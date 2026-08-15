@@ -1,0 +1,33 @@
+# OSRS Strategist
+
+**OSRS Strategist** is an adaptive RuneLite progression planner designed for mains, Ironmen, Group Ironmen, Hardcore variants, and Ultimate Ironmen.
+
+Its job is simple: **recommend the best useful thing to do next without making the player manage a giant spreadsheet.**
+
+## Design goals
+- simple UI, deep reasoning
+- account-type-aware strategy
+- no guessing about unavailable unlocks or storage
+- bank/resource-aware progression
+- optional Group Storage use
+- UIM capability-aware storage planning
+- Tool Leprechaun-aware farm preparation
+- birdhouse and herb-run readiness checklists
+- clue reminders, clue supplies, and STASH planning
+- player preference learning
+- Efficient / Balanced / Relaxed modes
+- quest tolerance
+- confidence labels and "Why this?" explanations
+- local-first architecture
+- no gameplay automation
+
+## Current state
+`0.2.0-dev` is a clean foundation and product spec, not a finished Plugin Hub release.
+
+Start with `docs/TONIGHT_SETUP.md`.
+
+## Development basis
+The project is intended to be copied over RuneLite's official `example-plugin` template so the current Gradle wrapper is retained.
+
+## Important rule
+Unknown state stays unknown. OSRS Strategist should never invent an unlock, bank item, Group Storage item, Tool Leprechaun tool, POH storage option, STASH state, or UIM storage capability.
