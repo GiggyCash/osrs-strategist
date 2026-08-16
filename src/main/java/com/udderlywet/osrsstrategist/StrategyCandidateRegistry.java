@@ -16,10 +16,18 @@ public class StrategyCandidateRegistry
     @Inject
     public StrategyCandidateRegistry(
             ClueCandidateProvider clueProvider,
-            PvmCandidateProvider pvmProvider)
+            PvmCandidateProvider pvmProvider,
+            QuestCandidateProvider questProvider,
+            DiaryCandidateProvider diaryProvider,
+            CombatAchievementCandidateProvider combatAchievementProvider)
     {
         this.providers = Collections.unmodifiableList(
-                new ArrayList<>(Arrays.asList(clueProvider, pvmProvider))
+                new ArrayList<>(Arrays.asList(
+                        clueProvider,
+                        pvmProvider,
+                        questProvider,
+                        diaryProvider,
+                        combatAchievementProvider))
         );
     }
 
