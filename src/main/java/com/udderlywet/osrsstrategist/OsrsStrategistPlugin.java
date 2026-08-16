@@ -6,9 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
-import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
@@ -21,18 +19,27 @@ import net.runelite.client.ui.NavigationButton;
 @PluginDescriptor(
         name = "OSRS Strategist",
         description = "Adaptive progression strategy for every OSRS account type",
-        tags = {"strategy", "progression", "maxing", "ironman", "uim", "gim", "clues", "farming"}
+        tags = {
+                "strategy",
+                "progression",
+                "maxing",
+                "ironman",
+                "uim",
+                "gim",
+                "clues",
+                "farming"
+        }
 )
 public class OsrsStrategistPlugin extends Plugin
 {
-    @Inject
-    private Client client;
-
     @Inject
     private OsrsStrategistConfig config;
 
     @Inject
     private ClientToolbar clientToolbar;
+
+    @Inject
+    private AccountReader accountReader;
 
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
@@ -48,7 +55,8 @@ public class OsrsStrategistPlugin extends Plugin
     {
         panel = new OsrsStrategistPanel();
 
-        BufferedImage icon = createTemporaryIcon();
+        BufferedImage icon =
+                createTemporaryIcon();
 
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
@@ -96,8 +104,10 @@ public class OsrsStrategistPlugin extends Plugin
             return;
         }
 
-        if (client.getGameState() != GameState.LOGGED_IN
-                || client.getLocalPlayer() == null)
+        AccountSnapshot snapshot =
+                accountReader.read();
+
+        if (snapshot == null)
         {
             SwingUtilities.invokeLater(() ->
                     panel.updateAccount(
@@ -106,65 +116,17 @@ public class OsrsStrategistPlugin extends Plugin
                             0
                     )
             );
+
             return;
         }
 
-        String playerName = client.getLocalPlayer().getName();
-
-        if (playerName == null || playerName.isEmpty())
-        {
-            playerName = "Unknown Player";
-        }
-
-        int accountType =
-                client.getVarbitValue(Varbits.ACCOUNT_TYPE);
-
-        String readableAccountType =
-                formatAccountType(accountType);
-
-        int totalLevel =
-                client.getTotalLevel();
-
-        String finalPlayerName =
-                playerName;
-
         SwingUtilities.invokeLater(() ->
                 panel.updateAccount(
-                        finalPlayerName,
-                        readableAccountType,
-                        totalLevel
+                        snapshot.getPlayerName(),
+                        snapshot.getAccountTypeName(),
+                        snapshot.getTotalLevel()
                 )
         );
-    }
-
-    private String formatAccountType(int type)
-    {
-        switch (type)
-        {
-            case 0:
-                return "Main";
-
-            case 1:
-                return "Ironman";
-
-            case 2:
-                return "Ultimate Ironman";
-
-            case 3:
-                return "Hardcore Ironman";
-
-            case 4:
-                return "Group Ironman";
-
-            case 5:
-                return "Hardcore Group Ironman";
-
-            case 6:
-                return "Unranked Group Ironman";
-
-            default:
-                return "Unknown";
-        }
     }
 
     private BufferedImage createTemporaryIcon()
