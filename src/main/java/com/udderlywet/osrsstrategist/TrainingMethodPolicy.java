@@ -21,7 +21,7 @@ public class TrainingMethodPolicy
                 ? MembershipStatus.UNKNOWN
                 : account.getMembershipStatus();
 
-        if (membership == MembershipStatus.FREE_TO_PLAY
+        if (membership == MembershipStatus.F2P
                 && !metadata.isFreeToPlayAllowed())
         {
             return false;
@@ -35,8 +35,6 @@ public class TrainingMethodPolicy
         if (mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
         {
-            // Hardcore defaults are intentionally conservative. A future
-            // explicit dangerous-content override can be added separately.
             if (method.isWilderness()
                     || !metadata.isHardcoreSafe()
                     || metadata.getRiskLevel() == RiskLevel.HIGH
@@ -87,24 +85,16 @@ public class TrainingMethodPolicy
             }
         }
 
-        if (mode == AccountMode.ULTIMATE_IRONMAN && metadata.isUimFriendly())
-        {
-            score += 4.0;
-        }
-
+        if (mode == AccountMode.ULTIMATE_IRONMAN && metadata.isUimFriendly()) score += 4.0;
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                && metadata.isHardcoreSafe())
-        {
-            score += 4.0;
-        }
+                && metadata.isHardcoreSafe()) score += 4.0;
 
         if (AccountModePolicy.isRiskSensitive(mode))
         {
             if (metadata.getRiskLevel() == RiskLevel.MEDIUM) score -= 5.0;
             if (metadata.getRiskLevel() == RiskLevel.HIGH) score -= 10.0;
         }
-
         return score;
     }
 
