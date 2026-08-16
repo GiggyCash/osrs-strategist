@@ -10,6 +10,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
@@ -20,6 +21,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
         name = "OSRS Strategist",
@@ -47,6 +49,7 @@ public class OsrsStrategistPlugin extends Plugin
 
     @Inject private OsrsStrategistConfig config;
     @Inject private ClientToolbar clientToolbar;
+    @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
     @Inject private StrategyEngine strategyEngine;
     @Inject private AccountPreferenceStore accountPreferenceStore;
@@ -54,6 +57,8 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private AccountMilestoneStore accountMilestoneStore;
     @Inject private MilestoneTracker milestoneTracker;
     @Inject private SkillIconLoader skillIconLoader;
+    @Inject private AccessObservationService accessObservationService;
+    @Inject private MilestoneRewardOverlay milestoneRewardOverlay;
 
     /** Learned likes/dislikes and recommendation cooldowns for this character. */
     private final PreferenceProfile preferenceProfile = new PreferenceProfile();
@@ -90,6 +95,7 @@ public class OsrsStrategistPlugin extends Plugin
                 .build();
 
         clientToolbar.addNavigation(navButton);
+        overlayManager.add(milestoneRewardOverlay);
 
         syncPreferenceProfile();
         syncStrategyProfile();
@@ -105,8 +111,12 @@ public class OsrsStrategistPlugin extends Plugin
             clientToolbar.removeNavigation(navButton);
         }
 
+        overlayManager.remove(milestoneRewardOverlay);
+        milestoneRewardOverlay.clear();
+
         preferenceProfile.clear();
         strategyDataAssembler.clearForAccountChange();
+        accessObservationService.clearForAccountChange();
         loadedPreferenceProfileKey = null;
         loadedStrategyProfileKey = null;
         loadedMilestoneProfileKey = null;
@@ -122,6 +132,17 @@ public class OsrsStrategistPlugin extends Plugin
     public void onGameStateChanged(GameStateChanged event)
     {
         updateAccountPanel();
+    }
+
+    @Subscribe
+    public void onGameTick(GameTick event)
+    {
+        // Location learning is intentionally passive. A new known access proof
+        // immediately refreshes readiness; ordinary movement does not rerank.
+        if (accessObservationService.observeCurrentLocation())
+        {
+            updateAccountPanel();
+        }
     }
 
     @Subscribe
@@ -158,6 +179,7 @@ public class OsrsStrategistPlugin extends Plugin
         loadedMilestoneProfileKey = null;
         trackedMilestone = null;
         strategyDataAssembler.clearForAccountChange();
+        accessObservationService.clearForAccountChange();
 
         syncPreferenceProfile();
         syncStrategyProfile();
@@ -380,6 +402,9 @@ public class OsrsStrategistPlugin extends Plugin
 
             trackedMilestone = null;
             saveTrackedMilestone();
+
+            // Reward feedback is intentionally non-modal and short lived.
+            milestoneRewardOverlay.show(completion);
         }
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
@@ -387,7 +412,6 @@ public class OsrsStrategistPlugin extends Plugin
         updateTrackedMilestone(result.getRecommendations());
 
         AccountSnapshot account = data.getAccount();
-        MilestoneCompletion completionForUi = completion;
 
         SwingUtilities.invokeLater(() ->
         {
@@ -405,11 +429,6 @@ public class OsrsStrategistPlugin extends Plugin
             );
             panel.updateRecommendations(result.getRecommendations());
             panel.updateOpportunities(result.getOpportunities());
-
-            if (completionForUi != null)
-            {
-                panel.showMilestoneCompletion(completionForUi);
-            }
         });
     }
 
