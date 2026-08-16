@@ -13,6 +13,7 @@ public class StrategyDataAssembler
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
+    private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final ObservedStateStore observedStateStore;
 
     @Inject
@@ -23,6 +24,7 @@ public class StrategyDataAssembler
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
             FarmingAccessEvaluator farmingAccessEvaluator,
+            PvmReadinessAnalyzer pvmReadinessAnalyzer,
             ObservedStateStore observedStateStore)
     {
         this.accountReader = accountReader;
@@ -31,6 +33,7 @@ public class StrategyDataAssembler
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
         this.farmingAccessEvaluator = farmingAccessEvaluator;
+        this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.observedStateStore = observedStateStore;
     }
 
@@ -45,6 +48,10 @@ public class StrategyDataAssembler
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
+        PvmSnapshot observedPvm = observedStateStore.getPvm();
+        PvmSnapshot pvm = observedPvm != null
+                ? observedPvm
+                : pvmReadinessAnalyzer.analyze(account, quests);
 
         return StrategyDataBundle.builder(account)
                 .inventory(itemStateReader.readInventory())
@@ -67,7 +74,7 @@ public class StrategyDataAssembler
                 .farming(farming)
                 .sailing(observedStateStore.getSailing())
                 .minigames(observedStateStore.getMinigames())
-                .pvm(observedStateStore.getPvm())
+                .pvm(pvm)
                 .recurringOpportunities(observedStateStore.getRecurringOpportunities())
                 .build();
     }
