@@ -11,11 +11,21 @@ import net.runelite.api.Skill;
 public class RecommendationEngine
 {
     private final TrainingMethodSelector trainingMethodSelector;
+    private final AccountArchetypeDetector archetypeDetector;
 
     @Inject
-    public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            AccountArchetypeDetector archetypeDetector)
     {
         this.trainingMethodSelector = trainingMethodSelector;
+        this.archetypeDetector = archetypeDetector;
+    }
+
+    /** Compatibility constructor retained for existing unit tests. */
+    public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
+    {
+        this(trainingMethodSelector, new AccountArchetypeDetector());
     }
 
     public List<Recommendation> recommend(
@@ -58,6 +68,7 @@ public class RecommendationEngine
         List<Recommendation> recommendations = new ArrayList<>();
         if (data == null || data.getAccount() == null) return recommendations;
         AccountSnapshot snapshot = data.getAccount();
+        AccountArchetype archetype = archetypeDetector.detect(snapshot);
 
         for (Skill skill : Skill.values())
         {
@@ -65,6 +76,7 @@ public class RecommendationEngine
             if (level >= 99 || skill == Skill.HITPOINTS) continue;
             if (!ContentAccessRules.isSkillAvailable(skill,
                     snapshot.getMembershipStatus())) continue;
+            if (!AccountArchetypePolicy.mayTrain(archetype, skill)) continue;
 
             String activityId = "skill:" + skill.name().toLowerCase();
             if (preferenceProfile.isOnCooldown(activityId)) continue;
@@ -88,7 +100,7 @@ public class RecommendationEngine
                     : trainingPlan.getConfidence();
             recommendations.add(new Recommendation(
                     activityId, "Train " + skill.getName() + " to " + target,
-                    skillReason(skill), score, trainingPlan, confidence,
+                    skillReason(skill, archetype), score, trainingPlan, confidence,
                     level, target));
         }
 
@@ -186,21 +198,26 @@ public class RecommendationEngine
         return 99;
     }
 
-    private String skillReason(Skill skill)
+    private String skillReason(Skill skill, AccountArchetype archetype)
     {
+        String suffix = archetype != null
+                && archetype != AccountArchetype.STANDARD
+                && archetype != AccountArchetype.UNKNOWN
+                ? " Restricted-build protection is active."
+                : "";
         switch (skill)
         {
-            case FARMING: return "Supports recurring runs, supplies, and later goals.";
-            case HERBLORE: return "Unlocks useful potions and supports later PvM.";
-            case SLAYER: return "Builds combat while unlocking monsters, drops, and gear.";
-            case CONSTRUCTION: return "Builds POH travel, utility, and storage options.";
-            case AGILITY: return "Supports shortcuts, Graceful progression, quests, and diaries.";
-            case RUNECRAFT: return "Opens rune options and useful training activities.";
-            case SAILING: return "Opens ports, voyages, and sea progression.";
-            case CRAFTING: return "Supports equipment, jewelry, quests, and upgrades.";
-            case MAGIC: return "Improves combat, teleports, and account utility.";
-            case PRAYER: return "Unlocks stronger protection and combat prayers.";
-            default: return "Useful progress toward broader account goals.";
+            case FARMING: return "Supports recurring runs, supplies, and later goals." + suffix;
+            case HERBLORE: return "Unlocks useful potions and supports later PvM." + suffix;
+            case SLAYER: return "Builds combat while unlocking monsters, drops, and gear." + suffix;
+            case CONSTRUCTION: return "Builds POH travel, utility, and storage options." + suffix;
+            case AGILITY: return "Supports shortcuts, Graceful progression, quests, and diaries." + suffix;
+            case RUNECRAFT: return "Opens rune options and useful training activities." + suffix;
+            case SAILING: return "Opens ports, voyages, and sea progression." + suffix;
+            case CRAFTING: return "Supports equipment, jewelry, quests, and upgrades." + suffix;
+            case MAGIC: return "Improves combat, teleports, and account utility." + suffix;
+            case PRAYER: return "Unlocks stronger protection and combat prayers." + suffix;
+            default: return "Useful progress toward broader account goals." + suffix;
         }
     }
 }
