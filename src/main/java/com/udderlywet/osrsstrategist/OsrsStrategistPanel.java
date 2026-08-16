@@ -69,7 +69,18 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         accountName.setText(html(name));
         accountType.setText(html("Account type: " + type));
-        totalLevel.setText(html("Total level: " + total + " / 2376"));
+        if (total > 0)
+        {
+            totalLevel.setText(
+                    html("Total level: " + total + " / 2376")
+            );
+        }
+        else
+        {
+            totalLevel.setText(
+                    html("Total level: -- / 2376")
+            );
+        }
     }
 
     private static JLabel sectionHeader(String text)
