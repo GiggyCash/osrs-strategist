@@ -35,6 +35,24 @@ Engine          Engine        + signals
         + optional Details view
 ```
 
+Resource requirements use a second reusable path:
+
+```text
+ResourceNeed
+    |
+    v
+ResourceAcquisitionPlanner
+    |
+    +--> confirmed inventory
+    +--> confirmed bank (non-UIM)
+    +--> observed GIM Group Storage when enabled
+    +--> GE candidate for Main (still requires price/GP validation)
+    +--> self-source family for Iron/UIM
+    |
+    v
+ResourceAcquisitionPlan
+```
+
 ## What is live now
 
 The foundation can already read or persist these pieces of state:
@@ -46,6 +64,9 @@ The foundation can already read or persist these pieces of state:
 - Per-character explicit strategy settings through `PlayerStrategyProfile`.
 - Strategy style, session intent, quest tolerance, active big goal, Group Storage preference, and collectionist weighting.
 - Skill recommendations, starter training-method selection, milestone momentum, and immediate feedback rotation.
+- Training-method selection already receives the full account-state bundle, so later bank/gear/quest/account-mode evaluators can be added without changing the pipeline.
+- Resource acquisition guardrails for Main, Ironman, GIM, and UIM.
+- Player-defined protected-item storage and shared risk-warning policy types.
 
 ## Scaffolded systems awaiting verified readers/game data
 
@@ -56,8 +77,8 @@ These systems now have typed homes in the architecture but must not be described
 - Clue and STASH state.
 - Combat Achievements.
 - Collection Log opportunity scoring.
-- Main-account economy, GE decisions, protected-item rules, high alchs, and money making.
-- GIM Group Storage item observations.
+- Main-account economy, live GE price/affordability decisions, built-in protected-item rules, high alchs, and money making.
+- GIM Group Storage live item observations.
 - UIM storage/capability state, including Tool Leprechaun, STASH, looting bag, POH storage, death storage, and deathpile safety.
 - Farming patches, Tool Leprechaun contents, herb/tree runs, and farming contracts.
 - Sailing ports and activities.
@@ -78,6 +99,7 @@ Do not write logic that silently turns an unobserved source into an empty or una
 - Tool Leprechaun access != every tool is stored there.
 - A possible POH furniture upgrade != the player already built it.
 - A Sailing activity existing in OSRS != this character has unlocked it.
+- A Main being able to use the GE != a purchase is affordable or strategically wise.
 
 When RuneLite cannot verify a state, either leave it unknown or ask the player to confirm it once and persist that confirmation.
 
@@ -88,10 +110,18 @@ Use `AccountModePolicy` instead of scattering restrictions throughout planners.
 - Main may use the GE, but purchases still need economy validation.
 - Iron-like accounts self-source by default.
 - GIM may use Group Storage only when the option is enabled and the storage has actually been observed.
-- UIM storage routes require verified capabilities.
+- UIM storage routes require verified capabilities, and normal bank-routing logic is ignored.
 - HCIM/HCGIM/UIM are treated as risk-sensitive for irreversible or dangerous recommendations.
 
 No planner should automate clicks, movement, combat, banking, or gameplay interaction. Strategist is an adviser only.
+
+## Safety rules
+
+`ProtectedItemProfile` is the player's explicit "never recommend selling/disposing of this" list. Future built-in protection rules for rare, quest, clue, and hard-to-replace progression items should be additive to that list, never a replacement for it.
+
+`RiskPolicy` and `RiskWarning` provide one shared language for expensive or irreversible suggestions. Examples include UIM death strategies, dropping valuables, consuming scarce resources, destroying quest/clue items, selling hard-to-replace gear, or spending a very large share of available GP.
+
+An irreversible recommendation should require explicit player confirmation before it can be presented as a normal plan.
 
 ## UI rule
 
