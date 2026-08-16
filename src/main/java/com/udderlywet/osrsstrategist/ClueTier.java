@@ -2,6 +2,14 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Locale;
 
+/**
+ * Treasure Trail tiers plus membership eligibility.
+ *
+ * <p>Membership filtering belongs on the clue tier itself so every Strategist
+ * surface (DO NEXT, opportunities, strategy signals, future reminders) uses the
+ * same rule. This prevents a members-only clue left in a bank from being
+ * presented as actionable while the character is currently F2P.</p>
+ */
 public enum ClueTier
 {
     BEGINNER(0.0),
@@ -20,6 +28,20 @@ public enum ClueTier
     }
 
     public double getPriorityBonus() { return priorityBonus; }
+
+    /**
+     * Only beginner Treasure Trails are actionable on a F2P planning profile.
+     * Unknown tiers stay eligible so Strategist can surface them as Needs Info
+     * rather than silently pretending it knows the tier.
+     */
+    public boolean isAvailableFor(MembershipStatus membershipStatus)
+    {
+        if (membershipStatus == MembershipStatus.F2P)
+        {
+            return this == BEGINNER || this == UNKNOWN;
+        }
+        return true;
+    }
 
     public static ClueTier fromText(String value)
     {
