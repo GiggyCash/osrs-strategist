@@ -88,9 +88,12 @@ public class StrategyEngine
                 preferenceProfile
         );
 
+        // Pass the full verified bundle into the skill/method pipeline. This is
+        // the seam that lets future method scoring consider banked resources,
+        // account mode, quests, equipment, transport, and storage safely.
         List<Recommendation> recommendations =
                 recommendationEngine.recommend(
-                        data.getAccount(),
+                        data,
                         context.getStrategyMode(),
                         context.getSessionIntent(),
                         context.getPreferenceProfile()
