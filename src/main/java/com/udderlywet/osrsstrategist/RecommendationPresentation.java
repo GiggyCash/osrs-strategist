@@ -28,8 +28,8 @@ public final class RecommendationPresentation
                 return text.toString();
             }
 
-            text.append("<b>BEST METHOD</b><br>")
-                    .append("Check needed before choosing a method.");
+            text.append("<b>METHOD UNAVAILABLE</b><br>")
+                    .append("Strategist does not currently have a usable method for this account state.");
             return text.toString();
         }
 
@@ -39,7 +39,7 @@ public final class RecommendationPresentation
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>CHECK NEEDED</b><br>");
+            text.append("<b>NEEDS INFO</b><br>");
             int shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
@@ -80,8 +80,8 @@ public final class RecommendationPresentation
                 return text.toString();
             }
 
-            text.append("<b>BEST METHOD</b><br>")
-                    .append("Check needed before choosing a method.");
+            text.append("<b>METHOD UNAVAILABLE</b><br>")
+                    .append("Strategist does not currently have a usable method for this account state. This recommendation should normally be filtered from DO NEXT.");
             return text.toString();
         }
 
@@ -180,9 +180,9 @@ public final class RecommendationPresentation
 
     private static String confidenceLabel(RecommendationConfidence confidence)
     {
-        if (confidence == RecommendationConfidence.VERIFIED) return "Verified";
+        if (confidence == RecommendationConfidence.VERIFIED) return "Ready";
         if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
-        return "Check Needed";
+        return "Needs Info";
     }
 
     private static void appendBreak(StringBuilder text, int count)
