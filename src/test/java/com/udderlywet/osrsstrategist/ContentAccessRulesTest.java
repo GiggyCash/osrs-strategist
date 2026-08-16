@@ -53,11 +53,13 @@ public class ContentAccessRulesTest
     {
         TrainingMethod motherlode = method(
                 "mining_mlm",
-                Skill.MINING
+                Skill.MINING,
+                false
         );
         TrainingMethod normalOre = method(
                 "mining_ore",
-                Skill.MINING
+                Skill.MINING,
+                false
         );
 
         assertFalse(ContentAccessRules.isMethodAvailable(
@@ -74,7 +76,29 @@ public class ContentAccessRulesTest
         ));
     }
 
-    private static TrainingMethod method(String id, Skill skill)
+    @Test
+    public void explicitMembersOnlyFlagIsFutureProof()
+    {
+        TrainingMethod futureMembersMethod = method(
+                "future_members_method",
+                Skill.MINING,
+                true
+        );
+
+        assertFalse(ContentAccessRules.isMethodAvailable(
+                futureMembersMethod,
+                MembershipStatus.F2P
+        ));
+        assertTrue(ContentAccessRules.isMethodAvailable(
+                futureMembersMethod,
+                MembershipStatus.P2P
+        ));
+    }
+
+    private static TrainingMethod method(
+            String id,
+            Skill skill,
+            boolean membersOnly)
     {
         return new TrainingMethod(
                 id,
@@ -90,7 +114,8 @@ public class ContentAccessRulesTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED
+                RecommendationConfidence.VERIFIED,
+                membersOnly
         );
     }
 }
