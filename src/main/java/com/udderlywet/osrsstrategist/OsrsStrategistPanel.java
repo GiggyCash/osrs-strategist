@@ -31,6 +31,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel accountType = wrapLabel("Account type: Unknown");
     private final JLabel totalLevel = wrapLabel("Total level: -- / 2376");
 
+    private final JLabel activeGoal = wrapLabel("Goal: Max");
     private final JLabel strategyMode = wrapLabel("Mode: Balanced");
     private final JLabel sessionIntent = wrapLabel("Session: Pick for me");
     private final JLabel questTolerance = wrapLabel("Quest tolerance: Normal");
@@ -87,6 +88,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
         content.add(Box.createVerticalStrut(20));
         content.add(sectionHeader("STRATEGY"));
+        content.add(activeGoal);
         content.add(strategyMode);
         content.add(sessionIntent);
         content.add(questTolerance);
@@ -177,6 +179,14 @@ public class OsrsStrategistPanel extends PluginPanel
                                 ? "Total level: " + total + " / 2376"
                                 : "Total level: -- / 2376"
                 )
+        );
+    }
+
+    public void updateGoal(GoalType goal)
+    {
+        GoalType safeGoal = goal == null ? GoalType.MAX : goal;
+        activeGoal.setText(
+                html("Goal: " + prettyName(safeGoal.name()))
         );
     }
 
