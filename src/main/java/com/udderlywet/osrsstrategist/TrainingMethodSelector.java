@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
@@ -9,21 +10,29 @@ import net.runelite.api.Skill;
 /**
  * Chooses the best training method for one skill.
  *
- * <p>The selector accepts the entire StrategyDataBundle even though the first
- * generation of scoring only uses part of it. That is deliberate: bank state,
- * account mode, equipment, quests, transport, GIM storage, UIM capabilities,
- * and other verified observations can be added to method scoring without
- * changing this API or rebuilding the recommendation pipeline.</p>
+ * <p>The selector receives the whole StrategyDataBundle so method choice and
+ * readiness can be based on the same verified account state. Requirement
+ * evidence is evaluated here, never in the Swing UI.</p>
  */
 @Singleton
 public class TrainingMethodSelector
 {
     private final TrainingMethodDatabase database;
+    private final RequirementEvidenceEngine requirementEvidenceEngine;
 
     @Inject
-    public TrainingMethodSelector(TrainingMethodDatabase database)
+    public TrainingMethodSelector(
+            TrainingMethodDatabase database,
+            RequirementEvidenceEngine requirementEvidenceEngine)
     {
         this.database = database;
+        this.requirementEvidenceEngine = requirementEvidenceEngine;
+    }
+
+    /** Compatibility constructor retained for focused unit tests. */
+    public TrainingMethodSelector(TrainingMethodDatabase database)
+    {
+        this(database, null);
     }
 
     /**
@@ -75,8 +84,12 @@ public class TrainingMethodSelector
             return null;
         }
 
+        List<RequirementCheck> checks = requirementEvidenceEngine == null
+                ? Collections.emptyList()
+                : requirementEvidenceEngine.evaluate(data, best);
+
         RecommendationConfidence confidence =
-                assessConfidence(data, best);
+                assessConfidence(best, checks);
 
         return new TrainingPlan(
                 best,
@@ -85,7 +98,8 @@ public class TrainingMethodSelector
                         strategyMode,
                         sessionIntent
                 ),
-                confidence
+                confidence,
+                checks
         );
     }
 
@@ -101,18 +115,36 @@ public class TrainingMethodSelector
     }
 
     /**
-     * Starter confidence evaluation. Generic method definitions remain
-     * CHECK_NEEDED until a reader/evaluator can prove their requirements.
-     * Future requirement evaluators will plug in here rather than into the UI.
+     * Confidence is the aggregate of concrete checks. One known blocker blocks
+     * the plan; one unknown keeps it Check Needed; all verified checks upgrade
+     * the plan to Verified even if its static catalog entry began conservatively.
      */
     private RecommendationConfidence assessConfidence(
-            StrategyDataBundle data,
-            TrainingMethod method)
+            TrainingMethod method,
+            List<RequirementCheck> checks)
     {
-        if (method.getConfidence()
-                == RecommendationConfidence.BLOCKED)
+        if (method.getConfidence() == RecommendationConfidence.BLOCKED)
         {
             return RecommendationConfidence.BLOCKED;
+        }
+
+        if (checks != null && !checks.isEmpty())
+        {
+            boolean hasUnknown = false;
+            for (RequirementCheck check : checks)
+            {
+                if (check.getState() == RequirementState.BLOCKED)
+                {
+                    return RecommendationConfidence.BLOCKED;
+                }
+                if (check.getState() == RequirementState.CHECK_NEEDED)
+                {
+                    hasUnknown = true;
+                }
+            }
+            return hasUnknown
+                    ? RecommendationConfidence.CHECK_NEEDED
+                    : RecommendationConfidence.VERIFIED;
         }
 
         if (method.getRequirements().isEmpty()
@@ -122,9 +154,6 @@ public class TrainingMethodSelector
             return RecommendationConfidence.VERIFIED;
         }
 
-        // Having a full data bundle is not the same as having verified every
-        // requirement inside it. Never upgrade confidence merely because data
-        // exists; a requirement evaluator must explicitly prove readiness.
         return RecommendationConfidence.CHECK_NEEDED;
     }
 
@@ -149,13 +178,6 @@ public class TrainingMethodSelector
         reason.append(". Attention: ")
                 .append(pretty(method.getAttentionLevel().name()))
                 .append(".");
-
-        if (!method.getRequirements().isEmpty())
-        {
-            reason.append(" Check: ")
-                    .append(String.join(", ", method.getRequirements()))
-                    .append(".");
-        }
 
         return reason.toString();
     }
