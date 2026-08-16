@@ -23,15 +23,7 @@ public final class RecommendationPresentation
         }
 
         StringBuilder text = new StringBuilder();
-
-        if (recommendation.getCurrentLevel() > 0
-                && recommendation.getTargetLevel() > 0)
-        {
-            text.append("Current: ")
-                    .append(recommendation.getCurrentLevel())
-                    .append(" → ")
-                    .append(recommendation.getTargetLevel());
-        }
+        appendLevelSummary(text, recommendation);
 
         TrainingPlan plan = recommendation.getTrainingPlan();
 
@@ -50,17 +42,7 @@ public final class RecommendationPresentation
         }
 
         TrainingMethod method = plan.getMethod();
-
-        appendBreak(text, 2);
-        text.append("<b>BEST METHOD</b><br>")
-                .append(escape(method.getName()));
-
-        appendBreak(text, 1);
-        text.append("<i>")
-                .append(attentionLabel(method.getAttentionLevel()))
-                .append(" • ")
-                .append(confidenceLabel(recommendation.getConfidence()))
-                .append("</i>");
+        appendMethodHeader(text, recommendation, method);
 
         List<String> requirements = method.getRequirements();
         if (!requirements.isEmpty())
@@ -97,40 +79,76 @@ public final class RecommendationPresentation
             return "";
         }
 
-        StringBuilder text = new StringBuilder(
-                compactHtml(recommendation)
-        );
+        StringBuilder text = new StringBuilder();
+        appendLevelSummary(text, recommendation);
 
         TrainingPlan plan = recommendation.getTrainingPlan();
-        if (plan != null && plan.getMethod() != null)
+        if (plan == null || plan.getMethod() == null)
         {
-            TrainingMethod method = plan.getMethod();
-
             appendBreak(text, 2);
-            text.append("<b>HOW</b><br>")
-                    .append(escape(method.getInstructions()));
+            text.append("<b>BEST METHOD</b><br>")
+                    .append("Check needed before choosing a method.");
+            return text.toString();
+        }
 
-            if (recommendation.getReason() != null
-                    && !recommendation.getReason().trim().isEmpty())
-            {
-                appendBreak(text, 2);
-                text.append("<b>WHY IT MATTERS</b><br>")
-                        .append(escape(recommendation.getReason()));
-            }
+        TrainingMethod method = plan.getMethod();
+        appendMethodHeader(text, recommendation, method);
 
-            if (!method.getRequirements().isEmpty())
+        appendBreak(text, 2);
+        text.append("<b>HOW</b><br>")
+                .append(escape(method.getInstructions()));
+
+        if (recommendation.getReason() != null
+                && !recommendation.getReason().trim().isEmpty())
+        {
+            appendBreak(text, 2);
+            text.append("<b>WHY IT MATTERS</b><br>")
+                    .append(escape(recommendation.getReason()));
+        }
+
+        if (!method.getRequirements().isEmpty())
+        {
+            appendBreak(text, 2);
+            text.append("<b>FULL PREP</b>");
+            for (String requirement : method.getRequirements())
             {
-                appendBreak(text, 2);
-                text.append("<b>FULL PREP</b>");
-                for (String requirement : method.getRequirements())
-                {
-                    text.append("<br>• ")
-                            .append(escape(requirement));
-                }
+                text.append("<br>• ")
+                        .append(escape(requirement));
             }
         }
 
         return text.toString();
+    }
+
+    private static void appendLevelSummary(
+            StringBuilder text,
+            Recommendation recommendation)
+    {
+        if (recommendation.getCurrentLevel() > 0
+                && recommendation.getTargetLevel() > 0)
+        {
+            text.append("Current: ")
+                    .append(recommendation.getCurrentLevel())
+                    .append(" → ")
+                    .append(recommendation.getTargetLevel());
+        }
+    }
+
+    private static void appendMethodHeader(
+            StringBuilder text,
+            Recommendation recommendation,
+            TrainingMethod method)
+    {
+        appendBreak(text, 2);
+        text.append("<b>BEST METHOD</b><br>")
+                .append(escape(method.getName()));
+
+        appendBreak(text, 1);
+        text.append("<i>")
+                .append(attentionLabel(method.getAttentionLevel()))
+                .append(" • ")
+                .append(confidenceLabel(recommendation.getConfidence()))
+                .append("</i>");
     }
 
     private static String attentionLabel(AttentionLevel attention)
