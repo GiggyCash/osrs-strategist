@@ -30,13 +30,13 @@ public class TrainingMethodSelector
             TrainingMethodDatabase database,
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
-        this(database, new ExpandedTrainingMethodCatalog(), requirementEvidenceEngine);
+        this(database, null, requirementEvidenceEngine);
     }
 
     /** Compatibility constructor retained for existing tests. */
     public TrainingMethodSelector(TrainingMethodDatabase database)
     {
-        this(database, new ExpandedTrainingMethodCatalog(), null);
+        this(database, null, null);
     }
 
     public TrainingPlan select(
@@ -69,7 +69,10 @@ public class TrainingMethodSelector
             boolean allowWildernessMethods)
     {
         List<TrainingMethod> methods = new ArrayList<>(database.methodsFor(skill));
-        methods.addAll(expandedCatalog.methodsFor(skill));
+        if (expandedCatalog != null)
+        {
+            methods.addAll(expandedCatalog.methodsFor(skill));
+        }
         MembershipStatus membershipStatus = membershipStatus(data);
         AccountMode accountMode = accountMode(data);
         TrainingMethod bestMethod = null;
@@ -145,37 +148,20 @@ public class TrainingMethodSelector
             AccountMode mode,
             boolean settingEnabled)
     {
-        if (!method.isWilderness())
-        {
-            return true;
-        }
-
-        // HCIM/HCGIM strategy is intentionally survival-first. Wilderness XP
-        // alternatives never enter the automatic method picker for these modes.
+        if (!method.isWilderness()) return true;
         if (mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
         {
             return false;
         }
-
         return settingEnabled;
     }
 
     private static boolean modeAllowsMethod(TrainingMethod method, AccountMode mode)
     {
-        if (mode != AccountMode.ULTIMATE_IRONMAN)
-        {
-            return true;
-        }
-
+        if (mode != AccountMode.ULTIMATE_IRONMAN) return true;
         String id = method.getId();
-        if (id == null)
-        {
-            return true;
-        }
-
-        // These early prototype methods explicitly assume a conventional bank.
-        // UIM receives inventory/storage-aware alternatives instead.
+        if (id == null) return true;
         return !"herblore_bank".equals(id)
                 && !"crafting_banked".equals(id)
                 && !"smithing_banked".equals(id)
@@ -187,8 +173,6 @@ public class TrainingMethodSelector
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             String id = method.getId() == null ? "" : method.getId();
-            // Stackable-resource, activity and self-contained methods are often
-            // friendlier to UIM inventory constraints than material-heavy loops.
             if (id.contains("gotr") || id.contains("wintertodt")
                     || id.contains("tempoross") || id.contains("sep")
                     || id.contains("stars") || id.contains("herbiboar")
@@ -200,14 +184,8 @@ public class TrainingMethodSelector
         if (mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
         {
-            if (method.getAttentionLevel() == AttentionLevel.AFK)
-            {
-                return -1.5;
-            }
-            if (method.getAttentionLevel() == AttentionLevel.MODERATE)
-            {
-                return 1.0;
-            }
+            if (method.getAttentionLevel() == AttentionLevel.AFK) return -1.5;
+            if (method.getAttentionLevel() == AttentionLevel.MODERATE) return 1.0;
         }
         return 0.0;
     }
