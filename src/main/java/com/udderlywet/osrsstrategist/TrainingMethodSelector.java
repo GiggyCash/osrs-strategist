@@ -25,6 +25,14 @@ public class TrainingMethodSelector
         this.requirementEvidenceEngine = requirementEvidenceEngine;
     }
 
+    /** Compatibility constructor retained for existing tests/callers. */
+    public TrainingMethodSelector(
+            TrainingMethodDatabase database,
+            RequirementEvidenceEngine requirementEvidenceEngine)
+    {
+        this(database, new ExpandedTrainingMethodCatalog(), requirementEvidenceEngine);
+    }
+
     /** Compatibility constructor retained for existing tests. */
     public TrainingMethodSelector(TrainingMethodDatabase database)
     {
