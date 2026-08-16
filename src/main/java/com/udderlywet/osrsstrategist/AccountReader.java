@@ -7,9 +7,9 @@ import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Skill;
-import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
+import net.runelite.api.gameval.VarPlayerID;
 
 @Singleton
 public class AccountReader
@@ -43,15 +43,18 @@ public class AccountReader
         String accountTypeName =
                 formatAccountType(accountTypeCode);
 
-        int membershipDays = client.getServerVarpValue(
-                VarPlayer.MEMBERSHIP_DAYS
+        // RuneLite itself uses ACCOUNT_CREDIT > 0 as the account-level member
+        // signal. A members world is retained as a safety proof because an F2P
+        // account cannot be logged into one.
+        int membershipCredit = client.getVarpValue(
+                VarPlayerID.ACCOUNT_CREDIT
         );
 
         boolean membersWorld = client.getWorldType() != null
                 && client.getWorldType().contains(WorldType.MEMBERS);
 
         MembershipStatus membershipStatus =
-                membershipDays > 0 || membersWorld
+                membershipCredit > 0 || membersWorld
                         ? MembershipStatus.P2P
                         : MembershipStatus.F2P;
 
@@ -78,7 +81,7 @@ public class AccountReader
                 accountTypeCode,
                 accountTypeName,
                 membershipStatus,
-                membershipDays,
+                membershipCredit,
                 client.getTotalLevel(),
                 client.getOverallExperience(),
                 skillLevels,
