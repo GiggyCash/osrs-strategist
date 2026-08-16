@@ -24,22 +24,17 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
     }
 
     @Override
-    public String getId()
-    {
-        return "pvm-candidates";
-    }
+    public String getId() { return "pvm-candidates"; }
 
     @Override
     public List<StrategyCandidate> candidates(StrategyContext context)
     {
         List<StrategyCandidate> result = new ArrayList<>();
         if (context == null || context.getData() == null
-                || context.getData().getPvm() == null)
-        {
-            return result;
-        }
+                || context.getData().getPvm() == null) return result;
 
         AccountMode mode = context.getAccountMode();
+        AccountSnapshot account = context.getData().getAccount();
         PreferenceProfile preferences = context.getPreferenceProfile();
         for (Map.Entry<String, PvmReadiness> entry
                 : context.getData().getPvm().getReadinessByActivity().entrySet())
@@ -50,18 +45,16 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             PvmActivityDefinition definition = catalog.match(entry.getKey());
             if (definition != null)
             {
+                if (account != null && account.getMembershipStatus() == MembershipStatus.F2P
+                        && !definition.isFreeToPlay()) continue;
                 if (definition.isWilderness() && !context.isAllowWildernessMethods()) continue;
                 if ((mode == AccountMode.HARDCORE_IRONMAN
                         || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                        && !definition.isHardcoreSafeByDefault())
-                {
-                    continue;
-                }
+                        && !definition.isHardcoreSafeByDefault()) continue;
             }
             else if (mode == AccountMode.HARDCORE_IRONMAN
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
             {
-                // Unknown PvM is not safe enough to recommend to a Hardcore.
                 continue;
             }
 
