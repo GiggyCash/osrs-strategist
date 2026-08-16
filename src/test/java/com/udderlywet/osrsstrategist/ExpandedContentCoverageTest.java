@@ -26,7 +26,7 @@ public class ExpandedContentCoverageTest
         ExpandedTrainingMethodCatalog catalog = new ExpandedTrainingMethodCatalog();
         assertHasIntensity(catalog.methodsFor(Skill.MINING), TrainingIntensity.AFK);
         assertHasIntensity(catalog.methodsFor(Skill.MINING), TrainingIntensity.SWEATY);
-        assertHasIntensity(catalog.methodsFor(Skill.FISHING), TrainingIntensity.RELAXED);
+        assertHasIntensity(catalog.methodsFor(Skill.FISHING), TrainingIntensity.AFK);
         assertHasIntensity(catalog.methodsFor(Skill.RUNECRAFT), TrainingIntensity.SWEATY);
         assertHasIntensity(catalog.methodsFor(Skill.AGILITY), TrainingIntensity.EFFICIENT);
         assertHasIntensity(catalog.methodsFor(Skill.SAILING), TrainingIntensity.BALANCED);
