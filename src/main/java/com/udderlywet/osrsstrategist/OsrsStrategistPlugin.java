@@ -127,8 +127,8 @@ public class OsrsStrategistPlugin extends Plugin
         loadedPreferenceProfileKey = null;
 
         // setRSProfileConfiguration can create a profile and post this event
-        // while a feedback save is still in progress. Do not reload stale data
-        // until that save has completed.
+        // while a feedback save is still in progress. Do not reload until the
+        // write has completed.
         if (savingPreferenceProfile)
         {
             return;
@@ -174,11 +174,12 @@ public class OsrsStrategistPlugin extends Plugin
             savingPreferenceProfile = false;
         }
 
-        // A first-time save may have created the RuneScape profile.
-        // Reload after the write so the recommendation engine sees the
-        // newly persisted value immediately.
-        loadedPreferenceProfileKey = null;
-        syncPreferenceProfile();
+        // Keep the just-updated in-memory profile active. If this was the
+        // account's first saved Strategist preference, RuneLite may have
+        // created its RS profile during save().
+        loadedPreferenceProfileKey =
+                accountPreferenceStore.getActiveProfileKey();
+
         updateAccountPanel();
     }
 
