@@ -13,6 +13,7 @@ public class TrainingMethodSelector
     private final TrainingMethodDatabase database;
     private final RequirementEvidenceEngine requirementEvidenceEngine;
     private final ExpandedTrainingMethodCatalog expandedCatalog;
+    private final F2pBaselineMethodCatalog f2pBaselineCatalog;
     private final TrainingMethodPolicy methodPolicy;
 
     @Inject
@@ -20,11 +21,13 @@ public class TrainingMethodSelector
             TrainingMethodDatabase database,
             RequirementEvidenceEngine requirementEvidenceEngine,
             ExpandedTrainingMethodCatalog expandedCatalog,
+            F2pBaselineMethodCatalog f2pBaselineCatalog,
             TrainingMethodPolicy methodPolicy)
     {
         this.database = database;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
         this.expandedCatalog = expandedCatalog;
+        this.f2pBaselineCatalog = f2pBaselineCatalog;
         this.methodPolicy = methodPolicy;
     }
 
@@ -33,7 +36,8 @@ public class TrainingMethodSelector
             TrainingMethodDatabase database,
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
-        this(database, requirementEvidenceEngine, null, new TrainingMethodPolicy());
+        this(database, requirementEvidenceEngine, null, null,
+                new TrainingMethodPolicy());
     }
 
     public TrainingMethodSelector(TrainingMethodDatabase database)
@@ -117,7 +121,7 @@ public class TrainingMethodSelector
         }
 
         // In production, legacy methods predate route-level F2P metadata. F2P
-        // therefore uses the curated catalog where membership is explicit.
+        // therefore uses only catalogs whose membership compatibility is explicit.
         if (membership != MembershipStatus.F2P)
         {
             for (TrainingMethod method : database.methodsFor(skill))
@@ -126,7 +130,16 @@ public class TrainingMethodSelector
                         TrainingMethodMetadata.legacy(method)));
             }
         }
+
         candidates.addAll(expandedCatalog.methodsFor(skill));
+
+        // Baseline records cover any known F2P level-band holes in the richer
+        // catalog. They still go through normal policy/evidence scoring, so a
+        // better curated route wins whenever one is available.
+        if (membership == MembershipStatus.F2P && f2pBaselineCatalog != null)
+        {
+            candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
+        }
         return candidates;
     }
 
