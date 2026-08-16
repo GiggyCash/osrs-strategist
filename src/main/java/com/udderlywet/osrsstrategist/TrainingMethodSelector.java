@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -10,20 +11,24 @@ import net.runelite.api.Skill;
 public class TrainingMethodSelector
 {
     private final TrainingMethodDatabase database;
+    private final ExpandedTrainingMethodCatalog expandedCatalog;
     private final RequirementEvidenceEngine requirementEvidenceEngine;
 
     @Inject
     public TrainingMethodSelector(
             TrainingMethodDatabase database,
+            ExpandedTrainingMethodCatalog expandedCatalog,
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
         this.database = database;
+        this.expandedCatalog = expandedCatalog;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
     }
 
+    /** Compatibility constructor retained for existing tests. */
     public TrainingMethodSelector(TrainingMethodDatabase database)
     {
-        this(database, null);
+        this(database, new ExpandedTrainingMethodCatalog(), null);
     }
 
     public TrainingPlan select(
@@ -55,8 +60,10 @@ public class TrainingMethodSelector
             SessionIntent sessionIntent,
             boolean allowWildernessMethods)
     {
-        List<TrainingMethod> methods = database.methodsFor(skill);
+        List<TrainingMethod> methods = new ArrayList<>(database.methodsFor(skill));
+        methods.addAll(expandedCatalog.methodsFor(skill));
         MembershipStatus membershipStatus = membershipStatus(data);
+        AccountMode accountMode = accountMode(data);
         TrainingMethod bestMethod = null;
         List<RequirementCheck> bestChecks = Collections.emptyList();
         RecommendationConfidence bestConfidence = RecommendationConfidence.CHECK_NEEDED;
@@ -65,7 +72,8 @@ public class TrainingMethodSelector
         for (TrainingMethod method : methods)
         {
             if (!method.supportsLevel(currentLevel)
-                    || (!allowWildernessMethods && method.isWilderness())
+                    || !wildernessAllowed(method, accountMode, allowWildernessMethods)
+                    || !modeAllowsMethod(method, accountMode)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
                     || method.getConfidence() == RecommendationConfidence.BLOCKED)
             {
@@ -82,7 +90,8 @@ public class TrainingMethodSelector
                 continue;
             }
 
-            double score = method.scoreFor(strategyMode, sessionIntent);
+            double score = method.scoreFor(strategyMode, sessionIntent)
+                    + accountModeScore(method, accountMode);
             if (bestMethod == null || score > bestScore)
             {
                 bestMethod = method;
@@ -99,7 +108,7 @@ public class TrainingMethodSelector
 
         return new TrainingPlan(
                 bestMethod,
-                buildExplanation(bestMethod, strategyMode, sessionIntent),
+                buildExplanation(bestMethod, strategyMode, sessionIntent, accountMode),
                 bestConfidence,
                 bestChecks
         );
@@ -112,6 +121,87 @@ public class TrainingMethodSelector
             return MembershipStatus.UNKNOWN;
         }
         return data.getAccount().getMembershipStatus();
+    }
+
+    private static AccountMode accountMode(StrategyDataBundle data)
+    {
+        if (data == null || data.getAccount() == null)
+        {
+            return AccountMode.UNKNOWN;
+        }
+        return AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
+    }
+
+    private static boolean wildernessAllowed(
+            TrainingMethod method,
+            AccountMode mode,
+            boolean settingEnabled)
+    {
+        if (!method.isWilderness())
+        {
+            return true;
+        }
+
+        // HCIM/HCGIM strategy is intentionally survival-first. Wilderness XP
+        // alternatives never enter the automatic method picker for these modes.
+        if (mode == AccountMode.HARDCORE_IRONMAN
+                || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
+        {
+            return false;
+        }
+
+        return settingEnabled;
+    }
+
+    private static boolean modeAllowsMethod(TrainingMethod method, AccountMode mode)
+    {
+        if (mode != AccountMode.ULTIMATE_IRONMAN)
+        {
+            return true;
+        }
+
+        String id = method.getId();
+        if (id == null)
+        {
+            return true;
+        }
+
+        // These early prototype methods explicitly assume a conventional bank.
+        // UIM receives inventory/storage-aware alternatives instead.
+        return !"herblore_bank".equals(id)
+                && !"crafting_banked".equals(id)
+                && !"smithing_banked".equals(id)
+                && !"cooking_banked".equals(id);
+    }
+
+    private static double accountModeScore(TrainingMethod method, AccountMode mode)
+    {
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            String id = method.getId() == null ? "" : method.getId();
+            // Stackable-resource, activity and self-contained methods are often
+            // friendlier to UIM inventory constraints than material-heavy loops.
+            if (id.contains("gotr") || id.contains("wintertodt")
+                    || id.contains("tempoross") || id.contains("sep")
+                    || id.contains("stars") || id.contains("herbiboar")
+                    || id.contains("karambwan") || id.contains("mahogany_homes"))
+            {
+                return 2.5;
+            }
+        }
+        if (mode == AccountMode.HARDCORE_IRONMAN
+                || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
+        {
+            if (method.getAttentionLevel() == AttentionLevel.AFK)
+            {
+                return -1.5;
+            }
+            if (method.getAttentionLevel() == AttentionLevel.MODERATE)
+            {
+                return 1.0;
+            }
+        }
+        return 0.0;
     }
 
     private RecommendationConfidence assessConfidence(
@@ -151,7 +241,8 @@ public class TrainingMethodSelector
     private String buildExplanation(
             TrainingMethod method,
             StrategyMode strategyMode,
-            SessionIntent sessionIntent)
+            SessionIntent sessionIntent,
+            AccountMode accountMode)
     {
         StringBuilder reason = new StringBuilder();
         reason.append("Selected for ")
@@ -169,6 +260,15 @@ public class TrainingMethodSelector
         if (method.isWilderness())
         {
             reason.append(" Wilderness method enabled by this character's settings.");
+        }
+        if (accountMode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            reason.append(" UIM bank assumptions are disabled.");
+        }
+        if (accountMode == AccountMode.HARDCORE_IRONMAN
+                || accountMode == AccountMode.HARDCORE_GROUP_IRONMAN)
+        {
+            reason.append(" Hardcore safety policy is active.");
         }
         return reason.toString();
     }
