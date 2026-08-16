@@ -13,7 +13,7 @@ import net.runelite.api.Skill;
  * <p>This catalog exists for level bands where the richer curated catalog may
  * not yet have a method. It is intentionally conservative: a baseline method
  * must be genuinely usable in F2P and must expose concrete requirements instead
- * of allowing the UI to fall back to a vague "check needed" message.</p>
+ * of allowing the UI to fall back to a vague Needs Info message.</p>
  */
 @Singleton
 public class F2pBaselineMethodCatalog
@@ -24,23 +24,29 @@ public class F2pBaselineMethodCatalog
     {
         List<CuratedTrainingMethod> values = new ArrayList<>();
         values.add(runecraft("runecraft_f2p_air", 1, 1,
-                "Craft air runes", "Use rune essence at the Air Altar. A talisman or tiara is required unless altar access has already been proven.",
-                "Air talisman/tiara or verified Air Altar access"));
+                "Craft air runes",
+                "Use rune essence at the Air Altar with an air talisman or air tiara.",
+                "Air talisman or air tiara"));
         values.add(runecraft("runecraft_f2p_mind", 2, 4,
-                "Craft mind runes", "Use rune essence at the Mind Altar once level 2 Runecraft is reached.",
-                "Mind talisman/tiara or verified Mind Altar access"));
+                "Craft mind runes",
+                "Use rune essence at the Mind Altar with a mind talisman or mind tiara.",
+                "Mind talisman or mind tiara"));
         values.add(runecraft("runecraft_f2p_water", 5, 8,
-                "Craft water runes", "Use rune essence at the Water Altar once level 5 Runecraft is reached.",
-                "Water talisman/tiara or verified Water Altar access"));
+                "Craft water runes",
+                "Use rune essence at the Water Altar with a water talisman or water tiara.",
+                "Water talisman or water tiara"));
         values.add(runecraft("runecraft_f2p_earth", 9, 13,
-                "Craft earth runes", "Use rune essence at the Earth Altar once level 9 Runecraft is reached.",
-                "Earth talisman/tiara or verified Earth Altar access"));
+                "Craft earth runes",
+                "Use rune essence at the Earth Altar with an earth talisman or earth tiara.",
+                "Earth talisman or earth tiara"));
         values.add(runecraft("runecraft_f2p_fire", 14, 19,
-                "Craft fire runes", "Use rune essence at the Fire Altar once level 14 Runecraft is reached.",
-                "Fire talisman/tiara or verified Fire Altar access"));
+                "Craft fire runes",
+                "Use rune essence at the Fire Altar with a fire talisman or fire tiara.",
+                "Fire talisman or fire tiara"));
         values.add(runecraft("runecraft_f2p_body", 20, 99,
-                "Craft body runes", "Use rune essence at the Body Altar, or compare against another unlocked F2P rune when its route is more useful for the account.",
-                "Body talisman/tiara or verified Body Altar access"));
+                "Craft body runes",
+                "Use rune essence at the Body Altar with a body talisman or body tiara. Strategist can still compare this with other unlocked F2P Runecraft routes later.",
+                "Body talisman or body tiara"));
         runecraftMethods = Collections.unmodifiableList(values);
     }
 
