@@ -17,6 +17,10 @@ public interface OsrsStrategistConfig extends Config
             description = "What kind of session you want Strategist to plan for")
     default SessionIntent sessionIntent() { return SessionIntent.PICK_FOR_ME; }
 
+    @ConfigItem(keyName = "varietyPreference", name = "Activity variety",
+            description = "How strongly Strategist should prefer a fresh activity when several choices are similarly useful")
+    default VarietyPreference varietyPreference() { return VarietyPreference.BALANCED; }
+
     @ConfigItem(keyName = "activeGoal", name = "Big goal",
             description = "The long-term goal Strategist should optimize around")
     default GoalType activeGoal() { return GoalType.MAX; }
