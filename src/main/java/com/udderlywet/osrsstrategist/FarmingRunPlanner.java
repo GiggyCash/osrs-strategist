@@ -6,16 +6,29 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
-/** Builds the current herb/tree checklist from verified account state. */
+/** Builds the current herb/tree checklist from verified access and resources. */
 @Singleton
 public class FarmingRunPlanner
 {
     private final FarmingRunCatalog catalog;
+    private final FarmingSupplyCatalog supplyCatalog;
+    private final ResourceReadinessService resources;
 
     @Inject
-    public FarmingRunPlanner(FarmingRunCatalog catalog)
+    public FarmingRunPlanner(
+            FarmingRunCatalog catalog,
+            FarmingSupplyCatalog supplyCatalog,
+            ResourceReadinessService resources)
     {
         this.catalog = catalog;
+        this.supplyCatalog = supplyCatalog;
+        this.resources = resources;
+    }
+
+    /** Compatibility constructor retained for focused tests. */
+    public FarmingRunPlanner(FarmingRunCatalog catalog)
+    {
+        this(catalog, new FarmingSupplyCatalog(), new ResourceReadinessService());
     }
 
     public GuidanceChecklist build(StrategyDataBundle data, String activityId)
@@ -35,24 +48,67 @@ public class FarmingRunPlanner
                     "Member Farming access required", steps);
         }
 
+        appendPrep(steps, data, farmingLevel);
         FarmingRunSnapshot snapshot = data.getFarmingRuns() == null
                 ? FarmingRunSnapshot.empty() : data.getFarmingRuns();
 
         for (FarmingRunPatchDefinition patch : catalog.all())
         {
             if (farmingLevel < patch.getMinimumLevel()
-                    || !isConfirmedReachable(data, patch))
-            {
-                continue;
-            }
+                    || !isConfirmedReachable(data, patch)) continue;
             steps.add(stepFor(patch, snapshot.stateOf(patch.getId())));
         }
 
         return new GuidanceChecklist(
-                activityId,
-                "Farming run",
-                "Best confirmed herb/tree patches",
-                steps);
+                activityId, "Farming run",
+                "Resources + best confirmed herb/tree patches", steps);
+    }
+
+    private void appendPrep(
+            List<GuidanceStep> steps,
+            StrategyDataBundle data,
+            int farmingLevel)
+    {
+        FarmingSnapshot farming = data.getFarming();
+        appendResource(steps, resources.evaluate(
+                data, supplyCatalog.rake(), toolState(farming, "rake"),
+                "Rake was previously verified in Tool Leprechaun storage."));
+        appendResource(steps, resources.evaluate(
+                data, supplyCatalog.dibber(), toolState(farming, "dibber"),
+                "Seed dibber was previously verified in Tool Leprechaun storage."));
+        appendResource(steps, resources.evaluate(
+                data, supplyCatalog.spade(), toolState(farming, "spade"),
+                "Spade was previously verified in Tool Leprechaun storage."));
+
+        if (farmingLevel >= 9)
+        {
+            appendResource(steps, resources.evaluate(
+                    data, supplyCatalog.herbSeedsForLevel(farmingLevel)));
+        }
+        if (farmingLevel >= 15)
+        {
+            appendResource(steps, resources.evaluate(
+                    data, supplyCatalog.treeSaplingsForLevel(farmingLevel)));
+        }
+    }
+
+    private CapabilityState toolState(FarmingSnapshot farming, String id)
+    {
+        return farming == null
+                ? CapabilityState.UNKNOWN
+                : farming.leprechaunToolState(id);
+    }
+
+    private void appendResource(
+            List<GuidanceStep> steps,
+            RequirementCheck check)
+    {
+        GuidanceStepState state = check.getState() == RequirementState.VERIFIED
+                ? GuidanceStepState.COMPLETE
+                : GuidanceStepState.CHECK_NEEDED;
+        steps.add(new GuidanceStep(
+                check.getId(), "Prep • " + check.getLabel(),
+                check.getEvidence(), state));
     }
 
     private boolean isConfirmedReachable(
@@ -67,7 +123,6 @@ public class FarmingRunPlanner
                 if (memory.hasObserved("region." + region)) return true;
             }
         }
-
         String quest = patch.getRequiredQuest();
         if (quest == null) return true;
         QuestSnapshot quests = data.getQuests();
@@ -82,41 +137,33 @@ public class FarmingRunPlanner
                 ? "Herb • " : "Tree • ";
         if (observed == null)
         {
-            return new GuidanceStep(patch.getId(),
-                    prefix + patch.getDisplayName(),
+            return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
                     "Visit once so Strategist can read this patch.",
                     GuidanceStepState.CHECK_NEEDED);
         }
-
         switch (observed.getState())
         {
             case GROWING:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(), "Planted",
-                        GuidanceStepState.COMPLETE);
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                        "Planted", GuidanceStepState.COMPLETE);
             case READY:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(),
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
                         patch.getKind() == FarmingPatchKind.TREE
                                 ? "Check/clear and replant" : "Harvest and replant",
                         GuidanceStepState.ACTION);
             case EMPTY:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(), "Plant this patch",
-                        GuidanceStepState.ACTION);
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                        "Plant this patch", GuidanceStepState.ACTION);
             case DISEASED:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(), "Cure the crop",
-                        GuidanceStepState.WARNING);
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                        "Cure the crop", GuidanceStepState.WARNING);
             case DEAD:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(), "Clear and replant",
-                        GuidanceStepState.WARNING);
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                        "Clear and replant", GuidanceStepState.WARNING);
             case UNKNOWN:
             default:
-                return new GuidanceStep(patch.getId(),
-                        prefix + patch.getDisplayName(), "Check patch state",
-                        GuidanceStepState.CHECK_NEEDED);
+                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                        "Check patch state", GuidanceStepState.CHECK_NEEDED);
         }
     }
 }
