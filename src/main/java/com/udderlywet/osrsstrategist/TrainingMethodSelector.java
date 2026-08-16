@@ -52,9 +52,14 @@ public class TrainingMethodSelector
             SessionIntent sessionIntent)
     {
         List<TrainingMethod> methods = database.methodsFor(skill);
+        MembershipStatus membershipStatus = membershipStatus(data);
 
         TrainingMethod best = methods.stream()
                 .filter(method -> method.supportsLevel(currentLevel))
+                .filter(method -> ContentAccessRules.isMethodAvailable(
+                        method,
+                        membershipStatus
+                ))
                 .filter(method -> method.getConfidence()
                         != RecommendationConfidence.BLOCKED)
                 .max(Comparator.comparingDouble(
@@ -82,6 +87,17 @@ public class TrainingMethodSelector
                 ),
                 confidence
         );
+    }
+
+    private static MembershipStatus membershipStatus(
+            StrategyDataBundle data)
+    {
+        if (data == null || data.getAccount() == null)
+        {
+            return MembershipStatus.UNKNOWN;
+        }
+
+        return data.getAccount().getMembershipStatus();
     }
 
     /**
