@@ -33,7 +33,7 @@ public class RecommendationEngine
             PreferenceProfile preferenceProfile)
     {
         return recommend(
-                snapshot,
+                StrategyDataBundle.builder(snapshot).build(),
                 strategyMode,
                 SessionIntent.PICK_FOR_ME,
                 preferenceProfile
@@ -46,7 +46,33 @@ public class RecommendationEngine
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
     {
+        return recommend(
+                StrategyDataBundle.builder(snapshot).build(),
+                strategyMode,
+                sessionIntent,
+                preferenceProfile
+        );
+    }
+
+    /**
+     * Full-state entry point used by StrategyEngine. Training-method selection
+     * receives the same verified account bundle that future resource, quest,
+     * economy, GIM, and UIM evaluators will use.
+     */
+    public List<Recommendation> recommend(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            PreferenceProfile preferenceProfile)
+    {
         List<Recommendation> recommendations = new ArrayList<>();
+
+        if (data == null || data.getAccount() == null)
+        {
+            return recommendations;
+        }
+
+        AccountSnapshot snapshot = data.getAccount();
 
         for (Skill skill : Skill.values())
         {
@@ -80,6 +106,7 @@ public class RecommendationEngine
 
             TrainingPlan trainingPlan =
                     trainingMethodSelector.select(
+                            data,
                             skill,
                             level,
                             strategyMode,
