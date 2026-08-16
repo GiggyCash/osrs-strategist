@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,7 +11,8 @@ import net.runelite.api.Skill;
  *
  * <p>The selector receives the whole StrategyDataBundle so method choice and
  * readiness can be based on the same verified account state. Requirement
- * evidence is evaluated here, never in the Swing UI.</p>
+ * evidence is evaluated before the winner is chosen, which means a dynamically
+ * blocked method cannot beat a slightly lower-scoring usable alternative.</p>
  */
 @Singleton
 public class TrainingMethodSelector
@@ -63,43 +63,68 @@ public class TrainingMethodSelector
         List<TrainingMethod> methods = database.methodsFor(skill);
         MembershipStatus membershipStatus = membershipStatus(data);
 
-        TrainingMethod best = methods.stream()
-                .filter(method -> method.supportsLevel(currentLevel))
-                .filter(method -> ContentAccessRules.isMethodAvailable(
-                        method,
-                        membershipStatus
-                ))
-                .filter(method -> method.getConfidence()
-                        != RecommendationConfidence.BLOCKED)
-                .max(Comparator.comparingDouble(
-                        method -> method.scoreFor(
-                                strategyMode,
-                                sessionIntent
-                        )
-                ))
-                .orElse(null);
+        TrainingMethod bestMethod = null;
+        List<RequirementCheck> bestChecks = Collections.emptyList();
+        RecommendationConfidence bestConfidence =
+                RecommendationConfidence.CHECK_NEEDED;
+        double bestScore = Double.NEGATIVE_INFINITY;
 
-        if (best == null)
+        for (TrainingMethod method : methods)
+        {
+            if (!method.supportsLevel(currentLevel)
+                    || !ContentAccessRules.isMethodAvailable(
+                            method,
+                            membershipStatus
+                    )
+                    || method.getConfidence()
+                            == RecommendationConfidence.BLOCKED)
+            {
+                continue;
+            }
+
+            List<RequirementCheck> checks =
+                    requirementEvidenceEngine == null
+                            ? Collections.emptyList()
+                            : requirementEvidenceEngine.evaluate(data, method);
+
+            RecommendationConfidence confidence =
+                    assessConfidence(method, checks);
+
+            // A known hard blocker removes this method from consideration, but
+            // does not block the entire skill. Keep looking for another route.
+            if (confidence == RecommendationConfidence.BLOCKED)
+            {
+                continue;
+            }
+
+            double score = method.scoreFor(
+                    strategyMode,
+                    sessionIntent
+            );
+
+            if (bestMethod == null || score > bestScore)
+            {
+                bestMethod = method;
+                bestChecks = checks;
+                bestConfidence = confidence;
+                bestScore = score;
+            }
+        }
+
+        if (bestMethod == null)
         {
             return null;
         }
 
-        List<RequirementCheck> checks = requirementEvidenceEngine == null
-                ? Collections.emptyList()
-                : requirementEvidenceEngine.evaluate(data, best);
-
-        RecommendationConfidence confidence =
-                assessConfidence(best, checks);
-
         return new TrainingPlan(
-                best,
+                bestMethod,
                 buildExplanation(
-                        best,
+                        bestMethod,
                         strategyMode,
                         sessionIntent
                 ),
-                confidence,
-                checks
+                bestConfidence,
+                bestChecks
         );
     }
 
@@ -116,8 +141,8 @@ public class TrainingMethodSelector
 
     /**
      * Confidence is the aggregate of concrete checks. One known blocker blocks
-     * the plan; one unknown keeps it Check Needed; all verified checks upgrade
-     * the plan to Verified even if its static catalog entry began conservatively.
+     * the method; one unknown keeps it Check Needed; all verified checks upgrade
+     * the method to Verified even if its static catalog entry began conservatively.
      */
     private RecommendationConfidence assessConfidence(
             TrainingMethod method,
