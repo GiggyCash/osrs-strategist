@@ -12,6 +12,7 @@ public class StrategyDataAssembler
     private final LiveQuestStateReader questStateReader;
     private final LiveDiaryStateReader diaryStateReader;
     private final LiveCombatAchievementReader combatAchievementReader;
+    private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
@@ -24,6 +25,7 @@ public class StrategyDataAssembler
             LiveQuestStateReader questStateReader,
             LiveDiaryStateReader diaryStateReader,
             LiveCombatAchievementReader combatAchievementReader,
+            PvmReadinessAnalyzer pvmReadinessAnalyzer,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
             FarmingAccessEvaluator farmingAccessEvaluator,
@@ -34,13 +36,14 @@ public class StrategyDataAssembler
         this.questStateReader = questStateReader;
         this.diaryStateReader = diaryStateReader;
         this.combatAchievementReader = combatAchievementReader;
+        this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
         this.farmingAccessEvaluator = farmingAccessEvaluator;
         this.observedStateStore = observedStateStore;
     }
 
-    /** Compatibility constructor for tests/callers created before live diary/CA readers. */
+    /** Compatibility constructor for focused tests created before live readers/analyzers. */
     public StrategyDataAssembler(
             AccountReader accountReader,
             LiveItemStateReader itemStateReader,
@@ -51,7 +54,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, questStateReader,
-                null, null, accessMemoryStore, farmingRunStateStore,
+                null, null, null, accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
 
@@ -60,6 +63,9 @@ public class StrategyDataAssembler
         AccountSnapshot account = accountReader.read();
         if (account == null) return null;
 
+        InventorySnapshot inventory = itemStateReader.readInventory();
+        BankSnapshot bank = itemStateReader.readBank();
+        EquipmentSnapshot equipment = itemStateReader.readEquipment();
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
                 ? liveQuests : observedStateStore.getQuests();
@@ -73,14 +79,19 @@ public class StrategyDataAssembler
                 combatAchievementReader == null
                         ? observedCombatAchievements
                         : combatAchievementReader.read(observedCombatAchievements);
+        PvmSnapshot observedPvm = observedStateStore.getPvm();
+        PvmSnapshot pvm = pvmReadinessAnalyzer == null
+                ? observedPvm
+                : pvmReadinessAnalyzer.analyze(
+                        account, quests, equipment, inventory, bank, observedPvm);
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
 
         return StrategyDataBundle.builder(account)
-                .inventory(itemStateReader.readInventory())
-                .bank(itemStateReader.readBank())
-                .equipment(itemStateReader.readEquipment())
+                .inventory(inventory)
+                .bank(bank)
+                .equipment(equipment)
                 .quests(quests)
                 .diaries(diaries)
                 .clue(observedStateStore.getClue())
@@ -98,7 +109,7 @@ public class StrategyDataAssembler
                 .farming(farming)
                 .sailing(observedStateStore.getSailing())
                 .minigames(observedStateStore.getMinigames())
-                .pvm(observedStateStore.getPvm())
+                .pvm(pvm)
                 .recurringOpportunities(observedStateStore.getRecurringOpportunities())
                 .build();
     }
