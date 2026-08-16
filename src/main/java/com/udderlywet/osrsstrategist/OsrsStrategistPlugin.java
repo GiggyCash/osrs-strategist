@@ -55,6 +55,7 @@ public class OsrsStrategistPlugin extends Plugin
             new PreferenceProfile();
 
     private String loadedPreferenceProfileKey;
+    private boolean savingPreferenceProfile;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
@@ -100,6 +101,7 @@ public class OsrsStrategistPlugin extends Plugin
 
         preferenceProfile.clear();
         loadedPreferenceProfileKey = null;
+        savingPreferenceProfile = false;
         panel = null;
         navButton = null;
     }
@@ -123,6 +125,15 @@ public class OsrsStrategistPlugin extends Plugin
             RuneScapeProfileChanged event)
     {
         loadedPreferenceProfileKey = null;
+
+        // setRSProfileConfiguration can create a profile and post this event
+        // while a feedback save is still in progress. Do not reload stale data
+        // until that save has completed.
+        if (savingPreferenceProfile)
+        {
+            return;
+        }
+
         syncPreferenceProfile();
         updateAccountPanel();
     }
@@ -149,7 +160,25 @@ public class OsrsStrategistPlugin extends Plugin
 
         syncPreferenceProfile();
         preferenceProfile.apply(activityId, action);
-        accountPreferenceStore.save(preferenceProfile);
+
+        savingPreferenceProfile = true;
+
+        try
+        {
+            accountPreferenceStore.save(
+                    preferenceProfile
+            );
+        }
+        finally
+        {
+            savingPreferenceProfile = false;
+        }
+
+        // A first-time save may have created the RuneScape profile.
+        // Reload after the write so the recommendation engine sees the
+        // newly persisted value immediately.
+        loadedPreferenceProfileKey = null;
+        syncPreferenceProfile();
         updateAccountPanel();
     }
 
