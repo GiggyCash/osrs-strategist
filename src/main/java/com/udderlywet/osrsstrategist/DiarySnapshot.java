@@ -1,24 +1,53 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public final class DiarySnapshot
 {
     private final Map<String, Integer> completedTasksByRegion;
     private final Map<String, Integer> totalTasksByRegion;
+    private final Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion;
 
     public DiarySnapshot(
             Map<String, Integer> completedTasksByRegion,
             Map<String, Integer> totalTasksByRegion)
     {
+        this(completedTasksByRegion, totalTasksByRegion,
+                Collections.emptyMap());
+    }
+
+    public DiarySnapshot(
+            Map<String, Integer> completedTasksByRegion,
+            Map<String, Integer> totalTasksByRegion,
+            Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion)
+    {
         this.completedTasksByRegion = Collections.unmodifiableMap(
-                new HashMap<>(completedTasksByRegion)
+                completedTasksByRegion == null
+                        ? new HashMap<>()
+                        : new HashMap<>(completedTasksByRegion)
         );
         this.totalTasksByRegion = Collections.unmodifiableMap(
-                new HashMap<>(totalTasksByRegion)
+                totalTasksByRegion == null
+                        ? new HashMap<>()
+                        : new HashMap<>(totalTasksByRegion)
         );
+        Map<String, Map<DiaryTier, Boolean>> tiers = new HashMap<>();
+        if (completedTiersByRegion != null)
+        {
+            for (Map.Entry<String, Map<DiaryTier, Boolean>> entry
+                    : completedTiersByRegion.entrySet())
+            {
+                EnumMap<DiaryTier, Boolean> copy = new EnumMap<>(DiaryTier.class);
+                if (entry.getValue() != null) copy.putAll(entry.getValue());
+                tiers.put(entry.getKey(), Collections.unmodifiableMap(copy));
+            }
+        }
+        this.completedTiersByRegion = Collections.unmodifiableMap(tiers);
     }
 
     public int completedIn(String region)
@@ -29,5 +58,30 @@ public final class DiarySnapshot
     public int totalIn(String region)
     {
         return totalTasksByRegion.getOrDefault(region, 0);
+    }
+
+    public Set<String> getRegions()
+    {
+        Set<String> result = new HashSet<>(completedTasksByRegion.keySet());
+        result.addAll(totalTasksByRegion.keySet());
+        result.addAll(completedTiersByRegion.keySet());
+        return Collections.unmodifiableSet(result);
+    }
+
+    public boolean isTierComplete(String region, DiaryTier tier)
+    {
+        Map<DiaryTier, Boolean> tiers = completedTiersByRegion.get(region);
+        return tiers != null && Boolean.TRUE.equals(tiers.get(tier));
+    }
+
+    public Map<DiaryTier, Boolean> tiersFor(String region)
+    {
+        Map<DiaryTier, Boolean> tiers = completedTiersByRegion.get(region);
+        return tiers == null ? Collections.emptyMap() : tiers;
+    }
+
+    public Map<String, Map<DiaryTier, Boolean>> getCompletedTiersByRegion()
+    {
+        return completedTiersByRegion;
     }
 }
