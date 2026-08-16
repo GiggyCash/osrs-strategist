@@ -95,11 +95,7 @@ public class TrainingMethodSelector
                     ? Collections.emptyList()
                     : requirementEvidenceEngine.evaluate(data, method);
             RecommendationConfidence confidence = assessConfidence(method, checks);
-
-            if (confidence == RecommendationConfidence.BLOCKED)
-            {
-                continue;
-            }
+            if (confidence == RecommendationConfidence.BLOCKED) continue;
 
             double score = method.scoreFor(strategyMode, sessionIntent)
                     + methodPolicy.scoreAdjustment(
@@ -114,11 +110,7 @@ public class TrainingMethodSelector
             }
         }
 
-        if (bestMethod == null)
-        {
-            return null;
-        }
-
+        if (bestMethod == null) return null;
         return new TrainingPlan(
                 bestMethod,
                 buildExplanation(bestMethod, bestMetadata,
@@ -135,10 +127,9 @@ public class TrainingMethodSelector
         List<CuratedTrainingMethod> candidates = new ArrayList<>();
         MembershipStatus membership = membershipStatus(data);
 
-        // Legacy methods are still useful for members and compatibility, but
-        // they predate method-level F2P metadata. F2P therefore uses only the
-        // curated catalog, where every route has explicit membership evidence.
-        if (membership != MembershipStatus.FREE_TO_PLAY)
+        // Legacy methods predate method-level F2P metadata, so an F2P account
+        // uses only the curated catalog where every route is explicitly tagged.
+        if (membership != MembershipStatus.F2P)
         {
             for (TrainingMethod method : database.methodsFor(skill))
             {
@@ -146,17 +137,13 @@ public class TrainingMethodSelector
                         method, TrainingMethodMetadata.legacy(method)));
             }
         }
-
         candidates.addAll(expandedCatalog.methodsFor(skill));
         return candidates;
     }
 
     private static MembershipStatus membershipStatus(StrategyDataBundle data)
     {
-        if (data == null || data.getAccount() == null)
-        {
-            return MembershipStatus.UNKNOWN;
-        }
+        if (data == null || data.getAccount() == null) return MembershipStatus.UNKNOWN;
         return data.getAccount().getMembershipStatus();
     }
 
@@ -165,22 +152,15 @@ public class TrainingMethodSelector
             List<RequirementCheck> checks)
     {
         if (method.getConfidence() == RecommendationConfidence.BLOCKED)
-        {
             return RecommendationConfidence.BLOCKED;
-        }
         if (checks != null && !checks.isEmpty())
         {
             boolean hasUnknown = false;
             for (RequirementCheck check : checks)
             {
                 if (check.getState() == RequirementState.BLOCKED)
-                {
                     return RecommendationConfidence.BLOCKED;
-                }
-                if (check.getState() == RequirementState.CHECK_NEEDED)
-                {
-                    hasUnknown = true;
-                }
+                if (check.getState() == RequirementState.CHECK_NEEDED) hasUnknown = true;
             }
             return hasUnknown
                     ? RecommendationConfidence.CHECK_NEEDED
@@ -188,9 +168,7 @@ public class TrainingMethodSelector
         }
         if (method.getRequirements().isEmpty()
                 && method.getConfidence() == RecommendationConfidence.VERIFIED)
-        {
             return RecommendationConfidence.VERIFIED;
-        }
         return RecommendationConfidence.CHECK_NEEDED;
     }
 
@@ -206,35 +184,21 @@ public class TrainingMethodSelector
                 .append(pretty(strategyMode.name()))
                 .append(" strategy");
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
-        {
-            reason.append(" and ")
-                    .append(pretty(sessionIntent.name()))
-                    .append(" sessions");
-        }
-        reason.append(". Attention: ")
-                .append(pretty(method.getAttentionLevel().name()))
-                .append(".");
+            reason.append(" and ").append(pretty(sessionIntent.name())).append(" sessions");
+        reason.append(". Attention: ").append(pretty(method.getAttentionLevel().name())).append(".");
         if (metadata != null)
-        {
             reason.append(" Method profile: ")
                     .append(pretty(metadata.getIntensity().name()))
                     .append(", ")
                     .append(pretty(metadata.getCostTier().name()))
                     .append(" cost.");
-        }
         AccountMode mode = data == null || data.getAccount() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
         if (mode != AccountMode.UNKNOWN)
-        {
-            reason.append(" Account policy: ")
-                    .append(pretty(mode.name()))
-                    .append(".");
-        }
+            reason.append(" Account policy: ").append(pretty(mode.name())).append(".");
         if (method.isWilderness())
-        {
             reason.append(" Wilderness method enabled by this character's settings.");
-        }
         return reason.toString();
     }
 
