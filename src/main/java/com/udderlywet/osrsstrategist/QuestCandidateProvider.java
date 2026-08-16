@@ -38,7 +38,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
         AccountSnapshot account = context.getData().getAccount();
         AccountMode mode = context.getAccountMode();
         boolean member = account != null
-                && account.getMembershipStatus() != MembershipStatus.FREE_TO_PLAY;
+                && !account.getMembershipStatus().isFreeToPlay();
 
         for (Map.Entry<String, QuestStatus> entry : quests.getQuests().entrySet())
         {
@@ -106,18 +106,9 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
-    private static String displayName(String normalized)
+    private static String displayName(String name)
     {
-        if (normalized == null || normalized.isEmpty()) return "Quest";
-        String[] words = normalized.split(" ");
-        StringBuilder text = new StringBuilder();
-        for (String word : words)
-        {
-            if (word.isEmpty()) continue;
-            if (text.length() > 0) text.append(' ');
-            text.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1));
-        }
-        return text.toString();
+        if (name == null || name.isEmpty()) return "Quest";
+        return name;
     }
 }
