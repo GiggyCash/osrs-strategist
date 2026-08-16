@@ -20,7 +20,9 @@ public class StrategyCandidateRegistry
             QuestCandidateProvider questProvider,
             DiaryCandidateProvider diaryProvider,
             CombatAchievementCandidateProvider combatAchievementProvider,
-            GearCandidateProvider gearProvider)
+            GearCandidateProvider gearProvider,
+            MoneyMakingCandidateProvider moneyProvider,
+            MinigameCandidateProvider minigameProvider)
     {
         this.providers = Collections.unmodifiableList(
                 new ArrayList<>(Arrays.asList(
@@ -29,7 +31,9 @@ public class StrategyCandidateRegistry
                         questProvider,
                         diaryProvider,
                         combatAchievementProvider,
-                        gearProvider))
+                        gearProvider,
+                        moneyProvider,
+                        minigameProvider))
         );
     }
 
