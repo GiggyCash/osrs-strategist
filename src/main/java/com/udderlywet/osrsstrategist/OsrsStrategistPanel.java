@@ -360,8 +360,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
         feedbackStatus.setText(
                 html(
-                        "<b>Saved:</b> "
-                                + feedbackActionName(action)
+                        feedbackStatusText(action)
                 )
         );
 
@@ -395,25 +394,25 @@ public class OsrsStrategistPanel extends PluginPanel
         return button;
     }
 
-    private static String feedbackActionName(
+    private static String feedbackStatusText(
             FeedbackAction action)
     {
         switch (action)
         {
             case DO_THIS:
-                return "Do This";
+                return "<b>Saved:</b> Do This";
 
             case LATER:
-                return "Later";
+                return "<b>Snoozed:</b> 1 hour";
 
             case NOT_TODAY:
-                return "Not Today";
+                return "<b>Snoozed:</b> 24 hours";
 
             case DISLIKE:
-                return "Dislike";
+                return "<b>Saved:</b> Dislike. Showing less often.";
 
             default:
-                return action.name();
+                return "<b>Saved.</b>";
         }
     }
 
