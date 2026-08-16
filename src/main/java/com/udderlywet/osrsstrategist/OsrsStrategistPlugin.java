@@ -70,7 +70,9 @@ public class OsrsStrategistPlugin extends Plugin
     @Override
     protected void startUp()
     {
-        panel = new OsrsStrategistPanel();
+        panel = new OsrsStrategistPanel(
+                this::applyRecommendationFeedback
+        );
 
         BufferedImage icon =
                 createTemporaryIcon();
