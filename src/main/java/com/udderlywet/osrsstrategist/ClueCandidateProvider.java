@@ -22,25 +22,46 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         ClueSnapshot clue = context.getData().getClue();
         if (clue == null || !clue.isCluePresent()) return result;
 
-        String id = "clue:pending";
+        ClueTier tier = ClueTier.fromText(clue.getClueType());
+        String id = "clue:pending:" + tier.name().toLowerCase();
         PreferenceProfile preferences = context.getPreferenceProfile();
-        if (preferences.isOnCooldown(id)) return result;
+        if (preferences.isOnCooldown(id)
+                || preferences.isOnCooldown("clue:pending")) return result;
 
         long age = Math.max(0L,
                 System.currentTimeMillis() - clue.getFirstSeenAtMillis());
         double ageHours = age / 3_600_000.0;
-        double score = 42.0 + Math.min(15.0, ageHours * 0.5)
+        double score = 39.0
+                + tier.getPriorityBonus()
+                + Math.min(15.0, ageHours * 0.5)
                 + preferences.weightFor(id) * 10.0;
 
-        String type = clue.getClueType() == null
+        if (context.isCollectionistMode()) score += 6.0;
+        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN) score += 2.0;
+
+        String type = tier == ClueTier.UNKNOWN
                 ? "clue"
-                : clue.getClueType() + " clue";
+                : tier.name().toLowerCase() + " clue";
+        StringBuilder reason = new StringBuilder();
+        reason.append("Clears the pending ").append(type)
+                .append(" slot and can advance Collection Log progress. ")
+                .append("Before starting, Strategist should check the current step, required equipment, spade, teleports, food/combat needs, and any observed STASH state.");
+        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+        {
+            reason.append(" UIM routing also checks inventory pressure and only counts STASH/POH/other storage when the relevant capability and contents are verified.");
+        }
+        if (context.getAccountMode() == AccountMode.HARDCORE_IRONMAN
+                || context.getAccountMode() == AccountMode.HARDCORE_GROUP_IRONMAN)
+        {
+            reason.append(" Hardcore accounts must verify the clue step is not a Wilderness or otherwise unsafe step before it can become Ready.");
+        }
+
         result.add(new StrategyCandidate(
                 id,
                 "Complete " + type,
-                "Clears the pending clue slot and can advance Collection Log progress without forcing clues to dominate every session.",
+                reason.toString(),
                 score,
-                clue.getConfidence()
+                RecommendationConfidence.CHECK_NEEDED
         ));
         return result;
     }
