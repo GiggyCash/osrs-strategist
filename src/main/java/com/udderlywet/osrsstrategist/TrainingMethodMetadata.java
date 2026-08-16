@@ -52,7 +52,7 @@ public final class TrainingMethodMetadata
                 TrainingIntensity.BALANCED,
                 MethodCostTier.LOW,
                 method != null && method.isWilderness() ? RiskLevel.HIGH : RiskLevel.NONE,
-                false,
+                method == null || !method.isMembersOnly(),
                 true,
                 true,
                 method == null || !method.isWilderness(),
