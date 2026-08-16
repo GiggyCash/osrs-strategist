@@ -17,20 +17,39 @@ import net.runelite.api.Skill;
 public class PvmReadinessAnalyzer
 {
     private final PvmEncounterCatalog catalog;
+    private final CurrentBossSupplementCatalog supplement;
 
     @Inject
-    public PvmReadinessAnalyzer(PvmEncounterCatalog catalog)
+    public PvmReadinessAnalyzer(
+            PvmEncounterCatalog catalog,
+            CurrentBossSupplementCatalog supplement)
     {
         this.catalog = catalog;
+        this.supplement = supplement;
+    }
+
+    /** Compatibility constructor retained for unit tests and callers. */
+    public PvmReadinessAnalyzer(PvmEncounterCatalog catalog)
+    {
+        this(catalog, new CurrentBossSupplementCatalog());
     }
 
     public PvmSnapshot analyze(AccountSnapshot account, QuestSnapshot quests)
     {
         if (account == null) return PvmSnapshot.unknown();
         Map<String, PvmReadiness> result = new LinkedHashMap<>();
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        analyzeAll(result, catalog.all(), account, quests);
+        analyzeAll(result, supplement.all(), account, quests);
+        return new PvmSnapshot(result);
+    }
 
-        for (PvmEncounterDefinition encounter : catalog.all())
+    private void analyzeAll(Map<String, PvmReadiness> result,
+            List<PvmEncounterDefinition> encounters,
+            AccountSnapshot account,
+            QuestSnapshot quests)
+    {
+        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        for (PvmEncounterDefinition encounter : encounters)
         {
             List<String> missing = new ArrayList<>();
             req(missing, account, Skill.ATTACK, encounter.getAttack());
@@ -65,11 +84,7 @@ public class PvmReadinessAnalyzer
                 missing.add("Hardcore safety approval and encounter-specific survival plan");
             }
 
-            // Baseline can say the character has the broad stat/access envelope,
-            // but gear, food/potions, spellbook, ammo and mechanics proficiency
-            // still have to be verified before Strategist calls the activity ready.
-            boolean broadRequirementsMet = missing.isEmpty();
-            if (broadRequirementsMet)
+            if (missing.isEmpty())
             {
                 missing.add("Verify practical gear, supplies and encounter mechanics");
             }
@@ -80,7 +95,6 @@ public class PvmReadinessAnalyzer
                     RecommendationConfidence.CHECK_NEEDED,
                     missing));
         }
-        return new PvmSnapshot(result);
     }
 
     private static void req(List<String> missing, AccountSnapshot account,
