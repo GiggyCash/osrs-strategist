@@ -1,13 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/**
- * Immutable bundle containing everything the strategy engine knows about the
- * currently logged-in character.
- *
- * <p>Most fields are intentionally nullable. In Strategist, {@code null}
- * means "this source has not been observed yet", not "the player has none".
- * That distinction is the foundation of the project's no-guessing rule.</p>
- */
+/** Immutable bundle containing everything Strategist currently knows. */
 public final class StrategyDataBundle
 {
     private final AccountSnapshot account;
@@ -22,7 +15,7 @@ public final class StrategyDataBundle
     private final AccountEconomySnapshot economy;
     private final AccountCapabilities capabilities;
     private final AccessMemorySnapshot accessMemory;
-
+    private final FarmingRunSnapshot farmingRuns;
     private final StorageSnapshot storage;
     private final TransportSnapshot transport;
     private final PohSnapshot poh;
@@ -34,7 +27,6 @@ public final class StrategyDataBundle
     private final PvmSnapshot pvm;
     private final RecurringOpportunitySnapshot recurringOpportunities;
 
-    /** Backwards-compatible constructor used by early skeleton tests. */
     public StrategyDataBundle(
             AccountSnapshot account,
             InventorySnapshot inventory,
@@ -48,11 +40,9 @@ public final class StrategyDataBundle
             AccountEconomySnapshot economy,
             AccountCapabilities capabilities)
     {
-        this(
-                account, inventory, bank, equipment, quests, diaries, clue,
+        this(account, inventory, bank, equipment, quests, diaries, clue,
                 combatAchievements, collectionLog, economy, capabilities,
-                null, null, null, null, null, null, null, null, null, null, null
-        );
+                null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     private StrategyDataBundle(
@@ -68,6 +58,7 @@ public final class StrategyDataBundle
             AccountEconomySnapshot economy,
             AccountCapabilities capabilities,
             AccessMemorySnapshot accessMemory,
+            FarmingRunSnapshot farmingRuns,
             StorageSnapshot storage,
             TransportSnapshot transport,
             PohSnapshot poh,
@@ -91,6 +82,7 @@ public final class StrategyDataBundle
         this.economy = economy;
         this.capabilities = capabilities;
         this.accessMemory = accessMemory;
+        this.farmingRuns = farmingRuns;
         this.storage = storage;
         this.transport = transport;
         this.poh = poh;
@@ -103,10 +95,7 @@ public final class StrategyDataBundle
         this.recurringOpportunities = recurringOpportunities;
     }
 
-    public static Builder builder(AccountSnapshot account)
-    {
-        return new Builder(account);
-    }
+    public static Builder builder(AccountSnapshot account) { return new Builder(account); }
 
     public AccountSnapshot getAccount() { return account; }
     public InventorySnapshot getInventory() { return inventory; }
@@ -120,6 +109,7 @@ public final class StrategyDataBundle
     public AccountEconomySnapshot getEconomy() { return economy; }
     public AccountCapabilities getCapabilities() { return capabilities; }
     public AccessMemorySnapshot getAccessMemory() { return accessMemory; }
+    public FarmingRunSnapshot getFarmingRuns() { return farmingRuns; }
     public StorageSnapshot getStorage() { return storage; }
     public TransportSnapshot getTransport() { return transport; }
     public PohSnapshot getPoh() { return poh; }
@@ -145,6 +135,7 @@ public final class StrategyDataBundle
         private AccountEconomySnapshot economy;
         private AccountCapabilities capabilities;
         private AccessMemorySnapshot accessMemory;
+        private FarmingRunSnapshot farmingRuns;
         private StorageSnapshot storage;
         private TransportSnapshot transport;
         private PohSnapshot poh;
@@ -157,37 +148,37 @@ public final class StrategyDataBundle
         private RecurringOpportunitySnapshot recurringOpportunities;
 
         private Builder(AccountSnapshot account) { this.account = account; }
-
-        public Builder inventory(InventorySnapshot value) { inventory = value; return this; }
-        public Builder bank(BankSnapshot value) { bank = value; return this; }
-        public Builder equipment(EquipmentSnapshot value) { equipment = value; return this; }
-        public Builder quests(QuestSnapshot value) { quests = value; return this; }
-        public Builder diaries(DiarySnapshot value) { diaries = value; return this; }
-        public Builder clue(ClueSnapshot value) { clue = value; return this; }
-        public Builder combatAchievements(CombatAchievementSnapshot value) { combatAchievements = value; return this; }
-        public Builder collectionLog(CollectionLogSnapshot value) { collectionLog = value; return this; }
-        public Builder economy(AccountEconomySnapshot value) { economy = value; return this; }
-        public Builder capabilities(AccountCapabilities value) { capabilities = value; return this; }
-        public Builder accessMemory(AccessMemorySnapshot value) { accessMemory = value; return this; }
-        public Builder storage(StorageSnapshot value) { storage = value; return this; }
-        public Builder transport(TransportSnapshot value) { transport = value; return this; }
-        public Builder poh(PohSnapshot value) { poh = value; return this; }
-        public Builder groupStorage(GroupStorageSnapshot value) { groupStorage = value; return this; }
-        public Builder slayer(SlayerSnapshot value) { slayer = value; return this; }
-        public Builder farming(FarmingSnapshot value) { farming = value; return this; }
-        public Builder sailing(SailingSnapshot value) { sailing = value; return this; }
-        public Builder minigames(MinigameSnapshot value) { minigames = value; return this; }
-        public Builder pvm(PvmSnapshot value) { pvm = value; return this; }
-        public Builder recurringOpportunities(RecurringOpportunitySnapshot value) { recurringOpportunities = value; return this; }
+        public Builder inventory(InventorySnapshot v) { inventory = v; return this; }
+        public Builder bank(BankSnapshot v) { bank = v; return this; }
+        public Builder equipment(EquipmentSnapshot v) { equipment = v; return this; }
+        public Builder quests(QuestSnapshot v) { quests = v; return this; }
+        public Builder diaries(DiarySnapshot v) { diaries = v; return this; }
+        public Builder clue(ClueSnapshot v) { clue = v; return this; }
+        public Builder combatAchievements(CombatAchievementSnapshot v) { combatAchievements = v; return this; }
+        public Builder collectionLog(CollectionLogSnapshot v) { collectionLog = v; return this; }
+        public Builder economy(AccountEconomySnapshot v) { economy = v; return this; }
+        public Builder capabilities(AccountCapabilities v) { capabilities = v; return this; }
+        public Builder accessMemory(AccessMemorySnapshot v) { accessMemory = v; return this; }
+        public Builder farmingRuns(FarmingRunSnapshot v) { farmingRuns = v; return this; }
+        public Builder storage(StorageSnapshot v) { storage = v; return this; }
+        public Builder transport(TransportSnapshot v) { transport = v; return this; }
+        public Builder poh(PohSnapshot v) { poh = v; return this; }
+        public Builder groupStorage(GroupStorageSnapshot v) { groupStorage = v; return this; }
+        public Builder slayer(SlayerSnapshot v) { slayer = v; return this; }
+        public Builder farming(FarmingSnapshot v) { farming = v; return this; }
+        public Builder sailing(SailingSnapshot v) { sailing = v; return this; }
+        public Builder minigames(MinigameSnapshot v) { minigames = v; return this; }
+        public Builder pvm(PvmSnapshot v) { pvm = v; return this; }
+        public Builder recurringOpportunities(RecurringOpportunitySnapshot v) { recurringOpportunities = v; return this; }
 
         public StrategyDataBundle build()
         {
             return new StrategyDataBundle(
                     account, inventory, bank, equipment, quests, diaries, clue,
                     combatAchievements, collectionLog, economy, capabilities,
-                    accessMemory, storage, transport, poh, groupStorage, slayer,
-                    farming, sailing, minigames, pvm, recurringOpportunities
-            );
+                    accessMemory, farmingRuns, storage, transport, poh,
+                    groupStorage, slayer, farming, sailing, minigames, pvm,
+                    recurringOpportunities);
         }
     }
 }
