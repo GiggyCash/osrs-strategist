@@ -4,6 +4,8 @@ import com.google.inject.Provides;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.List;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import net.runelite.api.GameState;
@@ -11,6 +13,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -41,31 +44,46 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject
     private AccountReader accountReader;
 
+    @Inject
+    private RecommendationEngine recommendationEngine;
+
+    private final PreferenceProfile preferenceProfile =
+            new PreferenceProfile();
+
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
     @Provides
-    OsrsStrategistConfig provideConfig(ConfigManager manager)
+    OsrsStrategistConfig provideConfig(
+            ConfigManager manager)
     {
-        return manager.getConfig(OsrsStrategistConfig.class);
+        return manager.getConfig(
+                OsrsStrategistConfig.class
+        );
     }
 
     @Override
     protected void startUp()
     {
-        panel = new OsrsStrategistPanel();
+        panel =
+                new OsrsStrategistPanel();
 
         BufferedImage icon =
                 createTemporaryIcon();
 
-        navButton = NavigationButton.builder()
-                .tooltip("OSRS Strategist")
-                .icon(icon)
-                .priority(5)
-                .panel(panel)
-                .build();
+        navButton =
+                NavigationButton.builder()
+                        .tooltip(
+                                "OSRS Strategist"
+                        )
+                        .icon(icon)
+                        .priority(5)
+                        .panel(panel)
+                        .build();
 
-        clientToolbar.addNavigation(navButton);
+        clientToolbar.addNavigation(
+                navButton
+        );
 
         updateAccountPanel();
     }
@@ -75,7 +93,9 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (navButton != null)
         {
-            clientToolbar.removeNavigation(navButton);
+            clientToolbar.removeNavigation(
+                    navButton
+            );
         }
 
         panel = null;
@@ -83,18 +103,28 @@ public class OsrsStrategistPlugin extends Plugin
     }
 
     @Subscribe
-    public void onGameStateChanged(GameStateChanged event)
+    public void onGameStateChanged(
+            GameStateChanged event)
     {
-        if (event.getGameState() == GameState.LOGGED_IN)
-        {
-            updateAccountPanel();
-        }
+        updateAccountPanel();
     }
 
     @Subscribe
-    public void onStatChanged(StatChanged event)
+    public void onStatChanged(
+            StatChanged event)
     {
         updateAccountPanel();
+    }
+
+    @Subscribe
+    public void onConfigChanged(
+            ConfigChanged event)
+    {
+        if (OsrsStrategistConfig.GROUP.equals(
+                event.getGroup()))
+        {
+            updateAccountPanel();
+        }
     }
 
     private void updateAccountPanel()
@@ -109,23 +139,54 @@ public class OsrsStrategistPlugin extends Plugin
 
         if (snapshot == null)
         {
-            SwingUtilities.invokeLater(() ->
-                    panel.updateAccount(
-                            "Waiting for login...",
-                            "Unknown",
-                            0
-                    )
+            SwingUtilities.invokeLater(
+                    () ->
+                    {
+                        panel.updateAccount(
+                                "Waiting for login...",
+                                "Unknown",
+                                0
+                        );
+
+                        panel.updateStrategy(
+                                config.strategyMode(),
+                                config.questTolerance()
+                        );
+
+                        panel.updateRecommendations(
+                                Collections.emptyList()
+                        );
+                    }
             );
 
             return;
         }
 
-        SwingUtilities.invokeLater(() ->
-                panel.updateAccount(
-                        snapshot.getPlayerName(),
-                        snapshot.getAccountTypeName(),
-                        snapshot.getTotalLevel()
-                )
+        List<Recommendation> recommendations =
+                recommendationEngine.recommend(
+                        snapshot,
+                        config.strategyMode(),
+                        preferenceProfile
+                );
+
+        SwingUtilities.invokeLater(
+                () ->
+                {
+                    panel.updateAccount(
+                            snapshot.getPlayerName(),
+                            snapshot.getAccountTypeName(),
+                            snapshot.getTotalLevel()
+                    );
+
+                    panel.updateStrategy(
+                            config.strategyMode(),
+                            config.questTolerance()
+                    );
+
+                    panel.updateRecommendations(
+                            recommendations
+                    );
+                }
         );
     }
 
@@ -142,7 +203,11 @@ public class OsrsStrategistPlugin extends Plugin
                 image.createGraphics();
 
         graphics.setColor(
-                new Color(60, 45, 30)
+                new Color(
+                        60,
+                        45,
+                        30
+                )
         );
 
         graphics.fillRect(
@@ -153,7 +218,11 @@ public class OsrsStrategistPlugin extends Plugin
         );
 
         graphics.setColor(
-                new Color(212, 167, 44)
+                new Color(
+                        212,
+                        167,
+                        44
+                )
         );
 
         graphics.drawOval(
