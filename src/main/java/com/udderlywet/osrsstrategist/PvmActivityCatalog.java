@@ -21,16 +21,16 @@ public class PvmActivityCatalog
             String enumName = skill.name();
             boolean wilderness = isWilderness(enumName);
             boolean raid = isRaid(enumName);
+            boolean f2p = isFreeToPlay(enumName);
             RiskLevel risk = wilderness ? RiskLevel.HIGH
                     : raid || isHighEnd(enumName) ? RiskLevel.HIGH : RiskLevel.MEDIUM;
 
-            // Hardcore is intentionally deny-by-default for bossing. Tempoross
-            // is the one hiscore boss activity we currently classify as safe
-            // enough to surface without a specific dangerous-PvM opt-in.
+            // Hardcore is deny-by-default for bossing. Non-lethal skilling-boss
+            // style encounters can be whitelisted as we verify their mechanics.
             boolean hardcoreSafe = "TEMPOROSS".equals(enumName);
             result.add(new PvmActivityDefinition(
                     "pvm:" + enumName.toLowerCase(Locale.ROOT),
-                    skill.getName(), wilderness, raid, risk, hardcoreSafe));
+                    skill.getName(), wilderness, raid, f2p, risk, hardcoreSafe));
         }
         return Collections.unmodifiableList(result);
     }
@@ -73,6 +73,13 @@ public class PvmActivityCatalog
         return name.startsWith("CHAMBERS_OF_XERIC")
                 || name.startsWith("THEATRE_OF_BLOOD")
                 || name.startsWith("TOMBS_OF_AMASCUT");
+    }
+
+    private static boolean isFreeToPlay(String name)
+    {
+        return "OBOR".equals(name)
+                || "BRYOPHYTA".equals(name)
+                || "BRUTUS".equals(name);
     }
 
     private static boolean isWilderness(String name)
