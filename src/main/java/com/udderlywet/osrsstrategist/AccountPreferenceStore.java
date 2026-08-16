@@ -70,11 +70,9 @@ public class AccountPreferenceStore
 
     public void save(PreferenceProfile profile)
     {
-        if (getActiveProfileKey() == null)
-        {
-            return;
-        }
-
+        // Do not require an existing RS profile key here.
+        // RuneLite's setRSProfileConfiguration() creates the per-character
+        // profile on the first write when the player is logged in.
         configManager.setRSProfileConfiguration(
                 GROUP,
                 PREFERENCES_KEY,
