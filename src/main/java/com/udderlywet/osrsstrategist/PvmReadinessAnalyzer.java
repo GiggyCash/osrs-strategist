@@ -33,12 +33,16 @@ public class PvmReadinessAnalyzer
             PvmSnapshot observed)
     {
         if (account == null) return observed;
+        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        // UIM readiness must never become true because a normal bank cache
+        // happens to contain an item from another account/state path.
+        BankSnapshot usableBank = mode == AccountMode.ULTIMATE_IRONMAN ? null : bank;
+
         Map<String, PvmReadiness> result = new HashMap<>();
         if (observed != null) result.putAll(observed.getReadinessByActivity());
 
         for (PvmActivityDefinition activity : catalog.all())
         {
-            // Explicit specialized observations beat the generic analyzer.
             if (result.containsKey(activity.getId())) continue;
             ReadinessFloor floor = floorFor(activity);
             List<String> missing = new ArrayList<>();
@@ -58,12 +62,15 @@ public class PvmReadinessAnalyzer
                 missing.add("Quest/access: " + floor.requiredQuest);
             }
 
-            boolean hasWeapon = hasCombatWeapon(equipment, inventory, bank,
-                    floor.preferredStyle);
-            if (!hasWeapon) missing.add("Usable " + floor.preferredStyle + " combat weapon/loadout");
+            if (!hasCombatWeapon(equipment, inventory, usableBank,
+                    floor.preferredStyle))
+                missing.add("Usable " + floor.preferredStyle + " combat weapon/loadout");
 
-            if (floor.requiresSupplies && !hasBasicSupplies(inventory, bank))
+            if (floor.requiresSupplies && !hasBasicSupplies(inventory, usableBank))
                 missing.add("Food/restoration supplies");
+
+            if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
+                missing.add("Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
 
             boolean realisticallyReady = missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
@@ -135,7 +142,6 @@ public class PvmReadinessAnalyzer
         if (activity.isRaid() || activity.getRiskLevel() == RiskLevel.HIGH)
             return floor(80, 80, 75, 80, 80, 70, 1, "hybrid", null, false, true);
 
-        // Covers every other current/future RuneLite boss identity conservatively.
         return floor(60, 60, 60, 60, 60, 43, 1, "combat", null, false, true);
     }
 
@@ -166,20 +172,15 @@ public class PvmReadinessAnalyzer
         if (equipment != null) items.addAll(equipment.getEquippedItems());
         if (inventory != null) items.addAll(inventory.getItems());
         if (bank != null) items.addAll(bank.getItems());
+        boolean melee = false, ranged = false, magic = false;
         for (ItemStackSnapshot item : items)
         {
             String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
-            if (weaponName(name, style)) return true;
+            melee |= containsAny(name, "scimitar", "sword", "whip", "mace", "axe",
+                    "halberd", "spear", "hasta", "fang", "scythe", "maul", "bludgeon", "lance");
+            ranged |= containsAny(name, "bow", "crossbow", "blowpipe", "ballista", "atlatl");
+            magic |= containsAny(name, "staff", "wand", "trident", "sceptre", "scepter", "shadow");
         }
-        return false;
-    }
-
-    private static boolean weaponName(String name, String style)
-    {
-        boolean melee = containsAny(name, "scimitar", "sword", "whip", "mace", "axe",
-                "halberd", "spear", "hasta", "fang", "scythe", "maul", "bludgeon", "lance");
-        boolean ranged = containsAny(name, "bow", "crossbow", "blowpipe", "ballista", "atlatl");
-        boolean magic = containsAny(name, "staff", "wand", "trident", "sceptre", "scepter", "shadow");
         if ("melee".equals(style)) return melee;
         if ("ranged".equals(style)) return ranged;
         if ("magic".equals(style)) return magic;
