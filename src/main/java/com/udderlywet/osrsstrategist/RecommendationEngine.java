@@ -83,6 +83,17 @@ public class RecommendationEngine
                 continue;
             }
 
+            // Membership access is a hard capability gate. A F2P account must
+            // never be nudged toward a members-only skill simply because that
+            // skill would score highly on an unrestricted maxing roadmap.
+            if (!ContentAccessRules.isSkillAvailable(
+                    skill,
+                    snapshot.getMembershipStatus()
+            ))
+            {
+                continue;
+            }
+
             String activityId =
                     "skill:" + skill.name().toLowerCase();
 
