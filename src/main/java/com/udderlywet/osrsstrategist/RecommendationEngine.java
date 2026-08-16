@@ -50,8 +50,6 @@ public class RecommendationEngine
                 continue;
             }
 
-            // Hitpoints is normally progressed through the combat style that
-            // the account needs, so do not recommend it as a standalone task.
             if (skill == Skill.HITPOINTS)
             {
                 continue;
@@ -189,43 +187,30 @@ public class RecommendationEngine
         {
             case FARMING:
                 return 18.0;
-
             case HERBLORE:
                 return 17.0;
-
             case SLAYER:
                 return 14.0;
-
             case CONSTRUCTION:
                 return 13.0;
-
             case AGILITY:
                 return 12.0;
-
             case RUNECRAFT:
                 return 11.0;
-
             case SAILING:
                 return 11.0;
-
             case CRAFTING:
                 return 9.0;
-
             case MAGIC:
                 return 8.0;
-
             case PRAYER:
                 return 8.0;
-
             case HUNTER:
                 return 8.0;
-
             case SMITHING:
                 return 7.0;
-
             case MINING:
                 return 6.0;
-
             default:
                 return 4.0;
         }
@@ -242,7 +227,6 @@ public class RecommendationEngine
             case AGILITY:
             case RUNECRAFT:
                 return 6.0;
-
             default:
                 return 0.0;
         }
@@ -259,7 +243,6 @@ public class RecommendationEngine
             case FLETCHING:
             case FIREMAKING:
                 return 8.0;
-
             default:
                 return 0.0;
         }
@@ -330,15 +313,39 @@ public class RecommendationEngine
                     .append(method.getName())
                     .append(". ")
                     .append(method.getInstructions())
+                    .append(" <br><b>Confidence:</b> ")
+                    .append(confidenceName(trainingPlan.getConfidence()))
+                    .append(".")
                     .append(" <br><b>Why:</b> ")
                     .append(trainingPlan.getWhyThisMethod());
         }
         else
         {
-            reason.append(" <br><br><b>BEST METHOD:</b> Check needed. Strategist does not yet have a verified method for this account state.");
+            reason.append(" <br><br><b>BEST METHOD:</b> Check needed. Strategist does not yet have a verified method for this account state.")
+                    .append(" <br><b>Confidence:</b> Check Needed.");
         }
 
         return reason.toString();
+    }
+
+    private String confidenceName(
+            RecommendationConfidence confidence)
+    {
+        if (confidence == null)
+        {
+            return "Check Needed";
+        }
+
+        switch (confidence)
+        {
+            case VERIFIED:
+                return "Verified";
+            case BLOCKED:
+                return "Blocked";
+            case CHECK_NEEDED:
+            default:
+                return "Check Needed";
+        }
     }
 
     private String skillReason(Skill skill)
