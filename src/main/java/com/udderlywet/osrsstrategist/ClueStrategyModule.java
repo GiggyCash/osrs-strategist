@@ -7,8 +7,9 @@ import javax.inject.Singleton;
 /**
  * Converts a verified clue observation into a strategy signal.
  *
- * <p>The signal grows slowly with clue age. Preference/cooldown logic will be
- * layered on later so players who routinely skip clues are not nagged.</p>
+ * <p>The signal grows slowly with clue age. Membership eligibility is checked
+ * here as well as on the visible clue surfaces so an unavailable clue cannot
+ * indirectly boost another recommendation while the character is F2P.</p>
  */
 @Singleton
 public class ClueStrategyModule implements StrategyModule
@@ -33,6 +34,16 @@ public class ClueStrategyModule implements StrategyModule
         ClueSnapshot clue = data.getClue();
 
         if (!clue.isCluePresent())
+        {
+            return signals;
+        }
+
+        ClueTier tier = ClueTier.fromText(clue.getClueType());
+        AccountSnapshot account = data.getAccount();
+        MembershipStatus membership = account == null
+                ? MembershipStatus.UNKNOWN
+                : account.getMembershipStatus();
+        if (!tier.isAvailableFor(membership))
         {
             return signals;
         }
