@@ -16,56 +16,46 @@ import javax.swing.JPanel;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
 
+/**
+ * RuneLite sidebar for Strategist.
+ *
+ * <p>Important UX rule: the engine may have deep reasoning, but the default
+ * panel must stay scannable. The concise recommendation is always visible;
+ * deeper instructions and explanation live behind the Details button.</p>
+ */
 public class OsrsStrategistPanel extends PluginPanel
 {
     private static final int CONTENT_WIDTH = 160;
 
-    private final JLabel accountName =
-            wrapLabel("Waiting for login...");
+    private final JLabel accountName = wrapLabel("Waiting for login...");
+    private final JLabel accountType = wrapLabel("Account type: Unknown");
+    private final JLabel totalLevel = wrapLabel("Total level: -- / 2376");
 
-    private final JLabel accountType =
-            wrapLabel("Account type: Unknown");
+    private final JLabel activeGoal = wrapLabel("Goal: Max");
+    private final JLabel strategyMode = wrapLabel("Mode: Balanced");
+    private final JLabel sessionIntent = wrapLabel("Session: Pick for me");
+    private final JLabel questTolerance = wrapLabel("Quest tolerance: Normal");
 
-    private final JLabel totalLevel =
-            wrapLabel("Total level: -- / 2376");
+    private final JLabel recommendationTitle = wrapLabel("Analyzing account...");
+    private final JLabel recommendationBody = wrapLabel("");
+    private final JLabel feedbackStatus = wrapLabel("");
 
-    private final JLabel strategyMode =
-            wrapLabel("Mode: Balanced");
+    private final JLabel alternativeOne = wrapLabel("");
+    private final JLabel alternativeTwo = wrapLabel("");
 
-    private final JLabel questTolerance =
-            wrapLabel("Quest tolerance: Normal");
+    private final JLabel opportunityOne = wrapLabel("No active reminders yet.");
+    private final JLabel opportunityTwo = wrapLabel("");
 
-    private final JLabel recommendationTitle =
-            wrapLabel("Analyzing account...");
-
-    private final JLabel recommendationReason =
-            wrapLabel("");
-
-    private final JLabel feedbackStatus =
-            wrapLabel("");
-
-    private final JLabel alternativeOne =
-            wrapLabel("");
-
-    private final JLabel alternativeTwo =
-            wrapLabel("");
-
-    private final JButton doThisButton =
-            feedbackButton("Do This");
-
-    private final JButton laterButton =
-            feedbackButton("Later");
-
-    private final JButton notTodayButton =
-            feedbackButton("Not Today");
-
-    private final JButton dislikeButton =
-            feedbackButton("Dislike");
+    private final JButton detailsButton = feedbackButton("Details");
+    private final JButton doThisButton = feedbackButton("Do This");
+    private final JButton laterButton = feedbackButton("Later");
+    private final JButton notTodayButton = feedbackButton("Not Today");
+    private final JButton dislikeButton = feedbackButton("Dislike");
 
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
 
-    private String currentRecommendationId;
-    private String currentRecommendationTitle;
+    private Recommendation currentRecommendation;
+    private boolean detailsVisible;
 
     public OsrsStrategistPanel(
             BiConsumer<String, FeedbackAction> feedbackHandler)
@@ -76,48 +66,18 @@ public class OsrsStrategistPanel extends PluginPanel
         setBackground(ColorScheme.DARK_GRAY_COLOR);
 
         JPanel content = new JPanel();
-
-        content.setLayout(
-                new BoxLayout(
-                        content,
-                        BoxLayout.Y_AXIS
-                )
-        );
-
-        content.setBackground(
-                ColorScheme.DARK_GRAY_COLOR
-        );
-
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBackground(ColorScheme.DARK_GRAY_COLOR);
         content.setBorder(
-                BorderFactory.createEmptyBorder(
-                        8,
-                        8,
-                        8,
-                        8
-                )
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)
         );
 
-        JLabel title =
-                wrapLabel(
-                        "<b>OSRS STRATEGIST</b>"
-                );
-
-        title.setFont(
-                title.getFont()
-                        .deriveFont(
-                                Font.BOLD,
-                                16f
-                        )
-        );
-
-        JLabel subtitle =
-                wrapLabel(
-                        "Your adaptive progression planner"
-                );
+        JLabel title = wrapLabel("<b>OSRS STRATEGIST</b>");
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 16f));
 
         content.add(title);
         content.add(Box.createVerticalStrut(4));
-        content.add(subtitle);
+        content.add(wrapLabel("Your adaptive progression planner"));
         content.add(Box.createVerticalStrut(16));
 
         content.add(accountName);
@@ -128,20 +88,28 @@ public class OsrsStrategistPanel extends PluginPanel
 
         content.add(Box.createVerticalStrut(20));
         content.add(sectionHeader("STRATEGY"));
+        content.add(activeGoal);
         content.add(strategyMode);
+        content.add(sessionIntent);
         content.add(questTolerance);
 
         content.add(Box.createVerticalStrut(20));
         content.add(sectionHeader("DO NEXT"));
         content.add(recommendationTitle);
         content.add(Box.createVerticalStrut(5));
-        content.add(recommendationReason);
-        content.add(Box.createVerticalStrut(10));
+        content.add(recommendationBody);
+        content.add(Box.createVerticalStrut(8));
+
+        detailsButton.setAlignmentX(LEFT_ALIGNMENT);
+        detailsButton.setMaximumSize(
+                new Dimension(CONTENT_WIDTH, 24)
+        );
+        content.add(detailsButton);
+        content.add(Box.createVerticalStrut(8));
 
         JPanel feedbackPanel = new JPanel(
                 new GridLayout(2, 2, 4, 4)
         );
-
         feedbackPanel.setOpaque(false);
         feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
         feedbackPanel.setPreferredSize(
@@ -150,7 +118,6 @@ public class OsrsStrategistPanel extends PluginPanel
         feedbackPanel.setMaximumSize(
                 new Dimension(CONTENT_WIDTH, 58)
         );
-
         feedbackPanel.add(doThisButton);
         feedbackPanel.add(laterButton);
         feedbackPanel.add(notTodayButton);
@@ -166,23 +133,21 @@ public class OsrsStrategistPanel extends PluginPanel
                 )
         );
 
+        detailsButton.addActionListener(event -> toggleDetails());
         doThisButton.addActionListener(
                 event -> submitFeedback(FeedbackAction.DO_THIS)
         );
-
         laterButton.addActionListener(
                 event -> submitFeedback(FeedbackAction.LATER)
         );
-
         notTodayButton.addActionListener(
                 event -> submitFeedback(FeedbackAction.NOT_TODAY)
         );
-
         dislikeButton.addActionListener(
                 event -> submitFeedback(FeedbackAction.DISLIKE)
         );
 
-        setFeedbackButtonsEnabled(false);
+        setRecommendationButtonsEnabled(false);
 
         content.add(Box.createVerticalStrut(20));
         content.add(sectionHeader("OTHER GOOD OPTIONS"));
@@ -192,16 +157,11 @@ public class OsrsStrategistPanel extends PluginPanel
 
         content.add(Box.createVerticalStrut(20));
         content.add(sectionHeader("OPPORTUNITIES"));
-        content.add(
-                wrapLabel(
-                        "No active reminders yet."
-                )
-        );
+        content.add(opportunityOne);
+        content.add(Box.createVerticalStrut(4));
+        content.add(opportunityTwo);
 
-        add(
-                content,
-                BorderLayout.NORTH
-        );
+        add(content, BorderLayout.NORTH);
     }
 
     public void updateAccount(
@@ -209,160 +169,181 @@ public class OsrsStrategistPanel extends PluginPanel
             String type,
             int total)
     {
-        accountName.setText(
-                html(name)
-        );
-
+        accountName.setText(html(escape(name)));
         accountType.setText(
+                html("Account type: " + escape(type))
+        );
+        totalLevel.setText(
                 html(
-                        "Account type: "
-                                + type
+                        total > 0
+                                ? "Total level: " + total + " / 2376"
+                                : "Total level: -- / 2376"
                 )
         );
+    }
 
-        if (total > 0)
-        {
-            totalLevel.setText(
-                    html(
-                            "Total level: "
-                                    + total
-                                    + " / 2376"
-                    )
-            );
-        }
-        else
-        {
-            totalLevel.setText(
-                    html(
-                            "Total level: -- / 2376"
-                    )
-            );
-        }
+    public void updateGoal(GoalType goal)
+    {
+        GoalType safeGoal = goal == null ? GoalType.MAX : goal;
+        activeGoal.setText(
+                html("Goal: " + prettyName(safeGoal.name()))
+        );
     }
 
     public void updateStrategy(
             StrategyMode mode,
             QuestTolerance tolerance)
     {
-        strategyMode.setText(
-                html(
-                        "Mode: "
-                                + prettyName(
-                                mode.name()
-                        )
-                )
+        updateStrategy(
+                mode,
+                SessionIntent.PICK_FOR_ME,
+                tolerance
         );
+    }
 
+    public void updateStrategy(
+            StrategyMode mode,
+            SessionIntent intent,
+            QuestTolerance tolerance)
+    {
+        strategyMode.setText(
+                html("Mode: " + prettyName(mode.name()))
+        );
+        sessionIntent.setText(
+                html("Session: " + prettyName(intent.name()))
+        );
         questTolerance.setText(
-                html(
-                        "Quest tolerance: "
-                                + prettyName(
-                                tolerance.name()
-                        )
-                )
+                html("Quest tolerance: " + prettyName(tolerance.name()))
         );
     }
 
     public void updateRecommendations(
             List<Recommendation> recommendations)
     {
-        if (recommendations == null
-                || recommendations.isEmpty())
+        if (recommendations == null || recommendations.isEmpty())
         {
-            currentRecommendationId = null;
-            currentRecommendationTitle = null;
-            setFeedbackButtonsEnabled(false);
+            currentRecommendation = null;
+            detailsVisible = false;
+            detailsButton.setText("Details");
+            setRecommendationButtonsEnabled(false);
 
             recommendationTitle.setText(
-                    html(
-                            "No recommendation available."
-                    )
+                    html("No recommendation available.")
             );
-
-            recommendationReason.setText(
-                    html("")
-            );
-
-            alternativeOne.setText(
-                    html("")
-            );
-
-            alternativeTwo.setText(
-                    html("")
-            );
-
+            recommendationBody.setText(html(""));
+            alternativeOne.setText(html(""));
+            alternativeTwo.setText(html(""));
             return;
         }
 
-        Recommendation best =
-                recommendations.get(0);
+        Recommendation best = recommendations.get(0);
+        String previousId = currentRecommendation == null
+                ? null
+                : currentRecommendation.getId();
 
-        currentRecommendationId = best.getId();
-        currentRecommendationTitle = best.getTitle();
-        setFeedbackButtonsEnabled(true);
+        currentRecommendation = best;
 
+        // A newly rotated recommendation starts collapsed. If the same task is
+        // merely refreshed by a stat event, preserve the player's Details view.
+        if (previousId == null || !previousId.equals(best.getId()))
+        {
+            detailsVisible = false;
+            detailsButton.setText("Details");
+        }
+
+        setRecommendationButtonsEnabled(true);
         recommendationTitle.setText(
+                html("<b>" + escape(best.getTitle()) + "</b>")
+        );
+        renderRecommendationBody();
+
+        alternativeOne.setText(
                 html(
-                        "<b>"
-                                + best.getTitle()
-                                + "</b>"
+                        recommendations.size() > 1
+                                ? "• " + escape(
+                                recommendations.get(1).getTitle()
+                        )
+                                : ""
                 )
         );
-
-        recommendationReason.setText(
+        alternativeTwo.setText(
                 html(
-                        best.getReason()
+                        recommendations.size() > 2
+                                ? "• " + escape(
+                                recommendations.get(2).getTitle()
+                        )
+                                : ""
                 )
         );
-
-        if (recommendations.size() > 1)
-        {
-            alternativeOne.setText(
-                    html(
-                            "• "
-                                    + recommendations
-                                    .get(1)
-                                    .getTitle()
-                    )
-            );
-        }
-        else
-        {
-            alternativeOne.setText(
-                    html("")
-            );
-        }
-
-        if (recommendations.size() > 2)
-        {
-            alternativeTwo.setText(
-                    html(
-                            "• "
-                                    + recommendations
-                                    .get(2)
-                                    .getTitle()
-                    )
-            );
-        }
-        else
-        {
-            alternativeTwo.setText(
-                    html("")
-            );
-        }
     }
 
-    private void submitFeedback(
-            FeedbackAction action)
+    public void updateOpportunities(List<Opportunity> opportunities)
     {
-        if (currentRecommendationId == null
-                || feedbackHandler == null)
+        if (opportunities == null || opportunities.isEmpty())
+        {
+            opportunityOne.setText(
+                    html("No active reminders yet.")
+            );
+            opportunityTwo.setText(html(""));
+            return;
+        }
+
+        opportunityOne.setText(
+                html(opportunityText(opportunities.get(0)))
+        );
+        opportunityTwo.setText(
+                html(
+                        opportunities.size() > 1
+                                ? opportunityText(opportunities.get(1))
+                                : ""
+                )
+        );
+    }
+
+    private void toggleDetails()
+    {
+        if (currentRecommendation == null)
         {
             return;
         }
 
-        String actedOnTitle = currentRecommendationTitle;
-        String actedOnId = currentRecommendationId;
+        detailsVisible = !detailsVisible;
+        detailsButton.setText(
+                detailsVisible ? "Hide Details" : "Details"
+        );
+        renderRecommendationBody();
+        revalidate();
+        repaint();
+    }
+
+    private void renderRecommendationBody()
+    {
+        if (currentRecommendation == null)
+        {
+            recommendationBody.setText(html(""));
+            return;
+        }
+
+        String body = detailsVisible
+                ? RecommendationPresentation.detailedHtml(
+                        currentRecommendation
+                )
+                : RecommendationPresentation.compactHtml(
+                        currentRecommendation
+                );
+
+        recommendationBody.setText(html(body));
+    }
+
+    private void submitFeedback(FeedbackAction action)
+    {
+        if (currentRecommendation == null || feedbackHandler == null)
+        {
+            return;
+        }
+
+        String actedOnTitle = currentRecommendation.getTitle();
+        String actedOnId = currentRecommendation.getId();
 
         feedbackStatus.setText(
                 html(
@@ -373,115 +354,114 @@ public class OsrsStrategistPanel extends PluginPanel
                 )
         );
 
-        feedbackHandler.accept(
-                actedOnId,
-                action
-        );
+        feedbackHandler.accept(actedOnId, action);
     }
 
-    private void setFeedbackButtonsEnabled(
-            boolean enabled)
+    private void setRecommendationButtonsEnabled(boolean enabled)
     {
+        detailsButton.setEnabled(enabled);
         doThisButton.setEnabled(enabled);
         laterButton.setEnabled(enabled);
         notTodayButton.setEnabled(enabled);
         dislikeButton.setEnabled(enabled);
     }
 
-    private static JButton feedbackButton(
-            String text)
+    private static JButton feedbackButton(String text)
     {
         JButton button = new JButton(text);
         button.setFocusable(false);
-        button.setFont(
-                button.getFont()
-                        .deriveFont(11f)
-        );
-        button.setMargin(
-                new Insets(2, 2, 2, 2)
-        );
+        button.setFont(button.getFont().deriveFont(11f));
+        button.setMargin(new Insets(2, 2, 2, 2));
         return button;
+    }
+
+    private static String opportunityText(Opportunity opportunity)
+    {
+        String state = opportunity.isReady()
+                ? "Ready"
+                : confidenceName(opportunity.getConfidence());
+
+        return "• <b>" + escape(opportunity.getTitle())
+                + "</b> — " + state;
     }
 
     private static String feedbackStatusText(
             FeedbackAction action,
             String title)
     {
-        String activity = title == null
-                ? "Recommendation"
-                : title;
+        String activity = escape(
+                title == null ? "Recommendation" : title
+        );
 
         switch (action)
         {
             case DO_THIS:
                 return "<b>Selected:</b> " + activity;
-
             case LATER:
                 return "<b>" + activity
                         + "</b> snoozed for 1 hour.";
-
             case NOT_TODAY:
                 return "<b>" + activity
                         + "</b> snoozed for 24 hours.";
-
             case DISLIKE:
                 return "<b>" + activity
-                        + "</b> marked as disliked and will appear less often.";
-
+                        + "</b> disliked. It will appear less often.";
             default:
                 return "<b>Feedback saved.</b>";
         }
     }
 
-    private static JLabel sectionHeader(
-            String text)
+    private static JLabel sectionHeader(String text)
     {
-        JLabel label =
-                wrapLabel(
-                        "<b>"
-                                + text
-                                + "</b>"
-                );
-
-        label.setFont(
-                label.getFont()
-                        .deriveFont(
-                                Font.BOLD
-                        )
-        );
-
+        JLabel label = wrapLabel("<b>" + text + "</b>");
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
         return label;
     }
 
-    private static JLabel wrapLabel(
-            String text)
+    private static JLabel wrapLabel(String text)
     {
-        JLabel label =
-                new JLabel(
-                        html(text)
-                );
-
-        label.setAlignmentX(
-                LEFT_ALIGNMENT
-        );
-
+        JLabel label = new JLabel(html(text));
+        label.setAlignmentX(LEFT_ALIGNMENT);
         return label;
     }
 
-    private static String prettyName(
-            String text)
+    private static String prettyName(String text)
     {
-        String lower =
-                text.toLowerCase()
-                        .replace('_', ' ');
-
-        return Character.toUpperCase(
-                lower.charAt(0)
-        ) + lower.substring(1);
+        String lower = text.toLowerCase().replace('_', ' ');
+        return Character.toUpperCase(lower.charAt(0))
+                + lower.substring(1);
     }
 
-    private static String html(
-            String text)
+    private static String confidenceName(
+            RecommendationConfidence confidence)
+    {
+        if (confidence == RecommendationConfidence.VERIFIED)
+        {
+            return "Verified";
+        }
+        if (confidence == RecommendationConfidence.BLOCKED)
+        {
+            return "Blocked";
+        }
+        return "Check Needed";
+    }
+
+    private static String escape(String value)
+    {
+        if (value == null)
+        {
+            return "";
+        }
+
+        return value
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
+    private static String html(String text)
     {
         return "<html><div style='width:"
                 + CONTENT_WIDTH

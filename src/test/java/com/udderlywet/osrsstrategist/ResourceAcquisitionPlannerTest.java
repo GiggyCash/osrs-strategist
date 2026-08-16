@@ -1,0 +1,151 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import net.runelite.api.Skill;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * Verifies the basic Main/Iron/GIM/UIM sourcing guardrails.
+ */
+public class ResourceAcquisitionPlannerTest
+{
+    private final ResourceAcquisitionPlanner planner =
+            new ResourceAcquisitionPlanner();
+    private final ResourceNeed planks =
+            new ResourceNeed(960, "Plank", 10);
+
+    @Test
+    public void mainWithoutOwnedSupplyFallsBackToGeCheck()
+    {
+        ResourceAcquisitionPlan plan = planner.plan(
+                context(AccountMode.MAIN, null, null, null, true),
+                planks
+        );
+
+        assertEquals(AcquisitionSource.GRAND_EXCHANGE, plan.getSource());
+        assertEquals(
+                RecommendationConfidence.CHECK_NEEDED,
+                plan.getConfidence()
+        );
+    }
+
+    @Test
+    public void ironWithoutOwnedSupplyRequiresSelfSource()
+    {
+        ResourceAcquisitionPlan plan = planner.plan(
+                context(AccountMode.IRONMAN, null, null, null, true),
+                planks
+        );
+
+        assertEquals(AcquisitionSource.SELF_SOURCE, plan.getSource());
+    }
+
+    @Test
+    public void uimNeverTreatsNormalBankAsAcquisitionRoute()
+    {
+        BankSnapshot bank = new BankSnapshot(
+                Arrays.asList(new ItemStackSnapshot(960, "Plank", 100)),
+                1L
+        );
+
+        ResourceAcquisitionPlan plan = planner.plan(
+                context(AccountMode.ULTIMATE_IRONMAN, null, bank, null, true),
+                planks
+        );
+
+        assertEquals(AcquisitionSource.SELF_SOURCE, plan.getSource());
+    }
+
+    @Test
+    public void gimUsesObservedGroupStorageOnlyWhenEnabled()
+    {
+        GroupStorageSnapshot group = new GroupStorageSnapshot(
+                true,
+                Arrays.asList(new ItemStackSnapshot(960, "Plank", 25))
+        );
+
+        ResourceAcquisitionPlan enabled = planner.plan(
+                context(AccountMode.GROUP_IRONMAN, null, null, group, true),
+                planks
+        );
+        ResourceAcquisitionPlan disabled = planner.plan(
+                context(AccountMode.GROUP_IRONMAN, null, null, group, false),
+                planks
+        );
+
+        assertEquals(AcquisitionSource.GROUP_STORAGE, enabled.getSource());
+        assertEquals(
+                RecommendationConfidence.VERIFIED,
+                enabled.getConfidence()
+        );
+        assertEquals(AcquisitionSource.SELF_SOURCE, disabled.getSource());
+    }
+
+    private static StrategyContext context(
+            AccountMode mode,
+            InventorySnapshot inventory,
+            BankSnapshot bank,
+            GroupStorageSnapshot group,
+            boolean useGroupStorage)
+    {
+        StrategyDataBundle data = StrategyDataBundle
+                .builder(account(mode))
+                .inventory(inventory)
+                .bank(bank)
+                .groupStorage(group)
+                .build();
+
+        return new StrategyContext(
+                data,
+                StrategyMode.BALANCED,
+                SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL,
+                GoalType.MAX,
+                useGroupStorage,
+                false,
+                new PreferenceProfile()
+        );
+    }
+
+    private static AccountSnapshot account(AccountMode mode)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> experience = new EnumMap<>(Skill.class);
+
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, 1);
+            experience.put(skill, 0);
+        }
+
+        return new AccountSnapshot(
+                "Test",
+                typeCode(mode),
+                mode.name(),
+                24,
+                0L,
+                levels,
+                experience
+        );
+    }
+
+    private static int typeCode(AccountMode mode)
+    {
+        switch (mode)
+        {
+            case MAIN: return 0;
+            case IRONMAN: return 1;
+            case ULTIMATE_IRONMAN: return 2;
+            case HARDCORE_IRONMAN: return 3;
+            case GROUP_IRONMAN: return 4;
+            case HARDCORE_GROUP_IRONMAN: return 5;
+            case UNRANKED_GROUP_IRONMAN: return 6;
+            default: return -1;
+        }
+    }
+}
