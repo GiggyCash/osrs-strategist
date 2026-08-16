@@ -23,9 +23,10 @@ public class RecommendationPresentationTest
 
         assertTrue(compact.contains("BEST METHOD"));
         assertTrue(compact.contains("PREP"));
-        assertTrue(compact.contains("1 → 10"));
         assertFalse(compact.contains("WHY IT MATTERS"));
         assertFalse(compact.contains("HOW"));
+        assertFalse(compact.contains("Current:"));
+        assertTrue("Compact copy should stay short", compact.length() < 450);
     }
 
     @Test
