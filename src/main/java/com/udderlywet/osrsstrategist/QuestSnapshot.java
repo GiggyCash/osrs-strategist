@@ -17,10 +17,25 @@ public final class QuestSnapshot
 
     public QuestStatus statusOf(String questName)
     {
-        return quests.getOrDefault(
-                questName,
-                QuestStatus.UNKNOWN
-        );
+        if (questName == null) return QuestStatus.UNKNOWN;
+        QuestStatus exact = quests.get(questName);
+        if (exact != null) return exact;
+
+        // RuneLite supplies canonical display names, but static knowledge can
+        // arrive from validated sources with harmless case differences.
+        for (Map.Entry<String, QuestStatus> entry : quests.entrySet())
+        {
+            if (entry.getKey().equalsIgnoreCase(questName))
+            {
+                return entry.getValue();
+            }
+        }
+        return QuestStatus.UNKNOWN;
+    }
+
+    public boolean isComplete(String questName)
+    {
+        return statusOf(questName) == QuestStatus.COMPLETE;
     }
 
     public Map<String, QuestStatus> getQuests()
