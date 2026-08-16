@@ -6,10 +6,11 @@ import javax.inject.Singleton;
 /**
  * Generic resource readiness evaluator.
  *
- * <p>Main/Iron/GIM can use an actually observed bank snapshot. UIM never waits
- * on or counts a bank; it uses inventory plus contents directly observed in
- * verified account-specific storage. Storage that has additional retrieval or
- * death risk proves existence but does not become method-ready automatically.</p>
+ * <p>Main/Iron/GIM can use equipment, inventory, and an actually observed bank
+ * snapshot. UIM never waits on or counts a bank; it uses equipped items,
+ * inventory, plus contents directly observed in verified account-specific
+ * storage. Storage that has additional retrieval or death risk proves existence
+ * but does not become method-ready automatically.</p>
  */
 @Singleton
 public class ResourceReadinessService
@@ -46,9 +47,9 @@ public class ResourceReadinessService
                     RequirementState.VERIFIED,
                     uim
                             ? "Observed quantity: " + observed
-                                    + " across inventory and directly usable verified UIM storage."
+                                    + " across equipment, inventory, and directly usable verified UIM storage."
                             : "Observed quantity: " + observed
-                                    + " across inventory and known bank state.");
+                                    + " across equipment, inventory, and known bank state.");
         }
 
         if (uim)
@@ -73,9 +74,9 @@ public class ResourceReadinessService
                     RequirementState.CHECK_NEEDED,
                     storageContentsKnown
                             ? "Only " + observed
-                                    + " directly usable quantity observed across inventory and verified UIM storage; need at least "
+                                    + " directly usable quantity observed across equipment, inventory, and verified UIM storage; need at least "
                                     + requirement.getRequiredQuantity() + "."
-                            : "Inventory has " + observed
+                            : "Equipment and inventory have " + observed
                                     + "; relevant UIM storage contents have not been observed yet."
             );
         }
@@ -86,7 +87,7 @@ public class ResourceReadinessService
             return new RequirementCheck(
                     requirement.getId(), requirement.getLabel(),
                     RequirementState.CHECK_NEEDED,
-                    "Inventory has " + observed
+                    "Equipment and inventory have " + observed
                             + "; the bank has not been observed yet.");
         }
 
@@ -101,12 +102,14 @@ public class ResourceReadinessService
     {
         if (data == null || itemIds == null) return 0;
         int total = 0;
+        EquipmentSnapshot equipment = data.getEquipment();
         InventorySnapshot inventory = data.getInventory();
         BankSnapshot bank = data.getBank();
         boolean uim = isUim(data);
 
         for (int itemId : itemIds)
         {
+            if (equipment != null) total += equipment.quantityOf(itemId);
             if (inventory != null) total += inventory.quantityOf(itemId);
             if (!uim && bank != null) total += bank.quantityOf(itemId);
             if (uim)
