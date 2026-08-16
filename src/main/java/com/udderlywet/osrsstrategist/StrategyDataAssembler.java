@@ -3,13 +3,7 @@ package com.udderlywet.osrsstrategist;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Builds one immutable {@link StrategyDataBundle} from live RuneLite state and
- * previously verified observations.
- *
- * <p>This is the seam between "reading the game" and "reasoning about the
- * game". Strategy code should not reach into RuneLite directly.</p>
- */
+/** Builds one immutable StrategyDataBundle from live and remembered evidence. */
 @Singleton
 public class StrategyDataAssembler
 {
@@ -17,6 +11,7 @@ public class StrategyDataAssembler
     private final LiveItemStateReader itemStateReader;
     private final LiveQuestStateReader questStateReader;
     private final AccountAccessMemoryStore accessMemoryStore;
+    private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
     private final ObservedStateStore observedStateStore;
 
@@ -26,6 +21,7 @@ public class StrategyDataAssembler
             LiveItemStateReader itemStateReader,
             LiveQuestStateReader questStateReader,
             AccountAccessMemoryStore accessMemoryStore,
+            FarmingRunStateStore farmingRunStateStore,
             FarmingAccessEvaluator farmingAccessEvaluator,
             ObservedStateStore observedStateStore)
     {
@@ -33,6 +29,7 @@ public class StrategyDataAssembler
         this.itemStateReader = itemStateReader;
         this.questStateReader = questStateReader;
         this.accessMemoryStore = accessMemoryStore;
+        this.farmingRunStateStore = farmingRunStateStore;
         this.farmingAccessEvaluator = farmingAccessEvaluator;
         this.observedStateStore = observedStateStore;
     }
@@ -40,24 +37,14 @@ public class StrategyDataAssembler
     public StrategyDataBundle read()
     {
         AccountSnapshot account = accountReader.read();
-
-        if (account == null)
-        {
-            return null;
-        }
+        if (account == null) return null;
 
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
-                ? liveQuests
-                : observedStateStore.getQuests();
-
+                ? liveQuests : observedStateStore.getQuests();
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
-                account,
-                quests,
-                accessMemory,
-                observedStateStore.getFarming()
-        );
+                account, quests, accessMemory, observedStateStore.getFarming());
 
         return StrategyDataBundle.builder(account)
                 .inventory(itemStateReader.readInventory())
@@ -66,13 +53,12 @@ public class StrategyDataAssembler
                 .quests(quests)
                 .diaries(observedStateStore.getDiaries())
                 .clue(observedStateStore.getClue())
-                .combatAchievements(
-                        observedStateStore.getCombatAchievements()
-                )
+                .combatAchievements(observedStateStore.getCombatAchievements())
                 .collectionLog(observedStateStore.getCollectionLog())
                 .economy(observedStateStore.getEconomy())
                 .capabilities(observedStateStore.getCapabilities())
                 .accessMemory(accessMemory)
+                .farmingRuns(farmingRunStateStore.snapshot())
                 .storage(observedStateStore.getStorage())
                 .transport(observedStateStore.getTransport())
                 .poh(observedStateStore.getPoh())
@@ -82,17 +68,10 @@ public class StrategyDataAssembler
                 .sailing(observedStateStore.getSailing())
                 .minigames(observedStateStore.getMinigames())
                 .pvm(observedStateStore.getPvm())
-                .recurringOpportunities(
-                        observedStateStore.getRecurringOpportunities()
-                )
+                .recurringOpportunities(observedStateStore.getRecurringOpportunities())
                 .build();
     }
 
-    /**
-     * Must be called when the active RuneScape profile changes so bank and
-     * in-memory observations never leak between characters. Persistent access
-     * memory is managed separately by AccountAccessMemoryStore.
-     */
     public void clearForAccountChange()
     {
         itemStateReader.clearAccountCaches();
