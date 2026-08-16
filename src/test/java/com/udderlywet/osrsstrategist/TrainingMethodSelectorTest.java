@@ -30,8 +30,16 @@ public class TrainingMethodSelectorTest
                 Skill.HERBLORE,
                 plan.getMethod().getSkill()
         );
+
+        // The method should never claim herbs are banked until the bank reader
+        // has actually observed them. The starter method is therefore phrased
+        // around confirmed supplies and remains CHECK_NEEDED.
         assertTrue(
-                plan.getMethod().getName().contains("banked")
+                plan.getMethod().getName().contains("confirmed")
+        );
+        assertEquals(
+                RecommendationConfidence.CHECK_NEEDED,
+                plan.getConfidence()
         );
     }
 
