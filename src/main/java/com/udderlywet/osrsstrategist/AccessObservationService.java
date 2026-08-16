@@ -34,7 +34,7 @@ public class AccessObservationService
     }
 
     /**
-     * @return true when a newly learned fact could change recommendation readiness.
+     * @return true only when newly learned evidence can affect current strategy.
      */
     public boolean observeCurrentLocation()
     {
@@ -62,16 +62,15 @@ public class AccessObservationService
         }
 
         lastRegionId = regionId;
-        boolean changed = memoryStore.remember("region." + regionId);
+
+        // Generic region memory is useful later for transport/content discovery,
+        // but it does not currently require an immediate recommendation rerank.
+        memoryStore.remember("region." + regionId);
 
         FarmingAccessDefinition farming =
                 farmingAccessCatalog.forRegion(regionId);
-        if (farming != null)
-        {
-            changed |= memoryStore.remember(farming.observationKey());
-        }
-
-        return changed;
+        return farming != null
+                && memoryStore.remember(farming.observationKey());
     }
 
     public void clearForAccountChange()
