@@ -1,12 +1,28 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /** Account-mode-aware sourcing planner for a required item. */
 @Singleton
 public class ResourceAcquisitionPlanner
 {
+    private final ResourceSourceCatalog sourceCatalog;
+
+    @Inject
+    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog)
+    {
+        this.sourceCatalog = sourceCatalog;
+    }
+
+    /** Compatibility constructor for existing focused tests. */
+    public ResourceAcquisitionPlanner()
+    {
+        this(new ResourceSourceCatalog());
+    }
+
     public ResourceAcquisitionPlan plan(
             StrategyContext context,
             ResourceNeed need)
@@ -83,12 +99,16 @@ public class ResourceAcquisitionPlanner
             }
         }
 
+        String sourceNote = sourceSuggestions(
+                need, mode, context.isAllowWildernessMethods());
+
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, inventoryQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     "GE is an option, but Strategist must verify price, available GP, and opportunity cost before recommending a purchase."
+                            + sourceNote
             );
         }
 
@@ -97,13 +117,39 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.SELF_SOURCE, inventoryQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
-                    mode == AccountMode.ULTIMATE_IRONMAN
-                            ? "No sufficient directly usable UIM inventory/storage source is known; use a verified self-source route that also fits current inventory pressure."
-                            : "This account must use a verified gathering, shop, crafting, minigame, or drop source."
+                    (mode == AccountMode.ULTIMATE_IRONMAN
+                            ? "No sufficient directly usable UIM inventory/storage source is known."
+                            : "No sufficient owned source is confirmed yet.")
+                            + sourceNote
             );
         }
 
-        return checkNeeded(need, "A verified acquisition route is not available yet.");
+        return checkNeeded(need,
+                "A verified acquisition route is not available yet." + sourceNote);
+    }
+
+    private String sourceSuggestions(
+            ResourceNeed need,
+            AccountMode mode,
+            boolean allowWilderness)
+    {
+        if (sourceCatalog == null || need == null) return "";
+        List<String> suggestions = sourceCatalog.suggestions(
+                need.getItemName(), mode, allowWilderness);
+        if (suggestions.isEmpty())
+        {
+            return " Strategist still needs a verified item-specific gathering, shop, crafting, minigame, or drop source for this resource.";
+        }
+
+        StringBuilder note = new StringBuilder(" Candidate route");
+        if (suggestions.size() > 1) note.append("s");
+        note.append(": ");
+        for (int i = 0; i < suggestions.size(); i++)
+        {
+            if (i > 0) note.append(" | ");
+            note.append(suggestions.get(i));
+        }
+        return note.toString();
     }
 
     private static StoredResource findVerifiedStoredResource(
