@@ -7,7 +7,8 @@ import java.util.List;
  * Converts a recommendation into concise sidebar copy.
  *
  * <p>"Check Needed" is never left unexplained. The compact card shows the
- * first unresolved requirement; Details shows the complete readiness list.</p>
+ * first unresolved requirement; Details shows the complete readiness list and
+ * the evidence behind both verified and unresolved checks.</p>
  */
 public final class RecommendationPresentation
 {
@@ -102,8 +103,11 @@ public final class RecommendationPresentation
                         .append(" ")
                         .append(escape(check.getLabel()));
 
-                if (check.getState() != RequirementState.VERIFIED
-                        && check.getEvidence() != null
+                // Details is intentionally the deeper view, so show the proof
+                // for successful checks too. This lets a player understand that
+                // an unlock came from quest state or remembered access instead
+                // of wondering why Strategist marked it Verified.
+                if (check.getEvidence() != null
                         && !check.getEvidence().trim().isEmpty())
                 {
                     text.append("<br><i>")
