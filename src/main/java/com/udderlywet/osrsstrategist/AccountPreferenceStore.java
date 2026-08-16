@@ -10,16 +10,22 @@ import javax.inject.Singleton;
 import net.runelite.client.config.ConfigManager;
 
 /**
- * Persists learned Strategist preferences in RuneLite's RuneScape-profile
- * configuration so each character keeps its own recommendation personality.
+ * Persists learned Strategist preferences and temporary recommendation
+ * cooldowns in RuneLite's RuneScape-profile configuration so each character
+ * keeps its own recommendation personality and snoozed activities.
  */
 @Singleton
 public class AccountPreferenceStore
 {
     private static final String GROUP = "osrs-strategist-profile";
     private static final String PREFERENCES_KEY = "preferences";
+    private static final String COOLDOWNS_KEY = "cooldowns";
+
     private static final Type PREFERENCE_MAP_TYPE =
             new TypeToken<Map<String, Double>>() { }.getType();
+
+    private static final Type COOLDOWN_MAP_TYPE =
+            new TypeToken<Map<String, Long>>() { }.getType();
 
     private final ConfigManager configManager;
     private final Gson gson;
@@ -47,36 +53,67 @@ public class AccountPreferenceStore
             return;
         }
 
-        String json = configManager.getRSProfileConfiguration(
-                GROUP,
-                PREFERENCES_KEY
-        );
+        String preferenceJson =
+                configManager.getRSProfileConfiguration(
+                        GROUP,
+                        PREFERENCES_KEY
+                );
 
-        if (json == null || json.trim().isEmpty())
+        if (preferenceJson != null
+                && !preferenceJson.trim().isEmpty())
         {
-            return;
+            Map<String, Double> storedPreferences =
+                    gson.fromJson(
+                            preferenceJson,
+                            PREFERENCE_MAP_TYPE
+                    );
+
+            if (storedPreferences == null)
+            {
+                storedPreferences = Collections.emptyMap();
+            }
+
+            profile.replaceAll(storedPreferences);
         }
 
-        Map<String, Double> stored =
-                gson.fromJson(json, PREFERENCE_MAP_TYPE);
+        String cooldownJson =
+                configManager.getRSProfileConfiguration(
+                        GROUP,
+                        COOLDOWNS_KEY
+                );
 
-        if (stored == null)
+        if (cooldownJson != null
+                && !cooldownJson.trim().isEmpty())
         {
-            stored = Collections.emptyMap();
-        }
+            Map<String, Long> storedCooldowns =
+                    gson.fromJson(
+                            cooldownJson,
+                            COOLDOWN_MAP_TYPE
+                    );
 
-        profile.replaceAll(stored);
+            if (storedCooldowns == null)
+            {
+                storedCooldowns = Collections.emptyMap();
+            }
+
+            profile.replaceCooldowns(storedCooldowns);
+        }
     }
 
     public void save(PreferenceProfile profile)
     {
-        // Do not require an existing RS profile key here.
-        // RuneLite's setRSProfileConfiguration() creates the per-character
-        // profile on the first write when the player is logged in.
+        // RuneLite creates the per-character RS profile on the first write
+        // when necessary, so do not require an existing profile key here.
         configManager.setRSProfileConfiguration(
                 GROUP,
                 PREFERENCES_KEY,
                 gson.toJson(profile.snapshot())
+        );
+
+        configManager.setRSProfileConfiguration(
+                GROUP,
+                COOLDOWNS_KEY,
+                gson.toJson(profile.cooldownSnapshot())
         );
     }
 }
