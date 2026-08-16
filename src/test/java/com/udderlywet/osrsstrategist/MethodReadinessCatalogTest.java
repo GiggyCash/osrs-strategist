@@ -181,7 +181,7 @@ public class MethodReadinessCatalogTest
         return new AccountSnapshot(
                 "Test", accountTypeCode,
                 AccountMode.fromTypeCode(accountTypeCode).name(),
-                MembershipStatus.MEMBER,
+                MembershipStatus.P2P,
                 generalLevel,
                 generalLevel,
                 0L,
