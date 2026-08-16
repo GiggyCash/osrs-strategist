@@ -68,28 +68,32 @@ public class RecommendationEngine
 
             String activityId = "skill:" + skill.name().toLowerCase();
             if (preferenceProfile.isOnCooldown(activityId)) continue;
+
+            TrainingPlan trainingPlan = trainingMethodSelector.select(
+                    data, skill, level, strategyMode, sessionIntent,
+                    allowWildernessMethods);
+
+            // A skill is not actionable until Strategist can attach an actual
+            // account-compatible method. This prevents internal catalog gaps
+            // from leaking into the UI as vague "check needed before choosing"
+            // recommendations.
+            if (trainingPlan == null || trainingPlan.getMethod() == null)
+            {
+                continue;
+            }
+
             int target = nextTarget(level);
             double score = baseScore(skill, level, strategyMode);
             score += preferenceProfile.weightFor(activityId) * 10.0;
             score += preferenceProfile.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
+            score += trainingPlan.getMethod().scoreFor(
+                    strategyMode, sessionIntent) * 0.35;
 
-            TrainingPlan trainingPlan = trainingMethodSelector.select(
-                    data, skill, level, strategyMode, sessionIntent,
-                    allowWildernessMethods);
-            if (trainingPlan != null && trainingPlan.getMethod() != null)
-            {
-                score += trainingPlan.getMethod().scoreFor(
-                        strategyMode, sessionIntent) * 0.35;
-            }
-
-            RecommendationConfidence confidence = trainingPlan == null
-                    ? RecommendationConfidence.CHECK_NEEDED
-                    : trainingPlan.getConfidence();
             recommendations.add(new Recommendation(
                     activityId, "Train " + skill.getName() + " to " + target,
-                    skillReason(skill), score, trainingPlan, confidence,
-                    level, target));
+                    skillReason(skill), score, trainingPlan,
+                    trainingPlan.getConfidence(), level, target));
         }
 
         recommendations.sort(Comparator.comparingDouble(
