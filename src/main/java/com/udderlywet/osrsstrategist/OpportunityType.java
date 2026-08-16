@@ -8,5 +8,10 @@ public enum OpportunityType
     FARMING_CONTRACT,
     TEARS_OF_GUTHIX,
     KINGDOM,
-    CLUE
+    BATTLESTAVES,
+    DYNAMITE,
+    DAILY_DIARY_REWARD,
+    KINGDOM_APPROVAL,
+    CLUE,
+    OTHER_COOLDOWN
 }
