@@ -8,7 +8,7 @@ import net.runelite.api.Skill;
 
 /**
  * Turns static method requirements into account-specific evidence checks.
- * Dedicated evaluators replace generic Check Needed rows one system at a time.
+ * Dedicated evaluators replace generic Needs Info rows one system at a time.
  */
 @Singleton
 public class RequirementEvidenceEngine
@@ -16,6 +16,7 @@ public class RequirementEvidenceEngine
     private final FarmingAccessEvaluator farmingAccessEvaluator;
     private final AgilityAccessEvaluator agilityAccessEvaluator;
     private final FarmingSupplyCatalog farmingSupplyCatalog;
+    private final RunecraftSupplyCatalog runecraftSupplyCatalog;
     private final ResourceReadinessService resourceReadinessService;
 
     @Inject
@@ -23,11 +24,13 @@ public class RequirementEvidenceEngine
             FarmingAccessEvaluator farmingAccessEvaluator,
             AgilityAccessEvaluator agilityAccessEvaluator,
             FarmingSupplyCatalog farmingSupplyCatalog,
+            RunecraftSupplyCatalog runecraftSupplyCatalog,
             ResourceReadinessService resourceReadinessService)
     {
         this.farmingAccessEvaluator = farmingAccessEvaluator;
         this.agilityAccessEvaluator = agilityAccessEvaluator;
         this.farmingSupplyCatalog = farmingSupplyCatalog;
+        this.runecraftSupplyCatalog = runecraftSupplyCatalog;
         this.resourceReadinessService = resourceReadinessService;
     }
 
@@ -40,6 +43,7 @@ public class RequirementEvidenceEngine
                 farmingAccessEvaluator,
                 agilityAccessEvaluator,
                 new FarmingSupplyCatalog(),
+                new RunecraftSupplyCatalog(),
                 new ResourceReadinessService()
         );
     }
@@ -67,10 +71,38 @@ public class RequirementEvidenceEngine
         {
             return evaluateAgility(data, method);
         }
+        if (method.getSkill() == Skill.RUNECRAFT
+                && runecraftSupplyCatalog.supports(method.getId()))
+        {
+            return evaluateRunecraft(data, method);
+        }
 
         for (String requirement : method.getRequirements())
         {
             checks.add(generic(requirement));
+        }
+        return checks;
+    }
+
+    /**
+     * Conventional F2P altar routes are resource-driven. The player does not
+     * need to manually confirm them once Strategist has observed the essence and
+     * the matching talisman/tiara in equipment, inventory, bank, or safe
+     * account-specific storage.
+     */
+    private List<RequirementCheck> evaluateRunecraft(
+            StrategyDataBundle data,
+            TrainingMethod method)
+    {
+        List<RequirementCheck> checks = new ArrayList<>();
+        checks.add(resourceReadinessService.evaluate(
+                data,
+                runecraftSupplyCatalog.runeEssence()
+        ));
+        ResourceRequirement entry = runecraftSupplyCatalog.altarEntryFor(method.getId());
+        if (entry != null)
+        {
+            checks.add(resourceReadinessService.evaluate(data, entry));
         }
         return checks;
     }
