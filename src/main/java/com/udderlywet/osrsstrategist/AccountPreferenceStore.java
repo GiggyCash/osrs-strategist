@@ -10,9 +10,8 @@ import javax.inject.Singleton;
 import net.runelite.client.config.ConfigManager;
 
 /**
- * Persists learned Strategist preferences and temporary recommendation
- * cooldowns in RuneLite's RuneScape-profile configuration so each character
- * keeps its own recommendation personality and snoozed activities.
+ * Persists learned Strategist preferences, explicit cooldowns, and temporary
+ * soft score adjustments in RuneLite's RuneScape-profile configuration.
  */
 @Singleton
 public class AccountPreferenceStore
@@ -20,12 +19,16 @@ public class AccountPreferenceStore
     private static final String GROUP = "osrs-strategist-profile";
     private static final String PREFERENCES_KEY = "preferences";
     private static final String COOLDOWNS_KEY = "cooldowns";
+    private static final String TIMED_ADJUSTMENTS_KEY = "timedAdjustments";
 
     private static final Type PREFERENCE_MAP_TYPE =
             new TypeToken<Map<String, Double>>() { }.getType();
 
     private static final Type COOLDOWN_MAP_TYPE =
             new TypeToken<Map<String, Long>>() { }.getType();
+
+    private static final Type TIMED_ADJUSTMENT_MAP_TYPE =
+            new TypeToken<Map<String, TimedScoreAdjustment>>() { }.getType();
 
     private final ConfigManager configManager;
     private final Gson gson;
@@ -98,6 +101,29 @@ public class AccountPreferenceStore
 
             profile.replaceCooldowns(storedCooldowns);
         }
+
+        String adjustmentJson =
+                configManager.getRSProfileConfiguration(
+                        GROUP,
+                        TIMED_ADJUSTMENTS_KEY
+                );
+
+        if (adjustmentJson != null
+                && !adjustmentJson.trim().isEmpty())
+        {
+            Map<String, TimedScoreAdjustment> storedAdjustments =
+                    gson.fromJson(
+                            adjustmentJson,
+                            TIMED_ADJUSTMENT_MAP_TYPE
+                    );
+
+            if (storedAdjustments == null)
+            {
+                storedAdjustments = Collections.emptyMap();
+            }
+
+            profile.replaceTimedAdjustments(storedAdjustments);
+        }
     }
 
     public void save(PreferenceProfile profile)
@@ -114,6 +140,12 @@ public class AccountPreferenceStore
                 GROUP,
                 COOLDOWNS_KEY,
                 gson.toJson(profile.cooldownSnapshot())
+        );
+
+        configManager.setRSProfileConfiguration(
+                GROUP,
+                TIMED_ADJUSTMENTS_KEY,
+                gson.toJson(profile.timedAdjustmentSnapshot())
         );
     }
 }

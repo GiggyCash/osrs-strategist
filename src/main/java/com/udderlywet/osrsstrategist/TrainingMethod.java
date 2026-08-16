@@ -21,6 +21,7 @@ public final class TrainingMethod
     private final int setupMinutes;
     private final List<String> requirements;
     private final RecommendationConfidence confidence;
+    private final boolean membersOnly;
 
     public TrainingMethod(
             String id,
@@ -38,6 +39,42 @@ public final class TrainingMethod
             List<String> requirements,
             RecommendationConfidence confidence)
     {
+        this(
+                id,
+                skill,
+                minLevel,
+                maxLevel,
+                name,
+                instructions,
+                efficientScore,
+                balancedScore,
+                relaxedScore,
+                attentionLevel,
+                minimumSessionMinutes,
+                setupMinutes,
+                requirements,
+                confidence,
+                false
+        );
+    }
+
+    public TrainingMethod(
+            String id,
+            Skill skill,
+            int minLevel,
+            int maxLevel,
+            String name,
+            String instructions,
+            double efficientScore,
+            double balancedScore,
+            double relaxedScore,
+            AttentionLevel attentionLevel,
+            int minimumSessionMinutes,
+            int setupMinutes,
+            List<String> requirements,
+            RecommendationConfidence confidence,
+            boolean membersOnly)
+    {
         this.id = id;
         this.skill = skill;
         this.minLevel = minLevel;
@@ -54,6 +91,7 @@ public final class TrainingMethod
                 new ArrayList<>(requirements)
         );
         this.confidence = confidence;
+        this.membersOnly = membersOnly;
     }
 
     public String getId()
@@ -109,6 +147,11 @@ public final class TrainingMethod
     public RecommendationConfidence getConfidence()
     {
         return confidence;
+    }
+
+    public boolean isMembersOnly()
+    {
+        return membersOnly;
     }
 
     public boolean supportsLevel(int level)

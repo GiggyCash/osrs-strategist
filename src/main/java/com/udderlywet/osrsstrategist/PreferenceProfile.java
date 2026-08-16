@@ -5,9 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A deliberately slow-moving preference model. Long-term preference and
- * temporary recommendation cooldowns are separate so "Not Today" does not
- * teach Strategist that the player permanently dislikes an activity.
+ * A deliberately slow-moving preference model.
+ *
+ * <p>Three concepts stay separate:</p>
+ * <ul>
+ *     <li>Long-term preference: what the player generally likes/dislikes.</li>
+ *     <li>Cooldowns: activities temporarily hidden by explicit feedback.</li>
+ *     <li>Timed score adjustments: soft nudges such as post-milestone variety.</li>
+ * </ul>
+ *
+ * <p>Keeping them separate prevents "Not Today" or a recently completed skill
+ * from accidentally becoming a permanent dislike.</p>
  */
 public final class PreferenceProfile
 {
@@ -17,10 +25,31 @@ public final class PreferenceProfile
 
     private final Map<String, Double> weights = new HashMap<>();
     private final Map<String, Long> cooldowns = new HashMap<>();
+    private final Map<String, TimedScoreAdjustment> timedAdjustments =
+            new HashMap<>();
 
     public double weightFor(String activityId)
     {
         return weights.getOrDefault(activityId, 0.0);
+    }
+
+    public double timedScoreAdjustmentFor(String activityId)
+    {
+        TimedScoreAdjustment adjustment = timedAdjustments.get(activityId);
+
+        if (adjustment == null)
+        {
+            return 0.0;
+        }
+
+        long now = System.currentTimeMillis();
+        if (adjustment.isExpired(now))
+        {
+            timedAdjustments.remove(activityId);
+            return 0.0;
+        }
+
+        return adjustment.getScoreDelta();
     }
 
     public boolean isOnCooldown(String activityId)
@@ -39,6 +68,30 @@ public final class PreferenceProfile
         }
 
         return true;
+    }
+
+    /**
+     * Adds a soft temporary ranking adjustment rather than hiding an activity.
+     * This is ideal for milestone completion: we encourage a fresh suggestion,
+     * but a strategically important continuation can still win the ranking.
+     */
+    public void addTemporaryScoreAdjustment(
+            String activityId,
+            double scoreDelta,
+            long durationMillis)
+    {
+        if (activityId == null || durationMillis <= 0L)
+        {
+            return;
+        }
+
+        timedAdjustments.put(
+                activityId,
+                new TimedScoreAdjustment(
+                        scoreDelta,
+                        System.currentTimeMillis() + durationMillis
+                )
+        );
     }
 
     public void apply(String activityId, FeedbackAction action)
@@ -101,6 +154,7 @@ public final class PreferenceProfile
     {
         weights.clear();
         cooldowns.clear();
+        timedAdjustments.clear();
     }
 
     public void replaceAll(Map<String, Double> storedWeights)
@@ -161,6 +215,34 @@ public final class PreferenceProfile
         }
     }
 
+    public void replaceTimedAdjustments(
+            Map<String, TimedScoreAdjustment> storedAdjustments)
+    {
+        timedAdjustments.clear();
+
+        if (storedAdjustments == null)
+        {
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        for (Map.Entry<String, TimedScoreAdjustment> entry
+                : storedAdjustments.entrySet())
+        {
+            String activityId = entry.getKey();
+            TimedScoreAdjustment adjustment = entry.getValue();
+
+            if (activityId == null
+                    || adjustment == null
+                    || adjustment.isExpired(now))
+            {
+                continue;
+            }
+
+            timedAdjustments.put(activityId, adjustment);
+        }
+    }
+
     public Map<String, Double> snapshot()
     {
         return Collections.unmodifiableMap(
@@ -172,6 +254,19 @@ public final class PreferenceProfile
     {
         return Collections.unmodifiableMap(
                 new HashMap<>(cooldowns)
+        );
+    }
+
+    public Map<String, TimedScoreAdjustment> timedAdjustmentSnapshot()
+    {
+        // Purge expired entries before serializing the profile.
+        for (String activityId : new HashMap<>(timedAdjustments).keySet())
+        {
+            timedScoreAdjustmentFor(activityId);
+        }
+
+        return Collections.unmodifiableMap(
+                new HashMap<>(timedAdjustments)
         );
     }
 }

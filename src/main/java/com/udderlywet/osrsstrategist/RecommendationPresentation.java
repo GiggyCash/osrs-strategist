@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Converts a recommendation into concise sidebar copy.
  *
- * <p>The strategy engine is allowed to be complicated. The default UI should
- * not be. This formatter deliberately shows the decision first and hides the
- * deeper explanation behind the Details button.</p>
+ * <p>Level progress is rendered visually by the recommendation card, so this
+ * formatter focuses only on method, attention/confidence, and preparation.
+ * Deeper instructions and reasoning remain behind Details.</p>
  */
 public final class RecommendationPresentation
 {
@@ -23,17 +23,14 @@ public final class RecommendationPresentation
         }
 
         StringBuilder text = new StringBuilder();
-        appendLevelSummary(text, recommendation);
-
         TrainingPlan plan = recommendation.getTrainingPlan();
 
         if (plan == null || plan.getMethod() == null)
         {
-            appendBreak(text, 2);
             text.append("<b>BEST METHOD</b><br>")
                     .append("Check needed before choosing a method.");
             appendBreak(text, 1);
-            text.append("<i>Confidence: ")
+            text.append("<i>")
                     .append(confidenceLabel(
                             recommendation.getConfidence()
                     ))
@@ -80,12 +77,10 @@ public final class RecommendationPresentation
         }
 
         StringBuilder text = new StringBuilder();
-        appendLevelSummary(text, recommendation);
-
         TrainingPlan plan = recommendation.getTrainingPlan();
+
         if (plan == null || plan.getMethod() == null)
         {
-            appendBreak(text, 2);
             text.append("<b>BEST METHOD</b><br>")
                     .append("Check needed before choosing a method.");
             return text.toString();
@@ -120,26 +115,11 @@ public final class RecommendationPresentation
         return text.toString();
     }
 
-    private static void appendLevelSummary(
-            StringBuilder text,
-            Recommendation recommendation)
-    {
-        if (recommendation.getCurrentLevel() > 0
-                && recommendation.getTargetLevel() > 0)
-        {
-            text.append("Current: ")
-                    .append(recommendation.getCurrentLevel())
-                    .append(" → ")
-                    .append(recommendation.getTargetLevel());
-        }
-    }
-
     private static void appendMethodHeader(
             StringBuilder text,
             Recommendation recommendation,
             TrainingMethod method)
     {
-        appendBreak(text, 2);
         text.append("<b>BEST METHOD</b><br>")
                 .append(escape(method.getName()));
 

@@ -83,6 +83,17 @@ public class RecommendationEngine
                 continue;
             }
 
+            // Membership access is a hard capability gate. A F2P account must
+            // never be nudged toward a members-only skill simply because that
+            // skill would score highly on an unrestricted maxing roadmap.
+            if (!ContentAccessRules.isSkillAvailable(
+                    skill,
+                    snapshot.getMembershipStatus()
+            ))
+            {
+                continue;
+            }
+
             String activityId =
                     "skill:" + skill.name().toLowerCase();
 
@@ -102,6 +113,11 @@ public class RecommendationEngine
             );
 
             score += preferenceProfile.weightFor(activityId) * 10.0;
+
+            // Completed milestones get a temporary soft nudge downward so the
+            // planner tends to offer something fresh. This is not a cooldown:
+            // a genuinely important continuation can still remain #1.
+            score += preferenceProfile.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
 
             TrainingPlan trainingPlan =
