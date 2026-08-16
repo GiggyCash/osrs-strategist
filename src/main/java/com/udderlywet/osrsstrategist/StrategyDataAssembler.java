@@ -11,6 +11,7 @@ public class StrategyDataAssembler
     private final LiveItemStateReader itemStateReader;
     private final LiveQuestStateReader questStateReader;
     private final LiveDiaryStateReader diaryStateReader;
+    private final LiveCombatAchievementReader combatAchievementReader;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
@@ -22,6 +23,7 @@ public class StrategyDataAssembler
             LiveItemStateReader itemStateReader,
             LiveQuestStateReader questStateReader,
             LiveDiaryStateReader diaryStateReader,
+            LiveCombatAchievementReader combatAchievementReader,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
             FarmingAccessEvaluator farmingAccessEvaluator,
@@ -31,10 +33,26 @@ public class StrategyDataAssembler
         this.itemStateReader = itemStateReader;
         this.questStateReader = questStateReader;
         this.diaryStateReader = diaryStateReader;
+        this.combatAchievementReader = combatAchievementReader;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
         this.farmingAccessEvaluator = farmingAccessEvaluator;
         this.observedStateStore = observedStateStore;
+    }
+
+    /** Compatibility constructor for tests/callers created before live diary/CA readers. */
+    public StrategyDataAssembler(
+            AccountReader accountReader,
+            LiveItemStateReader itemStateReader,
+            LiveQuestStateReader questStateReader,
+            AccountAccessMemoryStore accessMemoryStore,
+            FarmingRunStateStore farmingRunStateStore,
+            FarmingAccessEvaluator farmingAccessEvaluator,
+            ObservedStateStore observedStateStore)
+    {
+        this(accountReader, itemStateReader, questStateReader,
+                null, null, accessMemoryStore, farmingRunStateStore,
+                farmingAccessEvaluator, observedStateStore);
     }
 
     public StrategyDataBundle read()
@@ -45,9 +63,16 @@ public class StrategyDataAssembler
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
                 ? liveQuests : observedStateStore.getQuests();
-        DiarySnapshot liveDiaries = diaryStateReader.read();
+        DiarySnapshot liveDiaries = diaryStateReader == null
+                ? null : diaryStateReader.read();
         DiarySnapshot diaries = liveDiaries != null
                 ? liveDiaries : observedStateStore.getDiaries();
+        CombatAchievementSnapshot observedCombatAchievements =
+                observedStateStore.getCombatAchievements();
+        CombatAchievementSnapshot combatAchievements =
+                combatAchievementReader == null
+                        ? observedCombatAchievements
+                        : combatAchievementReader.read(observedCombatAchievements);
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
@@ -59,7 +84,7 @@ public class StrategyDataAssembler
                 .quests(quests)
                 .diaries(diaries)
                 .clue(observedStateStore.getClue())
-                .combatAchievements(observedStateStore.getCombatAchievements())
+                .combatAchievements(combatAchievements)
                 .collectionLog(observedStateStore.getCollectionLog())
                 .economy(observedStateStore.getEconomy())
                 .capabilities(observedStateStore.getCapabilities())
