@@ -6,14 +6,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
-import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.RuneScapeProfileChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -47,9 +48,15 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject
     private RecommendationEngine recommendationEngine;
 
+    @Inject
+    private AccountPreferenceStore accountPreferenceStore;
+
     private final PreferenceProfile preferenceProfile =
             new PreferenceProfile();
 
+    private String loadedPreferenceProfileKey;
+    private boolean savingPreferenceProfile;
+    private AccountSnapshot latestSnapshot;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
@@ -65,26 +72,22 @@ public class OsrsStrategistPlugin extends Plugin
     @Override
     protected void startUp()
     {
-        panel =
-                new OsrsStrategistPanel();
-
-        BufferedImage icon =
-                createTemporaryIcon();
-
-        navButton =
-                NavigationButton.builder()
-                        .tooltip(
-                                "OSRS Strategist"
-                        )
-                        .icon(icon)
-                        .priority(5)
-                        .panel(panel)
-                        .build();
-
-        clientToolbar.addNavigation(
-                navButton
+        panel = new OsrsStrategistPanel(
+                this::applyRecommendationFeedback
         );
 
+        BufferedImage icon = createTemporaryIcon();
+
+        navButton = NavigationButton.builder()
+                .tooltip("OSRS Strategist")
+                .icon(icon)
+                .priority(5)
+                .panel(panel)
+                .build();
+
+        clientToolbar.addNavigation(navButton);
+
+        syncPreferenceProfile();
         updateAccountPanel();
     }
 
@@ -93,11 +96,13 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (navButton != null)
         {
-            clientToolbar.removeNavigation(
-                    navButton
-            );
+            clientToolbar.removeNavigation(navButton);
         }
 
+        preferenceProfile.clear();
+        loadedPreferenceProfileKey = null;
+        savingPreferenceProfile = false;
+        latestSnapshot = null;
         panel = null;
         navButton = null;
     }
@@ -117,6 +122,21 @@ public class OsrsStrategistPlugin extends Plugin
     }
 
     @Subscribe
+    public void onRuneScapeProfileChanged(
+            RuneScapeProfileChanged event)
+    {
+        loadedPreferenceProfileKey = null;
+
+        if (savingPreferenceProfile)
+        {
+            return;
+        }
+
+        syncPreferenceProfile();
+        updateAccountPanel();
+    }
+
+    @Subscribe
     public void onConfigChanged(
             ConfigChanged event)
     {
@@ -125,6 +145,98 @@ public class OsrsStrategistPlugin extends Plugin
         {
             updateAccountPanel();
         }
+    }
+
+    void applyRecommendationFeedback(
+            String activityId,
+            FeedbackAction action)
+    {
+        if (activityId == null || action == null)
+        {
+            return;
+        }
+
+        syncPreferenceProfile();
+        preferenceProfile.apply(activityId, action);
+
+        refreshRecommendationsImmediately();
+
+        savingPreferenceProfile = true;
+
+        try
+        {
+            accountPreferenceStore.save(
+                    preferenceProfile
+            );
+        }
+        finally
+        {
+            savingPreferenceProfile = false;
+        }
+
+        loadedPreferenceProfileKey =
+                accountPreferenceStore.getActiveProfileKey();
+    }
+
+    private void refreshRecommendationsImmediately()
+    {
+        if (panel == null || latestSnapshot == null)
+        {
+            return;
+        }
+
+        List<Recommendation> recommendations =
+                recommendationEngine.recommend(
+                        latestSnapshot,
+                        config.strategyMode(),
+                        config.sessionIntent(),
+                        preferenceProfile
+                );
+
+        Runnable update = () ->
+        {
+            panel.updateRecommendations(recommendations);
+            panel.revalidate();
+            panel.repaint();
+        };
+
+        if (SwingUtilities.isEventDispatchThread())
+        {
+            update.run();
+        }
+        else
+        {
+            SwingUtilities.invokeLater(update);
+        }
+    }
+
+    private void syncPreferenceProfile()
+    {
+        String activeProfileKey =
+                accountPreferenceStore.getActiveProfileKey();
+
+        if (Objects.equals(
+                loadedPreferenceProfileKey,
+                activeProfileKey)
+                && activeProfileKey != null)
+        {
+            return;
+        }
+
+        preferenceProfile.clear();
+
+        if (activeProfileKey == null)
+        {
+            loadedPreferenceProfileKey = null;
+            return;
+        }
+
+        accountPreferenceStore.loadInto(
+                preferenceProfile
+        );
+
+        loadedPreferenceProfileKey =
+                activeProfileKey;
     }
 
     private void updateAccountPanel()
@@ -139,6 +251,8 @@ public class OsrsStrategistPlugin extends Plugin
 
         if (snapshot == null)
         {
+            latestSnapshot = null;
+
             SwingUtilities.invokeLater(
                     () ->
                     {
@@ -162,10 +276,14 @@ public class OsrsStrategistPlugin extends Plugin
             return;
         }
 
+        latestSnapshot = snapshot;
+        syncPreferenceProfile();
+
         List<Recommendation> recommendations =
                 recommendationEngine.recommend(
                         snapshot,
                         config.strategyMode(),
+                        config.sessionIntent(),
                         preferenceProfile
                 );
 
@@ -192,60 +310,21 @@ public class OsrsStrategistPlugin extends Plugin
 
     private BufferedImage createTemporaryIcon()
     {
-        BufferedImage image =
-                new BufferedImage(
-                        16,
-                        16,
-                        BufferedImage.TYPE_INT_ARGB
-                );
-
-        Graphics2D graphics =
-                image.createGraphics();
-
-        graphics.setColor(
-                new Color(
-                        60,
-                        45,
-                        30
-                )
-        );
-
-        graphics.fillRect(
-                0,
-                0,
+        BufferedImage image = new BufferedImage(
                 16,
-                16
+                16,
+                BufferedImage.TYPE_INT_ARGB
         );
 
-        graphics.setColor(
-                new Color(
-                        212,
-                        167,
-                        44
-                )
-        );
+        Graphics2D graphics = image.createGraphics();
 
-        graphics.drawOval(
-                1,
-                1,
-                13,
-                13
-        );
+        graphics.setColor(new Color(60, 45, 30));
+        graphics.fillRect(0, 0, 16, 16);
 
-        graphics.drawLine(
-                8,
-                3,
-                8,
-                13
-        );
-
-        graphics.drawLine(
-                3,
-                8,
-                13,
-                8
-        );
-
+        graphics.setColor(new Color(212, 167, 44));
+        graphics.drawOval(1, 1, 13, 13);
+        graphics.drawLine(8, 3, 8, 13);
+        graphics.drawLine(3, 8, 13, 8);
         graphics.dispose();
 
         return image;
