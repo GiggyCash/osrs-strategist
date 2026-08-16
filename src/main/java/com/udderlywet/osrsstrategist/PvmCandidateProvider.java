@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Singleton;
 
-/** Makes explicitly verified/realistic PvM assessments eligible for DO NEXT. */
+/** Makes verified or near-ready PvM assessments eligible for DO NEXT. */
 @Singleton
 public class PvmCandidateProvider implements StrategyCandidateProvider
 {
@@ -30,19 +30,37 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                 : context.getData().getPvm().getReadinessByActivity().entrySet())
         {
             PvmReadiness readiness = entry.getValue();
-            if (readiness == null || !readiness.isRealisticallyReady()) continue;
+            if (readiness == null) continue;
 
             String id = "pvm:" + entry.getKey();
             if (preferences.isOnCooldown(id)) continue;
-            double score = 48.0 + preferences.weightFor(id) * 10.0;
 
-            result.add(new StrategyCandidate(
-                    id,
-                    "Do " + entry.getKey(),
-                    "The account has an explicit realistic-readiness assessment for this PvM activity.",
-                    score,
-                    readiness.getConfidence()
-            ));
+            if (readiness.isRealisticallyReady())
+            {
+                double score = 48.0 + preferences.weightFor(id) * 10.0;
+                result.add(new StrategyCandidate(
+                        id,
+                        "Do " + entry.getKey(),
+                        "Stats, access, gear and supplies have passed the active readiness checks for this PvM activity.",
+                        score,
+                        readiness.getConfidence()));
+                continue;
+            }
+
+            // If the only remaining issue is the final loadout/mechanics proof,
+            // surface preparation instead of pretending the boss is ready.
+            if (readiness.getMissingRequirements().size() == 1
+                    && readiness.getMissingRequirements().get(0)
+                    .startsWith("Verify practical gear"))
+            {
+                double score = 22.0 + preferences.weightFor(id) * 10.0;
+                result.add(new StrategyCandidate(
+                        id,
+                        "Prepare for " + entry.getKey(),
+                        readiness.getMissingRequirements().get(0),
+                        score,
+                        RecommendationConfidence.CHECK_NEEDED));
+            }
         }
         return result;
     }
