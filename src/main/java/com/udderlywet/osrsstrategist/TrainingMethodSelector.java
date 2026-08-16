@@ -7,6 +7,16 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
+/**
+ * Chooses HOW to train one skill from the methods that are valid for the current
+ * account and level.
+ *
+ * <p>Method choice uses strategy/session fit, account-mode policy, risk policy,
+ * and live readiness evidence. Readiness is deliberately only a bounded score
+ * adjustment: verified supplies/access should win a close contest, but a clearly
+ * superior long-term method is not hidden merely because one requirement still
+ * needs confirmation.</p>
+ */
 @Singleton
 public class TrainingMethodSelector
 {
@@ -15,6 +25,7 @@ public class TrainingMethodSelector
     private final ExpandedTrainingMethodCatalog expandedCatalog;
     private final F2pBaselineMethodCatalog f2pBaselineCatalog;
     private final TrainingMethodPolicy methodPolicy;
+    private final ActionabilityScoringPolicy actionabilityScoringPolicy;
 
     @Inject
     public TrainingMethodSelector(
@@ -22,13 +33,31 @@ public class TrainingMethodSelector
             RequirementEvidenceEngine requirementEvidenceEngine,
             ExpandedTrainingMethodCatalog expandedCatalog,
             F2pBaselineMethodCatalog f2pBaselineCatalog,
-            TrainingMethodPolicy methodPolicy)
+            TrainingMethodPolicy methodPolicy,
+            ActionabilityScoringPolicy actionabilityScoringPolicy)
     {
         this.database = database;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
         this.expandedCatalog = expandedCatalog;
         this.f2pBaselineCatalog = f2pBaselineCatalog;
-        this.methodPolicy = methodPolicy;
+        this.methodPolicy = methodPolicy == null
+                ? new TrainingMethodPolicy() : methodPolicy;
+        this.actionabilityScoringPolicy = actionabilityScoringPolicy == null
+                ? new ActionabilityScoringPolicy()
+                : actionabilityScoringPolicy;
+    }
+
+    /** Compatibility constructor used by existing focused catalog tests. */
+    public TrainingMethodSelector(
+            TrainingMethodDatabase database,
+            RequirementEvidenceEngine requirementEvidenceEngine,
+            ExpandedTrainingMethodCatalog expandedCatalog,
+            F2pBaselineMethodCatalog f2pBaselineCatalog,
+            TrainingMethodPolicy methodPolicy)
+    {
+        this(database, requirementEvidenceEngine, expandedCatalog,
+                f2pBaselineCatalog, methodPolicy,
+                new ActionabilityScoringPolicy());
     }
 
     /** Compatibility constructor keeps focused legacy-selector tests isolated. */
@@ -37,7 +66,8 @@ public class TrainingMethodSelector
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
         this(database, requirementEvidenceEngine, null, null,
-                new TrainingMethodPolicy());
+                new TrainingMethodPolicy(),
+                new ActionabilityScoringPolicy());
     }
 
     public TrainingMethodSelector(TrainingMethodDatabase database)
@@ -88,7 +118,10 @@ public class TrainingMethodSelector
             if (confidence == RecommendationConfidence.BLOCKED) continue;
 
             double score = method.scoreFor(strategyMode, sessionIntent)
-                    + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent);
+                    + methodPolicy.scoreAdjustment(
+                            data, metadata, strategyMode, sessionIntent)
+                    + actionabilityScoringPolicy.adjustmentFor(
+                            confidence, checks);
             if (bestMethod == null || score > bestScore)
             {
                 bestMethod = method;

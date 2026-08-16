@@ -1,17 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
 
 /**
- * Small score adjustment for how immediately actionable a recommendation is.
+ * Small score adjustment for how immediately actionable a method or final
+ * recommendation is.
  *
  * <p>This policy is intentionally bounded. Readiness is useful tie-breaking
  * information, not a replacement for progression value. A fully verified action
  * gets a modest bonus; unresolved preparation gets a modest penalty. A 10-point
  * strategic advantage should not disappear because the stronger route needs the
  * player to confirm one teleport or open the bank once.</p>
+ *
+ * <p>The same calculation is used twice: first while choosing the best method
+ * inside a skill, then once more at the final cross-domain recommendation layer.
+ * The second pass evaluates the recommendation that actually survived method
+ * selection, so account readiness influences both HOW and WHAT without either
+ * layer needing to duplicate the evidence rules.</p>
  */
 @Singleton
 public class ActionabilityScoringPolicy
@@ -40,25 +48,37 @@ public class ActionabilityScoringPolicy
     public double adjustmentFor(Recommendation recommendation)
     {
         if (recommendation == null) return 0.0;
-        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED)
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        return adjustmentFor(
+                recommendation.getConfidence(),
+                plan == null ? Collections.emptyList()
+                        : plan.getRequirementChecks());
+    }
+
+    /** Shared method-selection/cross-domain actionability calculation. */
+    public double adjustmentFor(
+            RecommendationConfidence confidence,
+            List<RequirementCheck> checks)
+    {
+        if (confidence == RecommendationConfidence.VERIFIED)
             return VERIFIED_BONUS;
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        if (confidence == RecommendationConfidence.BLOCKED)
             return -1000.0;
 
-        int unresolved = unresolvedRequirements(recommendation);
+        int unresolved = unresolvedRequirements(checks);
         double penalty = CHECK_BASE_PENALTY
                 + unresolved * EACH_UNRESOLVED_PENALTY;
         return -Math.min(MAX_CHECK_PENALTY, penalty);
     }
 
-    private static int unresolvedRequirements(Recommendation recommendation)
+    private static int unresolvedRequirements(List<RequirementCheck> checks)
     {
-        TrainingPlan plan = recommendation.getTrainingPlan();
-        if (plan == null) return 1;
+        if (checks == null || checks.isEmpty()) return 1;
         int unresolved = 0;
-        for (RequirementCheck check : plan.getRequirementChecks())
+        for (RequirementCheck check : checks)
         {
-            if (check.getState() != RequirementState.VERIFIED) unresolved++;
+            if (check != null && check.getState() != RequirementState.VERIFIED)
+                unresolved++;
         }
         return Math.max(1, unresolved);
     }
