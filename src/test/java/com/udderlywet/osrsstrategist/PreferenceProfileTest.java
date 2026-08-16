@@ -44,4 +44,27 @@ public class PreferenceProfileTest
                 profile.weightFor("skill:agility") < 0.0
         );
     }
+
+    @Test
+    public void milestoneVarietyPenaltyDoesNotTeachDislike()
+    {
+        PreferenceProfile profile = new PreferenceProfile();
+
+        profile.addTemporaryScoreAdjustment(
+                "skill:farming",
+                -10.0,
+                60_000L
+        );
+
+        assertEquals(
+                -10.0,
+                profile.timedScoreAdjustmentFor("skill:farming"),
+                0.0001
+        );
+        assertEquals(
+                0.0,
+                profile.weightFor("skill:farming"),
+                0.0001
+        );
+    }
 }
