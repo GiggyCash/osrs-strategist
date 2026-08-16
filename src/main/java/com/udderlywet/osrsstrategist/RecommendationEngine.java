@@ -32,13 +32,20 @@ public class RecommendationEngine
                 continue;
             }
 
+            String activityId =
+                    "skill:" + skill.name().toLowerCase();
+
+            // Feedback such as Later, Not Today, and Dislike can temporarily
+            // snooze an activity. Long-term preference remains separate.
+            if (preferenceProfile.isOnCooldown(activityId))
+            {
+                continue;
+            }
+
             int target = nextTarget(level);
 
             double score =
                     baseScore(skill, level, strategyMode);
-
-            String activityId =
-                    "skill:" + skill.name().toLowerCase();
 
             score +=
                     preferenceProfile.weightFor(activityId) * 10.0;
