@@ -12,6 +12,7 @@ public class StrategyDataAssembler
     private final LiveQuestStateReader questStateReader;
     private final LiveDiaryStateReader diaryStateReader;
     private final LiveCombatAchievementReader combatAchievementReader;
+    private final LiveClueStateReader clueStateReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
@@ -25,6 +26,7 @@ public class StrategyDataAssembler
             LiveQuestStateReader questStateReader,
             LiveDiaryStateReader diaryStateReader,
             LiveCombatAchievementReader combatAchievementReader,
+            LiveClueStateReader clueStateReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
@@ -36,6 +38,7 @@ public class StrategyDataAssembler
         this.questStateReader = questStateReader;
         this.diaryStateReader = diaryStateReader;
         this.combatAchievementReader = combatAchievementReader;
+        this.clueStateReader = clueStateReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
@@ -54,7 +57,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, questStateReader,
-                null, null, null, accessMemoryStore, farmingRunStateStore,
+                null, null, null, null, accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
 
@@ -79,6 +82,17 @@ public class StrategyDataAssembler
                 combatAchievementReader == null
                         ? observedCombatAchievements
                         : combatAchievementReader.read(observedCombatAchievements);
+
+        AccountMode accountMode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        ClueSnapshot rememberedClue = observedStateStore.getClue();
+        ClueSnapshot clue = clueStateReader == null
+                ? rememberedClue
+                : clueStateReader.read(accountMode, inventory, bank, rememberedClue);
+        if (clueStateReader != null && clue != rememberedClue)
+        {
+            observedStateStore.setClue(clue);
+        }
+
         PvmSnapshot observedPvm = observedStateStore.getPvm();
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
                 ? observedPvm
@@ -94,7 +108,7 @@ public class StrategyDataAssembler
                 .equipment(equipment)
                 .quests(quests)
                 .diaries(diaries)
-                .clue(observedStateStore.getClue())
+                .clue(clue)
                 .combatAchievements(combatAchievements)
                 .collectionLog(observedStateStore.getCollectionLog())
                 .economy(observedStateStore.getEconomy())
