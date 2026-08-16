@@ -2,12 +2,28 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
 @Singleton
 public class MilestoneTracker
 {
+    private final ProgressionObjectiveService progressionObjectiveService;
+
+    /** Compatibility constructor retained for focused unit tests. */
+    public MilestoneTracker()
+    {
+        this.progressionObjectiveService = null;
+    }
+
+    @Inject
+    public MilestoneTracker(
+            ProgressionObjectiveService progressionObjectiveService)
+    {
+        this.progressionObjectiveService = progressionObjectiveService;
+    }
+
     public MilestoneCompletion detectCompletion(
             TrackedMilestone tracked,
             AccountSnapshot account)
@@ -23,7 +39,15 @@ public class MilestoneTracker
         );
     }
 
-    public TrackedMilestone fromRecommendations(List<Recommendation> recommendations)
+    public TrackedMilestone fromRecommendations(
+            List<Recommendation> recommendations)
+    {
+        return fromRecommendations(recommendations, null);
+    }
+
+    public TrackedMilestone fromRecommendations(
+            List<Recommendation> recommendations,
+            CollectionLogSnapshot collectionLog)
     {
         if (recommendations == null || recommendations.isEmpty()) return null;
         Recommendation best = recommendations.get(0);
@@ -36,9 +60,19 @@ public class MilestoneTracker
         }
 
         TrainingPlan plan = best.getTrainingPlan();
-        boolean progressionProtected = plan != null
-                && plan.getMethod() != null
-                && plan.getMethod().isProgressionProtected();
+        boolean progressionProtected;
+        if (progressionObjectiveService != null)
+        {
+            progressionProtected = progressionObjectiveService.shouldProtect(
+                    plan, collectionLog
+            );
+        }
+        else
+        {
+            progressionProtected = plan != null
+                    && plan.getMethod() != null
+                    && plan.getMethod().isProgressionProtected();
+        }
 
         return new TrackedMilestone(
                 best.getId(), best.getTitle(), skill.name(),
