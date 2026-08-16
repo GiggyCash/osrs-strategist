@@ -21,7 +21,7 @@ public class GearProgressionCatalogTest
     }
 
     @Test
-    public void bisEntriesExplainEncounterDependence()
+    public void bisEntriesExplainContextDependence()
     {
         GearProgressionCatalog catalog = new GearProgressionCatalog();
         for (GearProgressionEntry entry : catalog.all())
@@ -31,7 +31,9 @@ public class GearProgressionCatalogTest
             assertTrue(entry.getId(), note.contains("target")
                     || note.contains("encounter")
                     || note.contains("room")
-                    || note.contains("mechanic"));
+                    || note.contains("mechanic")
+                    || note.contains("setup")
+                    || note.contains("raid"));
         }
     }
 
