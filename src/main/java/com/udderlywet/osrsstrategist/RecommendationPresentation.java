@@ -1,13 +1,13 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Converts a recommendation into concise sidebar copy.
  *
- * <p>Level progress is rendered visually by the recommendation card, so this
- * formatter focuses only on method, attention/confidence, and preparation.
- * Deeper instructions and reasoning remain behind Details.</p>
+ * <p>"Check Needed" is never left unexplained. The compact card shows the
+ * first unresolved requirement; Details shows the complete readiness list.</p>
  */
 public final class RecommendationPresentation
 {
@@ -29,39 +29,36 @@ public final class RecommendationPresentation
         {
             text.append("<b>BEST METHOD</b><br>")
                     .append("Check needed before choosing a method.");
-            appendBreak(text, 1);
-            text.append("<i>")
-                    .append(confidenceLabel(
-                            recommendation.getConfidence()
-                    ))
-                    .append("</i>");
             return text.toString();
         }
 
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
 
-        List<String> requirements = method.getRequirements();
-        if (!requirements.isEmpty())
+        List<RequirementCheck> unresolved = unresolved(plan);
+        if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>PREP</b><br>");
+            text.append("<b>CHECK NEEDED</b><br>");
 
-            int shown = Math.min(2, requirements.size());
+            int shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
                 if (i > 0)
                 {
                     text.append("<br>");
                 }
-                text.append("• ")
-                        .append(escape(requirements.get(i)));
+                RequirementCheck check = unresolved.get(i);
+                text.append(check.getState() == RequirementState.BLOCKED
+                                ? "• Blocked: "
+                                : "• ")
+                        .append(escape(check.getLabel()));
             }
 
-            if (requirements.size() > shown)
+            if (unresolved.size() > shown)
             {
                 text.append("<br>• +")
-                        .append(requirements.size() - shown)
+                        .append(unresolved.size() - shown)
                         .append(" more in Details");
             }
         }
@@ -93,6 +90,29 @@ public final class RecommendationPresentation
         text.append("<b>HOW</b><br>")
                 .append(escape(method.getInstructions()));
 
+        if (!plan.getRequirementChecks().isEmpty())
+        {
+            appendBreak(text, 2);
+            text.append("<b>READINESS</b>");
+
+            for (RequirementCheck check : plan.getRequirementChecks())
+            {
+                text.append("<br>")
+                        .append(stateMarker(check.getState()))
+                        .append(" ")
+                        .append(escape(check.getLabel()));
+
+                if (check.getState() != RequirementState.VERIFIED
+                        && check.getEvidence() != null
+                        && !check.getEvidence().trim().isEmpty())
+                {
+                    text.append("<br><i>")
+                            .append(escape(check.getEvidence()))
+                            .append("</i>");
+                }
+            }
+        }
+
         if (recommendation.getReason() != null
                 && !recommendation.getReason().trim().isEmpty())
         {
@@ -101,18 +121,33 @@ public final class RecommendationPresentation
                     .append(escape(recommendation.getReason()));
         }
 
-        if (!method.getRequirements().isEmpty())
+        return text.toString();
+    }
+
+    private static List<RequirementCheck> unresolved(TrainingPlan plan)
+    {
+        List<RequirementCheck> unresolved = new ArrayList<>();
+        for (RequirementCheck check : plan.getRequirementChecks())
         {
-            appendBreak(text, 2);
-            text.append("<b>FULL PREP</b>");
-            for (String requirement : method.getRequirements())
+            if (check.getState() != RequirementState.VERIFIED)
             {
-                text.append("<br>• ")
-                        .append(escape(requirement));
+                unresolved.add(check);
             }
         }
+        return unresolved;
+    }
 
-        return text.toString();
+    private static String stateMarker(RequirementState state)
+    {
+        if (state == RequirementState.VERIFIED)
+        {
+            return "✓";
+        }
+        if (state == RequirementState.BLOCKED)
+        {
+            return "✕";
+        }
+        return "?";
     }
 
     private static void appendMethodHeader(
@@ -166,9 +201,7 @@ public final class RecommendationPresentation
         return "Check Needed";
     }
 
-    private static void appendBreak(
-            StringBuilder text,
-            int count)
+    private static void appendBreak(StringBuilder text, int count)
     {
         for (int i = 0; i < count; i++)
         {
