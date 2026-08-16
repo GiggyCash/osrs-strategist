@@ -23,6 +23,12 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         if (clue == null || !clue.isCluePresent()) return result;
 
         ClueTier tier = ClueTier.fromText(clue.getClueType());
+        AccountSnapshot account = context.getData().getAccount();
+        MembershipStatus membership = account == null
+                ? MembershipStatus.UNKNOWN
+                : account.getMembershipStatus();
+        if (!tier.isAvailableFor(membership)) return result;
+
         // Keep one stable activity id across clue tiers so learned preference,
         // snoozes, and older profiles continue to work after this richer model.
         String id = "clue:pending";
