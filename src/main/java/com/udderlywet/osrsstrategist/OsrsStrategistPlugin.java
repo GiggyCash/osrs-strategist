@@ -76,8 +76,7 @@ public class OsrsStrategistPlugin extends Plugin
                 this::applyRecommendationFeedback
         );
 
-        BufferedImage icon =
-                createTemporaryIcon();
+        BufferedImage icon = createTemporaryIcon();
 
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
@@ -128,9 +127,6 @@ public class OsrsStrategistPlugin extends Plugin
     {
         loadedPreferenceProfileKey = null;
 
-        // setRSProfileConfiguration can create a profile and post this event
-        // while a feedback save is still in progress. Do not reload until the
-        // write has completed.
         if (savingPreferenceProfile)
         {
             return;
@@ -163,9 +159,6 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         preferenceProfile.apply(activityId, action);
 
-        // Feedback buttons live on Swing's event-dispatch thread. Re-rank from
-        // the most recent account snapshot immediately so Later, Not Today,
-        // and Dislike visibly replace DO NEXT before the click finishes.
         refreshRecommendationsImmediately();
 
         savingPreferenceProfile = true;
@@ -181,9 +174,6 @@ public class OsrsStrategistPlugin extends Plugin
             savingPreferenceProfile = false;
         }
 
-        // Keep the just-updated in-memory profile active. If this was the
-        // account's first saved Strategist preference, RuneLite may have
-        // created its RS profile during save().
         loadedPreferenceProfileKey =
                 accountPreferenceStore.getActiveProfileKey();
     }
@@ -199,13 +189,16 @@ public class OsrsStrategistPlugin extends Plugin
                 recommendationEngine.recommend(
                         latestSnapshot,
                         config.strategyMode(),
+                        config.sessionIntent(),
                         preferenceProfile
                 );
 
         Runnable update = () ->
-                panel.updateRecommendations(
-                        recommendations
-                );
+        {
+            panel.updateRecommendations(recommendations);
+            panel.revalidate();
+            panel.repaint();
+        };
 
         if (SwingUtilities.isEventDispatchThread())
         {
@@ -290,6 +283,7 @@ public class OsrsStrategistPlugin extends Plugin
                 recommendationEngine.recommend(
                         snapshot,
                         config.strategyMode(),
+                        config.sessionIntent(),
                         preferenceProfile
                 );
 
@@ -316,52 +310,21 @@ public class OsrsStrategistPlugin extends Plugin
 
     private BufferedImage createTemporaryIcon()
     {
-        BufferedImage image =
-                new BufferedImage(
-                        16,
-                        16,
-                        BufferedImage.TYPE_INT_ARGB
-                );
-
-        Graphics2D graphics =
-                image.createGraphics();
-
-        graphics.setColor(
-                new Color(60, 45, 30)
-        );
-
-        graphics.fillRect(
-                0,
-                0,
+        BufferedImage image = new BufferedImage(
                 16,
-                16
+                16,
+                BufferedImage.TYPE_INT_ARGB
         );
 
-        graphics.setColor(
-                new Color(212, 167, 44)
-        );
+        Graphics2D graphics = image.createGraphics();
 
-        graphics.drawOval(
-                1,
-                1,
-                13,
-                13
-        );
+        graphics.setColor(new Color(60, 45, 30));
+        graphics.fillRect(0, 0, 16, 16);
 
-        graphics.drawLine(
-                8,
-                3,
-                8,
-                13
-        );
-
-        graphics.drawLine(
-                3,
-                8,
-                13,
-                8
-        );
-
+        graphics.setColor(new Color(212, 167, 44));
+        graphics.drawOval(1, 1, 13, 13);
+        graphics.drawLine(8, 3, 8, 13);
+        graphics.drawLine(3, 8, 13, 8);
         graphics.dispose();
 
         return image;

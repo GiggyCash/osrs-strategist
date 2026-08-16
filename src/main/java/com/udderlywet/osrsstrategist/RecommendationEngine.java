@@ -3,15 +3,39 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
 @Singleton
 public class RecommendationEngine
 {
+    private final TrainingMethodSelector trainingMethodSelector;
+
+    @Inject
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector)
+    {
+        this.trainingMethodSelector = trainingMethodSelector;
+    }
+
     public List<Recommendation> recommend(
             AccountSnapshot snapshot,
             StrategyMode strategyMode,
+            PreferenceProfile preferenceProfile)
+    {
+        return recommend(
+                snapshot,
+                strategyMode,
+                SessionIntent.PICK_FOR_ME,
+                preferenceProfile
+        );
+    }
+
+    public List<Recommendation> recommend(
+            AccountSnapshot snapshot,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
     {
         List<Recommendation> recommendations =
@@ -26,7 +50,8 @@ public class RecommendationEngine
                 continue;
             }
 
-            // Hitpoints is generally progressed through other combat skills.
+            // Hitpoints is normally progressed through the combat style that
+            // the account needs, so do not recommend it as a standalone task.
             if (skill == Skill.HITPOINTS)
             {
                 continue;
@@ -35,8 +60,6 @@ public class RecommendationEngine
             String activityId =
                     "skill:" + skill.name().toLowerCase();
 
-            // Feedback such as Later, Not Today, and Dislike can temporarily
-            // snooze an activity. Long-term preference remains separate.
             if (preferenceProfile.isOnCooldown(activityId))
             {
                 continue;
@@ -50,6 +73,23 @@ public class RecommendationEngine
             score +=
                     preferenceProfile.weightFor(activityId) * 10.0;
 
+            TrainingPlan trainingPlan =
+                    trainingMethodSelector.select(
+                            skill,
+                            level,
+                            strategyMode,
+                            sessionIntent
+                    );
+
+            if (trainingPlan != null
+                    && trainingPlan.getMethod() != null)
+            {
+                score += trainingPlan.getMethod().scoreFor(
+                        strategyMode,
+                        sessionIntent
+                ) * 0.35;
+            }
+
             String title =
                     "Train " + skill.getName()
                             + " to " + target;
@@ -58,15 +98,23 @@ public class RecommendationEngine
                     buildReason(
                             skill,
                             level,
-                            target
+                            target,
+                            trainingPlan
                     );
+
+            RecommendationConfidence confidence =
+                    trainingPlan == null
+                            ? RecommendationConfidence.CHECK_NEEDED
+                            : trainingPlan.getConfidence();
 
             recommendations.add(
                     new Recommendation(
                             activityId,
                             title,
                             reason,
-                            score
+                            score,
+                            trainingPlan,
+                            confidence
                     )
             );
         }
@@ -94,7 +142,6 @@ public class RecommendationEngine
     {
         double score = 20.0;
 
-        // Early levels are fast and usually provide strong account value.
         if (level < 10)
         {
             score += 45.0;
@@ -224,116 +271,102 @@ public class RecommendationEngine
         {
             return 10;
         }
-
         if (level < 20)
         {
             return 20;
         }
-
         if (level < 30)
         {
             return 30;
         }
-
         if (level < 40)
         {
             return 40;
         }
-
         if (level < 50)
         {
             return 50;
         }
-
         if (level < 60)
         {
             return 60;
         }
-
         if (level < 70)
         {
             return 70;
         }
-
         if (level < 80)
         {
             return 80;
         }
-
         if (level < 90)
         {
             return 90;
         }
-
         return 99;
     }
 
     private String buildReason(
             Skill skill,
             int level,
-            int target)
+            int target,
+            TrainingPlan trainingPlan)
     {
-        String base =
-                "Current level: " + level
-                        + ". Next useful checkpoint: "
-                        + target + ". ";
+        StringBuilder reason = new StringBuilder();
 
+        reason.append("Current level: ")
+                .append(level)
+                .append(". Next checkpoint: ")
+                .append(target)
+                .append(". ")
+                .append(skillReason(skill));
+
+        if (trainingPlan != null
+                && trainingPlan.getMethod() != null)
+        {
+            TrainingMethod method = trainingPlan.getMethod();
+
+            reason.append(" <br><br><b>BEST METHOD:</b> ")
+                    .append(method.getName())
+                    .append(". ")
+                    .append(method.getInstructions())
+                    .append(" <br><b>Why:</b> ")
+                    .append(trainingPlan.getWhyThisMethod());
+        }
+        else
+        {
+            reason.append(" <br><br><b>BEST METHOD:</b> Check needed. Strategist does not yet have a verified method for this account state.");
+        }
+
+        return reason.toString();
+    }
+
+    private String skillReason(Skill skill)
+    {
         switch (skill)
         {
             case FARMING:
-                return base
-                        + "Farming supports recurring runs, supplies, "
-                        + "and many later account goals.";
-
+                return "Farming supports recurring runs, supplies, and many later account goals.";
             case HERBLORE:
-                return base
-                        + "Herblore unlocks stronger potions and "
-                        + "becomes important for later progression.";
-
+                return "Herblore unlocks stronger potions and becomes important for later progression.";
             case SLAYER:
-                return base
-                        + "Slayer progresses combat while opening "
-                        + "new monsters, drops, and equipment.";
-
+                return "Slayer progresses combat while opening new monsters, drops, and equipment.";
             case CONSTRUCTION:
-                return base
-                        + "Construction develops POH utility, travel, "
-                        + "storage, and later account convenience.";
-
+                return "Construction develops POH utility, travel, storage, and later account convenience.";
             case AGILITY:
-                return base
-                        + "Agility supports shortcuts and many future "
-                        + "quest and diary requirements.";
-
+                return "Agility supports shortcuts and many future quest and diary requirements.";
             case RUNECRAFT:
-                return base
-                        + "Early Runecraft levels open more rune "
-                        + "options and future training activities.";
-
+                return "Runecraft opens rune options and future training activities.";
             case SAILING:
-                return base
-                        + "Sailing levels open more sea content and "
-                        + "future progression options.";
-
+                return "Sailing opens sea content and future progression options.";
             case CRAFTING:
-                return base
-                        + "Crafting supports equipment, jewelry, "
-                        + "quests, and future upgrades.";
-
+                return "Crafting supports equipment, jewelry, quests, and future upgrades.";
             case MAGIC:
-                return base
-                        + "Magic improves combat, teleports, utility, "
-                        + "and access to later spell options.";
-
+                return "Magic improves combat, teleports, utility, and later spell options.";
             case PRAYER:
-                return base
-                        + "Prayer unlocks stronger protection and "
-                        + "combat prayers.";
-
+                return "Prayer unlocks stronger protection and combat prayers.";
             default:
-                return base
-                        + "This is a useful step toward stronger "
-                        + "overall account progression.";
+                return "This is a useful step toward stronger overall account progression.";
         }
     }
 }
