@@ -3,31 +3,31 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Converts a recommendation into concise sidebar copy.
- *
- * <p>"Check Needed" is never left unexplained. The compact card shows the
- * first unresolved requirement; Details shows the complete readiness list and
- * the evidence behind both verified and unresolved checks.</p>
- */
+/** Converts a recommendation into concise sidebar copy. */
 public final class RecommendationPresentation
 {
-    private RecommendationPresentation()
-    {
-    }
+    private RecommendationPresentation() {}
 
     public static String compactHtml(Recommendation recommendation)
     {
-        if (recommendation == null)
-        {
-            return "";
-        }
-
+        if (recommendation == null) return "";
         StringBuilder text = new StringBuilder();
         TrainingPlan plan = recommendation.getTrainingPlan();
 
         if (plan == null || plan.getMethod() == null)
         {
+            if (!isSkillRecommendation(recommendation))
+            {
+                text.append("<b>NEXT STEP</b><br>")
+                        .append(confidenceLabel(recommendation.getConfidence()));
+                if (hasText(recommendation.getReason()))
+                {
+                    appendBreak(text, 2);
+                    text.append(escape(recommendation.getReason()));
+                }
+                return text.toString();
+            }
+
             text.append("<b>BEST METHOD</b><br>")
                     .append("Check needed before choosing a method.");
             return text.toString();
@@ -35,27 +35,20 @@ public final class RecommendationPresentation
 
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
-
         List<RequirementCheck> unresolved = unresolved(plan);
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
             text.append("<b>CHECK NEEDED</b><br>");
-
             int shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
-                if (i > 0)
-                {
-                    text.append("<br>");
-                }
+                if (i > 0) text.append("<br>");
                 RequirementCheck check = unresolved.get(i);
                 text.append(check.getState() == RequirementState.BLOCKED
-                                ? "• Blocked: "
-                                : "• ")
+                                ? "• Blocked: " : "• ")
                         .append(escape(check.getLabel()));
             }
-
             if (unresolved.size() > shown)
             {
                 text.append("<br>• +")
@@ -63,22 +56,30 @@ public final class RecommendationPresentation
                         .append(" more in Details");
             }
         }
-
         return text.toString();
     }
 
     public static String detailedHtml(Recommendation recommendation)
     {
-        if (recommendation == null)
-        {
-            return "";
-        }
-
+        if (recommendation == null) return "";
         StringBuilder text = new StringBuilder();
         TrainingPlan plan = recommendation.getTrainingPlan();
 
         if (plan == null || plan.getMethod() == null)
         {
+            if (!isSkillRecommendation(recommendation))
+            {
+                text.append("<b>NEXT STEP</b><br>")
+                        .append(confidenceLabel(recommendation.getConfidence()));
+                if (hasText(recommendation.getReason()))
+                {
+                    appendBreak(text, 2);
+                    text.append("<b>WHY IT MATTERS</b><br>")
+                            .append(escape(recommendation.getReason()));
+                }
+                return text.toString();
+            }
+
             text.append("<b>BEST METHOD</b><br>")
                     .append("Check needed before choosing a method.");
             return text.toString();
@@ -86,7 +87,6 @@ public final class RecommendationPresentation
 
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
-
         appendBreak(text, 2);
         text.append("<b>HOW</b><br>")
                 .append(escape(method.getInstructions()));
@@ -95,20 +95,13 @@ public final class RecommendationPresentation
         {
             appendBreak(text, 2);
             text.append("<b>READINESS</b>");
-
             for (RequirementCheck check : plan.getRequirementChecks())
             {
                 text.append("<br>")
                         .append(stateMarker(check.getState()))
                         .append(" ")
                         .append(escape(check.getLabel()));
-
-                // Details is intentionally the deeper view, so show the proof
-                // for successful checks too. This lets a player understand that
-                // an unlock came from quest state or remembered access instead
-                // of wondering why Strategist marked it Verified.
-                if (check.getEvidence() != null
-                        && !check.getEvidence().trim().isEmpty())
+                if (hasText(check.getEvidence()))
                 {
                     text.append("<br><i>")
                             .append(escape(check.getEvidence()))
@@ -117,15 +110,24 @@ public final class RecommendationPresentation
             }
         }
 
-        if (recommendation.getReason() != null
-                && !recommendation.getReason().trim().isEmpty())
+        if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
             text.append("<b>WHY IT MATTERS</b><br>")
                     .append(escape(recommendation.getReason()));
         }
-
         return text.toString();
+    }
+
+    private static boolean isSkillRecommendation(Recommendation recommendation)
+    {
+        return recommendation.getId() != null
+                && recommendation.getId().startsWith("skill:");
+    }
+
+    private static boolean hasText(String value)
+    {
+        return value != null && !value.trim().isEmpty();
     }
 
     private static List<RequirementCheck> unresolved(TrainingPlan plan)
@@ -143,14 +145,8 @@ public final class RecommendationPresentation
 
     private static String stateMarker(RequirementState state)
     {
-        if (state == RequirementState.VERIFIED)
-        {
-            return "✓";
-        }
-        if (state == RequirementState.BLOCKED)
-        {
-            return "✕";
-        }
+        if (state == RequirementState.VERIFIED) return "✓";
+        if (state == RequirementState.BLOCKED) return "✕";
         return "?";
     }
 
@@ -161,7 +157,6 @@ public final class RecommendationPresentation
     {
         text.append("<b>BEST METHOD</b><br>")
                 .append(escape(method.getName()));
-
         appendBreak(text, 1);
         text.append("<i>")
                 .append(attentionLabel(method.getAttentionLevel()))
@@ -172,54 +167,32 @@ public final class RecommendationPresentation
 
     private static String attentionLabel(AttentionLevel attention)
     {
-        if (attention == null)
-        {
-            return "Unknown attention";
-        }
-
+        if (attention == null) return "Unknown attention";
         switch (attention)
         {
-            case AFK:
-                return "AFK";
-            case LOW:
-                return "Low attention";
-            case ACTIVE:
-                return "Active";
+            case AFK: return "AFK";
+            case LOW: return "Low attention";
+            case ACTIVE: return "Active";
             case MODERATE:
-            default:
-                return "Moderate attention";
+            default: return "Moderate attention";
         }
     }
 
-    private static String confidenceLabel(
-            RecommendationConfidence confidence)
+    private static String confidenceLabel(RecommendationConfidence confidence)
     {
-        if (confidence == RecommendationConfidence.VERIFIED)
-        {
-            return "Verified";
-        }
-        if (confidence == RecommendationConfidence.BLOCKED)
-        {
-            return "Blocked";
-        }
+        if (confidence == RecommendationConfidence.VERIFIED) return "Verified";
+        if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
         return "Check Needed";
     }
 
     private static void appendBreak(StringBuilder text, int count)
     {
-        for (int i = 0; i < count; i++)
-        {
-            text.append("<br>");
-        }
+        for (int i = 0; i < count; i++) text.append("<br>");
     }
 
     private static String escape(String value)
     {
-        if (value == null)
-        {
-            return "";
-        }
-
+        if (value == null) return "";
         return value
                 .replace("&", "&amp;")
                 .replace("<", "&lt;")
