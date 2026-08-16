@@ -58,10 +58,15 @@ public class AccountMilestoneStore
     {
         if (milestone == null)
         {
-            configManager.unsetRSProfileConfiguration(
-                    GROUP,
-                    ACTIVE_MILESTONE_KEY
-            );
+            // There is nothing to clear until RuneLite has established the
+            // character-specific profile.
+            if (getActiveProfileKey() != null)
+            {
+                configManager.unsetRSProfileConfiguration(
+                        GROUP,
+                        ACTIVE_MILESTONE_KEY
+                );
+            }
             return;
         }
 
