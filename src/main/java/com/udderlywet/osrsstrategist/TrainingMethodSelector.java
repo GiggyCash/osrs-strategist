@@ -28,12 +28,12 @@ public class TrainingMethodSelector
         this.methodPolicy = methodPolicy;
     }
 
+    /** Compatibility constructor keeps focused legacy-selector tests isolated. */
     public TrainingMethodSelector(
             TrainingMethodDatabase database,
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
-        this(database, requirementEvidenceEngine,
-                new ExpandedTrainingMethodCatalog(), new TrainingMethodPolicy());
+        this(database, requirementEvidenceEngine, null, new TrainingMethodPolicy());
     }
 
     public TrainingMethodSelector(TrainingMethodDatabase database)
@@ -41,33 +41,20 @@ public class TrainingMethodSelector
         this(database, null);
     }
 
-    public TrainingPlan select(
-            Skill skill,
-            int currentLevel,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent)
+    public TrainingPlan select(Skill skill, int currentLevel,
+            StrategyMode strategyMode, SessionIntent sessionIntent)
     {
-        return select(null, skill, currentLevel, strategyMode,
-                sessionIntent, false);
+        return select(null, skill, currentLevel, strategyMode, sessionIntent, false);
     }
 
-    public TrainingPlan select(
-            StrategyDataBundle data,
-            Skill skill,
-            int currentLevel,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent)
+    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+            StrategyMode strategyMode, SessionIntent sessionIntent)
     {
-        return select(data, skill, currentLevel, strategyMode,
-                sessionIntent, false);
+        return select(data, skill, currentLevel, strategyMode, sessionIntent, false);
     }
 
-    public TrainingPlan select(
-            StrategyDataBundle data,
-            Skill skill,
-            int currentLevel,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
+    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+            StrategyMode strategyMode, SessionIntent sessionIntent,
             boolean allowWildernessMethods)
     {
         List<CuratedTrainingMethod> methods = candidates(data, skill);
@@ -85,8 +72,7 @@ public class TrainingMethodSelector
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
                     || method.getConfidence() == RecommendationConfidence.BLOCKED
-                    || !methodPolicy.isAllowed(data, method, metadata,
-                    allowWildernessMethods))
+                    || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods))
             {
                 continue;
             }
@@ -98,8 +84,7 @@ public class TrainingMethodSelector
             if (confidence == RecommendationConfidence.BLOCKED) continue;
 
             double score = method.scoreFor(strategyMode, sessionIntent)
-                    + methodPolicy.scoreAdjustment(
-                    data, metadata, strategyMode, sessionIntent);
+                    + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent);
             if (bestMethod == null || score > bestScore)
             {
                 bestMethod = method;
@@ -111,30 +96,34 @@ public class TrainingMethodSelector
         }
 
         if (bestMethod == null) return null;
-        return new TrainingPlan(
-                bestMethod,
-                buildExplanation(bestMethod, bestMetadata,
-                        strategyMode, sessionIntent, data),
-                bestConfidence,
-                bestChecks
-        );
+        return new TrainingPlan(bestMethod,
+                buildExplanation(bestMethod, bestMetadata, strategyMode, sessionIntent, data),
+                bestConfidence, bestChecks);
     }
 
-    private List<CuratedTrainingMethod> candidates(
-            StrategyDataBundle data,
-            Skill skill)
+    private List<CuratedTrainingMethod> candidates(StrategyDataBundle data, Skill skill)
     {
         List<CuratedTrainingMethod> candidates = new ArrayList<>();
         MembershipStatus membership = membershipStatus(data);
 
-        // Legacy methods predate method-level F2P metadata, so an F2P account
-        // uses only the curated catalog where every route is explicitly tagged.
+        if (expandedCatalog == null)
+        {
+            for (TrainingMethod method : database.methodsFor(skill))
+            {
+                candidates.add(new CuratedTrainingMethod(method,
+                        TrainingMethodMetadata.legacy(method)));
+            }
+            return candidates;
+        }
+
+        // In production, legacy methods predate route-level F2P metadata. F2P
+        // therefore uses the curated catalog where membership is explicit.
         if (membership != MembershipStatus.F2P)
         {
             for (TrainingMethod method : database.methodsFor(skill))
             {
-                candidates.add(new CuratedTrainingMethod(
-                        method, TrainingMethodMetadata.legacy(method)));
+                candidates.add(new CuratedTrainingMethod(method,
+                        TrainingMethodMetadata.legacy(method)));
             }
         }
         candidates.addAll(expandedCatalog.methodsFor(skill));
@@ -148,8 +137,7 @@ public class TrainingMethodSelector
     }
 
     private RecommendationConfidence assessConfidence(
-            TrainingMethod method,
-            List<RequirementCheck> checks)
+            TrainingMethod method, List<RequirementCheck> checks)
     {
         if (method.getConfidence() == RecommendationConfidence.BLOCKED)
             return RecommendationConfidence.BLOCKED;
@@ -162,8 +150,7 @@ public class TrainingMethodSelector
                     return RecommendationConfidence.BLOCKED;
                 if (check.getState() == RequirementState.CHECK_NEEDED) hasUnknown = true;
             }
-            return hasUnknown
-                    ? RecommendationConfidence.CHECK_NEEDED
+            return hasUnknown ? RecommendationConfidence.CHECK_NEEDED
                     : RecommendationConfidence.VERIFIED;
         }
         if (method.getRequirements().isEmpty()
@@ -172,26 +159,18 @@ public class TrainingMethodSelector
         return RecommendationConfidence.CHECK_NEEDED;
     }
 
-    private String buildExplanation(
-            TrainingMethod method,
-            TrainingMethodMetadata metadata,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            StrategyDataBundle data)
+    private String buildExplanation(TrainingMethod method,
+            TrainingMethodMetadata metadata, StrategyMode strategyMode,
+            SessionIntent sessionIntent, StrategyDataBundle data)
     {
         StringBuilder reason = new StringBuilder();
-        reason.append("Selected for ")
-                .append(pretty(strategyMode.name()))
-                .append(" strategy");
+        reason.append("Selected for ").append(pretty(strategyMode.name())).append(" strategy");
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
             reason.append(" and ").append(pretty(sessionIntent.name())).append(" sessions");
         reason.append(". Attention: ").append(pretty(method.getAttentionLevel().name())).append(".");
         if (metadata != null)
-            reason.append(" Method profile: ")
-                    .append(pretty(metadata.getIntensity().name()))
-                    .append(", ")
-                    .append(pretty(metadata.getCostTier().name()))
-                    .append(" cost.");
+            reason.append(" Method profile: ").append(pretty(metadata.getIntensity().name()))
+                    .append(", ").append(pretty(metadata.getCostTier().name())).append(" cost.");
         AccountMode mode = data == null || data.getAccount() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
