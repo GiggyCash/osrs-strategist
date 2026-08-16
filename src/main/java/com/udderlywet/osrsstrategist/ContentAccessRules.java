@@ -28,6 +28,20 @@ public final class ContentAccessRules
             Skill.WOODCUTTING
     );
 
+    /**
+     * Existing catalog methods that live behind membership even though their
+     * parent skill is available in F2P. New catalog entries should prefer the
+     * TrainingMethod.membersOnly flag instead of extending this compatibility
+     * set indefinitely.
+     */
+    private static final Set<String> MEMBERS_ONLY_METHOD_IDS = Set.of(
+            "runecraft_gotr",
+            "mining_mlm",
+            "smithing_foundry",
+            "fishing_tempoross",
+            "firemaking_wintertodt"
+    );
+
     private ContentAccessRules()
     {
     }
@@ -65,7 +79,12 @@ public final class ContentAccessRules
             return false;
         }
 
-        return membershipStatus != MembershipStatus.F2P
-                || !method.isMembersOnly();
+        if (membershipStatus != MembershipStatus.F2P)
+        {
+            return true;
+        }
+
+        return !method.isMembersOnly()
+                && !MEMBERS_ONLY_METHOD_IDS.contains(method.getId());
     }
 }
