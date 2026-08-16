@@ -16,6 +16,24 @@ public class StrategyCandidateRegistry
     @Inject
     public StrategyCandidateRegistry(
             ClueCandidateProvider clueProvider,
+            PvmCandidateProvider pvmProvider,
+            QuestCandidateProvider questProvider,
+            DiaryCandidateProvider diaryProvider,
+            CombatAchievementCandidateProvider combatAchievementProvider)
+    {
+        this.providers = Collections.unmodifiableList(
+                new ArrayList<>(Arrays.asList(
+                        clueProvider,
+                        pvmProvider,
+                        questProvider,
+                        diaryProvider,
+                        combatAchievementProvider))
+        );
+    }
+
+    /** Compatibility constructor for focused tests written before the expanded registry. */
+    public StrategyCandidateRegistry(
+            ClueCandidateProvider clueProvider,
             PvmCandidateProvider pvmProvider)
     {
         this.providers = Collections.unmodifiableList(
