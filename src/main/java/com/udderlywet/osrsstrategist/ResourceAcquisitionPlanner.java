@@ -29,28 +29,25 @@ public class ResourceAcquisitionPlanner
             );
         }
 
-        // UIM is its own resource universe. Normal bank state is ignored even if
-        // a stale/test snapshot exists. Observed storage contents can count only
-        // when the matching capability itself is verified.
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             StoredResource stored = findVerifiedStoredResource(
                     data.getStorage(), need.getItemId(), need.getQuantity());
             if (stored != null)
             {
-                boolean risky = stored.capability == StorageCapability.DEATH_STORAGE
-                        || stored.capability == StorageCapability.DEATHPILE;
+                boolean needsAccessCheck = requiresAdditionalAccessCheck(
+                        stored.capability);
                 return new ResourceAcquisitionPlan(
                         need,
                         AcquisitionSource.VERIFIED_STORAGE,
                         stored.quantity,
-                        risky
+                        needsAccessCheck
                                 ? RecommendationConfidence.CHECK_NEEDED
                                 : RecommendationConfidence.VERIFIED,
-                        risky
+                        needsAccessCheck
                                 ? "Required quantity is observed in "
                                         + pretty(stored.capability)
-                                        + ", but retrieval needs an explicit UIM risk/precondition check."
+                                        + ", but retrieval needs an explicit UIM access/risk/precondition check."
                                 : "Required quantity is confirmed in observed "
                                         + pretty(stored.capability) + "."
                 );
@@ -101,7 +98,7 @@ public class ResourceAcquisitionPlanner
                     need, AcquisitionSource.SELF_SOURCE, inventoryQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     mode == AccountMode.ULTIMATE_IRONMAN
-                            ? "No sufficient verified UIM inventory/storage source is known; use a verified self-source route that also fits current inventory pressure."
+                            ? "No sufficient directly usable UIM inventory/storage source is known; use a verified self-source route that also fits current inventory pressure."
                             : "This account must use a verified gathering, shop, crafting, minigame, or drop source."
             );
         }
@@ -115,6 +112,7 @@ public class ResourceAcquisitionPlanner
             int needed)
     {
         if (storage == null) return null;
+        StoredResource restrictedFallback = null;
         for (Map.Entry<StorageCapability, java.util.List<ItemStackSnapshot>> entry
                 : storage.getObservedContents().entrySet())
         {
@@ -125,12 +123,21 @@ public class ResourceAcquisitionPlanner
             {
                 if (item.getItemId() == itemId) quantity += item.getQuantity();
             }
-            if (quantity >= needed)
-            {
-                return new StoredResource(capability, quantity);
-            }
+            if (quantity < needed) continue;
+
+            StoredResource candidate = new StoredResource(capability, quantity);
+            if (!requiresAdditionalAccessCheck(capability)) return candidate;
+            if (restrictedFallback == null) restrictedFallback = candidate;
         }
-        return null;
+        return restrictedFallback;
+    }
+
+    private static boolean requiresAdditionalAccessCheck(
+            StorageCapability capability)
+    {
+        return capability == StorageCapability.LOOTING_BAG
+                || capability == StorageCapability.DEATH_STORAGE
+                || capability == StorageCapability.DEATHPILE;
     }
 
     private static ResourceAcquisitionPlan checkNeeded(

@@ -8,7 +8,8 @@ import javax.inject.Singleton;
  *
  * <p>Main/Iron/GIM can use an actually observed bank snapshot. UIM never waits
  * on or counts a bank; it uses inventory plus contents directly observed in
- * verified account-specific storage.</p>
+ * verified account-specific storage. Storage that has additional retrieval or
+ * death risk proves existence but does not become method-ready automatically.</p>
  */
 @Singleton
 public class ResourceReadinessService
@@ -45,13 +46,25 @@ public class ResourceReadinessService
                     RequirementState.VERIFIED,
                     uim
                             ? "Observed quantity: " + observed
-                                    + " across inventory and verified UIM storage."
+                                    + " across inventory and directly usable verified UIM storage."
                             : "Observed quantity: " + observed
                                     + " across inventory and known bank state.");
         }
 
         if (uim)
         {
+            int restricted = restrictedUimStorageQuantity(
+                    data == null ? null : data.getStorage(),
+                    requirement.getItemIds());
+            if (observed + restricted >= requirement.getRequiredQuantity())
+            {
+                return new RequirementCheck(
+                        requirement.getId(), requirement.getLabel(),
+                        RequirementState.CHECK_NEEDED,
+                        "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource."
+                );
+            }
+
             StorageSnapshot storage = data == null ? null : data.getStorage();
             boolean storageContentsKnown = storage != null
                     && !storage.getObservedContents().isEmpty();
@@ -60,7 +73,7 @@ public class ResourceReadinessService
                     RequirementState.CHECK_NEEDED,
                     storageContentsKnown
                             ? "Only " + observed
-                                    + " observed across inventory and verified UIM storage; need at least "
+                                    + " directly usable quantity observed across inventory and verified UIM storage; need at least "
                                     + requirement.getRequiredQuantity() + "."
                             : "Inventory has " + observed
                                     + "; relevant UIM storage contents have not been observed yet."
@@ -96,14 +109,32 @@ public class ResourceReadinessService
         {
             if (inventory != null) total += inventory.quantityOf(itemId);
             if (!uim && bank != null) total += bank.quantityOf(itemId);
-            if (uim) total += observedUimStorageQuantity(data.getStorage(), itemId);
+            if (uim)
+            {
+                total += observedUimStorageQuantity(
+                        data.getStorage(), itemId, false);
+            }
+        }
+        return total;
+    }
+
+    private static int restrictedUimStorageQuantity(
+            StorageSnapshot storage,
+            int... itemIds)
+    {
+        if (storage == null || itemIds == null) return 0;
+        int total = 0;
+        for (int itemId : itemIds)
+        {
+            total += observedUimStorageQuantity(storage, itemId, true);
         }
         return total;
     }
 
     private static int observedUimStorageQuantity(
             StorageSnapshot storage,
-            int itemId)
+            int itemId,
+            boolean restrictedOnly)
     {
         if (storage == null) return 0;
         int total = 0;
@@ -112,12 +143,22 @@ public class ResourceReadinessService
         {
             StorageCapability capability = entry.getKey();
             if (!storage.verified(capability)) continue;
+            boolean restricted = requiresAdditionalAccessCheck(capability);
+            if (restrictedOnly != restricted) continue;
             for (ItemStackSnapshot item : entry.getValue())
             {
                 if (item.getItemId() == itemId) total += item.getQuantity();
             }
         }
         return total;
+    }
+
+    private static boolean requiresAdditionalAccessCheck(
+            StorageCapability capability)
+    {
+        return capability == StorageCapability.LOOTING_BAG
+                || capability == StorageCapability.DEATH_STORAGE
+                || capability == StorageCapability.DEATHPILE;
     }
 
     private static boolean isUim(StrategyDataBundle data)
