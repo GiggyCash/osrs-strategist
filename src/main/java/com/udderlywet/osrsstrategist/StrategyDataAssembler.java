@@ -10,6 +10,7 @@ public class StrategyDataAssembler
     private final AccountReader accountReader;
     private final LiveItemStateReader itemStateReader;
     private final LiveQuestStateReader questStateReader;
+    private final LiveDiaryStateReader diaryStateReader;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
@@ -20,6 +21,7 @@ public class StrategyDataAssembler
             AccountReader accountReader,
             LiveItemStateReader itemStateReader,
             LiveQuestStateReader questStateReader,
+            LiveDiaryStateReader diaryStateReader,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
             FarmingAccessEvaluator farmingAccessEvaluator,
@@ -28,6 +30,7 @@ public class StrategyDataAssembler
         this.accountReader = accountReader;
         this.itemStateReader = itemStateReader;
         this.questStateReader = questStateReader;
+        this.diaryStateReader = diaryStateReader;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
         this.farmingAccessEvaluator = farmingAccessEvaluator;
@@ -42,6 +45,9 @@ public class StrategyDataAssembler
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
                 ? liveQuests : observedStateStore.getQuests();
+        DiarySnapshot liveDiaries = diaryStateReader.read();
+        DiarySnapshot diaries = liveDiaries != null
+                ? liveDiaries : observedStateStore.getDiaries();
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
@@ -51,7 +57,7 @@ public class StrategyDataAssembler
                 .bank(itemStateReader.readBank())
                 .equipment(itemStateReader.readEquipment())
                 .quests(quests)
-                .diaries(observedStateStore.getDiaries())
+                .diaries(diaries)
                 .clue(observedStateStore.getClue())
                 .combatAchievements(observedStateStore.getCombatAchievements())
                 .collectionLog(observedStateStore.getCollectionLog())
