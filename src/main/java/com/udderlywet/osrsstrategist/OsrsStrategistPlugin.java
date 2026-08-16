@@ -187,7 +187,10 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel == null || latestData == null) return;
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(latestData, profile);
-        updateTrackedMilestone(result.getRecommendations());
+        updateTrackedMilestone(
+                result.getRecommendations(),
+                latestData.getCollectionLog()
+        );
         updateGuidance(result, latestData);
 
         Runnable update = () ->
@@ -298,9 +301,9 @@ public class OsrsStrategistPlugin extends Plugin
                 completedCheckpoint, data.getAccount());
         if (completion != null)
         {
-            // A short skill target may finish while a meaningful outfit/collection
-            // objective is still active. Protected methods do not receive the
-            // usual variety penalty, so Graceful/Prospector-style grinds can continue.
+            // A short skill checkpoint must not knock the player off an unfinished
+            // longer objective such as Graceful, Prospector, or another tracked
+            // collection/reward grind.
             if (completedCheckpoint == null
                     || !completedCheckpoint.isProgressionProtected())
             {
@@ -316,7 +319,10 @@ public class OsrsStrategistPlugin extends Plugin
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(data, profile);
-        updateTrackedMilestone(result.getRecommendations());
+        updateTrackedMilestone(
+                result.getRecommendations(),
+                data.getCollectionLog()
+        );
         updateGuidance(result, data);
         AccountSnapshot account = data.getAccount();
 
@@ -332,9 +338,14 @@ public class OsrsStrategistPlugin extends Plugin
         });
     }
 
-    private void updateTrackedMilestone(List<Recommendation> recommendations)
+    private void updateTrackedMilestone(
+            List<Recommendation> recommendations,
+            CollectionLogSnapshot collectionLog)
     {
-        TrackedMilestone candidate = milestoneTracker.fromRecommendations(recommendations);
+        TrackedMilestone candidate = milestoneTracker.fromRecommendations(
+                recommendations,
+                collectionLog
+        );
         if (milestoneTracker.sameCheckpoint(trackedMilestone, candidate)) return;
         trackedMilestone = candidate;
         saveTrackedMilestone();
