@@ -23,6 +23,10 @@ public class PvmActivityCatalog
             boolean raid = isRaid(enumName);
             RiskLevel risk = wilderness ? RiskLevel.HIGH
                     : raid || isHighEnd(enumName) ? RiskLevel.HIGH : RiskLevel.MEDIUM;
+
+            // Hardcore is intentionally deny-by-default for bossing. Tempoross
+            // is the one hiscore boss activity we currently classify as safe
+            // enough to surface without a specific dangerous-PvM opt-in.
             boolean hardcoreSafe = "TEMPOROSS".equals(enumName);
             result.add(new PvmActivityDefinition(
                     "pvm:" + enumName.toLowerCase(Locale.ROOT),
@@ -37,6 +41,31 @@ public class PvmActivityCatalog
         for (PvmActivityDefinition definition : all())
             if (id.equals(definition.getId())) return definition;
         return null;
+    }
+
+    public PvmActivityDefinition match(String rawKey)
+    {
+        if (rawKey == null) return null;
+        String normalized = normalize(rawKey);
+        for (PvmActivityDefinition definition : all())
+        {
+            if (normalize(definition.getId()).equals(normalized)
+                    || normalize(definition.getName()).equals(normalized))
+                return definition;
+        }
+        return null;
+    }
+
+    private static String normalize(String value)
+    {
+        String normalized = value.toLowerCase(Locale.ROOT)
+                .replace("pvm:", "")
+                .replace("'", "")
+                .replace(":", "")
+                .replace("-", "_")
+                .replace(" ", "_");
+        while (normalized.contains("__")) normalized = normalized.replace("__", "_");
+        return normalized;
     }
 
     private static boolean isRaid(String name)
