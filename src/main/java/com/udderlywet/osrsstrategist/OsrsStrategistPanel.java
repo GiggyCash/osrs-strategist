@@ -32,6 +32,13 @@ public class OsrsStrategistPanel extends PluginPanel
     private static final int CONTENT_WIDTH = PluginPanel.PANEL_WIDTH - 30;
     private static final int INNER_WIDTH = CONTENT_WIDTH - 20;
 
+    /**
+     * Swing's HTML renderer needs a little extra breathing room inside bordered
+     * cards. Keeping prose narrower than controls prevents the final characters
+     * on wrapped lines from painting beneath the right card border.
+     */
+    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 14;
+
     private final SkillIconLoader skillIconLoader;
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
 
@@ -64,7 +71,6 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel opportunityTwo = label("");
 
     private final JButton detailsButton = actionButton("Details");
-    private final JButton doThisButton = actionButton("Do This");
     private final JButton laterButton = actionButton("Later");
     private final JButton notTodayButton = actionButton("Not Today");
     private final JButton dislikeButton = actionButton("Dislike");
@@ -213,18 +219,20 @@ public class OsrsStrategistPanel extends PluginPanel
         recommendationCard.add(detailsButton);
         recommendationCard.add(Box.createVerticalStrut(7));
 
+        // "Do This" is intentionally gone. Strategist follows live account
+        // state and detects natural milestone completion without requiring the
+        // player to declare that they started the recommendation.
         JPanel feedbackPanel = new JPanel(
-                new GridLayout(2, 2, 4, 4)
+                new GridLayout(1, 3, 4, 0)
         );
         feedbackPanel.setOpaque(false);
         feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
         feedbackPanel.setPreferredSize(
-                new Dimension(INNER_WIDTH, 58)
+                new Dimension(INNER_WIDTH, 27)
         );
         feedbackPanel.setMaximumSize(
-                new Dimension(INNER_WIDTH, 58)
+                new Dimension(INNER_WIDTH, 27)
         );
-        feedbackPanel.add(doThisButton);
         feedbackPanel.add(laterButton);
         feedbackPanel.add(notTodayButton);
         feedbackPanel.add(dislikeButton);
@@ -234,9 +242,6 @@ public class OsrsStrategistPanel extends PluginPanel
         recommendationCard.add(feedbackStatus);
 
         detailsButton.addActionListener(event -> toggleDetails());
-        doThisButton.addActionListener(
-                event -> submitFeedback(FeedbackAction.DO_THIS)
-        );
         laterButton.addActionListener(
                 event -> submitFeedback(FeedbackAction.LATER)
         );
@@ -275,15 +280,29 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(opportunitiesCard);
     }
 
+    /**
+     * Compatibility overload for logged-out/older callers.
+     */
     public void updateAccount(
             String name,
             String type,
+            int total)
+    {
+        updateAccount(name, type, "Unknown access", total);
+    }
+
+    public void updateAccount(
+            String name,
+            String type,
+            String membership,
             int total)
     {
         accountName.setText(html(escape(name)));
         accountMeta.setText(
                 html(
                         escape(type)
+                                + " • "
+                                + escape(membership)
                                 + " • "
                                 + (total > 0 ? total : "--")
                                 + " / 2376"
@@ -343,7 +362,7 @@ public class OsrsStrategistPanel extends PluginPanel
             );
             progressText.setText(html(""));
             progressBar.setValue(0);
-            recommendationBody.setText(html(""));
+            recommendationBody.setText(bodyHtml(""));
             alternativeOne.setText(html(""));
             alternativeTwo.setText(html(""));
             return;
@@ -419,7 +438,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
         milestoneTitle.setText(html("✓ Milestone complete"));
         milestoneBody.setText(
-                html(
+                bodyHtml(
                         escape(completion.getSkill().getName())
                                 + " "
                                 + completion.getStartedAtLevel()
@@ -532,7 +551,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (currentRecommendation == null)
         {
-            recommendationBody.setText(html(""));
+            recommendationBody.setText(bodyHtml(""));
             return;
         }
 
@@ -544,7 +563,7 @@ public class OsrsStrategistPanel extends PluginPanel
                         currentRecommendation
                 );
 
-        recommendationBody.setText(html(body));
+        recommendationBody.setText(bodyHtml(body));
     }
 
     private void submitFeedback(FeedbackAction action)
@@ -558,7 +577,7 @@ public class OsrsStrategistPanel extends PluginPanel
         String actedOnId = currentRecommendation.getId();
 
         feedbackStatus.setText(
-                html(
+                bodyHtml(
                         feedbackStatusText(
                                 action,
                                 actedOnTitle
@@ -572,7 +591,6 @@ public class OsrsStrategistPanel extends PluginPanel
     private void setRecommendationButtonsEnabled(boolean enabled)
     {
         detailsButton.setEnabled(enabled);
-        doThisButton.setEnabled(enabled);
         laterButton.setEnabled(enabled);
         notTodayButton.setEnabled(enabled);
         dislikeButton.setEnabled(enabled);
@@ -700,8 +718,18 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static String html(String text)
     {
+        return htmlWithWidth(text, INNER_WIDTH);
+    }
+
+    private static String bodyHtml(String text)
+    {
+        return htmlWithWidth(text, BODY_TEXT_WIDTH);
+    }
+
+    private static String htmlWithWidth(String text, int width)
+    {
         return "<html><div style='width:"
-                + INNER_WIDTH
+                + width
                 + "px;'>"
                 + text
                 + "</div></html>";
