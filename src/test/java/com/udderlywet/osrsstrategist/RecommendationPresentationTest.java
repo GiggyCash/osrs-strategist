@@ -8,43 +8,88 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Protects the compact-sidebar UX from accidentally becoming a wall of text
- * while also ensuring Needs Info always tells the player what is unresolved.
+ * Protects the compact-sidebar UX from becoming a wall of text while ensuring
+ * unresolved evidence is still explicit. Session intensity and deeper strategy
+ * reasoning belong in Details, not in the glanceable recommendation header.
  */
 public class RecommendationPresentationTest
 {
     @Test
-    public void compactViewHidesDeepExplanation()
+    public void compactViewShowsOnlyDecisionCriticalInformation()
     {
-        Recommendation recommendation = recommendation();
-
         String compact = RecommendationPresentation.compactHtml(
-                recommendation
-        );
+                recommendation());
 
         assertTrue(compact.contains("BEST METHOD"));
-        assertTrue(compact.contains("NEEDS INFO"));
+        assertTrue(compact.contains("CHECK FIRST"));
         assertTrue(compact.contains("Planks/materials"));
+        assertTrue(compact.contains("Transport"));
+        assertTrue(compact.contains("○"));
+        assertFalse(compact.contains("NEEDS INFO"));
+        assertFalse(compact.contains("Moderate attention"));
         assertFalse(compact.contains("WHY IT MATTERS"));
+        assertFalse(compact.contains("WHY THIS METHOD"));
         assertFalse(compact.contains("HOW"));
         assertFalse(compact.contains("Current:"));
         assertFalse(compact.contains("Verified POH access"));
+        assertFalse(compact.contains("?"));
         assertTrue("Compact copy should stay short", compact.length() < 450);
     }
 
     @Test
-    public void detailedViewExposesInstructionsReasoningAndEvidence()
+    public void detailedViewExposesInstructionsSessionFitReasoningAndEvidence()
     {
         String detailed = RecommendationPresentation.detailedHtml(
-                recommendation()
-        );
+                recommendation());
 
         assertTrue(detailed.contains("HOW"));
+        assertTrue(detailed.contains("SESSION FIT"));
+        assertTrue(detailed.contains("Moderate attention"));
+        assertTrue(detailed.contains("WHY THIS METHOD"));
         assertTrue(detailed.contains("WHY IT MATTERS"));
         assertTrue(detailed.contains("READINESS"));
         assertTrue(detailed.contains("POH access"));
         assertTrue(detailed.contains("Planks/materials"));
         assertTrue(detailed.contains("Need to confirm materials"));
+        assertTrue(detailed.contains("○"));
+        assertFalse(detailed.contains("?"));
+    }
+
+    @Test
+    public void fullyVerifiedMethodGetsSimpleReadySignal()
+    {
+        TrainingMethod method = new TrainingMethod(
+                "ready-method",
+                Skill.WOODCUTTING,
+                1,
+                99,
+                "Cut nearby trees",
+                "Cut the best verified nearby tree for the session.",
+                10.0,
+                10.0,
+                10.0,
+                AttentionLevel.LOW,
+                10,
+                1,
+                Arrays.asList("Axe"),
+                RecommendationConfidence.VERIFIED
+        );
+        TrainingPlan plan = new TrainingPlan(
+                method,
+                "Fits a relaxed short session.",
+                RecommendationConfidence.VERIFIED,
+                Arrays.asList(new RequirementCheck(
+                        "axe", "Axe", RequirementState.VERIFIED,
+                        "Observed in inventory."))
+        );
+        Recommendation recommendation = new Recommendation(
+                "skill:woodcutting", "Train Woodcutting to 10",
+                "Useful early gathering progress.", 50.0, plan,
+                RecommendationConfidence.VERIFIED, 1, 10);
+
+        String compact = RecommendationPresentation.compactHtml(recommendation);
+        assertTrue(compact.contains("✓ READY"));
+        assertFalse(compact.contains("CHECK FIRST"));
     }
 
     private static Recommendation recommendation()

@@ -3,7 +3,16 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Converts a recommendation into concise sidebar copy. */
+/**
+ * Converts a recommendation into sidebar copy.
+ *
+ * <p>The collapsed view is intentionally terse. Readiness and attention are
+ * different concepts: attention describes how actively a method is played,
+ * while readiness describes whether Strategist has enough evidence to know the
+ * method can be started. Showing both on one tiny line made the UI harder to
+ * understand, so attention/setup metadata now lives in Details and the compact
+ * view only calls out checks that actually need the player's attention.</p>
+ */
 public final class RecommendationPresentation
 {
     private RecommendationPresentation() {}
@@ -19,7 +28,7 @@ public final class RecommendationPresentation
             if (!isSkillRecommendation(recommendation))
             {
                 text.append("<b>NEXT STEP</b><br>")
-                        .append(confidenceLabel(recommendation.getConfidence()));
+                        .append(statusLabel(recommendation.getConfidence()));
                 if (hasText(recommendation.getReason()))
                 {
                     appendBreak(text, 2);
@@ -34,19 +43,20 @@ public final class RecommendationPresentation
         }
 
         TrainingMethod method = plan.getMethod();
-        appendMethodHeader(text, recommendation, method);
+        appendMethodHeader(text, method);
+
         List<RequirementCheck> unresolved = unresolved(plan);
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>NEEDS INFO</b><br>");
-            int shown = Math.min(2, unresolved.size());
+            text.append("<b>CHECK FIRST</b><br>");
+            int shown = Math.min(3, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
                 if (i > 0) text.append("<br>");
                 RequirementCheck check = unresolved.get(i);
                 text.append(check.getState() == RequirementState.BLOCKED
-                                ? "• Blocked: " : "• ")
+                                ? "✕ " : "○ ")
                         .append(escape(check.getLabel()));
             }
             if (unresolved.size() > shown)
@@ -55,6 +65,11 @@ public final class RecommendationPresentation
                         .append(unresolved.size() - shown)
                         .append(" more in Details");
             }
+        }
+        else if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED)
+        {
+            appendBreak(text, 2);
+            text.append("<b>✓ READY</b>");
         }
         return text.toString();
     }
@@ -70,7 +85,7 @@ public final class RecommendationPresentation
             if (!isSkillRecommendation(recommendation))
             {
                 text.append("<b>NEXT STEP</b><br>")
-                        .append(confidenceLabel(recommendation.getConfidence()));
+                        .append(statusLabel(recommendation.getConfidence()));
                 if (hasText(recommendation.getReason()))
                 {
                     appendBreak(text, 2);
@@ -86,10 +101,24 @@ public final class RecommendationPresentation
         }
 
         TrainingMethod method = plan.getMethod();
-        appendMethodHeader(text, recommendation, method);
+        appendMethodHeader(text, method);
+
         appendBreak(text, 2);
         text.append("<b>HOW</b><br>")
                 .append(escape(method.getInstructions()));
+
+        appendBreak(text, 2);
+        text.append("<b>SESSION FIT</b><br>")
+                .append(attentionLabel(method.getAttentionLevel()))
+                .append(" • ")
+                .append(Math.max(1, method.getMinimumSessionMinutes()))
+                .append("+ min session");
+        if (method.getSetupMinutes() > 0)
+        {
+            text.append(" • ~")
+                    .append(method.getSetupMinutes())
+                    .append(" min setup");
+        }
 
         if (!plan.getRequirementChecks().isEmpty())
         {
@@ -110,6 +139,13 @@ public final class RecommendationPresentation
             }
         }
 
+        if (hasText(plan.getWhyThisMethod()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>WHY THIS METHOD</b><br>")
+                    .append(escape(plan.getWhyThisMethod()));
+        }
+
         if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
@@ -117,6 +153,14 @@ public final class RecommendationPresentation
                     .append(escape(recommendation.getReason()));
         }
         return text.toString();
+    }
+
+    private static void appendMethodHeader(
+            StringBuilder text,
+            TrainingMethod method)
+    {
+        text.append("<b>BEST METHOD</b><br>")
+                .append(escape(method.getName()));
     }
 
     private static boolean isSkillRecommendation(Recommendation recommendation)
@@ -143,26 +187,15 @@ public final class RecommendationPresentation
         return unresolved;
     }
 
+    /**
+     * A hollow circle means "not yet proven", not "wrong". This avoids the
+     * question-mark glyph looking like an error or an unfinished placeholder.
+     */
     private static String stateMarker(RequirementState state)
     {
         if (state == RequirementState.VERIFIED) return "✓";
         if (state == RequirementState.BLOCKED) return "✕";
-        return "?";
-    }
-
-    private static void appendMethodHeader(
-            StringBuilder text,
-            Recommendation recommendation,
-            TrainingMethod method)
-    {
-        text.append("<b>BEST METHOD</b><br>")
-                .append(escape(method.getName()));
-        appendBreak(text, 1);
-        text.append("<i>")
-                .append(attentionLabel(method.getAttentionLevel()))
-                .append(" • ")
-                .append(confidenceLabel(recommendation.getConfidence()))
-                .append("</i>");
+        return "○";
     }
 
     private static String attentionLabel(AttentionLevel attention)
@@ -178,11 +211,11 @@ public final class RecommendationPresentation
         }
     }
 
-    private static String confidenceLabel(RecommendationConfidence confidence)
+    private static String statusLabel(RecommendationConfidence confidence)
     {
         if (confidence == RecommendationConfidence.VERIFIED) return "Ready";
         if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
-        return "Needs Info";
+        return "Check first";
     }
 
     private static void appendBreak(StringBuilder text, int count)
