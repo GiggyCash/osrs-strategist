@@ -394,6 +394,7 @@ public class OsrsStrategistPlugin extends Plugin
             panel.updateAccount(
                     account.getPlayerName(),
                     account.getAccountTypeName(),
+                    account.getMembershipStatus().getDisplayName(),
                     account.getTotalLevel()
             );
             panel.updateGoal(profile.getActiveGoal());
