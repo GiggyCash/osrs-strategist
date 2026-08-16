@@ -23,10 +23,11 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         if (clue == null || !clue.isCluePresent()) return result;
 
         ClueTier tier = ClueTier.fromText(clue.getClueType());
-        String id = "clue:pending:" + tier.name().toLowerCase();
+        // Keep one stable activity id across clue tiers so learned preference,
+        // snoozes, and older profiles continue to work after this richer model.
+        String id = "clue:pending";
         PreferenceProfile preferences = context.getPreferenceProfile();
-        if (preferences.isOnCooldown(id)
-                || preferences.isOnCooldown("clue:pending")) return result;
+        if (preferences.isOnCooldown(id)) return result;
 
         long age = Math.max(0L,
                 System.currentTimeMillis() - clue.getFirstSeenAtMillis());
