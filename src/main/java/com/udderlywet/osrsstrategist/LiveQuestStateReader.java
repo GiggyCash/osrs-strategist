@@ -12,13 +12,16 @@ import net.runelite.api.QuestState;
 /**
  * Converts RuneLite's live quest state into Strategist's immutable snapshot.
  *
- * <p>Quest state is direct evidence. This lets requirement evaluators prove
- * area/content access instead of leaving everything at Check Needed.</p>
+ * <p>Quest state is direct evidence. Multiple container/stat events can fire in
+ * one game tick, so the complete quest scan is cached for that tick instead of
+ * repeating the same reads unnecessarily.</p>
  */
 @Singleton
 public class LiveQuestStateReader
 {
     private final Client client;
+    private int cachedTick = -1;
+    private QuestSnapshot cachedSnapshot;
 
     @Inject
     public LiveQuestStateReader(Client client)
@@ -30,7 +33,15 @@ public class LiveQuestStateReader
     {
         if (client.getGameState() != GameState.LOGGED_IN)
         {
+            cachedTick = -1;
+            cachedSnapshot = null;
             return null;
+        }
+
+        int tick = client.getTickCount();
+        if (cachedSnapshot != null && cachedTick == tick)
+        {
+            return cachedSnapshot;
         }
 
         Map<String, QuestStatus> states = new HashMap<>();
@@ -41,7 +52,9 @@ public class LiveQuestStateReader
             states.put(quest.getName(), convert(state));
         }
 
-        return new QuestSnapshot(states);
+        cachedSnapshot = new QuestSnapshot(states);
+        cachedTick = tick;
+        return cachedSnapshot;
     }
 
     private QuestStatus convert(QuestState state)
