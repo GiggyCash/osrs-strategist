@@ -6,14 +6,15 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
-import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.RuneScapeProfileChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -47,9 +48,13 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject
     private RecommendationEngine recommendationEngine;
 
+    @Inject
+    private AccountPreferenceStore accountPreferenceStore;
+
     private final PreferenceProfile preferenceProfile =
             new PreferenceProfile();
 
+    private String loadedPreferenceProfileKey;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
@@ -65,26 +70,21 @@ public class OsrsStrategistPlugin extends Plugin
     @Override
     protected void startUp()
     {
-        panel =
-                new OsrsStrategistPanel();
+        panel = new OsrsStrategistPanel();
 
         BufferedImage icon =
                 createTemporaryIcon();
 
-        navButton =
-                NavigationButton.builder()
-                        .tooltip(
-                                "OSRS Strategist"
-                        )
-                        .icon(icon)
-                        .priority(5)
-                        .panel(panel)
-                        .build();
+        navButton = NavigationButton.builder()
+                .tooltip("OSRS Strategist")
+                .icon(icon)
+                .priority(5)
+                .panel(panel)
+                .build();
 
-        clientToolbar.addNavigation(
-                navButton
-        );
+        clientToolbar.addNavigation(navButton);
 
+        syncPreferenceProfile();
         updateAccountPanel();
     }
 
@@ -93,11 +93,11 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (navButton != null)
         {
-            clientToolbar.removeNavigation(
-                    navButton
-            );
+            clientToolbar.removeNavigation(navButton);
         }
 
+        preferenceProfile.clear();
+        loadedPreferenceProfileKey = null;
         panel = null;
         navButton = null;
     }
@@ -117,6 +117,15 @@ public class OsrsStrategistPlugin extends Plugin
     }
 
     @Subscribe
+    public void onRuneScapeProfileChanged(
+            RuneScapeProfileChanged event)
+    {
+        loadedPreferenceProfileKey = null;
+        syncPreferenceProfile();
+        updateAccountPanel();
+    }
+
+    @Subscribe
     public void onConfigChanged(
             ConfigChanged event)
     {
@@ -125,6 +134,50 @@ public class OsrsStrategistPlugin extends Plugin
         {
             updateAccountPanel();
         }
+    }
+
+    void applyRecommendationFeedback(
+            String activityId,
+            FeedbackAction action)
+    {
+        if (activityId == null || action == null)
+        {
+            return;
+        }
+
+        syncPreferenceProfile();
+        preferenceProfile.apply(activityId, action);
+        accountPreferenceStore.save(preferenceProfile);
+        updateAccountPanel();
+    }
+
+    private void syncPreferenceProfile()
+    {
+        String activeProfileKey =
+                accountPreferenceStore.getActiveProfileKey();
+
+        if (Objects.equals(
+                loadedPreferenceProfileKey,
+                activeProfileKey)
+                && activeProfileKey != null)
+        {
+            return;
+        }
+
+        preferenceProfile.clear();
+
+        if (activeProfileKey == null)
+        {
+            loadedPreferenceProfileKey = null;
+            return;
+        }
+
+        accountPreferenceStore.loadInto(
+                preferenceProfile
+        );
+
+        loadedPreferenceProfileKey =
+                activeProfileKey;
     }
 
     private void updateAccountPanel()
@@ -161,6 +214,8 @@ public class OsrsStrategistPlugin extends Plugin
 
             return;
         }
+
+        syncPreferenceProfile();
 
         List<Recommendation> recommendations =
                 recommendationEngine.recommend(
@@ -203,11 +258,7 @@ public class OsrsStrategistPlugin extends Plugin
                 image.createGraphics();
 
         graphics.setColor(
-                new Color(
-                        60,
-                        45,
-                        30
-                )
+                new Color(60, 45, 30)
         );
 
         graphics.fillRect(
@@ -218,11 +269,7 @@ public class OsrsStrategistPlugin extends Plugin
         );
 
         graphics.setColor(
-                new Color(
-                        212,
-                        167,
-                        44
-                )
+                new Color(212, 167, 44)
         );
 
         graphics.drawOval(
