@@ -39,9 +39,12 @@ public class ResourceSourceCatalog
         List<ResourceSourceDefinition> result = new ArrayList<>();
         for (ResourceSourceDefinition source : sources)
         {
+            if ("raw-fish".equals(source.getId()) && !normalized.startsWith("raw ")) continue;
+            if ("cooked-food".equals(source.getId()) && normalized.startsWith("raw ")) continue;
+
             for (String token : source.getNameTokens())
             {
-                if (normalized.contains(normalize(token)))
+                if (containsPhrase(normalized, normalize(token)))
                 {
                     result.add(source);
                     break;
@@ -83,11 +86,11 @@ public class ResourceSourceCatalog
                 "Buy if current GE price beats the time value of chopping; otherwise cut the required tree tier.",
                 "Cut the required tree tier or use verified PvM/minigame log rewards already available to the account.",
                 "Cut only the quantity needed near the destination, or use verified noted/reward sources that do not create long-term inventory pressure.");
-        add("planks", tokens("plank"),
+        add("planks", tokens("plank", "planks"),
                 "Compare GE planks with converting owned logs at a sawmill or through Plank Make.",
                 "Convert self-sourced logs at an unlocked sawmill/Plank Make route; use Managing Miscellania only when already unlocked and funded.",
                 "Prefer just-in-time sawmill/Plank Make conversion and verified POH/transport routes; never assume banked plank storage.");
-        add("nails", tokens("nails"),
+        add("nails", tokens("nail", "nails"),
                 "Buy the required nail tier or smith from suitable bars if that is cheaper.",
                 "Smith nails from suitable bars or use a verified shop source.",
                 "Smith/buy only the immediate quantity needed for the current Construction step.");
@@ -99,11 +102,11 @@ public class ResourceSourceCatalog
                 "Compare GE ore prices with mining time and any Blast Furnace processing plan.",
                 "Mine the required ore, obtain it from verified PvM/minigame rewards, or use an unlocked shop where appropriate.",
                 "Mine/process in small batches near the destination; avoid routes that depend on normal bank storage.");
-        add("bars", tokens("bar", "steel bar", "mithril bar", "adamantite bar", "runite bar"),
+        add("bars", tokens("bar", "bars"),
                 "Buy bars only after comparing ore+processing cost with finished-bar price.",
                 "Smelt self-sourced ore, use Blast Furnace when unlocked, or reclaim bars from verified rewards/drops.",
                 "Use Blast Furnace or nearby furnaces in just-in-time batches and immediately consume the bars in the target activity.");
-        add("cannonballs", tokens("cannonball"),
+        add("cannonballs", tokens("cannonball", "cannonballs"),
                 "Compare buying cannonballs with the time saved on the planned Slayer/combat task.",
                 "Smith steel bars into cannonballs when Dwarf Cannon and the mould are available; preserve steel if other progression needs are higher.",
                 "Smith only the batch needed for the planned task; account for mould and inventory slots before starting.");
@@ -111,7 +114,7 @@ public class ResourceSourceCatalog
 
     private void farmingAndHerblore()
     {
-        add("herb-seeds", tokens("seed"),
+        add("herb-seeds", tokens("seed", "seeds"),
                 "Buy the seed only if expected herb value/XP and current price justify it.",
                 "Prioritize Farming contracts, Master Farmers, Slayer/PvM seed drops, birdhouses, and existing seed packs.",
                 "Prioritize seed packs/contracts and immediately usable seeds; verify seed-box access before treating it as storage.");
@@ -127,7 +130,7 @@ public class ResourceSourceCatalog
                 "Buy eggs after comparing current price with collection time.",
                 "Use a safe verified spawn or unlocked repeatable source; avoid dangerous collection routes on Hardcore.",
                 "Collect in small batches close to the potion-making route and avoid storage assumptions.");
-        add("bird-nests", tokens("bird nest", "crushed nest"),
+        add("bird-nests", tokens("bird nest", "bird nests", "crushed nest", "crushed nests"),
                 "Buy nests only after comparing current brew economics with birdhouse/nest acquisition time.",
                 "Birdhouse runs, woodcutting nests, and verified PvM rewards are preferred self-sources.",
                 "Birdhouse runs are the preferred low-inventory-pressure source; crush/process nests near use.");
@@ -135,7 +138,10 @@ public class ResourceSourceCatalog
 
     private void runesAndMagic()
     {
-        add("runes", tokens("rune"),
+        add("runes", tokens("air rune", "mind rune", "water rune", "earth rune",
+                        "fire rune", "body rune", "cosmic rune", "chaos rune",
+                        "nature rune", "law rune", "death rune", "astral rune",
+                        "blood rune", "soul rune", "wrath rune"),
                 "Compare GE rune cost with shop stock and Runecraft time for the planned spell volume.",
                 "Runecraft, Guardians of the Rift, rune shops, and verified monster drops are standard self-sources.",
                 "Use rune shops/GOTR/Runecraft in task-sized batches; verify rune pouch before counting it as storage.");
@@ -147,11 +153,13 @@ public class ResourceSourceCatalog
 
     private void fishingAndCooking()
     {
-        add("raw-fish", tokens("raw shark", "raw karambwan", "raw monkfish", "raw swordfish", "raw lobster", "raw anglerfish", "raw manta"),
+        add("raw-fish", tokens("raw shark", "raw karambwan", "raw monkfish",
+                        "raw swordfish", "raw lobster", "raw anglerfish", "raw manta ray"),
                 "Buy raw food only when Cooking XP or finished-food value justifies the current spread.",
                 "Fish the required food or use verified minigame/PvM food rewards.",
                 "Fish and cook in the same route where possible; keep only the immediate combat/quest supply.");
-        add("cooked-food", tokens("shark", "karambwan", "anglerfish", "manta ray", "lobster", "swordfish", "moonlight antelope"),
+        add("cooked-food", tokens("shark", "karambwan", "anglerfish", "manta ray",
+                        "lobster", "swordfish", "moonlight antelope"),
                 "Buy food according to encounter risk and current price rather than always using the most expensive option.",
                 "Fish/hunt/cook sustainable food or use verified PvM/minigame supplies appropriate to the encounter.",
                 "Choose food that fits available inventory slots and resupply route; do not assume a banked reserve.");
@@ -163,15 +171,16 @@ public class ResourceSourceCatalog
                 "Compare buying molten glass/materials with Superglass Make and sand/seaweed processing.",
                 "Grow giant seaweed, obtain sand through verified collection/mining, and use Superglass Make when unlocked.",
                 "Use giant seaweed/sand and Superglass Make in immediate Crafting batches to control inventory pressure.");
-        add("bowstrings", tokens("bow string", "flax"),
+        add("bowstrings", tokens("bow string", "bow strings", "flax"),
                 "Buy bowstrings if the current margin makes stringing worthwhile; otherwise prefer faster Fletching routes.",
                 "Pick/spin flax or use verified Temple Trekking/reward sources when bowstrings are strategically useful.",
                 "Use a nearby flax/spinning or reward route and string bows immediately rather than storing large batches.");
-        add("feathers", tokens("feather"),
+        add("feathers", tokens("feather", "feathers"),
                 "Buy feathers from GE/shops according to current price and required quantity.",
                 "Use feather shops, bird drops, or fishing-related supply sources.",
                 "Shop-buy the immediate stack needed; feathers are stackable and UIM-friendly once acquired.");
-        add("gems", tokens("uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"),
+        add("gems", tokens("uncut sapphire", "uncut emerald", "uncut ruby",
+                        "uncut diamond", "uncut dragonstone"),
                 "Compare uncut gem price with the finished product and XP value.",
                 "Mine gem rocks, use Mining/PvM rewards, or cut banked gems already earned.",
                 "Gem rocks and immediate cutting are preferred; only retain gems with a clear near-term use.");
@@ -207,6 +216,14 @@ public class ResourceSourceCatalog
     private static List<String> tokens(String... values)
     {
         return Arrays.asList(values);
+    }
+
+    private static boolean containsPhrase(String value, String phrase)
+    {
+        if (value.equals(phrase)) return true;
+        String paddedValue = " " + value + " ";
+        String paddedPhrase = " " + phrase + " ";
+        return paddedValue.contains(paddedPhrase);
     }
 
     private static String normalize(String value)
