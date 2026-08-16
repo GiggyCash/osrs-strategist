@@ -11,9 +11,10 @@ import javax.inject.Singleton;
  * Top-level strategist coordinator.
  *
  * <p>Candidate providers answer "what is possible/useful?". The recommendation
- * engine supplies skill work, domain providers supply quests/PvM/gear/etc., and
- * the healthy-engagement policy is intentionally the final weak adjustment
- * before ranking. That ordering keeps account truth and strategic value more
+ * engine supplies skill work, domain providers supply quests/PvM/gear/etc.,
+ * actionability then adds a small preference for things the account can prove it
+ * can start, and the healthy-engagement policy is the final weak adjustment
+ * before ranking. This ordering keeps game truth and strategic value more
  * important than variety.</p>
  */
 @Singleton
@@ -23,6 +24,7 @@ public class StrategyEngine
     private final OpportunityEngine opportunityEngine;
     private final StrategyModuleRegistry moduleRegistry;
     private final StrategyCandidateRegistry candidateRegistry;
+    private final ActionabilityScoringPolicy actionabilityScoringPolicy;
     private final HealthyEngagementPolicy healthyEngagementPolicy;
 
     @Inject
@@ -31,12 +33,16 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             StrategyModuleRegistry moduleRegistry,
             StrategyCandidateRegistry candidateRegistry,
+            ActionabilityScoringPolicy actionabilityScoringPolicy,
             HealthyEngagementPolicy healthyEngagementPolicy)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
         this.moduleRegistry = moduleRegistry;
         this.candidateRegistry = candidateRegistry;
+        this.actionabilityScoringPolicy = actionabilityScoringPolicy == null
+                ? new ActionabilityScoringPolicy()
+                : actionabilityScoringPolicy;
         this.healthyEngagementPolicy = healthyEngagementPolicy == null
                 ? new HealthyEngagementPolicy()
                 : healthyEngagementPolicy;
@@ -47,10 +53,24 @@ public class StrategyEngine
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
             StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry,
+            HealthyEngagementPolicy healthyEngagementPolicy)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, new ActionabilityScoringPolicy(),
+                healthyEngagementPolicy);
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
             StrategyCandidateRegistry candidateRegistry)
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry,
-                candidateRegistry, new HealthyEngagementPolicy());
+                candidateRegistry, new ActionabilityScoringPolicy(),
+                new HealthyEngagementPolicy());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -60,7 +80,8 @@ public class StrategyEngine
             StrategyModuleRegistry moduleRegistry)
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry,
-                null, new HealthyEngagementPolicy());
+                null, new ActionabilityScoringPolicy(),
+                new HealthyEngagementPolicy());
     }
 
     public StrategyResult evaluate(
@@ -167,9 +188,14 @@ public class StrategyEngine
             }
         }
 
-        // Healthy engagement is purposefully applied after normal strategic
-        // scoring and before sorting. The policy itself is capped, so it can
-        // resolve close choices but cannot turn a poor action into the winner.
+        // Actionability is bounded. It lets a similarly valuable Ready option
+        // beat a route with several unresolved checks, but cannot compensate for
+        // a large strategic-score deficit.
+        recommendations = actionabilityScoringPolicy.adjust(recommendations);
+
+        // Healthy engagement is purposefully applied after normal strategic and
+        // readiness scoring and before sorting. It is also capped, so it can
+        // resolve close choices without manufacturing engagement pressure.
         recommendations = healthyEngagementPolicy.adjust(
                 recommendations, history, varietyPreference);
 
