@@ -11,7 +11,7 @@ public final class AccountSnapshot
     private final int accountTypeCode;
     private final String accountTypeName;
     private final MembershipStatus membershipStatus;
-    private final int membershipDays;
+    private final int membershipCredit;
     private final int totalLevel;
     private final long totalExperience;
 
@@ -49,7 +49,7 @@ public final class AccountSnapshot
             int accountTypeCode,
             String accountTypeName,
             MembershipStatus membershipStatus,
-            int membershipDays,
+            int membershipCredit,
             int totalLevel,
             long totalExperience,
             Map<Skill, Integer> skillLevels,
@@ -61,7 +61,7 @@ public final class AccountSnapshot
         this.membershipStatus = membershipStatus == null
                 ? MembershipStatus.UNKNOWN
                 : membershipStatus;
-        this.membershipDays = membershipDays;
+        this.membershipCredit = membershipCredit;
         this.totalLevel = totalLevel;
         this.totalExperience = totalExperience;
 
@@ -94,9 +94,9 @@ public final class AccountSnapshot
         return membershipStatus;
     }
 
-    public int getMembershipDays()
+    public int getMembershipCredit()
     {
-        return membershipDays;
+        return membershipCredit;
     }
 
     public int getTotalLevel()
