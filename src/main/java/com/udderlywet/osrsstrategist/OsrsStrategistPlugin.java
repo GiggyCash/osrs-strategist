@@ -56,6 +56,7 @@ public class OsrsStrategistPlugin extends Plugin
 
     private String loadedPreferenceProfileKey;
     private boolean savingPreferenceProfile;
+    private AccountSnapshot latestSnapshot;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
@@ -102,6 +103,7 @@ public class OsrsStrategistPlugin extends Plugin
         preferenceProfile.clear();
         loadedPreferenceProfileKey = null;
         savingPreferenceProfile = false;
+        latestSnapshot = null;
         panel = null;
         navButton = null;
     }
@@ -161,6 +163,11 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         preferenceProfile.apply(activityId, action);
 
+        // Feedback buttons live on Swing's event-dispatch thread. Re-rank from
+        // the most recent account snapshot immediately so Later, Not Today,
+        // and Dislike visibly replace DO NEXT before the click finishes.
+        refreshRecommendationsImmediately();
+
         savingPreferenceProfile = true;
 
         try
@@ -179,8 +186,35 @@ public class OsrsStrategistPlugin extends Plugin
         // created its RS profile during save().
         loadedPreferenceProfileKey =
                 accountPreferenceStore.getActiveProfileKey();
+    }
 
-        updateAccountPanel();
+    private void refreshRecommendationsImmediately()
+    {
+        if (panel == null || latestSnapshot == null)
+        {
+            return;
+        }
+
+        List<Recommendation> recommendations =
+                recommendationEngine.recommend(
+                        latestSnapshot,
+                        config.strategyMode(),
+                        preferenceProfile
+                );
+
+        Runnable update = () ->
+                panel.updateRecommendations(
+                        recommendations
+                );
+
+        if (SwingUtilities.isEventDispatchThread())
+        {
+            update.run();
+        }
+        else
+        {
+            SwingUtilities.invokeLater(update);
+        }
     }
 
     private void syncPreferenceProfile()
@@ -224,6 +258,8 @@ public class OsrsStrategistPlugin extends Plugin
 
         if (snapshot == null)
         {
+            latestSnapshot = null;
+
             SwingUtilities.invokeLater(
                     () ->
                     {
@@ -247,6 +283,7 @@ public class OsrsStrategistPlugin extends Plugin
             return;
         }
 
+        latestSnapshot = snapshot;
         syncPreferenceProfile();
 
         List<Recommendation> recommendations =
