@@ -53,11 +53,11 @@ public class RuneLiteSkillActionCatalog
 
             Method getLevel = type.getMethod("getLevel");
             Method getXp = type.getMethod("getXp");
-            Method getCategory = type.getMethod("getCategory");
+            Method getCategory = optionalMethod(type, "getCategory");
             Method getName = itemManager == null ? null
-                    : type.getMethod("getName", ItemManager.class);
+                    : optionalMethod(type, "getName", ItemManager.class);
             Method isMembers = itemManager == null ? null
-                    : type.getMethod("isMembers", ItemManager.class);
+                    : optionalMethod(type, "isMembers", ItemManager.class);
 
             List<RuneLiteSkillActionDefinition> actions = new ArrayList<>();
             for (Object constant : constants)
@@ -65,7 +65,8 @@ public class RuneLiteSkillActionCatalog
                 Enum<?> enumValue = (Enum<?>) constant;
                 int level = ((Number) getLevel.invoke(constant)).intValue();
                 float xp = ((Number) getXp.invoke(constant)).floatValue();
-                Object rawCategory = getCategory.invoke(constant);
+                Object rawCategory = getCategory == null
+                        ? null : getCategory.invoke(constant);
                 String category = rawCategory == null ? null : rawCategory.toString();
                 String name = getName == null
                         ? pretty(enumValue.name())
@@ -90,8 +91,9 @@ public class RuneLiteSkillActionCatalog
         }
         catch (ReflectiveOperationException | LinkageError ex)
         {
-            // A RuneLite release may rename/remove a calculator class. That
-            // should reduce coverage explicitly rather than break the plugin.
+            // A RuneLite release may rename/remove a calculator class or core
+            // action accessor. That should reduce coverage explicitly rather
+            // than break the plugin.
             return Collections.emptyList();
         }
     }
@@ -124,6 +126,21 @@ public class RuneLiteSkillActionCatalog
         enumClasses.put(Skill.SMITHING, "SmithingAction");
         enumClasses.put(Skill.THIEVING, "ThievingAction");
         enumClasses.put(Skill.WOODCUTTING, "WoodcuttingAction");
+    }
+
+    private static Method optionalMethod(
+            Class<?> type,
+            String name,
+            Class<?>... parameterTypes)
+    {
+        try
+        {
+            return type.getMethod(name, parameterTypes);
+        }
+        catch (NoSuchMethodException ex)
+        {
+            return null;
+        }
     }
 
     private static String pretty(String value)
