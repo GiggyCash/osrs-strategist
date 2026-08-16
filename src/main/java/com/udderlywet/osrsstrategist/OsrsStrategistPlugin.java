@@ -310,6 +310,7 @@ public class OsrsStrategistPlugin extends Plugin
                         "Unknown",
                         0
                 );
+                panel.updateGoal(profile.getActiveGoal());
                 panel.updateStrategy(
                         profile.getStrategyMode(),
                         profile.getSessionIntent(),
@@ -346,6 +347,7 @@ public class OsrsStrategistPlugin extends Plugin
                     account.getAccountTypeName(),
                     account.getTotalLevel()
             );
+            panel.updateGoal(profile.getActiveGoal());
             panel.updateStrategy(
                     profile.getStrategyMode(),
                     profile.getSessionIntent(),
