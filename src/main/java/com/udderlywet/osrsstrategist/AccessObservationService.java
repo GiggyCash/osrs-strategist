@@ -33,40 +33,45 @@ public class AccessObservationService
         this.farmingAccessCatalog = farmingAccessCatalog;
     }
 
-    public void observeCurrentLocation()
+    /**
+     * @return true when a newly learned fact could change recommendation readiness.
+     */
+    public boolean observeCurrentLocation()
     {
         if (client.getGameState() != GameState.LOGGED_IN)
         {
-            return;
+            return false;
         }
 
         Player player = client.getLocalPlayer();
         if (player == null)
         {
-            return;
+            return false;
         }
 
         WorldPoint location = player.getWorldLocation();
         if (location == null)
         {
-            return;
+            return false;
         }
 
         int regionId = location.getRegionID();
         if (regionId == lastRegionId)
         {
-            return;
+            return false;
         }
 
         lastRegionId = regionId;
-        memoryStore.remember("region." + regionId);
+        boolean changed = memoryStore.remember("region." + regionId);
 
         FarmingAccessDefinition farming =
                 farmingAccessCatalog.forRegion(regionId);
         if (farming != null)
         {
-            memoryStore.remember(farming.observationKey());
+            changed |= memoryStore.remember(farming.observationKey());
         }
+
+        return changed;
     }
 
     public void clearForAccountChange()
