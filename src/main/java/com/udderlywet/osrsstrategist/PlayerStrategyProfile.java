@@ -1,6 +1,12 @@
 package com.udderlywet.osrsstrategist;
 
-/** Per-character planning preferences that survive logout/restart. */
+/**
+ * Per-character planning preferences that survive logout/restart.
+ *
+ * <p>Getters are deliberately null-safe because Gson may load a profile written
+ * by an older Strategist version before a newer field existed. This lets us add
+ * customization without breaking long-lived RuneLite character profiles.</p>
+ */
 public final class PlayerStrategyProfile
 {
     private final StrategyMode strategyMode;
@@ -10,6 +16,7 @@ public final class PlayerStrategyProfile
     private final boolean useGroupStorage;
     private final boolean collectionistMode;
     private final boolean allowWildernessMethods;
+    private final VarietyPreference varietyPreference;
 
     public PlayerStrategyProfile(
             StrategyMode strategyMode,
@@ -20,7 +27,8 @@ public final class PlayerStrategyProfile
             boolean collectionistMode)
     {
         this(strategyMode, sessionIntent, questTolerance, activeGoal,
-                useGroupStorage, collectionistMode, false);
+                useGroupStorage, collectionistMode, false,
+                VarietyPreference.BALANCED);
     }
 
     public PlayerStrategyProfile(
@@ -32,6 +40,21 @@ public final class PlayerStrategyProfile
             boolean collectionistMode,
             boolean allowWildernessMethods)
     {
+        this(strategyMode, sessionIntent, questTolerance, activeGoal,
+                useGroupStorage, collectionistMode, allowWildernessMethods,
+                VarietyPreference.BALANCED);
+    }
+
+    public PlayerStrategyProfile(
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            QuestTolerance questTolerance,
+            GoalType activeGoal,
+            boolean useGroupStorage,
+            boolean collectionistMode,
+            boolean allowWildernessMethods,
+            VarietyPreference varietyPreference)
+    {
         this.strategyMode = strategyMode == null ? StrategyMode.BALANCED : strategyMode;
         this.sessionIntent = sessionIntent == null ? SessionIntent.PICK_FOR_ME : sessionIntent;
         this.questTolerance = questTolerance == null ? QuestTolerance.NORMAL : questTolerance;
@@ -39,6 +62,8 @@ public final class PlayerStrategyProfile
         this.useGroupStorage = useGroupStorage;
         this.collectionistMode = collectionistMode;
         this.allowWildernessMethods = allowWildernessMethods;
+        this.varietyPreference = varietyPreference == null
+                ? VarietyPreference.BALANCED : varietyPreference;
     }
 
     public static PlayerStrategyProfile fromConfig(OsrsStrategistConfig config)
@@ -47,15 +72,37 @@ public final class PlayerStrategyProfile
                 config.strategyMode(), config.sessionIntent(),
                 config.questTolerance(), config.activeGoal(),
                 config.useGroupStorage(), config.collectionistMode(),
-                config.allowWildernessMethods()
+                config.allowWildernessMethods(), config.varietyPreference()
         );
     }
 
-    public StrategyMode getStrategyMode() { return strategyMode; }
-    public SessionIntent getSessionIntent() { return sessionIntent; }
-    public QuestTolerance getQuestTolerance() { return questTolerance; }
-    public GoalType getActiveGoal() { return activeGoal; }
+    public StrategyMode getStrategyMode()
+    {
+        return strategyMode == null ? StrategyMode.BALANCED : strategyMode;
+    }
+
+    public SessionIntent getSessionIntent()
+    {
+        return sessionIntent == null ? SessionIntent.PICK_FOR_ME : sessionIntent;
+    }
+
+    public QuestTolerance getQuestTolerance()
+    {
+        return questTolerance == null ? QuestTolerance.NORMAL : questTolerance;
+    }
+
+    public GoalType getActiveGoal()
+    {
+        return activeGoal == null ? GoalType.MAX : activeGoal;
+    }
+
     public boolean isUseGroupStorage() { return useGroupStorage; }
     public boolean isCollectionistMode() { return collectionistMode; }
     public boolean isAllowWildernessMethods() { return allowWildernessMethods; }
+
+    public VarietyPreference getVarietyPreference()
+    {
+        return varietyPreference == null
+                ? VarietyPreference.BALANCED : varietyPreference;
+    }
 }

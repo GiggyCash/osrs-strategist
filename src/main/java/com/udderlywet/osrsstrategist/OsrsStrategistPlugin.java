@@ -233,7 +233,9 @@ public class OsrsStrategistPlugin extends Plugin
                 profile.isUseGroupStorage(),
                 profile.isCollectionistMode(),
                 profile.isAllowWildernessMethods(),
-                preferenceProfile);
+                preferenceProfile,
+                recommendationHistory,
+                profile.getVarietyPreference());
     }
 
     private void updateGuidance(StrategyResult result, StrategyDataBundle data)
