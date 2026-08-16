@@ -65,6 +65,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
 
     private String currentRecommendationId;
+    private String currentRecommendationTitle;
 
     public OsrsStrategistPanel(
             BiConsumer<String, FeedbackAction> feedbackHandler)
@@ -269,6 +270,7 @@ public class OsrsStrategistPanel extends PluginPanel
                 || recommendations.isEmpty())
         {
             currentRecommendationId = null;
+            currentRecommendationTitle = null;
             setFeedbackButtonsEnabled(false);
 
             recommendationTitle.setText(
@@ -296,6 +298,7 @@ public class OsrsStrategistPanel extends PluginPanel
                 recommendations.get(0);
 
         currentRecommendationId = best.getId();
+        currentRecommendationTitle = best.getTitle();
         setFeedbackButtonsEnabled(true);
 
         recommendationTitle.setText(
@@ -358,14 +361,20 @@ public class OsrsStrategistPanel extends PluginPanel
             return;
         }
 
+        String actedOnTitle = currentRecommendationTitle;
+        String actedOnId = currentRecommendationId;
+
         feedbackStatus.setText(
                 html(
-                        feedbackStatusText(action)
+                        feedbackStatusText(
+                                action,
+                                actedOnTitle
+                        )
                 )
         );
 
         feedbackHandler.accept(
-                currentRecommendationId,
+                actedOnId,
                 action
         );
     }
@@ -395,24 +404,32 @@ public class OsrsStrategistPanel extends PluginPanel
     }
 
     private static String feedbackStatusText(
-            FeedbackAction action)
+            FeedbackAction action,
+            String title)
     {
+        String activity = title == null
+                ? "Recommendation"
+                : title;
+
         switch (action)
         {
             case DO_THIS:
-                return "<b>Saved:</b> Do This";
+                return "<b>Selected:</b> " + activity;
 
             case LATER:
-                return "<b>Snoozed:</b> 1 hour";
+                return "<b>" + activity
+                        + "</b> snoozed for 1 hour.";
 
             case NOT_TODAY:
-                return "<b>Snoozed:</b> 24 hours";
+                return "<b>" + activity
+                        + "</b> snoozed for 24 hours.";
 
             case DISLIKE:
-                return "<b>Saved:</b> Dislike. Showing less often.";
+                return "<b>" + activity
+                        + "</b> marked as disliked and will appear less often.";
 
             default:
-                return "<b>Saved.</b>";
+                return "<b>Feedback saved.</b>";
         }
     }
 
