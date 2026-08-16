@@ -65,15 +65,15 @@ public class TrainingMethodDatabase
 
         add("magic_utility", Skill.MAGIC, 1, 99,
                 "Combine utility spells with combat Magic",
-                "Use useful teleports, enchants, alchemy, and combat spells you already have resources for instead of spending runes only for raw XP.",
+                "Use useful teleports, enchants, alchemy, and combat spells you have confirmed resources for instead of spending runes only for raw XP.",
                 9, 11, 8, AttentionLevel.MODERATE, 10, 3,
-                none(), RecommendationConfidence.VERIFIED);
+                none(), RecommendationConfidence.CHECK_NEEDED);
 
         add("prayer_bones", Skill.PRAYER, 1, 99,
                 "Use the best bones your account can sustainably obtain",
-                "Prefer banked or naturally obtained bones first. Use the safest altar or prayer-training option your account has actually unlocked.",
+                "Prefer bones already confirmed available or naturally obtained first. Use the safest altar or prayer-training option your account has actually unlocked.",
                 10, 11, 7, AttentionLevel.MODERATE, 10, 5,
-                Arrays.asList("Confirm the altar/training location is unlocked"),
+                Arrays.asList("Confirm available bones", "Confirm the altar/training location is unlocked"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("runecraft_best_rune", Skill.RUNECRAFT, 1, 99,
@@ -91,10 +91,10 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("construction_standard", Skill.CONSTRUCTION, 1, 99,
-                "Use banked planks on the best practical furniture",
-                "Spend planks you already own first and choose a build/remove cycle that fits your level and budget.",
+                "Use confirmed planks on the best practical furniture",
+                "If plank supplies are confirmed available, choose a build/remove cycle that fits your level and budget. Otherwise Strategist should first determine how this account should obtain planks.",
                 12, 10, 5, AttentionLevel.ACTIVE, 15, 5,
-                Arrays.asList("Player-owned house access", "Planks and required materials"),
+                Arrays.asList("Player-owned house access", "Confirm planks and required materials"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("construction_homes", Skill.CONSTRUCTION, 20, 99,
@@ -105,36 +105,36 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("agility_rooftop", Skill.AGILITY, 1, 99,
-                "Best unlocked rooftop or Agility course",
-                "Use the highest sensible course you have unlocked, prioritizing Marks of Grace when Graceful or stamina resources still matter.",
+                "Best confirmed rooftop or Agility course",
+                "Use the highest sensible course confirmed unlocked, prioritizing Marks of Grace when Graceful or stamina resources still matter.",
                 11, 12, 8, AttentionLevel.ACTIVE, 20, 2,
-                none(), RecommendationConfidence.CHECK_NEEDED);
+                Arrays.asList("Confirm the course is unlocked and reachable"), RecommendationConfidence.CHECK_NEEDED);
 
         add("herblore_bank", Skill.HERBLORE, 1, 99,
-                "Process banked herbs into useful potions",
-                "Use herbs and secondaries you already own, prioritizing potions your account will actually use later.",
+                "Process confirmed herbs into useful potions",
+                "If herbs and secondaries are confirmed available, prioritize potions your account will actually use later. Otherwise Strategist should determine an account-appropriate source first.",
                 11, 13, 9, AttentionLevel.MODERATE, 10, 3,
-                Arrays.asList("Herblore must be unlocked", "Usable herbs and secondaries"),
+                Arrays.asList("Herblore must be unlocked", "Confirm usable herbs and secondaries"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("thieving_best_target", Skill.THIEVING, 1, 99,
-                "Best unlocked low-risk Thieving target",
+                "Best confirmed low-risk Thieving target",
                 "Use a stall, chest, or pickpocket target appropriate to your level and food supply, favoring useful loot when efficiency is close.",
                 11, 11, 8, AttentionLevel.ACTIVE, 15, 2,
-                none(), RecommendationConfidence.CHECK_NEEDED);
+                Arrays.asList("Confirm the target is accessible"), RecommendationConfidence.CHECK_NEEDED);
 
         add("crafting_banked", Skill.CRAFTING, 1, 99,
-                "Process banked Crafting supplies",
-                "Use gems, hides, glass materials, jewelry supplies, or other banked resources before gathering or buying more.",
+                "Process confirmed Crafting supplies",
+                "Use gems, hides, glass materials, jewelry supplies, or other resources only after Strategist confirms they are available, before gathering or buying more.",
                 10, 13, 9, AttentionLevel.MODERATE, 10, 3,
                 Arrays.asList("Confirm which Crafting supplies are currently available"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("fletching_logs", Skill.FLETCHING, 1, 99,
-                "Fletch banked logs into useful products",
-                "Use logs you already have and favor products that support future Ranged, alching, or money-making plans.",
+                "Fletch confirmed logs into useful products",
+                "If logs are confirmed available, favor products that support future Ranged, alching, or money-making plans. Otherwise source materials using account-type rules.",
                 9, 12, 12, AttentionLevel.LOW, 10, 1,
-                Arrays.asList("Logs or other Fletching supplies"),
+                Arrays.asList("Confirm logs or other Fletching supplies"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("slayer_tasks", Skill.SLAYER, 1, 99,
@@ -145,10 +145,10 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("hunter_traps", Skill.HUNTER, 1, 99,
-                "Best unlocked Hunter creature or trap",
-                "Use the strongest practical Hunter method unlocked for your level, favoring useful supplies or collection progress when rates are similar.",
+                "Best confirmed Hunter creature or trap",
+                "Use the strongest practical Hunter method confirmed unlocked for your level, favoring useful supplies or collection progress when rates are similar.",
                 10, 11, 8, AttentionLevel.MODERATE, 15, 5,
-                none(), RecommendationConfidence.CHECK_NEEDED);
+                Arrays.asList("Confirm the Hunter method is accessible"), RecommendationConfidence.CHECK_NEEDED);
 
         add("hunter_birdhouses", Skill.HUNTER, 5, 99,
                 "Birdhouse runs",
@@ -171,10 +171,10 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("smithing_banked", Skill.SMITHING, 1, 99,
-                "Smith banked ores and bars",
-                "Use resources already owned first, favoring products that help quests, equipment, ammunition, or later processing.",
+                "Smith confirmed ores and bars",
+                "Use ores or bars only after Strategist confirms they are available, favoring products that help quests, equipment, ammunition, or later processing.",
                 9, 12, 9, AttentionLevel.MODERATE, 10, 3,
-                Arrays.asList("Usable ores/bars and furnace or anvil access"),
+                Arrays.asList("Confirm usable ores/bars and furnace or anvil access"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("smithing_foundry", Skill.SMITHING, 15, 99,
@@ -198,18 +198,17 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("cooking_banked", Skill.COOKING, 1, 99,
-                "Cook banked raw food",
-                "Turn food you already own into useful combat supplies before buying or gathering dedicated Cooking materials.",
+                "Cook confirmed raw food",
+                "Turn raw food into useful combat supplies only after Strategist confirms that food is available, before buying or gathering dedicated Cooking materials.",
                 10, 13, 12, AttentionLevel.LOW, 10, 2,
-                Arrays.asList("Raw cookable food"),
+                Arrays.asList("Confirm raw cookable food"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("firemaking_logs", Skill.FIREMAKING, 1, 99,
-                "Burn banked logs",
-                "Use spare logs when you only need a short Firemaking push and do not want to set up a longer activity.",
+                "Burn confirmed spare logs",
+                "Use spare logs only when they are confirmed available and not reserved for a higher-value goal.",
                 9, 9, 8, AttentionLevel.MODERATE, 10, 1,
-                Arrays.asList("Logs and a tinderbox"),
-                RecommendationConfidence.VERIFIED);
+                Arrays.asList("Confirm logs and a tinderbox"), RecommendationConfidence.CHECK_NEEDED);
 
         add("firemaking_wintertodt", Skill.FIREMAKING, 50, 99,
                 "Wintertodt",
@@ -232,10 +231,10 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("farming_early", Skill.FARMING, 1, 99,
-                "Use the best unlocked Farming patches and seeds",
-                "Start with whatever allotment, flower, tree, or other patches are actually unlocked, using banked seeds and compost first.",
+                "Use confirmed Farming patches and seeds",
+                "Start with allotment, flower, tree, or other patches only after Strategist confirms they are reachable, then use seeds and compost confirmed available or source them appropriately for the account type.",
                 11, 14, 11, AttentionLevel.LOW, 10, 5,
-                Arrays.asList("Confirm reachable Farming patches", "Seeds and farming tools"),
+                Arrays.asList("Confirm reachable Farming patches", "Confirm seeds and farming tools"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("farming_herbs", Skill.FARMING, 9, 99,
@@ -246,8 +245,8 @@ public class TrainingMethodDatabase
                 RecommendationConfidence.CHECK_NEEDED);
 
         add("sailing_unlocked", Skill.SAILING, 1, 99,
-                "Best unlocked Sailing activity for your current port progression",
-                "Choose a Sailing activity that advances both Sailing XP and useful voyage, port, contract, or resource progression. Strategist will replace this generic entry with verified activity data as Sailing coverage expands.",
+                "Choose the best confirmed Sailing activity",
+                "Strategist should only select an exact Sailing activity after confirming the relevant port, activity, and progression unlocks. Until then, treat the method as Check Needed rather than guessing.",
                 10, 12, 9, AttentionLevel.MODERATE, 20, 5,
                 Arrays.asList("Confirm the Sailing activity and port are unlocked"),
                 RecommendationConfidence.CHECK_NEEDED);
