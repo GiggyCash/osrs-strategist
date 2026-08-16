@@ -22,6 +22,8 @@ public final class TrainingMethod
     private final List<String> requirements;
     private final RecommendationConfidence confidence;
     private final boolean membersOnly;
+    private final boolean wilderness;
+    private final boolean progressionProtected;
 
     public TrainingMethod(
             String id,
@@ -39,23 +41,10 @@ public final class TrainingMethod
             List<String> requirements,
             RecommendationConfidence confidence)
     {
-        this(
-                id,
-                skill,
-                minLevel,
-                maxLevel,
-                name,
-                instructions,
-                efficientScore,
-                balancedScore,
-                relaxedScore,
-                attentionLevel,
-                minimumSessionMinutes,
-                setupMinutes,
-                requirements,
-                confidence,
-                false
-        );
+        this(id, skill, minLevel, maxLevel, name, instructions,
+                efficientScore, balancedScore, relaxedScore, attentionLevel,
+                minimumSessionMinutes, setupMinutes, requirements, confidence,
+                false, false, false);
     }
 
     public TrainingMethod(
@@ -75,6 +64,31 @@ public final class TrainingMethod
             RecommendationConfidence confidence,
             boolean membersOnly)
     {
+        this(id, skill, minLevel, maxLevel, name, instructions,
+                efficientScore, balancedScore, relaxedScore, attentionLevel,
+                minimumSessionMinutes, setupMinutes, requirements, confidence,
+                membersOnly, false, false);
+    }
+
+    public TrainingMethod(
+            String id,
+            Skill skill,
+            int minLevel,
+            int maxLevel,
+            String name,
+            String instructions,
+            double efficientScore,
+            double balancedScore,
+            double relaxedScore,
+            AttentionLevel attentionLevel,
+            int minimumSessionMinutes,
+            int setupMinutes,
+            List<String> requirements,
+            RecommendationConfidence confidence,
+            boolean membersOnly,
+            boolean wilderness,
+            boolean progressionProtected)
+    {
         this.id = id;
         this.skill = skill;
         this.minLevel = minLevel;
@@ -92,67 +106,24 @@ public final class TrainingMethod
         );
         this.confidence = confidence;
         this.membersOnly = membersOnly;
+        this.wilderness = wilderness;
+        this.progressionProtected = progressionProtected;
     }
 
-    public String getId()
-    {
-        return id;
-    }
-
-    public Skill getSkill()
-    {
-        return skill;
-    }
-
-    public int getMinLevel()
-    {
-        return minLevel;
-    }
-
-    public int getMaxLevel()
-    {
-        return maxLevel;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public String getInstructions()
-    {
-        return instructions;
-    }
-
-    public AttentionLevel getAttentionLevel()
-    {
-        return attentionLevel;
-    }
-
-    public int getMinimumSessionMinutes()
-    {
-        return minimumSessionMinutes;
-    }
-
-    public int getSetupMinutes()
-    {
-        return setupMinutes;
-    }
-
-    public List<String> getRequirements()
-    {
-        return requirements;
-    }
-
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
-
-    public boolean isMembersOnly()
-    {
-        return membersOnly;
-    }
+    public String getId() { return id; }
+    public Skill getSkill() { return skill; }
+    public int getMinLevel() { return minLevel; }
+    public int getMaxLevel() { return maxLevel; }
+    public String getName() { return name; }
+    public String getInstructions() { return instructions; }
+    public AttentionLevel getAttentionLevel() { return attentionLevel; }
+    public int getMinimumSessionMinutes() { return minimumSessionMinutes; }
+    public int getSetupMinutes() { return setupMinutes; }
+    public List<String> getRequirements() { return requirements; }
+    public RecommendationConfidence getConfidence() { return confidence; }
+    public boolean isMembersOnly() { return membersOnly; }
+    public boolean isWilderness() { return wilderness; }
+    public boolean isProgressionProtected() { return progressionProtected; }
 
     public boolean supportsLevel(int level)
     {
@@ -170,11 +141,9 @@ public final class TrainingMethod
             case EFFICIENT:
                 score = efficientScore;
                 break;
-
             case RELAXED:
                 score = relaxedScore;
                 break;
-
             case BALANCED:
             default:
                 score = balancedScore;
@@ -184,53 +153,26 @@ public final class TrainingMethod
         switch (sessionIntent)
         {
             case QUICK_20_MIN:
-                if (minimumSessionMinutes <= 20)
-                {
-                    score += 4.0;
-                }
-                else
-                {
-                    score -= 5.0;
-                }
-
-                if (setupMinutes <= 5)
-                {
-                    score += 3.0;
-                }
+                if (minimumSessionMinutes <= 20) score += 4.0;
+                else score -= 5.0;
+                if (setupMinutes <= 5) score += 3.0;
                 break;
-
             case ONE_HOUR:
-                if (minimumSessionMinutes <= 60)
-                {
-                    score += 2.0;
-                }
+                if (minimumSessionMinutes <= 60) score += 2.0;
                 break;
-
             case LONG_SESSION:
                 score += efficientScore * 0.10;
                 break;
-
             case AFK:
                 switch (attentionLevel)
                 {
-                    case AFK:
-                        score += 8.0;
-                        break;
-
-                    case LOW:
-                        score += 5.0;
-                        break;
-
-                    case ACTIVE:
-                        score -= 4.0;
-                        break;
-
+                    case AFK: score += 8.0; break;
+                    case LOW: score += 5.0; break;
+                    case ACTIVE: score -= 4.0; break;
                     case MODERATE:
-                    default:
-                        break;
+                    default: break;
                 }
                 break;
-
             case PICK_FOR_ME:
             default:
                 break;

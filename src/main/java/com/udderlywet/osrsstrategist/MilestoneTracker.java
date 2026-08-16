@@ -5,10 +5,6 @@ import java.util.Locale;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
-/**
- * Detects when the player naturally completes the currently suggested skill
- * checkpoint, even if no feedback button was ever pressed.
- */
 @Singleton
 public class MilestoneTracker
 {
@@ -16,43 +12,22 @@ public class MilestoneTracker
             TrackedMilestone tracked,
             AccountSnapshot account)
     {
-        if (tracked == null || account == null)
-        {
-            return null;
-        }
-
+        if (tracked == null || account == null) return null;
         Skill skill = tracked.getSkill();
-        if (skill == null)
-        {
-            return null;
-        }
-
+        if (skill == null) return null;
         int currentLevel = account.getSkillLevel(skill);
-        if (currentLevel < tracked.getTargetLevel())
-        {
-            return null;
-        }
-
+        if (currentLevel < tracked.getTargetLevel()) return null;
         return new MilestoneCompletion(
-                tracked.getActivityId(),
-                tracked.getTitle(),
-                skill,
-                tracked.getStartedAtLevel(),
-                tracked.getTargetLevel()
+                tracked.getActivityId(), tracked.getTitle(), skill,
+                tracked.getStartedAtLevel(), tracked.getTargetLevel()
         );
     }
 
-    public TrackedMilestone fromRecommendations(
-            List<Recommendation> recommendations)
+    public TrackedMilestone fromRecommendations(List<Recommendation> recommendations)
     {
-        if (recommendations == null || recommendations.isEmpty())
-        {
-            return null;
-        }
-
+        if (recommendations == null || recommendations.isEmpty()) return null;
         Recommendation best = recommendations.get(0);
         Skill skill = skillFor(best);
-
         if (skill == null
                 || best.getCurrentLevel() <= 0
                 || best.getTargetLevel() <= best.getCurrentLevel())
@@ -60,45 +35,33 @@ public class MilestoneTracker
             return null;
         }
 
+        TrainingPlan plan = best.getTrainingPlan();
+        boolean progressionProtected = plan != null
+                && plan.getMethod() != null
+                && plan.getMethod().isProgressionProtected();
+
         return new TrackedMilestone(
-                best.getId(),
-                best.getTitle(),
-                skill.name(),
-                best.getCurrentLevel(),
-                best.getTargetLevel()
+                best.getId(), best.getTitle(), skill.name(),
+                best.getCurrentLevel(), best.getTargetLevel(),
+                progressionProtected
         );
     }
 
-    public boolean sameCheckpoint(
-            TrackedMilestone first,
-            TrackedMilestone second)
+    public boolean sameCheckpoint(TrackedMilestone first, TrackedMilestone second)
     {
-        if (first == null || second == null)
-        {
-            return first == second;
-        }
-
+        if (first == null || second == null) return first == second;
         return safeEquals(first.getActivityId(), second.getActivityId())
-                && first.getTargetLevel() == second.getTargetLevel();
+                && first.getTargetLevel() == second.getTargetLevel()
+                && first.isProgressionProtected() == second.isProgressionProtected();
     }
 
     public static Skill skillFor(Recommendation recommendation)
     {
-        if (recommendation == null || recommendation.getId() == null)
-        {
-            return null;
-        }
-
+        if (recommendation == null || recommendation.getId() == null) return null;
         String prefix = "skill:";
-        if (!recommendation.getId().startsWith(prefix))
-        {
-            return null;
-        }
-
-        String name = recommendation.getId()
-                .substring(prefix.length())
+        if (!recommendation.getId().startsWith(prefix)) return null;
+        String name = recommendation.getId().substring(prefix.length())
                 .toUpperCase(Locale.ROOT);
-
         try
         {
             return Skill.valueOf(name);

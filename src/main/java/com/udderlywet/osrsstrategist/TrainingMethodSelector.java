@@ -6,14 +6,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
-/**
- * Chooses the best training method for one skill.
- *
- * <p>The selector receives the whole StrategyDataBundle so method choice and
- * readiness can be based on the same verified account state. Requirement
- * evidence is evaluated before the winner is chosen, which means a dynamically
- * blocked method cannot beat a slightly lower-scoring usable alternative.</p>
- */
 @Singleton
 public class TrainingMethodSelector
 {
@@ -29,28 +21,19 @@ public class TrainingMethodSelector
         this.requirementEvidenceEngine = requirementEvidenceEngine;
     }
 
-    /** Compatibility constructor retained for focused unit tests. */
     public TrainingMethodSelector(TrainingMethodDatabase database)
     {
         this(database, null);
     }
 
-    /**
-     * Compatibility overload used by focused unit tests and older callers.
-     */
     public TrainingPlan select(
             Skill skill,
             int currentLevel,
             StrategyMode strategyMode,
             SessionIntent sessionIntent)
     {
-        return select(
-                null,
-                skill,
-                currentLevel,
-                strategyMode,
-                sessionIntent
-        );
+        return select(null, skill, currentLevel, strategyMode,
+                sessionIntent, false);
     }
 
     public TrainingPlan select(
@@ -60,48 +43,46 @@ public class TrainingMethodSelector
             StrategyMode strategyMode,
             SessionIntent sessionIntent)
     {
+        return select(data, skill, currentLevel, strategyMode,
+                sessionIntent, false);
+    }
+
+    public TrainingPlan select(
+            StrategyDataBundle data,
+            Skill skill,
+            int currentLevel,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            boolean allowWildernessMethods)
+    {
         List<TrainingMethod> methods = database.methodsFor(skill);
         MembershipStatus membershipStatus = membershipStatus(data);
-
         TrainingMethod bestMethod = null;
         List<RequirementCheck> bestChecks = Collections.emptyList();
-        RecommendationConfidence bestConfidence =
-                RecommendationConfidence.CHECK_NEEDED;
+        RecommendationConfidence bestConfidence = RecommendationConfidence.CHECK_NEEDED;
         double bestScore = Double.NEGATIVE_INFINITY;
 
         for (TrainingMethod method : methods)
         {
             if (!method.supportsLevel(currentLevel)
-                    || !ContentAccessRules.isMethodAvailable(
-                            method,
-                            membershipStatus
-                    )
-                    || method.getConfidence()
-                            == RecommendationConfidence.BLOCKED)
+                    || (!allowWildernessMethods && method.isWilderness())
+                    || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
+                    || method.getConfidence() == RecommendationConfidence.BLOCKED)
             {
                 continue;
             }
 
-            List<RequirementCheck> checks =
-                    requirementEvidenceEngine == null
-                            ? Collections.emptyList()
-                            : requirementEvidenceEngine.evaluate(data, method);
+            List<RequirementCheck> checks = requirementEvidenceEngine == null
+                    ? Collections.emptyList()
+                    : requirementEvidenceEngine.evaluate(data, method);
+            RecommendationConfidence confidence = assessConfidence(method, checks);
 
-            RecommendationConfidence confidence =
-                    assessConfidence(method, checks);
-
-            // A known hard blocker removes this method from consideration, but
-            // does not block the entire skill. Keep looking for another route.
             if (confidence == RecommendationConfidence.BLOCKED)
             {
                 continue;
             }
 
-            double score = method.scoreFor(
-                    strategyMode,
-                    sessionIntent
-            );
-
+            double score = method.scoreFor(strategyMode, sessionIntent);
             if (bestMethod == null || score > bestScore)
             {
                 bestMethod = method;
@@ -118,32 +99,21 @@ public class TrainingMethodSelector
 
         return new TrainingPlan(
                 bestMethod,
-                buildExplanation(
-                        bestMethod,
-                        strategyMode,
-                        sessionIntent
-                ),
+                buildExplanation(bestMethod, strategyMode, sessionIntent),
                 bestConfidence,
                 bestChecks
         );
     }
 
-    private static MembershipStatus membershipStatus(
-            StrategyDataBundle data)
+    private static MembershipStatus membershipStatus(StrategyDataBundle data)
     {
         if (data == null || data.getAccount() == null)
         {
             return MembershipStatus.UNKNOWN;
         }
-
         return data.getAccount().getMembershipStatus();
     }
 
-    /**
-     * Confidence is the aggregate of concrete checks. One known blocker blocks
-     * the method; one unknown keeps it Check Needed; all verified checks upgrade
-     * the method to Verified even if its static catalog entry began conservatively.
-     */
     private RecommendationConfidence assessConfidence(
             TrainingMethod method,
             List<RequirementCheck> checks)
@@ -152,7 +122,6 @@ public class TrainingMethodSelector
         {
             return RecommendationConfidence.BLOCKED;
         }
-
         if (checks != null && !checks.isEmpty())
         {
             boolean hasUnknown = false;
@@ -171,14 +140,11 @@ public class TrainingMethodSelector
                     ? RecommendationConfidence.CHECK_NEEDED
                     : RecommendationConfidence.VERIFIED;
         }
-
         if (method.getRequirements().isEmpty()
-                && method.getConfidence()
-                == RecommendationConfidence.VERIFIED)
+                && method.getConfidence() == RecommendationConfidence.VERIFIED)
         {
             return RecommendationConfidence.VERIFIED;
         }
-
         return RecommendationConfidence.CHECK_NEEDED;
     }
 
@@ -188,29 +154,28 @@ public class TrainingMethodSelector
             SessionIntent sessionIntent)
     {
         StringBuilder reason = new StringBuilder();
-
         reason.append("Selected for ")
                 .append(pretty(strategyMode.name()))
                 .append(" strategy");
-
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
         {
             reason.append(" and ")
                     .append(pretty(sessionIntent.name()))
                     .append(" sessions");
         }
-
         reason.append(". Attention: ")
                 .append(pretty(method.getAttentionLevel().name()))
                 .append(".");
-
+        if (method.isWilderness())
+        {
+            reason.append(" Wilderness method enabled by this character's settings.");
+        }
         return reason.toString();
     }
 
     private static String pretty(String value)
     {
         String lower = value.toLowerCase().replace('_', ' ');
-        return Character.toUpperCase(lower.charAt(0))
-                + lower.substring(1);
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }
