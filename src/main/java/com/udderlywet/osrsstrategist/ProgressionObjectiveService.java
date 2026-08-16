@@ -1,9 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/** Decides whether a method is still serving a larger reward objective. */
+/**
+ * Decides whether a method is still serving a larger reward objective.
+ *
+ * <p>A method can advance several objectives simultaneously. We therefore keep
+ * protecting it until every known objective tied to that route is proven
+ * complete, rather than dropping protection as soon as the first catalog entry
+ * is completed.</p>
+ */
 @Singleton
 public class ProgressionObjectiveService
 {
@@ -19,46 +27,44 @@ public class ProgressionObjectiveService
             TrainingPlan plan,
             CollectionLogSnapshot collectionLog)
     {
-        if (plan == null || plan.getMethod() == null)
-        {
-            return null;
-        }
+        if (plan == null || plan.getMethod() == null) return null;
 
-        ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.getMethod().getId());
-        if (objective == null)
+        List<ProgressionObjectiveDefinition> objectives =
+                catalog.objectivesForMethod(plan.getMethod().getId());
+        for (ProgressionObjectiveDefinition objective : objectives)
         {
-            return null;
+            if (collectionLog == null
+                    || !collectionLog.isObjectiveComplete(objective.getId()))
+            {
+                return objective;
+            }
         }
-
-        if (collectionLog != null
-                && collectionLog.isObjectiveComplete(objective.getId()))
-        {
-            return null;
-        }
-
-        return objective;
+        return null;
     }
 
     public boolean shouldProtect(
             TrainingPlan plan,
             CollectionLogSnapshot collectionLog)
     {
-        if (plan == null || plan.getMethod() == null)
+        if (plan == null || plan.getMethod() == null) return false;
+
+        List<ProgressionObjectiveDefinition> objectives =
+                catalog.objectivesForMethod(plan.getMethod().getId());
+        if (!objectives.isEmpty())
         {
+            for (ProgressionObjectiveDefinition objective : objectives)
+            {
+                if (collectionLog == null
+                        || !collectionLog.isObjectiveComplete(objective.getId()))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
-        // Explicit catalog objectives take precedence. The method flag remains
-        // a conservative fallback while collection-log readers are incomplete.
-        ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.getMethod().getId());
-        if (objective != null)
-        {
-            return collectionLog == null
-                    || !collectionLog.isObjectiveComplete(objective.getId());
-        }
-
+        // Conservative fallback for a progression-protected method that has not
+        // yet been migrated to explicit long-form objective records.
         return plan.getMethod().isProgressionProtected();
     }
 }
