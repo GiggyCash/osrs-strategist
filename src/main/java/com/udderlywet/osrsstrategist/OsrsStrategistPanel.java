@@ -41,6 +41,9 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel recommendationReason =
             wrapLabel("");
 
+    private final JLabel feedbackStatus =
+            wrapLabel("");
+
     private final JLabel alternativeOne =
             wrapLabel("");
 
@@ -154,6 +157,8 @@ public class OsrsStrategistPanel extends PluginPanel
 
         content.add(feedbackPanel);
         content.add(Box.createVerticalStrut(5));
+        content.add(feedbackStatus);
+        content.add(Box.createVerticalStrut(3));
         content.add(
                 wrapLabel(
                         "<i>Feedback is remembered for this account.</i>"
@@ -353,6 +358,13 @@ public class OsrsStrategistPanel extends PluginPanel
             return;
         }
 
+        feedbackStatus.setText(
+                html(
+                        "<b>Saved:</b> "
+                                + feedbackActionName(action)
+                )
+        );
+
         feedbackHandler.accept(
                 currentRecommendationId,
                 action
@@ -381,6 +393,28 @@ public class OsrsStrategistPanel extends PluginPanel
                 new Insets(2, 2, 2, 2)
         );
         return button;
+    }
+
+    private static String feedbackActionName(
+            FeedbackAction action)
+    {
+        switch (action)
+        {
+            case DO_THIS:
+                return "Do This";
+
+            case LATER:
+                return "Later";
+
+            case NOT_TODAY:
+                return "Not Today";
+
+            case DISLIKE:
+                return "Dislike";
+
+            default:
+                return action.name();
+        }
     }
 
     private static JLabel sectionHeader(
