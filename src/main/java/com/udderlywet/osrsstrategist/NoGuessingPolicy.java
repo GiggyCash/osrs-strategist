@@ -18,7 +18,7 @@ public final class NoGuessingPolicy
             return RecommendationConfidence.VERIFIED;
         }
 
-        if (state == CapabilityState.UNAVAILABLE)
+        if (state == CapabilityState.BLOCKED)
         {
             return RecommendationConfidence.BLOCKED;
         }
