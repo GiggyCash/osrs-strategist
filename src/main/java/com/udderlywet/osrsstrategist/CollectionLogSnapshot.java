@@ -1,29 +1,44 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Observed collection-log state plus explicitly proven long-form objectives.
  *
- * <p>The named objective set is intentionally separate from raw item IDs. Some
- * progression goals are multi-item or currency based, and the plugin must not
- * infer completion from an incomplete collection-log snapshot.</p>
+ * <p>Category counts are optional observed evidence. A missing category total is
+ * unknown, not zero-complete. The named objective set is intentionally separate
+ * from raw item IDs because some progression goals are multi-item/currency based.</p>
  */
 public final class CollectionLogSnapshot
 {
     private final Set<Integer> obtainedItemIds;
     private final Set<String> completedObjectiveIds;
+    private final Map<String, Integer> categoryCompleted;
+    private final Map<String, Integer> categoryTotals;
 
     public CollectionLogSnapshot(Set<Integer> obtainedItemIds)
     {
-        this(obtainedItemIds, Collections.emptySet());
+        this(obtainedItemIds, Collections.emptySet(),
+                Collections.emptyMap(), Collections.emptyMap());
     }
 
     public CollectionLogSnapshot(
             Set<Integer> obtainedItemIds,
             Set<String> completedObjectiveIds)
+    {
+        this(obtainedItemIds, completedObjectiveIds,
+                Collections.emptyMap(), Collections.emptyMap());
+    }
+
+    public CollectionLogSnapshot(
+            Set<Integer> obtainedItemIds,
+            Set<String> completedObjectiveIds,
+            Map<String, Integer> categoryCompleted,
+            Map<String, Integer> categoryTotals)
     {
         this.obtainedItemIds = Collections.unmodifiableSet(
                 obtainedItemIds == null
@@ -34,6 +49,16 @@ public final class CollectionLogSnapshot
                 completedObjectiveIds == null
                         ? new HashSet<>()
                         : new HashSet<>(completedObjectiveIds)
+        );
+        this.categoryCompleted = Collections.unmodifiableMap(
+                categoryCompleted == null
+                        ? new HashMap<>()
+                        : new HashMap<>(categoryCompleted)
+        );
+        this.categoryTotals = Collections.unmodifiableMap(
+                categoryTotals == null
+                        ? new HashMap<>()
+                        : new HashMap<>(categoryTotals)
         );
     }
 
@@ -53,6 +78,16 @@ public final class CollectionLogSnapshot
         return obtainedItemIds.size();
     }
 
+    public int getCategoryCompleted(String category)
+    {
+        return categoryCompleted.getOrDefault(category, 0);
+    }
+
+    public int getCategoryTotal(String category)
+    {
+        return categoryTotals.getOrDefault(category, 0);
+    }
+
     public Set<Integer> getObtainedItemIds()
     {
         return obtainedItemIds;
@@ -61,5 +96,15 @@ public final class CollectionLogSnapshot
     public Set<String> getCompletedObjectiveIds()
     {
         return completedObjectiveIds;
+    }
+
+    public Map<String, Integer> getCategoryCompleted()
+    {
+        return categoryCompleted;
+    }
+
+    public Map<String, Integer> getCategoryTotals()
+    {
+        return categoryTotals;
     }
 }
