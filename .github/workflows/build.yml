@@ -12,14 +12,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Keep CI action majors current enough to avoid deprecated Node runtimes.
+      # The Java version itself stays pinned to 21 because RuneLite/Gradle dev
+      # behavior has been validated against that toolchain for this project.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
+          cache: gradle
 
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
