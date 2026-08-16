@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import net.runelite.api.Skill;
@@ -93,7 +92,7 @@ public class F2pRunecraftRecommendationTest
     }
 
     @Test
-    public void unresolvedRequirementsAreNamedInsteadOfVagueFallback()
+    public void unresolvedRequirementsAreNamedWithNeutralCheckMarkers()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
         TrainingPlan plan = selector().select(
@@ -117,9 +116,12 @@ public class F2pRunecraftRecommendationTest
 
         String compact = RecommendationPresentation.compactHtml(recommendation);
         assertTrue(compact.contains("Craft air runes"));
-        assertTrue(compact.contains("NEEDS INFO"));
+        assertTrue(compact.contains("CHECK FIRST"));
         assertTrue(compact.contains("Rune essence"));
         assertTrue(compact.contains("Air talisman or air tiara"));
+        assertTrue(compact.contains("○"));
+        assertFalse(compact.contains("?"));
+        assertFalse(compact.contains("Moderate attention"));
     }
 
     private static TrainingMethodSelector selector()
