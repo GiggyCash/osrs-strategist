@@ -2,13 +2,20 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
 /**
  * Turns static method requirements into account-specific evidence checks.
- * Dedicated evaluators replace generic Needs Info rows one system at a time.
+ * Dedicated evaluators replace generic Check First rows one system at a time.
+ *
+ * <p>The order is deliberate. Domain-specific evaluators (Farming, Agility,
+ * Runecraft) have the richest semantic knowledge and run first. The general
+ * {@link MethodReadinessCatalog} then handles stable item-driven requirements
+ * for common methods. Any fact that is still not observable stays explicit and
+ * unresolved rather than being guessed.</p>
  */
 @Singleton
 public class RequirementEvidenceEngine
@@ -17,6 +24,7 @@ public class RequirementEvidenceEngine
     private final AgilityAccessEvaluator agilityAccessEvaluator;
     private final FarmingSupplyCatalog farmingSupplyCatalog;
     private final RunecraftSupplyCatalog runecraftSupplyCatalog;
+    private final MethodReadinessCatalog methodReadinessCatalog;
     private final ResourceReadinessService resourceReadinessService;
 
     @Inject
@@ -25,12 +33,14 @@ public class RequirementEvidenceEngine
             AgilityAccessEvaluator agilityAccessEvaluator,
             FarmingSupplyCatalog farmingSupplyCatalog,
             RunecraftSupplyCatalog runecraftSupplyCatalog,
+            MethodReadinessCatalog methodReadinessCatalog,
             ResourceReadinessService resourceReadinessService)
     {
         this.farmingAccessEvaluator = farmingAccessEvaluator;
         this.agilityAccessEvaluator = agilityAccessEvaluator;
         this.farmingSupplyCatalog = farmingSupplyCatalog;
         this.runecraftSupplyCatalog = runecraftSupplyCatalog;
+        this.methodReadinessCatalog = methodReadinessCatalog;
         this.resourceReadinessService = resourceReadinessService;
     }
 
@@ -44,6 +54,7 @@ public class RequirementEvidenceEngine
                 agilityAccessEvaluator,
                 new FarmingSupplyCatalog(),
                 new RunecraftSupplyCatalog(),
+                new MethodReadinessCatalog(),
                 new ResourceReadinessService()
         );
     }
@@ -59,10 +70,8 @@ public class RequirementEvidenceEngine
             TrainingMethod method)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        if (method == null)
-        {
-            return checks;
-        }
+        if (method == null) return checks;
+
         if (method.getSkill() == Skill.FARMING)
         {
             return evaluateFarming(data, method);
@@ -77,6 +86,13 @@ public class RequirementEvidenceEngine
             return evaluateRunecraft(data, method);
         }
 
+        MethodReadinessProfile profile = methodReadinessCatalog == null
+                ? null : methodReadinessCatalog.forMethod(method.getId());
+        if (profile != null)
+        {
+            return evaluateProfile(data, profile);
+        }
+
         for (String requirement : method.getRequirements())
         {
             checks.add(generic(requirement));
@@ -87,7 +103,7 @@ public class RequirementEvidenceEngine
     /**
      * Conventional F2P altar routes are resource-driven. The player does not
      * need to manually confirm them once Strategist has observed the essence and
-     * the matching talisman/tiara in equipment, inventory, bank, or safe
+     * matching talisman/tiara in equipment, inventory, bank, or safe
      * account-specific storage.
      */
     private List<RequirementCheck> evaluateRunecraft(
@@ -103,6 +119,34 @@ public class RequirementEvidenceEngine
         if (entry != null)
         {
             checks.add(resourceReadinessService.evaluate(data, entry));
+        }
+        return checks;
+    }
+
+    /**
+     * Evaluates all automatically provable item families, then appends only the
+     * account facts that still need a richer reader (quest/access/location/etc.).
+     */
+    private List<RequirementCheck> evaluateProfile(
+            StrategyDataBundle data,
+            MethodReadinessProfile profile)
+    {
+        List<RequirementCheck> checks = new ArrayList<>();
+        for (NamedResourceRequirement requirement
+                : profile.getItemRequirements())
+        {
+            checks.add(resourceReadinessService.evaluate(data, requirement));
+        }
+        int index = 0;
+        for (String unresolved : profile.getOtherChecks())
+        {
+            checks.add(new RequirementCheck(
+                    "method:" + profile.getMethodId() + ":check:"
+                            + index++ + ":" + slug(unresolved),
+                    unresolved,
+                    RequirementState.CHECK_NEEDED,
+                    "Strategist cannot prove this requirement from the current live readers yet."
+            ));
         }
         return checks;
     }
@@ -245,5 +289,13 @@ public class RequirementEvidenceEngine
                 RequirementState.CHECK_NEEDED,
                 "Strategist has not observed enough account state to prove this yet."
         );
+    }
+
+    private static String slug(String value)
+    {
+        if (value == null) return "unknown";
+        return value.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("(^-|-$)", "");
     }
 }
