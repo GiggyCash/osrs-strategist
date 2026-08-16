@@ -1,8 +1,11 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +38,34 @@ public class F2pRunecraftRecommendationTest
         assertTrue(plan.getRequirementChecks().stream()
                 .anyMatch(check -> "Rune essence".equals(check.getLabel())));
         assertTrue(plan.getRequirementChecks().stream()
-                .anyMatch(check -> check.getLabel().contains("Air talisman/tiara")));
+                .anyMatch(check -> "Air talisman or air tiara".equals(check.getLabel())));
+    }
+
+    @Test
+    public void observedEssenceAndEquippedTiaraMakeAirRunesReady()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount())
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        new ItemStackSnapshot(ItemID.BLANKRUNE, "Rune essence", 28))))
+                .equipment(new EquipmentSnapshot(Arrays.asList(
+                        new ItemStackSnapshot(ItemID.TIARA_AIR, "Air tiara", 1))))
+                .build();
+
+        TrainingPlan plan = selector().select(
+                data,
+                Skill.RUNECRAFT,
+                1,
+                StrategyMode.BALANCED,
+                SessionIntent.PICK_FOR_ME,
+                false
+        );
+
+        assertNotNull(plan);
+        assertEquals("runecraft_f2p_air", plan.getMethod().getId());
+        assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
+        assertEquals(2, plan.getRequirementChecks().size());
+        assertTrue(plan.getRequirementChecks().stream()
+                .allMatch(check -> check.getState() == RequirementState.VERIFIED));
     }
 
     @Test
@@ -89,6 +119,7 @@ public class F2pRunecraftRecommendationTest
         assertTrue(compact.contains("Craft air runes"));
         assertTrue(compact.contains("NEEDS INFO"));
         assertTrue(compact.contains("Rune essence"));
+        assertTrue(compact.contains("Air talisman or air tiara"));
     }
 
     private static TrainingMethodSelector selector()
