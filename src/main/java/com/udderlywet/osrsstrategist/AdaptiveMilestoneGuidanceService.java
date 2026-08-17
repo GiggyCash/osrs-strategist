@@ -1,6 +1,5 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -24,7 +23,7 @@ public class AdaptiveMilestoneGuidanceService
     private final SkillingXpModifierService xpModifierService;
     private final AdaptiveActionSelector actionSelector;
     private final MethodInputResolver inputResolver;
-    private final PurchaseCostAdvisor purchaseCostAdvisor;
+    private final AccountResourcePlanner resourcePlanner;
 
     @Inject
     public AdaptiveMilestoneGuidanceService(
@@ -33,14 +32,14 @@ public class AdaptiveMilestoneGuidanceService
             SkillingXpModifierService xpModifierService,
             AdaptiveActionSelector actionSelector,
             MethodInputResolver inputResolver,
-            PurchaseCostAdvisor purchaseCostAdvisor)
+            AccountResourcePlanner resourcePlanner)
     {
         this.actionCatalog = actionCatalog;
         this.profileCatalog = profileCatalog;
         this.xpModifierService = xpModifierService;
         this.actionSelector = actionSelector;
         this.inputResolver = inputResolver;
-        this.purchaseCostAdvisor = purchaseCostAdvisor;
+        this.resourcePlanner = resourcePlanner;
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -51,7 +50,7 @@ public class AdaptiveMilestoneGuidanceService
     {
         this(actionCatalog, profileCatalog, xpModifierService,
                 new AdaptiveActionSelector(), new MethodInputResolver(),
-                new PurchaseCostAdvisor());
+                new AccountResourcePlanner());
     }
 
     /** Compatibility constructor retained for older callers. */
@@ -126,13 +125,12 @@ public class AdaptiveMilestoneGuidanceService
 
         List<ResolvedMethodInput> inputs = inputResolver.resolve(
                 profile, action, actionsNeeded);
+        AccountResourcePlan resources = resourcePlanner == null
+                ? null
+                : resourcePlanner.plan(data, inputs, useGroupStorage);
         String supplies = inputs.isEmpty()
                 ? null
-                : supplyGuidance(
-                        data,
-                        data.getAccount(),
-                        inputs,
-                        useGroupStorage);
+                : resources == null ? null : resources.getGuidance();
 
         String location = plan.getMethod().getInstructions();
         String note = profile.getNote();
@@ -162,6 +160,11 @@ public class AdaptiveMilestoneGuidanceService
                     + "materials so a supplied lower-tier route can beat an "
                     + "unsupplied higher-tier route.";
         }
+        if (mode == AccountMode.ULTIMATE_IRONMAN && resources != null
+                && resources.getTotalMissingUnits() > 0)
+        {
+            note += " UIM shortfalls are intentionally based on immediately usable supplies, not retrieval-only storage.";
+        }
 
         return new RecommendationGuidance(
                 actionText,
@@ -182,130 +185,6 @@ public class AdaptiveMilestoneGuidanceService
     {
         return actionSelector.selectSimple(
                 actions, profile, currentLevel, membership);
-    }
-
-    private String supplyGuidance(
-            StrategyDataBundle data,
-            AccountSnapshot account,
-            List<ResolvedMethodInput> needs,
-            boolean useGroupStorage)
-    {
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        ObservedItemIndex index = new ObservedItemIndex(data, useGroupStorage);
-        boolean infiniteFire = hasInfiniteFireRunes(index);
-
-        List<String> requiredParts = new ArrayList<>();
-        List<String> verifiedParts = new ArrayList<>();
-        List<String> missingParts = new ArrayList<>();
-        List<ResolvedMethodInput> missingInputs = new ArrayList<>();
-
-        for (ResolvedMethodInput need : needs)
-        {
-            if (infiniteFire && "fire rune".equalsIgnoreCase(need.getName()))
-            {
-                requiredParts.add("0 fire runes (use your fire-rune staff)");
-                continue;
-            }
-
-            int verified = index.quantity(need.getName());
-            int missing = Math.max(0, need.getQuantity() - verified);
-            requiredParts.add(need.getQuantity() + " " + need.getName());
-            verifiedParts.add(verified + " " + need.getName());
-            if (missing > 0)
-            {
-                missingParts.add(missing + " " + need.getName());
-                missingInputs.add(new ResolvedMethodInput(
-                        need.getName(), need.getItemId(), missing));
-            }
-        }
-
-        String required = joinNatural(requiredParts);
-        if (mode != AccountMode.ULTIMATE_IRONMAN && !index.bankObserved())
-        {
-            return "Need " + required
-                    + ". Open your bank once so Strategist can verify stored "
-                    + "materials before deciding exact shortfalls.";
-        }
-
-        StringBuilder text = new StringBuilder();
-        text.append("Need ").append(required).append(". ");
-        if (!verifiedParts.isEmpty())
-        {
-            text.append("Verified: ")
-                    .append(joinNatural(verifiedParts)).append(". ");
-        }
-
-        if (missingParts.isEmpty())
-        {
-            text.append("No extra modeled materials are needed.");
-            return text.toString();
-        }
-
-        String missing = joinNatural(missingParts);
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            text.append("Acquire ").append(missing)
-                    .append(" just in time. Normal bank state is ignored for UIM.");
-        }
-        else if (mode.usesGrandExchange())
-        {
-            text.append("Buy ").append(missing)
-                    .append(" at the Grand Exchange.");
-            String costAdvice = purchaseCostAdvisor == null
-                    ? null
-                    : purchaseCostAdvisor.advice(
-                            data.getEconomy(), missingInputs);
-            if (costAdvice != null)
-            {
-                text.append(" ").append(costAdvice);
-            }
-            else
-            {
-                text.append(" Exact quantities are ready, but a live exact-price quote is not currently available.");
-            }
-        }
-        else if (mode.isGroupIronman())
-        {
-            text.append("Source ").append(missing);
-            if (useGroupStorage)
-            {
-                text.append(" after checking observed Group Storage");
-            }
-            text.append(".");
-        }
-        else
-        {
-            text.append("Self-source ").append(missing).append(".");
-        }
-        return text.toString();
-    }
-
-    private static boolean hasInfiniteFireRunes(ObservedItemIndex items)
-    {
-        return items.has(
-                "Staff of fire", "Mystic fire staff",
-                "Lava battlestaff", "Mystic lava staff",
-                "Steam battlestaff", "Mystic steam staff",
-                "Smoke battlestaff", "Mystic smoke staff",
-                "Tome of fire", "Tome of fire (empty)");
-    }
-
-    private static String joinNatural(List<String> parts)
-    {
-        if (parts == null || parts.isEmpty()) return "nothing";
-        if (parts.size() == 1) return parts.get(0);
-        if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
-
-        StringBuilder text = new StringBuilder();
-        for (int i = 0; i < parts.size(); i++)
-        {
-            if (i > 0)
-            {
-                text.append(i == parts.size() - 1 ? ", and " : ", ");
-            }
-            text.append(parts.get(i));
-        }
-        return text.toString();
     }
 
     private static int divideRoundUp(int numerator, double denominator)
