@@ -74,7 +74,7 @@ public class OsrsStrategistPlugin extends Plugin
     protected void startUp()
     {
         panel = new OsrsStrategistPanel(this::applyRecommendationFeedback, skillIconLoader);
-        SidebarAccessibility.improveReadability(panel);
+        SidebarAccessibility.improveReadability(panel, config.sidebarTextSize());
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
                 .icon(createTemporaryIcon())
@@ -167,6 +167,17 @@ public class OsrsStrategistPlugin extends Plugin
     public void onConfigChanged(ConfigChanged event)
     {
         if (!OsrsStrategistConfig.GROUP.equals(event.getGroup())) return;
+
+        // Accessibility changes are safe to apply in-place. The scaler stores
+        // original component metrics, so switching Standard/Large/Extra Large
+        // never compounds font sizes or button heights.
+        if (panel != null && "sidebarTextSize".equals(event.getKey()))
+        {
+            SidebarAccessibility.improveReadability(
+                    panel,
+                    config.sidebarTextSize());
+        }
+
         strategyProfile = PlayerStrategyProfile.fromConfig(config);
         if (accountStrategyProfileStore.getActiveProfileKey() != null)
         {
