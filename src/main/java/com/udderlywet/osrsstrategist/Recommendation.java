@@ -78,6 +78,25 @@ public final class Recommendation
         this.targetLevel = Math.max(0, targetLevel);
     }
 
+    /**
+     * Creates the same recommendation with only its ranking score changed.
+     * Keeping recommendations immutable makes post-processing policies easy to
+     * reason about and avoids accidentally losing method/readiness metadata.
+     */
+    public Recommendation withScore(double adjustedScore)
+    {
+        return new Recommendation(
+                id,
+                title,
+                reason,
+                adjustedScore,
+                trainingPlan,
+                confidence,
+                currentLevel,
+                targetLevel
+        );
+    }
+
     public String getId() { return id; }
     public String getTitle() { return title; }
     public String getReason() { return reason; }
