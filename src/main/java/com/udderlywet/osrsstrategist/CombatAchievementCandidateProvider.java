@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Singleton;
 
-/** Surfaces the next Combat Achievement reward tier without inventing tasks. */
+/** Surfaces the next claimable Combat Achievement reward tier. */
 @Singleton
 public class CombatAchievementCandidateProvider implements StrategyCandidateProvider
 {
@@ -19,13 +19,21 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
     {
         List<StrategyCandidate> result = new ArrayList<>();
         if (context == null || context.getData() == null
-                || context.getData().getCombatAchievements() == null)
+                || context.getData().getCombatAchievements() == null
+                || context.getData().getAccount() == null)
         {
             return result;
         }
 
-        CombatAchievementSnapshot snapshot =
-                context.getData().getCombatAchievements();
+        // F2P characters can complete a small subset of tasks, but cannot claim
+        // tier rewards. Until Strategist models those individual F2P tasks, a
+        // reward-tier candidate would be misleading and is intentionally absent.
+        if (context.getData().getAccount().getMembershipStatus() == MembershipStatus.F2P)
+        {
+            return result;
+        }
+
+        CombatAchievementSnapshot snapshot = context.getData().getCombatAchievements();
         CombatAchievementTier next = snapshot.nextRewardTier();
         if (next == null) return result;
 
@@ -38,14 +46,17 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         else if (gap <= 75) score += 10.0;
         else if (gap <= 200) score += 5.0;
         if (context.getActiveGoal() == GoalType.ELITE_COMBAT_ACHIEVEMENTS)
+        {
             score += next.ordinal() <= CombatAchievementTier.ELITE.ordinal() ? 25.0 : 8.0;
+        }
         score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
         result.add(new StrategyCandidate(
                 id,
                 "Combat Achievements: " + pretty(next.name()),
-                "Next reward tier requires " + next.getRewardPoints()
-                        + " points. Strategist should prefer realistic tasks on bosses the account is already ready to fight instead of forcing mechanically extreme tasks early.",
+                "The next reward tier is " + gap + " point"
+                        + (gap == 1 ? "" : "s")
+                        + " away. This stays an alternative until Strategist can select a specific realistic task the account is ready to complete.",
                 score,
                 RecommendationConfidence.CHECK_NEEDED
         ));

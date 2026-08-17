@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Converts a recommendation into concise sidebar copy. */
+/** Converts a recommendation into concise sidebar copy and full detail copy. */
 public final class RecommendationPresentation
 {
     private RecommendationPresentation() {}
@@ -16,20 +16,7 @@ public final class RecommendationPresentation
 
         if (plan == null || plan.getMethod() == null)
         {
-            if (!isSkillRecommendation(recommendation))
-            {
-                text.append("<b>NEXT STEP</b><br>")
-                        .append(confidenceLabel(recommendation.getConfidence()));
-                if (hasText(recommendation.getReason()))
-                {
-                    appendBreak(text, 2);
-                    text.append(escape(recommendation.getReason()));
-                }
-                return text.toString();
-            }
-
-            text.append("<b>METHOD UNAVAILABLE</b><br>")
-                    .append("Strategist does not currently have a usable method for this account state.");
+            appendNonSkillCompact(text, recommendation);
             return text.toString();
         }
 
@@ -74,21 +61,7 @@ public final class RecommendationPresentation
 
         if (plan == null || plan.getMethod() == null)
         {
-            if (!isSkillRecommendation(recommendation))
-            {
-                text.append("<b>NEXT STEP</b><br>")
-                        .append(confidenceLabel(recommendation.getConfidence()));
-                if (hasText(recommendation.getReason()))
-                {
-                    appendBreak(text, 2);
-                    text.append("<b>WHY IT MATTERS</b><br>")
-                            .append(escape(recommendation.getReason()));
-                }
-                return text.toString();
-            }
-
-            text.append("<b>METHOD UNAVAILABLE</b><br>")
-                    .append("Strategist does not currently have a usable method for this account state. This recommendation should normally be filtered from DO NEXT.");
+            appendNonSkillDetailed(text, recommendation);
             return text.toString();
         }
 
@@ -135,6 +108,79 @@ public final class RecommendationPresentation
         return text.toString();
     }
 
+    /** Plain copy used by real line-wrapping Swing components and game overlays. */
+    public static String compactText(Recommendation recommendation)
+    {
+        return toPlainText(compactHtml(recommendation));
+    }
+
+    /** Plain full copy used by the on-game Details overlay. */
+    public static String detailedText(Recommendation recommendation)
+    {
+        return toPlainText(detailedHtml(recommendation));
+    }
+
+    private static void appendNonSkillCompact(
+            StringBuilder text,
+            Recommendation recommendation)
+    {
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        {
+            text.append("<b>BLOCKED</b><br>This is not available for the current account state.");
+            return;
+        }
+        if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
+        {
+            text.append("<b>NOT READY YET</b><br>")
+                    .append("Requirements still need verification. Keep playing a ready option for now.");
+            return;
+        }
+
+        text.append("<b>NEXT STEP</b><br>Ready");
+        if (guidance != null)
+        {
+            appendGuidance(text, guidance, false);
+        }
+        else if (hasText(recommendation.getReason()))
+        {
+            appendBreak(text, 2);
+            text.append(escape(recommendation.getReason()));
+        }
+    }
+
+    private static void appendNonSkillDetailed(
+            StringBuilder text,
+            Recommendation recommendation)
+    {
+        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        {
+            text.append("<b>BLOCKED</b><br>This is not available for the current account state.");
+            return;
+        }
+
+        text.append("<b>NEXT STEP</b><br>")
+                .append(confidenceLabel(recommendation.getConfidence()));
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null)
+        {
+            appendGuidance(text, guidance, true);
+        }
+        else if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
+        {
+            appendBreak(text, 2);
+            text.append("<b>STATUS</b><br>")
+                    .append("This stays out of the primary recommendation until its requirements are verified.");
+        }
+
+        if (hasText(recommendation.getReason()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>WHY IT MATTERS</b><br>")
+                    .append(escape(recommendation.getReason()));
+        }
+    }
+
     private static void appendGuidance(
             StringBuilder text,
             RecommendationGuidance guidance,
@@ -174,12 +220,6 @@ public final class RecommendationPresentation
         }
     }
 
-    private static boolean isSkillRecommendation(Recommendation recommendation)
-    {
-        return recommendation.getId() != null
-                && recommendation.getId().startsWith("skill:");
-    }
-
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
@@ -188,9 +228,10 @@ public final class RecommendationPresentation
     private static List<RequirementCheck> unresolved(TrainingPlan plan)
     {
         List<RequirementCheck> unresolved = new ArrayList<>();
+        if (plan == null || plan.getRequirementChecks() == null) return unresolved;
         for (RequirementCheck check : plan.getRequirementChecks())
         {
-            if (check.getState() != RequirementState.VERIFIED)
+            if (check != null && check.getState() != RequirementState.VERIFIED)
             {
                 unresolved.add(check);
             }
@@ -243,6 +284,23 @@ public final class RecommendationPresentation
     private static void appendBreak(StringBuilder text, int count)
     {
         for (int i = 0; i < count; i++) text.append("<br>");
+    }
+
+    static String toPlainText(String html)
+    {
+        if (html == null || html.isEmpty()) return "";
+        return html
+                .replaceAll("(?i)<br\\s*/?>", "\n")
+                .replaceAll("(?i)</?(b|i|strong|em|html|div)(?:\\s+[^>]*)?>", "")
+                .replaceAll("<[^>]+>", "")
+                .replace("&amp;", "&")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">")
+                .replace("&quot;", "\"")
+                .replace("&#39;", "'")
+                .replaceAll("[ \\t]+\\n", "\n")
+                .replaceAll("\\n{3,}", "\n\n")
+                .trim();
     }
 
     private static String escape(String value)

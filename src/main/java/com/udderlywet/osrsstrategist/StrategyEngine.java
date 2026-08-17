@@ -15,18 +15,34 @@ public class StrategyEngine
     private final OpportunityEngine opportunityEngine;
     private final StrategyModuleRegistry moduleRegistry;
     private final StrategyCandidateRegistry candidateRegistry;
+    private final RecommendationActionabilityPolicy actionabilityPolicy;
 
     @Inject
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
             StrategyModuleRegistry moduleRegistry,
-            StrategyCandidateRegistry candidateRegistry)
+            StrategyCandidateRegistry candidateRegistry,
+            RecommendationActionabilityPolicy actionabilityPolicy)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
         this.moduleRegistry = moduleRegistry;
         this.candidateRegistry = candidateRegistry;
+        this.actionabilityPolicy = actionabilityPolicy == null
+                ? new RecommendationActionabilityPolicy()
+                : actionabilityPolicy;
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, new RecommendationActionabilityPolicy());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -35,7 +51,8 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             StrategyModuleRegistry moduleRegistry)
     {
-        this(recommendationEngine, opportunityEngine, moduleRegistry, null);
+        this(recommendationEngine, opportunityEngine, moduleRegistry, null,
+                new RecommendationActionabilityPolicy());
     }
 
     public StrategyResult evaluate(
@@ -88,11 +105,7 @@ public class StrategyEngine
                 useGroupStorage, collectionistMode, allowWildernessMethods,
                 preferenceProfile);
 
-        // Skill training is one candidate source, not the entire final product.
-        // Generic providers let verified quests, PvM, diaries, gear steps, clues,
-        // minigames, and future content compete for DO NEXT without rewriting
-        // the recommendation engine.
-        List<Recommendation> recommendations = new ArrayList<>(
+        List<Recommendation> pool = new ArrayList<>(
                 recommendationEngine.recommend(
                         data,
                         context.getStrategyMode(),
@@ -103,30 +116,23 @@ public class StrategyEngine
 
         if (candidateRegistry != null)
         {
-            for (StrategyCandidateProvider provider
-                    : candidateRegistry.getProviders())
+            for (StrategyCandidateProvider provider : candidateRegistry.getProviders())
             {
                 List<StrategyCandidate> candidates = provider.candidates(context);
                 if (candidates == null) continue;
                 for (StrategyCandidate candidate : candidates)
                 {
-                    if (candidate != null
-                            && candidate.getConfidence()
-                            != RecommendationConfidence.BLOCKED)
+                    if (candidate == null
+                            || candidate.getConfidence() == RecommendationConfidence.BLOCKED)
                     {
-                        recommendations.add(candidate.toRecommendation());
+                        continue;
                     }
+                    pool.add(candidate.toRecommendation());
                 }
             }
         }
 
-        recommendations.sort(
-                Comparator.comparingDouble(Recommendation::getScore).reversed());
-        if (recommendations.size() > 3)
-        {
-            recommendations = new ArrayList<>(recommendations.subList(0, 3));
-        }
-
+        List<Recommendation> recommendations = buildPlayerQueue(pool);
         List<Opportunity> opportunities = opportunityEngine.evaluate(data);
         List<StrategySignal> signals = new ArrayList<>();
         for (StrategyModule module : moduleRegistry.getModules())
@@ -138,5 +144,48 @@ public class StrategyEngine
                 StrategySignal::getScoreDelta).reversed());
 
         return new StrategyResult(recommendations, opportunities, signals);
+    }
+
+    /**
+     * A high raw score cannot buy its way into DO NEXT while the candidate is
+     * still unresolved. Ready actions are ranked against ready actions first;
+     * Check Needed work is allowed only in the secondary slots and only when a
+     * real primary action exists.
+     */
+    List<Recommendation> buildPlayerQueue(List<Recommendation> pool)
+    {
+        if (pool == null || pool.isEmpty()) return Collections.emptyList();
+
+        List<Recommendation> ready = new ArrayList<>();
+        List<Recommendation> secondary = new ArrayList<>();
+        for (Recommendation recommendation : pool)
+        {
+            if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
+            if (actionabilityPolicy.canLeadQueue(recommendation)) ready.add(recommendation);
+            else secondary.add(recommendation);
+        }
+
+        Comparator<Recommendation> byScore = Comparator
+                .comparingDouble(Recommendation::getScore)
+                .reversed();
+        ready.sort(byScore);
+        secondary.sort(byScore);
+
+        // Never put a Needs Info recommendation in the primary slot merely to
+        // avoid an empty card. No recommendation is safer than false certainty.
+        if (ready.isEmpty()) return Collections.emptyList();
+
+        List<Recommendation> result = new ArrayList<>(3);
+        for (Recommendation recommendation : ready)
+        {
+            if (result.size() >= 3) break;
+            result.add(recommendation);
+        }
+        for (Recommendation recommendation : secondary)
+        {
+            if (result.size() >= 3) break;
+            result.add(recommendation);
+        }
+        return result;
     }
 }

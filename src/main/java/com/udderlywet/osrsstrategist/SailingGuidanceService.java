@@ -107,7 +107,7 @@ public class SailingGuidanceService
                 + " XP to level " + targetLevel + ".";
 
         String supplies = trial.requirements;
-        String note = "First-time Swordfish/Shark/Marlin rank rewards add one-off XP, so an account that has not claimed those bonuses will finish sooner than this repeat-only count. Boat speed and player execution affect XP per hour, not the listed Marlin completion XP.";
+        String note = "The one-time rank bonuses for Swordfish, Shark, and Marlin add extra XP the first time they are claimed, so an account with unclaimed bonuses will finish sooner than this repeat-only count. Boat speed and player execution affect XP per hour, not the listed Marlin completion XP.";
         return new RecommendationGuidance(
                 action, supplies, trial.location, note);
     }
@@ -226,11 +226,7 @@ public class SailingGuidanceService
         private final String requirements;
         private final String location;
 
-        private Trial(
-                String name,
-                int marlinXp,
-                String requirements,
-                String location)
+        private Trial(String name, int marlinXp, String requirements, String location)
         {
             this.name = name;
             this.marlinXp = marlinXp;
