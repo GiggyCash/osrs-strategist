@@ -53,4 +53,22 @@ public class SidebarAccessibilityTest
         assertEquals(originalFontSize, label.getFont().getSize2D(), 0.01f);
         assertEquals(originalHeight, button.getPreferredSize().height);
     }
+
+    @Test
+    public void fixedHeightParentRowsGrowWithLargerText()
+    {
+        JPanel root = new JPanel();
+        JPanel fixedRow = new JPanel();
+        fixedRow.setPreferredSize(new Dimension(180, 27));
+        fixedRow.setMaximumSize(new Dimension(180, 27));
+        fixedRow.add(new JButton("Not Today"));
+        root.add(fixedRow);
+
+        SidebarAccessibility.improveReadability(
+                root,
+                SidebarTextSize.EXTRA_LARGE);
+
+        assertTrue(fixedRow.getPreferredSize().height > 27);
+        assertTrue(fixedRow.getMaximumSize().height > 27);
+    }
 }
