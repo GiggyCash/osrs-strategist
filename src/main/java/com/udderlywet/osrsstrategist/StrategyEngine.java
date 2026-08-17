@@ -105,8 +105,11 @@ public class StrategyEngine
                 useGroupStorage, collectionistMode, allowWildernessMethods,
                 preferenceProfile);
 
+        // The global queue needs the complete skill candidate pool. Trimming to
+        // three inside RecommendationEngine can hide a lower-scoring executable
+        // action behind three unresolved skills before actionability is checked.
         List<Recommendation> pool = new ArrayList<>(
-                recommendationEngine.recommend(
+                recommendationEngine.recommendAll(
                         data,
                         context.getStrategyMode(),
                         context.getSessionIntent(),
