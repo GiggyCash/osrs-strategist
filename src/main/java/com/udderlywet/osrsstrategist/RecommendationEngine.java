@@ -14,18 +14,33 @@ public class RecommendationEngine
     private final RecommendationGuidanceService guidanceService;
     private final CombatGuidanceService combatGuidanceService;
     private final SlayerGuidanceService slayerGuidanceService;
+    private final SailingGuidanceService sailingGuidanceService;
 
     @Inject
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService,
             CombatGuidanceService combatGuidanceService,
-            SlayerGuidanceService slayerGuidanceService)
+            SlayerGuidanceService slayerGuidanceService,
+            SailingGuidanceService sailingGuidanceService)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
         this.combatGuidanceService = combatGuidanceService;
         this.slayerGuidanceService = slayerGuidanceService;
+        this.sailingGuidanceService = sailingGuidanceService;
+    }
+
+    /** Compatibility constructor retained for tests/older callers. */
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService,
+            CombatGuidanceService combatGuidanceService,
+            SlayerGuidanceService slayerGuidanceService)
+    {
+        this(trainingMethodSelector, guidanceService,
+                combatGuidanceService, slayerGuidanceService,
+                new SailingGuidanceService());
     }
 
     /** Compatibility constructor retained for tests/older callers. */
@@ -35,7 +50,8 @@ public class RecommendationEngine
             CombatGuidanceService combatGuidanceService)
     {
         this(trainingMethodSelector, guidanceService,
-                combatGuidanceService, new SlayerGuidanceService());
+                combatGuidanceService, new SlayerGuidanceService(),
+                new SailingGuidanceService());
     }
 
     /** Compatibility constructor retained for tests/older callers. */
@@ -44,14 +60,16 @@ public class RecommendationEngine
             RecommendationGuidanceService guidanceService)
     {
         this(trainingMethodSelector, guidanceService,
-                new CombatGuidanceService(), new SlayerGuidanceService());
+                new CombatGuidanceService(), new SlayerGuidanceService(),
+                new SailingGuidanceService());
     }
 
     /** Compatibility constructor for focused tests and older callers. */
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
     {
         this(trainingMethodSelector, new RecommendationGuidanceService(),
-                new CombatGuidanceService(), new SlayerGuidanceService());
+                new CombatGuidanceService(), new SlayerGuidanceService(),
+                new SailingGuidanceService());
     }
 
     public List<Recommendation> recommend(
@@ -154,6 +172,13 @@ public class RecommendationEngine
             {
                 guidance = slayerGuidanceService.build(
                         data, level, target);
+            }
+
+            if (guidance == null && skill == Skill.SAILING
+                    && sailingGuidanceService != null)
+            {
+                guidance = sailingGuidanceService.build(
+                        data, level, target, trainingPlan);
             }
 
             if (guidance == null && guidanceService != null)
