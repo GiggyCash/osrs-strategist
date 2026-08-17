@@ -38,6 +38,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
     @Inject private StrategyEngine strategyEngine;
+    @Inject private PlayerExperiencePolicy playerExperiencePolicy;
     @Inject private MethodGuidanceService methodGuidanceService;
     @Inject private AccountPreferenceStore accountPreferenceStore;
     @Inject private AccountStrategyProfileStore accountStrategyProfileStore;
@@ -73,6 +74,7 @@ public class OsrsStrategistPlugin extends Plugin
     protected void startUp()
     {
         panel = new OsrsStrategistPanel(this::applyRecommendationFeedback, skillIconLoader);
+        SidebarAccessibility.improveReadability(panel, config.sidebarTextSize());
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
                 .icon(createTemporaryIcon())
@@ -165,6 +167,17 @@ public class OsrsStrategistPlugin extends Plugin
     public void onConfigChanged(ConfigChanged event)
     {
         if (!OsrsStrategistConfig.GROUP.equals(event.getGroup())) return;
+
+        // Accessibility changes are safe to apply in-place. The scaler stores
+        // original component metrics, so switching Standard/Large/Extra Large
+        // never compounds font sizes or button heights.
+        if (panel != null && "sidebarTextSize".equals(event.getKey()))
+        {
+            SidebarAccessibility.improveReadability(
+                    panel,
+                    config.sidebarTextSize());
+        }
+
         strategyProfile = PlayerStrategyProfile.fromConfig(config);
         if (accountStrategyProfileStore.getActiveProfileKey() != null)
         {
@@ -222,9 +235,15 @@ public class OsrsStrategistPlugin extends Plugin
         else SwingUtilities.invokeLater(update);
     }
 
+    /**
+     * Runs the progression engine first, then applies a bounded comfort/variety
+     * rerank. This ordering is intentional: safety, account restrictions,
+     * requirements, goal progress, and explicit player settings always produce
+     * the candidate set before any anti-burnout adjustment is considered.
+     */
     private StrategyResult evaluate(StrategyDataBundle data, PlayerStrategyProfile profile)
     {
-        return strategyEngine.evaluate(
+        StrategyResult result = strategyEngine.evaluate(
                 data,
                 profile.getStrategyMode(),
                 profile.getSessionIntent(),
@@ -234,6 +253,7 @@ public class OsrsStrategistPlugin extends Plugin
                 profile.isCollectionistMode(),
                 profile.isAllowWildernessMethods(),
                 preferenceProfile);
+        return playerExperiencePolicy.rerank(result, recommendationHistory);
     }
 
     private void updateGuidance(StrategyResult result, StrategyDataBundle data)

@@ -25,6 +25,10 @@ public interface OsrsStrategistConfig extends Config
             description = "How often quests should appear in recommendations")
     default QuestTolerance questTolerance() { return QuestTolerance.NORMAL; }
 
+    @ConfigItem(keyName = "sidebarTextSize", name = "Sidebar text size",
+            description = "Increase Strategist text size without changing the rest of RuneLite")
+    default SidebarTextSize sidebarTextSize() { return SidebarTextSize.LARGE; }
+
     @ConfigItem(keyName = "allowWildernessMethods", name = "Wilderness methods",
             description = "Allow Strategist to recommend methods that require entering the Wilderness")
     default boolean allowWildernessMethods() { return false; }

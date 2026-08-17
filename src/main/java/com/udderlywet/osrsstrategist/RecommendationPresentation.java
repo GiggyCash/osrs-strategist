@@ -3,7 +3,16 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Converts a recommendation into concise sidebar copy. */
+/**
+ * Converts strategy recommendations into compact, readable RuneLite sidebar
+ * copy.
+ *
+ * <p>The presentation layer intentionally hides information that is useful to
+ * the scoring engine but not useful to the player at decision time. For
+ * example, attention level still influences ranking, but it does not occupy a
+ * permanent line in the compact card. The compact view answers three questions:
+ * what should I do, how should I do it, and what still needs to be confirmed?</p>
+ */
 public final class RecommendationPresentation
 {
     private RecommendationPresentation() {}
@@ -34,12 +43,13 @@ public final class RecommendationPresentation
         }
 
         TrainingMethod method = plan.getMethod();
-        appendMethodHeader(text, recommendation, method);
+        appendMethodHeader(text, method);
+
         List<RequirementCheck> unresolved = unresolved(plan);
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>NEEDS INFO</b><br>");
+            text.append("<b>CHECK BEFORE STARTING</b><br>");
             int shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
@@ -55,6 +65,11 @@ public final class RecommendationPresentation
                         .append(unresolved.size() - shown)
                         .append(" more in Details");
             }
+        }
+        else
+        {
+            appendBreak(text, 2);
+            text.append("<b>READY</b>");
         }
         return text.toString();
     }
@@ -86,7 +101,7 @@ public final class RecommendationPresentation
         }
 
         TrainingMethod method = plan.getMethod();
-        appendMethodHeader(text, recommendation, method);
+        appendMethodHeader(text, method);
         appendBreak(text, 2);
         text.append("<b>HOW</b><br>")
                 .append(escape(method.getInstructions()));
@@ -143,46 +158,31 @@ public final class RecommendationPresentation
         return unresolved;
     }
 
+    /**
+     * Unknown readiness uses a neutral bullet rather than a question mark.
+     * Question marks read like broken/missing UI in a narrow game overlay. The
+     * adjacent evidence text already explains that the player needs to check it.
+     */
     private static String stateMarker(RequirementState state)
     {
         if (state == RequirementState.VERIFIED) return "✓";
         if (state == RequirementState.BLOCKED) return "✕";
-        return "?";
+        return "•";
     }
 
     private static void appendMethodHeader(
             StringBuilder text,
-            Recommendation recommendation,
             TrainingMethod method)
     {
         text.append("<b>BEST METHOD</b><br>")
                 .append(escape(method.getName()));
-        appendBreak(text, 1);
-        text.append("<i>")
-                .append(attentionLabel(method.getAttentionLevel()))
-                .append(" • ")
-                .append(confidenceLabel(recommendation.getConfidence()))
-                .append("</i>");
-    }
-
-    private static String attentionLabel(AttentionLevel attention)
-    {
-        if (attention == null) return "Unknown attention";
-        switch (attention)
-        {
-            case AFK: return "AFK";
-            case LOW: return "Low attention";
-            case ACTIVE: return "Active";
-            case MODERATE:
-            default: return "Moderate attention";
-        }
     }
 
     private static String confidenceLabel(RecommendationConfidence confidence)
     {
         if (confidence == RecommendationConfidence.VERIFIED) return "Ready";
         if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
-        return "Needs Info";
+        return "Check before starting";
     }
 
     private static void appendBreak(StringBuilder text, int count)
