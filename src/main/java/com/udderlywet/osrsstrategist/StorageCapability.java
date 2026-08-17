@@ -17,5 +17,6 @@ public enum StorageCapability
     DEATHPILE,
     SEED_BOX,
     HERB_SACK,
+    RUNE_POUCH,
     GROUP_STORAGE
 }
