@@ -29,7 +29,7 @@ public final class RecommendationPresentation
             appendGuidance(text, guidance, false);
         }
 
-        List<RequirementCheck> unresolved = unresolved(plan);
+        List<RequirementCheck> unresolved = hardUnresolved(plan);
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
@@ -87,7 +87,7 @@ public final class RecommendationPresentation
             for (RequirementCheck check : plan.getRequirementChecks())
             {
                 text.append("<br>")
-                        .append(stateMarker(check.getState()))
+                        .append(readinessMarker(check))
                         .append(" ")
                         .append(escape(check.getLabel()));
                 if (hasText(check.getEvidence()))
@@ -160,7 +160,7 @@ public final class RecommendationPresentation
         }
 
         text.append("<b>NEXT STEP</b><br>")
-                .append(confidenceLabel(recommendation.getConfidence()));
+                .append(confidenceLabel(recommendation));
         RecommendationGuidance guidance = recommendation.getGuidance();
         if (guidance != null)
         {
@@ -200,10 +200,7 @@ public final class RecommendationPresentation
                     .append(escape(guidance.getSupplies()));
         }
 
-        if (!includeLocationAndNote)
-        {
-            return;
-        }
+        if (!includeLocationAndNote) return;
 
         if (hasText(guidance.getLocation()))
         {
@@ -225,18 +222,37 @@ public final class RecommendationPresentation
         return value != null && !value.trim().isEmpty();
     }
 
-    private static List<RequirementCheck> unresolved(TrainingPlan plan)
+    /** Only true unknowns belong under NEEDS INFO in the compact card. */
+    private static List<RequirementCheck> hardUnresolved(TrainingPlan plan)
     {
         List<RequirementCheck> unresolved = new ArrayList<>();
         if (plan == null || plan.getRequirementChecks() == null) return unresolved;
         for (RequirementCheck check : plan.getRequirementChecks())
         {
-            if (check != null && check.getState() != RequirementState.VERIFIED)
+            if (check == null)
             {
-                unresolved.add(check);
+                continue;
             }
+            if (check.getState() == RequirementState.VERIFIED)
+            {
+                continue;
+            }
+            if (RequirementActionability.isPreparationRequirement(check))
+            {
+                continue;
+            }
+            unresolved.add(check);
         }
         return unresolved;
+    }
+
+    private static String readinessMarker(RequirementCheck check)
+    {
+        if (check != null && RequirementActionability.isPreparationRequirement(check))
+        {
+            return "•";
+        }
+        return stateMarker(check == null ? RequirementState.CHECK_NEEDED : check.getState());
     }
 
     private static String stateMarker(RequirementState state)
@@ -257,7 +273,7 @@ public final class RecommendationPresentation
         text.append("<i>")
                 .append(attentionLabel(method.getAttentionLevel()))
                 .append(" • ")
-                .append(confidenceLabel(recommendation.getConfidence()))
+                .append(confidenceLabel(recommendation))
                 .append("</i>");
     }
 
@@ -274,10 +290,16 @@ public final class RecommendationPresentation
         }
     }
 
-    private static String confidenceLabel(RecommendationConfidence confidence)
+    private static String confidenceLabel(Recommendation recommendation)
     {
-        if (confidence == RecommendationConfidence.VERIFIED) return "Ready";
-        if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
+        if (recommendation == null) return "Needs Info";
+        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED) return "Ready";
+        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED) return "Blocked";
+        if (RequirementActionability.isActionablePreparation(
+                recommendation.getTrainingPlan(), recommendation.getGuidance()))
+        {
+            return "Ready to prep";
+        }
         return "Needs Info";
     }
 
