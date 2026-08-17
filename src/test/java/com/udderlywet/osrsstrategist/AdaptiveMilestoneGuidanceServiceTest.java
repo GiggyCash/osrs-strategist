@@ -41,7 +41,32 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
-    public void fireStaffRemovesFireRuneShortfallFromHighAlchemy()
+    public void equippedFireStaffRemovesFireRuneShortfallFromHighAlchemy()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
+        AccountSnapshot account = account(0, MembershipStatus.P2P,
+                Skill.MAGIC, 55, Experience.getXpForLevel(55));
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .bank(new BankSnapshot(Collections.singletonList(
+                        item(561, "Nature rune", 5000)), 1L))
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        item(1387, "Staff of fire", 1))))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        RecommendationGuidance guidance = service.build(
+                data, Skill.MAGIC, 55, 60,
+                plan("magic_high_alch", Skill.MAGIC), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains(
+                "Fire rune supplied by Staff of fire"));
+        assertFalse(guidance.getSupplies().contains("Buy "));
+    }
+
+    @Test
+    public void bankedFireStaffDoesNotPretendToBeEquippedRuneSource()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
@@ -52,6 +77,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                         item(561, "Nature rune", 5000),
                         item(1387, "Staff of fire", 1)), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .build();
 
         RecommendationGuidance guidance = service.build(
@@ -59,8 +85,9 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 plan("magic_high_alch", Skill.MAGIC), true);
 
         assertNotNull(guidance);
-        assertTrue(guidance.getSupplies().contains("0 fire runes"));
-        assertFalse(guidance.getSupplies().contains("buy 5 fire"));
+        assertFalse(guidance.getSupplies().contains(
+                "Fire rune supplied by Staff of fire"));
+        assertTrue(guidance.getSupplies().contains("Fire rune"));
     }
 
     @Test
@@ -82,7 +109,8 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 plan("magic_high_alch", Skill.MAGIC), true);
 
         assertNotNull(guidance);
-        assertTrue(guidance.getSupplies().contains("Normal bank state is ignored for UIM"));
+        assertTrue(guidance.getSupplies().contains(
+                "normal bank is never counted for UIM"));
         assertTrue(guidance.getSupplies().contains("Acquire"));
     }
 
@@ -107,10 +135,11 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 plan("herblore_prayer_potions", Skill.HERBLORE), true);
 
         assertNotNull(guidance);
-        assertTrue(guidance.getSupplies().contains("Verified:"));
+        assertTrue(guidance.getSupplies().contains("Verified usable:"));
         assertTrue(guidance.getSupplies().contains("Ranarr weed"));
         assertTrue(guidance.getSupplies().contains("Snape grass"));
         assertTrue(guidance.getSupplies().contains("Vial of water"));
+        assertTrue(guidance.getSupplies().contains("Group Storage"));
     }
 
     @Test
