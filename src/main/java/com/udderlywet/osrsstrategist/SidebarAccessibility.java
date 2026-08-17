@@ -13,13 +13,13 @@ import javax.swing.JLabel;
  *
  * <p>RuneLite sidebars have constrained horizontal space, so widening the panel
  * itself is not dependable across layouts. Strategist therefore improves
- * readability by scaling text and control height while preserving the existing
- * wrapping behavior.</p>
+ * readability by scaling text and fixed-height controls/rows while preserving
+ * the existing wrapping behavior.</p>
  *
  * <p>The implementation is intentionally idempotent. Base fonts and dimensions
  * are stored as component client properties the first time the scaler sees a
  * component. Later config changes always derive from those original values
- * instead of multiplying an already-scaled font or button height.</p>
+ * instead of multiplying an already-scaled font, button, or container height.</p>
  */
 public final class SidebarAccessibility
 {
@@ -65,11 +65,21 @@ public final class SidebarAccessibility
             else if (component instanceof AbstractButton)
             {
                 scaleFont((JComponent) component, scale);
-                scaleControlHeight((JComponent) component, scale);
+                scaleFixedHeight((JComponent) component, scale);
             }
 
             if (component instanceof Container)
             {
+                // Some sidebar rows intentionally cap their height (for example
+                // the recommendation title row and the feedback-button strip).
+                // If their children grow but the row does not, Swing can clip
+                // the lower edge of text even though the child itself reports a
+                // larger preferred size. Expand only genuinely fixed-height
+                // containers; normal vertically-growing cards are untouched.
+                if (component instanceof JComponent)
+                {
+                    scaleFixedContainerHeight((JComponent) component, scale);
+                }
                 scaleRecursively((Container) component, scale);
             }
         }
@@ -90,7 +100,22 @@ public final class SidebarAccessibility
         component.setFont(base.deriveFont(base.getSize2D() * scale));
     }
 
-    private static void scaleControlHeight(
+    private static void scaleFixedContainerHeight(
+            JComponent component,
+            float scale)
+    {
+        Dimension preferred = component.getPreferredSize();
+        Dimension maximum = component.getMaximumSize();
+
+        if (preferred == null || maximum == null) return;
+        if (maximum.height == Integer.MAX_VALUE) return;
+
+        // A finite maximum height is a strong signal that this is a deliberate
+        // fixed-height row. Increase it in lockstep with its children.
+        scaleFixedHeight(component, scale);
+    }
+
+    private static void scaleFixedHeight(
             JComponent component,
             float scale)
     {
