@@ -47,12 +47,10 @@ public class RecommendationIntelligenceService
         score += opportunityCostValue(recommendation, context, id, reason);
         score += uimSetupCostService.score(recommendation, context);
 
-        PreferenceProfile preferences = context.getPreferenceProfile();
-        if (preferences != null && recommendation.getId() != null)
-        {
-            score += preferences.weightFor(recommendation.getId()) * 8.0;
-            score += preferences.timedScoreAdjustmentFor(recommendation.getId());
-        }
+        // Preference weight, snooze timing, dislike weight, and fatigue are
+        // already priced into candidate scores by their producer. Applying them
+        // again here made feedback stronger than configured and could rotate an
+        // otherwise-correct DO NEXT choice too aggressively.
         return score;
     }
 
