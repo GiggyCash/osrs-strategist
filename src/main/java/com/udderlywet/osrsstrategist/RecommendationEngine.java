@@ -11,11 +11,21 @@ import net.runelite.api.Skill;
 public class RecommendationEngine
 {
     private final TrainingMethodSelector trainingMethodSelector;
+    private final RecommendationGuidanceService guidanceService;
 
     @Inject
-    public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService)
     {
         this.trainingMethodSelector = trainingMethodSelector;
+        this.guidanceService = guidanceService;
+    }
+
+    /** Compatibility constructor for focused tests and older callers. */
+    public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
+    {
+        this(trainingMethodSelector, new RecommendationGuidanceService());
     }
 
     public List<Recommendation> recommend(
@@ -90,10 +100,27 @@ public class RecommendationEngine
             score += trainingPlan.getMethod().scoreFor(
                     strategyMode, sessionIntent) * 0.35;
 
+            RecommendationGuidance guidance = guidanceService == null
+                    ? null
+                    : guidanceService.build(
+                            data,
+                            skill,
+                            level,
+                            target,
+                            trainingPlan
+                    );
+
             recommendations.add(new Recommendation(
-                    activityId, "Train " + skill.getName() + " to " + target,
-                    skillReason(skill), score, trainingPlan,
-                    trainingPlan.getConfidence(), level, target));
+                    activityId,
+                    "Train " + skill.getName() + " to " + target,
+                    skillReason(skill),
+                    score,
+                    trainingPlan,
+                    trainingPlan.getConfidence(),
+                    level,
+                    target,
+                    guidance
+            ));
         }
 
         recommendations.sort(Comparator.comparingDouble(
