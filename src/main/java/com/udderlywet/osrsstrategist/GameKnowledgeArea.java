@@ -1,0 +1,198 @@
+package com.udderlywet.osrsstrategist;
+
+/**
+ * Granular inventory of OSRS knowledge Strategist must eventually understand.
+ *
+ * <p>This enum is intentionally more detailed than {@link GameKnowledgeDomain}.
+ * Domains are useful architectural buckets; areas are the audit checklist that
+ * stops broad labels such as "PvM" or "training methods" from hiding important
+ * omissions. Adding a new OSRS system should normally require adding or updating
+ * an area here so completeness remains reviewable.</p>
+ */
+public enum GameKnowledgeArea
+{
+    // Character/account state
+    ACCOUNT_TYPES,
+    MEMBERSHIP_ACCESS,
+    RESTRICTED_BUILDS,
+    SKILL_LEVELS_AND_XP,
+    QUEST_POINTS,
+    INVENTORY,
+    EQUIPMENT,
+    BANK,
+    GROUP_STORAGE,
+    UIM_STORAGE,
+    CURRENCIES,
+    GP_AND_LIQUIDITY,
+    PROTECTED_ITEMS,
+
+    // Skill training. Every skill requires level bands, alternatives, resource
+    // requirements, account-mode policy, session fit, and unlock checks.
+    ATTACK_TRAINING,
+    STRENGTH_TRAINING,
+    DEFENCE_TRAINING,
+    HITPOINTS_TRAINING,
+    RANGED_TRAINING,
+    PRAYER_TRAINING,
+    MAGIC_TRAINING,
+    RUNECRAFT_TRAINING,
+    CONSTRUCTION_TRAINING,
+    AGILITY_TRAINING,
+    HERBLORE_TRAINING,
+    THIEVING_TRAINING,
+    CRAFTING_TRAINING,
+    FLETCHING_TRAINING,
+    SLAYER_TRAINING,
+    HUNTER_TRAINING,
+    MINING_TRAINING,
+    SMITHING_TRAINING,
+    FISHING_TRAINING,
+    COOKING_TRAINING,
+    FIREMAKING_TRAINING,
+    WOODCUTTING_TRAINING,
+    FARMING_TRAINING,
+    SAILING_TRAINING,
+
+    // Progression systems
+    QUESTS,
+    MINIQUESTS,
+    ACHIEVEMENT_DIARIES,
+    COMBAT_ACHIEVEMENTS,
+    COLLECTION_LOG,
+    MUSIC_TRACKS,
+    FAVOURS_AND_REPUTATION,
+    LEAGUE_OR_SEASONAL_EXCLUSIONS,
+
+    // Slayer
+    SLAYER_MASTERS,
+    SLAYER_TASKS,
+    SLAYER_UNLOCKS,
+    SLAYER_BLOCK_LISTS,
+    SLAYER_REWARDS,
+    SLAYER_GEAR,
+
+    // Farming/Hunter recurring systems
+    FARMING_PATCHES,
+    FARMING_RUNS,
+    FARMING_CONTRACTS,
+    TOOL_LEPRECHAUN,
+    BIRDHOUSE_RUNS,
+    HUNTER_RUMOURS,
+
+    // Clues
+    CLUE_TIERS,
+    CLUE_STEPS,
+    CLUE_REQUIREMENTS,
+    CLUE_STASH_UNITS,
+    CLUE_TRANSPORT,
+    CLUE_WILDERNESS_RISK,
+
+    // PvM
+    BOSSES,
+    DEMIBOSSES,
+    SLAYER_BOSSES,
+    RAIDS,
+    RAID_ROLES,
+    PVM_REQUIREMENTS,
+    PVM_GEAR_LOADOUTS,
+    PVM_SUPPLIES,
+    PVM_PRAYERS,
+    PVM_MECHANICS,
+    PVM_RISK,
+
+    // Minigames and skilling bosses
+    MINIGAMES,
+    SKILLING_BOSSES,
+    MINIGAME_REWARDS,
+    MINIGAME_CURRENCIES,
+    MINIGAME_REQUIREMENTS,
+
+    // Gear and unlocks
+    MELEE_GEAR_PROGRESSION,
+    RANGED_GEAR_PROGRESSION,
+    MAGIC_GEAR_PROGRESSION,
+    PRAYER_GEAR_PROGRESSION,
+    SKILLING_OUTFITS,
+    GRACEFUL,
+    RAIMENTS_OF_THE_EYE,
+    PROSPECTOR,
+    ANGLER,
+    FARMERS_OUTFIT,
+    LUMBERJACK,
+    PYROMANCER,
+    SMITHS_UNIFORM,
+    ROGUES_OUTFIT,
+    MIXOLOGY_REWARDS,
+    USEFUL_UNTRADEABLES,
+    CAPES_AND_ACHIEVEMENT_ITEMS,
+
+    // Transportation and world access
+    TELEPORT_SPELLS,
+    TELEPORT_JEWELLERY,
+    FAIRY_RINGS,
+    SPIRIT_TREES,
+    GNOME_GLIDERS,
+    CHARTER_SHIPS,
+    MINECARTS,
+    CANOES,
+    BALLOONS,
+    QUETZALS,
+    SAILING_TRANSPORT,
+    POH_TELEPORTS,
+    WORLD_ACCESS_REQUIREMENTS,
+
+    // POH
+    POH_ROOMS,
+    POH_PORTALS,
+    POH_JEWELLERY_BOX,
+    POH_REJUVENATION,
+    POH_STORAGE,
+    POH_UTILITY,
+
+    // Resources/economy
+    RESOURCE_SOURCES,
+    SHOPS,
+    NPC_SERVICES,
+    ITEM_SPAWNS,
+    MONSTER_DROPS,
+    PROCESSING_CHAINS,
+    GRAND_EXCHANGE_BUY_PATHS,
+    IRONMAN_SOURCE_PATHS,
+    UIM_SOURCE_PATHS,
+    MONEY_MAKING,
+    HIGH_ALCH_OPTIONS,
+    SELLABLE_OBSOLETE_GEAR,
+
+    // Recurring/dailies/weeklies
+    TEARS_OF_GUTHIX,
+    KINGDOM_OF_MISCELLANIA,
+    BATTLESTAVES,
+    DYNAMITE,
+    DIARY_DAILIES,
+    COOLDOWN_ACTIVITIES,
+
+    // Combat systems
+    SPELLBOOKS,
+    PRAYERS,
+    COMBAT_STYLES,
+    SPECIAL_ATTACKS,
+    POISONS_AND_VENOMS,
+    THRALLS,
+    CANNON,
+
+    // Player experience and planner behavior
+    SESSION_LENGTH_FIT,
+    AFK_FIT,
+    ATTENTION_FIT,
+    PREFERENCE_LEARNING,
+    RECOMMENDATION_COOLDOWNS,
+    MOMENTUM,
+    OPPORTUNITY_COST,
+    HEALTHY_VARIETY,
+    GOAL_DEPENDENCIES,
+    PREPARATION_CHECKLISTS,
+    CONFIDENCE_AND_EVIDENCE,
+    MEMBERSHIP_FILTERING,
+    ACCOUNT_MODE_FILTERING,
+    RISK_WARNINGS
+}
