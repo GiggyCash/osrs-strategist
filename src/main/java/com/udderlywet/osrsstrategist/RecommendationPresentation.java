@@ -111,13 +111,11 @@ public final class RecommendationPresentation
         return text.toString();
     }
 
-    /** Plain copy used by real line-wrapping Swing components and game overlays. */
     public static String compactText(Recommendation recommendation)
     {
         return toPlainText(compactHtml(recommendation));
     }
 
-    /** Plain full copy used by the on-game Details overlay. */
     public static String detailedText(Recommendation recommendation)
     {
         return toPlainText(detailedHtml(recommendation));
@@ -227,19 +225,21 @@ public final class RecommendationPresentation
 
     /**
      * Keep the sidebar useful without letting a detailed planner paragraph turn
-     * into a wall of text. Details retains the complete original string.
+     * into a wall of text. When guidance contains multiple sentences, the first
+     * complete useful sentence wins even if the full paragraph technically fits
+     * the character ceiling. Details retains the complete original string.
      */
     static String compactSentence(String value, int maxChars)
     {
         if (!hasText(value)) return "";
         String normalized = value.trim().replaceAll("\\s+", " ");
-        if (normalized.length() <= maxChars) return normalized;
 
         int sentence = normalized.indexOf(". ");
         if (sentence > 20 && sentence + 1 <= maxChars)
         {
             return normalized.substring(0, sentence + 1);
         }
+        if (normalized.length() <= maxChars) return normalized;
 
         int cut = Math.min(maxChars, normalized.length());
         int word = normalized.lastIndexOf(' ', cut);
@@ -252,7 +252,6 @@ public final class RecommendationPresentation
         return value != null && !value.trim().isEmpty();
     }
 
-    /** Only true unknowns belong under NEEDS INFO in the compact card. */
     private static List<RequirementCheck> hardUnresolved(TrainingPlan plan)
     {
         List<RequirementCheck> unresolved = new ArrayList<>();
