@@ -16,6 +16,7 @@ public class StrategyEngine
     private final StrategyModuleRegistry moduleRegistry;
     private final StrategyCandidateRegistry candidateRegistry;
     private final RecommendationActionabilityPolicy actionabilityPolicy;
+    private final RecommendationIntelligenceService intelligenceService;
 
     @Inject
     public StrategyEngine(
@@ -23,7 +24,8 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             StrategyModuleRegistry moduleRegistry,
             StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy)
+            RecommendationActionabilityPolicy actionabilityPolicy,
+            RecommendationIntelligenceService intelligenceService)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
@@ -32,6 +34,22 @@ public class StrategyEngine
         this.actionabilityPolicy = actionabilityPolicy == null
                 ? new RecommendationActionabilityPolicy()
                 : actionabilityPolicy;
+        this.intelligenceService = intelligenceService == null
+                ? new RecommendationIntelligenceService()
+                : intelligenceService;
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry,
+            RecommendationActionabilityPolicy actionabilityPolicy)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, actionabilityPolicy,
+                new RecommendationIntelligenceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -42,7 +60,8 @@ public class StrategyEngine
             StrategyCandidateRegistry candidateRegistry)
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry,
-                candidateRegistry, new RecommendationActionabilityPolicy());
+                candidateRegistry, new RecommendationActionabilityPolicy(),
+                new RecommendationIntelligenceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -52,7 +71,8 @@ public class StrategyEngine
             StrategyModuleRegistry moduleRegistry)
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry, null,
-                new RecommendationActionabilityPolicy());
+                new RecommendationActionabilityPolicy(),
+                new RecommendationIntelligenceService());
     }
 
     public StrategyResult evaluate(
@@ -135,7 +155,9 @@ public class StrategyEngine
             }
         }
 
-        List<Recommendation> recommendations = buildPlayerQueue(pool);
+        // Only after legality/actionability is known do we compare account value
+        // across skills, quests, upgrades, detours, PvM, gear and minigames.
+        List<Recommendation> recommendations = buildPlayerQueue(pool, context);
         List<Opportunity> opportunities = opportunityEngine.evaluate(data);
         List<StrategySignal> signals = new ArrayList<>();
         for (StrategyModule module : moduleRegistry.getModules())
@@ -149,13 +171,21 @@ public class StrategyEngine
         return new StrategyResult(recommendations, opportunities, signals);
     }
 
+    /** Compatibility entry used by focused queue/actionability tests. */
+    List<Recommendation> buildPlayerQueue(List<Recommendation> pool)
+    {
+        return buildPlayerQueue(pool, null);
+    }
+
     /**
      * A high raw score cannot buy its way into DO NEXT while the candidate is
      * still unresolved. Ready actions are ranked against ready actions first;
      * Check Needed work is allowed only in the secondary slots and only when a
      * real primary action exists.
      */
-    List<Recommendation> buildPlayerQueue(List<Recommendation> pool)
+    List<Recommendation> buildPlayerQueue(
+            List<Recommendation> pool,
+            StrategyContext context)
     {
         if (pool == null || pool.isEmpty()) return Collections.emptyList();
 
@@ -168,11 +198,12 @@ public class StrategyEngine
             else secondary.add(recommendation);
         }
 
-        Comparator<Recommendation> byScore = Comparator
-                .comparingDouble(Recommendation::getScore)
+        Comparator<Recommendation> byAccountValue = Comparator
+                .comparingDouble((Recommendation recommendation) ->
+                        intelligenceService.rankScore(recommendation, context))
                 .reversed();
-        ready.sort(byScore);
-        secondary.sort(byScore);
+        ready.sort(byAccountValue);
+        secondary.sort(byAccountValue);
 
         // Never put a Needs Info recommendation in the primary slot merely to
         // avoid an empty card. No recommendation is safer than false certainty.
