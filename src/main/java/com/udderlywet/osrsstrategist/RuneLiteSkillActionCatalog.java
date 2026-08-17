@@ -54,6 +54,7 @@ public class RuneLiteSkillActionCatalog
             Method getLevel = type.getMethod("getLevel");
             Method getXp = type.getMethod("getXp");
             Method getCategory = optionalMethod(type, "getCategory");
+            Method getItemId = optionalMethod(type, "getItemId");
             Method getName = itemManager == null ? null
                     : optionalMethod(type, "getName", ItemManager.class);
             Method isMembers = itemManager == null ? null
@@ -77,6 +78,15 @@ public class RuneLiteSkillActionCatalog
                     boolean members = (Boolean) isMembers.invoke(constant, itemManager);
                     membership = members ? MembershipStatus.P2P : MembershipStatus.F2P;
                 }
+                int itemId = -1;
+                if (getItemId != null)
+                {
+                    Object rawItemId = getItemId.invoke(constant);
+                    if (rawItemId instanceof Number)
+                    {
+                        itemId = ((Number) rawItemId).intValue();
+                    }
+                }
                 actions.add(new RuneLiteSkillActionDefinition(
                         skill,
                         "runelite:" + skill.name().toLowerCase(Locale.ROOT)
@@ -85,7 +95,8 @@ public class RuneLiteSkillActionCatalog
                         level,
                         xp,
                         category,
-                        membership));
+                        membership,
+                        itemId));
             }
             return Collections.unmodifiableList(actions);
         }
