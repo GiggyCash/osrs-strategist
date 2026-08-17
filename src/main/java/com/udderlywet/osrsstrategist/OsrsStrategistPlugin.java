@@ -38,6 +38,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
     @Inject private StrategyEngine strategyEngine;
+    @Inject private PlayerExperiencePolicy playerExperiencePolicy;
     @Inject private MethodGuidanceService methodGuidanceService;
     @Inject private AccountPreferenceStore accountPreferenceStore;
     @Inject private AccountStrategyProfileStore accountStrategyProfileStore;
@@ -223,9 +224,15 @@ public class OsrsStrategistPlugin extends Plugin
         else SwingUtilities.invokeLater(update);
     }
 
+    /**
+     * Runs the progression engine first, then applies a bounded comfort/variety
+     * rerank. This ordering is intentional: safety, account restrictions,
+     * requirements, goal progress, and explicit player settings always produce
+     * the candidate set before any anti-burnout adjustment is considered.
+     */
     private StrategyResult evaluate(StrategyDataBundle data, PlayerStrategyProfile profile)
     {
-        return strategyEngine.evaluate(
+        StrategyResult result = strategyEngine.evaluate(
                 data,
                 profile.getStrategyMode(),
                 profile.getSessionIntent(),
@@ -235,6 +242,7 @@ public class OsrsStrategistPlugin extends Plugin
                 profile.isCollectionistMode(),
                 profile.isAllowWildernessMethods(),
                 preferenceProfile);
+        return playerExperiencePolicy.rerank(result, recommendationHistory);
     }
 
     private void updateGuidance(StrategyResult result, StrategyDataBundle data)
