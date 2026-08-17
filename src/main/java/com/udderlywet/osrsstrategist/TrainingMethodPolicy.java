@@ -21,21 +21,18 @@ public class TrainingMethodPolicy
                 ? MembershipStatus.UNKNOWN
                 : account.getMembershipStatus();
 
-        if (!AccountBuildPolicy.allowsMethod(account, method))
-        {
-            return false;
-        }
+        if (!AccountBuildPolicy.allowsMethod(account, method)) return false;
 
-        if (membership == MembershipStatus.F2P
+        // UNKNOWN membership is intentionally treated like F2P here. The route
+        // can widen as soon as membership is verified, but it can never leak a
+        // members-only method into an F2P account during a transient read.
+        if (membership != MembershipStatus.P2P
                 && !metadata.isFreeToPlayAllowed())
         {
             return false;
         }
 
-        if (method.isWilderness() && !allowWildernessMethods)
-        {
-            return false;
-        }
+        if (method.isWilderness() && !allowWildernessMethods) return false;
 
         if (mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
@@ -75,7 +72,8 @@ public class TrainingMethodPolicy
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
-        double score = intensityAdjustment(metadata.getIntensity(), strategyMode, sessionIntent);
+        double score = intensityAdjustment(
+                metadata.getIntensity(), strategyMode, sessionIntent);
 
         if (mode != null && mode.isIronLike())
         {
@@ -90,10 +88,33 @@ public class TrainingMethodPolicy
             }
         }
 
-        if (mode == AccountMode.ULTIMATE_IRONMAN && metadata.isUimFriendly()) score += 4.0;
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            if (metadata.isUimFriendly()) score += 8.0;
+
+            // UIM setup changes can be much more expensive than a normal bank
+            // switch. Outside Efficient mode, prefer methods that are easier to
+            // sustain for a real play session instead of bouncing the player
+            // between click-heavy inventory layouts every milestone.
+            if (strategyMode != StrategyMode.EFFICIENT)
+            {
+                switch (metadata.getIntensity())
+                {
+                    case AFK: score += 6.0; break;
+                    case RELAXED: score += 7.0; break;
+                    case BALANCED: score += 2.0; break;
+                    case SWEATY: score -= 8.0; break;
+                    default: break;
+                }
+            }
+        }
+
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                && metadata.isHardcoreSafe()) score += 4.0;
+                && metadata.isHardcoreSafe())
+        {
+            score += 4.0;
+        }
 
         if (AccountModePolicy.isRiskSensitive(mode))
         {
