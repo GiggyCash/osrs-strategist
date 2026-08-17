@@ -76,6 +76,11 @@ public class RecommendationEngine
             if (!ContentAccessRules.isSkillAvailable(skill,
                     snapshot.getMembershipStatus())) continue;
 
+            // Player-imposed account builds are a hard safety boundary. A Main,
+            // Iron, UIM, Hardcore, or GIM can independently be a skiller/pure.
+            // Never rank a protected stat and hope the player notices later.
+            if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
+
             String activityId = "skill:" + skill.name().toLowerCase();
             if (preferenceProfile.isOnCooldown(activityId)) continue;
 
