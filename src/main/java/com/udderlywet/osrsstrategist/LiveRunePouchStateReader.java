@@ -18,9 +18,9 @@ import net.runelite.client.game.ItemManager;
  * Reads currently usable Rune pouch contents from the same varbits and enum
  * mapping used by RuneLite's Clue Scroll plugin.
  *
- * <p>The pouch is live storage, not persistent ownership. If no Rune pouch is
- * observed in inventory, stale remembered pouch contents are removed from the
- * returned snapshot while every unrelated storage capability is preserved.</p>
+ * <p>The pouch is live storage, not persistent ownership. If no recognized
+ * usable pouch is observed in inventory, stale remembered pouch contents are
+ * removed while every unrelated storage capability is preserved.</p>
  */
 @Singleton
 public class LiveRunePouchStateReader
@@ -125,9 +125,12 @@ public class LiveRunePouchStateReader
             if (item == null || item.getQuantity() <= 0 || item.getName() == null)
                 continue;
             String name = item.getName().trim().toLowerCase(Locale.ROOT);
+
+            // Fail closed on identity. Generic substring matching could treat a
+            // future note/token/placeholder containing "rune pouch" as an
+            // actually usable pouch and leak stale varbit runes into planning.
             if (name.equals("rune pouch")
-                    || name.equals("divine rune pouch")
-                    || name.contains("rune pouch"))
+                    || name.equals("divine rune pouch"))
             {
                 return true;
             }
