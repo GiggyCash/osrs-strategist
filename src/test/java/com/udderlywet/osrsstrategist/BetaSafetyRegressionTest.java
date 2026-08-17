@@ -1,0 +1,292 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import net.runelite.api.Experience;
+import net.runelite.api.Skill;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * Cross-system regression tests for failures that are unacceptable in beta.
+ *
+ * <p>These deliberately test boundaries rather than one implementation detail:
+ * membership isolation, primary-queue actionability, restricted builds, and
+ * account-mode storage semantics.</p>
+ */
+public class BetaSafetyRegressionTest
+{
+    @Test
+    public void unknownMembershipFailsClosedToF2pContent()
+    {
+        assertTrue(ContentAccessRules.isSkillAvailable(
+                Skill.DEFENCE, MembershipStatus.UNKNOWN));
+        assertFalse(ContentAccessRules.isSkillAvailable(
+                Skill.SLAYER, MembershipStatus.UNKNOWN));
+        assertFalse(ContentAccessRules.isSkillAvailable(
+                Skill.SAILING, MembershipStatus.UNKNOWN));
+
+        TrainingMethod f2p = method(
+                "mining_f2p_iron", Skill.MINING, false,
+                RecommendationConfidence.VERIFIED);
+        TrainingMethod members = method(
+                "mining_mlm", Skill.MINING, true,
+                RecommendationConfidence.VERIFIED);
+
+        assertTrue(ContentAccessRules.isMethodAvailable(
+                f2p, MembershipStatus.UNKNOWN));
+        assertFalse(ContentAccessRules.isMethodAvailable(
+                members, MembershipStatus.UNKNOWN));
+    }
+
+    @Test
+    public void f2pNeverGetsCombatAchievementRewardTierCandidate()
+    {
+        AccountSnapshot account = account(
+                MembershipStatus.F2P, 0, 60, 1, 1, 1, 1);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .combatAchievements(new CombatAchievementSnapshot(18, 27))
+                .build();
+        StrategyContext context = new StrategyContext(
+                data,
+                StrategyMode.BALANCED,
+                SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL,
+                GoalType.MAX,
+                false,
+                false,
+                false,
+                new PreferenceProfile());
+
+        assertTrue(new CombatAchievementCandidateProvider()
+                .candidates(context).isEmpty());
+    }
+
+    @Test
+    public void needsInfoCannotOutrankReadyDoNext()
+    {
+        Recommendation ready = new Recommendation(
+                "skill:defence",
+                "Train Defence to 80",
+                "Protected Defence-pure progression.",
+                40.0,
+                null,
+                RecommendationConfidence.VERIFIED,
+                75,
+                80,
+                new RecommendationGuidance(
+                        "Train Defence with the best legal defensive style.",
+                        "Use verified food and gear.",
+                        "Use a safe F2P combat target.",
+                        "Defence is the protected offensive-free combat path for this build."));
+        Recommendation unresolvedQuest = new Recommendation(
+                "quest:pandemonium",
+                "Quest: Pandemonium",
+                "Unresolved quest candidate.",
+                999.0,
+                null,
+                RecommendationConfidence.CHECK_NEEDED,
+                0,
+                0,
+                null);
+
+        RecommendationActionabilityPolicy policy =
+                new RecommendationActionabilityPolicy();
+        assertTrue(policy.canLeadQueue(ready));
+        assertFalse(policy.canLeadQueue(unresolvedQuest));
+
+        List<Recommendation> pool = Arrays.asList(
+                unresolvedQuest, ready);
+        List<Recommendation> queue = buildQueue(pool, policy);
+
+        assertEquals(2, queue.size());
+        assertEquals("skill:defence", queue.get(0).getId());
+        assertEquals("quest:pandemonium", queue.get(1).getId());
+    }
+
+    @Test
+    public void queueReturnsNothingRatherThanInventingPrimaryAction()
+    {
+        Recommendation unresolved = new Recommendation(
+                "quest:unknown",
+                "Quest: Unknown",
+                "Requirements are not verified.",
+                500.0);
+        List<Recommendation> queue = buildQueue(
+                Collections.singletonList(unresolved),
+                new RecommendationActionabilityPolicy());
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    public void defencePureAllowsDefenceAndPrayerButBlocksOffence()
+    {
+        AccountSnapshot account = account(
+                MembershipStatus.F2P, 0, 75, 1, 1, 1, 43);
+
+        assertEquals(RestrictedBuildType.DEFENCE_PURE,
+                AccountBuildPolicy.effectiveBuild(account));
+        assertTrue(AccountBuildPolicy.allowsSkill(account, Skill.DEFENCE));
+        assertTrue(AccountBuildPolicy.allowsSkill(account, Skill.PRAYER));
+        assertFalse(AccountBuildPolicy.allowsSkill(account, Skill.ATTACK));
+        assertFalse(AccountBuildPolicy.allowsSkill(account, Skill.STRENGTH));
+        assertFalse(AccountBuildPolicy.allowsSkill(account, Skill.RANGED));
+        assertFalse(AccountBuildPolicy.allowsSkill(account, Skill.MAGIC));
+        assertFalse(AccountBuildPolicy.allowsSkill(account, Skill.SLAYER));
+    }
+
+    @Test
+    public void uimNeverCountsNormalBankAsImmediatelyUsable()
+    {
+        AccountSnapshot uim = account(
+                MembershipStatus.P2P, 2, 70, 1, 1, 1, 43);
+        BankSnapshot bank = new BankSnapshot(
+                Collections.singletonList(
+                        new ItemStackSnapshot(383, "Raw shark", 1000)),
+                1L);
+        StrategyDataBundle data = StrategyDataBundle.builder(uim)
+                .bank(bank)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        ObservedItemIndex items = new ObservedItemIndex(data, false);
+        assertEquals(0, items.quantity("Raw shark"));
+        assertTrue(items.bankObserved());
+    }
+
+    @Test
+    public void ordinaryAccountCountsObservedBank()
+    {
+        AccountSnapshot main = account(
+                MembershipStatus.P2P, 0, 70, 70, 70, 70, 70);
+        BankSnapshot bank = new BankSnapshot(
+                Collections.singletonList(
+                        new ItemStackSnapshot(383, "Raw shark", 1000)),
+                1L);
+        StrategyDataBundle data = StrategyDataBundle.builder(main)
+                .bank(bank)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        assertEquals(1000,
+                new ObservedItemIndex(data, false).quantity("Raw shark"));
+    }
+
+    @Test
+    public void groupStorageOnlyCountsWhenEnabledAndObserved()
+    {
+        AccountSnapshot gim = account(
+                MembershipStatus.P2P, 4, 70, 70, 70, 70, 70);
+        GroupStorageSnapshot group = new GroupStorageSnapshot(
+                true,
+                Collections.singletonList(
+                        new ItemStackSnapshot(1515, "Yew logs", 500)));
+        StrategyDataBundle data = StrategyDataBundle.builder(gim)
+                .groupStorage(group)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        assertEquals(0,
+                new ObservedItemIndex(data, false).quantity("Yew logs"));
+        assertEquals(500,
+                new ObservedItemIndex(data, true).quantity("Yew logs"));
+    }
+
+    private static List<Recommendation> buildQueue(
+            List<Recommendation> pool,
+            RecommendationActionabilityPolicy policy)
+    {
+        List<Recommendation> ready = new ArrayList<>();
+        List<Recommendation> secondary = new ArrayList<>();
+        for (Recommendation recommendation : pool)
+        {
+            if (!policy.mayAppearAsAlternative(recommendation)) continue;
+            if (policy.canLeadQueue(recommendation)) ready.add(recommendation);
+            else secondary.add(recommendation);
+        }
+        ready.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
+        secondary.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
+        if (ready.isEmpty()) return Collections.emptyList();
+        List<Recommendation> result = new ArrayList<>();
+        result.addAll(ready);
+        result.addAll(secondary);
+        return result;
+    }
+
+    private static TrainingMethod method(
+            String id,
+            Skill skill,
+            boolean membersOnly,
+            RecommendationConfidence confidence)
+    {
+        return new TrainingMethod(
+                id,
+                skill,
+                1,
+                99,
+                id,
+                "test",
+                10,
+                10,
+                10,
+                AttentionLevel.MODERATE,
+                10,
+                1,
+                Collections.emptyList(),
+                confidence,
+                membersOnly,
+                false,
+                false);
+    }
+
+    private static AccountSnapshot account(
+            MembershipStatus membership,
+            int typeCode,
+            int defence,
+            int attack,
+            int strength,
+            int ranged,
+            int prayer)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, 30);
+            xp.put(skill, Experience.getXpForLevel(30));
+        }
+        levels.put(Skill.ATTACK, attack);
+        levels.put(Skill.STRENGTH, strength);
+        levels.put(Skill.DEFENCE, defence);
+        levels.put(Skill.RANGED, ranged);
+        levels.put(Skill.MAGIC, 1);
+        levels.put(Skill.PRAYER, prayer);
+        levels.put(Skill.HITPOINTS, Math.max(10, defence >= 20 ? 63 : 10));
+        xp.put(Skill.ATTACK, Experience.getXpForLevel(Math.max(1, attack)));
+        xp.put(Skill.STRENGTH, Experience.getXpForLevel(Math.max(1, strength)));
+        xp.put(Skill.DEFENCE, Experience.getXpForLevel(Math.max(1, defence)));
+        xp.put(Skill.RANGED, Experience.getXpForLevel(Math.max(1, ranged)));
+        xp.put(Skill.MAGIC, 0);
+        xp.put(Skill.PRAYER, Experience.getXpForLevel(Math.max(1, prayer)));
+        xp.put(Skill.HITPOINTS, Experience.getXpForLevel(
+                Math.max(10, defence >= 20 ? 63 : 10)));
+
+        return new AccountSnapshot(
+                "Beta Safety",
+                typeCode,
+                AccountMode.fromTypeCode(typeCode).name(),
+                membership,
+                1,
+                1200,
+                0L,
+                levels,
+                xp);
+    }
+}
