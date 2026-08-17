@@ -220,14 +220,15 @@ public class ProgressionUpgradeCandidateProviderTest
     public void uimRetrievalStoredTorsoSuppressesDuplicateTorsoGrind()
     {
         AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
-        StorageSnapshot storage = new StorageSnapshot(
-                Collections.emptyList(),
-                Collections.emptyList(),
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
+        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.DEATH_STORAGE,
                 Collections.singletonList(
-                        new ItemStackSnapshot(10551, "Fighter torso", 1)),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                true);
+                        new ItemStackSnapshot(10551, "Fighter torso", 1)));
+        StorageSnapshot storage = new StorageSnapshot(states, contents);
         StrategyDataBundle data = builder(account)
                 .storage(storage)
                 .build();
