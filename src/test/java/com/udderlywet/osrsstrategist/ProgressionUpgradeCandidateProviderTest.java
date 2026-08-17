@@ -1,7 +1,9 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.runelite.api.Experience;
@@ -33,7 +35,7 @@ public class ProgressionUpgradeCandidateProviderTest
     }
 
     @Test
-    public void earlyMidIronGetsFighterTorsoWhenMissing()
+    public void earlyMidIronTorsoIsActuallyActionable()
     {
         AccountSnapshot account = account(1, 60, 70, 45, 60, 43, 60, 70, 50, 60);
         StrategyCandidate torso = find(provider.candidates(
@@ -41,12 +43,16 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:fighter-torso");
 
         assertNotNull(torso);
-        assertTrue(torso.getReason().contains("375 honour points in each role"));
-        assertTrue(torso.getReason().contains("Penance Queen"));
+        assertEquals(RecommendationConfidence.VERIFIED, torso.getConfidence());
+        assertNotNull(torso.getGuidance());
+        assertTrue(torso.getGuidance().getAction().contains("375 honour points"));
+        assertTrue(torso.getGuidance().getAction().contains("Penance Queen"));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(torso.toRecommendation()));
     }
 
     @Test
-    public void ironWith85SlayerGetsWhipSelfSourceRoute()
+    public void ironWith85SlayerGetsActionableWhipSelfSourceRoute()
     {
         AccountSnapshot account = account(1, 70, 75, 70, 70, 70, 70, 80, 85, 70);
         StrategyCandidate whip = find(provider.candidates(
@@ -54,11 +60,12 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:abyssal-whip");
 
         assertNotNull(whip);
-        assertEquals(RecommendationConfidence.VERIFIED,
-                whip.getConfidence());
-        assertTrue(whip.getReason().contains("85 Slayer"));
-        assertTrue(whip.getReason().contains("abyssal demons"));
-        assertFalse(whip.getReason().contains("Grand Exchange"));
+        assertEquals(RecommendationConfidence.VERIFIED, whip.getConfidence());
+        assertNotNull(whip.getGuidance());
+        assertTrue(whip.getGuidance().getAction().contains("abyssal demons"));
+        assertFalse(whip.getGuidance().getAction().contains("Grand Exchange"));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(whip.toRecommendation()));
     }
 
     @Test
@@ -70,13 +77,14 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:abyssal-whip");
 
         assertNotNull(whip);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
-                whip.getConfidence());
-        assertTrue(whip.getReason().contains("verified cash budget"));
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, whip.getConfidence());
+        assertTrue(whip.getGuidance().getSupplies().contains("Live price"));
+        assertFalse(new RecommendationActionabilityPolicy()
+                .canLeadQueue(whip.toRecommendation()));
     }
 
     @Test
-    public void fishing82MakesMissingAnglerSetWorthConsidering()
+    public void fishing82MakesMissingAnglerSetActionable()
     {
         AccountSnapshot account = account(0, 70, 75, 70, 70, 70, 70, 80, 70, 82);
         StrategyCandidate angler = find(provider.candidates(
@@ -85,16 +93,168 @@ public class ProgressionUpgradeCandidateProviderTest
 
         assertNotNull(angler);
         assertTrue(angler.getTitle().contains("0/4"));
-        assertTrue(angler.getReason().contains("minnow access"));
+        assertTrue(angler.getGuidance().getNote().contains("minnow access"));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(angler.toRecommendation()));
+    }
+
+    @Test
+    public void completedRfdAndVerifiedCashMakesBarrowsGlovesReady()
+    {
+        AccountSnapshot account = account(0, 75, 75, 70, 75, 70, 75, 80, 70, 70);
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("Recipe for Disaster"))
+                .economy(new AccountEconomySnapshot(
+                        200_000L, 10_000_000L,
+                        RecommendationConfidence.VERIFIED))
+                .build();
+
+        StrategyCandidate gloves = find(provider.candidates(
+                context(data, GoalType.BARROWS_GLOVES, false)),
+                "upgrade:barrows-gloves");
+
+        assertNotNull(gloves);
+        assertEquals(RecommendationConfidence.VERIFIED, gloves.getConfidence());
+        assertTrue(gloves.getGuidance().getSupplies().contains("130,000"));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(gloves.toRecommendation()));
+    }
+
+    @Test
+    public void eliteLumbridgeDiscountUsesReducedBarrowsGlovesPrice()
+    {
+        AccountSnapshot account = account(0, 75, 75, 70, 75, 70, 75, 80, 70, 70);
+        Map<DiaryTier, Boolean> tiers = new EnumMap<>(DiaryTier.class);
+        tiers.put(DiaryTier.ELITE, true);
+        Map<String, Map<DiaryTier, Boolean>> completed = new HashMap<>();
+        completed.put("Lumbridge & Draynor", tiers);
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("Recipe for Disaster"))
+                .diaries(new DiarySnapshot(
+                        Collections.emptyMap(), Collections.emptyMap(), completed))
+                .economy(new AccountEconomySnapshot(
+                        110_000L, 10_000_000L,
+                        RecommendationConfidence.VERIFIED))
+                .build();
+
+        StrategyCandidate gloves = find(provider.candidates(
+                context(data, GoalType.BARROWS_GLOVES, false)),
+                "upgrade:barrows-gloves");
+        assertNotNull(gloves);
+        assertEquals(RecommendationConfidence.VERIFIED, gloves.getConfidence());
+        assertTrue(gloves.getGuidance().getSupplies().contains("104,000"));
+    }
+
+    @Test
+    public void fireCapeUsesConservativeReadinessAndHasFullGuidance()
+    {
+        AccountSnapshot account = account(0, 75, 75, 70, 75, 55, 75, 80, 70, 70);
+        StrategyCandidate cape = find(provider.candidates(
+                context(data(account), GoalType.GEAR_TARGET, false)),
+                "upgrade:fire-cape");
+
+        assertNotNull(cape);
+        assertEquals(RecommendationConfidence.VERIFIED, cape.getConfidence());
+        assertTrue(cape.getGuidance().getAction().contains("63 waves"));
+        assertTrue(cape.getGuidance().getNote().contains("readiness heuristic"));
+    }
+
+    @Test
+    public void hardcoreGroupFightCavesNeverAutoLeads()
+    {
+        AccountSnapshot account = account(5, 75, 75, 70, 80, 60, 75, 85, 70, 70);
+        StrategyCandidate cape = find(provider.candidates(
+                context(data(account), GoalType.GEAR_TARGET, false)),
+                "upgrade:fire-cape");
+
+        assertNotNull(cape);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, cape.getConfidence());
+        assertTrue(cape.getGuidance().getNote().contains("Hardcore Group Ironman"));
+        assertFalse(new RecommendationActionabilityPolicy()
+                .canLeadQueue(cape.toRecommendation()));
+    }
+
+    @Test
+    public void ironWithEnhancedSeedAndShardsCanCreateBowfaNow()
+    {
+        AccountSnapshot account = accountWithSkillOverrides(
+                1, 80, 85, 80, 85, 70, 85, 90, 85, 80,
+                Skill.SMITHING, 82, Skill.CRAFTING, 82);
+        List<ItemStackSnapshot> bank = new ArrayList<>();
+        bank.add(new ItemStackSnapshot(1, "Enhanced crystal weapon seed", 1));
+        bank.add(new ItemStackSnapshot(2, "Crystal shard", 100));
+        StrategyDataBundle data = builder(account)
+                .bank(new BankSnapshot(bank, 1L))
+                .quests(questsComplete("Song of the Elves"))
+                .build();
+
+        StrategyCandidate bowfa = find(provider.candidates(
+                context(data, GoalType.BOWFA, false)),
+                "upgrade:bowfa");
+
+        assertNotNull(bowfa);
+        assertEquals(RecommendationConfidence.VERIFIED, bowfa.getConfidence());
+        assertTrue(bowfa.getGuidance().getAction().contains("100 Crystal shards"));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(bowfa.toRecommendation()));
+    }
+
+    @Test
+    public void hardcoreIronBowfaSeedHuntIsDeliberateRiskOnly()
+    {
+        AccountSnapshot account = account(3, 80, 85, 80, 85, 70, 85, 90, 85, 80);
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("Song of the Elves"))
+                .build();
+
+        StrategyCandidate bowfa = find(provider.candidates(
+                context(data, GoalType.BOWFA, false)),
+                "upgrade:bowfa");
+
+        assertNotNull(bowfa);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, bowfa.getConfidence());
+        assertTrue(bowfa.getGuidance().getNote().contains("Hardcore"));
+    }
+
+    @Test
+    public void uimRetrievalStoredTorsoSuppressesDuplicateTorsoGrind()
+    {
+        AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
+        StorageSnapshot storage = new StorageSnapshot(
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.singletonList(
+                        new ItemStackSnapshot(10551, "Fighter torso", 1)),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                true);
+        StrategyDataBundle data = builder(account)
+                .storage(storage)
+                .build();
+
+        assertNull(find(provider.candidates(
+                context(data, GoalType.GEAR_TARGET, false)),
+                "upgrade:fighter-torso"));
     }
 
     private static StrategyDataBundle data(AccountSnapshot account)
     {
+        return builder(account).build();
+    }
+
+    private static StrategyDataBundle.Builder builder(AccountSnapshot account)
+    {
         return StrategyDataBundle.builder(account)
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .build();
+                .equipment(new EquipmentSnapshot(Collections.emptyList()));
+    }
+
+    private static QuestSnapshot questsComplete(String... names)
+    {
+        Map<String, QuestStatus> quests = new HashMap<>();
+        for (String name : names) quests.put(name, QuestStatus.COMPLETE);
+        return new QuestSnapshot(quests);
     }
 
     private static StrategyContext context(
@@ -137,13 +297,27 @@ public class ProgressionUpgradeCandidateProviderTest
             int slayer,
             int fishing)
     {
+        return accountWithSkillOverrides(
+                typeCode, attack, strength, defence, ranged, prayer,
+                magic, hp, slayer, fishing);
+    }
+
+    private static AccountSnapshot accountWithSkillOverrides(
+            int typeCode,
+            int attack,
+            int strength,
+            int defence,
+            int ranged,
+            int prayer,
+            int magic,
+            int hp,
+            int slayer,
+            int fishing,
+            Object... skillLevelPairs)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
-        for (Skill skill : Skill.values())
-        {
-            levels.put(skill, 60);
-            xp.put(skill, Experience.getXpForLevel(60));
-        }
+        for (Skill skill : Skill.values()) levels.put(skill, 60);
         levels.put(Skill.ATTACK, attack);
         levels.put(Skill.STRENGTH, strength);
         levels.put(Skill.DEFENCE, defence);
@@ -153,16 +327,30 @@ public class ProgressionUpgradeCandidateProviderTest
         levels.put(Skill.HITPOINTS, hp);
         levels.put(Skill.SLAYER, slayer);
         levels.put(Skill.FISHING, fishing);
-        xp.put(Skill.FISHING, Experience.getXpForLevel(fishing));
+        for (int i = 0; i + 1 < skillLevelPairs.length; i += 2)
+        {
+            levels.put((Skill) skillLevelPairs[i], (Integer) skillLevelPairs[i + 1]);
+        }
+
+        int total = 0;
+        long totalXp = 0L;
+        for (Skill skill : Skill.values())
+        {
+            int level = levels.get(skill);
+            int skillXp = level <= 1 ? 0 : Experience.getXpForLevel(level);
+            xp.put(skill, skillXp);
+            total += level;
+            totalXp += skillXp;
+        }
 
         return new AccountSnapshot(
                 "Upgrade Test",
                 typeCode,
-                typeCode == 0 ? "Main" : "Ironman",
+                AccountMode.fromTypeCode(typeCode).name(),
                 MembershipStatus.P2P,
                 1,
-                1600,
-                0L,
+                total,
+                totalXp,
                 levels,
                 xp);
     }
