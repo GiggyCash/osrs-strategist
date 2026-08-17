@@ -1,6 +1,5 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,19 +34,19 @@ public class UniversalSkillActionGuidanceService
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final UniversalActionRecipeResolver recipeResolver;
     private final SkillingXpModifierService xpModifierService;
-    private final PurchaseCostAdvisor purchaseCostAdvisor;
+    private final AccountResourcePlanner resourcePlanner;
 
     @Inject
     public UniversalSkillActionGuidanceService(
             RuneLiteSkillActionCatalog actionCatalog,
             UniversalActionRecipeResolver recipeResolver,
             SkillingXpModifierService xpModifierService,
-            PurchaseCostAdvisor purchaseCostAdvisor)
+            AccountResourcePlanner resourcePlanner)
     {
         this.actionCatalog = actionCatalog;
         this.recipeResolver = recipeResolver;
         this.xpModifierService = xpModifierService;
-        this.purchaseCostAdvisor = purchaseCostAdvisor;
+        this.resourcePlanner = resourcePlanner;
     }
 
     public UniversalSkillActionGuidanceService()
@@ -55,7 +54,7 @@ public class UniversalSkillActionGuidanceService
         this(new RuneLiteSkillActionCatalog(),
                 new UniversalActionRecipeResolver(),
                 new SkillingXpModifierService(),
-                new PurchaseCostAdvisor());
+                new AccountResourcePlanner());
     }
 
     public RecommendationGuidance build(
@@ -108,7 +107,21 @@ public class UniversalSkillActionGuidanceService
                 + " gives " + format(xpEach)
                 + " modeled XP per successful action.";
 
-        String supplies = supplyGuidance(data, recipe, useGroupStorage);
+        AccountResourcePlan resources = resourcePlanner == null
+                ? null
+                : resourcePlanner.plan(data, recipe.getInputs(), useGroupStorage);
+        String supplies;
+        if (recipe.getInputs().isEmpty())
+        {
+            supplies = recipe.hasExactInputs()
+                    ? "No consumed material is required for the modeled action."
+                    : "The action count is known, but Strategist is not claiming an exact material list yet.";
+        }
+        else
+        {
+            supplies = resources == null ? null : resources.getGuidance();
+        }
+
         String location = plan.getMethod().getInstructions();
         StringBuilder note = new StringBuilder();
         note.append("Action XP comes from RuneLite's maintained skill-calculator data. ")
@@ -125,6 +138,12 @@ public class UniversalSkillActionGuidanceService
         if (skill == Skill.COOKING)
         {
             note.append(" Successful-cook count is deterministic, but raw-food supply can require a burn buffer. Low-level F2P fish use the dedicated burn-aware planner.");
+        }
+        if (resources != null
+                && resources.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                && resources.getTotalMissingUnits() > 0)
+        {
+            note.append(" UIM material totals exclude retrieval-only storage unless a separate retrieval step is deliberately selected.");
         }
 
         return new RecommendationGuidance(
@@ -172,8 +191,7 @@ public class UniversalSkillActionGuidanceService
             double score = matches * 1000.0;
             score += Math.min(300.0, action.getLevel() * 3.0);
             score += Math.min(250.0, Math.log1p(action.getXp()) * 35.0);
-            score += resourceCoverageScore(
-                    data, observed, recipe, useGroupStorage);
+            score += resourceCoverageScore(data, observed, recipe);
 
             if (best == null || score > best.score)
             {
@@ -186,8 +204,7 @@ public class UniversalSkillActionGuidanceService
     private static double resourceCoverageScore(
             StrategyDataBundle data,
             ObservedItemIndex observed,
-            UniversalActionRecipe recipe,
-            boolean useGroupStorage)
+            UniversalActionRecipe recipe)
     {
         if (recipe == null || recipe.getInputs().isEmpty()) return 0.0;
         long required = 0;
@@ -202,91 +219,15 @@ public class UniversalSkillActionGuidanceService
         double coverage = Math.min(1.0, owned / (double) required);
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            return coverage * 650.0 + (coverage <= 0.0 ? -280.0 : 0.0);
+        }
         if (mode.isIronLike())
         {
             return coverage * 500.0 + (coverage <= 0.0 ? -220.0 : 0.0);
         }
         return coverage * 120.0;
-    }
-
-    private String supplyGuidance(
-            StrategyDataBundle data,
-            UniversalActionRecipe recipe,
-            boolean useGroupStorage)
-    {
-        if (recipe == null) return null;
-        if (recipe.getInputs().isEmpty())
-        {
-            return recipe.hasExactInputs()
-                    ? "No consumed material is required for the modeled action."
-                    : "The action count is known, but Strategist is not claiming an exact material list yet.";
-        }
-
-        AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
-        ObservedItemIndex observed = new ObservedItemIndex(data, useGroupStorage);
-        List<String> required = new ArrayList<>();
-        List<String> owned = new ArrayList<>();
-        List<String> missing = new ArrayList<>();
-        List<ResolvedMethodInput> missingInputs = new ArrayList<>();
-        for (ResolvedMethodInput input : recipe.getInputs())
-        {
-            int have = observed.quantity(input.getName());
-            int need = Math.max(0, input.getQuantity() - have);
-            required.add(format(input.getQuantity()) + " " + input.getName());
-            owned.add(format(have) + " " + input.getName());
-            if (need > 0)
-            {
-                missing.add(format(need) + " " + input.getName());
-                missingInputs.add(new ResolvedMethodInput(
-                        input.getName(), input.getItemId(), need));
-            }
-        }
-
-        if (mode != AccountMode.ULTIMATE_IRONMAN && !observed.bankObserved())
-        {
-            return "Need " + join(required)
-                    + ". Open your bank once so Strategist can verify stored materials before it calculates the real shortfall.";
-        }
-
-        StringBuilder text = new StringBuilder();
-        text.append("Need ").append(join(required))
-                .append(". Verified: ").append(join(owned)).append(".");
-        if (missing.isEmpty())
-        {
-            text.append(" You already have the modeled inputs for this milestone.");
-            return text.toString();
-        }
-
-        if (mode.usesGrandExchange())
-        {
-            text.append(" Buy ").append(join(missing)).append(" at the Grand Exchange.");
-            if (purchaseCostAdvisor != null)
-            {
-                String advice = purchaseCostAdvisor.advice(
-                        data.getEconomy(), missingInputs);
-                if (advice != null) text.append(" ").append(advice);
-            }
-        }
-        else if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            text.append(" Acquire ").append(join(missing))
-                    .append(" just in time. Normal bank state is never counted for UIM.");
-        }
-        else if (mode.isGroupIronman())
-        {
-            text.append(" Self-source ").append(join(missing));
-            if (useGroupStorage)
-            {
-                text.append(" after checking observed Group Storage");
-            }
-            text.append(".");
-        }
-        else
-        {
-            text.append(" Self-source ").append(join(missing)).append(".");
-        }
-        return text.toString();
     }
 
     private static boolean supportsUniversalAction(Skill skill)
@@ -418,20 +359,6 @@ public class UniversalSkillActionGuidanceService
     {
         if (numerator <= 0 || denominator <= 0) return 0;
         return (int) Math.ceil(numerator / denominator);
-    }
-
-    private static String join(List<String> parts)
-    {
-        if (parts == null || parts.isEmpty()) return "nothing";
-        if (parts.size() == 1) return parts.get(0);
-        if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
-        StringBuilder text = new StringBuilder();
-        for (int i = 0; i < parts.size(); i++)
-        {
-            if (i > 0) text.append(i == parts.size() - 1 ? ", and " : ", ");
-            text.append(parts.get(i));
-        }
-        return text.toString();
     }
 
     private static boolean containsAny(String text, String... values)
