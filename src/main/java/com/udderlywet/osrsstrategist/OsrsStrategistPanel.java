@@ -36,6 +36,12 @@ public class OsrsStrategistPanel extends PluginPanel
     private static final int INNER_WIDTH = CONTENT_WIDTH - CARD_HORIZONTAL_INSET;
     private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 6;
 
+    private static final float BODY_FONT_SIZE = 14f;
+    private static final float MUTED_FONT_SIZE = 13f;
+    private static final float BUTTON_FONT_SIZE = 13f;
+    private static final float EYEBROW_FONT_SIZE = 12f;
+    private static final float EMPHASIS_FONT_SIZE = 15f;
+
     private final SkillIconLoader skillIconLoader;
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
 
@@ -103,105 +109,105 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JLabel title = label("OSRS STRATEGIST");
         title.setForeground(StrategistTheme.GOLD);
-        title.setFont(title.getFont().deriveFont(Font.BOLD, 15f));
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 17f));
         content.add(title);
-        content.add(Box.createVerticalStrut(3));
+        content.add(Box.createVerticalStrut(4));
 
         JLabel subtitle = mutedLabel("Adaptive progression planner");
-        subtitle.setFont(subtitle.getFont().deriveFont(12f));
+        subtitle.setFont(subtitle.getFont().deriveFont(MUTED_FONT_SIZE));
         content.add(subtitle);
-        content.add(Box.createVerticalStrut(10));
+        content.add(Box.createVerticalStrut(11));
 
         JPanel accountCard = cardPanel(false);
-        accountName.setFont(accountName.getFont().deriveFont(Font.BOLD, 13f));
+        accountName.setFont(accountName.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE));
         accountCard.add(accountName);
-        accountCard.add(Box.createVerticalStrut(4));
+        accountCard.add(Box.createVerticalStrut(5));
         accountCard.add(accountMeta);
         content.add(accountCard);
-        content.add(Box.createVerticalStrut(8));
+        content.add(Box.createVerticalStrut(9));
     }
 
     private void buildStrategyCard(JPanel content)
     {
         JPanel card = cardPanel(false);
         activeGoal.setForeground(StrategistTheme.GOLD);
-        activeGoal.setFont(activeGoal.getFont().deriveFont(Font.BOLD, 13f));
+        activeGoal.setFont(activeGoal.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE));
         card.add(eyebrow("STRATEGY"));
-        card.add(Box.createVerticalStrut(6));
+        card.add(Box.createVerticalStrut(7));
         card.add(activeGoal);
-        card.add(Box.createVerticalStrut(6));
+        card.add(Box.createVerticalStrut(7));
         card.add(strategySummary);
         content.add(card);
-        content.add(Box.createVerticalStrut(8));
+        content.add(Box.createVerticalStrut(9));
     }
 
     private void buildMilestoneBanner(JPanel content)
     {
         milestoneTitle.setForeground(StrategistTheme.SUCCESS);
-        milestoneTitle.setFont(milestoneTitle.getFont().deriveFont(Font.BOLD, 13f));
+        milestoneTitle.setFont(milestoneTitle.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE));
         milestoneBanner.add(milestoneTitle);
-        milestoneBanner.add(Box.createVerticalStrut(4));
+        milestoneBanner.add(Box.createVerticalStrut(5));
         milestoneBanner.add(milestoneBody);
         milestoneBanner.setVisible(false);
         content.add(milestoneBanner);
-        content.add(Box.createVerticalStrut(8));
+        content.add(Box.createVerticalStrut(9));
     }
 
     private void buildRecommendationCard(JPanel content)
     {
         content.add(eyebrow("DO NEXT"));
-        content.add(Box.createVerticalStrut(5));
+        content.add(Box.createVerticalStrut(6));
 
         JPanel identityRow = new JPanel(new BorderLayout(7, 0));
         identityRow.setOpaque(false);
         identityRow.setAlignmentX(LEFT_ALIGNMENT);
-        identityRow.setMaximumSize(new Dimension(INNER_WIDTH, 30));
+        identityRow.setMaximumSize(new Dimension(INNER_WIDTH, 34));
 
         recommendationIcon.setHorizontalAlignment(SwingConstants.CENTER);
         recommendationIcon.setVerticalAlignment(SwingConstants.CENTER);
-        recommendationIcon.setPreferredSize(new Dimension(24, 24));
+        recommendationIcon.setPreferredSize(new Dimension(26, 26));
         recommendationEyebrow.setFont(
-                recommendationEyebrow.getFont().deriveFont(Font.BOLD, 10f)
+                recommendationEyebrow.getFont().deriveFont(Font.BOLD, EYEBROW_FONT_SIZE)
         );
         identityRow.add(recommendationIcon, BorderLayout.WEST);
         identityRow.add(recommendationEyebrow, BorderLayout.CENTER);
 
         recommendationTitle.setFont(
-                recommendationTitle.getFont().deriveFont(Font.BOLD, 13f)
+                recommendationTitle.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE)
         );
         recommendationCard.add(identityRow);
-        recommendationCard.add(Box.createVerticalStrut(5));
+        recommendationCard.add(Box.createVerticalStrut(6));
         recommendationCard.add(recommendationTitle);
-        recommendationCard.add(Box.createVerticalStrut(8));
+        recommendationCard.add(Box.createVerticalStrut(9));
 
         progressBar.setAlignmentX(LEFT_ALIGNMENT);
-        progressBar.setPreferredSize(new Dimension(INNER_WIDTH, 7));
-        progressBar.setMaximumSize(new Dimension(INNER_WIDTH, 7));
-        progressBar.setMinimumSize(new Dimension(INNER_WIDTH, 7));
+        progressBar.setPreferredSize(new Dimension(INNER_WIDTH, 8));
+        progressBar.setMaximumSize(new Dimension(INNER_WIDTH, 8));
+        progressBar.setMinimumSize(new Dimension(INNER_WIDTH, 8));
         progressBar.setBorderPainted(false);
         progressBar.setStringPainted(false);
         progressBar.setBackground(StrategistTheme.DIVIDER);
         progressBar.setForeground(StrategistTheme.GOLD);
         recommendationCard.add(progressText);
-        recommendationCard.add(Box.createVerticalStrut(3));
+        recommendationCard.add(Box.createVerticalStrut(4));
         recommendationCard.add(progressBar);
-        recommendationCard.add(Box.createVerticalStrut(10));
-        recommendationCard.add(recommendationBody);
         recommendationCard.add(Box.createVerticalStrut(11));
+        recommendationCard.add(recommendationBody);
+        recommendationCard.add(Box.createVerticalStrut(12));
 
-        makeFullWidth(detailsButton, 30);
-        makeFullWidth(laterButton, 30);
-        makeFullWidth(notTodayButton, 30);
-        makeFullWidth(dislikeButton, 30);
+        makeFullWidth(detailsButton, 34);
+        makeFullWidth(laterButton, 34);
+        makeFullWidth(notTodayButton, 34);
+        makeFullWidth(dislikeButton, 34);
 
         recommendationCard.add(detailsButton);
-        recommendationCard.add(Box.createVerticalStrut(6));
-        recommendationCard.add(laterButton);
-        recommendationCard.add(Box.createVerticalStrut(5));
-        recommendationCard.add(notTodayButton);
-        recommendationCard.add(Box.createVerticalStrut(5));
-        recommendationCard.add(dislikeButton);
         recommendationCard.add(Box.createVerticalStrut(7));
+        recommendationCard.add(laterButton);
+        recommendationCard.add(Box.createVerticalStrut(6));
+        recommendationCard.add(notTodayButton);
+        recommendationCard.add(Box.createVerticalStrut(6));
+        recommendationCard.add(dislikeButton);
+        recommendationCard.add(Box.createVerticalStrut(8));
         recommendationCard.add(feedbackStatus);
 
         detailsButton.addActionListener(event -> toggleDetails());
@@ -211,25 +217,25 @@ public class OsrsStrategistPanel extends PluginPanel
         setRecommendationButtonsEnabled(false);
 
         content.add(recommendationCard);
-        content.add(Box.createVerticalStrut(10));
+        content.add(Box.createVerticalStrut(11));
     }
 
     private void buildSecondaryCards(JPanel content)
     {
         JPanel alternatives = cardPanel(false);
         alternatives.add(eyebrow("OTHER GOOD OPTIONS"));
-        alternatives.add(Box.createVerticalStrut(7));
-        alternatives.add(alternativeOne);
         alternatives.add(Box.createVerticalStrut(8));
+        alternatives.add(alternativeOne);
+        alternatives.add(Box.createVerticalStrut(9));
         alternatives.add(alternativeTwo);
         content.add(alternatives);
-        content.add(Box.createVerticalStrut(8));
+        content.add(Box.createVerticalStrut(9));
 
         JPanel opportunities = cardPanel(false);
         opportunities.add(eyebrow("OPPORTUNITIES"));
-        opportunities.add(Box.createVerticalStrut(7));
-        opportunities.add(opportunityOne);
         opportunities.add(Box.createVerticalStrut(8));
+        opportunities.add(opportunityOne);
+        opportunities.add(Box.createVerticalStrut(9));
         opportunities.add(opportunityTwo);
         content.add(opportunities);
     }
@@ -320,7 +326,7 @@ public class OsrsStrategistPanel extends PluginPanel
         if (skill != null)
         {
             recommendationEyebrow.setText(skill.getName().toUpperCase());
-            skillIconLoader.load(skill, recommendationIcon, 24);
+            skillIconLoader.load(skill, recommendationIcon, 26);
         }
         else
         {
@@ -486,8 +492,8 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JButton button = new JButton(text);
         button.setFocusable(false);
-        button.setFont(button.getFont().deriveFont(11f));
-        button.setMargin(new Insets(3, 5, 3, 5));
+        button.setFont(button.getFont().deriveFont(BUTTON_FONT_SIZE));
+        button.setMargin(new Insets(4, 6, 4, 6));
         button.setBackground(StrategistTheme.CARD_HOVER);
         button.setForeground(StrategistTheme.TEXT);
         return button;
@@ -512,7 +518,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JLabel label = mutedLabel(text);
         label.setForeground(StrategistTheme.GOLD_SOFT);
-        label.setFont(label.getFont().deriveFont(Font.BOLD, 10f));
+        label.setFont(label.getFont().deriveFont(Font.BOLD, EYEBROW_FONT_SIZE));
         return label;
     }
 
@@ -520,7 +526,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JLabel label = new JLabel(html(text));
         label.setForeground(StrategistTheme.TEXT);
-        label.setFont(label.getFont().deriveFont(12f));
+        label.setFont(label.getFont().deriveFont(BODY_FONT_SIZE));
         label.setAlignmentX(LEFT_ALIGNMENT);
         return label;
     }
@@ -529,6 +535,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JLabel label = label(text);
         label.setForeground(StrategistTheme.MUTED_TEXT);
+        label.setFont(label.getFont().deriveFont(MUTED_FONT_SIZE));
         return label;
     }
 
@@ -536,7 +543,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         JLabel label = new JLabel(text);
         label.setForeground(StrategistTheme.MUTED_TEXT);
-        label.setFont(label.getFont().deriveFont(11f));
+        label.setFont(label.getFont().deriveFont(MUTED_FONT_SIZE));
         label.setAlignmentX(LEFT_ALIGNMENT);
         return label;
     }
