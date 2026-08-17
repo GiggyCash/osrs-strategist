@@ -28,30 +28,33 @@ public final class ObservedItemIndex
         return quantity(names) > 0;
     }
 
+    /**
+     * Returns only items that can be treated as directly usable by the current
+     * recommendation. For UIM this intentionally excludes the normal bank,
+     * looting bag, death storage, and deathpiles.
+     */
     public int quantity(String... names)
     {
         if (data == null || names == null || names.length == 0) return 0;
         int total = 0;
-        total += quantityIn(data.getInventory() == null
-                ? null : data.getInventory().getItems(), names);
-        total += quantityIn(data.getEquipment() == null
-                ? null : data.getEquipment().getEquippedItems(), names);
+        total = safeAdd(total, quantityIn(data.getInventory() == null
+                ? null : data.getInventory().getItems(), names));
+        total = safeAdd(total, quantityIn(data.getEquipment() == null
+                ? null : data.getEquipment().getEquippedItems(), names));
 
-        AccountMode mode = data.getAccount() == null
-                ? AccountMode.UNKNOWN
-                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
-
+        AccountMode mode = accountMode();
         if (mode != AccountMode.ULTIMATE_IRONMAN)
         {
-            total += quantityIn(data.getBank() == null
-                    ? null : data.getBank().getItems(), names);
+            total = safeAdd(total, quantityIn(data.getBank() == null
+                    ? null : data.getBank().getItems(), names));
         }
 
         if (useGroupStorage && mode.isGroupIronman()
                 && data.getGroupStorage() != null
                 && data.getGroupStorage().isObserved())
         {
-            total += quantityIn(data.getGroupStorage().getItems(), names);
+            total = safeAdd(total,
+                    quantityIn(data.getGroupStorage().getItems(), names));
         }
 
         if (data.getStorage() != null)
@@ -61,33 +64,78 @@ public final class ObservedItemIndex
             {
                 StorageCapability capability = entry.getKey();
                 if (!data.getStorage().verified(capability)) continue;
-
                 if (mode == AccountMode.ULTIMATE_IRONMAN
-                        && (capability == StorageCapability.LOOTING_BAG
-                        || capability == StorageCapability.DEATH_STORAGE
-                        || capability == StorageCapability.DEATHPILE))
+                        && isRestrictedUimStorage(capability))
                 {
-                    // Those items may exist, but are not safely/directly usable
-                    // for a normal recommendation without a retrieval plan.
                     continue;
                 }
-                total += quantityIn(entry.getValue(), names);
+                total = safeAdd(total, quantityIn(entry.getValue(), names));
             }
         }
         return total;
     }
 
+    /**
+     * Returns observed UIM items that exist but should not silently satisfy a
+     * normal recommendation because accessing them requires a retrieval plan.
+     */
+    public int restrictedQuantity(String... names)
+    {
+        if (data == null || names == null || names.length == 0
+                || accountMode() != AccountMode.ULTIMATE_IRONMAN
+                || data.getStorage() == null)
+        {
+            return 0;
+        }
+
+        int total = 0;
+        for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+                : data.getStorage().getObservedContents().entrySet())
+        {
+            StorageCapability capability = entry.getKey();
+            if (!isRestrictedUimStorage(capability)
+                    || !data.getStorage().verified(capability))
+            {
+                continue;
+            }
+            total = safeAdd(total, quantityIn(entry.getValue(), names));
+        }
+        return total;
+    }
+
+    /** True only when one of the names is currently equipped. */
+    public boolean equipped(String... names)
+    {
+        return data != null
+                && data.getEquipment() != null
+                && quantityIn(data.getEquipment().getEquippedItems(), names) > 0;
+    }
+
     public boolean bankObserved()
     {
         if (data == null || data.getAccount() == null) return false;
-        AccountMode mode = AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
-        return mode == AccountMode.ULTIMATE_IRONMAN || data.getBank() != null;
+        return accountMode() == AccountMode.ULTIMATE_IRONMAN
+                || data.getBank() != null;
     }
 
     public boolean groupStorageObserved()
     {
         return data != null && data.getGroupStorage() != null
                 && data.getGroupStorage().isObserved();
+    }
+
+    private AccountMode accountMode()
+    {
+        return data == null || data.getAccount() == null
+                ? AccountMode.UNKNOWN
+                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
+    }
+
+    private static boolean isRestrictedUimStorage(StorageCapability capability)
+    {
+        return capability == StorageCapability.LOOTING_BAG
+                || capability == StorageCapability.DEATH_STORAGE
+                || capability == StorageCapability.DEATHPILE;
     }
 
     private static int quantityIn(
@@ -104,12 +152,18 @@ public final class ObservedItemIndex
             {
                 if (name != null && actual.equals(normalize(name)))
                 {
-                    total += Math.max(0, item.getQuantity());
+                    total = safeAdd(total, Math.max(0, item.getQuantity()));
                     break;
                 }
             }
         }
         return total;
+    }
+
+    private static int safeAdd(int a, int b)
+    {
+        if (a >= Integer.MAX_VALUE - b) return Integer.MAX_VALUE;
+        return a + b;
     }
 
     private static String normalize(String value)
