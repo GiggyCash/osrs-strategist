@@ -3,6 +3,8 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
@@ -16,7 +18,7 @@ public class RecommendationGuidanceService
     /**
      * The early fish route deliberately uses a conservative raw-fish buffer.
      * Burns are random, so Strategist plans enough supply to avoid sending the
-     * player back to the bank or Grand Exchange just short of a milestone.
+     * player back for supplies just short of a milestone.
      */
     private static final double LOW_LEVEL_BURN_BUFFER = 2.5;
 
@@ -28,12 +30,62 @@ public class RecommendationGuidanceService
             new CookingStage(25, 30, "salmon", "Raw salmon", 90)
     );
 
+    private final AdaptiveMilestoneGuidanceService adaptiveGuidance;
+
+    @Inject
+    public RecommendationGuidanceService(
+            AdaptiveMilestoneGuidanceService adaptiveGuidance)
+    {
+        this.adaptiveGuidance = adaptiveGuidance;
+    }
+
+    /** Compatibility constructor for focused tests and older callers. */
+    public RecommendationGuidanceService()
+    {
+        this(new AdaptiveMilestoneGuidanceService());
+    }
+
     public RecommendationGuidance build(
             StrategyDataBundle data,
             Skill skill,
             int currentLevel,
             int targetLevel,
             TrainingPlan trainingPlan)
+    {
+        return build(data, skill, currentLevel, targetLevel,
+                trainingPlan, true);
+    }
+
+    public RecommendationGuidance build(
+            StrategyDataBundle data,
+            Skill skill,
+            int currentLevel,
+            int targetLevel,
+            TrainingPlan trainingPlan,
+            boolean useGroupStorage)
+    {
+        RecommendationGuidance cooking = earlyCookingGuidance(
+                data, skill, currentLevel, targetLevel,
+                trainingPlan, useGroupStorage);
+        if (cooking != null)
+        {
+            return cooking;
+        }
+
+        return adaptiveGuidance == null
+                ? null
+                : adaptiveGuidance.build(
+                        data, skill, currentLevel, targetLevel,
+                        trainingPlan, useGroupStorage);
+    }
+
+    private RecommendationGuidance earlyCookingGuidance(
+            StrategyDataBundle data,
+            Skill skill,
+            int currentLevel,
+            int targetLevel,
+            TrainingPlan trainingPlan,
+            boolean useGroupStorage)
     {
         if (data == null
                 || data.getAccount() == null
@@ -45,9 +97,10 @@ public class RecommendationGuidanceService
             return null;
         }
 
-        // The first curated exact planner covers the full F2P fish route through
-        // level 30. Higher bands can use the same structure once their burn and
-        // location models are curated instead of falling back to guesses.
+        // This exact burn-aware route covers early F2P fish through level 30.
+        // Above 30, the generic deterministic-action planner or a later
+        // fish-specific burn table takes over instead of pretending burns are
+        // identical across every fish/range/level combination.
         if (currentLevel < 1 || currentLevel >= 30 || targetLevel > 30)
         {
             return null;
@@ -64,7 +117,8 @@ public class RecommendationGuidanceService
         }
 
         String action = actionGuidance(stages);
-        String supplies = supplyGuidance(data, data.getAccount(), stages);
+        String supplies = supplyGuidance(
+                data, data.getAccount(), stages, useGroupStorage);
         String location = locationGuidance(data.getQuests());
         String note = "Raw-fish totals include a conservative low-level burn "
                 + "buffer. Burns are random, so you may finish a stage with "
@@ -155,8 +209,51 @@ public class RecommendationGuidanceService
     private static String supplyGuidance(
             StrategyDataBundle data,
             AccountSnapshot account,
-            List<StagePlan> stages)
+            List<StagePlan> stages,
+            boolean useGroupStorage)
     {
+        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            List<String> ownedParts = new ArrayList<>();
+            List<String> missingParts = new ArrayList<>();
+            for (StagePlan stage : stages)
+            {
+                int inventory = quantityByName(
+                        data.getInventory() == null
+                                ? null : data.getInventory().getItems(),
+                        stage.stage.rawItemName);
+                int storage = quantityByNameSafeUimStorage(
+                        data.getStorage(), stage.stage.rawItemName);
+                int verified = inventory + storage;
+                int missing = Math.max(0, stage.rawNeeded - verified);
+                ownedParts.add(verified + " "
+                        + stage.stage.rawItemName.toLowerCase());
+                if (missing > 0)
+                {
+                    missingParts.add(missing + " "
+                            + stage.stage.rawItemName.toLowerCase());
+                }
+            }
+
+            StringBuilder text = new StringBuilder();
+            text.append("Plan for ").append(requiredSummary(stages))
+                    .append(". Directly usable UIM supply: ")
+                    .append(joinNatural(ownedParts)).append(".");
+            if (missingParts.isEmpty())
+            {
+                text.append(" You already have enough in inventory/verified safe storage.");
+            }
+            else
+            {
+                text.append(" Catch or otherwise acquire ")
+                        .append(joinNatural(missingParts))
+                        .append(" just in time. Normal bank state is ignored for UIM.");
+            }
+            return text.toString();
+        }
+
         if (data.getBank() == null)
         {
             return "Plan for " + requiredSummary(stages)
@@ -178,7 +275,16 @@ public class RecommendationGuidanceService
                     data.getBank().getItems(),
                     stage.stage.rawItemName
             );
-            int verified = bankQuantity + inventoryQuantity;
+            int groupQuantity = 0;
+            if (useGroupStorage && mode.isGroupIronman()
+                    && data.getGroupStorage() != null
+                    && data.getGroupStorage().isObserved())
+            {
+                groupQuantity = quantityByName(
+                        data.getGroupStorage().getItems(),
+                        stage.stage.rawItemName);
+            }
+            int verified = bankQuantity + inventoryQuantity + groupQuantity;
             int missing = Math.max(0, stage.rawNeeded - verified);
 
             ownedParts.add(
@@ -205,12 +311,19 @@ public class RecommendationGuidanceService
             return text.toString();
         }
 
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
         if (mode.usesGrandExchange())
         {
             text.append(" Buy ")
                     .append(joinNatural(missingParts))
                     .append(" at the Grand Exchange.");
+        }
+        else if (mode.isGroupIronman())
+        {
+            text.append(" Source ")
+                    .append(joinNatural(missingParts))
+                    .append(useGroupStorage
+                            ? " after checking usable Group Storage."
+                            : ".");
         }
         else
         {
@@ -263,6 +376,28 @@ public class RecommendationGuidanceService
             {
                 total += Math.max(0, item.getQuantity());
             }
+        }
+        return total;
+    }
+
+    private static int quantityByNameSafeUimStorage(
+            StorageSnapshot storage,
+            String expectedName)
+    {
+        if (storage == null || expectedName == null) return 0;
+        int total = 0;
+        for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+                : storage.getObservedContents().entrySet())
+        {
+            StorageCapability capability = entry.getKey();
+            if (!storage.verified(capability)
+                    || capability == StorageCapability.LOOTING_BAG
+                    || capability == StorageCapability.DEATH_STORAGE
+                    || capability == StorageCapability.DEATHPILE)
+            {
+                continue;
+            }
+            total += quantityByName(entry.getValue(), expectedName);
         }
         return total;
     }
