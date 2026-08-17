@@ -114,7 +114,37 @@ public class RecommendationEngine
                 allowWildernessMethods, preferenceProfile);
     }
 
+    /**
+     * Legacy/public compact recommendation view. The complete StrategyEngine
+     * must use recommendAll so unresolved high-scoring skills cannot hide a
+     * lower-scoring executable action before the actionability gate runs.
+     */
     public List<Recommendation> recommend(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            boolean useGroupStorage,
+            boolean allowWildernessMethods,
+            PreferenceProfile preferenceProfile)
+    {
+        return topThree(recommendAll(
+                data,
+                strategyMode,
+                sessionIntent,
+                useGroupStorage,
+                allowWildernessMethods,
+                preferenceProfile));
+    }
+
+    /**
+     * Full skill candidate pool for the global strategy queue.
+     *
+     * <p>Do not trim here. Actionability, quests, gear, minigames, detours, and
+     * other candidate families must all compete before the final three cards are
+     * chosen. Truncating skill recommendations early can otherwise produce an
+     * empty DO NEXT card even when a safe lower-scoring skill action exists.</p>
+     */
+    public List<Recommendation> recommendAll(
             StrategyDataBundle data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
@@ -125,6 +155,9 @@ public class RecommendationEngine
         List<Recommendation> recommendations = new ArrayList<>();
         if (data == null || data.getAccount() == null) return recommendations;
         AccountSnapshot snapshot = data.getAccount();
+        PreferenceProfile safePreferences = preferenceProfile == null
+                ? new PreferenceProfile()
+                : preferenceProfile;
 
         for (Skill skill : Skill.values())
         {
@@ -138,7 +171,7 @@ public class RecommendationEngine
             if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
 
             String activityId = "skill:" + skill.name().toLowerCase();
-            if (preferenceProfile.isOnCooldown(activityId)) continue;
+            if (safePreferences.isOnCooldown(activityId)) continue;
 
             TrainingPlan trainingPlan = trainingMethodSelector.select(
                     data, skill, level, strategyMode, sessionIntent,
@@ -150,8 +183,8 @@ public class RecommendationEngine
 
             int target = nextTarget(level);
             double score = baseScore(skill, level, strategyMode);
-            score += preferenceProfile.weightFor(activityId) * 10.0;
-            score += preferenceProfile.timedScoreAdjustmentFor(activityId);
+            score += safePreferences.weightFor(activityId) * 10.0;
+            score += safePreferences.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
             score += trainingPlan.getMethod().scoreFor(
                     strategyMode, sessionIntent) * 0.35;
@@ -207,11 +240,17 @@ public class RecommendationEngine
 
         recommendations.sort(Comparator.comparingDouble(
                 Recommendation::getScore).reversed());
-        if (recommendations.size() > 3)
-        {
-            return new ArrayList<>(recommendations.subList(0, 3));
-        }
         return recommendations;
+    }
+
+    private static List<Recommendation> topThree(
+            List<Recommendation> recommendations)
+    {
+        if (recommendations == null || recommendations.isEmpty())
+            return new ArrayList<>();
+        if (recommendations.size() <= 3)
+            return new ArrayList<>(recommendations);
+        return new ArrayList<>(recommendations.subList(0, 3));
     }
 
     private double baseScore(Skill skill, int level, StrategyMode strategyMode)
