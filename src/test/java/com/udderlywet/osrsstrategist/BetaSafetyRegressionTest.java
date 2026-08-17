@@ -1,6 +1,5 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -102,9 +101,8 @@ public class BetaSafetyRegressionTest
         assertTrue(policy.canLeadQueue(ready));
         assertFalse(policy.canLeadQueue(unresolvedQuest));
 
-        List<Recommendation> pool = Arrays.asList(
-                unresolvedQuest, ready);
-        List<Recommendation> queue = buildQueue(pool, policy);
+        List<Recommendation> queue = queue(
+                Arrays.asList(unresolvedQuest, ready), policy);
 
         assertEquals(2, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
@@ -119,7 +117,7 @@ public class BetaSafetyRegressionTest
                 "Quest: Unknown",
                 "Requirements are not verified.",
                 500.0);
-        List<Recommendation> queue = buildQueue(
+        List<Recommendation> queue = queue(
                 Collections.singletonList(unresolved),
                 new RecommendationActionabilityPolicy());
         assertTrue(queue.isEmpty());
@@ -199,25 +197,13 @@ public class BetaSafetyRegressionTest
                 new ObservedItemIndex(data, true).quantity("Yew logs"));
     }
 
-    private static List<Recommendation> buildQueue(
+    private static List<Recommendation> queue(
             List<Recommendation> pool,
             RecommendationActionabilityPolicy policy)
     {
-        List<Recommendation> ready = new ArrayList<>();
-        List<Recommendation> secondary = new ArrayList<>();
-        for (Recommendation recommendation : pool)
-        {
-            if (!policy.mayAppearAsAlternative(recommendation)) continue;
-            if (policy.canLeadQueue(recommendation)) ready.add(recommendation);
-            else secondary.add(recommendation);
-        }
-        ready.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
-        secondary.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
-        if (ready.isEmpty()) return Collections.emptyList();
-        List<Recommendation> result = new ArrayList<>();
-        result.addAll(ready);
-        result.addAll(secondary);
-        return result;
+        StrategyEngine engine = new StrategyEngine(
+                null, null, null, null, policy);
+        return engine.buildPlayerQueue(pool);
     }
 
     private static TrainingMethod method(
