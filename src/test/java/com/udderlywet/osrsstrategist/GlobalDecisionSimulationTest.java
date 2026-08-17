@@ -60,8 +60,14 @@ public class GlobalDecisionSimulationTest
                 "skill:mining", -18.0, 60L * 60L * 1000L);
         StrategyContext context = context(account(0), GoalType.MAX,
                 preferences, StorageSnapshot.unknown());
+
+        // The real RecommendationEngine applies this temporary adjustment while
+        // producing the skill candidate. The global intelligence layer must not
+        // apply it again.
+        double miningScore = 50.0
+                + preferences.timedScoreAdjustmentFor("skill:mining");
         Recommendation mining = skill("skill:mining", Skill.MINING,
-                "Train Mining", 50.0, 70, 80, 2);
+                "Train Mining", miningScore, 70, 80, 2);
         Recommendation fishing = skill("skill:fishing", Skill.FISHING,
                 "Train Fishing", 45.0, 70, 80, 2);
 
