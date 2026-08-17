@@ -5,8 +5,9 @@ import java.util.Set;
 import net.runelite.api.Skill;
 
 /**
- * Membership-level content gates that can be evaluated before deeper account
- * capability checks. Method-specific requirements still run after this layer.
+ * Membership-level content gates that run before deeper account capability
+ * checks. Unknown membership fails closed to F2P-safe content instead of
+ * temporarily leaking members-only recommendations into the queue.
  */
 public final class ContentAccessRules
 {
@@ -28,18 +29,22 @@ public final class ContentAccessRules
             Skill.WOODCUTTING
     );
 
-    /**
-     * Existing catalog methods that live behind membership even though their
-     * parent skill is available in F2P. New catalog entries should prefer the
-     * TrainingMethod.membersOnly flag instead of extending this compatibility
-     * set indefinitely.
-     */
     private static final Set<String> MEMBERS_ONLY_METHOD_IDS = Set.of(
             "runecraft_gotr",
             "mining_mlm",
             "smithing_foundry",
+            "smithing_giants_foundry",
             "fishing_tempoross",
-            "firemaking_wintertodt"
+            "firemaking_wintertodt",
+            "construction_homes",
+            "construction_mahogany_homes",
+            "herblore_mixology",
+            "farming_tithe",
+            "hunter_rumours",
+            "hunter_herbiboar",
+            "woodcutting_forestry",
+            "thieving_pyramid",
+            "thieving_varlamore"
     );
 
     private ContentAccessRules()
@@ -50,41 +55,33 @@ public final class ContentAccessRules
             Skill skill,
             MembershipStatus membershipStatus)
     {
-        if (skill == null)
-        {
-            return false;
-        }
+        if (skill == null) return false;
+        if (membershipStatus == MembershipStatus.P2P) return true;
 
-        if (membershipStatus == MembershipStatus.F2P)
-        {
-            return FREE_TO_PLAY_SKILLS.contains(skill);
-        }
-
-        // P2P gets the complete skill set. UNKNOWN is intentionally permissive
-        // so a transient read failure does not erase the recommendation queue.
-        return true;
+        // F2P and UNKNOWN both use the F2P skill boundary. UNKNOWN is treated
+        // conservatively until RuneLite gives Strategist verified membership.
+        return FREE_TO_PLAY_SKILLS.contains(skill);
     }
 
     public static boolean isMethodAvailable(
             TrainingMethod method,
             MembershipStatus membershipStatus)
     {
-        if (method == null)
+        if (method == null || !isSkillAvailable(method.getSkill(), membershipStatus))
         {
             return false;
         }
+        if (membershipStatus == MembershipStatus.P2P) return true;
 
-        if (!isSkillAvailable(method.getSkill(), membershipStatus))
-        {
-            return false;
-        }
-
-        if (membershipStatus != MembershipStatus.F2P)
-        {
-            return true;
-        }
-
+        // F2P and UNKNOWN are intentionally identical here. A transient access
+        // read may temporarily narrow a member to safe F2P routes, but can never
+        // expose a members-only route to an F2P account.
         return !method.isMembersOnly()
                 && !MEMBERS_ONLY_METHOD_IDS.contains(method.getId());
+    }
+
+    public static boolean isFreeToPlaySkill(Skill skill)
+    {
+        return skill != null && FREE_TO_PLAY_SKILLS.contains(skill);
     }
 }
