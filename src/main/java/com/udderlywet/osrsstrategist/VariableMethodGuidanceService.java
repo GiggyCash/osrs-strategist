@@ -5,12 +5,9 @@ import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 
 /**
- * Concrete setup guidance for good methods whose XP per game/task is variable.
- *
- * <p>These methods should still remove setup guesswork, but they must not show a
- * fabricated number of games, contracts, kills, or rewards. Exact XP remaining
- * is always shown and the plugin explains what live state is still needed before
- * a repeat count can be trustworthy.</p>
+ * Concrete setup guidance for useful methods whose XP per game/task is variable.
+ * Exact XP remaining is preserved, but variable games/contracts/catches are never
+ * converted into fake repeat counts.
  */
 @Singleton
 public class VariableMethodGuidanceService
@@ -23,7 +20,7 @@ public class VariableMethodGuidanceService
             TrainingPlan plan,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.getAccount() == null || skill == null
                 || plan == null || plan.getMethod() == null)
         {
             return null;
@@ -38,208 +35,230 @@ public class VariableMethodGuidanceService
 
         switch (id)
         {
-            case "firemaking_wintertodt":
-                return wintertodt(data, targetLevel, xpNeeded, items);
-            case "fishing_tempoross":
-                return tempoross(targetLevel, xpNeeded, items);
-            case "runecraft_gotr":
-                return gotr(data, targetLevel, xpNeeded, items);
-            case "mining_mlm":
-                return motherlode(targetLevel, xpNeeded, items);
-            case "mining_stars":
-                return shootingStars(targetLevel, xpNeeded, items);
-            case "mining_volcanic":
-                return volcanicMine(data, targetLevel, xpNeeded, items);
-            case "mining_blast_mine":
-                return blastMine(targetLevel, xpNeeded, items);
+            case "firemaking_wintertodt": return wintertodt(targetLevel, xpNeeded, items);
+            case "fishing_tempoross": return tempoross(targetLevel, xpNeeded, items);
+            case "runecraft_gotr": return gotr(targetLevel, xpNeeded, items);
+            case "runecraft_zmi": return zmi(targetLevel, xpNeeded, items);
+            case "mining_mlm": return motherlode(targetLevel, xpNeeded, items);
+            case "mining_stars": return shootingStars(targetLevel, xpNeeded, items);
+            case "mining_volcanic": return volcanicMine(targetLevel, xpNeeded, items);
+            case "mining_blast_mine": return blastMine(targetLevel, xpNeeded, items);
             case "smithing_foundry":
-                return giantsFoundry(data, targetLevel, xpNeeded, items);
+            case "smithing_giants_foundry": return giantsFoundry(targetLevel, xpNeeded, items);
             case "construction_homes":
-                return mahoganyHomes(data, targetLevel, xpNeeded, items);
-            case "herblore_mixology":
-                return mixology(targetLevel, xpNeeded, items);
-            case "farming_tithe":
-                return titheFarm(targetLevel, xpNeeded, items);
-            case "hunter_rumours":
-                return hunterRumours(targetLevel, xpNeeded, items);
-            default:
-                return null;
+            case "construction_mahogany_homes": return mahoganyHomes(targetLevel, xpNeeded, items);
+            case "herblore_mixology": return mixology(targetLevel, xpNeeded, items);
+            case "farming_tithe": return titheFarm(targetLevel, xpNeeded, items);
+            case "farming_allotments_expanded": return farmingAllotments(data, targetLevel, xpNeeded, items);
+            case "farming_herbs_expanded": return farmingHerbs(data, targetLevel, xpNeeded, items);
+            case "farming_contracts": return farmingContracts(data, targetLevel, xpNeeded, items);
+            case "hunter_rumours": return hunterRumours(targetLevel, xpNeeded, items);
+            case "hunter_herbiboar": return herbiboar(targetLevel, xpNeeded, items);
+            case "woodcutting_forestry": return forestry(targetLevel, xpNeeded, items);
+            case "thieving_pyramid": return pyramidPlunder(targetLevel, xpNeeded, items);
+            case "thieving_varlamore": return varlamoreThieving(targetLevel, xpNeeded, items);
+            default: return null;
         }
     }
 
-    private static RecommendationGuidance wintertodt(
-            StrategyDataBundle data,
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance wintertodt(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Run Wintertodt rounds and reach at least 500 personal points before each kill so the round qualifies for reward rolls. You need "
-                + format(xpNeeded) + " Firemaking XP to level " + target + ".";
-        String supplies = "Equip four warm items, bring a knife and hammer, and bring food appropriate to your Hitpoints level. "
-                + observed(items, "Bruma torch", "Warm gloves", "Pyromancer hood",
-                "Pyromancer garb", "Pyromancer robe", "Pyromancer boots");
-        String where = "Use the Wintertodt camp in northern Great Kourend. Chop bruma roots, feed braziers, repair broken braziers, and fletch roots when the extra points/supply-roll value is worth the slower raw Firemaking XP.";
-        String note = "Round length, interruptions, fletching choice, and your Firemaking/Woodcutting levels change XP per game. Strategist keeps exact XP remaining but will not invent a fixed number of Wintertodt kills.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Run Wintertodt rounds and reach at least 500 personal points before each kill. You need " + format(xp) + " Firemaking XP to level " + target + ".",
+                "Equip four warm items, bring a knife and hammer, and use food appropriate to your Hitpoints level. " + observed(items, "Bruma torch", "Warm gloves", "Pyromancer hood", "Pyromancer garb", "Pyromancer robe", "Pyromancer boots"),
+                "Use the Wintertodt camp in northern Great Kourend. Chop bruma roots, feed braziers, repair broken braziers, and fletch only when extra points/reward value is worth lower raw Firemaking XP.",
+                "Round length, interruptions, fletching, and player levels change XP per game. Strategist keeps exact XP remaining and does not invent a fixed kill count."
+        );
     }
 
-    private static RecommendationGuidance tempoross(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance tempoross(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Complete Tempoross games while keeping your activity high enough to earn reward permits. You need "
-                + format(xpNeeded) + " Fishing XP to level " + target + ".";
-        String supplies = "Bring your best usable harpoon if you own one; otherwise use the island's tools. A rope, hammer, and buckets are available on the island, so do not fill the bank plan with unnecessary duplicates. "
-                + observed(items, "Dragon harpoon", "Crystal harpoon", "Infernal harpoon", "Harpoon");
-        String where = "Board the boat from the Tempoross lobby, fish harpoonfish, cook them when the chosen strategy values points/rewards, load cannons, and tether during waves.";
-        String note = "Cooking fish, team size, storm timing, and reward-point strategy change Fishing XP per game. The planner therefore shows exact XP remaining but not a fake number of games.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Complete Tempoross games while maintaining enough activity for reward permits. You need " + format(xp) + " Fishing XP to level " + target + ".",
+                "Bring your best usable harpoon if owned; island tools cover the fallback. Rope, hammer, and buckets are available on the island. " + observed(items, "Dragon harpoon", "Crystal harpoon", "Infernal harpoon", "Harpoon"),
+                "Fish harpoonfish, cook them when points/rewards matter, load cannons, and tether during waves.",
+                "Cooking choice, team size, storm timing, and reward strategy change Fishing XP per game, so no fake game count is shown."
+        );
     }
 
-    private static RecommendationGuidance gotr(
-            StrategyDataBundle data,
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance gotr(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Play Guardians of the Rift and balance elemental/catalytic energy while using the best essence-storage setup your account has unlocked. You need "
-                + format(xpNeeded) + " Runecraft XP to level " + target + ".";
-        String supplies = "Bring a pickaxe and chisel. Bring every essence pouch you can use safely; repair/degradation handling depends on your current pouch/quest access. "
-                + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Abyssal lantern");
-        String where = "Enter the Temple of the Eye minigame area, mine guardian fragments, craft essence, use opened altars, and place cells where they protect/upgrade guardians.";
-        String note = "Portal timing, altar choices, pouch capacity, cells, and match outcome change XP per game. Strategist will not convert the milestone into a fixed match count until those live factors are modeled.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Play Guardians of the Rift and balance elemental and catalytic energy until you gain " + format(xp) + " Runecraft XP toward level " + target + ".",
+                "Bring a pickaxe, chisel, and every essence pouch your account can safely use. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Abyssal lantern"),
+                "Mine fragments, craft guardian essence, use opened altars, and place cells where they protect or upgrade guardians.",
+                "Portal timing, altar choices, pouch capacity, and match outcome change XP per game. The planner therefore reports the exact XP gap, not a fabricated match count."
+        );
     }
 
-    private static RecommendationGuidance motherlode(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance zmi(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Mine pay-dirt at Motherlode Mine until you gain "
-                + format(xpNeeded) + " Mining XP toward level " + target
-                + ", banking the ores and spending golden nuggets on permanent unlocks before cosmetic detours.";
-        String supplies = "Bring your best usable pickaxe. "
-                + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Infernal pickaxe", "Rune pickaxe", "Prospector helmet", "Prospector jacket", "Prospector legs", "Prospector boots");
-        String where = "Use the lower level until the upper-area requirement is met and purchased, then favor the upper veins for longer depletion timers and lower attention.";
-        String note = "Pay-dirt ore results and vein uptime vary, so XP per sack is not fixed. Golden nuggets are separate progression currency; Strategist should preserve goals such as Prospector/upper level instead of rotating away on a level milestone.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Run Ourania Altar trips until you gain " + format(xp) + " Runecraft XP toward level " + target + ". Fill every usable essence pouch before each trip.",
+                "Bring pure essence, usable essence pouches, and your preferred banking/teleport setup. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Ourania teleport"),
+                "Bank near the Ourania entrance, follow the safe altar path, craft the mixed rune result, then repeat with full pouches.",
+                "Ourania produces a mix of runes and XP per essence depends on the result distribution and account level. Strategist will not turn the XP gap into a fake fixed essence count."
+        );
     }
 
-    private static RecommendationGuidance shootingStars(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance motherlode(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Mine a reachable Shooting Star with your best pickaxe until it depletes or you gain "
-                + format(xpNeeded) + " Mining XP toward level " + target + ".";
-        String supplies = "Only a usable pickaxe is required. Keep stardust instead of dropping it when Celestial ring/charge rewards still matter. "
-                + observed(items, "Celestial ring", "Celestial signet", "Dragon pickaxe", "Rune pickaxe");
-        String where = "Use a discovered star location that your account can reach without breaking Wilderness/risk settings.";
-        String note = "Star tier changes during depletion and affects XP, so an exact swing count would be false precision. Shooting Stars are primarily the low-attention Mining option.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Mine pay-dirt at Motherlode Mine until you gain " + format(xp) + " Mining XP toward level " + target + ", banking ores and preserving golden nuggets for useful unlocks.",
+                "Bring your best usable pickaxe. " + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Infernal pickaxe", "Rune pickaxe", "Prospector helmet", "Prospector jacket", "Prospector legs", "Prospector boots"),
+                "Use the lower level until upper-level access is available, then prefer upper veins for longer depletion timers and lower attention.",
+                "Vein uptime and pay-dirt flow vary. Golden-nugget goals such as Prospector or upper-level access can remain protected beyond an arbitrary level milestone."
+        );
     }
 
-    private static RecommendationGuidance volcanicMine(
-            StrategyDataBundle data,
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance shootingStars(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Run Volcanic Mine with a verified team/role until you gain "
-                + format(xpNeeded) + " Mining XP toward level " + target + ".";
-        String supplies = "Bring your best pickaxe and the food/stamina setup required by your team's role. "
-                + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Rune pickaxe");
-        String where = "Use the Volcanic Mine on Fossil Island only after its access requirements and your intended team/role are verified.";
-        String note = "Vent state, team role, boulder phase, and points change XP per game. The plugin deliberately refuses to fabricate a game count.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Mine a reachable Shooting Star until it depletes or you gain " + format(xp) + " Mining XP toward level " + target + ".",
+                "Only a usable pickaxe is required. Keep stardust when Celestial ring or charge rewards still matter. " + observed(items, "Celestial ring", "Celestial signet", "Dragon pickaxe", "Rune pickaxe"),
+                "Use a discovered star location that respects the account's membership, access, and Wilderness-risk settings.",
+                "Star tier changes while mining and affects XP. Exact swing counts would be false precision; this is primarily the low-attention Mining option."
+        );
     }
 
-    private static RecommendationGuidance blastMine(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance volcanicMine(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Mine blasted ore at Blast Mine until you gain "
-                + format(xpNeeded) + " Mining XP toward level " + target + ".";
-        String supplies = "Bring dynamite and your best usable pickaxe. Exact dynamite usage depends on the number of wall sections you choose to blast. "
-                + observed(items, "Dynamite", "Dragon pickaxe", "Rune pickaxe");
-        String where = "Use Blast Mine in Lovakengj and keep a safe blast rhythm: place dynamite, light it, move clear, excavate the blasted rock, then collect ore.";
-        String note = "Ore tier depends partly on Mining level and the loop's timing, so Strategist keeps exact XP remaining without claiming a universal dynamite-to-level count.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Run Volcanic Mine with a verified team and role until you gain " + format(xp) + " Mining XP toward level " + target + ".",
+                "Bring your best pickaxe plus food and stamina support required by the team's role. " + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Rune pickaxe"),
+                "Use Volcanic Mine only after its access requirements and intended team role are verified.",
+                "Vent state, role, boulder phase, and points change XP per game. Strategist deliberately refuses to fabricate a game count."
+        );
     }
 
-    private static RecommendationGuidance giantsFoundry(
-            StrategyDataBundle data,
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance blastMine(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Take a Giants' Foundry commission and forge the best commission-compatible alloy you can sustain until you gain "
-                + format(xpNeeded) + " Smithing XP toward level " + target + ".";
-        String supplies = "Each commissioned sword consumes 28 bars' worth of metal. Prefer banked metal on Iron-style accounts and avoid destroying items reserved for quests/upgrades. "
-                + observed(items, "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar");
-        String where = "At Giants' Foundry, choose the best owned moulds for the commission, pour the 28-bar alloy, then work the sword through heat/cool/hammer/grind/polish stations while staying in each target temperature band.";
-        String note = "Sword quality, mould score, alloy, mistakes, and commission all change XP per sword. Strategist can calculate exact bar shortfalls per chosen commission later, but it will not pretend every sword gives the same XP.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Mine blasted ore until you gain " + format(xp) + " Mining XP toward level " + target + ". Keep a consistent place, light, move, excavate, collect rhythm.",
+                "Bring dynamite and your best usable pickaxe. " + observed(items, "Dynamite", "Dragon pickaxe", "Rune pickaxe"),
+                "Use Blast Mine in Lovakengj and maintain safe distance from lit dynamite.",
+                "Ore tier and timing affect XP and dynamite use, so the plugin keeps the exact XP gap without claiming a universal dynamite count."
+        );
     }
 
-    private static RecommendationGuidance mahoganyHomes(
-            StrategyDataBundle data,
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance giantsFoundry(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Take the highest Mahogany Homes contract tier your Construction level and plank supply can sustain, then complete contracts until you gain "
-                + format(xpNeeded) + " Construction XP toward level " + target + ".";
-        String supplies = "Bring a hammer, saw, teleports for contract cities, and the matching plank tier. A plank sack should be used when owned. "
-                + observed(items, "Plank sack", "Oak plank", "Teak plank", "Mahogany plank", "Steel bar");
-        String where = "Get a contract from a Mahogany Homes contractor, travel to the named client, repair every marked hotspot, then return for the next contract/reward points.";
-        String note = "Furniture mix varies by client, so plank/steel-bar use and XP vary per contract. Exact material advice should be generated after the live contract/client is known.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Take a Giants' Foundry commission and use the best commission-compatible alloy your account can sustain until you gain " + format(xp) + " Smithing XP toward level " + target + ".",
+                "Each commissioned sword consumes 28 bars' worth of metal. Prefer banked metal on Iron-style accounts and preserve quest or upgrade items. " + observed(items, "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
+                "Choose the best owned moulds for the commission, pour the 28-bar alloy, then work the sword through each temperature station while staying inside the target band.",
+                "Mould score, alloy, commission, and mistakes change XP per sword. Strategist can state the 28-bar input rule without inventing a sword count to the level."
+        );
     }
 
-    private static RecommendationGuidance mixology(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance mahoganyHomes(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Fill Mastering Mixology orders from the current order list until you gain "
-                + format(xpNeeded) + " Herblore XP toward level " + target + ".";
-        String supplies = "Convert spare eligible herbs into the three paste types, but preserve herbs needed for higher-value combat potions before turning the whole bank into paste. "
-                + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed");
-        String where = "At the Alchemical Society, mix the ordered potion, use the correct processing station, and hand it in before selecting the next order.";
-        String note = "Orders and paste combinations change from potion to potion, so exact paste-to-level counts require the live order state. Strategist should optimize banked herbs and reward goals instead of inventing a constant XP/order.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Take the highest Mahogany Homes contract tier your level and plank supply can sustain, then complete contracts until you gain " + format(xp) + " Construction XP toward level " + target + ".",
+                "Bring a hammer, saw, contract-city teleports, and the matching plank tier. Use a plank sack when owned. " + observed(items, "Plank sack", "Oak plank", "Teak plank", "Mahogany plank", "Steel bar"),
+                "Get a contract, travel to the named client, repair every marked hotspot, then take the next contract.",
+                "Furniture mix varies by client, so exact planks and XP per contract require the live contract state. No universal contract count is fabricated."
+        );
     }
 
-    private static RecommendationGuidance titheFarm(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance mixology(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Run Tithe Farm with the highest fruit seed tier unlocked and a plot count you can water without losing plants. You need "
-                + format(xpNeeded) + " Farming XP to level " + target + ".";
-        String supplies = "Bring a spade and watering cans. Use Gricoller's can when owned because its large capacity cuts refill downtime. "
-                + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots");
-        String where = "Plant, water every growth cycle, harvest the fruit, and deposit it for points before the batch expires.";
-        String note = "The number of simultaneous plants and missed growth cycles changes XP/hour. Reward goals such as the seed box/can/outfit should be preserved as progression objectives instead of being abandoned at an arbitrary Farming level.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Fill Mastering Mixology orders until you gain " + format(xp) + " Herblore XP toward level " + target + ". Prioritize orders that support the reward goal you are currently protecting.",
+                "Convert spare eligible herbs into paste while preserving herbs needed for higher-value combat potions. " + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed"),
+                "At the Alchemical Society, mix the ordered potion, use its correct processing station, then hand it in before choosing the next order.",
+                "Order combinations change continuously. Exact paste-to-level counts require live order state, so Strategist does not assume constant XP per order."
+        );
     }
 
-    private static RecommendationGuidance hunterRumours(
-            int target,
-            int xpNeeded,
-            ObservedItemIndex items)
+    private static RecommendationGuidance titheFarm(int target, int xp, ObservedItemIndex items)
     {
-        String action = "Take the highest Hunter Rumour tier you can access and complete the assigned creature until you gain "
-                + format(xpNeeded) + " Hunter XP toward level " + target + ".";
-        String supplies = "Bring the trap/tool required by the assigned creature and your hunter's whistle when available. Do not pre-pack one generic trap loadout before the creature is known. "
-                + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle");
-        String where = "Get the rumour from the Hunter Guild, travel to the assigned creature, obtain its rare piece, then return it for the reward sack and next assignment.";
-        String note = "Creature assignment and rare-part RNG change XP per rumour. Once Strategist can observe the current rumour directly, this planner can switch from generic setup to creature-specific traps, route, and inventory.";
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new RecommendationGuidance(
+                "Run Tithe Farm with the highest fruit seed tier unlocked and a plot count you can water reliably. You need " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring a spade and watering cans. Use Gricoller's can when owned. " + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
+                "Plant, water every growth cycle, harvest the fruit, and deposit it for points before the batch expires.",
+                "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint."
+        );
+    }
+
+    private static RecommendationGuidance farmingAllotments(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Run every verified reachable allotment patch that is ready, then replant using the best useful seed supply. You need " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring a rake, seed dibber, spade, compost plan, and the selected allotment seeds. " + observed(items, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
+                "Use Strategist's Farming checklist for patches it has actually observed instead of assuming every unlocked patch is currently empty or ready.",
+                "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
+        );
+    }
+
+    private static RecommendationGuidance farmingHerbs(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Harvest and replant every verified herb patch that is ready, using the herb seed with the best current account value. You need " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring a seed dibber, spade, compost plan, herb seeds, and patch teleports. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+                "Follow the live Farming checklist so dead, diseased, growing, and ready patches are handled differently instead of blindly running a fixed route.",
+                "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP. Strategist therefore optimizes the run rather than fabricating an exact seed count."
+        );
+    }
+
+    private static RecommendationGuidance farmingContracts(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Complete the current Farming Guild contract when its crop is ready, then take the highest practical contract tier. Farming still needs " + format(xp) + " XP to level " + target + ".",
+                "Keep common contract seeds and planting tools available when storage allows. " + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
+                "Use the Farming Guild contract area. Pre-plant only crops that do not block a more valuable active Farming objective.",
+                "Contracts are primarily a seed-supply progression loop, not constant XP per contract. They should be surfaced as a detour when the seed value outweighs continuous training."
+        );
+    }
+
+    private static RecommendationGuidance hunterRumours(int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Take the highest Hunter Rumour tier you can access and complete the assigned creature until you gain " + format(xp) + " Hunter XP toward level " + target + ".",
+                "Bring the trap or tool required by the assigned creature and your hunter's whistle when available. " + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
+                "Get the rumour at the Hunter Guild, travel to the assigned creature, obtain its rare piece, then return it for the reward sack and next assignment.",
+                "Assignment and rare-part RNG change XP per rumour. Creature-specific loadouts should replace this generic setup once the current rumour can be observed directly."
+        );
+    }
+
+    private static RecommendationGuidance herbiboar(int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Track and harvest herbiboars until you gain " + format(xp) + " Hunter XP toward level " + target + ". Bank or process herbs according to the account's Herblore needs.",
+                "Bring a herb sack when owned, plus stamina or graceful-style movement support if useful. " + observed(items, "Herb sack", "Magic secateurs", "Graceful hood", "Graceful top", "Graceful legs", "Graceful boots"),
+                "Follow herbiboar tracks around Fossil Island and inspect the final burrow before beginning the next trail.",
+                "Track length and herb rewards vary. Iron accounts gain extra value from herbs, so Strategist can prefer this over higher raw Hunter XP when Herblore supply is scarce."
+        );
+    }
+
+    private static RecommendationGuidance forestry(int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Cut the best reachable Forestry-enabled tree and participate in nearby events when they appear until you gain " + format(xp) + " Woodcutting XP toward level " + target + ".",
+                "Bring your best usable axe and Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
+                "Choose a populated Forestry tree area that fits the selected tree tier and access state. Stay with the tree group so event downtime does not become wasted travel.",
+                "Event frequency and event type vary, so exact event counts are not meaningful. The planner treats Forestry as varied Woodcutting plus reward progression."
+        );
+    }
+
+    private static RecommendationGuidance pyramidPlunder(int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Run Pyramid Plunder and spend most of the timer in the highest rooms you can access until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
+                "Bring food or healing, antipoison if your route needs it, and free inventory space for loot. " + observed(items, "Pharaoh's sceptre", "Dodgy necklace", "Antipoison(4)", "Superantipoison(4)"),
+                "Enter Pyramid Plunder in Sophanem, move quickly through low-value rooms, and prioritize urns/chests in your highest available room according to the chosen sceptre-versus-XP goal.",
+                "Room access, failed traps, chest/sarcophagus choices, and sceptre hunting change XP per run. Strategist therefore does not invent a run count."
+        );
+    }
+
+    private static RecommendationGuidance varlamoreThieving(int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Use the unlocked Varlamore citizen and house-robbery loop until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
+                "Bring only the healing and teleport support needed for the chosen loop; keep enough inventory room for valuables. " + observed(items, "Dodgy necklace", "Rogue top", "Rogue trousers", "Rogue gloves", "Rogue boots"),
+                "Use the Varlamore Thieving area unlocked by your current quest/access state and stay on the low-friction loop rather than mixing in unrelated travel.",
+                "House availability and loop timing vary, so Strategist preserves exact XP remaining without claiming a fixed number of robberies."
+        );
     }
 
     private static String observed(ObservedItemIndex items, String... names)
