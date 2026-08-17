@@ -6,6 +6,9 @@ import java.util.List;
 /** Converts a recommendation into concise sidebar copy and full detail copy. */
 public final class RecommendationPresentation
 {
+    private static final int COMPACT_ACTION_CHARS = 190;
+    private static final int COMPACT_SUPPLIES_CHARS = 150;
+
     private RecommendationPresentation() {}
 
     public static String compactHtml(Recommendation recommendation)
@@ -145,7 +148,8 @@ public final class RecommendationPresentation
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append(escape(recommendation.getReason()));
+            text.append(escape(compactSentence(
+                    recommendation.getReason(), COMPACT_ACTION_CHARS)));
         }
     }
 
@@ -190,14 +194,18 @@ public final class RecommendationPresentation
         {
             appendBreak(text, 2);
             text.append("<b>DO THIS</b><br>")
-                    .append(escape(guidance.getAction()));
+                    .append(escape(includeLocationAndNote
+                            ? guidance.getAction()
+                            : compactSentence(guidance.getAction(), COMPACT_ACTION_CHARS)));
         }
 
         if (hasText(guidance.getSupplies()))
         {
             appendBreak(text, 2);
             text.append("<b>SUPPLIES</b><br>")
-                    .append(escape(guidance.getSupplies()));
+                    .append(escape(includeLocationAndNote
+                            ? guidance.getSupplies()
+                            : compactSentence(guidance.getSupplies(), COMPACT_SUPPLIES_CHARS)));
         }
 
         if (!includeLocationAndNote) return;
@@ -217,6 +225,28 @@ public final class RecommendationPresentation
         }
     }
 
+    /**
+     * Keep the sidebar useful without letting a detailed planner paragraph turn
+     * into a wall of text. Details retains the complete original string.
+     */
+    static String compactSentence(String value, int maxChars)
+    {
+        if (!hasText(value)) return "";
+        String normalized = value.trim().replaceAll("\\s+", " ");
+        if (normalized.length() <= maxChars) return normalized;
+
+        int sentence = normalized.indexOf(". ");
+        if (sentence > 20 && sentence + 1 <= maxChars)
+        {
+            return normalized.substring(0, sentence + 1);
+        }
+
+        int cut = Math.min(maxChars, normalized.length());
+        int word = normalized.lastIndexOf(' ', cut);
+        if (word >= Math.max(20, maxChars / 2)) cut = word;
+        return normalized.substring(0, cut).trim() + "…";
+    }
+
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
@@ -229,18 +259,8 @@ public final class RecommendationPresentation
         if (plan == null || plan.getRequirementChecks() == null) return unresolved;
         for (RequirementCheck check : plan.getRequirementChecks())
         {
-            if (check == null)
-            {
-                continue;
-            }
-            if (check.getState() == RequirementState.VERIFIED)
-            {
-                continue;
-            }
-            if (RequirementActionability.isPreparationRequirement(check))
-            {
-                continue;
-            }
+            if (check == null || check.getState() == RequirementState.VERIFIED) continue;
+            if (RequirementActionability.isPreparationRequirement(check)) continue;
             unresolved.add(check);
         }
         return unresolved;
@@ -249,9 +269,7 @@ public final class RecommendationPresentation
     private static String readinessMarker(RequirementCheck check)
     {
         if (check != null && RequirementActionability.isPreparationRequirement(check))
-        {
             return "•";
-        }
         return stateMarker(check == null ? RequirementState.CHECK_NEEDED : check.getState());
     }
 
@@ -297,9 +315,7 @@ public final class RecommendationPresentation
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED) return "Blocked";
         if (RequirementActionability.isActionablePreparation(
                 recommendation.getTrainingPlan(), recommendation.getGuidance()))
-        {
             return "Ready to prep";
-        }
         return "Needs Info";
     }
 
