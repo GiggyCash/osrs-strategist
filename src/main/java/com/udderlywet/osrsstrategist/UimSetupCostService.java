@@ -33,13 +33,14 @@ public class UimSetupCostService
         int setupMinutes = method == null ? 0 : Math.max(0, method.getSetupMinutes());
         int occupied = occupiedInventorySlots(data.getInventory());
 
-        if (setupMinutes <= 3) value += 5.0;
-        else if (setupMinutes >= 12) value -= 11.0;
-        else if (setupMinutes >= 7) value -= 5.0;
+        // Unknown/non-skill setup does not receive a fake "low setup" bonus.
+        if (method != null)
+        {
+            if (setupMinutes <= 3) value += 5.0;
+            else if (setupMinutes >= 12) value -= 11.0;
+            else if (setupMinutes >= 7) value -= 5.0;
+        }
 
-        // A full/valuable-looking inventory makes setup-heavy pivots more costly.
-        // Quantity is deliberately not interpreted as value because stackable
-        // items still occupy one slot and price is irrelevant to the slot cost.
         if (occupied >= 24 && setupMinutes >= 7) value -= 8.0;
         else if (occupied >= 20 && setupMinutes >= 7) value -= 4.0;
 
@@ -65,11 +66,14 @@ public class UimSetupCostService
         boolean dangerous = containsAny(text,
                 "dangerous death", "wilderness", "wildy",
                 "corrupted gauntlet", "gauntlet", "boss fight");
-        if (dangerous && deathStorageObserved) value -= 35.0;
-        if (dangerous && deathpileObserved) value -= 18.0;
 
-        // Retrieval-only resources are a sign that the current setup has real
-        // state attached to it. A random detour should pay an opportunity cost.
+        // Active death storage is not a small inconvenience. A dangerous death
+        // can delete or otherwise invalidate a carefully prepared UIM state, so
+        // a merely attractive gear goal must not overwhelm this protection with
+        // raw provider score.
+        if (dangerous && deathStorageObserved) value -= 50.0;
+        if (dangerous && deathpileObserved) value -= 22.0;
+
         if ((deathStorageObserved || deathpileObserved || lootingBagObserved)
                 && recommendation.getId() != null
                 && recommendation.getId().startsWith("detour:"))
