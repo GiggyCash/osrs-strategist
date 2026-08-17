@@ -1,5 +1,8 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.EnumMap;
+import java.util.Map;
+import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
@@ -18,6 +21,7 @@ public class TrainingMethodSelectorTest
     public void balancedHerbloreReturnsPlan()
     {
         TrainingPlan plan = selector.select(
+                p2pData(),
                 Skill.HERBLORE,
                 1,
                 StrategyMode.BALANCED,
@@ -47,6 +51,7 @@ public class TrainingMethodSelectorTest
     public void afkMiningPrefersLowAttentionMethodAtThirty()
     {
         TrainingPlan plan = selector.select(
+                p2pData(),
                 Skill.MINING,
                 30,
                 StrategyMode.RELAXED,
@@ -58,5 +63,26 @@ public class TrainingMethodSelectorTest
                 "Motherlode Mine",
                 plan.getMethod().getName()
         );
+    }
+
+    private static StrategyDataBundle p2pData()
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, 60);
+            xp.put(skill, Experience.getXpForLevel(60));
+        }
+        return StrategyDataBundle.builder(new AccountSnapshot(
+                "Selector Test",
+                0,
+                "Main",
+                MembershipStatus.P2P,
+                1,
+                1500,
+                0L,
+                levels,
+                xp)).build();
     }
 }
