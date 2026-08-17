@@ -4,25 +4,10 @@ import java.util.Locale;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
-/**
- * Global value model used after every skill, quest, upgrade, detour, gear path,
- * minigame, and PvM candidate has entered the same pool.
- *
- * <p>Individual providers remain responsible for legality and local method
- * quality. This service answers the higher-level question: which legal,
- * actionable opportunity matters most for this account right now? The model is
- * intentionally additive and inspectable so a future premium/online reasoning
- * layer can explain or tune the same dimensions without replacing the local
- * safety gates.</p>
- */
+/** Global account-value ranking after all legal candidates enter one pool. */
 @Singleton
 public class RecommendationIntelligenceService
 {
-    /**
-     * Returns the final ranking score. Raw provider score remains important, but
-     * cannot by itself represent goal alignment, readiness, session friction,
-     * account-mode practicality, and cross-account risk.
-     */
     public double rankScore(Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null) return Double.NEGATIVE_INFINITY;
@@ -42,13 +27,10 @@ public class RecommendationIntelligenceService
         score += goalValue(recommendation, context, id, title);
         score += sessionValue(recommendation, context.getSessionIntent());
         score += accountModeValue(recommendation, context, id, title, reason);
-        score += safetyValue(recommendation, context, id, title, reason);
+        score += safetyValue(context, id, title, reason);
         score += resourceValue(guidance, context.getAccountMode());
         score += opportunityCostValue(recommendation, context, id, reason);
 
-        // Explicit player feedback is the final soft signal. Cooldowns are hard
-        // filtered by providers; weights/timed adjustments can still move close
-        // calls without overriding build or membership legality.
         PreferenceProfile preferences = context.getPreferenceProfile();
         if (preferences != null && recommendation.getId() != null)
         {
@@ -64,17 +46,11 @@ public class RecommendationIntelligenceService
     {
         double value = 0.0;
         if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED)
-        {
             value += 7.0;
-        }
         else if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
-        {
             value -= 9.0;
-        }
         else if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
-        {
             return -10_000.0;
-        }
 
         if (guidance != null && hasText(guidance.getAction())) value += 5.0;
         if (guidance != null && hasText(guidance.getLocation())) value += 2.0;
@@ -88,8 +64,8 @@ public class RecommendationIntelligenceService
             String id,
             String title)
     {
-        GoalType goal = context.getActiveGoal();
-        if (goal == null) goal = GoalType.MAX;
+        GoalType goal = context.getActiveGoal() == null
+                ? GoalType.MAX : context.getActiveGoal();
         boolean skill = id.startsWith("skill:");
         boolean quest = id.startsWith("quest:");
         boolean gear = id.startsWith("gear:") || id.startsWith("upgrade:");
@@ -97,6 +73,7 @@ public class RecommendationIntelligenceService
         boolean diary = id.startsWith("diary:");
         boolean ca = id.startsWith("combat-achievement:")
                 || id.startsWith("combat_achievement:");
+        String identity = id + " " + title;
 
         switch (goal)
         {
@@ -108,35 +85,28 @@ public class RecommendationIntelligenceService
                 return 0.0;
             case QUEST_CAPE:
                 if (quest) return 28.0;
-                if (skill) return 6.0;
-                return 0.0;
+                return skill ? 6.0 : 0.0;
             case BARROWS_GLOVES:
-                if (contains(id, title, "recipe-for-disaster", "recipe for disaster")) return 38.0;
+                if (containsAny(identity, "recipe-for-disaster", "recipe for disaster")) return 38.0;
                 if (quest) return 17.0;
-                if (skill) return 5.0;
-                return 0.0;
+                return skill ? 5.0 : 0.0;
             case PRIFDDINAS:
-                if (contains(id, title, "song-of-the-elves", "song of the elves")) return 42.0;
+                if (containsAny(identity, "song-of-the-elves", "song of the elves")) return 42.0;
                 if (quest) return 18.0;
-                if (skill) return 8.0;
-                return 0.0;
+                return skill ? 8.0 : 0.0;
             case BOWFA:
-                if (contains(id, title, "bowfa", "crystal", "gauntlet")) return 38.0;
+                if (containsAny(identity, "bowfa", "crystal", "gauntlet")) return 38.0;
                 if (gear || pvm) return 15.0;
-                if (quest) return 8.0;
-                return 0.0;
+                return quest ? 8.0 : 0.0;
             case INFERNAL_CAPE:
-                if (contains(id, title, "inferno", "infernal")) return 45.0;
-                if (gear || pvm) return 20.0;
-                return 0.0;
+                if (containsAny(identity, "inferno", "infernal")) return 45.0;
+                return gear || pvm ? 20.0 : 0.0;
             case DIARY_CAPE:
                 if (diary) return 30.0;
-                if (skill || quest) return 8.0;
-                return 0.0;
+                return skill || quest ? 8.0 : 0.0;
             case ELITE_COMBAT_ACHIEVEMENTS:
                 if (ca) return 32.0;
-                if (pvm || gear) return 16.0;
-                return 0.0;
+                return pvm || gear ? 16.0 : 0.0;
             case RAID_READY:
                 if (pvm || gear) return 24.0;
                 if (id.startsWith("skill:slayer")
@@ -148,15 +118,12 @@ public class RecommendationIntelligenceService
                 return skill ? 19.0 : 0.0;
             case SLAYER_85:
                 if (id.startsWith("skill:slayer")) return 45.0;
-                if (contains(id, title, "whip", "slayer")) return 20.0;
-                return 0.0;
+                return containsAny(identity, "whip", "slayer") ? 20.0 : 0.0;
             case BASE_70S:
                 if (skill && recommendation.getCurrentLevel() > 0
                         && recommendation.getCurrentLevel() < 70)
-                {
                     return 23.0 + Math.min(8.0,
                             (70 - recommendation.getCurrentLevel()) * 0.15);
-                }
                 return 0.0;
             case GEAR_TARGET:
                 return gear ? 35.0 : pvm ? 15.0 : 0.0;
@@ -175,7 +142,6 @@ public class RecommendationIntelligenceService
         TrainingMethod method = plan.getMethod();
         int setup = Math.max(0, method.getSetupMinutes());
         int minimum = Math.max(0, method.getMinimumSessionMinutes());
-
         switch (intent)
         {
             case QUICK_20_MIN:
@@ -184,16 +150,13 @@ public class RecommendationIntelligenceService
                 return 1.0;
             case ONE_HOUR:
                 if (setup <= 8 && minimum <= 60) return 4.0;
-                if (minimum > 90) return -5.0;
-                return 0.0;
+                return minimum > 90 ? -5.0 : 0.0;
             case LONG_SESSION:
-                if (minimum >= 30) return 4.0;
-                return 1.0;
+                return minimum >= 30 ? 4.0 : 1.0;
             case AFK:
-                AttentionLevel attention = method.getAttentionLevel();
-                if (attention == AttentionLevel.AFK) return 12.0;
-                if (attention == AttentionLevel.LOW) return 7.0;
-                if (attention == AttentionLevel.ACTIVE) return -9.0;
+                if (method.getAttentionLevel() == AttentionLevel.AFK) return 12.0;
+                if (method.getAttentionLevel() == AttentionLevel.LOW) return 7.0;
+                if (method.getAttentionLevel() == AttentionLevel.ACTIVE) return -9.0;
                 return 0.0;
             case PICK_FOR_ME:
             default:
@@ -212,11 +175,10 @@ public class RecommendationIntelligenceService
         TrainingPlan plan = recommendation.getTrainingPlan();
         TrainingMethod method = plan == null ? null : plan.getMethod();
         double value = 0.0;
+        String identity = id + " " + title + " " + reason;
 
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            // UIM setup destruction is real account cost. Prefer routes with a
-            // light setup unless the candidate is explicitly UIM-oriented.
             if (method != null)
             {
                 int setup = Math.max(0, method.getSetupMinutes());
@@ -224,52 +186,45 @@ public class RecommendationIntelligenceService
                 else if (setup >= 12) value -= 14.0;
                 else if (setup >= 7) value -= 5.0;
             }
-            if (id.startsWith("detour:") && !contains(id, title, reason, "uim")) value -= 8.0;
-            if (contains(reason, "bank", "grand exchange")) value -= 12.0;
+            if (id.startsWith("detour:") && !containsAny(identity, "uim")) value -= 8.0;
+            if (containsAny(reason, "bank", "grand exchange")) value -= 12.0;
         }
         else if (mode.isIronLike())
         {
             if (id.startsWith("detour:")) value += 9.0;
             if (id.startsWith("upgrade:")) value += 5.0;
-            if (contains(reason, "self-source", "self source", "supplies")) value += 4.0;
-            if (contains(reason, "grand exchange")) value -= 15.0;
+            if (containsAny(reason, "self-source", "self source", "supplies")) value += 4.0;
+            if (containsAny(reason, "grand exchange")) value -= 15.0;
         }
         else if (mode.usesGrandExchange())
         {
             if (id.startsWith("money:")) value += 4.0;
-            // Resource detours generally have less value to a tradeable main
-            // unless the activity itself is a goal.
             if (id.startsWith("detour:")) value -= 3.0;
         }
         return value;
     }
 
     private static double safetyValue(
-            Recommendation recommendation,
             StrategyContext context,
             String id,
             String title,
             String reason)
     {
-        double value = 0.0;
-        boolean wilderness = contains(id, title, reason,
+        String identity = id + " " + title + " " + reason;
+        boolean wilderness = containsAny(identity,
                 "wilderness", "wildy", "revenant", "revs");
         if (wilderness && !context.isAllowWildernessMethods()) return -5_000.0;
 
         AccountMode mode = context.getAccountMode();
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN) && wilderness)
-        {
             return -7_500.0;
-        }
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && id.startsWith("pvm:")
-                && contains(reason, "dangerous", "high risk"))
-        {
-            value -= 20.0;
-        }
-        return value;
+                && containsAny(reason, "dangerous", "high risk"))
+            return -20.0;
+        return 0.0;
     }
 
     private static double resourceValue(
@@ -279,15 +234,14 @@ public class RecommendationIntelligenceService
         if (guidance == null || !hasText(guidance.getSupplies())) return 0.0;
         String supplies = lower(guidance.getSupplies());
         double value = 0.0;
-
-        if (contains(supplies, "verified:", "you own", "already have")) value += 5.0;
-        if (contains(supplies, "open your bank", "needs bank", "bank once")) value -= 6.0;
-        if (contains(supplies, "needs info", "not yet verified")) value -= 10.0;
+        if (containsAny(supplies, "verified:", "you own", "already have")) value += 5.0;
+        if (containsAny(supplies, "open your bank", "needs bank", "bank once")) value -= 6.0;
+        if (containsAny(supplies, "needs info", "not yet verified")) value -= 10.0;
         if (mode != null && mode.isIronLike()
-                && contains(supplies, "self-source", "self source")) value -= 2.0;
+                && containsAny(supplies, "self-source", "self source")) value -= 2.0;
         if (mode != null && mode.usesGrandExchange()
-                && contains(supplies, "grand exchange")
-                && !contains(supplies, "cannot afford", "short of")) value += 2.0;
+                && containsAny(supplies, "grand exchange")
+                && !containsAny(supplies, "cannot afford", "short of")) value += 2.0;
         return value;
     }
 
@@ -298,16 +252,11 @@ public class RecommendationIntelligenceService
             String reason)
     {
         if (id.startsWith("detour:"))
-        {
-            // A detour should earn its place by doing at least two useful jobs.
-            if (contains(reason, " + ", "while", "also", "cross-skill")) return 5.0;
-            return -6.0;
-        }
-
+            return containsAny(reason, " + ", "while", "also", "cross-skill")
+                    ? 5.0 : -6.0;
         if (id.contains("angler"))
         {
-            AccountSnapshot account = context.getData().getAccount();
-            int fishing = account.getSkillLevel(Skill.FISHING);
+            int fishing = context.getData().getAccount().getSkillLevel(Skill.FISHING);
             if (fishing >= 90) return 5.0;
             if (fishing < 55 && context.getActiveGoal() != GoalType.MAX
                     && !context.isCollectionistMode()) return -8.0;
@@ -315,26 +264,12 @@ public class RecommendationIntelligenceService
         return 0.0;
     }
 
-    private static boolean contains(String haystack, String... needles)
+    private static boolean containsAny(String haystack, String... needles)
     {
         if (haystack == null) return false;
         for (String needle : needles)
-        {
             if (needle != null && haystack.contains(lower(needle))) return true;
-        }
         return false;
-    }
-
-    private static boolean contains(
-            String first, String second, String... needles)
-    {
-        return contains(first + " " + second, needles);
-    }
-
-    private static boolean contains(
-            String first, String second, String third, String... needles)
-    {
-        return contains(first + " " + second + " " + third, needles);
     }
 
     private static String lower(String value)
