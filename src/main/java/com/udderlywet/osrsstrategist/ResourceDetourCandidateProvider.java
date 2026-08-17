@@ -13,7 +13,8 @@ import net.runelite.api.Skill;
  * <p>A detour must beat the direct acquisition route on more than novelty. This
  * provider therefore keeps scores modest unless the account is an Iron-style
  * account, the shortage is observed, and the detour also progresses a skill the
- * account still needs.</p>
+ * account still needs. VERIFIED detours include concrete guidance so they can
+ * legitimately compete for DO NEXT instead of existing as decorative options.</p>
  */
 @Singleton
 public class ResourceDetourCandidateProvider
@@ -79,13 +80,19 @@ public class ResourceDetourCandidateProvider
                     score += 3.0;
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+                RecommendationGuidance guidance = new RecommendationGuidance(
+                        "Play Tempoross for a Fishing session and claim the earned reward-pool permits. Keep useful plank/log rewards instead of treating the activity as disposable Fishing XP.",
+                        "Only " + planks + " usable planks are currently observed. Bring the normal Tempoross tools/supplies for the chosen strategy; reward permits and plank drops are variable, so Strategist will not invent an exact number of games required to solve the shortage.",
+                        "Tempoross at the Ruins of Unkah. Claim rewards from the reward pool after the games when you are ready to bank the resources.",
+                        "This is a cross-skill supply detour, not a bulk Construction plank method. It should win only while the Fishing XP is useful too; direct log/sawmill sourcing becomes better when the account needs large deterministic plank volumes."
+                );
                 result.add(new StrategyCandidate(
                         id,
                         "Tempoross for Fishing + early planks",
-                        "Only " + planks + " planks are currently observed. Tempoross can advance Fishing while its reward pool supplies some normal and oak planks. "
-                                + "Treat this as a cross-skill supply detour, not a bulk Construction plank method; switch to direct log/sawmill routes when larger plank volumes are needed.",
+                        "Only " + planks + " planks are currently observed. Tempoross can advance Fishing while its reward pool supplies some normal and oak planks. Treat this as a cross-skill supply detour, not a bulk Construction plank method; switch to direct log/sawmill routes when larger plank volumes are needed.",
                         score,
-                        RecommendationConfidence.VERIFIED));
+                        RecommendationConfidence.VERIFIED,
+                        guidance));
             }
         }
 
@@ -107,13 +114,19 @@ public class ResourceDetourCandidateProvider
                     score += 3.0;
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+                RecommendationGuidance guidance = new RecommendationGuidance(
+                        "Do a Wintertodt Firemaking session and keep useful log rewards from the supply crates. Stop using it as a Construction detour once direct plank sourcing clearly becomes the better account-time tradeoff.",
+                        "Only " + logs + " useful logs and " + planks + " planks are currently observed. Bring the normal cold-damage survival and Firemaking tools appropriate to the account. Crate contents are random, so no exact crate count is promised.",
+                        "Wintertodt Camp in northern Great Kourend.",
+                        "This route earns Firemaking progress while creating a chance at useful logs. It is intentionally excluded from automatic Hardcore routing here because a resource detour is not worth adding avoidable survival risk."
+                );
                 result.add(new StrategyCandidate(
                         id,
                         "Wintertodt for Firemaking + log supply",
-                        "Your observed log/plank stock is low. Wintertodt can progress Firemaking and provide logs from supply crates, which can later be converted into planks. "
-                                + "This is secondary to direct plank sourcing and should only win when the Firemaking progress is useful too.",
+                        "Your observed log/plank stock is low. Wintertodt can progress Firemaking and provide logs from supply crates, which can later be converted into planks. This is secondary to direct plank sourcing and should only win when the Firemaking progress is useful too.",
                         score,
-                        RecommendationConfidence.VERIFIED));
+                        RecommendationConfidence.VERIFIED,
+                        guidance));
             }
         }
     }
