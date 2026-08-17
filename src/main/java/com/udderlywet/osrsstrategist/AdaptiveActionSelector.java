@@ -53,12 +53,8 @@ public class AdaptiveActionSelector
         for (RuneLiteSkillActionDefinition action : actions)
         {
             if (action == null || action.getXp() <= 0
-                    || action.getLevel() > currentLevel)
-            {
-                continue;
-            }
-            if (membership == MembershipStatus.F2P
-                    && action.getMembership() == MembershipStatus.P2P)
+                    || action.getLevel() > currentLevel
+                    || !membershipAllowed(action.getMembership(), membership))
             {
                 continue;
             }
@@ -93,8 +89,6 @@ public class AdaptiveActionSelector
                 }
                 else
                 {
-                    // Mains can buy missing tradeables, so owned materials are
-                    // a convenience rather than a hard route preference.
                     score += coverage * 4.0;
                 }
             }
@@ -118,9 +112,11 @@ public class AdaptiveActionSelector
         RuneLiteSkillActionDefinition best = null;
         for (RuneLiteSkillActionDefinition action : actions)
         {
-            if (action == null || action.getLevel() > currentLevel) continue;
-            if (membership == MembershipStatus.F2P
-                    && action.getMembership() == MembershipStatus.P2P) continue;
+            if (action == null || action.getLevel() > currentLevel
+                    || !membershipAllowed(action.getMembership(), membership))
+            {
+                continue;
+            }
             if (!matches(action, profile.getActionTerms())) continue;
             if (best == null
                     || action.getLevel() > best.getLevel()
@@ -131,6 +127,26 @@ public class AdaptiveActionSelector
             }
         }
         return best;
+    }
+
+    private static boolean membershipAllowed(
+            MembershipStatus actionMembership,
+            MembershipStatus accountMembership)
+    {
+        if (actionMembership == null || actionMembership == MembershipStatus.UNKNOWN)
+        {
+            return false;
+        }
+        if (accountMembership == MembershipStatus.P2P)
+        {
+            return actionMembership == MembershipStatus.F2P
+                    || actionMembership == MembershipStatus.P2P;
+        }
+
+        // F2P and UNKNOWN fail closed to actions RuneLite explicitly identifies
+        // as F2P. This mirrors ContentAccessRules and prevents transient reads
+        // from leaking member actions into an F2P route.
+        return actionMembership == MembershipStatus.F2P;
     }
 
     private static double materialCoverage(
