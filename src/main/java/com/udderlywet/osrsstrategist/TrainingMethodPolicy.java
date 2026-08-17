@@ -2,7 +2,7 @@ package com.udderlywet.osrsstrategist;
 
 import javax.inject.Singleton;
 
-/** Account-mode and play-style guardrails for concrete training methods. */
+/** Account-mode, restricted-build, and play-style guardrails for training methods. */
 @Singleton
 public class TrainingMethodPolicy
 {
@@ -20,6 +20,11 @@ public class TrainingMethodPolicy
         MembershipStatus membership = account == null
                 ? MembershipStatus.UNKNOWN
                 : account.getMembershipStatus();
+
+        if (!AccountBuildPolicy.allowsMethod(account, method))
+        {
+            return false;
+        }
 
         if (membership == MembershipStatus.F2P
                 && !metadata.isFreeToPlayAllowed())
