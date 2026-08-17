@@ -12,9 +12,17 @@ public final class RuneLiteSkillActionDefinition
     private final float xp;
     private final String category;
     private final MembershipStatus membership;
+    private final int itemId;
 
     public RuneLiteSkillActionDefinition(Skill skill, String id, String name,
             int level, float xp, String category, MembershipStatus membership)
+    {
+        this(skill, id, name, level, xp, category, membership, -1);
+    }
+
+    public RuneLiteSkillActionDefinition(Skill skill, String id, String name,
+            int level, float xp, String category, MembershipStatus membership,
+            int itemId)
     {
         this.skill = skill;
         this.id = id;
@@ -23,6 +31,7 @@ public final class RuneLiteSkillActionDefinition
         this.xp = xp;
         this.category = category;
         this.membership = membership == null ? MembershipStatus.UNKNOWN : membership;
+        this.itemId = itemId;
     }
 
     public Skill getSkill() { return skill; }
@@ -32,4 +41,5 @@ public final class RuneLiteSkillActionDefinition
     public float getXp() { return xp; }
     public String getCategory() { return category; }
     public MembershipStatus getMembership() { return membership; }
+    public int getItemId() { return itemId; }
 }
