@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class StrategyEngineActionabilityTest
 {
     @Test
-    public void highScoreNeedsInfoCannotBeatReadyAction()
+    public void highScoreNeedsInfoCannotBeatReadyActionAndEmptyPlaceholderIsHidden()
     {
         Recommendation ready = new Recommendation(
                 "skill:defence",
@@ -45,9 +45,36 @@ public class StrategyEngineActionabilityTest
         List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(unresolved, ready));
 
+        assertEquals(1, queue.size());
+        assertEquals("skill:defence", queue.get(0).getId());
+    }
+
+    @Test
+    public void unresolvedAlternativeWithUsefulGuidanceCanStillAppearSecondary()
+    {
+        Recommendation ready = new Recommendation(
+                "skill:defence", "Train Defence to 80", "Ready", 40.0,
+                null, RecommendationConfidence.VERIFIED, 75, 80,
+                new RecommendationGuidance(
+                        "Train Defence.", "Use legal gear.", "Safe target.", "Safe."));
+        Recommendation unresolved = new Recommendation(
+                "upgrade:whip", "Get an Abyssal whip", "Needs live price", 500.0,
+                null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
+                new RecommendationGuidance(
+                        "Buy the whip after live price and affordability are verified.",
+                        "Live price/cash check is still required.",
+                        "Grand Exchange.",
+                        "This remains secondary until verified."));
+
+        StrategyEngine engine = new StrategyEngine(
+                null, null, null, null,
+                new RecommendationActionabilityPolicy());
+        List<Recommendation> queue = engine.buildPlayerQueue(
+                Arrays.asList(unresolved, ready));
+
         assertEquals(2, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
-        assertEquals("quest:pandemonium", queue.get(1).getId());
+        assertEquals("upgrade:whip", queue.get(1).getId());
     }
 
     @Test
