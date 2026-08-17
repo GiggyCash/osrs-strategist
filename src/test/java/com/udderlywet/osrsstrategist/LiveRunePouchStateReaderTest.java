@@ -16,16 +16,16 @@ import static org.junit.Assert.assertTrue;
 public class LiveRunePouchStateReaderTest
 {
     @Test
-    public void detectsNormalAndDivinePouchesByObservedInventoryName()
+    public void detectsOnlyKnownUsablePouchNames()
     {
         assertTrue(LiveRunePouchStateReader.hasUsableRunePouch(
-                inventory("Rune pouch")));
+                inventory("Rune pouch", 1)));
         assertTrue(LiveRunePouchStateReader.hasUsableRunePouch(
-                inventory("Divine rune pouch")));
-        assertTrue(LiveRunePouchStateReader.hasUsableRunePouch(
-                inventory("Rune pouch (l)")));
+                inventory("Divine rune pouch", 1)));
         assertFalse(LiveRunePouchStateReader.hasUsableRunePouch(
-                inventory("Rune pouch note")));
+                inventory("Rune pouch note", 1)));
+        assertFalse(LiveRunePouchStateReader.hasUsableRunePouch(
+                inventory("Future rune pouch token", 1)));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LiveRunePouchStateReaderTest
                         item(561, "Nature rune", 1000),
                         item(554, "Fire rune", 5000)));
         StrategyDataBundle data = StrategyDataBundle.builder(account(2))
-                .inventory(inventory("Rune pouch"))
+                .inventory(inventory("Rune pouch", 1))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .storage(storage)
                 .build();
@@ -99,13 +99,8 @@ public class LiveRunePouchStateReaderTest
         assertEquals(0, items.restrictedQuantity("Nature rune"));
     }
 
-    private static InventorySnapshot inventory(String name)
+    private static InventorySnapshot inventory(String name, int quantity)
     {
-        // The detector intentionally rejects generic notes and only accepts an
-        // item whose observed name includes the actual Rune pouch phrase. The
-        // fake note case below therefore uses quantity zero so it cannot appear
-        // as a usable inventory item.
-        int quantity = "Rune pouch note".equals(name) ? 0 : 1;
         return new InventorySnapshot(Collections.singletonList(
                 item(12791, name, quantity)));
     }
