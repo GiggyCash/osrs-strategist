@@ -74,6 +74,17 @@ public final class StorageSnapshot
         return contents.getOrDefault(capability, Collections.emptyList());
     }
 
+    /**
+     * Convenience view for planners that must reason about dangerous-death UIM
+     * state. This returns observed contents only. An empty list does not imply
+     * the capability is unavailable; callers should use {@link #verified} or
+     * {@link #hasObservedContents} when that distinction matters.
+     */
+    public List<ItemStackSnapshot> getDeathStorageItems()
+    {
+        return contentsOf(StorageCapability.DEATH_STORAGE);
+    }
+
     public int quantityOf(StorageCapability capability, int itemId)
     {
         if (!verified(capability) || !hasObservedContents(capability)) return 0;
