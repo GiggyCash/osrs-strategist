@@ -34,7 +34,15 @@ public class OsrsStrategistPanel extends PluginPanel
             - (PluginPanel.BORDER_OFFSET * 2)
             - (CONTENT_PADDING * 2);
     private static final int INNER_WIDTH = CONTENT_WIDTH - CARD_HORIZONTAL_INSET;
-    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 14;
+
+    /*
+     * Swing's HTML JLabel renderer can paint several pixels beyond the CSS div
+     * width once the RuneLite scrollbar, card border, and font metrics are all
+     * involved. Leave a deliberate safety gutter instead of trying to consume
+     * every last horizontal pixel. The sidebar has plenty of vertical space and
+     * wrapping one line earlier is much better than clipping the final letters.
+     */
+    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 36;
 
     private static final float BODY_FONT_SIZE = 14f;
     private static final float MUTED_FONT_SIZE = 13f;
@@ -192,6 +200,19 @@ public class OsrsStrategistPanel extends PluginPanel
         recommendationCard.add(Box.createVerticalStrut(4));
         recommendationCard.add(progressBar);
         recommendationCard.add(Box.createVerticalStrut(11));
+
+        // Constrain the component itself in addition to the HTML div. This keeps
+        // BoxLayout from handing the renderer enough width to paint beneath the
+        // sidebar scrollbar on narrow RuneLite layouts.
+        recommendationBody.setMaximumSize(new Dimension(
+                BODY_TEXT_WIDTH,
+                Integer.MAX_VALUE
+        ));
+        feedbackStatus.setMaximumSize(new Dimension(
+                BODY_TEXT_WIDTH,
+                Integer.MAX_VALUE
+        ));
+
         recommendationCard.add(recommendationBody);
         recommendationCard.add(Box.createVerticalStrut(12));
 
