@@ -1,7 +1,9 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Singleton;
 
@@ -23,6 +25,7 @@ public class MethodExecutionProfileCatalog
         agility();
         gathering();
         production();
+        farming();
         utility();
     }
 
@@ -64,7 +67,10 @@ public class MethodExecutionProfileCatalog
                 "Tick manipulation changes actions per hour, not XP awarded by each successful mined rock.",
                 "granite"));
         add(p("mining_calcified", "calcified rock success", "calcified rock successes", none(), null,
-                "calcified"));
+                "calcified_rocks"));
+        add(p("mining_gem_rocks", "gem rock mined", "gem rocks mined", none(),
+                "Each successful gem-rock mine gives the fixed Mining XP represented by RuneLite; the gem received is variable.",
+                "gem_rocks"));
 
         add(p("fishing_f2p_fly", "fish caught", "fish caught", none(),
                 "Selects the highest unlocked trout/salmon action in the route.",
@@ -97,7 +103,7 @@ public class MethodExecutionProfileCatalog
                 "redwood"));
 
         add(p("hunter_birdhouses", "birdhouse emptied", "birdhouses emptied", none(),
-                "Selects the highest birdhouse tier unlocked by Hunter level. Each run normally contains four houses, so the UI can later group this count into runs.",
+                "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run.",
                 "bird_house"));
         add(p("hunter_salamanders", "salamander caught", "salamanders caught", none(),
                 "Black salamanders are deliberately excluded because they are a Wilderness method.",
@@ -110,13 +116,13 @@ public class MethodExecutionProfileCatalog
 
     private void production()
     {
-        add(p("cooking_wines", "jug of wine made", "jugs of wine made",
-                fixed("Grapes", 1.0),
-                "Also needs one jug of water per action. Wine fermentation is delayed but XP is still deterministic per successful batch.",
+        add(pm("cooking_wines", "jug of wine made", "jugs of wine made",
+                rules(fixedRule("Grapes", 1.0), fixedRule("Jug of water", 1.0)),
+                "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
                 "jug_of_wine"));
         add(p("cooking_karambwan_1t", "karambwan cooked", "karambwans cooked",
                 rawAction(),
-                "Raw quantity should include any burn allowance appropriate to current Cooking level/location; a dedicated high-level burn model is still preferred.",
+                "Raw quantity should include a burn allowance appropriate to current Cooking level/location; a dedicated high-level burn model remains preferable.",
                 "cooked_karambwan"));
 
         add(p("smithing_f2p_platebodies", "platebody smithed", "platebodies smithed",
@@ -137,16 +143,29 @@ public class MethodExecutionProfileCatalog
 
         add(p("fletching_arrow_shafts", "arrow shaft made", "arrow shafts made",
                 fixed("Logs", 1.0 / 15.0),
-                "One normal log makes 15 arrow shafts; the action calculator records XP per shaft.",
+                "One normal log makes 15 arrow shafts; RuneLite records XP per shaft.",
                 "arrow_shaft"));
         add(p("fletching_bows", "unstrung bow fletched", "unstrung bows fletched",
                 logForBow(),
                 "Uses unstrung shortbow/longbow actions so the supply count is logs, not bowstrings.",
                 "shortbow_u", "longbow_u"));
-        add(p("fletching_broad_arrows", "broad arrow made", "broad arrows made",
-                fixed("Headless arrow", 1.0),
-                "Also needs one broad arrowhead per arrow.",
+        add(pm("fletching_darts", "dart fletched", "darts fletched",
+                rules(rule(MethodExecutionProfile.InputMode.DART_TIP_FOR_DART, null, 1.0),
+                        fixedRule("Feather", 1.0)),
+                "Quantities are per dart. This route is only selected after the relevant dart-making unlock is available.",
+                "bronze_dart", "iron_dart", "steel_dart", "mithril_dart",
+                "adamant_dart", "rune_dart", "amethyst_dart", "dragon_dart"));
+        add(pm("fletching_broad_arrows", "broad arrow made", "broad arrows made",
+                rules(fixedRule("Headless arrow", 1.0),
+                        fixedRule("Broad arrowhead", 1.0)),
+                "Requires the broader Fletching Slayer unlock before Strategist should select this route.",
                 "broad_arrows"));
+        add(pm("fletching_bolts", "bolt fletched", "bolts fletched",
+                rules(rule(MethodExecutionProfile.InputMode.UNFINISHED_BOLT, null, 1.0),
+                        fixedRule("Feather", 1.0)),
+                "Models the basic feathering step for metal bolts; gem-tipping variants need a separate gem-input profile.",
+                "bronze_bolts", "iron_bolts", "steel_bolts", "mithril_bolts",
+                "adamant_bolts", "runite_bolts", "dragon_bolts"));
 
         add(p("firemaking_f2p_logs", "log burned", "logs burned", actionItem(), null,
                 "logs"));
@@ -156,7 +175,8 @@ public class MethodExecutionProfileCatalog
                 "Runecraft XP is based on essence crafted, not the number of runes produced by level multipliers.",
                 "body_rune"));
         add(p("runecraft_lava", "essence crafted", "essence crafted",
-                fixed("Pure essence", 1.0), null,
+                fixed("Pure essence", 1.0),
+                "Binding necklace/elemental-rune charges are setup resources and are not yet reduced to a per-essence count.",
                 "lava_rune"));
         add(p("runecraft_blood", "essence crafted", "essence crafted",
                 fixed("Pure essence", 1.0), null,
@@ -165,17 +185,23 @@ public class MethodExecutionProfileCatalog
                 fixed("Pure essence", 1.0), null,
                 "soul_rune"));
 
-        add(p("herblore_prayer_potions", "potion made", "potions made",
-                fixed("Ranarr weed", 1.0),
-                "Also needs one snape grass and one vial of water per potion.",
+        add(pm("herblore_prayer_potions", "potion made", "potions made",
+                rules(fixedRule("Ranarr weed", 1.0),
+                        fixedRule("Snape grass", 1.0),
+                        fixedRule("Vial of water", 1.0)),
+                "Counts all three consumed materials for each prayer potion.",
                 "prayer_potion"));
-        add(p("herblore_restores", "super restore made", "super restores made",
-                fixed("Snapdragon", 1.0),
-                "Also needs one red spiders' eggs and one vial of water per potion.",
+        add(pm("herblore_restores", "super restore made", "super restores made",
+                rules(fixedRule("Snapdragon", 1.0),
+                        fixedRule("Red spiders' eggs", 1.0),
+                        fixedRule("Vial of water", 1.0)),
+                "Counts all three consumed materials for each super restore.",
                 "super_restore"));
-        add(p("herblore_brews", "Saradomin brew made", "Saradomin brews made",
-                fixed("Toadflax", 1.0),
-                "Also needs one crushed nest and one vial of water per potion.",
+        add(pm("herblore_brews", "Saradomin brew made", "Saradomin brews made",
+                rules(fixedRule("Toadflax", 1.0),
+                        fixedRule("Crushed nest", 1.0),
+                        fixedRule("Vial of water", 1.0)),
+                "Counts all three consumed materials for each Saradomin brew.",
                 "saradomin_brew"));
 
         add(p("construction_oak_larders", "oak larder built", "oak larders built",
@@ -189,11 +215,24 @@ public class MethodExecutionProfileCatalog
                 "mahogany_table"));
     }
 
+    private void farming()
+    {
+        add(p("farming_trees", "tree cycle", "tree cycles", sapling(),
+                "Each action represents planting/checking one tree cycle at the selected tier. Protection payments and compost are optional risk/yield choices, so they remain route-level setup rather than mandatory per-tree materials.",
+                "oak_tree", "willow_tree", "teak_tree", "maple_tree",
+                "mahogany_tree", "yew_tree", "camphor_tree", "magic_tree",
+                "ironwood_tree", "celastrus_tree", "redwood_tree", "rosewood_tree"));
+        add(p("farming_fruit_trees", "fruit-tree cycle", "fruit-tree cycles", sapling(),
+                "Each action represents one fruit-tree planting/check-health cycle at the selected tier.",
+                "apple_tree", "banana_tree", "orange_tree", "curry_tree",
+                "pineapple_plant", "papaya_tree", "palm_tree", "dragonfruit_tree"));
+    }
+
     private void utility()
     {
-        add(p("magic_high_alch", "High Alchemy cast", "High Alchemy casts",
-                fixed("Nature rune", 1.0),
-                "Each cast also needs five fire runes unless an equipped staff supplies them.",
+        add(pm("magic_high_alch", "High Alchemy cast", "High Alchemy casts",
+                rules(fixedRule("Nature rune", 1.0), fixedRule("Fire rune", 5.0)),
+                "A fire-rune staff replaces the five fire runes per cast. The item being alched must still be selected from a verified safe alch list before execution.",
                 "high_level_alchemy", "high_alchemy"));
         add(p("magic_f2p_curse", "curse cast", "curse casts", none(),
                 "Rune requirements depend on the exact curse spell selected; Strategist will not invent a rune quantity until that spell is resolved.",
@@ -214,6 +253,9 @@ public class MethodExecutionProfileCatalog
 
         add(p("thieving_fruit_stalls", "successful steal", "successful steals", none(), null,
                 "fruit_stall"));
+        add(p("thieving_blackjack", "successful pickpocket", "successful pickpockets", none(),
+                "Counts successful blackjacking pickpockets. Failed actions award no XP and therefore are not part of the milestone count.",
+                "blackjack", "bandit"));
         add(p("thieving_ardy_knights", "successful pickpocket", "successful pickpockets", none(),
                 "Failed pickpockets do not award XP, so this is the number of successful pickpockets needed.",
                 "ardougne_knight", "knight_of_ardougne"));
@@ -229,8 +271,19 @@ public class MethodExecutionProfileCatalog
     {
         return new MethodExecutionProfile(
                 id, singular, plural, 1.0,
-                input.getInputMode(), input.getFixedInputName(),
-                input.getFixedInputPerAction(), note, terms);
+                input.getInputs(), note, terms);
+    }
+
+    private MethodExecutionProfile pm(
+            String id,
+            String singular,
+            String plural,
+            List<MethodInputRule> inputs,
+            String note,
+            String... terms)
+    {
+        return new MethodExecutionProfile(
+                id, singular, plural, 1.0, inputs, note, terms);
     }
 
     private static MethodExecutionProfile none()
@@ -263,6 +316,11 @@ public class MethodExecutionProfileCatalog
         return input(MethodExecutionProfile.InputMode.UNCUT_GEM, null, 0.0);
     }
 
+    private static MethodExecutionProfile sapling()
+    {
+        return input(MethodExecutionProfile.InputMode.SAPLING_FOR_TREE, null, 1.0);
+    }
+
     private static MethodExecutionProfile fixed(String name, double perAction)
     {
         return input(MethodExecutionProfile.InputMode.FIXED, name, perAction);
@@ -276,6 +334,27 @@ public class MethodExecutionProfileCatalog
         return new MethodExecutionProfile(
                 "__input__", "action", "actions", 1.0,
                 mode, name, perAction, null);
+    }
+
+    private static MethodInputRule fixedRule(String name, double perAction)
+    {
+        return new MethodInputRule(
+                MethodExecutionProfile.InputMode.FIXED,
+                name,
+                perAction);
+    }
+
+    private static MethodInputRule rule(
+            MethodExecutionProfile.InputMode mode,
+            String name,
+            double perAction)
+    {
+        return new MethodInputRule(mode, name, perAction);
+    }
+
+    private static List<MethodInputRule> rules(MethodInputRule... rules)
+    {
+        return Arrays.asList(rules);
     }
 
     private void add(MethodExecutionProfile profile)
