@@ -35,6 +35,13 @@ public final class RecommendationPresentation
 
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
+
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null)
+        {
+            appendGuidance(text, guidance, false);
+        }
+
         List<RequirementCheck> unresolved = unresolved(plan);
         if (!unresolved.isEmpty())
         {
@@ -87,9 +94,18 @@ public final class RecommendationPresentation
 
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
-        appendBreak(text, 2);
-        text.append("<b>HOW</b><br>")
-                .append(escape(method.getInstructions()));
+
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null)
+        {
+            appendGuidance(text, guidance, true);
+        }
+        else
+        {
+            appendBreak(text, 2);
+            text.append("<b>HOW</b><br>")
+                    .append(escape(method.getInstructions()));
+        }
 
         if (!plan.getRequirementChecks().isEmpty())
         {
@@ -117,6 +133,45 @@ public final class RecommendationPresentation
                     .append(escape(recommendation.getReason()));
         }
         return text.toString();
+    }
+
+    private static void appendGuidance(
+            StringBuilder text,
+            RecommendationGuidance guidance,
+            boolean includeLocationAndNote)
+    {
+        if (hasText(guidance.getAction()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>DO THIS</b><br>")
+                    .append(escape(guidance.getAction()));
+        }
+
+        if (hasText(guidance.getSupplies()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>SUPPLIES</b><br>")
+                    .append(escape(guidance.getSupplies()));
+        }
+
+        if (!includeLocationAndNote)
+        {
+            return;
+        }
+
+        if (hasText(guidance.getLocation()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>WHERE</b><br>")
+                    .append(escape(guidance.getLocation()));
+        }
+
+        if (hasText(guidance.getNote()))
+        {
+            appendBreak(text, 2);
+            text.append("<b>NOTE</b><br>")
+                    .append(escape(guidance.getNote()));
+        }
     }
 
     private static boolean isSkillRecommendation(Recommendation recommendation)
