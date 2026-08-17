@@ -13,6 +13,7 @@ public class StrategyDataAssembler
     private final LiveDiaryStateReader diaryStateReader;
     private final LiveCombatAchievementReader combatAchievementReader;
     private final LiveClueStateReader clueStateReader;
+    private final LiveSlayerStateReader slayerStateReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
@@ -27,6 +28,7 @@ public class StrategyDataAssembler
             LiveDiaryStateReader diaryStateReader,
             LiveCombatAchievementReader combatAchievementReader,
             LiveClueStateReader clueStateReader,
+            LiveSlayerStateReader slayerStateReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
@@ -39,6 +41,7 @@ public class StrategyDataAssembler
         this.diaryStateReader = diaryStateReader;
         this.combatAchievementReader = combatAchievementReader;
         this.clueStateReader = clueStateReader;
+        this.slayerStateReader = slayerStateReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
@@ -57,7 +60,8 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, questStateReader,
-                null, null, null, null, accessMemoryStore, farmingRunStateStore,
+                null, null, null, null, null,
+                accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
 
@@ -93,6 +97,11 @@ public class StrategyDataAssembler
             observedStateStore.setClue(clue);
         }
 
+        SlayerSnapshot liveSlayer = slayerStateReader == null
+                ? null : slayerStateReader.read();
+        SlayerSnapshot slayer = liveSlayer != null
+                ? liveSlayer : observedStateStore.getSlayer();
+
         PvmSnapshot observedPvm = observedStateStore.getPvm();
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
                 ? observedPvm
@@ -119,7 +128,7 @@ public class StrategyDataAssembler
                 .transport(observedStateStore.getTransport())
                 .poh(observedStateStore.getPoh())
                 .groupStorage(observedStateStore.getGroupStorage())
-                .slayer(observedStateStore.getSlayer())
+                .slayer(slayer)
                 .farming(farming)
                 .sailing(observedStateStore.getSailing())
                 .minigames(observedStateStore.getMinigames())
@@ -131,6 +140,7 @@ public class StrategyDataAssembler
     public void clearForAccountChange()
     {
         itemStateReader.clearAccountCaches();
+        if (slayerStateReader != null) slayerStateReader.clear();
         observedStateStore.clearForAccountChange();
     }
 }
