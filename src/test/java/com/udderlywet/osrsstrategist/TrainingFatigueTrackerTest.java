@@ -16,13 +16,18 @@ public class TrainingFatigueTrackerTest
         long start = 1_000_000L;
         assertFalse(tracker.record(Skill.MINING, 1000,
                 StrategyMode.BALANCED, start).isPresent());
-        assertFalse(tracker.record(Skill.MINING, 2000,
-                StrategyMode.BALANCED,
-                start + 20L * 60L * 1000L).isPresent());
+        for (int minute = 8; minute <= 40; minute += 8)
+        {
+            assertFalse(tracker.record(
+                    Skill.MINING,
+                    1000 + minute * 100,
+                    StrategyMode.BALANCED,
+                    start + minutes(minute)).isPresent());
+        }
 
         TrainingFatigueTracker.FatigueSignal signal = tracker.record(
-                Skill.MINING, 3000, StrategyMode.BALANCED,
-                start + 46L * 60L * 1000L);
+                Skill.MINING, 6000, StrategyMode.BALANCED,
+                start + minutes(46));
         assertTrue(signal.isPresent());
         assertEquals("skill:mining", signal.getActivityId());
         assertEquals(-8.0, signal.getScoreDelta(), 0.001);
@@ -34,9 +39,16 @@ public class TrainingFatigueTrackerTest
         TrainingFatigueTracker tracker = new TrainingFatigueTracker();
         long start = 5_000_000L;
         tracker.record(Skill.WOODCUTTING, 1000, StrategyMode.RELAXED, start);
+        tracker.record(Skill.WOODCUTTING, 1800, StrategyMode.RELAXED,
+                start + minutes(8));
+        tracker.record(Skill.WOODCUTTING, 2600, StrategyMode.RELAXED,
+                start + minutes(16));
+        tracker.record(Skill.WOODCUTTING, 3400, StrategyMode.RELAXED,
+                start + minutes(24));
+
         TrainingFatigueTracker.FatigueSignal signal = tracker.record(
-                Skill.WOODCUTTING, 3000, StrategyMode.RELAXED,
-                start + 31L * 60L * 1000L);
+                Skill.WOODCUTTING, 4100, StrategyMode.RELAXED,
+                start + minutes(31));
 
         assertTrue(signal.isPresent());
         assertEquals(-14.0, signal.getScoreDelta(), 0.001);
@@ -48,9 +60,14 @@ public class TrainingFatigueTrackerTest
         TrainingFatigueTracker tracker = new TrainingFatigueTracker();
         long start = 10_000_000L;
         tracker.record(Skill.AGILITY, 1000, StrategyMode.EFFICIENT, start);
-        assertFalse(tracker.record(
-                Skill.AGILITY, 100000, StrategyMode.EFFICIENT,
-                start + 3L * 60L * 60L * 1000L).isPresent());
+        for (int minute = 8; minute <= 120; minute += 8)
+        {
+            assertFalse(tracker.record(
+                    Skill.AGILITY,
+                    1000 + minute * 100,
+                    StrategyMode.EFFICIENT,
+                    start + minutes(minute)).isPresent());
+        }
     }
 
     @Test
@@ -59,14 +76,23 @@ public class TrainingFatigueTrackerTest
         TrainingFatigueTracker tracker = new TrainingFatigueTracker();
         long start = 20_000_000L;
         tracker.record(Skill.FISHING, 1000, StrategyMode.RELAXED, start);
-        tracker.record(Skill.FISHING, 2000, StrategyMode.RELAXED,
-                start + 20L * 60L * 1000L);
+        tracker.record(Skill.FISHING, 1800, StrategyMode.RELAXED,
+                start + minutes(8));
+        tracker.record(Skill.FISHING, 2600, StrategyMode.RELAXED,
+                start + minutes(16));
+
         assertFalse(tracker.record(Skill.COOKING, 1000,
                 StrategyMode.RELAXED,
-                start + 21L * 60L * 1000L).isPresent());
-        assertFalse(tracker.record(Skill.COOKING, 2000,
+                start + minutes(17)).isPresent());
+        assertFalse(tracker.record(Skill.COOKING, 1800,
                 StrategyMode.RELAXED,
-                start + 40L * 60L * 1000L).isPresent());
+                start + minutes(25)).isPresent());
+        assertFalse(tracker.record(Skill.COOKING, 2600,
+                StrategyMode.RELAXED,
+                start + minutes(33)).isPresent());
+        assertFalse(tracker.record(Skill.COOKING, 3400,
+                StrategyMode.RELAXED,
+                start + minutes(41)).isPresent());
     }
 
     @Test
@@ -76,10 +102,19 @@ public class TrainingFatigueTrackerTest
         long start = 30_000_000L;
         tracker.record(Skill.DEFENCE, 1000, StrategyMode.RELAXED, start);
         tracker.record(Skill.HITPOINTS, 5000, StrategyMode.RELAXED,
-                start + 10L * 60L * 1000L);
+                start + minutes(4));
+        tracker.record(Skill.DEFENCE, 1800, StrategyMode.RELAXED,
+                start + minutes(8));
+        tracker.record(Skill.HITPOINTS, 5600, StrategyMode.RELAXED,
+                start + minutes(12));
+        tracker.record(Skill.DEFENCE, 2600, StrategyMode.RELAXED,
+                start + minutes(16));
+        tracker.record(Skill.DEFENCE, 3400, StrategyMode.RELAXED,
+                start + minutes(24));
+
         TrainingFatigueTracker.FatigueSignal signal = tracker.record(
-                Skill.DEFENCE, 4000, StrategyMode.RELAXED,
-                start + 31L * 60L * 1000L);
+                Skill.DEFENCE, 4100, StrategyMode.RELAXED,
+                start + minutes(31));
         assertTrue(signal.isPresent());
         assertEquals("skill:defence", signal.getActivityId());
     }
@@ -92,9 +127,14 @@ public class TrainingFatigueTrackerTest
         tracker.record(Skill.CRAFTING, 1000, StrategyMode.RELAXED, start);
         assertFalse(tracker.record(Skill.CRAFTING, 3000,
                 StrategyMode.RELAXED,
-                start + 11L * 60L * 1000L).isPresent());
+                start + minutes(11)).isPresent());
         assertFalse(tracker.record(Skill.CRAFTING, 4000,
                 StrategyMode.RELAXED,
-                start + 20L * 60L * 1000L).isPresent());
+                start + minutes(20)).isPresent());
+    }
+
+    private static long minutes(int value)
+    {
+        return value * 60L * 1000L;
     }
 }
