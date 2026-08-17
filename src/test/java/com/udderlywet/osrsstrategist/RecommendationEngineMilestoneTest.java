@@ -64,6 +64,8 @@ public class RecommendationEngineMilestoneTest
                 "Test",
                 0,
                 "Main",
+                MembershipStatus.P2P,
+                1,
                 2200,
                 0L,
                 levels,
