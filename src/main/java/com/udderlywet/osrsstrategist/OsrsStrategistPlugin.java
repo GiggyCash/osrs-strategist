@@ -47,6 +47,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private SkillIconLoader skillIconLoader;
     @Inject private AccessObservationService accessObservationService;
     @Inject private FarmingRunObservationService farmingRunObservationService;
+    @Inject private TrainingFatigueTracker trainingFatigueTracker;
     @Inject private MilestoneRewardOverlay milestoneRewardOverlay;
     @Inject private MethodGuidanceOverlay methodGuidanceOverlay;
     @Inject private RecommendationDetailsOverlay recommendationDetailsOverlay;
@@ -87,6 +88,7 @@ public class OsrsStrategistPlugin extends Plugin
         overlayManager.add(milestoneRewardOverlay);
         overlayManager.add(methodGuidanceOverlay);
         overlayManager.add(recommendationDetailsOverlay);
+        trainingFatigueTracker.clear();
         syncPreferenceProfile();
         syncStrategyProfile();
         syncMilestoneProfile();
@@ -106,6 +108,7 @@ public class OsrsStrategistPlugin extends Plugin
         recommendationDetailsOverlay.clear();
         preferenceProfile.clear();
         recommendationHistory.clear();
+        trainingFatigueTracker.clear();
         strategyDataAssembler.clearForAccountChange();
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
@@ -138,6 +141,16 @@ public class OsrsStrategistPlugin extends Plugin
     @Subscribe
     public void onStatChanged(StatChanged event)
     {
+        PlayerStrategyProfile profile = effectiveStrategyProfile();
+        TrainingFatigueTracker.FatigueSignal fatigue = trainingFatigueTracker.record(
+                event.getSkill(), event.getXp(), profile.getStrategyMode());
+        if (fatigue.isPresent())
+        {
+            preferenceProfile.addTemporaryScoreAdjustment(
+                    fatigue.getActivityId(),
+                    fatigue.getScoreDelta(),
+                    fatigue.getDurationMillis());
+        }
         updateAccountPanel();
     }
 
@@ -157,6 +170,7 @@ public class OsrsStrategistPlugin extends Plugin
         loadedHistoryProfileKey = null;
         trackedMilestone = null;
         recommendationHistory.clear();
+        trainingFatigueTracker.clear();
         strategyDataAssembler.clearForAccountChange();
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
