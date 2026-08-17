@@ -12,20 +12,33 @@ public class RecommendationEngine
 {
     private final TrainingMethodSelector trainingMethodSelector;
     private final RecommendationGuidanceService guidanceService;
+    private final CombatGuidanceService combatGuidanceService;
 
     @Inject
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService)
+            RecommendationGuidanceService guidanceService,
+            CombatGuidanceService combatGuidanceService)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
+        this.combatGuidanceService = combatGuidanceService;
+    }
+
+    /** Compatibility constructor retained for tests/older callers. */
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService)
+    {
+        this(trainingMethodSelector, guidanceService,
+                new CombatGuidanceService());
     }
 
     /** Compatibility constructor for focused tests and older callers. */
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
     {
-        this(trainingMethodSelector, new RecommendationGuidanceService());
+        this(trainingMethodSelector, new RecommendationGuidanceService(),
+                new CombatGuidanceService());
     }
 
     public List<Recommendation> recommend(
@@ -91,7 +104,6 @@ public class RecommendationEngine
 
             // Player-imposed account builds are a hard safety boundary. A Main,
             // Iron, UIM, Hardcore, or GIM can independently be a skiller/pure.
-            // Never rank a protected stat and hope the player notices later.
             if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
 
             String activityId = "skill:" + skill.name().toLowerCase();
@@ -100,7 +112,6 @@ public class RecommendationEngine
             TrainingPlan trainingPlan = trainingMethodSelector.select(
                     data, skill, level, strategyMode, sessionIntent,
                     allowWildernessMethods);
-
             if (trainingPlan == null || trainingPlan.getMethod() == null)
             {
                 continue;
@@ -114,16 +125,26 @@ public class RecommendationEngine
             score += trainingPlan.getMethod().scoreFor(
                     strategyMode, sessionIntent) * 0.35;
 
-            RecommendationGuidance guidance = guidanceService == null
+            RecommendationGuidance guidance = combatGuidanceService == null
                     ? null
-                    : guidanceService.build(
+                    : combatGuidanceService.build(
                             data,
                             skill,
                             level,
                             target,
                             trainingPlan,
-                            useGroupStorage
-                    );
+                            sessionIntent,
+                            useGroupStorage);
+            if (guidance == null && guidanceService != null)
+            {
+                guidance = guidanceService.build(
+                        data,
+                        skill,
+                        level,
+                        target,
+                        trainingPlan,
+                        useGroupStorage);
+            }
 
             recommendations.add(new Recommendation(
                     activityId,
