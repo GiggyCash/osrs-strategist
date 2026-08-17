@@ -9,6 +9,10 @@ import net.runelite.api.Skill;
 /**
  * Conservative consumed-input resolver for RuneLite skill-calculator actions.
  * Exact is only returned when the material recipe is stable and unambiguous.
+ *
+ * <p>The RuneLite calculator often expresses XP per produced item, while the
+ * game interface may create a batch. Recipes therefore model the calculator's
+ * action unit rather than assuming that one click equals one output.</p>
  */
 @Singleton
 public class UniversalActionRecipeResolver
@@ -42,9 +46,9 @@ public class UniversalActionRecipeResolver
             case COOKING:
                 return cooking(name, lower, actions);
             case FIREMAKING:
-                return one(name, actions, "Bring a tinderbox or another verified ignition source.");
+                return firemaking(name, lower, actions);
             case PRAYER:
-                return one(name, actions, "This models the consumed Prayer item before altar or other XP multipliers.");
+                return prayer(name, lower, actions);
             case RUNECRAFT:
                 return runecraft(actions, membership);
             case CRAFTING:
@@ -74,7 +78,8 @@ public class UniversalActionRecipeResolver
         {
             add(inputs, "Grapes", actions);
             add(inputs, "Jug of water", actions);
-            return exact(inputs, "One grapes and one jug of water are consumed per completed wine action.");
+            return exact(inputs,
+                    "One grapes and one jug of water are consumed per completed wine action.");
         }
         if (containsAny(lower, "cake", "pie", "pizza", "stew", "curry"))
         {
@@ -82,58 +87,183 @@ public class UniversalActionRecipeResolver
                     "Composite Cooking recipes need a recipe-specific ingredient model before Strategist gives a shopping list.");
         }
         String raw = rawFood(name);
-        if (raw == null) return UniversalActionRecipe.unknown("Raw food could not be inferred safely.");
+        if (raw == null)
+        {
+            return UniversalActionRecipe.unknown(
+                    "Raw food could not be inferred safely.");
+        }
         add(inputs, raw, actions);
         return exact(inputs,
                 "This is the successful-cook input count. A burn-aware route must add a level and location specific raw-food buffer when burns are possible.");
     }
 
-    private static UniversalActionRecipe runecraft(int actions, MembershipStatus membership)
+    private static UniversalActionRecipe firemaking(
+            String name,
+            String lower,
+            int actions)
+    {
+        // RuneLite Firemaking actions are normally named for the consumed log.
+        // Reject special activities rather than turning their reward/action name
+        // into a fake log requirement.
+        if (!lower.contains("log") && !lower.equals("logs"))
+        {
+            return UniversalActionRecipe.unknown(
+                    "This Firemaking action is not a conventional one-log burn and needs a route-specific setup model.");
+        }
+        return one(name, actions,
+                "Bring a tinderbox or another verified ignition source.");
+    }
+
+    private static UniversalActionRecipe prayer(
+            String name,
+            String lower,
+            int actions)
+    {
+        if (containsAny(lower, "bones", "ashes", "head"))
+        {
+            return one(name, actions,
+                    "This models one consumed Prayer item per calculator action. Altar, offering, and reanimation multipliers belong to the selected route.");
+        }
+        return UniversalActionRecipe.unknown(
+                "The Prayer action XP is known, but the consumed offering cannot be inferred safely from its name.");
+    }
+
+    private static UniversalActionRecipe runecraft(
+            int actions,
+            MembershipStatus membership)
     {
         List<ResolvedMethodInput> inputs = new ArrayList<>();
-        add(inputs, membership == MembershipStatus.F2P ? "Rune essence" : "Pure essence", actions);
+        add(inputs, membership == MembershipStatus.F2P
+                ? "Rune essence" : "Pure essence", actions);
         return exact(inputs,
-                "Rune multipliers affect output, not base XP per essence. Pouches and outfit effects are separate route modifiers.");
+                "Rune multipliers affect output, not base XP per essence. Pouches, raiments, and alternate essence types are route modifiers rather than extra consumed units.");
     }
 
     private static UniversalActionRecipe crafting(String name, String lower, int actions)
     {
         List<ResolvedMethodInput> inputs = new ArrayList<>();
+
+        if (lower.equals("ball of wool"))
+        {
+            add(inputs, "Wool", actions);
+            return exact(inputs, "Use a spinning wheel.");
+        }
+        if (lower.equals("bow string"))
+        {
+            add(inputs, "Flax", actions);
+            return exact(inputs, "Use a spinning wheel.");
+        }
+        if (lower.equals("unfired pot"))
+        {
+            add(inputs, "Soft clay", actions);
+            return exact(inputs, "Use the clay on a pottery wheel.");
+        }
+        if (lower.equals("pot"))
+        {
+            add(inputs, "Unfired pot", actions);
+            return exact(inputs, "Fire the unfired pots in a pottery oven.");
+        }
+        if (lower.equals("unfired pie dish"))
+        {
+            add(inputs, "Soft clay", actions);
+            return exact(inputs, "Use the clay on a pottery wheel.");
+        }
+        if (lower.equals("pie dish"))
+        {
+            add(inputs, "Unfired pie dish", actions);
+            return exact(inputs, "Fire the unfired dishes in a pottery oven.");
+        }
+        if (lower.equals("unfired bowl"))
+        {
+            add(inputs, "Soft clay", actions);
+            return exact(inputs, "Use the clay on a pottery wheel.");
+        }
+        if (lower.equals("bowl"))
+        {
+            add(inputs, "Unfired bowl", actions);
+            return exact(inputs, "Fire the unfired bowls in a pottery oven.");
+        }
+        if (lower.equals("unfired plant pot") || lower.equals("unfired pot lid"))
+        {
+            add(inputs, "Soft clay", actions);
+            return exact(inputs, "Use the clay on a pottery wheel.");
+        }
+        if (lower.equals("empty plant pot"))
+        {
+            add(inputs, "Unfired plant pot", actions);
+            return exact(inputs, "Fire the unfired plant pots in a pottery oven.");
+        }
+        if (lower.equals("pot lid"))
+        {
+            add(inputs, "Unfired pot lid", actions);
+            return exact(inputs, "Fire the unfired lids in a pottery oven.");
+        }
+        if (lower.equals("molten glass"))
+        {
+            add(inputs, "Bucket of sand", actions);
+            add(inputs, "Soda ash", actions);
+            return exact(inputs,
+                    "This models conventional furnace glassmaking. Superglass Make has different yield math and must use its own route.");
+        }
+
         if (isCutGem(lower))
         {
-            add(inputs, lower.startsWith("uncut ") ? name : "Uncut " + lower, actions);
+            add(inputs, lower.startsWith("uncut ")
+                    ? name : "Uncut " + lower, actions);
             return exact(inputs, "Bring a chisel.");
         }
         if (isGlassProduct(lower))
         {
             add(inputs, "Molten glass", actions);
-            return exact(inputs, "Bring a glassblowing pipe for blown-glass products.");
+            return exact(inputs,
+                    "Bring a glassblowing pipe for blown-glass products.");
+        }
+        if (isBirdHouse(lower))
+        {
+            add(inputs, birdHouseLog(lower), actions);
+            return exact(inputs,
+                    "A clockwork is reusable between bird houses, so only the consumed log is counted here.");
         }
         if (isDragonhideProduct(lower))
         {
-            int count = armourMaterialCount(lower);
+            int count = dragonhideMaterialCount(lower);
             if (count > 0)
             {
-                add(inputs, dragonLeatherName(lower), actions * count);
+                add(inputs, dragonLeatherName(lower),
+                        safeMultiply(actions, count));
                 return exact(inputs,
                         "Needle and thread are setup supplies. Thread is not modeled as one full item consumed per craft.");
             }
         }
         if (isPlainLeatherProduct(lower))
         {
-            int count = armourMaterialCount(lower);
-            if (count > 0)
-            {
-                add(inputs, "Leather", actions * count);
-                return exact(inputs, "Bring a needle and thread.");
-            }
+            add(inputs, "Leather", actions);
+            return exact(inputs,
+                    "Each modeled plain-leather item consumes one leather. Bring a needle and thread.");
+        }
+        if (lower.contains("hardleather body")
+                || lower.contains("hard leather body"))
+        {
+            add(inputs, "Hard leather", actions);
+            return exact(inputs, "Bring a needle and thread.");
         }
         if (isJewellery(lower))
         {
-            add(inputs, "Gold bar", actions);
             String gem = jewelleryGem(lower);
+            add(inputs, jewelleryBar(lower, gem), actions);
             if (gem != null) add(inputs, gem, actions);
-            return exact(inputs, "Bring the mould for the selected jewellery piece.");
+            return exact(inputs,
+                    "Bring the mould for the selected jewellery piece. Opal, jade, and red topaz jewellery use silver; standard precious-gem jewellery uses gold.");
+        }
+        if (lower.equals("tiara"))
+        {
+            add(inputs, "Silver bar", actions);
+            return exact(inputs, "Bring a tiara mould and use a furnace.");
+        }
+        if (lower.equals("gold tiara"))
+        {
+            add(inputs, "Gold bar", actions);
+            return exact(inputs, "Bring a tiara mould and use a furnace.");
         }
         if (lower.contains("battlestaff") || lower.contains("battlestave"))
         {
@@ -142,7 +272,8 @@ public class UniversalActionRecipeResolver
             {
                 add(inputs, "Battlestaff", actions);
                 add(inputs, orb, actions);
-                return exact(inputs, "This models attaching a charged elemental orb to a battlestaff.");
+                return exact(inputs,
+                        "This models attaching a charged elemental orb to a battlestaff.");
             }
         }
         return UniversalActionRecipe.unknown(
@@ -152,46 +283,90 @@ public class UniversalActionRecipeResolver
     private static UniversalActionRecipe fletching(String name, String lower, int actions)
     {
         List<ResolvedMethodInput> inputs = new ArrayList<>();
-        if (lower.contains("arrow shaft"))
+        if (lower.equals("arrow shaft") || lower.equals("arrow shafts"))
         {
+            // RuneLite records 0.33 XP per shaft. The basic normal-log recipe
+            // produces 15 shafts from one log, so the material count is based on
+            // shafts, not clicks.
             add(inputs, "Logs", (int) Math.ceil(actions / 15.0));
-            return exact(inputs, "One normal log makes 15 arrow shafts in the basic route.");
+            return exact(inputs,
+                    "The fallback models the basic normal-log recipe at 15 shafts per log. Higher-log shaft routes need a dedicated profile before their different yield is claimed.");
         }
-        if (lower.endsWith(" shortbow (u)") || lower.endsWith(" longbow (u)"))
+        if (lower.equals("headless arrow") || lower.equals("headless arrows"))
+        {
+            add(inputs, "Arrow shaft", actions);
+            add(inputs, "Feather", actions);
+            return exact(inputs,
+                    "RuneLite expresses this as XP per headless arrow even though the interface processes shafts in batches.");
+        }
+        if (lower.endsWith(" shortbow (u)") || lower.endsWith(" longbow (u)")
+                || lower.equals("shortbow (u)") || lower.equals("longbow (u)"))
         {
             add(inputs, logForBow(name), actions);
             return exact(inputs, "Bring a knife.");
         }
-        if ((lower.contains("shortbow") || lower.contains("longbow")) && !lower.contains("(u)"))
+        if ((lower.contains("shortbow") || lower.contains("longbow"))
+                && !lower.contains("(u)"))
         {
             add(inputs, name + " (u)", actions);
             add(inputs, "Bow string", actions);
             return exact(inputs, "This models stringing an unstrung bow.");
         }
+        if (lower.endsWith(" shield"))
+        {
+            String logs = logsForWoodPrefix(name);
+            if (logs != null)
+            {
+                add(inputs, logs, safeMultiply(actions, 2));
+                return exact(inputs,
+                        "Standard Fletching shields consume two matching logs per shield. Bring a knife.");
+            }
+        }
+        if (lower.endsWith(" stock"))
+        {
+            String logs = logsForWoodPrefix(name);
+            if (logs != null)
+            {
+                add(inputs, logs, actions);
+                return exact(inputs,
+                        "A standard crossbow stock consumes one matching log. Bring a knife.");
+            }
+        }
         if (lower.endsWith(" dart") || lower.endsWith(" darts"))
         {
-            String metal = firstWord(name);
-            add(inputs, metal + " dart tip", actions);
+            add(inputs, firstWord(name) + " dart tip", actions);
             add(inputs, "Feather", actions);
-            return exact(inputs, "One dart tip and one feather are consumed per dart.");
+            return exact(inputs,
+                    "One dart tip and one feather are consumed per dart. RuneLite's action XP is per finished dart.");
         }
         if (lower.contains("broad arrow"))
         {
             add(inputs, "Headless arrow", actions);
             add(inputs, "Broad arrowhead", actions);
-            return exact(inputs, "One headless arrow and one broad arrowhead are consumed per finished arrow.");
+            return exact(inputs,
+                    "One headless arrow and one broad arrowhead are consumed per finished arrow.");
         }
-        if (lower.endsWith(" arrows") || lower.endsWith(" arrow"))
+        if (isStandardArrow(lower))
         {
             add(inputs, "Headless arrow", actions);
             add(inputs, firstWord(name) + " arrowhead", actions);
-            return exact(inputs, "One headless arrow and one matching arrowhead are consumed per finished arrow.");
+            return exact(inputs,
+                    "One headless arrow and one matching arrowhead are consumed per finished arrow.");
         }
-        if (lower.endsWith(" bolts") || lower.endsWith(" bolt"))
+        if (isJavelin(lower))
         {
-            add(inputs, name + " (unf)", actions);
+            add(inputs, "Javelin shaft", actions);
+            add(inputs, firstWord(name) + " javelin head", actions);
+            return exact(inputs,
+                    "One shaft and one matching javelin head are consumed per javelin.");
+        }
+        if (isBasicFeatheredBolt(lower))
+        {
+            String metal = firstWord(name);
+            add(inputs, metal + " bolts (unf)", actions);
             add(inputs, "Feather", actions);
-            return exact(inputs, "This models the basic feathering step. Gem tipping and enchanting are separate actions.");
+            return exact(inputs,
+                    "One unfinished bolt and one feather are consumed per finished basic bolt. Gem-tipped and specialty bolts are intentionally excluded from this generic recipe.");
         }
         return UniversalActionRecipe.unknown(
                 "This Fletching action has fixed XP, but its components are not safely inferred by the generic resolver.");
@@ -208,29 +383,35 @@ public class UniversalActionRecipeResolver
                 return exact(inputs, "Standard furnace recipe.");
             case "iron bar":
                 add(inputs, "Iron ore", actions);
-                return exact(inputs, "Standard furnace input. Iron smelting failure must be handled by the selected route when applicable.");
+                return exact(inputs,
+                        "Standard furnace input. Iron smelting failure must be handled by the selected route when applicable.");
             case "silver bar":
                 add(inputs, "Silver ore", actions);
                 return exact(inputs, "Standard furnace recipe.");
             case "gold bar":
                 add(inputs, "Gold ore", actions);
-                return exact(inputs, "Standard furnace recipe. Goldsmith gauntlet XP belongs in the route XP modifier.");
+                return exact(inputs,
+                        "Standard furnace recipe. Goldsmith gauntlet XP belongs in the route XP modifier.");
             case "steel bar":
                 add(inputs, "Iron ore", actions);
-                add(inputs, "Coal", actions * 2);
-                return exact(inputs, "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
+                add(inputs, "Coal", safeMultiply(actions, 2));
+                return exact(inputs,
+                        "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
             case "mithril bar":
                 add(inputs, "Mithril ore", actions);
-                add(inputs, "Coal", actions * 4);
-                return exact(inputs, "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
+                add(inputs, "Coal", safeMultiply(actions, 4));
+                return exact(inputs,
+                        "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
             case "adamantite bar":
                 add(inputs, "Adamantite ore", actions);
-                add(inputs, "Coal", actions * 6);
-                return exact(inputs, "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
+                add(inputs, "Coal", safeMultiply(actions, 6));
+                return exact(inputs,
+                        "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
             case "runite bar":
                 add(inputs, "Runite ore", actions);
-                add(inputs, "Coal", actions * 8);
-                return exact(inputs, "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
+                add(inputs, "Coal", safeMultiply(actions, 8));
+                return exact(inputs,
+                        "Standard furnace recipe. Blast Furnace uses a dedicated coal model.");
             default:
                 break;
         }
@@ -239,7 +420,7 @@ public class UniversalActionRecipeResolver
         int bars = smithingBarsFor(lower);
         if (bar != null && bars > 0)
         {
-            add(inputs, bar, actions * bars);
+            add(inputs, bar, safeMultiply(actions, bars));
             return exact(inputs,
                     "Bring a hammer. The bar count follows the standard anvil recipe for this item family.");
         }
@@ -260,7 +441,7 @@ public class UniversalActionRecipeResolver
         add(inputs, recipe.secondary, actions);
         add(inputs, "Vial of water", actions);
         return exact(inputs,
-                "The recipe models one complete potion per action. Saving effects and decanting can reduce effective supply use.");
+                "The shopping list models making the complete potion from raw herb, secondary, and vial. Saving effects and decanting can reduce effective supply use.");
     }
 
     private static UniversalActionRecipe construction(String lower, int actions)
@@ -268,23 +449,29 @@ public class UniversalActionRecipeResolver
         List<ResolvedMethodInput> inputs = new ArrayList<>();
         if (lower.contains("oak larder"))
         {
-            add(inputs, "Oak plank", actions * 8);
+            add(inputs, "Oak plank", safeMultiply(actions, 8));
             return exact(inputs, "Bring a hammer and saw or verified equivalents.");
         }
-        if (lower.contains("oak dungeon door"))
+        if (lower.contains("oak dungeon door") || lower.equals("oak door"))
         {
-            add(inputs, "Oak plank", actions * 10);
+            add(inputs, "Oak plank", safeMultiply(actions, 10));
             return exact(inputs, "Bring a hammer and saw or verified equivalents.");
         }
         if (lower.contains("mahogany table"))
         {
-            add(inputs, "Mahogany plank", actions * 6);
+            add(inputs, "Mahogany plank", safeMultiply(actions, 6));
+            return exact(inputs, "Bring a hammer and saw or verified equivalents.");
+        }
+        if (lower.contains("teak garden bench"))
+        {
+            add(inputs, "Teak plank", safeMultiply(actions, 6));
             return exact(inputs, "Bring a hammer and saw or verified equivalents.");
         }
         if (lower.contains("mythical cape"))
         {
-            add(inputs, "Teak plank", actions * 3);
-            return exact(inputs, "The cape is reusable; only consumed planks are counted.");
+            add(inputs, "Teak plank", safeMultiply(actions, 3));
+            return exact(inputs,
+                    "The mounted cape is returned when removed; only consumed planks are counted.");
         }
         return UniversalActionRecipe.unknown(
                 "Furniture recipes vary. Strategist keeps the exact build count but does not fabricate plank counts for an unmapped hotspot.");
@@ -310,16 +497,17 @@ public class UniversalActionRecipeResolver
         if (lower.contains("high level alchemy") || lower.contains("high alchemy"))
         {
             add(inputs, "Nature rune", actions);
-            add(inputs, "Fire rune", actions * 5);
+            add(inputs, "Fire rune", safeMultiply(actions, 5));
             return exact(inputs,
-                    "A fire-rune staff can replace the fire runes. The item being alched must come from a verified safe alch list.");
+                    "An equipped fire-rune source can replace the fire runes. The item being alched must come from a verified safe alch list and is deliberately not invented here.");
         }
         if (lower.equals("curse") || lower.endsWith(" curse"))
         {
-            add(inputs, "Earth rune", actions * 3);
-            add(inputs, "Water rune", actions * 2);
+            add(inputs, "Earth rune", safeMultiply(actions, 3));
+            add(inputs, "Water rune", safeMultiply(actions, 2));
             add(inputs, "Body rune", actions);
-            return exact(inputs, "Elemental staves can replace their corresponding elemental runes.");
+            return exact(inputs,
+                    "Equipped elemental staves can replace their corresponding elemental runes.");
         }
         return UniversalActionRecipe.unknown(
                 "Rune costs depend on the exact spell and equipped staff. The cast count is known, but the fallback does not invent a rune loadout.");
@@ -337,12 +525,17 @@ public class UniversalActionRecipeResolver
         return exact(inputs, setup);
     }
 
-    private static UniversalActionRecipe exact(List<ResolvedMethodInput> inputs, String setup)
+    private static UniversalActionRecipe exact(
+            List<ResolvedMethodInput> inputs,
+            String setup)
     {
         return new UniversalActionRecipe(inputs, setup, true);
     }
 
-    private static void add(List<ResolvedMethodInput> inputs, String name, int quantity)
+    private static void add(
+            List<ResolvedMethodInput> inputs,
+            String name,
+            int quantity)
     {
         if (name == null || name.trim().isEmpty() || quantity <= 0) return;
         inputs.add(new ResolvedMethodInput(name, -1, quantity));
@@ -359,34 +552,55 @@ public class UniversalActionRecipeResolver
         if (lower.contains("claws")) return 2;
         if (lower.contains("full helm") || lower.contains("sq shield")) return 2;
         if (lower.contains("longsword") || lower.contains("scimitar")) return 2;
-        if (containsAny(lower, "mace", "sword", "dagger", " axe", "med helm",
-                "dart tip", "knife", "arrowtip", "nails", "wire", "unfinished bolt")) return 1;
+        if (containsAny(lower,
+                "mace", "sword", "dagger", " axe", "med helm",
+                "dart tip", "knife", "arrowtip", "nails", "wire",
+                "unfinished bolt")) return 1;
         return 0;
     }
 
     private static String rawFood(String name)
     {
         if (name == null || name.trim().isEmpty()) return null;
-        String clean = name.trim();
-        String lower = clean.toLowerCase(Locale.ROOT);
-        if (lower.startsWith("raw ")) return clean;
-        if (lower.startsWith("cooked ")) clean = clean.substring(7).trim();
-        if (clean.isEmpty()) return null;
-        return "Raw " + clean.toLowerCase(Locale.ROOT);
+        String value = name.trim();
+        String lower = value.toLowerCase(Locale.ROOT);
+        if (lower.startsWith("raw ")) return value;
+        if (lower.startsWith("cooked ")) value = value.substring(7).trim();
+        if (value.isEmpty()) return null;
+        return "Raw " + value.toLowerCase(Locale.ROOT);
     }
 
     private static boolean isCutGem(String lower)
     {
-        return containsAny(lower, "opal", "jade", "red topaz", "sapphire",
-                "emerald", "ruby", "diamond", "dragonstone", "onyx", "zenyte")
-                && !lower.contains("ring") && !lower.contains("necklace")
-                && !lower.contains("amulet") && !lower.contains("bracelet");
+        return containsAny(lower,
+                "opal", "jade", "red topaz", "sapphire", "emerald", "ruby",
+                "diamond", "dragonstone", "onyx", "zenyte")
+                && !isJewellery(lower)
+                && !lower.contains("bolt");
     }
 
     private static boolean isGlassProduct(String lower)
     {
-        return containsAny(lower, "glass", "orb", "lantern lens", "vial", "fishbowl")
+        return containsAny(lower,
+                "beer glass", "candle lantern", "oil lamp", "vial",
+                "fishbowl", "unpowered orb", "lantern lens")
                 && !lower.contains("molten glass");
+    }
+
+    private static boolean isBirdHouse(String lower)
+    {
+        return lower.contains("bird house");
+    }
+
+    private static String birdHouseLog(String lower)
+    {
+        for (String wood : new String[]{
+                "redwood", "magic", "yew", "mahogany", "maple", "teak",
+                "willow", "oak"})
+        {
+            if (lower.startsWith(wood + " ")) return capitalize(wood) + " logs";
+        }
+        return "Logs";
     }
 
     private static boolean isDragonhideProduct(String lower)
@@ -396,11 +610,16 @@ public class UniversalActionRecipeResolver
 
     private static boolean isPlainLeatherProduct(String lower)
     {
-        return lower.contains("leather body") || lower.contains("leather chaps")
-                || lower.contains("leather vambraces");
+        return lower.equals("leather gloves")
+                || lower.equals("leather boots")
+                || lower.equals("cowl")
+                || lower.equals("leather vambraces")
+                || lower.equals("leather body")
+                || lower.equals("leather chaps")
+                || lower.equals("coif");
     }
 
-    private static int armourMaterialCount(String lower)
+    private static int dragonhideMaterialCount(String lower)
     {
         if (lower.contains("body")) return 3;
         if (lower.contains("chaps")) return 2;
@@ -412,23 +631,46 @@ public class UniversalActionRecipeResolver
     {
         for (String color : new String[]{"green", "blue", "red", "black"})
         {
-            if (lower.contains(color)) return capitalize(color) + " dragon leather";
+            if (lower.contains(color))
+            {
+                return capitalize(color) + " dragon leather";
+            }
         }
         return "Dragon leather";
     }
 
     private static boolean isJewellery(String lower)
     {
-        return containsAny(lower, " ring", "bracelet", "necklace", "amulet");
+        return lower.endsWith(" ring")
+                || lower.endsWith(" bracelet")
+                || lower.endsWith(" necklace")
+                || lower.contains("amulet");
     }
 
     private static String jewelleryGem(String lower)
     {
-        for (String gem : new String[]{"sapphire", "emerald", "ruby", "diamond", "dragonstone", "onyx", "zenyte"})
+        if (lower.contains("red topaz") || lower.contains("topaz"))
+            return "Red topaz";
+        for (String gem : new String[]{
+                "opal", "jade", "sapphire", "emerald", "ruby", "diamond",
+                "dragonstone", "onyx", "zenyte"})
         {
             if (lower.contains(gem)) return capitalize(gem);
         }
         return null;
+    }
+
+    private static String jewelleryBar(String lower, String gem)
+    {
+        String normalizedGem = gem == null
+                ? "" : gem.toLowerCase(Locale.ROOT);
+        if (normalizedGem.equals("opal")
+                || normalizedGem.equals("jade")
+                || normalizedGem.equals("red topaz"))
+        {
+            return "Silver bar";
+        }
+        return "Gold bar";
     }
 
     private static String elementalOrb(String lower)
@@ -443,11 +685,56 @@ public class UniversalActionRecipeResolver
     private static String logForBow(String name)
     {
         String lower = clean(name).toLowerCase(Locale.ROOT);
-        for (String wood : new String[]{"oak", "willow", "maple", "yew", "magic", "redwood"})
+        for (String wood : new String[]{
+                "oak", "willow", "maple", "yew", "magic", "redwood"})
         {
             if (lower.startsWith(wood + " ")) return capitalize(wood) + " logs";
         }
         return "Logs";
+    }
+
+    private static String logsForWoodPrefix(String name)
+    {
+        String lower = clean(name).toLowerCase(Locale.ROOT);
+        for (String wood : new String[]{
+                "oak", "willow", "maple", "yew", "magic", "redwood",
+                "teak", "mahogany"})
+        {
+            if (lower.startsWith(wood + " ")) return capitalize(wood) + " logs";
+        }
+        if (lower.startsWith("wooden ")) return "Logs";
+        return null;
+    }
+
+    private static boolean isStandardArrow(String lower)
+    {
+        if (!(lower.endsWith(" arrow") || lower.endsWith(" arrows"))) return false;
+        return containsAny(lower,
+                "bronze", "iron", "steel", "mithril", "adamant", "rune",
+                "amethyst", "dragon");
+    }
+
+    private static boolean isJavelin(String lower)
+    {
+        if (!(lower.endsWith(" javelin") || lower.endsWith(" javelins"))) return false;
+        return containsAny(lower,
+                "bronze", "iron", "steel", "mithril", "adamant", "rune",
+                "amethyst", "dragon");
+    }
+
+    private static boolean isBasicFeatheredBolt(String lower)
+    {
+        if (!(lower.endsWith(" bolts") || lower.endsWith(" bolt"))) return false;
+        if (containsAny(lower,
+                "opal", "pearl", "barbed", "kebbit", "sapphire", "emerald",
+                "ruby", "diamond", "dragonstone", "onyx", "amethyst",
+                "broad"))
+        {
+            return false;
+        }
+        return containsAny(lower,
+                "bronze", "blurite", "iron", "silver", "steel", "mithril",
+                "adamant", "runite", "rune", "dragon");
     }
 
     private static String metalBarFor(String lower)
@@ -463,29 +750,52 @@ public class UniversalActionRecipeResolver
 
     private static PotionRecipe potionRecipe(String lower)
     {
-        if (lower.contains("attack potion") && !lower.contains("super")) return p("Guam leaf", "Eye of newt");
-        if (lower.contains("antipoison") && !lower.contains("super")) return p("Marrentill", "Unicorn horn dust");
-        if (lower.contains("strength potion") && !lower.contains("super")) return p("Tarromin", "Limpwurt root");
-        if (lower.contains("restore potion") && !lower.contains("super")) return p("Harralander", "Red spiders' eggs");
-        if (lower.contains("energy potion") && !lower.contains("super")) return p("Harralander", "Chocolate dust");
-        if (lower.contains("defence potion") && !lower.contains("super")) return p("Ranarr weed", "White berries");
-        if (lower.contains("agility potion")) return p("Toadflax", "Toad's legs");
-        if (lower.contains("combat potion") && !lower.contains("super")) return p("Harralander", "Goat horn dust");
-        if (lower.contains("prayer potion")) return p("Ranarr weed", "Snape grass");
-        if (lower.contains("super attack")) return p("Irit leaf", "Eye of newt");
-        if (lower.contains("superantipoison")) return p("Irit leaf", "Unicorn horn dust");
-        if (lower.contains("fishing potion")) return p("Avantoe", "Snape grass");
-        if (lower.contains("super energy")) return p("Avantoe", "Mort myre fungus");
-        if (lower.contains("hunter potion")) return p("Avantoe", "Kebbit teeth dust");
-        if (lower.contains("super strength")) return p("Kwuarm", "Limpwurt root");
-        if (lower.contains("weapon poison")) return p("Kwuarm", "Dragon scale dust");
-        if (lower.contains("super restore")) return p("Snapdragon", "Red spiders' eggs");
-        if (lower.contains("super defence")) return p("Cadantine", "White berries");
-        if (lower.contains("antifire")) return p("Lantadyme", "Dragon scale dust");
-        if (lower.contains("ranging potion")) return p("Dwarf weed", "Wine of zamorak");
-        if (lower.contains("magic potion")) return p("Lantadyme", "Potato cactus");
-        if (lower.contains("zamorak brew")) return p("Torstol", "Jangerberries");
-        if (lower.contains("saradomin brew")) return p("Toadflax", "Crushed nest");
+        if (lower.contains("attack potion") && !lower.contains("super"))
+            return p("Guam leaf", "Eye of newt");
+        if (lower.contains("antipoison") && !lower.contains("super"))
+            return p("Marrentill", "Unicorn horn dust");
+        if (lower.contains("strength potion") && !lower.contains("super"))
+            return p("Tarromin", "Limpwurt root");
+        if (lower.contains("restore potion") && !lower.contains("super"))
+            return p("Harralander", "Red spiders' eggs");
+        if (lower.contains("energy potion") && !lower.contains("super"))
+            return p("Harralander", "Chocolate dust");
+        if (lower.contains("defence potion") && !lower.contains("super"))
+            return p("Ranarr weed", "White berries");
+        if (lower.contains("agility potion"))
+            return p("Toadflax", "Toad's legs");
+        if (lower.contains("combat potion") && !lower.contains("super"))
+            return p("Harralander", "Goat horn dust");
+        if (lower.contains("prayer potion"))
+            return p("Ranarr weed", "Snape grass");
+        if (lower.contains("super attack"))
+            return p("Irit leaf", "Eye of newt");
+        if (lower.contains("superantipoison"))
+            return p("Irit leaf", "Unicorn horn dust");
+        if (lower.contains("fishing potion"))
+            return p("Avantoe", "Snape grass");
+        if (lower.contains("super energy"))
+            return p("Avantoe", "Mort myre fungus");
+        if (lower.contains("hunter potion"))
+            return p("Avantoe", "Kebbit teeth dust");
+        if (lower.contains("super strength"))
+            return p("Kwuarm", "Limpwurt root");
+        if (lower.contains("weapon poison"))
+            return p("Kwuarm", "Dragon scale dust");
+        if (lower.contains("super restore"))
+            return p("Snapdragon", "Red spiders' eggs");
+        if (lower.contains("super defence"))
+            return p("Cadantine", "White berries");
+        if (lower.contains("antifire"))
+            return p("Lantadyme", "Dragon scale dust");
+        if (lower.contains("ranging potion"))
+            return p("Dwarf weed", "Wine of zamorak");
+        if (lower.contains("magic potion"))
+            return p("Lantadyme", "Potato cactus");
+        if (lower.contains("zamorak brew"))
+            return p("Torstol", "Jangerberries");
+        if (lower.contains("saradomin brew"))
+            return p("Toadflax", "Crushed nest");
         return null;
     }
 
@@ -496,9 +806,9 @@ public class UniversalActionRecipeResolver
 
     private static String firstWord(String value)
     {
-        String clean = clean(value);
-        int space = clean.indexOf(' ');
-        return space < 0 ? clean : clean.substring(0, space);
+        String cleaned = clean(value);
+        int space = cleaned.indexOf(' ');
+        return space < 0 ? cleaned : cleaned.substring(0, space);
     }
 
     private static boolean containsAny(String text, String... values)
@@ -509,6 +819,13 @@ public class UniversalActionRecipeResolver
             if (value != null && text.contains(value)) return true;
         }
         return false;
+    }
+
+    private static int safeMultiply(int a, int b)
+    {
+        if (a <= 0 || b <= 0) return 0;
+        if (a > Integer.MAX_VALUE / b) return Integer.MAX_VALUE;
+        return a * b;
     }
 
     private static String clean(String value)
