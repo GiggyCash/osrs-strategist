@@ -4,13 +4,11 @@ import java.util.List;
 import javax.inject.Singleton;
 
 /**
- * Decides whether a recommendation is concrete enough to occupy the primary
- * DO NEXT slot.
+ * Hard gate for the primary DO NEXT slot.
  *
- * <p>The main card is a promise to the player: if Strategist places something
- * there, it must be ready enough to act on now. Candidates that still need
- * requirement discovery can remain useful alternatives, but they do not outrank
- * a verified training action merely because their raw score is higher.</p>
+ * <p>A primary recommendation must be verified, requirement-clean, and have a
+ * concrete structured action. A vague method description is never accepted as
+ * a substitute for executable guidance.</p>
  */
 @Singleton
 public class RecommendationActionabilityPolicy
@@ -26,24 +24,13 @@ public class RecommendationActionabilityPolicy
         TrainingPlan plan = recommendation.getTrainingPlan();
         if (plan != null)
         {
-            if (plan.getMethod() == null || hasUnresolvedRequirements(plan.getRequirementChecks()))
+            if (plan.getMethod() == null
+                    || hasUnresolvedRequirements(plan.getRequirementChecks()))
             {
                 return false;
             }
-
-            RecommendationGuidance guidance = recommendation.getGuidance();
-            if (guidance != null && hasText(guidance.getAction()))
-            {
-                return true;
-            }
-
-            return hasText(plan.getMethod().getInstructions());
         }
 
-        // Non-skill candidates need structured action guidance before they are
-        // allowed to become the primary recommendation. A paragraph explaining
-        // why an activity is useful is not the same thing as telling the player
-        // what to do next.
         RecommendationGuidance guidance = recommendation.getGuidance();
         return guidance != null && hasText(guidance.getAction());
     }

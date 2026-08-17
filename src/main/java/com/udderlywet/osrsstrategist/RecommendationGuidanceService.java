@@ -9,17 +9,17 @@ import javax.inject.Singleton;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 
-/** Builds concrete, account-aware instructions for supported recommendations. */
+/**
+ * Builds concrete, account-aware instructions for skill recommendations.
+ *
+ * <p>Guidance resolves in layers: special burn-aware routes, curated exact
+ * execution profiles, variable-XP activity planners, then the universal
+ * RuneLite action fallback. Every layer refuses to invent data it cannot prove.</p>
+ */
 @Singleton
 public class RecommendationGuidanceService
 {
     private static final String LOW_LEVEL_FISH_METHOD = "cooking_f2p_fish";
-
-    /**
-     * The early fish route deliberately uses a conservative raw-fish buffer.
-     * Burns are random, so Strategist plans enough supply to avoid sending the
-     * player back for supplies just short of a milestone.
-     */
     private static final double LOW_LEVEL_BURN_BUFFER = 2.5;
 
     private static final List<CookingStage> F2P_EARLY_COOKING = Arrays.asList(
@@ -31,18 +31,35 @@ public class RecommendationGuidanceService
     );
 
     private final AdaptiveMilestoneGuidanceService adaptiveGuidance;
+    private final VariableMethodGuidanceService variableGuidance;
+    private final UniversalSkillActionGuidanceService universalGuidance;
 
     @Inject
     public RecommendationGuidanceService(
-            AdaptiveMilestoneGuidanceService adaptiveGuidance)
+            AdaptiveMilestoneGuidanceService adaptiveGuidance,
+            VariableMethodGuidanceService variableGuidance,
+            UniversalSkillActionGuidanceService universalGuidance)
     {
         this.adaptiveGuidance = adaptiveGuidance;
+        this.variableGuidance = variableGuidance;
+        this.universalGuidance = universalGuidance;
+    }
+
+    /** Compatibility constructor retained for focused tests and older callers. */
+    public RecommendationGuidanceService(
+            AdaptiveMilestoneGuidanceService adaptiveGuidance)
+    {
+        this(adaptiveGuidance,
+                new VariableMethodGuidanceService(),
+                new UniversalSkillActionGuidanceService());
     }
 
     /** Compatibility constructor for focused tests and older callers. */
     public RecommendationGuidanceService()
     {
-        this(new AdaptiveMilestoneGuidanceService());
+        this(new AdaptiveMilestoneGuidanceService(),
+                new VariableMethodGuidanceService(),
+                new UniversalSkillActionGuidanceService());
     }
 
     public RecommendationGuidance build(
@@ -67,14 +84,25 @@ public class RecommendationGuidanceService
         RecommendationGuidance cooking = earlyCookingGuidance(
                 data, skill, currentLevel, targetLevel,
                 trainingPlan, useGroupStorage);
-        if (cooking != null)
-        {
-            return cooking;
-        }
+        if (cooking != null) return cooking;
 
-        return adaptiveGuidance == null
+        RecommendationGuidance exact = adaptiveGuidance == null
                 ? null
                 : adaptiveGuidance.build(
+                        data, skill, currentLevel, targetLevel,
+                        trainingPlan, useGroupStorage);
+        if (exact != null) return exact;
+
+        RecommendationGuidance variable = variableGuidance == null
+                ? null
+                : variableGuidance.build(
+                        data, skill, currentLevel, targetLevel,
+                        trainingPlan, useGroupStorage);
+        if (variable != null) return variable;
+
+        return universalGuidance == null
+                ? null
+                : universalGuidance.build(
                         data, skill, currentLevel, targetLevel,
                         trainingPlan, useGroupStorage);
     }
@@ -97,39 +125,23 @@ public class RecommendationGuidanceService
             return null;
         }
 
-        // This exact burn-aware route covers early F2P fish through level 30.
-        // Above 30, the generic deterministic-action planner or a later
-        // fish-specific burn table takes over instead of pretending burns are
-        // identical across every fish/range/level combination.
         if (currentLevel < 1 || currentLevel >= 30 || targetLevel > 30)
         {
             return null;
         }
 
         List<StagePlan> stages = buildStages(
-                data.getAccount(),
-                currentLevel,
-                targetLevel
-        );
-        if (stages.isEmpty())
-        {
-            return null;
-        }
+                data.getAccount(), currentLevel, targetLevel);
+        if (stages.isEmpty()) return null;
 
         String action = actionGuidance(stages);
         String supplies = supplyGuidance(
                 data, data.getAccount(), stages, useGroupStorage);
         String location = locationGuidance(data.getQuests());
-        String note = "Raw-fish totals include a conservative low-level burn "
-                + "buffer. Burns are random, so you may finish a stage with "
-                + "some raw fish left over.";
+        String note = "Raw-fish totals include a conservative low-level burn buffer. Burns are random, so you may finish a stage with some raw fish left over.";
 
         return new RecommendationGuidance(
-                action,
-                supplies,
-                location,
-                note
-        );
+                action, supplies, location, note);
     }
 
     private static List<StagePlan> buildStages(
@@ -159,26 +171,16 @@ public class RecommendationGuidanceService
             int successfulCooks = divideRoundUp(xpNeeded, stage.xpEach);
             int rawNeeded = Math.max(
                     successfulCooks,
-                    (int) Math.ceil(
-                            successfulCooks * LOW_LEVEL_BURN_BUFFER
-                    )
-            );
+                    (int) Math.ceil(successfulCooks * LOW_LEVEL_BURN_BUFFER));
 
             if (successfulCooks > 0)
             {
                 plans.add(new StagePlan(
-                        stage,
-                        stageTargetLevel,
-                        successfulCooks,
-                        rawNeeded
-                ));
+                        stage, stageTargetLevel, successfulCooks, rawNeeded));
             }
 
             stageStartXp = stageTargetXp;
-            if (stageTargetLevel >= targetLevel)
-            {
-                break;
-            }
+            if (stageTargetLevel >= targetLevel) break;
         }
         return plans;
     }
@@ -189,10 +191,7 @@ public class RecommendationGuidanceService
         for (int i = 0; i < stages.size(); i++)
         {
             StagePlan stage = stages.get(i);
-            if (i > 0)
-            {
-                text.append(" Then ");
-            }
+            if (i > 0) text.append(" Then ");
             text.append("cook ")
                     .append(stage.stage.foodName)
                     .append(" to level ")
@@ -257,8 +256,7 @@ public class RecommendationGuidanceService
         if (data.getBank() == null)
         {
             return "Plan for " + requiredSummary(stages)
-                    + ". Open your bank once so Strategist can verify stored "
-                    + "fish before telling you exactly how many more to get.";
+                    + ". Open your bank once so Strategist can verify stored fish before telling you exactly how many more to get.";
         }
 
         List<String> ownedParts = new ArrayList<>();
@@ -267,14 +265,10 @@ public class RecommendationGuidanceService
         {
             int inventoryQuantity = quantityByName(
                     data.getInventory() == null
-                            ? null
-                            : data.getInventory().getItems(),
-                    stage.stage.rawItemName
-            );
+                            ? null : data.getInventory().getItems(),
+                    stage.stage.rawItemName);
             int bankQuantity = quantityByName(
-                    data.getBank().getItems(),
-                    stage.stage.rawItemName
-            );
+                    data.getBank().getItems(), stage.stage.rawItemName);
             int groupQuantity = 0;
             if (useGroupStorage && mode.isGroupIronman()
                     && data.getGroupStorage() != null
@@ -287,14 +281,12 @@ public class RecommendationGuidanceService
             int verified = bankQuantity + inventoryQuantity + groupQuantity;
             int missing = Math.max(0, stage.rawNeeded - verified);
 
-            ownedParts.add(
-                    verified + " " + stage.stage.rawItemName.toLowerCase()
-            );
+            ownedParts.add(verified + " "
+                    + stage.stage.rawItemName.toLowerCase());
             if (missing > 0)
             {
-                missingParts.add(
-                        missing + " " + stage.stage.rawItemName.toLowerCase()
-                );
+                missingParts.add(missing + " "
+                        + stage.stage.rawItemName.toLowerCase());
             }
         }
 
@@ -313,14 +305,12 @@ public class RecommendationGuidanceService
 
         if (mode.usesGrandExchange())
         {
-            text.append(" Buy ")
-                    .append(joinNatural(missingParts))
+            text.append(" Buy ").append(joinNatural(missingParts))
                     .append(" at the Grand Exchange.");
         }
         else if (mode.isGroupIronman())
         {
-            text.append(" Source ")
-                    .append(joinNatural(missingParts))
+            text.append(" Source ").append(joinNatural(missingParts))
                     .append(useGroupStorage
                             ? " after checking usable Group Storage."
                             : ".");
@@ -328,8 +318,7 @@ public class RecommendationGuidanceService
         else
         {
             text.append(" Catch or otherwise source ")
-                    .append(joinNatural(missingParts))
-                    .append(".");
+                    .append(joinNatural(missingParts)).append(".");
         }
         return text.toString();
     }
@@ -350,28 +339,21 @@ public class RecommendationGuidanceService
         if (quests != null
                 && quests.statusOf("Cook's Assistant") == QuestStatus.COMPLETE)
         {
-            return "Use the Lumbridge Castle range to reduce burns, banking "
-                    + "upstairs between inventories.";
+            return "Use the Lumbridge Castle range to reduce burns, banking upstairs between inventories.";
         }
 
-        return "Use a nearby range. If Cook's Assistant is complete, prefer the "
-                + "Lumbridge Castle range for its lower burn rate.";
+        return "Use a nearby range. If Cook's Assistant is complete, prefer the Lumbridge Castle range for its lower burn rate.";
     }
 
     private static int quantityByName(
             List<ItemStackSnapshot> items,
             String expectedName)
     {
-        if (items == null || expectedName == null)
-        {
-            return 0;
-        }
-
+        if (items == null || expectedName == null) return 0;
         int total = 0;
         for (ItemStackSnapshot item : items)
         {
-            if (item != null
-                    && item.getName() != null
+            if (item != null && item.getName() != null
                     && expectedName.equalsIgnoreCase(item.getName()))
             {
                 total += Math.max(0, item.getQuantity());
@@ -404,18 +386,9 @@ public class RecommendationGuidanceService
 
     private static String joinNatural(List<String> parts)
     {
-        if (parts == null || parts.isEmpty())
-        {
-            return "nothing";
-        }
-        if (parts.size() == 1)
-        {
-            return parts.get(0);
-        }
-        if (parts.size() == 2)
-        {
-            return parts.get(0) + " and " + parts.get(1);
-        }
+        if (parts == null || parts.isEmpty()) return "nothing";
+        if (parts.size() == 1) return parts.get(0);
+        if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
 
         StringBuilder text = new StringBuilder();
         for (int i = 0; i < parts.size(); i++)
@@ -431,19 +404,13 @@ public class RecommendationGuidanceService
 
     private static String capitalize(String value)
     {
-        if (value == null || value.isEmpty())
-        {
-            return "";
-        }
+        if (value == null || value.isEmpty()) return "";
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
     private static int divideRoundUp(int numerator, int denominator)
     {
-        if (numerator <= 0)
-        {
-            return 0;
-        }
+        if (numerator <= 0) return 0;
         return (numerator + denominator - 1) / denominator;
     }
 
