@@ -58,14 +58,18 @@ public class ProgressionUpgradeCandidateProvider
     {
         if (account.getMembershipStatus() == MembershipStatus.F2P) return;
         if (account.getSkillLevel(Skill.DEFENCE) < 40) return;
-        if (Math.max(account.getSkillLevel(Skill.ATTACK),
-                account.getSkillLevel(Skill.STRENGTH)) < 40) return;
 
         RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+        boolean defencePure = build == RestrictedBuildType.DEFENCE_PURE;
+        if (!defencePure && Math.max(account.getSkillLevel(Skill.ATTACK),
+                account.getSkillLevel(Skill.STRENGTH)) < 40)
+        {
+            return;
+        }
+
         if (build == RestrictedBuildType.SKILLER
                 || build == RestrictedBuildType.F2P_SKILLER
                 || build == RestrictedBuildType.PRAYER_SKILLER
-                || build == RestrictedBuildType.DEFENCE_PURE
                 || build == RestrictedBuildType.TEN_HITPOINTS)
         {
             return;
@@ -85,6 +89,7 @@ public class ProgressionUpgradeCandidateProvider
 
         AccountMode mode = context.getAccountMode();
         double score = mode.isIronLike() ? 48.0 : 37.0;
+        if (defencePure) score += 8.0;
         if (context.getActiveGoal() == GoalType.GEAR_TARGET
                 || context.getActiveGoal() == GoalType.RAID_READY)
         {
@@ -92,12 +97,14 @@ public class ProgressionUpgradeCandidateProvider
         }
         score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+        String route = defencePure
+                ? "Barbarian Assault is legal for this Defence pure if the Attacker role is played on a Defence-training style only. Earn 375 honour in each role, defeat the Penance Queen once, and buy the torso without intentionally gaining Attack, Strength, Ranged, or Magic XP."
+                : "Barbarian Assault is a strong torso upgrade for this melee account. Earn 375 honour points in each role and defeat the Penance Queen once, then buy the torso.";
+
         result.add(new StrategyCandidate(
                 id,
                 "Get a Fighter torso",
-                "Barbarian Assault is a strong torso upgrade for this melee account. "
-                        + "Earn 375 honour points in each role and defeat the Penance Queen once, then buy the torso. "
-                        + "Strategist will stop offering this when it observes the torso or a stronger chest upgrade.",
+                route + " Strategist will stop offering this when it observes the torso or a stronger chest upgrade.",
                 score,
                 RecommendationConfidence.VERIFIED));
     }
