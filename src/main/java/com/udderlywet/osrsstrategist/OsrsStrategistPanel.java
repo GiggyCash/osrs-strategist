@@ -34,7 +34,7 @@ public class OsrsStrategistPanel extends PluginPanel
             - (PluginPanel.BORDER_OFFSET * 2)
             - (CONTENT_PADDING * 2);
     private static final int INNER_WIDTH = CONTENT_WIDTH - CARD_HORIZONTAL_INSET;
-    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 6;
+    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 14;
 
     private static final float BODY_FONT_SIZE = 14f;
     private static final float MUTED_FONT_SIZE = 13f;
