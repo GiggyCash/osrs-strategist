@@ -20,7 +20,7 @@ public class ProgressionUpgradeCandidateProviderTest
             new ProgressionUpgradeCandidateProvider();
 
     @Test
-    public void oneDefencePureDoesNotGetFighterTorsoCandidate()
+    public void oneDefencePureDoesNotGetDefenceLockedMeleeUpgrades()
     {
         AccountSnapshot account = account(0, 60, 70, 1, 80, 52, 80, 70, 60, 60);
         List<StrategyCandidate> candidates = provider.candidates(
@@ -29,6 +29,7 @@ public class ProgressionUpgradeCandidateProviderTest
         assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
         assertNull(find(candidates, "upgrade:fighter-torso"));
+        assertNull(find(candidates, "upgrade:dragon-defender"));
     }
 
     @Test
