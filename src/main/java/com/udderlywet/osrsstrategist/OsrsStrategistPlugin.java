@@ -73,6 +73,7 @@ public class OsrsStrategistPlugin extends Plugin
     protected void startUp()
     {
         panel = new OsrsStrategistPanel(this::applyRecommendationFeedback, skillIconLoader);
+        SidebarAccessibility.improveReadability(panel);
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
                 .icon(createTemporaryIcon())
