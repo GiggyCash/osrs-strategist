@@ -9,12 +9,12 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Protects the compact-sidebar UX from accidentally becoming a wall of text
- * while also ensuring Needs Info always tells the player what is unresolved.
+ * while still naming every unresolved prerequisite the player needs to check.
  */
 public class RecommendationPresentationTest
 {
     @Test
-    public void compactViewHidesDeepExplanation()
+    public void compactViewHidesDeepExplanationAndInternalScoringLabels()
     {
         Recommendation recommendation = recommendation();
 
@@ -23,17 +23,19 @@ public class RecommendationPresentationTest
         );
 
         assertTrue(compact.contains("BEST METHOD"));
-        assertTrue(compact.contains("NEEDS INFO"));
+        assertTrue(compact.contains("CHECK BEFORE STARTING"));
         assertTrue(compact.contains("Planks/materials"));
         assertFalse(compact.contains("WHY IT MATTERS"));
         assertFalse(compact.contains("HOW"));
         assertFalse(compact.contains("Current:"));
         assertFalse(compact.contains("Verified POH access"));
+        assertFalse(compact.contains("Moderate attention"));
+        assertFalse(compact.contains("Needs Info"));
         assertTrue("Compact copy should stay short", compact.length() < 450);
     }
 
     @Test
-    public void detailedViewExposesInstructionsReasoningAndEvidence()
+    public void detailedViewExposesInstructionsReasoningAndEvidenceWithoutQuestionMarkers()
     {
         String detailed = RecommendationPresentation.detailedHtml(
                 recommendation()
@@ -45,6 +47,7 @@ public class RecommendationPresentationTest
         assertTrue(detailed.contains("POH access"));
         assertTrue(detailed.contains("Planks/materials"));
         assertTrue(detailed.contains("Need to confirm materials"));
+        assertFalse(detailed.contains("? Planks/materials"));
     }
 
     private static Recommendation recommendation()
