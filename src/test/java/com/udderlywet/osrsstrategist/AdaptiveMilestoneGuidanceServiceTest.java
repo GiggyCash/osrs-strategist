@@ -115,6 +115,40 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
+    public void uimHighAlchemyCountsLiveRunePouchRunesAsUsable()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
+        AccountSnapshot account = account(2, MembershipStatus.P2P,
+                Skill.MAGIC, 55, Experience.getXpForLevel(55));
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
+        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.RUNE_POUCH, Arrays.asList(
+                item(561, "Nature rune", 2000),
+                item(554, "Fire rune", 10000)));
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        item(12791, "Rune pouch", 1))))
+                .storage(new StorageSnapshot(states, contents))
+                .build();
+
+        RecommendationGuidance guidance = service.build(
+                data, Skill.MAGIC, 55, 60,
+                plan("magic_high_alch", Skill.MAGIC), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("Verified usable:"));
+        assertTrue(guidance.getSupplies().contains("Nature rune"));
+        assertTrue(guidance.getSupplies().contains("Fire rune"));
+        assertTrue(guidance.getSupplies().contains(
+                "You already have the modeled inputs"));
+        assertFalse(guidance.getSupplies().contains("Acquire"));
+    }
+
+    @Test
     public void gimCountsObservedGroupStorageWhenEnabled()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
