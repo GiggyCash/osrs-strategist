@@ -125,6 +125,7 @@ public class RuneLiteSkillActionCatalog
         enumClasses.put(Skill.COOKING, "CookingAction");
         enumClasses.put(Skill.CONSTRUCTION, "ConstructionAction");
         enumClasses.put(Skill.CRAFTING, "CraftingAction");
+        enumClasses.put(Skill.FARMING, "FarmingAction");
         enumClasses.put(Skill.FIREMAKING, "FiremakingAction");
         enumClasses.put(Skill.FISHING, "FishingAction");
         enumClasses.put(Skill.FLETCHING, "FletchingAction");
