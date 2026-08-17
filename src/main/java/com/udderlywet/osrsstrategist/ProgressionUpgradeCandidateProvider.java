@@ -176,8 +176,11 @@ public class ProgressionUpgradeCandidateProvider
     {
         if (account.getMembershipStatus() == MembershipStatus.F2P) return;
         if (!ownershipCanBeJudged(account, items)) return;
-        if (AccountBuildPolicy.effectiveBuild(account)
-                == RestrictedBuildType.DEFENCE_PURE) return;
+
+        // The Warriors' Guild can be entered from Attack + Strength, but the
+        // Dragon defender itself requires 60 Defence to equip. Never suggest a
+        // technically obtainable but unusable defender to a pure.
+        if (account.getSkillLevel(Skill.DEFENCE) < 60) return;
         if (!AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
                 || !AccountBuildPolicy.allowsSkill(account, Skill.STRENGTH))
         {
@@ -206,7 +209,7 @@ public class ProgressionUpgradeCandidateProvider
         result.add(new StrategyCandidate(
                 id,
                 "Get a Dragon defender",
-                "Your Attack + Strength meet the Warriors' Guild requirement and no Dragon/Avernic defender is observed. "
+                "Your Attack + Strength meet the Warriors' Guild requirement, you have 60 Defence to equip the reward, and no Dragon/Avernic defender is observed. "
                         + "Enter the Warriors' Guild, work through defender tiers in the Cyclops rooms, then obtain the Dragon defender from the basement Cyclopes.",
                 score,
                 RecommendationConfidence.VERIFIED));
@@ -234,17 +237,13 @@ public class ProgressionUpgradeCandidateProvider
         int remainingXp = Math.max(0,
                 Experience.getXpForLevel(99) - currentXp);
 
-        // Angler is useful, but a 2.5% XP outfit should not automatically beat
-        // hours of direct Fishing simply because it exists. Give it strong
-        // priority for collection goals and minnow access, and modest priority
-        // for a long maxing grind.
         double score = 16.0;
         if (context.isCollectionistMode()) score += 30.0;
-        if (fishing >= 82) score += 17.0; // full set gates minnow access
+        if (fishing >= 82) score += 17.0;
         if (context.getActiveGoal() == GoalType.MAX && remainingXp >= 5_000_000)
             score += 12.0;
         if (context.getActiveGoal() == GoalType.GEAR_TARGET) score += 5.0;
-        score += pieces * 2.0; // finishing a partial set is less of a detour
+        score += pieces * 2.0;
         score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
         if (score < 25.0) return;
@@ -272,10 +271,6 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items)
     {
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        // Normal accounts should open the bank once before Strategist claims an
-        // untradeable or gear upgrade is missing. UIM has no normal bank, so its
-        // directly usable inventory/equipment/storage evidence is the best
-        // available ownership signal.
         return mode == AccountMode.ULTIMATE_IRONMAN || items.bankObserved();
     }
 }
