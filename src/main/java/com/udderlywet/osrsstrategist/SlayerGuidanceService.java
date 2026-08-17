@@ -26,17 +26,30 @@ public class SlayerGuidanceService
         SlayerSnapshot slayer = data.getSlayer();
         if (slayer != null && slayer.hasTask())
         {
-            String master = slayer.getMasterName() == null
-                    || slayer.getMasterName().trim().isEmpty()
-                    ? "your current Slayer master"
-                    : slayer.getMasterName();
             String action = "Finish your current " + slayer.getTaskName()
                     + " assignment: " + slayer.getRemaining()
                     + " kills remain. You need " + format(xpNeeded)
                     + " Slayer XP to level " + targetLevel + ".";
             String supplies = "Use the task's required Slayer protection/item first, then choose the strongest build-legal combat style and gear you can sustain. Task-specific loadout and supply quantities should only become exact after Strategist resolves this monster's mechanics.";
-            String where = "Continue the assignment from " + master
-                    + ". If the task has multiple locations, prefer the safest reachable non-Wilderness location unless Wilderness methods are explicitly enabled.";
+
+            String where;
+            if (hasText(slayer.getTaskLocation()))
+            {
+                where = "Your live assignment specifies "
+                        + slayer.getTaskLocation()
+                        + ". Use that area unless the task state changes.";
+            }
+            else if (hasText(slayer.getMasterName()))
+            {
+                where = "Continue the assignment from "
+                        + slayer.getMasterName()
+                        + ". If the task has multiple locations, prefer the safest reachable non-Wilderness option unless Wilderness methods are explicitly enabled.";
+            }
+            else
+            {
+                where = "Use the safest reachable non-Wilderness location for this task unless the assignment itself specifies an area or Wilderness methods are explicitly enabled.";
+            }
+
             String note = "The remaining kill count is live task evidence. Slayer XP per kill depends on the assigned monster's Hitpoints and variants, so Strategist does not convert the milestone into a fake universal kill count.";
             return new RecommendationGuidance(action, supplies, where, note);
         }
@@ -125,6 +138,11 @@ public class SlayerGuidanceService
     private static boolean complete(QuestSnapshot quests, String quest)
     {
         return quests != null && quests.statusOf(quest) == QuestStatus.COMPLETE;
+    }
+
+    private static boolean hasText(String value)
+    {
+        return value != null && !value.trim().isEmpty();
     }
 
     private static String format(long value)
