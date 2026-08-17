@@ -21,6 +21,7 @@ public class StrategyCandidateRegistry
             DiaryCandidateProvider diaryProvider,
             CombatAchievementCandidateProvider combatAchievementProvider,
             GearCandidateProvider gearProvider,
+            ProgressionUpgradeCandidateProvider progressionUpgradeProvider,
             MoneyMakingCandidateProvider moneyProvider,
             MinigameCandidateProvider minigameProvider,
             CollectionLogCandidateProvider collectionLogProvider)
@@ -32,6 +33,7 @@ public class StrategyCandidateRegistry
                         questProvider,
                         diaryProvider,
                         combatAchievementProvider,
+                        progressionUpgradeProvider,
                         gearProvider,
                         moneyProvider,
                         minigameProvider,
