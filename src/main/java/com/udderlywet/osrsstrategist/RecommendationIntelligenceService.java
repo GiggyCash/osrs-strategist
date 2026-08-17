@@ -1,6 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Locale;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
@@ -8,6 +9,20 @@ import net.runelite.api.Skill;
 @Singleton
 public class RecommendationIntelligenceService
 {
+    private final UimSetupCostService uimSetupCostService;
+
+    @Inject
+    public RecommendationIntelligenceService(UimSetupCostService uimSetupCostService)
+    {
+        this.uimSetupCostService = uimSetupCostService == null
+                ? new UimSetupCostService() : uimSetupCostService;
+    }
+
+    public RecommendationIntelligenceService()
+    {
+        this(new UimSetupCostService());
+    }
+
     public double rankScore(Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null) return Double.NEGATIVE_INFINITY;
@@ -30,6 +45,7 @@ public class RecommendationIntelligenceService
         score += safetyValue(context, id, title, reason);
         score += resourceValue(guidance, context.getAccountMode());
         score += opportunityCostValue(recommendation, context, id, reason);
+        score += uimSetupCostService.score(recommendation, context);
 
         PreferenceProfile preferences = context.getPreferenceProfile();
         if (preferences != null && recommendation.getId() != null)
@@ -40,39 +56,27 @@ public class RecommendationIntelligenceService
         return score;
     }
 
-    private static double readinessValue(
-            Recommendation recommendation,
-            RecommendationGuidance guidance)
+    private static double readinessValue(Recommendation recommendation, RecommendationGuidance guidance)
     {
         double value = 0.0;
-        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED)
-            value += 7.0;
-        else if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
-            value -= 9.0;
-        else if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
-            return -10_000.0;
-
+        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED) value += 7.0;
+        else if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED) value -= 9.0;
+        else if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED) return -10_000.0;
         if (guidance != null && hasText(guidance.getAction())) value += 5.0;
         if (guidance != null && hasText(guidance.getLocation())) value += 2.0;
         if (guidance != null && hasText(guidance.getSupplies())) value += 2.0;
         return value;
     }
 
-    private static double goalValue(
-            Recommendation recommendation,
-            StrategyContext context,
-            String id,
-            String title)
+    private static double goalValue(Recommendation recommendation, StrategyContext context, String id, String title)
     {
-        GoalType goal = context.getActiveGoal() == null
-                ? GoalType.MAX : context.getActiveGoal();
+        GoalType goal = context.getActiveGoal() == null ? GoalType.MAX : context.getActiveGoal();
         boolean skill = id.startsWith("skill:");
         boolean quest = id.startsWith("quest:");
         boolean gear = id.startsWith("gear:") || id.startsWith("upgrade:");
         boolean pvm = id.startsWith("pvm:");
         boolean diary = id.startsWith("diary:");
-        boolean ca = id.startsWith("combat-achievement:")
-                || id.startsWith("combat_achievement:");
+        boolean ca = id.startsWith("combat-achievement:") || id.startsWith("combat_achievement:");
         String identity = id + " " + title;
 
         switch (goal)
@@ -109,10 +113,8 @@ public class RecommendationIntelligenceService
                 return pvm || gear ? 16.0 : 0.0;
             case RAID_READY:
                 if (pvm || gear) return 24.0;
-                if (id.startsWith("skill:slayer")
-                        || id.startsWith("skill:prayer")
-                        || id.startsWith("skill:magic")
-                        || id.startsWith("skill:ranged")) return 11.0;
+                if (id.startsWith("skill:slayer") || id.startsWith("skill:prayer")
+                        || id.startsWith("skill:magic") || id.startsWith("skill:ranged")) return 11.0;
                 return 0.0;
             case TOTAL_2000:
                 return skill ? 19.0 : 0.0;
@@ -120,10 +122,8 @@ public class RecommendationIntelligenceService
                 if (id.startsWith("skill:slayer")) return 45.0;
                 return containsAny(identity, "whip", "slayer") ? 20.0 : 0.0;
             case BASE_70S:
-                if (skill && recommendation.getCurrentLevel() > 0
-                        && recommendation.getCurrentLevel() < 70)
-                    return 23.0 + Math.min(8.0,
-                            (70 - recommendation.getCurrentLevel()) * 0.15);
+                if (skill && recommendation.getCurrentLevel() > 0 && recommendation.getCurrentLevel() < 70)
+                    return 23.0 + Math.min(8.0, (70 - recommendation.getCurrentLevel()) * 0.15);
                 return 0.0;
             case GEAR_TARGET:
                 return gear ? 35.0 : pvm ? 15.0 : 0.0;
@@ -133,9 +133,7 @@ public class RecommendationIntelligenceService
         }
     }
 
-    private static double sessionValue(
-            Recommendation recommendation,
-            SessionIntent intent)
+    private static double sessionValue(Recommendation recommendation, SessionIntent intent)
     {
         TrainingPlan plan = recommendation.getTrainingPlan();
         if (plan == null || plan.getMethod() == null || intent == null) return 0.0;
@@ -164,12 +162,7 @@ public class RecommendationIntelligenceService
         }
     }
 
-    private static double accountModeValue(
-            Recommendation recommendation,
-            StrategyContext context,
-            String id,
-            String title,
-            String reason)
+    private static double accountModeValue(Recommendation recommendation, StrategyContext context, String id, String title, String reason)
     {
         AccountMode mode = context.getAccountMode();
         TrainingPlan plan = recommendation.getTrainingPlan();
@@ -204,32 +197,20 @@ public class RecommendationIntelligenceService
         return value;
     }
 
-    private static double safetyValue(
-            StrategyContext context,
-            String id,
-            String title,
-            String reason)
+    private static double safetyValue(StrategyContext context, String id, String title, String reason)
     {
         String identity = id + " " + title + " " + reason;
-        boolean wilderness = containsAny(identity,
-                "wilderness", "wildy", "revenant", "revs");
+        boolean wilderness = containsAny(identity, "wilderness", "wildy", "revenant", "revs");
         if (wilderness && !context.isAllowWildernessMethods()) return -5_000.0;
-
         AccountMode mode = context.getAccountMode();
-        if ((mode == AccountMode.HARDCORE_IRONMAN
-                || mode == AccountMode.HARDCORE_GROUP_IRONMAN) && wilderness)
+        if ((mode == AccountMode.HARDCORE_IRONMAN || mode == AccountMode.HARDCORE_GROUP_IRONMAN) && wilderness)
             return -7_500.0;
-        if ((mode == AccountMode.HARDCORE_IRONMAN
-                || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                && id.startsWith("pvm:")
-                && containsAny(reason, "dangerous", "high risk"))
-            return -20.0;
+        if ((mode == AccountMode.HARDCORE_IRONMAN || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
+                && id.startsWith("pvm:") && containsAny(reason, "dangerous", "high risk")) return -20.0;
         return 0.0;
     }
 
-    private static double resourceValue(
-            RecommendationGuidance guidance,
-            AccountMode mode)
+    private static double resourceValue(RecommendationGuidance guidance, AccountMode mode)
     {
         if (guidance == null || !hasText(guidance.getSupplies())) return 0.0;
         String supplies = lower(guidance.getSupplies());
@@ -237,29 +218,21 @@ public class RecommendationIntelligenceService
         if (containsAny(supplies, "verified:", "you own", "already have")) value += 5.0;
         if (containsAny(supplies, "open your bank", "needs bank", "bank once")) value -= 6.0;
         if (containsAny(supplies, "needs info", "not yet verified")) value -= 10.0;
-        if (mode != null && mode.isIronLike()
-                && containsAny(supplies, "self-source", "self source")) value -= 2.0;
-        if (mode != null && mode.usesGrandExchange()
-                && containsAny(supplies, "grand exchange")
+        if (mode != null && mode.isIronLike() && containsAny(supplies, "self-source", "self source")) value -= 2.0;
+        if (mode != null && mode.usesGrandExchange() && containsAny(supplies, "grand exchange")
                 && !containsAny(supplies, "cannot afford", "short of")) value += 2.0;
         return value;
     }
 
-    private static double opportunityCostValue(
-            Recommendation recommendation,
-            StrategyContext context,
-            String id,
-            String reason)
+    private static double opportunityCostValue(Recommendation recommendation, StrategyContext context, String id, String reason)
     {
         if (id.startsWith("detour:"))
-            return containsAny(reason, " + ", "while", "also", "cross-skill")
-                    ? 5.0 : -6.0;
+            return containsAny(reason, " + ", "while", "also", "cross-skill") ? 5.0 : -6.0;
         if (id.contains("angler"))
         {
             int fishing = context.getData().getAccount().getSkillLevel(Skill.FISHING);
             if (fishing >= 90) return 5.0;
-            if (fishing < 55 && context.getActiveGoal() != GoalType.MAX
-                    && !context.isCollectionistMode()) return -8.0;
+            if (fishing < 55 && context.getActiveGoal() != GoalType.MAX && !context.isCollectionistMode()) return -8.0;
         }
         return 0.0;
     }
