@@ -9,6 +9,7 @@ public class StrategyDataAssembler
 {
     private final AccountReader accountReader;
     private final LiveItemStateReader itemStateReader;
+    private final LiveRunePouchStateReader runePouchStateReader;
     private final LiveQuestStateReader questStateReader;
     private final LiveDiaryStateReader diaryStateReader;
     private final LiveCombatAchievementReader combatAchievementReader;
@@ -25,6 +26,7 @@ public class StrategyDataAssembler
     public StrategyDataAssembler(
             AccountReader accountReader,
             LiveItemStateReader itemStateReader,
+            LiveRunePouchStateReader runePouchStateReader,
             LiveQuestStateReader questStateReader,
             LiveDiaryStateReader diaryStateReader,
             LiveCombatAchievementReader combatAchievementReader,
@@ -39,6 +41,7 @@ public class StrategyDataAssembler
     {
         this.accountReader = accountReader;
         this.itemStateReader = itemStateReader;
+        this.runePouchStateReader = runePouchStateReader;
         this.questStateReader = questStateReader;
         this.diaryStateReader = diaryStateReader;
         this.combatAchievementReader = combatAchievementReader;
@@ -62,7 +65,7 @@ public class StrategyDataAssembler
             FarmingAccessEvaluator farmingAccessEvaluator,
             ObservedStateStore observedStateStore)
     {
-        this(accountReader, itemStateReader, questStateReader,
+        this(accountReader, itemStateReader, null, questStateReader,
                 null, null, null, null, null, null,
                 accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
@@ -76,6 +79,11 @@ public class StrategyDataAssembler
         InventorySnapshot inventory = itemStateReader.readInventory();
         BankSnapshot bank = itemStateReader.readBank();
         EquipmentSnapshot equipment = itemStateReader.readEquipment();
+        StorageSnapshot rememberedStorage = observedStateStore.getStorage();
+        StorageSnapshot storage = runePouchStateReader == null
+                ? rememberedStorage
+                : runePouchStateReader.merge(rememberedStorage, inventory);
+
         AccountEconomySnapshot liveEconomy = economyReader == null
                 ? null : economyReader.read(account, inventory, bank);
         AccountEconomySnapshot economy = liveEconomy != null
@@ -132,7 +140,7 @@ public class StrategyDataAssembler
                 .capabilities(observedStateStore.getCapabilities())
                 .accessMemory(accessMemory)
                 .farmingRuns(farmingRunStateStore.snapshot())
-                .storage(observedStateStore.getStorage())
+                .storage(storage)
                 .transport(observedStateStore.getTransport())
                 .poh(observedStateStore.getPoh())
                 .groupStorage(observedStateStore.getGroupStorage())
