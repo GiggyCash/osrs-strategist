@@ -3,7 +3,6 @@ package com.udderlywet.osrsstrategist;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,36 +18,20 @@ import javax.swing.Timer;
 import net.runelite.api.Skill;
 import net.runelite.client.ui.PluginPanel;
 
-/**
- * RuneLite sidebar for Strategist.
- *
- * <p>UI philosophy: fun enough to feel like RuneScape, restrained enough to
- * remain a useful tool. The panel uses native RuneLite/RuneScape skill sprites,
- * muted gold accents, compact cards, and a brief milestone celebration. Deep
- * reasoning remains behind Details so the default view is easy to scan.</p>
- */
+/** RuneLite sidebar for Strategist. Designed to use vertical space, not width. */
 public class OsrsStrategistPanel extends PluginPanel
 {
-    private static final int CONTENT_WIDTH = PluginPanel.PANEL_WIDTH - 30;
+    private static final int CONTENT_WIDTH = PluginPanel.PANEL_WIDTH - 16;
     private static final int INNER_WIDTH = CONTENT_WIDTH - 20;
-
-    /**
-     * Swing's HTML renderer needs a little extra breathing room inside bordered
-     * cards. Keeping prose narrower than controls prevents the final characters
-     * on wrapped lines from painting beneath the right card border.
-     */
-    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 14;
+    private static final int BODY_TEXT_WIDTH = INNER_WIDTH - 4;
 
     private final SkillIconLoader skillIconLoader;
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
 
     private final JLabel accountName = label("Waiting for login...");
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
-
     private final JLabel activeGoal = label("Goal: Max");
-    private final JLabel strategySummary = mutedLabel(
-            "Balanced • Pick for me • Normal quests"
-    );
+    private final JLabel strategySummary = mutedLabel("Mode: Balanced<br>Session: Pick for me<br>Quests: Normal");
 
     private final JPanel milestoneBanner = cardPanel(true);
     private final JLabel milestoneTitle = label("Milestone complete!");
@@ -57,7 +40,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private final JPanel recommendationCard = cardPanel(true);
     private final JLabel recommendationIcon = new JLabel();
-    private final JLabel recommendationEyebrow = mutedLabel("NEXT MOVE");
+    private final JLabel recommendationEyebrow = inlineMutedLabel("NEXT MOVE");
     private final JLabel recommendationTitle = label("Analyzing account...");
     private final JLabel progressText = mutedLabel("");
     private final JProgressBar progressBar = new JProgressBar(0, 100);
@@ -66,7 +49,6 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private final JLabel alternativeOne = label("");
     private final JLabel alternativeTwo = label("");
-
     private final JLabel opportunityOne = label("No active reminders yet.");
     private final JLabel opportunityTwo = label("");
 
@@ -78,29 +60,22 @@ public class OsrsStrategistPanel extends PluginPanel
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
 
-    public OsrsStrategistPanel(
-            BiConsumer<String, FeedbackAction> feedbackHandler,
-            SkillIconLoader skillIconLoader)
+    public OsrsStrategistPanel(BiConsumer<String, FeedbackAction> feedbackHandler, SkillIconLoader skillIconLoader)
     {
         this.feedbackHandler = feedbackHandler;
         this.skillIconLoader = skillIconLoader;
-
         setLayout(new BorderLayout());
         setBackground(StrategistTheme.BACKGROUND);
 
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBackground(StrategistTheme.BACKGROUND);
-        content.setBorder(
-                BorderFactory.createEmptyBorder(8, 8, 12, 8)
-        );
-
+        content.setBorder(BorderFactory.createEmptyBorder(8, 8, 12, 8));
         buildHeader(content);
         buildStrategyCard(content);
         buildMilestoneBanner(content);
         buildRecommendationCard(content);
         buildSecondaryCards(content);
-
         add(content, BorderLayout.NORTH);
     }
 
@@ -109,91 +84,66 @@ public class OsrsStrategistPanel extends PluginPanel
         JLabel title = label("OSRS STRATEGIST");
         title.setForeground(StrategistTheme.GOLD);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 15f));
-
-        JLabel subtitle = mutedLabel("Adaptive progression planner");
-
         content.add(title);
         content.add(Box.createVerticalStrut(2));
-        content.add(subtitle);
+        content.add(mutedLabel("Adaptive progression planner"));
         content.add(Box.createVerticalStrut(10));
 
         JPanel accountCard = cardPanel(false);
         accountName.setFont(accountName.getFont().deriveFont(Font.BOLD, 13f));
         accountCard.add(accountName);
-        accountCard.add(Box.createVerticalStrut(2));
+        accountCard.add(Box.createVerticalStrut(3));
         accountCard.add(accountMeta);
-
         content.add(accountCard);
         content.add(Box.createVerticalStrut(8));
     }
 
     private void buildStrategyCard(JPanel content)
     {
-        JPanel strategyCard = cardPanel(false);
-
-        JLabel section = eyebrow("STRATEGY");
+        JPanel card = cardPanel(false);
         activeGoal.setForeground(StrategistTheme.GOLD);
         activeGoal.setFont(activeGoal.getFont().deriveFont(Font.BOLD));
-
-        strategyCard.add(section);
-        strategyCard.add(Box.createVerticalStrut(4));
-        strategyCard.add(activeGoal);
-        strategyCard.add(Box.createVerticalStrut(2));
-        strategyCard.add(strategySummary);
-
-        content.add(strategyCard);
+        card.add(eyebrow("STRATEGY"));
+        card.add(Box.createVerticalStrut(5));
+        card.add(activeGoal);
+        card.add(Box.createVerticalStrut(5));
+        card.add(strategySummary);
+        content.add(card);
         content.add(Box.createVerticalStrut(8));
     }
 
     private void buildMilestoneBanner(JPanel content)
     {
-        milestoneBanner.setBackground(StrategistTheme.CARD);
         milestoneTitle.setForeground(StrategistTheme.SUCCESS);
-        milestoneTitle.setFont(
-                milestoneTitle.getFont().deriveFont(Font.BOLD, 13f)
-        );
-
+        milestoneTitle.setFont(milestoneTitle.getFont().deriveFont(Font.BOLD, 13f));
         milestoneBanner.add(milestoneTitle);
         milestoneBanner.add(Box.createVerticalStrut(3));
         milestoneBanner.add(milestoneBody);
         milestoneBanner.setVisible(false);
-
         content.add(milestoneBanner);
         content.add(Box.createVerticalStrut(8));
     }
 
     private void buildRecommendationCard(JPanel content)
     {
-        JLabel section = eyebrow("DO NEXT");
-        content.add(section);
+        content.add(eyebrow("DO NEXT"));
         content.add(Box.createVerticalStrut(5));
 
-        JPanel topRow = new JPanel(new BorderLayout(8, 0));
-        topRow.setOpaque(false);
-        topRow.setAlignmentX(LEFT_ALIGNMENT);
-        topRow.setMaximumSize(new Dimension(INNER_WIDTH, 48));
-
+        JPanel identityRow = new JPanel(new BorderLayout(7, 0));
+        identityRow.setOpaque(false);
+        identityRow.setAlignmentX(LEFT_ALIGNMENT);
+        identityRow.setMaximumSize(new Dimension(INNER_WIDTH, 30));
         recommendationIcon.setHorizontalAlignment(SwingConstants.CENTER);
         recommendationIcon.setVerticalAlignment(SwingConstants.CENTER);
-        recommendationIcon.setPreferredSize(new Dimension(28, 28));
+        recommendationIcon.setPreferredSize(new Dimension(24, 24));
+        recommendationEyebrow.setFont(recommendationEyebrow.getFont().deriveFont(Font.BOLD, 9f));
+        identityRow.add(recommendationIcon, BorderLayout.WEST);
+        identityRow.add(recommendationEyebrow, BorderLayout.CENTER);
 
-        JPanel titleStack = new JPanel();
-        titleStack.setOpaque(false);
-        titleStack.setLayout(new BoxLayout(titleStack, BoxLayout.Y_AXIS));
-        recommendationEyebrow.setFont(
-                recommendationEyebrow.getFont().deriveFont(Font.BOLD, 9f)
-        );
-        recommendationTitle.setFont(
-                recommendationTitle.getFont().deriveFont(Font.BOLD, 13f)
-        );
-        titleStack.add(recommendationEyebrow);
-        titleStack.add(Box.createVerticalStrut(1));
-        titleStack.add(recommendationTitle);
-
-        topRow.add(recommendationIcon, BorderLayout.WEST);
-        topRow.add(titleStack, BorderLayout.CENTER);
-
-        recommendationCard.add(topRow);
+        recommendationTitle.setFont(recommendationTitle.getFont().deriveFont(Font.BOLD, 13f));
+        recommendationCard.add(identityRow);
+        recommendationCard.add(Box.createVerticalStrut(4));
+        recommendationCard.add(recommendationTitle);
         recommendationCard.add(Box.createVerticalStrut(7));
 
         progressBar.setAlignmentX(LEFT_ALIGNMENT);
@@ -204,54 +154,31 @@ public class OsrsStrategistPanel extends PluginPanel
         progressBar.setStringPainted(false);
         progressBar.setBackground(StrategistTheme.DIVIDER);
         progressBar.setForeground(StrategistTheme.GOLD);
-
         recommendationCard.add(progressText);
         recommendationCard.add(Box.createVerticalStrut(3));
         recommendationCard.add(progressBar);
-        recommendationCard.add(Box.createVerticalStrut(8));
+        recommendationCard.add(Box.createVerticalStrut(9));
         recommendationCard.add(recommendationBody);
-        recommendationCard.add(Box.createVerticalStrut(8));
+        recommendationCard.add(Box.createVerticalStrut(10));
 
-        detailsButton.setAlignmentX(LEFT_ALIGNMENT);
-        detailsButton.setMaximumSize(
-                new Dimension(INNER_WIDTH, 25)
-        );
+        makeFullWidth(detailsButton, 27);
+        makeFullWidth(laterButton, 27);
+        makeFullWidth(notTodayButton, 27);
+        makeFullWidth(dislikeButton, 27);
         recommendationCard.add(detailsButton);
-        recommendationCard.add(Box.createVerticalStrut(7));
-
-        // "Do This" is intentionally gone. Strategist follows live account
-        // state and detects natural milestone completion without requiring the
-        // player to declare that they started the recommendation.
-        JPanel feedbackPanel = new JPanel(
-                new GridLayout(1, 3, 4, 0)
-        );
-        feedbackPanel.setOpaque(false);
-        feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
-        feedbackPanel.setPreferredSize(
-                new Dimension(INNER_WIDTH, 27)
-        );
-        feedbackPanel.setMaximumSize(
-                new Dimension(INNER_WIDTH, 27)
-        );
-        feedbackPanel.add(laterButton);
-        feedbackPanel.add(notTodayButton);
-        feedbackPanel.add(dislikeButton);
-
-        recommendationCard.add(feedbackPanel);
-        recommendationCard.add(Box.createVerticalStrut(5));
+        recommendationCard.add(Box.createVerticalStrut(6));
+        recommendationCard.add(laterButton);
+        recommendationCard.add(Box.createVerticalStrut(4));
+        recommendationCard.add(notTodayButton);
+        recommendationCard.add(Box.createVerticalStrut(4));
+        recommendationCard.add(dislikeButton);
+        recommendationCard.add(Box.createVerticalStrut(6));
         recommendationCard.add(feedbackStatus);
 
         detailsButton.addActionListener(event -> toggleDetails());
-        laterButton.addActionListener(
-                event -> submitFeedback(FeedbackAction.LATER)
-        );
-        notTodayButton.addActionListener(
-                event -> submitFeedback(FeedbackAction.NOT_TODAY)
-        );
-        dislikeButton.addActionListener(
-                event -> submitFeedback(FeedbackAction.DISLIKE)
-        );
-
+        laterButton.addActionListener(event -> submitFeedback(FeedbackAction.LATER));
+        notTodayButton.addActionListener(event -> submitFeedback(FeedbackAction.NOT_TODAY));
+        dislikeButton.addActionListener(event -> submitFeedback(FeedbackAction.DISLIKE));
         setRecommendationButtonsEnabled(false);
 
         content.add(recommendationCard);
@@ -260,94 +187,55 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildSecondaryCards(JPanel content)
     {
-        JPanel alternativesCard = cardPanel(false);
-        alternativesCard.add(eyebrow("OTHER GOOD OPTIONS"));
-        alternativesCard.add(Box.createVerticalStrut(5));
-        alternativesCard.add(alternativeOne);
-        alternativesCard.add(Box.createVerticalStrut(4));
-        alternativesCard.add(alternativeTwo);
-
-        content.add(alternativesCard);
+        JPanel alternatives = cardPanel(false);
+        alternatives.add(eyebrow("OTHER GOOD OPTIONS"));
+        alternatives.add(Box.createVerticalStrut(6));
+        alternatives.add(alternativeOne);
+        alternatives.add(Box.createVerticalStrut(7));
+        alternatives.add(alternativeTwo);
+        content.add(alternatives);
         content.add(Box.createVerticalStrut(8));
 
-        JPanel opportunitiesCard = cardPanel(false);
-        opportunitiesCard.add(eyebrow("OPPORTUNITIES"));
-        opportunitiesCard.add(Box.createVerticalStrut(5));
-        opportunitiesCard.add(opportunityOne);
-        opportunitiesCard.add(Box.createVerticalStrut(4));
-        opportunitiesCard.add(opportunityTwo);
-
-        content.add(opportunitiesCard);
+        JPanel opportunities = cardPanel(false);
+        opportunities.add(eyebrow("OPPORTUNITIES"));
+        opportunities.add(Box.createVerticalStrut(6));
+        opportunities.add(opportunityOne);
+        opportunities.add(Box.createVerticalStrut(7));
+        opportunities.add(opportunityTwo);
+        content.add(opportunities);
     }
 
-    /**
-     * Compatibility overload for logged-out/older callers.
-     */
-    public void updateAccount(
-            String name,
-            String type,
-            int total)
+    public void updateAccount(String name, String type, int total)
     {
         updateAccount(name, type, "Unknown access", total);
     }
 
-    public void updateAccount(
-            String name,
-            String type,
-            String membership,
-            int total)
+    public void updateAccount(String name, String type, String membership, int total)
     {
         accountName.setText(html(escape(name)));
-        accountMeta.setText(
-                html(
-                        escape(type)
-                                + " • "
-                                + escape(membership)
-                                + " • "
-                                + (total > 0 ? total : "--")
-                                + " / 2376"
-                )
-        );
+        accountMeta.setText(html(escape(type) + "<br>" + escape(membership) + "<br>" + (total > 0 ? total : "--") + " / 2376 total"));
     }
 
     public void updateGoal(GoalType goal)
     {
         GoalType safeGoal = goal == null ? GoalType.MAX : goal;
-        activeGoal.setText(
-                html("Goal: " + prettyName(safeGoal.name()))
-        );
+        activeGoal.setText(html("Goal: " + prettyName(safeGoal.name())));
     }
 
-    public void updateStrategy(
-            StrategyMode mode,
-            QuestTolerance tolerance)
+    public void updateStrategy(StrategyMode mode, QuestTolerance tolerance)
     {
-        updateStrategy(
-                mode,
-                SessionIntent.PICK_FOR_ME,
-                tolerance
-        );
+        updateStrategy(mode, SessionIntent.PICK_FOR_ME, tolerance);
     }
 
-    public void updateStrategy(
-            StrategyMode mode,
-            SessionIntent intent,
-            QuestTolerance tolerance)
+    public void updateStrategy(StrategyMode mode, SessionIntent intent, QuestTolerance tolerance)
     {
-        strategySummary.setText(
-                html(
-                        prettyName(mode.name())
-                                + " • "
-                                + prettyName(intent.name())
-                                + " • "
-                                + prettyName(tolerance.name())
-                                + " quests"
-                )
-        );
+        strategySummary.setText(html(
+                "Mode: " + prettyName(mode.name())
+                        + "<br>Session: " + prettyName(intent.name())
+                        + "<br>Quests: " + prettyName(tolerance.name())));
     }
 
-    public void updateRecommendations(
-            List<Recommendation> recommendations)
+    public void updateRecommendations(List<Recommendation> recommendations)
     {
         if (recommendations == null || recommendations.isEmpty())
         {
@@ -355,105 +243,57 @@ public class OsrsStrategistPanel extends PluginPanel
             detailsVisible = false;
             detailsButton.setText("Details");
             setRecommendationButtonsEnabled(false);
-
             recommendationIcon.setIcon(null);
-            recommendationTitle.setText(
-                    html("No recommendation available")
-            );
+            recommendationEyebrow.setText("NEXT MOVE");
+            recommendationTitle.setText(html("No recommendation available"));
             progressText.setText(html(""));
             progressBar.setValue(0);
             recommendationBody.setText(bodyHtml(""));
+            feedbackStatus.setText(bodyHtml(""));
             alternativeOne.setText(html(""));
             alternativeTwo.setText(html(""));
             return;
         }
 
         Recommendation best = recommendations.get(0);
-        String previousId = currentRecommendation == null
-                ? null
-                : currentRecommendation.getId();
-
+        String previousId = currentRecommendation == null ? null : currentRecommendation.getId();
         currentRecommendation = best;
-
-        // A newly rotated recommendation starts collapsed. If the same task is
-        // merely refreshed by a stat event, preserve the player's Details view.
         if (previousId == null || !previousId.equals(best.getId()))
         {
             detailsVisible = false;
             detailsButton.setText("Details");
+            feedbackStatus.setText(bodyHtml(""));
         }
 
         setRecommendationButtonsEnabled(true);
-        recommendationTitle.setText(
-                html(escape(best.getTitle()))
-        );
-
+        recommendationTitle.setText(html(escape(best.getTitle())));
         Skill skill = MilestoneTracker.skillFor(best);
         recommendationIcon.setIcon(null);
         if (skill != null)
         {
-            recommendationEyebrow.setText(
-                    html(escape(skill.getName().toUpperCase()))
-            );
+            recommendationEyebrow.setText(skill.getName().toUpperCase());
             skillIconLoader.load(skill, recommendationIcon, 24);
         }
         else
         {
-            recommendationEyebrow.setText(html("NEXT MOVE"));
+            recommendationEyebrow.setText("NEXT MOVE");
         }
-
         updateProgress(best);
         renderRecommendationBody();
-
-        alternativeOne.setText(
-                html(
-                        recommendations.size() > 1
-                                ? "• " + escape(
-                                recommendations.get(1).getTitle()
-                        )
-                                : ""
-                )
-        );
-        alternativeTwo.setText(
-                html(
-                        recommendations.size() > 2
-                                ? "• " + escape(
-                                recommendations.get(2).getTitle()
-                        )
-                                : ""
-                )
-        );
+        alternativeOne.setText(html(recommendations.size() > 1 ? "• " + escape(recommendations.get(1).getTitle()) : ""));
+        alternativeTwo.setText(html(recommendations.size() > 2 ? "• " + escape(recommendations.get(2).getTitle()) : ""));
     }
 
-    /**
-     * Displays a short, non-modal celebration. It disappears automatically so
-     * the useful planning content remains the visual focus.
-     */
     public void showMilestoneCompletion(MilestoneCompletion completion)
     {
-        if (completion == null)
-        {
-            return;
-        }
-
+        if (completion == null) return;
         milestoneTitle.setText(html("✓ Milestone complete"));
-        milestoneBody.setText(
-                bodyHtml(
-                        escape(completion.getSkill().getName())
-                                + " "
-                                + completion.getStartedAtLevel()
-                                + " → "
-                                + completion.getTargetLevel()
-                                + ". Picking your next move..."
-                )
-        );
+        milestoneBody.setText(bodyHtml(
+                escape(completion.getSkill().getName()) + " "
+                        + completion.getStartedAtLevel() + " → "
+                        + completion.getTargetLevel() + ". Picking your next move..."));
         milestoneBanner.setVisible(true);
-
-        if (milestoneHideTimer != null)
-        {
-            milestoneHideTimer.stop();
-        }
-
+        if (milestoneHideTimer != null) milestoneHideTimer.stop();
         milestoneHideTimer = new Timer(8000, event ->
         {
             milestoneBanner.setVisible(false);
@@ -462,7 +302,6 @@ public class OsrsStrategistPanel extends PluginPanel
         });
         milestoneHideTimer.setRepeats(false);
         milestoneHideTimer.start();
-
         revalidate();
         repaint();
     }
@@ -471,77 +310,36 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (opportunities == null || opportunities.isEmpty())
         {
-            opportunityOne.setText(
-                    html("No active reminders yet.")
-            );
+            opportunityOne.setText(html("No active reminders yet."));
             opportunityTwo.setText(html(""));
             return;
         }
-
-        opportunityOne.setText(
-                html(opportunityText(opportunities.get(0)))
-        );
-        opportunityTwo.setText(
-                html(
-                        opportunities.size() > 1
-                                ? opportunityText(opportunities.get(1))
-                                : ""
-                )
-        );
+        opportunityOne.setText(html(opportunityText(opportunities.get(0))));
+        opportunityTwo.setText(html(opportunities.size() > 1 ? opportunityText(opportunities.get(1)) : ""));
     }
 
     private void updateProgress(Recommendation recommendation)
     {
         int current = recommendation.getCurrentLevel();
         int target = recommendation.getTargetLevel();
-
         if (current <= 0 || target <= current)
         {
             progressText.setText(html(""));
             progressBar.setValue(0);
             return;
         }
-
-        int start = checkpointStart(target);
-        int range = Math.max(1, target - start);
-        int progressed = Math.max(0, current - start);
-        int percent = Math.max(
-                0,
-                Math.min(100, (int) Math.round(
-                        progressed * 100.0 / range
-                ))
-        );
-
-        progressText.setText(
-                html("Level " + current + " → " + target)
-        );
+        int start = target <= 10 ? 1 : target == 99 ? 90 : Math.max(1, target - 10);
+        int percent = Math.max(0, Math.min(100,
+                (int) Math.round(Math.max(0, current - start) * 100.0 / Math.max(1, target - start))));
+        progressText.setText(html("Level " + current + " → " + target));
         progressBar.setValue(percent);
-    }
-
-    private static int checkpointStart(int target)
-    {
-        if (target <= 10)
-        {
-            return 1;
-        }
-        if (target == 99)
-        {
-            return 90;
-        }
-        return Math.max(1, target - 10);
     }
 
     private void toggleDetails()
     {
-        if (currentRecommendation == null)
-        {
-            return;
-        }
-
+        if (currentRecommendation == null) return;
         detailsVisible = !detailsVisible;
-        detailsButton.setText(
-                detailsVisible ? "Hide Details" : "Details"
-        );
+        detailsButton.setText(detailsVisible ? "Hide Details" : "Details");
         renderRecommendationBody();
         revalidate();
         repaint();
@@ -554,38 +352,19 @@ public class OsrsStrategistPanel extends PluginPanel
             recommendationBody.setText(bodyHtml(""));
             return;
         }
-
         String body = detailsVisible
-                ? RecommendationPresentation.detailedHtml(
-                        currentRecommendation
-                )
-                : RecommendationPresentation.compactHtml(
-                        currentRecommendation
-                );
-
+                ? RecommendationPresentation.detailedHtml(currentRecommendation)
+                : RecommendationPresentation.compactHtml(currentRecommendation);
         recommendationBody.setText(bodyHtml(body));
     }
 
     private void submitFeedback(FeedbackAction action)
     {
-        if (currentRecommendation == null || feedbackHandler == null)
-        {
-            return;
-        }
-
-        String actedOnTitle = currentRecommendation.getTitle();
-        String actedOnId = currentRecommendation.getId();
-
-        feedbackStatus.setText(
-                bodyHtml(
-                        feedbackStatusText(
-                                action,
-                                actedOnTitle
-                        )
-                )
-        );
-
-        feedbackHandler.accept(actedOnId, action);
+        if (currentRecommendation == null || feedbackHandler == null) return;
+        String title = currentRecommendation.getTitle();
+        String id = currentRecommendation.getId();
+        feedbackStatus.setText(bodyHtml(feedbackStatusText(action, title)));
+        feedbackHandler.accept(id, action);
     }
 
     private void setRecommendationButtonsEnabled(boolean enabled)
@@ -596,12 +375,21 @@ public class OsrsStrategistPanel extends PluginPanel
         dislikeButton.setEnabled(enabled);
     }
 
+    private static void makeFullWidth(JButton button, int height)
+    {
+        button.setAlignmentX(LEFT_ALIGNMENT);
+        Dimension size = new Dimension(INNER_WIDTH, height);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setMinimumSize(size);
+    }
+
     private static JButton actionButton(String text)
     {
         JButton button = new JButton(text);
         button.setFocusable(false);
         button.setFont(button.getFont().deriveFont(10f));
-        button.setMargin(new Insets(2, 2, 2, 2));
+        button.setMargin(new Insets(2, 4, 2, 4));
         button.setBackground(StrategistTheme.CARD_HOVER);
         button.setForeground(StrategistTheme.TEXT);
         return button;
@@ -613,14 +401,8 @@ public class OsrsStrategistPanel extends PluginPanel
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(StrategistTheme.CARD);
         panel.setAlignmentX(LEFT_ALIGNMENT);
-        panel.setBorder(
-                highlighted
-                        ? StrategistTheme.highlightedCardBorder()
-                        : StrategistTheme.cardBorder()
-        );
-        panel.setMaximumSize(
-                new Dimension(CONTENT_WIDTH, Integer.MAX_VALUE)
-        );
+        panel.setBorder(highlighted ? StrategistTheme.highlightedCardBorder() : StrategistTheme.cardBorder());
+        panel.setMaximumSize(new Dimension(CONTENT_WIDTH, Integer.MAX_VALUE));
         return panel;
     }
 
@@ -647,73 +429,51 @@ public class OsrsStrategistPanel extends PluginPanel
         return label;
     }
 
-    private static String opportunityText(Opportunity opportunity)
+    private static JLabel inlineMutedLabel(String text)
     {
-        String state = opportunity.isReady()
-                ? "Ready"
-                : confidenceName(opportunity.getConfidence());
-
-        return "• <b>" + escape(opportunity.getTitle())
-                + "</b> • " + state;
+        JLabel label = new JLabel(text);
+        label.setForeground(StrategistTheme.MUTED_TEXT);
+        label.setAlignmentX(LEFT_ALIGNMENT);
+        return label;
     }
 
-    private static String feedbackStatusText(
-            FeedbackAction action,
-            String title)
+    private static String opportunityText(Opportunity opportunity)
     {
-        String activity = escape(
-                title == null ? "Recommendation" : title
-        );
+        String state = opportunity.isReady() ? "Ready" : confidenceName(opportunity.getConfidence());
+        return "• <b>" + escape(opportunity.getTitle()) + "</b><br>" + state;
+    }
 
+    private static String feedbackStatusText(FeedbackAction action, String title)
+    {
+        String activity = escape(title == null ? "Recommendation" : title);
         switch (action)
         {
-            case DO_THIS:
-                return "Selected: " + activity;
-            case LATER:
-                return activity + " • later (1h)";
-            case NOT_TODAY:
-                return activity + " • hidden today";
-            case DISLIKE:
-                return activity + " • showing less often";
-            default:
-                return "Feedback saved";
+            case DO_THIS: return "Selected: " + activity;
+            case LATER: return activity + "<br>Later for 1 hour";
+            case NOT_TODAY: return activity + "<br>Hidden for today";
+            case DISLIKE: return activity + "<br>Showing less often";
+            default: return "Feedback saved";
         }
     }
 
     private static String prettyName(String text)
     {
         String lower = text.toLowerCase().replace('_', ' ');
-        return Character.toUpperCase(lower.charAt(0))
-                + lower.substring(1);
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 
-    private static String confidenceName(
-            RecommendationConfidence confidence)
+    private static String confidenceName(RecommendationConfidence confidence)
     {
-        if (confidence == RecommendationConfidence.VERIFIED)
-        {
-            return "Verified";
-        }
-        if (confidence == RecommendationConfidence.BLOCKED)
-        {
-            return "Blocked";
-        }
+        if (confidence == RecommendationConfidence.VERIFIED) return "Verified";
+        if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
         return "Check Needed";
     }
 
     private static String escape(String value)
     {
-        if (value == null)
-        {
-            return "";
-        }
-
-        return value
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
+        if (value == null) return "";
+        return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                .replace("\"", "&quot;").replace("'", "&#39;");
     }
 
     private static String html(String text)
@@ -728,10 +488,6 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static String htmlWithWidth(String text, int width)
     {
-        return "<html><div style='width:"
-                + width
-                + "px;'>"
-                + text
-                + "</div></html>";
+        return "<html><div style='width:" + width + "px;'>" + text + "</div></html>";
     }
 }
