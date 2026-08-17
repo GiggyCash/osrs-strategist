@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -98,13 +100,14 @@ public class AdaptiveMilestoneGuidanceService
                 + format(xpNeeded) + " XP remains; this action gives "
                 + format(xpPerAction) + " XP each in the modeled setup.";
 
-        SupplyNeed supply = supplyNeed(profile, action, actionsNeeded);
-        String supplies = supply == null
+        List<SupplyNeed> supplyNeeds = supplyNeeds(
+                profile, action, actionsNeeded);
+        String supplies = supplyNeeds.isEmpty()
                 ? null
                 : supplyGuidance(
                         data,
                         data.getAccount(),
-                        supply,
+                        supplyNeeds,
                         useGroupStorage);
 
         String location = plan.getMethod().getInstructions();
@@ -177,19 +180,48 @@ public class AdaptiveMilestoneGuidanceService
         return false;
     }
 
-    private static SupplyNeed supplyNeed(
+    private static List<SupplyNeed> supplyNeeds(
             MethodExecutionProfile profile,
             RuneLiteSkillActionDefinition action,
             int actions)
     {
-        MethodExecutionProfile.InputMode mode = profile.getInputMode();
-        if (mode == MethodExecutionProfile.InputMode.NONE) return null;
+        Map<String, SupplyNeed> merged = new LinkedHashMap<>();
+        for (MethodInputRule rule : profile.getInputs())
+        {
+            SupplyNeed need = resolveSupplyNeed(rule, action, actions);
+            if (need == null || need.quantity <= 0) continue;
+            String key = need.itemId > 0
+                    ? "id:" + need.itemId
+                    : "name:" + need.name.toLowerCase(Locale.ROOT);
+            SupplyNeed previous = merged.get(key);
+            if (previous == null)
+            {
+                merged.put(key, need);
+            }
+            else
+            {
+                merged.put(key, new SupplyNeed(
+                        previous.name,
+                        previous.itemId,
+                        previous.quantity + need.quantity));
+            }
+        }
+        return new ArrayList<>(merged.values());
+    }
+
+    private static SupplyNeed resolveSupplyNeed(
+            MethodInputRule rule,
+            RuneLiteSkillActionDefinition action,
+            int actions)
+    {
+        if (rule == null || rule.getMode() == MethodExecutionProfile.InputMode.NONE)
+            return null;
 
         String name;
         int itemId = -1;
-        double perAction = profile.getFixedInputPerAction();
+        double perAction = rule.getQuantityPerAction();
 
-        switch (mode)
+        switch (rule.getMode())
         {
             case ACTION_ITEM:
                 name = action.getName();
@@ -222,8 +254,18 @@ public class AdaptiveMilestoneGuidanceService
                 if (name == null) return null;
                 if (perAction <= 0) perAction = 1.0;
                 break;
+            case DART_TIP_FOR_DART:
+                name = dartTipForDart(action.getName());
+                if (name == null) return null;
+                if (perAction <= 0) perAction = 1.0;
+                break;
+            case UNFINISHED_BOLT:
+                name = unfinishedBolt(action.getName());
+                if (name == null) return null;
+                if (perAction <= 0) perAction = 1.0;
+                break;
             case FIXED:
-                name = profile.getFixedInputName();
+                name = rule.getFixedName();
                 if (name == null || name.trim().isEmpty()) return null;
                 if (perAction <= 0) perAction = 1.0;
                 break;
@@ -239,76 +281,117 @@ public class AdaptiveMilestoneGuidanceService
     private static String supplyGuidance(
             StrategyDataBundle data,
             AccountSnapshot account,
-            SupplyNeed need,
+            List<SupplyNeed> needs,
             boolean useGroupStorage)
     {
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        int inventory = quantityInItems(
-                data.getInventory() == null ? null : data.getInventory().getItems(),
-                need);
+        ObservedItemIndex index = new ObservedItemIndex(data, useGroupStorage);
 
+        // Infinite elemental rune sources are equipment, not consumables. Do
+        // not tell the player to buy fire runes for High Alchemy if a verified
+        // fire-rune staff is already available to equip.
+        boolean infiniteFire = hasInfiniteFireRunes(index);
+
+        List<String> requiredParts = new ArrayList<>();
+        List<String> verifiedParts = new ArrayList<>();
+        List<String> missingParts = new ArrayList<>();
+
+        for (SupplyNeed need : needs)
+        {
+            if (infiniteFire && "fire rune".equalsIgnoreCase(need.name))
+            {
+                requiredParts.add("0 fire runes (use your fire-rune staff)");
+                continue;
+            }
+
+            int verified;
+            if (mode == AccountMode.ULTIMATE_IRONMAN)
+            {
+                int inventory = quantityInItems(
+                        data.getInventory() == null
+                                ? null : data.getInventory().getItems(), need);
+                int safeStorage = quantityInSafeUimStorage(
+                        data.getStorage(), need);
+                verified = inventory + safeStorage;
+            }
+            else
+            {
+                int inventory = quantityInItems(
+                        data.getInventory() == null
+                                ? null : data.getInventory().getItems(), need);
+                int bank = quantityInItems(
+                        data.getBank() == null
+                                ? null : data.getBank().getItems(), need);
+                int group = 0;
+                if (useGroupStorage && mode.isGroupIronman()
+                        && data.getGroupStorage() != null
+                        && data.getGroupStorage().isObserved())
+                {
+                    group = quantityInItems(data.getGroupStorage().getItems(), need);
+                }
+                verified = inventory + bank + group;
+            }
+
+            int missing = Math.max(0, need.quantity - verified);
+            requiredParts.add(need.quantity + " " + need.name);
+            verifiedParts.add(verified + " " + need.name);
+            if (missing > 0) missingParts.add(missing + " " + need.name);
+        }
+
+        String required = joinNatural(requiredParts);
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
+        {
+            return "Need " + required
+                    + ". Open your bank once so Strategist can verify stored materials before deciding exact shortfalls.";
+        }
+
+        StringBuilder text = new StringBuilder();
+        text.append("Need ").append(required).append(". ");
+        if (!verifiedParts.isEmpty())
+        {
+            text.append("Verified: ")
+                    .append(joinNatural(verifiedParts)).append(". ");
+        }
+
+        if (missingParts.isEmpty())
+        {
+            text.append("No extra modeled materials are needed.");
+            return text.toString();
+        }
+
+        String missing = joinNatural(missingParts);
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            int safeStorage = quantityInSafeUimStorage(data.getStorage(), need);
-            int verified = inventory + safeStorage;
-            int missing = Math.max(0, need.quantity - verified);
-            if (missing == 0)
-            {
-                return "Need about " + need.quantity + " " + need.name
-                        + ". You have " + verified
-                        + " directly usable across inventory and verified safe UIM storage.";
-            }
-            return "Need about " + need.quantity + " " + need.name
-                    + ". You have " + verified + " directly usable, so acquire "
-                    + missing + " more just in time. Normal bank state is ignored for UIM.";
+            text.append("Acquire ").append(missing)
+                    .append(" just in time. Normal bank state is ignored for UIM.");
         }
-
-        int bank = quantityInItems(
-                data.getBank() == null ? null : data.getBank().getItems(), need);
-        int group = 0;
-        if (useGroupStorage && mode.isGroupIronman()
-                && data.getGroupStorage() != null
-                && data.getGroupStorage().isObserved())
+        else if (mode.usesGrandExchange())
         {
-            group = quantityInItems(data.getGroupStorage().getItems(), need);
+            text.append("Buy ").append(missing)
+                    .append(" at the Grand Exchange. Price/GP affordability still needs live validation.");
         }
-        int verified = inventory + bank + group;
-        int missing = Math.max(0, need.quantity - verified);
-
-        if (data.getBank() == null)
+        else if (mode.isGroupIronman())
         {
-            return "Need about " + need.quantity + " " + need.name
-                    + ". " + inventory + " is verified in inventory"
-                    + (group > 0 ? " and " + group + " in Group Storage" : "")
-                    + ". Open your bank once so Strategist can verify stored supply before deciding the shortfall.";
+            text.append("Source ").append(missing);
+            if (useGroupStorage)
+                text.append(" after checking observed Group Storage");
+            text.append(".");
         }
-
-        if (missing == 0)
+        else
         {
-            return "Need about " + need.quantity + " " + need.name
-                    + ". You have " + verified
-                    + " verified across usable storage, so no extra supply is needed.";
+            text.append("Self-source ").append(missing).append(".");
         }
+        return text.toString();
+    }
 
-        if (mode.usesGrandExchange())
-        {
-            return "Need about " + need.quantity + " " + need.name
-                    + ". You have " + verified + " verified, so buy "
-                    + missing + " more at the Grand Exchange. Price/GP checks are a separate validation step.";
-        }
-
-        if (mode.isGroupIronman())
-        {
-            return "Need about " + need.quantity + " " + need.name
-                    + ". You have " + verified + " verified, so source "
-                    + missing + " more"
-                    + (useGroupStorage ? " after checking observed Group Storage" : "")
-                    + ".";
-        }
-
-        return "Need about " + need.quantity + " " + need.name
-                + ". You have " + verified + " verified, so self-source "
-                + missing + " more.";
+    private static boolean hasInfiniteFireRunes(ObservedItemIndex items)
+    {
+        return items.has(
+                "Staff of fire", "Mystic fire staff",
+                "Lava battlestaff", "Mystic lava staff",
+                "Steam battlestaff", "Mystic steam staff",
+                "Smoke battlestaff", "Mystic smoke staff",
+                "Tome of fire", "Tome of fire (empty)");
     }
 
     private static int quantityInItems(
@@ -359,9 +442,7 @@ public class AdaptiveMilestoneGuidanceService
     {
         String clean = actionName == null ? "" : actionName.trim();
         if (clean.toLowerCase(Locale.ROOT).startsWith("cooked "))
-        {
             clean = clean.substring(7);
-        }
         return "Raw " + clean;
     }
 
@@ -374,9 +455,7 @@ public class AdaptiveMilestoneGuidanceService
         for (String wood : woods)
         {
             if (lower.startsWith(wood + " "))
-            {
                 return capitalize(wood) + " logs";
-            }
         }
         return "Logs";
     }
@@ -413,6 +492,38 @@ public class AdaptiveMilestoneGuidanceService
         return tree + " sapling";
     }
 
+    private static String dartTipForDart(String actionName)
+    {
+        if (actionName == null) return null;
+        String clean = actionName.trim();
+        String lower = clean.toLowerCase(Locale.ROOT);
+        if (!lower.endsWith(" dart")) return null;
+        return clean.substring(0, clean.length() - 5).trim() + " dart tip";
+    }
+
+    private static String unfinishedBolt(String actionName)
+    {
+        if (actionName == null) return null;
+        String clean = actionName.trim();
+        String lower = clean.toLowerCase(Locale.ROOT);
+        if (!lower.endsWith(" bolts")) return null;
+        return clean + " (unf)";
+    }
+
+    private static String joinNatural(List<String> parts)
+    {
+        if (parts == null || parts.isEmpty()) return "nothing";
+        if (parts.size() == 1) return parts.get(0);
+        if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
+        StringBuilder text = new StringBuilder();
+        for (int i = 0; i < parts.size(); i++)
+        {
+            if (i > 0) text.append(i == parts.size() - 1 ? ", and " : ", ");
+            text.append(parts.get(i));
+        }
+        return text.toString();
+    }
+
     private static int divideRoundUp(int numerator, double denominator)
     {
         if (numerator <= 0) return 0;
@@ -422,9 +533,7 @@ public class AdaptiveMilestoneGuidanceService
     private static String format(double value)
     {
         if (Math.abs(value - Math.rint(value)) < 0.001)
-        {
             return String.format(Locale.ROOT, "%,d", (long) Math.rint(value));
-        }
         return String.format(Locale.ROOT, "%,.1f", value);
     }
 
