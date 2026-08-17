@@ -34,7 +34,7 @@ public class RecommendationEngine
             PreferenceProfile preferenceProfile)
     {
         return recommend(StrategyDataBundle.builder(snapshot).build(),
-                strategyMode, SessionIntent.PICK_FOR_ME, false,
+                strategyMode, SessionIntent.PICK_FOR_ME, true, false,
                 preferenceProfile);
     }
 
@@ -45,7 +45,7 @@ public class RecommendationEngine
             PreferenceProfile preferenceProfile)
     {
         return recommend(StrategyDataBundle.builder(snapshot).build(),
-                strategyMode, sessionIntent, false, preferenceProfile);
+                strategyMode, sessionIntent, true, false, preferenceProfile);
     }
 
     public List<Recommendation> recommend(
@@ -54,14 +54,27 @@ public class RecommendationEngine
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
     {
-        return recommend(data, strategyMode, sessionIntent, false,
+        return recommend(data, strategyMode, sessionIntent, true, false,
                 preferenceProfile);
+    }
+
+    /** Compatibility overload retained for callers that only supplied Wilderness policy. */
+    public List<Recommendation> recommend(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            boolean allowWildernessMethods,
+            PreferenceProfile preferenceProfile)
+    {
+        return recommend(data, strategyMode, sessionIntent, true,
+                allowWildernessMethods, preferenceProfile);
     }
 
     public List<Recommendation> recommend(
             StrategyDataBundle data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
+            boolean useGroupStorage,
             boolean allowWildernessMethods,
             PreferenceProfile preferenceProfile)
     {
@@ -88,10 +101,6 @@ public class RecommendationEngine
                     data, skill, level, strategyMode, sessionIntent,
                     allowWildernessMethods);
 
-            // A skill is not actionable until Strategist can attach an actual
-            // account-compatible method. This prevents internal catalog gaps
-            // from leaking into the UI as vague "check needed before choosing"
-            // recommendations.
             if (trainingPlan == null || trainingPlan.getMethod() == null)
             {
                 continue;
@@ -112,7 +121,8 @@ public class RecommendationEngine
                             skill,
                             level,
                             target,
-                            trainingPlan
+                            trainingPlan,
+                            useGroupStorage
                     );
 
             recommendations.add(new Recommendation(
