@@ -13,16 +13,29 @@ public class RecommendationEngine
     private final TrainingMethodSelector trainingMethodSelector;
     private final RecommendationGuidanceService guidanceService;
     private final CombatGuidanceService combatGuidanceService;
+    private final SlayerGuidanceService slayerGuidanceService;
 
     @Inject
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService,
-            CombatGuidanceService combatGuidanceService)
+            CombatGuidanceService combatGuidanceService,
+            SlayerGuidanceService slayerGuidanceService)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
         this.combatGuidanceService = combatGuidanceService;
+        this.slayerGuidanceService = slayerGuidanceService;
+    }
+
+    /** Compatibility constructor retained for tests/older callers. */
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService,
+            CombatGuidanceService combatGuidanceService)
+    {
+        this(trainingMethodSelector, guidanceService,
+                combatGuidanceService, new SlayerGuidanceService());
     }
 
     /** Compatibility constructor retained for tests/older callers. */
@@ -31,14 +44,14 @@ public class RecommendationEngine
             RecommendationGuidanceService guidanceService)
     {
         this(trainingMethodSelector, guidanceService,
-                new CombatGuidanceService());
+                new CombatGuidanceService(), new SlayerGuidanceService());
     }
 
     /** Compatibility constructor for focused tests and older callers. */
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
     {
         this(trainingMethodSelector, new RecommendationGuidanceService(),
-                new CombatGuidanceService());
+                new CombatGuidanceService(), new SlayerGuidanceService());
     }
 
     public List<Recommendation> recommend(
@@ -135,6 +148,14 @@ public class RecommendationEngine
                             trainingPlan,
                             sessionIntent,
                             useGroupStorage);
+
+            if (guidance == null && skill == Skill.SLAYER
+                    && slayerGuidanceService != null)
+            {
+                guidance = slayerGuidanceService.build(
+                        data, level, target);
+            }
+
             if (guidance == null && guidanceService != null)
             {
                 guidance = guidanceService.build(
