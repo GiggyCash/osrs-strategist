@@ -17,6 +17,7 @@ public final class Recommendation
     private final RecommendationConfidence confidence;
     private final int currentLevel;
     private final int targetLevel;
+    private final RecommendationGuidance guidance;
 
     public Recommendation(
             String id,
@@ -32,7 +33,8 @@ public final class Recommendation
                 null,
                 RecommendationConfidence.CHECK_NEEDED,
                 0,
-                0
+                0,
+                null
         );
     }
 
@@ -52,7 +54,8 @@ public final class Recommendation
                 trainingPlan,
                 confidence,
                 0,
-                0
+                0,
+                null
         );
     }
 
@@ -66,6 +69,30 @@ public final class Recommendation
             int currentLevel,
             int targetLevel)
     {
+        this(
+                id,
+                title,
+                reason,
+                score,
+                trainingPlan,
+                confidence,
+                currentLevel,
+                targetLevel,
+                null
+        );
+    }
+
+    public Recommendation(
+            String id,
+            String title,
+            String reason,
+            double score,
+            TrainingPlan trainingPlan,
+            RecommendationConfidence confidence,
+            int currentLevel,
+            int targetLevel,
+            RecommendationGuidance guidance)
+    {
         this.id = id;
         this.title = title;
         this.reason = reason;
@@ -76,6 +103,7 @@ public final class Recommendation
                 : confidence;
         this.currentLevel = Math.max(0, currentLevel);
         this.targetLevel = Math.max(0, targetLevel);
+        this.guidance = guidance;
     }
 
     public String getId() { return id; }
@@ -86,4 +114,5 @@ public final class Recommendation
     public RecommendationConfidence getConfidence() { return confidence; }
     public int getCurrentLevel() { return currentLevel; }
     public int getTargetLevel() { return targetLevel; }
+    public RecommendationGuidance getGuidance() { return guidance; }
 }
