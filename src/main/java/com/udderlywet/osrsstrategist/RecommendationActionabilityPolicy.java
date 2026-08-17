@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import javax.inject.Singleton;
 
 /**
- * Hard gate for the primary DO NEXT slot.
+ * Hard gate for the primary DO NEXT slot and quality gate for alternatives.
  *
  * <p>The primary card must always contain an executable next action. A fully
  * verified route can lead immediately. A route with only ordinary preparation
@@ -51,8 +51,27 @@ public class RecommendationActionabilityPolicy
 
     public boolean mayAppearAsAlternative(Recommendation recommendation)
     {
-        return recommendation != null
-                && recommendation.getConfidence() != RecommendationConfidence.BLOCKED;
+        if (recommendation == null
+                || recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        {
+            return false;
+        }
+        if (canLeadQueue(recommendation)) return true;
+
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        TrainingPlan plan = recommendation.getTrainingPlan();
+
+        // A secondary card still needs to tell the player something useful.
+        // Bare "Needs Info" quest/upgrade placeholders are hidden until their
+        // provider can produce a concrete next verification/preparation step.
+        if (plan == null)
+        {
+            return guidance != null && hasText(guidance.getAction());
+        }
+
+        return plan.getMethod() != null
+                && guidance != null
+                && hasText(guidance.getAction());
     }
 
     public int queuePriority(Recommendation recommendation)
