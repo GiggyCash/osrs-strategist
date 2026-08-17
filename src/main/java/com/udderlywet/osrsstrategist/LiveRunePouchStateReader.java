@@ -18,10 +18,9 @@ import net.runelite.client.game.ItemManager;
  * Reads currently usable Rune pouch contents from the same varbits and enum
  * mapping used by RuneLite's Clue Scroll plugin.
  *
- * <p>The pouch is treated as live storage, not persistent ownership. If no Rune
- * pouch is observed in the inventory, any remembered Rune pouch contents are
- * removed from the returned snapshot so stale runes cannot satisfy a current
- * recommendation. Other storage evidence is preserved unchanged.</p>
+ * <p>The pouch is live storage, not persistent ownership. If no Rune pouch is
+ * observed in inventory, stale remembered pouch contents are removed from the
+ * returned snapshot while every unrelated storage capability is preserved.</p>
  */
 @Singleton
 public class LiveRunePouchStateReader
@@ -54,6 +53,19 @@ public class LiveRunePouchStateReader
             StorageSnapshot base,
             InventorySnapshot inventory)
     {
+        boolean usable = hasUsableRunePouch(inventory)
+                && client.getGameState() == GameState.LOGGED_IN;
+        List<ItemStackSnapshot> liveContents = usable
+                ? readContents() : null;
+        return mergeObserved(base, usable, liveContents);
+    }
+
+    /** Pure merge seam used by tests and protects unrelated remembered state. */
+    static StorageSnapshot mergeObserved(
+            StorageSnapshot base,
+            boolean usablePouchObserved,
+            List<ItemStackSnapshot> liveContents)
+    {
         StorageSnapshot source = base == null
                 ? StorageSnapshot.unknown() : base;
         EnumMap<StorageCapability, CapabilityState> states =
@@ -67,17 +79,18 @@ public class LiveRunePouchStateReader
             contents.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
 
-        if (!hasUsableRunePouch(inventory)
-                || client.getGameState() != GameState.LOGGED_IN)
+        if (!usablePouchObserved)
         {
             states.remove(StorageCapability.RUNE_POUCH);
             contents.remove(StorageCapability.RUNE_POUCH);
             return new StorageSnapshot(states, contents);
         }
 
-        List<ItemStackSnapshot> runes = readContents();
         states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        contents.put(StorageCapability.RUNE_POUCH, runes);
+        contents.put(StorageCapability.RUNE_POUCH,
+                liveContents == null
+                        ? new ArrayList<>()
+                        : new ArrayList<>(liveContents));
         return new StorageSnapshot(states, contents);
     }
 
