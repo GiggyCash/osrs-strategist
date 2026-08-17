@@ -38,6 +38,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             return result;
         }
 
+        AccountSnapshot account = context.getData().getAccount();
         PreferenceProfile preferences = context.getPreferenceProfile();
         for (Map.Entry<String, QuestStatus> entry
                 : context.getData().getQuests().getQuests().entrySet())
@@ -50,6 +51,15 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             }
 
             String questName = entry.getKey();
+
+            // Quest XP is an irreversible build risk. Restricted builds use a
+            // fail-closed curated safety list: unknown reward profiles never
+            // enter DO NEXT until Strategist has verified them for that build.
+            if (!RestrictedQuestPolicy.isSafe(account, questName))
+            {
+                continue;
+            }
+
             String id = "quest:" + slug(questName);
             if (preferences.isOnCooldown(id)) continue;
 
@@ -67,6 +77,13 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             {
                 score -= 7.0;
                 reason = "This quest is unfinished. Strategist will verify its skill, quest, item, and combat requirements before treating it as immediately ready.";
+            }
+
+            RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+            if (build != RestrictedBuildType.STANDARD)
+            {
+                reason += " Quest rewards are on Strategist's curated safe list for the protected "
+                        + AccountBuildPolicy.label(account) + " build.";
             }
 
             if (priority != null)
@@ -94,8 +111,6 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
         }
 
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
-        // The engine only needs the strongest quest options, not the entire quest
-        // journal competing with every other activity on every evaluation.
         if (result.size() > 8)
         {
             return new ArrayList<>(result.subList(0, 8));
