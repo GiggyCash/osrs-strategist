@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class StrategyCandidateFoundationTest
 {
     @Test
-    public void observedClueCanBecomeGenericRecommendation()
+    public void observedClueBecomesCheckNeededGenericRecommendation()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account())
                 .clue(new ClueSnapshot(
@@ -30,7 +30,7 @@ public class StrategyCandidateFoundationTest
         assertEquals("clue:pending", recommendation.getId());
         assertEquals(0, recommendation.getCurrentLevel());
         assertTrue(RecommendationPresentation.compactHtml(recommendation)
-                .contains("NEXT STEP"));
+                .contains("NOT READY YET"));
     }
 
     private static AccountSnapshot account()
