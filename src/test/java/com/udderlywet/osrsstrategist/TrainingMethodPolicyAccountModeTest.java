@@ -17,7 +17,8 @@ public class TrainingMethodPolicyAccountModeTest
     public void hardcoreRejectsWildernessEvenWhenGloballyEnabled()
     {
         TrainingMethod method = method(true);
-        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.HIGH, false);
+        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.HIGH, false,
+                TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.HARDCORE_IRONMAN,
                 MembershipStatus.P2P), method, metadata, true));
     }
@@ -26,7 +27,8 @@ public class TrainingMethodPolicyAccountModeTest
     public void uimRejectsMethodNotMarkedUimFriendly()
     {
         TrainingMethod method = method(false);
-        TrainingMethodMetadata metadata = metadata(false, true, RiskLevel.NONE, false);
+        TrainingMethodMetadata metadata = metadata(false, true, RiskLevel.NONE, false,
+                TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P), method, metadata, false));
     }
@@ -35,18 +37,63 @@ public class TrainingMethodPolicyAccountModeTest
     public void f2pRejectsMembersOnlyMetadata()
     {
         TrainingMethod method = method(false);
-        TrainingMethodMetadata metadata = metadata(true, false, RiskLevel.NONE, false);
+        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.MAIN,
                 MembershipStatus.F2P), method, metadata, false));
+    }
+
+    @Test
+    public void unknownMembershipAlsoRejectsMembersOnlyMetadata()
+    {
+        TrainingMethod method = method(false);
+        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.BALANCED);
+        assertFalse(policy.isAllowed(data(AccountMode.MAIN,
+                MembershipStatus.UNKNOWN), method, metadata, false));
     }
 
     @Test
     public void safeSelfSourceMethodIsAllowedForIron()
     {
         TrainingMethod method = method(false);
-        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false);
+        TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.BALANCED);
         assertTrue(policy.isAllowed(data(AccountMode.IRONMAN,
                 MembershipStatus.P2P), method, metadata, false));
+    }
+
+    @Test
+    public void balancedUimPrefersSustainableRelaxedMethodOverSweatySwitching()
+    {
+        StrategyDataBundle uim = data(AccountMode.ULTIMATE_IRONMAN,
+                MembershipStatus.P2P);
+        TrainingMethodMetadata relaxed = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.RELAXED);
+        TrainingMethodMetadata sweaty = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.SWEATY);
+
+        double relaxedScore = policy.scoreAdjustment(
+                uim, relaxed, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME);
+        double sweatyScore = policy.scoreAdjustment(
+                uim, sweaty, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME);
+
+        assertTrue(relaxedScore > sweatyScore);
+    }
+
+    @Test
+    public void efficientUimDoesNotApplyExtraSustainabilityPenalty()
+    {
+        StrategyDataBundle uim = data(AccountMode.ULTIMATE_IRONMAN,
+                MembershipStatus.P2P);
+        TrainingMethodMetadata sweaty = metadata(true, true, RiskLevel.NONE, false,
+                TrainingIntensity.SWEATY);
+        double balanced = policy.scoreAdjustment(
+                uim, sweaty, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME);
+        double efficient = policy.scoreAdjustment(
+                uim, sweaty, StrategyMode.EFFICIENT, SessionIntent.PICK_FOR_ME);
+
+        assertTrue(efficient > balanced);
     }
 
     private static TrainingMethod method(boolean wilderness)
@@ -58,9 +105,9 @@ public class TrainingMethodPolicyAccountModeTest
     }
 
     private static TrainingMethodMetadata metadata(boolean uim, boolean hardcore,
-            RiskLevel risk, boolean f2p)
+            RiskLevel risk, boolean f2p, TrainingIntensity intensity)
     {
-        return new TrainingMethodMetadata(TrainingIntensity.BALANCED,
+        return new TrainingMethodMetadata(intensity,
                 MethodCostTier.FREE, risk, f2p, true, uim, hardcore,
                 Collections.emptyList());
     }
