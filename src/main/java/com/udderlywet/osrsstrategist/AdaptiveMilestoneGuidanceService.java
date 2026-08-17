@@ -12,9 +12,9 @@ import net.runelite.api.Skill;
  * Converts deterministic curated methods into account-specific milestone work.
  *
  * <p>RuneLite supplies maintained XP-per-action data. Strategist supplies route
- * selection, account-mode/build policy, observed resources, XP modifiers, and
- * acquisition advice. A concrete action is only emitted when its math can be
- * resolved without inventing a rate.</p>
+ * selection, account-mode/build policy, observed resources, XP modifiers, live
+ * Main-account purchase prices, and acquisition advice. A concrete action is
+ * only emitted when its math can be resolved without inventing a rate.</p>
  */
 @Singleton
 public class AdaptiveMilestoneGuidanceService
@@ -24,6 +24,7 @@ public class AdaptiveMilestoneGuidanceService
     private final SkillingXpModifierService xpModifierService;
     private final AdaptiveActionSelector actionSelector;
     private final MethodInputResolver inputResolver;
+    private final PurchaseCostAdvisor purchaseCostAdvisor;
 
     @Inject
     public AdaptiveMilestoneGuidanceService(
@@ -31,13 +32,15 @@ public class AdaptiveMilestoneGuidanceService
             MethodExecutionProfileCatalog profileCatalog,
             SkillingXpModifierService xpModifierService,
             AdaptiveActionSelector actionSelector,
-            MethodInputResolver inputResolver)
+            MethodInputResolver inputResolver,
+            PurchaseCostAdvisor purchaseCostAdvisor)
     {
         this.actionCatalog = actionCatalog;
         this.profileCatalog = profileCatalog;
         this.xpModifierService = xpModifierService;
         this.actionSelector = actionSelector;
         this.inputResolver = inputResolver;
+        this.purchaseCostAdvisor = purchaseCostAdvisor;
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -47,7 +50,8 @@ public class AdaptiveMilestoneGuidanceService
             SkillingXpModifierService xpModifierService)
     {
         this(actionCatalog, profileCatalog, xpModifierService,
-                new AdaptiveActionSelector(), new MethodInputResolver());
+                new AdaptiveActionSelector(), new MethodInputResolver(),
+                new PurchaseCostAdvisor());
     }
 
     /** Compatibility constructor retained for older callers. */
@@ -180,7 +184,7 @@ public class AdaptiveMilestoneGuidanceService
                 actions, profile, currentLevel, membership);
     }
 
-    private static String supplyGuidance(
+    private String supplyGuidance(
             StrategyDataBundle data,
             AccountSnapshot account,
             List<ResolvedMethodInput> needs,
@@ -193,6 +197,7 @@ public class AdaptiveMilestoneGuidanceService
         List<String> requiredParts = new ArrayList<>();
         List<String> verifiedParts = new ArrayList<>();
         List<String> missingParts = new ArrayList<>();
+        List<ResolvedMethodInput> missingInputs = new ArrayList<>();
 
         for (ResolvedMethodInput need : needs)
         {
@@ -209,6 +214,8 @@ public class AdaptiveMilestoneGuidanceService
             if (missing > 0)
             {
                 missingParts.add(missing + " " + need.getName());
+                missingInputs.add(new ResolvedMethodInput(
+                        need.getName(), need.getItemId(), missing));
             }
         }
 
@@ -243,8 +250,19 @@ public class AdaptiveMilestoneGuidanceService
         else if (mode.usesGrandExchange())
         {
             text.append("Buy ").append(missing)
-                    .append(" at the Grand Exchange. Price/GP affordability "
-                            + "still needs live validation.");
+                    .append(" at the Grand Exchange.");
+            String costAdvice = purchaseCostAdvisor == null
+                    ? null
+                    : purchaseCostAdvisor.advice(
+                            data.getEconomy(), missingInputs);
+            if (costAdvice != null)
+            {
+                text.append(" ").append(costAdvice);
+            }
+            else
+            {
+                text.append(" Exact quantities are ready, but a live exact-price quote is not currently available.");
+            }
         }
         else if (mode.isGroupIronman())
         {
