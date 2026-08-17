@@ -97,6 +97,7 @@ public class StrategyEngine
                         data,
                         context.getStrategyMode(),
                         context.getSessionIntent(),
+                        context.isUseGroupStorage(),
                         context.isAllowWildernessMethods(),
                         context.getPreferenceProfile()));
 
