@@ -77,6 +77,108 @@ public class UniversalActionRecipeResolverTest
         assertInput(recipe, "Vial of water", 40);
     }
 
+    @Test
+    public void plainLeatherBodyUsesOneLeatherNotDragonhideBodyCount()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.CRAFTING, "Leather body", 25),
+                80,
+                MembershipStatus.F2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertEquals(1, recipe.getInputs().size());
+        assertInput(recipe, "Leather", 80);
+    }
+
+    @Test
+    public void opalJewelleryUsesSilverBar()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.CRAFTING, "Opal ring", 10),
+                25,
+                MembershipStatus.P2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Silver bar", 25);
+        assertInput(recipe, "Opal", 25);
+        assertNoInput(recipe, "Gold bar");
+    }
+
+    @Test
+    public void sapphireJewelleryUsesGoldBar()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.CRAFTING, "Sapphire ring", 40),
+                25,
+                MembershipStatus.F2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Gold bar", 25);
+        assertInput(recipe, "Sapphire", 25);
+        assertNoInput(recipe, "Silver bar");
+    }
+
+    @Test
+    public void f2pTiaraUsesSilverBar()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.CRAFTING, "Tiara", 52.5f),
+                30,
+                MembershipStatus.F2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Silver bar", 30);
+    }
+
+    @Test
+    public void arrowShaftXpUnitUsesFifteenShaftsPerBasicLog()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.FLETCHING, "Arrow shaft", 0.33f),
+                31,
+                MembershipStatus.P2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Logs", 3);
+        assertTrue(recipe.getSetup().contains("15 shafts per log"));
+    }
+
+    @Test
+    public void specialtyGemBoltFailsClosedInsteadOfGuessingBasicBoltRecipe()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.FLETCHING, "Ruby bolts", 6.3f),
+                100,
+                MembershipStatus.P2P);
+
+        assertFalse(recipe.hasExactInputs());
+        assertTrue(recipe.getInputs().isEmpty());
+    }
+
+    @Test
+    public void nonLogFiremakingActivityFailsClosed()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.FIREMAKING, "Wintertodt", 100),
+                50,
+                MembershipStatus.P2P);
+
+        assertFalse(recipe.hasExactInputs());
+        assertTrue(recipe.getInputs().isEmpty());
+    }
+
+    @Test
+    public void largeSmithingCountSaturatesInsteadOfOverflowingNegative()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.SMITHING, "Rune platebody", 375),
+                Integer.MAX_VALUE,
+                MembershipStatus.P2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Runite bar", Integer.MAX_VALUE);
+    }
+
     private static RuneLiteSkillActionDefinition action(
             Skill skill, String name, float xp)
     {
@@ -104,5 +206,18 @@ public class UniversalActionRecipeResolverTest
             }
         }
         throw new AssertionError("Missing input: " + name);
+    }
+
+    private static void assertNoInput(
+            UniversalActionRecipe recipe,
+            String name)
+    {
+        for (ResolvedMethodInput input : recipe.getInputs())
+        {
+            if (name.equals(input.getName()))
+            {
+                throw new AssertionError("Unexpected input: " + name);
+            }
+        }
     }
 }
