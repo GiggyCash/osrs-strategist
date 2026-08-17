@@ -39,6 +39,11 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         {
             if (f2p && !entry.isFreeToPlay()) continue;
             if (!f2p && entry.getTier() == GearBudgetTier.F2P) continue;
+
+            // A legal item on a Main can still be an account-ending suggestion
+            // for a pure. Build policy is checked before style/tier ranking.
+            if (!AccountBuildPolicy.allowsGearEntry(account, entry)) continue;
+
             if (entry.getStyle() != primaryStyle
                     && !(context.getActiveGoal() == GoalType.RAID_READY
                     && entry.getStyle() == CombatStyle.HYBRID)) continue;
@@ -59,10 +64,16 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                     && entry.getStyle() == CombatStyle.HYBRID) score += 22.0;
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+            RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+            String buildNote = build == RestrictedBuildType.STANDARD
+                    ? ""
+                    : " Build protected: " + AccountBuildPolicy.label(account) + ".";
+
             result.add(new StrategyCandidate(
                     id,
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
+                            + buildNote
                             + " Strategist will compare owned equipment, bank/storage, acquisition route, GP, and target encounter before recommending an actual purchase or grind.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED
@@ -88,6 +99,16 @@ public class GearCandidateProvider implements StrategyCandidateProvider
 
     private static CombatStyle primaryStyle(AccountSnapshot account)
     {
+        RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+        if (build == RestrictedBuildType.DEFENCE_PURE
+                || build == RestrictedBuildType.RANGE_TANK)
+        {
+            if (account.getSkillLevel(Skill.RANGED) > 1)
+            {
+                return CombatStyle.RANGED;
+            }
+        }
+
         int melee = Math.max(account.getSkillLevel(Skill.ATTACK),
                 account.getSkillLevel(Skill.STRENGTH));
         int ranged = account.getSkillLevel(Skill.RANGED);
