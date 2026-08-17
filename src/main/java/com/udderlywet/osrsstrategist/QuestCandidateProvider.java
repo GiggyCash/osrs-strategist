@@ -9,7 +9,10 @@ import javax.inject.Singleton;
 
 /**
  * Turns RuneLite's complete live quest-state snapshot into ranked quest work.
- * Not-started quests remain Check Needed until prerequisites are verified.
+ *
+ * <p>Quest membership and restricted-build safety are hard gates. An unfinished
+ * quest whose remaining prerequisites are not yet proven stays Check Needed and
+ * therefore cannot occupy the primary DO NEXT slot.</p>
  */
 @Singleton
 public class QuestCandidateProvider implements StrategyCandidateProvider
@@ -33,12 +36,14 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
     {
         List<StrategyCandidate> result = new ArrayList<>();
         if (context == null || context.getData() == null
-                || context.getData().getQuests() == null)
+                || context.getData().getQuests() == null
+                || context.getData().getAccount() == null)
         {
             return result;
         }
 
         AccountSnapshot account = context.getData().getAccount();
+        MembershipStatus membership = account.getMembershipStatus();
         PreferenceProfile preferences = context.getPreferenceProfile();
         for (Map.Entry<String, QuestStatus> entry
                 : context.getData().getQuests().getQuests().entrySet())
@@ -51,10 +56,13 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             }
 
             String questName = entry.getKey();
+            if (!QuestMembershipPolicy.isAvailable(questName, membership))
+            {
+                continue;
+            }
 
-            // Quest XP is an irreversible build risk. Restricted builds use a
-            // fail-closed curated safety list: unknown reward profiles never
-            // enter DO NEXT until Strategist has verified them for that build.
+            // Quest XP is irreversible. Restricted builds fail closed: a quest
+            // that is not on the curated safe list never reaches the queue.
             if (!RestrictedQuestPolicy.isSafe(account, questName))
             {
                 continue;
@@ -71,18 +79,18 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (status == QuestStatus.IN_PROGRESS)
             {
                 score += 12.0;
-                reason = "This quest is already in progress, so finishing it avoids leaving partially completed progression behind.";
+                reason = "This quest is already in progress. It remains an alternative until Strategist can verify the remaining step and requirements.";
             }
             else
             {
                 score -= 7.0;
-                reason = "This quest is unfinished. Strategist will verify its skill, quest, item, and combat requirements before treating it as immediately ready.";
+                reason = "This quest is unfinished, but its requirements are not fully verified yet. It stays below ready actions until those checks are complete.";
             }
 
             RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
             if (build != RestrictedBuildType.STANDARD)
             {
-                reason += " Quest rewards are on Strategist's curated safe list for the protected "
+                reason += " Its reward profile is on the safe list for this "
                         + AccountBuildPolicy.label(account) + " build.";
             }
 
