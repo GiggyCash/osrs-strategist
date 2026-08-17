@@ -9,7 +9,14 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
-/** Movable on-game checklist complementing the Strategist sidebar. */
+/**
+ * Movable in-game checklist complementing the Strategist sidebar.
+ *
+ * <p>The overlay is deliberately wider than RuneLite's default compact panels.
+ * Requirement labels frequently contain item names, quest/access requirements,
+ * or transport notes, so a little extra width significantly improves legibility
+ * without covering a large portion of the game view.</p>
+ */
 public class MethodGuidanceOverlay extends OverlayPanel
 {
     private GuidanceChecklist checklist;
@@ -20,7 +27,7 @@ public class MethodGuidanceOverlay extends OverlayPanel
         super(plugin);
         setPosition(OverlayPosition.TOP_LEFT);
         setMovable(true);
-        panelComponent.setPreferredSize(new Dimension(250, 0));
+        panelComponent.setPreferredSize(new Dimension(285, 0));
     }
 
     public synchronized void update(GuidanceChecklist checklist)
@@ -70,6 +77,11 @@ public class MethodGuidanceOverlay extends OverlayPanel
         return super.render(graphics);
     }
 
+    /**
+     * A question mark looked like a missing asset/placeholder in live testing.
+     * Unknown state now uses the same neutral bullet language as the sidebar;
+     * the explicit right-side "Check" label carries the meaning.
+     */
     private static String marker(GuidanceStepState state)
     {
         switch (state)
@@ -77,9 +89,9 @@ public class MethodGuidanceOverlay extends OverlayPanel
             case COMPLETE: return "✓";
             case WARNING:
             case BLOCKED: return "!";
-            case ACTION: return "•";
+            case ACTION:
             case CHECK_NEEDED:
-            default: return "?";
+            default: return "•";
         }
     }
 
