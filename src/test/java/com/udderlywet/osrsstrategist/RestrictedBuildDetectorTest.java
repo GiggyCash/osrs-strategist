@@ -12,13 +12,13 @@ public class RestrictedBuildDetectorTest
     private final RestrictedBuildDetector detector = new RestrictedBuildDetector();
 
     @Test
-    public void identifiesLikelyOneDefencePureWithoutEnforcingIt()
+    public void identifiesStrongOneDefencePureAsProtectedBuild()
     {
         AccountSnapshot account = account(MembershipStatus.P2P,
                 60, 70, 1, 80, 52, 82, 70, 50);
         RestrictedBuildSuggestion result = detector.suggest(account);
         assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE, result.getType());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, result.getConfidence());
+        assertEquals(RecommendationConfidence.VERIFIED, result.getConfidence());
     }
 
     @Test
