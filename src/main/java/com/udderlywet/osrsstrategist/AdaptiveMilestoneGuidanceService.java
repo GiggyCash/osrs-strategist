@@ -12,29 +12,42 @@ import net.runelite.api.Skill;
  * Converts deterministic curated methods into account-specific milestone work.
  *
  * <p>RuneLite supplies the maintained XP-per-action data. Strategist supplies
- * route selection, account-mode policy, resource ownership, and acquisition
- * advice. If an action cannot be matched confidently this service returns null
- * rather than making up a number.</p>
+ * route selection, account-mode policy, observed XP modifiers, resource
+ * ownership, and acquisition advice. If an action cannot be matched confidently
+ * this service returns null rather than making up a number.</p>
  */
 @Singleton
 public class AdaptiveMilestoneGuidanceService
 {
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final MethodExecutionProfileCatalog profileCatalog;
+    private final SkillingXpModifierService xpModifierService;
 
     @Inject
     public AdaptiveMilestoneGuidanceService(
             RuneLiteSkillActionCatalog actionCatalog,
-            MethodExecutionProfileCatalog profileCatalog)
+            MethodExecutionProfileCatalog profileCatalog,
+            SkillingXpModifierService xpModifierService)
     {
         this.actionCatalog = actionCatalog;
         this.profileCatalog = profileCatalog;
+        this.xpModifierService = xpModifierService;
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public AdaptiveMilestoneGuidanceService(
+            RuneLiteSkillActionCatalog actionCatalog,
+            MethodExecutionProfileCatalog profileCatalog)
+    {
+        this(actionCatalog, profileCatalog, new SkillingXpModifierService());
     }
 
     /** Compatibility constructor for tests that do not have RuneLite injection. */
     public AdaptiveMilestoneGuidanceService()
     {
-        this(new RuneLiteSkillActionCatalog(), new MethodExecutionProfileCatalog());
+        this(new RuneLiteSkillActionCatalog(),
+                new MethodExecutionProfileCatalog(),
+                new SkillingXpModifierService());
     }
 
     public RecommendationGuidance build(
@@ -69,7 +82,13 @@ public class AdaptiveMilestoneGuidanceService
         }
         int targetXp = Experience.getXpForLevel(targetLevel);
         int xpNeeded = Math.max(0, targetXp - currentXp);
-        double xpPerAction = action.getXp() * profile.getXpMultiplier();
+
+        SkillingXpModifier modifier = xpModifierService == null
+                ? SkillingXpModifier.none()
+                : xpModifierService.modifier(data, skill, useGroupStorage);
+        double xpPerAction = action.getXp()
+                * profile.getXpMultiplier()
+                * modifier.getMultiplier();
         if (xpPerAction <= 0) return null;
         int actionsNeeded = divideRoundUp(xpNeeded, xpPerAction);
 
@@ -92,14 +111,20 @@ public class AdaptiveMilestoneGuidanceService
         String note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
-            note = "Action count uses RuneLite's maintained base action XP. "
-                    + "XP-boosting outfits, diary bonuses, or temporary modifiers "
-                    + "can reduce the remaining count.";
+            note = "Action count uses RuneLite's maintained base action XP.";
         }
         else
         {
-            note += " Action count uses RuneLite's maintained action XP; any "
-                    + "unmodeled XP bonus can reduce the remaining count.";
+            note += " Action count uses RuneLite's maintained action XP.";
+        }
+
+        if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
+        {
+            note += " Count assumes you wear the " + modifier.getLabel() + ".";
+        }
+        else
+        {
+            note += " Any unmodeled XP bonus can reduce the remaining count.";
         }
 
         return new RecommendationGuidance(
@@ -190,6 +215,11 @@ public class AdaptiveMilestoneGuidanceService
                 break;
             case UNCUT_GEM:
                 name = uncutGem(action.getName());
+                if (perAction <= 0) perAction = 1.0;
+                break;
+            case SAPLING_FOR_TREE:
+                name = saplingForTree(action.getName());
+                if (name == null) return null;
                 if (perAction <= 0) perAction = 1.0;
                 break;
             case FIXED:
@@ -368,6 +398,19 @@ public class AdaptiveMilestoneGuidanceService
         String clean = actionName == null ? "gem" : actionName.trim();
         if (clean.toLowerCase(Locale.ROOT).startsWith("uncut ")) return clean;
         return "Uncut " + clean.toLowerCase(Locale.ROOT);
+    }
+
+    private static String saplingForTree(String actionName)
+    {
+        if (actionName == null) return null;
+        String clean = actionName.trim();
+        String lower = clean.toLowerCase(Locale.ROOT);
+        if (lower.equals("spirit tree")) return "Spirit seed";
+        if (lower.equals("crystal tree")) return "Crystal acorn";
+        if (!lower.endsWith(" tree")) return null;
+        String tree = clean.substring(0, clean.length() - 5).trim();
+        if (tree.isEmpty()) return null;
+        return tree + " sapling";
     }
 
     private static int divideRoundUp(int numerator, double denominator)
