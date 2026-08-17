@@ -31,7 +31,6 @@ public class RecommendationEngine
         this.sailingGuidanceService = sailingGuidanceService;
     }
 
-    /** Compatibility constructor retained for tests/older callers. */
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService,
@@ -43,7 +42,6 @@ public class RecommendationEngine
                 new SailingGuidanceService());
     }
 
-    /** Compatibility constructor retained for tests/older callers. */
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService,
@@ -54,7 +52,6 @@ public class RecommendationEngine
                 new SailingGuidanceService());
     }
 
-    /** Compatibility constructor retained for tests/older callers. */
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService)
@@ -64,7 +61,6 @@ public class RecommendationEngine
                 new SailingGuidanceService());
     }
 
-    /** Compatibility constructor for focused tests and older callers. */
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
     {
         this(trainingMethodSelector, new RecommendationGuidanceService(),
@@ -102,7 +98,6 @@ public class RecommendationEngine
                 preferenceProfile);
     }
 
-    /** Compatibility overload retained for callers that only supplied Wilderness policy. */
     public List<Recommendation> recommend(
             StrategyDataBundle data,
             StrategyMode strategyMode,
@@ -114,11 +109,6 @@ public class RecommendationEngine
                 allowWildernessMethods, preferenceProfile);
     }
 
-    /**
-     * Legacy/public compact recommendation view. The complete StrategyEngine
-     * must use recommendAll so unresolved high-scoring skills cannot hide a
-     * lower-scoring executable action before the actionability gate runs.
-     */
     public List<Recommendation> recommend(
             StrategyDataBundle data,
             StrategyMode strategyMode,
@@ -127,23 +117,11 @@ public class RecommendationEngine
             boolean allowWildernessMethods,
             PreferenceProfile preferenceProfile)
     {
-        return topThree(recommendAll(
-                data,
-                strategyMode,
-                sessionIntent,
-                useGroupStorage,
-                allowWildernessMethods,
-                preferenceProfile));
+        return topThree(recommendAll(data, strategyMode, sessionIntent,
+                useGroupStorage, allowWildernessMethods, preferenceProfile));
     }
 
-    /**
-     * Full skill candidate pool for the global strategy queue.
-     *
-     * <p>Do not trim here. Actionability, quests, gear, minigames, detours, and
-     * other candidate families must all compete before the final three cards are
-     * chosen. Truncating skill recommendations early can otherwise produce an
-     * empty DO NEXT card even when a safe lower-scoring skill action exists.</p>
-     */
+    /** Full skill candidate pool for the global strategy queue. Do not trim here. */
     public List<Recommendation> recommendAll(
             StrategyDataBundle data,
             StrategyMode strategyMode,
@@ -156,8 +134,7 @@ public class RecommendationEngine
         if (data == null || data.getAccount() == null) return recommendations;
         AccountSnapshot snapshot = data.getAccount();
         PreferenceProfile safePreferences = preferenceProfile == null
-                ? new PreferenceProfile()
-                : preferenceProfile;
+                ? new PreferenceProfile() : preferenceProfile;
 
         for (Skill skill : Skill.values())
         {
@@ -165,9 +142,6 @@ public class RecommendationEngine
             if (level >= 99 || skill == Skill.HITPOINTS) continue;
             if (!ContentAccessRules.isSkillAvailable(skill,
                     snapshot.getMembershipStatus())) continue;
-
-            // Player-imposed account builds are a hard safety boundary. A Main,
-            // Iron, UIM, Hardcore, or GIM can independently be a skiller/pure.
             if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
 
             String activityId = "skill:" + skill.name().toLowerCase();
@@ -176,10 +150,7 @@ public class RecommendationEngine
             TrainingPlan trainingPlan = trainingMethodSelector.select(
                     data, skill, level, strategyMode, sessionIntent,
                     allowWildernessMethods);
-            if (trainingPlan == null || trainingPlan.getMethod() == null)
-            {
-                continue;
-            }
+            if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
 
             int target = nextTarget(level);
             double score = baseScore(skill, level, strategyMode);
@@ -190,21 +161,15 @@ public class RecommendationEngine
                     strategyMode, sessionIntent) * 0.35;
 
             RecommendationGuidance guidance = combatGuidanceService == null
-                    ? null
-                    : combatGuidanceService.build(
-                            data,
-                            skill,
-                            level,
-                            target,
-                            trainingPlan,
-                            sessionIntent,
-                            useGroupStorage);
+                    ? null : combatGuidanceService.build(
+                            data, skill, level, target, trainingPlan,
+                            sessionIntent, useGroupStorage);
 
             if (guidance == null && skill == Skill.SLAYER
                     && slayerGuidanceService != null)
             {
                 guidance = slayerGuidanceService.build(
-                        data, level, target);
+                        data, level, target, useGroupStorage);
             }
 
             if (guidance == null && skill == Skill.SAILING
@@ -217,11 +182,7 @@ public class RecommendationEngine
             if (guidance == null && guidanceService != null)
             {
                 guidance = guidanceService.build(
-                        data,
-                        skill,
-                        level,
-                        target,
-                        trainingPlan,
+                        data, skill, level, target, trainingPlan,
                         useGroupStorage);
             }
 
@@ -234,8 +195,7 @@ public class RecommendationEngine
                     trainingPlan.getConfidence(),
                     level,
                     target,
-                    guidance
-            ));
+                    guidance));
         }
 
         recommendations.sort(Comparator.comparingDouble(
