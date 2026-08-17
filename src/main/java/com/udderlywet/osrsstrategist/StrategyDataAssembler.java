@@ -14,6 +14,7 @@ public class StrategyDataAssembler
     private final LiveCombatAchievementReader combatAchievementReader;
     private final LiveClueStateReader clueStateReader;
     private final LiveSlayerStateReader slayerStateReader;
+    private final LiveEconomyReader economyReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
@@ -29,6 +30,7 @@ public class StrategyDataAssembler
             LiveCombatAchievementReader combatAchievementReader,
             LiveClueStateReader clueStateReader,
             LiveSlayerStateReader slayerStateReader,
+            LiveEconomyReader economyReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
@@ -42,6 +44,7 @@ public class StrategyDataAssembler
         this.combatAchievementReader = combatAchievementReader;
         this.clueStateReader = clueStateReader;
         this.slayerStateReader = slayerStateReader;
+        this.economyReader = economyReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
@@ -60,7 +63,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, questStateReader,
-                null, null, null, null, null,
+                null, null, null, null, null, null,
                 accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
@@ -73,6 +76,11 @@ public class StrategyDataAssembler
         InventorySnapshot inventory = itemStateReader.readInventory();
         BankSnapshot bank = itemStateReader.readBank();
         EquipmentSnapshot equipment = itemStateReader.readEquipment();
+        AccountEconomySnapshot liveEconomy = economyReader == null
+                ? null : economyReader.read(account, inventory, bank);
+        AccountEconomySnapshot economy = liveEconomy != null
+                ? liveEconomy : observedStateStore.getEconomy();
+
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
                 ? liveQuests : observedStateStore.getQuests();
@@ -120,7 +128,7 @@ public class StrategyDataAssembler
                 .clue(clue)
                 .combatAchievements(combatAchievements)
                 .collectionLog(observedStateStore.getCollectionLog())
-                .economy(observedStateStore.getEconomy())
+                .economy(economy)
                 .capabilities(observedStateStore.getCapabilities())
                 .accessMemory(accessMemory)
                 .farmingRuns(farmingRunStateStore.snapshot())
