@@ -97,7 +97,7 @@ public class QuestPlanningEngineTest
         assertTrue(catalog.all().size() >= 20);
         assertTrue(catalog.definitionFor("Animal Magnetism").getUnlocks()
                 .contains("Ava's devices"));
-        assertTrue(catalog.definitionFor("Fairy Tale II - Cure a Queen").getUnlocks()
+        assertTrue(catalog.definitionFor("Fairytale II - Cure a Queen").getUnlocks()
                 .contains("Fairy ring transportation"));
         assertTrue(catalog.definitionFor("Desert Treasure I").getPrerequisites()
                 .contains("Troll Stronghold"));

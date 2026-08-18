@@ -96,6 +96,43 @@ public class MinigameCatalog
         add("deep-sea-trawling", "Deep Sea Trawling", Skill.SAILING, 60, false,
                 RiskLevel.MEDIUM, AttentionLevel.LOW, allModes(),
                 "Hybrid Sailing/Fishing progression and deep-sea rewards");
+        add("nightmare-zone", "Nightmare Zone", null, 1, false,
+                RiskLevel.LOW, AttentionLevel.LOW, allModes(),
+                "Combat training, imbues and points after the required quest bosses are unlocked");
+        add("blast-furnace", "Blast Furnace", Skill.SMITHING, 1, false,
+                RiskLevel.NONE, AttentionLevel.ACTIVE, allModes(),
+                "Bar processing, Smithing XP, coal bag value and Blast Furnace shop access");
+        add("sorceresss-garden", "Sorceress's Garden", Skill.THIEVING, 1, false,
+                RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
+                "Thieving XP, sq'irk juice and seasonal garden progression");
+        add("tai-bwo-wannai-cleanup", "Tai Bwo Wannai Cleanup", null, 1, false,
+                RiskLevel.MEDIUM, AttentionLevel.MODERATE, allModes(),
+                "Trading sticks, village favour, gout tuber and Karamja progression");
+        add("aerial-fishing", "Aerial Fishing", Skill.FISHING, 43, false,
+                RiskLevel.NONE, AttentionLevel.ACTIVE, allModes(),
+                "Fishing and Hunter XP, Molch pearls and pearl fishing equipment");
+        add("drift-net-fishing", "Drift Net Fishing", Skill.FISHING, 47, false,
+                RiskLevel.LOW, AttentionLevel.ACTIVE, allModes(),
+                "Combined Fishing and Hunter XP after Fossil Island underwater access");
+        add("chompy-hunting", "Chompy bird hunting", Skill.RANGED, 30, false,
+                RiskLevel.LOW, AttentionLevel.MODERATE, allModes(),
+                "Chompy kill progression, ogre hats and Western Provinces diary value");
+        add("gnome-ball", "Gnome Ball", null, 1, false,
+                RiskLevel.NONE, AttentionLevel.ACTIVE, allModes(),
+                "Agility experience and gnomeball activity progress");
+        add("stealing-artefacts", "Stealing artefacts", Skill.THIEVING, 49, false,
+                RiskLevel.LOW, AttentionLevel.ACTIVE, allModes(),
+                "Thieving XP through Port Piscarilius artefact deliveries");
+        add("underwater-agility-thieving", "Underwater Agility and Thieving",
+                Skill.AGILITY, 48, false, RiskLevel.MEDIUM,
+                AttentionLevel.ACTIVE, allModes(),
+                "Combined Agility and Thieving XP in Fossil Island's underwater area");
+        add("shooting-stars", "Shooting Stars", Skill.MINING, 10, true,
+                RiskLevel.NONE, AttentionLevel.LOW, allModes(),
+                "Mining XP, stardust, celestial ring progression and gem rewards");
+        add("forestry", "Forestry", Skill.WOODCUTTING, 1, true,
+                RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
+                "Woodcutting group events, anima-infused bark and Forestry rewards");
     }
 
     public List<MinigameDefinition> all()
