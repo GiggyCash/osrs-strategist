@@ -38,10 +38,13 @@ public class PvmReadinessSafetyTest
     @Test
     public void genericLoadoutEvidenceCannotProveEncounterSpecificReadiness()
     {
-        PvmReadiness readiness = analyze(
-                new EquipmentSnapshot(Collections.singletonList(weapon("Rune scimitar", 1))),
+        PvmReadiness readiness = analyzer.analyze(account(),
+                new QuestSnapshot(Collections.emptyMap()),
+                new EquipmentSnapshot(Collections.singletonList(
+                        weapon("Rune scimitar", 1))),
                 new InventorySnapshot(Arrays.asList(
-                        item("Shark", 5), item("Prayer potion(4)", 1))), null);
+                        item("Shark", 5), item("Prayer potion(4)", 1))),
+                null, null).readinessFor("pvm:callisto");
         assertFalse(readiness.isReadyForRecommendation());
         assertTrue(readiness.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("encounter-specific")));
@@ -78,6 +81,42 @@ public class PvmReadinessSafetyTest
                 new InventorySnapshot(Collections.emptyList()), null,
                 new PvmSnapshot(observedMap)).readinessFor("pvm:obor");
         assertTrue(blocked.getConfidence() == RecommendationConfidence.BLOCKED);
+    }
+
+    @Test
+    public void oborTransitionsFromPreparationToFullyVerifiedCarriedEvidence()
+    {
+        EquipmentSnapshot equipment = new EquipmentSnapshot(
+                Collections.singletonList(weapon("Rune scimitar", 1)));
+        PvmReadiness preparation = analyze(equipment,
+                new InventorySnapshot(Arrays.asList(item("Shark", 5))), null);
+        assertFalse(preparation.isReadyForRecommendation());
+        assertTrue(preparation.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("Giant key")));
+
+        PvmReadiness ready = analyze(equipment,
+                new InventorySnapshot(Arrays.asList(
+                        item("Shark", 5), item("Giant key", 1))), null);
+        assertTrue(ready.isReadyForRecommendation());
+        assertTrue(ready.getMissingRequirements().isEmpty());
+    }
+
+    @Test
+    public void exactProfileRecomputesAndClearsStalePreparationEvidence()
+    {
+        Map<String, PvmReadiness> observed = new java.util.HashMap<>();
+        observed.put("pvm:obor", new PvmReadiness("pvm:obor", false,
+                RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList("Old missing setup")));
+        PvmReadiness ready = analyzer.analyze(account(),
+                new QuestSnapshot(Collections.emptyMap()),
+                new EquipmentSnapshot(Collections.singletonList(
+                        weapon("Rune scimitar", 1))),
+                new InventorySnapshot(Arrays.asList(
+                        item("Shark", 5), item("Giant key", 1))),
+                null, new PvmSnapshot(observed)).readinessFor("pvm:obor");
+        assertTrue(ready.isReadyForRecommendation());
+        assertFalse(ready.getMissingRequirements().contains("Old missing setup"));
     }
 
     private PvmReadiness analyze(EquipmentSnapshot equipment,

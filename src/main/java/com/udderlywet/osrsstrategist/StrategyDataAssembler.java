@@ -16,6 +16,7 @@ public class StrategyDataAssembler
     private final LiveClueStateReader clueStateReader;
     private final LiveSlayerStateReader slayerStateReader;
     private final LiveEconomyReader economyReader;
+    private final LiveCombatEvidenceReader combatEvidenceReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
@@ -34,6 +35,7 @@ public class StrategyDataAssembler
             LiveClueStateReader clueStateReader,
             LiveSlayerStateReader slayerStateReader,
             LiveEconomyReader economyReader,
+            LiveCombatEvidenceReader combatEvidenceReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
             AccountAccessMemoryStore accessMemoryStore,
             FarmingRunStateStore farmingRunStateStore,
@@ -49,6 +51,7 @@ public class StrategyDataAssembler
         this.clueStateReader = clueStateReader;
         this.slayerStateReader = slayerStateReader;
         this.economyReader = economyReader;
+        this.combatEvidenceReader = combatEvidenceReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
         this.accessMemoryStore = accessMemoryStore;
         this.farmingRunStateStore = farmingRunStateStore;
@@ -67,7 +70,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, null, questStateReader,
-                null, null, null, null, null, null,
+                null, null, null, null, null, null, null,
                 accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
@@ -162,6 +165,8 @@ public class StrategyDataAssembler
                 .minigames(observedStateStore.getMinigames())
                 .pvm(pvm)
                 .recurringOpportunities(observedStateStore.getRecurringOpportunities())
+                .combatEvidence(combatEvidenceReader == null
+                        ? null : combatEvidenceReader.read())
                 .build();
     }
 

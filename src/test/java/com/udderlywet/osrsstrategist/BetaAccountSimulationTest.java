@@ -345,6 +345,47 @@ public class BetaAccountSimulationTest
         }
     }
 
+    @Test
+    public void strategyEngineRunsMajorAccountStageMatrixEndToEnd()
+    {
+        StrategyEngine strategyEngine = new StrategyEngine(engine, null, null,
+                null, new RecommendationActionabilityPolicy(),
+                new RecommendationIntelligenceService());
+        MembershipStatus[] memberships = {
+                MembershipStatus.F2P, MembershipStatus.UNKNOWN,
+                MembershipStatus.P2P};
+        int[] stages = {1, 35, 65, 90, 98, 99};
+        for (MembershipStatus membership : memberships)
+        {
+            for (int accountType = 0; accountType <= 6; accountType++)
+            {
+                for (int stage : stages)
+                {
+                    StrategyDataBundle data = data(account(membership,
+                            accountType, standardLevels(stage)));
+                    for (StrategyMode mode : StrategyMode.values())
+                    {
+                        StrategyResult result = strategyEngine.evaluate(data,
+                                mode, stage < 40 ? SessionIntent.QUICK_20_MIN
+                                        : SessionIntent.LONG_SESSION,
+                                new PreferenceProfile());
+                        for (Recommendation recommendation
+                                : result.getRecommendations())
+                        {
+                            assertFalse(recommendation.getConfidence()
+                                    == RecommendationConfidence.BLOCKED);
+                            TrainingMethod method = requireMethod(recommendation);
+                            assertTrue(ContentAccessRules.isMethodAvailable(
+                                    method, membership));
+                            assertTrue(AccountBuildPolicy.allowsMethod(
+                                    data.getAccount(), method));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private static StrategyDataBundle data(AccountSnapshot account)
     {
         return StrategyDataBundle.builder(account)
