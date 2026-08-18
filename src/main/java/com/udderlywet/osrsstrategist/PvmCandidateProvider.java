@@ -59,7 +59,17 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                     ? entry.getKey().substring(4) : entry.getKey();
             String id = "pvm:" + normalizedKey;
             if (preferences.isOnCooldown(id)) continue;
-            double score = 48.0 + preferences.weightFor(id) * 10.0;
+            boolean ready = readiness.isReadyForRecommendation();
+            boolean relevant = progressionRelevant(definition, context);
+            // A generic hiscore identity is not a reason to boss. Preparation
+            // competes globally only when a goal/task makes the encounter
+            // relevant and a curated readiness floor can name concrete work.
+            if (!ready && (!catalog.hasCuratedReadinessProfile(definition.getId())
+                    || !relevant)) continue;
+
+            double score = (ready ? 48.0 : 32.0)
+                    + preferences.weightFor(id) * 10.0;
+            if (relevant) score += 14.0;
             if (definition != null)
             {
                 if (definition.isRaid()) score += 4.0;
@@ -68,7 +78,6 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             }
 
             String title = definition == null ? entry.getKey() : definition.getName();
-            boolean ready = readiness.isReadyForRecommendation();
             String missing = readiness.getMissingRequirements().isEmpty()
                     ? "" : String.join("; ", readiness.getMissingRequirements());
             if (!ready && missing.trim().isEmpty()) continue;
@@ -98,5 +107,46 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             ));
         }
         return result;
+    }
+
+    private static boolean progressionRelevant(PvmActivityDefinition definition,
+            StrategyContext context)
+    {
+        if (definition == null || context == null) return false;
+        String id = definition.getId();
+        GoalType goal = context.getActiveGoal();
+        if (goal == GoalType.BOWFA)
+            return id.contains("gauntlet");
+        if (goal == GoalType.INFERNAL_CAPE)
+            return id.endsWith("tztok_jad") || id.endsWith("tzkal_zuk");
+        if (goal == GoalType.RAID_READY)
+            return definition.isRaid();
+        if (goal == GoalType.ELITE_COMBAT_ACHIEVEMENTS)
+            return catalogChallengeEncounter(id);
+
+        SlayerSnapshot slayer = context.getData() == null
+                ? null : context.getData().getSlayer();
+        if (slayer == null || !slayer.hasTask()) return false;
+        String task = normalize(slayer.getTaskName());
+        String boss = normalize(definition.getName());
+        return boss.contains(task) || task.contains(boss)
+                || (id.endsWith("kraken") && task.contains("kraken"))
+                || (id.endsWith("cerberus") && task.contains("hellhound"))
+                || (id.endsWith("alchemical_hydra") && task.contains("hydra"))
+                || (id.endsWith("araxxor") && task.contains("araxyte"));
+    }
+
+    private static boolean catalogChallengeEncounter(String id)
+    {
+        return id != null && (id.contains("gauntlet") || id.contains("raid")
+                || id.contains("tombs_of_amascut") || id.contains("chambers_of_xeric")
+                || id.contains("theatre_of_blood") || id.endsWith("tzkal_zuk")
+                || id.endsWith("sol_heredit") || id.endsWith("nex"));
+    }
+
+    private static String normalize(String value)
+    {
+        return value == null ? "" : value.toLowerCase(java.util.Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", " ").trim();
     }
 }

@@ -28,6 +28,7 @@ public class QuestPlanningEngineTest
         assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
         assertTrue(candidate.getGuidance().getAction().contains("Start Rune Mysteries"));
         assertTrue(candidate.getGuidance().getLocation().contains("Duke Horacio"));
+        assertTrue(candidate.getGuidance().getSupplies().contains("Quest Helper"));
     }
 
     @Test
@@ -125,6 +126,29 @@ public class QuestPlanningEngineTest
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(prerequisite.getScore() > target.getScore());
         assertTrue(target.getGuidance().getAction().contains("The Grand Tree"));
+    }
+
+    @Test
+    public void lateGameBossQuestNamesItsImmediateStructuredPrerequisite()
+    {
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("Desert Treasure II - The Fallen Empire", QuestStatus.NOT_STARTED);
+        quests.put("Desert Treasure I", QuestStatus.COMPLETE);
+        quests.put("Secrets of the North", QuestStatus.COMPLETE);
+        quests.put("Enakhra's Lament", QuestStatus.COMPLETE);
+        quests.put("Temple of the Eye", QuestStatus.NOT_STARTED);
+        quests.put("The Garden of Death", QuestStatus.COMPLETE);
+        quests.put("Below Ice Mountain", QuestStatus.COMPLETE);
+        quests.put("His Faithful Servants", QuestStatus.COMPLETE);
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P, 90, 90, 90))
+                .quests(new QuestSnapshot(quests))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+
+        StrategyCandidate target = provider.candidates(context(data)).stream()
+                .filter(candidate -> candidate.getTitle().contains("Desert Treasure II"))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertTrue(target.getGuidance().getAction().contains("Temple of the Eye"));
     }
 
     @Test

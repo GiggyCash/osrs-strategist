@@ -133,6 +133,12 @@ public class MinigameCatalog
         add("forestry", "Forestry", Skill.WOODCUTTING, 1, true,
                 RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
                 "Woodcutting group events, anima-infused bark and Forestry rewards");
+        add("champions-challenge", "Champions' Challenge", null, 1, false,
+                RiskLevel.MEDIUM, AttentionLevel.ACTIVE, allModes(),
+                "Use an observed champion's scroll for Slayer and Hitpoints XP, banners and champion's cape progression; each champion has distinct combat restrictions");
+        add("rat-pits", "Rat Pits", null, 1, false,
+                RiskLevel.HIGH, AttentionLevel.ACTIVE, EnumSet.of(AccountMode.MAIN),
+                "Optional cat-growth and coin-betting activity after the relevant Ratcatchers pit is unlocked; protect the cat from death");
     }
 
     public List<MinigameDefinition> all()

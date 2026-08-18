@@ -52,11 +52,16 @@ public class MinigameCoverageManifest
         for (String[] row : CENSUS)
         {
             boolean structured = represented.containsKey(row[0]);
+            boolean notProgressionRelevant = "burthorpe-games-room".equals(row[0]);
             values.add(new ContentCoverageEntry(row[0], row[1],
                     structured ? ContentCoverageState.STRUCTURED
+                            : notProgressionRelevant
+                            ? ContentCoverageState.NOT_PROGRESSION_RELEVANT
                             : ContentCoverageState.CONSERVATIVE_FAIL_CLOSED,
                     structured
                             ? "The local catalog models membership, primary level, risk, attention and progression rewards; live unlock evidence is still required."
+                            : notProgressionRelevant
+                            ? "Verified social board-game activity with rankings but no XP, item, currency or account-progression reward; it is intentionally excluded from DO NEXT."
                             : "The activity is census-tracked, but its access and reward requirements are not fully modeled; it cannot enter the recommendation pool.",
                     PROVENANCE));
         }

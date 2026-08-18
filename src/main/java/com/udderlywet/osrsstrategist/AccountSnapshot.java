@@ -8,6 +8,7 @@ import net.runelite.api.Skill;
 public final class AccountSnapshot
 {
     private final String playerName;
+    private final long accountHash;
     private final int accountTypeCode;
     private final String accountTypeName;
     private final MembershipStatus membershipStatus;
@@ -33,6 +34,7 @@ public final class AccountSnapshot
     {
         this(
                 playerName,
+                0L,
                 accountTypeCode,
                 accountTypeName,
                 MembershipStatus.UNKNOWN,
@@ -55,7 +57,25 @@ public final class AccountSnapshot
             Map<Skill, Integer> skillLevels,
             Map<Skill, Integer> skillExperience)
     {
+        this(playerName, 0L, accountTypeCode, accountTypeName,
+                membershipStatus, membershipCredit, totalLevel,
+                totalExperience, skillLevels, skillExperience);
+    }
+
+    public AccountSnapshot(
+            String playerName,
+            long accountHash,
+            int accountTypeCode,
+            String accountTypeName,
+            MembershipStatus membershipStatus,
+            int membershipCredit,
+            int totalLevel,
+            long totalExperience,
+            Map<Skill, Integer> skillLevels,
+            Map<Skill, Integer> skillExperience)
+    {
         this.playerName = playerName;
+        this.accountHash = accountHash;
         this.accountTypeCode = accountTypeCode;
         this.accountTypeName = accountTypeName;
         this.membershipStatus = membershipStatus == null
@@ -77,6 +97,17 @@ public final class AccountSnapshot
     public String getPlayerName()
     {
         return playerName;
+    }
+
+    /** Stable local character identity. Zero means RuneLite has not supplied it yet. */
+    public long getAccountHash()
+    {
+        return accountHash;
+    }
+
+    public boolean hasStableAccountIdentity()
+    {
+        return accountHash != 0L;
     }
 
     public int getAccountTypeCode()
