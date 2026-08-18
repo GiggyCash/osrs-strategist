@@ -2,6 +2,26 @@
 
 This file is the current engineering checklist for content depth. It exists to keep "broad coverage" separate from "fully validated edge-case coverage."
 
+Coverage labels used below:
+
+- **VERIFIED**: modeled facts and required evidence are sufficient for an actionable recommendation.
+- **PARTIAL**: useful structured coverage exists, but unresolved requirements remain explicit.
+- **CONSERVATIVE**: deliberately fail-closed until live evidence or curated metadata is available.
+- **FUTURE COVERAGE**: known long-tail work, not claimed as implemented.
+
+## Current planner depth
+
+| Area | Status | Beta behavior |
+| --- | --- | --- |
+| Final membership/build/actionability gates | **VERIFIED** | Applied after candidate families merge; raw score cannot bypass them. |
+| Quest metadata | **PARTIAL** | A small source-verified corpus resolves prerequisites, levels, items, starts, rewards and unlocks. Unknown quests stay hidden or require a concrete check. |
+| Slayer task profiles | **PARTIAL** | Live task state and common equipment/protection profiles are modeled; location-specific cannon/multicombat claims remain unresolved unless explicitly verified. |
+| Gear acquisition | **PARTIAL** | Ownership, mode, Group Storage and UIM semantics shape acquisition guidance; encounter-specific marginal benefit is not universal BIS. |
+| PvM readiness | **CONSERVATIVE** | Banked gear never proves a loadout, live equipment-slot provenance is retained, and generic encounter floors cannot produce VERIFIED readiness. |
+| Resource chains | **PARTIAL** | Goals can expose owned quantity, nonnegative shortfall, mode-aware source and unresolved source prerequisites. |
+| Recurring opportunities | **PARTIAL** | Timer-only entries cannot lead. Herb runs have a positive carried-setup/level/reachable-patch evidence path; other recurring setups remain conservative. |
+| Full quest/task/boss/content corpus | **FUTURE COVERAGE** | Add only from current RuneLite evidence or source-verified game data. |
+
 ## Membership and account modes
 
 Implemented safety boundaries:
@@ -100,7 +120,7 @@ The broader `GearProgressionCatalog` covers F2P through high-end combat tiers an
 
 ## Recommendation intelligence
 
-The global queue now compares the complete legal skill pool with quest, gear, detour, diary, minigame and PvM candidates before selecting the top three.
+The global queue compares the complete legal skill pool with quests, gear, detours, diaries, minigames, PvM and actionable opportunities before selecting the top three.
 
 Primary DO NEXT must be actionable. Goal alignment, session fit, resource readiness, risk, account mode, UIM setup cost, player feedback and fatigue all influence close decisions.
 

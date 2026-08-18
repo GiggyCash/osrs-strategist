@@ -97,7 +97,7 @@ public class VariableMethodGuidanceService
                 "Run Ourania Altar trips until you gain " + format(xp) + " Runecraft XP toward level " + target + ". Fill every usable essence pouch before each trip.",
                 "Bring pure essence, usable essence pouches, and your preferred banking/teleport setup. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Ourania teleport"),
                 "Bank near the Ourania entrance, follow the safe altar path, craft the mixed rune result, then repeat with full pouches.",
-                "Ourania produces a mix of runes and XP per essence depends on the result distribution and account level. Strategist will not turn the XP gap into a fake fixed essence count."
+                "Ourania produces a mix of runes, and XP per essence depends on the result distribution and account level. Treat the remaining essence count as variable."
         );
     }
 

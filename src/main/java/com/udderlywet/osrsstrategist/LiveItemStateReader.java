@@ -89,8 +89,10 @@ public class LiveItemStateReader
 
         List<ItemStackSnapshot> result = new ArrayList<>();
 
-        for (Item item : container.getItems())
+        Item[] containerItems = container.getItems();
+        for (int slotIndex = 0; slotIndex < containerItems.length; slotIndex++)
         {
+            Item item = containerItems[slotIndex];
             if (item == null
                     || item.getId() < 0
                     || item.getQuantity() <= 0)
@@ -106,7 +108,8 @@ public class LiveItemStateReader
                     new ItemStackSnapshot(
                             item.getId(),
                             name,
-                            item.getQuantity()
+                            item.getQuantity(),
+                            slotIndex
                     )
             );
         }

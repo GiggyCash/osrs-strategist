@@ -33,6 +33,9 @@ public class SlayerTaskGuidanceTest
         assertTrue(guidance.getAction().contains("bursting/barraging"));
         assertTrue(guidance.getLocation().contains("Catacombs of Kourend"));
         assertTrue(guidance.getNote().contains("must be worn"));
+        assertTrue(guidance.getNote().contains("Multitarget Magic eligibility"));
+        assertTrue(guidance.getNote().contains("Cannon eligibility is unresolved"));
+        assertTrue(guidance.getNote().contains("Wilderness variant"));
     }
 
     @Test

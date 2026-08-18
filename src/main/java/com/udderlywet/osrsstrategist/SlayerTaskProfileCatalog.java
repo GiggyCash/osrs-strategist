@@ -15,7 +15,10 @@ public class SlayerTaskProfileCatalog
                     a("Slayer helmet", "Slayer helmet (i)", "Facemask"),
                     "Catacombs of Kourend unless the live assignment specifies another area.",
                     "Magic bursting/barraging is strong in multicombat when the build, rune supply and budget support it; otherwise use a build-legal conventional style.",
-                    "A facemask or Slayer helmet must be worn. Never route to the Wilderness Slayer Cave unless Wilderness methods are explicitly enabled."),
+                    "A facemask or Slayer helmet must be worn. Never route to the Wilderness Slayer Cave unless Wilderness methods are explicitly enabled.",
+                    CapabilityState.UNKNOWN, CapabilityState.VERIFIED, true,
+                    Collections.emptyList(),
+                    "Do not skip automatically: compare rune/prayer cost and the assigned location against the account's current goals."),
             p("aberrant-spectres", a("aberrant spectre", "aberrant spectres"),
                     a("Slayer helmet", "Slayer helmet (i)", "Nose peg"),
                     "Slayer Tower or another non-Wilderness location allowed by the assignment.",
@@ -70,7 +73,10 @@ public class SlayerTaskProfileCatalog
                     Collections.emptyList(),
                     "Catacombs of Kourend is a strong non-Wilderness option when reachable and allowed by the assignment.",
                     "Multitarget Magic can be efficient when the build and rune supply support it; otherwise use a legal conventional style.",
-                    "Variants and summons make fixed supply or kill-time estimates unreliable."),
+                    "Variants and summons make fixed supply or kill-time estimates unreliable.",
+                    CapabilityState.UNKNOWN, CapabilityState.VERIFIED, false,
+                    Collections.emptyList(),
+                    "Keep or extend only when the live location, rune supply, and combat goals make multitarget Magic worthwhile."),
             p("bloodvelds", a("bloodveld", "bloodvelds", "mutated bloodveld", "mutated bloodvelds"),
                     Collections.emptyList(),
                     "Prefer a safe reachable non-Wilderness location that matches the live assignment.",
@@ -97,6 +103,17 @@ public class SlayerTaskProfileCatalog
             List<String> required, String location, String style, String note)
     {
         return new SlayerTaskProfile(id, aliases, required, location, style, note);
+    }
+
+    private static SlayerTaskProfile p(String id, List<String> aliases,
+            List<String> required, String location, String style, String note,
+            CapabilityState cannon, CapabilityState multiTargetMagic,
+            boolean wildernessVariant, List<String> ironObjectives,
+            String decisionGuidance)
+    {
+        return new SlayerTaskProfile(id, aliases, required, location, style, note,
+                cannon, multiTargetMagic, wildernessVariant, ironObjectives,
+                decisionGuidance);
     }
 
     private static List<String> a(String... values) { return Arrays.asList(values); }

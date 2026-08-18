@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -126,6 +127,40 @@ public class ResourceAcquisitionPlanner
 
         return checkNeeded(need,
                 "A verified acquisition route is not available yet." + sourceNote);
+    }
+
+    /** Builds an ordered chain without pretending prose source hints are verified unlocks. */
+    public ResourceAcquisitionChain planChain(StrategyContext context,
+            ResourceNeed need)
+    {
+        ResourceAcquisitionPlan ownership = plan(context, need);
+        List<ResourceAcquisitionStep> steps = new ArrayList<>();
+        int shortfall = ownership == null || need == null ? 0
+                : Math.max(0, need.getQuantity() - ownership.getConfirmedQuantity());
+        if (ownership == null || need == null)
+            return new ResourceAcquisitionChain(need, shortfall, steps);
+
+        if (ownership.hasEnoughConfirmed())
+        {
+            steps.add(new ResourceAcquisitionStep(ownership.getSource(),
+                    ownership.getNote(), RecommendationConfidence.VERIFIED));
+            return new ResourceAcquisitionChain(need, 0, steps);
+        }
+
+        steps.add(new ResourceAcquisitionStep(ownership.getSource(),
+                ownership.getNote(), ownership.getConfidence()));
+        if (sourceCatalog != null && context != null)
+        {
+            List<String> routes = sourceCatalog.suggestions(need.getItemName(),
+                    context.getAccountMode(), context.isAllowWildernessMethods());
+            for (String route : routes)
+                steps.add(new ResourceAcquisitionStep(
+                        context.getAccountMode().usesGrandExchange()
+                                ? AcquisitionSource.GRAND_EXCHANGE
+                                : AcquisitionSource.SELF_SOURCE,
+                        route, RecommendationConfidence.CHECK_NEEDED));
+        }
+        return new ResourceAcquisitionChain(need, shortfall, steps);
     }
 
     private String sourceSuggestions(

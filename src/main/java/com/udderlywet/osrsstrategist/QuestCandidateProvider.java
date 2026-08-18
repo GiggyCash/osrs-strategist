@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -18,11 +21,23 @@ import javax.inject.Singleton;
 public class QuestCandidateProvider implements StrategyCandidateProvider
 {
     private final QuestPriorityCatalog priorityCatalog;
+    private final QuestKnowledgeCatalog knowledgeCatalog;
+    private final QuestRequirementResolver requirementResolver;
 
-    @Inject
     public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog)
     {
+        this(priorityCatalog, new QuestKnowledgeCatalog(),
+                new QuestRequirementResolver());
+    }
+
+    @Inject
+    public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog,
+            QuestKnowledgeCatalog knowledgeCatalog,
+            QuestRequirementResolver requirementResolver)
+    {
         this.priorityCatalog = priorityCatalog;
+        this.knowledgeCatalog = knowledgeCatalog;
+        this.requirementResolver = requirementResolver;
     }
 
     @Override
@@ -45,6 +60,8 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
         AccountSnapshot account = context.getData().getAccount();
         MembershipStatus membership = account.getMembershipStatus();
         PreferenceProfile preferences = context.getPreferenceProfile();
+        Set<String> neededPrerequisites = neededPrerequisites(
+                context.getData().getQuests());
         for (Map.Entry<String, QuestStatus> entry
                 : context.getData().getQuests().getQuests().entrySet())
         {
@@ -73,6 +90,9 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
 
             QuestPriorityCatalog.QuestPriority priority =
                     priorityCatalog.priorityFor(questName);
+            QuestDefinition definition = knowledgeCatalog.definitionFor(questName);
+            QuestResolution resolution = definition == null ? null
+                    : requirementResolver.resolve(definition, context);
             double score = baseScore(context.getQuestTolerance());
             String reason;
 
@@ -100,6 +120,12 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                 reason += " " + priority.getReason() + ".";
             }
 
+            if (neededPrerequisites.contains(normalize(questName)))
+            {
+                score += 24.0;
+                reason += " It is a verified prerequisite for another unfinished quest.";
+            }
+
             if (context.getActiveGoal() == GoalType.QUEST_CAPE) score += 18.0;
             if (context.getActiveGoal() == GoalType.BARROWS_GLOVES
                     && "Recipe for Disaster".equalsIgnoreCase(questName)) score += 25.0;
@@ -109,13 +135,20 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);
 
+            RecommendationConfidence confidence = resolution == null
+                    ? RecommendationConfidence.CHECK_NEEDED
+                    : resolution.getConfidence();
+            RecommendationGuidance guidance = resolution == null ? null
+                    : resolution.getGuidance();
+            if (resolution != null) reason += " " + resolution.getReason() + ".";
+
             result.add(new StrategyCandidate(
                     id,
                     (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ") + questName,
                     reason,
                     score,
-                    RecommendationConfidence.CHECK_NEEDED,
-                    null,
+                    confidence,
+                    guidance,
                     CandidateSafetyEvidence.verifiedSafe(
                             QuestMembershipPolicy.isFreeToPlayQuest(questName))
             ));
@@ -146,5 +179,26 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
         return value == null ? "unknown" : value.toLowerCase()
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("^-|-$", "");
+    }
+
+    private Set<String> neededPrerequisites(QuestSnapshot quests)
+    {
+        Set<String> result = new HashSet<>();
+        for (Map.Entry<String, QuestStatus> entry : quests.getQuests().entrySet())
+        {
+            if (entry.getValue() == QuestStatus.COMPLETE) continue;
+            QuestDefinition definition = knowledgeCatalog.definitionFor(entry.getKey());
+            if (definition == null) continue;
+            for (String prerequisite : definition.getPrerequisites())
+                if (quests.statusOf(prerequisite) != QuestStatus.COMPLETE)
+                    result.add(normalize(prerequisite));
+        }
+        return result;
+    }
+
+    private static String normalize(String value)
+    {
+        return value == null ? "" : value.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", " ").trim();
     }
 }
