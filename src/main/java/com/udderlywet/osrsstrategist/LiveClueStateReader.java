@@ -6,7 +6,7 @@ import java.util.Locale;
 import javax.inject.Singleton;
 
 /**
- * Detects owned clue scrolls from containers Strategist has actually observed.
+ * Detects owned clue scrolls from containers Compass has actually observed.
  *
  * <p>A stale/unopened bank is never treated as proof that a clue disappeared.
  * UIM ignores normal bank state entirely. Challenge-scroll style intermediate

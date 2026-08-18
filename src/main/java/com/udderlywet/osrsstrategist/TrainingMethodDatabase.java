@@ -100,7 +100,7 @@ public class TrainingMethodDatabase
                 Arrays.asList("Confirm the target is accessible"), RecommendationConfidence.CHECK_NEEDED);
         add("crafting_banked", Skill.CRAFTING, 1, 99,
                 "Process confirmed Crafting supplies",
-                "Use gems, hides, glass materials, jewelry supplies, or other resources only after Strategist confirms they are available.",
+                "Use gems, hides, glass materials, jewellery supplies, or other resources only after they are observed as available.",
                 10, 13, 9, AttentionLevel.MODERATE, 10, 3,
                 Arrays.asList("Confirm which Crafting supplies are currently available"), RecommendationConfidence.CHECK_NEEDED);
         add("fletching_logs", Skill.FLETCHING, 1, 99,
@@ -134,7 +134,7 @@ public class TrainingMethodDatabase
                 Arrays.asList("Motherlode Mine access"), RecommendationConfidence.CHECK_NEEDED);
         add("smithing_banked", Skill.SMITHING, 1, 99,
                 "Smith confirmed ores and bars",
-                "Use ores or bars only after Strategist confirms they are available, favoring products that help quests, equipment, ammunition, or later processing.",
+                "Use ores or bars only after they are observed as available, favouring products that help quests, equipment, ammunition, or later processing.",
                 9, 12, 9, AttentionLevel.MODERATE, 10, 3,
                 Arrays.asList("Confirm usable ores/bars and furnace or anvil access"), RecommendationConfidence.CHECK_NEEDED);
         addProtected("smithing_foundry", Skill.SMITHING, 15, 99,
@@ -153,7 +153,7 @@ public class TrainingMethodDatabase
                 Arrays.asList("Tempoross access"), RecommendationConfidence.CHECK_NEEDED);
         add("cooking_banked", Skill.COOKING, 1, 99,
                 "Cook confirmed raw food",
-                "Turn raw food into useful combat supplies only after Strategist confirms that food is available.",
+                "Turn raw food into useful combat supplies only after that food is observed as available.",
                 10, 13, 12, AttentionLevel.LOW, 10, 2,
                 Arrays.asList("Confirm raw cookable food"), RecommendationConfidence.CHECK_NEEDED);
         add("firemaking_logs", Skill.FIREMAKING, 1, 99,

@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/** Immutable bundle containing everything Strategist currently knows. */
+/** Immutable bundle containing everything Compass currently knows. */
 public final class StrategyDataBundle
 {
     private final AccountSnapshot account;

@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 /**
  * Conservative capability gate for Ultimate Ironman storage suggestions.
  *
- * <p>A storage system being possible in OSRS is never enough. Strategist needs
+ * <p>A storage system being possible in OSRS is never enough. Compass needs
  * direct evidence that this character has the capability and, for an item-
  * specific route, evidence that the item is compatible and that required space
  * or preconditions are satisfied.</p>
@@ -55,7 +55,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    "Strategist has not verified that this character can use this storage system.");
+                    "This character's access to the storage system has not been verified.");
         }
 
         if (itemCompatibility == CapabilityState.BLOCKED)

@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import javax.inject.Singleton;
 
 /**
- * Single entitlement boundary for a possible future Strategist Plus service.
+ * Single entitlement boundary for a possible future Compass Plus service.
  *
  * <p>The current implementation is intentionally local/free and performs no
  * authentication or network work. A future trusted provider can replace the

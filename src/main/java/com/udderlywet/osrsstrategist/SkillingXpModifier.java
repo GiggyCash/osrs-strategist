@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/** XP multiplier Strategist can safely plan around because the required set is observed. */
+/** XP multiplier Compass can safely plan around because the required set is observed. */
 public final class SkillingXpModifier
 {
     private final double multiplier;

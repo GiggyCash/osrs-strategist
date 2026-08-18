@@ -1,7 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 /**
- * Small helper that encodes Strategist's most important safety rule:
+ * Small helper that encodes Compass's most important safety rule:
  * unknown data is never silently promoted to verified data.
  */
 public final class NoGuessingPolicy

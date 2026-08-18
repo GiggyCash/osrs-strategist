@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
- * Dormant remote-service seam for a possible Strategist Plus product.
+ * Dormant remote-service seam for a possible Compass Plus product.
  *
  * <p>There is deliberately no HTTP client, endpoint, account system, telemetry,
  * or billing integration here. The gateway refuses remote operations until a
@@ -42,7 +42,7 @@ public class StrategistRemoteGateway
         }
 
         return RemoteOperationResult.disabled(
-                "Remote Strategist services are not configured in this build."
+                "Remote Compass services are not configured in this build."
         );
     }
 }

@@ -34,7 +34,7 @@ public class VariableMethodGuidanceServiceTest
         assertTrue(guidance.getSupplies().contains("four warm items"));
         assertTrue(guidance.getSupplies().contains("Bruma torch"));
         assertFalse(guidance.getAction().matches(".*about [0-9]+ (games|kills).*"));
-        assertTrue(guidance.getNote().contains("does not invent"));
+        assertTrue(guidance.getNote().contains("without inventing a fixed kill count"));
     }
 
     @Test

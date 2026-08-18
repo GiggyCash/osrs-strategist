@@ -4,10 +4,10 @@ This batch turns `Check Needed` from a generic warning into a concrete evidence 
 
 ## Evidence rule
 
-Strategist should prefer evidence in this order:
+Compass should prefer evidence in this order:
 
 1. Direct live account state from RuneLite.
-2. Positive facts Strategist previously observed on this RuneScape profile.
+2. Positive facts Compass previously observed on this RuneScape profile.
 3. Safe inference from verified prerequisites such as completed quests.
 4. `Check Needed` when the fact cannot yet be proven.
 5. `Blocked` when the account is known not to satisfy a hard requirement.
@@ -43,4 +43,4 @@ Details explain why a check is unresolved instead of only displaying the phrase 
 
 `MilestoneRewardOverlay` is a short-lived top-center overlay shown when the tracked recommendation checkpoint is naturally completed. It is intentionally inspired by the satisfying feel of Collection Log notifications without copying the Collection Log interface.
 
-The popup is non-modal, lasts only a few seconds, and uses the existing milestone tracker. The same reward surface can later support quests, diaries, gear targets, combat-achievement tiers, and other short-term Strategist goals.
+The popup is non-modal, lasts only a few seconds, and uses the existing milestone tracker. The same reward surface can later support quests, diaries, gear targets, combat-achievement tiers, and other short-term Compass goals.

@@ -11,7 +11,7 @@ import net.runelite.client.game.ItemManager;
  * Resolves current tradeable-item prices through RuneLite's own ItemManager.
  *
  * <p>RuneLite refreshes its price cache on login and exposes both name search
- * and getItemPrice. Strategist only uses exact-name matches so a request for
+ * and getItemPrice. Compass only uses exact-name matches so a request for
  * "Yew logs" never silently becomes a similarly named item.</p>
  */
 @Singleton

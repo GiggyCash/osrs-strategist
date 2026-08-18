@@ -8,7 +8,7 @@ import java.util.List;
  * Latest Group Storage observation for a GIM account.
  *
  * <p>The observed flag is intentional. An empty observed storage is different
- * from a storage we have never inspected. Strategist should only count group
+ * from a storage we have never inspected. Compass should only count group
  * items when this snapshot is observed and the user's Use Group Storage option
  * is enabled.</p>
  */

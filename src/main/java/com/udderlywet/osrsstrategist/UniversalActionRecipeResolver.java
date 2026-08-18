@@ -67,7 +67,7 @@ public class UniversalActionRecipeResolver
                 return magic(lower, actions);
             default:
                 return UniversalActionRecipe.unknown(
-                        "Strategist knows the action XP but does not have a safe generic material recipe for this skill.");
+                        "The action XP is known, but no safe generic material recipe is available for this skill.");
         }
     }
 
@@ -84,7 +84,7 @@ public class UniversalActionRecipeResolver
         if (containsAny(lower, "cake", "pie", "pizza", "stew", "curry"))
         {
             return UniversalActionRecipe.unknown(
-                    "Composite Cooking recipes need a recipe-specific ingredient model before Strategist gives a shopping list.");
+                    "Composite Cooking recipes need a recipe-specific ingredient model before a shopping list can be shown.");
         }
         String raw = rawFood(name);
         if (raw == null)
@@ -474,7 +474,7 @@ public class UniversalActionRecipeResolver
                     "The mounted cape is returned when removed; only consumed planks are counted.");
         }
         return UniversalActionRecipe.unknown(
-                "Furniture recipes vary. Strategist keeps the exact build count but does not fabricate plank counts for an unmapped hotspot.");
+                "Furniture recipes vary. The exact build count is retained without fabricating plank counts for an unmapped hotspot.");
     }
 
     private static UniversalActionRecipe farming(String name, String lower, int actions)

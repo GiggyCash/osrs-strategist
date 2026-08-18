@@ -12,7 +12,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
-/** Movable on-game checklist complementing the Strategist sidebar. */
+/** Movable on-game checklist complementing the Compass sidebar. */
 public class MethodGuidanceOverlay extends OverlayPanel
 {
     private static final int OVERLAY_WIDTH = 320;

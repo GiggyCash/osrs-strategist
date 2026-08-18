@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
-/** Immutable snapshot of capabilities granted to the current Strategist user. */
+/** Immutable snapshot of capabilities granted to the current Compass user. */
 public final class EntitlementSnapshot
 {
     private final StrategistEdition edition;

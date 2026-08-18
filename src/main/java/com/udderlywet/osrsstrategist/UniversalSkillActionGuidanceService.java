@@ -115,7 +115,7 @@ public class UniversalSkillActionGuidanceService
         {
             supplies = recipe.hasExactInputs()
                     ? "No consumed material is required for the modeled action."
-                    : "The action count is known, but Strategist is not claiming an exact material list yet.";
+                    : "The action count is known, but an exact material list is not proven yet.";
         }
         else
         {
@@ -125,7 +125,7 @@ public class UniversalSkillActionGuidanceService
         String location = plan.getMethod().getInstructions();
         StringBuilder note = new StringBuilder();
         note.append("Action XP comes from RuneLite's maintained skill-calculator data. ")
-                .append("Strategist only exposes this fallback after membership and recipe checks pass.");
+                .append("This fallback appears only after membership and recipe checks pass.");
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
             note.append(" Count assumes the ")

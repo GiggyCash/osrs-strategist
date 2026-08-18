@@ -8,7 +8,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
-/** Short-lived CLOG-style reward surface for any Strategist completion. */
+/** Short-lived CLOG-style reward surface for any Compass completion. */
 public class MilestoneRewardOverlay extends OverlayPanel
 {
     private static final long DISPLAY_MILLIS = 6500L;

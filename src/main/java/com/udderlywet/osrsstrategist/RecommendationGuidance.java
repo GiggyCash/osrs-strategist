@@ -5,7 +5,7 @@ package com.udderlywet.osrsstrategist;
  *
  * <p>The training-method catalog describes a route in general. This object
  * turns that route into concrete instructions for the current milestone and
- * the supplies Strategist has actually observed.</p>
+ * the supplies Compass has actually observed.</p>
  */
 public final class RecommendationGuidance
 {

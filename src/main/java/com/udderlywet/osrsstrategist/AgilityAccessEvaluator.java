@@ -85,7 +85,7 @@ public class AgilityAccessEvaluator
         {
             return verified(
                     course,
-                    "Strategist has previously observed this character in the course region."
+                    "This character was previously observed in the course region."
             );
         }
 

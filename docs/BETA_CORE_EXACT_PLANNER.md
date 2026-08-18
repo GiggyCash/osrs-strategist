@@ -4,7 +4,7 @@ This note documents the invariants behind the beta exact-method planner. The goa
 
 ## 1. Exact where the game is exact
 
-Strategist may convert a milestone into an exact action/material count when all of the following are known:
+Compass may convert a milestone into an exact action/material count when all of the following are known:
 
 - current skill XP
 - target milestone XP
@@ -16,13 +16,13 @@ Strategist may convert a milestone into an exact action/material count when all 
 
 Examples include a known number of potion completions, logs burned, bars smithed, bows fletched, bones offered under a specifically modeled route, or other deterministic calculator actions.
 
-If a route has variable XP, randomized outputs, variable kill XP, one-time rewards, variable encounter scoring, burn/failure randomness, or an ambiguous recipe, Strategist must not invent a fixed completion count. The planner can still state exact XP remaining and concrete setup/readiness requirements.
+If a route has variable XP, randomized outputs, variable kill XP, one-time rewards, variable encounter scoring, burn/failure randomness, or an ambiguous recipe, Compass must not invent a fixed completion count. The planner can still state exact XP remaining and concrete setup/readiness requirements.
 
-## 2. RuneLite action data versus Strategist route data
+## 2. RuneLite action data versus Compass route data
 
 RuneLite's skill-calculator action definitions are the maintained source for deterministic base action XP where available.
 
-Strategist remains responsible for:
+Compass remains responsible for:
 
 - deciding whether the action belongs to the selected training route
 - checking F2P/P2P access
@@ -41,7 +41,7 @@ A RuneLite action is never enough by itself to prove that the route is appropria
 
 ### Unknown is not empty
 
-An unopened bank is unknown. Strategist must ask the player to open the bank before publishing an exact stored-item shortfall. It must never convert `bank == null` into `0 banked`.
+An unopened bank is unknown. Compass must ask the player to open the bank before publishing an exact stored-item shortfall. It must never convert `bank == null` into `0 banked`.
 
 ### Main
 
@@ -73,7 +73,7 @@ Immediately usable quantities may include inventory, equipment, and verified sto
 
 Looting bag, death storage, and deathpile contents may be remembered as observed resources, but they are reported separately as retrieval-only supply. They do not silently satisfy a normal milestone plan. A future retrieval recommendation can deliberately turn those resources into an actionable step.
 
-This separation prevents Strategist from suggesting a UIM route that only works by destroying the player's current inventory setup without acknowledging the cost.
+This separation prevents Compass from suggesting a UIM route that only works by destroying the player's current inventory setup without acknowledging the cost.
 
 ## 4. Reusable resources
 

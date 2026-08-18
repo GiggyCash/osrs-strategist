@@ -81,7 +81,7 @@ If your Jagex Account requires a different development-login flow, use RuneLite'
 
 ## 10. Confirm the plugin appears
 In the development RuneLite client:
-- search settings/plugins for **OSRS Strategist**
+- search settings/plugins for **Gielinor Compass**
 - enable it if needed
 - log into a test account
 
@@ -94,7 +94,7 @@ The clone contains RuneLite example-plugin history. The simplest clean start is:
 rm -rf .git
 git init
 git add .
-git commit -m "Initial OSRS Strategist foundation"
+git commit -m "Initial Gielinor Compass foundation"
 git branch -M main
 git remote add origin https://github.com/YOUR_GITHUB_NAME/osrs-strategist.git
 git push -u origin main
@@ -103,6 +103,6 @@ git push -u origin main
 Replace `YOUR_GITHUB_NAME`.
 
 ## Stop point for tonight
-If `./gradlew clean test` passes and `./gradlew run` launches RuneLite with OSRS Strategist visible, tonight was successful.
+If `./gradlew clean test` passes and `./gradlew run` launches RuneLite with Gielinor Compass visible, tonight was successful.
 
 Do not start adding random code yet. Send the result back and we will add the first real subsystem in a controlled order.

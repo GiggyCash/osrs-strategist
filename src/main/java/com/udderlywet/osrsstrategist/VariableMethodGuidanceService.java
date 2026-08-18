@@ -67,7 +67,7 @@ public class VariableMethodGuidanceService
                 "Run Wintertodt rounds and reach at least 500 personal points before each kill. You need " + format(xp) + " Firemaking XP to level " + target + ".",
                 "Equip four warm items, bring a knife and hammer, and use food appropriate to your Hitpoints level. " + observed(items, "Bruma torch", "Warm gloves", "Pyromancer hood", "Pyromancer garb", "Pyromancer robe", "Pyromancer boots"),
                 "Use the Wintertodt camp in northern Great Kourend. Chop bruma roots, feed braziers, repair broken braziers, and fletch only when extra points/reward value is worth lower raw Firemaking XP.",
-                "Round length, interruptions, fletching, and player levels change XP per game. Strategist keeps exact XP remaining and does not invent a fixed kill count."
+                "Round length, interruptions, fletching, and player levels change XP per game. Exact XP remaining is shown without inventing a fixed kill count."
         );
     }
 
@@ -127,7 +127,7 @@ public class VariableMethodGuidanceService
                 "Run Volcanic Mine with a verified team and role until you gain " + format(xp) + " Mining XP toward level " + target + ".",
                 "Bring your best pickaxe plus food and stamina support required by the team's role. " + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Rune pickaxe"),
                 "Use Volcanic Mine only after its access requirements and intended team role are verified.",
-                "Vent state, role, boulder phase, and points change XP per game. Strategist deliberately refuses to fabricate a game count."
+                "Vent state, role, boulder phase, and points change XP per game, so no fixed game count is shown."
         );
     }
 
@@ -167,7 +167,7 @@ public class VariableMethodGuidanceService
                 "Fill Mastering Mixology orders until you gain " + format(xp) + " Herblore XP toward level " + target + ". Prioritize orders that support the reward goal you are currently protecting.",
                 "Convert spare eligible herbs into paste while preserving herbs needed for higher-value combat potions. " + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed"),
                 "At the Alchemical Society, mix the ordered potion, use its correct processing station, then hand it in before choosing the next order.",
-                "Order combinations change continuously. Exact paste-to-level counts require live order state, so Strategist does not assume constant XP per order."
+                "Order combinations change continuously. Exact paste-to-level counts require live order state; XP per order is not assumed constant."
         );
     }
 
@@ -186,7 +186,7 @@ public class VariableMethodGuidanceService
         return new RecommendationGuidance(
                 "Run every verified reachable allotment patch that is ready, then replant using the best useful seed supply. You need " + format(xp) + " Farming XP to level " + target + ".",
                 "Bring a rake, seed dibber, spade, compost plan, and the selected allotment seeds. " + observed(items, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
-                "Use Strategist's Farming checklist for patches it has actually observed instead of assuming every unlocked patch is currently empty or ready.",
+                "Use the Farming checklist for observed patches instead of assuming every unlocked patch is currently empty or ready.",
                 "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
         );
     }
@@ -197,7 +197,7 @@ public class VariableMethodGuidanceService
                 "Harvest and replant every verified herb patch that is ready, using the herb seed with the best current account value. You need " + format(xp) + " Farming XP to level " + target + ".",
                 "Bring a seed dibber, spade, compost plan, herb seeds, and patch teleports. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
                 "Follow the live Farming checklist so dead, diseased, growing, and ready patches are handled differently instead of blindly running a fixed route.",
-                "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP. Strategist therefore optimizes the run rather than fabricating an exact seed count."
+                "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
         );
     }
 
@@ -247,7 +247,7 @@ public class VariableMethodGuidanceService
                 "Run Pyramid Plunder and spend most of the timer in the highest rooms you can access until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
                 "Bring food or healing, antipoison if your route needs it, and free inventory space for loot. " + observed(items, "Pharaoh's sceptre", "Dodgy necklace", "Antipoison(4)", "Superantipoison(4)"),
                 "Enter Pyramid Plunder in Sophanem, move quickly through low-value rooms, and prioritize urns/chests in your highest available room according to the chosen sceptre-versus-XP goal.",
-                "Room access, failed traps, chest/sarcophagus choices, and sceptre hunting change XP per run. Strategist therefore does not invent a run count."
+                "Room access, failed traps, chest and sarcophagus choices, and sceptre hunting change XP per run, so no fixed run count is shown."
         );
     }
 
@@ -257,7 +257,7 @@ public class VariableMethodGuidanceService
                 "Use the unlocked Varlamore citizen and house-robbery loop until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
                 "Bring only the healing and teleport support needed for the chosen loop; keep enough inventory room for valuables. " + observed(items, "Dodgy necklace", "Rogue top", "Rogue trousers", "Rogue gloves", "Rogue boots"),
                 "Use the Varlamore Thieving area unlocked by your current quest/access state and stay on the low-friction loop rather than mixing in unrelated travel.",
-                "House availability and loop timing vary, so Strategist preserves exact XP remaining without claiming a fixed number of robberies."
+                "House availability and loop timing vary, so exact XP remaining is shown without claiming a fixed number of robberies."
         );
     }
 

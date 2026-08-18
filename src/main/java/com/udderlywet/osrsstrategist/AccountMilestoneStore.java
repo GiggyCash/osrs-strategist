@@ -8,7 +8,7 @@ import net.runelite.client.config.ConfigManager;
 /**
  * Keeps the currently watched checkpoint per RuneScape character.
  *
- * <p>This lets Strategist notice a milestone after a client restart instead of
+ * <p>This lets Compass notice a milestone after a client restart instead of
  * forgetting what it had been asking the player to do.</p>
  */
 @Singleton

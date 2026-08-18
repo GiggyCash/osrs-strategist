@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 /**
  * Starter course catalog aligned with RuneLite's current course regions.
- * Level and quest requirements remain Strategist game data so the evaluator can
+ * Level and quest requirements remain Compass game data so the evaluator can
  * combine them with live account state and remembered region observations.
  */
 @Singleton

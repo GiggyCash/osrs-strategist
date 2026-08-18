@@ -70,7 +70,7 @@ public class PurchaseCostAdvisor
                         .append(format(cash))
                         .append(" verified spendable coins, so you are about ")
                         .append(format(total - cash))
-                        .append(" coins short. Do not treat the purchase as ready until Strategist solves that cash gap or the live prices move.");
+                        .append(" coins short. Do not treat the purchase as ready until that cash gap closes or the live prices move.");
             }
         }
         else

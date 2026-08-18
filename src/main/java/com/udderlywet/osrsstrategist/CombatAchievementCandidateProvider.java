@@ -26,7 +26,7 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         }
 
         // F2P characters can complete a small subset of tasks, but cannot claim
-        // tier rewards. Until Strategist models those individual F2P tasks, a
+        // tier rewards. Until Compass models those individual F2P tasks, a
         // reward-tier candidate would be misleading and is intentionally absent.
         if (!ContentAccessRules.hasVerifiedMembership(
                 context.getData().getAccount().getMembershipStatus()))

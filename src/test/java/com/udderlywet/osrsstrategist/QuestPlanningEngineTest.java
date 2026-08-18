@@ -180,6 +180,8 @@ public class QuestPlanningEngineTest
                 .contains("Rum Deal"));
         assertTrue(catalog.definitionFor("Royal Trouble").getPrerequisites()
                 .contains("Throne of Miscellania"));
+        assertTrue(catalog.definitionFor("Watchtower").getUnlocks()
+                .contains("Watchtower Teleport"));
     }
 
     @Test

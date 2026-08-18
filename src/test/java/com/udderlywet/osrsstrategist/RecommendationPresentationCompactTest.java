@@ -58,7 +58,7 @@ public class RecommendationPresentationCompactTest
         String compact = RecommendationPresentation.compactText(recommendation);
         assertTrue(compact.contains("METHOD"));
         assertTrue(compact.contains("NEEDED"));
-        assertFalse(compact.contains("Strategist will verify"));
+        assertFalse(compact.contains("Compass will verify"));
         assertFalse(compact.contains("policy class"));
     }
 

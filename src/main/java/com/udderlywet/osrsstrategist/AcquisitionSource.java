@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/** Where Strategist believes a required resource should come from. */
+/** Where Compass believes a required resource should come from. */
 public enum AcquisitionSource
 {
     INVENTORY,

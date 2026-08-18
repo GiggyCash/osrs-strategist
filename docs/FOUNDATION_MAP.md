@@ -1,4 +1,4 @@
-# OSRS Strategist Foundation Map
+# Gielinor Compass Foundation Map
 
 This is the maintainer-facing map for the planner. The architecture is intentionally broader than the current verified OSRS dataset.
 
@@ -184,7 +184,7 @@ local production dataset
 
 Do not make the production plugin self-modify or blindly trust a live Wiki edit.
 
-## Strategist Plus seam
+## Compass Plus seam
 
 Core strategy has no knowledge of billing.
 
@@ -202,7 +202,7 @@ StrategistRemoteGateway
 CURRENT BUILD: disabled, no network endpoint/transmission
 ```
 
-Potential hosted capabilities are cloud sync, cross-device history, GIM team planning, remote reminders, web dashboard, and online reasoning. See `STRATEGIST_PLUS_ARCHITECTURE.md`.
+Potential hosted capabilities are cloud sync, cross-device history, GIM team planning, remote reminders, web dashboard, and online reasoning. See `STRATEGIST_PLUS_ARCHITECTURE.md`; the filename remains stable for existing links.
 
 ## Knowledge coverage versus architecture coverage
 

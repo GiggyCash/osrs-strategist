@@ -7,7 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Guardrail tests for rules that must remain true as Strategist grows.
+ * Guardrail tests for rules that must remain true as Compass grows.
  */
 public class FoundationPolicyTest
 {

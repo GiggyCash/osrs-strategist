@@ -53,7 +53,7 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                     id,
                     pretty(next.name()) + " " + region + " Diary",
                     "This is the next unclaimed tier in " + region
-                            + ". Strategist has the live tier state and will treat individual skill, quest, item, and combat tasks as Check Needed until their requirements are verified.",
+                            + ". The live tier is known; individual skill, quest, item, and combat tasks remain Check Needed until their requirements are verified.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     null,

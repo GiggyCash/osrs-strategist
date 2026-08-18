@@ -6,7 +6,7 @@ import java.util.Locale;
 /**
  * Separates unresolved knowledge from ordinary preparation work.
  *
- * <p>A recommendation may still be actionable when Strategist knows the route
+ * <p>A recommendation may still be actionable when Compass knows the route
  * but the player needs to obtain consumables or ordinary tools first. That is
  * different from not knowing whether a quest, area, spellbook, activity, or
  * irreversible build requirement is unlocked.</p>

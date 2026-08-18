@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Per-character memory of places/capabilities Strategist has directly observed.
+ * Per-character memory of places/capabilities Compass has directly observed.
  *
  * <p>The value is the last observed wall-clock time in milliseconds. Remembering
  * positive evidence lets the planner stop repeatedly asking whether an account

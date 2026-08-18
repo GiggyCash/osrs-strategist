@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 /**
  * One human-readable readiness check shown by the recommendation UI.
  *
- * <p>The evidence text explains why Strategist reached the state. This makes
+ * <p>The evidence text explains why Compass reached the state. This makes
  * "Check Needed" actionable instead of a vague warning.</p>
  */
 public final class RequirementCheck

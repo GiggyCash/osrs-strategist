@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Immutable result of resolving a deterministic material list against the
- * account state Strategist has actually observed.
+ * account state Compass has actually observed.
  */
 public final class AccountResourcePlan
 {

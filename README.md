@@ -1,8 +1,10 @@
-# OSRS Strategist
+# Gielinor Compass
 
-**OSRS Strategist** is an adaptive RuneLite progression planner designed for mains, Ironmen, Group Ironmen, Hardcore variants, and Ultimate Ironmen.
+**Your account. Your next move.**
 
-Its job is simple: **recommend the best useful thing to do next without making the player manage a giant spreadsheet.**
+Gielinor Compass is an adaptive RuneLite progression planner designed for mains, Ironmen, Group Ironmen, Hardcore variants, and Ultimate Ironmen.
+
+Its job is simple: decide the best safe, useful thing to do next without making the player manage a giant spreadsheet. Compass decides what is worthwhile and whether the account is ready; established RuneLite tools can help execute that decision.
 
 ## Design goals
 - simple UI, deep reasoning
@@ -30,4 +32,4 @@ Start with `docs/TONIGHT_SETUP.md`.
 The project is intended to be copied over RuneLite's official `example-plugin` template so the current Gradle wrapper is retained.
 
 ## Important rule
-Unknown state stays unknown. OSRS Strategist should never invent an unlock, bank item, Group Storage item, Tool Leprechaun tool, POH storage option, STASH state, or UIM storage capability.
+Unknown state stays unknown. Gielinor Compass should never invent an unlock, bank item, Group Storage item, Tool Leprechaun tool, POH storage option, STASH state, or UIM storage capability.

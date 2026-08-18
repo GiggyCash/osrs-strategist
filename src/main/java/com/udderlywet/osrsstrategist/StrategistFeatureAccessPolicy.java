@@ -37,7 +37,7 @@ public class StrategistFeatureAccessPolicy
 
         HostedFeatureUnavailableException(StrategistFeature feature)
         {
-            super("Hosted Strategist feature is not entitled: " + feature);
+            super("Hosted Compass feature is not entitled: " + feature);
             this.feature = feature;
         }
 

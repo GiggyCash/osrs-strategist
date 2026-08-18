@@ -10,7 +10,7 @@ import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 
 /**
- * Converts RuneLite's live quest state into Strategist's immutable snapshot.
+ * Converts RuneLite's live quest state into Compass's immutable snapshot.
  *
  * <p>Quest state is direct evidence. Multiple container/stat events can fire in
  * one game tick, so the complete quest scan is cached for that tick instead of

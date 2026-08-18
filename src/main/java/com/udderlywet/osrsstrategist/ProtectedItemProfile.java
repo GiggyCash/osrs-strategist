@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Per-character list of items Strategist must never suggest selling, dropping,
+ * Per-character list of items Compass must never suggest selling, dropping,
  * alching, destroying, or otherwise consuming as an "obsolete" resource.
  *
  * <p>Built-in protection rules for quest/rare/progression items will eventually

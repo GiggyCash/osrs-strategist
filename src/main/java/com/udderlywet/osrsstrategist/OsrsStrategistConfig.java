@@ -10,11 +10,11 @@ public interface OsrsStrategistConfig extends Config
     String GROUP = "osrs-strategist";
 
     @ConfigItem(keyName = "strategyMode", name = "Strategy style",
-            description = "How the strategist weighs speed versus comfort")
+            description = "How Compass weighs speed versus comfort")
     default StrategyMode strategyMode() { return StrategyMode.BALANCED; }
 
     @ConfigItem(keyName = "sessionIntent", name = "Session intent",
-            description = "What kind of session you want Strategist to plan for")
+            description = "What kind of session you want Compass to plan for")
     default SessionIntent sessionIntent() { return SessionIntent.PICK_FOR_ME; }
 
     @ConfigItem(keyName = "activeGoal", name = "Big goal",
@@ -26,11 +26,11 @@ public interface OsrsStrategistConfig extends Config
     default QuestTolerance questTolerance() { return QuestTolerance.NORMAL; }
 
     @ConfigItem(keyName = "allowWildernessMethods", name = "Wilderness methods",
-            description = "Allow Strategist to recommend methods that require entering the Wilderness")
+            description = "Allow Compass to recommend methods that require entering the Wilderness")
     default boolean allowWildernessMethods() { return false; }
 
     @ConfigItem(keyName = "showInGameGuidance", name = "In-game guidance",
-            description = "Show the current Strategist checklist as a movable game-screen overlay")
+            description = "Show the current Compass checklist as a movable game-screen overlay")
     default boolean showInGameGuidance() { return true; }
 
     @ConfigItem(keyName = "useGroupStorage", name = "Use Group Storage",
