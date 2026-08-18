@@ -32,7 +32,7 @@ public final class StrategistRewardNotification
         if (completion == null) return null;
         return new StrategistRewardNotification(
                 completion.getActivityId(),
-                "STRATEGIST MILESTONE",
+                "COMPASS MILESTONE",
                 completion.getSkill().getName(),
                 completion.getStartedAtLevel() + " → " + completion.getTargetLevel(),
                 "Goal complete",

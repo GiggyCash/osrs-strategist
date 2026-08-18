@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Immutable entitlement evidence for optional hosted Strategist services.
+ * Immutable entitlement evidence for optional hosted Compass services.
  *
  * <p>An unverified/empty snapshot never disables the local planner. Hosted
  * capabilities fail closed until their entitlement is verified.</p>

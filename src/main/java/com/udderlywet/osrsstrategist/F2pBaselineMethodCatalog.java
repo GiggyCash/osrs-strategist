@@ -177,7 +177,7 @@ public class F2pBaselineMethodCatalog
 
     private void utilityCombat()
     {
-        // Hitpoints is deliberately absent. Strategist never directly targets
+        // Hitpoints is deliberately absent. Compass never directly targets
         // Hitpoints because it should rise incidentally from a legal combat plan.
     }
 

@@ -529,6 +529,22 @@ public class QuestKnowledgeCatalog
                 a("Verify Port Phasmatys transport and a legal setup for attacking pirates"),
                 "Talk to Bill Teach in the Green Ghost inn at Port Phasmatys.",
                 a("Mos Le'Harmless", "Cave horror access", "Barrelchest anchor progression"), skills()));
+        add(q("Watchtower", false, none(),
+                skills(Skill.MAGIC, 14, Skill.THIEVING, 15,
+                        Skill.AGILITY, 25, Skill.HERBLORE, 14, Skill.MINING, 40),
+                a(item("Coins", 20), item("Gold bar", 1),
+                        item("Tinderbox", 1), item("Death rune", 1),
+                        item("Pickaxe", 1), item("Dragon bones", 1),
+                        item("Rope", 2), item("Guam leaf", 1),
+                        item("Vial of water", 1), item("Light source", 1),
+                        item("Pestle and mortar", 1), item("Bat bones", 1),
+                        item("Jangerberries", 1)), 0,
+                a("Verify a legal setup for Gorad and dragonfire protection for passing blue dragons",
+                        "This quest awards Magic XP; check protected build stats first"),
+                "Talk to the Watchtower Wizard north of Yanille after climbing the tower's north trellis.",
+                a("Watchtower Teleport", "Gu'Tanoth and Ogre Enclave access",
+                        "Monkey Madness II prerequisite"),
+                skills(Skill.MAGIC, 15_250)));
     }
 
     private static QuestDefinition q(String name, boolean f2p,

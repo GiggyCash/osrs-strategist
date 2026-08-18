@@ -86,7 +86,7 @@ public class RequirementEvidenceEngine
 
     /**
      * Conventional F2P altar routes are resource-driven. The player does not
-     * need to manually confirm them once Strategist has observed the essence and
+     * need to manually confirm them once Compass has observed the essence and
      * the matching talisman/tiara in equipment, inventory, bank, or safe
      * account-specific storage.
      */
@@ -243,7 +243,7 @@ public class RequirementEvidenceEngine
                 "generic:" + requirement,
                 requirement,
                 RequirementState.CHECK_NEEDED,
-                "Strategist has not observed enough account state to prove this yet."
+                "More account state must be observed before this can be proven."
         );
     }
 }

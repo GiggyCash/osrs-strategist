@@ -13,7 +13,7 @@ import javax.inject.Singleton;
  * <p>This is intentionally strict. A method only appears here when RuneLite has
  * a stable action XP value that can be matched without inventing a rate. Team
  * minigames, bosses, variable Slayer tasks, rumours, contracts, and other
- * variable-XP loops stay out until Strategist has a dedicated model.</p>
+ * variable-XP loops stay out until Compass has a dedicated model.</p>
  */
 @Singleton
 public class MethodExecutionProfileCatalog
@@ -127,7 +127,7 @@ public class MethodExecutionProfileCatalog
 
         add(p("smithing_f2p_platebodies", "platebody smithed", "platebodies smithed",
                 barForSmithing(),
-                "Each platebody uses five bars. Strategist converts the action count into the matching bar total.",
+                "Each platebody uses five bars, so the action count converts directly into the matching bar total.",
                 "platebody"));
         add(p("smithing_cannonballs", "steel bar processed", "steel bars processed",
                 fixed("Steel bar", 1.0),

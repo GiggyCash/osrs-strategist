@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Read-only item ownership queries over the evidence Strategist has actually
+ * Read-only item ownership queries over the evidence Compass has actually
  * observed for the current character.
  *
  * <p>Unknown storage is never treated as empty. Callers can choose whether GIM

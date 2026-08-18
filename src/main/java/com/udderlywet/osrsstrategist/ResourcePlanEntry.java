@@ -1,7 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 /**
- * One exact consumed-input requirement after Strategist has compared the plan
+ * One exact consumed-input requirement after Compass has compared the plan
  * with usable account storage.
  *
  * <p>A reusable source is deliberately represented separately from owned

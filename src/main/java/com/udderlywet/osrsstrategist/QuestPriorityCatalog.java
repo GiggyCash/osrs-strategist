@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.inject.Singleton;
 
 /**
- * Strategist weighting for quests with unusually important unlocks.
+ * Compass weighting for quests with unusually important unlocks.
  * The complete quest identity/state list still comes from RuneLite Quest.values().
  */
 @Singleton
@@ -58,6 +58,7 @@ public class QuestPriorityCatalog
         unlock("Tai Bwo Wannai Trio", 8, "Unlocks cooked karambwan progression");
         unlock("The Slug Menace", 7, "Unlocks proselyte armour");
         unlock("Family Crest", 7, "Unlocks Family gauntlet progression");
+        unlock("Watchtower", 7, "Unlocks Watchtower Teleport and deeper ogre-area progression");
     }
 
     public QuestPriority priorityFor(String questName)

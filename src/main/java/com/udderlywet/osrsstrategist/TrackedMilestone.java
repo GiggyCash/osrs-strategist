@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import java.util.Locale;
 import net.runelite.api.Skill;
 
-/** The recommendation Strategist is currently watching for natural completion. */
+/** The recommendation Compass is currently watching for natural completion. */
 public final class TrackedMilestone
 {
     private final String activityId;

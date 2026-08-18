@@ -125,7 +125,7 @@ public class SailingGuidanceService
                 ? "Use a skiff with a cargo hold and a salvaging hook. If you do not own a skiff yet, buy one for 15,000 coins before committing to this route."
                 : "Reach 15 Sailing before using the skiff + salvaging-hook route.";
         String where = "Use the highest shipwreck tier your Sailing level and boat can safely reach, with a nearby salvaging station when you want the resources.";
-        String note = "Salvaging XP depends on the shipwreck tier and interaction loop, so Strategist reports exact XP remaining but does not create a false universal salvage count. Iron-style accounts get extra value from sorting the resources instead of dropping salvage.";
+        String note = "Salvaging XP depends on the shipwreck tier and interaction loop, so exact XP remaining is shown without a false universal salvage count. Iron-style accounts get extra value from sorting the resources instead of dropping salvage.";
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -139,7 +139,7 @@ public class SailingGuidanceService
                 + format(xpNeeded) + " Sailing XP to level " + targetLevel + ".";
         String supplies = "Use your current verified boat. At 15 Sailing, a skiff costs 15,000 coins and unlocks the practical salvaging setup; do not buy it early if the account cannot afford it.";
         String where = "Use notice boards at verified ports and prefer tasks that can be chained along the same route instead of dead-heading the boat between jobs.";
-        String note = "Port Task XP varies with the assignment, so Strategist keeps the exact remaining XP but waits for a concrete live task before showing a task count.";
+        String note = "Port Task XP varies with the assignment, so exact remaining XP is shown but a task count waits for a concrete live assignment.";
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -193,12 +193,12 @@ public class SailingGuidanceService
             }
             else
             {
-                supplies.append(" A skiff costs 15,000 coins; Strategist needs verified cash before treating that purchase as ready.");
+                supplies.append(" A skiff costs 15,000 coins; verify spendable cash before treating that purchase as ready.");
             }
         }
 
         String where = "Work through charting tasks in reachable sea regions and claim each region's completion XP before sailing long distances solely for repeatable training.";
-        String note = "Sea charting is one-time account progress. Because Strategist does not yet read every individual Captain's-log checkbox, it will not invent a number of charts remaining. At 30 Sailing, Barracuda Trials become the fast repeatable route and can be converted into exact completion counts.";
+        String note = "Sea charting is one-time account progress. Individual Captain's-log checkboxes are not all observed, so no number of charts remaining is invented. At 30 Sailing, Barracuda Trials become the fast repeatable route and can be converted into exact completion counts.";
         return new RecommendationGuidance(
                 action.toString(), supplies.toString(), where, note);
     }

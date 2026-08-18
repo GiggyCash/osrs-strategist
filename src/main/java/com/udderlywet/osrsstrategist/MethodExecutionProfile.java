@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Connects a curated Strategist method to a deterministic RuneLite skill action.
+ * Connects a curated Compass method to a deterministic RuneLite skill action.
  *
  * <p>The method catalog decides <em>which route</em> is strategically sensible.
- * This profile describes the repeatable unit inside that route so Strategist can
+ * This profile describes the repeatable unit inside that route so Compass can
  * convert exact XP remaining into laps, catches, logs, casts, furniture builds,
  * items processed, etc. Methods with variable XP per completion deliberately do
  * not get a profile until a trustworthy model exists.</p>

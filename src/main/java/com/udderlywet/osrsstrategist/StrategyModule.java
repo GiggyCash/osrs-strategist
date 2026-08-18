@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import java.util.List;
 
 /**
- * Contract for a specialized Strategist subsystem.
+ * Contract for a specialized Compass subsystem.
  *
  * <p>Examples include goals, clues, PvM readiness, account-mode restrictions,
  * economy planning, and collection-log opportunities. Modules produce signals;

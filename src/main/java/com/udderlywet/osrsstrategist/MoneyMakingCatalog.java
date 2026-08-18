@@ -49,7 +49,7 @@ public class MoneyMakingCatalog
                 Skill.MINING, 15, true, allModes(), RiskLevel.NONE,
                 AttentionLevel.ACTIVE, false, true);
         add("money:f2p-high-alch", "High-alch verified items",
-                "High-alch only items that Strategist has confirmed are safe to consume and economically sensible.",
+                "High-alch only items observed as safe to consume and economically sensible.",
                 Skill.MAGIC, 55, true, allModes(), RiskLevel.NONE,
                 AttentionLevel.LOW, false, true);
         add("money:f2p-crafting", "F2P jewellery/crafting margin",

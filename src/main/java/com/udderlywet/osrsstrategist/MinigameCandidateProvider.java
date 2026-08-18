@@ -61,7 +61,7 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     id,
                     definition.getName(),
                     definition.getRewardFocus()
-                            + ". Unlock is verified, but Strategist still checks loadout, consumables, currency and account-mode constraints before calling the activity Ready.",
+                            + ". Unlock is verified, but loadout, consumables, currency and account-mode constraints must also pass before the activity is Ready.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     null,

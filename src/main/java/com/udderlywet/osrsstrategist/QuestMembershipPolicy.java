@@ -9,7 +9,7 @@ import java.util.Set;
  * Hard membership boundary for quest recommendations.
  *
  * <p>RuneLite exposes the complete quest list even while the character is on a
- * free-to-play account/world. The Strategist must therefore filter by content
+ * free-to-play account/world. The Compass must therefore filter by content
  * entitlement before scoring quests. This list tracks the current F2P quest set
  * and intentionally fails closed for unknown names on F2P.</p>
  */

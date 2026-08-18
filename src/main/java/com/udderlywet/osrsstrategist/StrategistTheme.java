@@ -6,7 +6,7 @@ import javax.swing.border.Border;
 import net.runelite.client.ui.ColorScheme;
 
 /**
- * Central visual language for the Strategist sidebar.
+ * Central visual language for the Compass sidebar.
  *
  * <p>The goal is "RuneLite first, OSRS flavored second": charcoal surfaces,
  * muted gold accents, and restrained status colors. Keeping colors here avoids

@@ -8,7 +8,7 @@ import net.runelite.api.Skill;
  * <p>This layer answers a different question from Ironman/Main/UIM policy. A
  * Hardcore Ironman can also be a 1 Defence pure, a Main can be a level-3
  * skiller, and a GIM can be a Defence pure. Both policy layers must agree before
- * Strategist recommends an action.</p>
+ * Compass recommends an action.</p>
  */
 public final class AccountBuildPolicy
 {

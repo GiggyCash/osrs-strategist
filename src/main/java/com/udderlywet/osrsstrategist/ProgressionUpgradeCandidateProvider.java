@@ -294,7 +294,7 @@ public class ProgressionUpgradeCandidateProvider
             reason = "You have 70 Attack and no observed whip-or-better general melee weapon.";
             confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    "Buy an Abyssal whip once Strategist has a verified live purchase price and confirms the account can afford it without violating the configured spending logic.",
+                    "Buy an Abyssal whip once its live price and the account's spendable cash are verified against the configured spending limit.",
                     "Live price and cash affordability still need to be resolved before this purchase can lead DO NEXT.",
                     "Grand Exchange.",
                     "Keep this as a secondary option until live price and affordability are observed."
@@ -439,7 +439,7 @@ public class ProgressionUpgradeCandidateProvider
         String supplies;
         if (!cashVerified)
         {
-            supplies = "Strategist needs verified current cash before treating the shop purchase as immediately ready. Required shop price: " + format(price) + " coins.";
+            supplies = "Verify current spendable cash before treating the shop purchase as immediately ready. Required shop price: " + format(price) + " coins.";
         }
         else if (!affordable)
         {
@@ -610,7 +610,7 @@ public class ProgressionUpgradeCandidateProvider
             title = "Get a Bow of faerdhinen";
             reason = "Song of the Elves is complete, but no Bowfa or Enhanced crystal weapon seed is observed.";
             guidance = new RecommendationGuidance(
-                    "Buy the Bow of faerdhinen or its seed route only after Strategist verifies a live price and confirms the purchase fits the account's current cash budget.",
+                    "Buy the Bow of faerdhinen or its seed route only after verifying a live price and confirming the purchase fits the account's current cash budget.",
                     "Check the live purchase price before choosing this over a ready action.",
                     "Grand Exchange for a Main; Prifddinas singing bowl if buying/using an Enhanced crystal weapon seed instead.",
                     "The planner deliberately avoids hard-coding a market price."
@@ -682,7 +682,7 @@ public class ProgressionUpgradeCandidateProvider
                 "Play Fishing Trawler and keep contribution at or above the reward threshold each game until the missing Angler pieces are obtained.",
                 "Bring the normal Fishing Trawler repair/activity supplies appropriate to the chosen contribution method. Outfit pieces are RNG rewards, so no fake exact game count is shown.",
                 "Fishing Trawler at Port Khazard. Inspect the trawler net after qualifying games for rewards.",
-                "You currently have " + pieces + "/4 observed Angler/Spirit Angler pieces. The full set gives the Fishing XP set bonus and also unlocks minnow access, but Strategist only detours here when the remaining account value justifies it."
+                "You currently have " + pieces + "/4 observed Angler/Spirit Angler pieces. The full set gives the Fishing XP set bonus and also unlocks minnow access; detour only when that remaining account value justifies it."
         );
         result.add(new StrategyCandidate(
                 id,

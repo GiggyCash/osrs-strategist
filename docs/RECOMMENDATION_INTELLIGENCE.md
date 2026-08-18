@@ -2,7 +2,7 @@
 
 ## Purpose
 
-OSRS Strategist must answer a harder question than "what training method is good?"
+Gielinor Compass must answer a harder question than "what training method is good?"
 
 It must decide which legal, useful, executable account action should happen next after comparing skills, quests, upgrades, resource detours, diaries, minigames, PvM and account goals.
 

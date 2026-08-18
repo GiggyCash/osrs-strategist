@@ -31,8 +31,8 @@ final class FallbackRecommendationFactory
                     "Open your bank once to verify available supplies.",
                     "No bank snapshot has been observed for this account.");
 
-        return fallback("goal", "Review your Strategist goal",
-                "Choose or confirm a goal in Strategist, then continue a familiar legal activity while the next recommendation is evaluated.",
+        return fallback("goal", "Review your Compass goal",
+                "Choose or confirm a goal in Compass, then continue a familiar legal activity while the next recommendation is evaluated.",
                 "No safe next activity is fully supported by current observations, so no account facts are being assumed.");
     }
 
@@ -51,7 +51,7 @@ final class FallbackRecommendationFactory
                 new RecommendationGuidance(action,
                         "No supplies are required for this verification step.",
                         "Use the relevant RuneLite or game interface.",
-                        "This fallback reports only the state Strategist has not observed."),
+                        "This fallback reports only account state that has not been observed."),
                 CandidateSafetyEvidence.harmless(true));
     }
 }

@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Future cloud-sync DTO. It contains only explicitly selected Strategist data
+ * Future cloud-sync DTO. It contains only explicitly selected Compass data
  * categories. Game credentials, Jagex credentials, RuneLite credentials, chat,
  * and unrelated client data are intentionally outside this model.
  */

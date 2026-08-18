@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/** Current boss/raid identity plus Strategist safety metadata. */
+/** Current boss/raid identity plus Compass safety metadata. */
 public final class PvmActivityDefinition
 {
     private final String id;

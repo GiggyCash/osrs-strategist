@@ -1,6 +1,6 @@
-# Strategist Plus Architecture
+# Compass Plus Architecture
 
-Strategist Plus is a future optional hosted-services layer. The local planner is the product core and must remain useful without an account, subscription, server, or network connection.
+Compass Plus is a future optional hosted-services layer. The local planner is the product core and must remain useful without an account, subscription, server, or network connection.
 
 ## Product boundary
 
@@ -85,7 +85,7 @@ The current repository intentionally stops before this point.
 
 ## GIM Plus direction
 
-A future team-planning service may synchronize explicitly selected Strategist planning state between group members. It must not turn teammate requests into ordinary local recommendations. Local GIM behavior remains Ironman-like unless Group Storage has actually been observed and the player has enabled its use.
+A future team-planning service may synchronize explicitly selected Compass planning state between group members. It must not turn teammate requests into ordinary local recommendations. Local GIM behavior remains Ironman-like unless Group Storage has actually been observed and the player has enabled its use.
 
 ## Business-model flexibility
 

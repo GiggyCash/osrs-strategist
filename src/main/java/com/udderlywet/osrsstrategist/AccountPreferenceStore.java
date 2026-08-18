@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 import net.runelite.client.config.ConfigManager;
 
 /**
- * Persists learned Strategist preferences, explicit cooldowns, and temporary
+ * Persists learned Compass preferences, explicit cooldowns, and temporary
  * soft score adjustments in RuneLite's RuneScape-profile configuration.
  */
 @Singleton

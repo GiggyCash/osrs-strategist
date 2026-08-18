@@ -16,7 +16,7 @@ import net.runelite.client.game.ItemManager;
  *
  * <p>The bank is cached only after RuneLite exposes the bank container. If the
  * account has not opened its bank during this client session, {@code readBank}
- * returns the last verified cache (or null). Strategist therefore never treats
+ * returns the last verified cache (or null). Compass therefore never treats
  * an unopened bank as an empty bank.</p>
  */
 @Singleton

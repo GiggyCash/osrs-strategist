@@ -110,7 +110,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
 
         assertNotNull(guidance);
         assertTrue(guidance.getSupplies().contains(
-                "normal bank is never counted for UIM"));
+                "normal bank never counts for UIM"));
         assertTrue(guidance.getSupplies().contains("Acquire"));
     }
 

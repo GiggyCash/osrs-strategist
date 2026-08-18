@@ -9,7 +9,7 @@ import net.runelite.api.Skill;
  *
  * <p>Combat is not treated like Cooking. Misses give no skill XP and target
  * choice, weapon speed, quest access, account builds, and monster XP modifiers
- * matter. Strategist therefore gives an exact remaining-XP/damage target only
+ * matter. Compass therefore gives an exact remaining-XP/damage target only
  * when the selected route has ordinary per-damage XP. Special encounters keep
  * exact XP remaining but do not invent a fake kill count.</p>
  */
@@ -65,7 +65,7 @@ public class CombatGuidanceService
         }
         else
         {
-            action.append("No preferred legal weapon is currently observed; use the best legal weapon you own while Strategist works the next weapon acquisition into the queue. ");
+            action.append("No preferred legal weapon is currently observed; use the best legal weapon you own while a suitable acquisition route is evaluated. ");
         }
         action.append(format(xpNeeded)).append(" ")
                 .append(skill.getName()).append(" XP remains to level ")
@@ -138,7 +138,7 @@ public class CombatGuidanceService
             return new CombatRoute(
                     "Fight Scurrius in the Varrock Sewers. Prefer the matching rat-bone weapon once you have a spine and the weapon is legal for your build.",
                     0.0,
-                    "Scurrius has a combat-XP bonus and rat-bone weapons change the effective XP model, so Strategist deliberately does not invent a kill count here.");
+                    "Scurrius has a combat-XP bonus and rat-bone weapons change the effective XP model, so no fixed kill count is shown.");
         }
 
         if (methodId.contains("slayer"))
@@ -299,7 +299,7 @@ public class CombatGuidanceService
             return "Bring food, prayer restoration, and combat boosts appropriate to the account. Rat-bone weapon progression should replace generic training gear once obtained.";
         }
         return weapon == null
-                ? "Open the bank once before Strategist commits to an exact combat loadout."
+                ? "Open the bank once before choosing an exact combat loadout."
                 : "Use your best build-legal armour with " + weapon
                         + ". Prefer supplies already observed on Iron-style accounts before creating a new acquisition detour.";
     }

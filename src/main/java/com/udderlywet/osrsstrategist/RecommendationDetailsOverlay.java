@@ -70,7 +70,7 @@ public class RecommendationDetailsOverlay extends OverlayPanel
 
         panelComponent.getChildren().clear();
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text("OSRS Strategist Details")
+                .text("Gielinor Compass Details")
                 .color(StrategistTheme.GOLD)
                 .build());
 

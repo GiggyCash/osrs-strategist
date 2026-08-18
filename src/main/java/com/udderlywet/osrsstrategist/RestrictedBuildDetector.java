@@ -139,7 +139,7 @@ public class RestrictedBuildDetector
         if (lowestNonCombat <= 1 && highestNonCombat <= 5 && combatPeak >= 30)
         {
             return suggestion(RestrictedBuildType.COMBAT_ONLY,
-                    "Combat is progressing while non-combat skills remain very low; confirm before Strategist protects them.");
+                    "Combat is progressing while non-combat skills remain very low; confirm which stats should be protected.");
         }
 
         return new RestrictedBuildSuggestion(

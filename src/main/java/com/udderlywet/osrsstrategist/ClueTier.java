@@ -5,7 +5,7 @@ import java.util.Locale;
 /**
  * Treasure Trail tiers plus membership eligibility.
  *
- * <p>Membership filtering belongs on the clue tier itself so every Strategist
+ * <p>Membership filtering belongs on the clue tier itself so every Compass
  * surface (DO NEXT, opportunities, strategy signals, future reminders) uses the
  * same rule. This prevents a members-only clue left in a bank from being
  * presented as actionable while the character is currently F2P.</p>
@@ -31,7 +31,7 @@ public enum ClueTier
 
     /**
      * Only beginner Treasure Trails are actionable on a F2P planning profile.
-     * Unknown tiers stay eligible so Strategist can surface them as Needs Info
+     * Unknown tiers stay eligible so Compass can surface them as Needs Info
      * rather than silently pretending it knows the tier.
      */
     public boolean isAvailableFor(MembershipStatus membershipStatus)

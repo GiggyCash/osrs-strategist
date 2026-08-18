@@ -1,10 +1,15 @@
-# OSRS Strategist Product Specification
+# Gielinor Compass Product Specification
 
 ## Product statement
 
-OSRS Strategist is a local, adaptive progression planner that understands the current RuneScape account and helps the player decide what to do next.
+Gielinor Compass is a local, adaptive progression planner that understands the current RuneScape account and helps the player decide what to do next.
 
 It is an adviser, not an automation tool. It never clicks, moves, banks, fights, or performs gameplay actions.
+
+**Compass decides. RuneLite helps you execute.** Compass selects the worthwhile
+quest, method, purchase, or activity and proves whether the account is ready.
+Quest Helper, encounter helpers, and the normal trading interfaces remain the
+right tools for walkthroughs, mechanics, and game interaction.
 
 ## Primary UX
 
@@ -22,7 +27,7 @@ The normal sidebar should remain compact:
 
 Detailed reasoning belongs behind `Details`. Active methods may also expose a movable in-game checklist, similar in purpose to other RuneLite helper overlays.
 
-There is no `Do This` button. Strategist follows live account state and detects natural progress/completion.
+There is no `Do This` button. Compass follows live account state and detects natural progress/completion.
 
 ## Recommendation behavior
 
@@ -56,7 +61,7 @@ Every meaningful requirement should resolve to one of:
 - Check Needed.
 - Blocked.
 
-`Check Needed` means Strategist knows what fact is missing but has not proven it. It should attempt live state, quest state, remembered access, inventory, last observed bank, storage, and other verified evidence before asking the player.
+`Check Needed` means Compass knows what fact is missing but has not proven it. It should attempt live state, quest state, remembered access, inventory, last observed bank, storage, and other verified evidence before asking the player.
 
 Positive observations may be remembered per character. Lack of observation is never proof that something is unavailable.
 
@@ -68,7 +73,7 @@ F2P/P2P is automatic account state. A F2P account receives only F2P skills and F
 
 ### Main
 
-The GE is an available acquisition family, not infinite resources. Before recommending a purchase, Strategist should compare:
+The GE is an available acquisition family, not infinite resources. Before recommending a purchase, Compass should compare:
 
 - Required quantity.
 - Inventory/bank supply.
@@ -106,7 +111,7 @@ Wilderness methods are an explicit per-character option and default OFF. When di
 
 ## Goals
 
-Strategist uses Big Goal and Current Mission layers rather than one giant fixed guide.
+Compass uses Big Goal and Current Mission layers rather than one giant fixed guide.
 
 Typed dependency paths exist for Max, Quest Cape, Barrows Gloves, Prifddinas, Bowfa, Infernal Cape, Diary Cape, Elite Combat Achievements, Raid Ready, 2000 total, 85 Slayer, Base 70s, gear targets, and custom goals.
 
@@ -166,7 +171,7 @@ Imported knowledge carries provenance and coverage state. A Wiki/API record may 
 
 This supports update tooling that detects OSRS changes, runs tests, and prepares reviewed data updates rather than self-modifying production logic.
 
-## Strategist Plus readiness
+## Compass Plus readiness
 
 The local core remains independent of hosted services. Current code contains a dormant entitlement/sync boundary only.
 

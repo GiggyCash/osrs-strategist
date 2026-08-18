@@ -14,8 +14,8 @@ import net.runelite.api.Skill;
 import net.runelite.client.game.ItemManager;
 
 /**
- * Adapts RuneLite's maintained skill-calculator action enums into Strategist.
- * Reflection deliberately keeps Strategist decoupled from individual enum
+ * Adapts RuneLite's maintained skill-calculator action enums into Compass.
+ * Reflection deliberately keeps Compass decoupled from individual enum
  * constants so RuneLite can add actions without requiring us to mirror them.
  */
 @Singleton

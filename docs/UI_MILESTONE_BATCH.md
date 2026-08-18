@@ -1,10 +1,10 @@
 # UI 2.0 and Milestone Tracking
 
-This note records the design rules introduced by the `feature/ui-milestone-batch` work so future changes do not accidentally undo the intended feel of Strategist.
+This note records the design rules introduced by the `feature/ui-milestone-batch` work so future changes do not accidentally undo the intended feel of Compass.
 
 ## Visual direction
 
-Strategist should look like a polished RuneLite tool with a small amount of Old School RuneScape flavor. It should not look like a parchment website squeezed into the sidebar.
+Compass should look like a polished RuneLite tool with a small amount of Old School RuneScape flavor. It should not look like a parchment website squeezed into the sidebar.
 
 The default visual language is:
 
@@ -34,7 +34,7 @@ Deep instructions remain behind the `Details` button. The strategy engine may be
 
 ## Natural milestone completion
 
-A player never has to press `Do This` for Strategist to recognize progress.
+A player never has to press `Do This` for Compass to recognize progress.
 
 The top skill recommendation becomes a `TrackedMilestone`. RuneLite `StatChanged` events cause the account to be reread. When the observed skill level reaches the tracked target, `MilestoneTracker` emits a `MilestoneCompletion`.
 
@@ -44,11 +44,11 @@ Example:
 DO NEXT
 Train Farming to 10
 
-Player trains normally without touching Strategist.
+Player trains normally without touching Compass.
 
 Farming reaches 10.
 
-Strategist detects completion, reranks the account, and shows a brief completion banner.
+Compass detects completion, reranks the account, and shows a brief completion banner.
 ```
 
 The tracked milestone is stored per RuneScape profile through `AccountMilestoneStore`, so restarting RuneLite does not intentionally erase the checkpoint being watched.

@@ -24,8 +24,8 @@ import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-        name = "OSRS Strategist",
-        description = "Adaptive progression strategy for every OSRS account type",
+        name = "Gielinor Compass",
+        description = "Decides your next safe, useful move from observed account state",
         tags = {"strategy", "progression", "maxing", "ironman", "uim", "gim", "clues", "farming"}
 )
 public class OsrsStrategistPlugin extends Plugin
@@ -80,7 +80,7 @@ public class OsrsStrategistPlugin extends Plugin
                 skillIconLoader,
                 this::updateRecommendationDetails);
         navButton = NavigationButton.builder()
-                .tooltip("OSRS Strategist")
+                .tooltip("Gielinor Compass")
                 .icon(createTemporaryIcon())
                 .priority(5)
                 .panel(panel)

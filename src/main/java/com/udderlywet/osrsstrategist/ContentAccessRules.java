@@ -59,7 +59,7 @@ public final class ContentAccessRules
         if (membershipStatus == MembershipStatus.P2P) return true;
 
         // F2P and UNKNOWN both use the F2P skill boundary. UNKNOWN is treated
-        // conservatively until RuneLite gives Strategist verified membership.
+        // conservatively until RuneLite gives Compass verified membership.
         return FREE_TO_PLAY_SKILLS.contains(skill);
     }
 

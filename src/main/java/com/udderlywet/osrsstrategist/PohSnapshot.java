@@ -8,7 +8,7 @@ import java.util.Map;
  * Player-owned-house capability snapshot.
  *
  * <p>POH planning is especially important for Ironman and UIM accounts, but
- * Strategist must only recommend furniture/storage that is known to exist.
+ * Compass must only recommend furniture/storage that is known to exist.
  * Furniture keys remain data-driven so new rooms and objects do not require a
  * rewrite of the strategy engine.</p>
  */

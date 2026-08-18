@@ -138,7 +138,7 @@ An opportunity is not invented when its timer/state has never been observed.
 - [ ] Automated Wiki import/update tooling and generated data files.
 - [ ] CI change report/PR generator for detected OSRS data changes.
 
-## Strategist Plus readiness
+## Compass Plus readiness
 
 - [x] Core-vs-hosted feature enum.
 - [x] Free local entitlement snapshot always includes the complete local core.

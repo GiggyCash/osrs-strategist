@@ -13,7 +13,7 @@ import net.runelite.client.util.ImageUtil;
 
 /**
  * Loads RuneScape's own skill sprites through RuneLite instead of bundling
- * replacement artwork. This keeps Strategist visually native and means new
+ * replacement artwork. This keeps Compass visually native and means new
  * RuneLite sprite updates can flow through without us maintaining image files.
  */
 @Singleton

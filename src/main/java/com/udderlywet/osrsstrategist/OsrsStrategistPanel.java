@@ -22,7 +22,7 @@ import net.runelite.api.Skill;
 import net.runelite.client.ui.PluginPanel;
 
 /**
- * RuneLite sidebar for Strategist.
+ * RuneLite sidebar for Compass.
  *
  * <p>All player-facing variable-length copy uses real wrapping text components.
  * Swing's HTML JLabel renderer is deliberately avoided for recommendation copy
@@ -66,7 +66,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel recommendationIcon = new JLabel();
     private final JLabel recommendationEyebrow = inlineMutedLabel("NEXT MOVE");
     private final JTextArea recommendationTitle = wrappingArea(
-            "Analyzing account...", EMPHASIS_FONT_SIZE, StrategistTheme.TEXT, true);
+            "Finding your next move...", EMPHASIS_FONT_SIZE, StrategistTheme.TEXT, true);
     private final JLabel progressText = mutedLabel("");
     private final JProgressBar progressBar = new JProgressBar(0, 100);
     private final JTextArea recommendationBody = wrappingArea(
@@ -127,7 +127,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildHeader(JPanel content)
     {
-        JLabel title = label("OSRS STRATEGIST");
+        JLabel title = label("GIELINOR COMPASS");
         title.setForeground(StrategistTheme.GOLD);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 17f));
         content.add(title);

@@ -10,7 +10,7 @@ import net.runelite.api.Skill;
 /**
  * Converts deterministic curated methods into account-specific milestone work.
  *
- * <p>RuneLite supplies maintained XP-per-action data. Strategist supplies route
+ * <p>RuneLite supplies maintained XP-per-action data. Compass supplies route
  * selection, account-mode/build policy, observed resources, XP modifiers, live
  * Main-account purchase prices, and acquisition advice. A concrete action is
  * only emitted when its math can be resolved without inventing a rate.</p>

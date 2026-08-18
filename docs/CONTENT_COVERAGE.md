@@ -1,4 +1,4 @@
-# OSRS Strategist Content Coverage
+# Gielinor Compass Content Coverage
 
 This file describes real production coverage, not just type/class availability.
 
@@ -29,7 +29,7 @@ This file describes real production coverage, not just type/class availability.
 
 ## Skills and training methods
 
-All current `Skill.values()` have curated Strategist methods, including Sailing.
+All current `Skill.values()` have curated Compass methods, including Sailing.
 
 Methods carry:
 - minimum/maximum levels
@@ -45,7 +45,7 @@ Methods carry:
 
 Major skills contain multiple real alternatives rather than one fixed route. Examples include tick-manipulation, conventional efficient, budget/self-source, relaxed, AFK, minigame, and progression-unlock methods where applicable.
 
-For additional breadth, `RuneLiteSkillActionCatalog` dynamically adapts RuneLite's maintained skill-calculator actions for Agility, Cooking, Construction, Crafting, Firemaking, Fishing, Fletching, Herblore, Hunter, Magic, Mining, Prayer, Runecraft, Smithing, Thieving, and Woodcutting. Strategist's curated method layer decides which action is sensible for the account instead of treating every calculator action as a recommendation.
+For additional breadth, `RuneLiteSkillActionCatalog` dynamically adapts RuneLite's maintained skill-calculator actions for Agility, Cooking, Construction, Crafting, Firemaking, Fishing, Fletching, Herblore, Hunter, Magic, Mining, Prayer, Runecraft, Smithing, Thieving, and Woodcutting. Compass's curated method layer decides which action is sensible for the account instead of treating every calculator action as a recommendation.
 
 ## F2P
 
@@ -59,7 +59,7 @@ Current PvM catalog marks Obor, Bryophyta, and Brutus as F2P boss content. Other
 
 `QuestCandidateProvider` can place unfinished quests into the same `DO NEXT` queue as skills. In-progress quests receive momentum; major progression quests receive explicit unlock weighting; Quest Cape, Barrows Gloves, and Prifddinas goals add goal-specific weighting.
 
-Not every quest's complete item/step/prerequisite graph is yet hand-authored in Strategist. A not-started quest therefore remains `Check Needed` until its requirements are verified instead of being falsely presented as ready.
+Not every quest's complete item/step/prerequisite graph is yet hand-authored in Compass. A not-started quest therefore remains `Check Needed` until its requirements are verified instead of being falsely presented as ready.
 
 ## Achievement Diaries
 
@@ -86,7 +86,7 @@ Individual task text and every per-task prerequisite are not yet a complete embe
 
 Live reward-tier state is read for Easy, Medium, Hard, Elite, Master, and Grandmaster. The candidate engine targets the next reward threshold and increases priority near a threshold.
 
-The exact full Combat Achievement task database is not yet embedded. Strategist is deliberately designed to prefer tasks on bosses the account is already ready to fight rather than blindly pushing mechanically extreme tasks.
+The exact full Combat Achievement task database is not yet embedded. Compass is deliberately designed to prefer tasks on bosses the account is already ready to fight rather than blindly pushing mechanically extreme tasks.
 
 ## PvM, bosses, and raids
 
@@ -120,7 +120,7 @@ Current ladders include:
 - contextual magic BIS
 - raid hybrid budget/BIS switches
 
-BIS entries explicitly remain target/room/phase/setup dependent. Before an actual acquisition recommendation, Strategist still checks owned equipment, account mode, resource route, Main GP/economics, and encounter context.
+BIS entries explicitly remain target/room/phase/setup dependent. Before an actual acquisition recommendation, Compass still checks owned equipment, account mode, resource route, Main GP/economics, and encounter context.
 
 ## Clues and STASH-aware planning
 
@@ -164,7 +164,7 @@ Matching uses resource phrases rather than loose substrings so equipment such as
 - Zerker
 - 10 Hitpoints build
 
-These are suggestions only. A normal developing account can temporarily resemble a pure, so Strategist must get player confirmation before protecting a stat cap or excluding progression that would train it.
+These are suggestions only. A normal developing account can temporarily resemble a pure, so Compass must get player confirmation before protecting a stat cap or excluding progression that would train it.
 
 ## Remaining deep-data work
 
@@ -174,7 +174,7 @@ The architecture is no longer the main blocker. The remaining work is primarily 
 - all 492 individual diary task definitions and readiness checks
 - every individual Combat Achievement task and mechanic
 - full per-boss phase/gear/DPS/special-attack/consumable modeling
-- every clue step and STASH requirement integrated directly into Strategist state
+- every clue step and STASH requirement integrated directly into Compass state
 - every Collection Log item/source/drop relationship
 - exhaustive item-source/shop/drop-rate database
 - live Main price/GE economics

@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-/** Major game-knowledge families Strategist intends to reason about. */
+/** Major game-knowledge families Compass intends to reason about. */
 public enum GameKnowledgeDomain
 {
     SKILLS,

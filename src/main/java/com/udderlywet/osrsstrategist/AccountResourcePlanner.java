@@ -188,7 +188,7 @@ public class AccountResourcePlanner
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             text.append("Acquire ").append(shortfall)
-                    .append(" just in time. Strategist only counted inventory, equipment, and verified directly usable storage; a normal bank is never counted for UIM.");
+                    .append(" just in time. Only inventory, equipment, and verified directly usable storage count; a normal bank never counts for UIM.");
         }
         else if (mode.isGroupIronman())
         {
@@ -199,7 +199,7 @@ public class AccountResourcePlanner
             }
             else if (groupIncluded)
             {
-                text.append(" Group Storage is enabled but unobserved, so this shortfall intentionally excludes it until Strategist sees it.");
+                text.append(" Group Storage is enabled but unobserved, so this shortfall excludes it until it is opened and observed.");
             }
         }
         else if (mode.isIronLike())
