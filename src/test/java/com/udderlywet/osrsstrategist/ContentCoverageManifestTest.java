@@ -19,18 +19,18 @@ public class ContentCoverageManifestTest
         QuestCoverageManifest manifest = new QuestCoverageManifest();
         assertEquals(Quest.values().length, manifest.all().size());
         assertEquals(18, manifest.miniquestCount());
-        assertEquals(6, manifest.all().stream().filter(entry ->
+        assertEquals(7, manifest.all().stream().filter(entry ->
                 manifest.isMiniquest(entry.getName())
                         && entry.getState() == ContentCoverageState.STRUCTURED).count());
-        assertEquals(12, manifest.all().stream().filter(entry ->
+        assertEquals(11, manifest.all().stream().filter(entry ->
                 manifest.isMiniquest(entry.getName())
                         && entry.getState() == ContentCoverageState.CONSERVATIVE_FAIL_CLOSED).count());
         assertUniqueAndExplained(manifest.all());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Watchtower")
                         && entry.getState() == ContentCoverageState.STRUCTURED));
-        assertEquals(87, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(124, count(manifest.all(),
+        assertEquals(98, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(113, count(manifest.all(),
                 ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Enter the Abyss")
