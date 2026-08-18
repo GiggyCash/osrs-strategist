@@ -18,10 +18,10 @@ public class FinalCandidateSafetyIntegrationTest
     {
         StrategyCandidate members = candidate("future:members",
                 CandidateSafetyEvidence.harmless(false));
-        assertTrue(evaluate(account(MembershipStatus.UNKNOWN, 70, 70, 70, 70,
-                70, 70, 70, 70), members).isEmpty());
-        assertTrue(evaluate(account(MembershipStatus.F2P, 70, 70, 70, 70,
-                70, 70, 70, 70), members).isEmpty());
+        assertOnlyFallback(evaluate(account(MembershipStatus.UNKNOWN, 70, 70, 70, 70,
+                70, 70, 70, 70), members));
+        assertOnlyFallback(evaluate(account(MembershipStatus.F2P, 70, 70, 70, 70,
+                70, 70, 70, 70), members));
         assertEquals("future:members", evaluate(account(MembershipStatus.P2P,
                 70, 70, 70, 70, 70, 70, 70, 70), members).get(0).getId());
     }
@@ -31,22 +31,22 @@ public class FinalCandidateSafetyIntegrationTest
     {
         AccountSnapshot oneDefence = account(MembershipStatus.P2P,
                 60, 60, 1, 60, 43, 60, 70, 50);
-        assertTrue(evaluate(oneDefence, candidate("future:unsafe",
-                CandidateSafetyEvidence.potentiallyIrreversible(false))).isEmpty());
+        assertOnlyFallback(evaluate(oneDefence, candidate("future:unsafe",
+                CandidateSafetyEvidence.potentiallyIrreversible(false))));
         assertFalse(evaluate(oneDefence, candidate("future:mining",
                 CandidateSafetyEvidence.skill(false, Skill.MINING))).isEmpty());
 
         AccountSnapshot ambiguousRangeTank = account(MembershipStatus.P2P,
                 50, 50, 75, 90, 70, 70, 85, 50);
-        assertTrue(evaluate(ambiguousRangeTank, candidate("future:unsafe",
-                CandidateSafetyEvidence.potentiallyIrreversible(false))).isEmpty());
+        assertOnlyFallback(evaluate(ambiguousRangeTank, candidate("future:unsafe",
+                CandidateSafetyEvidence.potentiallyIrreversible(false))));
         assertFalse(evaluate(ambiguousRangeTank, candidate("future:harmless",
                 CandidateSafetyEvidence.harmless(false))).isEmpty());
 
         AccountSnapshot combatOnly = account(MembershipStatus.P2P,
                 70, 70, 70, 70, 70, 70, 80, 1);
-        assertTrue(evaluate(combatOnly, candidate("future:farming",
-                CandidateSafetyEvidence.skill(false, Skill.FARMING))).isEmpty());
+        assertOnlyFallback(evaluate(combatOnly, candidate("future:farming",
+                CandidateSafetyEvidence.skill(false, Skill.FARMING))));
 
         for (AccountSnapshot restricted : java.util.Arrays.asList(
                 account(MembershipStatus.P2P, 1, 1, 60, 1, 1, 1, 70, 50),
@@ -54,8 +54,8 @@ public class FinalCandidateSafetyIntegrationTest
                 account(MembershipStatus.P2P, 1, 1, 1, 1, 20, 1, 10, 50),
                 account(MembershipStatus.P2P, 1, 1, 1, 20, 1, 20, 10, 50)))
         {
-            assertTrue(evaluate(restricted, candidate("future:unsafe",
-                    CandidateSafetyEvidence.potentiallyIrreversible(false))).isEmpty());
+            assertOnlyFallback(evaluate(restricted, candidate("future:unsafe",
+                    CandidateSafetyEvidence.potentiallyIrreversible(false))));
             assertFalse(evaluate(restricted, candidate("future:harmless",
                     CandidateSafetyEvidence.harmless(false))).isEmpty());
         }
@@ -96,8 +96,8 @@ public class FinalCandidateSafetyIntegrationTest
         StrategyCandidate blocked = new StrategyCandidate("pvm:obor", "Do Obor",
                 "blocked", 1000, RecommendationConfidence.BLOCKED,
                 guidance(), CandidateSafetyEvidence.potentiallyIrreversible(true));
-        assertTrue(evaluate(account(MembershipStatus.P2P, 70, 70, 70, 70,
-                70, 70, 70, 70), blocked).isEmpty());
+        assertOnlyFallback(evaluate(account(MembershipStatus.P2P, 70, 70, 70, 70,
+                70, 70, 70, 70), blocked));
     }
 
     private static List<Recommendation> evaluate(AccountSnapshot account,
@@ -115,6 +115,12 @@ public class FinalCandidateSafetyIntegrationTest
         return engine.evaluate(StrategyDataBundle.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 new PreferenceProfile()).getRecommendations();
+    }
+
+    private static void assertOnlyFallback(List<Recommendation> queue)
+    {
+        assertEquals(1, queue.size());
+        assertTrue(FallbackRecommendationFactory.isFallback(queue.get(0)));
     }
 
     private static StrategyCandidate candidate(String id,

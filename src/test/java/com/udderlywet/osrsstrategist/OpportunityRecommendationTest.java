@@ -94,7 +94,8 @@ public class OpportunityRecommendationTest
             hidden.apply(verified.getId(), action);
             StrategyResult result = engine.evaluate(data, StrategyMode.BALANCED,
                     SessionIntent.PICK_FOR_ME, hidden);
-            assertTrue(result.getRecommendations().isEmpty());
+            assertTrue(FallbackRecommendationFactory.isFallback(
+                    result.getRecommendations().get(0)));
             assertTrue(result.getOpportunities().isEmpty());
         }
 
@@ -152,7 +153,8 @@ public class OpportunityRecommendationTest
                 null, null, new RecommendationActionabilityPolicy())
                 .evaluate(data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                         new PreferenceProfile());
-        assertTrue(result.getRecommendations().isEmpty());
+        assertTrue(FallbackRecommendationFactory.isFallback(
+                result.getRecommendations().get(0)));
         assertTrue(result.getOpportunities().stream().anyMatch(value ->
                 "opportunity:battlestaves".equals(value.getId())));
     }
