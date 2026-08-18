@@ -309,13 +309,13 @@ public final class RecommendationPresentation
 
     private static String confidenceLabel(Recommendation recommendation)
     {
-        if (recommendation == null) return "Needs Info";
+        if (recommendation == null) return "Check Needed";
         if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED) return "Ready";
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED) return "Blocked";
         if (RequirementActionability.isActionablePreparation(
                 recommendation.getTrainingPlan(), recommendation.getGuidance()))
             return "Ready to prep";
-        return "Needs Info";
+        return "Check Needed";
     }
 
     private static void appendBreak(StringBuilder text, int count)

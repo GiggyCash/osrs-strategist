@@ -94,6 +94,85 @@ public class DoNextInvariantTest
         assertFalse(text.trim().isEmpty());
     }
 
+    @Test
+    public void largeMixedFamilyPoolSurvivesRepeatedFeedbackUntilFallback()
+    {
+        String[] ids = {"skill:mining", "quest:holy-grail", "gear:salve",
+                "pvm:obor", "resource:molten-glass", "opportunity:herb-run",
+                "skill:fishing", "quest:cabin-fever", "gear:ibans-staff",
+                "pvm:scurrius", "resource:bow-string", "opportunity:birdhouse"};
+        Recommendation[] pool = new Recommendation[ids.length];
+        for (int i = 0; i < ids.length; i++) pool[i] = ready(ids[i], 200 - i);
+        StrategyEngine engine = engine(pool);
+        PreferenceProfile preferences = new PreferenceProfile();
+        FeedbackAction[] actions = {FeedbackAction.LATER,
+                FeedbackAction.NOT_TODAY, FeedbackAction.DISLIKE};
+
+        for (int i = 0; i < ids.length; i++)
+        {
+            Recommendation before = evaluate(engine, observedData(), preferences);
+            assertFalse(FallbackRecommendationFactory.isFallback(before));
+            preferences.apply(before.getId(), actions[i % actions.length]);
+            Recommendation after = evaluate(engine, observedData(), preferences);
+            assertFalse(RecommendationPresentation.compactText(after).trim().isEmpty());
+            assertFalse(before.getId().equals(after.getId()));
+        }
+        assertTrue(FallbackRecommendationFactory.isFallback(
+                evaluate(engine, observedData(), preferences)));
+    }
+
+    @Test
+    public void missingStateFallbacksAreSpecificAndUimNeverRequestsBank()
+    {
+        StrategyDataBundle accountOnly = StrategyDataBundle.builder(
+                account(0, MembershipStatus.P2P)).build();
+        assertEquals("fallback:inventory", evaluate(engine(), accountOnly,
+                new PreferenceProfile()).getId());
+
+        StrategyDataBundle inventoryOnly = StrategyDataBundle.builder(
+                        account(0, MembershipStatus.P2P))
+                .inventory(new InventorySnapshot(Collections.emptyList())).build();
+        assertEquals("fallback:equipment", evaluate(engine(), inventoryOnly,
+                new PreferenceProfile()).getId());
+
+        StrategyDataBundle noBank = StrategyDataBundle.builder(
+                        account(0, MembershipStatus.P2P))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList())).build();
+        assertEquals("fallback:bank", evaluate(engine(), noBank,
+                new PreferenceProfile()).getId());
+
+        StrategyDataBundle uim = StrategyDataBundle.builder(
+                        account(2, MembershipStatus.P2P))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList())).build();
+        Recommendation uimFallback = evaluate(engine(), uim,
+                new PreferenceProfile());
+        assertEquals("fallback:goal", uimFallback.getId());
+        assertFalse(RecommendationPresentation.compactText(uimFallback)
+                .toLowerCase().contains("open your bank"));
+    }
+
+    @Test
+    public void unsafePoolFallsBackForUnknownRestrictedAndHardcoreStates()
+    {
+        Recommendation membersOnly = new Recommendation("pvm:unsafe", "Unsafe",
+                "Unsafe test", 500, null, RecommendationConfidence.VERIFIED,
+                0, 0, new RecommendationGuidance("Enter the encounter.",
+                "Bring gear.", "Members area.", "Unsafe."),
+                CandidateSafetyEvidence.potentiallyIrreversible(false));
+        for (StrategyDataBundle data : Arrays.asList(
+                data(account(0, MembershipStatus.UNKNOWN)),
+                data(oneDefenceAccount()),
+                data(account(3, MembershipStatus.P2P))))
+        {
+            Recommendation result = evaluate(engine(membersOnly), data,
+                    new PreferenceProfile());
+            assertTrue(FallbackRecommendationFactory.isFallback(result));
+            assertFalse(RecommendationPresentation.compactText(result).trim().isEmpty());
+        }
+    }
+
     private static StrategyEngine engine(Recommendation... candidates)
     {
         RecommendationEngine recommendations = new RecommendationEngine(
@@ -147,6 +226,35 @@ public class DoNextInvariantTest
                 .inventory(new InventorySnapshot(Collections.emptyList()))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+    }
+
+    private static StrategyDataBundle data(AccountSnapshot account)
+    {
+        return StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+    }
+
+    private static AccountSnapshot account(int type, MembershipStatus membership)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values()) { levels.put(skill, 70); xp.put(skill, 0); }
+        return new AccountSnapshot("Invariant", type,
+                AccountMode.fromTypeCode(type).name(), membership,
+                membership == MembershipStatus.P2P ? 1 : 0,
+                1500, 0, levels, xp);
+    }
+
+    private static AccountSnapshot oneDefenceAccount()
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values()) { levels.put(skill, 70); xp.put(skill, 0); }
+        levels.put(Skill.DEFENCE, 1);
+        return new AccountSnapshot("Pure", 0, "Main", MembershipStatus.P2P,
+                1, 1400, 0, levels, xp);
     }
 
     private static String allText(Component component)

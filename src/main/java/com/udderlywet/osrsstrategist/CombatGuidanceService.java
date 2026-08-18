@@ -61,7 +61,7 @@ public class CombatGuidanceService
         }
         else if (!items.bankObserved())
         {
-            action.append("Open your bank once so Strategist can choose the best legal observed weapon for this build. ");
+            action.append("Open your bank once to compare the legal observed weapons for this build. ");
         }
         else
         {

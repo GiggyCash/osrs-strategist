@@ -165,6 +165,46 @@ public class QuestPlanningEngineTest
         assertTrue(target.getGuidance().getAction().contains("Underground Pass"));
     }
 
+    @Test
+    public void expandedCorpusCoversKingdomMorytaniaDesertAndPirateChains()
+    {
+        QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
+        assertTrue(catalog.all().size() >= 65);
+        assertTrue(catalog.definitionFor("King's Ransom").getPrerequisites()
+                .contains("Holy Grail"));
+        assertTrue(catalog.definitionFor("A Taste of Hope").getPrerequisites()
+                .contains("Darkness of Hallowvale"));
+        assertTrue(catalog.definitionFor("Shadow of the Storm").getPrerequisites()
+                .contains("The Golem"));
+        assertTrue(catalog.definitionFor("Cabin Fever").getPrerequisites()
+                .contains("Rum Deal"));
+        assertTrue(catalog.definitionFor("Royal Trouble").getPrerequisites()
+                .contains("Throne of Miscellania"));
+    }
+
+    @Test
+    public void kingsRansomPromotesHolyGrailBeforeTarget()
+    {
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("King's Ransom", QuestStatus.NOT_STARTED);
+        quests.put("Black Knights' Fortress", QuestStatus.COMPLETE);
+        quests.put("Holy Grail", QuestStatus.NOT_STARTED);
+        quests.put("Merlin's Crystal", QuestStatus.COMPLETE);
+        quests.put("Murder Mystery", QuestStatus.COMPLETE);
+        quests.put("One Small Favour", QuestStatus.COMPLETE);
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P, 70, 70, 70))
+                .quests(new QuestSnapshot(quests))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        List<StrategyCandidate> candidates = provider.candidates(context(data));
+        StrategyCandidate target = candidates.stream()
+                .filter(value -> value.getTitle().contains("King's Ransom"))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertTrue(target.getGuidance().getAction().contains("Holy Grail"));
+        assertTrue(candidates.stream().anyMatch(value ->
+                value.getTitle().contains("Holy Grail")));
+    }
+
     private static StrategyCandidate only(StrategyDataBundle data)
     {
         List<StrategyCandidate> candidates = new QuestCandidateProvider(

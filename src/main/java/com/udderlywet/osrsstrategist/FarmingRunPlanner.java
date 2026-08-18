@@ -138,7 +138,7 @@ public class FarmingRunPlanner
         if (observed == null)
         {
             return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                    "Visit once so Strategist can read this patch.",
+                    "Visit the patch once to record its current state.",
                     GuidanceStepState.CHECK_NEEDED);
         }
         switch (observed.getState())

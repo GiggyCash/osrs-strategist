@@ -88,7 +88,7 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                     "Do " + title,
                     ready
                             ? "Observed equipped gear, carried supplies, access and conservative activity checks are ready."
-                            : "The encounter is not ready; the listed preparation step preserves the unresolved evidence.",
+                            : "The encounter is not ready; complete the listed preparation before attempting it.",
                     score,
                     ready ? RecommendationConfidence.VERIFIED
                             : RecommendationConfidence.CHECK_NEEDED,

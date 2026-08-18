@@ -143,6 +143,37 @@ public class ResourceDependencyResolverTest
         assertTrue(result.nextAction().getAction().contains("too much"));
     }
 
+    @Test
+    public void moltenGlassChainPromotesSeaweedBeforeProcessing()
+    {
+        ResourceDependencyResolution result = resolver().resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(ItemID.MOLTEN_GLASS, "Molten glass", 1));
+        assertTrue(ids(result).contains("resource:" + ItemID.SODA_ASH));
+        assertTrue(ids(result).contains("resource:" + ItemID.SEAWEED));
+        assertEquals("resource:" + ItemID.BUCKET_SAND,
+                result.nextAction().getId());
+        assertTrue(result.getNodes().size() <= 8);
+    }
+
+    @Test
+    public void observedFlaxCompletesOneBranchOfBowStringChain()
+    {
+        InventorySnapshot inventory = new InventorySnapshot(
+                Collections.singletonList(new ItemStackSnapshot(
+                        ItemID.FLAX, "Flax", 1)));
+        StrategyContext context = context(1, false, null, null, null,
+                inventory);
+        ResourceDependencyResolution result = resolver().resolve(context,
+                new ResourceNeed(ItemID.BOW_STRING, "Bow string", 1));
+        assertEquals(RecommendationConfidence.VERIFIED,
+                result.getNodes().stream()
+                        .filter(value -> value.getId().equals(
+                                "resource:" + ItemID.FLAX))
+                        .findFirst().orElseThrow(AssertionError::new)
+                        .getConfidence());
+    }
+
     private static ResourceDependencyDefinition definition(int item, int child,
             int cost)
     {
@@ -165,6 +196,14 @@ public class ResourceDependencyResolverTest
             BankSnapshot bank, GroupStorageSnapshot group,
             StorageSnapshot storage)
     {
+        return context(type, groupEnabled, bank, group, storage,
+                new InventorySnapshot(Collections.emptyList()));
+    }
+
+    private static StrategyContext context(int type, boolean groupEnabled,
+            BankSnapshot bank, GroupStorageSnapshot group,
+            StorageSnapshot storage, InventorySnapshot inventory)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 50); xp.put(skill, 0); }
@@ -172,7 +211,7 @@ public class ResourceDependencyResolverTest
                 AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
                 1, 1000, 0L, levels, xp);
         StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(inventory)
                 .bank(bank).groupStorage(group).storage(storage)
                 .quests(new QuestSnapshot(Collections.emptyMap())).build();
         return new StrategyContext(data, StrategyMode.BALANCED,

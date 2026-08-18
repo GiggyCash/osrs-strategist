@@ -98,7 +98,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         if (!items.bankObserved() && mode != AccountMode.ULTIMATE_IRONMAN)
         {
             return new RecommendationGuidance(
-                    "Open the bank once so Strategist can compare this gear path with verified ownership.",
+                    "Open the bank once to compare this gear path with verified ownership.",
                     "Bank ownership is currently unknown; no item is being called missing yet.",
                     "Any bank.",
                     "This remains a verification alternative, not a purchase instruction.");
@@ -126,7 +126,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
 
         String supplies = "Observed matching targets: "
                 + (owned.isEmpty() ? "none" : String.join(", ", owned))
-                + ". Unresolved targets: "
+                + ". Still to compare: "
                 + (unresolved.isEmpty() ? "weapon/context comparison only"
                 : String.join(", ", unresolved)) + ".";
         return new RecommendationGuidance(action, supplies,

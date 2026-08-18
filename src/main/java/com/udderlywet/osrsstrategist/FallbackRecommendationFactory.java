@@ -11,29 +11,29 @@ final class FallbackRecommendationFactory
     {
         if (data == null || data.getAccount() == null)
             return fallback("login", "Log in to continue",
-                    "Log in to RuneScape so Strategist can observe your account state.",
+                    "Log in to RuneScape to load your account state.",
                     "No character state is currently available.");
 
         if (data.getInventory() == null)
             return fallback("inventory", "Open your inventory",
-                    "Open your inventory tab so Strategist can verify carried supplies.",
+                    "Open your inventory tab to verify carried supplies.",
                     "Your carried items have not been observed yet.");
 
         if (data.getEquipment() == null)
             return fallback("equipment", "Open your equipment tab",
-                    "Open your equipment tab so Strategist can verify your current setup.",
+                    "Open your equipment tab to verify your current setup.",
                     "Your equipped items have not been observed yet.");
 
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
         if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
             return fallback("bank", "Open your bank",
-                    "Open your bank once so Strategist can verify available supplies.",
+                    "Open your bank once to verify available supplies.",
                     "No bank snapshot has been observed for this account.");
 
         return fallback("goal", "Review your Strategist goal",
                 "Choose or confirm a goal in Strategist, then continue a familiar legal activity while the next recommendation is evaluated.",
-                "The safe ranked candidate pool is currently exhausted; no account facts are being assumed.");
+                "No safe next activity is fully supported by current observations, so no account facts are being assumed.");
     }
 
     static boolean isFallback(Recommendation recommendation)

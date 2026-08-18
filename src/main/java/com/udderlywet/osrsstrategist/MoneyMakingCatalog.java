@@ -137,7 +137,7 @@ public class MoneyMakingCatalog
                 Skill.RANGED, 75, false, nonF2pModes(), RiskLevel.HIGH,
                 AttentionLevel.ACTIVE, false, true);
         add("money:gauntlet", "Corrupted Gauntlet",
-                "Use after Song of the Elves and only when the account's skill/risk policy supports repeated CG attempts.",
+                "Use after Song of the Elves and only when current skills and risk settings support repeated Gauntlet attempts.",
                 Skill.RANGED, 75, false, nonF2pModes(), RiskLevel.HIGH,
                 AttentionLevel.ACTIVE, false, false);
         add("money:slayer-bosses", "Slayer bosses",

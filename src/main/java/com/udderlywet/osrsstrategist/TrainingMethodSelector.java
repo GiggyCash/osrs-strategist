@@ -188,7 +188,7 @@ public class TrainingMethodSelector
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
         if (mode != AccountMode.UNKNOWN)
-            reason.append(" Account policy: ").append(pretty(mode.name())).append(".");
+            reason.append(" Account mode: ").append(pretty(mode.name())).append(".");
         if (method.isWilderness())
             reason.append(" Wilderness method enabled by this character's settings.");
         return reason.toString();
