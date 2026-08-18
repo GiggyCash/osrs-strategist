@@ -21,7 +21,7 @@ public class QuestCoverageManifest
             "The General's Shadow", "Hopespear's Will", "In Search of Knowledge",
             "Into the Tombs", "Lair of Tarn Razorlor", "Mage Arena I", "Mage Arena II",
             "Skippy and the Mogres", "The Frozen Door", "His Faithful Servants",
-            "Barbarian Training");
+            "Barbarian Training", "Vale Totems");
 
     private final List<ContentCoverageEntry> entries;
 
@@ -31,13 +31,16 @@ public class QuestCoverageManifest
         List<ContentCoverageEntry> values = new ArrayList<>();
         for (Quest quest : Quest.values())
         {
-            boolean structured = knowledge.definitionFor(quest.getName()) != null;
+            QuestDefinition definition = knowledge.definitionFor(quest.getName());
+            boolean structured = definition != null;
             String kind = isMiniquest(quest.getName()) ? "miniquest" : "quest/activity";
             values.add(new ContentCoverageEntry(quest.name(), quest.getName(),
                     structured ? ContentCoverageState.STRUCTURED
                             : ContentCoverageState.CONSERVATIVE_FAIL_CLOSED,
                     structured
-                            ? "Structured requirements and progression effects are locally curated."
+                            ? (definition.hasFieldUncertainty()
+                                    ? "Known direct quest and skill requirements are structured; explicitly listed fields remain fail-closed."
+                                    : "Structured requirements and progression effects are locally curated.")
                             : "This " + kind + " is observed by RuneLite, but its full requirements and irreversible rewards have not passed local verification; it cannot lead DO NEXT.",
                     PROVENANCE));
         }

@@ -18,20 +18,22 @@ public class ContentCoverageManifestTest
     {
         QuestCoverageManifest manifest = new QuestCoverageManifest();
         assertEquals(Quest.values().length, manifest.all().size());
-        assertEquals(18, manifest.miniquestCount());
-        assertEquals(7, manifest.all().stream().filter(entry ->
+        assertEquals(19, manifest.miniquestCount());
+        assertEquals(19, manifest.all().stream().filter(entry ->
                 manifest.isMiniquest(entry.getName())
                         && entry.getState() == ContentCoverageState.STRUCTURED).count());
-        assertEquals(11, manifest.all().stream().filter(entry ->
+        assertEquals(0, manifest.all().stream().filter(entry ->
                 manifest.isMiniquest(entry.getName())
                         && entry.getState() == ContentCoverageState.CONSERVATIVE_FAIL_CLOSED).count());
         assertUniqueAndExplained(manifest.all());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Watchtower")
                         && entry.getState() == ContentCoverageState.STRUCTURED));
-        assertEquals(98, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(113, count(manifest.all(),
+        assertEquals(211, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(0, count(manifest.all(),
                 ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+        assertEquals(104, new QuestKnowledgeCatalog().all().values().stream()
+                .filter(QuestDefinition::hasFieldUncertainty).count());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Enter the Abyss")
                         && entry.getState() == ContentCoverageState.STRUCTURED));
@@ -41,12 +43,12 @@ public class ContentCoverageManifestTest
     public void minigameCensusHasNoSilentOrDuplicateEntries()
     {
         MinigameCoverageManifest manifest = new MinigameCoverageManifest();
-        assertEquals(42, manifest.all().size());
+        assertEquals(43, manifest.all().size());
         assertUniqueAndExplained(manifest.all());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Burthorpe Games Room")
                         && entry.getState() == ContentCoverageState.NOT_PROGRESSION_RELEVANT));
-        assertEquals(41, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(42, count(manifest.all(), ContentCoverageState.STRUCTURED));
         assertEquals(0, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
         assertEquals(1, count(manifest.all(), ContentCoverageState.NOT_PROGRESSION_RELEVANT));
     }

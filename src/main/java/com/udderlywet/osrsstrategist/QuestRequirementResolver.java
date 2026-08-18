@@ -54,6 +54,13 @@ public class QuestRequirementResolver
                         + requirement.getName());
         }
 
+        ItemRequirementResult expressionResult = new ItemRequirementEvaluator()
+                .evaluate(definition.getItemRequirementExpression(), data,
+                        context.isUseGroupStorage());
+        if (!expressionResult.isSatisfied()
+                && !expressionResult.getAction().isEmpty())
+            missing.add(expressionResult.getAction());
+
         if (definition.getQuestPointsRequired() > 0)
             missing.add("Verify at least " + definition.getQuestPointsRequired()
                     + " quest points");

@@ -22,6 +22,90 @@ public class QuestKnowledgeCatalog
         seedUnlockChains();
         seedMidgameUnlocks();
         seedProgressionDepth();
+        seedSupplementalMiniquests();
+        seedImportedRequirements();
+    }
+
+    private void seedSupplementalMiniquests()
+    {
+        add(q("Daddy's Home", false, none(), skills(),
+                a(item("Plank", 10), item("Bolt of cloth", 5)), 0,
+                a("Bring at least 16 nails of one usable metal type; a hammer and saw can be obtained during the miniquest"),
+                "Speak to Marlo in the Estate Agent's house in north-east Varrock.",
+                a("Mahogany Homes access", "Construction training introduction"),
+                skills()));
+        add(q("The Enchanted Key", false, a("Making History"), skills(),
+                a(item("Enchanted key", 1), item("Spade", 1)), 0, none(),
+                "Reclaim the enchanted key from the silver merchant in East Ardougne if needed.",
+                a("Enchanted-key treasure locations", "Mjolnir and resource rewards"),
+                skills()));
+        add(q("The General's Shadow", false,
+                a("Curse of the Empty Lord", "Fight Arena"), skills(),
+                a(item("Coins", 40), item("Ghostspeak amulet", 1),
+                        item("Ghostly hood", 1), item("Ghostly robe", 1),
+                        item("Ghostly robe bottom", 1), item("Ghostly gloves", 1),
+                        item("Ghostly boots", 1), item("Ghostly cloak", 1),
+                        item("Ring of visibility", 1)), 0,
+                a("Start Desert Treasure I to obtain and use the ring of visibility",
+                        "Verify a legal setup for the prayer-disabled, safespottable Ghost of Bouncer fight"),
+                "Find General Khazard's ghost south-east of Rellekka.",
+                a("Shadow sword", "Secrets of the North prerequisite"),
+                skills(Skill.SLAYER, 2_000)));
+        add(q("Family Pest", false, a("Family Crest"), skills(),
+                a(item("Coins", 500_000)), 0, none(),
+                "Speak to Dimintheis in south-east Varrock.",
+                a("Own all three Family Crest gauntlet variants simultaneously"), skills()));
+        add(q("Lair of Tarn Razorlor", false, a("Haunted Mine"),
+                skills(Skill.SLAYER, 40), none(), 0,
+                a("Verify a legal setup for Tarn's two forms and the lair's rapid Prayer drain"),
+                "Enter Tarn's Lair from the Haunted Mine area.",
+                a("Salve amulet enchantment", "Tarn's diary access"), skills()));
+        add(q("Skippy and the Mogres", false, none(), skills(Skill.COOKING, 20),
+                a(item("Bucket of water", 1), item("Nettle tea", 1),
+                        item("Hangover cure", 1)), 0, none(),
+                "Speak to Skippy south-east of Rimmington.",
+                a("Mogre Slayer access at 32 Slayer"), skills()));
+        add(q("In Search of Knowledge", false, none(), skills(), none(), 0,
+                a("Bring five pieces of suitable food, a slash weapon or knife, and a legal combat setup for Forthos Dungeon monsters"),
+                "Speak to Brother Aimeri in the south-east of Forthos Dungeon.",
+                a("Lamp of knowledge", "Temple page trading"), skills()));
+        add(q("Land of the Goblins", false,
+                a("Another Slice of H.A.M.", "Fishing Contest"),
+                skills(Skill.AGILITY, 38, Skill.FISHING, 40,
+                        Skill.THIEVING, 45, Skill.HERBLORE, 48),
+                a(item("Toadflax potion (unf)", 1), item("Goblin mail", 1),
+                        item("Yellow dye", 1), item("Blue dye", 1),
+                        item("Orange dye", 1), item("Purple dye", 1),
+                        item("Fishing rod", 1), item("Raw slimy eel", 1),
+                        item("Coins", 5)), 0,
+                a("Bring a usable light source; Ultimate Iron accounts must plan the required unequipped disguise setup",
+                        "Verify a legal setup for the five goblin fights"),
+                "Talk to Grubfoot in the Dorgesh-Kaan mine.",
+                a("Yu'biusk access", "Goblin quest-chain progression"), skills()));
+        add(q("Vale Totems", false, a("Children of the Sun"),
+                skills(Skill.FLETCHING, 20), none(), 0,
+                a("Bring oak-or-better logs, a knife, and four matching unstrung bows or shields"),
+                "Talk to Ranulph in north-western Auburnvale.",
+                a("Vale Totems minigame", "Vale offerings and research points"),
+                skills()));
+    }
+
+    private void seedImportedRequirements()
+    {
+        for (AuthoritativeQuestRequirementCatalog.Record record
+                : new AuthoritativeQuestRequirementCatalog().all().values())
+        {
+            if (definitionFor(record.getName()) != null) continue;
+            java.util.List<String> checks = new java.util.ArrayList<>(
+                    record.getOtherChecks());
+            checks.add("Open the quest journal to check required items, access, and combat preparation");
+            add(new QuestDefinition(record.getName(),
+                    QuestMembershipPolicy.isFreeToPlayQuest(record.getName()),
+                    record.getPrerequisites(), record.getSkills(), none(), null,
+                    record.getQuestPoints(), checks, record.getStartLocation(),
+                    none(), skills(), a("items", "access/combat", "start location",
+                            "rewards/unlocks")));
+        }
     }
 
     private void seedFreeToPlay()

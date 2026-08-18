@@ -8,12 +8,14 @@ The census was audited on 2026-08-18 against RuneLite 1.12.35:
 
 | Family | Authoritative identity source | Discovered | Structured | Partial | Conservative |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 98 | 0 | 113 |
-| Progression miniquests | Maintained, Wiki-verified manifest | 18 | 7 | 0 | 11 |
-| Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 42 | 41 | 0 | 0 (1 not progression-relevant) |
+| Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 211 (104 with explicit field-level uncertainty) | 0 | 0 |
+| Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
+| Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 3 | 31 | 37 |
 
-“Structured” has a local planning definition. “Partial” may produce concrete
+“Structured” has a local planning definition. Quest records imported from the
+Wiki requirement module explicitly identify fields that are not yet proven;
+those fields remain fail-closed and prevent false readiness. “Partial” may produce concrete
 preparation but cannot claim encounter readiness. “Conservative” records the
 identity and why it remains fail-closed. Conservative content cannot lead
 **DO NEXT** merely because its identity is known.
