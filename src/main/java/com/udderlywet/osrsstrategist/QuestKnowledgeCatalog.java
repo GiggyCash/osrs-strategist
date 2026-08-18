@@ -174,13 +174,13 @@ public class QuestKnowledgeCatalog
                 a("Verify Morytania Graveyard access and every diamond-boss combat/setup requirement"),
                 "Talk to the Asgarnia Smith at the Bedabin Camp.",
                 a("Ancient Magicks", "Ancient staff access"), skills(Skill.MAGIC, 20_000)));
-        add(q("Fairy Tale I - Growing Pains", false, a("Lost City", "Nature Spirit"),
+        add(q("Fairytale I - Growing Pains", false, a("Lost City", "Nature Spirit"),
                 skills(), none(), 0,
                 a("Obtain the three randomly selected items requested by Malignius Mortifer"),
                 "Talk to Martin the Master Gardener in Draynor Village.",
-                a("Magic secateurs", "Fairy Tale II prerequisite"),
+                a("Magic secateurs", "Fairytale II prerequisite"),
                 skills(Skill.FARMING, 3_500, Skill.ATTACK, 2_000, Skill.MAGIC, 1_000)));
-        add(q("Fairy Tale II - Cure a Queen", false, a("Fairy Tale I - Growing Pains"),
+        add(q("Fairytale II - Cure a Queen", false, a("Fairytale I - Growing Pains"),
                 skills(Skill.THIEVING, 40, Skill.FARMING, 49, Skill.HERBLORE, 57),
                 none(), 0, a("Begin the quest far enough to unlock fairy-ring use"),
                 "Talk to Martin the Master Gardener in Draynor Village.",
@@ -193,7 +193,7 @@ public class QuestKnowledgeCatalog
                 skills(), a(item("Silver sickle", 1), item("Ghostspeak amulet", 1)),
                 0, a("Verify a legal setup for three level 30 Ghasts"),
                 "Talk to Drezel beneath Paterdomus Temple by the River Salve.",
-                a("Mort Myre Swamp access", "Druid pouch", "Fairy Tale I prerequisite",
+                a("Mort Myre Swamp access", "Druid pouch", "Fairytale I prerequisite",
                         "Myreque quest-chain access"),
                 skills(Skill.CRAFTING, 3_000, Skill.DEFENCE, 2_000,
                         Skill.HITPOINTS, 2_000)));
@@ -545,6 +545,55 @@ public class QuestKnowledgeCatalog
                 a("Watchtower Teleport", "Gu'Tanoth and Ogre Enclave access",
                         "Monkey Madness II prerequisite"),
                 skills(Skill.MAGIC, 15_250)));
+        add(q("Dwarf Cannon", false, none(), skills(),
+                a(item("Hammer", 1)), 0,
+                a("Verify a safe route through the dwarf base and the nearby combat areas"),
+                "Talk to Captain Lawgof south of the Coal Trucks and north-west of the Fishing Guild.",
+                a("Dwarf multicannon access", "Cannonball production progression"),
+                skills(Skill.CRAFTING, 750)));
+        add(q("Tears of Guthix", false, none(), skills(),
+                a(item("Sapphire lantern", 1), item("Chisel", 1),
+                        item("Pickaxe", 1), item("Rope", 1)), 43,
+                a("Use a lit sapphire lantern and a safe light-source route through Lumbridge Swamp Caves"),
+                "Talk to Juna deep inside Lumbridge Swamp Caves.",
+                a("Tears of Guthix weekly lowest-skill XP activity",
+                        "While Guthix Sleeps prerequisite"),
+                skills(Skill.CRAFTING, 1_000)));
+        add(q("Below Ice Mountain", true, none(), skills(),
+                a(item("Cooked meat", 1), item("Bread", 1),
+                        item("Knife", 1), item("Beer", 1)), 16,
+                a("Verify a legal setup for the Ancient Guardian or the optional Mining route"),
+                "Talk to Willow on the path south of Ice Mountain.",
+                a("Ruins of Camdozaal", "Barronite and Camdozaal skilling progression",
+                        "Defender of Varrock prerequisite"), skills()));
+        add(q("Temple of the Eye", false,
+                a("Rune Mysteries", "Enter the Abyss"),
+                skills(Skill.RUNECRAFT, 10),
+                a(item("Bucket of water", 1), item("Chisel", 1),
+                        item("Pickaxe", 1)), 0, none(),
+                "Talk to Wizard Persten north of Al Kharid near the Lumbridge gate.",
+                a("Guardians of the Rift", "Temple of the Eye access",
+                        "Medium rune pouch progression"),
+                skills(Skill.RUNECRAFT, 5_000)));
+        add(q("Sleeping Giants", false, none(), skills(Skill.SMITHING, 15),
+                a(item("Oak logs", 3), item("Wool", 1),
+                        item("Nails", 10), item("Hammer", 1),
+                        item("Chisel", 1), item("Bucket of water", 1)), 0,
+                none(), "Talk to Kovac at the Giants' Plateau east of Al Kharid.",
+                a("Giants' Foundry", "Smiths' Uniform and mould progression"), skills()));
+        add(q("A Porcine of Interest", false, none(), skills(),
+                a(item("Rope", 1), item("Knife", 1)), 0,
+                a("Verify a legal setup for the Sourhog and the instanced Pig Thing"),
+                "Read the notice board behind Fortunato's Wine Shop in Draynor Village.",
+                a("Sourhog Slayer assignment progression", "Spria Slayer-master progression"),
+                skills()));
+        add(q("Enter the Abyss", false, a("Rune Mysteries"), skills(),
+                none(), 0,
+                a("Entering the Abyss passes through low-level Wilderness and requires explicit Wilderness risk approval",
+                        "Verify a legal non-combat rift-entry obstacle for the current build"),
+                "Talk to the Mage of Zamorak north of Edgeville by the River Lum.",
+                a("Abyss Runecraft access", "Small pouch", "Temple of the Eye prerequisite"),
+                skills(Skill.RUNECRAFT, 1_000)));
     }
 
     private static QuestDefinition q(String name, boolean f2p,

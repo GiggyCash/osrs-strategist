@@ -130,7 +130,7 @@ public class SlayerTaskGuidanceTest
     public void corpusCoversEarlyMidAndLateTasksWithoutDemonAliasCollision()
     {
         SlayerTaskProfileCatalog catalog = new SlayerTaskProfileCatalog();
-        assertTrue(catalog.all().size() >= 40);
+        assertTrue(catalog.all().size() >= 52);
         assertEquals("cave-crawlers", catalog.profileFor("Cave crawlers").getId());
         assertEquals("abyssal-demons", catalog.profileFor("Abyssal demons").getId());
         assertEquals("greater-demons", catalog.profileFor("Greater demons").getId());

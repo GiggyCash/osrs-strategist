@@ -24,7 +24,14 @@ public class PvmActivityCatalog
                     "pvm:tombs_of_amascut", "pvm:chambers_of_xeric",
                     "pvm:theatre_of_blood", "pvm:alchemical_hydra",
                     "pvm:cerberus", "pvm:araxxor", "pvm:kraken",
-                    "pvm:tztok_jad")));
+                    "pvm:tztok_jad", "pvm:tzkal_zuk", "pvm:sol_heredit",
+                    "pvm:nex", "pvm:commander_zilyana", "pvm:general_graardor",
+                    "pvm:kreearra", "pvm:kril_tsutsaroth",
+                    "pvm:duke_sucellus", "pvm:the_leviathan",
+                    "pvm:vardorvis", "pvm:the_whisperer",
+                    "pvm:chambers_of_xeric_challenge_mode",
+                    "pvm:theatre_of_blood_hard_mode",
+                    "pvm:tombs_of_amascut_expert")));
 
     public List<PvmActivityDefinition> all()
     {
