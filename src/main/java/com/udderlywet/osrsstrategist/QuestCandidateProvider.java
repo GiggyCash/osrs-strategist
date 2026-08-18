@@ -114,7 +114,10 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                     (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ") + questName,
                     reason,
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    CandidateSafetyEvidence.verifiedSafe(
+                            QuestMembershipPolicy.isFreeToPlayQuest(questName))
             ));
         }
 

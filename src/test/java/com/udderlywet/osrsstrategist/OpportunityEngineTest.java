@@ -73,6 +73,8 @@ public class OpportunityEngineTest
                 "Test",
                 0,
                 "Main",
+                MembershipStatus.P2P,
+                1,
                 24,
                 0L,
                 levels,

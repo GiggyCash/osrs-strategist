@@ -41,7 +41,7 @@ public class SlayerGuidanceService
         if (data == null || data.getAccount() == null) return null;
         AccountSnapshot account = data.getAccount();
         if (!AccountBuildPolicy.allowsSkill(account, Skill.SLAYER)) return null;
-        if (account.getMembershipStatus() == MembershipStatus.F2P) return null;
+        if (account.getMembershipStatus() != MembershipStatus.P2P) return null;
 
         int currentXp = account.getSkillExperience(Skill.SLAYER);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);

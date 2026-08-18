@@ -33,6 +33,7 @@ public class CombatGuidanceService
         }
 
         AccountSnapshot account = data.getAccount();
+        if (account.getMembershipStatus() == MembershipStatus.UNKNOWN) return null;
         RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
         if (!AccountBuildPolicy.allowsSkill(account, skill)) return null;
 
@@ -109,7 +110,7 @@ public class CombatGuidanceService
 
         if (build == RestrictedBuildType.DEFENCE_PURE)
         {
-            if (membership == MembershipStatus.F2P)
+            if (membership != MembershipStatus.P2P)
             {
                 if (intent == SessionIntent.AFK)
                 {
@@ -167,7 +168,7 @@ public class CombatGuidanceService
             return bestCrab(data, intent);
         }
 
-        if (membership == MembershipStatus.F2P)
+        if (membership != MembershipStatus.P2P)
         {
             if (level < 20)
             {

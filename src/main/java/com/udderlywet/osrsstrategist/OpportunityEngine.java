@@ -36,7 +36,7 @@ public class OpportunityEngine
         // Every currently-modelled recurring activity below is members content.
         // Keep the entire family out of an F2P plan even if its timer was
         // observed while this character previously had membership.
-        if (membership != MembershipStatus.F2P)
+        if (ContentAccessRules.hasVerifiedMembership(membership))
         {
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:birdhouse", OpportunityType.BIRDHOUSE_RUN,
@@ -93,7 +93,10 @@ public class OpportunityEngine
                         Arrays.asList(
                                 "Required clue equipment", "Spade when needed",
                                 "Teleports/transport", "Combat supplies when needed",
-                                "Verified STASH state when relevant")
+                                "Verified STASH state when relevant"),
+                        false,
+                        CandidateSafetyEvidence.potentiallyIrreversible(
+                                tier == ClueTier.BEGINNER)
                 ));
             }
         }

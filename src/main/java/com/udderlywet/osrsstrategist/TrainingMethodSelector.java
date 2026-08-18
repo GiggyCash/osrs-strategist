@@ -122,7 +122,7 @@ public class TrainingMethodSelector
 
         // In production, legacy methods predate route-level F2P metadata. F2P
         // therefore uses only catalogs whose membership compatibility is explicit.
-        if (membership != MembershipStatus.F2P)
+        if (membership == MembershipStatus.P2P)
         {
             for (TrainingMethod method : database.methodsFor(skill))
             {
@@ -136,7 +136,7 @@ public class TrainingMethodSelector
         // Baseline records cover any known F2P level-band holes in the richer
         // catalog. They still go through normal policy/evidence scoring, so a
         // better curated route wins whenever one is available.
-        if (membership == MembershipStatus.F2P && f2pBaselineCatalog != null)
+        if (membership != MembershipStatus.P2P && f2pBaselineCatalog != null)
         {
             candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
         }

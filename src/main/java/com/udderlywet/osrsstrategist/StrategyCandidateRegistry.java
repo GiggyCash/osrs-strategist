@@ -53,6 +53,12 @@ public class StrategyCandidateRegistry
         );
     }
 
+    StrategyCandidateRegistry(List<StrategyCandidateProvider> providers)
+    {
+        this.providers = Collections.unmodifiableList(new ArrayList<>(
+                providers == null ? Collections.emptyList() : providers));
+    }
+
     public List<StrategyCandidateProvider> getProviders()
     {
         return providers;

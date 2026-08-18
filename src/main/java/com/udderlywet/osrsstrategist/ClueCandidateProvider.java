@@ -68,7 +68,9 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                 "Complete " + type,
                 reason.toString(),
                 score,
-                RecommendationConfidence.CHECK_NEEDED
+                RecommendationConfidence.CHECK_NEEDED,
+                null,
+                CandidateSafetyEvidence.potentiallyIrreversible(tier == ClueTier.BEGINNER)
         ));
         return result;
     }

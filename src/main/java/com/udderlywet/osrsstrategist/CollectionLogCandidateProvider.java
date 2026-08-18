@@ -48,7 +48,9 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
                     complete + "/" + total + " entries are observed complete ("
                             + missing + " remaining). Strategist will identify the missing items and their account-appropriate sources before turning this into an exact grind.",
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    CandidateSafetyEvidence.unknown()
             ));
         }
 

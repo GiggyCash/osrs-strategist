@@ -35,6 +35,12 @@ public final class PvmReadiness
         return realisticallyReady;
     }
 
+    /** Conservative beta contract: observed carried setup is ready to attempt. */
+    public boolean isReadyForRecommendation()
+    {
+        return realisticallyReady && confidence == RecommendationConfidence.VERIFIED;
+    }
+
     public RecommendationConfidence getConfidence()
     {
         return confidence;

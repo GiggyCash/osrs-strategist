@@ -104,9 +104,8 @@ public class BetaSafetyRegressionTest
         List<Recommendation> queue = queue(
                 Arrays.asList(unresolvedQuest, ready), policy);
 
-        assertEquals(2, queue.size());
+        assertEquals(1, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
-        assertEquals("quest:pandemonium", queue.get(1).getId());
     }
 
     @Test

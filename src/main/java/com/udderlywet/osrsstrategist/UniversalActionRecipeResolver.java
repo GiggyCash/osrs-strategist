@@ -133,7 +133,7 @@ public class UniversalActionRecipeResolver
             MembershipStatus membership)
     {
         List<ResolvedMethodInput> inputs = new ArrayList<>();
-        add(inputs, membership == MembershipStatus.F2P
+        add(inputs, membership != MembershipStatus.P2P
                 ? "Rune essence" : "Pure essence", actions);
         return exact(inputs,
                 "Rune multipliers affect output, not base XP per essence. Pouches, raiments, and alternate essence types are route modifiers rather than extra consumed units.");

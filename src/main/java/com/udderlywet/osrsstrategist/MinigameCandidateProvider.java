@@ -32,13 +32,13 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
         AccountSnapshot account = context.getData().getAccount();
         AccountMode mode = context.getAccountMode();
         MinigameSnapshot snapshot = context.getData().getMinigames();
-        boolean f2p = account.getMembershipStatus() == MembershipStatus.F2P;
 
         for (MinigameDefinition definition : catalog.all())
         {
             if (!snapshot.isUnlocked(definition.getId())) continue;
             if (!definition.supports(mode)) continue;
-            if (f2p && !definition.isFreeToPlay()) continue;
+            if (!ContentAccessRules.isContentAvailable(
+                    account.getMembershipStatus(), definition.isFreeToPlay())) continue;
             if (definition.getPrimarySkill() != null
                     && account.getSkillLevel(definition.getPrimarySkill())
                     < definition.getMinimumLevel()) continue;
@@ -63,12 +63,26 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     definition.getRewardFocus()
                             + ". Unlock is verified, but Strategist still checks loadout, consumables, currency and account-mode constraints before calling the activity Ready.",
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    safetyFor(definition)
             ));
         }
 
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
+    }
+
+    private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)
+    {
+        if (definition.getRiskLevel() == RiskLevel.HIGH
+                || definition.getRiskLevel() == RiskLevel.IRREVERSIBLE)
+            return CandidateSafetyEvidence.potentiallyIrreversible(
+                    definition.isFreeToPlay());
+        if (definition.getPrimarySkill() != null)
+            return CandidateSafetyEvidence.skill(definition.isFreeToPlay(),
+                    definition.getPrimarySkill());
+        return CandidateSafetyEvidence.harmless(definition.isFreeToPlay());
     }
 }

@@ -195,7 +195,11 @@ public class RecommendationEngine
                     trainingPlan.getConfidence(),
                     level,
                     target,
-                    guidance));
+                    guidance,
+                    CandidateSafetyEvidence.skill(
+                            ContentAccessRules.isMethodAvailable(
+                                    trainingPlan.getMethod(), MembershipStatus.F2P),
+                            skill)));
         }
 
         recommendations.sort(Comparator.comparingDouble(

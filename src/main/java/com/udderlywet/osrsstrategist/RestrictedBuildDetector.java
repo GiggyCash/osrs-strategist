@@ -45,7 +45,7 @@ public class RestrictedBuildDetector
 
         if (levelThreeCombatStats && highestNonCombat >= 20)
         {
-            RestrictedBuildType type = account.getMembershipStatus() == MembershipStatus.F2P
+            RestrictedBuildType type = account.getMembershipStatus() != MembershipStatus.P2P
                     ? RestrictedBuildType.F2P_SKILLER
                     : RestrictedBuildType.SKILLER;
             return strong(type,

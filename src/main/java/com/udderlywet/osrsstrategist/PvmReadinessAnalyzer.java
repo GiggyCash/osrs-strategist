@@ -32,20 +32,33 @@ public class PvmReadinessAnalyzer
             BankSnapshot bank,
             PvmSnapshot observed)
     {
+        return analyze(account, quests, equipment, inventory, null, bank, observed);
+    }
+
+    public PvmSnapshot analyze(
+            AccountSnapshot account,
+            QuestSnapshot quests,
+            EquipmentSnapshot equipment,
+            InventorySnapshot inventory,
+            StorageSnapshot storage,
+            BankSnapshot bank,
+            PvmSnapshot observed)
+    {
         if (account == null) return observed;
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        // UIM readiness must never become true because a normal bank cache
-        // happens to contain an item from another account/state path.
-        BankSnapshot usableBank = mode == AccountMode.ULTIMATE_IRONMAN ? null : bank;
-
         Map<String, PvmReadiness> result = new HashMap<>();
-        if (observed != null) result.putAll(observed.getReadinessByActivity());
-
         for (PvmActivityDefinition activity : catalog.all())
         {
-            if (result.containsKey(activity.getId())) continue;
+            PvmReadiness prior = priorFor(observed, activity.getId());
+            if (prior != null
+                    && prior.getConfidence() == RecommendationConfidence.BLOCKED)
+            {
+                result.put(activity.getId(), prior);
+                continue;
+            }
             ReadinessFloor floor = floorFor(activity);
             List<String> missing = new ArrayList<>();
+            if (prior != null) missing.addAll(prior.getMissingRequirements());
 
             requireLevel(account, Skill.ATTACK, floor.attack, missing);
             requireLevel(account, Skill.STRENGTH, floor.strength, missing);
@@ -62,23 +75,33 @@ public class PvmReadinessAnalyzer
                 missing.add("Quest/access: " + floor.requiredQuest);
             }
 
-            if (!hasCombatWeapon(equipment, inventory, usableBank,
-                    floor.preferredStyle))
-                missing.add("Usable " + floor.preferredStyle + " combat weapon/loadout");
+            if (!hasCombatWeapon(equipment, floor.preferredStyle))
+                addMissing(missing, "Equip a usable " + floor.preferredStyle + " combat weapon/loadout");
+            else
+                addMissing(missing, "Verify the observed weapon is in the weapon slot and is suitable for this encounter");
 
-            if (floor.requiresSupplies && !hasBasicSupplies(inventory, usableBank))
-                missing.add("Food/restoration supplies");
+            if (floor.requiresSupplies && carriedFoodQuantity(inventory) < 5)
+                addMissing(missing, "Carry more than a token food item and verify an encounter-appropriate healing supply");
+            if (floor.prayer >= 43 && carriedRestorationQuantity(inventory) < 1)
+                addMissing(missing, "Carry a recognised prayer-restoration item and verify its usable doses");
+            if (usesRanged(floor.preferredStyle))
+                addMissing(missing, carriedAmmoQuantity(inventory) > 0
+                        ? "Verify the carried ammunition or charges are compatible with the equipped ranged weapon"
+                        : "Carry and verify ammunition or charges compatible with the equipped ranged weapon");
+            if (usesMagic(floor.preferredStyle))
+                addMissing(missing, runeEvidence(inventory, storage)
+                        ? "Verify the observed inventory/rune-pouch runes satisfy the selected spell and current spellbook"
+                        : "Carry the required rune combination and verify the selected spell and current spellbook");
+
+            addMissing(missing, "Verify encounter-specific protection items, prayers, charges, and access requirements");
 
             if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
-                missing.add("Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
+                addMissing(missing, "Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
 
-            boolean realisticallyReady = missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
                     activity.getId(),
-                    realisticallyReady,
-                    realisticallyReady
-                            ? RecommendationConfidence.CHECK_NEEDED
-                            : RecommendationConfidence.BLOCKED,
+                    false,
+                    RecommendationConfidence.CHECK_NEEDED,
                     missing
             ));
         }
@@ -145,6 +168,16 @@ public class PvmReadinessAnalyzer
         return floor(60, 60, 60, 60, 60, 43, 1, "combat", null, false, true);
     }
 
+    private static PvmReadiness priorFor(PvmSnapshot observed, String activityId)
+    {
+        if (observed == null || activityId == null) return null;
+        PvmReadiness prior = observed.readinessFor(activityId);
+        if (prior != null) return prior;
+        String shortId = activityId.startsWith("pvm:")
+                ? activityId.substring("pvm:".length()) : activityId;
+        return observed.readinessFor(shortId);
+    }
+
     private static void requireLevel(AccountSnapshot account, Skill skill,
             int required, List<String> missing)
     {
@@ -165,13 +198,10 @@ public class PvmReadinessAnalyzer
         return false;
     }
 
-    private static boolean hasCombatWeapon(EquipmentSnapshot equipment,
-            InventorySnapshot inventory, BankSnapshot bank, String style)
+    private static boolean hasCombatWeapon(EquipmentSnapshot equipment, String style)
     {
         List<ItemStackSnapshot> items = new ArrayList<>();
         if (equipment != null) items.addAll(equipment.getEquippedItems());
-        if (inventory != null) items.addAll(inventory.getItems());
-        if (bank != null) items.addAll(bank.getItems());
         boolean melee = false, ranged = false, magic = false;
         for (ItemStackSnapshot item : items)
         {
@@ -189,19 +219,63 @@ public class PvmReadinessAnalyzer
         return melee || ranged || magic;
     }
 
-    private static boolean hasBasicSupplies(InventorySnapshot inventory, BankSnapshot bank)
+    private static int carriedFoodQuantity(InventorySnapshot inventory)
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
-        if (inventory != null) items.addAll(inventory.getItems());
-        if (bank != null) items.addAll(bank.getItems());
-        for (ItemStackSnapshot item : items)
+        return carriedQuantity(inventory, "shark", "karambwan", "anglerfish",
+                "manta ray", "moonlight antelope", "lobster", "swordfish", "pizza");
+    }
+
+    private static int carriedRestorationQuantity(InventorySnapshot inventory)
+    {
+        return carriedQuantity(inventory, "prayer potion", "super restore");
+    }
+
+    private static int carriedAmmoQuantity(InventorySnapshot inventory)
+    {
+        return carriedQuantity(inventory, "arrow", "bolt", "dart", "javelin", "chinchompa");
+    }
+
+    private static int carriedRuneQuantity(InventorySnapshot inventory)
+    {
+        return carriedQuantity(inventory, " rune");
+    }
+
+    private static boolean runeEvidence(InventorySnapshot inventory,
+            StorageSnapshot storage)
+    {
+        if (carriedRuneQuantity(inventory) > 0) return true;
+        return storage != null
+                && storage.verified(StorageCapability.RUNE_POUCH)
+                && storage.hasObservedContents(StorageCapability.RUNE_POUCH)
+                && !storage.contentsOf(StorageCapability.RUNE_POUCH).isEmpty();
+    }
+
+    private static void addMissing(List<String> missing, String requirement)
+    {
+        if (requirement != null && !requirement.trim().isEmpty()
+                && !missing.contains(requirement)) missing.add(requirement);
+    }
+
+    private static int carriedQuantity(InventorySnapshot inventory, String... terms)
+    {
+        if (inventory == null) return 0;
+        int total = 0;
+        for (ItemStackSnapshot item : inventory.getItems())
         {
             String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
-            if (containsAny(name, "shark", "karambwan", "anglerfish", "manta ray",
-                    "moonlight antelope", "prayer potion", "super restore", "saradomin brew",
-                    "lobster", "swordfish", "pizza")) return true;
+            if (containsAny(name, terms)) total += Math.max(0, item.getQuantity());
         }
-        return false;
+        return total;
+    }
+
+    private static boolean usesRanged(String style)
+    {
+        return style != null && (style.contains("ranged") || "hybrid".equals(style));
+    }
+
+    private static boolean usesMagic(String style)
+    {
+        return style != null && (style.contains("magic") || "hybrid".equals(style));
     }
 
     private static boolean containsAny(String value, String... terms)

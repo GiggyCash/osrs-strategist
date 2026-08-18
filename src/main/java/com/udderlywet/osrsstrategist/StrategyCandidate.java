@@ -9,6 +9,7 @@ public final class StrategyCandidate
     private final double score;
     private final RecommendationConfidence confidence;
     private final RecommendationGuidance guidance;
+    private final CandidateSafetyEvidence safetyEvidence;
 
     public StrategyCandidate(
             String id,
@@ -17,7 +18,8 @@ public final class StrategyCandidate
             double score,
             RecommendationConfidence confidence)
     {
-        this(id, title, reason, score, confidence, null);
+        this(id, title, reason, score, confidence, null,
+                CandidateSafetyEvidence.unknown());
     }
 
     public StrategyCandidate(
@@ -28,6 +30,15 @@ public final class StrategyCandidate
             RecommendationConfidence confidence,
             RecommendationGuidance guidance)
     {
+        this(id, title, reason, score, confidence, guidance,
+                CandidateSafetyEvidence.unknown());
+    }
+
+    public StrategyCandidate(
+            String id, String title, String reason, double score,
+            RecommendationConfidence confidence, RecommendationGuidance guidance,
+            CandidateSafetyEvidence safetyEvidence)
+    {
         this.id = id;
         this.title = title;
         this.reason = reason;
@@ -36,6 +47,8 @@ public final class StrategyCandidate
                 ? RecommendationConfidence.CHECK_NEEDED
                 : confidence;
         this.guidance = guidance;
+        this.safetyEvidence = safetyEvidence == null
+                ? CandidateSafetyEvidence.unknown() : safetyEvidence;
     }
 
     public String getId() { return id; }
@@ -44,6 +57,7 @@ public final class StrategyCandidate
     public double getScore() { return score; }
     public RecommendationConfidence getConfidence() { return confidence; }
     public RecommendationGuidance getGuidance() { return guidance; }
+    public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
 
     public Recommendation toRecommendation()
     {
@@ -56,6 +70,7 @@ public final class StrategyCandidate
                 confidence,
                 0,
                 0,
-                guidance);
+                guidance,
+                safetyEvidence);
     }
 }

@@ -84,4 +84,17 @@ public final class ContentAccessRules
     {
         return skill != null && FREE_TO_PLAY_SKILLS.contains(skill);
     }
+
+    /** UNKNOWN receives only records explicitly marked F2P-safe. */
+    public static boolean isContentAvailable(
+            MembershipStatus membershipStatus,
+            boolean freeToPlay)
+    {
+        return membershipStatus == MembershipStatus.P2P || freeToPlay;
+    }
+
+    public static boolean hasVerifiedMembership(MembershipStatus membershipStatus)
+    {
+        return membershipStatus == MembershipStatus.P2P;
+    }
 }

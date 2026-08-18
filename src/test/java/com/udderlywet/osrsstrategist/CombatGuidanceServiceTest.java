@@ -95,6 +95,22 @@ public class CombatGuidanceServiceTest
         assertTrue(guidance.getAction().contains("3.5 XP per damage"));
     }
 
+    @Test
+    public void unknownMembershipCannotReceiveCombatRouteGuidanceDirectly()
+    {
+        AccountSnapshot p2p = standard(70);
+        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(),
+                p2p.getAccountTypeCode(), p2p.getAccountTypeName(),
+                MembershipStatus.UNKNOWN, 0, p2p.getTotalLevel(),
+                p2p.getTotalExperience(), p2p.getSkillLevels(),
+                p2p.getSkillExperience());
+        RecommendationGuidance guidance = service.build(
+                StrategyDataBundle.builder(unknown).build(), Skill.ATTACK,
+                70, 80, plan("attack_crabs", Skill.ATTACK),
+                SessionIntent.AFK, true);
+        assertTrue(guidance == null);
+    }
+
     private static TrainingPlan plan(String id, Skill skill)
     {
         TrainingMethod method = new TrainingMethod(

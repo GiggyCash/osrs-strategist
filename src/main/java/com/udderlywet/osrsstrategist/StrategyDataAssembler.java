@@ -122,7 +122,8 @@ public class StrategyDataAssembler
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
                 ? observedPvm
                 : pvmReadinessAnalyzer.analyze(
-                        account, quests, equipment, inventory, bank, observedPvm);
+                        account, quests, equipment, inventory, storage, bank,
+                        observedPvm);
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());

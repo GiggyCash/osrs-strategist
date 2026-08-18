@@ -31,14 +31,15 @@ public class GearCandidateProvider implements StrategyCandidateProvider
 
         AccountSnapshot account = context.getData().getAccount();
         AccountMode mode = context.getAccountMode();
-        boolean f2p = account.getMembershipStatus() == MembershipStatus.F2P;
+        boolean f2pSafeOnly = account.getMembershipStatus() != MembershipStatus.P2P;
         CombatStyle primaryStyle = primaryStyle(account);
-        GearBudgetTier targetTier = targetTier(account, f2p);
+        GearBudgetTier targetTier = targetTier(account, f2pSafeOnly);
 
         for (GearProgressionEntry entry : catalog.all())
         {
-            if (f2p && !entry.isFreeToPlay()) continue;
-            if (!f2p && entry.getTier() == GearBudgetTier.F2P) continue;
+            if (!ContentAccessRules.isContentAvailable(
+                    account.getMembershipStatus(), entry.isFreeToPlay())) continue;
+            if (!f2pSafeOnly && entry.getTier() == GearBudgetTier.F2P) continue;
 
             // A legal item on a Main can still be an account-ending suggestion
             // for a pure. Build policy is checked before style/tier ranking.
@@ -76,7 +77,9 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                             + buildNote
                             + " Strategist will compare owned equipment, bank/storage, acquisition route, GP, and target encounter before recommending an actual purchase or grind.",
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    CandidateSafetyEvidence.verifiedSafe(entry.isFreeToPlay())
             ));
         }
 

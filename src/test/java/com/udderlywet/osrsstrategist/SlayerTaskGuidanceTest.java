@@ -93,6 +93,21 @@ public class SlayerTaskGuidanceTest
         assertTrue(guidance.getNote().contains("does not convert"));
     }
 
+    @Test
+    public void unknownMembershipCannotReceiveSlayerGuidanceDirectly()
+    {
+        AccountSnapshot p2p = account(0);
+        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(),
+                p2p.getAccountTypeCode(), p2p.getAccountTypeName(),
+                MembershipStatus.UNKNOWN, 0, p2p.getTotalLevel(),
+                p2p.getTotalExperience(), p2p.getSkillLevels(),
+                p2p.getSkillExperience());
+        assertTrue(service.build(data(unknown,
+                new SlayerSnapshot("Future monster", 10, "Unknown", 0,
+                        RecommendationConfidence.VERIFIED),
+                Collections.emptyList()), 80, 81, true) == null);
+    }
+
     private static StrategyDataBundle data(
             AccountSnapshot account,
             SlayerSnapshot slayer,
