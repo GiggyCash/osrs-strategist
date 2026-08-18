@@ -19,12 +19,18 @@ public class ContentCoverageManifestTest
         QuestCoverageManifest manifest = new QuestCoverageManifest();
         assertEquals(Quest.values().length, manifest.all().size());
         assertEquals(18, manifest.miniquestCount());
+        assertEquals(6, manifest.all().stream().filter(entry ->
+                manifest.isMiniquest(entry.getName())
+                        && entry.getState() == ContentCoverageState.STRUCTURED).count());
+        assertEquals(12, manifest.all().stream().filter(entry ->
+                manifest.isMiniquest(entry.getName())
+                        && entry.getState() == ContentCoverageState.CONSERVATIVE_FAIL_CLOSED).count());
         assertUniqueAndExplained(manifest.all());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Watchtower")
                         && entry.getState() == ContentCoverageState.STRUCTURED));
-        assertEquals(76, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(135, count(manifest.all(),
+        assertEquals(87, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(124, count(manifest.all(),
                 ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Enter the Abyss")
@@ -38,10 +44,11 @@ public class ContentCoverageManifestTest
         assertEquals(42, manifest.all().size());
         assertUniqueAndExplained(manifest.all());
         assertTrue(manifest.all().stream().anyMatch(entry ->
-                entry.getName().equals("Rat Pits")
-                        && entry.getState() == ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
-        assertEquals(39, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(3, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+                entry.getName().equals("Burthorpe Games Room")
+                        && entry.getState() == ContentCoverageState.NOT_PROGRESSION_RELEVANT));
+        assertEquals(41, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(0, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+        assertEquals(1, count(manifest.all(), ContentCoverageState.NOT_PROGRESSION_RELEVANT));
     }
 
     @Test

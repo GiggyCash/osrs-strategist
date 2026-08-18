@@ -23,6 +23,7 @@ public class StrategyDataAssembler
     private final FarmingAccessEvaluator farmingAccessEvaluator;
     private final ObservedStateStore observedStateStore;
     private String lastAccountIdentity;
+    private Integer lastAccountTypeCode;
 
     @Inject
     public StrategyDataAssembler(
@@ -80,6 +81,12 @@ public class StrategyDataAssembler
         AccountSnapshot account = accountReader.read();
         if (account == null) return null;
 
+        // A name is mutable and must never be used to attach cached state to a
+        // character. During login/loading RuneLite can briefly lack the stable
+        // hash; return no snapshot until it is available, retaining the prior
+        // identity only so the next proven hash can perform the correct clear.
+        if (!account.hasStableAccountIdentity()) return null;
+
         String identity = accountIdentity(account);
         if (lastAccountIdentity != null && !lastAccountIdentity.equals(identity))
         {
@@ -88,7 +95,17 @@ public class StrategyDataAssembler
             // account switches and unusual event ordering.
             clearAccountScopedCaches();
         }
+        else if (lastAccountIdentity != null
+                && lastAccountTypeCode != null
+                && lastAccountTypeCode != account.getAccountTypeCode())
+        {
+            // The character is stable, but bank/storage usability and build
+            // routing can change with mode. Preferences/history live in the
+            // RuneLite profile stores and are intentionally not cleared here.
+            clearAccountScopedCaches();
+        }
         lastAccountIdentity = identity;
+        lastAccountTypeCode = account.getAccountTypeCode();
 
         InventorySnapshot inventory = itemStateReader.readInventory();
         BankSnapshot bank = itemStateReader.readBank();
@@ -173,6 +190,7 @@ public class StrategyDataAssembler
     public synchronized void clearForAccountChange()
     {
         lastAccountIdentity = null;
+        lastAccountTypeCode = null;
         clearAccountScopedCaches();
     }
 
@@ -187,9 +205,8 @@ public class StrategyDataAssembler
 
     static String accountIdentity(AccountSnapshot account)
     {
-        if (account == null) return "";
-        String name = account.getPlayerName() == null ? ""
-                : account.getPlayerName().trim().toLowerCase(java.util.Locale.ROOT);
-        return name + "|" + account.getAccountTypeCode();
+        if (account == null || !account.hasStableAccountIdentity()) return "";
+        // This value is an internal equality key only. Never render or log it.
+        return Long.toUnsignedString(account.getAccountHash());
     }
 }

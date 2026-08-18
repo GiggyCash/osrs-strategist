@@ -50,9 +50,12 @@ public class QuestKnowledgeCatalog
                 Collections.singletonList("Fossil Island access"), skills()));
 
         add(new QuestDefinition("Dragon Slayer I", true,
-                Collections.emptyList(), skills(), Collections.emptyList(), 32,
+                Collections.emptyList(), skills(), a(
+                        item("Unfired bowl", 1), item("Wizard's mind bomb", 1),
+                        item("Lobster pot", 1), item("Silk", 1), item("Hammer", 1),
+                        item("Steel nails", 90), item("Plank", 3), item("Coins", 2_000)), 32,
                 Collections.singletonList(
-                        "Verify the combat setup and dragonfire-protection route"),
+                        "Obtain the anti-dragon shield during the quest and verify a legal setup to defeat Elvarg"),
                 "Talk to the Guildmaster in the Champions' Guild.",
                 Arrays.asList("Crandor access", "Corsair Cove Resource Area access",
                         "Rune platebody and green d'hide body equipment progression"),
@@ -594,6 +597,111 @@ public class QuestKnowledgeCatalog
                 "Talk to the Mage of Zamorak north of Edgeville by the River Lum.",
                 a("Abyss Runecraft access", "Small pouch", "Temple of the Eye prerequisite"),
                 skills(Skill.RUNECRAFT, 1_000)));
+        add(q("Alfred Grimhand's Barcrawl", false, none(), skills(),
+                a(item("Coins", 208)), 0,
+                a("Plan safe travel to all required pubs and carry food because the drinks reduce Hitpoints and skills"),
+                "Talk to a barbarian guard at the Barbarian Outpost Agility Course entrance.",
+                a("Barbarian Outpost Agility Course", "Horror from the Deep prerequisite",
+                        "Scorpion Catcher prerequisite", "Automatic empty-vial smashing"), skills()));
+        add(q("Mage Arena I", false, none(), skills(Skill.MAGIC, 60),
+                none(), 0,
+                a("Explicitly allow deep-Wilderness travel and verify runes or a powered staff, a web-cutting item, food and a legal Magic-only Kolodion setup"),
+                "Talk to Kolodion at the Mage Arena bank in level 53 Wilderness.",
+                a("God cape", "God staff", "God spell progression",
+                        "Mage Arena II prerequisite", "Wilderness Hard Diary progression"), skills()));
+        add(q("Mage Arena II", false, a("Mage Arena I"),
+                skills(Skill.MAGIC, 75), none(), 0,
+                a("Verify all three god spells are unlocked outside the arena",
+                        "Explicitly allow deep-Wilderness travel and verify all three god staves, spell runes, food, restoration and a level-30 escape"),
+                "Talk to Kolodion in the Mage Arena bank after meeting the spell requirement.",
+                a("Imbued god cape progression"), skills()));
+        add(q("The Frozen Door", false, a("Desert Treasure I"),
+                skills(Skill.AGILITY, 70, Skill.HITPOINTS, 70,
+                        Skill.RANGED, 70, Skill.STRENGTH, 70),
+                a(item("Mith grapple", 1), item("Rope", 2)), 0,
+                a("Verify God Wars Dungeon protection, transport and equipment for defeating each of the four faction generals",
+                        "Carry a crossbow for the grapple and a hammer or dragon warhammer for Bandos access"),
+                "Read the important letter delivered by the messenger.",
+                a("Frozen key", "Ancient Prison", "Nex access"), skills()));
+        add(q("Barbarian Training", false, a("Tai Bwo Wannai Trio"),
+                skills(Skill.FISHING, 55, Skill.FIREMAKING, 35,
+                        Skill.STRENGTH, 35, Skill.AGILITY, 15, Skill.FARMING, 15),
+                none(), 0,
+                a("Verify each skill-specific training step and a safe Ancient Cavern entry setup before the final descent"),
+                "Talk to Otto Godblessed in his grotto above Baxtorian Falls.",
+                a("Ancient Cavern", "Barbarian Fishing", "Barbarian Farming",
+                        "Barbarian potion mixes", "Hasta and spear Smithing progression"), skills()));
+        add(q("Dragon Slayer II", false,
+                a("Legends' Quest", "Dream Mentor", "A Tail of Two Cats",
+                        "Animal Magnetism", "Ghosts Ahoy", "Bone Voyage",
+                        "Client of Kourend", "Barbarian Training"),
+                skills(Skill.MAGIC, 75, Skill.SMITHING, 70, Skill.MINING, 68,
+                        Skill.CRAFTING, 62, Skill.AGILITY, 60, Skill.THIEVING, 60,
+                        Skill.CONSTRUCTION, 50, Skill.HITPOINTS, 50),
+                a(item("Goutweed", 1),
+                        item("Glassblowing pipe", 1), item("Spade", 1),
+                        item("Astral rune", 1), item("Tinderbox", 1),
+                        item("Pestle and mortar", 1), item("Insulated boots", 1)), 200,
+                a("Carry any usable pickaxe, and verify Catspeak/Ghostspeak amulet or diary-equipment alternatives",
+                        "Verify every Ancient Cavern, dragon and boss combat setup, including Vorkath and Galvek"),
+                "Talk to Alec Kincade outside the Myths' Guild.",
+                a("Myths' Guild", "Repeatable Vorkath", "Adamant and rune dragons",
+                        "Ava's assembler progression", "Wrath rune progression"), skills()));
+        add(q("Monkey Madness II", false,
+                a("Enlightened Journey", "The Eyes of Glouphrie",
+                        "Recipe for Disaster", "Troll Stronghold", "Watchtower"),
+                skills(Skill.SLAYER, 69, Skill.CRAFTING, 70, Skill.HUNTER, 60,
+                        Skill.FIREMAKING, 60, Skill.AGILITY, 55, Skill.THIEVING, 55),
+                a(item("Lemon", 1), item("Grapes", 1), item("Logs", 1)), 0,
+                a("Verify the Grand Tree balloon route and legal combat setups for Kruk, the generals and Glough"),
+                "Talk to King Narnode Shareen in the Grand Tree.",
+                a("Demonic gorillas", "Royal seed pod", "Heavy and light ballista progression",
+                        "Ape Atoll post-quest access without a greegree"), skills()));
+        add(q("Sins of the Father", false, a("Vampyre Slayer", "A Taste of Hope"),
+                skills(Skill.WOODCUTTING, 62, Skill.FLETCHING, 60, Skill.CRAFTING, 56,
+                        Skill.AGILITY, 52, Skill.ATTACK, 50, Skill.SLAYER, 50, Skill.MAGIC, 49),
+                a(item("Ivandis flail", 1), item("Ruby", 1),
+                        item("Knife", 1), item("Chisel", 1)), 0,
+                a("Carry any usable axe, verify the Vyrewatch disguise and a legal Vanstrom Klause combat setup"),
+                "Talk to Veliaf Hurtz outside the church in Slepe.",
+                a("Darkmeyer", "Blisterwood flail", "Daeyalt essence mine",
+                        "Vyrewatch Sentinel progression"), skills()));
+        add(q("Beneath Cursed Sands", false, a("Contact!"),
+                skills(Skill.AGILITY, 62, Skill.CRAFTING, 55, Skill.FIREMAKING, 55),
+                a(item("Coal", 1)), 0,
+                a("Prepare desert-heat protection, antipoison and legal melee/ranged setups",
+                        "Verify a setup for the Head Menaphite Guard fight without protection prayers"),
+                "Talk to Jamila at her stall in Sophanem.",
+                a("Tombs of Amascut", "Keris partisan", "Necropolis progression"), skills()));
+        add(q("Song of the Elves", false,
+                a("Mourning's End Part II", "Making History", "Druidic Ritual"),
+                skills(Skill.AGILITY, 70, Skill.CONSTRUCTION, 70, Skill.FARMING, 70,
+                        Skill.HERBLORE, 70, Skill.HUNTER, 70, Skill.MINING, 70,
+                        Skill.SMITHING, 70, Skill.WOODCUTTING, 70),
+                a(item("Steel full helm", 1), item("Steel platebody", 1),
+                        item("Steel platelegs", 1), item("Red dye", 1),
+                        item("Purple dye", 1), item("Silk", 1), item("Runite bar", 1),
+                        item("Limestone brick", 8), item("Rope", 1), item("Nature rune", 1),
+                        item("Adamant chainbody", 1), item("Cadantine seed", 1)), 0,
+                a("Verify full mourner gear and all remaining tool/ingredient alternatives",
+                        "Verify legal combat setups for Arianwyn, Essyllt and the Fragment of Seren"),
+                "Talk to Edmond at his home in East Ardougne.",
+                a("Prifddinas", "The Gauntlet", "Zalcano", "Crystal equipment and skilling progression"), skills()));
+        add(q("Desert Treasure II - The Fallen Empire", false,
+                a("Desert Treasure I", "Secrets of the North", "Enakhra's Lament",
+                        "Temple of the Eye", "The Garden of Death", "Below Ice Mountain",
+                        "His Faithful Servants"),
+                skills(Skill.FIREMAKING, 75, Skill.MAGIC, 75, Skill.THIEVING, 70,
+                        Skill.HERBLORE, 62, Skill.RUNECRAFT, 60, Skill.CONSTRUCTION, 60),
+                a(item("Ring of visibility", 1), item("Death rune", 8),
+                        item("Chaos rune", 16), item("Fire rune", 2),
+                        item("Air rune", 3), item("Water rune", 4),
+                        item("Soul rune", 2), item("Blood rune", 2)), 0,
+                a("Switch to Ancient Magicks and verify Blood, Ice, Smoke and Shadow Burst access",
+                        "Verify encounter-specific legal setups for every quest boss and a safe transport route"),
+                "Investigate the Ancient Vault north-east of Nardah.",
+                a("Repeatable Vardorvis, Leviathan, Duke Sucellus and Whisperer",
+                        "Ancient sceptre upgrade progression", "Soulreaper axe component progression"), skills()));
     }
 
     private static QuestDefinition q(String name, boolean f2p,
@@ -622,7 +730,10 @@ public class QuestKnowledgeCatalog
 
     private void add(QuestDefinition definition)
     {
-        definitions.put(normalize(definition.getName()), definition);
+        String id = normalize(definition.getName());
+        if (definitions.put(id, definition) != null)
+            throw new IllegalStateException("Duplicate quest identity: "
+                    + definition.getName());
     }
 
     private static QuestDefinition.QuestItemRequirement item(String name, int quantity)

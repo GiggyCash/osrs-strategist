@@ -66,7 +66,7 @@ public class QuestRequirementResolver
             return new QuestResolution(RecommendationConfidence.VERIFIED,
                     new RecommendationGuidance(
                             "Start " + definition.getName() + ".",
-                            "All modeled prerequisite quests, levels, and required items are currently satisfied.",
+                            "Requirements satisfied. Use Quest Helper for the walkthrough.",
                             definition.getStartLocation(),
                             unlocks.isEmpty() ? "The modeled requirements are verified."
                                     : "Progression unlocked: " + unlocks + "."),

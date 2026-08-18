@@ -78,6 +78,7 @@ public class AccountReader
 
         return new AccountSnapshot(
                 playerName,
+                client.getAccountHash(),
                 accountTypeCode,
                 accountTypeName,
                 membershipStatus,
