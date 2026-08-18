@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
+import net.runelite.api.gameval.VarbitID;
 
 /** Reads the game's six Combat Achievement reward-tier completion varbits. */
 @Singleton
@@ -26,17 +26,17 @@ public class LiveCombatAchievementReader
 
         Set<CombatAchievementTier> tiers = EnumSet.noneOf(CombatAchievementTier.class);
         addIfComplete(tiers, CombatAchievementTier.EASY,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_EASY);
+                VarbitID.CA_TIER_STATUS_EASY);
         addIfComplete(tiers, CombatAchievementTier.MEDIUM,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_MEDIUM);
+                VarbitID.CA_TIER_STATUS_MEDIUM);
         addIfComplete(tiers, CombatAchievementTier.HARD,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_HARD);
+                VarbitID.CA_TIER_STATUS_HARD);
         addIfComplete(tiers, CombatAchievementTier.ELITE,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_ELITE);
+                VarbitID.CA_TIER_STATUS_ELITE);
         addIfComplete(tiers, CombatAchievementTier.MASTER,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_MASTER);
+                VarbitID.CA_TIER_STATUS_MASTER);
         addIfComplete(tiers, CombatAchievementTier.GRANDMASTER,
-                Varbits.COMBAT_ACHIEVEMENT_TIER_GRANDMASTER);
+                VarbitID.CA_TIER_STATUS_GRANDMASTER);
 
         int minimumPoints = 0;
         for (CombatAchievementTier tier : tiers)

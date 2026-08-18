@@ -84,14 +84,14 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             RecommendationGuidance guidance = ready
                     ? new RecommendationGuidance(
                             "Attempt " + title + " using the currently equipped and carried setup.",
-                            "The beta readiness check observed an equipped weapon/loadout and minimum carried supplies.",
+                            "Your equipped weapon, loadout, and minimum carried supplies are ready.",
                             "Use only the verified non-Wilderness access route for this encounter.",
                             "This is conservative readiness, not a universal BIS claim. Stop and reassess if the live setup changes.")
                     : new RecommendationGuidance(
                             "Prepare the missing PvM evidence before attempting " + title + ": " + missing + ".",
                             missing,
                             "Verify the encounter access route and prepare outside the encounter.",
-                            "This remains a preparation alternative and cannot lead DO NEXT until the carried setup is verified.");
+                            "Finish this preparation before attempting the encounter.");
             result.add(new StrategyCandidate(
                     id,
                     "Do " + title,

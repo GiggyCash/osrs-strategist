@@ -190,7 +190,7 @@ public class ProgressionUpgradeCandidateProviderTest
         assertNotNull(cape);
         assertEquals(RecommendationConfidence.VERIFIED, cape.getConfidence());
         assertTrue(cape.getGuidance().getAction().contains("63 waves"));
-        assertTrue(cape.getGuidance().getNote().contains("readiness heuristic"));
+        assertTrue(cape.getGuidance().getNote().contains("preparation baseline"));
     }
 
     @Test

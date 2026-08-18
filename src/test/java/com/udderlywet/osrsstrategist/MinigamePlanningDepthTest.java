@@ -16,6 +16,21 @@ import static org.junit.Assert.assertTrue;
 
 public class MinigamePlanningDepthTest
 {
+    @Test
+    public void activityWithoutExactSetupProducesSpecificVerificationAction()
+    {
+        StrategyCandidate candidate = find(candidates(0, 60,
+                Collections.singleton("shooting-stars"),
+                Collections.emptyList(), StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR), "shooting-stars");
+
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                candidate.getConfidence());
+        assertTrue(candidate.getGuidance().getAction()
+                .contains("Shooting Stars setup"));
+        assertFalse(candidate.getGuidance().getAction().trim().isEmpty());
+    }
+
     private final MinigameCandidateProvider provider =
             new MinigameCandidateProvider(new MinigameCatalog());
 

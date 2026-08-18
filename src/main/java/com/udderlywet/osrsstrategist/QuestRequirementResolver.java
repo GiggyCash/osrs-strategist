@@ -88,9 +88,9 @@ public class QuestRequirementResolver
                             "Start " + definition.getName() + ".",
                             "Requirements satisfied. Use Quest Helper for the walkthrough.",
                             definition.getStartLocation(),
-                            unlocks.isEmpty() ? "The modeled requirements are verified."
+                            unlocks.isEmpty() ? "You have everything required by the available quest data."
                                     : "Progression unlocked: " + unlocks + "."),
-                    "All modeled requirements are verified",
+                    "Requirements satisfied",
                     CandidateSafetyEvidence.verifiedSafe(
                             definition.isFreeToPlay()));
         }
