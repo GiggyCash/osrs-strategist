@@ -8,8 +8,8 @@ The census was audited on 2026-08-18 against RuneLite 1.12.35:
 
 | Family | Authoritative identity source | Discovered | Structured | Partial | Conservative |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 87 | 0 | 124 |
-| Progression miniquests | Maintained, Wiki-verified manifest | 18 | 6 | 0 | 12 |
+| Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 98 | 0 | 113 |
+| Progression miniquests | Maintained, Wiki-verified manifest | 18 | 7 | 0 | 11 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 42 | 41 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 3 | 31 | 37 |
 
