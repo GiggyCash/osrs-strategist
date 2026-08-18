@@ -136,7 +136,8 @@ public class StrategyEngine
         if (data == null || data.getAccount() == null)
         {
             return new StrategyResult(
-                    Collections.emptyList(),
+                    Collections.singletonList(
+                            FallbackRecommendationFactory.forState(data)),
                     Collections.emptyList(),
                     Collections.emptyList());
         }
@@ -200,6 +201,13 @@ public class StrategyEngine
         // Only after legality/actionability is known do we compare account value
         // across skills, quests, upgrades, detours, PvM, gear and minigames.
         List<Recommendation> recommendations = buildPlayerQueue(pool, context);
+        if (recommendations.isEmpty())
+        {
+            Recommendation preparation = highestValuePreparation(pool, context);
+            recommendations = Collections.singletonList(preparation == null
+                    ? FallbackRecommendationFactory.forState(data)
+                    : preparation);
+        }
         if (!recommendations.isEmpty())
         {
             java.util.Set<String> promotedIds = new java.util.HashSet<>();
@@ -219,6 +227,31 @@ public class StrategyEngine
                 StrategySignal::getScoreDelta).reversed());
 
         return new StrategyResult(recommendations, opportunities, signals);
+    }
+
+    private Recommendation highestValuePreparation(List<Recommendation> pool,
+            StrategyContext context)
+    {
+        if (pool == null) return null;
+        Recommendation best = null;
+        double bestScore = Double.NEGATIVE_INFINITY;
+        for (Recommendation candidate : pool)
+        {
+            if (candidate == null
+                    || candidate.getConfidence() != RecommendationConfidence.CHECK_NEEDED
+                    || !candidateSafetyPolicy.isAllowed(candidate, context)
+                    || !actionabilityPolicy.mayAppearAsAlternative(candidate)) continue;
+            RecommendationGuidance guidance = candidate.getGuidance();
+            if (guidance == null || guidance.getAction() == null
+                    || guidance.getAction().trim().isEmpty()) continue;
+            double score = intelligenceService.rankScore(candidate, context);
+            if (best == null || score > bestScore)
+            {
+                best = candidate;
+                bestScore = score;
+            }
+        }
+        return best;
     }
 
     Recommendation opportunityRecommendation(

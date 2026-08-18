@@ -312,23 +312,8 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (recommendations == null || recommendations.isEmpty())
         {
-            clearDetailsOverlay();
-            currentRecommendation = null;
-            setRecommendationButtonsEnabled(false);
-            recommendationIcon.setIcon(null);
-            recommendationEyebrow.setText("NEXT MOVE");
-            setWrappedText(recommendationTitle, "No ready recommendation available", TEXT_WIDTH);
-            progressText.setText(html(""));
-            progressBar.setValue(0);
-            setWrappedText(recommendationBody,
-                    "More account evidence is needed. If you are logged in, open your inventory and equipment, then open the bank once; the next safe action will appear automatically when enough state is observed.",
-                    TEXT_WIDTH);
-            setWrappedText(feedbackStatus, "", TEXT_WIDTH);
-            setWrappedText(alternativeOne, "", TEXT_WIDTH);
-            setWrappedText(alternativeTwo, "", TEXT_WIDTH);
-            revalidate();
-            repaint();
-            return;
+            recommendations = java.util.Collections.singletonList(
+                    FallbackRecommendationFactory.forState(null));
         }
 
         Recommendation best = recommendations.get(0);
@@ -343,7 +328,8 @@ public class OsrsStrategistPanel extends PluginPanel
         }
         currentRecommendation = best;
 
-        setRecommendationButtonsEnabled(true);
+        setRecommendationButtonsEnabled(
+                !FallbackRecommendationFactory.isFallback(best));
         setWrappedText(recommendationTitle, safe(best.getTitle()), TEXT_WIDTH);
 
         Skill skill = MilestoneTracker.skillFor(best);

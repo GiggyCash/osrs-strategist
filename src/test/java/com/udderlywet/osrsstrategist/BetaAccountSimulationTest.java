@@ -374,6 +374,8 @@ public class BetaAccountSimulationTest
                         {
                             assertFalse(recommendation.getConfidence()
                                     == RecommendationConfidence.BLOCKED);
+                            if (FallbackRecommendationFactory.isFallback(
+                                    recommendation)) continue;
                             TrainingMethod method = requireMethod(recommendation);
                             assertTrue(ContentAccessRules.isMethodAvailable(
                                     method, membership));
