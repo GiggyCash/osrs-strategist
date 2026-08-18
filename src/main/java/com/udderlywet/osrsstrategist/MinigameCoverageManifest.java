@@ -37,7 +37,8 @@ public class MinigameCoverageManifest
             {"gnome-ball", "Gnome Ball"}, {"burthorpe-games-room", "Burthorpe Games Room"},
             {"rat-pits", "Rat Pits"}, {"stealing-artefacts", "Stealing artefacts"},
             {"underwater-agility-thieving", "Underwater Agility and Thieving"},
-            {"shooting-stars", "Shooting Stars"}, {"forestry", "Forestry"}
+            {"shooting-stars", "Shooting Stars"}, {"forestry", "Forestry"},
+            {"vale-totems", "Vale Totems"}
     };
 
     private final List<ContentCoverageEntry> entries;

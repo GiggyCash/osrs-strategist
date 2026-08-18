@@ -139,6 +139,9 @@ public class MinigameCatalog
         add("rat-pits", "Rat Pits", null, 1, false,
                 RiskLevel.HIGH, AttentionLevel.ACTIVE, EnumSet.of(AccountMode.MAIN),
                 "Optional cat-growth and coin-betting activity after the relevant Ratcatchers pit is unlocked; protect the cat from death");
+        add("vale-totems", "Vale Totems", Skill.FLETCHING, 20, false,
+                RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
+                "Fletching XP, Vale offerings, research points, Fletching knife and bow string spool progression after the Vale Totems miniquest");
     }
 
     public List<MinigameDefinition> all()
