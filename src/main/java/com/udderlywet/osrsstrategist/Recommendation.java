@@ -18,6 +18,7 @@ public final class Recommendation
     private final int currentLevel;
     private final int targetLevel;
     private final RecommendationGuidance guidance;
+    private final CandidateSafetyEvidence safetyEvidence;
 
     public Recommendation(
             String id,
@@ -34,7 +35,8 @@ public final class Recommendation
                 RecommendationConfidence.CHECK_NEEDED,
                 0,
                 0,
-                null
+                null,
+                CandidateSafetyEvidence.unknown()
         );
     }
 
@@ -55,7 +57,8 @@ public final class Recommendation
                 confidence,
                 0,
                 0,
-                null
+                null,
+                CandidateSafetyEvidence.unknown()
         );
     }
 
@@ -78,7 +81,8 @@ public final class Recommendation
                 confidence,
                 currentLevel,
                 targetLevel,
-                null
+                null,
+                CandidateSafetyEvidence.unknown()
         );
     }
 
@@ -93,6 +97,16 @@ public final class Recommendation
             int targetLevel,
             RecommendationGuidance guidance)
     {
+        this(id, title, reason, score, trainingPlan, confidence, currentLevel,
+                targetLevel, guidance, CandidateSafetyEvidence.unknown());
+    }
+
+    public Recommendation(
+            String id, String title, String reason, double score,
+            TrainingPlan trainingPlan, RecommendationConfidence confidence,
+            int currentLevel, int targetLevel, RecommendationGuidance guidance,
+            CandidateSafetyEvidence safetyEvidence)
+    {
         this.id = id;
         this.title = title;
         this.reason = reason;
@@ -104,6 +118,8 @@ public final class Recommendation
         this.currentLevel = Math.max(0, currentLevel);
         this.targetLevel = Math.max(0, targetLevel);
         this.guidance = guidance;
+        this.safetyEvidence = safetyEvidence == null
+                ? CandidateSafetyEvidence.unknown() : safetyEvidence;
     }
 
     public String getId() { return id; }
@@ -115,4 +131,5 @@ public final class Recommendation
     public int getCurrentLevel() { return currentLevel; }
     public int getTargetLevel() { return targetLevel; }
     public RecommendationGuidance getGuidance() { return guidance; }
+    public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
 }

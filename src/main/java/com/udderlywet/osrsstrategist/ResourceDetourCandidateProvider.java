@@ -37,6 +37,8 @@ public class ResourceDetourCandidateProvider
         }
 
         AccountSnapshot account = context.getData().getAccount();
+        if (!ContentAccessRules.hasVerifiedMembership(
+                account.getMembershipStatus())) return result;
         AccountMode mode = context.getAccountMode();
         if (!mode.isIronLike() || mode == AccountMode.ULTIMATE_IRONMAN)
         {
@@ -92,7 +94,8 @@ public class ResourceDetourCandidateProvider
                         "Only " + planks + " planks are currently observed. Tempoross can advance Fishing while its reward pool supplies some normal and oak planks. Treat this as a cross-skill supply detour, not a bulk Construction plank method; switch to direct log/sawmill routes when larger plank volumes are needed.",
                         score,
                         RecommendationConfidence.VERIFIED,
-                        guidance));
+                        guidance,
+                        CandidateSafetyEvidence.skill(false, Skill.FISHING)));
             }
         }
 
@@ -126,7 +129,8 @@ public class ResourceDetourCandidateProvider
                         "Your observed log/plank stock is low. Wintertodt can progress Firemaking and provide logs from supply crates, which can later be converted into planks. This is secondary to direct plank sourcing and should only win when the Firemaking progress is useful too.",
                         score,
                         RecommendationConfidence.VERIFIED,
-                        guidance));
+                        guidance,
+                        CandidateSafetyEvidence.skill(false, Skill.FIREMAKING)));
             }
         }
     }

@@ -25,7 +25,7 @@ public class RecommendationActionabilityPolicyTest
                 null);
 
         assertFalse(policy.canLeadQueue(candidate));
-        assertTrue(policy.mayAppearAsAlternative(candidate));
+        assertFalse(policy.mayAppearAsAlternative(candidate));
     }
 
     @Test
@@ -47,6 +47,18 @@ public class RecommendationActionabilityPolicyTest
                         "Safe test"));
 
         assertTrue(policy.canLeadQueue(candidate));
+    }
+
+    @Test
+    public void blockedCandidateNeverAppears()
+    {
+        Recommendation candidate = new Recommendation(
+                "pvm:blocked", "Blocked", "Known blocker", 999.0,
+                null, RecommendationConfidence.BLOCKED, 0, 0,
+                new RecommendationGuidance("Attempt it.", "Gear.", "Area.", "Blocked."));
+
+        assertFalse(policy.canLeadQueue(candidate));
+        assertFalse(policy.mayAppearAsAlternative(candidate));
     }
 
     @Test

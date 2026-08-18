@@ -60,7 +60,7 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items,
             List<StrategyCandidate> result)
     {
-        if (account.getMembershipStatus() == MembershipStatus.F2P) return;
+        if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (account.getSkillLevel(Skill.DEFENCE) < 40) return;
 
         RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
@@ -117,7 +117,8 @@ public class ProgressionUpgradeCandidateProvider
                 "A strong reusable melee-body upgrade that does not require a tradeable drop or GP purchase.",
                 score,
                 RecommendationConfidence.VERIFIED,
-                guidance));
+                guidance,
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void abyssalWhip(
@@ -126,7 +127,7 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items,
             List<StrategyCandidate> result)
     {
-        if (account.getMembershipStatus() == MembershipStatus.F2P) return;
+        if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (account.getSkillLevel(Skill.ATTACK) < 70) return;
         if (!AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)) return;
         if (!ownershipCanBeJudged(account, items)) return;
@@ -200,7 +201,8 @@ public class ProgressionUpgradeCandidateProvider
 
         score += preference(context, id);
         result.add(new StrategyCandidate(
-                id, title, reason, score, confidence, guidance));
+                id, title, reason, score, confidence, guidance,
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void dragonDefender(
@@ -209,7 +211,7 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items,
             List<StrategyCandidate> result)
     {
-        if (account.getMembershipStatus() == MembershipStatus.F2P) return;
+        if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (!ownershipCanBeJudged(account, items)) return;
 
         if (account.getSkillLevel(Skill.DEFENCE) < 60) return;
@@ -253,7 +255,8 @@ public class ProgressionUpgradeCandidateProvider
                 "A major melee off-hand progression step is available and no Dragon/Avernic defender is observed.",
                 score,
                 RecommendationConfidence.VERIFIED,
-                guidance));
+                guidance,
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void barrowsGloves(
@@ -329,7 +332,8 @@ public class ProgressionUpgradeCandidateProvider
                 "Recipe for Disaster is complete and this reusable glove upgrade is not observed.",
                 score,
                 confidence,
-                guidance));
+                guidance,
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void fireCape(
@@ -392,7 +396,8 @@ public class ProgressionUpgradeCandidateProvider
                 "The account has reached a conservative Fight Cave readiness band and no Fire/Infernal cape is observed.",
                 score,
                 confidence,
-                guidance));
+                guidance,
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void bowfaRoute(
@@ -501,7 +506,8 @@ public class ProgressionUpgradeCandidateProvider
 
         score += preference(context, id);
         result.add(new StrategyCandidate(
-                id, title, reason, score, confidence, guidance));
+                id, title, reason, score, confidence, guidance,
+                CandidateSafetyEvidence.potentiallyIrreversible(false)));
     }
 
     private static void anglerOutfit(
@@ -510,7 +516,7 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items,
             List<StrategyCandidate> result)
     {
-        if (account.getMembershipStatus() == MembershipStatus.F2P) return;
+        if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         int fishing = account.getSkillLevel(Skill.FISHING);
         if (fishing < 15) return;
         if (!ownershipCanBeJudged(account, items)) return;
@@ -548,7 +554,8 @@ public class ProgressionUpgradeCandidateProvider
                 "The remaining Fishing grind or collection goal is large enough for this reusable skilling unlock to compete with direct XP.",
                 score,
                 RecommendationConfidence.VERIFIED,
-                guidance));
+                guidance,
+                CandidateSafetyEvidence.skill(false, Skill.FISHING)));
     }
 
     private static int anglerPieces(

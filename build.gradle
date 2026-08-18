@@ -30,6 +30,7 @@ version = '0.2.0-dev'
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release.set(11)
+    options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
 }
 
 tasks.register('run', JavaExec) {

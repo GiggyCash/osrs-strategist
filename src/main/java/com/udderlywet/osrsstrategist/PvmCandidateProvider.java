@@ -40,23 +40,20 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                 : context.getData().getPvm().getReadinessByActivity().entrySet())
         {
             PvmReadiness readiness = entry.getValue();
-            if (readiness == null || !readiness.isRealisticallyReady()) continue;
+            if (readiness == null) continue;
+            if (readiness.getConfidence() == RecommendationConfidence.BLOCKED) continue;
 
             PvmActivityDefinition definition = catalog.match(entry.getKey());
             if (definition != null)
             {
-                if (account != null && account.getMembershipStatus() == MembershipStatus.F2P
-                        && !definition.isFreeToPlay()) continue;
+                if (account == null || !ContentAccessRules.isContentAvailable(
+                        account.getMembershipStatus(), definition.isFreeToPlay())) continue;
                 if (definition.isWilderness() && !context.isAllowWildernessMethods()) continue;
                 if ((mode == AccountMode.HARDCORE_IRONMAN
                         || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                         && !definition.isHardcoreSafeByDefault()) continue;
             }
-            else if (mode == AccountMode.HARDCORE_IRONMAN
-                    || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-            {
-                continue;
-            }
+            else continue; // Unknown/future metadata cannot prove beta readiness.
 
             String normalizedKey = entry.getKey().startsWith("pvm:")
                     ? entry.getKey().substring(4) : entry.getKey();
@@ -71,12 +68,33 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             }
 
             String title = definition == null ? entry.getKey() : definition.getName();
+            boolean ready = readiness.isReadyForRecommendation();
+            String missing = readiness.getMissingRequirements().isEmpty()
+                    ? "" : String.join("; ", readiness.getMissingRequirements());
+            if (!ready && missing.trim().isEmpty()) continue;
+            RecommendationGuidance guidance = ready
+                    ? new RecommendationGuidance(
+                            "Attempt " + title + " using the currently equipped and carried setup.",
+                            "The beta readiness check observed an equipped weapon/loadout and minimum carried supplies.",
+                            "Use only the verified non-Wilderness access route for this encounter.",
+                            "This is conservative readiness, not a universal BIS claim. Stop and reassess if the live setup changes.")
+                    : new RecommendationGuidance(
+                            "Prepare the missing PvM evidence before attempting " + title + ": " + missing + ".",
+                            missing,
+                            "Verify the encounter access route and prepare outside the encounter.",
+                            "This remains a preparation alternative and cannot lead DO NEXT until the carried setup is verified.");
             result.add(new StrategyCandidate(
                     id,
                     "Do " + title,
-                    "Combat stats, equipment, supplies, access, and the activity-specific readiness assessment say this is realistically ready.",
+                    ready
+                            ? "Observed equipped gear, carried supplies, access and conservative activity checks are ready."
+                            : "The encounter is not ready; the listed preparation step preserves the unresolved evidence.",
                     score,
-                    readiness.getConfidence()
+                    ready ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    guidance,
+                    CandidateSafetyEvidence.potentiallyIrreversible(
+                            definition.isFreeToPlay())
             ));
         }
         return result;

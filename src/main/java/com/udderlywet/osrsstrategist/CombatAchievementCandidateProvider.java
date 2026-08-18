@@ -28,7 +28,8 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         // F2P characters can complete a small subset of tasks, but cannot claim
         // tier rewards. Until Strategist models those individual F2P tasks, a
         // reward-tier candidate would be misleading and is intentionally absent.
-        if (context.getData().getAccount().getMembershipStatus() == MembershipStatus.F2P)
+        if (!ContentAccessRules.hasVerifiedMembership(
+                context.getData().getAccount().getMembershipStatus()))
         {
             return result;
         }
@@ -58,7 +59,9 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
                         + (gap == 1 ? "" : "s")
                         + " away. This stays an alternative until Strategist can select a specific realistic task the account is ready to complete.",
                 score,
-                RecommendationConfidence.CHECK_NEEDED
+                RecommendationConfidence.CHECK_NEEDED,
+                null,
+                CandidateSafetyEvidence.potentiallyIrreversible(false)
         ));
         return result;
     }

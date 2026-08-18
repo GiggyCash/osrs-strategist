@@ -22,7 +22,8 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
         if (context == null || context.getData() == null
                 || context.getData().getDiaries() == null
                 || context.getData().getAccount() == null
-                || context.getData().getAccount().getMembershipStatus() == MembershipStatus.F2P)
+                || !ContentAccessRules.hasVerifiedMembership(
+                        context.getData().getAccount().getMembershipStatus()))
         {
             return result;
         }
@@ -54,7 +55,9 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                     "This is the next unclaimed tier in " + region
                             + ". Strategist has the live tier state and will treat individual skill, quest, item, and combat tasks as Check Needed until their requirements are verified.",
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    CandidateSafetyEvidence.potentiallyIrreversible(false)
             ));
         }
 

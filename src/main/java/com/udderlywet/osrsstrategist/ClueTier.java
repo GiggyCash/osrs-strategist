@@ -36,9 +36,9 @@ public enum ClueTier
      */
     public boolean isAvailableFor(MembershipStatus membershipStatus)
     {
-        if (membershipStatus == MembershipStatus.F2P)
+        if (membershipStatus != MembershipStatus.P2P)
         {
-            return this == BEGINNER || this == UNKNOWN;
+            return this == BEGINNER;
         }
         return true;
     }

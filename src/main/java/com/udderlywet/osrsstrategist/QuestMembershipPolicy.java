@@ -55,7 +55,7 @@ public final class QuestMembershipPolicy
     public static boolean isAvailable(String questName, MembershipStatus membership)
     {
         if (questName == null || questName.trim().isEmpty()) return false;
-        if (membership != MembershipStatus.F2P) return true;
+        if (membership == MembershipStatus.P2P) return true;
         return FREE_TO_PLAY_QUESTS.contains(normalize(questName));
     }
 

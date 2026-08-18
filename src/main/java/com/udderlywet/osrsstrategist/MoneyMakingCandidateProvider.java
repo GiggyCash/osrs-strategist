@@ -38,10 +38,10 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
         if (!explicitGearNeed && !observedCashPressure) return result;
 
         AccountMode mode = context.getAccountMode();
-        boolean f2p = account.getMembershipStatus() == MembershipStatus.F2P;
         for (MoneyMakingDefinition method : catalog.forAccount(mode))
         {
-            if (f2p && !method.isFreeToPlay()) continue;
+            if (!ContentAccessRules.isContentAvailable(
+                    account.getMembershipStatus(), method.isFreeToPlay())) continue;
             if (method.getPrimarySkill() != null
                     && account.getSkillLevel(method.getPrimarySkill()) < method.getMinimumLevel()) continue;
             if (method.isWilderness() && !context.isAllowWildernessMethods()) continue;
@@ -71,12 +71,26 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     "Make money: " + method.getName(),
                     method.getDescription() + priceNote,
                     score,
-                    RecommendationConfidence.CHECK_NEEDED
+                    RecommendationConfidence.CHECK_NEEDED,
+                    null,
+                    safetyFor(method)
             ));
         }
 
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
+    }
+
+    private static CandidateSafetyEvidence safetyFor(MoneyMakingDefinition method)
+    {
+        if (method.getRiskLevel() == RiskLevel.HIGH
+                || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)
+            return CandidateSafetyEvidence.potentiallyIrreversible(
+                    method.isFreeToPlay());
+        if (method.getPrimarySkill() != null)
+            return CandidateSafetyEvidence.skill(method.isFreeToPlay(),
+                    method.getPrimarySkill());
+        return CandidateSafetyEvidence.harmless(method.isFreeToPlay());
     }
 }
