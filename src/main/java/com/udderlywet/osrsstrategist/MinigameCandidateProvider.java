@@ -74,7 +74,8 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     : itemEvaluator.evaluate(setup.getItems(), context.getData(),
                             context.isUseGroupStorage());
             boolean verified = setup != null && itemResult.isSatisfied();
-            RecommendationGuidance guidance = setup == null ? null
+            RecommendationGuidance guidance = setup == null
+                    ? verificationGuidance(definition)
                     : new RecommendationGuidance(
                             verified ? "Start " + definition.getName() + "."
                                     : itemResult.getAction() + " before " + definition.getName() + ".",
@@ -97,6 +98,18 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
+    }
+
+    private static RecommendationGuidance verificationGuidance(
+            MinigameDefinition definition)
+    {
+        String activity = definition.getName();
+        return new RecommendationGuidance(
+                "Open your inventory and equipment tab with your " + activity
+                        + " setup equipped.",
+                "Carry the supplies you intend to use. Compass will keep this as preparation until the required setup can be proven.",
+                "Use the verified in-game unlock for " + activity + ".",
+                definition.getRewardFocus() + ".");
     }
 
     private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)

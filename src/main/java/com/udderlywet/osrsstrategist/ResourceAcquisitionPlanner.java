@@ -192,7 +192,7 @@ public class ResourceAcquisitionPlanner
             return " No verified item-specific gathering, shop, crafting, minigame, or drop source is currently available for this resource.";
         }
 
-        StringBuilder note = new StringBuilder(" Candidate route");
+        StringBuilder note = new StringBuilder(" Useful route");
         if (suggestions.size() > 1) note.append("s");
         note.append(": ");
         for (int i = 0; i < suggestions.size(); i++)

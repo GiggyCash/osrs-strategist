@@ -37,7 +37,6 @@ public class RecommendationDetailsOverlay extends OverlayPanel
             "READINESS",
             "WHY IT MATTERS",
             "STATUS",
-            "NEEDS INFO",
             "NOT READY YET",
             "METHOD UNAVAILABLE",
             "BLOCKED"));

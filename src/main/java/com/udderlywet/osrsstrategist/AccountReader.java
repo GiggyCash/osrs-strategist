@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Skill;
-import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.gameval.VarPlayerID;
 
 @Singleton
@@ -38,7 +38,7 @@ public class AccountReader
         }
 
         int accountTypeCode =
-                client.getVarbitValue(Varbits.ACCOUNT_TYPE);
+                client.getVarbitValue(VarbitID.IRONMAN);
 
         String accountTypeName =
                 formatAccountType(accountTypeCode);

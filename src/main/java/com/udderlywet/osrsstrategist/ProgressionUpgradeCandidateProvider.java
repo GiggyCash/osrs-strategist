@@ -524,7 +524,7 @@ public class ProgressionUpgradeCandidateProvider
                 "TzHaar Fight Cave in Mor Ul Rek beneath Karamja volcano.",
                 hardcoreGroup
                         ? "Important: Fight Cave death is dangerous for Hardcore Group Ironman lives. This stays out of automatic DO NEXT until the player deliberately accepts that risk."
-                        : "The planner's 70 Ranged, 43 Prayer, and 50 Hitpoints gate is a conservative readiness heuristic, not a formal game requirement."
+                        : "Your 70 Ranged, 43 Prayer, and 50 Hitpoints meet this cautious preparation baseline; these are not formal game requirements."
         );
         result.add(new StrategyCandidate(
                 id,
