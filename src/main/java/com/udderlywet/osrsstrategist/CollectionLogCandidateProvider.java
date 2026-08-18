@@ -46,7 +46,7 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
                     id,
                     "Collection Log: " + category,
                     complete + "/" + total + " entries are observed complete ("
-                            + missing + " remaining). Strategist will identify the missing items and their account-appropriate sources before turning this into an exact grind.",
+                            + missing + " remaining). Identify the missing items and their account-appropriate sources before treating this as a concrete grind.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     null,

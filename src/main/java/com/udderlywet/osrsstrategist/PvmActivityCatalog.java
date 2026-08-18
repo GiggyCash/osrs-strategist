@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import javax.inject.Singleton;
 import net.runelite.client.hiscore.HiscoreSkill;
 import net.runelite.client.hiscore.HiscoreSkillType;
@@ -12,6 +15,17 @@ import net.runelite.client.hiscore.HiscoreSkillType;
 @Singleton
 public class PvmActivityCatalog
 {
+    private static final Set<String> PROFILED = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList(
+                    "pvm:brutus", "pvm:obor", "pvm:bryophyta",
+                    "pvm:barrows_chests", "pvm:scurrius", "pvm:giant_mole",
+                    "pvm:sarachnis", "pvm:hespori", "pvm:zulrah", "pvm:vorkath",
+                    "pvm:the_gauntlet", "pvm:the_corrupted_gauntlet",
+                    "pvm:tombs_of_amascut", "pvm:chambers_of_xeric",
+                    "pvm:theatre_of_blood", "pvm:alchemical_hydra",
+                    "pvm:cerberus", "pvm:araxxor", "pvm:kraken",
+                    "pvm:tztok_jad")));
+
     public List<PvmActivityDefinition> all()
     {
         List<PvmActivityDefinition> result = new ArrayList<>();
@@ -55,6 +69,14 @@ public class PvmActivityCatalog
         }
         return null;
     }
+
+    /** Encounters with a curated floor beyond the generic fail-closed profile. */
+    public boolean hasCuratedReadinessProfile(String id)
+    {
+        return id != null && PROFILED.contains(id.toLowerCase(Locale.ROOT));
+    }
+
+    public int curatedReadinessProfileCount() { return PROFILED.size(); }
 
     private static String normalize(String value)
     {

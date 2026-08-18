@@ -38,12 +38,7 @@ public class OpportunityEngine
         // observed while this character previously had membership.
         if (ContentAccessRules.hasVerifiedMembership(membership))
         {
-            addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:birdhouse", OpportunityType.BIRDHOUSE_RUN,
-                    "Birdhouse run", Arrays.asList(
-                            "Fossil Island access", "Hammer and chisel",
-                            "4 clockworks", "4 suitable logs", "40 suitable seeds",
-                            "Verified transport to the route"));
+            addBirdhouseOpportunity(opportunities, data, recurring, now);
 
             addHerbRunOpportunity(opportunities, data, recurring, now);
 
@@ -142,7 +137,39 @@ public class OpportunityEngine
         result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
                 ready, RecommendationConfidence.VERIFIED, missing,
                 setupVerified, CandidateSafetyEvidence.skill(false,
-                        net.runelite.api.Skill.FARMING)));
+                net.runelite.api.Skill.FARMING)));
+    }
+
+    private static void addBirdhouseOpportunity(List<Opportunity> result,
+            StrategyDataBundle data, RecurringOpportunitySnapshot recurring,
+            long now)
+    {
+        String id = "opportunity:birdhouse";
+        if (recurring == null || recurring.readyAt(id) == null) return;
+        List<String> missing = new ArrayList<>();
+        QuestSnapshot quests = data.getQuests();
+        if (quests == null || quests.statusOf("Bone Voyage") != QuestStatus.COMPLETE)
+            missing.add("Complete Bone Voyage for Fossil Island access");
+        InventorySnapshot inventory = data.getInventory();
+        if (!inventoryHas(inventory, "hammer")) missing.add("Carry a hammer");
+        if (!inventoryHas(inventory, "chisel")) missing.add("Carry a chisel");
+        if (inventoryQuantity(inventory, "clockwork") < 4)
+            missing.add("Carry 4 clockworks");
+        if (matchingQuantity(inventory, " log", "logs") < 4)
+            missing.add("Carry 4 suitable logs");
+        if (birdhouseSeedQuantity(inventory) < 40)
+            missing.add("Carry 40 suitable hop or herb seeds");
+        if (data.getAccount().getSkillLevel(net.runelite.api.Skill.HUNTER) < 5)
+            missing.add("Reach Hunter level 5");
+        if (data.getAccount().getSkillLevel(net.runelite.api.Skill.CRAFTING) < 5)
+            missing.add("Reach Crafting level 5");
+        boolean ready = recurring.isReadyNow(id, now);
+        boolean setupVerified = ready && missing.isEmpty();
+        result.add(new Opportunity(id, OpportunityType.BIRDHOUSE_RUN,
+                "Birdhouse run", ready, RecommendationConfidence.VERIFIED,
+                missing, setupVerified,
+                CandidateSafetyEvidence.skill(false,
+                        net.runelite.api.Skill.HUNTER)));
     }
 
     private static boolean inventoryHas(InventorySnapshot inventory, String expected)
@@ -162,6 +189,55 @@ public class OpportunityEngine
                 for (int itemId : itemIds)
                     if (item.getItemId() == itemId) return true;
         return false;
+    }
+
+    private static int inventoryQuantity(InventorySnapshot inventory, String name)
+    {
+        if (inventory == null || name == null) return 0;
+        int quantity = 0;
+        for (ItemStackSnapshot item : inventory.getItems())
+            if (item != null && item.getName() != null
+                    && item.getName().equalsIgnoreCase(name)) quantity += item.getQuantity();
+        return quantity;
+    }
+
+    private static int matchingQuantity(InventorySnapshot inventory,
+            String suffix, String exact)
+    {
+        if (inventory == null) return 0;
+        int quantity = 0;
+        for (ItemStackSnapshot item : inventory.getItems())
+        {
+            if (item == null || item.getName() == null) continue;
+            String name = item.getName().toLowerCase(java.util.Locale.ROOT);
+            if (name.endsWith(suffix) || name.endsWith(" " + exact)
+                    || name.equals(exact)) quantity += item.getQuantity();
+        }
+        return quantity;
+    }
+
+    private static int birdhouseSeedQuantity(InventorySnapshot inventory)
+    {
+        if (inventory == null) return 0;
+        int quantity = 0;
+        for (ItemStackSnapshot item : inventory.getItems())
+        {
+            if (item == null || item.getName() == null) continue;
+            String name = item.getName().toLowerCase(java.util.Locale.ROOT);
+            boolean hops = name.equals("barley seed") || name.equals("hammerstone seed")
+                    || name.equals("asgarnian seed") || name.equals("jute seed")
+                    || name.equals("yanillian seed") || name.equals("krandorian seed")
+                    || name.equals("wildblood seed");
+            boolean herb = name.equals("guam seed") || name.equals("marrentill seed")
+                    || name.equals("tarromin seed") || name.equals("harralander seed")
+                    || name.equals("ranarr seed") || name.equals("toadflax seed")
+                    || name.equals("irit seed") || name.equals("avantoe seed")
+                    || name.equals("kwuarm seed") || name.equals("snapdragon seed")
+                    || name.equals("cadantine seed") || name.equals("lantadyme seed")
+                    || name.equals("dwarf weed seed") || name.equals("torstol seed");
+            if (hops || herb) quantity += item.getQuantity();
+        }
+        return quantity;
     }
 
     private static boolean hasReachableHerbPatch(FarmingSnapshot farming)

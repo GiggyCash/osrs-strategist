@@ -56,7 +56,7 @@ public class SailingGuidanceService
             return new RecommendationGuidance(
                     "Use Deep Sea Trawling until you gain " + format(xpNeeded)
                             + " Sailing XP toward level " + targetLevel + ".",
-                    "Bring a safe boat/trawling setup and enough repair supplies for the trip. The exact per-catch Sailing XP depends on the live trawling loop, so Strategist will not invent a catch count.",
+                    "Bring a safe boat/trawling setup and enough repair supplies for the trip. Per-catch Sailing XP depends on the live trawling loop, so no exact catch count is shown.",
                     "Use the highest safe Deep Sea Trawling route your verified boat and Sailing/Fishing levels support.",
                     "Deep Sea Trawling is a Fishing/Sailing hybrid focused more on valuable fish than maximum Sailing XP. Use it when the hybrid rewards fit the account better than Barracuda Trials."
             );
@@ -156,7 +156,7 @@ public class SailingGuidanceService
                     "Complete Pandemonium to unlock Sailing training.",
                     "Keep the starter boat/tools from the Sailing tutorial progression.",
                     "Start Pandemonium from its normal quest start and finish the Sailing tutorial sequence.",
-                    "Sailing is members-only and normal training begins after Pandemonium. Strategist will recalculate the route as soon as the quest state changes."
+                    "Sailing is members-only and normal training begins after Pandemonium. The route refreshes automatically when the quest state changes."
             );
         }
 

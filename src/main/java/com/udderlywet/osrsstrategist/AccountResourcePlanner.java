@@ -140,7 +140,7 @@ public class AccountResourcePlanner
         // or Iron shortfall until the ordinary bank has been observed once.
         if (!primaryObserved && mode != AccountMode.ULTIMATE_IRONMAN)
         {
-            text.append("Open your bank once so Strategist can verify stored ")
+            text.append("Open your bank once to verify stored ")
                     .append("materials before calculating the real shortfall.");
             if (groupIncluded && !groupObserved)
             {
@@ -209,7 +209,7 @@ public class AccountResourcePlanner
         else
         {
             text.append("Source ").append(shortfall)
-                    .append(" after account mode is verified. Strategist will not assume Grand Exchange access for an unknown account mode.");
+                    .append(" after account mode is verified. Grand Exchange access is never assumed for an unknown account mode.");
         }
 
         appendRestrictedUimNote(text, restricted);

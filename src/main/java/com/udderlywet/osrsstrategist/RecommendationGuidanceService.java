@@ -256,7 +256,7 @@ public class RecommendationGuidanceService
         if (data.getBank() == null)
         {
             return "Plan for " + requiredSummary(stages)
-                    + ". Open your bank once so Strategist can verify stored fish before telling you exactly how many more to get.";
+                    + ". Open your bank once to verify stored fish before calculating the remaining shortfall.";
         }
 
         List<String> ownedParts = new ArrayList<>();

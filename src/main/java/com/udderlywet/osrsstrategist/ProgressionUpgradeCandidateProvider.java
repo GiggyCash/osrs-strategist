@@ -44,6 +44,8 @@ public class ProgressionUpgradeCandidateProvider
         fighterTorso(context, account, items, result);
         abyssalWhip(context, account, items, result);
         dragonDefender(context, account, items, result);
+        dragonScimitar(context, account, items, result);
+        avaDevice(context, account, items, result);
         barrowsGloves(context, account, items, result);
         fireCape(context, account, items, result);
         bowfaRoute(context, account, items, result);
@@ -52,6 +54,83 @@ public class ProgressionUpgradeCandidateProvider
         result.sort(Comparator.comparingDouble(
                 StrategyCandidate::getScore).reversed());
         return result;
+    }
+
+    private static void dragonScimitar(StrategyContext context,
+            AccountSnapshot account, ObservedItemIndex items,
+            List<StrategyCandidate> result)
+    {
+        if (account.getMembershipStatus() != MembershipStatus.P2P
+                || account.getSkillLevel(Skill.ATTACK) < 60
+                || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
+                || !ownershipCanBeJudged(account, items)
+                || ownsObserved(account, items, "Dragon scimitar",
+                        "Abyssal whip", "Blade of saeldor", "Blade of saeldor (c)")) return;
+        QuestSnapshot quests = context.getData().getQuests();
+        if (quests == null || quests.statusOf("Monkey Madness I")
+                != QuestStatus.COMPLETE) return;
+        String id = "upgrade:dragon-scimitar";
+        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.getAccountMode();
+        String setup = mode == AccountMode.ULTIMATE_IRONMAN
+                ? "Keep one inventory space free and preserve any retrieval-heavy setup before travelling."
+                : "Withdraw 100,000 coins only when ready to make the purchase.";
+        boolean cashReady = verifiedCoins(context.getData(), 100_000L);
+        result.add(new StrategyCandidate(id, "Buy a Dragon scimitar",
+                "Monkey Madness I and 60 Attack are observed, making this a concrete slash progression purchase rather than a generic gear tier.",
+                42.0 + preference(context, id), cashReady
+                        ? RecommendationConfidence.VERIFIED
+                        : RecommendationConfidence.CHECK_NEEDED,
+                new RecommendationGuidance(
+                        cashReady
+                                ? "Travel to Ape Atoll and buy a Dragon scimitar from Daga's Scimitar Smithy for 100,000 coins."
+                                : "Verify or obtain 100,000 spendable coins, then travel to Daga's Scimitar Smithy on Ape Atoll.",
+                        setup + (cashReady ? " Coin affordability is observed." : " Coin affordability is not yet observed.")
+                                + " This is the same shop route for Main and Iron accounts; no Grand Exchange assumption is needed.",
+                        "Daga's Scimitar Smithy on Ape Atoll after Monkey Madness I.",
+                        "Use it where a one-handed slash weapon is appropriate; it is not a universal encounter weapon."),
+                CandidateSafetyEvidence.verifiedSafe(false)));
+    }
+
+    private static void avaDevice(StrategyContext context,
+            AccountSnapshot account, ObservedItemIndex items,
+            List<StrategyCandidate> result)
+    {
+        if (account.getMembershipStatus() != MembershipStatus.P2P
+                || account.getSkillLevel(Skill.RANGED) < 30
+                || !AccountBuildPolicy.allowsSkill(account, Skill.RANGED)
+                || !ownershipCanBeJudged(account, items)
+                || ownsObserved(account, items, "Ava's attractor", "Ava's accumulator",
+                        "Ava's assembler", "Masori assembler", "Dizana's quiver")) return;
+        QuestSnapshot quests = context.getData().getQuests();
+        if (quests == null || quests.statusOf("Animal Magnetism")
+                != QuestStatus.COMPLETE) return;
+        String id = "upgrade:ava-device";
+        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        String device = account.getSkillLevel(Skill.RANGED) >= 50
+                ? "Ava's accumulator" : "Ava's attractor";
+        String replacement = account.getSkillLevel(Skill.RANGED) >= 50
+                ? "Bring 999 coins and 75 steel arrows for a replacement accumulator."
+                : "Bring 999 coins for a replacement attractor.";
+        boolean arrowsReady = account.getSkillLevel(Skill.RANGED) < 50
+                || items.quantity("Steel arrow") >= 75;
+        boolean replacementReady = verifiedCoins(context.getData(), 999L)
+                && arrowsReady;
+        result.add(new StrategyCandidate(id, "Get " + device,
+                "Animal Magnetism is complete and no Ava device is observed; this is a reusable Ranged cape-slot and ammunition-recovery upgrade.",
+                40.0 + preference(context, id), replacementReady
+                        ? RecommendationConfidence.VERIFIED
+                        : RecommendationConfidence.CHECK_NEEDED,
+                new RecommendationGuidance(
+                        replacementReady
+                                ? "Talk to Ava in Draynor Manor and obtain " + device + ". Equip it for compatible Ranged setups."
+                                : "Obtain the replacement materials, then talk to Ava in Draynor Manor for " + device + ".",
+                        replacement + (replacementReady
+                                ? " The required coins and arrows are observed."
+                                : " The complete replacement cost is not yet observed."),
+                        "Ava's room in the west wing of Draynor Manor.",
+                        "Weapon and ammunition compatibility still matter; owning the device does not prove a complete encounter loadout."),
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void fighterTorso(
@@ -171,7 +250,7 @@ public class ProgressionUpgradeCandidateProvider
             reason = "This Iron-style account has reached the Slayer unlock needed for the self-source route.";
             confidence = RecommendationConfidence.VERIFIED;
             guidance = new RecommendationGuidance(
-                    "Kill abyssal demons on a safe, reachable account-appropriate route until an Abyssal whip drops. This is RNG, so Strategist will not invent a fixed kill count.",
+                    "Kill abyssal demons on a safe, reachable account-appropriate route until an Abyssal whip drops. This is RNG, so no fixed kill count is shown.",
                     "Use your strongest build-legal sustainable Slayer setup. Bring the supplies required by the chosen abyssal-demon location; do not route into the Wilderness unless Wilderness methods are explicitly enabled.",
                     "Use a verified non-Wilderness abyssal-demon location by default.",
                     "The acquisition is probabilistic. The useful exact fact here is that the self-source route is unlocked, not the number of kills remaining."
@@ -193,7 +272,7 @@ public class ProgressionUpgradeCandidateProvider
             confidence = RecommendationConfidence.VERIFIED;
             guidance = new RecommendationGuidance(
                     "Train Slayer from " + slayer + " to 85, then self-source an Abyssal whip from abyssal demons.",
-                    "Use banked/observed combat supplies and task gear where possible. Strategist will continue to replace this long-term acquisition step with the best actionable Slayer task whenever live task state exists.",
+                    "Use banked/observed combat supplies and task gear where possible. A live actionable Slayer task takes priority over this long-term acquisition step.",
                     "Use the highest safe standard Slayer master and the live task location selected by the Slayer planner.",
                     "This is an acquisition-chain recommendation, not a claim that every Slayer level should be trained using the same task or setup."
             );
@@ -384,7 +463,7 @@ public class ProgressionUpgradeCandidateProvider
                 : RecommendationConfidence.VERIFIED;
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Complete all 63 waves of the TzHaar Fight Cave and defeat TzTok-Jad to obtain the Fire cape. Use Ranged as the default route unless a deliberately specialized build plan says otherwise.",
-                "Bring the best observed build-legal Ranged setup plus sustainable prayer restoration, healing, and ammunition. Exact quantities depend on weapon, Prayer level, Defence, player execution, and run duration, so Strategist will not invent a universal inventory.",
+                "Bring the best observed build-legal Ranged setup plus sustainable prayer restoration, healing, and ammunition. Exact quantities depend on weapon, Prayer level, Defence, execution, and run duration, so no universal inventory is shown.",
                 "TzHaar Fight Cave in Mor Ul Rek beneath Karamja volcano.",
                 hardcoreGroup
                         ? "Important: Fight Cave death is dangerous for Hardcore Group Ironman lives. This stays out of automatic DO NEXT until the player deliberately accepts that risk."
@@ -493,7 +572,7 @@ public class ProgressionUpgradeCandidateProvider
             title = "Hunt the Enhanced crystal weapon seed";
             reason = "This Iron-style account must self-source the Bowfa seed after Song of the Elves.";
             guidance = new RecommendationGuidance(
-                    "Run the Corrupted Gauntlet for an Enhanced crystal weapon seed. The seed is an RNG reward, so Strategist will track the acquisition state but will not invent a fixed completion count.",
+                    "Run the Corrupted Gauntlet for an Enhanced crystal weapon seed. The seed is an RNG reward, so progress is tracked without a fixed completion count.",
                     "The Gauntlet supplies its own temporary equipment inside the activity, so do not plan normal bank gear as a required input. After the seed drops, the Bowfa creation step needs Crystal shards.",
                     "The Corrupted Gauntlet in Prifddinas.",
                     hardcore
@@ -607,6 +686,14 @@ public class ProgressionUpgradeCandidateProvider
     private static double preference(StrategyContext context, String id)
     {
         return context.getPreferenceProfile().weightFor(id) * 10.0;
+    }
+
+    private static boolean verifiedCoins(StrategyDataBundle data, long needed)
+    {
+        AccountEconomySnapshot economy = data == null ? null : data.getEconomy();
+        return economy != null
+                && economy.getConfidence() == RecommendationConfidence.VERIFIED
+                && economy.getCoins() >= needed;
     }
 
     private static String format(long value)

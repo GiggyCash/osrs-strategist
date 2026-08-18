@@ -18,7 +18,7 @@ public interface OsrsStrategistConfig extends Config
     default SessionIntent sessionIntent() { return SessionIntent.PICK_FOR_ME; }
 
     @ConfigItem(keyName = "activeGoal", name = "Big goal",
-            description = "The long-term goal Strategist should optimize around")
+            description = "The long-term goal used to prioritize recommendations")
     default GoalType activeGoal() { return GoalType.MAX; }
 
     @ConfigItem(keyName = "questTolerance", name = "Quest tolerance",

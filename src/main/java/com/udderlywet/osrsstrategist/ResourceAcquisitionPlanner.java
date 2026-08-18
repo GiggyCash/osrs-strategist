@@ -108,7 +108,7 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, inventoryQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
-                    "GE is an option, but Strategist must verify price, available GP, and opportunity cost before recommending a purchase."
+                    "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
                             + sourceNote
             );
         }
@@ -173,7 +173,7 @@ public class ResourceAcquisitionPlanner
                 need.getItemName(), mode, allowWilderness);
         if (suggestions.isEmpty())
         {
-            return " Strategist still needs a verified item-specific gathering, shop, crafting, minigame, or drop source for this resource.";
+            return " No verified item-specific gathering, shop, crafting, minigame, or drop source is currently available for this resource.";
         }
 
         StringBuilder note = new StringBuilder(" Candidate route");

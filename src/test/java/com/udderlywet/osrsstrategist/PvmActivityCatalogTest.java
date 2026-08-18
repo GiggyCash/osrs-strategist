@@ -33,4 +33,15 @@ public class PvmActivityCatalogTest
         PvmActivityDefinition callisto = catalog.byId("pvm:callisto");
         if (callisto != null) assertTrue(callisto.isWilderness());
     }
+
+    @Test
+    public void usefulEncounterCorpusHasCuratedFloorsWhileUnknownsStayGeneric()
+    {
+        PvmActivityCatalog catalog = new PvmActivityCatalog();
+        assertTrue(catalog.curatedReadinessProfileCount() >= 10);
+        assertTrue(catalog.hasCuratedReadinessProfile("pvm:obor"));
+        assertTrue(catalog.hasCuratedReadinessProfile("pvm:vorkath"));
+        assertTrue(catalog.hasCuratedReadinessProfile("pvm:tombs_of_amascut"));
+        assertFalse(catalog.hasCuratedReadinessProfile("pvm:callisto"));
+    }
 }

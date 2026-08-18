@@ -121,6 +121,40 @@ public class ProgressionUpgradeCandidateProviderTest
     }
 
     @Test
+    public void completedMonkeyMadnessCreatesExactDragonScimitarShopRoute()
+    {
+        AccountSnapshot account = account(1, 60, 70, 45, 60, 43, 60, 70, 50, 60);
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("Monkey Madness I"))
+                .economy(new AccountEconomySnapshot(100_000L, 100_000L,
+                        RecommendationConfidence.VERIFIED)).build();
+        StrategyCandidate candidate = find(provider.candidates(
+                context(data, GoalType.GEAR_TARGET, false)),
+                "upgrade:dragon-scimitar");
+        assertNotNull(candidate);
+        assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
+        assertTrue(candidate.getGuidance().getAction().contains("100,000 coins"));
+        assertFalse(candidate.getGuidance().getAction().contains("Grand Exchange"));
+    }
+
+    @Test
+    public void ownedAvaDeviceSuppressesDuplicateAcquisition()
+    {
+        AccountSnapshot account = account(0, 60, 70, 45, 60, 43, 60, 70, 50, 60);
+        StrategyDataBundle missing = builder(account)
+                .quests(questsComplete("Animal Magnetism")).build();
+        assertNotNull(find(provider.candidates(
+                context(missing, GoalType.GEAR_TARGET, false)), "upgrade:ava-device"));
+
+        StrategyDataBundle owned = builder(account)
+                .quests(questsComplete("Animal Magnetism"))
+                .bank(new BankSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(1, "Ava's accumulator", 1)), 1L)).build();
+        assertNull(find(provider.candidates(
+                context(owned, GoalType.GEAR_TARGET, false)), "upgrade:ava-device"));
+    }
+
+    @Test
     public void eliteLumbridgeDiscountUsesReducedBarrowsGlovesPrice()
     {
         AccountSnapshot account = account(0, 75, 75, 70, 75, 70, 75, 80, 70, 70);

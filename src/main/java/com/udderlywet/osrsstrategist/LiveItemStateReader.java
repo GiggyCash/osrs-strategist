@@ -5,9 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
-import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.game.ItemManager;
 
 /**
@@ -38,7 +38,7 @@ public class LiveItemStateReader
     public InventorySnapshot readInventory()
     {
         List<ItemStackSnapshot> items =
-                readContainer(InventoryID.INVENTORY);
+                readContainer(InventoryID.INV);
 
         return items == null
                 ? null
@@ -48,7 +48,7 @@ public class LiveItemStateReader
     public EquipmentSnapshot readEquipment()
     {
         List<ItemStackSnapshot> items =
-                readContainer(InventoryID.EQUIPMENT);
+                readContainer(InventoryID.WORN);
 
         return items == null
                 ? null
@@ -77,7 +77,7 @@ public class LiveItemStateReader
     }
 
     private List<ItemStackSnapshot> readContainer(
-            InventoryID inventoryId)
+            int inventoryId)
     {
         ItemContainer container =
                 client.getItemContainer(inventoryId);

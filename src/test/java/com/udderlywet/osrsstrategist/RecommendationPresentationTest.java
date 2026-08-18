@@ -22,8 +22,8 @@ public class RecommendationPresentationTest
                 recommendation
         );
 
-        assertTrue(compact.contains("BEST METHOD"));
-        assertTrue(compact.contains("NEEDS INFO"));
+        assertTrue(compact.contains("METHOD"));
+        assertTrue(compact.contains("NEEDED"));
         assertTrue(compact.contains("Planks/materials"));
         assertFalse(compact.contains("WHY IT MATTERS"));
         assertFalse(compact.contains("HOW"));

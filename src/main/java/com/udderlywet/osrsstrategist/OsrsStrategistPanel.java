@@ -321,7 +321,7 @@ public class OsrsStrategistPanel extends PluginPanel
             progressText.setText(html(""));
             progressBar.setValue(0);
             setWrappedText(recommendationBody,
-                    "Strategist is waiting for enough verified account state to give a safe next action.",
+                    "More account evidence is needed. If you are logged in, open your inventory and equipment, then open the bank once; the next safe action will appear automatically when enough state is observed.",
                     TEXT_WIDTH);
             setWrappedText(feedbackStatus, "", TEXT_WIDTH);
             setWrappedText(alternativeOne, "", TEXT_WIDTH);

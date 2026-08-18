@@ -128,7 +128,7 @@ public class GearProgressionCatalog
                         "Dizana's quiver", "Zaryte vambraces", "Pegasian boots/encounter alternative",
                         "Venator ring or Lightbearer when special attacks matter"),
                 "Twisted bow / Zaryte crossbow / Bowfa / blowpipe according to the encounter",
-                "Strategist must use the target model before calling one of these weapons BIS.",
+                "A target-specific model is required before calling one of these weapons BIS.",
                 false, false, false, false);
     }
 

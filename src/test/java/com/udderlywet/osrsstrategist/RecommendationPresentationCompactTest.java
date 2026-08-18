@@ -10,6 +10,16 @@ import static org.junit.Assert.assertTrue;
 public class RecommendationPresentationCompactTest
 {
     @Test
+    public void sidebarUsesRequestedMethodAndNeededHierarchy()
+    {
+        Recommendation recommendation = recommendationWithMethodAndMissingRequirement();
+        String text = RecommendationPresentation.compactText(recommendation);
+        assertTrue(text.contains("METHOD"));
+        assertTrue(text.contains("NEEDED"));
+        assertFalse(text.contains("BEST METHOD"));
+        assertFalse(text.contains("NEEDS INFO"));
+    }
+    @Test
     public void compactCardDoesNotDumpFullPlannerParagraphs()
     {
         String longAction = "Cook 1,234 sharks at the range after withdrawing them in batches. "
@@ -56,5 +66,25 @@ public class RecommendationPresentationCompactTest
                         action, supplies,
                         "Use the best verified range.",
                         "Detailed note that belongs in Details."));
+    }
+
+    private static Recommendation recommendationWithMethodAndMissingRequirement()
+    {
+        TrainingMethod method = new TrainingMethod(
+                "cooking_test", Skill.COOKING, 1, 99,
+                "Cook banked food", "Cook the selected food.",
+                10, 10, 10, AttentionLevel.MODERATE,
+                20, 2, Collections.emptyList(),
+                RecommendationConfidence.CHECK_NEEDED);
+        RequirementCheck check = new RequirementCheck(
+                "access:range", "Verify range access",
+                RequirementState.CHECK_NEEDED, "No range access observation yet.");
+        TrainingPlan plan = new TrainingPlan(method, "test",
+                RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(check));
+        return new Recommendation(
+                "skill:cooking", "Train Cooking", "Useful progression.",
+                50.0, plan, RecommendationConfidence.CHECK_NEEDED,
+                70, 80, null);
     }
 }

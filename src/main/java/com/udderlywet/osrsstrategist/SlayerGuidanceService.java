@@ -127,7 +127,7 @@ public class SlayerGuidanceService
 
         if (!items.bankObserved())
         {
-            return "Open your bank once so Strategist can verify the mandatory task item. Valid options include: "
+            return "Open your bank once to verify the mandatory task item. Valid options include: "
                     + choices + ".";
         }
 
