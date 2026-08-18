@@ -60,8 +60,8 @@ public class ContentCoverageManifestTest
         assertEquals(new PvmActivityCatalog().all().size(), manifest.all().size());
         assertEquals(71, manifest.all().size());
         assertUniqueAndExplained(manifest.all());
-        assertEquals(3, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(31, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
+        assertEquals(4, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(30, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
         assertEquals(37, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
     }
 

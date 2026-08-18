@@ -39,7 +39,7 @@ public class ResourceDependencyCatalog
         List<ResourceDependencyDefinition> values = new ArrayList<>();
         values.add(new ResourceDependencyDefinition(ItemID.MCANNONBALL,
                 "Smith the required cannonballs from steel bars after Dwarf Cannon.",
-                35, java.util.Arrays.asList(
+                35, 4, java.util.Arrays.asList(
                 DependencyRequirement.quest("Dwarf Cannon"),
                 DependencyRequirement.skill(Skill.SMITHING, 35),
                 DependencyRequirement.resource(new ResourceNeed(
@@ -85,6 +85,55 @@ public class ResourceDependencyCatalog
                 DependencyRequirement.skill(Skill.CRAFTING, 10),
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.FLAX, "Flax", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.IRON_BAR,
+                "Smelt iron ore at a verified furnace.", 10,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.SMITHING, 15),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.IRON_ORE, "Iron ore", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.SILVER_BAR,
+                "Smelt silver ore at a verified furnace.", 10,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.SMITHING, 20),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.SILVER_ORE, "Silver ore", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.MITHRIL_BAR,
+                "Smelt mithril ore with four coal at a verified furnace.", 25,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.SMITHING, 50),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.MITHRIL_ORE, "Mithril ore", 1)),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.COAL, "Coal", 4)))));
+        values.add(new ResourceDependencyDefinition(ItemID.ADAMANTITE_BAR,
+                "Smelt adamantite ore with six coal at a verified furnace.", 30,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.SMITHING, 70),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.ADAMANTITE_ORE, "Adamantite ore", 1)),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.COAL, "Coal", 6)))));
+        values.add(new ResourceDependencyDefinition(ItemID.RUNITE_BAR,
+                "Smelt runite ore with eight coal at a verified furnace.", 35,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.SMITHING, 85),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.RUNITE_ORE, "Runite ore", 1)),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.COAL, "Coal", 8)))));
+        values.add(new ResourceDependencyDefinition(ItemID.BALL_OF_WOOL,
+                "Spin wool into a ball of wool at a spinning wheel.", 8,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.CRAFTING, 1),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.WOOL, "Wool", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.VIAL_EMPTY,
+                "Use a glassblowing pipe on molten glass to make an empty vial.", 12,
+                java.util.Arrays.asList(
+                        DependencyRequirement.skill(Skill.CRAFTING, 33),
+                        DependencyRequirement.gear("Glassblowing pipe"),
+                        DependencyRequirement.resource(new ResourceNeed(
+                                ItemID.MOLTEN_GLASS, "Molten glass", 1)))));
         return values;
     }
 }

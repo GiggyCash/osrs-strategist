@@ -50,10 +50,11 @@ public class PvmActivityCatalogTest
     public void fullEvidenceSubsetIsSmallAndExplicit()
     {
         PvmEvidenceProfileCatalog profiles = new PvmEvidenceProfileCatalog();
-        assertEquals(3, profiles.size());
+        assertEquals(4, profiles.size());
         assertNotNull(profiles.forActivity("pvm:obor"));
         assertNotNull(profiles.forActivity("pvm:bryophyta"));
         assertNotNull(profiles.forActivity("pvm:scurrius"));
+        assertNotNull(profiles.forActivity("pvm:brutus"));
         assertTrue(profiles.forActivity("pvm:obor").getAccessItems()
                 .contains("Giant key"));
     }

@@ -1,6 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,55 +51,82 @@ public class ResourceDependencyResolver
         if (active.contains(id))
         {
             state.cycle = true;
-            add(state, id + ":cycle", "Stop: the resource route contains a cycle.",
-                    RecommendationConfidence.CHECK_NEEDED, depth);
+            addResource(state, id + ":cycle", "Stop: the resource route contains a cycle.",
+                    RecommendationConfidence.CHECK_NEEDED, depth, need.getQuantity());
             return;
         }
-        if (state.nodes.containsKey(id)) return;
+        int previousRequested = state.requested.getOrDefault(need.getItemId(), 0);
+        int totalRequested = safeAdd(previousRequested, need.getQuantity());
+        state.requested.put(need.getItemId(), totalRequested);
+        int previousProcessed = state.processed.getOrDefault(need.getItemId(), 0);
+        if (totalRequested <= previousProcessed) return;
+        state.processed.put(need.getItemId(), totalRequested);
+        ResourceNeed totalNeed = new ResourceNeed(need.getItemId(),
+                need.getItemName(), totalRequested);
         if (depth > maxDepth)
         {
             state.depth = true;
-            add(state, id + ":depth", "Stop: the resource route exceeds the safe planning depth.",
-                    RecommendationConfidence.CHECK_NEEDED, depth);
+            addResource(state, id + ":depth", "Stop: the resource route exceeds the safe planning depth.",
+                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
-        ResourceAcquisitionPlan ownership = ownershipPlanner.plan(context, need);
+        ResourceAcquisitionPlan ownership = ownershipPlanner.plan(context, totalNeed);
         if (ownership != null && ownership.hasEnoughConfirmed())
         {
             // Retrieval-only UIM storage can prove quantity without proving that
             // the item is immediately usable. Preserve that preparation state.
-            add(state, id, ownership.getNote(), ownership.getConfidence(), depth);
+            addResource(state, id, ownership.getNote(), ownership.getConfidence(),
+                    depth, totalRequested);
             return;
         }
         AccountMode mode = context == null ? AccountMode.UNKNOWN : context.getAccountMode();
         if (mode.usesGrandExchange())
         {
-            add(state, id, ownership == null ? "Verify a purchase route." : ownership.getNote(),
-                    RecommendationConfidence.CHECK_NEEDED, depth);
+            addResource(state, id, ownership == null ? "Verify a purchase route." : ownership.getNote(),
+                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
         ResourceDependencyDefinition definition = catalog.forItem(need.getItemId());
         if (definition == null)
         {
-            add(state, id, ownership == null ? "Verify a self-source route." : ownership.getNote(),
-                    RecommendationConfidence.CHECK_NEEDED, depth);
+            addResource(state, id, ownership == null ? "Verify a self-source route." : ownership.getNote(),
+                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
         if (rejectForOpportunityCost(context, definition.getOpportunityCost()))
         {
             state.cost = true;
-            add(state, id, "Use a shorter direct source; this detour costs too much for the current session.",
-                    RecommendationConfidence.CHECK_NEEDED, depth);
+            addResource(state, id, "Use a shorter direct source; this detour costs too much for the current session.",
+                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
         active.add(id);
+        int batches = ceilDiv(totalRequested, definition.getOutputQuantity())
+                - ceilDiv(previousProcessed, definition.getOutputQuantity());
+        Map<Integer, ResourceNeed> resourceNeeds = new LinkedHashMap<>();
         for (DependencyRequirement requirement : definition.getPrerequisites())
-            visitRequirement(context, requirement, depth + 1, active, state);
+        {
+            if (requirement.getKind() != DependencyRequirement.Kind.RESOURCE)
+            {
+                visitRequirement(context, requirement, depth + 1, active, state);
+                continue;
+            }
+            ResourceNeed child = requirement.getResource();
+            int required = safeMultiply(child.getQuantity(), batches);
+            ResourceNeed prior = resourceNeeds.get(child.getItemId());
+            int combined = prior == null ? required
+                    : safeAdd(prior.getQuantity(), required);
+            resourceNeeds.put(child.getItemId(), new ResourceNeed(
+                    child.getItemId(), child.getItemName(), combined));
+        }
+        for (ResourceNeed child : resourceNeeds.values())
+            visit(context, child, depth + 1, active, state);
         active.remove(id);
-        add(state, id, definition.getAction(), RecommendationConfidence.CHECK_NEEDED, depth);
+        addResource(state, id, definition.getAction(),
+                RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
     }
 
     private void visitRequirement(StrategyContext context,
@@ -160,9 +188,35 @@ public class ResourceDependencyResolver
                 new ResolvedDependencyNode(id, action, confidence, depth));
     }
 
+    private static void addResource(State state, String id, String action,
+            RecommendationConfidence confidence, int depth, int quantity)
+    {
+        state.nodes.put(id,
+                new ResolvedDependencyNode(id, action, confidence, depth, quantity));
+    }
+
+    private static int ceilDiv(int value, int divisor)
+    {
+        return value / divisor + (value % divisor == 0 ? 0 : 1);
+    }
+
+    private static int safeMultiply(int left, int right)
+    {
+        if (left > Integer.MAX_VALUE / Math.max(1, right)) return Integer.MAX_VALUE;
+        return left * right;
+    }
+
+    private static int safeAdd(int left, int right)
+    {
+        if (left > Integer.MAX_VALUE - right) return Integer.MAX_VALUE;
+        return left + right;
+    }
+
     private static final class State
     {
         private final Map<String, ResolvedDependencyNode> nodes = new LinkedHashMap<>();
+        private final Map<Integer, Integer> requested = new HashMap<>();
+        private final Map<Integer, Integer> processed = new HashMap<>();
         private boolean cycle;
         private boolean depth;
         private boolean cost;

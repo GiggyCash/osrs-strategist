@@ -142,6 +142,10 @@ public class MinigameCatalog
         add("vale-totems", "Vale Totems", Skill.FLETCHING, 20, false,
                 RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
                 "Fletching XP, Vale offerings, research points, Fletching knife and bow string spool progression after the Vale Totems miniquest");
+        markCombat("pest-control", "barbarian-assault", "soul-wars",
+                "castle-wars", "nightmare-zone", "warriors-guild",
+                "champions-challenge", "chompy-hunting",
+                "temple-trekking", "tai-bwo-wannai-cleanup");
     }
 
     public List<MinigameDefinition> all()
@@ -163,6 +167,21 @@ public class MinigameCatalog
     {
         definitions.add(new MinigameDefinition(id, name, skill, level,
                 f2p, risk, attention, modes, rewards));
+    }
+
+    private void markCombat(String... ids)
+    {
+        java.util.Set<String> combat = new java.util.HashSet<>(
+                java.util.Arrays.asList(ids));
+        for (int i = 0; i < definitions.size(); i++)
+        {
+            MinigameDefinition value = definitions.get(i);
+            if (!combat.contains(value.getId())) continue;
+            definitions.set(i, new MinigameDefinition(value.getId(), value.getName(),
+                    value.getPrimarySkill(), value.getMinimumLevel(),
+                    value.isFreeToPlay(), value.getRiskLevel(), value.getAttention(),
+                    value.getSupportedModes(), value.getRewardFocus(), true));
+        }
     }
 
     private static EnumSet<AccountMode> allModes()

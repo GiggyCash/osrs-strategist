@@ -16,11 +16,21 @@ public final class MinigameDefinition
     private final AttentionLevel attention;
     private final Set<AccountMode> supportedModes;
     private final String rewardFocus;
+    private final boolean combatActivity;
 
     public MinigameDefinition(String id, String name, Skill primarySkill,
             int minimumLevel, boolean freeToPlay, RiskLevel riskLevel,
             AttentionLevel attention, Set<AccountMode> supportedModes,
             String rewardFocus)
+    {
+        this(id, name, primarySkill, minimumLevel, freeToPlay, riskLevel,
+                attention, supportedModes, rewardFocus, false);
+    }
+
+    public MinigameDefinition(String id, String name, Skill primarySkill,
+            int minimumLevel, boolean freeToPlay, RiskLevel riskLevel,
+            AttentionLevel attention, Set<AccountMode> supportedModes,
+            String rewardFocus, boolean combatActivity)
     {
         this.id = id;
         this.name = name;
@@ -33,6 +43,7 @@ public final class MinigameDefinition
                 ? Collections.emptySet()
                 : Collections.unmodifiableSet(EnumSet.copyOf(supportedModes));
         this.rewardFocus = rewardFocus;
+        this.combatActivity = combatActivity;
     }
 
     public String getId() { return id; }
@@ -44,5 +55,6 @@ public final class MinigameDefinition
     public AttentionLevel getAttention() { return attention; }
     public Set<AccountMode> getSupportedModes() { return supportedModes; }
     public String getRewardFocus() { return rewardFocus; }
+    public boolean isCombatActivity() { return combatActivity; }
     public boolean supports(AccountMode mode) { return supportedModes.contains(mode); }
 }
