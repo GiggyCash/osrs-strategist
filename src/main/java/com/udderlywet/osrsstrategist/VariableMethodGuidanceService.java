@@ -147,7 +147,7 @@ public class VariableMethodGuidanceService
                 "Take a Giants' Foundry commission and use the best commission-compatible alloy your account can sustain until you gain " + format(xp) + " Smithing XP toward level " + target + ".",
                 "Each commissioned sword consumes 28 bars' worth of metal. Prefer banked metal on Iron-style accounts and preserve quest or upgrade items. " + observed(items, "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
                 "Choose the best owned moulds for the commission, pour the 28-bar alloy, then work the sword through each temperature station while staying inside the target band.",
-                "Mould score, alloy, commission, and mistakes change XP per sword. Strategist can state the 28-bar input rule without inventing a sword count to the level."
+                "Mould choice, alloy, commission, and mistakes change XP per sword. Each commission uses 28 bars, but the number of swords needed is variable."
         );
     }
 
@@ -227,7 +227,7 @@ public class VariableMethodGuidanceService
                 "Track and harvest herbiboars until you gain " + format(xp) + " Hunter XP toward level " + target + ". Bank or process herbs according to the account's Herblore needs.",
                 "Bring a herb sack when owned, plus stamina or graceful-style movement support if useful. " + observed(items, "Herb sack", "Magic secateurs", "Graceful hood", "Graceful top", "Graceful legs", "Graceful boots"),
                 "Follow herbiboar tracks around Fossil Island and inspect the final burrow before beginning the next trail.",
-                "Track length and herb rewards vary. Iron accounts gain extra value from herbs, so Strategist can prefer this over higher raw Hunter XP when Herblore supply is scarce."
+                "Track length and herb rewards vary. Iron accounts may prefer this over higher raw Hunter XP when Herblore supplies are scarce."
         );
     }
 

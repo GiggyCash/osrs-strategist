@@ -565,7 +565,7 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.MODERATE, 30, 8,
                 "Dwarf Cannon", "Cannon-eligible task", "Cannonball supply");
         add(Skill.SLAYER, "slayer_bossing", 75, 99,
-                "Slayer bossing", "Use suitable boss variants of assignments when gear, supplies, experience, and risk policy support them.",
+                "Slayer bossing", "Use suitable boss variants only when gear, supplies, experience, and risk settings support them.",
                 TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
                 false, true, true, false, false, AttentionLevel.ACTIVE, 30, 10,
                 "Boss task and PvM readiness");

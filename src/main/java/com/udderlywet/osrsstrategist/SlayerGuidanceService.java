@@ -64,7 +64,7 @@ public class SlayerGuidanceService
         String action = "Get a new Slayer assignment from " + master.name
                 + ". You need " + format(xpNeeded)
                 + " Slayer XP to level " + targetLevel + ".";
-        String supplies = "Do not pre-buy a task loadout before the assignment is known. Once Strategist observes the task, it can resolve required protection, legal damage options, location, and then choose supplies around the account's actual gear and storage.";
+        String supplies = "Do not pre-buy a task loadout before the assignment is known. Get the assignment first, then check its required protection, legal damage options, location, and supplies against the account's observed gear and storage.";
         String note = master.reason + " Wilderness Slayer is intentionally excluded from automatic master selection because its risk must be explicitly enabled.";
         return new RecommendationGuidance(action, supplies, master.location, note);
     }
@@ -138,7 +138,7 @@ public class SlayerGuidanceService
         }
         return "No required task item is observed. Obtain one legal option before continuing: "
                 + choices
-                + ". For a Main, Strategist can use live price/cash data when the selected option is tradeable.";
+                + ". For a Main, compare live price and observed cash when the selected option is tradeable.";
     }
 
     private static String taskLocation(
@@ -167,7 +167,7 @@ public class SlayerGuidanceService
     private static String taskNote(AccountSnapshot account,
             SlayerTaskProfile profile)
     {
-        String base = "The remaining kill count is live task evidence. Slayer XP per kill depends on the assigned monster's Hitpoints and variants, so Strategist does not convert the milestone into a fake universal kill count.";
+        String base = "The remaining count comes from the live assignment. Slayer XP per kill varies with the assigned monster and variant, so no fixed kills-to-level estimate is shown.";
         if (profile == null) return base;
         StringBuilder note = new StringBuilder();
         if (hasText(profile.getMechanicsNote()))
@@ -175,9 +175,9 @@ public class SlayerGuidanceService
             note.append(profile.getMechanicsNote()).append(" ");
         }
         if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
-            note.append("Multitarget Magic eligibility is catalogued, but use it only when spellbook, runes, prayer, build, and the live location are verified. ");
+            note.append("Multitarget Magic is supported for this task, but use it only when spellbook, runes, prayer, build, and the live location are ready. ");
         if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
-            note.append("Cannon eligibility is unresolved for the live location; do not bring or place a cannon from this profile alone. ");
+            note.append("Cannon use is not confirmed for the live location; do not bring or place one yet. ");
         if (profile.isWildernessVariantKnown())
             note.append("A Wilderness variant exists, but the safe default remains non-Wilderness unless risk is explicitly enabled. ");
         if (AccountMode.fromTypeCode(account.getAccountTypeCode()).isIronLike()

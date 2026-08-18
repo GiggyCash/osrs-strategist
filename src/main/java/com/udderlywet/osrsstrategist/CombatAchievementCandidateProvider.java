@@ -57,7 +57,7 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
                 "Combat Achievements: " + pretty(next.name()),
                 "The next reward tier is " + gap + " point"
                         + (gap == 1 ? "" : "s")
-                        + " away. This stays an alternative until Strategist can select a specific realistic task the account is ready to complete.",
+                        + " away. Keep this as an alternative until a specific realistic task is proven ready.",
                 score,
                 RecommendationConfidence.CHECK_NEEDED,
                 null,

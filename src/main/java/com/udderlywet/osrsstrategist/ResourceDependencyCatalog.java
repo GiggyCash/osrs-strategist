@@ -60,6 +60,31 @@ public class ResourceDependencyCatalog
                         ItemID.BUCKET_SAND, "Bucket of sand", 1)),
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.SODA_ASH, "Soda ash", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.BRONZE_BAR,
+                "Smelt a bronze bar from one copper ore and one tin ore at a furnace.",
+                8, java.util.Arrays.asList(
+                DependencyRequirement.skill(Skill.SMITHING, 1),
+                DependencyRequirement.resource(new ResourceNeed(
+                        ItemID.COPPER_ORE, "Copper ore", 1)),
+                DependencyRequirement.resource(new ResourceNeed(
+                        ItemID.TIN_ORE, "Tin ore", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.GOLD_BAR,
+                "Smelt the gold ore at a furnace.", 12, java.util.Arrays.asList(
+                DependencyRequirement.skill(Skill.SMITHING, 40),
+                DependencyRequirement.resource(new ResourceNeed(
+                        ItemID.GOLD_ORE, "Gold ore", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.SODA_ASH,
+                "Cook seaweed on a range or fire to make soda ash.",
+                8, java.util.Arrays.asList(
+                DependencyRequirement.skill(Skill.COOKING, 1),
+                DependencyRequirement.resource(new ResourceNeed(
+                        ItemID.SEAWEED, "Seaweed", 1)))));
+        values.add(new ResourceDependencyDefinition(ItemID.BOW_STRING,
+                "Spin flax into bow string at a spinning wheel.",
+                10, java.util.Arrays.asList(
+                DependencyRequirement.skill(Skill.CRAFTING, 10),
+                DependencyRequirement.resource(new ResourceNeed(
+                        ItemID.FLAX, "Flax", 1)))));
         return values;
     }
 }

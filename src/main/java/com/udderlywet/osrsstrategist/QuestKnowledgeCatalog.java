@@ -21,6 +21,7 @@ public class QuestKnowledgeCatalog
         seedEarlyMembers();
         seedUnlockChains();
         seedMidgameUnlocks();
+        seedProgressionDepth();
     }
 
     private void seedFreeToPlay()
@@ -321,6 +322,213 @@ public class QuestKnowledgeCatalog
                 a("Verify a legal vampyre-damaging weapon and resolve the requested food branch"),
                 "Talk to Veliaf Hurtz in the Myreque Hideout below the Canifis pub.",
                 a("Burgh de Rott facilities", "Darkness of Hallowvale prerequisite"), skills()));
+    }
+
+    private void seedProgressionDepth()
+    {
+        add(q("Cook's Assistant", true, none(), skills(),
+                a(item("Bucket of milk", 1), item("Pot of flour", 1),
+                        item("Egg", 1)), 0, none(),
+                "Talk to the Cook in Lumbridge Castle kitchen.",
+                a("Cook-o-matic 100 access"), skills(Skill.COOKING, 300)));
+        add(q("Vampyre Slayer", true, none(), skills(),
+                a(item("Beer", 1)), 0,
+                a("Obtain the stake and verify a legal setup for Count Draynor"),
+                "Talk to Morgan in northern Draynor Village.",
+                a("Count Draynor Nightmare Zone access"),
+                skills(Skill.ATTACK, 4_825)));
+        add(q("Witch's House", false, none(), skills(),
+                a(item("Leather gloves", 1)), 0,
+                a("Verify food and a legal setup for four consecutive monster forms"),
+                "Talk to the boy by the gate west of Falador in Taverley.",
+                a("Witch's experiment Nightmare Zone access"),
+                skills(Skill.HITPOINTS, 6_325)));
+        add(q("Gertrude's Cat", false, none(), skills(),
+                a(item("Coins", 100), item("Seasoned sardine", 1)), 0, none(),
+                "Talk to Gertrude in her house west of Varrock.",
+                a("Kitten access", "Icthlarin's Little Helper prerequisite"),
+                skills(Skill.COOKING, 1_525)));
+        add(q("The Feud", false, none(), skills(Skill.THIEVING, 30),
+                a(item("Kharidian headpiece", 1),
+                        item("Fake beard", 1), item("Beer", 3)), 0,
+                a("Obtain gloves accepted for handling the quest cactus",
+                        "Verify a legal setup for the Bandit champion and Tough Guy"),
+                "Talk to Ali Morrisane in northern Al Kharid.",
+                a("Blackjack Thieving progression", "My Arm's Big Adventure prerequisite"),
+                skills(Skill.THIEVING, 15_000)));
+        add(q("Temple of Ikov", false, none(), skills(Skill.THIEVING, 42),
+                a(item("Limpwurt root", 20)), 0,
+                a("Reduce carried weight below 0 kg",
+                        "Verify a legal ranged route for the Fire Warrior of Lesarkus"),
+                "Talk to Lucien at the Flying Horse Inn in East Ardougne.",
+                a("Desert Treasure I prerequisite", "Pendant of Lucien"), skills()));
+        add(q("The Golem", false, none(),
+                skills(Skill.CRAFTING, 20, Skill.THIEVING, 25),
+                a(item("Pestle and mortar", 1), item("Papyrus", 1),
+                        item("Soft clay", 4), item("Phoenix feather", 1)), 0,
+                a("Verify a safe desert-entry and heat-management route"),
+                "Talk to the clay golem in the ruins of Uzer.",
+                a("Shadow of the Storm prerequisite"), skills()));
+        add(q("Shadow of the Storm", false, a("The Golem", "Demon Slayer"),
+                skills(Skill.CRAFTING, 30),
+                a(item("Silver bar", 1), item("Black dye", 1)), 0,
+                a("Wear three accepted black clothing pieces",
+                        "Choose the combat XP reward only after checking protected build stats",
+                        "Verify a legal setup for Agrith-Naar"),
+                "Talk to Father Reen south of Al Kharid bank.",
+                a("Darklight", "Recipe for Disaster Evil Dave prerequisite"), skills()));
+        add(q("Icthlarin's Little Helper", false, a("Gertrude's Cat"), skills(),
+                a(item("Tinderbox", 1), item("Willow logs", 1),
+                        item("Bag of salt", 1), item("Bucket of sap", 1),
+                        item("Waterskin(4)", 1), item("Linen", 1)), 0,
+                a("Verify desert heat, poison protection and a legal setup for the level 91 guardian"),
+                "Talk to the wanderer west of the Agility Pyramid.",
+                a("Sophanem access", "Contact! prerequisite"), skills()));
+        add(q("Merlin's Crystal", false, none(), skills(),
+                a(item("Tinderbox", 1), item("Bucket of wax", 1),
+                        item("Bat bones", 1)), 0,
+                a("Verify a legal setup for Sir Mordred"),
+                "Talk to King Arthur in Camelot.",
+                a("Excalibur", "Holy Grail prerequisite", "Heroes' Quest prerequisite"), skills()));
+        add(q("Holy Grail", false, a("Merlin's Crystal"), skills(Skill.ATTACK, 20),
+                none(), 0,
+                a("Verify a legal safespot or flinch setup for the Black Knight Titan",
+                        "This quest awards Defence and Prayer XP; check protected build stats first"),
+                "Talk to King Arthur in Camelot.",
+                a("King's Ransom prerequisite", "Fisher Realm access"),
+                skills(Skill.DEFENCE, 15_300, Skill.PRAYER, 11_000)));
+        add(q("Black Knights' Fortress", true, none(), skills(),
+                a(item("Iron chainbody", 1), item("Bronze med helm", 1)), 12,
+                a("Verify a safe route past level 33 Black Knights"),
+                "Talk to Sir Amik Varze in the western tower of Falador Castle.",
+                a("King's Ransom prerequisite"), skills()));
+        add(q("Murder Mystery", false, none(), skills(), none(), 0, none(),
+                "Talk to a guard around Sinclair Mansion north of Seers' Village.",
+                a("King's Ransom prerequisite"), skills(Skill.CRAFTING, 1_406)));
+        add(q("One Small Favour", false, a("Rune Mysteries", "Shilo Village"),
+                skills(Skill.AGILITY, 36, Skill.CRAFTING, 25,
+                        Skill.HERBLORE, 18, Skill.SMITHING, 30),
+                a(item("Bronze bar", 1), item("Iron bar", 1),
+                        item("Guam leaf", 2), item("Marrentill", 1),
+                        item("Harralander", 1), item("Hammer", 1),
+                        item("Pigeon cage", 5), item("Pot", 1),
+                        item("Soft clay", 1)), 0,
+                a("Resolve the cut-gem and Guthix-rest processing supplies before starting"),
+                "Talk to Yanni Salika in Shilo Village.",
+                a("King's Ransom prerequisite", "Gnome glider route to Feldip Hills"), skills()));
+        add(q("King's Ransom", false,
+                a("Black Knights' Fortress", "Holy Grail", "Murder Mystery", "One Small Favour"),
+                skills(Skill.MAGIC, 45, Skill.DEFENCE, 65),
+                a(item("Air rune", 1), item("Law rune", 1),
+                        item("Black full helm", 1), item("Black platebody", 1),
+                        item("Black platelegs", 1), item("Bronze med helm", 1),
+                        item("Iron chainbody", 1)), 0,
+                a("This quest awards Defence XP; check protected build stats first",
+                        "Knight Waves and its prayer unlocks require a separate legal combat setup"),
+                "Talk to the Gossip outside Sinclair Mansion.",
+                a("Knight Waves Training Grounds", "Piety", "Chivalry"),
+                skills(Skill.DEFENCE, 33_000)));
+        add(q("Shield of Arrav", true, none(), skills(), none(), 0,
+                a("Arrange a trusted partner or use the official OSRS SOA chat-channel"),
+                "Talk to Reldo in Varrock Castle library.",
+                a("Heroes' Quest prerequisite"), skills()));
+        add(q("Heroes' Quest", false,
+                a("Shield of Arrav", "Lost City", "Merlin's Crystal", "Dragon Slayer I"),
+                skills(Skill.COOKING, 53, Skill.FISHING, 53,
+                        Skill.HERBLORE, 25, Skill.MINING, 50), none(), 55,
+                a("Arrange a partner from the opposite Shield of Arrav gang",
+                        "Verify dragonfire protection and a legal Ice Queen setup"),
+                "Talk to Achietties outside the Heroes' Guild.",
+                a("Heroes' Guild", "Throne of Miscellania prerequisite"), skills()));
+        add(q("Throne of Miscellania", false,
+                a("Heroes' Quest", "The Fremennik Trials"), skills(),
+                a(item("Gold ring", 1)), 0,
+                a("Choose and verify one legal favour-gaining route"),
+                "Talk to King Vargas in Miscellania Castle.",
+                a("Managing Miscellania", "Royal Trouble prerequisite"), skills()));
+        add(q("Royal Trouble", false, a("Throne of Miscellania"),
+                skills(Skill.AGILITY, 40, Skill.SLAYER, 40),
+                a(item("Rope", 2), item("Plank", 1)), 0,
+                a("Verify poison protection and a legal combat setup"),
+                "Talk to Advisor Ghrim in Miscellania Castle.",
+                a("Expanded Managing Miscellania resource allocation"), skills()));
+        add(q("Haunted Mine", false, a("Priest in Peril"),
+                skills(Skill.CRAFTING, 35), none(), 0,
+                a("Verify Abandoned Mine access and a legal setup for Treus Dayth"),
+                "Talk to the Zealot by the Abandoned Mine in south-west Morytania.",
+                a("Salve amulet", "Lair of Tarn Razorlor access"),
+                skills(Skill.STRENGTH, 22_000)));
+        add(q("Darkness of Hallowvale", false, a("In Aid of the Myreque"),
+                skills(Skill.CONSTRUCTION, 5, Skill.MINING, 20,
+                        Skill.THIEVING, 22, Skill.AGILITY, 26,
+                        Skill.CRAFTING, 32, Skill.MAGIC, 33, Skill.STRENGTH, 40),
+                a(item("Plank", 2), item("Hammer", 1), item("Air rune", 1),
+                        item("Law rune", 1)), 0,
+                a("Verify a safe Meiyerditch route and protection from Vyrewatch attacks"),
+                "Talk to Veliaf Hurtz beneath the Burgh de Rott inn.",
+                a("Meiyerditch access", "A Taste of Hope prerequisite"), skills()));
+        add(q("A Taste of Hope", false, a("Darkness of Hallowvale"),
+                skills(Skill.CRAFTING, 48, Skill.AGILITY, 45,
+                        Skill.ATTACK, 40, Skill.HERBLORE, 40, Skill.SLAYER, 38),
+                a(item("Knife", 1), item("Emerald", 1), item("Chisel", 1)), 0,
+                a("Verify standard spellbook enchantment access or carry an enchant tablet",
+                        "Verify a legal setup and restoration for the Abomination"),
+                "Talk to Garth by the Theatre of Blood entrance in Ver Sinhaza.",
+                a("Drakan's medallion", "Sins of the Father prerequisite"), skills()));
+        add(q("The Lost Tribe", false, a("Goblin Diplomacy", "Rune Mysteries"),
+                skills(Skill.AGILITY, 13, Skill.THIEVING, 13, Skill.MINING, 17),
+                a(item("Light source", 1)), 0,
+                a("Use a safe light source for Lumbridge Swamp Caves"),
+                "Talk to Sigmund in Lumbridge Castle.",
+                a("Dorgeshuun mine access", "Death to the Dorgeshuun prerequisite"), skills()));
+        add(q("Death to the Dorgeshuun", false, a("The Lost Tribe"),
+                skills(Skill.AGILITY, 23, Skill.THIEVING, 23),
+                a(item("H.A.M. hood", 2), item("H.A.M. robe", 2),
+                        item("H.A.M. shirt", 2), item("H.A.M. logo", 2),
+                        item("H.A.M. cloak", 2), item("H.A.M. gloves", 2),
+                        item("H.A.M. boots", 2), item("Sapphire lantern", 1),
+                        item("Chisel", 1)), 0,
+                a("Verify a legal melee or Magic setup for Sigmund"),
+                "Talk to Mistag in the Dorgesh-Kaan mine.",
+                a("Dorgeshuun crossbow", "Dorgesh-Kaan quest progression"), skills()));
+        add(q("Big Chompy Bird Hunting", false, none(),
+                skills(Skill.FLETCHING, 5, Skill.COOKING, 30, Skill.RANGED, 30),
+                a(item("Feather", 100), item("Knife", 1), item("Chisel", 1),
+                        item("Wolf bones", 4), item("Cabbage", 1),
+                        item("Tomato", 1), item("Onion", 1),
+                        item("Potato", 1), item("Equa leaves", 1),
+                        item("Doogle leaves", 1)), 0,
+                a("Verify a legal ranged setup using the quest's ogre bow and arrows"),
+                "Talk to Rantz on the eastern coast of Feldip Hills.",
+                a("Ogre bow progression", "Zogre Flesh Eaters prerequisite"), skills()));
+        add(q("Zogre Flesh Eaters", false,
+                a("Big Chompy Bird Hunting", "Jungle Potion"),
+                skills(Skill.SMITHING, 4, Skill.HERBLORE, 8, Skill.RANGED, 30),
+                a(item("Knife", 1)), 0,
+                a("Verify disease protection and a legal brutal-arrow or Crumble Undead setup for Slash Bash"),
+                "Talk to Grish at Jiggig south of Castle Wars.",
+                a("Relicym's balm", "Ogre coffin access", "Rum Deal prerequisite"), skills()));
+        add(q("Rum Deal", false, a("Zogre Flesh Eaters", "Priest in Peril"),
+                skills(Skill.CRAFTING, 42, Skill.FARMING, 40,
+                        Skill.PRAYER, 47, Skill.SLAYER, 42), none(), 0,
+                a("Verify ranged damage or disease protection for the Evil Spirit",
+                        "Resolve the Fishing requirement or verified monster-drop bypass"),
+                "Talk to Pirate Pete on the dock north of Port Phasmatys.",
+                a("Braindeath Island", "Cabin Fever prerequisite"), skills()));
+        add(q("Pirate's Treasure", true, none(), skills(),
+                a(item("White apron", 1), item("Coins", 60),
+                        item("Banana", 10), item("Spade", 1)), 0,
+                a("Verify a safe route past the level 4 gardener"),
+                "Talk to Redbeard Frank at the northern Port Sarim dock.",
+                a("Cabin Fever prerequisite"), skills()));
+        add(q("Cabin Fever", false, a("Pirate's Treasure", "Rum Deal"),
+                skills(Skill.AGILITY, 42, Skill.CRAFTING, 45,
+                        Skill.SMITHING, 50, Skill.RANGED, 40),
+                a(item("Repair plank", 6), item("Tacks", 30),
+                        item("Swamp paste", 3), item("Hammer", 1)), 0,
+                a("Verify Port Phasmatys transport and a legal setup for attacking pirates"),
+                "Talk to Bill Teach in the Green Ghost inn at Port Phasmatys.",
+                a("Mos Le'Harmless", "Cave horror access", "Barrelchest anchor progression"), skills()));
     }
 
     private static QuestDefinition q(String name, boolean f2p,

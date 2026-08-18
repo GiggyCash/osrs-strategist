@@ -365,22 +365,29 @@ public class BetaAccountSimulationTest
                             accountType, standardLevels(stage)));
                     for (StrategyMode mode : StrategyMode.values())
                     {
-                        StrategyResult result = strategyEngine.evaluate(data,
-                                mode, stage < 40 ? SessionIntent.QUICK_20_MIN
-                                        : SessionIntent.LONG_SESSION,
-                                new PreferenceProfile());
-                        for (Recommendation recommendation
-                                : result.getRecommendations())
+                        for (SessionIntent session : new SessionIntent[]{
+                                SessionIntent.QUICK_20_MIN, SessionIntent.AFK,
+                                SessionIntent.PICK_FOR_ME,
+                                SessionIntent.LONG_SESSION})
                         {
-                            assertFalse(recommendation.getConfidence()
-                                    == RecommendationConfidence.BLOCKED);
-                            if (FallbackRecommendationFactory.isFallback(
-                                    recommendation)) continue;
-                            TrainingMethod method = requireMethod(recommendation);
-                            assertTrue(ContentAccessRules.isMethodAvailable(
-                                    method, membership));
-                            assertTrue(AccountBuildPolicy.allowsMethod(
-                                    data.getAccount(), method));
+                            StrategyResult result = strategyEngine.evaluate(data,
+                                    mode, session, new PreferenceProfile());
+                            assertFalse("DO NEXT missing for " + membership + "/"
+                                    + accountType + "/" + stage + "/" + mode + "/"
+                                    + session, result.getRecommendations().isEmpty());
+                            for (Recommendation recommendation
+                                    : result.getRecommendations())
+                            {
+                                assertFalse(recommendation.getConfidence()
+                                        == RecommendationConfidence.BLOCKED);
+                                if (FallbackRecommendationFactory.isFallback(
+                                        recommendation)) continue;
+                                TrainingMethod method = requireMethod(recommendation);
+                                assertTrue(ContentAccessRules.isMethodAvailable(
+                                        method, membership));
+                                assertTrue(AccountBuildPolicy.allowsMethod(
+                                        data.getAccount(), method));
+                            }
                         }
                     }
                 }

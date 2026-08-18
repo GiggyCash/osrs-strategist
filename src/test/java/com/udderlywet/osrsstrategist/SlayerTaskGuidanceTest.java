@@ -9,6 +9,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -47,8 +48,8 @@ public class SlayerTaskGuidanceTest
         assertTrue(guidance.getAction().contains("bursting/barraging"));
         assertTrue(guidance.getLocation().contains("Catacombs of Kourend"));
         assertTrue(guidance.getNote().contains("must be worn"));
-        assertTrue(guidance.getNote().contains("Multitarget Magic eligibility"));
-        assertTrue(guidance.getNote().contains("Cannon eligibility is unresolved"));
+        assertTrue(guidance.getNote().contains("Multitarget Magic is supported"));
+        assertTrue(guidance.getNote().contains("Cannon use is not confirmed"));
         assertTrue(guidance.getNote().contains("Wilderness variant"));
     }
 
@@ -107,7 +108,7 @@ public class SlayerTaskGuidanceTest
 
         RecommendationGuidance guidance = service.build(data, 75, 80, true);
         assertTrue(guidance.getSupplies().contains("No catalogued mandatory Slayer item"));
-        assertTrue(guidance.getNote().contains("does not convert"));
+        assertTrue(guidance.getNote().contains("no fixed kills-to-level"));
     }
 
     @Test
@@ -123,6 +124,19 @@ public class SlayerTaskGuidanceTest
                 new SlayerSnapshot("Future monster", 10, "Unknown", 0,
                         RecommendationConfidence.VERIFIED),
                 Collections.emptyList()), 80, 81, true) == null);
+    }
+
+    @Test
+    public void corpusCoversEarlyMidAndLateTasksWithoutDemonAliasCollision()
+    {
+        SlayerTaskProfileCatalog catalog = new SlayerTaskProfileCatalog();
+        assertTrue(catalog.all().size() >= 40);
+        assertEquals("cave-crawlers", catalog.profileFor("Cave crawlers").getId());
+        assertEquals("abyssal-demons", catalog.profileFor("Abyssal demons").getId());
+        assertEquals("greater-demons", catalog.profileFor("Greater demons").getId());
+        assertEquals("black-demons", catalog.profileFor("Black demons").getId());
+        assertTrue(catalog.profileFor("Harpie bug swarms").getRequiredProtection()
+                .contains("Lit bug lantern"));
     }
 
     private static StrategyDataBundle data(

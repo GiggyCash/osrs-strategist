@@ -50,10 +50,67 @@ public class ProgressionUpgradeCandidateProvider
         fireCape(context, account, items, result);
         bowfaRoute(context, account, items, result);
         anglerOutfit(context, account, items, result);
+        questRewardGear(context, account, items, result);
 
         result.sort(Comparator.comparingDouble(
                 StrategyCandidate::getScore).reversed());
         return result;
+    }
+
+    private static void questRewardGear(StrategyContext context,
+            AccountSnapshot account, ObservedItemIndex items,
+            List<StrategyCandidate> result)
+    {
+        if (account.getMembershipStatus() != MembershipStatus.P2P
+                || !ownershipCanBeJudged(account, items)
+                || context.getData().getQuests() == null) return;
+
+        addQuestRewardGear(context, items, result,
+                "salve-amulet", "Salve amulet", "Haunted Mine",
+                "Take a chisel to the crystal outcrop at the bottom of the Abandoned Mine and cut a salve shard, then use the chisel on the shard.",
+                "Bring a chisel and preserve enough inventory space for the shard and amulet.",
+                "The amulet is useful against applicable undead targets; upgrades and encounter mechanics still need their own checks.",
+                items.has("Chisel"));
+        addQuestRewardGear(context, items, result,
+                "helm-of-neitiznot", "Helm of neitiznot", "The Fremennik Isles",
+                "Return to Mawnis Burowgar on Neitiznot and verify the current replacement requirement before paying or changing setup.",
+                "The quest is complete, but replacement cost and spendable cash must be observed before calling the acquisition ready.",
+                "This is a broadly useful melee helm, not a universal best choice.", false);
+        addQuestRewardGear(context, items, result,
+                "ibans-staff", "Iban's staff", "Underground Pass",
+                "Talk to the Dark Mage in West Ardougne and verify the current replacement requirement before paying.",
+                "The quest is complete, but replacement cost, spellbook, runes and UIM setup must be checked separately.",
+                "Iban Blast can be useful progression Magic where the target and rune cost support it.", false);
+    }
+
+    private static void addQuestRewardGear(StrategyContext context,
+            ObservedItemIndex items, List<StrategyCandidate> result,
+            String suffix, String item, String quest, String action,
+            String supplies, String note, boolean ready)
+    {
+        if (context.getData().getQuests().statusOf(quest) != QuestStatus.COMPLETE
+                || items.has(item)) return;
+        String id = "upgrade:" + suffix;
+        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.getAccountMode();
+        boolean retrievalOnly = mode == AccountMode.ULTIMATE_IRONMAN
+                && items.restrictedQuantity(item) > 0;
+        String uim = mode == AccountMode.ULTIMATE_IRONMAN
+                ? " Check inventory space and retrieval/storage consequences before travelling."
+                : "";
+        String nextAction = retrievalOnly
+                ? "Verify the current death or looting-bag state, then retrieve "
+                        + item + " without destroying the active UIM setup."
+                : action;
+        result.add(new StrategyCandidate(id,
+                (retrievalOnly ? "Retrieve " : "Recover ") + item,
+                quest + " is complete and the item is not present in observed usable ownership.",
+                34.0 + preference(context, id), ready && !retrievalOnly
+                        ? RecommendationConfidence.VERIFIED
+                        : RecommendationConfidence.CHECK_NEEDED,
+                new RecommendationGuidance(nextAction, supplies + uim,
+                        "Use the quest's established replacement or reacquisition location.", note),
+                CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void dragonScimitar(StrategyContext context,
@@ -240,7 +297,7 @@ public class ProgressionUpgradeCandidateProvider
                     "Buy an Abyssal whip once Strategist has a verified live purchase price and confirms the account can afford it without violating the configured spending logic.",
                     "Live price and cash affordability still need to be resolved before this purchase can lead DO NEXT.",
                     "Grand Exchange.",
-                    "This remains a secondary option while price/affordability is unresolved rather than pretending a historical price is current."
+                    "Keep this as a secondary option until live price and affordability are observed."
             );
         }
         else if (slayer >= 85)
@@ -554,7 +611,7 @@ public class ProgressionUpgradeCandidateProvider
             reason = "Song of the Elves is complete, but no Bowfa or Enhanced crystal weapon seed is observed.";
             guidance = new RecommendationGuidance(
                     "Buy the Bow of faerdhinen or its seed route only after Strategist verifies a live price and confirms the purchase fits the account's current cash budget.",
-                    "Live purchase price is unresolved, so this cannot displace a verified actionable recommendation yet.",
+                    "Check the live purchase price before choosing this over a ready action.",
                     "Grand Exchange for a Main; Prifddinas singing bowl if buying/using an Enhanced crystal weapon seed instead.",
                     "The planner deliberately avoids hard-coding a market price."
             );

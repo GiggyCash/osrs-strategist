@@ -177,7 +177,7 @@ public class TrainingMethodDatabase
                 Arrays.asList("A suitable Forestry area and axe"), RecommendationConfidence.CHECK_NEEDED);
         add("farming_early", Skill.FARMING, 1, 99,
                 "Use confirmed Farming patches and seeds",
-                "Use only patches Strategist can prove reachable, then source seeds, compost, and tools according to account type.",
+                "Use only patches with observed access, then source seeds, compost, and tools according to account type.",
                 11, 14, 11, AttentionLevel.LOW, 10, 5,
                 Arrays.asList("Confirm reachable Farming patches", "Confirm seeds and farming tools"), RecommendationConfidence.CHECK_NEEDED);
         add("farming_herbs", Skill.FARMING, 9, 99,

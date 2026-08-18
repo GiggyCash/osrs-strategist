@@ -44,7 +44,7 @@ public class MethodGuidanceService
         {
             steps.add(new GuidanceStep(
                     "method:ready", "Method ready",
-                    "No unresolved prerequisites are known for this method.",
+                    "All known prerequisites for this method are ready.",
                     GuidanceStepState.COMPLETE));
         }
 

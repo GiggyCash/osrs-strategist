@@ -50,4 +50,24 @@ public class ObservedStateStoreLifecycleTest
 
         assertSame(second, store.getQuests());
     }
+
+    @Test
+    public void repeatedAccountChangesNeverRetainBankAdjacentTaskOrOpportunityState()
+    {
+        ObservedStateStore store = new ObservedStateStore();
+        for (int i = 0; i < 100; i++)
+        {
+            store.setGroupStorage(new GroupStorageSnapshot(true,
+                    Collections.singletonList(new ItemStackSnapshot(
+                            i + 1, "Account item", 1))));
+            store.setSlayer(new SlayerSnapshot("Task " + i, i + 1,
+                    "Master", 0, RecommendationConfidence.VERIFIED));
+            store.setRecurringOpportunities(new RecurringOpportunitySnapshot(
+                    Collections.singletonMap("ready:" + i, (long) i)));
+            store.clearForAccountChange();
+            assertNull(store.getGroupStorage());
+            assertNull(store.getSlayer());
+            assertNull(store.getRecurringOpportunities());
+        }
+    }
 }

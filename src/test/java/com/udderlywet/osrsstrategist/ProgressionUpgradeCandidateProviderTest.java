@@ -272,6 +272,77 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:fighter-torso"));
     }
 
+    @Test
+    public void hauntedMineCreatesExactSalveReacquisitionAndOwnershipSuppressesIt()
+    {
+        AccountSnapshot account = account(1, 70, 70, 70, 70, 60, 70, 80, 70, 70);
+        StrategyDataBundle missing = builder(account)
+                .quests(questsComplete("Haunted Mine"))
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(1, "Chisel", 1))))
+                .build();
+        StrategyCandidate salve = find(provider.candidates(
+                context(missing, GoalType.GEAR_TARGET, false)),
+                "upgrade:salve-amulet");
+        assertNotNull(salve);
+        assertEquals(RecommendationConfidence.VERIFIED, salve.getConfidence());
+        assertTrue(salve.getGuidance().getAction().contains("crystal outcrop"));
+
+        StrategyDataBundle owned = builder(account)
+                .quests(questsComplete("Haunted Mine"))
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(2, "Salve amulet", 1))))
+                .build();
+        assertNull(find(provider.candidates(
+                context(owned, GoalType.GEAR_TARGET, false)),
+                "upgrade:salve-amulet"));
+    }
+
+    @Test
+    public void questRewardReplacementRoutesRemainPreparationUntilCostObserved()
+    {
+        AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("The Fremennik Isles", "Underground Pass"))
+                .build();
+        List<StrategyCandidate> candidates = provider.candidates(
+                context(data, GoalType.GEAR_TARGET, false));
+        StrategyCandidate helm = find(candidates, "upgrade:helm-of-neitiznot");
+        StrategyCandidate staff = find(candidates, "upgrade:ibans-staff");
+        assertNotNull(helm);
+        assertNotNull(staff);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, helm.getConfidence());
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, staff.getConfidence());
+        assertTrue(helm.getGuidance().getSupplies().contains("inventory space"));
+        assertFalse(helm.getGuidance().getAction().contains("Grand Exchange"));
+    }
+
+    @Test
+    public void uimStoredSalvePromotesRetrievalInsteadOfDuplicateAcquisition()
+    {
+        AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
+        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.DEATH_STORAGE,
+                Collections.singletonList(new ItemStackSnapshot(
+                        1, "Salve amulet", 1)));
+        StrategyDataBundle data = builder(account)
+                .quests(questsComplete("Haunted Mine"))
+                .storage(new StorageSnapshot(states, contents)).build();
+
+        StrategyCandidate salve = find(provider.candidates(
+                context(data, GoalType.GEAR_TARGET, false)),
+                "upgrade:salve-amulet");
+        assertNotNull(salve);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                salve.getConfidence());
+        assertTrue(salve.getTitle().startsWith("Retrieve"));
+        assertTrue(salve.getGuidance().getAction().contains("retrieve"));
+    }
+
     private static StrategyDataBundle data(AccountSnapshot account)
     {
         return builder(account).build();

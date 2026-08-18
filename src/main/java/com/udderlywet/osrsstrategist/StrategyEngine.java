@@ -288,7 +288,7 @@ public class StrategyEngine
                 supplies,
                 "Use the verified route associated with this observed opportunity.",
                 setupVerified
-                        ? "The opportunity can lead because its ready state was observed and no unresolved setup remains."
+                        ? "The ready state was observed and no remaining setup checks are known."
                         : "The timer is ready, but this remains a preparation alternative until the listed setup is verified.");
         return new Recommendation(
                 id, opportunity.getTitle(),
