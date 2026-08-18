@@ -47,6 +47,21 @@ public class RecommendationPresentationCompactTest
         assertTrue(compact.endsWith("…") || compact.endsWith("."));
     }
 
+    @Test
+    public void longPlayerFacingContentStaysCompactAndKeepsHierarchy()
+    {
+        String longName = "Complete The Fremennik Isles using the verified Neitiznot travel and equipment preparation route";
+        Recommendation recommendation = recommendation(
+                longName + ". Bring the required quest items and follow the marked route.",
+                "A very long required item name, food, teleport, and quest prerequisite list that must wrap inside the RuneLite sidebar.");
+
+        String compact = RecommendationPresentation.compactText(recommendation);
+        assertTrue(compact.contains("METHOD"));
+        assertTrue(compact.contains("NEEDED"));
+        assertFalse(compact.contains("Strategist will verify"));
+        assertFalse(compact.contains("policy class"));
+    }
+
     private static Recommendation recommendation(String action, String supplies)
     {
         TrainingMethod method = new TrainingMethod(

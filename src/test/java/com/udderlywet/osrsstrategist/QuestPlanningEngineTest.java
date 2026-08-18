@@ -127,6 +127,44 @@ public class QuestPlanningEngineTest
         assertTrue(target.getGuidance().getAction().contains("The Grand Tree"));
     }
 
+    @Test
+    public void practicalBetaCorpusCoversMajorEarlyAndMidgameChains()
+    {
+        QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
+        assertTrue(catalog.all().size() >= 38);
+        assertTrue(catalog.definitionFor("Lunar Diplomacy").getPrerequisites()
+                .contains("Shilo Village"));
+        assertTrue(catalog.definitionFor("Regicide").getPrerequisites()
+                .contains("Underground Pass"));
+        assertTrue(catalog.definitionFor("My Arm's Big Adventure").getPrerequisites()
+                .contains("Eadgar's Ruse"));
+        assertTrue(catalog.definitionFor("In Aid of the Myreque").getPrerequisites()
+                .contains("In Search of the Myreque"));
+    }
+
+    @Test
+    public void deepPlagueChainPromotesImmediateEncodedQuest()
+    {
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("Regicide", QuestStatus.NOT_STARTED);
+        quests.put("Underground Pass", QuestStatus.NOT_STARTED);
+        quests.put("Biohazard", QuestStatus.COMPLETE);
+        quests.put("Plague City", QuestStatus.COMPLETE);
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P, 70, 70, 70))
+                .quests(new QuestSnapshot(quests))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        List<StrategyCandidate> candidates = provider.candidates(context(data));
+        StrategyCandidate prerequisite = candidates.stream()
+                .filter(value -> value.getTitle().contains("Underground Pass"))
+                .findFirst().orElseThrow(AssertionError::new);
+        StrategyCandidate target = candidates.stream()
+                .filter(value -> value.getTitle().contains("Regicide"))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertTrue(prerequisite.getScore() > target.getScore());
+        assertTrue(target.getGuidance().getAction().contains("Underground Pass"));
+    }
+
     private static StrategyCandidate only(StrategyDataBundle data)
     {
         List<StrategyCandidate> candidates = new QuestCandidateProvider(

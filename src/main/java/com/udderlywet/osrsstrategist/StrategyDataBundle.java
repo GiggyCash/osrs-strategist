@@ -26,6 +26,7 @@ public final class StrategyDataBundle
     private final MinigameSnapshot minigames;
     private final PvmSnapshot pvm;
     private final RecurringOpportunitySnapshot recurringOpportunities;
+    private final CombatEvidenceSnapshot combatEvidence;
 
     public StrategyDataBundle(
             AccountSnapshot account,
@@ -42,7 +43,8 @@ public final class StrategyDataBundle
     {
         this(account, inventory, bank, equipment, quests, diaries, clue,
                 combatAchievements, collectionLog, economy, capabilities,
-                null, null, null, null, null, null, null, null, null, null, null, null);
+                null, null, null, null, null, null, null, null, null, null, null,
+                null, null);
     }
 
     private StrategyDataBundle(
@@ -68,7 +70,8 @@ public final class StrategyDataBundle
             SailingSnapshot sailing,
             MinigameSnapshot minigames,
             PvmSnapshot pvm,
-            RecurringOpportunitySnapshot recurringOpportunities)
+            RecurringOpportunitySnapshot recurringOpportunities,
+            CombatEvidenceSnapshot combatEvidence)
     {
         this.account = account;
         this.inventory = inventory;
@@ -93,6 +96,7 @@ public final class StrategyDataBundle
         this.minigames = minigames;
         this.pvm = pvm;
         this.recurringOpportunities = recurringOpportunities;
+        this.combatEvidence = combatEvidence;
     }
 
     public static Builder builder(AccountSnapshot account) { return new Builder(account); }
@@ -120,6 +124,7 @@ public final class StrategyDataBundle
     public MinigameSnapshot getMinigames() { return minigames; }
     public PvmSnapshot getPvm() { return pvm; }
     public RecurringOpportunitySnapshot getRecurringOpportunities() { return recurringOpportunities; }
+    public CombatEvidenceSnapshot getCombatEvidence() { return combatEvidence; }
 
     public static final class Builder
     {
@@ -146,6 +151,7 @@ public final class StrategyDataBundle
         private MinigameSnapshot minigames;
         private PvmSnapshot pvm;
         private RecurringOpportunitySnapshot recurringOpportunities;
+        private CombatEvidenceSnapshot combatEvidence;
 
         private Builder(AccountSnapshot account) { this.account = account; }
         public Builder inventory(InventorySnapshot v) { inventory = v; return this; }
@@ -170,6 +176,7 @@ public final class StrategyDataBundle
         public Builder minigames(MinigameSnapshot v) { minigames = v; return this; }
         public Builder pvm(PvmSnapshot v) { pvm = v; return this; }
         public Builder recurringOpportunities(RecurringOpportunitySnapshot v) { recurringOpportunities = v; return this; }
+        public Builder combatEvidence(CombatEvidenceSnapshot v) { combatEvidence = v; return this; }
 
         public StrategyDataBundle build()
         {
@@ -178,7 +185,7 @@ public final class StrategyDataBundle
                     combatAchievements, collectionLog, economy, capabilities,
                     accessMemory, farmingRuns, storage, transport, poh,
                     groupStorage, slayer, farming, sailing, minigames, pvm,
-                    recurringOpportunities);
+                    recurringOpportunities, combatEvidence);
         }
     }
 }

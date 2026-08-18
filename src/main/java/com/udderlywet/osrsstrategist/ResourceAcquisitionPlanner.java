@@ -11,17 +11,25 @@ import javax.inject.Singleton;
 public class ResourceAcquisitionPlanner
 {
     private final ResourceSourceCatalog sourceCatalog;
+    private final ResourceDependencyCatalog dependencyCatalog;
 
     @Inject
-    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog)
+    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog,
+            ResourceDependencyCatalog dependencyCatalog)
     {
         this.sourceCatalog = sourceCatalog;
+        this.dependencyCatalog = dependencyCatalog;
+    }
+
+    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog)
+    {
+        this(sourceCatalog, new ResourceDependencyCatalog());
     }
 
     /** Compatibility constructor for existing focused tests. */
     public ResourceAcquisitionPlanner()
     {
-        this(new ResourceSourceCatalog());
+        this(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
     }
 
     public ResourceAcquisitionPlan plan(
@@ -161,6 +169,14 @@ public class ResourceAcquisitionPlanner
                         route, RecommendationConfidence.CHECK_NEEDED));
         }
         return new ResourceAcquisitionChain(need, shortfall, steps);
+    }
+
+    /** Resolves acquisition prerequisites recursively with bounded, cycle-safe traversal. */
+    public ResourceDependencyResolution resolveDependencies(
+            StrategyContext context, ResourceNeed need)
+    {
+        return new ResourceDependencyResolver(this, dependencyCatalog)
+                .resolve(context, need);
     }
 
     private String sourceSuggestions(

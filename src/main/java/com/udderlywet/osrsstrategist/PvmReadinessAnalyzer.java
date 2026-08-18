@@ -18,11 +18,19 @@ import net.runelite.api.Skill;
 public class PvmReadinessAnalyzer
 {
     private final PvmActivityCatalog catalog;
+    private final PvmEvidenceProfileCatalog evidenceProfiles;
 
-    @Inject
     public PvmReadinessAnalyzer(PvmActivityCatalog catalog)
     {
+        this(catalog, new PvmEvidenceProfileCatalog());
+    }
+
+    @Inject
+    public PvmReadinessAnalyzer(PvmActivityCatalog catalog,
+            PvmEvidenceProfileCatalog evidenceProfiles)
+    {
         this.catalog = catalog;
+        this.evidenceProfiles = evidenceProfiles;
     }
 
     public PvmSnapshot analyze(
@@ -59,7 +67,12 @@ public class PvmReadinessAnalyzer
             }
             ReadinessFloor floor = floorFor(activity);
             List<String> missing = new ArrayList<>();
-            if (prior != null) missing.addAll(prior.getMissingRequirements());
+            PvmEvidenceProfile exact = evidenceProfiles == null ? null
+                    : evidenceProfiles.forActivity(activity.getId());
+            // Exact profiles are recomputed from current carried state so a
+            // preparation -> ready transition cannot retain stale failures.
+            if (exact == null && prior != null)
+                missing.addAll(prior.getMissingRequirements());
 
             requireLevel(account, Skill.ATTACK, floor.attack, missing);
             requireLevel(account, Skill.STRENGTH, floor.strength, missing);
@@ -76,17 +89,23 @@ public class PvmReadinessAnalyzer
                 missing.add("Quest/access: " + floor.requiredQuest);
             }
 
-            if (!hasCombatWeapon(equipment, floor.preferredStyle))
+            String requiredStyle = exact == null ? floor.preferredStyle
+                    : exact.getWeaponStyle();
+            if (!hasCombatWeapon(equipment, requiredStyle))
                 addMissing(missing, "Equip a usable " + floor.preferredStyle + " combat weapon/loadout");
-            else
+            else if (exact == null)
                 addMissing(missing, "Verify the observed weapon is in the weapon slot and is suitable for this encounter");
 
-            if (floor.requiresSupplies && carriedFoodQuantity(inventory) < 5)
+            int requiredFood = exact == null ? (floor.requiresSupplies ? 5 : 0)
+                    : exact.getMinimumFood();
+            if (carriedFoodQuantity(inventory) < requiredFood)
                 addMissing(missing, "Carry more than a token food item and verify an encounter-appropriate healing supply");
-            if (floor.prayer >= 43 && carriedRestorationQuantity(inventory) < 1)
+            int requiredRestore = exact == null ? (floor.prayer >= 43 ? 1 : 0)
+                    : exact.getMinimumRestoration();
+            if (carriedRestorationQuantity(inventory) < requiredRestore)
                 addMissing(missing, "Carry a recognised prayer-restoration item and verify its usable doses");
             if (usesRanged(floor.preferredStyle))
-                addMissing(missing, carriedAmmoQuantity(inventory) > 0
+                addMissing(missing, carriedAmmoQuantity(inventory, equipment) > 0
                         ? "Verify the carried ammunition or charges are compatible with the equipped ranged weapon"
                         : "Carry and verify ammunition or charges compatible with the equipped ranged weapon");
             if (usesMagic(floor.preferredStyle))
@@ -94,15 +113,22 @@ public class PvmReadinessAnalyzer
                         ? "Verify the observed inventory/rune-pouch runes satisfy the selected spell and current spellbook"
                         : "Carry the required rune combination and verify the selected spell and current spellbook");
 
-            addMissing(missing, "Verify encounter-specific protection items, prayers, charges, and access requirements");
+            if (exact == null)
+                addMissing(missing, "Verify encounter-specific protection items, prayers, charges, and access requirements");
+            else
+                for (String accessItem : exact.getAccessItems())
+                    if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
+                        addMissing(missing, "Carry " + accessItem + " for encounter access");
 
             if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
                 addMissing(missing, "Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
 
+            boolean fullyVerified = exact != null && missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
                     activity.getId(),
-                    false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    fullyVerified,
+                    fullyVerified ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
                     missing
             ));
         }
@@ -233,9 +259,19 @@ public class PvmReadinessAnalyzer
         return carriedQuantity(inventory, "prayer potion", "super restore");
     }
 
-    private static int carriedAmmoQuantity(InventorySnapshot inventory)
+    private static int carriedAmmoQuantity(InventorySnapshot inventory,
+            EquipmentSnapshot equipment)
     {
-        return carriedQuantity(inventory, "arrow", "bolt", "dart", "javelin", "chinchompa");
+        int quantity = carriedQuantity(inventory, "arrow", "bolt", "dart",
+                "javelin", "chinchompa");
+        if (equipment != null)
+            for (ItemStackSnapshot item : equipment.getEquippedItems())
+                if (item.getSlotIndex() == EquipmentInventorySlot.AMMO.getSlotIdx()
+                        && containsAny(item.getName() == null ? ""
+                        : item.getName().toLowerCase(Locale.ROOT),
+                        "arrow", "bolt", "dart", "javelin"))
+                    quantity += item.getQuantity();
+        return quantity;
     }
 
     private static int carriedRuneQuantity(InventorySnapshot inventory)

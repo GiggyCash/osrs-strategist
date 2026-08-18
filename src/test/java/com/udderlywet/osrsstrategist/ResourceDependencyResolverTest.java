@@ -1,0 +1,196 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ResourceDependencyResolverTest
+{
+    @Test
+    public void simpleAndMultiHopIronChainsResolveInPrerequisiteOrder()
+    {
+        ResourceDependencyResolution simple = resolver().resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(ItemID.STEEL_BAR, "Steel bar", 1));
+        assertTrue(ids(simple).contains("resource:" + ItemID.IRON_ORE));
+        assertTrue(ids(simple).contains("resource:" + ItemID.COAL));
+
+        ResourceDependencyResolution multi = resolver().resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 4));
+        assertTrue(ids(multi).contains("quest:dwarf-cannon"));
+        assertTrue(ids(multi).contains("resource:" + ItemID.STEEL_BAR));
+        assertTrue(ids(multi).contains("resource:" + ItemID.IRON_ORE));
+        assertEquals("quest:dwarf-cannon", multi.nextAction().getId());
+    }
+
+    @Test
+    public void branchingAndRepeatedDependenciesAreDeduplicated()
+    {
+        int root = 900001, leaf = 900002;
+        ResourceDependencyDefinition definition = new ResourceDependencyDefinition(
+                root, "Make root.", 1, Arrays.asList(
+                DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
+                DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
+                DependencyRequirement.gear("Hammer")));
+        ResourceDependencyResolution result = resolver(definition).resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(root, "Root", 1));
+        assertEquals(1, count(ids(result), "resource:" + leaf));
+        assertTrue(ids(result).contains("gear:hammer"));
+    }
+
+    @Test
+    public void cyclesAndDepthLimitsTerminateDeterministically()
+    {
+        int a = 910001, b = 910002;
+        ResourceDependencyDefinition first = definition(a, b, 1);
+        ResourceDependencyDefinition second = definition(b, a, 1);
+        ResourceDependencyResolution cycle = resolver(first, second).resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(a, "A", 1));
+        assertTrue(cycle.isCycleDetected());
+        assertTrue(cycle.getNodes().size() <= 4);
+
+        ResourceDependencyResolution depth = new ResourceDependencyResolver(
+                new ResourceAcquisitionPlanner(),
+                new ResourceDependencyCatalog(Arrays.asList(first, second)), 1)
+                .resolve(context(1, false, null, null, null),
+                        new ResourceNeed(a, "A", 1));
+        assertTrue(depth.isDepthLimited() || depth.isCycleDetected());
+    }
+
+    @Test
+    public void mainStopsAtPurchaseWhileUnknownIronLeafStaysCheckNeeded()
+    {
+        ResourceNeed need = new ResourceNeed(920001, "Uncatalogued", 1);
+        ResourceDependencyResolution main = resolver().resolve(
+                context(0, false, null, null, null), need);
+        assertEquals(1, main.getNodes().size());
+        assertTrue(main.nextAction().getAction().contains("GE"));
+
+        ResourceDependencyResolution iron = resolver().resolve(
+                context(1, false, null, null, null), need);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                iron.nextAction().getConfidence());
+        assertFalse(iron.nextAction().getAction().trim().isEmpty());
+    }
+
+    @Test
+    public void groupStorageCountsOnlyWhenEnabledAndObserved()
+    {
+        int id = 930001;
+        GroupStorageSnapshot observed = new GroupStorageSnapshot(true,
+                Collections.singletonList(new ItemStackSnapshot(id, "Part", 2)));
+        ResourceNeed need = new ResourceNeed(id, "Part", 2);
+        ResourceDependencyResolution usable = resolver().resolve(
+                context(4, true, null, observed, null), need);
+        assertEquals(RecommendationConfidence.VERIFIED,
+                usable.getNodes().get(0).getConfidence());
+
+        ResourceDependencyResolution disabled = resolver().resolve(
+                context(4, false, null, observed, null), need);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                disabled.nextAction().getConfidence());
+        ResourceDependencyResolution unseen = resolver().resolve(
+                context(4, true, null, GroupStorageSnapshot.unknown(), null), need);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                unseen.nextAction().getConfidence());
+    }
+
+    @Test
+    public void uimIgnoresBankAndSurfacesRetrievalOnlyStorage()
+    {
+        int id = 940001;
+        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
+                new ItemStackSnapshot(id, "UIM part", 2)), 1L);
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
+        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.LOOTING_BAG, Collections.singletonList(
+                new ItemStackSnapshot(id, "UIM part", 2)));
+        StorageSnapshot storage = new StorageSnapshot(states, contents);
+
+        ResourceDependencyResolution result = resolver().resolve(
+                context(2, false, bank, null, storage),
+                new ResourceNeed(id, "UIM part", 2));
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                result.nextAction().getConfidence());
+        assertTrue(result.nextAction().getAction().contains("retrieval"));
+    }
+
+    @Test
+    public void expensiveDetourIsRejectedForShortSession()
+    {
+        int root = 950001;
+        ResourceDependencyDefinition expensive = new ResourceDependencyDefinition(
+                root, "Long detour", 90, Collections.emptyList());
+        ResourceDependencyResolution result = resolver(expensive).resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(root, "Expensive", 1));
+        assertTrue(result.isOpportunityCostRejected());
+        assertTrue(result.nextAction().getAction().contains("too much"));
+    }
+
+    private static ResourceDependencyDefinition definition(int item, int child,
+            int cost)
+    {
+        return new ResourceDependencyDefinition(item, "Make " + item, cost,
+                Collections.singletonList(DependencyRequirement.resource(
+                        new ResourceNeed(child, "Child", 1))));
+    }
+
+    private static ResourceDependencyResolver resolver(
+            ResourceDependencyDefinition... definitions)
+    {
+        ResourceDependencyCatalog catalog = definitions.length == 0
+                ? new ResourceDependencyCatalog()
+                : new ResourceDependencyCatalog(Arrays.asList(definitions));
+        return new ResourceDependencyResolver(new ResourceAcquisitionPlanner(),
+                catalog, 8);
+    }
+
+    private static StrategyContext context(int type, boolean groupEnabled,
+            BankSnapshot bank, GroupStorageSnapshot group,
+            StorageSnapshot storage)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values()) { levels.put(skill, 50); xp.put(skill, 0); }
+        AccountSnapshot account = new AccountSnapshot("Graph", type,
+                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
+                1, 1000, 0L, levels, xp);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .bank(bank).groupStorage(group).storage(storage)
+                .quests(new QuestSnapshot(Collections.emptyMap())).build();
+        return new StrategyContext(data, StrategyMode.BALANCED,
+                SessionIntent.QUICK_20_MIN, QuestTolerance.NORMAL, GoalType.MAX,
+                groupEnabled, false, false, new PreferenceProfile());
+    }
+
+    private static List<String> ids(ResourceDependencyResolution result)
+    {
+        java.util.ArrayList<String> ids = new java.util.ArrayList<>();
+        for (ResolvedDependencyNode node : result.getNodes()) ids.add(node.getId());
+        return ids;
+    }
+
+    private static int count(List<String> values, String target)
+    {
+        int count = 0;
+        for (String value : values) if (target.equals(value)) count++;
+        return count;
+    }
+}

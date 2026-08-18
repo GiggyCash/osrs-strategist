@@ -4,6 +4,7 @@ import java.util.List;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -43,5 +44,17 @@ public class PvmActivityCatalogTest
         assertTrue(catalog.hasCuratedReadinessProfile("pvm:vorkath"));
         assertTrue(catalog.hasCuratedReadinessProfile("pvm:tombs_of_amascut"));
         assertFalse(catalog.hasCuratedReadinessProfile("pvm:callisto"));
+    }
+
+    @Test
+    public void fullEvidenceSubsetIsSmallAndExplicit()
+    {
+        PvmEvidenceProfileCatalog profiles = new PvmEvidenceProfileCatalog();
+        assertEquals(3, profiles.size());
+        assertNotNull(profiles.forActivity("pvm:obor"));
+        assertNotNull(profiles.forActivity("pvm:bryophyta"));
+        assertNotNull(profiles.forActivity("pvm:scurrius"));
+        assertTrue(profiles.forActivity("pvm:obor").getAccessItems()
+                .contains("Giant key"));
     }
 }
