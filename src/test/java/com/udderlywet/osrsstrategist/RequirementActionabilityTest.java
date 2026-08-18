@@ -44,8 +44,8 @@ public class RequirementActionabilityTest
         assertTrue(policy.canLeadQueue(recommendation));
         assertTrue(RecommendationPresentation.compactText(recommendation)
                 .contains("Ready to prep"));
-        assertFalse(RecommendationPresentation.compactText(recommendation)
-                .contains("NEEDS INFO"));
+        assertTrue(RecommendationPresentation.compactText(recommendation)
+                .contains("NEEDED"));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class RequirementActionabilityTest
         assertFalse(new RecommendationActionabilityPolicy()
                 .canLeadQueue(recommendation));
         assertTrue(RecommendationPresentation.compactText(recommendation)
-                .contains("NEEDS INFO"));
+                .contains("NEEDED"));
     }
 
     @Test

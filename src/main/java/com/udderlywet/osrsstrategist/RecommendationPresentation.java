@@ -36,7 +36,7 @@ public final class RecommendationPresentation
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>NEEDS INFO</b><br>");
+            text.append("<b>NEEDED</b><br>");
             int shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
@@ -200,7 +200,7 @@ public final class RecommendationPresentation
         if (hasText(guidance.getSupplies()))
         {
             appendBreak(text, 2);
-            text.append("<b>SUPPLIES</b><br>")
+            text.append("<b>NEEDED</b><br>")
                     .append(escape(includeLocationAndNote
                             ? guidance.getSupplies()
                             : compactSentence(guidance.getSupplies(), COMPACT_SUPPLIES_CHARS)));
@@ -284,7 +284,7 @@ public final class RecommendationPresentation
             Recommendation recommendation,
             TrainingMethod method)
     {
-        text.append("<b>BEST METHOD</b><br>")
+        text.append("<b>METHOD</b><br>")
                 .append(escape(method.getName()));
         appendBreak(text, 1);
         text.append("<i>")

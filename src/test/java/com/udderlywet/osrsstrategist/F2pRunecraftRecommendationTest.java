@@ -117,7 +117,7 @@ public class F2pRunecraftRecommendationTest
 
         String compact = RecommendationPresentation.compactHtml(recommendation);
         assertTrue(compact.contains("Craft air runes"));
-        assertTrue(compact.contains("NEEDS INFO"));
+        assertTrue(compact.contains("NEEDED"));
         assertTrue(compact.contains("Rune essence"));
         assertTrue(compact.contains("Air talisman or air tiara"));
     }

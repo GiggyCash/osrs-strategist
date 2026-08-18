@@ -21,6 +21,7 @@ public class StrategyDataAssembler
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
     private final ObservedStateStore observedStateStore;
+    private String lastAccountIdentity;
 
     @Inject
     public StrategyDataAssembler(
@@ -71,10 +72,20 @@ public class StrategyDataAssembler
                 farmingAccessEvaluator, observedStateStore);
     }
 
-    public StrategyDataBundle read()
+    public synchronized StrategyDataBundle read()
     {
         AccountSnapshot account = accountReader.read();
         if (account == null) return null;
+
+        String identity = accountIdentity(account);
+        if (lastAccountIdentity != null && !lastAccountIdentity.equals(identity))
+        {
+            // RuneScapeProfileChanged is the normal signal, but comparing the
+            // observed character is a second fail-closed boundary for fast
+            // account switches and unusual event ordering.
+            clearAccountScopedCaches();
+        }
+        lastAccountIdentity = identity;
 
         InventorySnapshot inventory = itemStateReader.readInventory();
         BankSnapshot bank = itemStateReader.readBank();
@@ -154,10 +165,26 @@ public class StrategyDataAssembler
                 .build();
     }
 
-    public void clearForAccountChange()
+    public synchronized void clearForAccountChange()
+    {
+        lastAccountIdentity = null;
+        clearAccountScopedCaches();
+    }
+
+    private void clearAccountScopedCaches()
     {
         itemStateReader.clearAccountCaches();
         if (slayerStateReader != null) slayerStateReader.clear();
+        accessMemoryStore.clearCacheForAccountChange();
+        farmingRunStateStore.clearCacheForAccountChange();
         observedStateStore.clearForAccountChange();
+    }
+
+    static String accountIdentity(AccountSnapshot account)
+    {
+        if (account == null) return "";
+        String name = account.getPlayerName() == null ? ""
+                : account.getPlayerName().trim().toLowerCase(java.util.Locale.ROOT);
+        return name + "|" + account.getAccountTypeCode();
     }
 }

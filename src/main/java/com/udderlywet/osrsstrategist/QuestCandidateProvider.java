@@ -99,7 +99,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (status == QuestStatus.IN_PROGRESS)
             {
                 score += 12.0;
-                reason = "This quest is already in progress. It remains an alternative until Strategist can verify the remaining step and requirements.";
+                reason = "This quest is already in progress. It remains an alternative until the remaining step and requirements are observed.";
             }
             else
             {

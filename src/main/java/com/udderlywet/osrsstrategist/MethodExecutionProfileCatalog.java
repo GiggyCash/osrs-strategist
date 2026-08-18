@@ -158,7 +158,7 @@ public class MethodExecutionProfileCatalog
         add(pm("fletching_broad_arrows", "broad arrow made", "broad arrows made",
                 rules(fixedRule("Headless arrow", 1.0),
                         fixedRule("Broad arrowhead", 1.0)),
-                "Requires the broader Fletching Slayer unlock before Strategist should select this route.",
+                "Requires the broader Fletching Slayer unlock before this route can be selected.",
                 "broad_arrows"));
         add(pm("fletching_bolts", "bolt fletched", "bolts fletched",
                 rules(rule(MethodExecutionProfile.InputMode.UNFINISHED_BOLT, null, 1.0),
@@ -235,7 +235,7 @@ public class MethodExecutionProfileCatalog
                 "A fire-rune staff replaces the five fire runes per cast. The item being alched must still be selected from a verified safe alch list before execution.",
                 "high_level_alchemy", "high_alchemy"));
         add(p("magic_f2p_curse", "curse cast", "curse casts", none(),
-                "Rune requirements depend on the exact curse spell selected; Strategist will not invent a rune quantity until that spell is resolved.",
+                "Rune requirements depend on the exact curse spell selected; no rune quantity is shown until that spell is resolved.",
                 "curse"));
 
         add(new MethodExecutionProfile(

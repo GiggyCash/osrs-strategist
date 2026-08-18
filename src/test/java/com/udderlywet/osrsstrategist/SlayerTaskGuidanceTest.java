@@ -14,6 +14,20 @@ import static org.junit.Assert.assertTrue;
 
 public class SlayerTaskGuidanceTest
 {
+    @Test
+    public void expandedCorpusCoversProtectionAccessAndIronObjectives()
+    {
+        SlayerTaskProfileCatalog catalog = new SlayerTaskProfileCatalog();
+        assertTrue(catalog.all().size() >= 25);
+        assertTrue(catalog.profileFor("Cave horrors").getRequiredProtection()
+                .contains("Witchwood icon"));
+        assertTrue(catalog.profileFor("Cave horrors").getIronObjectives()
+                .contains("Black mask"));
+        assertTrue(catalog.profileFor("Skeletal wyverns").getMechanicsNote()
+                .contains("does not replace"));
+        assertTrue(catalog.profileFor("Drakes").getPreferredLocation()
+                .contains("Mount Karuulm"));
+    }
     private final SlayerGuidanceService service = new SlayerGuidanceService();
 
     @Test

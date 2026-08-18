@@ -84,7 +84,7 @@ public class ResourceDetourCandidateProvider
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
                         "Play Tempoross for a Fishing session and claim the earned reward-pool permits. Keep useful plank/log rewards instead of treating the activity as disposable Fishing XP.",
-                        "Only " + planks + " usable planks are currently observed. Bring the normal Tempoross tools/supplies for the chosen strategy; reward permits and plank drops are variable, so Strategist will not invent an exact number of games required to solve the shortage.",
+                        "Only " + planks + " usable planks are currently observed. Bring the normal Tempoross tools/supplies for the chosen strategy; reward permits and plank drops are variable, so there is no exact number of games for this shortage.",
                         "Tempoross at the Ruins of Unkah. Claim rewards from the reward pool after the games when you are ready to bank the resources.",
                         "This is a cross-skill supply detour, not a bulk Construction plank method. It should win only while the Fishing XP is useful too; direct log/sawmill sourcing becomes better when the account needs large deterministic plank volumes."
                 );

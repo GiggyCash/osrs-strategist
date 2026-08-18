@@ -87,7 +87,7 @@ public class CombatGuidanceService
         if (build != RestrictedBuildType.STANDARD)
         {
             note += " Protected build: " + AccountBuildPolicy.label(account)
-                    + ". Strategist will not intentionally train a blocked combat stat.";
+                    + ". A blocked combat stat will not be trained intentionally.";
         }
 
         return new RecommendationGuidance(
@@ -288,7 +288,7 @@ public class CombatGuidanceService
     {
         if (skill == Skill.RANGED)
         {
-            return "Use ammunition that matches the observed weapon and your account mode. Strategist will only give an exact ammo purchase/source count after the selected weapon's ammo consumption is modeled.";
+            return "Use ammunition that matches the observed weapon and account mode. An exact purchase/source count requires modeled consumption for the selected weapon.";
         }
         if (build == RestrictedBuildType.DEFENCE_PURE)
         {

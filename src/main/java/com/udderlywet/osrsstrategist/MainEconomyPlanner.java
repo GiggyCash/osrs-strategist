@@ -49,7 +49,7 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, RecommendationConfidence.CHECK_NEEDED,
-                    "Current verified coins do not cover the purchase. Strategist must compare money makers, banked materials, and only safe/protected-item-aware sale options before spending.");
+                    "Current verified coins do not cover the purchase. Compare money makers, banked materials, and only safe protected-item-aware sale options before spending.");
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() > 0
@@ -65,7 +65,7 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     cost, coins, RecommendationConfidence.CHECK_NEEDED,
-                    "The purchase is affordable, but Strategist still needs a verified self-source/time comparison.");
+                    "The purchase is affordable, but a verified self-source/time comparison is still needed.");
         }
 
         return decision(MainPurchaseChoice.BUY,

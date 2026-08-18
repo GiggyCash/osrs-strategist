@@ -90,6 +90,43 @@ public class QuestPlanningEngineTest
                 .contains("Verify ownership"));
     }
 
+    @Test
+    public void corpusCoversCommonTransportEquipmentAndCombatUnlockChains()
+    {
+        QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
+        assertTrue(catalog.all().size() >= 20);
+        assertTrue(catalog.definitionFor("Animal Magnetism").getUnlocks()
+                .contains("Ava's devices"));
+        assertTrue(catalog.definitionFor("Fairy Tale II - Cure a Queen").getUnlocks()
+                .contains("Fairy ring transportation"));
+        assertTrue(catalog.definitionFor("Desert Treasure I").getPrerequisites()
+                .contains("Troll Stronghold"));
+        assertTrue(catalog.definitionFor("Monkey Madness I").getPrerequisites()
+                .contains("The Grand Tree"));
+    }
+
+    @Test
+    public void targetQuestPromotesItsMissingEncodedPrerequisite()
+    {
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("Monkey Madness I", QuestStatus.NOT_STARTED);
+        quests.put("The Grand Tree", QuestStatus.NOT_STARTED);
+        quests.put("Tree Gnome Village", QuestStatus.COMPLETE);
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P, 70, 70, 70))
+                .quests(new QuestSnapshot(quests))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+
+        StrategyCandidate prerequisite = provider.candidates(context(data)).stream()
+                .filter(candidate -> candidate.getTitle().contains("The Grand Tree"))
+                .findFirst().orElseThrow(AssertionError::new);
+        StrategyCandidate target = provider.candidates(context(data)).stream()
+                .filter(candidate -> candidate.getTitle().contains("Monkey Madness I"))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertTrue(prerequisite.getScore() > target.getScore());
+        assertTrue(target.getGuidance().getAction().contains("The Grand Tree"));
+    }
+
     private static StrategyCandidate only(StrategyDataBundle data)
     {
         List<StrategyCandidate> candidates = new QuestCandidateProvider(

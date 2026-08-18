@@ -78,6 +78,44 @@ public class ExpandedOpportunityEngineTest
         assertTrue(verified.getPreparation().isEmpty());
     }
 
+    @Test
+    public void birdhouseTimerNeedsQuestLevelsAndCarriedSetup()
+    {
+        Map<String, Long> timers = Collections.singletonMap(
+                "opportunity:birdhouse", 0L);
+        StrategyDataBundle unresolved = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .quests(new QuestSnapshot(Collections.emptyMap())).build();
+        Opportunity missing = new OpportunityEngine().evaluate(unresolved).get(0);
+        assertTrue(!missing.isSetupVerified());
+        assertTrue(missing.getPreparation().contains(
+                "Complete Bone Voyage for Fossil Island access"));
+
+        StrategyDataBundle treeSeeds = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .quests(new QuestSnapshot(Collections.singletonMap(
+                        "Bone Voyage", QuestStatus.COMPLETE)))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        item("Hammer"), item("Chisel"),
+                        new ItemStackSnapshot(1, "Clockwork", 4),
+                        new ItemStackSnapshot(2, "Logs", 4),
+                        new ItemStackSnapshot(ItemID.ACORN, "Acorn", 40)))).build();
+        assertTrue(!new OpportunityEngine().evaluate(treeSeeds).get(0)
+                .isSetupVerified());
+
+        StrategyDataBundle ready = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .quests(new QuestSnapshot(Collections.singletonMap(
+                        "Bone Voyage", QuestStatus.COMPLETE)))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        item("Hammer"), item("Chisel"),
+                        new ItemStackSnapshot(1, "Clockwork", 4),
+                        new ItemStackSnapshot(2, "Logs", 4),
+                        new ItemStackSnapshot(3, "Guam seed", 40)))).build();
+        assertTrue(new OpportunityEngine().evaluate(ready).get(0).isSetupVerified());
+    }
+
     private static ItemStackSnapshot item(String name)
     {
         return new ItemStackSnapshot(1, name, 1);
