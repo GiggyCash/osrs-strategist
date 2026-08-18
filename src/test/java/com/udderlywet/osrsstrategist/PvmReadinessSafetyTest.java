@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import net.runelite.api.Skill;
+import net.runelite.api.EquipmentInventorySlot;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -27,7 +28,7 @@ public class PvmReadinessSafetyTest
                 .anyMatch(value -> value.contains("Equip")));
 
         PvmReadiness oneFood = analyze(
-                new EquipmentSnapshot(Collections.singletonList(item("Rune scimitar", 1))),
+                new EquipmentSnapshot(Collections.singletonList(weapon("Rune scimitar", 1))),
                 new InventorySnapshot(Collections.singletonList(item("Shark", 1))), bank);
         assertFalse(oneFood.isReadyForRecommendation());
         assertTrue(oneFood.getMissingRequirements().stream()
@@ -38,12 +39,22 @@ public class PvmReadinessSafetyTest
     public void genericLoadoutEvidenceCannotProveEncounterSpecificReadiness()
     {
         PvmReadiness readiness = analyze(
-                new EquipmentSnapshot(Collections.singletonList(item("Rune scimitar", 1))),
+                new EquipmentSnapshot(Collections.singletonList(weapon("Rune scimitar", 1))),
                 new InventorySnapshot(Arrays.asList(
                         item("Shark", 5), item("Prayer potion(4)", 1))), null);
         assertFalse(readiness.isReadyForRecommendation());
         assertTrue(readiness.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("encounter-specific")));
+    }
+
+    @Test
+    public void equipmentWithoutWeaponSlotProvenanceDoesNotProveAReadiedWeapon()
+    {
+        PvmReadiness readiness = analyze(
+                new EquipmentSnapshot(Collections.singletonList(item("Rune scimitar", 1))),
+                new InventorySnapshot(Collections.emptyList()), null);
+        assertTrue(readiness.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("Equip a usable")));
     }
 
     @Test
@@ -79,6 +90,13 @@ public class PvmReadinessSafetyTest
     private static ItemStackSnapshot item(String name, int quantity)
     {
         return new ItemStackSnapshot(1, name, quantity);
+    }
+
+
+    private static ItemStackSnapshot weapon(String name, int quantity)
+    {
+        return new ItemStackSnapshot(1, name, quantity,
+                EquipmentInventorySlot.WEAPON.getSlotIdx());
     }
 
     private static AccountSnapshot account()

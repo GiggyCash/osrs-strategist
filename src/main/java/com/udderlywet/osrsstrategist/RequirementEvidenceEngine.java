@@ -156,7 +156,7 @@ public class RequirementEvidenceEngine
                     "farming:supplies",
                     "Seeds and farming tools",
                     RequirementState.CHECK_NEEDED,
-                    "The generic early-Farming seed catalog is not complete yet; Strategist will not guess a usable seed."
+                    "The early-Farming seed source is not verified yet; choose and verify a usable seed before starting."
             ));
             return checks;
         }

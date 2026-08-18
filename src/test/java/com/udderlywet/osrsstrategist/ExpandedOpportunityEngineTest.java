@@ -3,7 +3,10 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -38,13 +41,55 @@ public class ExpandedOpportunityEngineTest
         assertTrue(new OpportunityEngine().evaluate(data).isEmpty());
     }
 
+    @Test
+    public void herbRunNeedsPositiveCarriedSetupAndHerbPatchEvidence()
+    {
+        Map<String, Long> timers = new HashMap<>();
+        timers.put("opportunity:herb-run", 0L);
+        StrategyDataBundle unresolved = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .farming(FarmingSnapshot.unknown()).build();
+        Opportunity missing = new OpportunityEngine().evaluate(unresolved).get(0);
+        assertTrue(!missing.isSetupVerified());
+        assertTrue(missing.getPreparation().contains("Carry a spade"));
+
+        StrategyDataBundle wrongSeed = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        item("Spade"), item("Seed dibber"),
+                        new ItemStackSnapshot(ItemID.ACORN, "Acorn", 1))))
+                .farming(new FarmingSnapshot(
+                        new HashSet<>(Collections.singletonList("falador")),
+                        Collections.emptyMap(), Collections.emptyMap())).build();
+        assertTrue(new OpportunityEngine().evaluate(wrongSeed).get(0)
+                .getPreparation().contains("Carry a suitable herb seed"));
+
+        StrategyDataBundle ready = StrategyDataBundle.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        item("Spade"), item("Seed dibber"),
+                        new ItemStackSnapshot(ItemID.GUAM_SEED, "Guam seed", 1))))
+                .farming(new FarmingSnapshot(
+                        new HashSet<>(Collections.singletonList("falador")),
+                        Collections.emptyMap(), Collections.emptyMap())).build();
+        Opportunity verified = new OpportunityEngine().evaluate(ready).get(0);
+        assertTrue(verified.isSetupVerified());
+        assertTrue(verified.getPreparation().isEmpty());
+    }
+
+    private static ItemStackSnapshot item(String name)
+    {
+        return new ItemStackSnapshot(1, name, 1);
+    }
+
     private static AccountSnapshot account()
     {
         Map<Skill, Integer> levels = new java.util.EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new java.util.EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
         {
-            levels.put(skill, 1);
+            levels.put(skill, 50);
             xp.put(skill, 0);
         }
         return new AccountSnapshot(

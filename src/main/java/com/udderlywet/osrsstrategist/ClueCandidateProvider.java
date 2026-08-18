@@ -52,7 +52,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         StringBuilder reason = new StringBuilder();
         reason.append("Clears the pending ").append(type)
                 .append(" slot and can advance Collection Log progress. ")
-                .append("Before starting, Strategist should check the current step, required equipment, spade, teleports, food/combat needs, and any observed STASH state.");
+                .append("Before starting, check the current step, required equipment, spade, teleports, food/combat needs, and any observed STASH state.");
         if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
             reason.append(" UIM routing also checks inventory pressure and only counts STASH/POH/other storage when the relevant capability and contents are verified.");

@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
 
 /**
@@ -205,6 +206,8 @@ public class PvmReadinessAnalyzer
         boolean melee = false, ranged = false, magic = false;
         for (ItemStackSnapshot item : items)
         {
+            // Persisted snapshots without slot provenance cannot prove a readied weapon.
+            if (item.getSlotIndex() != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;
             String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             melee |= containsAny(name, "scimitar", "sword", "whip", "mace", "axe",
                     "halberd", "spear", "hasta", "fang", "scythe", "maul", "bludgeon", "lance");

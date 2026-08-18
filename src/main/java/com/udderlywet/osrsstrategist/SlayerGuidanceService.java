@@ -56,7 +56,7 @@ public class SlayerGuidanceService
             String action = taskAction(slayer, profile, xpNeeded, targetLevel);
             String supplies = taskSupplies(account, items, profile);
             String where = taskLocation(slayer, profile);
-            String note = taskNote(profile);
+            String note = taskNote(account, profile);
             return new RecommendationGuidance(action, supplies, where, note);
         }
 
@@ -122,7 +122,7 @@ public class SlayerGuidanceService
             }
             return "Acquire one legal task item just in time before continuing: "
                     + choices
-                    + ". Normal bank state is ignored for UIM, and Strategist will not pretend an inaccessible stored item is ready.";
+                    + ". Normal bank state is ignored for UIM; inaccessible stored items require a retrieval step.";
         }
 
         if (!items.bankObserved())
@@ -164,14 +164,29 @@ public class SlayerGuidanceService
         return "Use the safest reachable non-Wilderness location for this task unless the assignment itself specifies an area or Wilderness methods are explicitly enabled.";
     }
 
-    private static String taskNote(SlayerTaskProfile profile)
+    private static String taskNote(AccountSnapshot account,
+            SlayerTaskProfile profile)
     {
         String base = "The remaining kill count is live task evidence. Slayer XP per kill depends on the assigned monster's Hitpoints and variants, so Strategist does not convert the milestone into a fake universal kill count.";
-        if (profile != null && hasText(profile.getMechanicsNote()))
+        if (profile == null) return base;
+        StringBuilder note = new StringBuilder();
+        if (hasText(profile.getMechanicsNote()))
         {
-            return profile.getMechanicsNote() + " " + base;
+            note.append(profile.getMechanicsNote()).append(" ");
         }
-        return base;
+        if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
+            note.append("Multitarget Magic eligibility is catalogued, but use it only when spellbook, runes, prayer, build, and the live location are verified. ");
+        if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
+            note.append("Cannon eligibility is unresolved for the live location; do not bring or place a cannon from this profile alone. ");
+        if (profile.isWildernessVariantKnown())
+            note.append("A Wilderness variant exists, but the safe default remains non-Wilderness unless risk is explicitly enabled. ");
+        if (AccountMode.fromTypeCode(account.getAccountTypeCode()).isIronLike()
+                && !profile.getIronObjectives().isEmpty())
+            note.append("Iron objective: ").append(String.join(", ",
+                    profile.getIronObjectives())).append(". ");
+        if (hasText(profile.getTaskDecisionGuidance()))
+            note.append(profile.getTaskDecisionGuidance()).append(" ");
+        return note.append(base).toString();
     }
 
     private static String firstOwned(

@@ -1,0 +1,79 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import net.runelite.api.Skill;
+
+/** Verified quest requirements and progression effects used by the local planner. */
+public final class QuestDefinition
+{
+    private final String name;
+    private final boolean freeToPlay;
+    private final List<String> prerequisites;
+    private final Map<Skill, Integer> skillRequirements;
+    private final List<QuestItemRequirement> itemRequirements;
+    private final int questPointsRequired;
+    private final List<String> accessChecks;
+    private final String startLocation;
+    private final List<String> unlocks;
+    private final Map<Skill, Integer> rewardXp;
+
+    public QuestDefinition(String name, boolean freeToPlay,
+            List<String> prerequisites, Map<Skill, Integer> skillRequirements,
+            List<QuestItemRequirement> itemRequirements, int questPointsRequired,
+            List<String> accessChecks, String startLocation, List<String> unlocks,
+            Map<Skill, Integer> rewardXp)
+    {
+        this.name = name;
+        this.freeToPlay = freeToPlay;
+        this.prerequisites = immutable(prerequisites);
+        EnumMap<Skill, Integer> skills = new EnumMap<>(Skill.class);
+        if (skillRequirements != null) skills.putAll(skillRequirements);
+        this.skillRequirements = Collections.unmodifiableMap(skills);
+        this.itemRequirements = itemRequirements == null
+                ? Collections.emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(itemRequirements));
+        this.questPointsRequired = Math.max(0, questPointsRequired);
+        this.accessChecks = immutable(accessChecks);
+        this.startLocation = startLocation;
+        this.unlocks = immutable(unlocks);
+        EnumMap<Skill, Integer> rewards = new EnumMap<>(Skill.class);
+        if (rewardXp != null) rewards.putAll(rewardXp);
+        this.rewardXp = Collections.unmodifiableMap(rewards);
+    }
+
+    public String getName() { return name; }
+    public boolean isFreeToPlay() { return freeToPlay; }
+    public List<String> getPrerequisites() { return prerequisites; }
+    public Map<Skill, Integer> getSkillRequirements() { return skillRequirements; }
+    public List<QuestItemRequirement> getItemRequirements() { return itemRequirements; }
+    public int getQuestPointsRequired() { return questPointsRequired; }
+    public List<String> getAccessChecks() { return accessChecks; }
+    public String getStartLocation() { return startLocation; }
+    public List<String> getUnlocks() { return unlocks; }
+    public Map<Skill, Integer> getRewardXp() { return rewardXp; }
+
+    private static List<String> immutable(List<String> values)
+    {
+        return values == null ? Collections.emptyList()
+                : Collections.unmodifiableList(new ArrayList<>(values));
+    }
+
+    public static final class QuestItemRequirement
+    {
+        private final String name;
+        private final int quantity;
+
+        public QuestItemRequirement(String name, int quantity)
+        {
+            this.name = name;
+            this.quantity = Math.max(1, quantity);
+        }
+
+        public String getName() { return name; }
+        public int getQuantity() { return quantity; }
+    }
+}

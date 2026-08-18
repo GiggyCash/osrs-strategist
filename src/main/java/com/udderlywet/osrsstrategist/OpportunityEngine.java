@@ -45,12 +45,7 @@ public class OpportunityEngine
                             "4 clockworks", "4 suitable logs", "40 suitable seeds",
                             "Verified transport to the route"));
 
-            addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:herb-run", OpportunityType.HERB_RUN,
-                    "Herb run", Arrays.asList(
-                            "Herb seeds", "Spade and seed dibber",
-                            "Rake or verified Tool Leprechaun storage", "Compost",
-                            "Verified reachable herb patches", "Patch transport"));
+            addHerbRunOpportunity(opportunities, data, recurring, now);
 
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:tree-run", OpportunityType.TREE_RUN,
@@ -118,5 +113,63 @@ public class OpportunityEngine
         result.add(new Opportunity(
                 id, type, title, ready,
                 RecommendationConfidence.VERIFIED, preparation));
+    }
+
+    private static void addHerbRunOpportunity(List<Opportunity> result,
+            StrategyDataBundle data, RecurringOpportunitySnapshot recurring,
+            long now)
+    {
+        String id = "opportunity:herb-run";
+        if (recurring == null || recurring.readyAt(id) == null) return;
+
+        List<String> missing = new ArrayList<>();
+        InventorySnapshot inventory = data.getInventory();
+        if (!inventoryHas(inventory, "spade")) missing.add("Carry a spade");
+        if (!inventoryHas(inventory, "seed dibber")) missing.add("Carry a seed dibber");
+        int farmingLevel = data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        ResourceRequirement herbSeeds = new FarmingSupplyCatalog()
+                .herbSeedsForLevel(farmingLevel);
+        if (!inventoryHasAnyId(inventory, herbSeeds.getItemIds()))
+            missing.add("Carry a suitable herb seed");
+        if (farmingLevel < 9)
+            missing.add("Reach Farming level 9 for the modeled herb patches");
+        FarmingSnapshot farming = data.getFarming();
+        if (!hasReachableHerbPatch(farming))
+            missing.add("Verify at least one reachable herb patch");
+
+        boolean ready = recurring.isReadyNow(id, now);
+        boolean setupVerified = ready && missing.isEmpty();
+        result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
+                ready, RecommendationConfidence.VERIFIED, missing,
+                setupVerified, CandidateSafetyEvidence.skill(false,
+                        net.runelite.api.Skill.FARMING)));
+    }
+
+    private static boolean inventoryHas(InventorySnapshot inventory, String expected)
+    {
+        if (inventory == null) return false;
+        for (ItemStackSnapshot item : inventory.getItems())
+            if (item != null && item.getQuantity() > 0 && item.getName() != null
+                    && item.getName().equalsIgnoreCase(expected)) return true;
+        return false;
+    }
+
+    private static boolean inventoryHasAnyId(InventorySnapshot inventory, int[] itemIds)
+    {
+        if (inventory == null || itemIds == null) return false;
+        for (ItemStackSnapshot item : inventory.getItems())
+            if (item != null && item.getQuantity() > 0)
+                for (int itemId : itemIds)
+                    if (item.getItemId() == itemId) return true;
+        return false;
+    }
+
+    private static boolean hasReachableHerbPatch(FarmingSnapshot farming)
+    {
+        if (farming == null) return false;
+        for (FarmingAccessDefinition patch : new FarmingAccessCatalog().all())
+            if (patch.isHerbPatch() && farming.isPatchReachable(patch.getId()))
+                return true;
+        return false;
     }
 }

@@ -60,6 +60,17 @@ Scores valid activities. Suggested score families:
 
 Invalid methods receive no score at all.
 
+The final decision boundary is ordered as:
+
+1. merge every candidate family, including opportunities;
+2. reject membership-incompatible content;
+3. reject account/build-unsafe content;
+4. reject BLOCKED and bare unresolved candidates;
+5. apply intelligence, feedback, session, risk and fatigue scoring;
+6. choose DO NEXT only from candidates that satisfy the actionability contract.
+
+Provider filtering is an early optimization, not the security boundary.
+
 ## 5. EconomyPlanner
 Main accounts only:
 - required spend
@@ -85,6 +96,10 @@ One generic engine for recurring and short detours:
 - future recurring content
 
 Each opportunity defines unlocks, cooldown, required items, likely duration, value, and preparation steps.
+
+A timer observation proves only timing. Setup becomes VERIFIED only from positive
+access/resource evidence; otherwise the opportunity remains a concrete preparation
+alternative or sidebar item.
 
 ## 8. PreparationService
 Creates the green-check checklist before the player leaves the bank/location.

@@ -31,6 +31,8 @@ public class GearCandidateProvider implements StrategyCandidateProvider
 
         AccountSnapshot account = context.getData().getAccount();
         AccountMode mode = context.getAccountMode();
+        ObservedItemIndex items = new ObservedItemIndex(context.getData(),
+                context.isUseGroupStorage());
         boolean f2pSafeOnly = account.getMembershipStatus() != MembershipStatus.P2P;
         CombatStyle primaryStyle = primaryStyle(account);
         GearBudgetTier targetTier = targetTier(account, f2pSafeOnly);
@@ -69,16 +71,18 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             String buildNote = build == RestrictedBuildType.STANDARD
                     ? ""
                     : " Build protected: " + AccountBuildPolicy.label(account) + ".";
+            RecommendationGuidance guidance = acquisitionGuidance(entry, mode,
+                    items);
 
             result.add(new StrategyCandidate(
                     id,
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
                             + buildNote
-                            + " Strategist will compare owned equipment, bank/storage, acquisition route, GP, and target encounter before recommending an actual purchase or grind.",
+                            + " Compare owned equipment, bank/storage, acquisition route, GP, and the target encounter before choosing a purchase or grind.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
-                    null,
+                    guidance,
                     CandidateSafetyEvidence.verifiedSafe(entry.isFreeToPlay())
             ));
         }
@@ -86,6 +90,48 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
         if (result.size() > 2) return new ArrayList<>(result.subList(0, 2));
         return result;
+    }
+
+    private static RecommendationGuidance acquisitionGuidance(
+            GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items)
+    {
+        if (!items.bankObserved() && mode != AccountMode.ULTIMATE_IRONMAN)
+        {
+            return new RecommendationGuidance(
+                    "Open the bank once so Strategist can compare this gear path with verified ownership.",
+                    "Bank ownership is currently unknown; no item is being called missing yet.",
+                    "Any bank.",
+                    "This remains a verification alternative, not a purchase instruction.");
+        }
+
+        List<String> owned = new ArrayList<>();
+        List<String> unresolved = new ArrayList<>();
+        for (String target : entry.getRecommendedItems())
+        {
+            if (items.has(target)) owned.add(target);
+            else unresolved.add(target);
+        }
+        String next = unresolved.isEmpty()
+                ? entry.getWeaponGuidance() : unresolved.get(0);
+        String action;
+        if (mode.usesGrandExchange())
+            action = "Compare the live price and marginal benefit of " + next
+                    + " before buying; keep the current item when the upgrade is not worth the detour.";
+        else if (mode == AccountMode.ULTIMATE_IRONMAN)
+            action = "Verify a self-source route and inventory/storage consequence for "
+                    + next + " before changing the current UIM setup.";
+        else
+            action = "Resolve the verified self-source acquisition path for " + next
+                    + "; do not substitute a Grand Exchange purchase.";
+
+        String supplies = "Observed matching targets: "
+                + (owned.isEmpty() ? "none" : String.join(", ", owned))
+                + ". Unresolved targets: "
+                + (unresolved.isEmpty() ? "weapon/context comparison only"
+                : String.join(", ", unresolved)) + ".";
+        return new RecommendationGuidance(action, supplies,
+                "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location.",
+                entry.getNote());
     }
 
     private static GearBudgetTier targetTier(AccountSnapshot account, boolean f2p)

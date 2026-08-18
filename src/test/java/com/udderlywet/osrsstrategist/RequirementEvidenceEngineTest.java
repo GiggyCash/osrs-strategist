@@ -40,7 +40,7 @@ public class RequirementEvidenceEngineTest
         assertEquals(RequirementState.VERIFIED, checks.get(0).getState());
         assertTrue(checks.get(0).getEvidence().contains("Falador"));
         assertEquals(RequirementState.CHECK_NEEDED, checks.get(1).getState());
-        assertTrue(checks.get(1).getEvidence().contains("will not guess"));
+        assertTrue(checks.get(1).getEvidence().contains("source is not verified"));
     }
 
     @Test
