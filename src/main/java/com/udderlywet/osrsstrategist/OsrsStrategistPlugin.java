@@ -64,6 +64,7 @@ public class OsrsStrategistPlugin extends Plugin
     private StrategyDataBundle latestData;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
+    private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
@@ -99,6 +100,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Override
     protected void shutDown()
     {
+        uiGeneration.invalidate();
         if (navButton != null) clientToolbar.removeNavigation(navButton);
         overlayManager.remove(milestoneRewardOverlay);
         overlayManager.remove(methodGuidanceOverlay);
@@ -237,6 +239,7 @@ public class OsrsStrategistPlugin extends Plugin
     private void refreshStrategyImmediately()
     {
         if (panel == null || latestData == null) return;
+        final long generation = uiGeneration.next();
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(latestData, profile);
         updateTrackedMilestone(
@@ -246,6 +249,7 @@ public class OsrsStrategistPlugin extends Plugin
 
         Runnable update = () ->
         {
+            if (!uiGeneration.isCurrent(generation) || panel == null) return;
             panel.updateRecommendations(result.getRecommendations());
             panel.updateOpportunities(result.getOpportunities());
             panel.revalidate();
@@ -338,6 +342,7 @@ public class OsrsStrategistPlugin extends Plugin
     private void updateAccountPanel()
     {
         if (panel == null) return;
+        final long generation = uiGeneration.next();
         StrategyDataBundle data = strategyDataAssembler.read();
         if (data == null || data.getAccount() == null)
         {
@@ -347,6 +352,7 @@ public class OsrsStrategistPlugin extends Plugin
             PlayerStrategyProfile profile = effectiveStrategyProfile();
             SwingUtilities.invokeLater(() ->
             {
+                if (!uiGeneration.isCurrent(generation) || panel == null) return;
                 panel.updateAccount("Waiting for login...", "Unknown", 0);
                 panel.updateGoal(profile.getActiveGoal());
                 panel.updateStrategy(profile.getStrategyMode(),
@@ -398,6 +404,7 @@ public class OsrsStrategistPlugin extends Plugin
 
         SwingUtilities.invokeLater(() ->
         {
+            if (!uiGeneration.isCurrent(generation) || panel == null) return;
             panel.updateAccount(
                     account.getPlayerName(),
                     account.getAccountTypeName(),
