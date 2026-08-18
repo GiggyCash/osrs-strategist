@@ -133,8 +133,12 @@ public final class RecommendationPresentation
         }
         if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
         {
-            text.append("<b>NOT READY YET</b><br>")
-                    .append("Requirements still need verification. Keep playing a ready option for now.");
+            text.append("<b>PREPARATION</b><br>");
+            if (guidance != null && hasText(guidance.getAction()))
+                text.append(escape(compactSentence(guidance.getAction(),
+                        COMPACT_ACTION_CHARS)));
+            else
+                text.append("Open the relevant account panel so Compass can check the remaining requirement.");
             return;
         }
 

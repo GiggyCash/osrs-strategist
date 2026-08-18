@@ -11,11 +11,22 @@ import javax.inject.Singleton;
 public class MinigameCandidateProvider implements StrategyCandidateProvider
 {
     private final MinigameCatalog catalog;
+    private final MinigameSetupCatalog setupCatalog;
+    private final ItemRequirementEvaluator itemEvaluator;
 
-    @Inject
     public MinigameCandidateProvider(MinigameCatalog catalog)
     {
+        this(catalog, new MinigameSetupCatalog(), new ItemRequirementEvaluator());
+    }
+
+    @Inject
+    public MinigameCandidateProvider(MinigameCatalog catalog,
+            MinigameSetupCatalog setupCatalog,
+            ItemRequirementEvaluator itemEvaluator)
+    {
         this.catalog = catalog;
+        this.setupCatalog = setupCatalog;
+        this.itemEvaluator = itemEvaluator;
     }
 
     @Override
@@ -57,14 +68,28 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
             if (context.isCollectionistMode()) score += 4.0;
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+            MinigameSetupProfile setup = setupCatalog.forActivity(
+                    definition.getId());
+            ItemRequirementResult itemResult = setup == null ? null
+                    : itemEvaluator.evaluate(setup.getItems(), context.getData(),
+                            context.isUseGroupStorage());
+            boolean verified = setup != null && itemResult.isSatisfied();
+            RecommendationGuidance guidance = setup == null ? null
+                    : new RecommendationGuidance(
+                            verified ? "Start " + definition.getName() + "."
+                                    : itemResult.getAction() + " before " + definition.getName() + ".",
+                            verified ? setup.getInstructions() : itemResult.getAction(),
+                            setup.getLocation(), definition.getRewardFocus() + ".");
+
             result.add(new StrategyCandidate(
                     id,
                     definition.getName(),
                     definition.getRewardFocus()
                             + ". Unlock is verified, but loadout, consumables, currency and account-mode constraints must also pass before the activity is Ready.",
                     score,
-                    RecommendationConfidence.CHECK_NEEDED,
-                    null,
+                    verified ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    guidance,
                     safetyFor(definition)
             ));
         }
@@ -78,6 +103,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
     {
         if (definition.getRiskLevel() == RiskLevel.HIGH
                 || definition.getRiskLevel() == RiskLevel.IRREVERSIBLE)
+            return CandidateSafetyEvidence.potentiallyIrreversible(
+                    definition.isFreeToPlay());
+        if (definition.isCombatActivity())
             return CandidateSafetyEvidence.potentiallyIrreversible(
                     definition.isFreeToPlay());
         if (definition.getPrimarySkill() != null)

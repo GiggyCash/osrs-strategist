@@ -7,18 +7,28 @@ public final class ResolvedDependencyNode
     private final String action;
     private final RecommendationConfidence confidence;
     private final int depth;
+    private final int requiredQuantity;
 
     public ResolvedDependencyNode(String id, String action,
             RecommendationConfidence confidence, int depth)
+    {
+        this(id, action, confidence, depth, 0);
+    }
+
+    public ResolvedDependencyNode(String id, String action,
+            RecommendationConfidence confidence, int depth,
+            int requiredQuantity)
     {
         this.id = id;
         this.action = action;
         this.confidence = confidence;
         this.depth = depth;
+        this.requiredQuantity = Math.max(0, requiredQuantity);
     }
 
     public String getId() { return id; }
     public String getAction() { return action; }
     public RecommendationConfidence getConfidence() { return confidence; }
     public int getDepth() { return depth; }
+    public int getRequiredQuantity() { return requiredQuantity; }
 }

@@ -18,16 +18,21 @@ public class QuestRequirementResolver
         StrategyDataBundle data = context.getData();
         AccountSnapshot account = data.getAccount();
         QuestSnapshot quests = data.getQuests();
-        List<String> missing = new ArrayList<>();
+        List<Preparation> missing = new ArrayList<>();
 
         for (String prerequisite : definition.getPrerequisites())
         {
             QuestStatus status = quests == null ? QuestStatus.UNKNOWN
                     : quests.statusOf(prerequisite);
             if (status != QuestStatus.COMPLETE)
-                missing.add(status == QuestStatus.UNKNOWN
+                missing.add(new Preparation(status == QuestStatus.UNKNOWN
                         ? "Verify and complete prerequisite quest: " + prerequisite
-                        : "Complete prerequisite quest: " + prerequisite);
+                        : "Complete prerequisite quest: " + prerequisite,
+                        RestrictedQuestPolicy.isSafe(account, prerequisite)
+                                ? CandidateSafetyEvidence.verifiedSafe(
+                                definition.isFreeToPlay())
+                                : CandidateSafetyEvidence.potentiallyIrreversible(
+                                definition.isFreeToPlay())));
         }
 
         for (Map.Entry<Skill, Integer> requirement
@@ -35,8 +40,11 @@ public class QuestRequirementResolver
         {
             int current = account.getSkillLevel(requirement.getKey());
             if (current < requirement.getValue())
-                missing.add("Train " + requirement.getKey().getName() + " from "
-                        + current + " to " + requirement.getValue());
+                missing.add(new Preparation("Train "
+                        + requirement.getKey().getName() + " from " + current
+                        + " to " + requirement.getValue(),
+                        CandidateSafetyEvidence.skill(definition.isFreeToPlay(),
+                                requirement.getKey())));
         }
 
         ObservedItemIndex items = new ObservedItemIndex(data,
@@ -49,9 +57,10 @@ public class QuestRequirementResolver
         {
             int owned = items.quantity(requirement.getName());
             if (owned < requirement.getQuantity())
-                missing.add((ownershipObserved ? "Obtain " : "Verify ownership of ")
+                missing.add(new Preparation((ownershipObserved ? "Obtain " : "Verify ownership of ")
                         + Math.max(0, requirement.getQuantity() - owned) + " × "
-                        + requirement.getName());
+                        + requirement.getName(), CandidateSafetyEvidence.harmless(
+                        definition.isFreeToPlay())));
         }
 
         ItemRequirementResult expressionResult = new ItemRequirementEvaluator()
@@ -59,12 +68,16 @@ public class QuestRequirementResolver
                         context.isUseGroupStorage());
         if (!expressionResult.isSatisfied()
                 && !expressionResult.getAction().isEmpty())
-            missing.add(expressionResult.getAction());
+            missing.add(new Preparation(expressionResult.getAction(),
+                    CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
 
         if (definition.getQuestPointsRequired() > 0)
-            missing.add("Verify at least " + definition.getQuestPointsRequired()
-                    + " quest points");
-        missing.addAll(definition.getAccessChecks());
+            missing.add(new Preparation("Verify at least "
+                    + definition.getQuestPointsRequired() + " quest points",
+                    CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
+        for (String check : definition.getAccessChecks())
+            missing.add(new Preparation(check,
+                    CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
 
         String unlocks = definition.getUnlocks().isEmpty() ? ""
                 : String.join(", ", definition.getUnlocks());
@@ -77,15 +90,33 @@ public class QuestRequirementResolver
                             definition.getStartLocation(),
                             unlocks.isEmpty() ? "The modeled requirements are verified."
                                     : "Progression unlocked: " + unlocks + "."),
-                    "All modeled requirements are verified");
+                    "All modeled requirements are verified",
+                    CandidateSafetyEvidence.verifiedSafe(
+                            definition.isFreeToPlay()));
         }
 
+        List<String> missingText = new ArrayList<>();
+        for (Preparation preparation : missing) missingText.add(preparation.text);
         return new QuestResolution(RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(missing.get(0) + ".",
-                        String.join("; ", missing), definition.getStartLocation(),
+                new RecommendationGuidance(missing.get(0).text + ".",
+                        String.join("; ", missingText), definition.getStartLocation(),
                         unlocks.isEmpty()
                                 ? "Resolve the listed requirement before starting."
                                 : "Resolving this path unlocks: " + unlocks + "."),
-                "Preparation required: " + missing.get(0));
+                "Preparation required: " + missing.get(0).text,
+                missing.get(0).safetyEvidence);
+    }
+
+    private static final class Preparation
+    {
+        private final String text;
+        private final CandidateSafetyEvidence safetyEvidence;
+
+        private Preparation(String text,
+                CandidateSafetyEvidence safetyEvidence)
+        {
+            this.text = text;
+            this.safetyEvidence = safetyEvidence;
+        }
     }
 }

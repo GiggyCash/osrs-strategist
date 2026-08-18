@@ -13,6 +13,8 @@ public class PvmEvidenceProfileCatalog
 
     public PvmEvidenceProfileCatalog()
     {
+        add(new PvmEvidenceProfile("pvm:brutus", "melee",
+                Collections.emptyList(), 5, 0));
         add(new PvmEvidenceProfile("pvm:obor", "melee",
                 Collections.singletonList("Giant key"), 5, 0));
         add(new PvmEvidenceProfile("pvm:bryophyta", "melee",

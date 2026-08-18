@@ -30,7 +30,7 @@ public class StrategyCandidateFoundationTest
         assertEquals("clue:pending", recommendation.getId());
         assertEquals(0, recommendation.getCurrentLevel());
         assertTrue(RecommendationPresentation.compactHtml(recommendation)
-                .contains("NOT READY YET"));
+                .contains("PREPARATION"));
     }
 
     private static AccountSnapshot account()

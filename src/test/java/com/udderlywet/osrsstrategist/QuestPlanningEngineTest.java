@@ -78,6 +78,28 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void questDerivedSkillPreparationKeepsProtectedSkillSafety()
+    {
+        Map<Skill, Integer> requirements = new EnumMap<>(Skill.class);
+        requirements.put(Skill.DEFENCE, 40);
+        QuestDefinition definition = new QuestDefinition("Safe parent", true,
+                Collections.emptyList(), requirements, Collections.emptyList(),
+                0, Collections.emptyList(), "Varrock",
+                Collections.singletonList("A useful unlock"),
+                Collections.emptyMap());
+        AccountSnapshot pure = account(MembershipStatus.F2P, 60, 60, 1);
+        QuestResolution resolution = new QuestRequirementResolver().resolve(
+                definition, context(StrategyDataBundle.builder(pure).build()));
+
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                resolution.getConfidence());
+        assertTrue(resolution.getGuidance().getAction().contains("Train Defence"));
+        assertFalse(new CandidateSafetyPolicy().isAllowed(
+                resolution.getSafetyEvidence(), context(
+                        StrategyDataBundle.builder(pure).build())));
+    }
+
+    @Test
     public void observedInventoryDoesNotTurnUnobservedBankIntoMissingItems()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(

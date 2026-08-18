@@ -142,15 +142,24 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                     : resolution.getGuidance();
             if (resolution != null) reason += " " + resolution.getReason() + ".";
 
+            String title = (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ")
+                    + questName;
+            if (resolution != null
+                    && resolution.getConfidence() == RecommendationConfidence.CHECK_NEEDED
+                    && guidance != null && guidance.getAction() != null
+                    && !guidance.getAction().trim().isEmpty())
+                title = "Prepare for " + questName + ": "
+                        + guidance.getAction().replaceFirst("\\.$", "");
             result.add(new StrategyCandidate(
                     id,
-                    (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ") + questName,
+                    title,
                     reason,
                     score,
                     confidence,
                     guidance,
-                    CandidateSafetyEvidence.verifiedSafe(
-                            QuestMembershipPolicy.isFreeToPlayQuest(questName))
+                    resolution == null
+                            ? CandidateSafetyEvidence.unknown()
+                            : resolution.getSafetyEvidence()
             ));
         }
 

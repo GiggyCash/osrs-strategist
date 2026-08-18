@@ -174,6 +174,65 @@ public class ResourceDependencyResolverTest
                         .getConfidence());
     }
 
+    @Test
+    public void deterministicRecipeYieldsScaleChildQuantities()
+    {
+        InventorySnapshot inventory = new InventorySnapshot(Arrays.asList(
+                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 24),
+                new ItemStackSnapshot(ItemID.IRON_ORE, "Iron ore", 1),
+                new ItemStackSnapshot(ItemID.COAL, "Coal", 2)));
+        ResourceDependencyResolution result = resolver().resolve(
+                context(1, false, null, null, null, inventory),
+                new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 100));
+        ResolvedDependencyNode steel = result.getNodes().stream()
+                .filter(value -> value.getId().equals("resource:" + ItemID.STEEL_BAR))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(RecommendationConfidence.CHECK_NEEDED, steel.getConfidence());
+        assertEquals(25, steel.getRequiredQuantity());
+    }
+
+    @Test
+    public void repeatedChildRequirementsAreSummedBeforeTraversal()
+    {
+        int root = 960001, leaf = 960002;
+        ResourceDependencyDefinition combined = new ResourceDependencyDefinition(
+                root, "Combine leaf parts.", 1, Arrays.asList(
+                DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2)),
+                DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 3))));
+        InventorySnapshot inventory = new InventorySnapshot(
+                Collections.singletonList(new ItemStackSnapshot(leaf, "Leaf", 4)));
+        ResourceDependencyResolution result = resolver(combined).resolve(
+                context(1, false, null, null, null, inventory),
+                new ResourceNeed(root, "Root", 1));
+        ResolvedDependencyNode node = result.getNodes().stream()
+                .filter(value -> value.getId().equals("resource:" + leaf))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(5, node.getRequiredQuantity());
+    }
+
+    @Test
+    public void sharedLeafAcrossBranchesIsDeduplicatedAndSummed()
+    {
+        int root = 970001, left = 970002, right = 970003, leaf = 970004;
+        ResourceDependencyDefinition rootDefinition = new ResourceDependencyDefinition(
+                root, "Assemble root.", 1, Arrays.asList(
+                DependencyRequirement.resource(new ResourceNeed(left, "Left", 1)),
+                DependencyRequirement.resource(new ResourceNeed(right, "Right", 1))));
+        ResourceDependencyDefinition leftDefinition = definition(left, leaf, 1);
+        ResourceDependencyDefinition rightDefinition = new ResourceDependencyDefinition(
+                right, "Make right.", 1, Collections.singletonList(
+                DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2))));
+        ResourceDependencyResolution result = resolver(rootDefinition,
+                leftDefinition, rightDefinition).resolve(
+                context(1, false, null, null, null),
+                new ResourceNeed(root, "Root", 1));
+        assertEquals(1, count(ids(result), "resource:" + leaf));
+        ResolvedDependencyNode node = result.getNodes().stream()
+                .filter(value -> value.getId().equals("resource:" + leaf))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(3, node.getRequiredQuantity());
+    }
+
     private static ResourceDependencyDefinition definition(int item, int child,
             int cost)
     {

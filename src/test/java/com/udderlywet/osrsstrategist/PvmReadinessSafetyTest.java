@@ -119,6 +119,33 @@ public class PvmReadinessSafetyTest
         assertFalse(ready.getMissingRequirements().contains("Old missing setup"));
     }
 
+    @Test
+    public void brutusRequiresCompletedQuestAndTransitionsToReady()
+    {
+        Map<String, QuestStatus> quests = Collections.singletonMap(
+                "The Ides of Milk", QuestStatus.NOT_STARTED);
+        PvmReadiness blocked = analyzer.analyze(account(),
+                new QuestSnapshot(quests),
+                new EquipmentSnapshot(Collections.singletonList(
+                        weapon("Rune scimitar", 1))),
+                new InventorySnapshot(Collections.singletonList(
+                        item("Lobster", 5))), null, null)
+                .readinessFor("pvm:brutus");
+        assertFalse(blocked.isReadyForRecommendation());
+        assertTrue(blocked.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("The Ides of Milk")));
+
+        PvmReadiness ready = analyzer.analyze(account(),
+                new QuestSnapshot(Collections.singletonMap(
+                        "The Ides of Milk", QuestStatus.COMPLETE)),
+                new EquipmentSnapshot(Collections.singletonList(
+                        weapon("Rune scimitar", 1))),
+                new InventorySnapshot(Collections.singletonList(
+                        item("Lobster", 5))), null, null)
+                .readinessFor("pvm:brutus");
+        assertTrue(ready.isReadyForRecommendation());
+    }
+
     private PvmReadiness analyze(EquipmentSnapshot equipment,
             InventorySnapshot inventory, BankSnapshot bank)
     {
