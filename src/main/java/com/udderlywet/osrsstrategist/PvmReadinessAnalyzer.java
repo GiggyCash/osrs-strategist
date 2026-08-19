@@ -19,18 +19,28 @@ public class PvmReadinessAnalyzer
 {
     private final PvmActivityCatalog catalog;
     private final PvmEvidenceProfileCatalog evidenceProfiles;
+    private final PvmPreparationProfileCatalog preparationProfiles;
 
     public PvmReadinessAnalyzer(PvmActivityCatalog catalog)
     {
-        this(catalog, new PvmEvidenceProfileCatalog());
+        this(catalog, new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog());
     }
 
     @Inject
     public PvmReadinessAnalyzer(PvmActivityCatalog catalog,
             PvmEvidenceProfileCatalog evidenceProfiles)
     {
+        this(catalog, evidenceProfiles, new PvmPreparationProfileCatalog());
+    }
+
+    public PvmReadinessAnalyzer(PvmActivityCatalog catalog,
+            PvmEvidenceProfileCatalog evidenceProfiles,
+            PvmPreparationProfileCatalog preparationProfiles)
+    {
         this.catalog = catalog;
         this.evidenceProfiles = evidenceProfiles;
+        this.preparationProfiles = preparationProfiles;
     }
 
     public PvmSnapshot analyze(
@@ -69,6 +79,8 @@ public class PvmReadinessAnalyzer
             List<String> missing = new ArrayList<>();
             PvmEvidenceProfile exact = evidenceProfiles == null ? null
                     : evidenceProfiles.forActivity(activity.getId());
+            PvmPreparationProfile preparation = preparationProfiles == null ? null
+                    : preparationProfiles.forActivity(activity.getId());
             // Exact profiles are recomputed from current carried state so a
             // preparation -> ready transition cannot retain stale failures.
             if (exact == null && prior != null)
@@ -119,6 +131,9 @@ public class PvmReadinessAnalyzer
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
                         addMissing(missing, "Carry " + accessItem + " for encounter access");
+
+            if (exact == null && preparation != null)
+                for (String check : preparation.getChecks()) addMissing(missing, check);
 
             if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
                 addMissing(missing, "Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
