@@ -24,7 +24,9 @@ Its job is simple: decide the best safe, useful thing to do next without making 
 - no gameplay automation
 
 ## Current state
-`0.2.0-dev` is a clean foundation and product spec, not a finished Plugin Hub release.
+`0.2.0-beta.1` is a local-first testing build. Conservative content remains
+explicitly fail-closed until its requirements are verified; see
+`docs/CONTENT_CENSUS.md` for the current identity/structure/readiness census.
 
 Start with `docs/TONIGHT_SETUP.md`.
 

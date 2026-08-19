@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 
-def runeLiteVersion = 'latest.release'
+def runeLiteVersion = '1.12.35'
 def pluginMainClass = 'com.udderlywet.osrsstrategist.OsrsStrategistPluginTest'
 
 dependencies {
@@ -25,7 +25,7 @@ dependencies {
 }
 
 group = 'com.udderlywet'
-version = '0.2.0-dev'
+version = '0.2.0-beta.1'
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
