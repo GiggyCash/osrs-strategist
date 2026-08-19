@@ -99,12 +99,15 @@ public class QuestKnowledgeCatalog
             java.util.List<String> checks = new java.util.ArrayList<>(
                     record.getOtherChecks());
             checks.add("Open the quest journal to check required items, access, and combat preparation");
+            java.util.List<String> uncertainties = new java.util.ArrayList<>(
+                    a("items", "access/combat", "rewards/unlocks"));
+            if (record.getStartLocation().trim().isEmpty())
+                uncertainties.add("start location");
             add(new QuestDefinition(record.getName(),
                     QuestMembershipPolicy.isFreeToPlayQuest(record.getName()),
                     record.getPrerequisites(), record.getSkills(), none(), null,
                     record.getQuestPoints(), checks, record.getStartLocation(),
-                    none(), skills(), a("items", "access/combat", "start location",
-                            "rewards/unlocks")));
+                    none(), skills(), uncertainties));
         }
     }
 
