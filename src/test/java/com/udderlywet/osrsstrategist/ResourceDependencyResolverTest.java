@@ -16,6 +16,11 @@ import static org.junit.Assert.assertTrue;
 public class ResourceDependencyResolverTest
 {
     @Test
+    public void catalogContainsBroadDeterministicProductionGraph()
+    {
+        assertEquals(41, new ResourceDependencyCatalog().size());
+    }
+    @Test
     public void simpleAndMultiHopIronChainsResolveInPrerequisiteOrder()
     {
         ResourceDependencyResolution simple = resolver().resolve(
