@@ -87,14 +87,14 @@ public class ContentCoverageManifestTest
         assertEquals(new SlayerTaskProfileCatalog().all().size(),
                 ids(new SlayerTaskProfileCatalog().all().stream()
                         .map(SlayerTaskProfile::getId).toArray(String[]::new)).size());
-        assertEquals(104, new SlayerTaskProfileCatalog().all().size());
+        assertEquals(147, new SlayerTaskProfileCatalog().all().size());
 
         Set<String> aliases = new HashSet<>();
         for (SlayerTaskProfile profile : new SlayerTaskProfileCatalog().all())
             for (String alias : profile.getAliases())
                 assertTrue("duplicate Slayer alias: " + alias,
                         aliases.add(alias.toLowerCase(java.util.Locale.ROOT).trim()));
-        assertEquals(184, aliases.size());
+        assertEquals(227, aliases.size());
     }
 
     private static void assertUniqueAndExplained(List<ContentCoverageEntry> entries)

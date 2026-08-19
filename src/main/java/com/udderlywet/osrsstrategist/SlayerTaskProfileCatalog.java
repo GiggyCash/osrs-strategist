@@ -329,7 +329,53 @@ public class SlayerTaskProfileCatalog
                 ordinary("tzhaar", "Tzhaar", "Use the reachable Mor Ul Rek/TzHaar area supported by account access.", "Jad and Zuk are separate challenge encounters."),
                 ordinary("werewolves", "Werewolves", "Use a reachable Morytania werewolf location after access is proven.", "Verify the exact variant; Wolfbane mechanics are quest-context dependent."),
                 ordinary("wolves", "Wolves", "Use a reachable non-Wilderness wolf location.", "Use any sustainable build-legal style."),
-                ordinary("zombies", "Zombies", "Use a reachable non-Wilderness zombie location.", "Vorkath and Zogre variants are separate access/mechanics contexts."));
+                ordinary("zombies", "Zombies", "Use a reachable non-Wilderness zombie location.", "Vorkath and Zogre variants are separate access/mechanics contexts."),
+                ordinary("aquanites", "Aquanites", "Use only the live assignment's verified Sailing route and aquanite area.", "Verify the current variant, protection and return route before leaving port."),
+                ordinary("araxytes", "Araxytes", "Araxyte Lair only after the live Slayer and access requirements are satisfied.", "Choose a task setup independently from Araxxor boss readiness."),
+                ordinary("catablepon", "Catablepon", "Stronghold of Security after the exact room route is verified.", "Use a sustainable build-legal style and account for their stat-draining attack."),
+                ordinary("custodian-stalkers", "Custodian Stalkers", "Use the live assignment's verified Custodia access route.", "Do not infer new-content mechanics or protection from the task name alone."),
+                dragon("frost-dragons", "Frost dragons", "Grimstone only after the required Sailing access is observed; verify icy-breath protection separately."),
+                ordinary("gryphons", "Gryphons", "The Great Conch after Troubled Tortugans and live gryphon-task access are observed.", "Shellbane Gryphon is a separate task-gated PvM preparation decision."),
+                ordinary("lesser-nagua", "Lesser Nagua", "Use a reachable Neypotzli location supported by quest state.", "Verify the exact room and sustainable setup before travel."),
+                ordinary("mammoths", "Mammoths", "Use only a task-valid location after Wilderness status is explicit.", "Hardcore accounts need a safer alternative; use disposable gear when Wilderness risk is accepted."),
+                ordinary("metal-dragons", "Metal dragons", "Resolve the live task to a reachable bronze, iron, steel, mithril or other named metal-dragon location.", "Verify dragonfire protection and the exact tier instead of using a universal setup."),
+                p("molanisks", a("Molanisks"), a("Slayer bell"),
+                        "Dorgesh-Kaan South Dungeon after access is verified.",
+                        "Use a Slayer bell to make the molanisk attackable, then use a build-legal style.",
+                        "The bell and dungeon access must both be observed."),
+                ordinary("fossil-island-wyvern-task", "Fossil island wyverns", "Wyvern Cave after Fossil Island access is verified.", "Use a valid wyvern shield; ordinary antifire is not a substitute."),
+                ordinary("spiritual-creature-task", "Spiritual creatures", "God Wars Dungeon after route and faction protection are verified.", "Resolve the exact ranger, mage, or warrior variant before choosing gear."),
+                ordinary("warped-creature-task", "Warped Creatures", "Poison Waste Slayer Dungeon after The Path of Glouphrie.", "Carry the crystal chime and resolve the live terrorbird or tortoise variant."),
+                bossTask("abyssal-sire-task", "The Abyssal Sire", false),
+                bossTask("araxxor-task", "Araxxor", false),
+                bossTask("barrows-task", "Barrows Brothers", false),
+                bossTask("callisto-task", "Callisto", true),
+                bossTask("cerberus-task", "Cerberus", false),
+                bossTask("chaos-elemental-task", "The Chaos Elemental", true),
+                bossTask("chaos-fanatic-task", "The Chaos Fanatic", true),
+                bossTask("crazy-archaeologist-task", "Crazy Archaeologists", true),
+                bossTask("deranged-archaeologist-task", "Deranged Archaeologist", false),
+                bossTask("duke-sucellus-task", "Duke Sucellus", false),
+                bossTask("graardor-task", "General Graardor", false),
+                bossTask("giant-mole-task", "The Giant Mole", false),
+                bossTask("grotesque-guardians-task", "The Grotesque Guardians", false),
+                bossTask("jad-task", "TzTok-Jad", false),
+                bossTask("kreearra-task", "Kree'arra", false),
+                bossTask("kril-task", "K'ril Tsutsaroth", false),
+                bossTask("maggot-king-task", "The Maggot King", false),
+                bossTask("phantom-muspah-task", "The Phantom Muspah", false),
+                bossTask("sarachnis-task", "Sarachnis", false),
+                bossTask("scorpia-task", "Scorpia", true),
+                bossTask("shellbane-gryphon-task", "The Shellbane Gryphon", false),
+                bossTask("leviathan-task", "The Leviathan", false),
+                bossTask("whisperer-task", "The Whisperer", false),
+                bossTask("vardorvis-task", "Vardorvis", false),
+                bossTask("venenatis-task", "Venenatis", true),
+                bossTask("vetion-task", "Vet'ion", true),
+                bossTask("vorkath-task", "Vorkath", false),
+                bossTask("zilyana-task", "Commander Zilyana", false),
+                bossTask("zuk-task", "TzKal-Zuk", false),
+                bossTask("zulrah-task", "Zulrah", false));
     }
 
     private static SlayerTaskProfile ordinary(String id, String alias,
@@ -345,6 +391,20 @@ public class SlayerTaskProfileCatalog
         return p(id, a(alias), a("Anti-dragon shield", "Dragonfire shield", "Dragonfire ward"),
                 location, "Use a compatible one-handed or otherwise verified dragonfire-safe setup.",
                 "Dragonfire protection and the exact location must be verified separately.");
+    }
+
+    private static SlayerTaskProfile bossTask(String id, String alias,
+            boolean wilderness)
+    {
+        String risk = wilderness
+                ? "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape."
+                : "Use the encounter-specific PvM readiness profile; a live Slayer assignment does not prove gear, supplies or player execution.";
+        return p(id, a(alias), Collections.emptyList(),
+                "Open the matching encounter preparation before travelling.",
+                "Use only an encounter-verified setup, not generic Slayer gear.",
+                risk, CapabilityState.UNKNOWN, CapabilityState.UNKNOWN,
+                wilderness, Collections.emptyList(),
+                "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup.");
     }
 
     private static List<SlayerTaskProfile> join(List<SlayerTaskProfile> first,
