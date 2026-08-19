@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SlayerTaskProfileCatalog
 {
-    private final List<SlayerTaskProfile> profiles = Arrays.asList(
+    private final List<SlayerTaskProfile> profiles = join(Arrays.asList(
             p("dust-devils", a("dust devil", "dust devils"),
                     a("Slayer helmet", "Slayer helmet (i)", "Facemask"),
                     "Catacombs of Kourend unless the live assignment specifies another area.",
@@ -271,7 +271,89 @@ public class SlayerTaskProfileCatalog
                     a("Elemental shield", "Mind shield", "Dragonfire shield", "Ancient wyvern shield"),
                     "Wyvern Cave after Fossil Island access is verified.",
                     "Use a one-handed build-legal weapon with valid wyvern-breath protection.",
-                    "Fossil Island access and the exact wyvern variant must be known; ordinary antifire does not replace a valid shield."));
+                    "Fossil Island access and the exact wyvern variant must be known; ordinary antifire does not replace a valid shield.")),
+            additionalProfiles());
+
+    /** Common RuneLite task identities that previously fell through generically. */
+    private static List<SlayerTaskProfile> additionalProfiles()
+    {
+        return Arrays.asList(
+                ordinary("aviansies", "Aviansies", "God Wars Dungeon after route and faction protection are verified.", "Use Ranged and verify the assigned aviansie variant."),
+                ordinary("bandits", "Bandits", "Use the task-valid desert or Wilderness location selected by the assignment.", "Choose a legal style; Wilderness variants require explicit risk acceptance."),
+                ordinary("bats", "Bats", "Use a reachable low-risk bat location matching the assignment.", "Use any build-legal conventional style."),
+                ordinary("bears", "Bears", "Use a reachable non-Wilderness bear location.", "Callisto and Artio are separate Wilderness boss decisions."),
+                ordinary("black-knights", "Black Knights", "Use a reachable Black Knight location supported by access evidence.", "Use any sustainable build-legal style."),
+                ordinary("cave-bugs", "Cave bugs", "Lumbridge Swamp Caves with a verified safe light source.", "Bring cave access equipment and use a build-legal style."),
+                ordinary("chaos-druids", "Chaos druids", "Use a reachable non-Wilderness location unless risk is enabled.", "Their herb drops can matter to Iron accounts; compare travel with the task size."),
+                ordinary("cows", "Cows", "Use a nearby reachable cow field.", "Use any legal style; hides can support early Crafting."),
+                ordinary("crabs", "Crabs", "Use the exact reachable crab variant named by the assignment.", "Low-attention combat may fit AFK sessions, but verify variant access."),
+                ordinary("crocodiles", "Crocodiles", "Use the assigned Kharidian Desert area with water/heat preparation.", "Use a sustainable legal style and verify desert supplies."),
+                ordinary("dark-warriors", "Dark warriors", "Use the assignment's verified location; do not assume a Wilderness route.", "Use any sustainable build-legal style."),
+                ordinary("dogs", "Dogs", "Use a reachable non-Wilderness dog variant matching the assignment.", "Temple Guardian and dangerous variants require separate access checks."),
+                ordinary("dwarves", "Dwarves", "Use a reachable dwarf or Black Guard location matching the assignment.", "Use any build-legal conventional style."),
+                ordinary("earth-warriors", "Earth warriors", "Use the assignment location only after its risk/access is verified.", "Do not route a Hardcore account into the Wilderness by default."),
+                ordinary("ents", "Ents", "Use a verified task-valid location; Wilderness ents require explicit risk acceptance.", "Choose a legal style and preserve useful log drops when relevant."),
+                ordinary("fire-giants", "Fire giants", "Use a reachable non-Wilderness dungeon matching current quest access.", "Use a safespot or sustainable legal setup; Branda is a separate boss encounter."),
+                ordinary("flesh-crawlers", "Fleshcrawlers", "Stronghold of Security when reachable and suitable.", "Use a sustainable build-legal style and value herb drops on early Irons."),
+                ordinary("ghosts", "Ghosts", "Use a reachable non-Wilderness ghost location matching the task.", "Revenants and boss variants are separate risk contexts."),
+                ordinary("ghouls", "Ghouls", "Morytania only after Priest in Peril access is observed.", "Use any sustainable build-legal style."),
+                ordinary("goblins", "Goblins", "Use a nearby low-risk goblin location.", "God Wars sergeants are separate encounter contexts."),
+                dragon("green-dragons", "Green dragons", "Use a safe non-Wilderness route when available; Wilderness routes require explicit risk acceptance."),
+                ordinary("hellhounds", "Hellhounds", "Use a reachable non-Wilderness location matching the assignment.", "Cerberus requires its own Slayer/boss readiness decision."),
+                ordinary("hill-giants", "Hill giants", "Use a reachable low-risk location; giant keys may support an explicit Obor goal.", "Use a sustainable legal style; Obor is a separate keyed encounter."),
+                ordinary("hobgoblins", "Hobgoblins", "Use a reachable non-Wilderness location.", "Use any sustainable build-legal style."),
+                ordinary("icefiends", "Icefiends", "Use a reachable icy-area spawn matching the assignment.", "Use any legal style after verifying cold-area access."),
+                ordinary("ice-giants", "Ice giants", "Use a reachable non-Wilderness ice dungeon.", "Eldric is a separate boss encounter."),
+                ordinary("ice-warriors", "Ice warriors", "Use a reachable non-Wilderness ice dungeon.", "Use any sustainable build-legal style."),
+                ordinary("jungle-horrors", "Jungle horrors", "Mos Le'Harmless only after Cabin Fever access is observed.", "Use a legal style and verify island transport."),
+                ordinary("lava-dragons", "Lava Dragons", "Wilderness Lava Dragon Isle only with explicit risk acceptance.", "Use disposable risk-aware gear, dragonfire protection, and an escape route."),
+                ordinary("lesser-demons", "Lesser demons", "Use a reachable non-Wilderness location unless risk is enabled.", "Use a safespot or sustainable build-legal setup."),
+                ordinary("lizardmen", "Lizardmen", "Use the exact reachable Shayzien/Kourend variant supported by access evidence.", "Shamans require separate protection and encounter preparation."),
+                ordinary("magic-axes", "Magic axes", "Use only the assignment location after Wilderness/access status is known.", "Prefer a safe alternative for Hardcore accounts."),
+                ordinary("minotaurs", "Minotaurs", "Stronghold of Security when reachable.", "Use any low-risk build-legal style."),
+                ordinary("monkeys", "Monkeys", "Use the exact reachable monkey variant supported by quest access.", "Demonic gorillas are a separate mechanics-heavy encounter."),
+                ordinary("moss-giants", "Moss giants", "Use a reachable non-Wilderness location; mossy keys can support a Bryophyta goal.", "Use a sustainable style; Bryophyta is a separate keyed encounter."),
+                ordinary("otherworldly-beings", "Otherworldly beings", "Zanaris only after fairy-ring access is proven.", "Use any sustainable build-legal style."),
+                ordinary("pirates", "Pirates", "Use a reachable non-Wilderness pirate location matching the assignment.", "Use any sustainable legal style."),
+                dragon("red-dragons", "Red dragons", "Use a verified non-Wilderness red-dragon route and compatible protection."),
+                ordinary("revenants", "Revenants", "Revenant Caves only with explicit Wilderness risk acceptance.", "Use disposable gear, verify bracelet/ether decisions, and keep a tested escape."),
+                ordinary("rogues", "Rogues", "Use the assignment's verified location; Wilderness variants require risk acceptance.", "Use any sustainable build-legal style."),
+                ordinary("scabarites", "Scabarites", "Use only after the relevant desert quest/access route is observed.", "Verify the exact scarab variant and desert supplies before travel."),
+                ordinary("scorpions", "Scorpions", "Use a reachable non-Wilderness scorpion location.", "Scorpia and Wilderness variants are separate risk contexts."),
+                ordinary("sea-snakes", "Sea snakes", "Use the verified island/quest route for the assigned variant.", "Verify transport before choosing a combat setup."),
+                ordinary("shades", "Shades", "Use the exact reachable shade tier and Morytania access.", "Shade-burning supplies are a separate minigame/resource decision."),
+                ordinary("shadow-warriors", "Shadow warriors", "Legends' Guild basement only after access is proven.", "Use any sustainable build-legal style."),
+                ordinary("skeletons", "Skeletons", "Use a reachable non-Wilderness skeleton location.", "Vet'ion, Calvar'ion and Wilderness variants are separate risk contexts."),
+                ordinary("sourhogs", "Sourhogs", "Use the verified Sourhog Cave route after A Porcine of Interest.", "Carry reinforced goggles or another verified protection option."),
+                ordinary("terror-dogs", "Terror dogs", "Tarn's Lair only after Haunted Mine/lair access is proven.", "Verify the dungeon route and supplies before travel."),
+                ordinary("tzhaar", "Tzhaar", "Use the reachable Mor Ul Rek/TzHaar area supported by account access.", "Jad and Zuk are separate challenge encounters."),
+                ordinary("werewolves", "Werewolves", "Use a reachable Morytania werewolf location after access is proven.", "Verify the exact variant; Wolfbane mechanics are quest-context dependent."),
+                ordinary("wolves", "Wolves", "Use a reachable non-Wilderness wolf location.", "Use any sustainable build-legal style."),
+                ordinary("zombies", "Zombies", "Use a reachable non-Wilderness zombie location.", "Vorkath and Zogre variants are separate access/mechanics contexts."));
+    }
+
+    private static SlayerTaskProfile ordinary(String id, String alias,
+            String location, String note)
+    {
+        return p(id, a(alias), Collections.emptyList(), location,
+                "Choose a sustainable build-legal style from observed gear.", note);
+    }
+
+    private static SlayerTaskProfile dragon(String id, String alias,
+            String location)
+    {
+        return p(id, a(alias), a("Anti-dragon shield", "Dragonfire shield", "Dragonfire ward"),
+                location, "Use a compatible one-handed or otherwise verified dragonfire-safe setup.",
+                "Dragonfire protection and the exact location must be verified separately.");
+    }
+
+    private static List<SlayerTaskProfile> join(List<SlayerTaskProfile> first,
+            List<SlayerTaskProfile> second)
+    {
+        java.util.ArrayList<SlayerTaskProfile> result = new java.util.ArrayList<>(first);
+        result.addAll(second);
+        return Collections.unmodifiableList(result);
+    }
 
     public SlayerTaskProfile profileFor(String taskName)
     {
