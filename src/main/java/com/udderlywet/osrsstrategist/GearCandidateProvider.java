@@ -12,11 +12,19 @@ import net.runelite.api.Skill;
 public class GearCandidateProvider implements StrategyCandidateProvider
 {
     private final GearProgressionCatalog catalog;
+    private final GearAcquisitionCatalog acquisitionCatalog;
 
     @Inject
-    public GearCandidateProvider(GearProgressionCatalog catalog)
+    public GearCandidateProvider(GearProgressionCatalog catalog,
+            GearAcquisitionCatalog acquisitionCatalog)
     {
         this.catalog = catalog;
+        this.acquisitionCatalog = acquisitionCatalog;
+    }
+
+    public GearCandidateProvider(GearProgressionCatalog catalog)
+    {
+        this(catalog, new GearAcquisitionCatalog());
     }
 
     @Override
@@ -92,7 +100,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
-    private static RecommendationGuidance acquisitionGuidance(
+    private RecommendationGuidance acquisitionGuidance(
             GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items)
     {
         if (!items.bankObserved() && mode != AccountMode.ULTIMATE_IRONMAN)
@@ -113,8 +121,12 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         }
         String next = unresolved.isEmpty()
                 ? entry.getWeaponGuidance() : unresolved.get(0);
+        GearAcquisitionRoute route = acquisitionCatalog.forItem(next);
         String action;
-        if (mode.usesGrandExchange())
+        if (route != null && !route.getSteps().isEmpty()
+                && (!mode.usesGrandExchange() || !route.isTradeable()))
+            action = route.getSteps().get(0).getAction();
+        else if (mode.usesGrandExchange())
             action = "Compare the live price and marginal benefit of " + next
                     + " before buying; keep the current item when the upgrade is not worth the detour.";
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
@@ -129,9 +141,11 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 + ". Still to compare: "
                 + (unresolved.isEmpty() ? "weapon/context comparison only"
                 : String.join(", ", unresolved)) + ".";
-        return new RecommendationGuidance(action, supplies,
-                "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location.",
-                entry.getNote());
+        String location = route == null
+                ? "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location."
+                : "Route: " + route.getSteps().get(0).getTarget() + ".";
+        return new RecommendationGuidance(action, supplies, location,
+                entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }
 
     private static GearBudgetTier targetTier(AccountSnapshot account, boolean f2p)
