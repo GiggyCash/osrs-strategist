@@ -62,7 +62,7 @@ public final class ItemRequirementEvaluator
         switch (expression.getScope())
         {
             case EQUIPPED:
-                owned = items.equipped(names) ? 1 : 0;
+                owned = items.equippedQuantity(names);
                 observed = data != null && data.getEquipment() != null;
                 break;
             case CARRIED:
@@ -73,7 +73,7 @@ public final class ItemRequirementEvaluator
             case CARRIED_OR_EQUIPPED:
                 owned = quantityIn(data == null || data.getInventory() == null
                         ? null : data.getInventory().getItems(), names)
-                        + (items.equipped(names) ? 1 : 0);
+                        + items.equippedQuantity(names);
                 observed = data != null && data.getInventory() != null
                         && data.getEquipment() != null;
                 break;

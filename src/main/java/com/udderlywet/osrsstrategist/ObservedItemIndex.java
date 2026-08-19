@@ -106,9 +106,14 @@ public final class ObservedItemIndex
     /** True only when one of the names is currently equipped. */
     public boolean equipped(String... names)
     {
-        return data != null
-                && data.getEquipment() != null
-                && quantityIn(data.getEquipment().getEquippedItems(), names) > 0;
+        return equippedQuantity(names) > 0;
+    }
+
+    /** Returns the observed stack quantity in equipped slots. */
+    public int equippedQuantity(String... names)
+    {
+        return data == null || data.getEquipment() == null ? 0
+                : quantityIn(data.getEquipment().getEquippedItems(), names);
     }
 
     public boolean bankObserved()

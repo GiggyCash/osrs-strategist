@@ -105,6 +105,30 @@ public class ItemRequirementEvaluatorTest
                 evaluator.evaluate(requirement, data, false).getState());
     }
 
+    @Test
+    public void stackableEquippedQuantitySatisfiesExactRequirement()
+    {
+        ItemRequirementExpression equipped = ItemRequirementExpression.item(
+                "Broad bolts", 50, ItemRequirementScope.EQUIPPED);
+        StrategyDataBundle data = bundle(0)
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        item("Broad bolts", 75)))).build();
+        assertTrue(evaluator.evaluate(equipped, data, false).isSatisfied());
+    }
+
+    @Test
+    public void carriedAndEquippedStacksCombineForExactRequirement()
+    {
+        ItemRequirementExpression available = ItemRequirementExpression.item(
+                "Broad bolts", 100, ItemRequirementScope.CARRIED_OR_EQUIPPED);
+        StrategyDataBundle data = bundle(0)
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        item("Broad bolts", 40))))
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        item("Broad bolts", 60)))).build();
+        assertTrue(evaluator.evaluate(available, data, false).isSatisfied());
+    }
+
     private static StrategyDataBundle.Builder bundle(int type)
     {
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);
