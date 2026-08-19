@@ -1,11 +1,11 @@
 package com.udderlywet.osrsstrategist;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.ItemComposition;
 import net.runelite.client.game.ItemManager;
+import net.runelite.http.api.item.ItemPrice;
 
 /**
  * Resolves current tradeable-item prices through RuneLite's own ItemManager.
@@ -41,12 +41,12 @@ public class MarketPriceService
 
         try
         {
-            List<?> results = itemManager.search(exactItemName);
+            List<ItemPrice> results = itemManager.search(exactItemName);
             if (results == null) return null;
-            for (Object result : results)
+            for (ItemPrice result : results)
             {
-                Integer itemId = readItemId(result);
-                if (itemId == null || itemId <= 0) continue;
+                int itemId = result.getId();
+                if (itemId <= 0) continue;
                 ItemComposition composition = itemManager.getItemComposition(itemId);
                 if (composition == null || composition.getName() == null
                         || !exactItemName.equalsIgnoreCase(composition.getName()))
@@ -81,20 +81,4 @@ public class MarketPriceService
         }
     }
 
-    private static Integer readItemId(Object priceObject)
-    {
-        if (priceObject == null) return null;
-        try
-        {
-            Method getId = priceObject.getClass().getMethod("getId");
-            Object value = getId.invoke(priceObject);
-            return value instanceof Number
-                    ? ((Number) value).intValue()
-                    : null;
-        }
-        catch (ReflectiveOperationException ex)
-        {
-            return null;
-        }
-    }
 }
