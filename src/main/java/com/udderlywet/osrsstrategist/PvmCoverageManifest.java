@@ -16,11 +16,13 @@ public class PvmCoverageManifest
     {
         PvmActivityCatalog activities = new PvmActivityCatalog();
         PvmEvidenceProfileCatalog evidence = new PvmEvidenceProfileCatalog();
+        PvmPreparationProfileCatalog preparation = new PvmPreparationProfileCatalog();
         List<ContentCoverageEntry> values = new ArrayList<>();
         for (PvmActivityDefinition activity : activities.all())
         {
             boolean verified = evidence.forActivity(activity.getId()) != null;
-            boolean partial = activities.hasCuratedReadinessProfile(activity.getId());
+            boolean partial = activities.hasCuratedReadinessProfile(activity.getId())
+                    || preparation.forActivity(activity.getId()) != null;
             ContentCoverageState state = verified ? ContentCoverageState.STRUCTURED
                     : partial ? ContentCoverageState.PARTIAL_PREPARATION
                     : ContentCoverageState.CONSERVATIVE_FAIL_CLOSED;

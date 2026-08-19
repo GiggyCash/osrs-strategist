@@ -61,8 +61,8 @@ public class ContentCoverageManifestTest
         assertEquals(71, manifest.all().size());
         assertUniqueAndExplained(manifest.all());
         assertEquals(4, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(30, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
-        assertEquals(37, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+        assertEquals(57, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
+        assertEquals(10, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
     }
 
     @Test
