@@ -32,7 +32,7 @@ public class ContentCoverageManifestTest
         assertEquals(211, count(manifest.all(), ContentCoverageState.STRUCTURED));
         assertEquals(0, count(manifest.all(),
                 ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
-        assertEquals(104, new QuestKnowledgeCatalog().all().values().stream()
+        assertEquals(0, new QuestKnowledgeCatalog().all().values().stream()
                 .filter(QuestDefinition::hasFieldUncertainty).count());
         assertTrue(manifest.all().stream().anyMatch(entry ->
                 entry.getName().equals("Enter the Abyss")

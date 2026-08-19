@@ -32,8 +32,10 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertEquals(Integer.valueOf(74),
                 bloodMoon.getSkillRequirements().get(Skill.SLAYER));
         assertTrue(bloodMoon.getPrerequisites().contains("Sins of the Father"));
-        assertTrue(bloodMoon.hasFieldUncertainty());
+        assertFalse(bloodMoon.hasFieldUncertainty());
         assertFalse(bloodMoon.getStartLocation().isEmpty());
+        assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
     }
 
     @Test
