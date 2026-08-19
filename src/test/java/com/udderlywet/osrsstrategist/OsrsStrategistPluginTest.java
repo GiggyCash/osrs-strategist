@@ -2,9 +2,30 @@ package com.udderlywet.osrsstrategist;
 
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
+import net.runelite.client.eventbus.Subscribe;
+import net.runelite.api.events.VarbitChanged;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class OsrsStrategistPluginTest
 {
+    @Test
+    public void varbitBackedProgressionChangesAreSubscribed()
+            throws NoSuchMethodException
+    {
+        assertTrue(OsrsStrategistPlugin.class
+                .getMethod("onVarbitChanged", VarbitChanged.class)
+                .isAnnotationPresent(Subscribe.class));
+
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        plugin.onVarbitChanged(null);
+        plugin.onVarbitChanged(null);
+        assertTrue(plugin.consumeVarbitRefreshPending());
+        assertFalse(plugin.consumeVarbitRefreshPending());
+    }
+
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception
     {

@@ -13,6 +13,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -65,6 +66,7 @@ public class OsrsStrategistPlugin extends Plugin
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
+    private boolean varbitRefreshPending;
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
@@ -122,6 +124,7 @@ public class OsrsStrategistPlugin extends Plugin
         strategyProfile = null;
         trackedMilestone = null;
         latestData = null;
+        varbitRefreshPending = false;
         panel = null;
         navButton = null;
     }
@@ -137,7 +140,25 @@ public class OsrsStrategistPlugin extends Plugin
     {
         boolean accessChanged = accessObservationService.observeCurrentLocation();
         boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
-        if (accessChanged || farmChanged) updateAccountPanel();
+        boolean liveStateChanged = consumeVarbitRefreshPending();
+        if (accessChanged || farmChanged || liveStateChanged) updateAccountPanel();
+    }
+
+    /**
+     * Quest, diary, Slayer, and several unlock states are varbit-backed. Coalesce
+     * their often-bursty changes into one read on the following game tick.
+     */
+    @Subscribe
+    public void onVarbitChanged(VarbitChanged event)
+    {
+        varbitRefreshPending = true;
+    }
+
+    boolean consumeVarbitRefreshPending()
+    {
+        boolean pending = varbitRefreshPending;
+        varbitRefreshPending = false;
+        return pending;
     }
 
     @Subscribe
@@ -176,6 +197,7 @@ public class OsrsStrategistPlugin extends Plugin
         strategyDataAssembler.clearForAccountChange();
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
+        varbitRefreshPending = false;
         methodGuidanceOverlay.clear();
         recommendationDetailsOverlay.clear();
         syncPreferenceProfile();
