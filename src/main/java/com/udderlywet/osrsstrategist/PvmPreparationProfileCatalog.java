@@ -24,6 +24,7 @@ public class PvmPreparationProfileCatalog
         wildernessBosses();
         conventionalBosses();
         skillingEncounters();
+        currentEncounters();
     }
 
     public PvmPreparationProfile forActivity(String id)
@@ -128,6 +129,50 @@ public class PvmPreparationProfileCatalog
                 "Verify Song of the Elves completion and Prifddinas access",
                 "Prepare the required Mining, Smithing and Runecraft activity tools",
                 "Carry food and an escape option; value the encounter for resources and collection goals");
+    }
+
+    private void currentEncounters()
+    {
+        add("pvm:amoxliatl", "crush melee",
+                "Verify completion of The Heart of Darkness and access to the Twilight Temple",
+                "Use a legal crush setup and prepare to destroy unstable ice with melee",
+                "Carry food, restoration and an escape; do not infer mechanic readiness from stats alone");
+        add("pvm:deranged_archaeologist", "magic",
+                "Verify Bone Voyage completion and Fossil Island Tar Swamp access",
+                "Carry an axe for the swamp route; add a rake or use an already unlocked alternate crossing",
+                "Use Protect from Missiles at range and be ready to move immediately from the book special attack");
+        add("pvm:doom_of_mokhaiotl", "ranged with switches",
+                "Verify The Final Dawn completion and access to the Ruins of Mokhaiotl",
+                "Start only at a conservative delve level; player execution and deeper-delve readiness remain unknown",
+                "Prepare phase-compatible switches, anti-venom, food, restoration and a return route");
+        add("pvm:lunar_chests", "melee",
+                "Verify Perilous Moons completion and Neypotzli access",
+                "Prepare for only the Moon bosses the account intends to subdue before looting",
+                "Use the dungeon's verified food and potion preparation or carry an independently complete setup");
+        add("pvm:mad_angel", "crush melee",
+                "Verify Fallen From Grace completion and repeatable Mad Angel access in Ardeaglais",
+                "Use a legal crush or verified golembane setup and review the encounter mechanics before waking the boss",
+                "Carry food, restoration and an escape; quest-version completion does not prove repeatable-boss readiness");
+        add("pvm:maggot_king", "hybrid",
+                "Verify The Blood Moon Rises completion and post-quest Vampyrium access",
+                "Treat this as high-end solo content and verify every phase-specific weapon and prayer response",
+                "Prepare poison handling, food, restoration and death-cost acceptance; never infer player execution skill");
+        add("pvm:shellbane_gryphon", "melee",
+                "Verify Troubled Tortugans completion plus a live gryphon Slayer assignment or an eligible Elite clue",
+                "Equip a tortugan shield and verify the chosen setup meets the encounter's protection mechanics",
+                "Use Protect from Melee, carry food and plan access via fairy ring CJQ or a valid charter route");
+        add("pvm:the_hueycoatl", "crush melee",
+                "Verify Children of the Sun completion, speak to Taala, and choose a public group or paid private instance",
+                "Prepare crush damage for the tail and protection-prayer responses for the projectile phases",
+                "Carry food and restoration; solo possibility does not make soloing the practical recommendation");
+        add("pvm:the_royal_titans", "melee, ranged and magic",
+                "Verify the Asgarnia Ice Dungeon route; no quest or formal stat requirement is assumed",
+                "Prepare melee as the primary style plus compatible ranged and fire/water spell responses",
+                "Carry food, restoration and an escape; distinguish recommended stats from hard access");
+        add("pvm:yama", "slash melee or magic",
+                "Verify A Kingdom Divided completion and access through the Voice of Yama in the Chasm of Fire",
+                "Attempt the inhibited fight before considering any contract; contract readiness is never inferred",
+                "Prepare protection-prayer swaps, poison treatment, food, restoration and a verified demonbane or magic setup");
     }
 
     private void wild(String id, String style)

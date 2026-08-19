@@ -14,7 +14,7 @@ public class PvmPreparationProfileCatalogTest
     public void bulkProfilesAreUniqueReviewableAndCannotClaimReady()
     {
         PvmPreparationProfileCatalog catalog = new PvmPreparationProfileCatalog();
-        assertEquals(27, catalog.all().size());
+        assertEquals(37, catalog.all().size());
         Set<String> ids = new HashSet<>();
         for (PvmPreparationProfile profile : catalog.all().values())
         {
