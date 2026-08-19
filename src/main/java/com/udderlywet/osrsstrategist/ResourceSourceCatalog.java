@@ -25,6 +25,7 @@ public class ResourceSourceCatalog
         fishingAndCooking();
         craftingAndFletching();
         prayerAndCombat();
+        commonProgressionFamilies();
     }
 
     public List<ResourceSourceDefinition> all()
@@ -197,6 +198,59 @@ public class ResourceSourceCatalog
                 "Green dragons are optional Wilderness sourcing; safer blue/other dragon routes should be preferred on Hardcore.",
                 "Wilderness dragon routes require explicit risk acceptance and a UIM death/storage safety check before recommendation.",
                 true, RiskLevel.HIGH);
+    }
+
+    /** Broad, qualitative routes for common deterministic planning inputs. */
+    private void commonProgressionFamilies()
+    {
+        family("compost", "make or buy it near the Farming route", "compost", "supercompost", "ultracompost");
+        family("allotment-seeds", "use seed shops, contracts, pickpocketing, or verified drops", "potato seed", "onion seed", "cabbage seed", "tomato seed", "sweetcorn seed", "watermelon seed", "snape grass seed");
+        family("tree-seeds", "use bird nests, contracts, seed packs, or verified PvM drops", "acorn", "willow seed", "maple seed", "yew seed", "magic seed");
+        family("fruit-tree-seeds", "use bird nests, contracts, seed packs, or verified PvM drops", "apple tree seed", "banana tree seed", "orange tree seed", "curry tree seed", "pineapple seed", "papaya tree seed", "palm tree seed", "dragonfruit tree seed");
+        family("eye-of-newt", "buy from a verified Herblore shop or obtain from a known spawn", "eye of newt");
+        family("limpwurt-root", "farm limpwurts or use verified monster drops", "limpwurt root");
+        family("white-berries", "farm bushes or use a verified safe spawn/drop source", "white berries");
+        family("mort-myres", "gather in Mort Myre only after the required Morytania access and blessing are verified", "mort myre fungus", "mort myre stem", "mort myre pear");
+        family("potato-cactus", "farm cactus patches or use verified reward/drop sources", "potato cactus");
+        family("zammy-wine", "use a verified telegrab, temple, or PvM source without assuming a dangerous route", "wine of zamorak");
+        family("blue-dragon-scale", "collect scales only from a verified reachable blue-dragon area", "blue dragon scale", "ground blue dragon scale");
+        family("unfinished-potions", "combine the verified clean herb with a vial of water", "potion (unf)", "unfinished potion");
+        family("finished-potions", "make from verified herbs and secondaries; mains may compare buying the finished potion", "prayer potion", "super restore", "antipoison", "stamina potion", "ranging potion", "super combat potion", "sanfew serum");
+        family("vials", "buy vials or blow them from molten glass when that detour is worthwhile", "vial", "vial of water");
+        family("hides", "obtain from a safe verified creature source before tanning", "cowhide", "snake hide", "yak hide");
+        family("leather", "tan the matching hide at a verified tanner; mains may compare buying it", "leather", "hard leather");
+        family("dragon-leather", "tan self-sourced dragonhides or buy the exact leather on a Main", "green dragon leather", "blue dragon leather", "red dragon leather", "black dragon leather");
+        family("dragonhides", "use a safe verified dragon source; Wilderness dragons require explicit risk acceptance", "green dragonhide", "blue dragonhide", "red dragonhide", "black dragonhide");
+        family("jewellery", "craft from the matching bar, gem, and mould or buy on a Main", "sapphire ring", "emerald ring", "ruby ring", "diamond ring", "dragonstone ring", "sapphire necklace", "emerald necklace", "ruby necklace", "diamond necklace");
+        family("charged-orbs", "charge an unpowered orb at the verified elemental obelisk", "air orb", "water orb", "earth orb", "fire orb");
+        family("battlestaves", "buy from verified staff shops/rewards or attach a charged orb for the elemental staff", "battlestaff", "air battlestaff", "water battlestaff", "earth battlestaff", "fire battlestaff");
+        family("clay", "mine clay and add water, or buy the exact form when account mode permits", "clay", "soft clay");
+        family("wool", "shear sheep and spin wool, or use a verified shop", "wool", "ball of wool");
+        family("sand", "collect or mine buckets of sand using a verified route", "bucket of sand");
+        family("seaweed", "gather/farm seaweed and cook ordinary seaweed when soda ash is required", "seaweed", "giant seaweed", "soda ash");
+        family("arrows", "fletch shafts, feathers, and matching arrowheads or buy compatible ammunition", "bronze arrow", "iron arrow", "steel arrow", "mithril arrow", "adamant arrow", "rune arrow", "amethyst arrow");
+        family("bolts", "combine matching unfinished bolts, feathers, and tips where applicable", "bronze bolts", "iron bolts", "steel bolts", "mithril bolts", "adamant bolts", "runite bolts", "broad bolts");
+        family("darts", "attach feathers to matching dart tips after the Smithing unlock is available", "bronze dart", "iron dart", "steel dart", "mithril dart", "adamant dart", "rune dart", "amethyst dart");
+        family("javelins", "attach matching heads to javelin shafts or use verified ammunition rewards", "bronze javelin", "iron javelin", "steel javelin", "mithril javelin", "adamant javelin", "rune javelin");
+        family("bow-components", "cut the matching logs and spin or source bow strings", "shortbow (u)", "longbow (u)", "bow string");
+        family("crossbow-components", "craft matching stocks and limbs, then add a crossbow string", "crossbow stock", "crossbow limb", "crossbow string", "crossbow (u)");
+        family("raw-meat", "hunt or kill a safe verified creature that provides the exact meat", "raw beef", "raw chicken", "raw rat meat", "raw bear meat", "raw chompy", "raw yak meat");
+        family("hunter-food", "hunt the unlocked creature and cook the meat using its verified recipe", "antelope meat", "dashing kebbit meat", "pyre fox meat");
+        family("ashes", "obtain the required ash tier from a verified demon or fire source", "ashes", "fiendish ashes", "vile ashes", "malicious ashes", "abyssal ashes", "infernal ashes");
+        family("teleport-jewellery", "craft and enchant the matching jewellery or buy charged variants on a Main", "games necklace", "dueling ring", "ring of wealth", "glory", "skills necklace", "combat bracelet", "slayer ring");
+        family("teleport-tablets", "make tablets in an observed suitable POH or buy them on a Main", "teleport to house", "varrock teleport", "falador teleport", "camelot teleport", "ardougne teleport");
+        family("construction-stone", "buy from the verified Construction supplier only when the target build justifies the cost", "limestone brick", "marble block", "gold leaf", "magic stone");
+        family("quest-tools", "obtain from a nearby verified tool shop or spawn", "rope", "spade", "hammer", "chisel", "tinderbox", "knife", "bucket", "pot");
+        family("poison-protection", "make, buy, or obtain the exact antipoison tier before the dangerous route", "antipoison", "antidote", "anti-venom");
+    }
+
+    private void family(String id, String route, String... itemTokens)
+    {
+        add(id, tokens(itemTokens),
+                "Buy the exact requirement when current price and time saved justify it; otherwise " + route + ".",
+                "Self-source the exact requirement: " + route + ".",
+                "Use a task-sized, immediately consumable route: " + route
+                        + "; do not assume conventional bank storage.");
     }
 
     private void add(String id, List<String> tokens,

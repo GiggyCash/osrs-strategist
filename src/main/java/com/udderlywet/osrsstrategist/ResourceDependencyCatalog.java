@@ -134,6 +134,105 @@ public class ResourceDependencyCatalog
                         DependencyRequirement.gear("Glassblowing pipe"),
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.MOLTEN_GLASS, "Molten glass", 1)))));
+        addAmmunition(values);
+        addCrafting(values);
         return values;
+    }
+
+    public int size()
+    {
+        return definitions.size();
+    }
+
+    private static void addAmmunition(List<ResourceDependencyDefinition> values)
+    {
+        values.add(recipe(ItemID.ARROW_SHAFT, "Cut normal logs into arrow shafts.",
+                15, Skill.FLETCHING, 1, ItemID.LOGS, "Logs", 1));
+        values.add(recipe(ItemID.HEADLESS_ARROW,
+                "Attach feathers to arrow shafts to make headless arrows.",
+                1, Skill.FLETCHING, 1, ItemID.ARROW_SHAFT, "Arrow shaft", 1,
+                ItemID.FEATHER, "Feather", 1));
+        arrow(values, ItemID.BRONZE_ARROW, "Bronze", ItemID.BRONZE_ARROWHEADS, 1);
+        arrow(values, ItemID.IRON_ARROW, "Iron", ItemID.IRON_ARROWHEADS, 15);
+        arrow(values, ItemID.STEEL_ARROW, "Steel", ItemID.STEEL_ARROWHEADS, 30);
+        arrow(values, ItemID.MITHRIL_ARROW, "Mithril", ItemID.MITHRIL_ARROWHEADS, 45);
+        arrow(values, ItemID.ADAMANT_ARROW, "Adamant", ItemID.ADAMANT_ARROWHEADS, 60);
+        arrow(values, ItemID.RUNE_ARROW, "Rune", ItemID.RUNE_ARROWHEADS, 75);
+        dart(values, ItemID.BRONZE_DART, "Bronze", ItemID.BRONZE_DART_TIP, 1);
+        dart(values, ItemID.IRON_DART, "Iron", ItemID.IRON_DART_TIP, 22);
+        dart(values, ItemID.STEEL_DART, "Steel", ItemID.STEEL_DART_TIP, 37);
+        dart(values, ItemID.MITHRIL_DART, "Mithril", ItemID.MITHRIL_DART_TIP, 52);
+        dart(values, ItemID.ADAMANT_DART, "Adamant", ItemID.ADAMANT_DART_TIP, 67);
+        dart(values, ItemID.RUNE_DART, "Rune", ItemID.RUNE_DART_TIP, 81);
+    }
+
+    private static void addCrafting(List<ResourceDependencyDefinition> values)
+    {
+        leather(values, ItemID.LEATHER_GLOVES, "Leather gloves", 1);
+        leather(values, ItemID.LEATHER_BOOTS, "Leather boots", 7);
+        leather(values, ItemID.LEATHER_COWL, "Leather cowl", 9);
+        leather(values, ItemID.LEATHER_VAMBRACES, "Leather vambraces", 11);
+        leather(values, ItemID.LEATHER_ARMOUR, "Leather body", 14);
+        values.add(recipe(ItemID.HARDLEATHER_BODY, "Sew a hardleather body.",
+                1, Skill.CRAFTING, 28, ItemID.HARD_LEATHER, "Hard leather", 1));
+        battlestaff(values, ItemID.AIR_BATTLESTAFF, "Air", ItemID.AIR_ORB, 66);
+        battlestaff(values, ItemID.WATER_BATTLESTAFF, "Water", ItemID.WATER_ORB, 54);
+        battlestaff(values, ItemID.EARTH_BATTLESTAFF, "Earth", ItemID.EARTH_ORB, 58);
+        battlestaff(values, ItemID.FIRE_BATTLESTAFF, "Fire", ItemID.FIRE_ORB, 62);
+        glass(values, ItemID.BEER_GLASS, "beer glass", 1);
+        glass(values, ItemID.CANDLE_LANTERN_EMPTY, "empty candle lantern", 4);
+        glass(values, ItemID.FISHBOWL_EMPTY, "empty fishbowl", 42);
+    }
+
+    private static void arrow(List<ResourceDependencyDefinition> values, int output,
+            String metal, int heads, int level)
+    {
+        values.add(recipe(output, "Attach " + metal.toLowerCase()
+                + " arrowheads to headless arrows.", 1, Skill.FLETCHING, level,
+                ItemID.HEADLESS_ARROW, "Headless arrow", 1,
+                heads, metal + " arrowhead", 1));
+    }
+
+    private static void dart(List<ResourceDependencyDefinition> values, int output,
+            String metal, int tips, int level)
+    {
+        values.add(recipe(output, "Attach feathers to " + metal.toLowerCase()
+                + " dart tips.", 1, Skill.FLETCHING, level,
+                tips, metal + " dart tip", 1, ItemID.FEATHER, "Feather", 1));
+    }
+
+    private static void leather(List<ResourceDependencyDefinition> values,
+            int output, String name, int level)
+    {
+        values.add(recipe(output, "Sew " + name.toLowerCase() + ".", 1,
+                Skill.CRAFTING, level, ItemID.LEATHER, "Leather", 1));
+    }
+
+    private static void battlestaff(List<ResourceDependencyDefinition> values,
+            int output, String element, int orb, int level)
+    {
+        values.add(recipe(output, "Attach the charged " + element.toLowerCase()
+                + " orb to a battlestaff.", 1, Skill.CRAFTING, level,
+                ItemID.BATTLESTAFF, "Battlestaff", 1,
+                orb, element + " orb", 1));
+    }
+
+    private static void glass(List<ResourceDependencyDefinition> values,
+            int output, String name, int level)
+    {
+        values.add(recipe(output, "Blow molten glass into an " + name + ".", 1,
+                Skill.CRAFTING, level, ItemID.MOLTEN_GLASS, "Molten glass", 1));
+    }
+
+    private static ResourceDependencyDefinition recipe(int output, String action,
+            int yield, Skill skill, int level, Object... resources)
+    {
+        List<DependencyRequirement> requirements = new ArrayList<>();
+        requirements.add(DependencyRequirement.skill(skill, level));
+        for (int index = 0; index + 2 < resources.length; index += 3)
+            requirements.add(DependencyRequirement.resource(new ResourceNeed(
+                    (Integer) resources[index], (String) resources[index + 1],
+                    (Integer) resources[index + 2])));
+        return new ResourceDependencyDefinition(output, action, 8, yield, requirements);
     }
 }

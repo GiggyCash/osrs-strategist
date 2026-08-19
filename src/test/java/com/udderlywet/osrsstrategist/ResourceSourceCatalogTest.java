@@ -4,10 +4,16 @@ import java.util.List;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ResourceSourceCatalogTest
 {
+    @Test
+    public void broadSourceFamiliesCoverCommonProgressionInputs()
+    {
+        assertEquals(60, new ResourceSourceCatalog().all().size());
+    }
     private final ResourceSourceCatalog catalog = new ResourceSourceCatalog();
 
     @Test
