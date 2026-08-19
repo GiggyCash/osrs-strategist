@@ -1,6 +1,5 @@
 package com.udderlywet.osrsstrategist;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -12,20 +11,35 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.plugins.skillcalculator.skills.AgilityAction;
+import net.runelite.client.plugins.skillcalculator.skills.ConstructionAction;
+import net.runelite.client.plugins.skillcalculator.skills.CookingAction;
+import net.runelite.client.plugins.skillcalculator.skills.CraftingAction;
+import net.runelite.client.plugins.skillcalculator.skills.FarmingAction;
+import net.runelite.client.plugins.skillcalculator.skills.FiremakingAction;
+import net.runelite.client.plugins.skillcalculator.skills.FishingAction;
+import net.runelite.client.plugins.skillcalculator.skills.FletchingAction;
+import net.runelite.client.plugins.skillcalculator.skills.HerbloreAction;
+import net.runelite.client.plugins.skillcalculator.skills.HunterAction;
+import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
+import net.runelite.client.plugins.skillcalculator.skills.MiningAction;
+import net.runelite.client.plugins.skillcalculator.skills.PrayerAction;
+import net.runelite.client.plugins.skillcalculator.skills.RunecraftAction;
+import net.runelite.client.plugins.skillcalculator.skills.SkillAction;
+import net.runelite.client.plugins.skillcalculator.skills.SmithingAction;
+import net.runelite.client.plugins.skillcalculator.skills.ThievingAction;
+import net.runelite.client.plugins.skillcalculator.skills.WoodcuttingAction;
 
 /**
  * Adapts RuneLite's maintained skill-calculator action enums into Compass.
- * Reflection deliberately keeps Compass decoupled from individual enum
- * constants so RuneLite can add actions without requiring us to mirror them.
+ * The enum types are wired explicitly because Plugin Hub review forbids Java
+ * reflection; their maintained {@code values()} still provide the full catalog.
  */
 @Singleton
 public class RuneLiteSkillActionCatalog
 {
-    private static final String PACKAGE =
-            "net.runelite.client.plugins.skillcalculator.skills.";
-
     private final ItemManager itemManager;
-    private final Map<Skill, String> enumClasses = new LinkedHashMap<>();
+    private final Map<Skill, SkillAction[]> actionsBySkill = new LinkedHashMap<>();
 
     @Inject
     public RuneLiteSkillActionCatalog(ItemManager itemManager)
@@ -43,76 +57,36 @@ public class RuneLiteSkillActionCatalog
 
     public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
     {
-        String className = enumClasses.get(skill);
-        if (className == null) return Collections.emptyList();
-        try
+        SkillAction[] constants = actionsBySkill.get(skill);
+        if (constants == null) return Collections.emptyList();
+        List<RuneLiteSkillActionDefinition> actions = new ArrayList<>();
+        for (SkillAction action : constants)
         {
-            Class<?> type = Class.forName(PACKAGE + className);
-            Object[] constants = type.getEnumConstants();
-            if (constants == null) return Collections.emptyList();
-
-            Method getLevel = type.getMethod("getLevel");
-            Method getXp = type.getMethod("getXp");
-            Method getCategory = optionalMethod(type, "getCategory");
-            Method getItemId = optionalMethod(type, "getItemId");
-            Method getName = itemManager == null ? null
-                    : optionalMethod(type, "getName", ItemManager.class);
-            Method isMembers = itemManager == null ? null
-                    : optionalMethod(type, "isMembers", ItemManager.class);
-
-            List<RuneLiteSkillActionDefinition> actions = new ArrayList<>();
-            for (Object constant : constants)
-            {
-                Enum<?> enumValue = (Enum<?>) constant;
-                int level = ((Number) getLevel.invoke(constant)).intValue();
-                float xp = ((Number) getXp.invoke(constant)).floatValue();
-                Object rawCategory = getCategory == null
-                        ? null : getCategory.invoke(constant);
-                String category = rawCategory == null ? null : rawCategory.toString();
-                String name = getName == null
-                        ? pretty(enumValue.name())
-                        : String.valueOf(getName.invoke(constant, itemManager));
-                MembershipStatus membership = MembershipStatus.UNKNOWN;
-                if (isMembers != null)
-                {
-                    boolean members = (Boolean) isMembers.invoke(constant, itemManager);
-                    membership = members ? MembershipStatus.P2P : MembershipStatus.F2P;
-                }
-                int itemId = -1;
-                if (getItemId != null)
-                {
-                    Object rawItemId = getItemId.invoke(constant);
-                    if (rawItemId instanceof Number)
-                    {
-                        itemId = ((Number) rawItemId).intValue();
-                    }
-                }
-                actions.add(new RuneLiteSkillActionDefinition(
-                        skill,
-                        "runelite:" + skill.name().toLowerCase(Locale.ROOT)
-                                + ":" + enumValue.name().toLowerCase(Locale.ROOT),
-                        name,
-                        level,
-                        xp,
-                        category,
-                        membership,
-                        itemId));
-            }
-            return Collections.unmodifiableList(actions);
+            Enum<?> enumValue = (Enum<?>) action;
+            String name = itemManager == null ? pretty(enumValue.name())
+                    : action.getName(itemManager);
+            MembershipStatus membership = itemManager == null
+                    ? MembershipStatus.UNKNOWN
+                    : action.isMembers(itemManager)
+                            ? MembershipStatus.P2P : MembershipStatus.F2P;
+            actions.add(new RuneLiteSkillActionDefinition(
+                    skill,
+                    "runelite:" + skill.name().toLowerCase(Locale.ROOT)
+                            + ":" + enumValue.name().toLowerCase(Locale.ROOT),
+                    name,
+                    action.getLevel(),
+                    action.getXp(),
+                    null,
+                    membership,
+                    action.getIcon()));
         }
-        catch (ReflectiveOperationException | LinkageError ex)
-        {
-            // A RuneLite release may rename/remove a calculator class or core
-            // action accessor. That should reduce coverage explicitly rather
-            // than break the plugin.
-            return Collections.emptyList();
-        }
+        return Collections.unmodifiableList(actions);
     }
 
     public Map<Skill, Integer> coverageCounts()
     {
         Map<Skill, Integer> result = new EnumMap<>(Skill.class);
-        for (Skill skill : enumClasses.keySet())
+        for (Skill skill : actionsBySkill.keySet())
         {
             result.put(skill, actionsFor(skill).size());
         }
@@ -121,38 +95,23 @@ public class RuneLiteSkillActionCatalog
 
     private void seedClassMap()
     {
-        enumClasses.put(Skill.AGILITY, "AgilityAction");
-        enumClasses.put(Skill.COOKING, "CookingAction");
-        enumClasses.put(Skill.CONSTRUCTION, "ConstructionAction");
-        enumClasses.put(Skill.CRAFTING, "CraftingAction");
-        enumClasses.put(Skill.FARMING, "FarmingAction");
-        enumClasses.put(Skill.FIREMAKING, "FiremakingAction");
-        enumClasses.put(Skill.FISHING, "FishingAction");
-        enumClasses.put(Skill.FLETCHING, "FletchingAction");
-        enumClasses.put(Skill.HERBLORE, "HerbloreAction");
-        enumClasses.put(Skill.HUNTER, "HunterAction");
-        enumClasses.put(Skill.MAGIC, "MagicAction");
-        enumClasses.put(Skill.MINING, "MiningAction");
-        enumClasses.put(Skill.PRAYER, "PrayerAction");
-        enumClasses.put(Skill.RUNECRAFT, "RunecraftAction");
-        enumClasses.put(Skill.SMITHING, "SmithingAction");
-        enumClasses.put(Skill.THIEVING, "ThievingAction");
-        enumClasses.put(Skill.WOODCUTTING, "WoodcuttingAction");
-    }
-
-    private static Method optionalMethod(
-            Class<?> type,
-            String name,
-            Class<?>... parameterTypes)
-    {
-        try
-        {
-            return type.getMethod(name, parameterTypes);
-        }
-        catch (NoSuchMethodException ex)
-        {
-            return null;
-        }
+        actionsBySkill.put(Skill.AGILITY, AgilityAction.values());
+        actionsBySkill.put(Skill.COOKING, CookingAction.values());
+        actionsBySkill.put(Skill.CONSTRUCTION, ConstructionAction.values());
+        actionsBySkill.put(Skill.CRAFTING, CraftingAction.values());
+        actionsBySkill.put(Skill.FARMING, FarmingAction.values());
+        actionsBySkill.put(Skill.FIREMAKING, FiremakingAction.values());
+        actionsBySkill.put(Skill.FISHING, FishingAction.values());
+        actionsBySkill.put(Skill.FLETCHING, FletchingAction.values());
+        actionsBySkill.put(Skill.HERBLORE, HerbloreAction.values());
+        actionsBySkill.put(Skill.HUNTER, HunterAction.values());
+        actionsBySkill.put(Skill.MAGIC, MagicAction.values());
+        actionsBySkill.put(Skill.MINING, MiningAction.values());
+        actionsBySkill.put(Skill.PRAYER, PrayerAction.values());
+        actionsBySkill.put(Skill.RUNECRAFT, RunecraftAction.values());
+        actionsBySkill.put(Skill.SMITHING, SmithingAction.values());
+        actionsBySkill.put(Skill.THIEVING, ThievingAction.values());
+        actionsBySkill.put(Skill.WOODCUTTING, WoodcuttingAction.values());
     }
 
     private static String pretty(String value)
