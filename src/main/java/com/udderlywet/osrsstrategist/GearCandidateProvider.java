@@ -80,7 +80,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                     ? ""
                     : " Build protected: " + AccountBuildPolicy.label(account) + ".";
             RecommendationGuidance guidance = acquisitionGuidance(entry, mode,
-                    items);
+                    items, context);
 
             result.add(new StrategyCandidate(
                     id,
@@ -101,7 +101,8 @@ public class GearCandidateProvider implements StrategyCandidateProvider
     }
 
     private RecommendationGuidance acquisitionGuidance(
-            GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items)
+            GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items,
+            StrategyContext context)
     {
         if (!items.bankObserved() && mode != AccountMode.ULTIMATE_IRONMAN)
         {
@@ -122,10 +123,15 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         String next = unresolved.isEmpty()
                 ? entry.getWeaponGuidance() : unresolved.get(0);
         GearAcquisitionRoute route = acquisitionCatalog.forItem(next);
+        GearAcquisitionResolution resolution = route == null ? null
+                : new GearAcquisitionResolver(acquisitionCatalog,
+                        new QuestKnowledgeCatalog()).resolve(next, context);
         String action;
         if (route != null && !route.getSteps().isEmpty()
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
-            action = route.getSteps().get(0).getAction();
+            action = resolution != null && !resolution.getSteps().isEmpty()
+                    ? resolution.getSteps().get(0).getAction()
+                    : route.getSteps().get(0).getAction();
         else if (mode.usesGrandExchange())
             action = "Compare the live price and marginal benefit of " + next
                     + " before buying; keep the current item when the upgrade is not worth the detour.";
@@ -143,7 +149,9 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
                 ? "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location."
-                : "Route: " + route.getSteps().get(0).getTarget() + ".";
+                : "Route: " + (resolution != null && !resolution.getSteps().isEmpty()
+                        ? resolution.getSteps().get(0).getTarget()
+                        : route.getSteps().get(0).getTarget()) + ".";
         return new RecommendationGuidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }
