@@ -38,13 +38,30 @@ public class ResourceDependencyResolver
             ResourceNeed root)
     {
         State state = new State();
-        visit(context, root, 0, new HashSet<>(), state);
+        visit(context, root, 0, new HashSet<>(), state, false);
+        return result(state);
+    }
+
+    /**
+     * Resolves a root quantity already proven missing by another evaluator.
+     * Child dependencies still use normal ownership checks.
+     */
+    public ResourceDependencyResolution resolveKnownShortfall(
+            StrategyContext context, ResourceNeed root)
+    {
+        State state = new State();
+        visit(context, root, 0, new HashSet<>(), state, true);
+        return result(state);
+    }
+
+    private static ResourceDependencyResolution result(State state)
+    {
         return new ResourceDependencyResolution(new ArrayList<>(state.nodes.values()),
                 state.cycle, state.depth, state.cost);
     }
 
     private void visit(StrategyContext context, ResourceNeed need, int depth,
-            Set<String> active, State state)
+            Set<String> active, State state, boolean knownShortfall)
     {
         if (need == null) return;
         String id = "resource:" + need.getItemId();
@@ -71,7 +88,9 @@ public class ResourceDependencyResolver
             return;
         }
 
-        ResourceAcquisitionPlan ownership = ownershipPlanner.plan(context, totalNeed);
+        ResourceAcquisitionPlan ownership = knownShortfall
+                ? ownershipPlanner.planKnownShortfall(context, totalNeed)
+                : ownershipPlanner.plan(context, totalNeed);
         if (ownership != null && ownership.hasEnoughConfirmed())
         {
             // Retrieval-only UIM storage can prove quantity without proving that
@@ -123,7 +142,7 @@ public class ResourceDependencyResolver
                     child.getItemId(), child.getItemName(), combined));
         }
         for (ResourceNeed child : resourceNeeds.values())
-            visit(context, child, depth + 1, active, state);
+            visit(context, child, depth + 1, active, state, false);
         active.remove(id);
         addResource(state, id, definition.getAction(),
                 RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
@@ -135,7 +154,7 @@ public class ResourceDependencyResolver
     {
         if (requirement.getKind() == DependencyRequirement.Kind.RESOURCE)
         {
-            visit(context, requirement.getResource(), depth, active, state);
+            visit(context, requirement.getResource(), depth, active, state, false);
             return;
         }
         if (state.nodes.containsKey(requirement.getId())) return;
