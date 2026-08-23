@@ -107,6 +107,13 @@ public class ResourceDependencyResolver
             return;
         }
 
+        int confirmedOwned = knownShortfall || ownership == null
+                ? 0 : Math.min(totalRequested, ownership.getConfirmedQuantity());
+        int unresolvedRequested = Math.max(0, totalRequested - confirmedOwned);
+        int previousUnresolved = knownShortfall
+                ? previousProcessed
+                : Math.max(0, previousProcessed - confirmedOwned);
+
         ResourceDependencyDefinition definition = catalog.forItem(need.getItemId());
         if (definition == null)
         {
@@ -123,8 +130,8 @@ public class ResourceDependencyResolver
         }
 
         active.add(id);
-        int batches = ceilDiv(totalRequested, definition.getOutputQuantity())
-                - ceilDiv(previousProcessed, definition.getOutputQuantity());
+        int batches = ceilDiv(unresolvedRequested, definition.getOutputQuantity())
+                - ceilDiv(previousUnresolved, definition.getOutputQuantity());
         Map<Integer, ResourceNeed> resourceNeeds = new LinkedHashMap<>();
         for (DependencyRequirement requirement : definition.getPrerequisites())
         {
@@ -133,6 +140,7 @@ public class ResourceDependencyResolver
                 visitRequirement(context, requirement, depth + 1, active, state);
                 continue;
             }
+            if (batches <= 0) continue;
             ResourceNeed child = requirement.getResource();
             int required = safeMultiply(child.getQuantity(), batches);
             ResourceNeed prior = resourceNeeds.get(child.getItemId());
