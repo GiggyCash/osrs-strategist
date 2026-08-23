@@ -2,6 +2,8 @@
 """Generate the pinned quest-detail snapshot consumed by the local planner.
 
 This is a development-time tool. The plugin never contacts the Wiki at runtime.
+The generated schema records evidence state separately from field value so a
+missing source field or parser failure cannot silently become verified NONE.
 """
 
 import argparse
@@ -16,6 +18,11 @@ USER_AGENT = (
     "GielinorCompass quest-enrichment generator "
     "(contact: GitHub GiggyCash/osrs-strategist)"
 )
+
+VALUE = "VALUE"
+NONE = "NONE"
+MISSING = "MISSING"
+PARSE_FAILURE = "PARSE_FAILURE"
 
 
 def request(parameters):
@@ -35,19 +42,42 @@ def quest_bucket():
                     "formatversion": 2, "query": query})["bucket"]
 
 
+def bucket_field(row, key, blank_is_none):
+    if key not in row:
+        return "", MISSING
+    value = row.get(key)
+    if value is None:
+        value = ""
+    value = str(value)
+    if value.strip():
+        return value, VALUE
+    return "", NONE if blank_is_none else MISSING
+
+
 def reward_sections(names):
     result = {}
     for offset in range(0, len(names), 40):
+        batch = names[offset:offset + 40]
         response = request({
             "action": "query", "format": "json", "formatversion": 2,
             "prop": "revisions", "rvprop": "content", "rvslots": "main",
-            "titles": "|".join(names[offset:offset + 40]),
+            "titles": "|".join(batch),
         })
-        for page in response["query"]["pages"]:
+        seen = set()
+        for page in response.get("query", {}).get("pages", []):
+            title = page.get("title")
+            if not title:
+                continue
+            seen.add(title)
             revisions = page.get("revisions", [])
             if not revisions:
+                result[title] = ("", MISSING)
                 continue
-            source = revisions[0]["slots"]["main"]["content"]
+            slots = revisions[0].get("slots", {})
+            source = slots.get("main", {}).get("content")
+            if source is None:
+                result[title] = ("", MISSING)
+                continue
             match = re.search(
                 r"(?ims)^==+\s*Rewards?\s*==+\s*(.*?)(?=^==[^=]|\Z)",
                 source,
@@ -58,8 +88,12 @@ def reward_sections(names):
                 match = re.search(
                     r"(?ims)(The rewarded XP .*?)(?=^==[^=]|\Z)", source
                 )
-            if match:
-                result[page["title"]] = match.group(1).strip()
+            if not match or not match.group(1).strip():
+                result[title] = ("", PARSE_FAILURE)
+            else:
+                result[title] = (match.group(1).strip(), VALUE)
+        for title in batch:
+            result.setdefault(title, ("", MISSING))
     return result
 
 
@@ -74,20 +108,30 @@ def main():
     raw_rows = quest_bucket()
     rows_by_name = {}
     for row in raw_rows:
+        page_name = row.get("page_name")
+        if not page_name:
+            raise RuntimeError("Quest bucket returned a row without page_name")
         # Some guide pages transclude several Quest details templates into the
         # same page bucket. They are not canonical RuneLite quest identities.
-        rows_by_name.setdefault(row["page_name"], row)
+        rows_by_name.setdefault(page_name, row)
     rows = [rows_by_name[name] for name in sorted(rows_by_name)]
     rewards = reward_sections([row["page_name"] for row in rows])
     with open(args.output, "w", encoding="utf-8", newline="\n") as output:
         output.write("# OSRS Wiki quest bucket and quest reward sections.\n")
         output.write("# Generated development-time; runtime performs no network requests.\n")
-        output.write("# name<TAB>start<TAB>requirements<TAB>items<TAB>enemies<TAB>rewards\n")
+        output.write("# schema=2; blank values are meaningful only with their evidence state.\n")
+        output.write("# name<TAB>start<TAB>start_state<TAB>requirements<TAB>requirements_state<TAB>items<TAB>items_state<TAB>enemies<TAB>enemies_state<TAB>rewards<TAB>rewards_state\n")
         for row in rows:
-            values = [row["page_name"], row.get("start_point", ""),
-                      row.get("requirements", ""), row.get("items_required", ""),
-                      row.get("enemies_to_defeat", ""),
-                      rewards.get(row["page_name"], "")]
+            start, start_state = bucket_field(row, "start_point", False)
+            requirements, requirements_state = bucket_field(
+                row, "requirements", True)
+            items, items_state = bucket_field(row, "items_required", True)
+            enemies, enemies_state = bucket_field(
+                row, "enemies_to_defeat", True)
+            reward_text, reward_state = rewards[row["page_name"]]
+            values = [row["page_name"], start, start_state,
+                      requirements, requirements_state, items, items_state,
+                      enemies, enemies_state, reward_text, reward_state]
             output.write("\t".join(escape(value) for value in values) + "\n")
 
 

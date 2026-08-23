@@ -3,6 +3,7 @@ package com.udderlywet.osrsstrategist;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,25 +24,32 @@ public class AuthoritativeQuestEnrichmentCatalogTest
     }
 
     @Test
-    public void explicitBlankBucketFieldsAreVerifiedNone()
+    public void legacyBlankBucketFieldsAreDistinguishableFromStrictEvidence()
     {
+        AuthoritativeQuestEnrichmentCatalog catalog =
+                new AuthoritativeQuestEnrichmentCatalog();
         AuthoritativeQuestEnrichmentCatalog.Record quest =
-                new AuthoritativeQuestEnrichmentCatalog()
-                        .recordFor("Ethically Acquired Antiquities");
+                catalog.recordFor("Ethically Acquired Antiquities");
         assertNotNull(quest);
         assertTrue(quest.getItems().isEmpty());
+        assertEquals(AuthoritativeQuestEnrichmentCatalog.EvidenceState.LEGACY_NONE,
+                quest.getItemState());
         assertTrue(quest.hasItemEvidence());
-        assertTrue(quest.hasCombatEvidence());
+        assertFalse(quest.hasStrictItemEvidence());
+        assertFalse(catalog.hasStrictFieldEvidence());
     }
 
     @Test
-    public void recipeSubquestAliasesResolveToTheirOwnEvidence()
+    public void nonBlankLegacyFieldsRemainValueEvidence()
     {
         AuthoritativeQuestEnrichmentCatalog.Record quest =
                 new AuthoritativeQuestEnrichmentCatalog()
                         .recordFor("Recipe for Disaster - King Awowogei");
         assertNotNull(quest);
         assertTrue(quest.getItems().contains("greegree"));
+        assertEquals(AuthoritativeQuestEnrichmentCatalog.EvidenceState.VALUE,
+                quest.getItemState());
+        assertTrue(quest.hasStrictItemEvidence());
         assertTrue(quest.hasRewardEvidence());
     }
 }

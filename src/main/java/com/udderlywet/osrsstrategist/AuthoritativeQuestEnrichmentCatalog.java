@@ -32,6 +32,18 @@ public final class AuthoritativeQuestEnrichmentCatalog
 
     public Map<String, Record> all() { return records; }
 
+    /**
+     * True only when every row came from the evidence-aware snapshot schema.
+     * Legacy snapshots remain readable so an update can be staged safely, but
+     * callers can distinguish their inferred blank fields from verified NONE.
+     */
+    public boolean hasStrictFieldEvidence()
+    {
+        for (Record record : records.values())
+            if (record.hasLegacyEvidence()) return false;
+        return true;
+    }
+
     private static Map<String, Record> load()
     {
         Map<String, Record> result = new LinkedHashMap<>();
@@ -43,16 +55,24 @@ public final class AuthoritativeQuestEnrichmentCatalog
                 stream, StandardCharsets.UTF_8)))
         {
             String line;
+            int lineNumber = 0;
             while ((line = reader.readLine()) != null)
             {
+                lineNumber++;
                 if (line.isEmpty() || line.startsWith("#")) continue;
-                String[] columns = line.split("\t", -1);
-                if (columns.length != 6) throw new IllegalStateException(
-                        "Malformed quest enrichment row");
-                Record record = new Record(unescape(columns[0]),
-                        unescape(columns[1]), unescape(columns[2]),
-                        unescape(columns[3]), unescape(columns[4]),
-                        unescape(columns[5]));
+                String[] columns = line.split("\\t", -1);
+                Record record;
+                if (columns.length == 6)
+                    record = legacyRecord(columns);
+                else if (columns.length == 11)
+                    record = evidenceAwareRecord(columns, lineNumber);
+                else
+                    throw new IllegalStateException("Malformed quest enrichment row at line "
+                            + lineNumber + ": expected 6 or 11 columns, found "
+                            + columns.length);
+                if (record.name.trim().isEmpty())
+                    throw new IllegalStateException(
+                            "Quest enrichment row has blank name at line " + lineNumber);
                 if (result.put(normalize(record.name), record) != null)
                     throw new IllegalStateException(
                             "Duplicate quest enrichment: " + record.name);
@@ -63,6 +83,88 @@ public final class AuthoritativeQuestEnrichmentCatalog
             throw new IllegalStateException("Unable to read " + RESOURCE, ex);
         }
         return Collections.unmodifiableMap(result);
+    }
+
+    private static Record legacyRecord(String[] columns)
+    {
+        String start = unescape(columns[1]);
+        String requirements = unescape(columns[2]);
+        String items = unescape(columns[3]);
+        String enemies = unescape(columns[4]);
+        String rewards = unescape(columns[5]);
+        return new Record(unescape(columns[0]), start,
+                legacyState(start, false), requirements,
+                legacyState(requirements, true), items,
+                legacyState(items, true), enemies,
+                legacyState(enemies, true), rewards,
+                legacyState(rewards, false));
+    }
+
+    private static Record evidenceAwareRecord(String[] columns, int lineNumber)
+    {
+        String name = unescape(columns[0]);
+        String start = unescape(columns[1]);
+        EvidenceState startState = parseState(columns[2], lineNumber, "start");
+        String requirements = unescape(columns[3]);
+        EvidenceState requirementsState = parseState(columns[4], lineNumber,
+                "requirements");
+        String items = unescape(columns[5]);
+        EvidenceState itemsState = parseState(columns[6], lineNumber, "items");
+        String enemies = unescape(columns[7]);
+        EvidenceState combatState = parseState(columns[8], lineNumber, "combat");
+        String rewards = unescape(columns[9]);
+        EvidenceState rewardsState = parseState(columns[10], lineNumber, "rewards");
+
+        validateState(start, startState, lineNumber, "start");
+        validateState(requirements, requirementsState, lineNumber, "requirements");
+        validateState(items, itemsState, lineNumber, "items");
+        validateState(enemies, combatState, lineNumber, "combat");
+        validateState(rewards, rewardsState, lineNumber, "rewards");
+
+        return new Record(name, start, startState, requirements,
+                requirementsState, items, itemsState, enemies, combatState,
+                rewards, rewardsState);
+    }
+
+    private static EvidenceState legacyState(String value,
+            boolean blankWasPreviouslyTreatedAsNone)
+    {
+        if (value != null && !value.trim().isEmpty()) return EvidenceState.VALUE;
+        return blankWasPreviouslyTreatedAsNone
+                ? EvidenceState.LEGACY_NONE : EvidenceState.MISSING;
+    }
+
+    private static EvidenceState parseState(String raw, int lineNumber,
+            String field)
+    {
+        try
+        {
+            return EvidenceState.valueOf(unescape(raw).trim()
+                    .toUpperCase(Locale.ROOT));
+        }
+        catch (IllegalArgumentException ex)
+        {
+            throw new IllegalStateException("Invalid " + field
+                    + " evidence state at line " + lineNumber + ": " + raw, ex);
+        }
+    }
+
+    private static void validateState(String value, EvidenceState state,
+            int lineNumber, String field)
+    {
+        boolean blank = value == null || value.trim().isEmpty();
+        if (state == EvidenceState.VALUE && blank)
+            throw new IllegalStateException("Blank " + field
+                    + " marked VALUE at line " + lineNumber);
+        if (state == EvidenceState.NONE && !blank)
+            throw new IllegalStateException("Non-blank " + field
+                    + " marked NONE at line " + lineNumber);
+        if ((state == EvidenceState.MISSING || state == EvidenceState.PARSE_FAILURE)
+                && !blank)
+            throw new IllegalStateException("Non-blank " + field + " marked "
+                    + state + " at line " + lineNumber);
+        if (state == EvidenceState.LEGACY_NONE)
+            throw new IllegalStateException("LEGACY_NONE is reserved for six-column snapshots");
     }
 
     private static String unescape(String value)
@@ -116,24 +218,56 @@ public final class AuthoritativeQuestEnrichmentCatalog
         return result;
     }
 
+    public enum EvidenceState
+    {
+        VALUE,
+        NONE,
+        MISSING,
+        PARSE_FAILURE,
+        LEGACY_NONE;
+
+        public boolean isEvidence()
+        {
+            return this == VALUE || this == NONE || this == LEGACY_NONE;
+        }
+
+        public boolean isStrictEvidence()
+        {
+            return this == VALUE || this == NONE;
+        }
+    }
+
     public static final class Record
     {
         private final String name;
         private final String start;
+        private final EvidenceState startState;
         private final String requirements;
+        private final EvidenceState requirementsState;
         private final String items;
+        private final EvidenceState itemsState;
         private final String enemies;
+        private final EvidenceState combatState;
         private final String rewards;
+        private final EvidenceState rewardsState;
 
-        private Record(String name, String start, String requirements,
-                String items, String enemies, String rewards)
+        private Record(String name, String start, EvidenceState startState,
+                String requirements, EvidenceState requirementsState,
+                String items, EvidenceState itemsState, String enemies,
+                EvidenceState combatState, String rewards,
+                EvidenceState rewardsState)
         {
             this.name = name;
             this.start = start;
+            this.startState = startState;
             this.requirements = requirements;
+            this.requirementsState = requirementsState;
             this.items = items;
+            this.itemsState = itemsState;
             this.enemies = enemies;
+            this.combatState = combatState;
             this.rewards = rewards;
+            this.rewardsState = rewardsState;
         }
 
         public String getName() { return name; }
@@ -142,12 +276,30 @@ public final class AuthoritativeQuestEnrichmentCatalog
         public String getItems() { return items; }
         public String getEnemies() { return enemies; }
         public String getRewards() { return rewards; }
-        public boolean hasStartEvidence() { return !start.trim().isEmpty(); }
-        // Bucket rows preserve explicitly blank Quest details parameters. For
-        // these three fields a blank value is authoritative NONE, not UNKNOWN.
-        public boolean hasRequirementEvidence() { return true; }
-        public boolean hasItemEvidence() { return true; }
-        public boolean hasCombatEvidence() { return true; }
-        public boolean hasRewardEvidence() { return !rewards.trim().isEmpty(); }
+        public EvidenceState getStartState() { return startState; }
+        public EvidenceState getRequirementState() { return requirementsState; }
+        public EvidenceState getItemState() { return itemsState; }
+        public EvidenceState getCombatState() { return combatState; }
+        public EvidenceState getRewardState() { return rewardsState; }
+        public boolean hasStartEvidence() { return startState.isEvidence(); }
+        public boolean hasRequirementEvidence() { return requirementsState.isEvidence(); }
+        public boolean hasItemEvidence() { return itemsState.isEvidence(); }
+        public boolean hasCombatEvidence() { return combatState.isEvidence(); }
+        public boolean hasRewardEvidence() { return rewardsState.isEvidence(); }
+        public boolean hasStrictItemEvidence() { return itemsState.isStrictEvidence(); }
+        public boolean hasStrictRequirementEvidence()
+        {
+            return requirementsState.isStrictEvidence();
+        }
+        public boolean hasStrictCombatEvidence() { return combatState.isStrictEvidence(); }
+        public boolean hasStrictRewardEvidence() { return rewardsState.isStrictEvidence(); }
+        public boolean hasLegacyEvidence()
+        {
+            return startState == EvidenceState.LEGACY_NONE
+                    || requirementsState == EvidenceState.LEGACY_NONE
+                    || itemsState == EvidenceState.LEGACY_NONE
+                    || combatState == EvidenceState.LEGACY_NONE
+                    || rewardsState == EvidenceState.LEGACY_NONE;
+        }
     }
 }
