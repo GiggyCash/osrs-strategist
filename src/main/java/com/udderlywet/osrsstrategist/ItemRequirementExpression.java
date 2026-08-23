@@ -62,9 +62,21 @@ public final class ItemRequirementExpression
 
     public String label()
     {
-        if (kind == Kind.ITEM) return String.join(" or ", itemNames);
+        if (kind == Kind.ITEM)
+        {
+            String names = String.join(" or ", itemNames);
+            if (quantity <= 1) return names;
+            return quantity + " × " + (itemNames.size() > 1
+                    ? "(" + names + ")" : names);
+        }
         List<String> labels = new ArrayList<>();
-        for (ItemRequirementExpression child : children) labels.add(child.label());
+        for (ItemRequirementExpression child : children)
+        {
+            String label = child.label();
+            if (child.kind != Kind.ITEM && child.kind != kind)
+                label = "(" + label + ")";
+            labels.add(label);
+        }
         return String.join(kind == Kind.ALL_OF ? " and " : " or ", labels);
     }
 

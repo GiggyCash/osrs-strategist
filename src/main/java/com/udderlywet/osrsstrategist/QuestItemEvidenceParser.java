@@ -10,19 +10,20 @@ import java.util.regex.Pattern;
 /**
  * Conservative parser for the pinned Wiki "items required" field.
  *
- * Only unambiguous, single-item bullet lines become executable ownership
- * requirements. Alternatives, generic item classes, optional items, and
- * complicated prose stay explicit verification text rather than being guessed.
+ * Only unambiguous item bullets become executable ownership requirements.
+ * Explicit alternatives are supported when every branch names a concrete item.
+ * Generic item classes, optional items, and complicated prose stay explicit
+ * verification text rather than being guessed.
  */
 public final class QuestItemEvidenceParser
 {
-    private static final Pattern SIMPLE_ITEM = Pattern.compile(
-            "^\\*\\s*(?:(\\d[\\d,]*)\\s+|(?:an?|one)\\s+)?"
+    private static final Pattern ITEM_TERM = Pattern.compile(
+            "^(?:(\\d[\\d,]*)\\s+|(?:an?|one)\\s+)?"
                     + "\\[\\[([^]|#]+)(?:\\|[^]]+)?]](?:s|es)?\\s*[.;]?\\s*$",
             Pattern.CASE_INSENSITIVE);
 
     private static final String[] AMBIGUOUS_MARKERS = {
-        " or ", " any ", " either ", "one of", "other ", " works",
+        " any ", " either ", "one of", "other ", " works",
         "work too", "obtainable", "optional", "recommended", " unless ",
         "alternatively", "at least", "up to", "such as", " if "
     };
@@ -56,13 +57,43 @@ public final class QuestItemEvidenceParser
     private static ItemRequirementExpression parseLine(String line)
     {
         // Nested bullets usually explain alternatives or subrequirements. Keep
-        // them fail-closed until a richer structured parser can prove semantics.
+        // them fail-closed until their parent-child meaning can be proven.
         if (line.startsWith("**")) return null;
         String lower = " " + display(line).toLowerCase(Locale.ROOT) + " ";
         for (String marker : AMBIGUOUS_MARKERS)
             if (lower.contains(marker)) return null;
 
-        Matcher matcher = SIMPLE_ITEM.matcher(line);
+        String body = line.replaceFirst("^\\*\\s*", "").trim();
+        if (body.toLowerCase(Locale.ROOT).contains(" or "))
+            return parseExplicitAlternatives(body);
+        return parseTerm(body);
+    }
+
+    private static ItemRequirementExpression parseExplicitAlternatives(String body)
+    {
+        // Parentheticals, conjunctions, and prose around an alternative often
+        // change the actual semantics. Only a bare list of explicit linked items
+        // separated by "or" is safe to execute automatically.
+        String lower = body.toLowerCase(Locale.ROOT);
+        if (body.contains("(") || body.contains(")") || lower.contains(" and "))
+            return null;
+
+        String[] branches = body.split("(?i)\\s+or\\s+");
+        if (branches.length < 2 || branches.length > 4) return null;
+        List<ItemRequirementExpression> alternatives = new ArrayList<>();
+        for (String branch : branches)
+        {
+            ItemRequirementExpression alternative = parseTerm(branch.trim());
+            if (alternative == null) return null;
+            alternatives.add(alternative);
+        }
+        return ItemRequirementExpression.anyOf(
+                alternatives.toArray(new ItemRequirementExpression[0]));
+    }
+
+    private static ItemRequirementExpression parseTerm(String term)
+    {
+        Matcher matcher = ITEM_TERM.matcher(term);
         if (!matcher.matches()) return null;
         String name = matcher.group(2).trim();
         if (isGenericClass(name)) return null;

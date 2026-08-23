@@ -30,6 +30,30 @@ public class QuestItemEvidenceParserTest
     }
 
     @Test
+    public void parsesBareConcreteAlternativesWithoutGuessing()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "* [[Ivandis flail]] or [[Blisterwood flail]]\n"
+                        + "* 5 [[death rune]]s or 10 [[chaos rune]]s");
+
+        assertTrue(result.isFullyExecutable());
+        assertEquals(ItemRequirementExpression.Kind.ALL_OF,
+                result.getExpression().getKind());
+        ItemRequirementExpression weapons = result.getExpression()
+                .getChildren().get(0);
+        assertEquals(ItemRequirementExpression.Kind.ANY_OF, weapons.getKind());
+        assertEquals("Ivandis flail", weapons.getChildren().get(0)
+                .getItemNames().get(0));
+        assertEquals("Blisterwood flail", weapons.getChildren().get(1)
+                .getItemNames().get(0));
+        ItemRequirementExpression runes = result.getExpression()
+                .getChildren().get(1);
+        assertEquals(5, runes.getChildren().get(0).getQuantity());
+        assertEquals(10, runes.getChildren().get(1).getQuantity());
+        assertEquals("5 × Death rune or 10 × Chaos rune", runes.label());
+    }
+
+    @Test
     public void explicitNoneNeedsNoOwnershipExpression()
     {
         QuestItemEvidenceParser.Result result = parser.parse("None");
@@ -39,12 +63,13 @@ public class QuestItemEvidenceParserTest
     }
 
     @Test
-    public void genericAndAlternativeRequirementsRemainFailClosed()
+    public void genericAndQualifiedAlternativesRemainFailClosed()
     {
         QuestItemEvidenceParser.Result result = parser.parse(
-                "* A [[weapon]]\n* Any [[axe]]\n* [[Cat]] or [[kitten]]");
+                "* A [[weapon]]\n* Any [[axe]]\n* [[Cat]] or [[kitten]]\n"
+                        + "* [[Ghostspeak amulet]] ([[Morytania legs 2]] or better also work)");
         assertNull(result.getExpression());
-        assertEquals(3, result.getUnresolved().size());
+        assertEquals(4, result.getUnresolved().size());
     }
 
     @Test
