@@ -44,6 +44,7 @@ public class ResourceAcquisitionPlanner
         StrategyDataBundle data = context.getData();
         AccountMode mode = context.getAccountMode();
         int inventoryQuantity = quantityIn(data.getInventory(), need.getItemId());
+        int confirmedQuantity = inventoryQuantity;
 
         if (inventoryQuantity >= need.getQuantity())
         {
@@ -56,24 +57,26 @@ public class ResourceAcquisitionPlanner
 
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
+            int remaining = Math.max(0, need.getQuantity() - inventoryQuantity);
             StoredResource stored = findVerifiedStoredResource(
-                    data.getStorage(), need.getItemId(), need.getQuantity());
+                    data.getStorage(), need.getItemId(), remaining);
             if (stored != null)
             {
                 boolean needsAccessCheck = requiresAdditionalAccessCheck(
                         stored.capability);
+                confirmedQuantity = safeAdd(inventoryQuantity, stored.quantity);
                 return new ResourceAcquisitionPlan(
                         need,
                         AcquisitionSource.VERIFIED_STORAGE,
-                        stored.quantity,
+                        confirmedQuantity,
                         needsAccessCheck
                                 ? RecommendationConfidence.CHECK_NEEDED
                                 : RecommendationConfidence.VERIFIED,
                         needsAccessCheck
-                                ? "Required quantity is observed in "
+                                ? "Required quantity is observed across inventory and "
                                         + pretty(stored.capability)
                                         + ", but retrieval needs an explicit UIM access/risk/precondition check."
-                                : "Required quantity is confirmed in observed "
+                                : "Required quantity is confirmed across inventory and observed "
                                         + pretty(stored.capability) + "."
                 );
             }
@@ -81,30 +84,35 @@ public class ResourceAcquisitionPlanner
         else
         {
             int bankQuantity = quantityIn(data.getBank(), need.getItemId());
-            if (bankQuantity >= need.getQuantity())
+            int ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
+            confirmedQuantity = ordinaryQuantity;
+            if (ordinaryQuantity >= need.getQuantity())
             {
                 return new ResourceAcquisitionPlan(
-                        need, AcquisitionSource.BANK, bankQuantity,
+                        need, AcquisitionSource.BANK, ordinaryQuantity,
                         RecommendationConfidence.VERIFIED,
-                        "Required quantity is confirmed in the latest observed bank snapshot."
+                        "Required quantity is confirmed across observed inventory and bank state."
                 );
             }
-        }
 
-        if (AccountModePolicy.mayUseGroupStorage(
-                mode, context.isUseGroupStorage()))
-        {
-            GroupStorageSnapshot groupStorage = data.getGroupStorage();
-            int groupQuantity = quantityIn(groupStorage, need.getItemId());
-            if (groupStorage != null
-                    && groupStorage.isObserved()
-                    && groupQuantity >= need.getQuantity())
+            if (AccountModePolicy.mayUseGroupStorage(
+                    mode, context.isUseGroupStorage()))
             {
-                return new ResourceAcquisitionPlan(
-                        need, AcquisitionSource.GROUP_STORAGE, groupQuantity,
-                        RecommendationConfidence.VERIFIED,
-                        "Required quantity is confirmed in observed Group Storage."
-                );
+                GroupStorageSnapshot groupStorage = data.getGroupStorage();
+                int groupQuantity = quantityIn(groupStorage, need.getItemId());
+                if (groupStorage != null && groupStorage.isObserved())
+                {
+                    confirmedQuantity = safeAdd(ordinaryQuantity, groupQuantity);
+                    if (confirmedQuantity >= need.getQuantity())
+                    {
+                        return new ResourceAcquisitionPlan(
+                                need, AcquisitionSource.GROUP_STORAGE,
+                                confirmedQuantity,
+                                RecommendationConfidence.VERIFIED,
+                                "Required quantity is confirmed across observed inventory, bank, and Group Storage state."
+                        );
+                    }
+                }
             }
         }
 
@@ -114,7 +122,7 @@ public class ResourceAcquisitionPlanner
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
             return new ResourceAcquisitionPlan(
-                    need, AcquisitionSource.GRAND_EXCHANGE, inventoryQuantity,
+                    need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
                             + sourceNote
@@ -124,7 +132,7 @@ public class ResourceAcquisitionPlanner
         if (AccountModePolicy.requiresSelfSourcing(mode))
         {
             return new ResourceAcquisitionPlan(
-                    need, AcquisitionSource.SELF_SOURCE, inventoryQuantity,
+                    need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     (mode == AccountMode.ULTIMATE_IRONMAN
                             ? "No sufficient directly usable UIM inventory/storage source is known."
@@ -196,7 +204,7 @@ public class ResourceAcquisitionPlanner
         if (ownership.hasEnoughConfirmed())
         {
             steps.add(new ResourceAcquisitionStep(ownership.getSource(),
-                    ownership.getNote(), RecommendationConfidence.VERIFIED));
+                    ownership.getNote(), ownership.getConfidence()));
             return new ResourceAcquisitionChain(need, 0, steps);
         }
 
@@ -330,9 +338,16 @@ public class ResourceAcquisitionPlanner
         int total = 0;
         for (ItemStackSnapshot item : items)
         {
-            if (item.getItemId() == itemId) total += item.getQuantity();
+            if (item.getItemId() == itemId) total = safeAdd(total, item.getQuantity());
         }
         return total;
+    }
+
+    private static int safeAdd(int left, int right)
+    {
+        int safeRight = Math.max(0, right);
+        if (left > Integer.MAX_VALUE - safeRight) return Integer.MAX_VALUE;
+        return left + safeRight;
     }
 
     private static String pretty(StorageCapability capability)
