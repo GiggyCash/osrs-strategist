@@ -1,0 +1,62 @@
+package com.udderlywet.osrsstrategist;
+
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+public class QuestItemEvidenceParserTest
+{
+    private final QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
+
+    @Test
+    public void parsesOnlyUnambiguousSingleItemBullets()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "* [[Rope]]\n* 5 [[death rune]]s\n* [[Knife]] or a [[slash weapon]]");
+
+        assertNotNull(result.getExpression());
+        assertEquals(ItemRequirementExpression.Kind.ALL_OF,
+                result.getExpression().getKind());
+        assertEquals(2, result.getExpression().getChildren().size());
+        assertEquals("Rope", result.getExpression().getChildren().get(0)
+                .getItemNames().get(0));
+        assertEquals(5, result.getExpression().getChildren().get(1).getQuantity());
+        assertEquals(1, result.getUnresolved().size());
+        assertFalse(result.isFullyExecutable());
+    }
+
+    @Test
+    public void explicitNoneNeedsNoOwnershipExpression()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse("None");
+        assertNull(result.getExpression());
+        assertTrue(result.getUnresolved().isEmpty());
+        assertTrue(result.isFullyExecutable());
+    }
+
+    @Test
+    public void genericAndAlternativeRequirementsRemainFailClosed()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "* A [[weapon]]\n* Any [[axe]]\n* [[Cat]] or [[kitten]]");
+        assertNull(result.getExpression());
+        assertEquals(3, result.getUnresolved().size());
+    }
+
+    @Test
+    public void authoritativeCatalogExposesExecutableCoverageMetrics()
+    {
+        ImportedQuestItemRequirementCatalog catalog =
+                new ImportedQuestItemRequirementCatalog();
+        QuestItemEvidenceParser.Result porcine = catalog.resultFor(
+                "A Porcine of Interest");
+        assertNotNull(porcine);
+        assertNotNull(porcine.getExpression());
+        assertTrue(porcine.getParsedLineCount() >= 1);
+        assertTrue(catalog.questCount() > 0);
+    }
+}

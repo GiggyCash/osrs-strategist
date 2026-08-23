@@ -10,6 +10,10 @@ import net.runelite.api.Skill;
 @Singleton
 public class QuestRequirementResolver
 {
+    private static final String IMPORTED_ITEM_PREFIX = "Required items:";
+    private final ImportedQuestItemRequirementCatalog importedItems =
+            new ImportedQuestItemRequirementCatalog();
+
     public QuestResolution resolve(QuestDefinition definition, StrategyContext context)
     {
         if (definition == null || context == null || context.getData() == null
@@ -63,9 +67,13 @@ public class QuestRequirementResolver
                         definition.isFreeToPlay())));
         }
 
+        QuestItemEvidenceParser.Result imported = hasImportedItemEvidence(definition)
+                ? importedItems.resultFor(definition.getName()) : null;
+        ItemRequirementExpression expression = definition.getItemRequirementExpression();
+        if (expression == null && imported != null)
+            expression = imported.getExpression();
         ItemRequirementResult expressionResult = new ItemRequirementEvaluator()
-                .evaluate(definition.getItemRequirementExpression(), data,
-                        context.isUseGroupStorage());
+                .evaluate(expression, data, context.isUseGroupStorage());
         if (!expressionResult.isSatisfied()
                 && !expressionResult.getAction().isEmpty())
             missing.add(new Preparation(expressionResult.getAction(),
@@ -76,8 +84,28 @@ public class QuestRequirementResolver
                     + definition.getQuestPointsRequired() + " quest points",
                     CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
         for (String check : definition.getAccessChecks())
+        {
+            if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
+            {
+                if (imported == null)
+                {
+                    missing.add(new Preparation(check,
+                            CandidateSafetyEvidence.harmless(
+                                    definition.isFreeToPlay())));
+                }
+                else
+                {
+                    for (String unresolved : imported.getUnresolved())
+                        missing.add(new Preparation(
+                                "Verify quest item requirement: " + unresolved,
+                                CandidateSafetyEvidence.harmless(
+                                        definition.isFreeToPlay())));
+                }
+                continue;
+            }
             missing.add(new Preparation(check,
                     CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
+        }
 
         String unlocks = definition.getUnlocks().isEmpty() ? ""
                 : String.join(", ", definition.getUnlocks());
@@ -105,6 +133,13 @@ public class QuestRequirementResolver
                                 : "Resolving this path unlocks: " + unlocks + "."),
                 "Preparation required: " + missing.get(0).text,
                 missing.get(0).safetyEvidence);
+    }
+
+    private static boolean hasImportedItemEvidence(QuestDefinition definition)
+    {
+        for (String check : definition.getAccessChecks())
+            if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX)) return true;
+        return false;
     }
 
     private static final class Preparation
