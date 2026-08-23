@@ -1,0 +1,92 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class QuestResourceDependencyIntegrationTest
+{
+    @Test
+    public void dependencyCatalogResolvesNamedOutputsCaseInsensitively()
+    {
+        ResourceDependencyDefinition definition =
+                new ResourceDependencyCatalog().forItemName("molten GLASS");
+
+        assertNotNull(definition);
+        assertEquals(ItemID.MOLTEN_GLASS, definition.getItemId());
+        assertEquals("Molten glass", definition.getItemName());
+    }
+
+    @Test
+    public void provenShortfallDoesNotSubtractOwnedQuantityTwice()
+    {
+        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
+                new ItemStackSnapshot(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
+        StrategyContext context = context(bank);
+
+        ResourceDependencyResolution result = new ResourceAcquisitionPlanner()
+                .resolveKnownShortfall(context, "Molten glass", 3);
+
+        assertNotNull(result);
+        assertTrue(result.getNodes().stream().anyMatch(node ->
+                node.getId().equals("resource:" + ItemID.BUCKET_SAND)));
+        ResolvedDependencyNode root = result.getNodes().stream()
+                .filter(node -> node.getId().equals(
+                        "resource:" + ItemID.MOLTEN_GLASS))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(3, root.getRequiredQuantity());
+    }
+
+    @Test
+    public void questPreparationPromotesFirstRecursiveResourceStep()
+    {
+        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+                "Molten glass", 8, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
+        QuestDefinition quest = new QuestDefinition("Dependency test quest", false,
+                Collections.emptyList(), Collections.<Skill, Integer>emptyMap(),
+                Collections.emptyList(), requirement, 0, Collections.emptyList(),
+                "Test location", Collections.singletonList("Test unlock"),
+                Collections.<Skill, Integer>emptyMap());
+        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
+                new ItemStackSnapshot(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
+
+        QuestResolution result = new QuestRequirementResolver().resolve(
+                quest, context(bank));
+
+        assertNotNull(result);
+        assertTrue(result.getGuidance().getAction().toLowerCase().contains("sand"));
+        assertTrue(result.getGuidance().getSupplies().contains(
+                "Confirmed shortfall: 3 × Molten glass"));
+        assertTrue(result.getGuidance().getSupplies().contains(
+                "Dependency first step for 3 × Molten glass"));
+    }
+
+    private static StrategyContext context(BankSnapshot bank)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, 70);
+            xp.put(skill, 0);
+        }
+        AccountSnapshot account = new AccountSnapshot("Dependency", 1,
+                AccountMode.IRONMAN.name(), MembershipStatus.P2P,
+                1, 1500, 0L, levels, xp);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .bank(bank)
+                .quests(new QuestSnapshot(Collections.emptyMap()))
+                .build();
+        return new StrategyContext(data, StrategyMode.BALANCED,
+                SessionIntent.QUICK_20_MIN, QuestTolerance.NORMAL, GoalType.MAX,
+                false, false, false, new PreferenceProfile());
+    }
+}
