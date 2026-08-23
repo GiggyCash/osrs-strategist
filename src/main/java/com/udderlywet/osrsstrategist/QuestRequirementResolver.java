@@ -14,13 +14,23 @@ public class QuestRequirementResolver
     private static final String IMPORTED_ITEM_PREFIX = "Required items:";
     private final ImportedQuestItemRequirementCatalog importedItems;
     private final ResourceSourceCatalog resourceSources;
+    private final ResourceAcquisitionPlanner resourcePlanner;
 
     @Inject
-    public QuestRequirementResolver(ResourceSourceCatalog resourceSources)
+    public QuestRequirementResolver(ResourceSourceCatalog resourceSources,
+            ResourceAcquisitionPlanner resourcePlanner)
     {
         this.importedItems = new ImportedQuestItemRequirementCatalog();
         this.resourceSources = resourceSources == null
                 ? new ResourceSourceCatalog() : resourceSources;
+        this.resourcePlanner = resourcePlanner == null
+                ? new ResourceAcquisitionPlanner(this.resourceSources)
+                : resourcePlanner;
+    }
+
+    public QuestRequirementResolver(ResourceSourceCatalog resourceSources)
+    {
+        this(resourceSources, new ResourceAcquisitionPlanner(resourceSources));
     }
 
     /** Compatibility constructor for focused tests and local tooling. */
@@ -166,6 +176,25 @@ public class QuestRequirementResolver
             return new Preparation(result.getAction(), safety);
 
         ResolvedMethodInput first = result.getMissingInputs().get(0);
+        ResourceDependencyResolution dependency = dependencyResolution(context, first);
+        ResolvedDependencyNode next = dependency == null ? null : dependency.nextAction();
+        if (next != null
+                && next.getConfidence() != RecommendationConfidence.VERIFIED
+                && next.getAction() != null
+                && !next.getAction().trim().isEmpty())
+        {
+            String action = withoutTerminalPeriod(next.getAction().trim());
+            StringBuilder detail = new StringBuilder(result.getAction());
+            detail.append(". Confirmed shortfall: ")
+                    .append(formatInputs(result.getMissingInputs())).append(".");
+            detail.append(" Dependency first step for ")
+                    .append(quantity(first)).append(": ")
+                    .append(next.getAction().trim());
+            if (result.getMissingInputs().size() > 1)
+                detail.append(" Resolve the remaining confirmed item shortfalls after this first step.");
+            return new Preparation(action, detail.toString(), safety);
+        }
+
         AccountMode mode = context.getAccountMode();
         String action;
         if (mode == AccountMode.ULTIMATE_IRONMAN)
@@ -188,6 +217,22 @@ public class QuestRequirementResolver
         if (result.getMissingInputs().size() > 1)
             detail.append(" Resolve the remaining confirmed item shortfalls after this first step.");
         return new Preparation(action, detail.toString(), safety);
+    }
+
+    private ResourceDependencyResolution dependencyResolution(
+            StrategyContext context, ResolvedMethodInput input)
+    {
+        if (context == null || input == null || context.getData() == null
+                || context.getData().getAccount() == null)
+            return null;
+        // The dependency graph contains deterministic recipes, but its leaf
+        // source catalog is not yet membership-tagged. Keep this richer path
+        // behind verified P2P evidence until those source families are tagged.
+        if (context.getData().getAccount().getMembershipStatus()
+                != MembershipStatus.P2P)
+            return null;
+        return resourcePlanner.resolveKnownShortfall(
+                context, input.getName(), input.getQuantity());
     }
 
     private List<String> sourceRoutes(StrategyContext context, String itemName)
@@ -215,6 +260,15 @@ public class QuestRequirementResolver
         List<String> values = new ArrayList<>();
         for (ResolvedMethodInput input : inputs) values.add(quantity(input));
         return String.join(", ", values);
+    }
+
+    private static String withoutTerminalPeriod(String value)
+    {
+        if (value == null) return "";
+        String result = value.trim();
+        while (result.endsWith("."))
+            result = result.substring(0, result.length() - 1).trim();
+        return result;
     }
 
     private static boolean hasImportedItemEvidence(QuestDefinition definition)
