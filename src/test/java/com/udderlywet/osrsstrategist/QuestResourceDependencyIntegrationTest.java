@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -25,6 +26,23 @@ public class QuestResourceDependencyIntegrationTest
     }
 
     @Test
+    public void observedInventoryAndBankCombineBeforeDeclaringShortfall()
+    {
+        InventorySnapshot inventory = new InventorySnapshot(Collections.singletonList(
+                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 2)));
+        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
+                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 2)), 1L);
+
+        ResourceAcquisitionPlan result = new ResourceAcquisitionPlanner().plan(
+                context(bank, inventory),
+                new ResourceNeed(ItemID.STEEL_BAR, "Steel bar", 3));
+
+        assertEquals(RecommendationConfidence.VERIFIED, result.getConfidence());
+        assertEquals(4, result.getConfirmedQuantity());
+        assertEquals(AcquisitionSource.BANK, result.getSource());
+    }
+
+    @Test
     public void provenShortfallDoesNotSubtractOwnedQuantityTwice()
     {
         BankSnapshot bank = new BankSnapshot(Collections.singletonList(
@@ -42,6 +60,26 @@ public class QuestResourceDependencyIntegrationTest
                         "resource:" + ItemID.MOLTEN_GLASS))
                 .findFirst().orElseThrow(AssertionError::new);
         assertEquals(3, root.getRequiredQuantity());
+    }
+
+    @Test
+    public void partialOwnedDependencyOnlyExpandsMissingRecipeBatches()
+    {
+        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
+                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 24)), 1L);
+
+        ResourceDependencyResolution result = new ResourceAcquisitionPlanner()
+                .resolveDependencies(context(bank),
+                        new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 100));
+
+        ResolvedDependencyNode iron = result.getNodes().stream()
+                .filter(node -> node.getId().equals("resource:" + ItemID.IRON_ORE))
+                .findFirst().orElseThrow(AssertionError::new);
+        ResolvedDependencyNode coal = result.getNodes().stream()
+                .filter(node -> node.getId().equals("resource:" + ItemID.COAL))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(1, iron.getRequiredQuantity());
+        assertEquals(2, coal.getRequiredQuantity());
     }
 
     @Test
@@ -70,6 +108,12 @@ public class QuestResourceDependencyIntegrationTest
 
     private static StrategyContext context(BankSnapshot bank)
     {
+        return context(bank, new InventorySnapshot(Collections.emptyList()));
+    }
+
+    private static StrategyContext context(BankSnapshot bank,
+            InventorySnapshot inventory)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -81,7 +125,7 @@ public class QuestResourceDependencyIntegrationTest
                 AccountMode.IRONMAN.name(), MembershipStatus.P2P,
                 1, 1500, 0L, levels, xp);
         StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(inventory)
                 .bank(bank)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .build();
