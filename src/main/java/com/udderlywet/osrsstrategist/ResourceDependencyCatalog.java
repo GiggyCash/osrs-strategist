@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -14,6 +15,7 @@ import net.runelite.api.gameval.ItemID;
 public class ResourceDependencyCatalog
 {
     private final Map<Integer, ResourceDependencyDefinition> definitions;
+    private final Map<String, ResourceDependencyDefinition> definitionsByName;
 
     public ResourceDependencyCatalog()
     {
@@ -22,11 +24,20 @@ public class ResourceDependencyCatalog
 
     ResourceDependencyCatalog(List<ResourceDependencyDefinition> values)
     {
-        Map<Integer, ResourceDependencyDefinition> result = new LinkedHashMap<>();
+        Map<Integer, ResourceDependencyDefinition> byId = new LinkedHashMap<>();
+        Map<String, ResourceDependencyDefinition> byName = new LinkedHashMap<>();
         if (values != null)
+        {
             for (ResourceDependencyDefinition value : values)
-                if (value != null) result.put(value.getItemId(), value);
-        definitions = Collections.unmodifiableMap(result);
+            {
+                if (value == null) continue;
+                byId.put(value.getItemId(), value);
+                String name = normalize(value.getItemName());
+                if (!name.isEmpty()) byName.put(name, value);
+            }
+        }
+        definitions = Collections.unmodifiableMap(byId);
+        definitionsByName = Collections.unmodifiableMap(byName);
     }
 
     public ResourceDependencyDefinition forItem(int itemId)
@@ -34,10 +45,17 @@ public class ResourceDependencyCatalog
         return definitions.get(itemId);
     }
 
+    /** Resolves only outputs explicitly named by this deterministic graph. */
+    public ResourceDependencyDefinition forItemName(String itemName)
+    {
+        return definitionsByName.get(normalize(itemName));
+    }
+
     private static List<ResourceDependencyDefinition> seed()
     {
         List<ResourceDependencyDefinition> values = new ArrayList<>();
         values.add(new ResourceDependencyDefinition(ItemID.MCANNONBALL,
+                "Cannonball",
                 "Smith the required cannonballs from steel bars after Dwarf Cannon.",
                 35, 4, java.util.Arrays.asList(
                 DependencyRequirement.quest("Dwarf Cannon"),
@@ -45,6 +63,7 @@ public class ResourceDependencyCatalog
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.STEEL_BAR, "Steel bar", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.STEEL_BAR,
+                "Steel bar",
                 "Smelt steel bars from iron ore and coal at a verified furnace.",
                 20, java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.SMITHING, 30),
@@ -53,6 +72,7 @@ public class ResourceDependencyCatalog
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.COAL, "Coal", 2)))));
         values.add(new ResourceDependencyDefinition(ItemID.MOLTEN_GLASS,
+                "Molten glass",
                 "Make molten glass from a bucket of sand and soda ash at a furnace.",
                 18, java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.CRAFTING, 1),
@@ -61,6 +81,7 @@ public class ResourceDependencyCatalog
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.SODA_ASH, "Soda ash", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.BRONZE_BAR,
+                "Bronze bar",
                 "Smelt a bronze bar from one copper ore and one tin ore at a furnace.",
                 8, java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.SMITHING, 1),
@@ -69,35 +90,37 @@ public class ResourceDependencyCatalog
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.TIN_ORE, "Tin ore", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.GOLD_BAR,
-                "Smelt the gold ore at a furnace.", 12, java.util.Arrays.asList(
+                "Gold bar", "Smelt the gold ore at a furnace.", 12,
+                java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.SMITHING, 40),
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.GOLD_ORE, "Gold ore", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.SODA_ASH,
-                "Cook seaweed on a range or fire to make soda ash.",
+                "Soda ash", "Cook seaweed on a range or fire to make soda ash.",
                 8, java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.COOKING, 1),
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.SEAWEED, "Seaweed", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.BOW_STRING,
-                "Spin flax into bow string at a spinning wheel.",
+                "Bow string", "Spin flax into bow string at a spinning wheel.",
                 10, java.util.Arrays.asList(
                 DependencyRequirement.skill(Skill.CRAFTING, 10),
                 DependencyRequirement.resource(new ResourceNeed(
                         ItemID.FLAX, "Flax", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.IRON_BAR,
-                "Smelt iron ore at a verified furnace.", 10,
+                "Iron bar", "Smelt iron ore at a verified furnace.", 10,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.SMITHING, 15),
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.IRON_ORE, "Iron ore", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.SILVER_BAR,
-                "Smelt silver ore at a verified furnace.", 10,
+                "Silver bar", "Smelt silver ore at a verified furnace.", 10,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.SMITHING, 20),
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.SILVER_ORE, "Silver ore", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.MITHRIL_BAR,
+                "Mithril bar",
                 "Smelt mithril ore with four coal at a verified furnace.", 25,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.SMITHING, 50),
@@ -106,6 +129,7 @@ public class ResourceDependencyCatalog
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.COAL, "Coal", 4)))));
         values.add(new ResourceDependencyDefinition(ItemID.ADAMANTITE_BAR,
+                "Adamantite bar",
                 "Smelt adamantite ore with six coal at a verified furnace.", 30,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.SMITHING, 70),
@@ -114,6 +138,7 @@ public class ResourceDependencyCatalog
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.COAL, "Coal", 6)))));
         values.add(new ResourceDependencyDefinition(ItemID.RUNITE_BAR,
+                "Runite bar",
                 "Smelt runite ore with eight coal at a verified furnace.", 35,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.SMITHING, 85),
@@ -122,12 +147,13 @@ public class ResourceDependencyCatalog
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.COAL, "Coal", 8)))));
         values.add(new ResourceDependencyDefinition(ItemID.BALL_OF_WOOL,
-                "Spin wool into a ball of wool at a spinning wheel.", 8,
-                java.util.Arrays.asList(
+                "Ball of wool", "Spin wool into a ball of wool at a spinning wheel.",
+                8, java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.CRAFTING, 1),
                         DependencyRequirement.resource(new ResourceNeed(
                                 ItemID.WOOL, "Wool", 1)))));
         values.add(new ResourceDependencyDefinition(ItemID.VIAL_EMPTY,
+                "Vial",
                 "Use a glassblowing pipe on molten glass to make an empty vial.", 12,
                 java.util.Arrays.asList(
                         DependencyRequirement.skill(Skill.CRAFTING, 33),
@@ -146,9 +172,10 @@ public class ResourceDependencyCatalog
 
     private static void addAmmunition(List<ResourceDependencyDefinition> values)
     {
-        values.add(recipe(ItemID.ARROW_SHAFT, "Cut normal logs into arrow shafts.",
+        values.add(recipe(ItemID.ARROW_SHAFT, "Arrow shaft",
+                "Cut normal logs into arrow shafts.",
                 15, Skill.FLETCHING, 1, ItemID.LOGS, "Logs", 1));
-        values.add(recipe(ItemID.HEADLESS_ARROW,
+        values.add(recipe(ItemID.HEADLESS_ARROW, "Headless arrow",
                 "Attach feathers to arrow shafts to make headless arrows.",
                 1, Skill.FLETCHING, 1, ItemID.ARROW_SHAFT, "Arrow shaft", 1,
                 ItemID.FEATHER, "Feather", 1));
@@ -173,21 +200,23 @@ public class ResourceDependencyCatalog
         leather(values, ItemID.LEATHER_COWL, "Leather cowl", 9);
         leather(values, ItemID.LEATHER_VAMBRACES, "Leather vambraces", 11);
         leather(values, ItemID.LEATHER_ARMOUR, "Leather body", 14);
-        values.add(recipe(ItemID.HARDLEATHER_BODY, "Sew a hardleather body.",
+        values.add(recipe(ItemID.HARDLEATHER_BODY, "Hardleather body",
+                "Sew a hardleather body.",
                 1, Skill.CRAFTING, 28, ItemID.HARD_LEATHER, "Hard leather", 1));
         battlestaff(values, ItemID.AIR_BATTLESTAFF, "Air", ItemID.AIR_ORB, 66);
         battlestaff(values, ItemID.WATER_BATTLESTAFF, "Water", ItemID.WATER_ORB, 54);
         battlestaff(values, ItemID.EARTH_BATTLESTAFF, "Earth", ItemID.EARTH_ORB, 58);
         battlestaff(values, ItemID.FIRE_BATTLESTAFF, "Fire", ItemID.FIRE_ORB, 62);
-        glass(values, ItemID.BEER_GLASS, "beer glass", 1);
-        glass(values, ItemID.CANDLE_LANTERN_EMPTY, "empty candle lantern", 4);
-        glass(values, ItemID.FISHBOWL_EMPTY, "empty fishbowl", 42);
+        glass(values, ItemID.BEER_GLASS, "Beer glass", 1);
+        glass(values, ItemID.CANDLE_LANTERN_EMPTY, "Candle lantern", 4);
+        glass(values, ItemID.FISHBOWL_EMPTY, "Fishbowl", 42);
     }
 
     private static void arrow(List<ResourceDependencyDefinition> values, int output,
             String metal, int heads, int level)
     {
-        values.add(recipe(output, "Attach " + metal.toLowerCase()
+        values.add(recipe(output, metal + " arrow", "Attach "
+                + metal.toLowerCase(Locale.ROOT)
                 + " arrowheads to headless arrows.", 1, Skill.FLETCHING, level,
                 ItemID.HEADLESS_ARROW, "Headless arrow", 1,
                 heads, metal + " arrowhead", 1));
@@ -196,36 +225,39 @@ public class ResourceDependencyCatalog
     private static void dart(List<ResourceDependencyDefinition> values, int output,
             String metal, int tips, int level)
     {
-        values.add(recipe(output, "Attach feathers to " + metal.toLowerCase()
-                + " dart tips.", 1, Skill.FLETCHING, level,
+        values.add(recipe(output, metal + " dart", "Attach feathers to "
+                + metal.toLowerCase(Locale.ROOT) + " dart tips.",
+                1, Skill.FLETCHING, level,
                 tips, metal + " dart tip", 1, ItemID.FEATHER, "Feather", 1));
     }
 
     private static void leather(List<ResourceDependencyDefinition> values,
             int output, String name, int level)
     {
-        values.add(recipe(output, "Sew " + name.toLowerCase() + ".", 1,
-                Skill.CRAFTING, level, ItemID.LEATHER, "Leather", 1));
+        values.add(recipe(output, name, "Sew " + name.toLowerCase(Locale.ROOT) + ".",
+                1, Skill.CRAFTING, level, ItemID.LEATHER, "Leather", 1));
     }
 
     private static void battlestaff(List<ResourceDependencyDefinition> values,
             int output, String element, int orb, int level)
     {
-        values.add(recipe(output, "Attach the charged " + element.toLowerCase()
-                + " orb to a battlestaff.", 1, Skill.CRAFTING, level,
-                ItemID.BATTLESTAFF, "Battlestaff", 1,
+        values.add(recipe(output, element + " battlestaff", "Attach the charged "
+                + element.toLowerCase(Locale.ROOT) + " orb to a battlestaff.",
+                1, Skill.CRAFTING, level, ItemID.BATTLESTAFF, "Battlestaff", 1,
                 orb, element + " orb", 1));
     }
 
     private static void glass(List<ResourceDependencyDefinition> values,
             int output, String name, int level)
     {
-        values.add(recipe(output, "Blow molten glass into an " + name + ".", 1,
+        values.add(recipe(output, name, "Blow molten glass into a "
+                + name.toLowerCase(Locale.ROOT) + ".", 1,
                 Skill.CRAFTING, level, ItemID.MOLTEN_GLASS, "Molten glass", 1));
     }
 
-    private static ResourceDependencyDefinition recipe(int output, String action,
-            int yield, Skill skill, int level, Object... resources)
+    private static ResourceDependencyDefinition recipe(int output,
+            String outputName, String action, int yield, Skill skill, int level,
+            Object... resources)
     {
         List<DependencyRequirement> requirements = new ArrayList<>();
         requirements.add(DependencyRequirement.skill(skill, level));
@@ -233,6 +265,12 @@ public class ResourceDependencyCatalog
             requirements.add(DependencyRequirement.resource(new ResourceNeed(
                     (Integer) resources[index], (String) resources[index + 1],
                     (Integer) resources[index + 2])));
-        return new ResourceDependencyDefinition(output, action, 8, yield, requirements);
+        return new ResourceDependencyDefinition(output, outputName, action,
+                8, yield, requirements);
+    }
+
+    private static String normalize(String value)
+    {
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
     }
 }
