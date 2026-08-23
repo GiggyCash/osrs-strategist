@@ -95,7 +95,7 @@ public final class QuestItemEvidenceParser
     {
         Matcher matcher = ITEM_TERM.matcher(term);
         if (!matcher.matches()) return null;
-        String name = matcher.group(2).trim();
+        String name = canonicalItemName(matcher.group(2).trim());
         if (isGenericClass(name)) return null;
         int quantity = 1;
         if (matcher.group(1) != null)
@@ -112,6 +112,14 @@ public final class QuestItemEvidenceParser
         if (quantity < 1) return null;
         return ItemRequirementExpression.item(name, quantity,
                 ItemRequirementScope.OWNED_OR_RETRIEVABLE);
+    }
+
+    private static String canonicalItemName(String name)
+    {
+        if (name == null || name.isEmpty()) return name;
+        char first = name.charAt(0);
+        if (!Character.isLetter(first) || Character.isUpperCase(first)) return name;
+        return Character.toUpperCase(first) + name.substring(1);
     }
 
     private static boolean isGenericClass(String name)
