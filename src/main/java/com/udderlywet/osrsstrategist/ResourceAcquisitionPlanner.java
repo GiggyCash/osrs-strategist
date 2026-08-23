@@ -137,6 +137,51 @@ public class ResourceAcquisitionPlanner
                 "A verified acquisition route is not available yet." + sourceNote);
     }
 
+    /**
+     * Plans a shortfall already proven by another evidence-aware evaluator.
+     * The root quantity is the missing quantity, so owned state must not be
+     * subtracted a second time here.
+     */
+    public ResourceAcquisitionPlan planKnownShortfall(
+            StrategyContext context,
+            ResourceNeed shortfall)
+    {
+        if (context == null || shortfall == null || context.getData() == null)
+        {
+            return checkNeeded(shortfall, "Account state is not available.");
+        }
+
+        AccountMode mode = context.getAccountMode();
+        String sourceNote = sourceSuggestions(
+                shortfall, mode, context.isAllowWildernessMethods());
+        String prefix = "Confirmed shortfall: " + shortfall.getQuantity()
+                + " × " + shortfall.getItemName() + ". ";
+
+        if (AccountModePolicy.mayUseGrandExchange(mode))
+        {
+            return new ResourceAcquisitionPlan(
+                    shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
+                    RecommendationConfidence.CHECK_NEEDED,
+                    prefix + "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
+                            + sourceNote);
+        }
+
+        if (AccountModePolicy.requiresSelfSourcing(mode))
+        {
+            return new ResourceAcquisitionPlan(
+                    shortfall, AcquisitionSource.SELF_SOURCE, 0,
+                    RecommendationConfidence.CHECK_NEEDED,
+                    prefix + (mode == AccountMode.ULTIMATE_IRONMAN
+                            ? "Acquire the missing quantity with a UIM-safe route."
+                            : "Self-source the missing quantity.")
+                            + sourceNote);
+        }
+
+        return checkNeeded(shortfall,
+                prefix + "Verify account mode before choosing an acquisition route."
+                        + sourceNote);
+    }
+
     /** Builds an ordered chain without pretending prose source hints are verified unlocks. */
     public ResourceAcquisitionChain planChain(StrategyContext context,
             ResourceNeed need)
@@ -177,6 +222,23 @@ public class ResourceAcquisitionPlanner
     {
         return new ResourceDependencyResolver(this, dependencyCatalog)
                 .resolve(context, need);
+    }
+
+    /**
+     * Resolves a proven shortfall by canonical dependency output name. Unknown
+     * names deliberately remain with the caller's conservative source guidance.
+     */
+    public ResourceDependencyResolution resolveKnownShortfall(
+            StrategyContext context, String itemName, int quantity)
+    {
+        if (dependencyCatalog == null) return null;
+        ResourceDependencyDefinition definition = dependencyCatalog.forItemName(itemName);
+        if (definition == null) return null;
+        String canonical = definition.getItemName() == null
+                ? itemName : definition.getItemName();
+        ResourceNeed need = new ResourceNeed(definition.getItemId(), canonical, quantity);
+        return new ResourceDependencyResolver(this, dependencyCatalog)
+                .resolveKnownShortfall(context, need);
     }
 
     private String sourceSuggestions(
