@@ -77,11 +77,11 @@ public class ContentCoverageManifestTest
                 .mapToInt(Map::size).sum());
 
         TransportCatalog transports = new TransportCatalog();
-        assertEquals(26, transports.all().size());
+        assertEquals(41, transports.all().size());
         assertEquals(TransportCategory.values().length,
                 transports.all().stream().map(TransportDefinition::getCategory)
                         .collect(java.util.stream.Collectors.toSet()).size());
-        assertEquals(26, ids(transports.all().stream()
+        assertEquals(41, ids(transports.all().stream()
                 .map(TransportDefinition::getId).toArray(String[]::new)).size());
     }
 

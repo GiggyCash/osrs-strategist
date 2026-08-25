@@ -8,6 +8,7 @@ public final class RecommendationPresentation
 {
     private static final int COMPACT_ACTION_CHARS = 190;
     private static final int COMPACT_SUPPLIES_CHARS = 150;
+    private static final int COMPACT_UNLOCK_CHARS = 120;
 
     private RecommendationPresentation() {}
 
@@ -53,6 +54,7 @@ public final class RecommendationPresentation
                         .append(" more in Details");
             }
         }
+        appendNextUnlock(text, recommendation);
         return text.toString();
     }
 
@@ -128,21 +130,26 @@ public final class RecommendationPresentation
         RecommendationGuidance guidance = recommendation.getGuidance();
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
         {
-            text.append("<b>BLOCKED</b><br>This is not available for the current account state.");
+            text.append("<b>ACTIVITY</b><br>Blocked")
+                    .append("<br><br><b>NEEDED</b><br>This is not available for the current account state.");
             return;
         }
+        text.append("<b>ACTIVITY</b><br>")
+                .append(confidenceLabel(recommendation));
         if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
         {
-            text.append("<b>PREPARATION</b><br>");
             if (guidance != null && hasText(guidance.getAction()))
-                text.append(escape(compactSentence(guidance.getAction(),
-                        COMPACT_ACTION_CHARS)));
+                appendGuidance(text, guidance, false);
             else
+            {
+                appendBreak(text, 2);
+                text.append("<b>DO THIS</b><br>");
                 text.append("Open the relevant account panel so Compass can check the remaining requirement.");
+            }
+            appendNextUnlock(text, recommendation);
             return;
         }
 
-        text.append("<b>NEXT STEP</b><br>Ready");
         if (guidance != null)
         {
             appendGuidance(text, guidance, false);
@@ -150,9 +157,9 @@ public final class RecommendationPresentation
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append(escape(compactSentence(
-                    recommendation.getReason(), COMPACT_ACTION_CHARS)));
+            text.append("<b>DO THIS</b><br>Begin the verified activity.");
         }
+        appendNextUnlock(text, recommendation);
     }
 
     private static void appendNonSkillDetailed(
@@ -161,11 +168,12 @@ public final class RecommendationPresentation
     {
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
         {
-            text.append("<b>BLOCKED</b><br>This is not available for the current account state.");
+            text.append("<b>ACTIVITY</b><br>Blocked")
+                    .append("<br><br><b>NEEDED</b><br>This is not available for the current account state.");
             return;
         }
 
-        text.append("<b>NEXT STEP</b><br>")
+        text.append("<b>ACTIVITY</b><br>")
                 .append(confidenceLabel(recommendation));
         RecommendationGuidance guidance = recommendation.getGuidance();
         if (guidance != null)
@@ -254,6 +262,17 @@ public final class RecommendationPresentation
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
+    }
+
+    private static void appendNextUnlock(StringBuilder text,
+            Recommendation recommendation)
+    {
+        if (recommendation == null || !hasText(recommendation.getReason()))
+            return;
+        appendBreak(text, 2);
+        text.append("<b>NEXT UNLOCK</b><br>")
+                .append(escape(compactSentence(recommendation.getReason(),
+                        COMPACT_UNLOCK_CHARS)));
     }
 
     private static List<RequirementCheck> hardUnresolved(TrainingPlan plan)

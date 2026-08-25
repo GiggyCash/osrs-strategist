@@ -76,7 +76,7 @@ public class RuneLiteSkillActionCatalog
                     id,
                     name,
                     CurrentLiveSkillActionOverrides.level(id, action.getLevel()),
-                    action.getXp(),
+                    CurrentLiveSkillActionOverrides.xp(id, action.getXp()),
                     null,
                     membership,
                     action.getIcon()));

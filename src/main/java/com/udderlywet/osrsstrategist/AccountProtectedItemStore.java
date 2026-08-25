@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
 import javax.inject.Inject;
@@ -16,11 +14,8 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountProtectedItemStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String KEY = "protected-items";
-    private static final Type SET_TYPE =
-            new TypeToken<Set<Integer>>() { }.getType();
-
     private final ConfigManager configManager;
     private final Gson gson;
 
@@ -57,7 +52,7 @@ public class AccountProtectedItemStore
             return;
         }
 
-        Set<Integer> stored = gson.fromJson(json, SET_TYPE);
+        Set<Integer> stored = ProfileJsonCodec.integers(gson, json);
         profile.replaceAll(
                 stored == null ? Collections.emptySet() : stored
         );

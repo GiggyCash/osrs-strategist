@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -14,10 +12,8 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class FarmingRunStateStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String KEY = "farmingRunStates";
-    private static final Type TYPE = new TypeToken<Map<String, ObservedFarmingPatchState>>() { }.getType();
-
     private final ConfigManager configManager;
     private final Gson gson;
     private final Map<String, ObservedFarmingPatchState> states = new HashMap<>();
@@ -74,7 +70,8 @@ public class FarmingRunStateStore
             String json = configManager.getRSProfileConfiguration(GROUP, KEY);
             if (json != null && !json.trim().isEmpty())
             {
-                Map<String, ObservedFarmingPatchState> stored = gson.fromJson(json, TYPE);
+                Map<String, ObservedFarmingPatchState> stored =
+                        ProfileJsonCodec.farmingStates(gson, json);
                 if (stored != null) states.putAll(stored);
             }
         }

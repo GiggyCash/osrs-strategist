@@ -47,6 +47,10 @@ Developers need Java 11 and the repository Gradle wrapper. Run
 `./scripts/check-content-census.sh`. The reviewed content-refresh workflow is
 documented in `docs/MAINTENANCE.md`.
 
+The current repository-backed Plugin Hub audit is documented in
+`docs/PLUGIN_HUB_AUDIT.md`. External Plugin Hub CI and reviewer approval remain
+release steps after a reviewed feature-branch commit is pushed.
+
 ## Development basis
 The project is intended to be copied over RuneLite's official `example-plugin` template so the current Gradle wrapper is retained.
 

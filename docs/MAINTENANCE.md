@@ -61,3 +61,18 @@ identities, and update hand-authored strategy knowledge separately. Never let a
 generator overwrite semantic routing without review. An announced future
 change belongs in `announcedNotLive` with `planningEnabled: false` until an
 official live update is verified.
+
+Identity importers can emit review snapshots with stable records shaped as
+`{"id":"stable-upstream-id","name":"display name","fingerprint":"semantic-hash"}`
+inside each family. Compare the last reviewed and proposed snapshots with:
+
+```sh
+python3 scripts/detect-content-changes.py \
+  --baseline path/to/reviewed.json \
+  --current path/to/proposed.json
+```
+
+The report uses `NEW`, `REMOVED`, `RENAMED`, `CHANGED`, and
+`POSSIBLY_STALE`. It never edits catalogs or enables announced content. A human
+must review every event, update provenance and regression tests, and only then
+replace a committed snapshot.

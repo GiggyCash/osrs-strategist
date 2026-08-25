@@ -14,7 +14,7 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountMilestoneStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String ACTIVE_MILESTONE_KEY = "activeMilestone";
 
     private final ConfigManager configManager;

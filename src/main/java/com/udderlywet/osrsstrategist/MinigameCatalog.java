@@ -20,10 +20,10 @@ public class MinigameCatalog
                 "Firemaking XP, Pyromancer, Tome of fire, supplies and Collection Log");
         add("tempoross", "Tempoross", Skill.FISHING, 35, false,
                 RiskLevel.LOW, AttentionLevel.MODERATE, allModes(),
-                "Fishing XP, fish barrel, tackle box, Spirit angler and supplies");
+                "Fishing XP, Spirit angler, supplies, and live 6,000-Spirit-Flake Fish Barrel or Tackle Box purchases");
         add("guardians-of-the-rift", "Guardians of the Rift", Skill.RUNECRAFT, 27, false,
                 RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
-                "Runecraft XP, Raiments of the Eye, abyssal needle/lantern and runes");
+                "Runecraft XP, Raiments of the Eye, runes, and the live 750-Abyssal-Pearl Abyssal Needle purchase");
         add("giants-foundry", "Giants' Foundry", Skill.SMITHING, 15, false,
                 RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
                 "Smithing XP, coins, Smiths' Uniform and mould progression");

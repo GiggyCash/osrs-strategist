@@ -17,6 +17,7 @@ public enum TransportCategory
     DIARY,
     MINIGAME,
     QUEST,
+    AGILITY_SHORTCUT,
     SLAYER,
     POH,
     SAILING

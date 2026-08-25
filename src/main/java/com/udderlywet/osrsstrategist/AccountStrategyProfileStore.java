@@ -16,7 +16,7 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountStrategyProfileStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String KEY = "strategy-settings";
 
     private final ConfigManager configManager;

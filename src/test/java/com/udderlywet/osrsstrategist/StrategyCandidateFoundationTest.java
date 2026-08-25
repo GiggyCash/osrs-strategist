@@ -29,8 +29,9 @@ public class StrategyCandidateFoundationTest
 
         assertEquals("clue:pending", recommendation.getId());
         assertEquals(0, recommendation.getCurrentLevel());
-        assertTrue(RecommendationPresentation.compactHtml(recommendation)
-                .contains("PREPARATION"));
+        String compact = RecommendationPresentation.compactHtml(recommendation);
+        assertTrue(compact.contains("ACTIVITY"));
+        assertTrue(compact.contains("DO THIS"));
     }
 
     private static AccountSnapshot account()

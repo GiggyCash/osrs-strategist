@@ -10,7 +10,7 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Family | Authoritative identity source | Discovered | Structured | Partial | Conservative |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 211 represented | 0 | 0 |
-| Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 165 curated methods / 1,528 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
+| Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 167 curated methods / 1,528 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 locally verifiable | 67 preparation-only; all 71 have specific preparation | 0 |
@@ -18,7 +18,7 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Contextual gear and acquisition | Maintained target/context catalogs | 41 acquisition targets / 17 context ladders | 7 decision kinds operational | live value/readiness checked | 0 |
 | Resource dependencies and sources | Deterministic recipes and account-aware source families | 41 recipes / 60 source families | quantity/yield/account routes | unknown live supply checked | 0 |
 | Achievement Diary tasks | RuneLite Achievement Diary definitions | 378 tasks / 12 regions / 48 tiers | 378 represented | alternatives remain explicit checks | 0 |
-| Reusable transport systems | RuneLite identities plus maintained current-live unlock evidence | 26 systems / 18 categories | 26 | live unlock state checked | 0 |
+| Reusable transport systems | RuneLite identities plus maintained current-live unlock evidence | 41 systems / 19 categories | 41 | live unlock state checked | 0 |
 | STASH units | RuneLite `STASHUnit` and `EmoteClue`, current Wiki build rules | 119 | 119 | 0 | 0 |
 
 “Represented” is not a claim of executable completeness. Quest records reconcile
@@ -41,14 +41,16 @@ preparation but cannot claim encounter readiness. “Conservative” records the
 identity and why it remains fail-closed. Conservative content cannot lead
 **DO NEXT** merely because its identity is known.
 
-The training-method census covers all 24 current skills with 165 curated
+The training-method census covers all 24 current skills with 167 curated
 strategic methods. RuneLite contributes 1,528 deterministic calculator actions
 across 17 skills as execution evidence; these actions do not become strategy
 recommendations by identity alone. The census validates unique IDs, level
 bounds, player-facing instructions, membership consistency, self-source routes,
 and Hardcore-safe alternatives. Current-live overrides correct the pinned
-RuneLite Hallowed Sepulchre floor 4/5 levels to 77/87; the announced 2026-09-02
-follow-up remains excluded from runtime planning.
+RuneLite Hallowed Sepulchre floor 4/5 levels to 77/87 and replaces the live
+birdhouse XP values. Calculator XP made stale by non-exact Hunter/Colossal Wyrm
+changes is suppressed rather than used for false exact action counts; the
+announced 2026-09-02 follow-up remains excluded from runtime planning.
 
 The STASH census covers all 119 current units: 3 Beginner, 31 Easy, 25
 Medium, 16 Hard, 19 Elite, and 25 Master. Every record has RuneLite identity,
@@ -65,10 +67,11 @@ into an unsafe all-of requirement. Diary goals traverse the first known unmet
 task prerequisite, while the unobserved per-task completion state is always
 called out before **DO NEXT**.
 
-The transport census contains 26 high-value reusable systems across all 18
+The transport census contains 41 high-value reusable systems across all 19
 modeled families, including fairy rings, spirit trees, gliders, minecarts,
 boats, spellbooks, jewellery, diary/minigame/Slayer routes, POH routes, and
-current Sailing transport. Verified live routes short-circuit their setup;
+current Sailing transport. It includes all 15 Agility shortcuts added or
+converted to barehanded travel on 2026-08-12. Verified live routes short-circuit their setup;
 unknown membership, POH furniture, destination access, or Wilderness risk fails
 closed. POH furniture is never inferred from Construction level.
 

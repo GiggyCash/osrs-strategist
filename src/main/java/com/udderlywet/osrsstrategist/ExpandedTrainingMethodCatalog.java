@@ -330,7 +330,7 @@ public class ExpandedTrainingMethodCatalog
                 "Woodcutting Guild redwood access");
 
         add(Skill.HUNTER, "hunter_birdhouses", 5, 99,
-                "Birdhouse runs", "Complete birdhouse runs whenever ready for low-time Hunter experience and nests.",
+                "Birdhouse runs", "Complete birdhouse runs when passive nests and low-time progress fit the account; live August 2026 XP is lower by tier, so do not treat them as the default fastest Hunter route.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 5, 5,
                 "Birdhouse access and supplies");
@@ -364,10 +364,20 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
                 "Bird snare and reachable habitat");
         add(Skill.HUNTER, "hunter_falconry", 43, 99,
-                "Falconry kebbits", "Catch the best suitable falconry kebbit when active XP and kebbit rewards fit the account.",
+                "Falconry kebbits", "Catch the best suitable falconry kebbit when active XP and kebbit rewards fit the account; reposition while the falcon chases and use observed pouch/inventory capacity.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.VERY_LOW, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 4,
                 "Piscatoris falconry access and falcon rental coins");
+        add(Skill.HUNTER, "hunter_deadfall_kebbits", 23, 56,
+                "Deadfall kebbits", "Use the live two-deadfall limit and log-preservation behavior for Wild, Barb-tailed, Prickly, or Sabre-toothed kebbits appropriate to the current level.",
+                TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Verified deadfall habitat", "Knife, axe, and a small log buffer");
+        add(Skill.HUNTER, "hunter_deadfall_pyre_foxes", 57, 99,
+                "Pyre fox deadfalls", "Hunt Pyre foxes with the live faster two-deadfall loop when their rewards, Rumour task, or active Hunter progress justify the travel.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.VERY_LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Pyre fox habitat access", "Knife, axe, and a small log buffer");
         add(Skill.HUNTER, "hunter_maniacal_monkeys", 60, 99,
                 "Maniacal monkeys", "Trap maniacal monkeys for low-attention Hunter when Kruk's Dungeon access and banana supply are ready.",
                 TrainingIntensity.AFK, MethodCostTier.LOW, RiskLevel.NONE,
@@ -622,9 +632,9 @@ public class ExpandedTrainingMethodCatalog
                 false, true, false, false, true, AttentionLevel.ACTIVE, 20, 7,
                 "Wilderness risk accepted");
         add(Skill.AGILITY, "agility_colossal_wyrm", 50, 99,
-                "Colossal Wyrm courses", "Run the basic or advanced Colossal Wyrm course appropriate to the current level when termite rewards are useful.",
-                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
-                false, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Colossal Wyrm courses", "Run the live longer basic or advanced course when its lower-input rhythm, bone shards, and termite rewards fit the session; do not use the pre-update per-lap XP value.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 4,
                 "Colossal Wyrm course access");
         add(Skill.AGILITY, "agility_brimhaven_arena", 1, 99,
                 "Brimhaven Agility Arena", "Tag the active arena pillars and spend tickets when the varied obstacle loop and reward goals fit the session.",

@@ -2,7 +2,6 @@ package com.udderlywet.osrsstrategist;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,20 +37,16 @@ public class BrandingCompatibilityTest
 
     @Test
     public void stableConfigurationAndProfileGroupsRemainCompatible()
-            throws Exception
     {
         assertEquals("osrs-strategist", OsrsStrategistConfig.GROUP);
-        for (Class<?> store : new Class<?>[]{AccountStrategyProfileStore.class,
-                AccountProtectedItemStore.class, AccountPreferenceStore.class,
-                AccountAccessMemoryStore.class, AccountMilestoneStore.class,
-                FarmingRunStateStore.class,
-                AccountRecommendationHistoryStore.class})
-        {
-            Field group = store.getDeclaredField("GROUP");
-            group.setAccessible(true);
-            assertEquals(store.getSimpleName(), "osrs-strategist-profile",
-                    group.get(null));
-        }
+        assertEquals("osrs-strategist-profile", AccountStrategyProfileStore.GROUP);
+        assertEquals("osrs-strategist-profile", AccountProtectedItemStore.GROUP);
+        assertEquals("osrs-strategist-profile", AccountPreferenceStore.GROUP);
+        assertEquals("osrs-strategist-profile", AccountAccessMemoryStore.GROUP);
+        assertEquals("osrs-strategist-profile", AccountMilestoneStore.GROUP);
+        assertEquals("osrs-strategist-profile", FarmingRunStateStore.GROUP);
+        assertEquals("osrs-strategist-profile",
+                AccountRecommendationHistoryStore.GROUP);
     }
 
     private static String allText(Component component)

@@ -54,6 +54,18 @@ public class TrainingMethodCensusTest
                 "runelite:agility:hallowed_sepulchre_floor_5"));
         assertEquals(2,
                 CurrentLiveSkillActionOverrides.levelOverrides().size());
+        assertEquals(9,
+                CurrentLiveSkillActionOverrides.xpOverrides().size());
+        assertEquals(7,
+                CurrentLiveSkillActionOverrides.suppressedStaleXp().size());
+        assertEquals(112.0f, xp(catalog,
+                "runelite:hunter:regular_bird_house"), 0.0f);
+        assertEquals(969.0f, xp(catalog,
+                "runelite:hunter:magic_bird_house"), 0.0f);
+        assertEquals(0.0f, xp(catalog,
+                "runelite:hunter:pyre_fox"), 0.0f);
+        assertEquals(0.0f, xp(catalog,
+                "runelite:agility:colossal_wyrm_basic_course"), 0.0f);
         assertFalse(CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-09-02-sweep-up-follow-up",
                 LocalDate.of(2026, 8, 25)));
@@ -64,6 +76,15 @@ public class TrainingMethodCensusTest
         for (RuneLiteSkillActionDefinition action
                 : catalog.actionsFor(Skill.AGILITY))
             if (id.equals(action.getId())) return action.getLevel();
+        throw new AssertionError("Missing action " + id);
+    }
+
+    private static float xp(RuneLiteSkillActionCatalog catalog, String id)
+    {
+        for (Skill skill : Skill.values())
+            for (RuneLiteSkillActionDefinition action
+                    : catalog.actionsFor(skill))
+                if (id.equals(action.getId())) return action.getXp();
         throw new AssertionError("Missing action " + id);
     }
 }

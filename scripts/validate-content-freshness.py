@@ -22,6 +22,10 @@ def fail(message):
 
 data = json.loads(MANIFEST.read_text(encoding="utf-8"))
 validation_date = dt.date.fromisoformat(data["validationDate"])
+if data.get("currentLiveStatus") not in {
+        "LIVE_CURRENT", "ANNOUNCED_NOT_LIVE", "UNKNOWN",
+        "REMOVED_SUPERSEDED"}:
+    fail("invalid currentLiveStatus")
 families = data.get("families", [])
 ids = [entry.get("id") for entry in families]
 if len(ids) != len(set(ids)):
@@ -40,6 +44,7 @@ for entry in families:
     if entry.get("status") not in {"STRUCTURED", "PARTIAL", "SCAFFOLDED"}:
         fail(entry["id"] + " has an invalid status")
 for change in data.get("announcedNotLive", []):
+    dt.date.fromisoformat(change["effectiveDate"])
     if change.get("planningEnabled") is not False:
         fail(change.get("id", "announced change") + " must not affect planning")
 print("Freshness manifest valid for " + validation_date.isoformat()

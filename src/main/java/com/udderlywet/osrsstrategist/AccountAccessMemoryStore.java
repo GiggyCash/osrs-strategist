@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +18,8 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountAccessMemoryStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String KEY = "accessMemory";
-    private static final Type MEMORY_TYPE =
-            new TypeToken<Map<String, Long>>() { }.getType();
-
     private final ConfigManager configManager;
     private final Gson gson;
     private final Map<String, Long> memory = new HashMap<>();
@@ -96,7 +91,7 @@ public class AccountAccessMemoryStore
             String json = configManager.getRSProfileConfiguration(GROUP, KEY);
             if (json != null && !json.trim().isEmpty())
             {
-                Map<String, Long> stored = gson.fromJson(json, MEMORY_TYPE);
+                Map<String, Long> stored = ProfileJsonCodec.longs(gson, json);
                 if (stored != null)
                 {
                     memory.putAll(stored);

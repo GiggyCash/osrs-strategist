@@ -45,15 +45,21 @@ public class MethodGuidanceOverlay extends OverlayPanel
         if (checklist == null || checklist.getSteps().isEmpty()) return null;
         panelComponent.getChildren().clear();
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text(checklist.getTitle())
+                .text("Method Guidance")
                 .color(StrategistTheme.GOLD)
                 .build());
+        FontMetrics metrics = graphics.getFontMetrics();
+        for (String titleLine : wrap(checklist.getTitle(), metrics,
+                STEP_TEXT_WIDTH))
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left(titleLine)
+                    .leftColor(StrategistTheme.GOLD_SOFT)
+                    .build());
         panelComponent.getChildren().add(LineComponent.builder()
                 .left("Progress")
                 .right(checklist.completeCount() + "/" + checklist.getSteps().size())
                 .build());
 
-        FontMetrics metrics = graphics.getFontMetrics();
         int shown = Math.min(12, checklist.getSteps().size());
         for (int i = 0; i < shown; i++)
         {
@@ -84,7 +90,7 @@ public class MethodGuidanceOverlay extends OverlayPanel
         return super.render(graphics);
     }
 
-    private static List<String> wrap(
+    static List<String> wrap(
             String text,
             FontMetrics metrics,
             int maxWidth)

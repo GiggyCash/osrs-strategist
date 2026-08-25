@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
 import javax.inject.Inject;
@@ -16,19 +14,10 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountPreferenceStore
 {
-    private static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = "osrs-strategist-profile";
     private static final String PREFERENCES_KEY = "preferences";
     private static final String COOLDOWNS_KEY = "cooldowns";
     private static final String TIMED_ADJUSTMENTS_KEY = "timedAdjustments";
-
-    private static final Type PREFERENCE_MAP_TYPE =
-            new TypeToken<Map<String, Double>>() { }.getType();
-
-    private static final Type COOLDOWN_MAP_TYPE =
-            new TypeToken<Map<String, Long>>() { }.getType();
-
-    private static final Type TIMED_ADJUSTMENT_MAP_TYPE =
-            new TypeToken<Map<String, TimedScoreAdjustment>>() { }.getType();
 
     private final ConfigManager configManager;
     private final Gson gson;
@@ -66,10 +55,7 @@ public class AccountPreferenceStore
                 && !preferenceJson.trim().isEmpty())
         {
             Map<String, Double> storedPreferences =
-                    gson.fromJson(
-                            preferenceJson,
-                            PREFERENCE_MAP_TYPE
-                    );
+                    ProfileJsonCodec.doubles(gson, preferenceJson);
 
             if (storedPreferences == null)
             {
@@ -89,10 +75,7 @@ public class AccountPreferenceStore
                 && !cooldownJson.trim().isEmpty())
         {
             Map<String, Long> storedCooldowns =
-                    gson.fromJson(
-                            cooldownJson,
-                            COOLDOWN_MAP_TYPE
-                    );
+                    ProfileJsonCodec.longs(gson, cooldownJson);
 
             if (storedCooldowns == null)
             {
@@ -112,10 +95,7 @@ public class AccountPreferenceStore
                 && !adjustmentJson.trim().isEmpty())
         {
             Map<String, TimedScoreAdjustment> storedAdjustments =
-                    gson.fromJson(
-                            adjustmentJson,
-                            TIMED_ADJUSTMENT_MAP_TYPE
-                    );
+                    ProfileJsonCodec.timedAdjustments(gson, adjustmentJson);
 
             if (storedAdjustments == null)
             {

@@ -37,6 +37,8 @@ public class RecommendationDetailsOverlay extends OverlayPanel
             "READINESS",
             "WHY IT MATTERS",
             "STATUS",
+            "ACTIVITY",
+            "NEXT UNLOCK",
             "NOT READY YET",
             "METHOD UNAVAILABLE",
             "BLOCKED"));

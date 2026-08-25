@@ -118,6 +118,7 @@ public final class TransportCatalog
                 true, null, false, Skill.SAILING, 1,
                 "Observe the current boat class, port discoveries, crew/cargo setup, and route before relying on Sailing transport",
                 null, false, "current ports", "island access", "Sailing activities", "quest routes");
+        liveAgilityShortcuts();
     }
 
     public List<TransportDefinition> all()
@@ -125,6 +126,56 @@ public final class TransportCatalog
         return Collections.unmodifiableList(new ArrayList<>(routes.values()));
     }
     public TransportDefinition get(String id) { return routes.get(id); }
+
+    private void liveAgilityShortcuts()
+    {
+        shortcut("draynor-manor-west-gap", "Draynor Manor west fence gap", 49,
+                "Draynor routes", "manor clue and quest routing");
+        shortcut("river-lum-champions-stones", "River Lum stepping stones south of the Champions' Guild", 52,
+                "Champions' Guild routes", "east-west River Lum travel");
+        shortcut("giants-plateau-gap", "Giant's Plateau south-west shortcut", 54,
+                "desert access", "Giant's Plateau activities");
+        shortcut("edgeville-dungeon-pipe", "Southern Edgeville Dungeon pipe", 60,
+                "Edgeville Dungeon travel", "routes without a Brass key");
+        shortcut("arceuus-library-middle-drop", "Arceuus Library middle-floor drop", 52,
+                "Arceuus Library navigation", "library activity routes");
+        shortcut("arceuus-library-top-drop", "Arceuus Library top-floor drop", 62,
+                "Arceuus Library navigation", "library activity routes");
+        shortcut("sophanem-river-elid-stones", "River Elid stepping stones north of Sophanem", 79,
+                "Sophanem routes", "desert clue travel");
+        shortcut("mos-le-harmless-island-stones", "Mos le'Harmless island stepping stones", 82,
+                "Mos le'Harmless routes", "Treasure Trail travel");
+        shortcut("pollnivneach-west-plateau", "Pollnivneach west plateau shortcut", 83,
+                "Ali the Hag routes", "desert plateau travel");
+        barehanded("river-lum-broken-raft", "River Lum broken raft barehanded shortcut", 48,
+                "River Lum travel", "former grapple route");
+        barehanded("falador-rough-wall", "Falador rough wall barehanded shortcut", 52,
+                "Falador travel", "former grapple route");
+        barehanded("catherby-taverley-rock-climb", "Catherby-Taverley two-way rock climb", 68,
+                "Catherby travel", "Taverley travel");
+        barehanded("water-obelisk-catherby-crossing", "Water Obelisk-Catherby barehanded crossing", 72,
+                "Water Obelisk access", "Catherby travel");
+        barehanded("yanille-rough-wall", "Yanille rough wall barehanded shortcut", 69,
+                "Yanille travel", "former grapple route");
+        barehanded("karamja-volcano-strong-trees", "Karamja Volcano strong-tree shortcut", 78,
+                "Karamja Volcano travel", "former grapple route");
+    }
+
+    private void shortcut(String id, String name, int level, String... uses)
+    {
+        add(id, name, TransportCategory.AGILITY_SHORTCUT, true, null, false,
+                Skill.AGILITY, level,
+                "Verify live route access before relying on the shortcut",
+                null, false, uses);
+    }
+
+    private void barehanded(String id, String name, int level, String... uses)
+    {
+        add(id, name, TransportCategory.AGILITY_SHORTCUT, true, null, false,
+                Skill.AGILITY, level,
+                "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+                null, false, uses);
+    }
 
     private void add(String id, String name, TransportCategory category,
             boolean membersOnly, String quest, boolean questStartSuffices,

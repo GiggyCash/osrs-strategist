@@ -16,8 +16,29 @@ public class RecommendationPresentationCompactTest
         String text = RecommendationPresentation.compactText(recommendation);
         assertTrue(text.contains("METHOD"));
         assertTrue(text.contains("NEEDED"));
+        assertTrue(text.contains("NEXT UNLOCK"));
         assertFalse(text.contains("BEST METHOD"));
         assertFalse(text.contains("NEEDS INFO"));
+    }
+
+    @Test
+    public void nonSkillCardsUseActivityHierarchyAndNeverExposeDebugCopy()
+    {
+        Recommendation recommendation = new Recommendation(
+                "stash:master:very-long", "Build the current Master STASH unit",
+                "Avoid repeated clue inventory setup after the unit is observed built.",
+                40, null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
+                new RecommendationGuidance(
+                        "Open the Construction interface at the exact STASH location and verify built state.",
+                        "Bring the verified flatpack materials only after the live built-state check.",
+                        "The active clue location.",
+                        "Built state remains unknown."));
+        String compact = RecommendationPresentation.compactText(recommendation);
+        assertTrue(compact.contains("ACTIVITY"));
+        assertTrue(compact.contains("NEEDED"));
+        assertTrue(compact.contains("NEXT UNLOCK"));
+        assertFalse(compact.contains("Strategist will verify"));
+        assertFalse(compact.contains("policy class"));
     }
     @Test
     public void compactCardDoesNotDumpFullPlannerParagraphs()
