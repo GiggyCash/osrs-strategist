@@ -159,7 +159,9 @@ public final class AuthoritativeQuestEnrichmentCatalog
         if (state == EvidenceState.NONE && !blank)
             throw new IllegalStateException("Non-blank " + field
                     + " marked NONE at line " + lineNumber);
-        if ((state == EvidenceState.MISSING || state == EvidenceState.PARSE_FAILURE)
+        if ((state == EvidenceState.SOURCE_MISSING
+                || state == EvidenceState.PARSE_FAILURE
+                || state == EvidenceState.UNSUPPORTED_STRUCTURE)
                 && !blank)
             throw new IllegalStateException("Non-blank " + field + " marked "
                     + state + " at line " + lineNumber);
@@ -215,6 +217,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
                 "Recipe for Disaster/Freeing King Awowogei");
         result.put(normalize("Recipe for Disaster - Culinaromancer"),
                 "Recipe for Disaster/Defeating the Culinaromancer");
+        result.put(normalize("Vale Totems"), "Vale Totems (miniquest)");
         return result;
     }
 
@@ -222,18 +225,23 @@ public final class AuthoritativeQuestEnrichmentCatalog
     {
         VALUE,
         NONE,
+        NOT_APPLICABLE,
+        SOURCE_MISSING,
         MISSING,
         PARSE_FAILURE,
+        UNSUPPORTED_STRUCTURE,
+        UNKNOWN,
         LEGACY_NONE;
 
         public boolean isEvidence()
         {
-            return this == VALUE || this == NONE || this == LEGACY_NONE;
+            return this == VALUE || this == NONE
+                    || this == NOT_APPLICABLE || this == LEGACY_NONE;
         }
 
         public boolean isStrictEvidence()
         {
-            return this == VALUE || this == NONE;
+            return this == VALUE || this == NONE || this == NOT_APPLICABLE;
         }
     }
 

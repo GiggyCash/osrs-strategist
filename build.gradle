@@ -39,3 +39,16 @@ tasks.register('run', JavaExec) {
     jvmArgs '-ea'
     args '--developer-mode', '--debug'
 }
+
+tasks.register('contentCensus', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.udderlywet.osrsstrategist.ContentCensusReporter'
+}
+
+tasks.register('contentCensusSummary', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.udderlywet.osrsstrategist.ContentCensusReporter'
+    args '--summary'
+}

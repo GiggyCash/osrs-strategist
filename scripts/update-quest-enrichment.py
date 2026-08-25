@@ -21,8 +21,9 @@ USER_AGENT = (
 
 VALUE = "VALUE"
 NONE = "NONE"
-MISSING = "MISSING"
+SOURCE_MISSING = "SOURCE_MISSING"
 PARSE_FAILURE = "PARSE_FAILURE"
+UNSUPPORTED_STRUCTURE = "UNSUPPORTED_STRUCTURE"
 
 
 def request(parameters):
@@ -44,14 +45,19 @@ def quest_bucket():
 
 def bucket_field(row, key, blank_is_none):
     if key not in row:
-        return "", MISSING
+        return "", SOURCE_MISSING
     value = row.get(key)
     if value is None:
         value = ""
     value = str(value)
+    if blank_is_none:
+        semantic = re.sub(r"<[^>]+>", "", value).strip().lower()
+        if semantic == "none" or semantic.startswith(
+                "you don't need to bring any items yourself"):
+            return "", NONE
     if value.strip():
         return value, VALUE
-    return "", NONE if blank_is_none else MISSING
+    return "", NONE if blank_is_none else SOURCE_MISSING
 
 
 def reward_sections(names):
@@ -71,12 +77,12 @@ def reward_sections(names):
             seen.add(title)
             revisions = page.get("revisions", [])
             if not revisions:
-                result[title] = ("", MISSING)
+                result[title] = ("", SOURCE_MISSING)
                 continue
             slots = revisions[0].get("slots", {})
             source = slots.get("main", {}).get("content")
             if source is None:
-                result[title] = ("", MISSING)
+                result[title] = ("", SOURCE_MISSING)
                 continue
             match = re.search(
                 r"(?ims)^==+\s*Rewards?\s*==+\s*(.*?)(?=^==[^=]|\Z)",
@@ -89,11 +95,14 @@ def reward_sections(names):
                     r"(?ims)(The rewarded XP .*?)(?=^==[^=]|\Z)", source
                 )
             if not match or not match.group(1).strip():
-                result[title] = ("", PARSE_FAILURE)
+                # The source was read successfully but does not use a supported
+                # rewards section. This is uncertainty, not a parser crash and
+                # not proof that the activity has no rewards.
+                result[title] = ("", UNSUPPORTED_STRUCTURE)
             else:
                 result[title] = (match.group(1).strip(), VALUE)
         for title in batch:
-            result.setdefault(title, ("", MISSING))
+            result.setdefault(title, ("", SOURCE_MISSING))
     return result
 
 

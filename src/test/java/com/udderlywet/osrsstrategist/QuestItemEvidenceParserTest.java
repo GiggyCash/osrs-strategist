@@ -10,6 +10,28 @@ import static org.junit.Assert.assertTrue;
 
 public class QuestItemEvidenceParserTest
 {
+    @Test
+    public void sourceAndPhaseAnnotationsDoNotHideExactRequirements()
+    {
+        QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "*[[Rope]] (obtainable during the quest)\n"
+                        + "*5 [[iron bar]]s (unnoted)\n"
+                        + "*A [[tinderbox]] (part 2)");
+        assertTrue(result.isFullyExecutable());
+        assertNotNull(result.getExpression());
+        assertEquals(3, result.getParsedLineCount());
+    }
+
+    @Test
+    public void semanticParentheticalsRemainUnresolved()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "*[[Rope]] (consumed during the quest)\n"
+                        + "*[[Saw]] ([[Crystal saw]] also works)");
+        assertNull(result.getExpression());
+        assertEquals(2, result.getUnresolved().size());
+    }
     private final QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
 
     @Test

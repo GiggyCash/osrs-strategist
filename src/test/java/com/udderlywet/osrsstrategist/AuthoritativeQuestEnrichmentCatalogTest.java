@@ -24,7 +24,7 @@ public class AuthoritativeQuestEnrichmentCatalogTest
     }
 
     @Test
-    public void legacyBlankBucketFieldsAreDistinguishableFromStrictEvidence()
+    public void regeneratedBlankBucketFieldsHaveExplicitStrictEvidence()
     {
         AuthoritativeQuestEnrichmentCatalog catalog =
                 new AuthoritativeQuestEnrichmentCatalog();
@@ -32,11 +32,11 @@ public class AuthoritativeQuestEnrichmentCatalogTest
                 catalog.recordFor("Ethically Acquired Antiquities");
         assertNotNull(quest);
         assertTrue(quest.getItems().isEmpty());
-        assertEquals(AuthoritativeQuestEnrichmentCatalog.EvidenceState.LEGACY_NONE,
+        assertEquals(AuthoritativeQuestEnrichmentCatalog.EvidenceState.NONE,
                 quest.getItemState());
         assertTrue(quest.hasItemEvidence());
-        assertFalse(quest.hasStrictItemEvidence());
-        assertFalse(catalog.hasStrictFieldEvidence());
+        assertTrue(quest.hasStrictItemEvidence());
+        assertTrue(catalog.hasStrictFieldEvidence());
     }
 
     @Test
@@ -51,5 +51,15 @@ public class AuthoritativeQuestEnrichmentCatalogTest
                 quest.getItemState());
         assertTrue(quest.hasStrictItemEvidence());
         assertTrue(quest.hasRewardEvidence());
+    }
+
+    @Test
+    public void renamedMiniquestIdentityMapsToCurrentWikiPage()
+    {
+        AuthoritativeQuestEnrichmentCatalog.Record quest =
+                new AuthoritativeQuestEnrichmentCatalog().recordFor("Vale Totems");
+        assertNotNull(quest);
+        assertEquals("Vale Totems (miniquest)", quest.getName());
+        assertTrue(quest.hasStrictItemEvidence());
     }
 }

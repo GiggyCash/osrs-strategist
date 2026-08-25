@@ -59,6 +59,7 @@ public final class QuestItemEvidenceParser
         // Nested bullets usually explain alternatives or subrequirements. Keep
         // them fail-closed until their parent-child meaning can be proven.
         if (line.startsWith("**")) return null;
+        line = stripSafeAnnotations(line);
         String lower = " " + display(line).toLowerCase(Locale.ROOT) + " ";
         for (String marker : AMBIGUOUS_MARKERS)
             if (lower.contains(marker)) return null;
@@ -67,6 +68,27 @@ public final class QuestItemEvidenceParser
         if (body.toLowerCase(Locale.ROOT).contains(" or "))
             return parseExplicitAlternatives(body);
         return parseTerm(body);
+    }
+
+    private static String stripSafeAnnotations(String line)
+    {
+        // These notes only describe where the item is found or which quest
+        // phase uses it. They do not alter identity, quantity, alternatives,
+        // consumption, or ownership scope.
+        String stripped = line.replaceAll("(?i)\\s*\\((?:obtainable|obtained|can be obtained|found|spawns?|part\\s+\\d+)[^)]*\\)\\s*$", "")
+                .replaceAll("(?i)\\s*\\(unnoted\\)\\s*$", "")
+                .replaceAll("(?i)\\s+unnoted\\s*$", "")
+                .trim();
+        Matcher note = Pattern.compile("^(.*)\\s+\\(([^()]*)\\)\\s*$")
+                .matcher(stripped);
+        if (!note.matches()) return stripped;
+        String detail = note.group(2).toLowerCase(Locale.ROOT);
+        String[] semantic = {" or ", "also", "instead", "unless", " if ",
+                "lose", "consum", "return", "keep", "recommend", "dose",
+                "charge", "at least", "up to", "more"};
+        for (String marker : semantic)
+            if ((" " + detail + " ").contains(marker)) return stripped;
+        return note.group(1).trim();
     }
 
     private static ItemRequirementExpression parseExplicitAlternatives(String body)
