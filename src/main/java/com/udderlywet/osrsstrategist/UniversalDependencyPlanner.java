@@ -28,6 +28,8 @@ public final class UniversalDependencyPlanner
 
     private final GearAcquisitionCatalog gear = new GearAcquisitionCatalog();
     private final QuestKnowledgeCatalog quests = new QuestKnowledgeCatalog();
+    private final QuestCoverageManifest questCoverage =
+            new QuestCoverageManifest();
     private final PvmPreparationProfileCatalog pvm =
             new PvmPreparationProfileCatalog();
     private final ResourceSourceCatalog resources = new ResourceSourceCatalog();
@@ -44,6 +46,12 @@ public final class UniversalDependencyPlanner
             new StashDependencyPlanner();
     private final DiaryTaskCatalog diaries = new DiaryTaskCatalog();
     private final TransportCatalog transports = new TransportCatalog();
+    private final MinigameCatalog minigames = new MinigameCatalog();
+    private final MinigameSetupCatalog minigameSetups =
+            new MinigameSetupCatalog();
+    private final SlayerTaskProfileCatalog slayerProfiles =
+            new SlayerTaskProfileCatalog();
+    private final AbilityUnlockCatalog abilities = new AbilityUnlockCatalog();
     private final int maxDepth;
     private final int maxNodes;
 
@@ -275,6 +283,57 @@ public final class UniversalDependencyPlanner
         return traversal.finish();
     }
 
+    public UniversalDependencyResolution resolveAbility(String abilityId,
+            StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.ability(abilityId, null, 0, new LinkedHashSet<>());
+        return traversal.finish();
+    }
+
+    public UniversalDependencyResolution resolveMinigame(String minigameId,
+            StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.minigame(minigameId, null, 0);
+        return traversal.finish();
+    }
+
+    public UniversalDependencyResolution resolveMinigameCurrency(
+            String minigameId, String currencyId, String currencyName,
+            int targetQuantity, StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.minigameCurrency(minigameId, currencyId, currencyName,
+                targetQuantity, null, 0);
+        return traversal.finish();
+    }
+
+    public UniversalDependencyResolution resolveSlayerTask(String taskName,
+            StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.slayer(taskName, null, 0);
+        return traversal.finish();
+    }
+
+    public UniversalDependencyResolution resolveRecurring(
+            String opportunityId, String name, long nowMillis,
+            StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.recurring(opportunityId, name, nowMillis, null, 0);
+        return traversal.finish();
+    }
+
+    public UniversalDependencyResolution resolveCombatAchievement(
+            CombatAchievementTier tier, StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.combatAchievement(tier, null, 0);
+        return traversal.finish();
+    }
+
     /** Resolve a total requirement, subtracting only observed usable ownership. */
     public UniversalDependencyResolution resolveResource(String itemName,
             int quantity, StrategyContext context)
@@ -430,7 +489,9 @@ public final class UniversalDependencyPlanner
             RecommendationConfidence confidence = questComplete(name)
                     ? RecommendationConfidence.VERIFIED
                     : RecommendationConfidence.CHECK_NEEDED;
-            String questNode = add(key, GoalNodeKind.QUEST,
+            GoalNodeKind questKind = questCoverage.isMiniquest(name)
+                    ? GoalNodeKind.MINIQUEST : GoalNodeKind.QUEST;
+            String questNode = add(key, questKind,
                     (confidence == RecommendationConfidence.VERIFIED
                             ? "Completed " : "Complete ") + name,
                     confidence, nodeDepth, 1, parent);
@@ -505,15 +566,33 @@ public final class UniversalDependencyPlanner
         private void skill(Skill skill, int target, String parent, int nodeDepth)
         {
             int current = level(skill);
+            AccountSnapshot account = context == null || context.getData() == null
+                    ? null : context.getData().getAccount();
+            boolean buildLegal = current >= target
+                    || AccountBuildPolicy.allowsSkill(account, skill);
             RecommendationConfidence confidence = current >= target
                     ? RecommendationConfidence.VERIFIED
                     : RecommendationConfidence.CHECK_NEEDED;
             String node = add("skill-level:" + normalize(skill.getName()) + ":" + target,
                     GoalNodeKind.SKILL_LEVEL,
                     current >= target ? skill.getName() + " level verified"
+                            : !buildLegal
+                            ? "Do not train protected " + skill.getName()
+                                    + "; verify a build-safe alternative"
                             : "Train " + skill.getName() + " from " + current
                                     + " to " + target,
                     confidence, nodeDepth, 1, parent);
+            if (!buildLegal)
+            {
+                add("access:restricted-build:" + normalize(skill.getName()),
+                        GoalNodeKind.ACCESS,
+                        "This level would violate the verified "
+                                + AccountBuildPolicy.label(account)
+                                + " restriction; do not recommend irreversible XP",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
             if (current >= target || context == null || context.getData() == null)
                 return;
             TrainingPlan plan = training.select(context.getData(), skill, current,
@@ -539,9 +618,17 @@ public final class UniversalDependencyPlanner
             if (value == null) return;
             if (value.getKind() == ItemRequirementExpression.Kind.ITEM)
             {
-                if (!value.getItemNames().isEmpty())
+                if (value.getItemNames().size() == 1)
                     resource(value.getItemNames().get(0), value.getQuantity(),
                             parent, nodeDepth);
+                else if (!value.getItemNames().isEmpty())
+                    add("preparation:item-alternative:"
+                                    + normalize(value.label()),
+                            GoalNodeKind.PREPARATION_ACTION,
+                            "Verify one immediately usable item alternative: "
+                                    + value.label(),
+                            RecommendationConfidence.CHECK_NEEDED,
+                            nodeDepth, 1, parent);
                 return;
             }
             if (value.getKind() == ItemRequirementExpression.Kind.ITEM_CLASS
@@ -716,6 +803,321 @@ public final class UniversalDependencyPlanner
                         nodeDepth + 1, 1, node);
         }
 
+        private void ability(String abilityId, String parent, int nodeDepth,
+                Set<String> path)
+        {
+            AbilityUnlockDefinition definition = abilities.get(abilityId);
+            String key = "ability:" + normalize(abilityId);
+            if (!path.add(key)) { cycle = true; return; }
+            if (definition == null)
+            {
+                add(key, GoalNodeKind.PREPARATION_ACTION,
+                        "Verify this ability and its current-live unlock requirements before planning it",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth, 1,
+                        parent);
+                path.remove(key);
+                return;
+            }
+            String node = add(key, definition.getKind(),
+                    "Unlock and verify " + definition.getName(),
+                    RecommendationConfidence.CHECK_NEEDED, nodeDepth, 1,
+                    parent);
+            if (!p2p())
+            {
+                add("access:membership:" + key, GoalNodeKind.ACCESS,
+                        "Verify active membership before planning "
+                                + definition.getName(),
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        1, node);
+                path.remove(key);
+                return;
+            }
+            if (definition.getQuest() != null
+                    && !questComplete(definition.getQuest()))
+                quest(definition.getQuest(), node, nodeDepth + 1, path);
+            if (definition.getSkill() != null
+                    && level(definition.getSkill()) < definition.getLevel())
+                skill(definition.getSkill(), definition.getLevel(), node,
+                        nodeDepth + 1);
+            if (definition.getSecondarySkill() != null
+                    && level(definition.getSecondarySkill())
+                            < definition.getSecondaryLevel())
+                skill(definition.getSecondarySkill(),
+                        definition.getSecondaryLevel(), node, nodeDepth + 1);
+            if (definition.getRequiredItem() != null)
+                resource(definition.getRequiredItem(), 1, node,
+                        nodeDepth + 1);
+            if (definition.getEncounterId() != null)
+                pvm(definition.getEncounterId(), "the source encounter",
+                        node, nodeDepth + 1);
+            if (definition.getAccessCheck() != null)
+                add("access:ability:" + normalize(definition.getId()),
+                        GoalNodeKind.ACCESS, definition.getAccessCheck(),
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+            path.remove(key);
+        }
+
+        private void minigame(String minigameId, String parent, int nodeDepth)
+        {
+            MinigameDefinition definition = minigames.byId(minigameId);
+            String key = "minigame:" + normalize(minigameId);
+            if (definition == null)
+            {
+                add(key, GoalNodeKind.MINIGAME,
+                        "Verify this minigame's current identity and access before planning it",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth, 1,
+                        parent);
+                return;
+            }
+            String node = add(key, GoalNodeKind.MINIGAME,
+                    "Prepare " + definition.getName() + " for "
+                            + definition.getRewardFocus(),
+                    minigameUnlocked(definition.getId())
+                            ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth, 1, parent);
+            if (!definition.isFreeToPlay() && !p2p())
+            {
+                add("access:membership:" + key, GoalNodeKind.ACCESS,
+                        "Verify active membership before planning "
+                                + definition.getName(),
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        1, node);
+                return;
+            }
+            if (context == null || !definition.supports(
+                    context.getAccountMode()))
+            {
+                add("access:account-mode:" + key, GoalNodeKind.ACCESS,
+                        "This activity is not verified safe for the observed account mode",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        1, node);
+                return;
+            }
+            if (definition.getRiskLevel() == RiskLevel.HIGH && hardcore())
+            {
+                add("access:hardcore-risk:" + key, GoalNodeKind.ACCESS,
+                        "Do not route this high-risk activity for a Hardcore account without a separate explicit risk decision",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        1, node);
+                return;
+            }
+            if (!minigameUnlocked(definition.getId()))
+                add("access:minigame:" + normalize(definition.getId()),
+                        GoalNodeKind.ACCESS,
+                        "Verify the current quest, location and activity unlock before travelling to "
+                                + definition.getName(),
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+            if (definition.getPrimarySkill() != null
+                    && level(definition.getPrimarySkill())
+                            < definition.getMinimumLevel())
+                skill(definition.getPrimarySkill(), definition.getMinimumLevel(),
+                        node, nodeDepth + 1);
+            MinigameSetupProfile setup = minigameSetups.forActivity(
+                    definition.getId());
+            if (setup == null)
+            {
+                add("preparation:minigame:" + normalize(definition.getId()),
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Open the activity guide and verify the exact setup for the selected role before travelling",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
+            expression(setup.getItems(), node, nodeDepth + 1);
+            add("transport:minigame:" + normalize(definition.getId()),
+                    GoalNodeKind.TRANSPORTATION,
+                    "Verify a usable route to " + setup.getLocation(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, 1, node);
+            add("preparation:minigame-guidance:"
+                            + normalize(definition.getId()),
+                    GoalNodeKind.PREPARATION_ACTION,
+                    setup.getInstructions(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, 1, node);
+        }
+
+        private void minigameCurrency(String minigameId, String currencyId,
+                String currencyName, int targetQuantity, String parent,
+                int nodeDepth)
+        {
+            int target = Math.max(1, targetQuantity);
+            MinigameSnapshot snapshot = context == null
+                    || context.getData() == null ? null
+                    : context.getData().getMinigames();
+            boolean observed = snapshot != null && currencyId != null
+                    && snapshot.getCurrencies().containsKey(currencyId);
+            int owned = observed ? snapshot.currency(currencyId) : 0;
+            int shortfall = observed ? Math.max(0, target - owned) : target;
+            String label = currencyName == null || currencyName.trim().isEmpty()
+                    ? currencyId : currencyName;
+            String node = add("currency:" + normalize(currencyId),
+                    GoalNodeKind.CURRENCY,
+                    !observed ? "Observe the current " + label
+                            + " balance before calculating its shortfall"
+                            : shortfall == 0 ? label + " target verified"
+                            : "Earn " + shortfall + " more " + label,
+                    observed && shortfall == 0
+                            ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth, shortfall == 0 ? target : shortfall, parent);
+            if (shortfall > 0) minigame(minigameId, node, nodeDepth + 1);
+        }
+
+        private void slayer(String taskName, String parent, int nodeDepth)
+        {
+            String key = "slayer:" + normalize(taskName);
+            SlayerTaskProfile profile = slayerProfiles.profileFor(taskName);
+            String node = add(key, GoalNodeKind.SLAYER,
+                    "Prepare the observed " + taskName + " Slayer assignment",
+                    RecommendationConfidence.CHECK_NEEDED, nodeDepth, 1,
+                    parent);
+            if (!p2p())
+            {
+                add("access:membership:" + key, GoalNodeKind.ACCESS,
+                        "Verify active membership before planning a Slayer assignment",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        1, node);
+                return;
+            }
+            if (profile == null)
+            {
+                add("preparation:slayer-evidence:" + normalize(taskName),
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Verify the canonical task identity and exact assignment location before choosing a setup",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
+            String liveLocation = context.getData().getSlayer() == null ? null
+                    : context.getData().getSlayer().getTaskLocation();
+            boolean wilderness = containsAny(liveLocation, "wilderness")
+                    || exclusivelyWildernessTask(profile);
+            if (wilderness && (hardcore()
+                    || !context.isAllowWildernessMethods()))
+            {
+                add("access:wilderness:" + key, GoalNodeKind.ACCESS,
+                        hardcore()
+                                ? "Do not route this Wilderness assignment for a Hardcore account without a separate explicit risk decision"
+                                : "Enable and accept Wilderness risk before routing this assignment location",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
+            if (!profile.getRequiredProtection().isEmpty())
+                add("preparation:slayer-protection:"
+                                + normalize(profile.getId()),
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Equip or carry one verified legal protection option: "
+                                + String.join(" / ",
+                                        profile.getRequiredProtection()),
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+            add("transport:slayer:" + normalize(profile.getId()),
+                    GoalNodeKind.TRANSPORTATION,
+                    "Verify the task-valid route: "
+                            + profile.getPreferredLocation(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, 1, node);
+            add("preparation:slayer-style:" + normalize(profile.getId()),
+                    GoalNodeKind.PREPARATION_ACTION,
+                    profile.getStyleGuidance(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, 1, node);
+            add("preparation:slayer-mechanics:"
+                            + normalize(profile.getId()),
+                    GoalNodeKind.PREPARATION_ACTION,
+                    profile.getMechanicsNote(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, 1, node);
+        }
+
+        private void recurring(String opportunityId, String name,
+                long nowMillis, String parent, int nodeDepth)
+        {
+            RecurringOpportunitySnapshot snapshot = context == null
+                    || context.getData() == null ? null
+                    : context.getData().getRecurringOpportunities();
+            Long readyAt = snapshot == null ? null
+                    : snapshot.readyAt(opportunityId);
+            boolean ready = readyAt != null && readyAt <= nowMillis;
+            String label = name == null || name.trim().isEmpty()
+                    ? opportunityId : name;
+            String node = add("recurring:" + normalize(opportunityId),
+                    GoalNodeKind.RECURRING_OPPORTUNITY,
+                    readyAt == null
+                            ? "Observe the live cooldown for " + label
+                            : ready ? label + " is ready now"
+                            : label + " is not ready until its observed cooldown expires",
+                    ready ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth, 1, parent);
+            if (ready)
+                add("preparation:recurring:" + normalize(opportunityId),
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Verify the ordinary supplies and route, then complete "
+                                + label,
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+        }
+
+        private void combatAchievement(CombatAchievementTier tier,
+                String parent, int nodeDepth)
+        {
+            CombatAchievementTier target = tier;
+            CombatAchievementSnapshot snapshot = context == null
+                    || context.getData() == null ? null
+                    : context.getData().getCombatAchievements();
+            if (target == null && snapshot != null)
+                target = snapshot.nextRewardTier();
+            String suffix = target == null ? "next" : target.name();
+            String node = add("combat-achievement:" + normalize(suffix),
+                    GoalNodeKind.COMBAT_ACHIEVEMENT,
+                    target == null ? "Observe Combat Achievement progress and select the next reward tier"
+                            : "Complete the " + target.name().toLowerCase(Locale.ROOT)
+                                    + " Combat Achievement reward tier",
+                    snapshot != null && target != null
+                            && snapshot.isRewardTierComplete(target)
+                            ? RecommendationConfidence.VERIFIED
+                            : RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth, 1, parent);
+            if (!p2p())
+            {
+                add("access:membership:combat-achievement",
+                        GoalNodeKind.ACCESS,
+                        "Verify active membership before planning Combat Achievement reward tiers",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
+            if (snapshot == null || target == null)
+            {
+                add("preparation:combat-achievement-observation",
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Open the Combat Achievements interface once so the current tier and points are known",
+                        RecommendationConfidence.CHECK_NEEDED,
+                        nodeDepth + 1, 1, node);
+                return;
+            }
+            if (snapshot.isRewardTierComplete(target)) return;
+            int gap = Math.max(0,
+                    target.getRewardPoints() - snapshot.getEarnedPoints());
+            String points = add("currency:combat-achievement-points",
+                    GoalNodeKind.CURRENCY,
+                    "Earn " + gap + " more Combat Achievement point"
+                            + (gap == 1 ? "" : "s"),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 1, Math.max(1, gap), node);
+            add("preparation:combat-achievement-task-selection",
+                    GoalNodeKind.PREPARATION_ACTION,
+                    "Open the task list and select the first incomplete task whose encounter access, gear and mechanics are already verified",
+                    RecommendationConfidence.CHECK_NEEDED,
+                    nodeDepth + 2, 1, points);
+        }
+
         private void transport(String transportId, String parent, int nodeDepth,
                 Set<String> path)
         {
@@ -798,6 +1200,23 @@ public final class UniversalDependencyPlanner
                     || context.getData() == null ? null
                     : context.getData().getTransport();
             return snapshot != null && snapshot.hasVerifiedRoute(id);
+        }
+
+        private boolean minigameUnlocked(String id)
+        {
+            MinigameSnapshot snapshot = context == null
+                    || context.getData() == null ? null
+                    : context.getData().getMinigames();
+            return snapshot != null && snapshot.isUnlocked(id);
+        }
+
+        private boolean exclusivelyWildernessTask(SlayerTaskProfile profile)
+        {
+            String id = profile == null ? "" : profile.getId();
+            return containsAny(id, "revenants", "lava-dragons",
+                    "callisto-task", "chaos-elemental-task",
+                    "chaos-fanatic-task", "crazy-archaeologist-task",
+                    "scorpia-task", "venenatis-task", "vetion-task");
         }
 
         private boolean questAccessSatisfied(TransportDefinition definition)
