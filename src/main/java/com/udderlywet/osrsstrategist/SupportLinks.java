@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 public final class SupportLinks
 {
     /** Set only this value when the real optional tip destination exists. */
-    public static final String SUPPORT_URL = "";
+    public static final String SUPPORT_URL = "https://ko-fi.com/gielinorcompass";
 
     private SupportLinks() { }
 
