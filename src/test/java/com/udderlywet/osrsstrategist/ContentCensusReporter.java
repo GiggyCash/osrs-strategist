@@ -49,6 +49,8 @@ public final class ContentCensusReporter
             appendDiaries(output, diaries);
             output.append(',');
             appendTransports(output, transports);
+            output.append(',');
+            appendCombatAndAcquisition(output);
             output.append("\n}");
             System.out.println(output);
             return;
@@ -74,6 +76,8 @@ public final class ContentCensusReporter
         appendDiaries(output, diaries);
         output.append(',');
         appendTransports(output, transports);
+        output.append(',');
+        appendCombatAndAcquisition(output);
         output.append("\n}");
         System.out.println(output);
     }
@@ -116,6 +120,48 @@ public final class ContentCensusReporter
                 .append(",\n    \"reusableFanOutUses\": ")
                 .append(transports.all().stream()
                         .mapToInt(TransportDefinition::getFanOut).sum())
+                .append("\n  }");
+    }
+
+    private static void appendCombatAndAcquisition(StringBuilder output)
+    {
+        SlayerTaskIdentityCatalog slayerIdentities =
+                new SlayerTaskIdentityCatalog();
+        SlayerTaskProfileCatalog slayerProfiles =
+                new SlayerTaskProfileCatalog();
+        int mapped = 0;
+        for (SlayerTaskIdentity identity : slayerIdentities.all())
+            if (slayerProfiles.profileFor(identity.getAssignment()) != null)
+                mapped++;
+        int aliases = slayerProfiles.all().stream()
+                .mapToInt(profile -> profile.getAliases().size()).sum();
+        PvmActivityCatalog activities = new PvmActivityCatalog();
+        PvmPreparationProfileCatalog preparation =
+                new PvmPreparationProfileCatalog();
+        output.append("\n  \"combatAndAcquisition\": {")
+                .append("\n    \"pvmIdentities\": ")
+                .append(activities.all().size())
+                .append(",\n    \"pvmPreparationProfiles\": ")
+                .append(preparation.all().size())
+                .append(",\n    \"pvmLocallyVerifiedProfiles\": ")
+                .append(new PvmEvidenceProfileCatalog().size())
+                .append(",\n    \"slayerCanonicalIdentities\": ")
+                .append(slayerIdentities.all().size())
+                .append(",\n    \"slayerMappedIdentities\": ")
+                .append(mapped)
+                .append(",\n    \"slayerProfiles\": ")
+                .append(slayerProfiles.all().size())
+                .append(",\n    \"slayerAliases\": ").append(aliases)
+                .append(",\n    \"gearAcquisitionTargets\": ")
+                .append(new GearAcquisitionCatalog().all().size())
+                .append(",\n    \"gearContextLadders\": ")
+                .append(new GearProgressionCatalog().all().size())
+                .append(",\n    \"gearDecisionKinds\": ")
+                .append(GearDecisionKind.values().length)
+                .append(",\n    \"deterministicResourceDefinitions\": ")
+                .append(new ResourceDependencyCatalog().size())
+                .append(",\n    \"accountAwareResourceSourceFamilies\": ")
+                .append(new ResourceSourceCatalog().all().size())
                 .append("\n  }");
     }
 

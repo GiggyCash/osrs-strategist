@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 public class PvmPreparationProfileCatalog
 {
     public static final String PROVENANCE =
-            "RuneLite HiscoreSkill/Slayer Task 1.12.35 and OSRS Wiki encounter pages; audited 2026-08-19";
+            "RuneLite HiscoreSkill/Slayer Task 1.12.35 and maintained current-live encounter evidence; audited 2026-08-25";
     private final Map<String, PvmPreparationProfile> profiles = new LinkedHashMap<>();
 
     public PvmPreparationProfileCatalog()
@@ -25,6 +25,7 @@ public class PvmPreparationProfileCatalog
         conventionalBosses();
         skillingEncounters();
         currentEncounters();
+        curatedReadinessEncounters();
     }
 
     public PvmPreparationProfile forActivity(String id)
@@ -173,6 +174,137 @@ public class PvmPreparationProfileCatalog
                 "Verify A Kingdom Divided completion and access through the Voice of Yama in the Chasm of Fire",
                 "Attempt the inhibited fight before considering any contract; contract readiness is never inferred",
                 "Prepare protection-prayer swaps, poison treatment, food, restoration and a verified demonbane or magic setup");
+    }
+
+    /** Specific preparation for every encounter that has a curated readiness floor. */
+    private void curatedReadinessEncounters()
+    {
+        add("pvm:brutus", "melee",
+                "Verify The Ides of Milk completion and repeatable Brutus access",
+                "Equip a legal melee weapon in the weapon slot rather than relying on bank ownership",
+                "Carry food and keep player execution as unknown");
+        add("pvm:obor", "melee",
+                "Carry a giant key and verify Edgeville Dungeon hill-giant access",
+                "Prepare a legal melee setup and prayer response for the arena",
+                "Carry food; one key proves one attempt, not repeatable readiness");
+        add("pvm:bryophyta", "melee",
+                "Carry a mossy key and verify Varrock Sewers moss-giant access",
+                "Prepare a legal melee setup and an answer to the growthling phase",
+                "Carry food; one key proves one attempt, not repeatable readiness");
+        add("pvm:barrows_chests", "magic with encounter switches",
+                "Verify Priest in Peril completion and a usable route to the Barrows",
+                "Carry a spade and verify runes/charges for the chosen brothers and tunnels setup",
+                "Prepare prayer restoration, food, and an escape; crypt order remains a player choice");
+        add("pvm:scurrius", "melee, ranged, or magic",
+                "Verify the Varrock Sewers entrance and public or private instance choice",
+                "Equip one legal style; rat-bone weapons are optional upgrades, not access requirements",
+                "Carry food and prayer restoration appropriate to the selected encounter mode");
+        add("pvm:giant_mole", "melee or ranged",
+                "Carry a spade and verify the Falador Park lair route and a safe light source",
+                "Prepare protection prayer and a legal weapon; diary locator value requires observed diary completion",
+                "Carry food, restoration, and a teleport out of the lair");
+        add("pvm:sarachnis", "crush melee",
+                "Verify the Forthos Dungeon route and Sarachnis lair access",
+                "Prepare a legal crush setup, prayer responses, and a plan for web binding",
+                "Carry food, restoration, poison response, and an escape");
+        add("pvm:hespori", "melee",
+                "Verify 65 Farming, Farming Guild west-wing access, and a fully grown planted Hespori seed",
+                "Prepare a legal melee setup and a plan for the flower phases",
+                "Carry food and a weapon capable of damaging the encounter; planting is not proof of growth");
+        add("pvm:zulrah", "ranged or magic",
+                "Verify the required Regicide progress and a current route to Zul-Andra",
+                "Prepare phase-compatible ranged, Magic, or approved single-style gear with matching ammo/runes",
+                "Carry venom protection, food, restoration, and a teleport; rotation execution remains unknown");
+        add("pvm:vorkath", "ranged or melee",
+                "Verify Dragon Slayer II completion and access to Ungael",
+                "Prepare verified dragonfire protection, a compatible weapon, and a response to the undead spawn",
+                "Carry venom protection, food, restoration, ammunition/runes as applicable, and a teleport");
+        gauntlet("pvm:the_gauntlet", "standard Gauntlet");
+        gauntlet("pvm:the_corrupted_gauntlet", "Corrupted Gauntlet");
+        raid("pvm:chambers_of_xeric", "Chambers of Xeric",
+                "Verify the Mount Quidamortem route and raid party/scale before entering");
+        raid("pvm:chambers_of_xeric_challenge_mode",
+                "Chambers of Xeric Challenge Mode",
+                "Verify standard Chambers completion knowledge and deliberately select Challenge Mode");
+        raid("pvm:tombs_of_amascut", "Tombs of Amascut",
+                "Verify Beneath Cursed Sands completion, Necropolis access, and the selected invocation level");
+        raid("pvm:tombs_of_amascut_expert", "Tombs of Amascut Expert Mode",
+                "Verify a legal expert invocation total and standard ToA execution before entering");
+        raid("pvm:theatre_of_blood", "Theatre of Blood",
+                "Verify A Taste of Hope completion, Ver Sinhaza access, and team/entry-mode intent");
+        raid("pvm:theatre_of_blood_hard_mode", "Theatre of Blood Hard Mode",
+                "Verify standard Theatre completion knowledge and deliberately select Hard Mode");
+        add("pvm:alchemical_hydra", "ranged or melee",
+                "Verify 95 Slayer, a live hydra assignment, and Mount Karuulm access",
+                "Prepare heat protection and a phase-compatible legal weapon with ammo/charges",
+                "Carry prayer restoration, food, poison response, and an escape");
+        add("pvm:cerberus", "melee",
+                "Verify 91 Slayer, a live hellhound assignment, and Taverley Dungeon access",
+                "Prepare a legal melee setup and prayer/restoration response for the encounter mechanics",
+                "Carry food, restoration, and a teleport; an assignment does not prove execution readiness");
+        add("pvm:araxxor", "melee",
+                "Verify 92 Slayer, a live araxyte assignment, and Araxyte Lair access",
+                "Prepare a legal melee setup plus venom and enrage-mechanic responses",
+                "Carry food, restoration, venom treatment, and a teleport");
+        add("pvm:kraken", "magic",
+                "Verify 87 Slayer, a live cave-kraken assignment, and Kraken Cove access",
+                "Prepare a legal Magic weapon with verified charges or runes",
+                "Carry food, restoration where used, and a teleport; do not promote ordinary kraken blindly");
+        add("pvm:tztok_jad", "ranged",
+                "Verify Karamja volcano/Fight Cave access and enough uninterrupted session time",
+                "Prepare ranged ammunition/charges, prayer restoration, food, and wave sustain",
+                "Prayer-switch and wave execution remain unknown; stats alone never prove readiness");
+        add("pvm:tzkal_zuk", "ranged with switches",
+                "Verify an owned fire cape, Mor Ul Rek access, and enough uninterrupted session time",
+                "Prepare an Inferno-specific legal loadout, ammunition/charges, restoration, and wave supplies",
+                "Do not infer wave, prayer, or shield execution skill from equipment or stats");
+        add("pvm:sol_heredit", "melee with switches",
+                "Verify Fortis Colosseum access and a deliberate high-wave run",
+                "Prepare a Colosseum-specific loadout and supplies for the selected invocation history",
+                "Sol execution and wave consistency remain unknown; do not claim ready from stats");
+        add("pvm:nex", "ranged",
+                "Verify The Frozen Door completion and Ancient Prison access",
+                "Prepare God Wars protection for entry plus a team/instance-appropriate ranged setup",
+                "Carry compatible ammunition, food, restoration, and kill-count/key entry evidence");
+        godWars("pvm:commander_zilyana", "Commander Zilyana", "Saradomin");
+        godWars("pvm:general_graardor", "General Graardor", "Bandos");
+        godWars("pvm:kreearra", "Kree'Arra", "Armadyl");
+        godWars("pvm:kril_tsutsaroth", "K'ril Tsutsaroth", "Zamorak");
+        desertTreasureTwo("pvm:duke_sucellus", "Duke Sucellus", "slash melee");
+        desertTreasureTwo("pvm:the_leviathan", "The Leviathan", "ranged");
+        desertTreasureTwo("pvm:vardorvis", "Vardorvis", "slash melee");
+        desertTreasureTwo("pvm:the_whisperer", "The Whisperer", "magic");
+    }
+
+    private void gauntlet(String id, String name)
+    {
+        add(id, "self-contained hybrid",
+                "Verify Song of the Elves completion and Prifddinas/Gauntlet access",
+                "Plan a bounded in-instance resource, armour, weapon, food, and potion preparation route",
+                "No carried bank gear is used; preparation speed and encounter execution remain unknown for " + name);
+    }
+
+    private void raid(String id, String name, String access)
+    {
+        add(id, "raid hybrid", access,
+                "Verify room/role-compatible melee, ranged, and Magic gear with matching ammo, runes, charges, and prayers",
+                "Carry team/scale-appropriate supplies; mechanics and team execution remain unknown for " + name);
+    }
+
+    private void godWars(String id, String name, String faction)
+    {
+        add(id, "encounter-specific combat", "Verify God Wars Dungeon access, "
+                        + faction + " protection, and the boss-room entry route",
+                "Prepare the selected team/solo method and a weapon legal for " + name,
+                "Carry food, restoration, and verified kill-count or key entry evidence plus a return/escape plan");
+    }
+
+    private void desertTreasureTwo(String id, String name, String style)
+    {
+        add(id, style,
+                "Verify Desert Treasure II - The Fallen Empire completion and repeatable " + name + " access",
+                "Prepare a verified " + style + " setup and the encounter-specific movement/prayer response",
+                "Carry matching supplies and a teleport; quest completion does not prove repeatable-boss execution");
     }
 
     private void wild(String id, String style)

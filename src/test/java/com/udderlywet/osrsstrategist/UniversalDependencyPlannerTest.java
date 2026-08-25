@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.client.plugins.cluescrolls.clues.emote.STASHUnit;
 import org.junit.Test;
 
@@ -112,6 +113,52 @@ public class UniversalDependencyPlannerTest
             assertFalse(node.getAction().trim().isEmpty());
     }
 
+    @Test
+    public void deterministicResourceRecipesPreserveYieldAndPartialOwnership()
+    {
+        StrategyContext context = context(MembershipStatus.P2P, 99,
+                Collections.singletonList(new ItemStackSnapshot(
+                        ItemID.STEEL_BAR, "Steel bar", 24)));
+        UniversalDependencyResolution result = new UniversalDependencyPlanner()
+                .resolveResource("Cannonball", 100, context);
+
+        UniversalDependencyNode steel = result.getNodes().stream()
+                .filter(node -> "resource:steel-bar".equals(node.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(1, steel.getQuantity());
+        assertTrue(result.getNodes().stream().anyMatch(node ->
+                "resource:iron-ore".equals(node.getId())
+                        && node.getQuantity() == 1));
+        assertTrue(result.getNodes().stream().anyMatch(node ->
+                "resource:coal".equals(node.getId())
+                        && node.getQuantity() == 2));
+        assertKinds(result, GoalNodeKind.RESOURCE, GoalNodeKind.QUEST,
+                GoalNodeKind.SKILL_LEVEL, GoalNodeKind.PREPARATION_ACTION);
+    }
+
+    @Test
+    public void provenShortfallDoesNotSubtractOriginalOwnershipTwice()
+    {
+        StrategyContext context = context(MembershipStatus.P2P, 99,
+                Collections.singletonList(new ItemStackSnapshot(
+                        ItemID.MCANNONBALL, "Cannonball", 100)));
+        UniversalDependencyPlanner planner = new UniversalDependencyPlanner();
+        UniversalDependencyResolution total = planner.resolveResource(
+                "Cannonball", 100, context);
+        UniversalDependencyResolution shortfall =
+                planner.resolveKnownResourceShortfall("Cannonball", 100,
+                        context);
+
+        assertEquals(RecommendationConfidence.VERIFIED,
+                total.getNodes().stream().filter(node ->
+                        "resource:cannonball".equals(node.getId()))
+                        .findFirst().orElseThrow(AssertionError::new)
+                        .getConfidence());
+        assertTrue(shortfall.getNodes().stream().anyMatch(node ->
+                "resource:steel-bar".equals(node.getId())
+                        && node.getQuantity() == 25));
+    }
+
     private static NamedResolution goal(String name,
             UniversalDependencyResolution resolution)
     {
@@ -131,6 +178,12 @@ public class UniversalDependencyPlannerTest
 
     private static StrategyContext context(MembershipStatus membership, int level)
     {
+        return context(membership, level, Collections.emptyList());
+    }
+
+    private static StrategyContext context(MembershipStatus membership, int level,
+            List<ItemStackSnapshot> inventory)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -142,7 +195,7 @@ public class UniversalDependencyPlannerTest
                 "IRONMAN", membership, membership == MembershipStatus.P2P ? 1 : 0,
                 level * Skill.values().length, 0L, levels, xp);
         StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new InventorySnapshot(inventory))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .quests(new QuestSnapshot(Collections.emptyMap()))

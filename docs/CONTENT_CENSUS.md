@@ -13,7 +13,10 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 165 curated methods / 1,528 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
-| PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 | 67 | 0 |
+| PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 locally verifiable | 67 preparation-only; all 71 have specific preparation | 0 |
+| Slayer assignments | RuneLite Slayer `Task` enum | 151 | 151 mapped to 147 specific profiles / 227 aliases | readiness stays evidence-bound | 0 |
+| Contextual gear and acquisition | Maintained target/context catalogs | 41 acquisition targets / 17 context ladders | 7 decision kinds operational | live value/readiness checked | 0 |
+| Resource dependencies and sources | Deterministic recipes and account-aware source families | 41 recipes / 60 source families | quantity/yield/account routes | unknown live supply checked | 0 |
 | Achievement Diary tasks | RuneLite Achievement Diary definitions | 378 tasks / 12 regions / 48 tiers | 378 represented | alternatives remain explicit checks | 0 |
 | Reusable transport systems | RuneLite identities plus maintained current-live unlock evidence | 26 systems / 18 categories | 26 | live unlock state checked | 0 |
 | STASH units | RuneLite `STASHUnit` and `EmoteClue`, current Wiki build rules | 119 | 119 | 0 | 0 |
@@ -68,6 +71,24 @@ boats, spellbooks, jewellery, diary/minigame/Slayer routes, POH routes, and
 current Sailing transport. Verified live routes short-circuit their setup;
 unknown membership, POH furniture, destination access, or Wilderness risk fails
 closed. POH furniture is never inferred from Construction level.
+
+All 71 current boss identities now have named preparation profiles covering the
+known first access, style, mandatory setup, supply, and risk questions. Four
+simple encounters retain complete locally verifiable evidence profiles; the
+other 67 remain preparation-only and never claim player mechanical readiness.
+The Slayer census is generated from RuneLite's canonical 151-task enum and
+asserts that every assignment maps to a specific maintained profile. Profiles
+separate mandatory protection, location/access, combat style, cannon and
+multitarget-Magic evidence, Wilderness/boss variants, Iron objectives, and the
+keep/extend/skip/block decision.
+
+Gear planning separates best owned, best usable, best available now, best value
+upgrade, best practical upgrade, long-term target, and target-specific best.
+Compound slot prose is not treated as one exact missing item. The 41 acquisition
+targets traverse shared quests, skills, bosses, minigames, resources, shops,
+and checks through the bounded universal graph. Resource planning retains 41
+deterministic yield-aware definitions and 60 Main/Iron/UIM-aware source
+families; unknown storage never becomes an empty bank assumption.
 
 The quest enumeration includes several miniquests, Recipe for Disaster
 subquests, tutorials, and other quest-state entries. They remain in the census

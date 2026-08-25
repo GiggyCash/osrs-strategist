@@ -14,7 +14,7 @@ public class PvmPreparationProfileCatalogTest
     public void bulkProfilesAreUniqueReviewableAndCannotClaimReady()
     {
         PvmPreparationProfileCatalog catalog = new PvmPreparationProfileCatalog();
-        assertEquals(37, catalog.all().size());
+        assertEquals(71, catalog.all().size());
         Set<String> ids = new HashSet<>();
         for (PvmPreparationProfile profile : catalog.all().values())
         {
@@ -25,5 +25,7 @@ public class PvmPreparationProfileCatalogTest
             assertFalse(profile.getStyle().trim().isEmpty());
             assertFalse(profile.getActivityId(), !ids.add(profile.getActivityId()));
         }
+        for (PvmActivityDefinition activity : new PvmActivityCatalog().all())
+            assertNotNull(activity.getId(), catalog.forActivity(activity.getId()));
     }
 }

@@ -64,6 +64,7 @@ public class ContentCoverageManifestTest
         assertEquals(4, count(manifest.all(), ContentCoverageState.STRUCTURED));
         assertEquals(67, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
         assertEquals(0, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+        assertEquals(71, new PvmPreparationProfileCatalog().all().size());
     }
 
     @Test
@@ -107,6 +108,13 @@ public class ContentCoverageManifestTest
                 ids(new SlayerTaskProfileCatalog().all().stream()
                         .map(SlayerTaskProfile::getId).toArray(String[]::new)).size());
         assertEquals(147, new SlayerTaskProfileCatalog().all().size());
+
+        SlayerTaskIdentityCatalog canonical = new SlayerTaskIdentityCatalog();
+        assertEquals(151, canonical.all().size());
+        for (SlayerTaskIdentity identity : canonical.all())
+            assertNotNull(identity.getAssignment(),
+                    new SlayerTaskProfileCatalog().profileFor(
+                            identity.getAssignment()));
 
         Set<String> aliases = new HashSet<>();
         for (SlayerTaskProfile profile : new SlayerTaskProfileCatalog().all())

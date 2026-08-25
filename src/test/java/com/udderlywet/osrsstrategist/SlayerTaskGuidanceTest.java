@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 import org.junit.Test;
@@ -137,6 +141,42 @@ public class SlayerTaskGuidanceTest
         assertEquals("black-demons", catalog.profileFor("Black demons").getId());
         assertTrue(catalog.profileFor("Harpie bug swarms").getRequiredProtection()
                 .contains("Lit bug lantern"));
+    }
+
+    @Test
+    public void everyCanonicalRuneLiteAssignmentHasSpecificReviewableGuidance()
+    {
+        SlayerTaskIdentityCatalog identities = new SlayerTaskIdentityCatalog();
+        SlayerTaskProfileCatalog profiles = new SlayerTaskProfileCatalog();
+        List<String> missing = new ArrayList<>();
+        Set<String> enumIds = new HashSet<>();
+        Set<String> names = new HashSet<>();
+        for (SlayerTaskIdentity identity : identities.all())
+        {
+            assertTrue("Duplicate RuneLite enum identity "
+                    + identity.getEnumIdentity(),
+                    enumIds.add(identity.getEnumIdentity()));
+            assertTrue("Duplicate canonical assignment "
+                    + identity.getAssignment(),
+                    names.add(identity.getAssignment().toLowerCase()));
+            SlayerTaskProfile profile = profiles.profileFor(
+                    identity.getAssignment());
+            if (profile == null)
+            {
+                missing.add(identity.getAssignment());
+                continue;
+            }
+            assertFalse(identity.getAssignment(),
+                    profile.getPreferredLocation().trim().isEmpty());
+            assertFalse(identity.getAssignment(),
+                    profile.getStyleGuidance().trim().isEmpty());
+            assertFalse(identity.getAssignment(),
+                    profile.getMechanicsNote().trim().isEmpty());
+            assertFalse(identity.getAssignment(),
+                    profile.getTaskDecisionGuidance().trim().isEmpty());
+        }
+        assertEquals(missing.toString(), Collections.emptyList(), missing);
+        assertEquals(151, identities.all().size());
     }
 
     private static StrategyDataBundle data(

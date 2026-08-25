@@ -13,6 +13,8 @@ public class GearCandidateProvider implements StrategyCandidateProvider
 {
     private final GearProgressionCatalog catalog;
     private final GearAcquisitionCatalog acquisitionCatalog;
+    private final ContextualGearDecisionService decisionService =
+            new ContextualGearDecisionService();
 
     @Inject
     public GearCandidateProvider(GearProgressionCatalog catalog,
@@ -81,13 +83,21 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                     : " Build protected: " + AccountBuildPolicy.label(account) + ".";
             RecommendationGuidance guidance = acquisitionGuidance(entry, mode,
                     items, context);
+            ContextualGearAssessment assessment = decisionService.assess(entry,
+                    context);
+            ContextualGearDecision practical = assessment.get(
+                    GearDecisionKind.BEST_PRACTICAL_UPGRADE);
+            ContextualGearDecision targetBest = assessment.get(
+                    GearDecisionKind.TARGET_SPECIFIC_BEST);
 
             result.add(new StrategyCandidate(
                     id,
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
                             + buildNote
-                            + " Compare owned equipment, bank/storage, acquisition route, GP, and the target encounter before choosing a purchase or grind.",
+                            + " Practical next comparison: "
+                            + practical.getValue() + ". Target-specific rule: "
+                            + targetBest.getValue(),
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     guidance,
@@ -117,21 +127,24 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         List<String> unresolved = new ArrayList<>();
         for (String target : entry.getRecommendedItems())
         {
+            if (!ContextualGearDecisionService
+                    .isExactOwnershipTarget(target)) continue;
             if (items.has(target)) owned.add(target);
             else unresolved.add(target);
         }
         String next = unresolved.isEmpty()
                 ? entry.getWeaponGuidance() : unresolved.get(0);
         GearAcquisitionRoute route = acquisitionCatalog.forItem(next);
-        GearAcquisitionResolution resolution = route == null ? null
-                : new GearAcquisitionResolver(acquisitionCatalog,
-                        new QuestKnowledgeCatalog()).resolve(next, context);
+        UniversalDependencyResolution dependency = route == null ? null
+                : new UniversalDependencyPlanner().resolveGear(next, context);
+        UniversalDependencyNode nextDependency = dependency == null ? null
+                : dependency.nextAction();
         String action;
         if (route != null && !route.getSteps().isEmpty()
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
-            action = resolution != null && !resolution.getSteps().isEmpty()
-                    ? resolution.getSteps().get(0).getAction()
-                    : route.getSteps().get(0).getAction();
+            action = nextDependency == null
+                    ? route.getSteps().get(0).getAction()
+                    : nextDependency.getAction();
         else if (mode.usesGrandExchange())
             action = "Compare the live price and marginal benefit of " + next
                     + " before buying; keep the current item when the upgrade is not worth the detour.";
@@ -149,9 +162,8 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
                 ? "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location."
-                : "Route: " + (resolution != null && !resolution.getSteps().isEmpty()
-                        ? resolution.getSteps().get(0).getTarget()
-                        : route.getSteps().get(0).getTarget()) + ".";
+                : "Route starts with " + route.getSteps().get(0).getTarget()
+                        + "; follow the deepest known unmet dependency first.";
         return new RecommendationGuidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }

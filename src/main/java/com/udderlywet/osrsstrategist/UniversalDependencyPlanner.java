@@ -31,6 +31,10 @@ public final class UniversalDependencyPlanner
     private final PvmPreparationProfileCatalog pvm =
             new PvmPreparationProfileCatalog();
     private final ResourceSourceCatalog resources = new ResourceSourceCatalog();
+    private final ResourceDependencyCatalog resourceDependencies =
+            new ResourceDependencyCatalog();
+    private final ResourceAcquisitionPlanner resourceAcquisition =
+            new ResourceAcquisitionPlanner(resources, resourceDependencies);
     private final TrainingMethodSelector training = new TrainingMethodSelector(
             new TrainingMethodDatabase(), null,
             new ExpandedTrainingMethodCatalog(), new F2pBaselineMethodCatalog(),
@@ -271,6 +275,26 @@ public final class UniversalDependencyPlanner
         return traversal.finish();
     }
 
+    /** Resolve a total requirement, subtracting only observed usable ownership. */
+    public UniversalDependencyResolution resolveResource(String itemName,
+            int quantity, StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.resource(itemName, quantity, null, 0, false,
+                new LinkedHashSet<>());
+        return traversal.finish();
+    }
+
+    /** Resolve a quantity already proven missing without subtracting ownership again. */
+    public UniversalDependencyResolution resolveKnownResourceShortfall(
+            String itemName, int quantity, StrategyContext context)
+    {
+        Traversal traversal = new Traversal(context);
+        traversal.resource(itemName, quantity, null, 0, true,
+                new LinkedHashSet<>());
+        return traversal.finish();
+    }
+
     private static boolean taskHasUnmetRequirement(DiaryTaskDefinition task,
             StrategyContext context)
     {
@@ -325,7 +349,10 @@ public final class UniversalDependencyPlanner
             UniversalDependencyNode existing = nodes.get(id);
             if (existing != null)
             {
-                existing.addParent(parent);
+                boolean newParent = existing.addParent(parent);
+                if (newParent && (kind == GoalNodeKind.ITEM
+                        || kind == GoalNodeKind.RESOURCE))
+                    existing.addQuantity(quantity);
                 return existing.getId();
             }
             if (nodes.size() >= maxNodes) { nodeLimit = true; return parent; }
@@ -535,15 +562,126 @@ public final class UniversalDependencyPlanner
         private void resource(String name, int quantity, String parent,
                 int nodeDepth)
         {
-            String item = add("item:" + normalize(name), GoalNodeKind.ITEM,
-                    "Obtain " + quantity + " × " + name,
-                    RecommendationConfidence.CHECK_NEEDED, nodeDepth, quantity,
+            resource(name, quantity, parent, nodeDepth, false,
+                    new LinkedHashSet<>());
+        }
+
+        private void resource(String name, int quantity, String parent,
+                int nodeDepth, boolean knownShortfall, Set<String> path)
+        {
+            if (name == null || name.trim().isEmpty()) return;
+            int requested = Math.max(1, quantity);
+            String pathKey = "resource:" + normalize(name);
+            if (!path.add(pathKey)) { cycle = true; return; }
+            ResourceDependencyDefinition definition =
+                    resourceDependencies.forItemName(name);
+            String canonical = definition != null
+                    && definition.getItemName() != null
+                    ? definition.getItemName() : name;
+            String item = add("item:" + normalize(canonical), GoalNodeKind.ITEM,
+                    "Obtain " + requested + " × " + canonical,
+                    RecommendationConfidence.CHECK_NEEDED, nodeDepth, requested,
                     parent);
-            String resource = add("resource:" + normalize(name),
-                    GoalNodeKind.RESOURCE,
-                    "Resolve the confirmed " + name + " shortfall",
+
+            if (!knownShortfall && definition != null && context != null
+                    && context.getData() != null
+                    && context.getAccountMode() != AccountMode.ULTIMATE_IRONMAN
+                    && context.getData().getBank() == null)
+            {
+                String resource = add(pathKey, GoalNodeKind.RESOURCE,
+                        "Open the bank once before calculating the " + canonical
+                                + " shortfall",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
+                        requested, item);
+                add("preparation:bank-observation:" + normalize(canonical),
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Open the bank once; unobserved storage is unknown, not empty",
+                        RecommendationConfidence.CHECK_NEEDED, nodeDepth + 2,
+                        requested, resource);
+                path.remove(pathKey);
+                return;
+            }
+
+            ResourceNeed need = definition == null ? null : new ResourceNeed(
+                    definition.getItemId(), canonical, requested);
+            ResourceAcquisitionPlan ownership = need == null ? null
+                    : knownShortfall
+                    ? resourceAcquisition.planKnownShortfall(context, need)
+                    : resourceAcquisition.plan(context, need);
+            if (ownership != null && ownership.hasEnoughConfirmed())
+            {
+                add(pathKey, GoalNodeKind.RESOURCE, ownership.getNote(),
+                        ownership.getConfidence(), nodeDepth + 1, requested,
+                        item);
+                path.remove(pathKey);
+                return;
+            }
+
+            int confirmed = knownShortfall || ownership == null ? 0
+                    : Math.min(requested, ownership.getConfirmedQuantity());
+            int shortfall = Math.max(0, requested - confirmed);
+            String resource = add(pathKey, GoalNodeKind.RESOURCE,
+                    definition == null
+                            ? "Resolve the confirmed " + canonical + " shortfall"
+                            : definition.getAction(),
                     RecommendationConfidence.CHECK_NEEDED, nodeDepth + 1,
-                    quantity, item);
+                    Math.max(1, shortfall), item);
+
+            if (definition == null || context == null
+                    || context.getAccountMode().usesGrandExchange()
+                    || !context.getAccountMode().isIronLike())
+            {
+                addResourceSource(canonical, Math.max(1, shortfall), resource,
+                        nodeDepth + 2);
+                path.remove(pathKey);
+                return;
+            }
+
+            int batches = ceilDiv(Math.max(1, shortfall),
+                    definition.getOutputQuantity());
+            Map<Integer, ResourceNeed> children = new LinkedHashMap<>();
+            Set<String> gearPath = new LinkedHashSet<>(path);
+            for (DependencyRequirement requirement
+                    : definition.getPrerequisites())
+            {
+                switch (requirement.getKind())
+                {
+                    case QUEST:
+                        quest(requirement.getLabel(), resource, nodeDepth + 2,
+                                gearPath);
+                        break;
+                    case SKILL:
+                        skill(requirement.getSkill(), requirement.getLevel(),
+                                resource, nodeDepth + 2);
+                        break;
+                    case GEAR:
+                        gear(requirement.getLabel(), resource, nodeDepth + 2,
+                                gearPath);
+                        break;
+                    case RESOURCE:
+                        ResourceNeed child = requirement.getResource();
+                        int childQuantity = safeMultiply(child.getQuantity(),
+                                batches);
+                        ResourceNeed prior = children.get(child.getItemId());
+                        children.put(child.getItemId(), new ResourceNeed(
+                                child.getItemId(), child.getItemName(),
+                                prior == null ? childQuantity
+                                        : safeAdd(prior.getQuantity(),
+                                                childQuantity)));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            for (ResourceNeed child : children.values())
+                resource(child.getItemName(), child.getQuantity(), resource,
+                        nodeDepth + 2, false, path);
+            path.remove(pathKey);
+        }
+
+        private void addResourceSource(String name, int quantity,
+                String parent, int nodeDepth)
+        {
             List<String> suggestions = p2p() && context != null
                     ? resources.suggestions(name, context.getAccountMode(),
                             context.isAllowWildernessMethods())
@@ -559,8 +697,8 @@ public final class UniversalDependencyPlanner
                 action = "Verify an account-safe self-source for the shortfall";
             add("preparation:source:" + normalize(name),
                     GoalNodeKind.PREPARATION_ACTION, action,
-                    RecommendationConfidence.CHECK_NEEDED, nodeDepth + 2,
-                    quantity, resource);
+                    RecommendationConfidence.CHECK_NEEDED, nodeDepth,
+                    quantity, parent);
         }
 
         private void pvm(String id, String name, String parent, int nodeDepth)
@@ -688,6 +826,23 @@ public final class UniversalDependencyPlanner
             return context.getAccountMode() == AccountMode.HARDCORE_IRONMAN
                     || context.getAccountMode()
                     == AccountMode.HARDCORE_GROUP_IRONMAN;
+        }
+
+        private int ceilDiv(int value, int divisor)
+        {
+            return value / divisor + (value % divisor == 0 ? 0 : 1);
+        }
+
+        private int safeMultiply(int left, int right)
+        {
+            return left > Integer.MAX_VALUE / Math.max(1, right)
+                    ? Integer.MAX_VALUE : left * right;
+        }
+
+        private int safeAdd(int left, int right)
+        {
+            return left > Integer.MAX_VALUE - right
+                    ? Integer.MAX_VALUE : left + right;
         }
 
         private boolean questComplete(String name)

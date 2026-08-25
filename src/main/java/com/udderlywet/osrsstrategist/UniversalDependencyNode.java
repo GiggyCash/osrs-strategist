@@ -12,7 +12,7 @@ public final class UniversalDependencyNode
     private final String action;
     private final RecommendationConfidence confidence;
     private final int depth;
-    private final int quantity;
+    private int quantity;
     private final Set<String> parentIds = new LinkedHashSet<>();
 
     UniversalDependencyNode(String id, GoalNodeKind kind, String action,
@@ -27,10 +27,18 @@ public final class UniversalDependencyNode
         this.quantity = Math.max(1, quantity);
     }
 
-    void addParent(String parentId)
+    boolean addParent(String parentId)
     {
         if (parentId != null && !parentId.isEmpty() && !parentId.equals(id))
-            parentIds.add(parentId);
+            return parentIds.add(parentId);
+        return false;
+    }
+
+    void addQuantity(int additional)
+    {
+        if (additional <= 0) return;
+        quantity = quantity > Integer.MAX_VALUE - additional
+                ? Integer.MAX_VALUE : quantity + additional;
     }
 
     public String getId() { return id; }

@@ -52,7 +52,9 @@ public final class SlayerTaskProfile
                 ? CapabilityState.UNKNOWN : multiTargetMagicEligibility;
         this.wildernessVariantKnown = wildernessVariantKnown;
         this.ironObjectives = immutable(ironObjectives);
-        this.taskDecisionGuidance = taskDecisionGuidance;
+        this.taskDecisionGuidance = taskDecisionGuidance == null
+                ? "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+                : taskDecisionGuidance;
     }
 
     public String getId() { return id; }

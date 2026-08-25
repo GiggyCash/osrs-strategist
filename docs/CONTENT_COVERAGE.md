@@ -121,11 +121,19 @@ Metadata includes:
 - risk class
 - conservative Hardcore policy
 
-`PvmReadinessAnalyzer` builds a readiness result for every catalog boss. It has explicit floors/access rules for many major encounters (including Barrows, Scurrius, Zulrah, Vorkath, Gauntlet/CG, CoX, ToB, ToA, Slayer bosses, Jad/Zuk, Nex, GWD, DT2 bosses, and more) plus a conservative fallback for current/future identities.
+`PvmReadinessAnalyzer` builds a readiness result for every catalog boss. All 71
+current identities have encounter-specific preparation covering known access,
+style, mandatory setup, supplies, and risk, including Barrows, Scurrius,
+Zulrah, Vorkath, Gauntlet/CG, CoX, ToB, ToA, Slayer bosses, Jad/Zuk, Nex, GWD,
+DT2 bosses, and current 2026 encounters.
 
 Readiness evaluates combat stats, known quest/access gates, observed combat equipment, basic supplies, membership/account mode, and risk policy. UIM never becomes ready because of a normal bank cache.
 
 This is broad real PvM coverage, but not yet a hand-authored phase-by-phase DPS/loadout/special-attack model for every encounter.
+
+Only four deliberately simple evidence profiles can become locally
+`VERIFIED`; the remaining 67 are preparation-only. Complete stats and equipment
+never prove player mechanical execution.
 
 ## Gear and BIS
 
@@ -143,6 +151,23 @@ Current ladders include:
 - raid hybrid budget/BIS switches
 
 BIS entries explicitly remain target/room/phase/setup dependent. Before an actual acquisition recommendation, Compass still checks owned equipment, account mode, resource route, Main GP/economics, and encounter context.
+
+The decision layer explicitly separates best owned, best usable, best available
+now, best value upgrade, best practical upgrade, long-term target, and
+target-specific best. Compound slot descriptions and alternative sets do not
+masquerade as one exact missing item. Forty-one concrete acquisition targets
+recurse through the shared dependency graph instead of duplicating quest,
+boss, minigame, skill, shop, or resource logic.
+
+## Slayer
+
+The development-time catalog is generated from all 151 canonical RuneLite
+Slayer assignment identities. Every identity maps to one of 147 task-specific
+profiles through 227 audited aliases. Guidance separates mandatory protection,
+location/access, style, cannon and multitarget-Magic evidence, Wilderness and
+boss variants, Iron objectives, and keep/extend/skip/block value. An unknown
+future task still receives conservative guidance, but no current canonical task
+depends on that fallback.
 
 ## Clues and STASH-aware planning
 
