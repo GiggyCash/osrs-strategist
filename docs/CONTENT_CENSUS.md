@@ -14,6 +14,8 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 | 67 | 0 |
+| Achievement Diary tasks | RuneLite Achievement Diary definitions | 378 tasks / 12 regions / 48 tiers | 378 represented | alternatives remain explicit checks | 0 |
+| Reusable transport systems | RuneLite identities plus maintained current-live unlock evidence | 26 systems / 18 categories | 26 | live unlock state checked | 0 |
 | STASH units | RuneLite `STASHUnit` and `EmoteClue`, current Wiki build rules | 119 | 119 | 0 | 0 |
 
 “Represented” is not a claim of executable completeness. Quest records reconcile
@@ -51,6 +53,21 @@ world coordinates, location, and authoritative emote/equipment evidence. Tier
 rules supply the exact Construction level and build materials. Built and filled
 state remains `UNKNOWN` until explicitly observed; seven location records are
 classified as Wilderness-risk routes and cannot route without permission.
+
+The diary census is generated from the pinned RuneLite definitions and contains
+all 378 current task rows across 12 regions and 48 tiers. Direct skill, quest,
+combat-level, and quest-point prerequisites are structured. RuneLite `OR`
+requirements remain one explicit alternative check instead of being flattened
+into an unsafe all-of requirement. Diary goals traverse the first known unmet
+task prerequisite, while the unobserved per-task completion state is always
+called out before **DO NEXT**.
+
+The transport census contains 26 high-value reusable systems across all 18
+modeled families, including fairy rings, spirit trees, gliders, minecarts,
+boats, spellbooks, jewellery, diary/minigame/Slayer routes, POH routes, and
+current Sailing transport. Verified live routes short-circuit their setup;
+unknown membership, POH furniture, destination access, or Wilderness risk fails
+closed. POH furniture is never inferred from Construction level.
 
 The quest enumeration includes several miniquests, Recipe for Disaster
 subquests, tutorials, and other quest-state entries. They remain in the census

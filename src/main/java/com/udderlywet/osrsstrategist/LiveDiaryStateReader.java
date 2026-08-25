@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.gameval.VarbitID;
-import net.runelite.api.gameval.VarbitID;
 
 /** Reads all 12 regions x 4 Achievement Diary tier states directly from RuneLite. */
 @Singleton

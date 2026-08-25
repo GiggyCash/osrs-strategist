@@ -13,6 +13,8 @@ public final class ContentCensusReporter
         QuestRequirementCensus quests = new QuestRequirementCensus();
         TrainingMethodCensus training = new TrainingMethodCensus();
         StashUnitCensus stash = new StashUnitCensus();
+        DiaryTaskCatalog diaries = new DiaryTaskCatalog();
+        TransportCatalog transports = new TransportCatalog();
         StringBuilder output = new StringBuilder();
         boolean includeUnresolved = args.length == 0
                 || !"--summary".equals(args[0]);
@@ -43,6 +45,10 @@ public final class ContentCensusReporter
             appendTraining(output, training);
             output.append(',');
             appendStash(output, stash);
+            output.append(',');
+            appendDiaries(output, diaries);
+            output.append(',');
+            appendTransports(output, transports);
             output.append("\n}");
             System.out.println(output);
             return;
@@ -64,8 +70,53 @@ public final class ContentCensusReporter
         appendTraining(output, training);
         output.append(',');
         appendStash(output, stash);
+        output.append(',');
+        appendDiaries(output, diaries);
+        output.append(',');
+        appendTransports(output, transports);
         output.append("\n}");
         System.out.println(output);
+    }
+
+    private static void appendDiaries(StringBuilder output,
+            DiaryTaskCatalog diaries)
+    {
+        int requirements = 0;
+        int alternativeChecks = 0;
+        int transportTasks = 0;
+        for (DiaryTaskDefinition task : diaries.all())
+        {
+            requirements += task.getRequirements().size();
+            if (task.isTransportRelevant()) transportTasks++;
+            for (DiaryTaskRequirement requirement : task.getRequirements())
+                if (requirement.getKind()
+                        == DiaryTaskRequirement.Kind.ALTERNATIVE_CHECK)
+                    alternativeChecks++;
+        }
+        output.append("\n  \"diaryTasks\": {")
+                .append("\n    \"regions\": ").append(diaries.census().size())
+                .append(",\n    \"tiers\": 48")
+                .append(",\n    \"tasks\": ").append(diaries.all().size())
+                .append(",\n    \"structuredRequirements\": ")
+                .append(requirements - alternativeChecks)
+                .append(",\n    \"alternativeChecks\": ")
+                .append(alternativeChecks)
+                .append(",\n    \"transportRelevantTasks\": ")
+                .append(transportTasks)
+                .append("\n  }");
+    }
+
+    private static void appendTransports(StringBuilder output,
+            TransportCatalog transports)
+    {
+        output.append("\n  \"transportSystems\": {")
+                .append("\n    \"systems\": ").append(transports.all().size())
+                .append(",\n    \"categories\": ")
+                .append(TransportCategory.values().length)
+                .append(",\n    \"reusableFanOutUses\": ")
+                .append(transports.all().stream()
+                        .mapToInt(TransportDefinition::getFanOut).sum())
+                .append("\n  }");
     }
 
     private static void appendStash(StringBuilder output,

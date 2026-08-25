@@ -2,6 +2,7 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Quest;
 import org.junit.Test;
@@ -63,6 +64,24 @@ public class ContentCoverageManifestTest
         assertEquals(4, count(manifest.all(), ContentCoverageState.STRUCTURED));
         assertEquals(67, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
         assertEquals(0, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
+    }
+
+    @Test
+    public void diaryAndTransportCensusesHaveNoSilentCoverageGaps()
+    {
+        DiaryTaskCatalog diaries = new DiaryTaskCatalog();
+        assertEquals(378, diaries.all().size());
+        assertEquals(12, diaries.census().size());
+        assertEquals(48, diaries.census().values().stream()
+                .mapToInt(Map::size).sum());
+
+        TransportCatalog transports = new TransportCatalog();
+        assertEquals(26, transports.all().size());
+        assertEquals(TransportCategory.values().length,
+                transports.all().stream().map(TransportDefinition::getCategory)
+                        .collect(java.util.stream.Collectors.toSet()).size());
+        assertEquals(26, ids(transports.all().stream()
+                .map(TransportDefinition::getId).toArray(String[]::new)).size());
     }
 
     @Test

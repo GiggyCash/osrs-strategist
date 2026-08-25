@@ -84,7 +84,25 @@ Not every quest's complete item/step/prerequisite graph is yet hand-authored in 
 
 The main queue can recommend the next unfinished tier. Wilderness diaries respect Wilderness policy.
 
-Individual task text and every per-task prerequisite are not yet a complete embedded 492-task dataset, so a tier stays `Check Needed` until task readiness is known.
+The pinned RuneLite task catalog contains all 378 current task rows across the
+12 regions and 48 tiers. Direct skill, quest, combat-level, and quest-point
+requirements are structured; nested RuneLite alternatives stay explicit
+`Check Needed` evidence. Because RuneLite exposes tier completion rather than
+every individual task's live completion state, Compass tells the player to
+check the selected task before following its first known prerequisite.
+
+## Transportation
+
+The structured catalog covers 26 high-value reusable systems across fairy
+rings, spirit trees, gnome transport, minecarts, boats/charters, item and
+spellbook teleports, jewellery, diary/minigame/quest/Slayer routes, POH routes,
+and current Sailing transport. Each system records membership, quests, skill,
+item/access setup, Wilderness risk, and reusable fan-out.
+
+Only observed `TransportSnapshot` routes count as verified. Unknown membership
+fails closed for members routes; Hardcore accounts do not auto-route Wilderness
+teleports. POH portal, mounted, spirit-tree, and fairy-ring capabilities require
+observed furniture state and are never inferred from Construction level.
 
 ## Combat Achievements
 
@@ -175,7 +193,7 @@ These are suggestions only. A normal developing account can temporarily resemble
 The architecture is no longer the main blocker. The remaining work is primarily deeper structured content:
 
 - exact prerequisite/item/step graph for every quest
-- all 492 individual diary task definitions and readiness checks
+- direct live observation of each individual diary task's completion state
 - every individual Combat Achievement task and mechanic
 - full per-boss phase/gear/DPS/special-attack/consumable modeling
 - direct observation of the active clue step and per-unit STASH built/filled state (the full static 119-unit catalogue and dependency planner are present)

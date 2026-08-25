@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 @Singleton
 public class DiaryCandidateProvider implements StrategyCandidateProvider
 {
+    private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
     @Override
     public String getId()
     {
@@ -49,14 +50,22 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
             score += Math.min(8.0, observedTasks * 0.15);
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
+            List<DiaryTaskDefinition> tierTasks = taskCatalog.forTier(region, next);
+            String firstCheck = tierTasks.isEmpty()
+                    ? "Open the diary interface and inspect the incomplete tasks."
+                    : "Open the diary interface and check whether this task is incomplete: "
+                            + tierTasks.get(0).getTask();
             result.add(new StrategyCandidate(
                     id,
                     pretty(next.name()) + " " + region + " Diary",
-                    "This is the next unclaimed tier in " + region
-                            + ". The live tier is known; individual skill, quest, item, and combat tasks remain Check Needed until their requirements are verified.",
+                    "This is the next unclaimed tier in " + region + ". "
+                            + tierTasks.size() + " current task definitions provide skill, quest, activity, and transport prerequisite evidence.",
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
-                    null,
+                    new RecommendationGuidance(firstCheck,
+                            "After identifying the first incomplete task, resolve its structured skill/quest prerequisite before gathering task-specific items.",
+                            "Use the task location shown in the in-game diary and verified transport state.",
+                            "Per-task completion is not inferred from the tier count."),
                     CandidateSafetyEvidence.potentiallyIrreversible(false)
             ));
         }
