@@ -63,6 +63,7 @@ public class OsrsStrategistPlugin extends Plugin
     private PlayerStrategyProfile strategyProfile;
     private TrackedMilestone trackedMilestone;
     private StrategyDataBundle latestData;
+    private List<Recommendation> latestRecommendations = Collections.emptyList();
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
@@ -124,6 +125,7 @@ public class OsrsStrategistPlugin extends Plugin
         strategyProfile = null;
         trackedMilestone = null;
         latestData = null;
+        latestRecommendations = Collections.emptyList();
         varbitRefreshPending = false;
         panel = null;
         navButton = null;
@@ -191,6 +193,7 @@ public class OsrsStrategistPlugin extends Plugin
         loadedStrategyProfileKey = null;
         loadedMilestoneProfileKey = null;
         loadedHistoryProfileKey = null;
+        latestRecommendations = Collections.emptyList();
         trackedMilestone = null;
         recommendationHistory.clear();
         trainingFatigueTracker.clear();
@@ -233,7 +236,19 @@ public class OsrsStrategistPlugin extends Plugin
         if (activityId == null || action == null) return;
         syncPreferenceProfile();
         syncRecommendationHistory();
-        preferenceProfile.apply(activityId, action);
+        Recommendation current = null;
+        for (Recommendation recommendation : latestRecommendations)
+            if (activityId.equals(recommendation.getId()))
+            {
+                current = recommendation;
+                break;
+            }
+        if (current == null)
+            preferenceProfile.apply(activityId, action);
+        else
+            preferenceProfile.applySemantic(
+                    new RecommendationDeduplicator().semanticKey(current),
+                    action);
 
         RecommendationHistoryAction historyAction = historyAction(action);
         if (historyAction != null)
@@ -264,6 +279,8 @@ public class OsrsStrategistPlugin extends Plugin
         final long generation = uiGeneration.next();
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(latestData, profile);
+        latestRecommendations = new java.util.ArrayList<>(
+                result.getRecommendations());
         updateTrackedMilestone(
                 result.getRecommendations(),
                 latestData.getCollectionLog());
@@ -369,6 +386,7 @@ public class OsrsStrategistPlugin extends Plugin
         if (data == null || data.getAccount() == null)
         {
             latestData = null;
+            latestRecommendations = Collections.emptyList();
             methodGuidanceOverlay.clear();
             recommendationDetailsOverlay.clear();
             PlayerStrategyProfile profile = effectiveStrategyProfile();
@@ -418,6 +436,8 @@ public class OsrsStrategistPlugin extends Plugin
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(data, profile);
+        latestRecommendations = new java.util.ArrayList<>(
+                result.getRecommendations());
         updateTrackedMilestone(
                 result.getRecommendations(),
                 data.getCollectionLog());

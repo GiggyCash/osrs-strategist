@@ -27,6 +27,21 @@ This file describes real production coverage, not just type/class availability.
 - Boss recommendations are deny-by-default unless the encounter is explicitly classified safe enough or a future player override is added.
 - High-risk Wilderness resource routes and money methods are filtered.
 
+## Feedback and account-state transitions
+
+Later, Not Today, Dislike, and Do This are applied to the deduplicated semantic
+action, so the same recommendation cannot rebound immediately under another
+provider ID. Later remains a short cooldown, Not Today remains day-scale,
+Dislike adds a durable negative preference, and Do This adds a positive signal
+without hiding the action.
+
+Preference, strategy, milestone, and recommendation-history documents remain
+in RuneLite's per-character `osrs-strategist-profile` group. Live observation
+caches have an independent raw-account-hash boundary; the hash is used only for
+equality and is never rendered or logged. The state-sequence matrix covers bank
+observation, item acquisition, quest completion, changed gear, feedback
+rotation, logout/relogin restoration, and A/B/A account isolation.
+
 ## Skills and training methods
 
 All current `Skill.values()` have curated Compass methods, including Sailing.

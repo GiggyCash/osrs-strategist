@@ -90,6 +90,13 @@ and checks through the bounded universal graph. Resource planning retains 41
 deterministic yield-aware definitions and 60 Main/Iron/UIM-aware source
 families; unknown storage never becomes an empty bank assumption.
 
+The ranking suite contains 51 defensible sensible-winner scenarios and 20 real
+multi-domain dependency simulations; at least 10 contain five or more edges and
+at least five contain seven or more. State-transition tests cover observation,
+progression, gear, feedback rotation, relog restoration, and account isolation.
+Semantic feedback prevents provider-alias rebound without suppressing unrelated
+recommendations.
+
 The quest enumeration includes several miniquests, Recipe for Disaster
 subquests, tutorials, and other quest-state entries. They remain in the census
 because RuneLite can report them and a future RuneLite update must not create an

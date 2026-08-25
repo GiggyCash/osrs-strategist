@@ -349,6 +349,11 @@ public class StrategyEngine
         List<Recommendation> secondary = new ArrayList<>();
         for (Recommendation recommendation : deduplicator.deduplicate(pool))
         {
+            String semanticKey = deduplicator.semanticKey(recommendation);
+            if (context != null && (context.getPreferenceProfile()
+                    .isOnCooldown(recommendation.getId())
+                    || context.getPreferenceProfile()
+                    .isSemanticOnCooldown(semanticKey))) continue;
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
             if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
             if (actionabilityPolicy.canLeadQueue(recommendation)) ready.add(recommendation);
@@ -357,7 +362,9 @@ public class StrategyEngine
 
         Comparator<Recommendation> byAccountValue = Comparator
                 .comparingDouble((Recommendation recommendation) ->
-                        intelligenceService.rankScore(recommendation, context))
+                        intelligenceService.rankScore(recommendation, context)
+                                + semanticPreferenceScore(recommendation,
+                                        context))
                 .reversed()
                 .thenComparing(Recommendation::getId,
                         Comparator.nullsLast(String::compareTo));
@@ -380,5 +387,15 @@ public class StrategyEngine
             result.add(recommendation);
         }
         return result;
+    }
+
+    private double semanticPreferenceScore(Recommendation recommendation,
+            StrategyContext context)
+    {
+        if (recommendation == null || context == null) return 0.0;
+        String key = deduplicator.semanticKey(recommendation);
+        return context.getPreferenceProfile().semanticWeightFor(key) * 10.0
+                + context.getPreferenceProfile()
+                .semanticTimedScoreAdjustmentFor(key);
     }
 }

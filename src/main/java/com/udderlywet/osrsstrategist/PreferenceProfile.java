@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public final class PreferenceProfile
 {
+    private static final String SEMANTIC_PREFIX = "semantic:";
     private static final long ONE_HOUR_MILLIS = 60L * 60L * 1000L;
     private static final long SIX_HOURS_MILLIS = 6L * ONE_HOUR_MILLIS;
     private static final long ONE_DAY_MILLIS = 24L * ONE_HOUR_MILLIS;
@@ -148,6 +149,32 @@ public final class PreferenceProfile
 
             weights.put(activityId, next);
         }
+    }
+
+    /** Apply feedback to a deduplicated action so provider aliases cannot rebound. */
+    public void applySemantic(String semanticKey, FeedbackAction action)
+    {
+        if (semanticKey == null || semanticKey.trim().isEmpty()
+                || action == null) return;
+        apply(SEMANTIC_PREFIX + semanticKey, action);
+    }
+
+    public boolean isSemanticOnCooldown(String semanticKey)
+    {
+        return semanticKey != null
+                && isOnCooldown(SEMANTIC_PREFIX + semanticKey);
+    }
+
+    public double semanticWeightFor(String semanticKey)
+    {
+        return semanticKey == null ? 0.0
+                : weightFor(SEMANTIC_PREFIX + semanticKey);
+    }
+
+    public double semanticTimedScoreAdjustmentFor(String semanticKey)
+    {
+        return semanticKey == null ? 0.0
+                : timedScoreAdjustmentFor(SEMANTIC_PREFIX + semanticKey);
     }
 
     public void clear()
