@@ -36,7 +36,7 @@ public class F2pRunecraftRecommendationTest
         assertEquals("Craft air runes", plan.getMethod().getName());
         assertFalse(plan.getRequirementChecks().isEmpty());
         assertTrue(plan.getRequirementChecks().stream()
-                .anyMatch(check -> "Rune essence".equals(check.getLabel())));
+                .anyMatch(check -> "Rune or pure essence".equals(check.getLabel())));
         assertTrue(plan.getRequirementChecks().stream()
                 .anyMatch(check -> "Air talisman or air tiara".equals(check.getLabel())));
     }
@@ -64,6 +64,38 @@ public class F2pRunecraftRecommendationTest
         assertEquals("runecraft_f2p_air", plan.getMethod().getId());
         assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
         assertEquals(2, plan.getRequirementChecks().size());
+        assertTrue(plan.getRequirementChecks().stream()
+                .allMatch(check -> check.getState() == RequirementState.VERIFIED));
+    }
+
+    @Test
+    public void p2pLevelNineUsesConcreteEarthRunesAndAcceptsPureEssence()
+    {
+        AccountSnapshot account = account(MembershipStatus.P2P, 9);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        new ItemStackSnapshot(ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
+                .equipment(new EquipmentSnapshot(Arrays.asList(
+                        new ItemStackSnapshot(ItemID.TIARA_EARTH, "Earth tiara", 1))))
+                .build();
+
+        TrainingPlan plan = selector().select(
+                data,
+                Skill.RUNECRAFT,
+                9,
+                StrategyMode.EFFICIENT,
+                SessionIntent.PICK_FOR_ME,
+                false
+        );
+
+        assertNotNull(plan);
+        assertNotNull(plan.getMethod());
+        assertEquals("runecraft_f2p_earth", plan.getMethod().getId());
+        assertEquals("Craft earth runes", plan.getMethod().getName());
+        assertTrue(plan.getMethod().getInstructions().contains("Earth Altar"));
+        assertTrue(plan.getMethod().getInstructions().contains("Varrock East"));
+        assertFalse(plan.getMethod().getName().toLowerCase().contains("most useful"));
+        assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
         assertTrue(plan.getRequirementChecks().stream()
                 .allMatch(check -> check.getState() == RequirementState.VERIFIED));
     }
@@ -118,7 +150,7 @@ public class F2pRunecraftRecommendationTest
         String compact = RecommendationPresentation.compactHtml(recommendation);
         assertTrue(compact.contains("Craft air runes"));
         assertTrue(compact.contains("NEEDED"));
-        assertTrue(compact.contains("Rune essence"));
+        assertTrue(compact.contains("Rune or pure essence"));
         assertTrue(compact.contains("Air talisman or air tiara"));
     }
 
@@ -135,6 +167,11 @@ public class F2pRunecraftRecommendationTest
 
     private static AccountSnapshot f2pAccount()
     {
+        return account(MembershipStatus.F2P, 1);
+    }
+
+    private static AccountSnapshot account(MembershipStatus membership, int runecraftLevel)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -142,11 +179,12 @@ public class F2pRunecraftRecommendationTest
             levels.put(skill, 1);
             xp.put(skill, 0);
         }
+        levels.put(Skill.RUNECRAFT, runecraftLevel);
         return new AccountSnapshot(
-                "F2P Test",
+                membership == MembershipStatus.F2P ? "F2P Test" : "P2P Test",
                 0,
                 "Main",
-                MembershipStatus.F2P,
+                membership,
                 1,
                 1,
                 0L,
