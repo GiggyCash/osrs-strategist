@@ -51,7 +51,10 @@ public class UiTextStressTest
                     90);
             assertFalse(lines.isEmpty());
             assertFalse(String.join("", lines).trim().isEmpty());
-            assertTrue(String.join(" ", lines).contains("CHECK_NEEDED"));
+            // A narrow renderer may split CHECK_NEEDED itself depending on the
+            // runner's installed font. Rejoining without inserted whitespace
+            // verifies that wrapping preserved the token rather than dropping it.
+            assertTrue(String.join("", lines).contains("CHECK_NEEDED"));
         }
         finally
         {
