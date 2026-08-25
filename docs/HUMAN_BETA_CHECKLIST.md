@@ -1,4 +1,4 @@
-# Human RuneLite beta checklist
+# Human RuneLite gameplay checklist
 
 These checks require a person playing through RuneLite. They are not marked
 passed by repository automation.

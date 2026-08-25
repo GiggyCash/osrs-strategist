@@ -2,57 +2,104 @@
 
 **Your account. Your next move.**
 
-Gielinor Compass is an adaptive RuneLite progression planner designed for mains, Ironmen, Group Ironmen, Hardcore variants, and Ultimate Ironmen.
+Gielinor Compass is a local RuneLite progression planner. It examines the
+account state RuneLite can safely observe and turns it into one clear **DO
+NEXT** recommendation.
 
-Its job is simple: decide the best safe, useful thing to do next without making the player manage a giant spreadsheet. Compass decides what is worthwhile and whether the account is ready; established RuneLite tools can help execute that decision.
+## What it does
 
-## Design goals
-- simple UI, deep reasoning
-- account-type-aware strategy
-- no guessing about unavailable unlocks or storage
-- bank/resource-aware progression
-- optional Group Storage use
-- UIM capability-aware storage planning
-- Tool Leprechaun-aware farm preparation
-- birdhouse and herb-run readiness checklists
-- clue reminders, clue supplies, and STASH planning
-- player preference learning
-- Efficient / Balanced / Relaxed modes
-- quest tolerance
-- confidence labels and "Why this?" explanations
-- local-first architecture
-- no gameplay automation
+Compass decides what is worth doing and which prerequisite comes first. It can
+weigh skills, quests, gear, PvM preparation, Slayer, diaries, clues and STASH
+units, transport unlocks, resources, and recurring opportunities in the same
+decision.
 
-## Controlled beta
+The sidebar answers four practical questions:
 
-`0.2.0-beta.1` is a local-first testing build. **DO NEXT** compares legal,
-actionable candidates across the account evidence Compass has actually
-observed. Goals, Efficient/Balanced/Relaxed strategy, session intent, and the
-Later/Not Today/Dislike/Do This feedback controls influence that decision and
-are stored per stable RuneLite account identity.
+- What should I do?
+- How should I do it?
+- Why this?
+- What does this move me toward?
 
-Quest Helper remains the quest walkthrough: Compass chooses the useful quest or
-prerequisite and hands execution off. RuneLite's Clue Scroll plugin remains the
-detailed clue solver: Compass only decides whether clue preparation is worth
-doing and what safely observed blocker comes first.
+Quest Helper remains the detailed quest walkthrough. RuneLite's Clue Scroll
+plugin remains the detailed clue solver. Compass chooses the next useful move;
+those tools help execute it.
 
-The planning core is offline and local. It does not make runtime network calls
-or send account evidence to a hosted service. Unknown membership, storage,
-unlock, clue-step, and POH state fails closed. This beta does not observe player
-mechanical skill and does not claim exact variable rates, drops, or completion
-times. See `docs/CONTENT_CENSUS.md` for the current honest coverage census.
+## How DO NEXT works
 
-Developers need Java 11 and the repository Gradle wrapper. Run
-`./gradlew clean test --warning-mode all`, then
-`./scripts/check-content-census.sh`. The reviewed content-refresh workflow is
-documented in `docs/MAINTENANCE.md`.
+Choose a goal, strategy, and session style—or leave the goal on Automatic.
+Compass filters out unsafe or unavailable actions, resolves known
+prerequisites, and ranks the remaining actionable choices. Details gives a
+short reason and blocker; Method Guidance gives a compact bring/where/do
+checklist.
 
-The current repository-backed Plugin Hub audit is documented in
-`docs/PLUGIN_HUB_AUDIT.md`. External Plugin Hub CI and reviewer approval remain
-release steps after a reviewed feature-branch commit is pushed.
+Later, Not Today, Dislike, and Do This teach Compass your preferences for the
+current account. You can reset that learned feedback without resetting account
+evidence or unrelated RuneLite settings.
 
-## Development basis
-The project is intended to be copied over RuneLite's official `example-plugin` template so the current Gradle wrapper is retained.
+## Supported accounts
 
-## Important rule
-Unknown state stays unknown. Gielinor Compass should never invent an unlock, bank item, Group Storage item, Tool Leprechaun tool, POH storage option, STASH state, or UIM storage capability.
+Compass keeps Main, Ironman, Ultimate Ironman, Group Ironman, Hardcore Group
+Ironman, Unranked Group Ironman, and Hardcore Ironman rules distinct where the
+game mechanics differ. It also protects restricted builds when a route could
+cause irreversible experience or break the build.
+
+Unknown membership and unobserved storage fail closed. Group Storage counts
+only when enabled and observed. UIM storage is treated as retrieval/setup work,
+not as an ordinary bank.
+
+## Strategy and session modes
+
+- **Efficient** favors time-saving, high-value progression.
+- **Balanced** trades some speed for sustainable, practical routes.
+- **Relaxed** favors lower-fatigue and lower-intensity choices when sensible.
+
+Short, AFK, Focused, and Long session choices affect suitable actions across
+the planner, not only the wording of training methods.
+
+## Privacy and safety
+
+Planning is local. Compass makes no runtime network requests and does not send
+gameplay account evidence to a hosted Compass service. It does not automate
+gameplay, inject input, or expose raw RuneLite account hashes.
+
+## Known limitations
+
+Compass cannot observe every game state. It may ask you to open your bank or
+confirm an unlock, POH feature, STASH unit, or other state before it can safely
+lead with that action. It does not observe player mechanical skill and does not
+claim exact variable rates, RNG drops, or completion times.
+
+The repository-backed coverage census is maintained in
+[docs/CONTENT_CENSUS.md](docs/CONTENT_CENSUS.md).
+
+## Reporting a bad recommendation
+
+Please use the **Bad Recommendation** issue template and include the selected
+goal, strategy, session, account mode, membership, and what Compass suggested.
+Never include passwords, authentication data, or raw account identifiers.
+
+## Support Gielinor Compass
+
+Core planning is free and does not depend on donations. The optional in-plugin
+**Support Compass** link remains hidden until a real destination is configured.
+Bug reports and normal help belong on the
+[GitHub Issues page](https://github.com/GiggyCash/osrs-strategist/issues).
+
+## Development
+
+The first public release is `0.2.0`. The project uses Java 11-compatible source
+and RuneLite's standard Plugin Hub build. From the repository root:
+
+```sh
+./gradlew clean test --warning-mode all
+./scripts/check-content-census.sh
+git diff --check
+```
+
+Content maintenance is documented in [docs/MAINTENANCE.md](docs/MAINTENANCE.md),
+the current Plugin Hub review in
+[docs/PLUGIN_HUB_AUDIT.md](docs/PLUGIN_HUB_AUDIT.md), and publication steps in
+[docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md).
+
+Stable compatibility identifiers intentionally retain the internal
+`osrs-strategist` name.

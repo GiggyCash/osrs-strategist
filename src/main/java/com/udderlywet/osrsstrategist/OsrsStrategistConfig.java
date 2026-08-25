@@ -18,8 +18,8 @@ public interface OsrsStrategistConfig extends Config
     default SessionIntent sessionIntent() { return SessionIntent.PICK_FOR_ME; }
 
     @ConfigItem(keyName = CompassConfigKeys.ACTIVE_GOAL, name = "Goal",
-            description = "The long-term goal used to prioritize recommendations; Max is the automatic all-account path")
-    default GoalType activeGoal() { return GoalType.MAX; }
+            description = "The long-term goal used to prioritize recommendations; Automatic applies no specific-goal bias")
+    default GoalType activeGoal() { return GoalType.AUTOMATIC; }
 
     @ConfigItem(keyName = CompassConfigKeys.QUEST_TOLERANCE, name = "Quest tolerance",
             description = "How often quests should appear in recommendations")

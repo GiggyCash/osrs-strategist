@@ -8,6 +8,24 @@ import static org.junit.Assert.assertTrue;
 public class GoalRecommendationContextTest
 {
     @Test
+    public void automaticIsDistinctFromTheMaxGoal()
+    {
+        GoalRecommendationContext automatic = GoalRecommendationContext.assess(
+                GoalType.AUTOMATIC, recommendation("skill:woodcutting",
+                        RecommendationConfidence.VERIFIED), MembershipStatus.P2P);
+        GoalRecommendationContext max = GoalRecommendationContext.assess(
+                GoalType.MAX, recommendation("skill:woodcutting",
+                        RecommendationConfidence.VERIFIED), MembershipStatus.P2P);
+
+        assertEquals(GoalRecommendationRelationship.AUTOMATIC,
+                automatic.getRelationship());
+        assertEquals("Automatic", automatic.getGoalName());
+        assertEquals("Max", max.getGoalName());
+        assertEquals(GoalType.AUTOMATIC,
+                new OsrsStrategistConfig() { }.activeGoal());
+    }
+
+    @Test
     public void bowfaRelationshipNeverPretendsGenericWorkIsDirect()
     {
         GoalRecommendationContext direct = GoalRecommendationContext.assess(

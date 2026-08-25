@@ -1,6 +1,9 @@
-# Beta Core Exact Planner
+# Exact planner invariants
 
-This note documents the invariants behind the beta exact-method planner. The goal is not to make every recommendation look precise. The goal is to make every precise recommendation defensible from live account evidence and verified game data.
+This note documents the invariants behind exact method calculations. The goal
+is not to make every recommendation look precise. The goal is to make every
+precise recommendation defensible from live account evidence and verified game
+data.
 
 ## 1. Exact where the game is exact
 

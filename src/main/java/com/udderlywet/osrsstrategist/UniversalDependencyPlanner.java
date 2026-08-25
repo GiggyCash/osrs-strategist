@@ -70,13 +70,19 @@ public final class UniversalDependencyPlanner
             StrategyContext context)
     {
         Traversal traversal = new Traversal(context);
-        GoalType safe = goal == null ? GoalType.MAX : goal;
+        GoalType safe = goal == null ? GoalType.AUTOMATIC : goal;
         String root = traversal.add("goal:" + normalize(safe.name()),
                 GoalNodeKind.META, "Advance " + safe.name().toLowerCase()
                         .replace('_', ' '), RecommendationConfidence.CHECK_NEEDED,
                 0, 1, null);
         switch (safe)
         {
+            case AUTOMATIC:
+                traversal.add("preparation:automatic",
+                        GoalNodeKind.PREPARATION_ACTION,
+                        "Rank all currently safe, actionable account progression",
+                        RecommendationConfidence.CHECK_NEEDED, 1, 1, root);
+                break;
             case BOWFA:
                 traversal.gear("Bow of faerdhinen", root, 1,
                         new LinkedHashSet<>());

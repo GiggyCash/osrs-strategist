@@ -71,7 +71,7 @@ public class RecommendationIntelligenceService
     static double goalValue(Recommendation recommendation, GoalType selectedGoal)
     {
         if (recommendation == null) return 0.0;
-        GoalType goal = selectedGoal == null ? GoalType.MAX : selectedGoal;
+        GoalType goal = selectedGoal == null ? GoalType.AUTOMATIC : selectedGoal;
         String id = lower(recommendation.getId());
         String title = lower(recommendation.getTitle());
         boolean skill = id.startsWith("skill:");
@@ -84,6 +84,8 @@ public class RecommendationIntelligenceService
 
         switch (goal)
         {
+            case AUTOMATIC:
+                return 0.0;
             case MAX:
                 if (skill) return 8.0;
                 if (id.startsWith("detour:")) return 5.0;

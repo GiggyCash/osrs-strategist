@@ -10,7 +10,7 @@ public final class GoalRecommendationContext
     private GoalRecommendationContext(GoalType goal,
             GoalRecommendationRelationship relationship, String status)
     {
-        this.goal = goal == null ? GoalType.MAX : goal;
+        this.goal = goal == null ? GoalType.AUTOMATIC : goal;
         this.relationship = relationship == null
                 ? GoalRecommendationRelationship.AUTOMATIC : relationship;
         this.status = status == null ? "" : status;
@@ -19,8 +19,8 @@ public final class GoalRecommendationContext
     public static GoalRecommendationContext assess(GoalType goal,
             Recommendation recommendation, MembershipStatus membership)
     {
-        GoalType safeGoal = goal == null ? GoalType.MAX : goal;
-        if (safeGoal == GoalType.MAX || safeGoal == GoalType.CUSTOM)
+        GoalType safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
+        if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
                     "Compass is choosing the best overall move.");
@@ -79,20 +79,15 @@ public final class GoalRecommendationContext
 
     static String displayName(GoalType goal)
     {
-        if (goal == null || goal == GoalType.MAX) return "Automatic";
-        String lower = goal.name().toLowerCase(java.util.Locale.ROOT)
-                .replace('_', ' ');
-        if (goal == GoalType.BOWFA) return "Bowfa";
-        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+        if (goal == null) return "Automatic";
+        return goal.toString();
     }
 
     private static boolean requiresMembers(GoalType goal)
     {
         switch (goal)
         {
-            case TOTAL_2000:
-            case BASE_70S:
-            case MAX:
+            case AUTOMATIC:
             case CUSTOM:
                 return false;
             default:

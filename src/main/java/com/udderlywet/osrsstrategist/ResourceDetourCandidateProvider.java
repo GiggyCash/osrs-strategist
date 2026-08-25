@@ -140,6 +140,7 @@ public class ResourceDetourCandidateProvider
         if (goal == null) return true;
         switch (goal)
         {
+            case AUTOMATIC:
             case MAX:
             case QUEST_CAPE:
             case BARROWS_GLOVES:

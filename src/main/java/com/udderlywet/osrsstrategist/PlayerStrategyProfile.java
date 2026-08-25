@@ -35,7 +35,7 @@ public final class PlayerStrategyProfile
         this.strategyMode = strategyMode == null ? StrategyMode.BALANCED : strategyMode;
         this.sessionIntent = sessionIntent == null ? SessionIntent.PICK_FOR_ME : sessionIntent;
         this.questTolerance = questTolerance == null ? QuestTolerance.NORMAL : questTolerance;
-        this.activeGoal = activeGoal == null ? GoalType.MAX : activeGoal;
+        this.activeGoal = activeGoal == null ? GoalType.AUTOMATIC : activeGoal;
         this.useGroupStorage = useGroupStorage;
         this.collectionistMode = collectionistMode;
         this.allowWildernessMethods = allowWildernessMethods;

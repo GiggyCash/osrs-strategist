@@ -1,6 +1,8 @@
-# Beta Content Coverage
+# Historical content-coverage notes
 
-This file is the current engineering checklist for content depth. It exists to keep "broad coverage" separate from "fully validated edge-case coverage."
+This file preserves an earlier engineering checklist and its coverage
+vocabulary. It is not the current release census. See `CONTENT_CENSUS.md` and
+the executable census checks for current authoritative counts and statuses.
 
 Coverage labels used below:
 
@@ -9,7 +11,7 @@ Coverage labels used below:
 - **CONSERVATIVE**: deliberately fail-closed until live evidence or curated metadata is available.
 - **FUTURE COVERAGE**: known long-tail work, not claimed as implemented.
 
-## Current planner depth
+## Historical planner-depth snapshot
 
 | Area | Status | Beta behavior |
 | --- | --- | --- |

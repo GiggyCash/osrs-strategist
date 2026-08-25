@@ -82,7 +82,7 @@ public final class GoalGraph
 
     public GoalPathPreview previewFor(GoalType goalType)
     {
-        GoalType safe = goalType == null ? GoalType.MAX : goalType;
+        GoalType safe = goalType == null ? GoalType.AUTOMATIC : goalType;
         return new GoalPathPreview(
                 safe,
                 graph.getOrDefault(safe, Collections.emptyList())

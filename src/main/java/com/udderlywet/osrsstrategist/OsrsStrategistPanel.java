@@ -107,7 +107,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
     private boolean detailsOverlayEnabled = true;
-    private GoalType selectedGoal = GoalType.MAX;
+    private GoalType selectedGoal = GoalType.AUTOMATIC;
     private MembershipStatus membership = MembershipStatus.UNKNOWN;
 
     public OsrsStrategistPanel(
@@ -388,7 +388,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     public void updateGoal(GoalType goal)
     {
-        GoalType safeGoal = goal == null ? GoalType.MAX : goal;
+        GoalType safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
         selectedGoal = safeGoal;
         activeGoal.setText(html("Goal: "
                 + GoalRecommendationContext.displayName(safeGoal)));
