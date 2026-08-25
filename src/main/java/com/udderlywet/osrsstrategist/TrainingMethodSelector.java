@@ -126,6 +126,9 @@ public class TrainingMethodSelector
         {
             for (TrainingMethod method : database.methodsFor(skill))
             {
+                // The old Runecraft catch-all intentionally delegated the actual
+                // rune choice back to the player. Compass must make that choice.
+                if (isDeprecatedGenericRunecraft(method)) continue;
                 candidates.add(new CuratedTrainingMethod(method,
                         TrainingMethodMetadata.legacy(method)));
             }
@@ -133,14 +136,22 @@ public class TrainingMethodSelector
 
         candidates.addAll(expandedCatalog.methodsFor(skill));
 
-        // Baseline records cover any known F2P level-band holes in the richer
-        // catalog. They still go through normal policy/evidence scoring, so a
-        // better curated route wins whenever one is available.
-        if (membership != MembershipStatus.P2P && f2pBaselineCatalog != null)
+        // Basic F2P routes are also valid on members worlds. Keep them available
+        // to P2P accounts as concrete low-level Runecraft routes and as a safe
+        // fallback when a higher-level members method is not currently usable.
+        if (f2pBaselineCatalog != null
+                && (membership != MembershipStatus.P2P || skill == Skill.RUNECRAFT))
         {
             candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
         }
         return candidates;
+    }
+
+    private static boolean isDeprecatedGenericRunecraft(TrainingMethod method)
+    {
+        return method != null
+                && method.getSkill() == Skill.RUNECRAFT
+                && "runecraft_best_rune".equals(method.getId());
     }
 
     private static MembershipStatus membershipStatus(StrategyDataBundle data)
