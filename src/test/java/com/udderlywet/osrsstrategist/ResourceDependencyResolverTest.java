@@ -75,6 +75,36 @@ public class ResourceDependencyResolverTest
     }
 
     @Test
+    public void broadAcyclicGraphsRespectIndependentNodeLimit()
+    {
+        java.util.ArrayList<ResourceDependencyDefinition> definitions =
+                new java.util.ArrayList<>();
+        java.util.ArrayList<DependencyRequirement> children =
+                new java.util.ArrayList<>();
+        int root = 915000;
+        for (int i = 1; i <= 40; i++)
+        {
+            int child = root + i;
+            children.add(DependencyRequirement.resource(
+                    new ResourceNeed(child, "Child " + i, 1)));
+            definitions.add(new ResourceDependencyDefinition(child,
+                    "Resolve child " + i + ".", 1,
+                    Collections.emptyList()));
+        }
+        definitions.add(new ResourceDependencyDefinition(root,
+                "Resolve root.", 1, children));
+
+        ResourceDependencyResolution result = new ResourceDependencyResolver(
+                new ResourceAcquisitionPlanner(),
+                new ResourceDependencyCatalog(definitions), 8, 12)
+                .resolve(context(1, false, null, null, null),
+                        new ResourceNeed(root, "Root", 1));
+
+        assertTrue(result.isNodeLimited());
+        assertTrue(result.getNodes().size() <= 12);
+    }
+
+    @Test
     public void mainStopsAtPurchaseWhileUnknownIronLeafStaysCheckNeeded()
     {
         ResourceNeed need = new ResourceNeed(920001, "Uncatalogued", 1);

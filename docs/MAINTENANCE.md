@@ -39,3 +39,25 @@ At minimum:
 - clue dislike should lower clue frequency gradually, not permanently
 - critical quest requirement may still surface despite low quest tolerance
 - "Not today" should suppress immediate repeat recommendations
+# Content freshness workflow
+
+Content validation is development-time only. Gielinor Compass must not fetch
+game data at runtime.
+
+The machine-readable source ledger is
+`src/main/resources/content/content-freshness.json`. Its validation date is the
+date on which live-vs-announced semantics were reviewed, not a promise that
+every partial domain is exhaustive.
+
+Run the safe refresh check with:
+
+```sh
+./scripts/refresh-content.sh
+```
+
+For a real upstream refresh, first update the pinned authoritative snapshot,
+then run the quest importer in review mode, inspect new/removed/renamed/changed
+identities, and update hand-authored strategy knowledge separately. Never let a
+generator overwrite semantic routing without review. An announced future
+change belongs in `announcedNotLive` with `planningEnabled: false` until an
+official live update is verified.

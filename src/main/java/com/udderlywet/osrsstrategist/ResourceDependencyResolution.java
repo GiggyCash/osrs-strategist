@@ -11,21 +11,31 @@ public final class ResourceDependencyResolution
     private final boolean cycleDetected;
     private final boolean depthLimited;
     private final boolean opportunityCostRejected;
+    private final boolean nodeLimited;
 
     public ResourceDependencyResolution(List<ResolvedDependencyNode> nodes,
             boolean cycleDetected, boolean depthLimited,
             boolean opportunityCostRejected)
     {
+        this(nodes, cycleDetected, depthLimited, opportunityCostRejected, false);
+    }
+
+    public ResourceDependencyResolution(List<ResolvedDependencyNode> nodes,
+            boolean cycleDetected, boolean depthLimited,
+            boolean opportunityCostRejected, boolean nodeLimited)
+    {
         this.nodes = Collections.unmodifiableList(new ArrayList<>(nodes));
         this.cycleDetected = cycleDetected;
         this.depthLimited = depthLimited;
         this.opportunityCostRejected = opportunityCostRejected;
+        this.nodeLimited = nodeLimited;
     }
 
     public List<ResolvedDependencyNode> getNodes() { return nodes; }
     public boolean isCycleDetected() { return cycleDetected; }
     public boolean isDepthLimited() { return depthLimited; }
     public boolean isOpportunityCostRejected() { return opportunityCostRejected; }
+    public boolean isNodeLimited() { return nodeLimited; }
     public ResolvedDependencyNode nextAction()
     {
         for (ResolvedDependencyNode node : nodes)

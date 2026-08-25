@@ -23,12 +23,29 @@ Its job is simple: decide the best safe, useful thing to do next without making 
 - local-first architecture
 - no gameplay automation
 
-## Current state
-`0.2.0-beta.1` is a local-first testing build. Conservative content remains
-explicitly fail-closed until its requirements are verified; see
-`docs/CONTENT_CENSUS.md` for the current identity/structure/readiness census.
+## Controlled beta
 
-Start with `docs/TONIGHT_SETUP.md`.
+`0.2.0-beta.1` is a local-first testing build. **DO NEXT** compares legal,
+actionable candidates across the account evidence Compass has actually
+observed. Goals, Efficient/Balanced/Relaxed strategy, session intent, and the
+Later/Not Today/Dislike/Do This feedback controls influence that decision and
+are stored per stable RuneLite account identity.
+
+Quest Helper remains the quest walkthrough: Compass chooses the useful quest or
+prerequisite and hands execution off. RuneLite's Clue Scroll plugin remains the
+detailed clue solver: Compass only decides whether clue preparation is worth
+doing and what safely observed blocker comes first.
+
+The planning core is offline and local. It does not make runtime network calls
+or send account evidence to a hosted service. Unknown membership, storage,
+unlock, clue-step, and POH state fails closed. This beta does not observe player
+mechanical skill and does not claim exact variable rates, drops, or completion
+times. See `docs/CONTENT_CENSUS.md` for the current honest coverage census.
+
+Developers need Java 11 and the repository Gradle wrapper. Run
+`./gradlew clean test --warning-mode all`, then
+`./scripts/check-content-census.sh`. The reviewed content-refresh workflow is
+documented in `docs/MAINTENANCE.md`.
 
 ## Development basis
 The project is intended to be copied over RuneLite's official `example-plugin` template so the current Gradle wrapper is retained.

@@ -51,7 +51,7 @@ public class MethodExecutionProfileCatalog
                 "Seers lap XP before diary bonus adjustments.",
                 "seers_village_rooftop"));
         add(p("agility_sep", "floor completion", "floor completions", none(),
-                "Uses the deepest unlocked Hallowed Sepulchre floor represented by RuneLite at the current level.",
+                "Uses the deepest unlocked floor represented by RuneLite. Current live floor thresholds are 77 Agility for floor 4 and 87 for floor 5; both permit boosts.",
                 "hallowed_sepulchre"));
         add(p("agility_prif", "lap", "laps", none(), null,
                 "prifddinas_agility_course"));
@@ -103,7 +103,7 @@ public class MethodExecutionProfileCatalog
                 "redwood"));
 
         add(p("hunter_birdhouses", "birdhouse emptied", "birdhouses emptied", none(),
-                "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run.",
+                "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run. Nest yields are variable; the August 2026 five-roll/tripled-success change must not be presented as an exact yield.",
                 "bird_house"));
         add(p("hunter_salamanders", "salamander caught", "salamanders caught", none(),
                 "Black salamanders are deliberately excluded because they are a Wilderness method.",

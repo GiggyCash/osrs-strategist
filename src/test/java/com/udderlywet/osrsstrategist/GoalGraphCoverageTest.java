@@ -7,6 +7,26 @@ import static org.junit.Assert.assertTrue;
 
 public class GoalGraphCoverageTest
 {
+    @Test
+    public void universalGraphHasTypedHomesForEveryPlanningDomain()
+    {
+        java.util.EnumSet<GoalNodeKind> kinds =
+                java.util.EnumSet.allOf(GoalNodeKind.class);
+        assertTrue(kinds.contains(GoalNodeKind.MINIQUEST));
+        assertTrue(kinds.contains(GoalNodeKind.TRAINING_METHOD));
+        assertTrue(kinds.contains(GoalNodeKind.PVM_ENCOUNTER));
+        assertTrue(kinds.contains(GoalNodeKind.SLAYER));
+        assertTrue(kinds.contains(GoalNodeKind.MINIGAME));
+        assertTrue(kinds.contains(GoalNodeKind.CLUE));
+        assertTrue(kinds.contains(GoalNodeKind.STASH));
+        assertTrue(kinds.contains(GoalNodeKind.TRANSPORTATION));
+        assertTrue(kinds.contains(GoalNodeKind.SHOP));
+        assertTrue(kinds.contains(GoalNodeKind.CURRENCY));
+        assertTrue(kinds.contains(GoalNodeKind.SPELLBOOK));
+        assertTrue(kinds.contains(GoalNodeKind.PRAYER));
+        assertTrue(kinds.contains(GoalNodeKind.RECURRING_OPPORTUNITY));
+        assertTrue(kinds.contains(GoalNodeKind.PREPARATION_ACTION));
+    }
     private final GoalGraph graph = new GoalGraph();
 
     @Test

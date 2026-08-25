@@ -15,29 +15,38 @@ import javax.inject.Singleton;
 public class ResourceDependencyResolver
 {
     public static final int DEFAULT_MAX_DEPTH = 8;
+    public static final int DEFAULT_MAX_NODES = 128;
     private final ResourceAcquisitionPlanner ownershipPlanner;
     private final ResourceDependencyCatalog catalog;
     private final int maxDepth;
+    private final int maxNodes;
 
     @Inject
     public ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
             ResourceDependencyCatalog catalog)
     {
-        this(ownershipPlanner, catalog, DEFAULT_MAX_DEPTH);
+        this(ownershipPlanner, catalog, DEFAULT_MAX_DEPTH, DEFAULT_MAX_NODES);
     }
 
     ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
             ResourceDependencyCatalog catalog, int maxDepth)
     {
+        this(ownershipPlanner, catalog, maxDepth, DEFAULT_MAX_NODES);
+    }
+
+    ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
+            ResourceDependencyCatalog catalog, int maxDepth, int maxNodes)
+    {
         this.ownershipPlanner = ownershipPlanner;
         this.catalog = catalog;
         this.maxDepth = Math.max(1, maxDepth);
+        this.maxNodes = Math.max(1, maxNodes);
     }
 
     public ResourceDependencyResolution resolve(StrategyContext context,
             ResourceNeed root)
     {
-        State state = new State();
+        State state = new State(maxNodes);
         visit(context, root, 0, new HashSet<>(), state, false);
         return result(state);
     }
@@ -49,7 +58,7 @@ public class ResourceDependencyResolver
     public ResourceDependencyResolution resolveKnownShortfall(
             StrategyContext context, ResourceNeed root)
     {
-        State state = new State();
+        State state = new State(maxNodes);
         visit(context, root, 0, new HashSet<>(), state, true);
         return result(state);
     }
@@ -57,13 +66,18 @@ public class ResourceDependencyResolver
     private static ResourceDependencyResolution result(State state)
     {
         return new ResourceDependencyResolution(new ArrayList<>(state.nodes.values()),
-                state.cycle, state.depth, state.cost);
+                state.cycle, state.depth, state.cost, state.nodeLimit);
     }
 
     private void visit(StrategyContext context, ResourceNeed need, int depth,
             Set<String> active, State state, boolean knownShortfall)
     {
         if (need == null) return;
+        if (state.nodes.size() >= maxNodes)
+        {
+            state.nodeLimit = true;
+            return;
+        }
         String id = "resource:" + need.getItemId();
         if (active.contains(id))
         {
@@ -166,6 +180,11 @@ public class ResourceDependencyResolver
             return;
         }
         if (state.nodes.containsKey(requirement.getId())) return;
+        if (state.nodes.size() >= maxNodes)
+        {
+            state.nodeLimit = true;
+            return;
+        }
         boolean verified = false;
         StrategyDataBundle data = context == null ? null : context.getData();
         if (data != null && data.getAccount() != null)
@@ -211,6 +230,11 @@ public class ResourceDependencyResolver
     private static void add(State state, String id, String action,
             RecommendationConfidence confidence, int depth)
     {
+        if (!state.nodes.containsKey(id) && state.nodes.size() >= state.maxNodes)
+        {
+            state.nodeLimit = true;
+            return;
+        }
         state.nodes.putIfAbsent(id,
                 new ResolvedDependencyNode(id, action, confidence, depth));
     }
@@ -218,6 +242,11 @@ public class ResourceDependencyResolver
     private static void addResource(State state, String id, String action,
             RecommendationConfidence confidence, int depth, int quantity)
     {
+        if (!state.nodes.containsKey(id) && state.nodes.size() >= state.maxNodes)
+        {
+            state.nodeLimit = true;
+            return;
+        }
         state.nodes.put(id,
                 new ResolvedDependencyNode(id, action, confidence, depth, quantity));
     }
@@ -241,11 +270,18 @@ public class ResourceDependencyResolver
 
     private static final class State
     {
+        private final int maxNodes;
         private final Map<String, ResolvedDependencyNode> nodes = new LinkedHashMap<>();
         private final Map<Integer, Integer> requested = new HashMap<>();
         private final Map<Integer, Integer> processed = new HashMap<>();
         private boolean cycle;
         private boolean depth;
         private boolean cost;
+        private boolean nodeLimit;
+
+        private State(int maxNodes)
+        {
+            this.maxNodes = maxNodes;
+        }
     }
 }
