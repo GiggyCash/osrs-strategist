@@ -129,6 +129,54 @@ public class ItemRequirementEvaluatorTest
         assertTrue(evaluator.evaluate(available, data, false).isSatisfied());
     }
 
+    @Test
+    public void nameObservableClassUsesObservedItemsAndExclusions()
+    {
+        ItemRequirementExpression axe = ItemRequirementExpression.itemClass(
+                ItemRequirementClass.AXE, 1,
+                ItemRequirementScope.IMMEDIATELY_USABLE);
+        StrategyDataBundle data = bundle(0)
+                .bank(new BankSnapshot(Arrays.asList(item("Rune pickaxe", 1),
+                        item("Dragon axe", 1)), 1L)).build();
+        assertTrue(evaluator.evaluate(axe, data, false).isSatisfied());
+
+        ItemRequirementExpression cat = ItemRequirementExpression.itemClass(
+                ItemRequirementClass.CAT_OR_KITTEN, 1,
+                ItemRequirementScope.IMMEDIATELY_USABLE, "Overgrown cat");
+        StrategyDataBundle overgrownOnly = bundle(0)
+                .bank(new BankSnapshot(Collections.singletonList(
+                        item("Overgrown cat", 1)), 1L)).build();
+        assertEquals(RequirementState.BLOCKED,
+                evaluator.evaluate(cat, overgrownOnly, false).getState());
+    }
+
+    @Test
+    public void mechanicalClassStaysExplicitCheckNeeded()
+    {
+        ItemRequirementExpression light = ItemRequirementExpression.itemClass(
+                ItemRequirementClass.LIGHT_SOURCE, 1,
+                ItemRequirementScope.OWNED_OR_RETRIEVABLE);
+        StrategyDataBundle data = bundle(0)
+                .bank(new BankSnapshot(Collections.singletonList(
+                        item("Bullseye lantern", 1)), 1L)).build();
+        ItemRequirementResult result = evaluator.evaluate(light, data, false);
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().contains("suitable light source"));
+    }
+
+    @Test
+    public void explicitVerificationNodeCannotClaimSatisfied()
+    {
+        ItemRequirementResult result = evaluator.evaluate(
+                ItemRequirementExpression.checkNeeded(
+                        "Check the route-specific item requirement"),
+                bundle(0).bank(new BankSnapshot(Collections.emptyList(), 1L))
+                        .build(), false);
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertEquals("Check the route-specific item requirement",
+                result.getAction());
+    }
+
     private static StrategyDataBundle.Builder bundle(int type)
     {
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);

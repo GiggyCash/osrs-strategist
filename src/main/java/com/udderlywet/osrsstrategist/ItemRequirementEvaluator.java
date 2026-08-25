@@ -22,6 +22,11 @@ public final class ItemRequirementEvaluator
     {
         if (expression.getKind() == ItemRequirementExpression.Kind.ITEM)
             return item(expression, data, items, useGroupStorage);
+        if (expression.getKind() == ItemRequirementExpression.Kind.ITEM_CLASS)
+            return itemClass(expression, data, items, useGroupStorage);
+        if (expression.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED)
+            return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
+                    expression.getCheckAction());
 
         List<ItemRequirementResult> results = new ArrayList<>();
         for (ItemRequirementExpression child : expression.getChildren())
@@ -120,6 +125,70 @@ public final class ItemRequirementEvaluator
                 action, inputs);
     }
 
+    private ItemRequirementResult itemClass(ItemRequirementExpression expression,
+            StrategyDataBundle data, ObservedItemIndex items,
+            boolean useGroupStorage)
+    {
+        ItemRequirementClass itemClass = expression.getItemClass();
+        if (itemClass == null)
+            return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
+                    "Verify the required item class");
+        if (!itemClass.isNameObservable())
+            return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
+                    "Check and bring " + expression.label());
+
+        int owned;
+        boolean observed;
+        switch (expression.getScope())
+        {
+            case EQUIPPED:
+                owned = items.equippedQuantityMatching(itemClass,
+                        expression.getExcludedItemNames());
+                observed = data != null && data.getEquipment() != null;
+                break;
+            case CARRIED:
+                owned = quantityMatching(data == null || data.getInventory() == null
+                        ? null : data.getInventory().getItems(), itemClass,
+                        expression.getExcludedItemNames());
+                observed = data != null && data.getInventory() != null;
+                break;
+            case CARRIED_OR_EQUIPPED:
+                owned = quantityMatching(data == null || data.getInventory() == null
+                        ? null : data.getInventory().getItems(), itemClass,
+                        expression.getExcludedItemNames())
+                        + items.equippedQuantityMatching(itemClass,
+                                expression.getExcludedItemNames());
+                observed = data != null && data.getInventory() != null
+                        && data.getEquipment() != null;
+                break;
+            case OWNED_OR_RETRIEVABLE:
+                owned = items.quantityMatching(itemClass,
+                        expression.getExcludedItemNames())
+                        + items.restrictedQuantityMatching(itemClass,
+                                expression.getExcludedItemNames());
+                observed = ownershipObserved(data, items, useGroupStorage)
+                        && !isUim(data);
+                break;
+            case IMMEDIATELY_USABLE:
+            default:
+                owned = items.quantityMatching(itemClass,
+                        expression.getExcludedItemNames());
+                observed = ownershipObserved(data, items, useGroupStorage);
+                break;
+        }
+        if (owned >= expression.getQuantity())
+            return new ItemRequirementResult(RequirementState.VERIFIED, "");
+        int shortfall = Math.max(0, expression.getQuantity() - owned);
+        String target = itemClass.getLabel();
+        if (!expression.getExcludedItemNames().isEmpty())
+            target += " (excluding " + String.join(" or ",
+                    expression.getExcludedItemNames()) + ")";
+        return new ItemRequirementResult(observed
+                ? RequirementState.BLOCKED : RequirementState.CHECK_NEEDED,
+                (observed ? "Get " : "Check whether you own ") + shortfall
+                        + " × " + target);
+    }
+
     private static List<ResolvedMethodInput> bestAlternativeInputs(
             List<ItemRequirementResult> results)
     {
@@ -175,6 +244,29 @@ public final class ItemRequirementEvaluator
                     total += Math.max(0, stack.getQuantity());
                     break;
                 }
+        }
+        return total;
+    }
+
+    private static int quantityMatching(Iterable<ItemStackSnapshot> stacks,
+            ItemRequirementClass itemClass, Iterable<String> excludedNames)
+    {
+        if (stacks == null || itemClass == null) return 0;
+        int total = 0;
+        for (ItemStackSnapshot stack : stacks)
+        {
+            if (stack == null || stack.getName() == null
+                    || !itemClass.matches(stack.getName())) continue;
+            boolean excluded = false;
+            if (excludedNames != null)
+                for (String value : excludedNames)
+                    if (value != null && stack.getName().trim()
+                            .equalsIgnoreCase(value.trim()))
+                    {
+                        excluded = true;
+                        break;
+                    }
+            if (!excluded) total += Math.max(0, stack.getQuantity());
         }
         return total;
     }

@@ -92,7 +92,10 @@ public final class QuestRequirementCensus
                                 + ex.getClass().getSimpleName()));
                 continue;
             }
-            if (result.isFullyExecutable() && result.getExpression() != null)
+            // A VALUE field may contain only explicitly optional preparation.
+            // Once the parser proves every line non-mandatory, that is the same
+            // executable outcome as source NONE: there is no ownership gate.
+            if (result.isFullyExecutable())
                 fullyExecutable++;
             else if (result.getExpression() != null)
                 partiallyExecutable++;

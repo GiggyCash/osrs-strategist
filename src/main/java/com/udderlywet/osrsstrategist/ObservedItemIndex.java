@@ -103,6 +103,65 @@ public final class ObservedItemIndex
         return total;
     }
 
+    public int quantityMatching(ItemRequirementClass itemClass,
+            Iterable<String> excludedNames)
+    {
+        if (data == null || itemClass == null) return 0;
+        int total = 0;
+        total = safeAdd(total, quantityMatching(data.getInventory() == null
+                ? null : data.getInventory().getItems(), itemClass, excludedNames));
+        total = safeAdd(total, quantityMatching(data.getEquipment() == null
+                ? null : data.getEquipment().getEquippedItems(), itemClass, excludedNames));
+        AccountMode mode = accountMode();
+        if (mode != AccountMode.ULTIMATE_IRONMAN)
+            total = safeAdd(total, quantityMatching(data.getBank() == null
+                    ? null : data.getBank().getItems(), itemClass, excludedNames));
+        if (useGroupStorage && mode.isGroupIronman()
+                && data.getGroupStorage() != null
+                && data.getGroupStorage().isObserved())
+            total = safeAdd(total, quantityMatching(data.getGroupStorage().getItems(),
+                    itemClass, excludedNames));
+        if (data.getStorage() != null)
+        {
+            for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+                    : data.getStorage().getObservedContents().entrySet())
+            {
+                if (!data.getStorage().verified(entry.getKey())) continue;
+                if (mode == AccountMode.ULTIMATE_IRONMAN
+                        && isRestrictedUimStorage(entry.getKey())) continue;
+                total = safeAdd(total, quantityMatching(entry.getValue(),
+                        itemClass, excludedNames));
+            }
+        }
+        return total;
+    }
+
+    public int restrictedQuantityMatching(ItemRequirementClass itemClass,
+            Iterable<String> excludedNames)
+    {
+        if (data == null || itemClass == null
+                || accountMode() != AccountMode.ULTIMATE_IRONMAN
+                || data.getStorage() == null) return 0;
+        int total = 0;
+        for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+                : data.getStorage().getObservedContents().entrySet())
+        {
+            if (!isRestrictedUimStorage(entry.getKey())
+                    || !data.getStorage().verified(entry.getKey())) continue;
+            total = safeAdd(total, quantityMatching(entry.getValue(),
+                    itemClass, excludedNames));
+        }
+        return total;
+    }
+
+    public int equippedQuantityMatching(ItemRequirementClass itemClass,
+            Iterable<String> excludedNames)
+    {
+        return data == null || data.getEquipment() == null ? 0
+                : quantityMatching(data.getEquipment().getEquippedItems(),
+                        itemClass, excludedNames);
+    }
+
     /** True only when one of the names is currently equipped. */
     public boolean equipped(String... names)
     {
@@ -163,6 +222,30 @@ public final class ObservedItemIndex
             }
         }
         return total;
+    }
+
+    private static int quantityMatching(Iterable<ItemStackSnapshot> items,
+            ItemRequirementClass itemClass, Iterable<String> excludedNames)
+    {
+        if (items == null || itemClass == null) return 0;
+        int total = 0;
+        for (ItemStackSnapshot item : items)
+        {
+            if (item == null || item.getName() == null
+                    || !itemClass.matches(item.getName())
+                    || excluded(item.getName(), excludedNames)) continue;
+            total = safeAdd(total, Math.max(0, item.getQuantity()));
+        }
+        return total;
+    }
+
+    private static boolean excluded(String itemName, Iterable<String> excludedNames)
+    {
+        if (itemName == null || excludedNames == null) return false;
+        String actual = normalize(itemName);
+        for (String excluded : excludedNames)
+            if (excluded != null && actual.equals(normalize(excluded))) return true;
+        return false;
     }
 
     private static int safeAdd(int a, int b)
