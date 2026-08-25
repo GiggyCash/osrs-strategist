@@ -103,10 +103,21 @@ public class UniversalSkillActionGuidanceService
                 action, actions, data.getAccount().getMembershipStatus());
         if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
 
-        String actionText = format(xpNeeded) + " XP remaining — about "
-                + format(actions) + " "
-                + playerAction(skill, action.getName(), actions)
-                + " to level " + targetLevel + ".";
+        String actionText;
+        if (skill == Skill.RUNECRAFT)
+        {
+            actionText = format(xpNeeded) + " XP remaining. Craft "
+                    + pluralRunes(action.getName()) + " with about "
+                    + format(actions) + " essence to reach level "
+                    + targetLevel + ".";
+        }
+        else
+        {
+            actionText = format(xpNeeded) + " XP remaining - about "
+                    + format(actions) + " "
+                    + playerAction(skill, action.getName(), actions)
+                    + " to level " + targetLevel + ".";
+        }
 
         AccountResourcePlan resources = resourcePlanner == null
                 ? null
@@ -121,6 +132,17 @@ public class UniversalSkillActionGuidanceService
         else
         {
             supplies = resources == null ? null : resources.getGuidance();
+        }
+
+        if (skill == Skill.RUNECRAFT)
+        {
+            String altarEntry = runecraftEntryInstruction(action.getName());
+            if (altarEntry != null)
+            {
+                supplies = supplies == null || supplies.trim().isEmpty()
+                        ? altarEntry
+                        : altarEntry + " " + supplies;
+            }
         }
 
         String location = plan.getMethod().getInstructions();
@@ -354,6 +376,34 @@ public class UniversalSkillActionGuidanceService
         return value;
     }
 
+    private static String pluralRunes(String actionName)
+    {
+        String name = actionName == null ? "runes" : actionName.trim();
+        if (name.isEmpty()) return "runes";
+        String lower = name.toLowerCase(Locale.ROOT);
+        if (lower.endsWith(" runes")) return name;
+        if (lower.endsWith(" rune")) return name + "s";
+        return name;
+    }
+
+    private static String runecraftEntryInstruction(String actionName)
+    {
+        String lower = normalize(actionName);
+        if (lower.contains("air rune"))
+            return "Bring an air talisman or wear an air tiara.";
+        if (lower.contains("mind rune"))
+            return "Bring a mind talisman or wear a mind tiara.";
+        if (lower.contains("water rune"))
+            return "Bring a water talisman or wear a water tiara.";
+        if (lower.contains("earth rune"))
+            return "Bring an earth talisman or wear an earth tiara.";
+        if (lower.contains("fire rune"))
+            return "Bring a fire talisman or wear a fire tiara.";
+        if (lower.contains("body rune"))
+            return "Bring a body talisman or wear a body tiara.";
+        return null;
+    }
+
     private static String playerAction(Skill skill, String actionName, int count)
     {
         String name = actionName == null ? "" : actionName.trim();
@@ -384,7 +434,7 @@ public class UniversalSkillActionGuidanceService
             case HUNTER: singular = "catch"; break;
             case FIREMAKING: singular = "burn"; break;
             case PRAYER: singular = "Prayer action"; break;
-            case RUNECRAFT: singular = "essence action"; break;
+            case RUNECRAFT: singular = "craft"; break;
             case CRAFTING: singular = "craft"; break;
             case FLETCHING: singular = "fletch"; break;
             case HERBLORE: singular = "potion action"; break;
