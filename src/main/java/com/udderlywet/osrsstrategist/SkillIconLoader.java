@@ -1,6 +1,10 @@
 package com.udderlywet.osrsstrategist;
 
 import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.ImageIcon;
@@ -15,11 +19,18 @@ import net.runelite.client.util.ImageUtil;
  * Loads RuneScape's own skill sprites through RuneLite instead of bundling
  * replacement artwork. This keeps Compass visually native and means new
  * RuneLite sprite updates can flow through without us maintaining image files.
+ *
+ * <p>Scaled icons are cached so routine account refreshes do not briefly clear
+ * and reload the same sprite. A per-label request key also prevents an older
+ * asynchronous sprite callback from replacing a newer recommendation icon.</p>
  */
 @Singleton
 public class SkillIconLoader
 {
     private final SpriteManager spriteManager;
+    private final Map<String, ImageIcon> iconCache = new ConcurrentHashMap<>();
+    private final Map<JLabel, String> latestRequest =
+            Collections.synchronizedMap(new WeakHashMap<>());
 
     @Inject
     public SkillIconLoader(SpriteManager spriteManager)
@@ -44,15 +55,26 @@ public class SkillIconLoader
             return;
         }
 
+        String requestKey = skill.name() + ':' + size;
+        latestRequest.put(target, requestKey);
+
+        ImageIcon cached = iconCache.get(requestKey);
+        if (cached != null)
+        {
+            applyIcon(target, requestKey, cached);
+            return;
+        }
+
         spriteManager.getSpriteAsync(
                 hiscoreSkill.getSpriteId(),
                 0,
-                sprite -> applySprite(target, sprite, size)
+                sprite -> cacheAndApply(target, requestKey, sprite, size)
         );
     }
 
-    private static void applySprite(
+    private void cacheAndApply(
             JLabel target,
+            String requestKey,
             BufferedImage sprite,
             int size)
     {
@@ -66,12 +88,35 @@ public class SkillIconLoader
                 size,
                 size
         );
+        ImageIcon icon = new ImageIcon(scaled);
+        iconCache.put(requestKey, icon);
+        applyIcon(target, requestKey, icon);
+    }
 
-        SwingUtilities.invokeLater(() ->
+    private void applyIcon(JLabel target, String requestKey, ImageIcon icon)
+    {
+        Runnable apply = () ->
         {
-            target.setIcon(new ImageIcon(scaled));
+            synchronized (latestRequest)
+            {
+                if (!requestKey.equals(latestRequest.get(target)))
+                {
+                    return;
+                }
+            }
+
+            target.setIcon(icon);
             target.revalidate();
             target.repaint();
-        });
+        };
+
+        if (SwingUtilities.isEventDispatchThread())
+        {
+            apply.run();
+        }
+        else
+        {
+            SwingUtilities.invokeLater(apply);
+        }
     }
 }
