@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
@@ -16,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import net.runelite.api.Skill;
@@ -48,13 +51,22 @@ public class OsrsStrategistPanel extends PluginPanel
     private final SkillIconLoader skillIconLoader;
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
     private final Consumer<Recommendation> detailsHandler;
+    private final Runnable refreshHandler;
+    private final Runnable resetFeedbackHandler;
+    private final Runnable firstUseHandler;
+    private final String supportUrl;
+    private final Consumer<String> supportBrowser;
+    private final BooleanSupplier resetConfirmation;
 
     private final JLabel accountName = label("Waiting for login...");
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
-    private final JLabel activeGoal = label("Goal: Max");
+    private final JLabel activeGoal = label("Goal: Automatic");
     private final JLabel strategySummary = mutedLabel(
             "Mode: Balanced<br>Session: Pick for me<br>Quests: Normal"
     );
+    private final JTextArea firstUseHint = wrappingArea(
+            "Choose a goal, strategy, and session style. Compass will handle the rest.",
+            MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
     private final JPanel milestoneBanner = cardPanel(true);
     private final JLabel milestoneTitle = label("Milestone complete!");
@@ -84,18 +96,27 @@ public class OsrsStrategistPanel extends PluginPanel
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
 
     private final JButton detailsButton = actionButton("Details");
+    private final JButton doThisButton = actionButton("Do This");
     private final JButton laterButton = actionButton("Later");
     private final JButton notTodayButton = actionButton("Not Today");
     private final JButton dislikeButton = actionButton("Dislike");
+    private final JButton refreshButton = actionButton("Re-evaluate");
+    private final JButton resetFeedbackButton = actionButton("Reset Feedback");
+    private final JButton supportButton = actionButton("Support Compass");
 
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
+    private boolean detailsOverlayEnabled = true;
+    private GoalType selectedGoal = GoalType.MAX;
+    private MembershipStatus membership = MembershipStatus.UNKNOWN;
 
     public OsrsStrategistPanel(
             BiConsumer<String, FeedbackAction> feedbackHandler,
             SkillIconLoader skillIconLoader)
     {
-        this(feedbackHandler, skillIconLoader, recommendation -> { });
+        this(feedbackHandler, skillIconLoader, recommendation -> { },
+                () -> { }, () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
+                value -> { }, () -> true);
     }
 
     public OsrsStrategistPanel(
@@ -103,11 +124,36 @@ public class OsrsStrategistPanel extends PluginPanel
             SkillIconLoader skillIconLoader,
             Consumer<Recommendation> detailsHandler)
     {
+        this(feedbackHandler, skillIconLoader, detailsHandler,
+                () -> { }, () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
+                value -> { }, () -> true);
+    }
+
+    OsrsStrategistPanel(
+            BiConsumer<String, FeedbackAction> feedbackHandler,
+            SkillIconLoader skillIconLoader,
+            Consumer<Recommendation> detailsHandler,
+            Runnable refreshHandler,
+            Runnable resetFeedbackHandler,
+            Runnable firstUseHandler,
+            String supportUrl,
+            Consumer<String> supportBrowser,
+            BooleanSupplier resetConfirmation)
+    {
         this.feedbackHandler = feedbackHandler;
         this.skillIconLoader = skillIconLoader;
         this.detailsHandler = detailsHandler == null
                 ? recommendation -> { }
                 : detailsHandler;
+        this.refreshHandler = refreshHandler == null ? () -> { } : refreshHandler;
+        this.resetFeedbackHandler = resetFeedbackHandler == null
+                ? () -> { } : resetFeedbackHandler;
+        this.firstUseHandler = firstUseHandler == null
+                ? () -> { } : firstUseHandler;
+        this.supportUrl = supportUrl;
+        this.supportBrowser = supportBrowser == null ? value -> { } : supportBrowser;
+        this.resetConfirmation = resetConfirmation == null
+                ? this::confirmReset : resetConfirmation;
 
         setLayout(new BorderLayout());
         setBackground(StrategistTheme.BACKGROUND);
@@ -122,6 +168,7 @@ public class OsrsStrategistPanel extends PluginPanel
         buildMilestoneBanner(content);
         buildRecommendationCard(content);
         buildSecondaryCards(content);
+        buildFooter(content);
         add(content, BorderLayout.NORTH);
     }
 
@@ -133,7 +180,7 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(title);
         content.add(Box.createVerticalStrut(4));
 
-        JLabel subtitle = mutedLabel("Adaptive progression planner");
+        JLabel subtitle = mutedLabel("Your account. Your next move.");
         subtitle.setFont(subtitle.getFont().deriveFont(MUTED_FONT_SIZE));
         content.add(subtitle);
         content.add(Box.createVerticalStrut(11));
@@ -158,6 +205,10 @@ public class OsrsStrategistPanel extends PluginPanel
         card.add(Box.createVerticalStrut(7));
         card.add(strategySummary);
         content.add(card);
+        content.add(Box.createVerticalStrut(9));
+
+        setWrappedText(firstUseHint, firstUseHint.getText(), TEXT_WIDTH);
+        content.add(firstUseHint);
         content.add(Box.createVerticalStrut(9));
     }
 
@@ -216,22 +267,26 @@ public class OsrsStrategistPanel extends PluginPanel
         recommendationCard.add(Box.createVerticalStrut(12));
 
         makeFullWidth(detailsButton, 34);
-        makeFullWidth(laterButton, 34);
-        makeFullWidth(notTodayButton, 34);
-        makeFullWidth(dislikeButton, 34);
 
         recommendationCard.add(detailsButton);
-        recommendationCard.add(Box.createVerticalStrut(7));
-        recommendationCard.add(laterButton);
+        recommendationCard.add(Box.createVerticalStrut(9));
+        recommendationCard.add(eyebrow("FEEDBACK"));
         recommendationCard.add(Box.createVerticalStrut(6));
-        recommendationCard.add(notTodayButton);
-        recommendationCard.add(Box.createVerticalStrut(6));
-        recommendationCard.add(dislikeButton);
+        JPanel feedbackGrid = new JPanel(new GridLayout(2, 2, 6, 6));
+        feedbackGrid.setOpaque(false);
+        feedbackGrid.setAlignmentX(LEFT_ALIGNMENT);
+        feedbackGrid.setMaximumSize(new Dimension(INNER_WIDTH, 74));
+        feedbackGrid.add(doThisButton);
+        feedbackGrid.add(laterButton);
+        feedbackGrid.add(notTodayButton);
+        feedbackGrid.add(dislikeButton);
+        recommendationCard.add(feedbackGrid);
         recommendationCard.add(Box.createVerticalStrut(8));
         setWrappedText(feedbackStatus, "", TEXT_WIDTH);
         recommendationCard.add(feedbackStatus);
 
         detailsButton.addActionListener(event -> toggleDetails());
+        doThisButton.addActionListener(event -> submitFeedback(FeedbackAction.DO_THIS));
         laterButton.addActionListener(event -> submitFeedback(FeedbackAction.LATER));
         notTodayButton.addActionListener(event -> submitFeedback(FeedbackAction.NOT_TODAY));
         dislikeButton.addActionListener(event -> submitFeedback(FeedbackAction.DISLIKE));
@@ -265,6 +320,42 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(opportunities);
     }
 
+    private void buildFooter(JPanel content)
+    {
+        content.add(Box.createVerticalStrut(9));
+        JPanel recovery = new JPanel(new GridLayout(1, 2, 6, 0));
+        recovery.setOpaque(false);
+        recovery.setAlignmentX(LEFT_ALIGNMENT);
+        recovery.setMaximumSize(new Dimension(CONTENT_WIDTH, 32));
+        recovery.add(refreshButton);
+        recovery.add(resetFeedbackButton);
+        refreshButton.addActionListener(event ->
+        {
+            acknowledgeFirstUse();
+            refreshHandler.run();
+            setWrappedText(feedbackStatus, "Recommendation refreshed.", TEXT_WIDTH);
+        });
+        resetFeedbackButton.addActionListener(event ->
+        {
+            if (!resetConfirmation.getAsBoolean()) return;
+            acknowledgeFirstUse();
+            resetFeedbackHandler.run();
+            setWrappedText(feedbackStatus,
+                    "Learned feedback reset for this account.", TEXT_WIDTH);
+        });
+        content.add(recovery);
+
+        content.add(Box.createVerticalStrut(12));
+        supportButton.setForeground(StrategistTheme.MUTED_TEXT);
+        supportButton.setBorderPainted(false);
+        supportButton.setContentAreaFilled(false);
+        supportButton.setVisible(SupportLinks.isConfigured(supportUrl));
+        supportButton.setAlignmentX(CENTER_ALIGNMENT);
+        supportButton.addActionListener(event ->
+                SupportLinks.openIfConfigured(supportUrl, supportBrowser));
+        content.add(supportButton);
+    }
+
     public void updateAccount(String name, String type, int total)
     {
         updateAccount(name, type, "Unknown access", total);
@@ -276,6 +367,7 @@ public class OsrsStrategistPanel extends PluginPanel
             String membership,
             int total)
     {
+        this.membership = membershipFromDisplay(membership);
         accountName.setText(html(escape(name)));
         accountMeta.setText(html(
                 escape(type)
@@ -286,10 +378,21 @@ public class OsrsStrategistPanel extends PluginPanel
                         + " / 2376 total"));
     }
 
+    public void updateAccount(String name, String type,
+            MembershipStatus membership, int total)
+    {
+        this.membership = membership == null
+                ? MembershipStatus.UNKNOWN : membership;
+        updateAccount(name, type, this.membership.getDisplayName(), total);
+    }
+
     public void updateGoal(GoalType goal)
     {
         GoalType safeGoal = goal == null ? GoalType.MAX : goal;
-        activeGoal.setText(html("Goal: " + prettyName(safeGoal.name())));
+        selectedGoal = safeGoal;
+        activeGoal.setText(html("Goal: "
+                + GoalRecommendationContext.displayName(safeGoal)));
+        renderRecommendationBody();
     }
 
     public void updateStrategy(StrategyMode mode, QuestTolerance tolerance)
@@ -435,7 +538,8 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void toggleDetails()
     {
-        if (currentRecommendation == null) return;
+        if (currentRecommendation == null || !detailsOverlayEnabled) return;
+        acknowledgeFirstUse();
         detailsVisible = !detailsVisible;
         detailsButton.setText(detailsVisible ? "Hide Details" : "Details");
         detailsHandler.accept(detailsVisible ? currentRecommendation : null);
@@ -457,7 +561,8 @@ public class OsrsStrategistPanel extends PluginPanel
         }
         setWrappedText(
                 recommendationBody,
-                RecommendationPresentation.compactText(currentRecommendation),
+                RecommendationPresentation.compactText(currentRecommendation,
+                        currentGoalContext()),
                 TEXT_WIDTH);
     }
 
@@ -468,15 +573,70 @@ public class OsrsStrategistPanel extends PluginPanel
         String title = currentRecommendation.getTitle();
         String id = currentRecommendation.getId();
         setWrappedText(feedbackStatus, feedbackStatusText(action, title), TEXT_WIDTH);
+        acknowledgeFirstUse();
         feedbackHandler.accept(id, action);
     }
 
     private void setRecommendationButtonsEnabled(boolean enabled)
     {
-        detailsButton.setEnabled(enabled);
+        detailsButton.setEnabled(enabled && detailsOverlayEnabled);
+        doThisButton.setEnabled(enabled);
         laterButton.setEnabled(enabled);
         notTodayButton.setEnabled(enabled);
         dislikeButton.setEnabled(enabled);
+    }
+
+    public void setDetailsOverlayEnabled(boolean enabled)
+    {
+        detailsOverlayEnabled = enabled;
+        if (!enabled) clearDetailsOverlay();
+        setRecommendationButtonsEnabled(currentRecommendation != null
+                && !FallbackRecommendationFactory.isFallback(currentRecommendation));
+    }
+
+    public void closeDetails() { clearDetailsOverlay(); }
+
+    public void setFirstUseHintVisible(boolean visible)
+    {
+        firstUseHint.setVisible(visible);
+        revalidate();
+        repaint();
+    }
+
+    boolean isSupportVisible() { return supportButton.isVisible(); }
+    boolean isFirstUseHintVisible() { return firstUseHint.isVisible(); }
+    boolean isDetailsControlEnabled() { return detailsButton.isEnabled(); }
+    void clickSupportForTest() { supportButton.doClick(); }
+    void clickResetFeedbackForTest() { resetFeedbackButton.doClick(); }
+    String recommendationTextForTest() { return recommendationBody.getText(); }
+
+    private GoalRecommendationContext currentGoalContext()
+    {
+        return GoalRecommendationContext.assess(
+                selectedGoal, currentRecommendation, membership);
+    }
+
+    private void acknowledgeFirstUse()
+    {
+        firstUseHint.setVisible(false);
+        firstUseHandler.run();
+    }
+
+    private boolean confirmReset()
+    {
+        return JOptionPane.showConfirmDialog(this,
+                "Reset learned Compass feedback for this account?",
+                "Reset Compass feedback", JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION;
+    }
+
+    private static MembershipStatus membershipFromDisplay(String display)
+    {
+        if (display == null) return MembershipStatus.UNKNOWN;
+        for (MembershipStatus status : MembershipStatus.values())
+            if (status.getDisplayName().equalsIgnoreCase(display.trim()))
+                return status;
+        return MembershipStatus.UNKNOWN;
     }
 
     private static void makeFullWidth(JButton button, int height)

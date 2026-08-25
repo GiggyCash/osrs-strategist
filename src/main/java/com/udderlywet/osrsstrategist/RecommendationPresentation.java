@@ -1,6 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /** Converts a recommendation into concise sidebar copy and full detail copy. */
@@ -14,9 +15,17 @@ public final class RecommendationPresentation
 
     public static String compactHtml(Recommendation recommendation)
     {
+        return compactHtml(recommendation, null);
+    }
+
+    public static String compactHtml(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
         if (recommendation == null) return "";
         StringBuilder text = new StringBuilder();
         TrainingPlan plan = recommendation.getTrainingPlan();
+
+        appendGoalStatus(text, goalContext);
 
         if (plan == null || plan.getMethod() == null)
         {
@@ -60,55 +69,18 @@ public final class RecommendationPresentation
 
     public static String detailedHtml(Recommendation recommendation)
     {
-        if (recommendation == null) return "";
+        return detailedHtml(recommendation, null);
+    }
+
+    public static String detailedHtml(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
         StringBuilder text = new StringBuilder();
-        TrainingPlan plan = recommendation.getTrainingPlan();
-
-        if (plan == null || plan.getMethod() == null)
+        for (Section section : detailsSections(recommendation, goalContext))
         {
-            appendNonSkillDetailed(text, recommendation);
-            return text.toString();
-        }
-
-        TrainingMethod method = plan.getMethod();
-        appendMethodHeader(text, recommendation, method);
-
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance != null)
-        {
-            appendGuidance(text, guidance, true);
-        }
-        else
-        {
-            appendBreak(text, 2);
-            text.append("<b>HOW</b><br>")
-                    .append(escape(method.getInstructions()));
-        }
-
-        if (!plan.getRequirementChecks().isEmpty())
-        {
-            appendBreak(text, 2);
-            text.append("<b>READINESS</b>");
-            for (RequirementCheck check : plan.getRequirementChecks())
-            {
-                text.append("<br>")
-                        .append(readinessMarker(check))
-                        .append(" ")
-                        .append(escape(check.getLabel()));
-                if (hasText(check.getEvidence()))
-                {
-                    text.append("<br><i>")
-                            .append(escape(check.getEvidence()))
-                            .append("</i>");
-                }
-            }
-        }
-
-        if (hasText(recommendation.getReason()))
-        {
-            appendBreak(text, 2);
-            text.append("<b>WHY IT MATTERS</b><br>")
-                    .append(escape(recommendation.getReason()));
+            if (text.length() > 0) appendBreak(text, 2);
+            text.append("<b>").append(escape(section.getHeading()))
+                    .append("</b><br>").append(escape(section.getValue()));
         }
         return text.toString();
     }
@@ -118,9 +90,56 @@ public final class RecommendationPresentation
         return toPlainText(compactHtml(recommendation));
     }
 
+    public static String compactText(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
+        return toPlainText(compactHtml(recommendation, goalContext));
+    }
+
     public static String detailedText(Recommendation recommendation)
     {
         return toPlainText(detailedHtml(recommendation));
+    }
+
+    public static String detailedText(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
+        return toPlainText(detailedHtml(recommendation, goalContext));
+    }
+
+    /** Four compact sections retain the useful decision without graph dumps. */
+    public static List<Section> detailsSections(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
+        if (recommendation == null) return Collections.emptyList();
+        List<Section> sections = new ArrayList<>();
+        if (goalContext != null && !goalContext.isAutomatic())
+            sections.add(new Section("GOAL", goalContext.getGoalName()));
+
+        String why = goalContext != null && !goalContext.isAutomatic()
+                ? goalContext.getStatus() : recommendation.getReason();
+        if (hasText(why))
+            sections.add(new Section("WHY", compactSentence(why, 140)));
+
+        String needed = firstNeeded(recommendation);
+        if (hasText(needed))
+            sections.add(new Section(
+                    recommendation.getConfidence() == RecommendationConfidence.BLOCKED
+                            ? "BLOCKED BY" : "NEEDED",
+                    compactSentence(needed, 140)));
+
+        String current = recommendation.getGuidance() != null
+                ? recommendation.getGuidance().getAction() : recommendation.getTitle();
+        if (hasText(current))
+            sections.add(new Section("CURRENT STEP",
+                    compactSentence(current, 150)));
+
+        if (sections.size() < 4 && hasText(recommendation.getReason())
+                && !sameSentence(why, recommendation.getReason()))
+            sections.add(new Section("NEXT",
+                    compactSentence(recommendation.getReason(), 130)));
+        return Collections.unmodifiableList(sections.subList(0,
+                Math.min(4, sections.size())));
     }
 
     private static void appendNonSkillCompact(
@@ -135,7 +154,7 @@ public final class RecommendationPresentation
             return;
         }
         text.append("<b>ACTIVITY</b><br>")
-                .append(confidenceLabel(recommendation));
+                .append(escape(compactSentence(recommendation.getTitle(), 110)));
         if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
         {
             if (guidance != null && hasText(guidance.getAction()))
@@ -162,63 +181,37 @@ public final class RecommendationPresentation
         appendNextUnlock(text, recommendation);
     }
 
-    private static void appendNonSkillDetailed(
-            StringBuilder text,
-            Recommendation recommendation)
-    {
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
-        {
-            text.append("<b>ACTIVITY</b><br>Blocked")
-                    .append("<br><br><b>NEEDED</b><br>This is not available for the current account state.");
-            return;
-        }
-
-        text.append("<b>ACTIVITY</b><br>")
-                .append(confidenceLabel(recommendation));
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance != null)
-        {
-            appendGuidance(text, guidance, true);
-        }
-        else if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
-        {
-            appendBreak(text, 2);
-            text.append("<b>STATUS</b><br>")
-                    .append("This stays out of the primary recommendation until its requirements are verified.");
-        }
-
-        if (hasText(recommendation.getReason()))
-        {
-            appendBreak(text, 2);
-            text.append("<b>WHY IT MATTERS</b><br>")
-                    .append(escape(recommendation.getReason()));
-        }
-    }
-
     private static void appendGuidance(
             StringBuilder text,
             RecommendationGuidance guidance,
             boolean includeLocationAndNote)
     {
+        if (!includeLocationAndNote)
+        {
+            String needed = compactNeeded(guidance);
+            if (hasText(needed))
+            {
+                appendBreak(text, 2);
+                text.append("<b>NEEDED</b><br>")
+                        .append(escape(compactSentence(needed,
+                                COMPACT_ACTION_CHARS)));
+            }
+            return;
+        }
+
         if (hasText(guidance.getAction()))
         {
             appendBreak(text, 2);
-            text.append("<b>DO THIS</b><br>")
-                    .append(escape(includeLocationAndNote
-                            ? guidance.getAction()
-                            : compactSentence(guidance.getAction(), COMPACT_ACTION_CHARS)));
+            text.append("<b>DO</b><br>")
+                    .append(escape(guidance.getAction()));
         }
 
         if (hasText(guidance.getSupplies()))
         {
             appendBreak(text, 2);
-            text.append("<b>NEEDED</b><br>")
-                    .append(escape(includeLocationAndNote
-                            ? guidance.getSupplies()
-                            : compactSentence(guidance.getSupplies(), COMPACT_SUPPLIES_CHARS)));
+            text.append("<b>BRING</b><br>")
+                    .append(escape(guidance.getSupplies()));
         }
-
-        if (!includeLocationAndNote) return;
 
         if (hasText(guidance.getLocation()))
         {
@@ -233,6 +226,18 @@ public final class RecommendationPresentation
             text.append("<b>NOTE</b><br>")
                     .append(escape(guidance.getNote()));
         }
+    }
+
+    private static String compactNeeded(RecommendationGuidance guidance)
+    {
+        String action = guidance.getAction();
+        String supplies = guidance.getSupplies();
+        if (hasText(action) && (action.contains("XP remaining")
+                || action.toLowerCase().contains("confirm")
+                || !hasText(supplies)
+                || supplies.startsWith("No consumed")))
+            return action;
+        return supplies;
     }
 
     /**
@@ -275,6 +280,40 @@ public final class RecommendationPresentation
                         COMPACT_UNLOCK_CHARS)));
     }
 
+    private static void appendGoalStatus(StringBuilder text,
+            GoalRecommendationContext context)
+    {
+        if (context == null || context.isAutomatic()) return;
+        text.append("<b>GOAL</b><br>")
+                .append(escape(context.getGoalName()))
+                .append("<br>")
+                .append(escape(compactSentence(context.getStatus(), 125)));
+        appendBreak(text, 2);
+    }
+
+    private static String firstNeeded(Recommendation recommendation)
+    {
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        if (plan != null)
+            for (RequirementCheck check : hardUnresolved(plan))
+                if (check != null && hasText(check.getLabel()))
+                    return check.getLabel();
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null && hasText(guidance.getSupplies()))
+            return guidance.getSupplies();
+        if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
+            return "Confirm the account state Compass cannot safely observe.";
+        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+            return "Current account access or safety restrictions.";
+        return "";
+    }
+
+    private static boolean sameSentence(String left, String right)
+    {
+        if (!hasText(left) || !hasText(right)) return false;
+        return compactSentence(left, 140).equals(compactSentence(right, 140));
+    }
+
     private static List<RequirementCheck> hardUnresolved(TrainingPlan plan)
     {
         List<RequirementCheck> unresolved = new ArrayList<>();
@@ -309,12 +348,6 @@ public final class RecommendationPresentation
     {
         text.append("<b>METHOD</b><br>")
                 .append(escape(method.getName()));
-        appendBreak(text, 1);
-        text.append("<i>")
-                .append(attentionLabel(method.getAttentionLevel()))
-                .append(" • ")
-                .append(confidenceLabel(recommendation))
-                .append("</i>");
     }
 
     private static String attentionLabel(AttentionLevel attention)
@@ -372,5 +405,20 @@ public final class RecommendationPresentation
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;");
+    }
+
+    public static final class Section
+    {
+        private final String heading;
+        private final String value;
+
+        Section(String heading, String value)
+        {
+            this.heading = heading == null ? "" : heading;
+            this.value = value == null ? "" : value;
+        }
+
+        public String getHeading() { return heading; }
+        public String getValue() { return value; }
     }
 }

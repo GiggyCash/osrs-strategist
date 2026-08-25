@@ -128,4 +128,13 @@ public class AccountPreferenceStore
                 gson.toJson(profile.timedAdjustmentSnapshot())
         );
     }
+
+    /** Clear only learned feedback for the active RuneScape profile. */
+    public void clear()
+    {
+        if (getActiveProfileKey() == null) return;
+        configManager.unsetRSProfileConfiguration(GROUP, PREFERENCES_KEY);
+        configManager.unsetRSProfileConfiguration(GROUP, COOLDOWNS_KEY);
+        configManager.unsetRSProfileConfiguration(GROUP, TIMED_ADJUSTMENTS_KEY);
+    }
 }

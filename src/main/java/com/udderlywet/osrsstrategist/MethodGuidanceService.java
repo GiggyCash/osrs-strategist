@@ -48,9 +48,41 @@ public class MethodGuidanceService
                     GuidanceStepState.COMPLETE));
         }
 
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        String bring = guidance == null ? null
+                : RecommendationPresentation.compactSentence(
+                        guidance.getSupplies(), 120);
+        String where = guidance == null ? null
+                : RecommendationPresentation.compactSentence(
+                        guidance.getLocation(), 110);
+        String action = guidance == null
+                ? method.getInstructions()
+                : guidance.getAction();
+        action = RecommendationPresentation.compactSentence(action, 135);
+        String progress = recommendation.getCurrentLevel() > 0
+                && recommendation.getTargetLevel()
+                        > recommendation.getCurrentLevel()
+                ? "Level " + recommendation.getCurrentLevel() + " → "
+                        + recommendation.getTargetLevel() : null;
+        String important = guidance == null ? null
+                : criticalNote(guidance.getNote());
+
         return new GuidanceChecklist(
                 recommendation.getId(), method.getName(),
-                plan.getWhyThisMethod(), steps);
+                plan.getWhyThisMethod(), steps, bring, where, action,
+                progress, important);
+    }
+
+    private static String criticalNote(String note)
+    {
+        if (note == null || note.trim().isEmpty()) return null;
+        String lower = note.toLowerCase(java.util.Locale.ROOT);
+        if (!(lower.contains("wilderness") || lower.contains("hardcore")
+                || lower.contains("uim") || lower.contains("iron")
+                || lower.contains("restricted") || lower.contains("mandatory")
+                || lower.contains("required protection")
+                || lower.contains("irreversible"))) return null;
+        return RecommendationPresentation.compactSentence(note, 135);
     }
 
     private GuidanceStepState convert(RequirementState state)

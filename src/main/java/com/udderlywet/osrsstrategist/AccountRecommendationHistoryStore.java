@@ -55,4 +55,10 @@ public class AccountRecommendationHistoryStore
                 gson.toJson(new RecommendationHistoryDocument(history.snapshot()))
         );
     }
+
+    public void clear()
+    {
+        if (getActiveProfileKey() == null) return;
+        configManager.unsetRSProfileConfiguration(GROUP, KEY);
+    }
 }

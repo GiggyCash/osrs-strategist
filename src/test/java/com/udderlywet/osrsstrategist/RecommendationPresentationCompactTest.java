@@ -52,11 +52,13 @@ public class RecommendationPresentationCompactTest
         String compact = RecommendationPresentation.compactText(recommendation);
         String details = RecommendationPresentation.detailedText(recommendation);
 
-        assertTrue(compact.contains("Cook 1,234 sharks"));
+        assertTrue(compact.contains("Verified: you own 900 raw sharks"));
         assertFalse(compact.contains("intentionally detailed execution notes"));
         assertFalse(compact.contains("several other detailed accounting notes"));
-        assertTrue(details.contains("intentionally detailed execution notes"));
-        assertTrue(details.contains("several other detailed accounting notes"));
+        assertFalse(details.contains("intentionally detailed execution notes"));
+        assertFalse(details.contains("several other detailed accounting notes"));
+        assertTrue(details.contains("CURRENT STEP"));
+        assertTrue(details.length() < 500);
     }
 
     @Test

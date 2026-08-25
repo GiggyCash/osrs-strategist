@@ -41,4 +41,18 @@ public class UiGenerationGuardTest
         guard.invalidate();
         assertFalse(guard.isCurrent(loadingFallback));
     }
+
+    @Test
+    public void thousandsOfBenignRefreshesRetainOnlyOneCurrentGeneration()
+    {
+        UiGenerationGuard guard = new UiGenerationGuard();
+        long previous = 0;
+        for (int i = 0; i < 2_000; i++)
+        {
+            long current = guard.next();
+            if (previous != 0) assertFalse(guard.isCurrent(previous));
+            previous = current;
+        }
+        assertTrue(guard.isCurrent(previous));
+    }
 }

@@ -5,10 +5,7 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -16,34 +13,18 @@ import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
 /**
- * Movable on-game expanded recommendation view.
+ * Movable on-game decision summary.
  *
- * <p>The fixed RuneLite sidebar carries only the compact action. Details uses
- * game-screen space where long instructions, supply lists, and readiness checks
- * can be read without squeezing them into a 225px plugin panel.</p>
+ * <p>The full planner graph remains internal; players see only the selected
+ * goal relationship, reason, blocker, current step, and next unlock when it is
+ * useful.</p>
  */
 public class RecommendationDetailsOverlay extends OverlayPanel
 {
     private static final int PANEL_WIDTH = 340;
     private static final int TEXT_WIDTH = 310;
-    private static final Set<String> HEADINGS = new HashSet<>(Arrays.asList(
-            "NEXT STEP",
-            "BEST METHOD",
-            "DO THIS",
-            "SUPPLIES",
-            "WHERE",
-            "NOTE",
-            "HOW",
-            "READINESS",
-            "WHY IT MATTERS",
-            "STATUS",
-            "ACTIVITY",
-            "NEXT UNLOCK",
-            "NOT READY YET",
-            "METHOD UNAVAILABLE",
-            "BLOCKED"));
-
     private Recommendation recommendation;
+    private GoalRecommendationContext goalContext;
 
     @Inject
     public RecommendationDetailsOverlay(OsrsStrategistPlugin plugin)
@@ -56,12 +37,20 @@ public class RecommendationDetailsOverlay extends OverlayPanel
 
     public synchronized void showRecommendation(Recommendation recommendation)
     {
+        showRecommendation(recommendation, null);
+    }
+
+    public synchronized void showRecommendation(Recommendation recommendation,
+            GoalRecommendationContext goalContext)
+    {
         this.recommendation = recommendation;
+        this.goalContext = goalContext;
     }
 
     public synchronized void clear()
     {
         recommendation = null;
+        goalContext = null;
     }
 
     @Override
@@ -71,35 +60,18 @@ public class RecommendationDetailsOverlay extends OverlayPanel
 
         panelComponent.getChildren().clear();
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text("Gielinor Compass Details")
+                .text("Compass Details")
                 .color(StrategistTheme.GOLD)
                 .build());
 
         FontMetrics metrics = graphics.getFontMetrics();
-        for (String line : wrap(safe(recommendation.getTitle()), metrics, TEXT_WIDTH))
+        for (RecommendationPresentation.Section section
+                : RecommendationPresentation.detailsSections(
+                        recommendation, goalContext))
         {
-            addLine(line, StrategistTheme.TEXT);
-        }
-        addLine("", StrategistTheme.TEXT);
-
-        String details = RecommendationPresentation.detailedText(recommendation);
-        String[] logicalLines = details.split("\\n", -1);
-        for (String logical : logicalLines)
-        {
-            String trimmed = logical.trim();
-            if (trimmed.isEmpty())
-            {
-                addLine("", StrategistTheme.TEXT);
-                continue;
-            }
-
-            Color color = HEADINGS.contains(trimmed)
-                    ? StrategistTheme.GOLD_SOFT
-                    : stateColor(trimmed);
-            for (String wrapped : wrap(logical, metrics, TEXT_WIDTH))
-            {
-                addLine(wrapped, color);
-            }
+            addLine(section.getHeading(), StrategistTheme.GOLD_SOFT);
+            for (String wrapped : wrap(section.getValue(), metrics, TEXT_WIDTH))
+                addLine(wrapped, stateColor(section.getValue()));
         }
         return super.render(graphics);
     }
@@ -190,8 +162,4 @@ public class RecommendationDetailsOverlay extends OverlayPanel
         current.append(chunk);
     }
 
-    private static String safe(String value)
-    {
-        return value == null ? "" : value;
-    }
 }

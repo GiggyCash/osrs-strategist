@@ -196,11 +196,11 @@ public class RecommendationGuidanceService
                     .append(stage.stage.foodName)
                     .append(" to level ")
                     .append(stage.targetLevel)
-                    .append(": ")
+                    .append(" (about ")
                     .append(stage.successfulCooks)
                     .append(" successful cook")
                     .append(stage.successfulCooks == 1 ? "" : "s")
-                    .append(".");
+                    .append(").");
         }
         return capitalize(text.toString());
     }

@@ -39,7 +39,7 @@ public class RecommendationIntelligenceService
         RecommendationGuidance guidance = recommendation.getGuidance();
 
         score += readinessValue(recommendation, guidance);
-        score += goalValue(recommendation, context, id, title);
+        score += goalValue(recommendation, context.getActiveGoal());
         score += sessionValue(recommendation, context.getSessionIntent());
         score += globalIntentValue(recommendation, context, id, reason);
         score += strategyModeValue(recommendation, context, id, reason);
@@ -68,9 +68,12 @@ public class RecommendationIntelligenceService
         return value;
     }
 
-    private static double goalValue(Recommendation recommendation, StrategyContext context, String id, String title)
+    static double goalValue(Recommendation recommendation, GoalType selectedGoal)
     {
-        GoalType goal = context.getActiveGoal() == null ? GoalType.MAX : context.getActiveGoal();
+        if (recommendation == null) return 0.0;
+        GoalType goal = selectedGoal == null ? GoalType.MAX : selectedGoal;
+        String id = lower(recommendation.getId());
+        String title = lower(recommendation.getTitle());
         boolean skill = id.startsWith("skill:");
         boolean quest = id.startsWith("quest:");
         boolean gear = id.startsWith("gear:") || id.startsWith("upgrade:");

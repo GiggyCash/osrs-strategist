@@ -33,18 +33,19 @@ public class RecommendationPresentationTest
     }
 
     @Test
-    public void detailedViewExposesInstructionsReasoningAndEvidence()
+    public void detailedViewKeepsOnlyDecisionCriticalSections()
     {
         String detailed = RecommendationPresentation.detailedHtml(
                 recommendation()
         );
 
-        assertTrue(detailed.contains("HOW"));
-        assertTrue(detailed.contains("WHY IT MATTERS"));
-        assertTrue(detailed.contains("READINESS"));
-        assertTrue(detailed.contains("POH access"));
+        assertTrue(detailed.contains("WHY"));
+        assertTrue(detailed.contains("NEEDED"));
+        assertTrue(detailed.contains("CURRENT STEP"));
         assertTrue(detailed.contains("Planks/materials"));
-        assertTrue(detailed.contains("Need to confirm materials"));
+        assertFalse(detailed.contains("Need to confirm materials"));
+        assertFalse(detailed.contains("Verified POH access"));
+        assertTrue(detailed.length() < 500);
     }
 
     private static Recommendation recommendation()

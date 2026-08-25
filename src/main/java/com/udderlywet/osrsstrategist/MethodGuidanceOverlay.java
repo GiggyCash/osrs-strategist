@@ -1,6 +1,5 @@
 package com.udderlywet.osrsstrategist;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -16,7 +15,7 @@ import net.runelite.client.ui.overlay.components.TitleComponent;
 public class MethodGuidanceOverlay extends OverlayPanel
 {
     private static final int OVERLAY_WIDTH = 320;
-    private static final int STEP_TEXT_WIDTH = 230;
+    private static final int STEP_TEXT_WIDTH = 285;
 
     private GuidanceChecklist checklist;
 
@@ -42,52 +41,45 @@ public class MethodGuidanceOverlay extends OverlayPanel
     @Override
     public synchronized Dimension render(Graphics2D graphics)
     {
-        if (checklist == null || checklist.getSteps().isEmpty()) return null;
+        if (checklist == null) return null;
         panelComponent.getChildren().clear();
         panelComponent.getChildren().add(TitleComponent.builder()
                 .text("Method Guidance")
                 .color(StrategistTheme.GOLD)
                 .build());
         FontMetrics metrics = graphics.getFontMetrics();
-        for (String titleLine : wrap(checklist.getTitle(), metrics,
-                STEP_TEXT_WIDTH))
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left(titleLine)
-                    .leftColor(StrategistTheme.GOLD_SOFT)
-                    .build());
-        panelComponent.getChildren().add(LineComponent.builder()
-                .left("Progress")
-                .right(checklist.completeCount() + "/" + checklist.getSteps().size())
-                .build());
-
-        int shown = Math.min(12, checklist.getSteps().size());
-        for (int i = 0; i < shown; i++)
-        {
-            GuidanceStep step = checklist.getSteps().get(i);
-            List<String> lines = wrap(
-                    marker(step.getState()) + " " + step.getLabel(),
-                    metrics,
-                    STEP_TEXT_WIDTH);
-            for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++)
-            {
-                panelComponent.getChildren().add(LineComponent.builder()
-                        .left(lines.get(lineIndex))
-                        .right(lineIndex == 0 ? status(step.getState()) : "")
-                        .leftColor(color(step.getState()))
-                        .rightColor(color(step.getState()))
-                        .build());
-            }
-        }
-        if (checklist.getSteps().size() > shown)
-        {
-            panelComponent.getChildren().add(LineComponent.builder()
-                    .left("+" + (checklist.getSteps().size() - shown) + " more")
-                    .right("Details")
-                    .leftColor(StrategistTheme.MUTED_TEXT)
-                    .rightColor(StrategistTheme.MUTED_TEXT)
-                    .build());
-        }
+        addSection("METHOD", checklist.getTitle(), metrics);
+        addSection("BRING", checklist.getBring(), metrics);
+        addSection("WHERE", checklist.getWhere(), metrics);
+        addSection("DO", fallbackAction(checklist), metrics);
+        addSection("PROGRESS", checklist.getProgress(), metrics);
+        addSection("IMPORTANT", checklist.getImportant(), metrics);
         return super.render(graphics);
+    }
+
+    private void addSection(String heading, String value, FontMetrics metrics)
+    {
+        if (value == null || value.trim().isEmpty()) return;
+        panelComponent.getChildren().add(LineComponent.builder()
+                .left(heading)
+                .leftColor("IMPORTANT".equals(heading)
+                        ? StrategistTheme.WARNING : StrategistTheme.GOLD_SOFT)
+                .build());
+        for (String line : wrap(value, metrics, STEP_TEXT_WIDTH))
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left(line)
+                    .leftColor("IMPORTANT".equals(heading)
+                            ? StrategistTheme.WARNING : StrategistTheme.TEXT)
+                    .build());
+    }
+
+    private static String fallbackAction(GuidanceChecklist checklist)
+    {
+        if (checklist.getAction() != null
+                && !checklist.getAction().trim().isEmpty())
+            return checklist.getAction();
+        GuidanceStep pending = checklist.firstPending();
+        return pending == null ? checklist.getSubtitle() : pending.getLabel();
     }
 
     static List<String> wrap(
@@ -146,42 +138,4 @@ public class MethodGuidanceOverlay extends OverlayPanel
         return lines;
     }
 
-    private static String marker(GuidanceStepState state)
-    {
-        switch (state)
-        {
-            case COMPLETE: return "✓";
-            case WARNING:
-            case BLOCKED: return "!";
-            case ACTION: return "•";
-            case CHECK_NEEDED:
-            default: return "?";
-        }
-    }
-
-    private static String status(GuidanceStepState state)
-    {
-        switch (state)
-        {
-            case COMPLETE: return "Done";
-            case ACTION: return "Do";
-            case WARNING: return "Fix";
-            case BLOCKED: return "Blocked";
-            case CHECK_NEEDED:
-            default: return "Check";
-        }
-    }
-
-    private static Color color(GuidanceStepState state)
-    {
-        switch (state)
-        {
-            case COMPLETE: return StrategistTheme.SUCCESS;
-            case WARNING: return StrategistTheme.WARNING;
-            case BLOCKED: return StrategistTheme.DANGER;
-            case ACTION: return StrategistTheme.GOLD;
-            case CHECK_NEEDED:
-            default: return StrategistTheme.TEXT;
-        }
-    }
 }

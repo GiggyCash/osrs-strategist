@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.inject.Provides;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +21,13 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.util.ImageUtil;
+import net.runelite.client.util.LinkBrowser;
 
 @PluginDescriptor(
         name = "Gielinor Compass",
         description = "Decides your next safe, useful move from observed account state",
-        tags = {"strategy", "progression", "maxing", "ironman", "uim", "gim", "clues", "farming"}
+        tags = {"strategy", "progression", "goals", "ironman", "uim", "gim", "clues", "slayer"}
 )
 public class OsrsStrategistPlugin extends Plugin
 {
@@ -35,6 +35,7 @@ public class OsrsStrategistPlugin extends Plugin
     private static final long COMPLETION_VARIETY_DURATION_MILLIS = 30L * 60L * 1000L;
 
     @Inject private OsrsStrategistConfig config;
+    @Inject private ConfigManager configManager;
     @Inject private ClientToolbar clientToolbar;
     @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
@@ -68,6 +69,8 @@ public class OsrsStrategistPlugin extends Plugin
     private OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
     private boolean varbitRefreshPending;
+    private final OverlayLifecycleGuard overlayLifecycle =
+            new OverlayLifecycleGuard();
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
@@ -81,17 +84,24 @@ public class OsrsStrategistPlugin extends Plugin
         panel = new OsrsStrategistPanel(
                 this::applyRecommendationFeedback,
                 skillIconLoader,
-                this::updateRecommendationDetails);
+                this::updateRecommendationDetails,
+                this::updateAccountPanel,
+                this::resetLearnedFeedback,
+                this::acknowledgeFirstUse,
+                SupportLinks.SUPPORT_URL,
+                LinkBrowser::browse,
+                null);
+        panel.setDetailsOverlayEnabled(
+                OverlayDisplayState.from(config).showsDetails());
+        panel.setFirstUseHintVisible(!config.firstUseComplete());
         navButton = NavigationButton.builder()
                 .tooltip("Gielinor Compass")
-                .icon(createTemporaryIcon())
+                .icon(loadPluginIcon())
                 .priority(5)
                 .panel(panel)
                 .build();
         clientToolbar.addNavigation(navButton);
-        overlayManager.add(milestoneRewardOverlay);
-        overlayManager.add(methodGuidanceOverlay);
-        overlayManager.add(recommendationDetailsOverlay);
+        registerOverlays();
         trainingFatigueTracker.clear();
         syncPreferenceProfile();
         syncStrategyProfile();
@@ -105,9 +115,7 @@ public class OsrsStrategistPlugin extends Plugin
     {
         uiGeneration.invalidate();
         if (navButton != null) clientToolbar.removeNavigation(navButton);
-        overlayManager.remove(milestoneRewardOverlay);
-        overlayManager.remove(methodGuidanceOverlay);
-        overlayManager.remove(recommendationDetailsOverlay);
+        unregisterOverlays();
         milestoneRewardOverlay.clear();
         methodGuidanceOverlay.clear();
         recommendationDetailsOverlay.clear();
@@ -214,20 +222,28 @@ public class OsrsStrategistPlugin extends Plugin
     public void onConfigChanged(ConfigChanged event)
     {
         if (!OsrsStrategistConfig.GROUP.equals(event.getGroup())) return;
-        strategyProfile = PlayerStrategyProfile.fromConfig(config);
-        if (accountStrategyProfileStore.getActiveProfileKey() != null)
+        String key = event.getKey();
+        if (CompassConfigKeys.acknowledgesFirstUse(key)) acknowledgeFirstUse();
+        if (CompassConfigKeys.isOverlay(key))
         {
-            savingProfileConfiguration = true;
-            try
-            {
-                accountStrategyProfileStore.save(strategyProfile);
-            }
-            finally
-            {
-                savingProfileConfiguration = false;
-            }
-            loadedStrategyProfileKey = accountStrategyProfileStore.getActiveProfileKey();
+            updateOverlaySettings();
+            return;
         }
+        if (CompassConfigKeys.FIRST_USE_COMPLETE.equals(key))
+        {
+            if (panel != null)
+                panel.setFirstUseHintVisible(!config.firstUseComplete());
+            return;
+        }
+        if (!CompassConfigKeys.changesPlanning(key)) return;
+
+        if (CompassConfigKeys.changesStrategyProfile(key))
+        {
+            strategyProfile = PlayerStrategyProfile.fromConfig(config);
+            saveStrategyProfile();
+        }
+        if (panel != null) panel.closeDetails();
+        recommendationDetailsOverlay.clear();
         updateAccountPanel();
     }
 
@@ -263,13 +279,21 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void updateRecommendationDetails(Recommendation recommendation)
     {
-        if (recommendation == null)
+        if (recommendation == null
+                || !OverlayDisplayState.from(config).showsDetails())
         {
             recommendationDetailsOverlay.clear();
         }
         else
         {
-            recommendationDetailsOverlay.showRecommendation(recommendation);
+            AccountSnapshot account = latestData == null
+                    ? null : latestData.getAccount();
+            recommendationDetailsOverlay.showRecommendation(recommendation,
+                    GoalRecommendationContext.assess(
+                            effectiveStrategyProfile().getActiveGoal(),
+                            recommendation,
+                            account == null ? MembershipStatus.UNKNOWN
+                                    : account.getMembershipStatus()));
         }
     }
 
@@ -450,7 +474,7 @@ public class OsrsStrategistPlugin extends Plugin
             panel.updateAccount(
                     account.getPlayerName(),
                     account.getAccountTypeName(),
-                    account.getMembershipStatus().getDisplayName(),
+                    account.getMembershipStatus(),
                     account.getTotalLevel());
             panel.updateGoal(profile.getActiveGoal());
             panel.updateStrategy(
@@ -486,6 +510,73 @@ public class OsrsStrategistPlugin extends Plugin
             savingProfileConfiguration = false;
         }
         loadedPreferenceProfileKey = accountPreferenceStore.getActiveProfileKey();
+    }
+
+    private void resetLearnedFeedback()
+    {
+        preferenceProfile.clear();
+        recommendationHistory.clear();
+        accountPreferenceStore.clear();
+        accountRecommendationHistoryStore.clear();
+        loadedPreferenceProfileKey = accountPreferenceStore.getActiveProfileKey();
+        loadedHistoryProfileKey = accountRecommendationHistoryStore
+                .getActiveProfileKey();
+        refreshStrategyImmediately();
+    }
+
+    private void acknowledgeFirstUse()
+    {
+        if (config.firstUseComplete()) return;
+        configManager.setConfiguration(OsrsStrategistConfig.GROUP,
+                CompassConfigKeys.FIRST_USE_COMPLETE, true);
+        if (panel != null) panel.setFirstUseHintVisible(false);
+    }
+
+    private void saveStrategyProfile()
+    {
+        if (accountStrategyProfileStore.getActiveProfileKey() == null) return;
+        savingProfileConfiguration = true;
+        try
+        {
+            accountStrategyProfileStore.save(strategyProfile);
+        }
+        finally
+        {
+            savingProfileConfiguration = false;
+        }
+        loadedStrategyProfileKey = accountStrategyProfileStore.getActiveProfileKey();
+    }
+
+    private void updateOverlaySettings()
+    {
+        OverlayDisplayState state = OverlayDisplayState.from(config);
+        if (panel != null)
+            panel.setDetailsOverlayEnabled(state.showsDetails());
+        if (!state.showsDetails()) recommendationDetailsOverlay.clear();
+        if (!state.showsMethodGuidance())
+        {
+            methodGuidanceOverlay.clear();
+            return;
+        }
+        if (latestData != null && !latestRecommendations.isEmpty())
+            methodGuidanceOverlay.update(methodGuidanceService.build(
+                    latestRecommendations.get(0), latestData));
+    }
+
+    private void registerOverlays()
+    {
+        if (!overlayLifecycle.beginRegistration()) return;
+        overlayManager.add(milestoneRewardOverlay);
+        overlayManager.add(methodGuidanceOverlay);
+        overlayManager.add(recommendationDetailsOverlay);
+    }
+
+    private void unregisterOverlays()
+    {
+        if (!overlayLifecycle.beginRemoval()) return;
+        overlayManager.remove(milestoneRewardOverlay);
+        overlayManager.remove(methodGuidanceOverlay);
+        overlayManager.remove(recommendationDetailsOverlay);
     }
 
     private void saveRecommendationHistory()
@@ -532,17 +623,9 @@ public class OsrsStrategistPlugin extends Plugin
         }
     }
 
-    private BufferedImage createTemporaryIcon()
+    private BufferedImage loadPluginIcon()
     {
-        BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = image.createGraphics();
-        graphics.setColor(new Color(60, 45, 30));
-        graphics.fillRect(0, 0, 16, 16);
-        graphics.setColor(new Color(212, 167, 44));
-        graphics.drawOval(1, 1, 13, 13);
-        graphics.drawLine(8, 3, 8, 13);
-        graphics.drawLine(3, 8, 13, 8);
-        graphics.dispose();
-        return image;
+        return ImageUtil.loadImageResource(getClass(),
+                "/gielinor-compass-icon.png");
     }
 }

@@ -100,12 +100,10 @@ public class UniversalSkillActionGuidanceService
                 action, actions, data.getAccount().getMembershipStatus());
         if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
 
-        String actionText = "Do " + format(actions) + " "
-                + actionUnit(skill, actions) + " using " + action.getName()
-                + " to cover the remaining " + format(xpNeeded)
-                + " XP to level " + targetLevel + ". " + action.getName()
-                + " gives " + format(xpEach)
-                + " modeled XP per successful action.";
+        String actionText = format(xpNeeded) + " XP remaining — about "
+                + format(actions) + " "
+                + playerAction(skill, action.getName(), actions)
+                + " to level " + targetLevel + ".";
 
         AccountResourcePlan resources = resourcePlanner == null
                 ? null
@@ -328,19 +326,29 @@ public class UniversalSkillActionGuidanceService
         return value;
     }
 
-    private static String actionUnit(Skill skill, int count)
+    private static String playerAction(Skill skill, String actionName, int count)
     {
+        String name = actionName == null ? "" : actionName.trim();
+        if (skill == Skill.WOODCUTTING)
+        {
+            String tree = name.replaceAll("(?i)\\s+logs?$", "").trim();
+            if (tree.isEmpty()) tree = "tree";
+            return tree.toLowerCase(Locale.ROOT) + " chop" + (count == 1 ? "" : "s");
+        }
+        if (skill == Skill.FISHING)
+            return name + " catch" + (count == 1 ? "" : "es");
+        if (skill == Skill.MINING)
+            return name + " mining action" + (count == 1 ? "" : "s");
+        if (skill == Skill.COOKING)
+            return name + " cook" + (count == 1 ? "" : "s");
+
         String singular;
         switch (skill)
         {
-            case AGILITY: singular = "successful course/obstacle action"; break;
-            case MINING: singular = "successful mine"; break;
-            case FISHING: singular = "successful catch"; break;
-            case WOODCUTTING: singular = "successful cut"; break;
-            case THIEVING: singular = "successful steal/pickpocket"; break;
-            case HUNTER: singular = "successful catch"; break;
-            case COOKING: singular = "successful cook"; break;
-            case FIREMAKING: singular = "successful burn"; break;
+            case AGILITY: singular = "course or obstacle action"; break;
+            case THIEVING: singular = "steal or pickpocket"; break;
+            case HUNTER: singular = "catch"; break;
+            case FIREMAKING: singular = "burn"; break;
             case PRAYER: singular = "Prayer action"; break;
             case RUNECRAFT: singular = "essence action"; break;
             case CRAFTING: singular = "craft"; break;
@@ -352,7 +360,7 @@ public class UniversalSkillActionGuidanceService
             case MAGIC: singular = "cast"; break;
             default: singular = "action"; break;
         }
-        return count == 1 ? singular : singular + "s";
+        return name + " " + (count == 1 ? singular : singular + "s");
     }
 
     private static int divideRoundUp(int numerator, double denominator)

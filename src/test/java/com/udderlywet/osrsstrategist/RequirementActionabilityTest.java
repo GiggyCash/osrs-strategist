@@ -43,7 +43,7 @@ public class RequirementActionabilityTest
                 plan, recommendation.getGuidance()));
         assertTrue(policy.canLeadQueue(recommendation));
         assertTrue(RecommendationPresentation.compactText(recommendation)
-                .contains("Ready to prep"));
+                .contains("Need 500 steel bars"));
         assertTrue(RecommendationPresentation.compactText(recommendation)
                 .contains("NEEDED"));
     }

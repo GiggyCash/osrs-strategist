@@ -117,11 +117,10 @@ public class AdaptiveMilestoneGuidanceService
         if (xpPerAction <= 0) return null;
         int actionsNeeded = divideRoundUp(xpNeeded, xpPerAction);
 
-        String actionText = "Use " + action.getName() + " for about "
+        String actionText = format(xpNeeded) + " XP remaining — about "
                 + actionsNeeded + " " + profile.unit(actionsNeeded)
-                + " to reach level " + targetLevel + ". "
-                + format(xpNeeded) + " XP remains; this action gives "
-                + format(xpPerAction) + " XP each in the modeled setup.";
+                + " with " + action.getName() + " to level "
+                + targetLevel + ".";
 
         List<ResolvedMethodInput> inputs = inputResolver.resolve(
                 profile, action, actionsNeeded);

@@ -9,31 +9,35 @@ public interface OsrsStrategistConfig extends Config
 {
     String GROUP = "osrs-strategist";
 
-    @ConfigItem(keyName = "strategyMode", name = "Strategy style",
+    @ConfigItem(keyName = CompassConfigKeys.STRATEGY_MODE, name = "Strategy style",
             description = "How Compass weighs speed versus comfort")
     default StrategyMode strategyMode() { return StrategyMode.BALANCED; }
 
-    @ConfigItem(keyName = "sessionIntent", name = "Session intent",
+    @ConfigItem(keyName = CompassConfigKeys.SESSION_INTENT, name = "Session intent",
             description = "What kind of session you want Compass to plan for")
     default SessionIntent sessionIntent() { return SessionIntent.PICK_FOR_ME; }
 
-    @ConfigItem(keyName = "activeGoal", name = "Big goal",
-            description = "The long-term goal used to prioritize recommendations")
+    @ConfigItem(keyName = CompassConfigKeys.ACTIVE_GOAL, name = "Goal",
+            description = "The long-term goal used to prioritize recommendations; Max is the automatic all-account path")
     default GoalType activeGoal() { return GoalType.MAX; }
 
-    @ConfigItem(keyName = "questTolerance", name = "Quest tolerance",
+    @ConfigItem(keyName = CompassConfigKeys.QUEST_TOLERANCE, name = "Quest tolerance",
             description = "How often quests should appear in recommendations")
     default QuestTolerance questTolerance() { return QuestTolerance.NORMAL; }
 
-    @ConfigItem(keyName = "allowWildernessMethods", name = "Wilderness methods",
+    @ConfigItem(keyName = CompassConfigKeys.ALLOW_WILDERNESS, name = "Wilderness methods",
             description = "Allow Compass to recommend methods that require entering the Wilderness")
     default boolean allowWildernessMethods() { return false; }
 
-    @ConfigItem(keyName = "showInGameGuidance", name = "In-game guidance",
-            description = "Show the current Compass checklist as a movable game-screen overlay")
+    @ConfigItem(keyName = CompassConfigKeys.DETAILS_OVERLAY, name = "Details overlay",
+            description = "Allow the compact Why and current-step overlay")
+    default boolean showDetailsOverlay() { return true; }
+
+    @ConfigItem(keyName = CompassConfigKeys.METHOD_OVERLAY, name = "Method Guidance overlay",
+            description = "Show the current method as a movable heads-up reference")
     default boolean showInGameGuidance() { return true; }
 
-    @ConfigItem(keyName = "useGroupStorage", name = "Use Group Storage",
+    @ConfigItem(keyName = CompassConfigKeys.USE_GROUP_STORAGE, name = "Use Group Storage",
             description = "For GIM accounts, count useful items actually observed in Group Storage")
     default boolean useGroupStorage() { return true; }
 
@@ -41,7 +45,7 @@ public interface OsrsStrategistConfig extends Config
             description = "Use the most recent verified bank snapshot when weighing options")
     default boolean bankAware() { return true; }
 
-    @ConfigItem(keyName = "collectionistMode", name = "Collectionist mode",
+    @ConfigItem(keyName = CompassConfigKeys.COLLECTIONIST, name = "Collectionist mode",
             description = "Give a little more weight to useful or near-complete collection-log opportunities")
     default boolean collectionistMode() { return false; }
 
@@ -60,4 +64,9 @@ public interface OsrsStrategistConfig extends Config
     @ConfigItem(keyName = "clueReminders", name = "Clue reminders",
             description = "Surface clues at good times without constantly nagging")
     default boolean clueReminders() { return true; }
+
+    @ConfigItem(keyName = CompassConfigKeys.FIRST_USE_COMPLETE,
+            name = "First use complete",
+            description = "Internal first-use hint state", hidden = true)
+    default boolean firstUseComplete() { return false; }
 }
