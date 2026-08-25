@@ -151,27 +151,27 @@ public class F2pBaselineMethodCatalog
     {
         rune("runecraft_f2p_air", 1, 1,
                 "Craft air runes",
-                "Use rune essence at the Air Altar with an air talisman or air tiara.",
+                "Air Altar southwest of Falador. Bank in Falador, run to the altar, craft, repeat.",
                 "Air talisman or air tiara");
         rune("runecraft_f2p_mind", 2, 4,
                 "Craft mind runes",
-                "Use rune essence at the Mind Altar with a mind talisman or mind tiara.",
+                "Mind Altar north of Falador between Ice Mountain and Goblin Village. Bank in Falador, run north, craft, repeat.",
                 "Mind talisman or mind tiara");
         rune("runecraft_f2p_water", 5, 8,
                 "Craft water runes",
-                "Use rune essence at the Water Altar with a water talisman or water tiara.",
+                "Water Altar in Lumbridge Swamp. Bank in Draynor Village, run southeast to the altar, craft, repeat.",
                 "Water talisman or water tiara");
         rune("runecraft_f2p_earth", 9, 13,
                 "Craft earth runes",
-                "Use rune essence at the Earth Altar with an earth talisman or earth tiara.",
+                "Earth Altar northeast of Varrock, south of the Lumber Yard. Bank at Varrock East, run to the altar, craft, repeat.",
                 "Earth talisman or earth tiara");
         rune("runecraft_f2p_fire", 14, 19,
                 "Craft fire runes",
-                "Use rune essence at the Fire Altar with a fire talisman or fire tiara.",
+                "Fire Altar north of Al Kharid, west of Emir's Arena. Bank in Al Kharid, run to the altar, craft, repeat.",
                 "Fire talisman or fire tiara");
         rune("runecraft_f2p_body", 20, 99,
                 "Craft body runes",
-                "Use rune essence at the Body Altar with a body talisman or body tiara.",
+                "Body Altar south of Edgeville Monastery. Bank in Edgeville, run to the altar, craft, repeat.",
                 "Body talisman or body tiara");
     }
 
@@ -242,7 +242,7 @@ public class F2pBaselineMethodCatalog
                 AttentionLevel.MODERATE,
                 10,
                 3,
-                java.util.Arrays.asList("Rune essence", altarRequirement),
+                java.util.Arrays.asList("Rune or pure essence", altarRequirement),
                 RecommendationConfidence.CHECK_NEEDED,
                 false,
                 false,
