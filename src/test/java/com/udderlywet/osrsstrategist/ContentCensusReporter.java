@@ -23,6 +23,7 @@ public final class ContentCensusReporter
                 .append(",\n    \"partiallyExecutable\": ").append(quests.getPartiallyExecutable())
                 .append(",\n    \"rawOnly\": ").append(quests.getRawOnly())
                 .append(",\n    \"unsupportedExpressions\": ").append(quests.getUnsupportedExpressions())
+                .append(",\n    \"explicitCheckExpressions\": ").append(quests.getExplicitCheckExpressions())
                 .append(",\n    \"parseFailures\": ").append(quests.getParseFailures())
                 .append(",\n    \"sourceMissingFields\": ").append(quests.getSourceMissingFields());
         if (!quests.getRawOnlyQuests().isEmpty())

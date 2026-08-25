@@ -52,7 +52,12 @@ public final class QuestItemEvidenceParser
             if (isStructuralOrOptional(line)) continue;
             ItemRequirementExpression expression = parseLine(line);
             if (expression == null)
-                unresolved.add(display(line));
+            {
+                ItemRequirementExpression semanticCheck =
+                        parseActionableSemanticCheck(line);
+                if (semanticCheck == null) unresolved.add(display(line));
+                else parsed.add(semanticCheck);
+            }
             else
                 parsed.add(expression);
         }
@@ -95,6 +100,41 @@ public final class QuestItemEvidenceParser
         if (body.toLowerCase(Locale.ROOT).contains(" or "))
             return parseExplicitAlternatives(body);
         return parseTerm(body);
+    }
+
+    /**
+     * Complex authoritative prose still has planning value even when it cannot
+     * safely become an exact ownership expression. Classify the uncertainty and
+     * give the player the concrete fact to verify instead of dropping the whole
+     * quest into an opaque raw-only bucket.
+     */
+    private static ItemRequirementExpression parseActionableSemanticCheck(
+            String line)
+    {
+        String evidence = display(line)
+                .replaceAll("^[,;:.\\-–—]+\\s*", "").trim();
+        if (evidence.isEmpty()) return null;
+        String lower = evidence.toLowerCase(Locale.ROOT);
+        if (isAcquisitionNarrative(lower)
+                || isRecommendationNarrative(lower))
+            return null;
+
+        String action;
+        if (lower.contains(" or ") || lower.contains("either ")
+                || lower.contains("unless") || lower.contains(" if "))
+            action = "Verify which quest requirement alternative applies, then prepare: ";
+        else if (lower.matches(".*(?:~\\d|\\d+\\s*[-–]\\s*\\d|at most|up to|several).*"))
+            action = "Verify the required quantity for your route, then prepare: ";
+        else if (lower.contains("obtainable during")
+                || lower.contains("obtained during"))
+            action = "Plan this quest-phase acquisition before starting: ";
+        else if (lower.contains("equipment") || lower.contains("weapon")
+                || lower.contains("armour") || lower.contains("food")
+                || lower.contains("combat") || lower.contains("spellbook"))
+            action = "Verify a mechanically valid quest setup for: ";
+        else
+            action = "Before starting, confirm and prepare this quest requirement: ";
+        return ItemRequirementExpression.checkNeeded(action + evidence);
     }
 
     private static ItemRequirementExpression parseParentheticalAcquisitionAlternative(
@@ -312,10 +352,36 @@ public final class QuestItemEvidenceParser
         String text = display(line).toLowerCase(Locale.ROOT);
         if (text.matches("(?:trip\\s+\\d+.*|farming|firemaking|fishing|smithing|herblore|obtainable during (?:the )?quest):"))
             return true;
-        if (text.startsWith("note:") || text.startsWith("offer ")) return true;
+        if (text.startsWith("note:") || text.startsWith("offer ")
+                || isAcquisitionNarrative(text)
+                || isRecommendationNarrative(text)) return true;
         return text.contains("(optional)")
                 || text.startsWith("optional:")
                 || text.startsWith("recommended:");
+    }
+
+    private static boolean isRecommendationNarrative(String text)
+    {
+        return text.startsWith("recommended to bring ")
+                || text.startsWith("bring additional ")
+                || text.startsWith("bringing ") && text.endsWith(" also works")
+                || text.startsWith("a good weapon ")
+                || text.startsWith("good armour ")
+                || text.startsWith("good food ");
+    }
+
+    private static boolean isAcquisitionNarrative(String text)
+    {
+        return text.startsWith("can be purchased from ")
+                || text.startsWith("can be bought from ")
+                || text.startsWith("buy from ")
+                || text.startsWith("free-to-play: buy ")
+                || text.startsWith("member: several ")
+                || text.startsWith("there is a ")
+                || text.startsWith("clay rocks are found ")
+                || text.startsWith("gordon's house has ")
+                || text.startsWith("all required items can be bought ")
+                || text.startsWith("alternatively, get it from ");
     }
 
     private static String stripSafeAnnotations(String line)
@@ -568,6 +634,9 @@ public final class QuestItemEvidenceParser
         return wiki.replaceAll("\\[\\[(?:[^]|]+\\|)?([^]]+)]]", "$1")
                 .replaceAll("\\{\\{[^}]+}}", " ")
                 .replaceAll("<[^>]+>", " ")
+                .replaceAll("(?i)link=[^|]+\\|alt=[^ ]+\\s*", "")
+                .replaceAll("(?i)File:[^ ]+\\.(?:png|gif|jpe?g)\\s*", "")
+                .replace("&nbsp;", " ")
                 .replaceFirst("^\\*+\\s*", "")
                 .replaceAll("'{2,}", "")
                 .replaceAll("\\s+", " ").trim();
@@ -594,6 +663,27 @@ public final class QuestItemEvidenceParser
         public boolean isFullyExecutable()
         {
             return unresolved.isEmpty();
+        }
+
+        /** True only when every parsed edge can be evaluated from account state. */
+        public boolean isDeterministicallyExecutable()
+        {
+            return unresolved.isEmpty() && countChecks(expression) == 0;
+        }
+
+        public int getCheckNeededExpressionCount()
+        {
+            return countChecks(expression);
+        }
+
+        private static int countChecks(ItemRequirementExpression value)
+        {
+            if (value == null) return 0;
+            int count = value.getKind()
+                    == ItemRequirementExpression.Kind.CHECK_NEEDED ? 1 : 0;
+            for (ItemRequirementExpression child : value.getChildren())
+                count += countChecks(child);
+            return count;
         }
     }
 }

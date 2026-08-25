@@ -18,6 +18,8 @@ public class StrategyEngine
     private final RecommendationActionabilityPolicy actionabilityPolicy;
     private final RecommendationIntelligenceService intelligenceService;
     private final CandidateSafetyPolicy candidateSafetyPolicy;
+    private final RecommendationDeduplicator deduplicator =
+            new RecommendationDeduplicator();
 
     @Inject
     public StrategyEngine(
@@ -345,7 +347,7 @@ public class StrategyEngine
 
         List<Recommendation> ready = new ArrayList<>();
         List<Recommendation> secondary = new ArrayList<>();
-        for (Recommendation recommendation : pool)
+        for (Recommendation recommendation : deduplicator.deduplicate(pool))
         {
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
             if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
@@ -356,7 +358,9 @@ public class StrategyEngine
         Comparator<Recommendation> byAccountValue = Comparator
                 .comparingDouble((Recommendation recommendation) ->
                         intelligenceService.rankScore(recommendation, context))
-                .reversed();
+                .reversed()
+                .thenComparing(Recommendation::getId,
+                        Comparator.nullsLast(String::compareTo));
         ready.sort(byAccountValue);
         secondary.sort(byAccountValue);
 

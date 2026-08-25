@@ -23,11 +23,14 @@ explicit source NONE remains NONE, missing fields remain SOURCE_MISSING, and
 unsupported page structure remains UNSUPPORTED_STRUCTURE.
 
 The executable quest-item census currently reports 211 identities, 195 with an
-item source field, 90 fully executable-or-verified-NONE, 121 partially
-executable, 0 raw-only, 331 unsupported lines, 0 parser failures, and 0
-source-missing fields. `./gradlew contentCensus` lists every unresolved line
-with quest, field, raw evidence, and reason. These figures deliberately prevent
-identity coverage from masquerading as executable planning coverage.
+item source field, 81 deterministically executable-or-verified-NONE, 130
+partially executable, 0 raw-only, 0 unsupported item lines, 352 explicit
+semantic checks, 0 parser failures, and 0 source-missing fields. Conditional,
+skill-dependent, variable-quantity, generic-loadout, and quest-phase evidence
+becomes a specific `CHECK_NEEDED` action rather than a fake exact item. The
+census counts those checks separately, so normalized evidence cannot masquerade
+as deterministic execution coverage. `./gradlew contentCensus` lists any future
+unresolved lines with quest, field, raw evidence, and reason.
 “Partial” may produce concrete
 preparation but cannot claim encounter readiness. “Conservative” records the
 identity and why it remains fail-closed. Conservative content cannot lead

@@ -24,13 +24,15 @@ public class QuestItemEvidenceParserTest
     }
 
     @Test
-    public void semanticParentheticalsRemainUnresolved()
+    public void semanticParentheticalsRemainExplicitChecks()
     {
         QuestItemEvidenceParser.Result result = parser.parse(
                 "*[[Rope]] (consumed during the quest)\n"
                         + "*[[Ghostspeak amulet]] ([[Morytania legs 2]] or better also work)");
-        assertNull(result.getExpression());
-        assertEquals(2, result.getUnresolved().size());
+        assertNotNull(result.getExpression());
+        assertEquals(0, result.getUnresolved().size());
+        assertEquals(2, result.getCheckNeededExpressionCount());
+        assertFalse(result.isDeterministicallyExecutable());
     }
 
     @Test
@@ -237,6 +239,23 @@ public class QuestItemEvidenceParserTest
             assertTrue(child.getKind() == ItemRequirementExpression.Kind.ITEM_CLASS
                     || child.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED);
     }
+
+    @Test
+    public void complexSemanticFamiliesBecomeSpecificChecksNotFakeItems()
+    {
+        QuestItemEvidenceParser.Result result = parser.parse(
+                "*20-50+ [[lockpick]]s\n"
+                        + "*[[Ghostspeak amulet]] or [[Morytania legs 2]] or better\n"
+                        + "*Equipment for two different combat styles\n"
+                        + "*[[Vyre noble clothing]] (obtainable for free during quest)\n"
+                        + "*Can be purchased from the nearby archery shop");
+
+        assertTrue(result.getUnresolved().toString(), result.isFullyExecutable());
+        assertFalse(result.isDeterministicallyExecutable());
+        assertEquals(3, result.getCheckNeededExpressionCount());
+        assertEquals(4, result.getParsedLineCount());
+        assertFalse(result.getExpression().label().contains("link="));
+    }
     private final QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
 
     @Test
@@ -248,12 +267,13 @@ public class QuestItemEvidenceParserTest
         assertNotNull(result.getExpression());
         assertEquals(ItemRequirementExpression.Kind.ALL_OF,
                 result.getExpression().getKind());
-        assertEquals(2, result.getExpression().getChildren().size());
+        assertEquals(3, result.getExpression().getChildren().size());
         assertEquals("Rope", result.getExpression().getChildren().get(0)
                 .getItemNames().get(0));
         assertEquals(5, result.getExpression().getChildren().get(1).getQuantity());
-        assertEquals(1, result.getUnresolved().size());
-        assertFalse(result.isFullyExecutable());
+        assertEquals(0, result.getUnresolved().size());
+        assertTrue(result.isFullyExecutable());
+        assertEquals(1, result.getCheckNeededExpressionCount());
     }
 
     @Test
@@ -296,8 +316,9 @@ public class QuestItemEvidenceParserTest
                 "* A [[weapon]]\n* Any [[axe]]\n* [[Cat]] or [[kitten]]\n"
                         + "* [[Ghostspeak amulet]] ([[Morytania legs 2]] or better also work)");
         assertNotNull(result.getExpression());
-        assertEquals(2, result.getParsedLineCount());
-        assertEquals(2, result.getUnresolved().size());
+        assertEquals(4, result.getParsedLineCount());
+        assertEquals(0, result.getUnresolved().size());
+        assertEquals(2, result.getCheckNeededExpressionCount());
     }
 
     @Test

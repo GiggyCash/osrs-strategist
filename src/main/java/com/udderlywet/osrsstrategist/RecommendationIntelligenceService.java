@@ -41,6 +41,8 @@ public class RecommendationIntelligenceService
         score += readinessValue(recommendation, guidance);
         score += goalValue(recommendation, context, id, title);
         score += sessionValue(recommendation, context.getSessionIntent());
+        score += globalIntentValue(recommendation, context, id, reason);
+        score += strategyModeValue(recommendation, context, id, reason);
         score += accountModeValue(recommendation, context, id, title, reason);
         score += safetyValue(context, id, title, reason);
         score += resourceValue(guidance, context.getAccountMode());
@@ -157,6 +159,76 @@ public class RecommendationIntelligenceService
             case PICK_FOR_ME:
             default:
                 return 0.0;
+        }
+    }
+
+    /** Session intent also prices non-training work in the shared final queue. */
+    private static double globalIntentValue(Recommendation recommendation,
+            StrategyContext context, String id, String reason)
+    {
+        if (recommendation.getTrainingPlan() != null) return 0.0;
+        SessionIntent intent = context.getSessionIntent();
+        boolean longActivity = id.startsWith("quest:") || id.startsWith("pvm:")
+                || id.startsWith("minigame:") || id.startsWith("diary:");
+        boolean readyRecurring = id.startsWith("opportunity:")
+                || id.startsWith("recurring:");
+        switch (intent)
+        {
+            case QUICK_20_MIN:
+                if (readyRecurring) return 9.0;
+                return longActivity ? -8.0 : 2.0;
+            case ONE_HOUR:
+                return longActivity ? 3.0 : readyRecurring ? 2.0 : 0.0;
+            case LONG_SESSION:
+                return longActivity ? 7.0 : 0.0;
+            case AFK:
+                if (readyRecurring) return 5.0;
+                if (id.startsWith("pvm:") || id.startsWith("combat-achievement:"))
+                    return -8.0;
+                return containsAny(reason, "low attention", "afk", "relaxed")
+                        ? 5.0 : 0.0;
+            case PICK_FOR_ME:
+            default:
+                return 0.0;
+        }
+    }
+
+    /** Strategy mode prices every recommendation family, not method names alone. */
+    private static double strategyModeValue(Recommendation recommendation,
+            StrategyContext context, String id, String reason)
+    {
+        StrategyMode mode = context.getStrategyMode();
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        TrainingMethod method = plan == null ? null : plan.getMethod();
+        boolean unlock = id.startsWith("quest:") || id.startsWith("diary:")
+                || id.startsWith("transport:") || id.startsWith("detour:");
+        boolean encounter = id.startsWith("pvm:")
+                || id.startsWith("combat-achievement:");
+        boolean shared = containsAny(reason, "also advances", "multiple goals",
+                "shared prerequisite", "cross-skill", "future time");
+        switch (mode)
+        {
+            case EFFICIENT:
+                if (unlock || shared) return 6.0;
+                if (encounter && recommendation.getConfidence()
+                        == RecommendationConfidence.VERIFIED) return 3.0;
+                return method != null
+                        && method.getAttentionLevel() == AttentionLevel.ACTIVE
+                        ? 3.0 : 0.0;
+            case RELAXED:
+                if (encounter) return -5.0;
+                if (id.startsWith("opportunity:") || id.startsWith("recurring:"))
+                    return 4.0;
+                if (method != null)
+                {
+                    if (method.getAttentionLevel() == AttentionLevel.AFK) return 7.0;
+                    if (method.getAttentionLevel() == AttentionLevel.LOW) return 4.0;
+                    if (method.getAttentionLevel() == AttentionLevel.ACTIVE) return -5.0;
+                }
+                return containsAny(reason, "sustainable", "low fatigue") ? 4.0 : 0.0;
+            case BALANCED:
+            default:
+                return shared || containsAny(reason, "sustainable") ? 3.0 : 0.0;
         }
     }
 

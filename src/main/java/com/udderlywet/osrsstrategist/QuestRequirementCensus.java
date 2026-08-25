@@ -36,6 +36,7 @@ public final class QuestRequirementCensus
     private int partiallyExecutable;
     private int rawOnly;
     private int unsupportedExpressions;
+    private int explicitCheckExpressions;
     private int parseFailures;
     private int sourceMissingFields;
     private final List<Unresolved> unresolved = new ArrayList<>();
@@ -95,9 +96,10 @@ public final class QuestRequirementCensus
             // A VALUE field may contain only explicitly optional preparation.
             // Once the parser proves every line non-mandatory, that is the same
             // executable outcome as source NONE: there is no ownership gate.
-            if (result.isFullyExecutable())
+            explicitCheckExpressions += result.getCheckNeededExpressionCount();
+            if (result.isDeterministicallyExecutable())
                 fullyExecutable++;
-            else if (result.getExpression() != null)
+            else if (result.getExpression() != null || result.isFullyExecutable())
                 partiallyExecutable++;
             else
             {
@@ -143,6 +145,7 @@ public final class QuestRequirementCensus
     public int getPartiallyExecutable() { return partiallyExecutable; }
     public int getRawOnly() { return rawOnly; }
     public int getUnsupportedExpressions() { return unsupportedExpressions; }
+    public int getExplicitCheckExpressions() { return explicitCheckExpressions; }
     public int getParseFailures() { return parseFailures; }
     public int getSourceMissingFields() { return sourceMissingFields; }
     public List<Unresolved> getUnresolved()
