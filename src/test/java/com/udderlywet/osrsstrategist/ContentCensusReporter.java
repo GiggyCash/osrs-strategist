@@ -1,5 +1,8 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Map;
+import net.runelite.api.Skill;
+
 /** Development-time machine-readable census entry point. */
 public final class ContentCensusReporter
 {
@@ -8,6 +11,8 @@ public final class ContentCensusReporter
     public static void main(String[] args)
     {
         QuestRequirementCensus quests = new QuestRequirementCensus();
+        TrainingMethodCensus training = new TrainingMethodCensus();
+        StashUnitCensus stash = new StashUnitCensus();
         StringBuilder output = new StringBuilder();
         boolean includeUnresolved = args.length == 0
                 || !"--summary".equals(args[0]);
@@ -33,7 +38,11 @@ public final class ContentCensusReporter
         }
         if (!includeUnresolved)
         {
-            output.append("\n  }\n}");
+            output.append("\n  },");
+            appendTraining(output, training);
+            output.append(',');
+            appendStash(output, stash);
+            output.append("\n}");
             System.out.println(output);
             return;
         }
@@ -50,8 +59,68 @@ public final class ContentCensusReporter
                     .append("\"}");
         }
         if (!first) output.append('\n');
-        output.append("    ]\n  }\n}");
+        output.append("    ]\n  },");
+        appendTraining(output, training);
+        output.append(',');
+        appendStash(output, stash);
+        output.append("\n}");
         System.out.println(output);
+    }
+
+    private static void appendStash(StringBuilder output,
+            StashUnitCensus stash)
+    {
+        output.append("\n  \"stashUnits\": {")
+                .append("\n    \"total\": ").append(stash.getTotal())
+                .append(",\n    \"missingEvidence\": ")
+                .append(stash.getMissingEvidence())
+                .append(",\n    \"wilderness\": ")
+                .append(stash.getWildernessUnits())
+                .append(",\n    \"byTier\": {");
+        boolean first = true;
+        for (Map.Entry<ClueTier, Integer> entry : stash.getByTier().entrySet())
+        {
+            if (!first) output.append(',');
+            first = false;
+            output.append("\n      \"")
+                    .append(entry.getKey().name().toLowerCase())
+                    .append("\": ").append(entry.getValue());
+        }
+        if (!first) output.append('\n');
+        output.append("    }\n  }");
+    }
+
+    private static void appendTraining(StringBuilder output,
+            TrainingMethodCensus training)
+    {
+        output.append("\n  \"trainingMethods\": {")
+                .append("\n    \"skills\": ").append(training.getSkillCount())
+                .append(",\n    \"curatedMethods\": ")
+                .append(training.getCuratedMethodCount())
+                .append(",\n    \"runeLiteActions\": ")
+                .append(training.getRuneLiteActionCount())
+                .append(",\n    \"skillsWithRuneLiteActions\": ")
+                .append(training.getSkillsWithRuneLiteActions())
+                .append(",\n    \"duplicateIds\": ")
+                .append(training.getDuplicateIds())
+                .append(",\n    \"invalidMethods\": ")
+                .append(training.getInvalidMethods().size())
+                .append(",\n    \"perSkill\": {");
+        boolean first = true;
+        for (Map.Entry<Skill, TrainingMethodCensus.SkillCoverage> entry
+                : training.getBySkill().entrySet())
+        {
+            if (!first) output.append(',');
+            first = false;
+            TrainingMethodCensus.SkillCoverage value = entry.getValue();
+            output.append("\n      \"").append(entry.getKey().getName())
+                    .append("\": {\"curated\":")
+                    .append(value.getCuratedMethods())
+                    .append(",\"runeLiteActions\":")
+                    .append(value.getRuneLiteActions()).append('}');
+        }
+        if (!first) output.append('\n');
+        output.append("    }\n  }");
     }
 
     private static String json(String value)

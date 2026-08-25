@@ -63,6 +63,8 @@ public class RuneLiteSkillActionCatalog
         for (SkillAction action : constants)
         {
             Enum<?> enumValue = (Enum<?>) action;
+            String id = "runelite:" + skill.name().toLowerCase(Locale.ROOT)
+                    + ":" + enumValue.name().toLowerCase(Locale.ROOT);
             String name = itemManager == null ? pretty(enumValue.name())
                     : action.getName(itemManager);
             MembershipStatus membership = itemManager == null
@@ -71,10 +73,9 @@ public class RuneLiteSkillActionCatalog
                             ? MembershipStatus.P2P : MembershipStatus.F2P;
             actions.add(new RuneLiteSkillActionDefinition(
                     skill,
-                    "runelite:" + skill.name().toLowerCase(Locale.ROOT)
-                            + ":" + enumValue.name().toLowerCase(Locale.ROOT),
+                    id,
                     name,
-                    action.getLevel(),
+                    CurrentLiveSkillActionOverrides.level(id, action.getLevel()),
                     action.getXp(),
                     null,
                     membership,

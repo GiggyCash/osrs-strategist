@@ -20,6 +20,10 @@ import net.runelite.api.Skill;
 @Singleton
 public class ExpandedTrainingMethodCatalog
 {
+    public static final String PROVENANCE =
+            "RuneLite 1.12.35 skill calculators plus maintained current-live strategy audit";
+    public static final String AUDITED_THROUGH = "2026-08-25";
+
     private final Map<Skill, List<CuratedTrainingMethod>> methods =
             new EnumMap<>(Skill.class);
 
@@ -123,6 +127,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.MODERATE, 20, 7,
                 "Blessed bone shard route and supplies");
+        add(Skill.PRAYER, "prayer_ectofuntus", 1, 99,
+                "Ectofuntus", "Grind bones and offer bonemeal with slime at the Ectofuntus when conserving bones matters more than speed.",
+                TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 7,
+                "Ghosts Ahoy or verified Port Phasmatys route", "Bone, pot and bucket-of-slime supply");
+        add(Skill.PRAYER, "prayer_bonecrusher_passive", 1, 99,
+                "Bonecrusher during combat", "Carry a charged bonecrusher during suitable combat or Slayer when passive Prayer XP and inventory saving outweigh the charge cost.",
+                TrainingIntensity.RELAXED, MethodCostTier.LOW, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 4,
+                "Morytania hard diary reward", "Bonecrusher charges", "Suitable combat activity");
         add(Skill.PRAYER, "prayer_chaos_altar", 1, 99,
                 "Chaos altar", "Offer bones at the Wilderness Chaos Altar only when Wilderness risk is explicitly enabled and accepted.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.MODERATE, RiskLevel.HIGH,
@@ -158,6 +172,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.BALANCED, MethodCostTier.HIGH, RiskLevel.MEDIUM,
                 false, true, true, true, false, AttentionLevel.MODERATE, 30, 6,
                 "Suitable Slayer task");
+        add(Skill.MAGIC, "magic_lunar_utility", 65, 99,
+                "Lunar utility spells", "Use an economically sensible Lunar utility spell such as Bake Pie, String Jewellery, or Plank Make when its output advances another account goal.",
+                TrainingIntensity.RELAXED, MethodCostTier.MODERATE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 5,
+                "Lunar Diplomacy and Lunar spellbook", "Runes and matching production inputs");
 
         add(Skill.HITPOINTS, "hitpoints_combat", 1, 99,
                 "Train through combat", "Let Hitpoints rise naturally while training combat skills or completing PvM progression.",
@@ -209,6 +228,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.EFFICIENT, MethodCostTier.LOW, RiskLevel.MEDIUM,
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 6,
                 "Blast Mine access and dynamite");
+        add(Skill.MINING, "mining_sandstone", 35, 99,
+                "Sandstone", "Mine sandstone in the Kharidian Desert when active Mining XP and future sandstone/grinder resources are both useful.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.FREE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "Desert heat protection", "Quarry transport and inventory plan");
+        add(Skill.MINING, "mining_amethyst", 92, 99,
+                "Amethyst", "Mine amethyst for low-attention Mining and valuable high-level ammunition materials.",
+                TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.AFK, 30, 4,
+                "Mining Guild amethyst area access");
 
         add(Skill.FISHING, "fishing_f2p_fly", 20, 99,
                 "Fly fishing", "Fly-fish trout and salmon for a dependable F2P training route.",
@@ -249,6 +278,26 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
                 false, true, false, false, true, AttentionLevel.LOW, 20, 8,
                 "Wilderness resource area access and risk accepted");
+        add(Skill.FISHING, "fishing_aerial", 43, 99,
+                "Aerial fishing", "Use aerial fishing when combined Fishing/Hunter XP and Molch pearl rewards justify the high attention.",
+                TrainingIntensity.SWEATY, MethodCostTier.LOW, RiskLevel.NONE,
+                false, true, false, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "35 Hunter", "Lake Molch access", "Cormorant glove setup");
+        add(Skill.FISHING, "fishing_drift_net", 47, 99,
+                "Drift net fishing", "Run drift nets for strong combined Fishing and Hunter progress when the net cost and underwater setup are worthwhile.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.LOW,
+                false, true, false, true, false, AttentionLevel.ACTIVE, 20, 7,
+                "44 Hunter", "Fossil Island underwater access", "Drift net supply");
+        add(Skill.FISHING, "fishing_infernal_eels", 80, 99,
+                "Infernal eels", "Fish and process infernal eels for a relaxed, bank-light route with Tokkul and onyx-bolt-tip rewards.",
+                TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.AFK, 30, 6,
+                "Mor Ul Rek access", "Oily fishing rod and bait", "Hammer");
+        add(Skill.FISHING, "fishing_sacred_eels", 87, 99,
+                "Sacred eels", "Fish and process sacred eels when Zulrah scales and low-attention profit are strategically useful.",
+                TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.AFK, 30, 6,
+                "Zul-Andra access", "Fishing rod, bait and knife");
 
         add(Skill.WOODCUTTING, "woodcutting_f2p_willows", 30, 99,
                 "F2P willows", "Cut willows at a convenient F2P location for straightforward Woodcutting experience.",
@@ -309,6 +358,36 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 25, 5,
                 "Fossil Island herbiboar access");
+        add(Skill.HUNTER, "hunter_bird_traps", 1, 28,
+                "Bird snare progression", "Catch the best reachable bird supported by the current Hunter level for conventional early training.",
+                TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
+                "Bird snare and reachable habitat");
+        add(Skill.HUNTER, "hunter_falconry", 43, 99,
+                "Falconry kebbits", "Catch the best suitable falconry kebbit when active XP and kebbit rewards fit the account.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.VERY_LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 4,
+                "Piscatoris falconry access and falcon rental coins");
+        add(Skill.HUNTER, "hunter_maniacal_monkeys", 60, 99,
+                "Maniacal monkeys", "Trap maniacal monkeys for low-attention Hunter when Kruk's Dungeon access and banana supply are ready.",
+                TrainingIntensity.AFK, MethodCostTier.LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.AFK, 25, 7,
+                "Monkey Madness II Kruk's Dungeon access", "Banana supply");
+        add(Skill.HUNTER, "hunter_sunlight_antelopes", 72, 90,
+                "Sunlight antelopes", "Hunt sunlight antelopes when their antlers and meat are useful alongside active Hunter XP.",
+                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "Sunlight antelope area access", "Pitfall tools and logs");
+        add(Skill.HUNTER, "hunter_black_chins", 73, 99,
+                "Black chinchompas", "Hunt black chinchompas only when the player explicitly accepts Wilderness risk and has an escape plan.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
+                false, true, false, false, true, AttentionLevel.ACTIVE, 15, 6,
+                "Wilderness risk accepted", "Box traps and escape plan");
+        add(Skill.HUNTER, "hunter_moonlight_antelopes", 91, 99,
+                "Moonlight antelopes", "Hunt moonlight antelopes for high-level active Hunter and their useful antler/meat rewards.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "Moonlight antelope area access", "Pitfall tools and logs");
     }
 
     private void production()
@@ -332,6 +411,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.SWEATY, MethodCostTier.MODERATE, RiskLevel.NONE,
                 false, true, false, true, false, AttentionLevel.ACTIVE, 20, 4,
                 "Raw karambwan supply and cooking access");
+        add(Skill.COOKING, "cooking_gnome_restaurant", 29, 99,
+                "Gnome Restaurant deliveries", "Prepare and deliver gnome food when varied Cooking, delivery rewards, and collection goals matter more than raw XP.",
+                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 6,
+                "Gnome Restaurant access", "Gnome ingredient and transport setup");
 
         add(Skill.SMITHING, "smithing_f2p_platebodies", 48, 99,
                 "F2P platebodies", "Smith the best practical platebody tier for solid F2P Smithing experience and alchable products.",
@@ -358,6 +442,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.AFK, 20, 3,
                 "Dart Smithing unlock and bar supply");
+        add(Skill.SMITHING, "smithing_blast_furnace_bars", 15, 99,
+                "Blast Furnace bars", "Smelt the most strategically useful unlocked bar at Blast Furnace when coal savings, output value, or iron supply justify the setup.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.MODERATE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 7,
+                "Blast Furnace access and operating coins", "Ore, coal and transport setup");
 
         add(Skill.CRAFTING, "crafting_f2p_jewellery", 5, 99,
                 "F2P jewellery", "Craft gold or gem jewellery appropriate to the available F2P materials and Magic plans.",
@@ -384,6 +473,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 3,
                 "Dragonhide and thread supply");
+        add(Skill.CRAFTING, "crafting_charter_glass", 1, 99,
+                "Charter-ship glass", "Buy or gather seaweed and sand near a charter route, make molten glass, and blow the best useful item when a bank-light loop suits the account.",
+                TrainingIntensity.BALANCED, MethodCostTier.LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 6,
+                "Reachable charter ship stock", "Glassblowing pipe and glassmaking runes or furnace");
 
         add(Skill.FLETCHING, "fletching_arrow_shafts", 1, 20,
                 "Arrow shafts", "Fletch logs into arrow shafts for cheap early Fletching and future ammunition supplies.",
@@ -426,6 +520,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.MODERATE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 2,
                 "Log supply");
+        add(Skill.FIREMAKING, "firemaking_shades", 5, 99,
+                "Shade pyres", "Burn the best safe shade remains and pyre logs available when Prayer XP, keys, and Shade reward progression are useful.",
+                TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 6,
+                "Shades of Mort'ton access", "Shade remains, pyre logs and tinderbox");
 
         add(Skill.RUNECRAFT, "runecraft_f2p_body", 20, 99,
                 "F2P body runes", "Craft body runes or the best unlocked F2P rune using bank/altar routes that fit the account.",
@@ -457,6 +556,11 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 30, 5,
                 "Unlocked soul-rune route");
+        add(Skill.RUNECRAFT, "runecraft_abyss", 1, 99,
+                "Abyss altar runs", "Use the Abyss for the most useful unlocked altar only when the short Wilderness crossing and required protection are accepted.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
+                false, true, false, false, true, AttentionLevel.ACTIVE, 20, 6,
+                "Enter the Abyss", "Essence, pouches and altar access", "Wilderness risk accepted");
 
         add(Skill.HERBLORE, "herblore_low_potions", 3, 37,
                 "Early potions", "Clean herbs and make the best useful low-level potion supported by the account's herb and secondary supply.",
@@ -517,6 +621,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
                 false, true, false, false, true, AttentionLevel.ACTIVE, 20, 7,
                 "Wilderness risk accepted");
+        add(Skill.AGILITY, "agility_colossal_wyrm", 50, 99,
+                "Colossal Wyrm courses", "Run the basic or advanced Colossal Wyrm course appropriate to the current level when termite rewards are useful.",
+                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Colossal Wyrm course access");
+        add(Skill.AGILITY, "agility_brimhaven_arena", 1, 99,
+                "Brimhaven Agility Arena", "Tag the active arena pillars and spend tickets when the varied obstacle loop and reward goals fit the session.",
+                TrainingIntensity.BALANCED, MethodCostTier.LOW, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "Brimhaven arena access and entrance coins");
 
         add(Skill.THIEVING, "thieving_fruit_stalls", 25, 44,
                 "Fruit stalls", "Steal from fruit stalls for simple early Thieving and useful fruit supplies.",
@@ -543,6 +657,31 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 5,
                 "Varlamore Thieving access");
+        add(Skill.THIEVING, "thieving_artefacts", 49, 99,
+                "Stealing artefacts", "Steal and deliver artefacts in Port Piscarilius for active Thieving with useful multiskill movement windows.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 6,
+                "Port Piscarilius artefact access", "Guard route and stamina plan");
+        add(Skill.THIEVING, "thieving_stone_chests", 64, 99,
+                "Stone chests", "Loot stone chests when medium clues, gems, and lower-intensity Thieving rewards are strategically useful.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 5,
+                "Lizardman Temple chest access", "Food or healing plan");
+        add(Skill.THIEVING, "thieving_vyres", 82, 99,
+                "Vyres", "Pickpocket vyres when blood shards, profit, and a sustainable bank/altar route outweigh faster XP methods.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 6,
+                "Sins of the Father and Darkmeyer access", "Vyre outfit and healing setup");
+        add(Skill.THIEVING, "thieving_elves", 85, 99,
+                "Prifddinas elves", "Pickpocket an appropriate elf clan when crystal shards, teleport seeds, and profit are the priority.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.LOW, 20, 6,
+                "Song of the Elves and Prifddinas access", "Healing and dodgy-necklace setup");
+        add(Skill.THIEVING, "thieving_rogues_chest", 84, 99,
+                "Rogues' Castle chests", "Loot Rogues' Castle chests only when Wilderness risk is explicitly accepted and the account has an escape/death-loss plan.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
+                false, true, false, false, true, AttentionLevel.ACTIVE, 15, 7,
+                "Wilderness risk accepted", "Deep-Wilderness escape and loss plan");
 
         add(Skill.SLAYER, "slayer_safe_assignments", 1, 99,
                 "Conservative Slayer", "Use the best safe unlocked Slayer master and favor low-risk assignments with a reliable escape/supply plan.",
@@ -569,6 +708,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
                 false, true, true, false, false, AttentionLevel.ACTIVE, 30, 10,
                 "Boss task and PvM readiness");
+        add(Skill.SLAYER, "slayer_point_boosting", 1, 99,
+                "Slayer point boosting", "Use short low-tier tasks before each bonus task only when the points unlock a worthwhile block, extension, or item sooner than normal Slayer.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.LOW, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.MODERATE, 30, 6,
+                "Two practical Slayer masters and live task streak", "Point-spend goal");
+        add(Skill.SLAYER, "slayer_wilderness", 1, 99,
+                "Wilderness Slayer", "Use Wilderness Slayer only when explicitly enabled, with task-specific risk, death-loss, and escape planning.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.HIGH,
+                false, true, false, false, true, AttentionLevel.ACTIVE, 30, 8,
+                "Wilderness risk accepted", "Krystilia access and disposable setup");
 
         add(Skill.FARMING, "farming_allotments_expanded", 1, 99,
                 "Allotment runs", "Plant the best useful available allotments when seeds, tools, compost, and reachable patches are confirmed.",
@@ -600,6 +749,21 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 5, 3,
                 "Farming Guild contract access");
+        add(Skill.FARMING, "farming_seaweed", 23, 99,
+                "Giant seaweed runs", "Plant and harvest giant seaweed when Crafting glass supply and a short recurring run fit the account.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 8, 6,
+                "Fossil Island underwater seaweed patches", "Seaweed spores, compost and diving setup");
+        add(Skill.FARMING, "farming_hardwood", 35, 99,
+                "Hardwood tree runs", "Maintain teak, mahogany, and other unlocked hardwood patches for infrequent high-value Farming cycles.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 8, 7,
+                "Reachable hardwood patches", "Saplings, compost and payment plan");
+        add(Skill.FARMING, "farming_hespori", 65, 99,
+                "Hespori", "Plant and defeat Hespori when ready for Farming XP, anima seeds, and bottomless-bucket progression.",
+                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.MEDIUM,
+                false, true, true, true, false, AttentionLevel.MODERATE, 10, 6,
+                "Farming Guild Hespori cave access", "Hespori seed and combat readiness");
 
         add(Skill.CONSTRUCTION, "construction_oak_larders", 33, 73,
                 "Oak larders", "Build and remove oak larders for fast conventional Construction experience.",
@@ -621,6 +785,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.MODERATE, 20, 6,
                 "Mahogany Homes contract and plank supply");
+        add(Skill.CONSTRUCTION, "construction_mythical_capes", 47, 99,
+                "Mounted mythical capes", "Build and remove mounted mythical capes when teak-plank efficiency matters and Dragon Slayer II is complete.",
+                TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 6,
+                "Dragon Slayer II", "Quest hall, teak planks and mythical cape");
+        add(Skill.CONSTRUCTION, "construction_teak_benches", 66, 99,
+                "Teak garden benches", "Build and remove teak garden benches for fast active Construction when the plank cost and POH setup are justified.",
+                TrainingIntensity.SWEATY, MethodCostTier.HIGH, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
+                "Superior garden and teak plank supply");
     }
 
     private void sailing()

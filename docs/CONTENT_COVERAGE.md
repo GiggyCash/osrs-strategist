@@ -30,6 +30,10 @@ This file describes real production coverage, not just type/class availability.
 ## Skills and training methods
 
 All current `Skill.values()` have curated Compass methods, including Sailing.
+The development census currently records 165 distinct strategic methods across
+24 skills plus 1,528 RuneLite calculator actions used only as execution
+evidence. Current-live level overrides are applied explicitly when the pinned
+RuneLite calculator lags a verified game update.
 
 Methods carry:
 - minimum/maximum levels
@@ -128,7 +132,7 @@ BIS entries explicitly remain target/room/phase/setup dependent. Before an actua
 
 Clue recommendations are tier-aware, become gradually more important with age, receive Collectionist weighting, and carry explicit UIM and Hardcore safety guidance.
 
-Exact every-step equipment/STASH/coordinate solution data is not yet duplicated from RuneLite's clue system. Current clue readiness remains `Check Needed` until the active step's requirements are verified.
+All 119 current RuneLite STASH identities are represented in the offline catalogue with tier, world coordinates, current clue/equipment evidence, Construction level, exact build materials, Wilderness classification, and fail-closed built/filled state. The development-time generator reads the pinned RuneLite sources without adding runtime networking, reflection, or process execution. Current clue readiness remains `Check Needed` until the active clue step and exact STASH built/filled state are observed; RuneLite Clue Helper still owns execution.
 
 ## Collection Log and progression objectives
 
@@ -174,7 +178,7 @@ The architecture is no longer the main blocker. The remaining work is primarily 
 - all 492 individual diary task definitions and readiness checks
 - every individual Combat Achievement task and mechanic
 - full per-boss phase/gear/DPS/special-attack/consumable modeling
-- every clue step and STASH requirement integrated directly into Compass state
+- direct observation of the active clue step and per-unit STASH built/filled state (the full static 119-unit catalogue and dependency planner are present)
 - every Collection Log item/source/drop relationship
 - exhaustive item-source/shop/drop-rate database
 - live Main price/GE economics
