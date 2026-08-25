@@ -31,6 +31,9 @@ public class UniversalSkillActionGuidanceService
             "firemaking_campfires",
             "herblore_low_potions"));
 
+    private static final String F2P_ANVIL_ROUTE =
+            "Varrock West Bank: keep a hammer, withdraw bars, use the anvils just south of the bank, smith, bank, repeat.";
+
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final UniversalActionRecipeResolver recipeResolver;
     private final SkillingXpModifierService xpModifierService;
@@ -121,6 +124,12 @@ public class UniversalSkillActionGuidanceService
         }
 
         String location = plan.getMethod().getInstructions();
+        if (isAnvilSmithingMethod(plan.getMethod())
+                && data.getAccount().getMembershipStatus() == MembershipStatus.F2P)
+        {
+            location = F2P_ANVIL_ROUTE;
+        }
+
         StringBuilder note = new StringBuilder();
         note.append("Action XP comes from RuneLite's maintained skill-calculator data. ")
                 .append("This fallback appears only after membership and recipe checks pass.");
@@ -162,6 +171,7 @@ public class UniversalSkillActionGuidanceService
         Set<String> routeTokens = routeTokens(method);
         ObservedItemIndex observed = new ObservedItemIndex(data, useGroupStorage);
         boolean genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
+        boolean anvilSmithing = isAnvilSmithingMethod(method);
         Choice best = null;
 
         for (RuneLiteSkillActionDefinition action : actions)
@@ -169,7 +179,8 @@ public class UniversalSkillActionGuidanceService
             if (action == null || action.getXp() <= 0
                     || action.getLevel() > currentLevel
                     || !membershipAllowed(action, membership)
-                    || isOneTimeOrRewardAction(action))
+                    || isOneTimeOrRewardAction(action)
+                    || (anvilSmithing && isBarSmeltingAction(action)))
             {
                 continue;
             }
@@ -251,6 +262,23 @@ public class UniversalSkillActionGuidanceService
                 || skill == Skill.MAGIC
                 || skill == Skill.PRAYER
                 || skill == Skill.RUNECRAFT;
+    }
+
+    private static boolean isAnvilSmithingMethod(TrainingMethod method)
+    {
+        if (method == null || method.getSkill() != Skill.SMITHING) return false;
+        String name = normalize(method.getName());
+        String instructions = normalize(method.getInstructions());
+        return name.startsWith("smith ")
+                || name.startsWith("smithing ")
+                || instructions.contains("anvil");
+    }
+
+    private static boolean isBarSmeltingAction(RuneLiteSkillActionDefinition action)
+    {
+        return action != null
+                && action.getSkill() == Skill.SMITHING
+                && normalize(action.getName()).endsWith(" bar");
     }
 
     private static boolean membershipAllowed(
@@ -341,6 +369,12 @@ public class UniversalSkillActionGuidanceService
             return name + " mining action" + (count == 1 ? "" : "s");
         if (skill == Skill.COOKING)
             return name + " cook" + (count == 1 ? "" : "s");
+        if (skill == Skill.SMITHING)
+        {
+            if (normalize(name).endsWith(" bar"))
+                return name + " smelt" + (count == 1 ? "" : "s");
+            return name + " smithing action" + (count == 1 ? "" : "s");
+        }
 
         String singular;
         switch (skill)
@@ -353,7 +387,6 @@ public class UniversalSkillActionGuidanceService
             case RUNECRAFT: singular = "essence action"; break;
             case CRAFTING: singular = "craft"; break;
             case FLETCHING: singular = "fletch"; break;
-            case SMITHING: singular = "smith/smelt action"; break;
             case HERBLORE: singular = "potion action"; break;
             case CONSTRUCTION: singular = "build"; break;
             case FARMING: singular = "Farming action"; break;
