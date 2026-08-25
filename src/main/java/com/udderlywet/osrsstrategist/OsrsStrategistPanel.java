@@ -346,11 +346,15 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(recovery);
 
         content.add(Box.createVerticalStrut(12));
-        supportButton.setForeground(StrategistTheme.MUTED_TEXT);
-        supportButton.setBorderPainted(false);
-        supportButton.setContentAreaFilled(false);
+        Dimension supportSize = new Dimension(CONTENT_WIDTH, 34);
+        supportButton.setPreferredSize(supportSize);
+        supportButton.setMinimumSize(supportSize);
+        supportButton.setMaximumSize(supportSize);
+        supportButton.setForeground(StrategistTheme.TEXT);
+        supportButton.setBorderPainted(true);
+        supportButton.setContentAreaFilled(true);
         supportButton.setVisible(SupportLinks.isConfigured(supportUrl));
-        supportButton.setAlignmentX(CENTER_ALIGNMENT);
+        supportButton.setAlignmentX(LEFT_ALIGNMENT);
         supportButton.addActionListener(event ->
                 SupportLinks.openIfConfigured(supportUrl, supportBrowser));
         content.add(supportButton);
