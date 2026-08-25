@@ -114,6 +114,36 @@ public class UniversalDependencyPlannerTest
     }
 
     @Test
+    public void everyGoalResolutionIsDeterministicDeduplicatedAndBounded()
+    {
+        UniversalDependencyPlanner planner = new UniversalDependencyPlanner();
+        StrategyContext context = context(MembershipStatus.P2P, 20);
+        for (GoalType goal : GoalType.values())
+        {
+            String expected = signature(planner.resolveGoal(goal, context));
+            for (int run = 0; run < 10; run++)
+            {
+                UniversalDependencyResolution result = planner.resolveGoal(
+                        goal, context);
+                assertEquals(goal + " changed graph order on run " + run,
+                        expected, signature(result));
+                assertTrue(goal + " exceeded node bound",
+                        result.getNodes().size() <= 160);
+                assertTrue(goal + " exceeded depth bound",
+                        result.getMaxDepth() <= 12);
+                Set<String> ids = new HashSet<>();
+                for (UniversalDependencyNode node : result.getNodes())
+                {
+                    assertTrue(goal + " duplicated " + node.getId(),
+                            ids.add(node.getId()));
+                    assertFalse(goal + " produced a blank action",
+                            node.getAction().trim().isEmpty());
+                }
+            }
+        }
+    }
+
+    @Test
     public void deterministicResourceRecipesPreserveYieldAndPartialOwnership()
     {
         StrategyContext context = context(MembershipStatus.P2P, 99,
@@ -163,6 +193,18 @@ public class UniversalDependencyPlannerTest
             UniversalDependencyResolution resolution)
     {
         return new NamedResolution(name, resolution);
+    }
+
+    private static String signature(UniversalDependencyResolution resolution)
+    {
+        StringBuilder value = new StringBuilder();
+        for (UniversalDependencyNode node : resolution.getNodes())
+            value.append(node.getId()).append('|').append(node.getKind())
+                    .append('|').append(node.getDepth()).append('|')
+                    .append(node.getQuantity()).append('|')
+                    .append(node.getConfidence()).append('|')
+                    .append(node.getParentIds()).append('\n');
+        return value.toString();
     }
 
     private static void assertKinds(UniversalDependencyResolution resolution,

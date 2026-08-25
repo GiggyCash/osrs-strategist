@@ -108,7 +108,7 @@ check the selected task before following its first known prerequisite.
 
 ## Transportation
 
-The structured catalog covers 26 high-value reusable systems across fairy
+The structured catalog covers 41 high-value reusable systems across fairy
 rings, spirit trees, gnome transport, minecarts, boats/charters, item and
 spellbook teleports, jewellery, diary/minigame/quest/Slayer routes, POH routes,
 and current Sailing transport. Each system records membership, quests, skill,
