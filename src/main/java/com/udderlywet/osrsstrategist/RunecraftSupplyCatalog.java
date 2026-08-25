@@ -17,9 +17,10 @@ public class RunecraftSupplyCatalog
     {
         return new ResourceRequirement(
                 "resource:runecraft_essence",
-                "Rune essence",
+                "Rune or pure essence",
                 1,
-                ItemID.BLANKRUNE
+                ItemID.BLANKRUNE,
+                ItemID.BLANKRUNE_HIGH
         );
     }
 
