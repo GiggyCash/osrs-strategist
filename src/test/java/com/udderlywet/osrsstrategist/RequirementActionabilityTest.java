@@ -110,6 +110,62 @@ public class RequirementActionabilityTest
     }
 
     @Test
+    public void typedResourceShortfallIsPreparationNotUnknownAccess()
+    {
+        TrainingPlan plan = new TrainingPlan(
+                method("runecraft_f2p_earth", Skill.RUNECRAFT),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                java.util.Arrays.asList(
+                        new RequirementCheck("resource:runecraft_essence",
+                                "Rune or pure essence",
+                                RequirementState.CHECK_NEEDED,
+                                "No essence is currently observed."),
+                        new RequirementCheck("resource:runecraft_earth_entry",
+                                "Earth talisman or earth tiara",
+                                RequirementState.CHECK_NEEDED,
+                                "No entry item is currently observed.")));
+        RecommendationGuidance guidance = new RecommendationGuidance(
+                "Bank at Varrock East, craft earth runes, and repeat.",
+                "Acquire essence and an earth talisman before starting.",
+                "Earth Altar northeast of Varrock.", null);
+
+        assertFalse(RequirementActionability.hasHardUnresolvedRequirement(plan));
+        assertTrue(RequirementActionability.isActionablePreparation(
+                plan, guidance));
+    }
+
+    @Test
+    public void locationDoesNotMasqueradeAsALogSupply()
+    {
+        RequirementCheck check = new RequirementCheck(
+                "generic:Forestry-enabled tree location",
+                "Forestry-enabled tree location",
+                RequirementState.CHECK_NEEDED,
+                "No location is proven.");
+        TrainingPlan plan = new TrainingPlan(
+                method("woodcutting_forestry", Skill.WOODCUTTING),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(check));
+
+        assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
+    }
+
+    @Test
+    public void retrievalOnlyUimResourceStillRequiresExplicitRoute()
+    {
+        RequirementCheck check = new RequirementCheck(
+                "resource:runecraft_essence", "Rune or pure essence",
+                RequirementState.CHECK_NEEDED,
+                "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource.");
+        TrainingPlan plan = new TrainingPlan(
+                method("runecraft_f2p_earth", Skill.RUNECRAFT),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(check));
+
+        assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
+    }
+
+    @Test
     public void blockedRequirementCanNeverBePrep()
     {
         TrainingMethod method = method("blocked_test", Skill.PRAYER);

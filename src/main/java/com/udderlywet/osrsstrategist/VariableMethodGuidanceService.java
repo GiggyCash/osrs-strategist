@@ -294,7 +294,7 @@ public class VariableMethodGuidanceService
                 "Adamant pickaxe", "Mithril pickaxe", "Black pickaxe",
                 "Steel pickaxe", "Iron pickaxe", "Bronze pickaxe"};
         for (String name : names) if (items.has(name)) return name;
-        return "a pickaxe obtained before leaving";
+        return "a bronze pickaxe; get one free from the Mining tutor at the east Lumbridge Swamp mine before leaving";
     }
 
     private static String firstObserved(

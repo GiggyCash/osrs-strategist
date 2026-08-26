@@ -70,6 +70,19 @@ public final class RequirementActionability
 
         String id = normalize(check.getId());
         String label = normalize(check.getLabel());
+
+        // ResourceReadinessService uses typed resource:* checks. A known tool
+        // or material shortfall is ordinary preparation, not uncertainty about
+        // whether a quest, region, spellbook, or activity is available.
+        if (id.startsWith("resource:"))
+        {
+            String evidence = normalize(check.getEvidence());
+            // Retrieval-only UIM storage is not ordinary shopping/banking
+            // preparation. The route must first model its extra access or
+            // death-risk setup explicitly.
+            return !evidence.contains("additional access/risk preconditions")
+                    && !evidence.contains("verify that route");
+        }
         if (!id.startsWith("generic:")) return false;
 
         // A combined label such as "Ourania route and essence supply" is an
@@ -80,7 +93,8 @@ public final class RequirementActionability
                 "access", "unlock", "quest", "completion", "completed",
                 "route", "contract", "spellbook", "activity", "minigame",
                 "region", "guild", "poh", "room", "course", "team",
-                "role", "assignment", "task", "risk accepted"))
+                "role", "assignment", "task", "location", "habitat",
+                "target", "risk accepted"))
         {
             return false;
         }
@@ -100,7 +114,8 @@ public final class RequirementActionability
                 "dynamite", "tick-manipulation supplies", "warm clothing",
                 "knife", "hammer", "saw", "chisel", "rope", "bucket",
                 "pickaxe", "hatchet", "axe", "harpoon", "fishing rod",
-                "fly fishing rod", "net", "lobster pot", "cage",
+                "fly fishing rod", "net", "lobster pot", "cage", "snare",
+                "talisman", "tiara",
                 "teleport setup", "teleports", "stamina", "repair supplies");
     }
 

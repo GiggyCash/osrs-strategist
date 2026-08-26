@@ -77,7 +77,8 @@ public class CombatGuidanceService
 
         String supplies = unarmed
                 ? "No supplies required for the first trip."
-                : supplyGuidance(account, skill, build, route, weapon);
+                : supplyGuidance(account, skill, build, route, weapon, items);
+        if (skill == Skill.RANGED && supplies == null) return null;
         String location = route.location;
         String note = route.note;
         if (build != RestrictedBuildType.STANDARD)
@@ -293,11 +294,12 @@ public class CombatGuidanceService
             Skill skill,
             RestrictedBuildType build,
             CombatRoute route,
-            String weapon)
+            String weapon,
+            ObservedItemIndex items)
     {
         if (skill == Skill.RANGED)
         {
-            return "Use ammunition that matches the observed weapon and account mode. An exact purchase/source count requires modeled consumption for the selected weapon.";
+            return rangedSupplies(weapon, items);
         }
         if (route.location.contains("Scurrius"))
         {
@@ -305,6 +307,41 @@ public class CombatGuidanceService
         }
         return "Bring " + weapon
                 + "; no other supplies are required for the first trip. Leave if the target damages you faster than you recover.";
+    }
+
+    private static String rangedSupplies(String weapon, ObservedItemIndex items)
+    {
+        if (weapon == null) return null;
+        if ("Bow of faerdhinen (c)".equals(weapon))
+            return "Bring your charged Bow of faerdhinen (c); it supplies its own ammunition.";
+        if ("Bow of faerdhinen".equals(weapon)
+                || "Venator bow".equals(weapon)) return null;
+        if (weapon.contains("Dorgeshuun crossbow")
+                || weapon.contains("Bone crossbow"))
+        {
+            String bolts = firstObserved(items, "Bone bolts");
+            return bolts == null ? null : "Bring " + weapon + " and " + bolts + ".";
+        }
+        if (weapon.toLowerCase().contains("crossbow"))
+        {
+            String bolts = firstObserved(items,
+                    "Dragon bolts", "Runite bolts", "Adamant bolts",
+                    "Mithril bolts", "Steel bolts", "Iron bolts",
+                    "Bronze bolts");
+            return bolts == null ? null : "Bring " + weapon + " and " + bolts + ".";
+        }
+        if (weapon.toLowerCase().contains("bow")
+                && !weapon.toLowerCase().contains("blowpipe"))
+        {
+            String arrows = firstObserved(items,
+                    "Dragon arrow", "Amethyst arrow", "Rune arrow",
+                    "Adamant arrow", "Mithril arrow", "Steel arrow",
+                    "Iron arrow", "Bronze arrow", "Training arrows");
+            return arrows == null ? null : "Bring " + weapon + " and " + arrows + ".";
+        }
+        // Blowpipe, Venator, and other charged/ammo-bearing weapons need live
+        // charge evidence before Compass can claim the setup is executable.
+        return null;
     }
 
     private static String attackStyle(Skill skill)

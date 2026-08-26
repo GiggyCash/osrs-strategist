@@ -84,6 +84,32 @@ public class DoNextInvariantTest
     }
 
     @Test
+    public void rejectedPoolUsesConcreteRecoveryWithoutInternalLanguage()
+    {
+        Recommendation vague = new Recommendation(
+                "skill:mining", "Train Mining", "Candidate was filtered.",
+                999, null, RecommendationConfidence.CHECK_NEEDED, 1, 10,
+                new RecommendationGuidance("Choose the best available method.",
+                        "Get supplies.", "A nearby mine.",
+                        "Quality gate diagnostic."),
+                CandidateSafetyEvidence.harmless(true));
+
+        Recommendation result = evaluate(engine(vague), observedData(),
+                new PreferenceProfile());
+        String playerText = (RecommendationPresentation.compactText(result)
+                + " " + result.getReason() + " "
+                + result.getGuidance().getNote()).toLowerCase();
+        assertEquals("fallback:starter-pickaxe", result.getId());
+        for (String forbidden : Arrays.asList(
+                "filtered", "quality gate", "developer", "debug",
+                "higher-value route", "passed the current"))
+        {
+            assertFalse(forbidden, playerText.contains(forbidden));
+        }
+        assertTrue(playerText.contains("east lumbridge swamp mine"));
+    }
+
+    @Test
     public void sidebarNeverRendersBlankWhenGivenEmptyOrNullQueue()
     {
         OsrsStrategistPanel panel = new OsrsStrategistPanel((id, action) -> { }, null);

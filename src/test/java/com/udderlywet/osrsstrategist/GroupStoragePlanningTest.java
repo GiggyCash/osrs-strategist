@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class GroupStoragePlanningTest
 {
     @Test
-    public void recentSharedPickaxeChangesReadinessOnlyWhenEnabled()
+    public void recentSharedPickaxeChangesSetupGuidanceOnlyWhenEnabled()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account())
                 .inventory(new InventorySnapshot(Collections.emptyList()))
@@ -36,14 +36,16 @@ public class GroupStoragePlanningTest
 
         RecommendationActionabilityPolicy policy =
                 new RecommendationActionabilityPolicy();
-        assertFalse(policy.canLeadQueue(disabled));
+        assertTrue(policy.canLeadQueue(disabled));
         assertTrue(policy.canLeadQueue(enabled));
         assertTrue(enabled.getGuidance().getSupplies()
                 .contains("Bronze pickaxe"));
+        assertTrue(disabled.getGuidance().getSupplies()
+                .contains("Mining tutor"));
     }
 
     @Test
-    public void staleSharedPickaxeNeverMakesMethodReady()
+    public void staleSharedPickaxeUsesConcreteAcquisitionInsteadOfOwnership()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account())
                 .inventory(new InventorySnapshot(Collections.emptyList()))
@@ -60,8 +62,12 @@ public class GroupStoragePlanningTest
                 .recommendAll(data, StrategyMode.RELAXED, SessionIntent.AFK,
                         true, false, new PreferenceProfile()), "skill:mining");
 
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertTrue(new RecommendationActionabilityPolicy()
                 .canLeadQueue(mining));
+        assertTrue(mining.getGuidance().getSupplies()
+                .contains("Mining tutor"));
+        assertFalse(mining.getGuidance().getSupplies()
+                .contains("Bring your Bronze pickaxe"));
     }
 
     private static TrainingMethodSelector selector()

@@ -152,7 +152,7 @@ public class F2pRunecraftRecommendationTest
     }
 
     @Test
-    public void unresolvedRequirementsAreNamedInsteadOfVagueFallback()
+    public void unresolvedResourcesRemainNamedOrdinaryPreparation()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
         TrainingPlan plan = selector().select(
@@ -174,11 +174,12 @@ public class F2pRunecraftRecommendationTest
                 10
         );
 
-        String compact = RecommendationPresentation.compactHtml(recommendation);
-        assertTrue(compact.contains("Craft air runes"));
-        assertTrue(compact.contains("NEEDED"));
-        assertTrue(compact.contains("Rune or pure essence"));
-        assertTrue(compact.contains("Air talisman or air tiara"));
+        assertEquals("Craft air runes", plan.getMethod().getName());
+        assertTrue(plan.getRequirementChecks().stream().anyMatch(check ->
+                "Rune or pure essence".equals(check.getLabel())));
+        assertTrue(plan.getRequirementChecks().stream().anyMatch(check ->
+                "Air talisman or air tiara".equals(check.getLabel())));
+        assertFalse(RequirementActionability.hasHardUnresolvedRequirement(plan));
     }
 
     private static TrainingMethodSelector selector()

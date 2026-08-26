@@ -130,6 +130,13 @@ public class AdaptiveMilestoneGuidanceService
         String supplies = inputs.isEmpty()
                 ? null
                 : resources == null ? null : resources.getGuidance();
+        String routeSetup = routeSetup(
+                data, plan.getMethod().getId(), useGroupStorage);
+        if (routeSetup != null)
+        {
+            supplies = supplies == null || supplies.trim().isEmpty()
+                    ? routeSetup : routeSetup + " " + supplies;
+        }
 
         String location = plan.getMethod().getInstructions();
         String note = profile.getNote();
@@ -190,6 +197,61 @@ public class AdaptiveMilestoneGuidanceService
     {
         if (numerator <= 0) return 0;
         return (int) Math.ceil(numerator / denominator);
+    }
+
+    /** Reusable tools are not consumed recipes, but still belong in BRING. */
+    private static String routeSetup(StrategyDataBundle data, String methodId,
+            boolean useGroupStorage)
+    {
+        if (methodId == null) return null;
+        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        if (methodId.startsWith("mining_"))
+        {
+            String pickaxe = firstObserved(items,
+                    "Crystal pickaxe", "Infernal pickaxe", "Dragon pickaxe",
+                    "Rune pickaxe", "Adamant pickaxe", "Mithril pickaxe",
+                    "Black pickaxe", "Steel pickaxe", "Iron pickaxe",
+                    "Bronze pickaxe");
+            return pickaxe == null
+                    ? "Get a free bronze pickaxe from the Mining tutor at the east Lumbridge Swamp mine."
+                    : "Bring your " + pickaxe + ".";
+        }
+        if (methodId.startsWith("woodcutting_"))
+        {
+            String axe = firstObserved(items,
+                    "Crystal axe", "Infernal axe", "Dragon axe", "Rune axe",
+                    "Adamant axe", "Mithril axe", "Black axe", "Steel axe",
+                    "Iron axe", "Bronze axe");
+            return axe == null
+                    ? "Buy a bronze axe from Bob's Brilliant Axes in Lumbridge before starting."
+                    : "Bring your " + axe + ".";
+        }
+        if ("fishing_f2p_fly".equals(methodId))
+            return "Bring a fly fishing rod and feathers.";
+        if ("fishing_lumbridge_shrimps".equals(methodId))
+            return "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed.";
+        if ("hunter_bird_traps".equals(methodId))
+            return items.has("Bird snare")
+                    ? "Bring one bird snare."
+                    : "Buy one bird snare from Aleck's Hunter Emporium in Yanille before walking south to the Hunter area.";
+        if ("thieving_lumbridge_people".equals(methodId))
+            return "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed.";
+        if ("thieving_ardy_knights".equals(methodId))
+            return "Bring food for failed pickpockets; restock at Ardougne South Bank when needed.";
+        if (methodId.startsWith("runecraft_f2p_"))
+        {
+            String rune = methodId.substring("runecraft_f2p_".length());
+            return "Bring the " + rune + " talisman or wear the " + rune
+                    + " tiara.";
+        }
+        return null;
+    }
+
+    private static String firstObserved(
+            ObservedItemIndex items, String... names)
+    {
+        for (String name : names) if (items.has(name)) return name;
+        return null;
     }
 
     private static String format(double value)

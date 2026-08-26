@@ -278,6 +278,24 @@ public class OsrsStrategistPlugin extends Plugin
                 panel.setFirstUseHintVisible(!config.firstUseComplete());
             return;
         }
+        if (CompassConfigKeys.RESET_LEARNED_FEEDBACK.equals(key))
+        {
+            if (!config.resetLearnedFeedback()) return;
+            try
+            {
+                // RuneLite shows ConfigItem.warning before setting this
+                // one-shot action to true.
+                resetLearnedFeedbackForActiveCharacter();
+            }
+            finally
+            {
+                configManager.setConfiguration(
+                        OsrsStrategistConfig.GROUP,
+                        CompassConfigKeys.RESET_LEARNED_FEEDBACK,
+                        false);
+            }
+            return;
+        }
         if (!CompassConfigKeys.changesPlanning(key)) return;
 
         if (CompassConfigKeys.changesStrategyProfile(key))
@@ -291,6 +309,36 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel != null) panel.closeDetails();
         recommendationDetailsOverlay.clear();
         updateAccountPanel();
+    }
+
+    /** Clear only recommendation learning for the active RuneScape profile. */
+    boolean resetLearnedFeedbackForActiveCharacter()
+    {
+        syncPreferenceProfile();
+        String activeKey = accountPreferenceStore.getActiveProfileKey();
+        if (activeKey == null) return false;
+
+        savingProfileConfiguration = true;
+        try
+        {
+            accountPreferenceStore.clear();
+        }
+        finally
+        {
+            savingProfileConfiguration = false;
+        }
+        preferenceProfile.clear();
+        loadedPreferenceProfileKey = activeKey;
+
+        // Bypass hysteresis for this deliberate recovery action. Completion
+        // history, goal/settings, milestone state, and observed account data
+        // are intentionally left untouched.
+        latestRecommendations = Collections.emptyList();
+        accountRefreshPending = true;
+        if (recommendationDetailsOverlay != null)
+            recommendationDetailsOverlay.clear();
+        refreshStrategyImmediately();
+        return true;
     }
 
     void applyRecommendationFeedback(String activityId, FeedbackAction action)

@@ -190,8 +190,12 @@ public class ExpandedTrainingMethodCatalog
 
     private void gathering()
     {
+        add(Skill.MINING, "mining_lumbridge_copper", 1, 14,
+                "Lumbridge copper", "East Lumbridge Swamp mine: mine copper, drop the ore when full, and repeat.",
+                TrainingIntensity.BALANCED, MethodCostTier.FREE, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.MODERATE, 15, 2);
         add(Skill.MINING, "mining_f2p_iron", 15, 99,
-                "Power-mine iron", "Mine iron at a convenient three-rock or nearby-bank location depending whether XP or resources matter more.",
+                "Power-mine iron", "Varrock East mine, southeast of Varrock: mine iron, drop the ore when full, and repeat.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.FREE, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.ACTIVE, 20, 2);
         add(Skill.MINING, "mining_mlm", 30, 99,
@@ -240,7 +244,7 @@ public class ExpandedTrainingMethodCatalog
                 "Mining Guild amethyst area access");
 
         add(Skill.FISHING, "fishing_f2p_fly", 20, 99,
-                "Fly fishing", "Fly-fish trout and salmon for a dependable F2P training route.",
+                "Fly fishing", "Barbarian Village fishing spots: catch trout and salmon, drop the fish when full, and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.MODERATE, 20, 2);
         add(Skill.FISHING, "fishing_barbarian", 48, 99,
@@ -299,8 +303,21 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.AFK, 30, 6,
                 "Zul-Andra access", "Fishing rod, bait and knife");
 
+        add(Skill.FISHING, "fishing_lumbridge_shrimps", 1, 19,
+                "Lumbridge shrimp", "Lumbridge Swamp fishing spots beside the Fishing tutor: net shrimp, drop the catch when full, and repeat.",
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.LOW, 15, 2);
+
+        add(Skill.WOODCUTTING, "woodcutting_lumbridge_trees", 1, 14,
+                "Lumbridge trees", "Trees west of Lumbridge Castle: cut regular logs, drop them when full, and repeat.",
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.LOW, 15, 2);
+        add(Skill.WOODCUTTING, "woodcutting_draynor_oaks", 15, 29,
+                "Draynor oaks", "Oak trees beside Draynor Village bank: cut oaks, bank the logs, and repeat.",
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.LOW, 15, 2);
         add(Skill.WOODCUTTING, "woodcutting_f2p_willows", 30, 99,
-                "F2P willows", "Cut willows at a convenient F2P location for straightforward Woodcutting experience.",
+                "F2P willows", "Willow trees beside Draynor Village bank: cut willows, bank the logs, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.LOW, 20, 2);
         add(Skill.WOODCUTTING, "woodcutting_teaks", 35, 99,
@@ -359,10 +376,10 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.LOW, 25, 5,
                 "Fossil Island herbiboar access");
         add(Skill.HUNTER, "hunter_bird_traps", 1, 28,
-                "Bird snare progression", "Catch the best reachable bird supported by the current Hunter level for conventional early training.",
+                "Feldip bird snares", "Feldip Hunter area south of Yanille: catch crimson swifts, switching to tropical wagtails at 19 Hunter; reset collapsed traps and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
-                "Bird snare and reachable habitat");
+                "Bird snare");
         add(Skill.HUNTER, "hunter_falconry", 43, 99,
                 "Falconry kebbits", "Catch the best suitable falconry kebbit when active XP and kebbit rewards fit the account; reposition while the falcon chases and use observed pouch/inventory capacity.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.VERY_LOW, RiskLevel.NONE,
@@ -642,21 +659,24 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
                 "Brimhaven arena access and entrance coins");
 
-        add(Skill.THIEVING, "thieving_fruit_stalls", 25, 44,
-                "Fruit stalls", "Steal from fruit stalls for simple early Thieving and useful fruit supplies.",
+        add(Skill.THIEVING, "thieving_fruit_stalls", 25, 54,
+                "Hosidius fruit stalls", "Steal from both fruit stalls in the easternmost house near the Hosidius beach, drop the fruit while moving between them, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
-                false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
-                "Fruit stall access");
+                false, true, true, true, false, AttentionLevel.MODERATE, 15, 3);
+        add(Skill.THIEVING, "thieving_lumbridge_people", 1, 24,
+                "Lumbridge pickpockets", "Pickpocket men and women around Lumbridge Castle, use the nearby bank for food, and repeat.",
+                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.MODERATE, 15, 1);
         add(Skill.THIEVING, "thieving_blackjack", 45, 99,
                 "Blackjacking", "Blackjack appropriate NPCs for very high, click-intensive Thieving experience.",
                 TrainingIntensity.SWEATY, MethodCostTier.PROFITABLE, RiskLevel.LOW,
                 false, true, false, true, false, AttentionLevel.ACTIVE, 20, 5,
                 "Blackjacking quest/access requirements");
         add(Skill.THIEVING, "thieving_ardy_knights", 55, 99,
-                "Ardougne knights", "Pickpocket Ardougne knights for a simple, sustainable Thieving method.",
+                "Ardougne knights", "Ardougne Marketplace: pickpocket a knight already lured into a house or bank safespot, open coin pouches before the cap, heal, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 4,
-                "Ardougne access and food/healing plan");
+                "Food or healing supply");
         add(Skill.THIEVING, "thieving_pyramid", 21, 99,
                 "Pyramid Plunder", "Run Pyramid Plunder for active Thieving XP and sceptre collection-log progression.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.MEDIUM,
@@ -696,8 +716,7 @@ public class ExpandedTrainingMethodCatalog
         add(Skill.SLAYER, "slayer_safe_assignments", 1, 99,
                 "Conservative Slayer", "Use the best safe unlocked Slayer master and favor low-risk assignments with a reliable escape/supply plan.",
                 TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
-                false, true, true, true, false, AttentionLevel.MODERATE, 30, 6,
-                "Unlocked Slayer master");
+                false, true, true, true, false, AttentionLevel.MODERATE, 30, 6);
         add(Skill.SLAYER, "slayer_highest_master", 1, 99,
                 "Highest practical Slayer master", "Use the highest practical unlocked master, accounting for block list, points, gear, and task suitability.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.PROFITABLE, RiskLevel.MEDIUM,

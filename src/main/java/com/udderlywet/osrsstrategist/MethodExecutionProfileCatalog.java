@@ -61,6 +61,8 @@ public class MethodExecutionProfileCatalog
 
     private void gathering()
     {
+        add(p("mining_lumbridge_copper", "copper ore mined", "copper ores mined", none(), null,
+                "copper_ore"));
         add(p("mining_f2p_iron", "iron ore mined", "iron ores mined", none(), null,
                 "iron_ore"));
         add(p("mining_granite_3t", "granite success", "granite successes", none(),
@@ -75,6 +77,8 @@ public class MethodExecutionProfileCatalog
         add(p("fishing_f2p_fly", "fish caught", "fish caught", none(),
                 "Selects the highest unlocked trout/salmon action in the route.",
                 "trout", "salmon"));
+        add(p("fishing_lumbridge_shrimps", "shrimp caught", "shrimp caught", none(), null,
+                "shrimp"));
         add(p("fishing_barbarian", "fish caught", "fish caught", none(),
                 "Selects the highest unlocked leaping fish. Passive Agility/Strength XP is extra.",
                 "leaping"));
@@ -92,6 +96,10 @@ public class MethodExecutionProfileCatalog
 
         add(p("woodcutting_f2p_willows", "willow log cut", "willow logs cut", none(), null,
                 "willow"));
+        add(p("woodcutting_lumbridge_trees", "log cut", "logs cut", none(), null,
+                "runelite:woodcutting:logs"));
+        add(p("woodcutting_draynor_oaks", "oak log cut", "oak logs cut", none(), null,
+                "oak_logs"));
         add(p("woodcutting_teaks", "teak log cut", "teak logs cut", none(), null,
                 "teak"));
         add(p("woodcutting_tick_teaks", "teak log cut", "teak logs cut", none(),
@@ -105,6 +113,8 @@ public class MethodExecutionProfileCatalog
         add(p("hunter_birdhouses", "birdhouse emptied", "birdhouses emptied", none(),
                 "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run. Nest yields are variable; the August 2026 five-roll/tripled-success change must not be presented as an exact yield.",
                 "bird_house"));
+        add(p("hunter_bird_traps", "bird caught", "birds caught", none(), null,
+                "crimson_swift", "tropical_wagtail"));
         add(p("hunter_salamanders", "salamander caught", "salamanders caught", none(),
                 "Black salamanders are deliberately excluded because they are a Wilderness method.",
                 "swamp_lizard", "orange_salamander", "red_salamander"));
@@ -253,6 +263,8 @@ public class MethodExecutionProfileCatalog
 
         add(p("thieving_fruit_stalls", "successful steal", "successful steals", none(), null,
                 "fruit_stall"));
+        add(p("thieving_lumbridge_people", "successful pickpocket", "successful pickpockets", none(), null,
+                "runelite:thieving:man", "runelite:thieving:woman"));
         add(p("thieving_blackjack", "successful pickpocket", "successful pickpockets", none(),
                 "Counts successful blackjacking pickpockets. Failed actions award no XP and therefore are not part of the milestone count.",
                 "blackjack", "bandit"));

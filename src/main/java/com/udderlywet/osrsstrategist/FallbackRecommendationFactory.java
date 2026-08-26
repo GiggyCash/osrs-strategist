@@ -54,7 +54,7 @@ final class FallbackRecommendationFactory
                         "Talk to the Mining tutor at the east Lumbridge Swamp mine and ask for a bronze pickaxe. Keep it in your inventory so Compass can advance the plan when it is observed.",
                         "No supplies required.",
                         "East Lumbridge Swamp mine, beside the Mining tutor.",
-                        "No higher-value route is executable with the currently observed supplies, so this obtains a free reusable starter tool.");
+                        "A free reusable pickaxe unlocks a concrete no-cost Mining route immediately.");
             }
             int current = Math.max(1, account.getSkillLevel(Skill.MINING));
             int target = Math.min(99, current + 1);
@@ -66,7 +66,7 @@ final class FallbackRecommendationFactory
                             + (maxed ? "after one inventory." : "at level " + target + "."),
                     "Bronze pickaxe; the Mining tutor at the mine supplies one when needed.",
                     "East Lumbridge Swamp mine, beside the Mining tutor.",
-                    "No higher-value route passed the current access, resource, and safety checks, so Compass is using a verified no-cost F2P recovery route.");
+                    "Copper mining is a safe no-cost route while other activities still need supplies or access information.");
         }
 
         Skill combatSkill = firstTrainableMeleeSkill(account);
@@ -81,14 +81,14 @@ final class FallbackRecommendationFactory
                             + target + ". Ask a monk to heal you when needed.",
                     "No weapon or food required.",
                     "Edgeville Monastery, west of Edgeville.",
-                    "This no-cost F2P route is used only when no higher-value plan passes the current build and resource checks.");
+                    "Monks provide a concrete no-cost route that respects the current combat build.");
         }
 
         return fallback("safe-combat", "Fight 10 monks",
                 "Fight 10 unarmed monks with the current build-legal combat style. Ask a monk to heal you when needed, then stop.",
                 "No weapon or food required.",
                 "Edgeville Monastery, west of Edgeville.",
-                "This no-cost F2P route is used only when no higher-value plan passes the current build and resource checks.");
+                "Monks provide a concrete no-cost route that respects the current combat build.");
     }
 
     static boolean isFallback(Recommendation recommendation)
@@ -120,7 +120,7 @@ final class FallbackRecommendationFactory
                 Double.NEGATIVE_INFINITY, null,
                 RecommendationConfidence.VERIFIED, 0, 0,
                 new RecommendationGuidance(action, supplies, location,
-                        "This fallback reports only account state that has not been observed."),
+                        "Compass replaces this recovery step automatically when the account state changes."),
                 CandidateSafetyEvidence.harmless(true));
     }
 }

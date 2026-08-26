@@ -7,6 +7,8 @@ import java.util.List;
 final class RecommendationStabilizer
 {
     private static final double MAX_SCORE_DEFICIT = 5.0;
+    private final RecommendationActionabilityPolicy actionabilityPolicy =
+            new RecommendationActionabilityPolicy();
 
     StrategyResult stabilize(List<Recommendation> previous, StrategyResult fresh)
     {
@@ -27,7 +29,12 @@ final class RecommendationStabilizer
                 break;
             }
         }
-        if (stillValid == null || stillValid == current.get(0)) return fresh;
+        // A formerly executable plan may remain in the fresh queue as a
+        // secondary preparation card after an item, quest, membership, or
+        // access change. Never promote that alternative back into DO NEXT.
+        if (stillValid == null
+                || !actionabilityPolicy.canLeadQueue(stillValid)
+                || stillValid == current.get(0)) return fresh;
         if (current.get(0).getScore() - stillValid.getScore()
                 > MAX_SCORE_DEFICIT) return fresh;
 
