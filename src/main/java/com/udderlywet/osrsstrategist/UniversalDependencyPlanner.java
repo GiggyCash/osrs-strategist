@@ -91,6 +91,10 @@ public final class UniversalDependencyPlanner
                 traversal.gear("Barrows gloves", root, 1,
                         new LinkedHashSet<>());
                 break;
+            case FIRE_CAPE:
+                traversal.gear("Fire cape", root, 1,
+                        new LinkedHashSet<>());
+                break;
             case INFERNAL_CAPE:
                 traversal.gear("Infernal cape", root, 1,
                         new LinkedHashSet<>());

@@ -54,12 +54,17 @@ public enum ItemRequirementClass
         switch (this)
         {
             case AXE:
-                return (name.equals("axe") || name.endsWith(" axe"))
-                        && !name.endsWith("pickaxe")
-                        && !name.endsWith("battleaxe")
-                        && !name.endsWith("greataxe");
+                return (name.equals("axe") || name.contains(" axe"))
+                        && !name.contains("pickaxe")
+                        && !name.contains("battleaxe")
+                        && !name.contains("greataxe")
+                        && !name.contains(" axe head")
+                        && !name.startsWith("broken ");
             case PICKAXE:
-                return name.equals("pickaxe") || name.endsWith(" pickaxe");
+                return (name.equals("pickaxe") || name.contains(" pickaxe"))
+                        && !name.contains("pickaxe head")
+                        && !name.contains("pickaxe handle")
+                        && !name.startsWith("broken ");
             case BOW:
                 return (name.equals("bow") || name.endsWith(" bow"))
                         && !name.endsWith("crossbow");

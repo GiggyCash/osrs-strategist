@@ -7,6 +7,7 @@ import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +34,8 @@ public class VariableMethodGuidanceServiceTest
         assertTrue(guidance.getAction().contains("500 personal points"));
         assertTrue(guidance.getSupplies().contains("four warm items"));
         assertTrue(guidance.getSupplies().contains("Bruma torch"));
+        assertEquals("Wintertodt camp in northern Great Kourend.",
+                guidance.getLocation());
         assertFalse(guidance.getAction().matches(".*about [0-9]+ (games|kills).*"));
         assertTrue(guidance.getNote().contains("without inventing a fixed kill count"));
     }
@@ -52,6 +55,8 @@ public class VariableMethodGuidanceServiceTest
 
         assertNotNull(guidance);
         assertTrue(guidance.getSupplies().contains("Dragon harpoon"));
+        assertEquals("Tempoross island, entered from the Ruins of Unkah ferry.",
+                guidance.getLocation());
         assertFalse(guidance.getAction().matches(".*about [0-9]+ games.*"));
     }
 

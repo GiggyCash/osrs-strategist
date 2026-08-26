@@ -34,6 +34,11 @@ public final class GoalGraph
                 dep("barrows-gloves:rfd", "Recipe for Disaster prerequisite chain", GoalNodeKind.QUEST),
                 dep("barrows-gloves:skills", "Required quest and skill dependencies", GoalNodeKind.SKILL));
 
+        register(GoalType.FIRE_CAPE,
+                dep("fire-cape:combat", "Conservative Fight Cave combat readiness", GoalNodeKind.SKILL),
+                dep("fire-cape:gear", "Practical Ranged gear and supplies", GoalNodeKind.GEAR),
+                dep("fire-cape:jad", "Complete the TzHaar Fight Cave and defeat TzTok-Jad", GoalNodeKind.ACTIVITY));
+
         register(GoalType.PRIFDDINAS,
                 dep("prif:quest-chain", "Song of the Elves prerequisite chain", GoalNodeKind.QUEST),
                 dep("prif:skills", "Required skill levels", GoalNodeKind.SKILL));

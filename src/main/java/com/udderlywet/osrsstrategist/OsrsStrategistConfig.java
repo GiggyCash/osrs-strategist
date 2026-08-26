@@ -19,7 +19,7 @@ public interface OsrsStrategistConfig extends Config
 
     @ConfigItem(keyName = CompassConfigKeys.ACTIVE_GOAL, name = "Goal",
             description = "The long-term goal used to prioritize recommendations; Automatic applies no specific-goal bias")
-    default GoalType activeGoal() { return GoalType.AUTOMATIC; }
+    default PlayerGoal activeGoal() { return PlayerGoal.AUTOMATIC; }
 
     @ConfigItem(keyName = CompassConfigKeys.QUEST_TOLERANCE, name = "Quest tolerance",
             description = "How often quests should appear in recommendations")
@@ -35,35 +35,20 @@ public interface OsrsStrategistConfig extends Config
 
     @ConfigItem(keyName = CompassConfigKeys.METHOD_OVERLAY, name = "Method Guidance overlay",
             description = "Show the current method as a movable heads-up reference")
-    default boolean showInGameGuidance() { return true; }
+    default boolean showInGameGuidance() { return false; }
+
+    @ConfigItem(keyName = CompassConfigKeys.SIDEBAR_TEXT_SIZE,
+            name = "Sidebar text size",
+            description = "Scale Compass text without changing the rest of RuneLite")
+    default SidebarTextSize sidebarTextSize() { return SidebarTextSize.STANDARD; }
 
     @ConfigItem(keyName = CompassConfigKeys.USE_GROUP_STORAGE, name = "Use Group Storage",
             description = "For GIM accounts, count useful items actually observed in Group Storage")
     default boolean useGroupStorage() { return true; }
 
-    @ConfigItem(keyName = "bankAware", name = "Bank-aware strategy",
-            description = "Use the most recent verified bank snapshot when weighing options")
-    default boolean bankAware() { return true; }
-
     @ConfigItem(keyName = CompassConfigKeys.COLLECTIONIST, name = "Collectionist mode",
             description = "Give a little more weight to useful or near-complete collection-log opportunities")
     default boolean collectionistMode() { return false; }
-
-    @ConfigItem(keyName = "riskWarnings", name = "Risk warnings",
-            description = "Warn before irreversible or high-risk account actions")
-    default boolean riskWarnings() { return true; }
-
-    @ConfigItem(keyName = "birdhouseReminders", name = "Birdhouse reminders",
-            description = "Remind when a birdhouse run is ready and show a preparation checklist")
-    default boolean birdhouseReminders() { return true; }
-
-    @ConfigItem(keyName = "herbRunReminders", name = "Herb run reminders",
-            description = "Remind when an herb run is ready and show a preparation checklist")
-    default boolean herbRunReminders() { return true; }
-
-    @ConfigItem(keyName = "clueReminders", name = "Clue reminders",
-            description = "Surface clues at good times without constantly nagging")
-    default boolean clueReminders() { return true; }
 
     @ConfigItem(keyName = CompassConfigKeys.FIRST_USE_COMPLETE,
             name = "First use complete",

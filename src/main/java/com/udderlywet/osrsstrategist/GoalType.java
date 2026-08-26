@@ -6,6 +6,7 @@ public enum GoalType
     MAX,
     QUEST_CAPE,
     BARROWS_GLOVES,
+    FIRE_CAPE,
     PRIFDDINAS,
     BOWFA,
     INFERNAL_CAPE,
@@ -23,6 +24,7 @@ public enum GoalType
     {
         if (this == AUTOMATIC) return "Automatic";
         if (this == BOWFA) return "Bowfa";
+        if (this == MAX) return "Max cape";
         String lower = name().toLowerCase(java.util.Locale.ROOT)
                 .replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);

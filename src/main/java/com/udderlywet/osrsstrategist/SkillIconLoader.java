@@ -72,7 +72,31 @@ public class SkillIconLoader
         );
     }
 
-    private void cacheAndApply(
+    /**
+     * Clear a label and invalidate every callback issued for its old icon.
+     * This matters when a skill recommendation is replaced by a quest or
+     * upgrade before RuneLite finishes loading the skill sprite.
+     */
+    public void clear(JLabel target)
+    {
+        if (target == null) return;
+        String requestKey = "clear:" + System.nanoTime();
+        latestRequest.put(target, requestKey);
+        Runnable clear = () ->
+        {
+            synchronized (latestRequest)
+            {
+                if (!requestKey.equals(latestRequest.get(target))) return;
+            }
+            target.setIcon(null);
+            target.revalidate();
+            target.repaint();
+        };
+        if (SwingUtilities.isEventDispatchThread()) clear.run();
+        else SwingUtilities.invokeLater(clear);
+    }
+
+    void cacheAndApply(
             JLabel target,
             String requestKey,
             BufferedImage sprite,

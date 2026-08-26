@@ -99,6 +99,10 @@ public class RecommendationIntelligenceService
                 if (containsAny(identity, "recipe-for-disaster", "recipe for disaster")) return 38.0;
                 if (quest) return 17.0;
                 return skill ? 5.0 : 0.0;
+            case FIRE_CAPE:
+                if (containsAny(identity, "fire-cape", "fire cape", "tztok_jad", "tzhaar fight cave")) return 45.0;
+                if (id.startsWith("skill:ranged") || id.startsWith("skill:prayer")) return 18.0;
+                return gear || pvm ? 14.0 : 0.0;
             case PRIFDDINAS:
                 if (containsAny(identity, "song-of-the-elves", "song of the elves")) return 42.0;
                 if (quest) return 18.0;

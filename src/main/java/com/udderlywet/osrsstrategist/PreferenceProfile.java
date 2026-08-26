@@ -102,11 +102,6 @@ public final class PreferenceProfile
 
         switch (action)
         {
-            case DO_THIS:
-                delta = 0.20;
-                cooldowns.remove(activityId);
-                break;
-
             case LATER:
                 // "Later" is temporary, not a dislike.
                 cooldowns.put(

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class CombatGuidanceServiceTest
@@ -39,8 +40,11 @@ public class CombatGuidanceServiceTest
         assertNotNull(guidance);
         assertTrue(guidance.getAction().contains("Defensive / Defence XP"));
         assertTrue(guidance.getAction().contains("Swift blade"));
+        assertTrue(RecommendationPresentation.compactSentence(
+                guidance.getAction(), 150).contains("Fight sand crabs"));
         assertTrue(guidance.getAction().contains("successful damage dealt"));
-        assertTrue(guidance.getLocation().contains("sand crabs"));
+        assertTrue(guidance.getLocation().toLowerCase().contains("sand crab"));
+        assertTrue(guidance.getAction().toLowerCase().contains("fight sand crabs"));
         assertTrue(guidance.getNote().contains("Defence pure"));
     }
 
@@ -64,9 +68,8 @@ public class CombatGuidanceServiceTest
                 SessionIntent.PICK_FOR_ME,
                 true);
 
-        assertNotNull(guidance);
-        assertTrue(guidance.getAction().contains("Aggressive / Strength XP"));
-        assertFalse(guidance.getAction().contains("Abyssal whip"));
+        assertNull("A whip-only setup cannot execute dedicated Strength XP",
+                guidance);
     }
 
     @Test
@@ -92,6 +95,7 @@ public class CombatGuidanceServiceTest
 
         assertNotNull(guidance);
         assertTrue(guidance.getLocation().contains("Gemstone Crab"));
+        assertTrue(guidance.getAction().contains("follow it through the cave"));
         assertTrue(guidance.getAction().contains("3.5 XP per damage"));
     }
 

@@ -59,7 +59,7 @@ public class AccountStrategyProfileStore
                 PlayerStrategyProfile.class
         );
 
-        return stored == null ? defaults : stored;
+        return stored == null ? defaults : stored.sanitizedForPublicProduct();
     }
 
     public void save(PlayerStrategyProfile profile)

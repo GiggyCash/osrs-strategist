@@ -101,6 +101,33 @@ public class F2pRunecraftRecommendationTest
     }
 
     @Test
+    public void gimLevelNineCanUseRecentlyObservedSharedEssenceForEarthRunes()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P, 9, 4))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(ItemID.TIARA_EARTH,
+                                "Earth tiara", 1))))
+                .groupStorage(new GroupStorageSnapshot(true,
+                        Collections.singletonList(new ItemStackSnapshot(
+                                ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
+                .build();
+
+        TrainingPlan plan = selector().select(data, Skill.RUNECRAFT, 9,
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR,
+                false, true);
+
+        assertNotNull(plan);
+        assertEquals("runecraft_f2p_earth", plan.getMethod().getId());
+        assertEquals(RecommendationConfidence.VERIFIED,
+                plan.getConfidence());
+        assertTrue(plan.getRequirementChecks().stream()
+                .allMatch(check -> check.getState()
+                        == RequirementState.VERIFIED));
+    }
+
+    @Test
     public void skillRecommendationsNeverLeakWithoutConcreteMethods()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
@@ -172,6 +199,12 @@ public class F2pRunecraftRecommendationTest
 
     private static AccountSnapshot account(MembershipStatus membership, int runecraftLevel)
     {
+        return account(membership, runecraftLevel, 0);
+    }
+
+    private static AccountSnapshot account(MembershipStatus membership,
+            int runecraftLevel, int accountType)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -182,8 +215,8 @@ public class F2pRunecraftRecommendationTest
         levels.put(Skill.RUNECRAFT, runecraftLevel);
         return new AccountSnapshot(
                 membership == MembershipStatus.F2P ? "F2P Test" : "P2P Test",
-                0,
-                "Main",
+                accountType,
+                AccountMode.fromTypeCode(accountType).name(),
                 membership,
                 1,
                 1,

@@ -36,15 +36,13 @@ public class ReleaseUxControlsTest
     }
 
     @Test
-    public void firstUseAndResetAreExplicitCallbacks()
+    public void negativeFeedbackIsTheOnlyPrimaryFeedback()
     {
-        AtomicInteger reset = new AtomicInteger();
         OsrsStrategistPanel panel = panel("", value -> { },
-                reset::incrementAndGet);
-        assertTrue(panel.isFirstUseHintVisible());
-        panel.clickResetFeedbackForTest();
-        assertEquals(1, reset.get());
-        assertFalse(panel.isFirstUseHintVisible());
+                () -> { });
+        assertEquals(java.util.Arrays.asList("Later", "Not Today", "Dislike"),
+                panel.feedbackLabelsForTest());
+        assertFalse(panel.feedbackLabelsForTest().contains("Do This"));
     }
 
     @Test
@@ -73,24 +71,34 @@ public class ReleaseUxControlsTest
     }
 
     @Test
-    public void cancelledResetDoesNotEraseFeedback()
+    public void emptySecondarySectionsDoNotOccupyTheSidebar()
     {
-        AtomicInteger reset = new AtomicInteger();
-        OsrsStrategistPanel panel = new OsrsStrategistPanel(
-                (id, feedback) -> { }, null, recommendation -> { },
-                () -> { }, reset::incrementAndGet, () -> { }, "",
-                value -> { }, () -> false);
-        panel.clickResetFeedbackForTest();
-        assertEquals(0, reset.get());
-        assertTrue(panel.isFirstUseHintVisible());
+        OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
+        panel.updateRecommendations(Collections.singletonList(recommendation()));
+        panel.updateOpportunities(Collections.emptyList());
+        assertFalse(panel.areAlternativesVisibleForTest());
+        assertFalse(panel.areOpportunitiesVisibleForTest());
+    }
+
+    @Test
+    public void alternativesIncludeMethodAndLocationInsteadOfBareCategories()
+    {
+        OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
+        Recommendation first = recommendation("skill:mining", "Train Mining to 40");
+        Recommendation second = recommendation("skill:fishing", "Train Fishing to 40");
+        panel.updateRecommendations(java.util.Arrays.asList(first, second));
+
+        String text = panel.firstAlternativeTextForTest();
+        assertTrue(text.contains("Concrete method"));
+        assertTrue(text.contains("Named location"));
     }
 
     private static OsrsStrategistPanel panel(String support,
             java.util.function.Consumer<String> browser, Runnable reset)
     {
         return new OsrsStrategistPanel((id, feedback) -> { }, null,
-                recommendation -> { }, () -> { }, reset, () -> { },
-                support, browser, () -> true);
+                recommendation -> { }, () -> { }, () -> { },
+                support, browser);
     }
 
     private static Recommendation recommendation()
@@ -100,5 +108,21 @@ public class ReleaseUxControlsTest
                 RecommendationConfidence.VERIFIED, 0, 0,
                 new RecommendationGuidance("Start the quest.", null,
                         "Quest start", null));
+    }
+
+    private static Recommendation recommendation(String id, String title)
+    {
+        net.runelite.api.Skill skill = id.contains("fishing")
+                ? net.runelite.api.Skill.FISHING : net.runelite.api.Skill.MINING;
+        TrainingMethod method = new TrainingMethod(id + ":method", skill,
+                1, 99, "Concrete method", "Named location", 1, 1, 1,
+                AttentionLevel.MODERATE, 10, 1, Collections.emptyList(),
+                RecommendationConfidence.VERIFIED);
+        return new Recommendation(id, title, "Reason", 1,
+                new TrainingPlan(method, "Reason",
+                        RecommendationConfidence.VERIFIED),
+                RecommendationConfidence.VERIFIED, 30, 40,
+                new RecommendationGuidance("Repeat the exact loop.",
+                        "Required tool.", "Named location.", null));
     }
 }

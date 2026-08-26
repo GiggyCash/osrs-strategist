@@ -19,7 +19,16 @@ public class ResourceReadinessService
             StrategyDataBundle data,
             ResourceRequirement requirement)
     {
-        return evaluate(data, requirement, CapabilityState.UNKNOWN, null);
+        return evaluate(data, requirement, false);
+    }
+
+    public RequirementCheck evaluate(
+            StrategyDataBundle data,
+            ResourceRequirement requirement,
+            boolean useGroupStorage)
+    {
+        return evaluate(data, requirement, CapabilityState.UNKNOWN, null,
+                useGroupStorage);
     }
 
     public RequirementCheck evaluate(
@@ -27,6 +36,17 @@ public class ResourceReadinessService
             ResourceRequirement requirement,
             CapabilityState alternateStorageState,
             String alternateEvidence)
+    {
+        return evaluate(data, requirement, alternateStorageState,
+                alternateEvidence, false);
+    }
+
+    private RequirementCheck evaluate(
+            StrategyDataBundle data,
+            ResourceRequirement requirement,
+            CapabilityState alternateStorageState,
+            String alternateEvidence,
+            boolean useGroupStorage)
     {
         if (alternateStorageState == CapabilityState.VERIFIED)
         {
@@ -39,7 +59,8 @@ public class ResourceReadinessService
         }
 
         boolean uim = isUim(data);
-        int observed = observedQuantity(data, requirement.getItemIds());
+        int observed = observedQuantity(data, useGroupStorage,
+                requirement.getItemIds());
         if (observed >= requirement.getRequiredQuantity())
         {
             return new RequirementCheck(
@@ -49,7 +70,9 @@ public class ResourceReadinessService
                             ? "Observed quantity: " + observed
                                     + " across equipment, inventory, and directly usable verified UIM storage."
                             : "Observed quantity: " + observed
-                                    + " across equipment, inventory, and known bank state.");
+                                    + " across equipment, inventory, known bank state"
+                                    + (usesObservedGroupStorage(data, useGroupStorage)
+                                            ? ", and recent Group Storage state." : "."));
         }
 
         if (uim)
@@ -100,6 +123,12 @@ public class ResourceReadinessService
 
     public int observedQuantity(StrategyDataBundle data, int... itemIds)
     {
+        return observedQuantity(data, false, itemIds);
+    }
+
+    public int observedQuantity(StrategyDataBundle data,
+            boolean useGroupStorage, int... itemIds)
+    {
         if (data == null || itemIds == null) return 0;
         int total = 0;
         EquipmentSnapshot equipment = data.getEquipment();
@@ -112,6 +141,10 @@ public class ResourceReadinessService
             if (equipment != null) total += equipment.quantityOf(itemId);
             if (inventory != null) total += inventory.quantityOf(itemId);
             if (!uim && bank != null) total += bank.quantityOf(itemId);
+            if (!uim && usesObservedGroupStorage(data, useGroupStorage))
+                total += data.getGroupStorage().getItems().stream()
+                        .filter(item -> item.getItemId() == itemId)
+                        .mapToInt(item -> Math.max(0, item.getQuantity())).sum();
             if (uim)
             {
                 total += observedUimStorageQuantity(
@@ -119,6 +152,16 @@ public class ResourceReadinessService
             }
         }
         return total;
+    }
+
+    private static boolean usesObservedGroupStorage(
+            StrategyDataBundle data, boolean enabled)
+    {
+        if (!enabled || data == null || data.getAccount() == null
+                || data.getGroupStorage() == null
+                || !data.getGroupStorage().isObserved()) return false;
+        return AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode())
+                .isGroupIronman();
     }
 
     private static int restrictedUimStorageQuantity(

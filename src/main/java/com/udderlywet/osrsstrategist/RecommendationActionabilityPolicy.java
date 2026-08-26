@@ -13,6 +13,9 @@ import javax.inject.Singleton;
 @Singleton
 public class RecommendationActionabilityPolicy
 {
+    private final RecommendationQualityPolicy qualityPolicy =
+            new RecommendationQualityPolicy();
+
     public boolean canLeadQueue(Recommendation recommendation)
     {
         if (recommendation == null
@@ -23,14 +26,20 @@ public class RecommendationActionabilityPolicy
 
         TrainingPlan plan = recommendation.getTrainingPlan();
         RecommendationGuidance guidance = recommendation.getGuidance();
+        if (!qualityPolicy.isPresentable(recommendation)) return false;
 
         if (plan == null)
         {
             // Non-skill candidates must be fully verified and structured before
-            // they can displace a concrete training action.
-            return recommendation.getConfidence() == RecommendationConfidence.VERIFIED
-                    && guidance != null
-                    && hasText(guidance.getAction());
+            // they can displace a concrete training action. The one exception
+            // is an explicitly typed preparation/verification action whose
+            // remaining work is fully described by the quality contract.
+            return (recommendation.getConfidence()
+                        == RecommendationConfidence.VERIFIED
+                    || (recommendation.getConfidence()
+                        == RecommendationConfidence.CHECK_NEEDED
+                        && isExplicitPreparation(recommendation)))
+                    && guidance != null && hasText(guidance.getAction());
         }
 
         if (plan.getMethod() == null || guidance == null
@@ -58,6 +67,8 @@ public class RecommendationActionabilityPolicy
         }
         if (canLeadQueue(recommendation)) return true;
 
+        if (!qualityPolicy.isPresentable(recommendation)) return false;
+
         RecommendationGuidance guidance = recommendation.getGuidance();
         TrainingPlan plan = recommendation.getTrainingPlan();
 
@@ -66,12 +77,16 @@ public class RecommendationActionabilityPolicy
         // provider can produce a concrete next verification/preparation step.
         if (plan == null)
         {
-            return guidance != null && hasText(guidance.getAction());
+            return guidance != null && hasText(guidance.getAction())
+                    && (recommendation.getConfidence()
+                            == RecommendationConfidence.VERIFIED
+                        || isExplicitPreparation(recommendation));
         }
 
         return plan.getMethod() != null
                 && guidance != null
-                && hasText(guidance.getAction());
+                && hasText(guidance.getAction())
+                && !RequirementActionability.hasHardUnresolvedRequirement(plan);
     }
 
     public int queuePriority(Recommendation recommendation)
@@ -84,5 +99,15 @@ public class RecommendationActionabilityPolicy
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
+    }
+
+    private static boolean isExplicitPreparation(Recommendation recommendation)
+    {
+        String id = recommendation == null || recommendation.getId() == null
+                ? "" : recommendation.getId().toLowerCase(
+                        java.util.Locale.ROOT);
+        return id.startsWith("prepare:")
+                || id.startsWith("preparation:")
+                || id.startsWith("verify:");
     }
 }

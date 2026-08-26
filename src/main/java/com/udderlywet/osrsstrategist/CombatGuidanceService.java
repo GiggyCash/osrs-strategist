@@ -46,6 +46,9 @@ public class CombatGuidanceService
 
         ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
         String weapon = chooseWeapon(account, skill, build, items);
+        boolean unarmed = weapon == null && currentLevel < 10
+                && skill != Skill.RANGED;
+        if (weapon == null && !unarmed) return null;
         String style = attackStyle(skill);
 
         int currentXp = account.getSkillExperience(skill);
@@ -54,19 +57,10 @@ public class CombatGuidanceService
         int xpNeeded = Math.max(0, targetXp - currentXp);
 
         StringBuilder action = new StringBuilder();
-        action.append("Set your combat style to ").append(style).append(". ");
-        if (weapon != null)
-        {
-            action.append("Use ").append(weapon).append(". ");
-        }
-        else if (!items.bankObserved())
-        {
-            action.append("Open your bank once to compare the legal observed weapons for this build. ");
-        }
-        else
-        {
-            action.append("No preferred legal weapon is currently observed; use the best legal weapon you own while a suitable acquisition route is evaluated. ");
-        }
+        action.append(withoutPeriod(route.loop));
+        if (weapon != null) action.append(" with ").append(weapon);
+        else if (unarmed) action.append(" while unarmed");
+        action.append(" on ").append(style).append(". ");
         action.append(format(xpNeeded)).append(" ")
                 .append(skill.getName()).append(" XP remains to level ")
                 .append(targetLevel).append(".");
@@ -81,7 +75,9 @@ public class CombatGuidanceService
                     .append(" XP per damage.");
         }
 
-        String supplies = supplyGuidance(account, skill, build, route, weapon);
+        String supplies = unarmed
+                ? "No supplies required for the first trip."
+                : supplyGuidance(account, skill, build, route, weapon);
         String location = route.location;
         String note = route.note;
         if (build != RestrictedBuildType.STANDARD)
@@ -115,12 +111,14 @@ public class CombatGuidanceService
                 if (intent == SessionIntent.AFK)
                 {
                     return new CombatRoute(
-                            "Train on monks at the Edgeville Monastery. Ask a monk to heal you when needed.",
+                            "Edgeville Monastery, west of Edgeville.",
+                            "Fight monks and ask a monk to heal you when needed.",
                             4.0,
                             "Monks are a low-risk Defence-pure target. Their healing can extend a training interaction, so do not turn the damage target into a fixed kill count.");
                 }
                 return new CombatRoute(
-                        "Train on seagulls around Port Sarim. They have very low Defence and low offensive pressure.",
+                        "Port Sarim docks and shoreline.",
+                        "Fight seagulls and stay on Defensive style.",
                         4.0,
                         "Use Defensive style only. Seagulls are efficient for the low-damage Defence-pure profile because accuracy matters more than loot.");
             }
@@ -136,29 +134,24 @@ public class CombatGuidanceService
         if (methodId.contains("scurrius"))
         {
             return new CombatRoute(
-                    "Fight Scurrius in the Varrock Sewers. Prefer the matching rat-bone weapon once you have a spine and the weapon is legal for your build.",
+                    "Scurrius arena in Varrock Sewers.",
+                    "Fight Scurrius and use the matching rat-bone weapon once it is observed and legal for the build.",
                     0.0,
                     "Scurrius has a combat-XP bonus and rat-bone weapons change the effective XP model, so no fixed kill count is shown.");
         }
 
         if (methodId.contains("slayer"))
         {
-            SlayerSnapshot slayer = data.getSlayer();
-            if (slayer != null && slayer.hasTask())
-            {
-                return new CombatRoute(
-                        "Train on your current Slayer task: " + slayer.getTaskName()
-                                + " (" + slayer.getRemaining() + " remaining).",
-                        0.0,
-                        "Task monsters can have different defence, hitpoints, and XP modifiers. The task count is live evidence, but a fixed combat kill count would be fake precision.");
-            }
+            // A live task count does not prove a concrete legal location or
+            // loadout. SlayerGuidanceService owns task-specific execution.
             return null;
         }
 
         if (methodId.contains("nmz"))
         {
             return new CombatRoute(
-                    "Use your verified Nightmare Zone setup and only bosses already unlocked for the account.",
+                    "Nightmare Zone in Yanille.",
+                    "Enter with the verified setup and select only bosses already unlocked for this account.",
                     0.0,
                     "Nightmare Zone boss choices and modifiers change effective XP per damage, so the remaining XP is exact but a universal kill count is not.");
         }
@@ -168,33 +161,46 @@ public class CombatGuidanceService
             return bestCrab(data, intent);
         }
 
-        if (membership != MembershipStatus.P2P)
+        if (methodId.contains("f2p_giants"))
+        {
+            return new CombatRoute(
+                    "Hill giants in Edgeville Dungeon.",
+                    "Fight hill giants, collect only the drops worth keeping, and repeat.",
+                    4.0,
+                    "Hill giants provide a concrete F2P combat-and-Prayer-supply loop without requiring a members area.");
+        }
+
+        if (membership != MembershipStatus.P2P || methodId.contains("f2p"))
         {
             if (level < 20)
             {
                 return new CombatRoute(
-                        "Train on monks at the Edgeville Monastery until the low-level combat band is complete.",
+                        "Edgeville Monastery, west of Edgeville.",
+                        "Fight monks and ask a monk to heal you when needed.",
                         4.0,
                         "Monks can heal you and themselves, reducing food use while early accuracy and max hit are low.");
             }
             if (level < 40)
             {
                 return new CombatRoute(
-                        "Train on giant frogs in Lumbridge Swamp.",
+                        "Giant frogs in Lumbridge Swamp, south of Lumbridge Castle.",
+                        "Fight giant frogs, bury or keep the big bones, and repeat.",
                         4.0,
                         "Giant frogs have high Hitpoints for their level, low Defence, and always drop big bones that can support Prayer progression.");
             }
             return new CombatRoute(
-                    "Train on Flesh Crawlers in the Stronghold of Security for low-attention combat, or giant frogs when you want big bones for Prayer.",
+                    "Flesh Crawlers in the Stronghold of Security's Catacomb of Famine.",
+                    "Fight Flesh Crawlers, reset aggression when they stop attacking, and repeat.",
                     4.0,
-                    "Flesh Crawlers stay aggressive and are useful for AFK combat. Giant frogs trade some convenience for Prayer supplies.");
+                    "Flesh Crawlers stay aggressive for low-attention combat; this route does not ask the player to choose between two targets.");
         }
 
         CombatRoute crab = bestCrab(data, intent);
         if (crab != null) return crab;
 
         return new CombatRoute(
-                "Train on sand crabs south of Hosidius until a higher-value combat route is verified.",
+                "Sand crab beach south of Hosidius.",
+                "Fight sand crabs and reset aggression after roughly 10 minutes.",
                 4.0,
                 "Sand crabs have 60 Hitpoints, very low combat stats, and no quest requirement for the basic beach route.");
     }
@@ -210,19 +216,22 @@ public class CombatGuidanceService
         if (childrenOfSun && intent == SessionIntent.AFK)
         {
             return new CombatRoute(
-                    "Train on the Gemstone Crab in the Tlati Rainforest and follow it through the nearby cave when it relocates.",
+                    "Gemstone Crab cave in the Tlati Rainforest.",
+                    "Attack the Gemstone Crab and follow it through the cave when it relocates.",
                     3.5,
                     "Gemstone Crab has effectively infinite Hitpoints and gives 87.5% of ordinary combat XP per damage. It is excellent for long idle sessions but not always the best low-level raw XP choice.");
         }
         if (boneVoyage)
         {
             return new CombatRoute(
-                    "Train on Ammonite Crabs on Fossil Island. Reset aggression after roughly 10 minutes.",
+                    "Ammonite Crab coast on Fossil Island.",
+                    "Fight Ammonite Crabs and reset aggression after roughly 10 minutes.",
                     4.0,
                     "Ammonite Crabs have 100 Hitpoints and very low combat stats, reducing downtime and food use.");
         }
         return new CombatRoute(
-                "Train on sand crabs south of Hosidius. Reset aggression after roughly 10 minutes.",
+                "Sand crab beach south of Hosidius.",
+                "Fight sand crabs and reset aggression after roughly 10 minutes.",
                 4.0,
                 "Sand crabs have 60 Hitpoints, very low combat stats, and the basic beach route has no quest requirement.");
     }
@@ -290,18 +299,12 @@ public class CombatGuidanceService
         {
             return "Use ammunition that matches the observed weapon and account mode. An exact purchase/source count requires modeled consumption for the selected weapon.";
         }
-        if (build == RestrictedBuildType.DEFENCE_PURE)
-        {
-            return "Prioritize accuracy/Strength-bonus equipment that does not violate the build. Bring food only if the chosen target can out-damage your natural sustain.";
-        }
         if (route.location.contains("Scurrius"))
         {
             return "Bring food, prayer restoration, and combat boosts appropriate to the account. Rat-bone weapon progression should replace generic training gear once obtained.";
         }
-        return weapon == null
-                ? "Open the bank once before choosing an exact combat loadout."
-                : "Use your best build-legal armour with " + weapon
-                        + ". Prefer supplies already observed on Iron-style accounts before creating a new acquisition detour.";
+        return "Bring " + weapon
+                + "; no other supplies are required for the first trip. Leave if the target damages you faster than you recover.";
     }
 
     private static String attackStyle(Skill skill)
@@ -350,15 +353,26 @@ public class CombatGuidanceService
         return String.format(java.util.Locale.ROOT, "%.1f", value);
     }
 
+    private static String withoutPeriod(String value)
+    {
+        if (value == null) return "Fight the selected target";
+        String trimmed = value.trim();
+        return trimmed.endsWith(".")
+                ? trimmed.substring(0, trimmed.length() - 1) : trimmed;
+    }
+
     private static final class CombatRoute
     {
         private final String location;
+        private final String loop;
         private final double xpPerDamage;
         private String note;
 
-        private CombatRoute(String location, double xpPerDamage, String note)
+        private CombatRoute(String location, String loop,
+                double xpPerDamage, String note)
         {
             this.location = location;
+            this.loop = loop;
             this.xpPerDamage = xpPerDamage;
             this.note = note;
         }

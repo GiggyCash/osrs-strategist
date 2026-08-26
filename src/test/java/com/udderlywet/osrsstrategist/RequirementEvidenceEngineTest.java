@@ -81,6 +81,36 @@ public class RequirementEvidenceEngineTest
         }
     }
 
+    @Test
+    public void miningRequiresAnObservedImmediatelyUsablePickaxe()
+    {
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        TrainingMethod mining = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.MINING).stream()
+                .filter(candidate -> "mining_mlm".equals(
+                        candidate.getMethod().getId()))
+                .findFirst().orElseThrow(AssertionError::new).getMethod();
+
+        StrategyDataBundle empty = StrategyDataBundle.builder(account(1))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .build();
+        assertEquals(RequirementState.CHECK_NEEDED,
+                engine.evaluate(empty, mining).get(0).getState());
+
+        StrategyDataBundle ready = StrategyDataBundle.builder(account(1))
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+                                "Bronze pickaxe", 1))))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .build();
+        assertEquals(RequirementState.VERIFIED,
+                engine.evaluate(ready, mining).get(0).getState());
+    }
+
     private static TrainingMethod method(String id)
     {
         return new TrainingMethodDatabase()

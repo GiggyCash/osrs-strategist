@@ -119,7 +119,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             return new RecommendationGuidance(
                     "Open the bank once to compare this gear path with verified ownership.",
                     "Bank ownership is currently unknown; no item is being called missing yet.",
-                    "Any bank.",
+                    "Lumbridge Castle bank, on the top floor.",
                     "This remains a verification alternative, not a purchase instruction.");
         }
 

@@ -4,6 +4,7 @@ import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.events.ItemContainerChanged;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -24,6 +25,16 @@ public class OsrsStrategistPluginTest
         plugin.onVarbitChanged(null);
         assertTrue(plugin.consumeVarbitRefreshPending());
         assertFalse(plugin.consumeVarbitRefreshPending());
+    }
+
+    @Test
+    public void containerBurstsCoalesceIntoOnePendingRefresh()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        plugin.onItemContainerChanged((ItemContainerChanged) null);
+        plugin.onItemContainerChanged((ItemContainerChanged) null);
+        assertTrue(plugin.consumeAccountRefreshPending());
+        assertFalse(plugin.consumeAccountRefreshPending());
     }
 
     @SuppressWarnings("unchecked")

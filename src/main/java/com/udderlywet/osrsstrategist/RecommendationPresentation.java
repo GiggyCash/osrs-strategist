@@ -7,9 +7,9 @@ import java.util.List;
 /** Converts a recommendation into concise sidebar copy and full detail copy. */
 public final class RecommendationPresentation
 {
-    private static final int COMPACT_ACTION_CHARS = 190;
-    private static final int COMPACT_SUPPLIES_CHARS = 150;
-    private static final int COMPACT_UNLOCK_CHARS = 120;
+    private static final int COMPACT_ACTION_CHARS = 150;
+    private static final int COMPACT_SUPPLIES_CHARS = 120;
+    private static final int COMPACT_LOCATION_CHARS = 130;
 
     private RecommendationPresentation() {}
 
@@ -39,7 +39,7 @@ public final class RecommendationPresentation
         RecommendationGuidance guidance = recommendation.getGuidance();
         if (guidance != null)
         {
-            appendGuidance(text, guidance, false);
+            appendCompactGuidance(text, guidance);
         }
 
         List<RequirementCheck> unresolved = hardUnresolved(plan);
@@ -63,7 +63,6 @@ public final class RecommendationPresentation
                         .append(" more in Details");
             }
         }
-        appendNextUnlock(text, recommendation);
         return text.toString();
     }
 
@@ -158,86 +157,63 @@ public final class RecommendationPresentation
         if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
         {
             if (guidance != null && hasText(guidance.getAction()))
-                appendGuidance(text, guidance, false);
+                appendCompactGuidance(text, guidance);
             else
             {
                 appendBreak(text, 2);
-                text.append("<b>DO THIS</b><br>");
+                text.append("<b>DO</b><br>");
                 text.append("Open the relevant account panel so Compass can check the remaining requirement.");
             }
-            appendNextUnlock(text, recommendation);
             return;
         }
 
         if (guidance != null)
         {
-            appendGuidance(text, guidance, false);
+            appendCompactGuidance(text, guidance);
         }
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append("<b>DO THIS</b><br>Begin the verified activity.");
+            text.append("<b>DO</b><br>Start the activity using the verified setup.");
         }
-        appendNextUnlock(text, recommendation);
     }
 
-    private static void appendGuidance(
-            StringBuilder text,
-            RecommendationGuidance guidance,
-            boolean includeLocationAndNote)
+    /** The primary card must contain the executable loop, not only its inputs. */
+    private static void appendCompactGuidance(
+            StringBuilder text, RecommendationGuidance guidance)
     {
-        if (!includeLocationAndNote)
-        {
-            String needed = compactNeeded(guidance);
-            if (hasText(needed))
-            {
-                appendBreak(text, 2);
-                text.append("<b>NEEDED</b><br>")
-                        .append(escape(compactSentence(needed,
-                                COMPACT_ACTION_CHARS)));
-            }
-            return;
-        }
-
-        if (hasText(guidance.getAction()))
-        {
-            appendBreak(text, 2);
-            text.append("<b>DO</b><br>")
-                    .append(escape(guidance.getAction()));
-        }
-
-        if (hasText(guidance.getSupplies()))
+        if (guidance == null) return;
+        if (meaningfulSupplies(guidance.getSupplies()))
         {
             appendBreak(text, 2);
             text.append("<b>BRING</b><br>")
-                    .append(escape(guidance.getSupplies()));
+                    .append(escape(compactSentence(guidance.getSupplies(),
+                            COMPACT_SUPPLIES_CHARS)));
         }
-
         if (hasText(guidance.getLocation()))
         {
             appendBreak(text, 2);
             text.append("<b>WHERE</b><br>")
-                    .append(escape(guidance.getLocation()));
+                    .append(escape(compactSentence(guidance.getLocation(),
+                            COMPACT_LOCATION_CHARS)));
         }
-
-        if (hasText(guidance.getNote()))
+        if (hasText(guidance.getAction()))
         {
             appendBreak(text, 2);
-            text.append("<b>NOTE</b><br>")
-                    .append(escape(guidance.getNote()));
+            text.append("<b>DO</b><br>")
+                    .append(escape(compactSentence(guidance.getAction(),
+                            COMPACT_ACTION_CHARS)));
         }
     }
 
-    private static String compactNeeded(RecommendationGuidance guidance)
+    private static boolean meaningfulSupplies(String supplies)
     {
-        String action = guidance.getAction();
-        String supplies = guidance.getSupplies();
-        if (hasText(action) && (action.contains("XP remaining")
-                || action.toLowerCase().contains("confirm")
-                || !hasText(supplies)
-                || supplies.startsWith("No consumed")))
-            return action;
-        return supplies;
+        if (!hasText(supplies)) return false;
+        String normalized = supplies.trim().toLowerCase();
+        return !normalized.equals("none")
+                && !normalized.startsWith("no supplies required")
+                && !normalized.startsWith("no weapon or other supplies")
+                && !normalized.startsWith("no consumed supplies");
     }
 
     /**
@@ -267,17 +243,6 @@ public final class RecommendationPresentation
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
-    }
-
-    private static void appendNextUnlock(StringBuilder text,
-            Recommendation recommendation)
-    {
-        if (recommendation == null || !hasText(recommendation.getReason()))
-            return;
-        appendBreak(text, 2);
-        text.append("<b>NEXT UNLOCK</b><br>")
-                .append(escape(compactSentence(recommendation.getReason(),
-                        COMPACT_UNLOCK_CHARS)));
     }
 
     private static void appendGoalStatus(StringBuilder text,

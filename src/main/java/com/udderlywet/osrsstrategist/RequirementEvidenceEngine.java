@@ -58,6 +58,14 @@ public class RequirementEvidenceEngine
             StrategyDataBundle data,
             TrainingMethod method)
     {
+        return evaluate(data, method, false);
+    }
+
+    public List<RequirementCheck> evaluate(
+            StrategyDataBundle data,
+            TrainingMethod method,
+            boolean useGroupStorage)
+    {
         List<RequirementCheck> checks = new ArrayList<>();
         if (method == null)
         {
@@ -65,7 +73,7 @@ public class RequirementEvidenceEngine
         }
         if (method.getSkill() == Skill.FARMING)
         {
-            return evaluateFarming(data, method);
+            return evaluateFarming(data, method, useGroupStorage);
         }
         if (method.getSkill() == Skill.AGILITY && agilityAccessEvaluator != null)
         {
@@ -74,9 +82,49 @@ public class RequirementEvidenceEngine
         if (method.getSkill() == Skill.RUNECRAFT
                 && runecraftSupplyCatalog.supports(method.getId()))
         {
-            return evaluateRunecraft(data, method);
+            return evaluateRunecraft(data, method, useGroupStorage);
+        }
+        if (method.getSkill() == Skill.MINING)
+        {
+            return evaluateTool(data, method, ItemRequirementClass.PICKAXE,
+                    useGroupStorage,
+                    "resource:usable-pickaxe", "Usable pickaxe");
+        }
+        if (method.getSkill() == Skill.WOODCUTTING)
+        {
+            return evaluateTool(data, method, ItemRequirementClass.AXE,
+                    useGroupStorage,
+                    "resource:usable-axe", "Usable axe");
         }
 
+        for (String requirement : method.getRequirements())
+        {
+            checks.add(generic(requirement));
+        }
+        return checks;
+    }
+
+    private List<RequirementCheck> evaluateTool(
+            StrategyDataBundle data,
+            TrainingMethod method,
+            ItemRequirementClass itemClass,
+            boolean useGroupStorage,
+            String requirementId,
+            String label)
+    {
+        List<RequirementCheck> checks = new ArrayList<>();
+        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        int usable = items.quantityMatching(itemClass,
+                java.util.Collections.emptyList());
+        checks.add(new RequirementCheck(
+                requirementId,
+                label,
+                usable > 0 ? RequirementState.VERIFIED
+                        : RequirementState.CHECK_NEEDED,
+                usable > 0
+                        ? label + " is observed in immediately usable ownership."
+                        : "No " + label.toLowerCase()
+                                + " is observed in immediately usable ownership."));
         for (String requirement : method.getRequirements())
         {
             checks.add(generic(requirement));
@@ -92,17 +140,19 @@ public class RequirementEvidenceEngine
      */
     private List<RequirementCheck> evaluateRunecraft(
             StrategyDataBundle data,
-            TrainingMethod method)
+            TrainingMethod method,
+            boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
         checks.add(resourceReadinessService.evaluate(
                 data,
-                runecraftSupplyCatalog.runeEssence()
+                runecraftSupplyCatalog.runeEssence(), useGroupStorage
         ));
         ResourceRequirement entry = runecraftSupplyCatalog.altarEntryFor(method.getId());
         if (entry != null)
         {
-            checks.add(resourceReadinessService.evaluate(data, entry));
+            checks.add(resourceReadinessService.evaluate(
+                    data, entry, useGroupStorage));
         }
         return checks;
     }
@@ -132,7 +182,8 @@ public class RequirementEvidenceEngine
 
     private List<RequirementCheck> evaluateFarming(
             StrategyDataBundle data,
-            TrainingMethod method)
+            TrainingMethod method,
+            boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
         AccountSnapshot account = data == null ? null : data.getAccount();
@@ -186,28 +237,32 @@ public class RequirementEvidenceEngine
 
             checks.add(resourceReadinessService.evaluate(
                     data,
-                    farmingSupplyCatalog.herbSeedsForLevel(level)
+                    farmingSupplyCatalog.herbSeedsForLevel(level),
+                    useGroupStorage
             ));
             checks.add(toolCheck(
                     data,
                     farming,
                     farmingSupplyCatalog.rake(),
                     "rake",
-                    "Rake was previously verified in Tool Leprechaun storage."
+                    "Rake was previously verified in Tool Leprechaun storage.",
+                    useGroupStorage
             ));
             checks.add(toolCheck(
                     data,
                     farming,
                     farmingSupplyCatalog.dibber(),
                     "dibber",
-                    "Seed dibber was previously verified in Tool Leprechaun storage."
+                    "Seed dibber was previously verified in Tool Leprechaun storage.",
+                    useGroupStorage
             ));
             checks.add(toolCheck(
                     data,
                     farming,
                     farmingSupplyCatalog.spade(),
                     "spade",
-                    "Spade was previously verified in Tool Leprechaun storage."
+                    "Spade was previously verified in Tool Leprechaun storage.",
+                    useGroupStorage
             ));
             return checks;
         }
@@ -224,17 +279,17 @@ public class RequirementEvidenceEngine
             FarmingSnapshot farming,
             ResourceRequirement requirement,
             String toolId,
-            String leprechaunEvidence)
+            String leprechaunEvidence,
+            boolean useGroupStorage)
     {
         CapabilityState stored = farming == null
                 ? CapabilityState.UNKNOWN
                 : farming.leprechaunToolState(toolId);
+        if (stored == CapabilityState.VERIFIED)
+            return resourceReadinessService.evaluate(data, requirement,
+                    stored, leprechaunEvidence);
         return resourceReadinessService.evaluate(
-                data,
-                requirement,
-                stored,
-                leprechaunEvidence
-        );
+                data, requirement, useGroupStorage);
     }
 
     private RequirementCheck generic(String requirement)

@@ -72,6 +72,19 @@ public final class RequirementActionability
         String label = normalize(check.getLabel());
         if (!id.startsWith("generic:")) return false;
 
+        // A combined label such as "Ourania route and essence supply" is an
+        // access check, not ordinary shopping/banking preparation. Check hard
+        // gates first so one supply word cannot accidentally make an unknown
+        // quest, area, activity, room, assignment, or risk gate actionable.
+        if (containsAny(label,
+                "access", "unlock", "quest", "completion", "completed",
+                "route", "contract", "spellbook", "activity", "minigame",
+                "region", "guild", "poh", "room", "course", "team",
+                "role", "assignment", "task", "risk accepted"))
+        {
+            return false;
+        }
+
         // These words describe resources or ordinary setup that can be acquired
         // as part of the recommendation. Access/unlock requirements deliberately
         // do not appear in this list and therefore stay hard CHECK_NEEDED gates.

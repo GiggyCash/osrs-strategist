@@ -82,11 +82,7 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                     ? "" : String.join("; ", readiness.getMissingRequirements());
             if (!ready && missing.trim().isEmpty()) continue;
             RecommendationGuidance guidance = ready
-                    ? new RecommendationGuidance(
-                            "Attempt " + title + " using the currently equipped and carried setup.",
-                            "Your equipped weapon, loadout, and minimum carried supplies are ready.",
-                            "Use only the verified non-Wilderness access route for this encounter.",
-                            "This is conservative readiness, not a universal BIS claim. Stop and reassess if the live setup changes.")
+                    ? readyGuidance(definition, title)
                     : new RecommendationGuidance(
                             "Prepare the missing PvM evidence before attempting " + title + ": " + missing + ".",
                             missing,
@@ -109,6 +105,24 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
+    private static RecommendationGuidance readyGuidance(
+            PvmActivityDefinition definition, String title)
+    {
+        if (definition != null && "pvm:tztok_jad".equals(definition.getId()))
+        {
+            return new RecommendationGuidance(
+                    "Enter the Fight Cave, complete all 63 waves, tag Jad's healers, and finish TzTok-Jad without missing a prayer switch.",
+                    "Keep the Ranged weapon, ammunition or charges, prayer restoration, and healing that the live readiness check verified equipped or carried.",
+                    "TzHaar Fight Cave beneath Karamja volcano.",
+                    "Readiness reflects observed carried setup and conservative access checks; it does not claim a universal best loadout.");
+        }
+        return new RecommendationGuidance(
+                "Attempt " + title + " using the currently equipped and carried setup.",
+                "Keep the weapon, loadout, and minimum supplies that the live readiness check verified.",
+                "Use the exact non-Wilderness route recorded by the encounter readiness check.",
+                "This is conservative readiness, not a universal best-in-slot claim. Stop and reassess if the live setup changes.");
+    }
+
     private static boolean progressionRelevant(PvmActivityDefinition definition,
             StrategyContext context)
     {
@@ -117,6 +131,8 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
         GoalType goal = context.getActiveGoal();
         if (goal == GoalType.BOWFA)
             return id.contains("gauntlet");
+        if (goal == GoalType.FIRE_CAPE)
+            return id.endsWith("tztok_jad");
         if (goal == GoalType.INFERNAL_CAPE)
             return id.endsWith("tztok_jad") || id.endsWith("tzkal_zuk");
         if (goal == GoalType.RAID_READY)

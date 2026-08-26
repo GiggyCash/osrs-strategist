@@ -43,9 +43,12 @@ public final class PlayerStrategyProfile
 
     public static PlayerStrategyProfile fromConfig(OsrsStrategistConfig config)
     {
+        PlayerGoal configuredGoal = config.activeGoal();
         return new PlayerStrategyProfile(
                 config.strategyMode(), config.sessionIntent(),
-                config.questTolerance(), config.activeGoal(),
+                config.questTolerance(), configuredGoal == null
+                        ? GoalType.AUTOMATIC
+                        : configuredGoal.toPlanningGoal(),
                 config.useGroupStorage(), config.collectionistMode(),
                 config.allowWildernessMethods()
         );
@@ -58,4 +61,12 @@ public final class PlayerStrategyProfile
     public boolean isUseGroupStorage() { return useGroupStorage; }
     public boolean isCollectionistMode() { return collectionistMode; }
     public boolean isAllowWildernessMethods() { return allowWildernessMethods; }
+
+    PlayerStrategyProfile sanitizedForPublicProduct()
+    {
+        if (PlayerGoal.isPlayerFacing(activeGoal)) return this;
+        return new PlayerStrategyProfile(strategyMode, sessionIntent,
+                questTolerance, GoalType.AUTOMATIC, useGroupStorage,
+                collectionistMode, allowWildernessMethods);
+    }
 }

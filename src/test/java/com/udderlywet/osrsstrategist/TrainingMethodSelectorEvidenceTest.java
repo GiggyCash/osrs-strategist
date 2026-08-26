@@ -74,6 +74,47 @@ public class TrainingMethodSelectorEvidenceTest
         );
     }
 
+    @Test
+    public void unknownAccessHighScoreMethodFallsBackToActionableAlternative()
+    {
+        TrainingMethod unknownFast = method("unknown-fast", 20.0);
+        TrainingMethod usableSlower = method("safe", 10.0);
+        TrainingMethodDatabase database = new TrainingMethodDatabase()
+        {
+            @Override
+            public List<TrainingMethod> methodsFor(Skill skill)
+            {
+                return Arrays.asList(unknownFast, usableSlower);
+            }
+        };
+        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()))
+        {
+            @Override
+            public List<RequirementCheck> evaluate(
+                    StrategyDataBundle data, TrainingMethod method)
+            {
+                if ("unknown-fast".equals(method.getId()))
+                {
+                    return Collections.singletonList(new RequirementCheck(
+                            "generic:Minigame access and food supply",
+                            "Minigame access and food supply",
+                            RequirementState.CHECK_NEEDED,
+                            "Access has not been observed."));
+                }
+                return Collections.singletonList(new RequirementCheck(
+                        "ready", "Ready", RequirementState.VERIFIED,
+                        "Verified."));
+            }
+        };
+
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence)
+                .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
+                        SessionIntent.PICK_FOR_ME);
+
+        assertEquals("safe", plan.getMethod().getId());
+    }
+
     private static TrainingMethod method(String id, double score)
     {
         return new TrainingMethod(

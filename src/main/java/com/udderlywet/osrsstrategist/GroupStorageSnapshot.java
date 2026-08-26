@@ -14,14 +14,25 @@ import java.util.List;
  */
 public final class GroupStorageSnapshot
 {
+    static final long FRESH_FOR_MILLIS = 5L * 60L * 1000L;
     private final boolean observed;
     private final List<ItemStackSnapshot> items;
+    private final long observedAtMillis;
 
     public GroupStorageSnapshot(
             boolean observed,
             List<ItemStackSnapshot> items)
     {
+        this(observed, items, observed ? System.currentTimeMillis() : 0L);
+    }
+
+    public GroupStorageSnapshot(
+            boolean observed,
+            List<ItemStackSnapshot> items,
+            long observedAtMillis)
+    {
         this.observed = observed;
+        this.observedAtMillis = Math.max(0L, observedAtMillis);
         this.items = Collections.unmodifiableList(
                 items == null
                         ? new ArrayList<>()
@@ -39,8 +50,12 @@ public final class GroupStorageSnapshot
 
     public boolean isObserved()
     {
-        return observed;
+        long age = System.currentTimeMillis() - observedAtMillis;
+        return observed && observedAtMillis > 0L
+                && age >= 0L && age <= FRESH_FOR_MILLIS;
     }
+
+    public long getObservedAtMillis() { return observedAtMillis; }
 
     public List<ItemStackSnapshot> getItems()
     {
@@ -49,7 +64,7 @@ public final class GroupStorageSnapshot
 
     public boolean containsItem(int itemId)
     {
-        if (!observed)
+        if (!isObserved())
         {
             return false;
         }

@@ -149,7 +149,7 @@ public class RecommendationEngine
 
             TrainingPlan trainingPlan = trainingMethodSelector.select(
                     data, skill, level, strategyMode, sessionIntent,
-                    allowWildernessMethods);
+                    allowWildernessMethods, useGroupStorage);
             if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
 
             int target = nextTarget(level);

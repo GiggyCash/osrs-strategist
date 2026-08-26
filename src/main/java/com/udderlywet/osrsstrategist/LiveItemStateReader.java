@@ -25,6 +25,7 @@ public class LiveItemStateReader
     private final Client client;
     private final ItemManager itemManager;
     private BankSnapshot lastBankSnapshot;
+    private GroupStorageSnapshot lastGroupStorageSnapshot;
 
     @Inject
     public LiveItemStateReader(
@@ -71,9 +72,24 @@ public class LiveItemStateReader
         return lastBankSnapshot;
     }
 
+    /** Shared storage is usable only after this character actually opens it. */
+    public GroupStorageSnapshot readGroupStorage()
+    {
+        return lastGroupStorageSnapshot;
+    }
+
+    public void observeGroupStorage(ItemContainer container)
+    {
+        List<ItemStackSnapshot> items = snapshot(container);
+        if (items != null)
+            lastGroupStorageSnapshot = new GroupStorageSnapshot(
+                    true, items, System.currentTimeMillis());
+    }
+
     public void clearAccountCaches()
     {
         lastBankSnapshot = null;
+        lastGroupStorageSnapshot = null;
     }
 
     private List<ItemStackSnapshot> readContainer(
@@ -87,8 +103,13 @@ public class LiveItemStateReader
             return null;
         }
 
-        List<ItemStackSnapshot> result = new ArrayList<>();
+        return snapshot(container);
+    }
 
+    private List<ItemStackSnapshot> snapshot(ItemContainer container)
+    {
+        if (container == null) return null;
+        List<ItemStackSnapshot> result = new ArrayList<>();
         Item[] containerItems = container.getItems();
         for (int slotIndex = 0; slotIndex < containerItems.length; slotIndex++)
         {

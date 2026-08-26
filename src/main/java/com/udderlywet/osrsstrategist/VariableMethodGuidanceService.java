@@ -64,29 +64,36 @@ public class VariableMethodGuidanceService
     private static RecommendationGuidance wintertodt(int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Run Wintertodt rounds and reach at least 500 personal points before each kill. You need " + format(xp) + " Firemaking XP to level " + target + ".",
+                "Chop bruma roots, feed and repair braziers, reach at least 500 personal points, then repeat until you gain " + format(xp) + " Firemaking XP for level " + target + ". Fletch only when needed to secure the 500-point threshold.",
                 "Equip four warm items, bring a knife and hammer, and use food appropriate to your Hitpoints level. " + observed(items, "Bruma torch", "Warm gloves", "Pyromancer hood", "Pyromancer garb", "Pyromancer robe", "Pyromancer boots"),
-                "Use the Wintertodt camp in northern Great Kourend. Chop bruma roots, feed braziers, repair broken braziers, and fletch only when extra points/reward value is worth lower raw Firemaking XP.",
+                "Wintertodt camp in northern Great Kourend.",
                 "Round length, interruptions, fletching, and player levels change XP per game. Exact XP remaining is shown without inventing a fixed kill count."
         );
     }
 
     private static RecommendationGuidance tempoross(int target, int xp, ObservedItemIndex items)
     {
+        String harpoon = firstObserved(items, "Dragon harpoon",
+                "Crystal harpoon", "Infernal harpoon", "Harpoon");
         return new RecommendationGuidance(
-                "Complete Tempoross games while maintaining enough activity for reward permits. You need " + format(xp) + " Fishing XP to level " + target + ".",
-                "Bring your best usable harpoon if owned; island tools cover the fallback. Rope, hammer, and buckets are available on the island. " + observed(items, "Dragon harpoon", "Crystal harpoon", "Infernal harpoon", "Harpoon"),
-                "Fish harpoonfish, cook them when points/rewards matter, load cannons, and tether during waves.",
+                "Fish harpoonfish, cook the catch, load both cannons, tether during waves, and repeat until you gain " + format(xp) + " Fishing XP for level " + target + ".",
+                harpoon == null
+                        ? "No supplies required; use the harpoon, rope, hammer, and buckets on the island."
+                        : "Bring " + harpoon + "; rope, hammer, and buckets are available on the island.",
+                "Tempoross island, entered from the Ruins of Unkah ferry.",
                 "Cooking choice, team size, storm timing, and reward strategy change Fishing XP per game, so no fake game count is shown."
         );
     }
 
     private static RecommendationGuidance gotr(int target, int xp, ObservedItemIndex items)
     {
+        String pouches = observed(items, "Small pouch", "Medium pouch",
+                "Large pouch", "Giant pouch", "Colossal pouch");
         return new RecommendationGuidance(
-                "Play Guardians of the Rift and balance elemental and catalytic energy until you gain " + format(xp) + " Runecraft XP toward level " + target + ".",
-                "Bring a pickaxe, chisel, and every essence pouch your account can safely use. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Abyssal lantern"),
-                "Mine fragments, craft guardian essence, use opened altars, and place cells where they protect or upgrade guardians.",
+                "Mine fragments, craft guardian essence, enter the open altars, charge guardians, and place cells until you gain " + format(xp) + " Runecraft XP for level " + target + ".",
+                "Bring a pickaxe and chisel."
+                        + (pouches.isEmpty() ? "" : " " + pouches),
+                "Guardians of the Rift arena in the Temple of the Eye.",
                 "Portal timing, altar choices, pouch capacity, and match outcome change XP per game. The planner therefore reports the exact XP gap, not a fabricated match count."
         );
     }
@@ -94,28 +101,30 @@ public class VariableMethodGuidanceService
     private static RecommendationGuidance zmi(int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Run Ourania Altar trips until you gain " + format(xp) + " Runecraft XP toward level " + target + ". Fill every usable essence pouch before each trip.",
+                "Fill every usable essence pouch, follow the safe altar path, craft the mixed rune result, bank, and repeat until you gain " + format(xp) + " Runecraft XP for level " + target + ".",
                 "Bring pure essence, usable essence pouches, and your preferred banking/teleport setup. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Ourania teleport"),
-                "Bank near the Ourania entrance, follow the safe altar path, craft the mixed rune result, then repeat with full pouches.",
+                "Ourania Altar, southwest of Ardougne.",
                 "Ourania produces a mix of runes, and XP per essence depends on the result distribution and account level. Treat the remaining essence count as variable."
         );
     }
 
     private static RecommendationGuidance motherlode(int target, int xp, ObservedItemIndex items)
     {
+        String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                "Mine pay-dirt at Motherlode Mine until you gain " + format(xp) + " Mining XP toward level " + target + ", banking ores and preserving golden nuggets for useful unlocks.",
-                "Bring your best usable pickaxe. " + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Infernal pickaxe", "Rune pickaxe", "Prospector helmet", "Prospector jacket", "Prospector legs", "Prospector boots"),
-                "Use the lower level until upper-level access is available, then prefer upper veins for longer depletion timers and lower attention.",
+                "Mine pay-dirt on the lower level, clean it through the hopper, empty the sack, bank the ores, and repeat until you gain " + format(xp) + " Mining XP for level " + target + ". Keep golden nuggets for planned unlocks.",
+                "Bring " + pickaxe + ". " + observed(items, "Prospector helmet", "Prospector jacket", "Prospector legs", "Prospector boots"),
+                "Motherlode Mine beneath Falador.",
                 "Vein uptime and pay-dirt flow vary. Golden-nugget goals such as Prospector or upper-level access can remain protected beyond an arbitrary level milestone."
         );
     }
 
     private static RecommendationGuidance shootingStars(int target, int xp, ObservedItemIndex items)
     {
+        String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
                 "Mine a reachable Shooting Star until it depletes or you gain " + format(xp) + " Mining XP toward level " + target + ".",
-                "Only a usable pickaxe is required. Keep stardust when Celestial ring or charge rewards still matter. " + observed(items, "Celestial ring", "Celestial signet", "Dragon pickaxe", "Rune pickaxe"),
+                "Bring " + pickaxe + ". Keep stardust when Celestial ring or charge rewards still matter. " + observed(items, "Celestial ring", "Celestial signet"),
                 "Use a discovered star location that respects the account's membership, access, and Wilderness-risk settings.",
                 "Star tier changes while mining and affects XP. Exact swing counts would be false precision; this is primarily the low-attention Mining option."
         );
@@ -123,20 +132,22 @@ public class VariableMethodGuidanceService
 
     private static RecommendationGuidance volcanicMine(int target, int xp, ObservedItemIndex items)
     {
+        String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                "Run Volcanic Mine with a verified team and role until you gain " + format(xp) + " Mining XP toward level " + target + ".",
-                "Bring your best pickaxe plus food and stamina support required by the team's role. " + observed(items, "Dragon pickaxe", "Crystal pickaxe", "Rune pickaxe"),
-                "Use Volcanic Mine only after its access requirements and intended team role are verified.",
+                "Perform the already verified team role and complete Volcanic Mine rounds until you gain " + format(xp) + " Mining XP for level " + target + ".",
+                "Bring " + pickaxe + " plus the food and stamina supplies in the verified team-role setup.",
+                "Volcanic Mine on Fossil Island.",
                 "Vent state, role, boulder phase, and points change XP per game, so no fixed game count is shown."
         );
     }
 
     private static RecommendationGuidance blastMine(int target, int xp, ObservedItemIndex items)
     {
+        String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                "Mine blasted ore until you gain " + format(xp) + " Mining XP toward level " + target + ". Keep a consistent place, light, move, excavate, collect rhythm.",
-                "Bring dynamite and your best usable pickaxe. " + observed(items, "Dynamite", "Dragon pickaxe", "Rune pickaxe"),
-                "Use Blast Mine in Lovakengj and maintain safe distance from lit dynamite.",
+                "Place dynamite, light it, move clear, excavate the blasted rock, collect the ore, and repeat until you gain " + format(xp) + " Mining XP for level " + target + ".",
+                "Bring dynamite and " + pickaxe + ". " + observed(items, "Dynamite"),
+                "Blast Mine in Lovakengj.",
                 "Ore tier and timing affect XP and dynamite use, so the plugin keeps the exact XP gap without claiming a universal dynamite count."
         );
     }
@@ -166,7 +177,7 @@ public class VariableMethodGuidanceService
         return new RecommendationGuidance(
                 "Fill Mastering Mixology orders until you gain " + format(xp) + " Herblore XP toward level " + target + ". Prioritize orders that support the reward goal you are currently protecting.",
                 "Convert spare eligible herbs into paste while preserving herbs needed for higher-value combat potions. " + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed"),
-                "At the Alchemical Society, mix the ordered potion, use its correct processing station, then hand it in before choosing the next order.",
+                "Alchemical Society in Aldarin.",
                 "Order combinations change continuously. Exact paste-to-level counts require live order state; XP per order is not assumed constant."
         );
     }
@@ -176,7 +187,7 @@ public class VariableMethodGuidanceService
         return new RecommendationGuidance(
                 "Run Tithe Farm with the highest fruit seed tier unlocked and a plot count you can water reliably. You need " + format(xp) + " Farming XP to level " + target + ".",
                 "Bring a spade and watering cans. Use Gricoller's can when owned. " + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
-                "Plant, water every growth cycle, harvest the fruit, and deposit it for points before the batch expires.",
+                "Tithe Farm in Hosidius.",
                 "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint."
         );
     }
@@ -226,7 +237,7 @@ public class VariableMethodGuidanceService
         return new RecommendationGuidance(
                 "Track and harvest herbiboars until you gain " + format(xp) + " Hunter XP toward level " + target + ". Bank or process herbs according to the account's Herblore needs.",
                 "Bring a herb sack when owned, plus stamina or graceful-style movement support if useful. " + observed(items, "Herb sack", "Magic secateurs", "Graceful hood", "Graceful top", "Graceful legs", "Graceful boots"),
-                "Follow herbiboar tracks around Fossil Island and inspect the final burrow before beginning the next trail.",
+                "Herbiboar hunting area on Fossil Island.",
                 "Track length and herb rewards vary. Iron accounts may prefer this over higher raw Hunter XP when Herblore supplies are scarce."
         );
     }
@@ -246,7 +257,7 @@ public class VariableMethodGuidanceService
         return new RecommendationGuidance(
                 "Run Pyramid Plunder and spend most of the timer in the highest rooms you can access until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
                 "Bring food or healing, antipoison if your route needs it, and free inventory space for loot. " + observed(items, "Pharaoh's sceptre", "Dodgy necklace", "Antipoison(4)", "Superantipoison(4)"),
-                "Enter Pyramid Plunder in Sophanem, move quickly through low-value rooms, and prioritize urns/chests in your highest available room according to the chosen sceptre-versus-XP goal.",
+                "Pyramid Plunder in Sophanem.",
                 "Room access, failed traps, chest and sarcophagus choices, and sceptre hunting change XP per run, so no fixed run count is shown."
         );
     }
@@ -272,8 +283,25 @@ public class VariableMethodGuidanceService
             found.append(quantity).append("x ").append(name);
         }
         return found.length() == 0
-                ? "No relevant setup item from this short list is currently observed."
+                ? ""
                 : "Observed: " + found + ".";
+    }
+
+    private static String pickaxe(ObservedItemIndex items)
+    {
+        String[] names = {"Crystal pickaxe", "Infernal pickaxe",
+                "3rd age pickaxe", "Dragon pickaxe", "Rune pickaxe",
+                "Adamant pickaxe", "Mithril pickaxe", "Black pickaxe",
+                "Steel pickaxe", "Iron pickaxe", "Bronze pickaxe"};
+        for (String name : names) if (items.has(name)) return name;
+        return "a pickaxe obtained before leaving";
+    }
+
+    private static String firstObserved(
+            ObservedItemIndex items, String... names)
+    {
+        for (String name : names) if (items.has(name)) return name;
+        return null;
     }
 
     private static String format(long value)

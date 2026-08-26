@@ -46,26 +46,6 @@ public class FeedbackTortureTest
     }
 
     @Test
-    public void doThisBoostsTheSemanticActionWithoutSuppressingIt()
-    {
-        Recommendation displayed = ready("quest-prereq:agility-70",
-                "Train Agility to 70", 39);
-        Recommendation alias = ready("skill:agility",
-                "Train Agility to 70", 39);
-        Recommendation mining = ready("skill:mining",
-                "Train Mining to 71", 40);
-        PreferenceProfile profile = new PreferenceProfile();
-        String semantic = deduplicator.semanticKey(displayed);
-        profile.applySemantic(semantic, FeedbackAction.DO_THIS);
-
-        List<Recommendation> queue = engine().buildPlayerQueue(
-                Arrays.asList(alias, mining), context(profile));
-        assertEquals("skill:agility", queue.get(0).getId());
-        assertFalse(profile.isSemanticOnCooldown(semantic));
-        assertTrue(profile.semanticWeightFor(semantic) > 0.0);
-    }
-
-    @Test
     public void accountSwitchAndReturnRestoresOnlyTheCorrectFeedbackState()
     {
         Recommendation action = ready("skill:fishing",
@@ -81,7 +61,7 @@ public class FeedbackTortureTest
         assertEquals(0.0, accountB.semanticWeightFor(semantic), 0.0);
         assertFalse(accountB.isSemanticOnCooldown(semantic));
         accountB.applySemantic(deduplicator.semanticKey(ready("skill:mining",
-                "Train Mining to 71", 40)), FeedbackAction.DO_THIS);
+                "Train Mining to 71", 40)), FeedbackAction.DISLIKE);
         assertEquals(0.0, accountB.semanticWeightFor(semantic), 0.0);
 
         PreferenceProfile returnedA = new PreferenceProfile();

@@ -16,13 +16,12 @@ final class CompassConfigKeys
     static final String COLLECTIONIST = "collectionistMode";
     static final String DETAILS_OVERLAY = "showDetailsOverlay";
     static final String METHOD_OVERLAY = "showInGameGuidance";
+    static final String SIDEBAR_TEXT_SIZE = "sidebarTextSize";
     static final String FIRST_USE_COMPLETE = "firstUseComplete";
 
     private static final Set<String> PLANNING = new HashSet<>(Arrays.asList(
             STRATEGY_MODE, SESSION_INTENT, ACTIVE_GOAL, QUEST_TOLERANCE,
-            ALLOW_WILDERNESS, USE_GROUP_STORAGE, COLLECTIONIST,
-            "bankAware", "riskWarnings", "birdhouseReminders",
-            "herbRunReminders", "clueReminders"));
+            ALLOW_WILDERNESS, USE_GROUP_STORAGE, COLLECTIONIST));
     private static final Set<String> PROFILE = new HashSet<>(Arrays.asList(
             STRATEGY_MODE, SESSION_INTENT, ACTIVE_GOAL, QUEST_TOLERANCE,
             ALLOW_WILDERNESS, USE_GROUP_STORAGE, COLLECTIONIST));

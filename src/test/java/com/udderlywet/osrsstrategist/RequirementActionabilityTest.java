@@ -34,7 +34,7 @@ public class RequirementActionabilityTest
                 new RecommendationGuidance(
                         "Smith steel platebodies until the milestone.",
                         "Need 500 steel bars. Buy or self-source the missing amount.",
-                        "Use a reachable anvil.",
+                        "Varrock West anvils, directly south of the bank.",
                         "The route is known; only supplies remain."));
 
         RecommendationActionabilityPolicy policy =
@@ -45,7 +45,7 @@ public class RequirementActionabilityTest
         assertTrue(RecommendationPresentation.compactText(recommendation)
                 .contains("Need 500 steel bars"));
         assertTrue(RecommendationPresentation.compactText(recommendation)
-                .contains("NEEDED"));
+                .contains("BRING"));
     }
 
     @Test
@@ -81,8 +81,32 @@ public class RequirementActionabilityTest
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
         assertFalse(new RecommendationActionabilityPolicy()
                 .canLeadQueue(recommendation));
+        assertFalse(new RecommendationActionabilityPolicy()
+                .mayAppearAsAlternative(recommendation));
         assertTrue(RecommendationPresentation.compactText(recommendation)
                 .contains("NEEDED"));
+    }
+
+    @Test
+    public void accessAndSupplyInOneLabelRemainsAHardGate()
+    {
+        TrainingPlan plan = new TrainingPlan(
+                method("runecraft_zmi", Skill.RUNECRAFT),
+                "test",
+                RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(new RequirementCheck(
+                        "generic:Ourania Altar route and essence supply",
+                        "Ourania Altar route and essence supply",
+                        RequirementState.CHECK_NEEDED,
+                        "Route not observed.")));
+
+        assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
+        assertFalse(RequirementActionability.isActionablePreparation(plan,
+                new RecommendationGuidance(
+                        "Run essence to the altar.",
+                        "Bring pure essence.",
+                        "Ourania Altar.",
+                        "Route access is unknown.")));
     }
 
     @Test

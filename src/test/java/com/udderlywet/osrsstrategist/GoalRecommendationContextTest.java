@@ -20,8 +20,8 @@ public class GoalRecommendationContextTest
         assertEquals(GoalRecommendationRelationship.AUTOMATIC,
                 automatic.getRelationship());
         assertEquals("Automatic", automatic.getGoalName());
-        assertEquals("Max", max.getGoalName());
-        assertEquals(GoalType.AUTOMATIC,
+        assertEquals("Max cape", max.getGoalName());
+        assertEquals(PlayerGoal.AUTOMATIC,
                 new OsrsStrategistConfig() { }.activeGoal());
     }
 

@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
-import java.util.function.BooleanSupplier;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
@@ -18,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import net.runelite.api.Skill;
@@ -52,11 +50,9 @@ public class OsrsStrategistPanel extends PluginPanel
     private final BiConsumer<String, FeedbackAction> feedbackHandler;
     private final Consumer<Recommendation> detailsHandler;
     private final Runnable refreshHandler;
-    private final Runnable resetFeedbackHandler;
     private final Runnable firstUseHandler;
     private final String supportUrl;
     private final Consumer<String> supportBrowser;
-    private final BooleanSupplier resetConfirmation;
 
     private final JLabel accountName = label("Waiting for login...");
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
@@ -65,7 +61,7 @@ public class OsrsStrategistPanel extends PluginPanel
             "Mode: Balanced<br>Session: Pick for me<br>Quests: Normal"
     );
     private final JTextArea firstUseHint = wrappingArea(
-            "Choose a goal, strategy, and session style. Compass will handle the rest.",
+            "Compass starts with sensible defaults. Change Goal or Session only when you want to steer the plan.",
             MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
     private final JPanel milestoneBanner = cardPanel(true);
@@ -91,17 +87,17 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JTextArea alternativeTwo = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
     private final JTextArea opportunityOne = wrappingArea(
-            "No active reminders yet.", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
+            "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
     private final JTextArea opportunityTwo = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
+    private final JPanel alternativesCard = cardPanel(false);
+    private final JPanel opportunitiesCard = cardPanel(false);
 
     private final JButton detailsButton = actionButton("Details");
-    private final JButton doThisButton = actionButton("Do This");
     private final JButton laterButton = actionButton("Later");
     private final JButton notTodayButton = actionButton("Not Today");
     private final JButton dislikeButton = actionButton("Dislike");
-    private final JButton refreshButton = actionButton("Re-evaluate");
-    private final JButton resetFeedbackButton = actionButton("Reset Feedback");
+    private final JButton refreshButton = actionButton("Refresh Plan");
     private final JButton supportButton = actionButton("Support Compass");
 
     private Recommendation currentRecommendation;
@@ -115,8 +111,8 @@ public class OsrsStrategistPanel extends PluginPanel
             SkillIconLoader skillIconLoader)
     {
         this(feedbackHandler, skillIconLoader, recommendation -> { },
-                () -> { }, () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
-                value -> { }, () -> true);
+                () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
+                value -> { });
     }
 
     public OsrsStrategistPanel(
@@ -125,8 +121,8 @@ public class OsrsStrategistPanel extends PluginPanel
             Consumer<Recommendation> detailsHandler)
     {
         this(feedbackHandler, skillIconLoader, detailsHandler,
-                () -> { }, () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
-                value -> { }, () -> true);
+                () -> { }, () -> { }, SupportLinks.SUPPORT_URL,
+                value -> { });
     }
 
     OsrsStrategistPanel(
@@ -134,11 +130,9 @@ public class OsrsStrategistPanel extends PluginPanel
             SkillIconLoader skillIconLoader,
             Consumer<Recommendation> detailsHandler,
             Runnable refreshHandler,
-            Runnable resetFeedbackHandler,
             Runnable firstUseHandler,
             String supportUrl,
-            Consumer<String> supportBrowser,
-            BooleanSupplier resetConfirmation)
+            Consumer<String> supportBrowser)
     {
         this.feedbackHandler = feedbackHandler;
         this.skillIconLoader = skillIconLoader;
@@ -146,14 +140,10 @@ public class OsrsStrategistPanel extends PluginPanel
                 ? recommendation -> { }
                 : detailsHandler;
         this.refreshHandler = refreshHandler == null ? () -> { } : refreshHandler;
-        this.resetFeedbackHandler = resetFeedbackHandler == null
-                ? () -> { } : resetFeedbackHandler;
         this.firstUseHandler = firstUseHandler == null
                 ? () -> { } : firstUseHandler;
         this.supportUrl = supportUrl;
         this.supportBrowser = supportBrowser == null ? value -> { } : supportBrowser;
-        this.resetConfirmation = resetConfirmation == null
-                ? this::confirmReset : resetConfirmation;
 
         setLayout(new BorderLayout());
         setBackground(StrategistTheme.BACKGROUND);
@@ -276,7 +266,6 @@ public class OsrsStrategistPanel extends PluginPanel
         feedbackGrid.setOpaque(false);
         feedbackGrid.setAlignmentX(LEFT_ALIGNMENT);
         feedbackGrid.setMaximumSize(new Dimension(INNER_WIDTH, 74));
-        feedbackGrid.add(doThisButton);
         feedbackGrid.add(laterButton);
         feedbackGrid.add(notTodayButton);
         feedbackGrid.add(dislikeButton);
@@ -286,7 +275,6 @@ public class OsrsStrategistPanel extends PluginPanel
         recommendationCard.add(feedbackStatus);
 
         detailsButton.addActionListener(event -> toggleDetails());
-        doThisButton.addActionListener(event -> submitFeedback(FeedbackAction.DO_THIS));
         laterButton.addActionListener(event -> submitFeedback(FeedbackAction.LATER));
         notTodayButton.addActionListener(event -> submitFeedback(FeedbackAction.NOT_TODAY));
         dislikeButton.addActionListener(event -> submitFeedback(FeedbackAction.DISLIKE));
@@ -298,52 +286,38 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildSecondaryCards(JPanel content)
     {
-        JPanel alternatives = cardPanel(false);
-        alternatives.add(eyebrow("OTHER GOOD OPTIONS"));
-        alternatives.add(Box.createVerticalStrut(8));
+        alternativesCard.add(eyebrow("OTHER GOOD OPTIONS"));
+        alternativesCard.add(Box.createVerticalStrut(8));
         setWrappedText(alternativeOne, "", TEXT_WIDTH);
-        alternatives.add(alternativeOne);
-        alternatives.add(Box.createVerticalStrut(9));
+        alternativesCard.add(alternativeOne);
+        alternativesCard.add(Box.createVerticalStrut(9));
         setWrappedText(alternativeTwo, "", TEXT_WIDTH);
-        alternatives.add(alternativeTwo);
-        content.add(alternatives);
+        alternativesCard.add(alternativeTwo);
+        alternativesCard.setVisible(false);
+        content.add(alternativesCard);
         content.add(Box.createVerticalStrut(9));
 
-        JPanel opportunities = cardPanel(false);
-        opportunities.add(eyebrow("OPPORTUNITIES"));
-        opportunities.add(Box.createVerticalStrut(8));
-        setWrappedText(opportunityOne, "No active reminders yet.", TEXT_WIDTH);
-        opportunities.add(opportunityOne);
-        opportunities.add(Box.createVerticalStrut(9));
+        opportunitiesCard.add(eyebrow("OPPORTUNITIES"));
+        opportunitiesCard.add(Box.createVerticalStrut(8));
+        setWrappedText(opportunityOne, "", TEXT_WIDTH);
+        opportunitiesCard.add(opportunityOne);
+        opportunitiesCard.add(Box.createVerticalStrut(9));
         setWrappedText(opportunityTwo, "", TEXT_WIDTH);
-        opportunities.add(opportunityTwo);
-        content.add(opportunities);
+        opportunitiesCard.add(opportunityTwo);
+        opportunitiesCard.setVisible(false);
+        content.add(opportunitiesCard);
     }
 
     private void buildFooter(JPanel content)
     {
         content.add(Box.createVerticalStrut(9));
-        JPanel recovery = new JPanel(new GridLayout(1, 2, 6, 0));
-        recovery.setOpaque(false);
-        recovery.setAlignmentX(LEFT_ALIGNMENT);
-        recovery.setMaximumSize(new Dimension(CONTENT_WIDTH, 32));
-        recovery.add(refreshButton);
-        recovery.add(resetFeedbackButton);
+        makeFullWidth(refreshButton, 32);
         refreshButton.addActionListener(event ->
         {
             acknowledgeFirstUse();
             refreshHandler.run();
-            setWrappedText(feedbackStatus, "Recommendation refreshed.", TEXT_WIDTH);
         });
-        resetFeedbackButton.addActionListener(event ->
-        {
-            if (!resetConfirmation.getAsBoolean()) return;
-            acknowledgeFirstUse();
-            resetFeedbackHandler.run();
-            setWrappedText(feedbackStatus,
-                    "Learned feedback reset for this account.", TEXT_WIDTH);
-        });
-        content.add(recovery);
+        content.add(refreshButton);
 
         content.add(Box.createVerticalStrut(12));
         Dimension supportSize = new Dimension(CONTENT_WIDTH, 34);
@@ -411,7 +385,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         strategySummary.setText(html(
                 "Mode: " + prettyName(mode.name())
-                        + "<br>Session: " + prettyName(intent.name())
+                        + "<br>Session: " + intent
                         + "<br>Quests: " + prettyName(tolerance.name())));
     }
 
@@ -428,7 +402,9 @@ public class OsrsStrategistPanel extends PluginPanel
                 ? null
                 : currentRecommendation.getId();
 
-        if (previousId == null || !previousId.equals(best.getId()))
+        boolean recommendationChanged = previousId == null
+                || !previousId.equals(best.getId());
+        if (recommendationChanged)
         {
             clearDetailsOverlay();
             setWrappedText(feedbackStatus, "", TEXT_WIDTH);
@@ -440,29 +416,36 @@ public class OsrsStrategistPanel extends PluginPanel
         setWrappedText(recommendationTitle, safe(best.getTitle()), TEXT_WIDTH);
 
         Skill skill = MilestoneTracker.skillFor(best);
-        recommendationIcon.setIcon(null);
-        if (skill != null)
+        if (recommendationChanged)
         {
-            recommendationEyebrow.setText(skill.getName().toUpperCase());
-            skillIconLoader.load(skill, recommendationIcon, 26);
-        }
-        else
-        {
-            recommendationEyebrow.setText("NEXT MOVE");
+            if (skillIconLoader != null) skillIconLoader.clear(recommendationIcon);
+            else recommendationIcon.setIcon(null);
+            if (skill != null)
+            {
+                recommendationEyebrow.setText(skill.getName().toUpperCase());
+                if (skillIconLoader != null)
+                    skillIconLoader.load(skill, recommendationIcon, 26);
+            }
+            else
+            {
+                recommendationEyebrow.setText("NEXT MOVE");
+            }
         }
 
         updateProgress(best);
         renderRecommendationBody();
         setWrappedText(alternativeOne,
                 recommendations.size() > 1
-                        ? "• " + safe(recommendations.get(1).getTitle())
+                        ? alternativeText(recommendations.get(1))
                         : "",
                 TEXT_WIDTH);
         setWrappedText(alternativeTwo,
                 recommendations.size() > 2
-                        ? "• " + safe(recommendations.get(2).getTitle())
+                        ? alternativeText(recommendations.get(2))
                         : "",
                 TEXT_WIDTH);
+        alternativeTwo.setVisible(recommendations.size() > 2);
+        alternativesCard.setVisible(recommendations.size() > 1);
         revalidate();
         repaint();
     }
@@ -499,8 +482,9 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (opportunities == null || opportunities.isEmpty())
         {
-            setWrappedText(opportunityOne, "No active reminders yet.", TEXT_WIDTH);
+            setWrappedText(opportunityOne, "", TEXT_WIDTH);
             setWrappedText(opportunityTwo, "", TEXT_WIDTH);
+            opportunitiesCard.setVisible(false);
             return;
         }
 
@@ -508,6 +492,8 @@ public class OsrsStrategistPanel extends PluginPanel
         setWrappedText(opportunityTwo,
                 opportunities.size() > 1 ? opportunityText(opportunities.get(1)) : "",
                 TEXT_WIDTH);
+        opportunityTwo.setVisible(opportunities.size() > 1);
+        opportunitiesCard.setVisible(true);
         revalidate();
         repaint();
     }
@@ -584,7 +570,6 @@ public class OsrsStrategistPanel extends PluginPanel
     private void setRecommendationButtonsEnabled(boolean enabled)
     {
         detailsButton.setEnabled(enabled && detailsOverlayEnabled);
-        doThisButton.setEnabled(enabled);
         laterButton.setEnabled(enabled);
         notTodayButton.setEnabled(enabled);
         dislikeButton.setEnabled(enabled);
@@ -611,8 +596,15 @@ public class OsrsStrategistPanel extends PluginPanel
     boolean isFirstUseHintVisible() { return firstUseHint.isVisible(); }
     boolean isDetailsControlEnabled() { return detailsButton.isEnabled(); }
     void clickSupportForTest() { supportButton.doClick(); }
-    void clickResetFeedbackForTest() { resetFeedbackButton.doClick(); }
     String recommendationTextForTest() { return recommendationBody.getText(); }
+    boolean areAlternativesVisibleForTest() { return alternativesCard.isVisible(); }
+    boolean areOpportunitiesVisibleForTest() { return opportunitiesCard.isVisible(); }
+    String firstAlternativeTextForTest() { return alternativeOne.getText(); }
+    java.util.List<String> feedbackLabelsForTest()
+    {
+        return java.util.Arrays.asList(
+                laterButton.getText(), notTodayButton.getText(), dislikeButton.getText());
+    }
 
     private GoalRecommendationContext currentGoalContext()
     {
@@ -626,14 +618,6 @@ public class OsrsStrategistPanel extends PluginPanel
         firstUseHandler.run();
     }
 
-    private boolean confirmReset()
-    {
-        return JOptionPane.showConfirmDialog(this,
-                "Reset learned Compass feedback for this account?",
-                "Reset Compass feedback", JOptionPane.YES_NO_OPTION)
-                == JOptionPane.YES_OPTION;
-    }
-
     private static MembershipStatus membershipFromDisplay(String display)
     {
         if (display == null) return MembershipStatus.UNKNOWN;
@@ -641,6 +625,22 @@ public class OsrsStrategistPanel extends PluginPanel
             if (status.getDisplayName().equalsIgnoreCase(display.trim()))
                 return status;
         return MembershipStatus.UNKNOWN;
+    }
+
+    private static String alternativeText(Recommendation recommendation)
+    {
+        if (recommendation == null) return "";
+        StringBuilder value = new StringBuilder("• ")
+                .append(safe(recommendation.getTitle()));
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        if (plan != null && plan.getMethod() != null)
+            value.append(" — ").append(safe(plan.getMethod().getName()));
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null && guidance.getLocation() != null
+                && !guidance.getLocation().trim().isEmpty())
+            value.append(" at ").append(RecommendationPresentation
+                    .compactSentence(guidance.getLocation(), 75));
+        return value.toString();
     }
 
     private static void makeFullWidth(JButton button, int height)
@@ -765,8 +765,6 @@ public class OsrsStrategistPanel extends PluginPanel
         String activity = safe(title == null ? "Recommendation" : title);
         switch (action)
         {
-            case DO_THIS:
-                return "Selected: " + activity;
             case LATER:
                 return activity + "\nLater for 1 hour";
             case NOT_TODAY:

@@ -60,7 +60,8 @@ public class DoNextInvariantTest
                 50, null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
                 new RecommendationGuidance(
                         "Open your bank and leave it open for one game tick.",
-                        "No supplies required.", "Any bank.",
+                        "No supplies required.",
+                        "Grand Exchange bank booths, northwest of Varrock.",
                         "This records an observed snapshot."),
                 CandidateSafetyEvidence.harmless(true));
 
@@ -73,7 +74,7 @@ public class DoNextInvariantTest
     {
         Recommendation exhausted = evaluate(engine(), observedData(),
                 new PreferenceProfile());
-        assertEquals("fallback:goal", exhausted.getId());
+        assertEquals("fallback:starter-pickaxe", exhausted.getId());
 
         StrategyResult unavailable = engine().evaluate(null,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -148,7 +149,7 @@ public class DoNextInvariantTest
                 .equipment(new EquipmentSnapshot(Collections.emptyList())).build();
         Recommendation uimFallback = evaluate(engine(), uim,
                 new PreferenceProfile());
-        assertEquals("fallback:goal", uimFallback.getId());
+        assertEquals("fallback:starter-pickaxe", uimFallback.getId());
         assertFalse(RecommendationPresentation.compactText(uimFallback)
                 .toLowerCase().contains("open your bank"));
     }
@@ -207,11 +208,22 @@ public class DoNextInvariantTest
     private static Recommendation ready(String id, double score)
     {
         Skill skill = id.contains("mining") ? Skill.MINING : Skill.FISHING;
-        return new Recommendation(id, "Train " + skill.getName(), "Safe training.",
+        String title = skill == Skill.MINING
+                ? "Mine copper to reach 2 Mining"
+                : "Catch shrimp to reach 2 Fishing";
+        String location = skill == Skill.MINING
+                ? "Southeast Varrock mine"
+                : "Lumbridge Swamp fishing spots";
+        return new Recommendation(id, title, "Safe training.",
                 score, null, RecommendationConfidence.VERIFIED, 1, 2,
-                new RecommendationGuidance("Use the verified safe method.",
-                        "Use your observed setup.", "A safe area.",
-                        "This is a legal training action."),
+                new RecommendationGuidance(
+                        skill == Skill.MINING
+                                ? "Mine copper rocks, drop the ore, and repeat."
+                                : "Catch shrimp, drop them, and repeat.",
+                        skill == Skill.MINING
+                                ? "Bronze pickaxe."
+                                : "Small fishing net.",
+                        location, "This is a legal training action."),
                 CandidateSafetyEvidence.skill(true, skill));
     }
 

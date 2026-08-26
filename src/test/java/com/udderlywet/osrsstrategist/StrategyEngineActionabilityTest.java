@@ -50,7 +50,7 @@ public class StrategyEngineActionabilityTest
     }
 
     @Test
-    public void unresolvedAlternativeWithUsefulGuidanceCanStillAppearSecondary()
+    public void unresolvedPriceCheckIsHiddenFromOtherGoodOptions()
     {
         Recommendation ready = new Recommendation(
                 "skill:defence", "Train Defence to 80", "Ready", 40.0,
@@ -72,9 +72,8 @@ public class StrategyEngineActionabilityTest
         List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(unresolved, ready));
 
-        assertEquals(2, queue.size());
+        assertEquals(1, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
-        assertEquals("upgrade:whip", queue.get(1).getId());
     }
 
     @Test

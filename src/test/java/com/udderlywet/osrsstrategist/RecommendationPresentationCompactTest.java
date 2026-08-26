@@ -16,7 +16,7 @@ public class RecommendationPresentationCompactTest
         String text = RecommendationPresentation.compactText(recommendation);
         assertTrue(text.contains("METHOD"));
         assertTrue(text.contains("NEEDED"));
-        assertTrue(text.contains("NEXT UNLOCK"));
+        assertFalse(text.contains("NEXT UNLOCK"));
         assertFalse(text.contains("BEST METHOD"));
         assertFalse(text.contains("NEEDS INFO"));
     }
@@ -35,8 +35,10 @@ public class RecommendationPresentationCompactTest
                         "Built state remains unknown."));
         String compact = RecommendationPresentation.compactText(recommendation);
         assertTrue(compact.contains("ACTIVITY"));
-        assertTrue(compact.contains("NEEDED"));
-        assertTrue(compact.contains("NEXT UNLOCK"));
+        assertTrue(compact.contains("BRING"));
+        assertTrue(compact.contains("WHERE"));
+        assertTrue(compact.contains("DO"));
+        assertFalse(compact.contains("NEXT UNLOCK"));
         assertFalse(compact.contains("Strategist will verify"));
         assertFalse(compact.contains("policy class"));
     }
@@ -80,7 +82,9 @@ public class RecommendationPresentationCompactTest
 
         String compact = RecommendationPresentation.compactText(recommendation);
         assertTrue(compact.contains("METHOD"));
-        assertTrue(compact.contains("NEEDED"));
+        assertTrue(compact.contains("BRING"));
+        assertTrue(compact.contains("WHERE"));
+        assertTrue(compact.contains("DO"));
         assertFalse(compact.contains("Compass will verify"));
         assertFalse(compact.contains("policy class"));
     }

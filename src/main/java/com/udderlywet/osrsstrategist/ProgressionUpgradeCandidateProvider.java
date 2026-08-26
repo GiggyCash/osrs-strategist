@@ -47,7 +47,6 @@ public class ProgressionUpgradeCandidateProvider
         dragonScimitar(context, account, items, result);
         avaDevice(context, account, items, result);
         barrowsGloves(context, account, items, result);
-        fireCape(context, account, items, result);
         bowfaRoute(context, account, items, result);
         anglerOutfit(context, account, items, result);
         questRewardGear(context, account, items, result);
@@ -304,13 +303,13 @@ public class ProgressionUpgradeCandidateProvider
         {
             score = 49.0;
             title = "Get an Abyssal whip";
-            reason = "This Iron-style account has reached the Slayer unlock needed for the self-source route.";
-            confidence = RecommendationConfidence.VERIFIED;
+            reason = "This Iron-style account has the Slayer level for the self-source route, but the location and combat setup are not yet proven.";
+            confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    "Kill abyssal demons on a safe, reachable account-appropriate route until an Abyssal whip drops. This is RNG, so no fixed kill count is shown.",
-                    "Use your strongest build-legal sustainable Slayer setup. Bring the supplies required by the chosen abyssal-demon location; do not route into the Wilderness unless Wilderness methods are explicitly enabled.",
-                    "Use a verified non-Wilderness abyssal-demon location by default.",
-                    "The acquisition is probabilistic. The useful exact fact here is that the self-source route is unlocked, not the number of kills remaining."
+                    "Verify access to the Slayer Tower top floor and an observed build-legal abyssal-demon loadout before starting the whip grind.",
+                    "The 85 Slayer requirement is met; location access, weapon, armour, food, and any prayer supplies are not yet proven.",
+                    "Slayer Tower top floor in Morytania, only after its access is observed.",
+                    "Once setup is proven, kill abyssal demons until an Abyssal whip drops. The drop is RNG, so Compass will not invent a kill count."
             );
         }
         else
@@ -466,70 +465,6 @@ public class ProgressionUpgradeCandidateProvider
                 id,
                 "Buy Barrows gloves",
                 "Recipe for Disaster is complete and this reusable glove upgrade is not observed.",
-                score,
-                confidence,
-                guidance,
-                CandidateSafetyEvidence.verifiedSafe(false)));
-    }
-
-    private static void fireCape(
-            StrategyContext context,
-            AccountSnapshot account,
-            ObservedItemIndex items,
-            List<StrategyCandidate> result)
-    {
-        if (account.getMembershipStatus() != MembershipStatus.P2P) return;
-        if (!ownershipCanBeJudged(account, items)) return;
-        if (ownsObserved(account, items,
-                "Fire cape", "Fire cape (l)", "Infernal cape", "Infernal cape (l)"))
-        {
-            return;
-        }
-        if (!AccountBuildPolicy.allowsSkill(account, Skill.RANGED)
-                || account.getSkillLevel(Skill.RANGED) < 70
-                || account.getSkillLevel(Skill.PRAYER) < 43
-                || account.getSkillLevel(Skill.HITPOINTS) < 50)
-        {
-            return;
-        }
-
-        RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
-        if (build == RestrictedBuildType.SKILLER
-                || build == RestrictedBuildType.F2P_SKILLER
-                || build == RestrictedBuildType.PRAYER_SKILLER
-                || build == RestrictedBuildType.DEFENCE_PURE
-                || build == RestrictedBuildType.TEN_HITPOINTS)
-        {
-            return;
-        }
-
-        String id = "upgrade:fire-cape";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
-        AccountMode mode = context.getAccountMode();
-        boolean hardcoreGroup = mode == AccountMode.HARDCORE_GROUP_IRONMAN;
-        double score = 36.0;
-        if (context.getActiveGoal() == GoalType.GEAR_TARGET
-                || context.getActiveGoal() == GoalType.RAID_READY) score += 12.0;
-        if (context.getActiveGoal() == GoalType.INFERNAL_CAPE) score += 20.0;
-        if (mode == AccountMode.ULTIMATE_IRONMAN) score -= 5.0;
-        if (hardcoreGroup) score -= 25.0;
-        score += preference(context, id);
-
-        RecommendationConfidence confidence = hardcoreGroup
-                ? RecommendationConfidence.CHECK_NEEDED
-                : RecommendationConfidence.VERIFIED;
-        RecommendationGuidance guidance = new RecommendationGuidance(
-                "Complete all 63 waves of the TzHaar Fight Cave and defeat TzTok-Jad to obtain the Fire cape. Use Ranged as the default route unless a deliberately specialized build plan says otherwise.",
-                "Bring the best observed build-legal Ranged setup plus sustainable prayer restoration, healing, and ammunition. Exact quantities depend on weapon, Prayer level, Defence, execution, and run duration, so no universal inventory is shown.",
-                "TzHaar Fight Cave in Mor Ul Rek beneath Karamja volcano.",
-                hardcoreGroup
-                        ? "Important: Fight Cave death is dangerous for Hardcore Group Ironman lives. This stays out of automatic DO NEXT until the player deliberately accepts that risk."
-                        : "Your 70 Ranged, 43 Prayer, and 50 Hitpoints meet this cautious preparation baseline; these are not formal game requirements."
-        );
-        result.add(new StrategyCandidate(
-                id,
-                "Get a Fire cape",
-                "The account has reached a conservative Fight Cave readiness band and no Fire/Infernal cape is observed.",
                 score,
                 confidence,
                 guidance,

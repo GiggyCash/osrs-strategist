@@ -52,7 +52,7 @@ public class ProgressionUpgradeCandidateProviderTest
     }
 
     @Test
-    public void ironWith85SlayerGetsActionableWhipSelfSourceRoute()
+    public void ironWith85SlayerStillNeedsProvenWhipLocationAndLoadout()
     {
         AccountSnapshot account = account(1, 70, 75, 70, 70, 70, 70, 80, 85, 70);
         StrategyCandidate whip = find(provider.candidates(
@@ -60,11 +60,12 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:abyssal-whip");
 
         assertNotNull(whip);
-        assertEquals(RecommendationConfidence.VERIFIED, whip.getConfidence());
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                whip.getConfidence());
         assertNotNull(whip.getGuidance());
-        assertTrue(whip.getGuidance().getAction().contains("abyssal demons"));
+        assertTrue(whip.getGuidance().getAction().contains("Slayer Tower"));
         assertFalse(whip.getGuidance().getAction().contains("Grand Exchange"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertFalse(new RecommendationActionabilityPolicy()
                 .canLeadQueue(whip.toRecommendation()));
     }
 
@@ -177,35 +178,6 @@ public class ProgressionUpgradeCandidateProviderTest
         assertNotNull(gloves);
         assertEquals(RecommendationConfidence.VERIFIED, gloves.getConfidence());
         assertTrue(gloves.getGuidance().getSupplies().contains("104,000"));
-    }
-
-    @Test
-    public void fireCapeUsesConservativeReadinessAndHasFullGuidance()
-    {
-        AccountSnapshot account = account(0, 75, 75, 70, 75, 55, 75, 80, 70, 70);
-        StrategyCandidate cape = find(provider.candidates(
-                context(data(account), GoalType.GEAR_TARGET, false)),
-                "upgrade:fire-cape");
-
-        assertNotNull(cape);
-        assertEquals(RecommendationConfidence.VERIFIED, cape.getConfidence());
-        assertTrue(cape.getGuidance().getAction().contains("63 waves"));
-        assertTrue(cape.getGuidance().getNote().contains("preparation baseline"));
-    }
-
-    @Test
-    public void hardcoreGroupFightCavesNeverAutoLeads()
-    {
-        AccountSnapshot account = account(5, 75, 75, 70, 80, 60, 75, 85, 70, 70);
-        StrategyCandidate cape = find(provider.candidates(
-                context(data(account), GoalType.GEAR_TARGET, false)),
-                "upgrade:fire-cape");
-
-        assertNotNull(cape);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, cape.getConfidence());
-        assertTrue(cape.getGuidance().getNote().contains("Hardcore Group Ironman"));
-        assertFalse(new RecommendationActionabilityPolicy()
-                .canLeadQueue(cape.toRecommendation()));
     }
 
     @Test

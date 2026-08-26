@@ -31,7 +31,7 @@ public class StrategyCandidateFoundationTest
         assertEquals(0, recommendation.getCurrentLevel());
         String compact = RecommendationPresentation.compactHtml(recommendation);
         assertTrue(compact.contains("ACTIVITY"));
-        assertTrue(compact.contains("DO THIS"));
+        assertTrue(compact.contains("DO"));
     }
 
     private static AccountSnapshot account()

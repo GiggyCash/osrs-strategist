@@ -3,7 +3,10 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -205,10 +208,8 @@ public class StrategyEngine
         List<Recommendation> recommendations = buildPlayerQueue(pool, context);
         if (recommendations.isEmpty())
         {
-            Recommendation preparation = highestValuePreparation(pool, context);
-            recommendations = Collections.singletonList(preparation == null
-                    ? FallbackRecommendationFactory.forState(data)
-                    : preparation);
+            recommendations = Collections.singletonList(
+                    FallbackRecommendationFactory.forState(data));
         }
         if (!recommendations.isEmpty())
         {
@@ -231,31 +232,6 @@ public class StrategyEngine
         return new StrategyResult(recommendations, opportunities, signals);
     }
 
-    private Recommendation highestValuePreparation(List<Recommendation> pool,
-            StrategyContext context)
-    {
-        if (pool == null) return null;
-        Recommendation best = null;
-        double bestScore = Double.NEGATIVE_INFINITY;
-        for (Recommendation candidate : pool)
-        {
-            if (candidate == null
-                    || candidate.getConfidence() != RecommendationConfidence.CHECK_NEEDED
-                    || !candidateSafetyPolicy.isAllowed(candidate, context)
-                    || !actionabilityPolicy.mayAppearAsAlternative(candidate)) continue;
-            RecommendationGuidance guidance = candidate.getGuidance();
-            if (guidance == null || guidance.getAction() == null
-                    || guidance.getAction().trim().isEmpty()) continue;
-            double score = intelligenceService.rankScore(candidate, context);
-            if (best == null || score > bestScore)
-            {
-                best = candidate;
-                bestScore = score;
-            }
-        }
-        return best;
-    }
-
     Recommendation opportunityRecommendation(
             Opportunity opportunity,
             StrategyContext context)
@@ -271,6 +247,10 @@ public class StrategyEngine
 
         boolean setupVerified = opportunity.isSetupVerified();
         if (!setupVerified && opportunity.getPreparation().isEmpty()) return null;
+        String location = opportunityLocation(opportunity.getType());
+        String action = opportunityAction(opportunity.getType(),
+                opportunity.getTitle());
+        if (location == null || action == null) return null;
         String supplies = setupVerified
                 ? "No additional preparation is recorded for this observed ready opportunity."
                 : "Before leaving, verify: " + String.join(", ", opportunity.getPreparation()) + ".";
@@ -284,11 +264,11 @@ public class StrategyEngine
         }
         RecommendationGuidance guidance = new RecommendationGuidance(
                 setupVerified
-                        ? "Complete the observed ready " + opportunity.getTitle() + " now."
+                        ? action
                         : "Verify the listed setup for the ready " + opportunity.getTitle()
                                 + " before starting it.",
                 supplies,
-                "Use the verified route associated with this observed opportunity.",
+                location,
                 setupVerified
                         ? "The ready state was observed and no remaining setup checks are known."
                         : "The timer is ready, but this remains a preparation alternative until the listed setup is verified.");
@@ -300,6 +280,39 @@ public class StrategyEngine
                         : RecommendationConfidence.CHECK_NEEDED,
                 0, 0, guidance,
                 opportunitySafety(opportunity));
+    }
+
+    private static String opportunityAction(
+            OpportunityType type, String title)
+    {
+        if (type == null) return null;
+        switch (type)
+        {
+            case BIRDHOUSE_RUN:
+                return "Empty all four birdhouses, rebuild them with the carried logs and clockworks, seed them, then leave the Fossil Island route.";
+            case HERB_RUN:
+                return "Harvest each verified reachable herb patch, compost it, and replant with the carried herb seeds.";
+            case BATTLESTAVES:
+                return "Buy the available daily battlestaves from Zaff.";
+            default:
+                return null;
+        }
+    }
+
+    private static String opportunityLocation(OpportunityType type)
+    {
+        if (type == null) return null;
+        switch (type)
+        {
+            case BIRDHOUSE_RUN:
+                return "The four birdhouse spaces on Fossil Island.";
+            case HERB_RUN:
+                return "The reachable herb patches in the active Farming checklist.";
+            case BATTLESTAVES:
+                return "Zaff's Superior Staves in central Varrock.";
+            default:
+                return null;
+        }
     }
 
     private static CandidateSafetyEvidence opportunitySafety(Opportunity opportunity)
@@ -376,17 +389,42 @@ public class StrategyEngine
         if (ready.isEmpty()) return Collections.emptyList();
 
         List<Recommendation> result = new ArrayList<>(3);
-        for (Recommendation recommendation : ready)
-        {
-            if (result.size() >= 3) break;
-            result.add(recommendation);
-        }
-        for (Recommendation recommendation : secondary)
-        {
-            if (result.size() >= 3) break;
-            result.add(recommendation);
-        }
+        Set<String> representedDimensions = new HashSet<>();
+        addDiverse(result, representedDimensions, ready);
+        addDiverse(result, representedDimensions, secondary);
         return result;
+    }
+
+    /**
+     * Alternative slots are product choices, not an unfiltered scoreboard.
+     * Keep at most one candidate per activity dimension unless the candidates
+     * are different skills, which are inherently different playable sessions.
+     */
+    private static void addDiverse(List<Recommendation> result,
+            Set<String> representedDimensions, List<Recommendation> candidates)
+    {
+        for (Recommendation recommendation : candidates)
+        {
+            if (result.size() >= 3) return;
+            String dimension = alternativeDimension(recommendation);
+            if (!result.isEmpty() && representedDimensions.contains(dimension))
+                continue;
+            result.add(recommendation);
+            representedDimensions.add(dimension);
+        }
+    }
+
+    static String alternativeDimension(Recommendation recommendation)
+    {
+        if (recommendation == null) return "unknown";
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        if (plan != null && plan.getMethod() != null
+                && plan.getMethod().getSkill() != null)
+            return "skill:" + plan.getMethod().getSkill().name();
+        String id = recommendation.getId() == null ? ""
+                : recommendation.getId().toLowerCase(Locale.ROOT);
+        int colon = id.indexOf(':');
+        return colon < 0 ? id : id.substring(0, colon);
     }
 
     private double semanticPreferenceScore(Recommendation recommendation,

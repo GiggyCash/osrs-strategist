@@ -100,6 +100,27 @@ public class StrategyDataAssemblerLifecycleTest
         assertEquals(1, items.clears);
     }
 
+    @Test
+    public void liveGroupStorageObservationIsUsedOnlyForCurrentGim()
+    {
+        MutableAccountReader accounts = new MutableAccountReader(
+                account("GIM A", 81L, 4, MembershipStatus.P2P));
+        FakeItems items = new FakeItems();
+        items.group = new GroupStorageSnapshot(true,
+                Collections.singletonList(new ItemStackSnapshot(
+                        55, "Shared plank", 12)));
+        StrategyDataAssembler assembler = assembler(accounts, items,
+                new ObservedStateStore());
+
+        StrategyDataBundle first = assembler.read();
+        assertSame(items.group, first.getGroupStorage());
+        assertEquals(12, first.getGroupStorage().getItems().get(0).getQuantity());
+
+        accounts.account = account("Main B", 82L, 0, MembershipStatus.P2P);
+        StrategyDataBundle switched = assembler.read();
+        assertNull(switched.getGroupStorage());
+    }
+
     private static StrategyDataAssembler assembler(MutableAccountReader accounts,
             FakeItems items, ObservedStateStore observed)
     {
@@ -131,12 +152,14 @@ public class StrategyDataAssemblerLifecycleTest
     private static final class FakeItems extends LiveItemStateReader
     {
         private final BankSnapshot bank = new BankSnapshot(Collections.emptyList(), 1L);
+        private GroupStorageSnapshot group;
         private int clears;
         private FakeItems() { super(null, null); }
         @Override public InventorySnapshot readInventory() { return new InventorySnapshot(Collections.emptyList()); }
         @Override public BankSnapshot readBank() { return bank; }
         @Override public EquipmentSnapshot readEquipment() { return new EquipmentSnapshot(Collections.emptyList()); }
-        @Override public void clearAccountCaches() { clears++; }
+        @Override public GroupStorageSnapshot readGroupStorage() { return group; }
+        @Override public void clearAccountCaches() { clears++; group = null; }
     }
 
     private static final class EmptyQuests extends LiveQuestStateReader

@@ -67,9 +67,9 @@ public class GlobalDecisionSimulationTest
         double miningScore = 50.0
                 + preferences.timedScoreAdjustmentFor("skill:mining");
         Recommendation mining = skill("skill:mining", Skill.MINING,
-                "Train Mining", miningScore, 70, 80, 2);
+                "Train Mining to 80", miningScore, 70, 80, 2);
         Recommendation fishing = skill("skill:fishing", Skill.FISHING,
-                "Train Fishing", 45.0, 70, 80, 2);
+                "Train Fishing to 80", 45.0, 70, 80, 2);
 
         List<Recommendation> queue = engine().buildPlayerQueue(
                 Arrays.asList(mining, fishing), context);
@@ -92,7 +92,7 @@ public class GlobalDecisionSimulationTest
                 new PreferenceProfile(), storage);
 
         Recommendation fishing = skill("skill:fishing", Skill.FISHING,
-                "Train Fishing", 38.0, 70, 80, 2);
+                "Train Fishing to 80", 38.0, 70, 80, 2);
         Recommendation dangerous = readyUpgrade(
                 "upgrade:bowfa", "Hunt Bowfa seed", 48.0,
                 "Run the Corrupted Gauntlet; a dangerous death can threaten UIM death storage.");

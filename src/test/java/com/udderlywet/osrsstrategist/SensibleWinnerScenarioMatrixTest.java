@@ -65,6 +65,9 @@ public class SensibleWinnerScenarioMatrixTest
         values.add(goal("06 Infernal cape values Inferno preparation", GoalType.INFERNAL_CAPE, "pvm:",
                 ready("pvm:inferno", 20, "Verified Inferno preparation."),
                 ready("money:generic", 52, "Earn GP.")));
+        values.add(goal("06b Fire cape values observed Jad readiness", GoalType.FIRE_CAPE, "pvm:tztok_jad",
+                ready("pvm:tztok_jad", 24, "Observed Fight Cave readiness."),
+                skill("skill:mining", Skill.MINING, 48, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(goal("07 diary cape values diary task", GoalType.DIARY_CAPE, "diary:",
                 ready("diary:kandarin-elite", 28, "Finish an actionable diary prerequisite."),
                 skill("skill:cooking", Skill.COOKING, 45, AttentionLevel.LOW, 2, 20, 70, 71)));
@@ -225,12 +228,6 @@ public class SensibleWinnerScenarioMatrixTest
                 withPreferences(max, dislike), "skill:fishing",
                 skill("skill:mining", Skill.MINING, 35 + dislike.weightFor("skill:mining") * 10, AttentionLevel.LOW, 2, 20, 70, 71),
                 skill("skill:fishing", Skill.FISHING, 35, AttentionLevel.LOW, 2, 20, 70, 71)));
-        PreferenceProfile positive = new PreferenceProfile();
-        positive.apply("skill:agility", FeedbackAction.DO_THIS);
-        values.add(scenario("49 Do This strengthens the selected family",
-                withPreferences(max, positive), "skill:agility",
-                skill("skill:agility", Skill.AGILITY, 39 + positive.weightFor("skill:agility") * 10, AttentionLevel.LOW, 2, 20, 70, 71),
-                skill("skill:mining", Skill.MINING, 40, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(scenario("50 unobserved Group Storage cannot make gear ready",
                 accountContext(4), "skill:", check("upgrade:group-storage", 500, "Observe Group Storage first."),
                 skill("skill:slayer", Skill.SLAYER, 28, AttentionLevel.ACTIVE, 2, 30, 70, 71)));
@@ -371,8 +368,9 @@ public class SensibleWinnerScenarioMatrixTest
 
     private static RecommendationGuidance guidance()
     {
-        return new RecommendationGuidance("Do the verified action.",
-                "Verified: setup is available.", "Safe location.",
+        return new RecommendationGuidance(
+                "Follow the named route until the displayed target is complete.",
+                "Verified: setup is available.", "Named scenario location.",
                 "This advances the stated account goal.");
     }
 

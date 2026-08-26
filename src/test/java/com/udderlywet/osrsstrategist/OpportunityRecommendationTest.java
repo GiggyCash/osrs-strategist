@@ -99,11 +99,6 @@ public class OpportunityRecommendationTest
             assertTrue(result.getOpportunities().isEmpty());
         }
 
-        PreferenceProfile doThis = new PreferenceProfile();
-        doThis.apply(verified.getId(), FeedbackAction.LATER);
-        doThis.apply(verified.getId(), FeedbackAction.DO_THIS);
-        assertEquals(verified.getId(), engine.evaluate(data, StrategyMode.BALANCED,
-                SessionIntent.PICK_FOR_ME, doThis).getRecommendations().get(0).getId());
     }
 
     @Test

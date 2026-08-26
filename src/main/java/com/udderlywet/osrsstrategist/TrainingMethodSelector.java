@@ -61,6 +61,14 @@ public class TrainingMethodSelector
             StrategyMode strategyMode, SessionIntent sessionIntent,
             boolean allowWildernessMethods)
     {
+        return select(data, skill, currentLevel, strategyMode, sessionIntent,
+                allowWildernessMethods, false);
+    }
+
+    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+            StrategyMode strategyMode, SessionIntent sessionIntent,
+            boolean allowWildernessMethods, boolean useGroupStorage)
+    {
         List<CuratedTrainingMethod> methods = candidates(data, skill);
         MembershipStatus membershipStatus = membershipStatus(data);
         TrainingMethod bestMethod = null;
@@ -83,12 +91,29 @@ public class TrainingMethodSelector
 
             List<RequirementCheck> checks = requirementEvidenceEngine == null
                     ? Collections.emptyList()
-                    : requirementEvidenceEngine.evaluate(data, method);
+                    : useGroupStorage
+                            ? requirementEvidenceEngine.evaluate(
+                                    data, method, true)
+                            : requirementEvidenceEngine.evaluate(data, method);
             RecommendationConfidence confidence = assessConfidence(method, checks);
             if (confidence == RecommendationConfidence.BLOCKED) continue;
 
+            // A skill gets one selected method. Never let a higher-scoring
+            // method with unknown access consume that slot and hide a simpler
+            // route the player can actually begin. Hard-gated methods can
+            // return once their quest/access evidence is observed.
+            TrainingPlan assessed = new TrainingPlan(method, "", confidence,
+                    checks);
+            boolean hardRequirementUnknown =
+                    RequirementActionability.hasHardUnresolvedRequirement(
+                            assessed);
+
             double score = method.scoreFor(strategyMode, sessionIntent)
                     + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent);
+            // Retain a hard-gated plan as diagnostic/secondary information when
+            // every route is unknown, but it must lose to any executable route
+            // regardless of their normal efficiency scores.
+            if (hardRequirementUnknown) score -= 10_000.0;
             if (bestMethod == null || score > bestScore)
             {
                 bestMethod = method;

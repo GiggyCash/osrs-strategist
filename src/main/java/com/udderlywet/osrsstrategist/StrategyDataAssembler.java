@@ -135,6 +135,10 @@ public class StrategyDataAssembler
                         : combatAchievementReader.read(observedCombatAchievements);
 
         AccountMode accountMode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        GroupStorageSnapshot liveGroupStorage = accountMode.isGroupIronman()
+                ? itemStateReader.readGroupStorage() : null;
+        GroupStorageSnapshot groupStorage = liveGroupStorage != null
+                ? liveGroupStorage : observedStateStore.getGroupStorage();
         ClueSnapshot rememberedClue = observedStateStore.getClue();
         ClueSnapshot clue = clueStateReader == null
                 ? rememberedClue
@@ -175,7 +179,7 @@ public class StrategyDataAssembler
                 .storage(storage)
                 .transport(observedStateStore.getTransport())
                 .poh(observedStateStore.getPoh())
-                .groupStorage(observedStateStore.getGroupStorage())
+                .groupStorage(groupStorage)
                 .slayer(slayer)
                 .farming(farming)
                 .sailing(observedStateStore.getSailing())

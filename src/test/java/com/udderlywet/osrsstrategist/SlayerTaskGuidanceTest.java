@@ -131,6 +131,29 @@ public class SlayerTaskGuidanceTest
     }
 
     @Test
+    public void currentTaskCannotLeadUntilItsLoadoutIsConcrete()
+    {
+        StrategyDataBundle assigned = data(
+                account(0),
+                new SlayerSnapshot("Dust devils", 143, "Duradel", 500,
+                        RecommendationConfidence.VERIFIED),
+                Collections.singletonList(
+                        new ItemStackSnapshot(4164, "Facemask", 1)));
+        Recommendation assignedRecommendation = recommendation(
+                service.build(assigned, 80, 81, true));
+
+        assertFalse(new RecommendationActionabilityPolicy()
+                .canLeadQueue(assignedRecommendation));
+
+        StrategyDataBundle unassigned = data(account(0), null,
+                Collections.emptyList());
+        Recommendation getTask = recommendation(
+                service.build(unassigned, 80, 81, true));
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(getTask));
+    }
+
+    @Test
     public void corpusCoversEarlyMidAndLateTasksWithoutDemonAliasCollision()
     {
         SlayerTaskProfileCatalog catalog = new SlayerTaskProfileCatalog();
@@ -190,6 +213,22 @@ public class SlayerTaskGuidanceTest
                 .inventory(new InventorySnapshot(Collections.emptyList()))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .build();
+    }
+
+    private static Recommendation recommendation(
+            RecommendationGuidance guidance)
+    {
+        TrainingMethod method = new TrainingMethod(
+                "slayer_task", Skill.SLAYER, 1, 99,
+                "Complete a Slayer assignment", "Use live task state.",
+                10, 10, 10, AttentionLevel.MODERATE, 20, 2,
+                Collections.emptyList(), RecommendationConfidence.VERIFIED);
+        return new Recommendation("skill:slayer", "Train Slayer to 81",
+                "Advance Slayer.", 10,
+                new TrainingPlan(method, "Live task",
+                        RecommendationConfidence.VERIFIED),
+                RecommendationConfidence.VERIFIED, 80, 81, guidance,
+                CandidateSafetyEvidence.skill(false, Skill.SLAYER));
     }
 
     private static AccountSnapshot account(int typeCode)

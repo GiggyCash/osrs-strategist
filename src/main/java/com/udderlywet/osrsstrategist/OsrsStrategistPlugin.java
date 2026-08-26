@@ -39,6 +39,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private ClientToolbar clientToolbar;
     @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
+    @Inject private LiveItemStateReader liveItemStateReader;
     @Inject private StrategyEngine strategyEngine;
     @Inject private MethodGuidanceService methodGuidanceService;
     @Inject private AccountPreferenceStore accountPreferenceStore;
@@ -69,8 +70,11 @@ public class OsrsStrategistPlugin extends Plugin
     private OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
     private boolean varbitRefreshPending;
+    private boolean accountRefreshPending;
     private final OverlayLifecycleGuard overlayLifecycle =
             new OverlayLifecycleGuard();
+    private final RecommendationStabilizer recommendationStabilizer =
+            new RecommendationStabilizer();
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
@@ -86,14 +90,13 @@ public class OsrsStrategistPlugin extends Plugin
                 skillIconLoader,
                 this::updateRecommendationDetails,
                 this::updateAccountPanel,
-                this::resetLearnedFeedback,
                 this::acknowledgeFirstUse,
                 SupportLinks.SUPPORT_URL,
-                LinkBrowser::browse,
-                null);
+                LinkBrowser::browse);
         panel.setDetailsOverlayEnabled(
                 OverlayDisplayState.from(config).showsDetails());
         panel.setFirstUseHintVisible(!config.firstUseComplete());
+        SidebarAccessibility.apply(panel, config.sidebarTextSize());
         navButton = NavigationButton.builder()
                 .tooltip("Gielinor Compass")
                 .icon(loadPluginIcon())
@@ -135,6 +138,7 @@ public class OsrsStrategistPlugin extends Plugin
         latestData = null;
         latestRecommendations = Collections.emptyList();
         varbitRefreshPending = false;
+        accountRefreshPending = false;
         panel = null;
         navButton = null;
     }
@@ -151,7 +155,9 @@ public class OsrsStrategistPlugin extends Plugin
         boolean accessChanged = accessObservationService.observeCurrentLocation();
         boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
         boolean liveStateChanged = consumeVarbitRefreshPending();
-        if (accessChanged || farmChanged || liveStateChanged) updateAccountPanel();
+        boolean observedStateChanged = consumeAccountRefreshPending();
+        if (accessChanged || farmChanged || liveStateChanged
+                || observedStateChanged) updateAccountPanel();
     }
 
     /**
@@ -171,6 +177,13 @@ public class OsrsStrategistPlugin extends Plugin
         return pending;
     }
 
+    boolean consumeAccountRefreshPending()
+    {
+        boolean pending = accountRefreshPending;
+        accountRefreshPending = false;
+        return pending;
+    }
+
     @Subscribe
     public void onStatChanged(StatChanged event)
     {
@@ -184,24 +197,44 @@ public class OsrsStrategistPlugin extends Plugin
                     fatigue.getScoreDelta(),
                     fatigue.getDurationMillis());
         }
-        updateAccountPanel();
+        if (fatigue.isPresent() || latestData == null
+                || latestData.getAccount() == null
+                || latestData.getAccount().getSkillLevel(event.getSkill())
+                        != event.getLevel())
+        {
+            accountRefreshPending = true;
+        }
     }
 
     @Subscribe
     public void onItemContainerChanged(ItemContainerChanged event)
     {
-        updateAccountPanel();
+        if (event != null
+                && event.getContainerId()
+                        == net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP
+                && liveItemStateReader != null)
+        {
+            liveItemStateReader.observeGroupStorage(event.getItemContainer());
+        }
+        accountRefreshPending = true;
     }
 
     @Subscribe
     public void onRuneScapeProfileChanged(RuneScapeProfileChanged event)
     {
         if (savingProfileConfiguration) return;
+        // Fail closed before reading the new profile. No queued Swing callback,
+        // cached bundle, preference weight, or strategy choice from the prior
+        // character may survive even for a single refresh generation.
+        uiGeneration.invalidate();
         loadedPreferenceProfileKey = null;
         loadedStrategyProfileKey = null;
         loadedMilestoneProfileKey = null;
         loadedHistoryProfileKey = null;
         latestRecommendations = Collections.emptyList();
+        latestData = null;
+        preferenceProfile.clear();
+        strategyProfile = null;
         trackedMilestone = null;
         recommendationHistory.clear();
         trainingFatigueTracker.clear();
@@ -209,6 +242,7 @@ public class OsrsStrategistPlugin extends Plugin
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
         varbitRefreshPending = false;
+        accountRefreshPending = false;
         methodGuidanceOverlay.clear();
         recommendationDetailsOverlay.clear();
         syncPreferenceProfile();
@@ -223,6 +257,15 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (!OsrsStrategistConfig.GROUP.equals(event.getGroup())) return;
         String key = event.getKey();
+        if (CompassConfigKeys.SIDEBAR_TEXT_SIZE.equals(key))
+        {
+            if (panel != null)
+            {
+                SidebarAccessibility.apply(panel, config.sidebarTextSize());
+                updateAccountPanel();
+            }
+            return;
+        }
         if (CompassConfigKeys.acknowledgesFirstUse(key)) acknowledgeFirstUse();
         if (CompassConfigKeys.isOverlay(key))
         {
@@ -242,6 +285,9 @@ public class OsrsStrategistPlugin extends Plugin
             strategyProfile = PlayerStrategyProfile.fromConfig(config);
             saveStrategyProfile();
         }
+        // A deliberate strategy-setting change is allowed to replace the plan
+        // immediately; stability is for incidental game events only.
+        latestRecommendations = Collections.emptyList();
         if (panel != null) panel.closeDetails();
         recommendationDetailsOverlay.clear();
         updateAccountPanel();
@@ -302,7 +348,8 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel == null || latestData == null) return;
         final long generation = uiGeneration.next();
         PlayerStrategyProfile profile = effectiveStrategyProfile();
-        StrategyResult result = evaluate(latestData, profile);
+        StrategyResult result = recommendationStabilizer.stabilize(
+                latestRecommendations, evaluate(latestData, profile));
         latestRecommendations = new java.util.ArrayList<>(
                 result.getRecommendations());
         updateTrackedMilestone(
@@ -459,7 +506,8 @@ public class OsrsStrategistPlugin extends Plugin
         }
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
-        StrategyResult result = evaluate(data, profile);
+        StrategyResult result = recommendationStabilizer.stabilize(
+                latestRecommendations, evaluate(data, profile));
         latestRecommendations = new java.util.ArrayList<>(
                 result.getRecommendations());
         updateTrackedMilestone(
@@ -510,18 +558,6 @@ public class OsrsStrategistPlugin extends Plugin
             savingProfileConfiguration = false;
         }
         loadedPreferenceProfileKey = accountPreferenceStore.getActiveProfileKey();
-    }
-
-    private void resetLearnedFeedback()
-    {
-        preferenceProfile.clear();
-        recommendationHistory.clear();
-        accountPreferenceStore.clear();
-        accountRecommendationHistoryStore.clear();
-        loadedPreferenceProfileKey = accountPreferenceStore.getActiveProfileKey();
-        loadedHistoryProfileKey = accountRecommendationHistoryStore
-                .getActiveProfileKey();
-        refreshStrategyImmediately();
     }
 
     private void acknowledgeFirstUse()
@@ -617,7 +653,6 @@ public class OsrsStrategistPlugin extends Plugin
                 return RecommendationHistoryAction.NOT_TODAY;
             case DISLIKE:
                 return RecommendationHistoryAction.DISLIKE;
-            case DO_THIS:
             default:
                 return null;
         }
