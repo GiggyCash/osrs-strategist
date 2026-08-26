@@ -56,6 +56,20 @@ public class FarmingSupplyCatalog
                 unlockedItemIds(HERB_SEEDS, level));
     }
 
+    public ResourceRequirement potatoSeeds()
+    {
+        return new ResourceRequirement(
+                "resource:potato_seeds", "Three potato seeds", 3,
+                ItemID.POTATO_SEED);
+    }
+
+    public ResourceRequirement watermelonSeeds()
+    {
+        return new ResourceRequirement(
+                "resource:watermelon_seeds", "Three watermelon seeds", 3,
+                ItemID.WATERMELON_SEED);
+    }
+
     public ResourceRequirement treeSaplingsForLevel(int level)
     {
         return new ResourceRequirement(

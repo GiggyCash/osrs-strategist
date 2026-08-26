@@ -101,7 +101,9 @@ public class RecommendationGuidanceServiceTest
                 fishPlan()
         );
 
-        assertTrue(guidance.getSupplies().contains("source 30 raw trout"));
+        assertTrue(guidance.getSupplies().toLowerCase()
+                .contains("source 30 raw trout"));
+        assertTrue(guidance.getSupplies().contains("Barbarian Village"));
         assertFalse(guidance.getSupplies().contains("Grand Exchange"));
     }
 

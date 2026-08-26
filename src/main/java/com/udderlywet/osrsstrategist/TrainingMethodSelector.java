@@ -151,9 +151,9 @@ public class TrainingMethodSelector
         {
             for (TrainingMethod method : database.methodsFor(skill))
             {
-                // The old Runecraft catch-all intentionally delegated the actual
-                // rune choice back to the player. Compass must make that choice.
-                if (isDeprecatedGenericRunecraft(method)) continue;
+                // These legacy catch-alls delegate the meaningful method choice
+                // back to the player and can outrank their concrete successors.
+                if (isDeprecatedGenericMethod(method)) continue;
                 candidates.add(new CuratedTrainingMethod(method,
                         TrainingMethodMetadata.legacy(method)));
             }
@@ -172,11 +172,25 @@ public class TrainingMethodSelector
         return candidates;
     }
 
-    private static boolean isDeprecatedGenericRunecraft(TrainingMethod method)
+    private static boolean isDeprecatedGenericMethod(TrainingMethod method)
     {
-        return method != null
-                && method.getSkill() == Skill.RUNECRAFT
-                && "runecraft_best_rune".equals(method.getId());
+        if (method == null || method.getId() == null) return false;
+        switch (method.getId())
+        {
+            case "runecraft_best_rune":
+            case "magic_utility":
+            case "cooking_banked":
+            case "fishing_best":
+            case "construction_standard":
+            case "construction_homes":
+            case "farming_early":
+            case "farming_herbs":
+            case "hunter_traps":
+            case "hunter_birdhouses":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static MembershipStatus membershipStatus(StrategyDataBundle data)

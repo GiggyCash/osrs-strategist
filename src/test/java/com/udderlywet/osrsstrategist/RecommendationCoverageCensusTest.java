@@ -7,12 +7,15 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -216,6 +219,425 @@ public class RecommendationCoverageCensusTest
         assertTrue(executable.getOrDefault(Skill.RUNECRAFT, 0) > 0);
     }
 
+    @Test
+    public void requestedSkillCensusDoesNotCountUnrelatedRecoveryAsCoverage()
+    {
+        Map<Skill, EnumMap<CoverageClass, Integer>> observed =
+                classifiedCensus(false);
+        Map<Skill, EnumMap<CoverageClass, Integer>> prepared =
+                classifiedCensus(true);
+
+        printClassifiedCensus("REQUESTED", observed);
+        printClassifiedCensus("REQUESTED_PREPARED", prepared);
+
+        // A safe fallback remains useful, but it is not requested-skill
+        // coverage. These guards make that distinction durable.
+        assertTrue(count(observed, Skill.MINING, CoverageClass.PREREQUISITE) > 0);
+        assertTrue(count(prepared, Skill.MINING, CoverageClass.DIRECT) > 0);
+        assertTrue(count(observed, Skill.RUNECRAFT, CoverageClass.PREREQUISITE) > 0);
+        assertTrue(count(prepared, Skill.RUNECRAFT, CoverageClass.DIRECT) > 0);
+        for (Skill skill : EnumSet.of(
+                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.FARMING, Skill.HUNTER, Skill.CONSTRUCTION))
+        {
+            assertEquals(skill.getName() + " prepared recovery debt",
+                    0, count(prepared, skill, CoverageClass.RECOVERY));
+        }
+        for (Skill skill : EnumSet.of(
+                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.FARMING, Skill.HUNTER))
+        {
+            assertEquals(skill.getName() + " observed-empty recovery debt",
+                    0, count(observed, skill, CoverageClass.RECOVERY));
+        }
+    }
+
+    @Test
+    public void classificationHasAnHonestBlockedState()
+    {
+        assertEquals(CoverageClass.BLOCKED,
+                classify(Skill.COOKING, null, null,
+                        new RecommendationActionabilityPolicy()));
+        Recommendation recovery = FallbackRecommendationFactory.forState(
+                data(ACCOUNTS[0], 5));
+        assertEquals(CoverageClass.RECOVERY,
+                classify(Skill.COOKING, null, recovery,
+                        new RecommendationActionabilityPolicy()));
+    }
+
+    @Test
+    public void classifiedStateCensusShowsMidgameUimDensity()
+    {
+        for (boolean prepared : new boolean[]{false, true})
+        {
+            for (Scenario account : ACCOUNTS)
+            {
+                RecommendationEngine engine = recommendationEngine(
+                        account.membership);
+                StrategyEngine strategy = strategyEngine(account.membership);
+                for (int level : LEVELS)
+                {
+                    EnumMap<CoverageClass, Integer> counts =
+                            new EnumMap<>(CoverageClass.class);
+                    for (StrategyMode mode : MODES)
+                    {
+                        for (SessionIntent session : SESSIONS)
+                        {
+                            StrategyDataBundle data = data(
+                                    account, level, prepared);
+                            List<Recommendation> candidates = engine.recommendAll(
+                                    data, mode, session, true, false,
+                                    new PreferenceProfile());
+                            Recommendation recovery = strategy.evaluate(
+                                    data, mode, session,
+                                    new PreferenceProfile())
+                                    .getRecommendations().get(0);
+                            for (Skill skill : Skill.values())
+                            {
+                                if (INDIRECT_ONLY.contains(skill)
+                                        || !ContentAccessRules.isSkillAvailable(
+                                                skill, account.membership))
+                                    continue;
+                                CoverageClass result = classify(skill,
+                                        candidateFor(candidates, skill),
+                                        recovery,
+                                        new RecommendationActionabilityPolicy());
+                                counts.merge(result, 1, Integer::sum);
+                            }
+                        }
+                    }
+                    System.out.println("COVERAGE_CLASS_STATE "
+                            + (prepared ? "prepared" : "observed-empty")
+                            + " " + account.name + " "
+                            + progressionBand(level)
+                            + " DIRECT=" + counts.getOrDefault(
+                                    CoverageClass.DIRECT, 0)
+                            + " PREREQUISITE=" + counts.getOrDefault(
+                                    CoverageClass.PREREQUISITE, 0)
+                            + " RECOVERY=" + counts.getOrDefault(
+                                    CoverageClass.RECOVERY, 0)
+                            + " BLOCKED=" + counts.getOrDefault(
+                                    CoverageClass.BLOCKED, 0));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void priorityCoverageDebtRemainsVisibleBySelectedMethod()
+    {
+        EnumSet<Skill> priority = EnumSet.of(
+                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
+                Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
+        RecommendationActionabilityPolicy policy =
+                new RecommendationActionabilityPolicy();
+        for (Scenario account : ACCOUNTS)
+        {
+            RecommendationEngine engine = recommendationEngine(account.membership);
+            for (int level : LEVELS)
+            {
+                List<Recommendation> candidates = engine.recommendAll(
+                        data(account, level), StrategyMode.BALANCED,
+                        SessionIntent.ONE_HOUR, true, false,
+                        new PreferenceProfile());
+                for (Skill skill : priority)
+                {
+                    if (!ContentAccessRules.isSkillAvailable(
+                            skill, account.membership)) continue;
+                    Recommendation candidate = candidateFor(candidates, skill);
+                    if (candidate == null || !policy.canLeadQueue(candidate))
+                    {
+                        String method = candidate == null
+                                || candidate.getTrainingPlan() == null
+                                || candidate.getTrainingPlan().getMethod() == null
+                                ? "none"
+                                : candidate.getTrainingPlan().getMethod().getId();
+                        System.out.println("COVERAGE_DEBT " + account.name
+                                + " " + progressionBand(level) + " "
+                                + skill.getName() + " method=" + method
+                                + " confidence=" + (candidate == null ? "none"
+                                        : candidate.getConfidence())
+                                + " action=" + (candidate == null
+                                        || candidate.getGuidance() == null
+                                        ? "none" : candidate.getGuidance().getAction())
+                                + " location=" + (candidate == null
+                                        || candidate.getGuidance() == null
+                                        ? "none" : candidate.getGuidance().getLocation()));
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void repeatedRequestedSkillRecoveryIsReportedAsCoverageDebt()
+    {
+        Map<String, Integer> debt = new java.util.TreeMap<>();
+        RecommendationActionabilityPolicy policy =
+                new RecommendationActionabilityPolicy();
+        for (boolean prepared : new boolean[]{false, true})
+        {
+            for (Scenario account : ACCOUNTS)
+            {
+                RecommendationEngine engine = recommendationEngine(
+                        account.membership);
+                StrategyEngine strategy = new StrategyEngine(
+                        engine, null, null, null, policy,
+                        new RecommendationIntelligenceService());
+                for (int level : LEVELS)
+                {
+                    StrategyDataBundle data = data(account, level, prepared);
+                    for (StrategyMode mode : MODES)
+                    {
+                        for (SessionIntent session : SESSIONS)
+                        {
+                            List<Recommendation> candidates = engine.recommendAll(
+                                    data, mode, session, true, false,
+                                    new PreferenceProfile());
+                            Recommendation recovery = strategy.evaluate(
+                                    data, mode, session,
+                                    new PreferenceProfile())
+                                    .getRecommendations().get(0);
+                            for (Skill skill : Skill.values())
+                            {
+                                if (INDIRECT_ONLY.contains(skill)
+                                        || !ContentAccessRules.isSkillAvailable(
+                                                skill, account.membership))
+                                    continue;
+                                Recommendation candidate = candidateFor(
+                                        candidates, skill);
+                                if (classify(skill, candidate, recovery, policy)
+                                        != CoverageClass.RECOVERY) continue;
+                                String method = candidate == null
+                                        || candidate.getTrainingPlan() == null
+                                        || candidate.getTrainingPlan().getMethod() == null
+                                        ? "none"
+                                        : candidate.getTrainingPlan().getMethod().getId();
+                                String key = (prepared ? "prepared" : "observed-empty")
+                                        + " " + skill.getName() + " " + method;
+                                debt.merge(key, 1, Integer::sum);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (Map.Entry<String, Integer> entry : debt.entrySet())
+            System.out.println("COVERAGE_DEBT_SUMMARY " + entry.getKey()
+                    + "=" + entry.getValue());
+
+        // A prepared, universally legal baseline must not repeatedly recover
+        // into an unrelated skill merely because a generic route scored first.
+        assertTrue(debt.getOrDefault("prepared Runecraft none", 0) == 0);
+        assertTrue(debt.getOrDefault("prepared Hunter none", 0) == 0);
+    }
+
+    @Test
+    public void concreteBaselinesRespectTheirProgressionBands()
+    {
+        Scenario p2p = ACCOUNTS[1];
+        RecommendationEngine engine = recommendationEngine(p2p.membership);
+
+        assertEquals("magic_f2p_combat", selectedMethod(engine, p2p, 5,
+                Skill.MAGIC));
+        assertEquals("magic_f2p_fire_bolt", selectedMethod(engine, p2p, 50,
+                Skill.MAGIC));
+        assertEquals("magic_f2p_fire_blast", selectedMethod(engine, p2p, 85,
+                Skill.MAGIC));
+        assertEquals("farming_falador_potatoes", selectedMethod(
+                engine, p2p, 5, Skill.FARMING));
+        assertEquals("farming_falador_watermelons", selectedMethod(
+                engine, p2p, 50, Skill.FARMING));
+        assertEquals("farming_falador_watermelons", selectedMethod(
+                engine, p2p, 85, Skill.FARMING));
+        assertEquals("construction_crude_chairs", selectedMethod(
+                engine, p2p, 5, Skill.CONSTRUCTION));
+        assertEquals("construction_oak_larders", selectedMethod(
+                engine, p2p, 50, Skill.CONSTRUCTION));
+        assertFalse("construction_crude_chairs".equals(selectedMethod(
+                engine, p2p, 85, Skill.CONSTRUCTION)));
+    }
+
+    private static String selectedMethod(RecommendationEngine engine,
+            Scenario scenario, int level, Skill skill)
+    {
+        Recommendation candidate = candidateFor(engine.recommendAll(
+                data(scenario, level, true), StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR, true, false,
+                new PreferenceProfile()), skill);
+        assertTrue(skill.getName() + " candidate missing", candidate != null);
+        return candidate.getTrainingPlan().getMethod().getId();
+    }
+
+    private static Map<Skill, EnumMap<CoverageClass, Integer>> classifiedCensus(
+            boolean prepared)
+    {
+        Map<Skill, EnumMap<CoverageClass, Integer>> counts =
+                new EnumMap<>(Skill.class);
+        RecommendationActionabilityPolicy policy =
+                new RecommendationActionabilityPolicy();
+        for (Scenario account : ACCOUNTS)
+        {
+            RecommendationEngine recommendationEngine = recommendationEngine(
+                    account.membership);
+            StrategyEngine strategyEngine = new StrategyEngine(
+                    recommendationEngine, null, null, null, policy,
+                    new RecommendationIntelligenceService());
+            for (int level : LEVELS)
+            {
+                StrategyDataBundle data = data(account, level, prepared);
+                for (StrategyMode mode : MODES)
+                {
+                    for (SessionIntent session : SESSIONS)
+                    {
+                        List<Recommendation> skillCandidates =
+                                recommendationEngine.recommendAll(
+                                        data, mode, session, true, false,
+                                        new PreferenceProfile());
+                        StrategyResult global = strategyEngine.evaluate(
+                                data, mode, session, new PreferenceProfile());
+                        Recommendation recovery = global.getRecommendations().isEmpty()
+                                ? null : global.getRecommendations().get(0);
+                        for (Skill skill : Skill.values())
+                        {
+                            if (INDIRECT_ONLY.contains(skill)
+                                    || !ContentAccessRules.isSkillAvailable(
+                                            skill, account.membership))
+                            {
+                                continue;
+                            }
+                            Recommendation candidate = candidateFor(
+                                    skillCandidates, skill);
+                            CoverageClass result = classify(
+                                    skill, candidate, recovery, policy);
+                            counts.computeIfAbsent(skill,
+                                    ignored -> new EnumMap<>(CoverageClass.class))
+                                    .merge(result, 1, Integer::sum);
+                        }
+                    }
+                }
+            }
+        }
+        return counts;
+    }
+
+    private static Recommendation candidateFor(
+            List<Recommendation> candidates, Skill skill)
+    {
+        for (Recommendation candidate : candidates)
+        {
+            TrainingPlan plan = candidate.getTrainingPlan();
+            if (plan != null && plan.getMethod() != null
+                    && plan.getMethod().getSkill() == skill)
+            {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    private static CoverageClass classify(
+            Skill requestedSkill,
+            Recommendation candidate,
+            Recommendation recovery,
+            RecommendationActionabilityPolicy policy)
+    {
+        if (candidate != null && policy.canLeadQueue(candidate))
+        {
+            TrainingPlan plan = candidate.getTrainingPlan();
+            if (candidate.getConfidence() == RecommendationConfidence.CHECK_NEEDED
+                    || hasOutstandingPreparation(plan)
+                    || isAcquisitionGuidance(candidate))
+            {
+                return CoverageClass.PREREQUISITE;
+            }
+            return CoverageClass.DIRECT;
+        }
+
+        if (recovery != null && policy.canLeadQueue(recovery))
+        {
+            String id = recovery.getId() == null ? "" : recovery.getId();
+            if (requestedSkill == Skill.MINING
+                    && id.equals("fallback:starter-pickaxe"))
+            {
+                return CoverageClass.PREREQUISITE;
+            }
+            if (requestedSkill == Skill.MINING
+                    && id.equals("fallback:starter-mining"))
+            {
+                return CoverageClass.DIRECT;
+            }
+            if (id.equals("fallback:safe-combat-"
+                    + requestedSkill.name().toLowerCase(
+                            java.util.Locale.ROOT)))
+            {
+                return CoverageClass.DIRECT;
+            }
+            return CoverageClass.RECOVERY;
+        }
+        return CoverageClass.BLOCKED;
+    }
+
+    private static boolean isAcquisitionGuidance(Recommendation recommendation)
+    {
+        RecommendationGuidance guidance = recommendation == null
+                ? null : recommendation.getGuidance();
+        String action = guidance == null || guidance.getAction() == null
+                ? "" : guidance.getAction().toLowerCase(
+                        java.util.Locale.ROOT);
+        return action.startsWith("talk to ")
+                || action.startsWith("buy ")
+                || action.startsWith("get ")
+                || action.startsWith("obtain ");
+    }
+
+    private static boolean hasOutstandingPreparation(TrainingPlan plan)
+    {
+        if (plan == null) return false;
+        for (RequirementCheck check : plan.getRequirementChecks())
+        {
+            if (check.getState() == RequirementState.CHECK_NEEDED)
+                return true;
+        }
+        return false;
+    }
+
+    private static int count(
+            Map<Skill, EnumMap<CoverageClass, Integer>> census,
+            Skill skill,
+            CoverageClass classification)
+    {
+        EnumMap<CoverageClass, Integer> counts = census.get(skill);
+        return counts == null ? 0 : counts.getOrDefault(classification, 0);
+    }
+
+    private static void printClassifiedCensus(
+            String prefix,
+            Map<Skill, EnumMap<CoverageClass, Integer>> census)
+    {
+        for (Skill skill : Skill.values())
+        {
+            if (!census.containsKey(skill)) continue;
+            System.out.println(prefix + " " + skill.getName()
+                    + " DIRECT=" + count(census, skill, CoverageClass.DIRECT)
+                    + " PREREQUISITE=" + count(census, skill,
+                            CoverageClass.PREREQUISITE)
+                    + " RECOVERY=" + count(census, skill,
+                            CoverageClass.RECOVERY)
+                    + " BLOCKED=" + count(census, skill,
+                            CoverageClass.BLOCKED));
+        }
+    }
+
+    private enum CoverageClass
+    {
+        DIRECT,
+        PREREQUISITE,
+        RECOVERY,
+        BLOCKED
+    }
+
     private static String progressionBand(int level)
     {
         if (level < 20) return "early";
@@ -321,6 +743,26 @@ public class RecommendationCoverageCensusTest
         StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
                 .inventory(new InventorySnapshot(items))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()));
+        if (scenario.membership == MembershipStatus.P2P)
+        {
+            Map<String, CapabilityState> tools = new HashMap<>();
+            if (prepared)
+            {
+                tools.put("rake", CapabilityState.VERIFIED);
+                tools.put("dibber", CapabilityState.VERIFIED);
+                tools.put("spade", CapabilityState.VERIFIED);
+            }
+            builder.farming(new FarmingSnapshot(
+                    new HashSet<>(Collections.singletonList("falador")),
+                    tools, Collections.emptyMap()));
+            if (prepared)
+            {
+                Map<String, CapabilityState> poh = new HashMap<>();
+                poh.put("room:parlour", CapabilityState.VERIFIED);
+                poh.put("room:kitchen", CapabilityState.VERIFIED);
+                builder.poh(new PohSnapshot(CapabilityState.VERIFIED, poh));
+            }
+        }
         if (scenario.type != 2)
         {
             builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
@@ -354,6 +796,23 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.FIRE_TALISMAN, "Fire talisman", 1));
         items.add(item(ItemID.BODY_TALISMAN, "Body talisman", 1));
         items.add(item(ItemID.HUNTING_SNARE, "Bird snare", 1));
+        items.add(item(ItemID.AIRRUNE, "Air rune", 10_000));
+        items.add(item(ItemID.MINDRUNE, "Mind rune", 10_000));
+        items.add(item(ItemID.FIRERUNE, "Fire rune", 100_000));
+        items.add(item(ItemID.CHAOSRUNE, "Chaos rune", 10_000));
+        items.add(item(ItemID.DEATHRUNE, "Death rune", 10_000));
+        items.add(item(ItemID.RAW_SALMON, "Raw salmon", 10_000));
+        items.add(item(ItemID.RAW_HERRING, "Raw herring", 10_000));
+        items.add(item(ItemID.COINS, "Coins", 10_000));
+        items.add(item(ItemID.POTATO_SEED, "Potato seed", 1_000));
+        items.add(item(ItemID.WATERMELON_SEED, "Watermelon seed", 1_000));
+        items.add(item(ItemID.RAKE, "Rake", 1));
+        items.add(item(ItemID.DIBBER, "Seed dibber", 1));
+        items.add(item(ItemID.SPADE, "Spade", 1));
+        items.add(item(ItemID.WOODPLANK, "Plank", 10_000));
+        items.add(item(ItemID.PLANK_OAK, "Oak plank", 10_000));
+        items.add(item(ItemID.NAILS, "Steel nails", 10_000));
+        items.add(item(ItemID.POH_SAW, "Saw", 1));
         return items;
     }
 

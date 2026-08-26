@@ -227,13 +227,26 @@ public class AdaptiveMilestoneGuidanceService
                     : "Bring your " + axe + ".";
         }
         if ("fishing_f2p_fly".equals(methodId))
-            return "Bring a fly fishing rod and feathers.";
+            return items.has("Fly fishing rod") && items.has("Feather")
+                    ? "Bring your fly fishing rod and feathers."
+                    : "Buy a fly fishing rod and feather packs from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village.";
         if ("fishing_lumbridge_shrimps".equals(methodId))
             return "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed.";
         if ("hunter_bird_traps".equals(methodId))
             return items.has("Bird snare")
                     ? "Bring one bird snare."
                     : "Buy one bird snare from Aleck's Hunter Emporium in Yanille before walking south to the Hunter area.";
+        if ("hunter_falconry".equals(methodId))
+            return "Bring 500 coins. Unequip weapon, shield, and gloves before renting the gyr falcon from Matthias.";
+        if ("magic_f2p_combat".equals(methodId))
+            return "Bring one mind rune and one air rune per Wind Strike; if short, buy both from Aubury's Rune Shop just south of Varrock East Bank.";
+        if ("magic_f2p_fire_bolt".equals(methodId))
+            return "Bring three air runes, four fire runes, and one chaos rune per Fire Bolt; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
+        if ("magic_f2p_fire_blast".equals(methodId))
+            return "Bring four air runes, five fire runes, and one death rune per Fire Blast; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
+        if ("construction_crude_chairs".equals(methodId)
+                || "construction_oak_larders".equals(methodId))
+            return "Bring a hammer and saw.";
         if ("thieving_lumbridge_people".equals(methodId))
             return "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed.";
         if ("thieving_ardy_knights".equals(methodId))

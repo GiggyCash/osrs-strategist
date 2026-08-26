@@ -5,6 +5,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ExpandedContentCoverageTest
@@ -46,6 +47,32 @@ public class ExpandedContentCoverageTest
                 found |= method.getMetadata().isFreeToPlayAllowed();
             assertTrue("No F2P method for " + skill, found);
         }
+    }
+
+    @Test
+    public void crudeChairsAreOnlyAnEarlyConstructionBaseline()
+    {
+        TrainingMethod method = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.CONSTRUCTION).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> "construction_crude_chairs".equals(
+                        candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertEquals(32, method.getMaxLevel());
+    }
+
+    @Test
+    public void potatoAllotmentsAreOnlyAnEarlyFarmingBaseline()
+    {
+        TrainingMethod method = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.FARMING).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> "farming_falador_potatoes".equals(
+                        candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertEquals(14, method.getMaxLevel());
     }
 
     private static void assertHasIntensity(

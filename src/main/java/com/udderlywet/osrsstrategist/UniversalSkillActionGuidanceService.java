@@ -202,6 +202,8 @@ public class UniversalSkillActionGuidanceService
                     || action.getLevel() > currentLevel
                     || !membershipAllowed(action, membership)
                     || isOneTimeOrRewardAction(action)
+                    || (action.getSkill() == Skill.RUNECRAFT
+                            && !normalize(action.getName()).endsWith(" rune"))
                     || (anvilSmithing && isBarSmeltingAction(action)))
             {
                 continue;

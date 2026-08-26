@@ -151,6 +151,39 @@ public class RequirementActionabilityTest
     }
 
     @Test
+    public void barbarianFishingDoesNotMasqueradeAsAMetalBarShortfall()
+    {
+        TrainingPlan plan = new TrainingPlan(
+                method("fishing_barbarian", Skill.FISHING),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(new RequirementCheck(
+                        "generic:Barbarian Fishing training",
+                        "Barbarian Fishing training",
+                        RequirementState.CHECK_NEEDED,
+                        "Training unlock has not been observed.")));
+
+        assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
+        assertFalse(RequirementActionability.isActionablePreparation(plan,
+                new RecommendationGuidance("Catch leaping fish.",
+                        "Bring feathers.", "Otto's Grotto.", null)));
+    }
+
+    @Test
+    public void unknownFarmingPatchIsNotJustASeedShortfall()
+    {
+        TrainingPlan plan = new TrainingPlan(
+                method("farming_allotments_expanded", Skill.FARMING),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(new RequirementCheck(
+                        "generic:Reachable allotment patches and supplies",
+                        "Reachable allotment patches and supplies",
+                        RequirementState.CHECK_NEEDED,
+                        "No patch has been proven.")));
+
+        assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
+    }
+
+    @Test
     public void retrievalOnlyUimResourceStillRequiresExplicitRoute()
     {
         RequirementCheck check = new RequirementCheck(

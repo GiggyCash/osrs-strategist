@@ -50,6 +50,8 @@ public class VariableMethodGuidanceService
             case "herblore_mixology": return mixology(targetLevel, xpNeeded, items);
             case "farming_tithe": return titheFarm(targetLevel, xpNeeded, items);
             case "farming_allotments_expanded": return farmingAllotments(data, targetLevel, xpNeeded, items);
+            case "farming_falador_potatoes": return faladorPotatoes(targetLevel, xpNeeded, items);
+            case "farming_falador_watermelons": return faladorWatermelons(targetLevel, xpNeeded, items);
             case "farming_herbs_expanded": return farmingHerbs(data, targetLevel, xpNeeded, items);
             case "farming_contracts": return farmingContracts(data, targetLevel, xpNeeded, items);
             case "hunter_rumours": return hunterRumours(targetLevel, xpNeeded, items);
@@ -199,6 +201,32 @@ public class VariableMethodGuidanceService
                 "Bring a rake, seed dibber, spade, compost plan, and the selected allotment seeds. " + observed(items, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
                 "Use the Farming checklist for observed patches instead of assuming every unlocked patch is currently empty or ready.",
                 "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
+        );
+    }
+
+    private static RecommendationGuidance faladorPotatoes(
+            int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Rake one allotment, plant three potato seeds, leave while they grow, then return with a spade to harvest and replant. Repeat until you gain "
+                        + format(xp) + " Farming XP toward level " + target + ".",
+                "Bring three potato seeds, a rake, seed dibber, and spade. Buy tools from Sarah at the farm and potato seeds from Olivia in Draynor Village when missing. "
+                        + observed(items, "Potato seed", "Rake", "Seed dibber", "Spade"),
+                "South Falador Farm allotments, between Falador and Port Sarim.",
+                "Harvest yield and disease are variable, so Compass does not invent a seed-to-level count. Compost is optional but reduces disease and improves yield."
+        );
+    }
+
+    private static RecommendationGuidance faladorWatermelons(
+            int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Rake one allotment, plant three watermelon seeds, leave while they grow, then return with a spade to harvest and replant. Repeat until you gain "
+                        + format(xp) + " Farming XP toward level " + target + ".",
+                "Bring three watermelon seeds, a rake, seed dibber, and spade. If seeds are missing, pickpocket Master Farmers in Draynor Village until you have three; the number of pickpockets is variable. "
+                        + observed(items, "Watermelon seed", "Rake", "Seed dibber", "Spade"),
+                "South Falador Farm allotments, between Falador and Port Sarim.",
+                "Harvest yield and disease are variable, so Compass does not invent a seed-to-level count. Compost is optional but reduces disease and improves yield."
         );
     }
 

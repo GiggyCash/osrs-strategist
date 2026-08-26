@@ -122,10 +122,18 @@ public class MethodExecutionProfileCatalog
                 ":chinchompa"));
         add(p("hunter_red_chins", "red chinchompa caught", "red chinchompas caught", none(), null,
                 "carnivorous_chinchompa"));
+        add(p("hunter_falconry", "kebbit caught", "kebbits caught", none(),
+                "Selects spotted kebbits, adding dark kebbits from 57 Hunter and dashing kebbits from 69.",
+                "spotted_kebbit", "dark_kebbit", "dashing_kebbit"));
     }
 
     private void production()
     {
+        add(p("cooking_f2p_fish", "fish cooked", "fish cooked",
+                rawAction(),
+                "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
+                "shrimp", "sardine", "herring", "trout", "pike",
+                "salmon", "tuna", "lobster", "swordfish"));
         add(pm("cooking_wines", "jug of wine made", "jugs of wine made",
                 rules(fixedRule("Grapes", 1.0), fixedRule("Jug of water", 1.0)),
                 "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
@@ -223,6 +231,12 @@ public class MethodExecutionProfileCatalog
         add(p("construction_mahogany_tables", "mahogany table built", "mahogany tables built",
                 fixed("Mahogany plank", 6.0), null,
                 "mahogany_table"));
+        add(pm("construction_crude_chairs", "crude wooden chair built",
+                "crude wooden chairs built",
+                rules(fixedRule("Plank", 2.0),
+                        fixedRule("Steel nails", 2.0)),
+                "Bring a hammer and saw. Steel nails or better reduce bending; the count is the minimum consumed by successful builds.",
+                "crude_wooden_chair"));
     }
 
     private void farming()
@@ -240,6 +254,23 @@ public class MethodExecutionProfileCatalog
 
     private void utility()
     {
+        add(pm("magic_f2p_combat", "Wind Strike cast", "Wind Strike casts",
+                rules(fixedRule("Air rune", 1.0),
+                        fixedRule("Mind rune", 1.0)),
+                "This baseline deliberately counts one air rune and one mind rune per cast; staff substitution is not assumed without an equipment-aware input plan.",
+                "wind_strike"));
+        add(pm("magic_f2p_fire_bolt", "Fire Bolt cast", "Fire Bolt casts",
+                rules(fixedRule("Air rune", 3.0),
+                        fixedRule("Fire rune", 4.0),
+                        fixedRule("Chaos rune", 1.0)),
+                "This safe baseline counts the full rune cost; staff substitution is not assumed without an equipment-aware input plan.",
+                "fire_bolt"));
+        add(pm("magic_f2p_fire_blast", "Fire Blast cast", "Fire Blast casts",
+                rules(fixedRule("Air rune", 4.0),
+                        fixedRule("Fire rune", 5.0),
+                        fixedRule("Death rune", 1.0)),
+                "This safe baseline counts the full rune cost; staff substitution is not assumed without an equipment-aware input plan.",
+                "fire_blast"));
         add(pm("magic_high_alch", "High Alchemy cast", "High Alchemy casts",
                 rules(fixedRule("Nature rune", 1.0), fixedRule("Fire rune", 5.0)),
                 "A fire-rune staff replaces the five fire runes per cast. The item being alched must still be selected from a verified safe alch list before execution.",

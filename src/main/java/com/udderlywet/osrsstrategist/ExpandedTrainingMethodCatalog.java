@@ -143,15 +143,27 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, false, true, AttentionLevel.ACTIVE, 15, 8,
                 "Bone supply", "Wilderness risk accepted");
 
-        add(Skill.MAGIC, "magic_f2p_combat", 1, 99,
-                "F2P combat spells", "Cast the strongest economical F2P combat spell appropriate to the target and rune supply.",
+        add(Skill.MAGIC, "magic_f2p_combat", 1, 34,
+                "Wind Strike on monks", "Edgeville Monastery, west of Edgeville: cast Wind Strike on monks, ask a monk to heal you when needed, and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.LOW,
-                true, true, true, true, false, AttentionLevel.MODERATE, 15, 3);
+                true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
+                "Air and mind rune supply");
         add(Skill.MAGIC, "magic_f2p_curse", 19, 99,
                 "F2P curse casting", "Use curse-style utility casting for lower-cost F2P Magic experience when appropriate.",
                 TrainingIntensity.RELAXED, MethodCostTier.LOW, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
-                "Appropriate rune supply");
+                "Verified Curse splash target and equipment setup",
+                "Earth, water, and body rune supply");
+        add(Skill.MAGIC, "magic_f2p_fire_bolt", 35, 58,
+                "Fire Bolt at Wizards' Tower", "Top floor of Wizards' Tower: cast Fire Bolt through the cage at the lesser demon, wait for it to respawn, and repeat.",
+                TrainingIntensity.BALANCED, MethodCostTier.HIGH, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Air, fire, and chaos rune supply");
+        add(Skill.MAGIC, "magic_f2p_fire_blast", 59, 99,
+                "Fire Blast at Wizards' Tower", "Top floor of Wizards' Tower: cast Fire Blast through the cage at the lesser demon, wait for it to respawn, and repeat.",
+                TrainingIntensity.BALANCED, MethodCostTier.HIGH, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.MODERATE, 20, 4,
+                "Air, fire, and death rune supply");
         add(Skill.MAGIC, "magic_high_alch", 55, 99,
                 "High Level Alchemy", "High-alch verified items during movement or downtime, accounting for item value before consuming them.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
@@ -381,10 +393,10 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
                 "Bird snare");
         add(Skill.HUNTER, "hunter_falconry", 43, 99,
-                "Falconry kebbits", "Catch the best suitable falconry kebbit when active XP and kebbit rewards fit the account; reposition while the falcon chases and use observed pouch/inventory capacity.",
+                "Piscatoris falconry", "Piscatoris falconry area: rent a gyr falcon from Matthias, catch spotted kebbits (dark kebbits from 57), retrieve the falcon, drop the loot, and repeat.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.VERY_LOW, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 4,
-                "Piscatoris falconry access and falcon rental coins");
+                "500 coins for falcon rental");
         add(Skill.HUNTER, "hunter_deadfall_kebbits", 23, 56,
                 "Deadfall kebbits", "Use the live two-deadfall limit and log-preservation behavior for Wild, Barb-tailed, Prickly, or Sabre-toothed kebbits appropriate to the current level.",
                 TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
@@ -420,9 +432,10 @@ public class ExpandedTrainingMethodCatalog
     private void production()
     {
         add(Skill.COOKING, "cooking_f2p_fish", 1, 99,
-                "Cook fish", "Cook the best sensible fish supply on a nearby range or fire; favor banked/self-caught food on irons.",
+                "Cook fish at Al Kharid", "Al Kharid bank and range: withdraw one inventory of the selected raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
-                true, true, true, true, false, AttentionLevel.LOW, 20, 2);
+                true, true, true, true, false, AttentionLevel.LOW, 20, 2,
+                "Raw fish supply");
         add(Skill.COOKING, "cooking_wines", 35, 99,
                 "Jugs of wine", "Make jugs of wine for fast bankstanding Cooking when the grape cost/supply is acceptable.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.MODERATE, RiskLevel.NONE,
@@ -753,6 +766,16 @@ public class ExpandedTrainingMethodCatalog
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 10, 5,
                 "Reachable allotment patches and supplies");
+        add(Skill.FARMING, "farming_falador_potatoes", 1, 14,
+                "Falador potato allotments", "South Falador Farm: rake one allotment, plant three potato seeds, leave it to grow, return with a spade, harvest, and replant.",
+                TrainingIntensity.BALANCED, MethodCostTier.VERY_LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 10, 2,
+                "Falador patch, potato seeds, and farming tools");
+        add(Skill.FARMING, "farming_falador_watermelons", 47, 99,
+                "Falador watermelon allotments", "South Falador Farm: rake one allotment, plant three watermelon seeds, leave it to grow, return with a spade, harvest, and replant.",
+                TrainingIntensity.BALANCED, MethodCostTier.LOW, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.LOW, 10, 2,
+                "Falador patch, watermelon seeds, and farming tools");
         add(Skill.FARMING, "farming_herbs_expanded", 9, 99,
                 "Herb runs", "Run verified herb patches with the best strategically useful seed supply available.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
@@ -795,10 +818,15 @@ public class ExpandedTrainingMethodCatalog
                 "Farming Guild Hespori cave access", "Hespori seed and combat readiness");
 
         add(Skill.CONSTRUCTION, "construction_oak_larders", 33, 73,
-                "Oak larders", "Build and remove oak larders for fast conventional Construction experience.",
+                "Oak larders", "At the oak larder hotspot in a verified POH Kitchen, enter building mode, build an oak larder with eight oak planks, remove it, and repeat.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.ACTIVE, 20, 5,
-                "POH kitchen and oak plank supply");
+                "Verified POH Kitchen, oak planks, hammer, and saw");
+        add(Skill.CONSTRUCTION, "construction_crude_chairs", 1, 32,
+                "Crude wooden chairs", "In a verified POH Parlour, enter building mode, build a crude wooden chair with two planks and two nails, remove it, and repeat.",
+                TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.ACTIVE, 15, 3,
+                "Verified POH Parlour, planks, nails, hammer, and saw");
         add(Skill.CONSTRUCTION, "construction_oak_doors", 74, 99,
                 "Oak dungeon doors", "Build and remove oak dungeon doors for fast high-level oak-plank Construction.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.NONE,

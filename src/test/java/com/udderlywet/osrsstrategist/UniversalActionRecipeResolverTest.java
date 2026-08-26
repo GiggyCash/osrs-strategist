@@ -13,6 +13,38 @@ public class UniversalActionRecipeResolverTest
             new UniversalActionRecipeResolver();
 
     @Test
+    public void windStrikeHasExactRuneInputs()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.MAGIC, "Wind Strike", 5.5f), 25,
+                MembershipStatus.F2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Air rune", 25);
+        assertInput(recipe, "Mind rune", 25);
+    }
+
+    @Test
+    public void f2pFireCombatSpellsHaveExactRuneInputs()
+    {
+        UniversalActionRecipe bolt = resolver.resolve(
+                action(Skill.MAGIC, "Fire Bolt", 22.5f), 10,
+                MembershipStatus.F2P);
+        assertTrue(bolt.hasExactInputs());
+        assertInput(bolt, "Air rune", 30);
+        assertInput(bolt, "Fire rune", 40);
+        assertInput(bolt, "Chaos rune", 10);
+
+        UniversalActionRecipe blast = resolver.resolve(
+                action(Skill.MAGIC, "Fire Blast", 34.5f), 10,
+                MembershipStatus.F2P);
+        assertTrue(blast.hasExactInputs());
+        assertInput(blast, "Air rune", 40);
+        assertInput(blast, "Fire rune", 50);
+        assertInput(blast, "Death rune", 10);
+    }
+
+    @Test
     public void smithingBarCountsMatchStandardAnvilFamilies()
     {
         assertEquals(5, UniversalActionRecipeResolver.smithingBarsFor("rune platebody"));

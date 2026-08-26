@@ -182,6 +182,55 @@ public class F2pRunecraftRecommendationTest
         assertFalse(RequirementActionability.hasHardUnresolvedRequirement(plan));
     }
 
+    @Test
+    public void waterRuneRouteNeverSelectsWaterTiaraAsTheAction()
+    {
+        RuneLiteSkillActionCatalog actions = new RuneLiteSkillActionCatalog()
+        {
+            @Override
+            public java.util.List<RuneLiteSkillActionDefinition> actionsFor(
+                    Skill skill)
+            {
+                if (skill != Skill.RUNECRAFT) return Collections.emptyList();
+                return Arrays.asList(
+                        new RuneLiteSkillActionDefinition(Skill.RUNECRAFT,
+                                "test:water_tiara", "Water tiara", 1, 50,
+                                null, MembershipStatus.F2P),
+                        new RuneLiteSkillActionDefinition(Skill.RUNECRAFT,
+                                "test:water_rune", "Water rune", 5, 5,
+                                null, MembershipStatus.F2P));
+            }
+        };
+        AccountSnapshot account = account(MembershipStatus.F2P, 5);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(ItemID.BLANKRUNE,
+                                "Rune essence", 100))))
+                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(ItemID.TIARA_WATER,
+                                "Water tiara", 1))))
+                .build();
+        TrainingPlan plan = selector().select(data, Skill.RUNECRAFT, 5,
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR, false);
+        RecommendationGuidanceService guidanceService =
+                new RecommendationGuidanceService(
+                        new AdaptiveMilestoneGuidanceService(actions,
+                                new MethodExecutionProfileCatalog(),
+                                new SkillingXpModifierService()),
+                        new VariableMethodGuidanceService(),
+                        new UniversalSkillActionGuidanceService(actions,
+                                new UniversalActionRecipeResolver(),
+                                new SkillingXpModifierService(),
+                                new AccountResourcePlanner()));
+
+        RecommendationGuidance guidance = guidanceService.build(
+                data, Skill.RUNECRAFT, 5, 10, plan, false);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Water runes"));
+        assertFalse(guidance.getAction().contains("Water tiara"));
+    }
+
     private static TrainingMethodSelector selector()
     {
         return new TrainingMethodSelector(

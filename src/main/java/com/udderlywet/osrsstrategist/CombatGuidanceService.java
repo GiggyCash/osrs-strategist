@@ -46,6 +46,16 @@ public class CombatGuidanceService
 
         ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
         String weapon = chooseWeapon(account, skill, build, items);
+        if (weapon == null && skill != Skill.RANGED
+                && build == RestrictedBuildType.STANDARD
+                && currentLevel < 20)
+        {
+            return new RecommendationGuidance(
+                    "Talk to Harlan, claim a training sword, and equip it. DO NEXT refreshes when the weapon is observed.",
+                    "No coins or other supplies required.",
+                    "Melee combat tutor Harlan, north of Lumbridge Castle.",
+                    "A verified weapon is required before Compass can give a sensible melee loop.");
+        }
         boolean unarmed = weapon == null && currentLevel < 10
                 && skill != Skill.RANGED;
         if (weapon == null && !unarmed) return null;

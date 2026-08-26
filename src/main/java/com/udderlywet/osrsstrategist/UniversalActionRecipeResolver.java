@@ -462,6 +462,13 @@ public class UniversalActionRecipeResolver
             add(inputs, "Mahogany plank", safeMultiply(actions, 6));
             return exact(inputs, "Bring a hammer and saw or verified equivalents.");
         }
+        if (lower.contains("crude wooden chair"))
+        {
+            add(inputs, "Plank", safeMultiply(actions, 2));
+            add(inputs, "Steel nails", safeMultiply(actions, 2));
+            return exact(inputs,
+                    "Bring a hammer and saw. Steel nails or better reduce bending; the count is the minimum consumed by successful builds.");
+        }
         if (lower.contains("teak garden bench"))
         {
             add(inputs, "Teak plank", safeMultiply(actions, 6));
@@ -494,6 +501,27 @@ public class UniversalActionRecipeResolver
     private static UniversalActionRecipe magic(String lower, int actions)
     {
         List<ResolvedMethodInput> inputs = new ArrayList<>();
+        if (lower.equals("wind strike"))
+        {
+            add(inputs, "Air rune", actions);
+            add(inputs, "Mind rune", actions);
+            return exact(inputs,
+                    "This safe baseline counts one air rune and one mind rune per cast.");
+        }
+        if (lower.equals("fire bolt"))
+        {
+            add(inputs, "Air rune", safeMultiply(actions, 3));
+            add(inputs, "Fire rune", safeMultiply(actions, 4));
+            add(inputs, "Chaos rune", actions);
+            return exact(inputs, "This safe baseline counts the full rune cost.");
+        }
+        if (lower.equals("fire blast"))
+        {
+            add(inputs, "Air rune", safeMultiply(actions, 4));
+            add(inputs, "Fire rune", safeMultiply(actions, 5));
+            add(inputs, "Death rune", actions);
+            return exact(inputs, "This safe baseline counts the full rune cost.");
+        }
         if (lower.contains("high level alchemy") || lower.contains("high alchemy"))
         {
             add(inputs, "Nature rune", actions);

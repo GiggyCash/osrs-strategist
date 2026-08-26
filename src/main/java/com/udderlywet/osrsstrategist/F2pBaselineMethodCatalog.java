@@ -108,7 +108,7 @@ public class F2pBaselineMethodCatalog
     {
         baseline(Skill.COOKING, "cooking_f2p_fish_baseline", 1, 99,
                 "Cook F2P fish",
-                "Cook the best sensible F2P fish supply on a nearby range. Prefer the Lumbridge Castle range after Cook's Assistant when its burn reduction is useful.",
+                "Al Kharid bank and range: withdraw one inventory of raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
                 AttentionLevel.LOW);
 
         baseline(Skill.FIREMAKING, "firemaking_f2p_logs", 1, 99,

@@ -246,9 +246,9 @@ public class RecommendationGuidanceService
             }
             else
             {
-                text.append(" Catch or otherwise acquire ")
+                text.append(" Acquire ")
                         .append(joinNatural(missingParts))
-                        .append(" just in time. Normal bank state is ignored for UIM.");
+                        .append(" just in time: buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village. Normal bank state is ignored for UIM.");
             }
             return text.toString();
         }
@@ -317,8 +317,9 @@ public class RecommendationGuidanceService
         }
         else
         {
-            text.append(" Catch or otherwise source ")
-                    .append(joinNatural(missingParts)).append(".");
+            text.append(" Source ")
+                    .append(joinNatural(missingParts))
+                    .append(": buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village.");
         }
         return text.toString();
     }
@@ -342,7 +343,7 @@ public class RecommendationGuidanceService
             return "Use the Lumbridge Castle range to reduce burns, banking upstairs between inventories.";
         }
 
-        return "Use a nearby range. If Cook's Assistant is complete, prefer the Lumbridge Castle range for its lower burn rate.";
+        return "Use the range immediately north of Al Kharid bank: withdraw raw fish, cook one inventory, bank, and repeat.";
     }
 
     private static int quantityByName(

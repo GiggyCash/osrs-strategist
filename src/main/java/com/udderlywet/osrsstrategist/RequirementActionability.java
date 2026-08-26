@@ -93,6 +93,7 @@ public final class RequirementActionability
                 "access", "unlock", "quest", "completion", "completed",
                 "route", "contract", "spellbook", "activity", "minigame",
                 "region", "guild", "poh", "room", "course", "team",
+                "patch", "reachable",
                 "role", "assignment", "task", "location", "habitat",
                 "target", "risk accepted"))
         {
@@ -107,7 +108,7 @@ public final class RequirementActionability
                 "ammo", "ammunition", "arrow", "bolt", "dart", "cannonball",
                 "chinchompa", "bone", "bones", "head", "heads",
                 "essence", "talisman", "tiara", "binding necklace",
-                "ore", "bar", "bars", "metal", "log", "logs", "plank",
+                "ore", "bars", "metal", "log", "logs", "plank",
                 "planks", "herb", "herbs", "secondary", "secondaries",
                 "seed", "seeds", "compost", "payment", "payments",
                 "potion", "potions", "grape", "grapes", "jug",
