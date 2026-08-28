@@ -37,6 +37,7 @@ public class VariableMethodGuidanceService
         {
             case "firemaking_wintertodt": return wintertodt(targetLevel, xpNeeded, items);
             case "fishing_tempoross": return tempoross(targetLevel, xpNeeded, items);
+            case "fishing_karambwan": return karambwans(targetLevel, xpNeeded, items);
             case "runecraft_gotr": return gotr(targetLevel, xpNeeded, items);
             case "runecraft_zmi": return zmi(targetLevel, xpNeeded, items);
             case "mining_mlm": return motherlode(targetLevel, xpNeeded, items);
@@ -48,7 +49,7 @@ public class VariableMethodGuidanceService
             case "construction_homes":
             case "construction_mahogany_homes": return mahoganyHomes(targetLevel, xpNeeded, items);
             case "herblore_mixology": return mixology(targetLevel, xpNeeded, items);
-            case "farming_tithe": return titheFarm(targetLevel, xpNeeded, items);
+            case "farming_tithe": return titheFarm(data, targetLevel, xpNeeded, items);
             case "farming_allotments_expanded": return farmingAllotments(data, targetLevel, xpNeeded, items);
             case "farming_falador_potatoes": return faladorPotatoes(targetLevel, xpNeeded, items);
             case "farming_falador_watermelons": return faladorWatermelons(targetLevel, xpNeeded, items);
@@ -87,6 +88,18 @@ public class VariableMethodGuidanceService
         );
     }
 
+    private static RecommendationGuidance karambwans(
+            int target, int xp, ObservedItemIndex items)
+    {
+        return new RecommendationGuidance(
+                "Load the vessel with raw karambwanji, fish the static spot until full, take the fairy ring to Zanaris, bank, return via DKP, and repeat until you gain " + format(xp) + " Fishing XP for level " + target + ".",
+                "Bring a karambwan vessel and raw karambwanji. "
+                        + observed(items, "Karambwan vessel", "Raw karambwanji", "Fish barrel"),
+                "Karambwan fishing spot north of fairy ring DKP on north-east Karamja.",
+                "The static spot and stackable bait make this the low-attention option. Faster bank teleports can improve the loop later without being assumed here."
+        );
+    }
+
     private static RecommendationGuidance gotr(int target, int xp, ObservedItemIndex items)
     {
         String pouches = observed(items, "Small pouch", "Medium pouch",
@@ -104,7 +117,7 @@ public class VariableMethodGuidanceService
     {
         return new RecommendationGuidance(
                 "Fill every usable essence pouch, follow the safe altar path, craft the mixed rune result, bank, and repeat until you gain " + format(xp) + " Runecraft XP for level " + target + ".",
-                "Bring pure essence, usable essence pouches, and your preferred banking/teleport setup. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Ourania teleport"),
+                "Bring pure essence and every usable essence pouch; leave inventory space for the mixed runes. " + observed(items, "Small pouch", "Medium pouch", "Large pouch", "Giant pouch", "Colossal pouch", "Ourania teleport"),
                 "Ourania Altar, southwest of Ardougne.",
                 "Ourania produces a mix of runes, and XP per essence depends on the result distribution and account level. Treat the remaining essence count as variable."
         );
@@ -184,11 +197,16 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance titheFarm(int target, int xp, ObservedItemIndex items)
+    private static RecommendationGuidance titheFarm(StrategyDataBundle data,
+            int target, int xp, ObservedItemIndex items)
     {
+        int level = data == null || data.getAccount() == null ? 34
+                : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        String seed = level >= 74 ? "Logavano"
+                : level >= 54 ? "Bologano" : "Golovanova";
         return new RecommendationGuidance(
-                "Run Tithe Farm with the highest fruit seed tier unlocked and a plot count you can water reliably. You need " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring a spade and watering cans. Use Gricoller's can when owned. " + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
+                "Take " + seed + " seeds from the table. Plant and immediately water a 20-plot cycle, revisit each plant for every watering stage, harvest, deposit the fruit, and repeat for " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring a spade, seed dibber, and eight filled watering cans; Gricoller's can replaces the eight cans. " + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
                 "Tithe Farm in Hosidius.",
                 "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint."
         );
@@ -232,12 +250,42 @@ public class VariableMethodGuidanceService
 
     private static RecommendationGuidance farmingHerbs(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data == null || data.getAccount() == null ? 9
+                : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        String seed = herbSeed(items, level);
+        String patch = new FarmingAccessEvaluator(new FarmingAccessCatalog())
+                .firstReachableHerbPatchName(
+                        data == null ? null : data.getFarming());
+        if (patch == null) patch = "the verified herb patch";
         return new RecommendationGuidance(
-                "Harvest and replant every verified herb patch that is ready, using the herb seed with the best current account value. You need " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring a seed dibber, spade, compost plan, herb seeds, and patch teleports. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
-                "Follow the live Farming checklist so dead, diseased, growing, and ready patches are handled differently instead of blindly running a fixed route.",
+                "At " + patch + ", harvest any ready herbs, plant one " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring one " + seed + ", a seed dibber, and a spade. Compost is optional but protects yield. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+                patch + ".",
                 "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
         );
+    }
+
+    private static String herbSeed(ObservedItemIndex items, int level)
+    {
+        String[][] tiers = {
+                {"Torstol seed", "85"}, {"Dwarf weed seed", "79"},
+                {"Lantadyme seed", "73"}, {"Cadantine seed", "67"},
+                {"Snapdragon seed", "62"}, {"Kwuarm seed", "56"},
+                {"Avantoe seed", "50"}, {"Irit seed", "44"},
+                {"Toadflax seed", "38"}, {"Ranarr seed", "32"},
+                {"Harralander seed", "26"}, {"Tarromin seed", "19"},
+                {"Marrentill seed", "14"}, {"Guam seed", "9"}
+        };
+        for (String[] tier : tiers)
+        {
+            if (level >= Integer.parseInt(tier[1])
+                    && items.quantity(tier[0]) > 0)
+                return tier[0].toLowerCase(java.util.Locale.ROOT);
+        }
+        for (String[] tier : tiers)
+            if (level >= Integer.parseInt(tier[1]))
+                return tier[0].toLowerCase(java.util.Locale.ROOT);
+        return "guam seed";
     }
 
     private static RecommendationGuidance farmingContracts(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)

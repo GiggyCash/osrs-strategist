@@ -168,8 +168,8 @@ public final class TrainingMethod
                 {
                     case AFK: score += 8.0; break;
                     case LOW: score += 5.0; break;
-                    case ACTIVE: score -= 4.0; break;
-                    case MODERATE:
+                    case ACTIVE: score -= 8.0; break;
+                    case MODERATE: score -= 2.0; break;
                     default: break;
                 }
                 break;

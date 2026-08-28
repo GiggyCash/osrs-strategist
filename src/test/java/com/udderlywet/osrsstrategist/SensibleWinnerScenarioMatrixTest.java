@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
@@ -16,6 +17,52 @@ import static org.junit.Assert.assertTrue;
 /** Fifty defensible winner assertions across the shared final decision layer. */
 public class SensibleWinnerScenarioMatrixTest
 {
+    @Test
+    public void everyPublicGoalReshapesOneIdenticalCandidatePool()
+    {
+        List<Recommendation> candidates = Arrays.asList(
+                ready("opportunity:automatic", 31, "Ready account opportunity."),
+                skill("skill:mining", Skill.MINING, 30,
+                        AttentionLevel.LOW, 2, 20, 70, 71),
+                ready("quest:recipe-for-disaster", 30,
+                        "Advance Recipe for Disaster."),
+                ready("pvm:tztok_jad", 30,
+                        "Observed Fight Caves preparation."),
+                ready("quest:remaining-prerequisite", 30,
+                        "Complete a quest-cape prerequisite."),
+                ready("quest:song-of-the-elves", 30,
+                        "Unlock Prifddinas."),
+                ready("upgrade:bowfa", 30,
+                        "Advance crystal weapon acquisition."),
+                ready("pvm:inferno", 30,
+                        "Complete verified Inferno preparation."));
+        Map<GoalType, String> expected = new LinkedHashMap<>();
+        expected.put(GoalType.AUTOMATIC, "opportunity:automatic");
+        expected.put(GoalType.BARROWS_GLOVES, "quest:recipe-for-disaster");
+        expected.put(GoalType.FIRE_CAPE, "pvm:tztok_jad");
+        expected.put(GoalType.QUEST_CAPE, "quest:");
+        expected.put(GoalType.PRIFDDINAS, "quest:song-of-the-elves");
+        expected.put(GoalType.BOWFA, "upgrade:bowfa");
+        expected.put(GoalType.INFERNAL_CAPE, "pvm:inferno");
+        expected.put(GoalType.MAX, "skill:mining");
+
+        StrategyEngine engine = new StrategyEngine(null, null, null, null,
+                new RecommendationActionabilityPolicy(),
+                new RecommendationIntelligenceService());
+        for (Map.Entry<GoalType, String> entry : expected.entrySet())
+        {
+            StrategyContext context = context(0, MembershipStatus.P2P,
+                    StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                    entry.getKey(), standard(70), false);
+            String winner = engine.buildPlayerQueue(candidates, context)
+                    .get(0).getId();
+            assertTrue(entry.getKey() + " did not reshape the pool: " + winner,
+                    winner.startsWith(entry.getValue()));
+            System.out.println("GOAL_SENSITIVITY " + entry.getKey()
+                    + " winner=" + winner);
+        }
+    }
+
     @Test
     public void fiftyRealisticAccountSituationsChooseTheExpectedActionFamily()
     {

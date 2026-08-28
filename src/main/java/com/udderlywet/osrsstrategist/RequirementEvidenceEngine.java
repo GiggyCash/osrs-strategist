@@ -98,6 +98,12 @@ public class RequirementEvidenceEngine
         {
             return evaluateCookedFish(data, useGroupStorage);
         }
+        if (method.getSkill() == Skill.COOKING
+                && ("cooking_hosidius".equals(method.getId())
+                    || "cooking_wines".equals(method.getId())))
+        {
+            return evaluateMembersCooking(data, method.getId(), useGroupStorage);
+        }
         if (method.getSkill() == Skill.FISHING)
         {
             List<RequirementCheck> fishing = evaluateFishing(
@@ -109,6 +115,20 @@ public class RequirementEvidenceEngine
             List<RequirementCheck> hunter = evaluateHunter(
                     data, method, useGroupStorage);
             if (hunter != null) return hunter;
+        }
+        if ("runecraft_gotr".equals(method.getId()))
+        {
+            return evaluateMinigameAccess(data, "guardians-of-the-rift",
+                    "Temple of the Eye access");
+        }
+        if ("runecraft_zmi".equals(method.getId()))
+        {
+            List<RequirementCheck> zmiChecks = new ArrayList<>();
+            zmiChecks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:zmi_pure_essence",
+                            "Pure essence", 1, ItemID.BLANKRUNE_HIGH),
+                    useGroupStorage));
+            return zmiChecks;
         }
         if (method.getSkill() == Skill.CONSTRUCTION
                 && "construction_crude_chairs".equals(method.getId()))
@@ -145,6 +165,19 @@ public class RequirementEvidenceEngine
             boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
+        CombatEvidenceSnapshot combat = data == null ? null
+                : data.getCombatEvidence();
+        if (combat != null)
+        {
+            boolean standard = combat.getSpellbookSelector() == 0;
+            checks.add(new RequirementCheck(
+                    "spellbook:standard", "Standard spellbook active",
+                    standard ? RequirementState.VERIFIED
+                            : RequirementState.BLOCKED,
+                    standard
+                            ? "The Standard spellbook is active."
+                            : "The observed spellbook cannot cast this Standard spell."));
+        }
         int airPerCast = "magic_f2p_fire_blast".equals(methodId) ? 4
                 : "magic_f2p_fire_bolt".equals(methodId) ? 3 : 1;
         checks.add(resourceReadinessService.evaluate(data,
@@ -205,6 +238,35 @@ public class RequirementEvidenceEngine
         return checks;
     }
 
+    private List<RequirementCheck> evaluateMembersCooking(
+            StrategyDataBundle data, String methodId,
+            boolean useGroupStorage)
+    {
+        if ("cooking_wines".equals(methodId))
+        {
+            List<RequirementCheck> checks = new ArrayList<>();
+            checks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:wine_grapes", "Grapes",
+                            1, ItemID.GRAPES), useGroupStorage));
+            checks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:wine_water", "Jug of water",
+                            1, ItemID.JUG_WATER), useGroupStorage));
+            return checks;
+        }
+
+        List<RequirementCheck> checks = evaluateCookedFish(data, useGroupStorage);
+        DiarySnapshot diaries = data == null ? null : data.getDiaries();
+        boolean kitchen = diaries != null
+                && diaries.isTierComplete("Kourend & Kebos", DiaryTier.EASY);
+        checks.add(new RequirementCheck(
+                "access:hosidius_kitchen", "Kourend & Kebos Easy Diary",
+                kitchen ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
+                kitchen
+                        ? "The Easy Diary proves access to the Hosidius kitchen range and bank chest."
+                        : "Kourend & Kebos Easy Diary completion has not been observed."));
+        return checks;
+    }
+
     private List<RequirementCheck> evaluateFishing(
             StrategyDataBundle data, TrainingMethod method,
             boolean useGroupStorage)
@@ -214,6 +276,50 @@ public class RequirementEvidenceEngine
             // The tutor beside this exact spot replaces a lost net, so lack of
             // an observed net does not block the first executable trip.
             return new ArrayList<>();
+        }
+        if ("fishing_tempoross".equals(method.getId()))
+        {
+            return evaluateMinigameAccess(data, "tempoross", "Tempoross access");
+        }
+        if ("fishing_karambwan".equals(method.getId()))
+        {
+            List<RequirementCheck> checks = new ArrayList<>();
+            QuestSnapshot quests = data == null ? null : data.getQuests();
+            boolean questComplete = quests != null
+                    && quests.statusOf("Tai Bwo Wannai Trio")
+                            == QuestStatus.COMPLETE;
+            checks.add(new RequirementCheck(
+                    "quest:tai_bwo_wannai_trio",
+                    "Tai Bwo Wannai Trio completed",
+                    questComplete ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    questComplete
+                            ? "Quest completion proves karambwan fishing access."
+                            : "Tai Bwo Wannai Trio completion has not been observed."));
+            TransportSnapshot transport = data == null ? null
+                    : data.getTransport();
+            boolean fairyRings = transport != null
+                    && transport.hasVerifiedRoute("fairy-rings");
+            checks.add(new RequirementCheck(
+                    "transport:fairy-rings", "Fairy ring network",
+                    fairyRings ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    fairyRings
+                            ? "Fairy ring transport is verified for this character."
+                            : "Fairy ring transport has not been verified for this character."));
+            checks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:karambwan_vessel",
+                            "Karambwan vessel", 1,
+                            ItemID.TBWT_KARAMBWAN_VESSEL,
+                            ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
+                    useGroupStorage));
+            checks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:karambwanji",
+                            "Raw karambwanji or a loaded vessel", 1,
+                            ItemID.TBWT_RAW_KARAMBWANJI,
+                            ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
+                    useGroupStorage));
+            return checks;
         }
         if (!"fishing_f2p_fly".equals(method.getId())) return null;
         List<RequirementCheck> checks = new ArrayList<>();
@@ -250,7 +356,47 @@ public class RequirementEvidenceEngine
                             ItemID.HUNTING_SNARE), useGroupStorage));
             return checks;
         }
+        if ("hunter_herbiboar".equals(method.getId()))
+        {
+            List<RequirementCheck> checks = new ArrayList<>();
+            AccountSnapshot account = data == null ? null : data.getAccount();
+            int herblore = account == null ? 1
+                    : account.getSkillLevel(Skill.HERBLORE);
+            checks.add(new RequirementCheck(
+                    "skill:herbiboar_herblore", "31 Herblore",
+                    herblore >= 31 ? RequirementState.VERIFIED
+                            : RequirementState.BLOCKED,
+                    "Current Herblore level is " + herblore + "."));
+            QuestSnapshot quests = data == null ? null : data.getQuests();
+            boolean boneVoyage = quests != null
+                    && quests.statusOf("Bone Voyage") == QuestStatus.COMPLETE;
+            checks.add(new RequirementCheck(
+                    "quest:bone_voyage", "Bone Voyage completed",
+                    boneVoyage ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    boneVoyage
+                            ? "Bone Voyage completion proves Fossil Island access."
+                            : "Bone Voyage completion has not been observed."));
+            return checks;
+        }
         return null;
+    }
+
+    private static List<RequirementCheck> evaluateMinigameAccess(
+            StrategyDataBundle data, String minigameId, String label)
+    {
+        List<RequirementCheck> checks = new ArrayList<>();
+        MinigameSnapshot minigames = data == null ? null : data.getMinigames();
+        boolean unlocked = minigames != null
+                && minigames.isUnlocked(minigameId);
+        checks.add(new RequirementCheck(
+                "minigame:" + minigameId, label,
+                unlocked ? RequirementState.VERIFIED
+                        : RequirementState.CHECK_NEEDED,
+                unlocked
+                        ? label + " is observed for this character."
+                        : label + " has not been observed for this character."));
+        return checks;
     }
 
     private List<RequirementCheck> evaluateCrudeChairs(
@@ -475,7 +621,35 @@ public class RequirementEvidenceEngine
             return checks;
         }
 
-        if ("farming_herbs".equals(method.getId()))
+        if ("farming_tithe".equals(method.getId()))
+        {
+            List<RequirementCheck> tithe = evaluateMinigameAccess(
+                    data, "tithe-farm", "Tithe Farm access");
+            tithe.add(resourceReadinessService.evaluate(data,
+                    farmingSupplyCatalog.spade(), useGroupStorage));
+            tithe.add(resourceReadinessService.evaluate(data,
+                    farmingSupplyCatalog.dibber(), useGroupStorage));
+            int cans = resourceReadinessService.observedQuantity(data,
+                    useGroupStorage, ItemID.WATERING_CAN_1,
+                    ItemID.WATERING_CAN_2, ItemID.WATERING_CAN_3,
+                    ItemID.WATERING_CAN_4, ItemID.WATERING_CAN_5,
+                    ItemID.WATERING_CAN_6, ItemID.WATERING_CAN_7,
+                    ItemID.WATERING_CAN_8);
+            int gricoller = resourceReadinessService.observedQuantity(data,
+                    useGroupStorage, ItemID.ZEAH_WATERINGCAN);
+            boolean waterReady = cans >= 8 || gricoller > 0;
+            tithe.add(new RequirementCheck(
+                    "resource:tithe_watering", "Eight filled watering cans or Gricoller's can",
+                    waterReady ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    waterReady
+                            ? "The continuous watering setup is observed."
+                            : "Bring eight filled watering cans, or Gricoller's can, for a reliable continuous cycle."));
+            return tithe;
+        }
+
+        if ("farming_herbs".equals(method.getId())
+                || "farming_herbs_expanded".equals(method.getId()))
         {
             checks.add(new RequirementCheck(
                     "farming:level_9",

@@ -160,6 +160,8 @@ public class TrainingMethodPolicy
         {
             if (intensity == TrainingIntensity.AFK) score += 9.0;
             if (intensity == TrainingIntensity.RELAXED) score += 4.0;
+            if (intensity == TrainingIntensity.BALANCED) score -= 2.0;
+            if (intensity == TrainingIntensity.EFFICIENT) score -= 5.0;
             if (intensity == TrainingIntensity.SWEATY) score -= 12.0;
         }
         return score;

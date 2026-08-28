@@ -111,6 +111,26 @@ public class RequirementEvidenceEngineTest
                 engine.evaluate(ready, mining).get(0).getState());
     }
 
+    @Test
+    public void observedNonStandardSpellbookBlocksStandardCombatMagic()
+    {
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        TrainingMethod fireBlast = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.MAGIC).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(method -> "magic_f2p_fire_blast".equals(method.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+                .combatEvidence(new CombatEvidenceSnapshot(1,
+                        Collections.emptySet(), false, false, false))
+                .build();
+
+        java.util.List<RequirementCheck> checks = engine.evaluate(data, fireBlast);
+        assertEquals("spellbook:standard", checks.get(0).getId());
+        assertEquals(RequirementState.BLOCKED, checks.get(0).getState());
+    }
+
     private static TrainingMethod method(String id)
     {
         return new TrainingMethodDatabase()

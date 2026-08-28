@@ -433,7 +433,7 @@ public class ExpandedTrainingMethodCatalog
     {
         add(Skill.COOKING, "cooking_f2p_fish", 1, 99,
                 "Cook fish at Al Kharid", "Al Kharid bank and range: withdraw one inventory of the selected raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
-                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.LOW, 20, 2,
                 "Raw fish supply");
         add(Skill.COOKING, "cooking_wines", 35, 99,
@@ -442,7 +442,7 @@ public class ExpandedTrainingMethodCatalog
                 true, false, false, true, false, AttentionLevel.ACTIVE, 20, 2,
                 "Grape and jug-of-water supply");
         add(Skill.COOKING, "cooking_hosidius", 1, 99,
-                "Hosidius kitchen", "Cook banked food in the Hosidius kitchen when its lower burn rate matters.",
+                "Hosidius kitchen", "Hosidius Kitchen: withdraw raw food from the bank chest, cook it on the kitchen range, bank, and repeat; use this route when its lower burn rate matters.",
                 TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 4,
                 "Hosidius kitchen access");

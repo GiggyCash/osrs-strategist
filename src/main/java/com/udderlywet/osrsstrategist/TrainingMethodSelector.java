@@ -2,7 +2,10 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -69,13 +72,21 @@ public class TrainingMethodSelector
             StrategyMode strategyMode, SessionIntent sessionIntent,
             boolean allowWildernessMethods, boolean useGroupStorage)
     {
+        List<TrainingPlan> ranked = rankedCandidates(data, skill, currentLevel,
+                strategyMode, sessionIntent, allowWildernessMethods,
+                useGroupStorage);
+        return ranked.isEmpty() ? null : ranked.get(0);
+    }
+
+    /** Ranked legal methods, exposed package-wide for decision-tournament tests. */
+    List<TrainingPlan> rankedCandidates(StrategyDataBundle data, Skill skill,
+            int currentLevel, StrategyMode strategyMode,
+            SessionIntent sessionIntent, boolean allowWildernessMethods,
+            boolean useGroupStorage)
+    {
         List<CuratedTrainingMethod> methods = candidates(data, skill);
         MembershipStatus membershipStatus = membershipStatus(data);
-        TrainingMethod bestMethod = null;
-        TrainingMethodMetadata bestMetadata = null;
-        List<RequirementCheck> bestChecks = Collections.emptyList();
-        RecommendationConfidence bestConfidence = RecommendationConfidence.CHECK_NEEDED;
-        double bestScore = Double.NEGATIVE_INFINITY;
+        List<ScoredPlan> ranked = new ArrayList<>();
 
         for (CuratedTrainingMethod candidate : methods)
         {
@@ -109,25 +120,74 @@ public class TrainingMethodSelector
                             assessed);
 
             double score = method.scoreFor(strategyMode, sessionIntent)
-                    + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent);
+                    + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent)
+                    + readinessAdjustment(data, checks, sessionIntent);
             // Retain a hard-gated plan as diagnostic/secondary information when
             // every route is unknown, but it must lose to any executable route
             // regardless of their normal efficiency scores.
             if (hardRequirementUnknown) score -= 10_000.0;
-            if (bestMethod == null || score > bestScore)
-            {
-                bestMethod = method;
-                bestMetadata = metadata;
-                bestChecks = checks;
-                bestConfidence = confidence;
-                bestScore = score;
-            }
+            ranked.add(new ScoredPlan(new TrainingPlan(method,
+                    buildExplanation(method, metadata, strategyMode,
+                            sessionIntent, data), confidence, checks), score));
         }
 
-        if (bestMethod == null) return null;
-        return new TrainingPlan(bestMethod,
-                buildExplanation(bestMethod, bestMetadata, strategyMode, sessionIntent, data),
-                bestConfidence, bestChecks);
+        ranked.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed());
+        List<TrainingPlan> plans = new ArrayList<>();
+        for (ScoredPlan candidate : ranked) plans.add(candidate.plan);
+        return Collections.unmodifiableList(plans);
+    }
+
+    private static double readinessAdjustment(StrategyDataBundle data,
+            List<RequirementCheck> checks, SessionIntent sessionIntent)
+    {
+        if (checks == null || checks.isEmpty()) return 0.0;
+        AccountMode mode = data == null || data.getAccount() == null
+                ? AccountMode.UNKNOWN
+                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
+        int verifiedAccess = 0;
+        boolean allVerified = true;
+        double missingResourcePenalty = 0.0;
+        for (RequirementCheck check : checks)
+        {
+            if (check.getState() != RequirementState.VERIFIED)
+                allVerified = false;
+            if (check.getState() == RequirementState.VERIFIED)
+            {
+                if (check.getId() == null
+                        || !check.getId().startsWith("resource:"))
+                    verifiedAccess++;
+            }
+            if (check.getState() == RequirementState.CHECK_NEEDED
+                    && check.getId() != null
+                    && check.getId().startsWith("resource:"))
+            {
+                double penalty = mode.isIronLike() ? 14.0 : 10.0;
+                if (sessionIntent == SessionIntent.QUICK_20_MIN) penalty += 4.0;
+                if (sessionIntent == SessionIntent.LONG_SESSION)
+                    penalty -= mode.isIronLike() ? 5.0 : 8.0;
+                missingResourcePenalty += penalty;
+            }
+        }
+        // Readiness is a plan-level advantage. Counting each declared item
+        // separately would reward catalogs for splitting one setup into many
+        // checks and distort method tournaments.
+        double readyResources = allVerified ? 16.0 : 0.0;
+        double readyAccess = Math.min(2.0, verifiedAccess * 0.75);
+        return readyResources + readyAccess - missingResourcePenalty;
+    }
+
+    private static final class ScoredPlan
+    {
+        private final TrainingPlan plan;
+        private final double score;
+
+        private ScoredPlan(TrainingPlan plan, double score)
+        {
+            this.plan = plan;
+            this.score = score;
+        }
+
+        private double getScore() { return score; }
     }
 
     private List<CuratedTrainingMethod> candidates(StrategyDataBundle data, Skill skill)
@@ -169,7 +229,18 @@ public class TrainingMethodSelector
         {
             candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
         }
-        return candidates;
+        // Several routes exist in both the protected legacy catalog and the
+        // richer expanded catalog. A duplicate must never masquerade as the
+        // runner-up in Other Good Options or method-tournament diagnostics.
+        // Prefer the later expanded definition, preserving original order.
+        Map<String, CuratedTrainingMethod> unique = new LinkedHashMap<>();
+        for (CuratedTrainingMethod candidate : candidates)
+        {
+            String id = candidate.getMethod().getId();
+            if (unique.containsKey(id)) unique.remove(id);
+            unique.put(id, candidate);
+        }
+        return new ArrayList<>(unique.values());
     }
 
     private static boolean isDeprecatedGenericMethod(TrainingMethod method)
