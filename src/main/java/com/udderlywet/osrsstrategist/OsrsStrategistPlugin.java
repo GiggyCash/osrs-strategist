@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -77,6 +78,8 @@ public class OsrsStrategistPlugin extends Plugin
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
+    private final AtomicBoolean progressUiUpdatePending =
+            new AtomicBoolean();
     private boolean varbitRefreshPending;
     private boolean accountRefreshPending;
     private final OverlayLifecycleGuard overlayLifecycle =
@@ -513,12 +516,14 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void updateProgressPanel()
     {
-        if (panel == null) return;
-        ProgressSessionSnapshot snapshot = progressAnalyticsService.snapshot();
+        if (panel == null || !progressUiUpdatePending.compareAndSet(false, true))
+            return;
         Runnable update = () ->
         {
+            progressUiUpdatePending.set(false);
             if (panel != null)
-                panel.updateProgress(snapshot, latestPlan, progressHistory);
+                panel.updateProgress(progressAnalyticsService.snapshot(),
+                        latestPlan, progressHistory);
         };
         if (SwingUtilities.isEventDispatchThread()) update.run();
         else SwingUtilities.invokeLater(update);

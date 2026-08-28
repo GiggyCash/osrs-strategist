@@ -24,14 +24,18 @@ It must decide which legal, useful, executable account action should happen next
 - readiness and confidence
 - active goal alignment
 - session length and attention fit
-- account mode
-- resource readiness
-- Wilderness and Hardcore risk
-- detour opportunity cost
-- UIM setup and retrieval cost
+- typed account-mode fit
+- deterministic resource readiness/replacement value
+- typed Wilderness and Hardcore risk burden
+- typed detour opportunity cost
+- observed UIM setup and retrieval cost
 - explicit player feedback and temporary score adjustments
 
-The scoring layer is intentionally inspectable and additive. A future online/premium reasoning service may explain or tune these dimensions, but it must not replace local membership/build/actionability safety gates.
+The scoring layer is intentionally inspectable and additive. It does not parse
+method IDs, titles, reasons, or guidance prose to infer strategy, risk,
+resources, or account value. A future online/premium reasoning service may
+explain or tune these dimensions, but it must not replace local
+membership/build/actionability safety gates.
 
 ## Goal behavior
 
@@ -63,7 +67,7 @@ This is temporary preference state, not a permanent dislike.
 
 `UimSetupCostService` treats setup as account progress cost.
 
-Observed conditions that can reduce a candidate's value include:
+Observed typed conditions that can reduce a candidate's value include:
 
 - high setup time
 - a nearly full inventory
@@ -71,9 +75,10 @@ Observed conditions that can reduce a candidate's value include:
 - an active deathpile
 - a populated looting bag
 - a dangerous-death activity while retrieval storage is populated
-- Main-style bank/Grand Exchange assumptions
+- a proven conventional-bank dependency
 
-UIM-aware just-in-time and setup-preserving instructions receive a small practicality credit.
+Setup-preserving value must be attached as a typed property; wording alone
+receives no practicality credit.
 
 Unknown storage is never assumed empty.
 

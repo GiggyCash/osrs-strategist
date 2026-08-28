@@ -17,7 +17,8 @@ public class CandidateSafetyPolicy
         AccountSnapshot account = context.getData().getAccount();
         if (AccountMode.fromTypeCode(account.getAccountTypeCode())
                     == AccountMode.ULTIMATE_IRONMAN
-                && requiresNormalBank(recommendation)) return false;
+                && recommendation.getSafetyEvidence()
+                        .isConventionalBankRequired()) return false;
         return isAllowed(recommendation.getSafetyEvidence(), account);
     }
 
@@ -79,32 +80,4 @@ public class CandidateSafetyPolicy
         }
     }
 
-    private static boolean requiresNormalBank(Recommendation recommendation)
-    {
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance == null) return false;
-        String text = (safe(guidance.getAction()) + " "
-                + safe(guidance.getSupplies()) + " "
-                + safe(guidance.getLocation())).toLowerCase(
-                        java.util.Locale.ROOT);
-        return text.contains("open the bank")
-                || text.contains("open your bank")
-                || text.contains("bank at ")
-                || text.contains("bank near ")
-                || text.contains("banking ores")
-                || text.contains("bank the ")
-                || text.contains("bank and repeat")
-                || text.contains("bank, repeat")
-                || text.contains("bank or ")
-                || text.contains("banking upstairs")
-                || text.contains("bank upstairs")
-                || text.contains("withdraw bars")
-                || text.contains("banked metal")
-                || text.contains("withdraw from the bank");
-    }
-
-    private static String safe(String value)
-    {
-        return value == null ? "" : value;
-    }
 }

@@ -24,39 +24,51 @@ public final class CandidateSafetyEvidence
     private final Access access;
     private final BuildEffect buildEffect;
     private final Skill affectedSkill;
+    private final boolean conventionalBankRequired;
 
     private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
-            Skill affectedSkill)
+            Skill affectedSkill, boolean conventionalBankRequired)
     {
         this.access = access == null ? Access.UNKNOWN : access;
         this.buildEffect = buildEffect == null ? BuildEffect.UNKNOWN : buildEffect;
         this.affectedSkill = affectedSkill;
+        this.conventionalBankRequired = conventionalBankRequired;
     }
 
     public static CandidateSafetyEvidence unknown()
     {
-        return new CandidateSafetyEvidence(Access.UNKNOWN, BuildEffect.UNKNOWN, null);
+        return new CandidateSafetyEvidence(Access.UNKNOWN, BuildEffect.UNKNOWN,
+                null, false);
     }
 
     public static CandidateSafetyEvidence harmless(boolean freeToPlay)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay), BuildEffect.HARMLESS, null);
+        return new CandidateSafetyEvidence(access(freeToPlay),
+                BuildEffect.HARMLESS, null, false);
     }
 
     public static CandidateSafetyEvidence skill(boolean freeToPlay, Skill skill)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay), BuildEffect.SKILL_XP, skill);
+        return new CandidateSafetyEvidence(access(freeToPlay),
+                BuildEffect.SKILL_XP, skill, false);
     }
 
     public static CandidateSafetyEvidence verifiedSafe(boolean freeToPlay)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay), BuildEffect.VERIFIED_SAFE, null);
+        return new CandidateSafetyEvidence(access(freeToPlay),
+                BuildEffect.VERIFIED_SAFE, null, false);
     }
 
     public static CandidateSafetyEvidence potentiallyIrreversible(boolean freeToPlay)
     {
         return new CandidateSafetyEvidence(access(freeToPlay),
-                BuildEffect.POTENTIALLY_IRREVERSIBLE, null);
+                BuildEffect.POTENTIALLY_IRREVERSIBLE, null, false);
+    }
+
+    public CandidateSafetyEvidence requiringConventionalBank()
+    {
+        return new CandidateSafetyEvidence(access, buildEffect,
+                affectedSkill, true);
     }
 
     private static Access access(boolean freeToPlay)
@@ -67,4 +79,8 @@ public final class CandidateSafetyEvidence
     public Access getAccess() { return access; }
     public BuildEffect getBuildEffect() { return buildEffect; }
     public Skill getAffectedSkill() { return affectedSkill; }
+    public boolean isConventionalBankRequired()
+    {
+        return conventionalBankRequired;
+    }
 }

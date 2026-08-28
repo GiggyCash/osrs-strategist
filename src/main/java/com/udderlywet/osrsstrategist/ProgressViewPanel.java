@@ -145,10 +145,10 @@ public final class ProgressViewPanel extends JPanel
             text.append("\nNEXT  ").append(plan.getNextStep().getObjective());
         text.append("\nTARGET  ")
                 .append(GoalRecommendationContext.displayName(plan.getGoal()));
-        int dependencies = Math.max(0, plan.getSteps().size() - 1);
-        if (dependencies > 0)
+        int steps = plan.getSteps().size();
+        if (steps > 1)
             text.append("\nStep ").append(plan.getCurrentIndex() + 1)
-                    .append(" of ").append(dependencies);
+                    .append(" of ").append(steps);
         planPath.setText(text.toString());
     }
 

@@ -20,6 +20,11 @@ The sidebar answers four practical questions:
 - Why this?
 - What does this move me toward?
 
+The secondary **Progress** view uses observed XP events to show session XP,
+active time, a measured recent rate/ETA when enough samples exist, the current
+NOW/NEXT/TARGET plan, bounded charts, milestones, and the previous session
+recap. It remains local and character-namespaced.
+
 Quest Helper remains the detailed quest walkthrough. RuneLite's Clue Scroll
 plugin remains the detailed clue solver. Compass chooses the next useful move;
 those tools help execute it.
@@ -97,6 +102,8 @@ git diff --check
 ```
 
 Content maintenance is documented in [docs/MAINTENANCE.md](docs/MAINTENANCE.md),
+the implemented planning/progress seams in
+[docs/PRODUCT_COMPLETION_ARCHITECTURE.md](docs/PRODUCT_COMPLETION_ARCHITECTURE.md),
 the current Plugin Hub review in
 [docs/PLUGIN_HUB_AUDIT.md](docs/PLUGIN_HUB_AUDIT.md), and publication steps in
 [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md).

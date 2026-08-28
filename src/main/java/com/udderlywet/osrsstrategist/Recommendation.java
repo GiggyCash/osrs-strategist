@@ -174,4 +174,11 @@ public final class Recommendation
                 confidence, currentLevel, targetLevel, value, safetyEvidence,
                 goalProvenance, strategicValue);
     }
+
+    public Recommendation withSafetyEvidence(CandidateSafetyEvidence value)
+    {
+        return new Recommendation(id, title, reason, score, trainingPlan,
+                confidence, currentLevel, targetLevel, guidance, value,
+                goalProvenance, strategicValue);
+    }
 }

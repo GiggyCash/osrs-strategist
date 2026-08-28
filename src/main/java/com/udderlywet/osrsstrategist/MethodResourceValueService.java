@@ -1,7 +1,12 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
@@ -10,8 +15,7 @@ import net.runelite.api.Skill;
 @Singleton
 public final class MethodResourceValueService
 {
-    private final RuneLiteSkillActionCatalog actions =
-            new RuneLiteSkillActionCatalog();
+    private final RuneLiteSkillActionCatalog actions;
     private final MethodExecutionProfileCatalog profiles =
             new MethodExecutionProfileCatalog();
     private final SkillingXpModifierService modifiers =
@@ -23,6 +27,20 @@ public final class MethodResourceValueService
             new ResourcePipelinePolicyCatalog();
     private final SustainableResourceValueService resources =
             new SustainableResourceValueService();
+    private final GimGroupStrategyService groupStrategy =
+            new GimGroupStrategyService();
+
+    @Inject
+    public MethodResourceValueService(RuneLiteSkillActionCatalog actions)
+    {
+        this.actions = actions == null
+                ? new RuneLiteSkillActionCatalog() : actions;
+    }
+
+    public MethodResourceValueService()
+    {
+        this(new RuneLiteSkillActionCatalog());
+    }
 
     public Recommendation attach(
             Recommendation recommendation, StrategyContext context)
@@ -58,6 +76,8 @@ public final class MethodResourceValueService
         int count = (int) Math.ceil(Math.max(0, targetXp - currentXp)
                 / (action.getXp() * multiplier));
         List<ResourcePipelineRequest> requests = new ArrayList<>();
+        RecommendationStrategicValue sharedValue =
+                RecommendationStrategicValue.neutral();
         for (ResolvedMethodInput input : inputs.resolve(profile, action, count))
         {
             ResourcePipelinePolicy policy = policies.forInput(input.getName());
@@ -67,17 +87,57 @@ public final class MethodResourceValueService
                             input.getQuantity()),
                     policy.getUseKind(), policy.getScarcity(),
                     policy.isTradeable()));
+            Set<Integer> sharedIds = observedGroupItemIds(context,
+                    input.getName());
+            if (!sharedIds.isEmpty())
+            {
+                GroupResourceAssessment shared = groupStrategy.assess(context,
+                        new GroupResourceNeed(input.getName(), sharedIds,
+                                input.getQuantity(), policy.getUseKind()
+                                == ResourceUseKind.REUSABLE));
+                sharedValue = sharedValue.merge(shared.strategicValue(
+                        "group-resource:" + input.getName()
+                                .toLowerCase(Locale.ROOT)));
+            }
         }
         if (requests.isEmpty()) return recommendation;
         ResourcePortfolioAssessment assessment = resources.assessAll(
                 context, requests);
+        RecommendationStrategicValue resourceValue =
+                RecommendationStrategicValue.builder()
+                        .resourceFit(assessment.getScoreAdjustment() / 12.0)
+                        .evidence("resource-pipeline:" + method.getId())
+                        .build()
+                        .merge(sharedValue);
         return recommendation.withStrategicValue(
-                recommendation.getStrategicValue().merge(
-                        RecommendationStrategicValue.builder()
-                                .resourceFit(assessment.getScoreAdjustment()
-                                        / 12.0)
-                                .evidence("resource-pipeline:"
-                                        + method.getId())
-                                .build()));
+                recommendation.getStrategicValue().merge(resourceValue));
+    }
+
+    private static Set<Integer> observedGroupItemIds(StrategyContext context,
+            String itemName)
+    {
+        if (context == null || !context.getAccountMode().isGroupIronman()
+                || !context.isUseGroupStorage()
+                || context.getData() == null
+                || context.getData().getGroupStorage() == null
+                || !context.getData().getGroupStorage().isObserved())
+            return Collections.emptySet();
+        String target = normalize(itemName);
+        Set<Integer> ids = new LinkedHashSet<>();
+        for (ItemStackSnapshot item
+                : context.getData().getGroupStorage().getItems())
+            if (item != null && item.getQuantity() > 0
+                    && item.getItemId() > 0
+                    && target.equals(normalize(item.getName())))
+                ids.add(item.getItemId());
+        return ids;
+    }
+
+    private static String normalize(String value)
+    {
+        return value == null ? "" : value.toLowerCase(Locale.ROOT)
+                .replace('\u2019', '\'')
+                .replaceAll("[^a-z0-9 ]+", " ")
+                .replaceAll("\\s+", " ").trim();
     }
 }

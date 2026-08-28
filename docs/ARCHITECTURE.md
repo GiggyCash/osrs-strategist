@@ -60,6 +60,11 @@ Scores valid activities. Suggested score families:
 
 Invalid methods receive no score at all.
 
+The implemented account-value boundary uses `RecommendationStrategicValue`.
+Typed goal provenance, infrastructure, unlock, travel, resource, setup reuse,
+shared-dependency, risk, and opportunity-cost properties are attached before
+the final queue. IDs and player-facing prose do not manufacture those values.
+
 The final decision boundary is ordered as:
 
 1. merge every candidate family, including opportunities;
@@ -117,3 +122,16 @@ Default screen should remain small:
 - feedback controls
 
 Advanced screens may expose dependencies and debug reasoning, but the normal experience should stay calm.
+
+## 11. Strategic plans and progress
+
+`StrategicPlanService` derives NOW/NEXT/TARGET only from proven selected-goal
+paths. `PlanContinuityService` retains valid unfinished work across minor state
+changes and rebuilds on material invalidation.
+
+`ProgressAnalyticsService` consumes XP events, excludes idle time, and stores
+bounded character-local summaries. The secondary Progress surface contains the
+chart, ETA, plan, milestones, and recap; it does not compete with DO NEXT.
+
+The complete implemented seams and their evidence limitations are documented
+in [PRODUCT_COMPLETION_ARCHITECTURE.md](PRODUCT_COMPLETION_ARCHITECTURE.md).

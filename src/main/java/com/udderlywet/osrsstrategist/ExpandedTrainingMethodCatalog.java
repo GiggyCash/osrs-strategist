@@ -166,8 +166,8 @@ public class ExpandedTrainingMethodCatalog
                 "Air, fire, and death rune supply");
         add(Skill.MAGIC, "magic_high_alch", 55, 99,
                 "High Level Alchemy", "High-alch verified items during movement or downtime, accounting for item value before consuming them.",
-                TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
-                true, true, true, true, false, AttentionLevel.LOW, 10, 2,
+                TrainingIntensity.BALANCED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.ACTIVE, 10, 2,
                 "Nature rune supply", "Safe alch item list");
         add(Skill.MAGIC, "magic_bursting", 70, 93,
                 "Ancient burst training", "Burst verified multi-target monsters when spellbook, runes, and supplies are ready.",

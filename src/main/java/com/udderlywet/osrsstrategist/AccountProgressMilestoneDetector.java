@@ -3,6 +3,7 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /** Detects durable non-XP progress from successive live account snapshots. */
@@ -74,7 +75,7 @@ public final class AccountProgressMilestoneDetector
                     && before.stateOf(capability)
                             != CapabilityState.VERIFIED)
                 result.add(milestone("storage:"
-                                + capability.name().toLowerCase(),
+                                + capability.name().toLowerCase(Locale.ROOT),
                         ProgressMilestoneType.INFRASTRUCTURE,
                         "Storage unlocked: " + display(capability.name()),
                         goal, now));
@@ -121,14 +122,14 @@ public final class AccountProgressMilestoneDetector
     private static String display(String value)
     {
         String clean = value == null ? "Unknown" : value.replace('_', ' ')
-                .replace('-', ' ').toLowerCase();
+                .replace('-', ' ').toLowerCase(Locale.ROOT);
         return clean.isEmpty() ? "Unknown"
                 : Character.toUpperCase(clean.charAt(0)) + clean.substring(1);
     }
 
     private static String slug(String value)
     {
-        return value == null ? "unknown" : value.toLowerCase()
+        return value == null ? "unknown" : value.toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("^-|-$", "");
     }

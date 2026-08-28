@@ -208,9 +208,10 @@ public class SensibleWinnerScenarioMatrixTest
         values.add(scenario("30 UGIM values shared self-source detour",
                 accountContext(6), "detour:", shared(readyResource(ready("detour:shared-resource", 37, "Self-source supplies while advancing another goal."), 1.0)),
                 ready("money:generic", 46, "GE value only.")));
-        values.add(scenario("31 UIM rejects bank-heavy reason",
+        values.add(scenario("31 UIM rejects typed bank dependency",
                 accountContext(2), "skill:", skill("skill:safe", Skill.AGILITY, 35, AttentionLevel.LOW, 2, 20, 70, 71),
-                burden(ready("upgrade:banked", 49, "Open the bank and reorganise stored gear."))));
+                bankRequired(ready("upgrade:banked", 500,
+                        "Reorganise stored gear before the upgrade."))));
 
         // Membership and restricted-build final safety boundaries.
         values.add(scenario("32 unknown membership fails closed to F2P-safe action",
@@ -436,15 +437,12 @@ public class SensibleWinnerScenarioMatrixTest
                         .build());
     }
 
-    private static Recommendation burden(Recommendation recommendation)
+    private static Recommendation bankRequired(
+            Recommendation recommendation)
     {
-        return recommendation.withStrategicValue(
-                RecommendationStrategicValue.builder()
-                        .accountModeFit(-1.0)
-                        .resourceFit(-1.0)
-                        .opportunityCost(1.0)
-                        .evidence("scenario:typed-burden")
-                        .build());
+        return recommendation.withSafetyEvidence(
+                recommendation.getSafetyEvidence()
+                        .requiringConventionalBank());
     }
 
     private static Recommendation proven(GoalType goal,

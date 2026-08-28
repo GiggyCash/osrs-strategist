@@ -45,7 +45,7 @@ rotation, logout/relogin restoration, and A/B/A account isolation.
 ## Skills and training methods
 
 All current `Skill.values()` have curated Compass methods, including Sailing.
-The development census currently records 167 distinct strategic methods across
+The development census currently records 177 distinct strategic methods across
 24 skills plus 1,528 RuneLite calculator actions used only as execution
 evidence. Current-live level overrides are applied explicitly when the pinned
 RuneLite calculator lags a verified game update.

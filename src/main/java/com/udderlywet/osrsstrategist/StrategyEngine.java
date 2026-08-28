@@ -28,8 +28,7 @@ public class StrategyEngine
             new StrategicPlanService();
     private final InfrastructureRecommendationValueService infrastructureValue =
             new InfrastructureRecommendationValueService();
-    private final MethodRecommendationValueService methodValue =
-            new MethodRecommendationValueService();
+    private final MethodRecommendationValueService methodValue;
     private final QuestRecommendationValueService questValue =
             new QuestRecommendationValueService();
 
@@ -42,7 +41,8 @@ public class StrategyEngine
             RecommendationActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
-            GoalDependencyProvenanceService goalProvenanceService)
+            GoalDependencyProvenanceService goalProvenanceService,
+            MethodRecommendationValueService methodValue)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
@@ -58,6 +58,25 @@ public class StrategyEngine
                 ? new CandidateSafetyPolicy() : candidateSafetyPolicy;
         this.goalProvenanceService = goalProvenanceService == null
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
+        this.methodValue = methodValue == null
+                ? new MethodRecommendationValueService() : methodValue;
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry,
+            RecommendationActionabilityPolicy actionabilityPolicy,
+            RecommendationIntelligenceService intelligenceService,
+            CandidateSafetyPolicy candidateSafetyPolicy,
+            GoalDependencyProvenanceService goalProvenanceService)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, actionabilityPolicy, intelligenceService,
+                candidateSafetyPolicy, goalProvenanceService,
+                new MethodRecommendationValueService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */

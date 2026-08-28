@@ -12,16 +12,25 @@ public final class MethodRecommendationValueService
 
     @Inject
     public MethodRecommendationValueService(
-            TravelAwareMethodValueService travel)
+            TravelAwareMethodValueService travel,
+            MethodResourceValueService resources)
     {
         this.travel = travel == null
                 ? new TravelAwareMethodValueService() : travel;
-        this.resources = new MethodResourceValueService();
+        this.resources = resources == null
+                ? new MethodResourceValueService() : resources;
+    }
+
+    public MethodRecommendationValueService(
+            TravelAwareMethodValueService travel)
+    {
+        this(travel, new MethodResourceValueService());
     }
 
     public MethodRecommendationValueService()
     {
-        this(new TravelAwareMethodValueService());
+        this(new TravelAwareMethodValueService(),
+                new MethodResourceValueService());
     }
 
     public Recommendation attach(

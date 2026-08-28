@@ -10,7 +10,7 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Family | Authoritative identity source | Discovered | Structured | Partial | Conservative |
 | --- | --- | ---: | ---: | ---: | ---: |
 | Quests and RuneLite quest-state identities | `net.runelite.api.Quest` | 211 | 211 represented | 0 | 0 |
-| Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 167 curated methods / 1,528 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
+| Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 177 curated methods / 1,528 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 locally verifiable | 67 preparation-only; all 71 have specific preparation | 0 |
@@ -41,7 +41,7 @@ preparation but cannot claim encounter readiness. “Conservative” records the
 identity and why it remains fail-closed. Conservative content cannot lead
 **DO NEXT** merely because its identity is known.
 
-The training-method census covers all 24 current skills with 167 curated
+The training-method census covers all 24 current skills with 177 curated
 strategic methods. RuneLite contributes 1,528 deterministic calculator actions
 across 17 skills as execution evidence; these actions do not become strategy
 recommendations by identity alone. The census validates unique IDs, level

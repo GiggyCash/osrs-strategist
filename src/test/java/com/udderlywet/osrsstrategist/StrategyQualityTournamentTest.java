@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /** Paired method tournaments: one account variable changes at a time. */
@@ -158,6 +159,20 @@ public class StrategyQualityTournamentTest
         }
         assertEquals(MethodCostTier.LOW, costs.get("cooking_f2p_fish"));
         assertEquals(MethodCostTier.LOW, costs.get("cooking_hosidius"));
+    }
+
+    @Test
+    public void highAlchemyIsNotClassifiedAsAfkTraining()
+    {
+        TrainingMethod highAlchemy = null;
+        for (CuratedTrainingMethod method :
+                new ExpandedTrainingMethodCatalog().methodsFor(Skill.MAGIC))
+            if ("magic_high_alch".equals(method.getMethod().getId()))
+                highAlchemy = method.getMethod();
+
+        assertNotNull(highAlchemy);
+        assertEquals(AttentionLevel.ACTIVE,
+                highAlchemy.getAttentionLevel());
     }
 
     @Test

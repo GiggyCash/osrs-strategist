@@ -18,7 +18,10 @@ public class UimRecommendationSafetyPolicyTest
         StrategyContext uim = context(2);
         Recommendation banked = recommendation(
                 "Mine pay-dirt, bank the ores, and repeat.",
-                "Bank near Motherlode Mine.");
+                "Bank near Motherlode Mine.")
+                .withSafetyEvidence(CandidateSafetyEvidence
+                        .skill(true, Skill.MINING)
+                        .requiringConventionalBank());
         Recommendation carried = recommendation(
                 "Mine copper, drop the ore when full, and repeat.",
                 "East Lumbridge Swamp mine.");
@@ -29,19 +32,19 @@ public class UimRecommendationSafetyPolicyTest
     }
 
     @Test
-    public void siblingBankPhrasingsCannotBypassTheUimBoundary()
+    public void everyTypedConventionalBankDependencyIsRejectedForUim()
     {
         CandidateSafetyPolicy policy = new CandidateSafetyPolicy();
-        String[] actions = {
-                "Open your bank before starting.",
-                "Withdraw bars, smith, bank, repeat.",
-                "Cook at Lumbridge and bank upstairs.",
-                "Bank or process the herbs.",
-                "Prefer banked metal for this method."
+        CandidateSafetyEvidence[] evidence = {
+                CandidateSafetyEvidence.harmless(true),
+                CandidateSafetyEvidence.skill(true, Skill.MINING),
+                CandidateSafetyEvidence.verifiedSafe(true)
         };
-        for (String action : actions)
-            assertFalse(action, policy.isAllowed(recommendation(
-                    action, "Named location."), context(2)));
+        for (CandidateSafetyEvidence value : evidence)
+            assertFalse(policy.isAllowed(recommendation(
+                    "Follow the named mining loop.", "East Lumbridge Swamp.")
+                    .withSafetyEvidence(
+                            value.requiringConventionalBank()), context(2)));
     }
 
     private static Recommendation recommendation(String action, String location)

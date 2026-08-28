@@ -59,3 +59,12 @@ typed class makes a gameplay domain complete.
 Every checkpoint is required to pass its focused tests. Substantial checkpoints
 also run `./gradlew clean test`; the final state additionally runs the content
 census/freshness validations and `git diff --check`.
+
+## Completion status
+
+The six checkpoints above were implemented and locally validated on
+2026-08-29. Evidence-limited evaluators (notably broad setup batching,
+teammate infrastructure, generic gear benefit, and exhaustive Slayer reward
+economics) remain internal or CHECK_NEEDED rather than being exposed as false
+automatic intelligence. The exact operational seams and limits are recorded in
+`PRODUCT_COMPLETION_ARCHITECTURE.md`.

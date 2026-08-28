@@ -2,7 +2,10 @@ package com.udderlywet.osrsstrategist;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
@@ -59,6 +62,41 @@ public class ProgressViewPanelTest
         assertTrue(panel.getLastSessionText().contains("+87,420 XP"));
         assertTrue(panel.getLastSessionText().contains("3 levels"));
         assertTrue(panel.getLastSessionText().contains("Fishing +87,420"));
+    }
+
+    @Test
+    public void planProgressCountIncludesCurrentAndTargetSteps()
+    {
+        StrategicPlan plan = new StrategicPlan(GoalType.BARROWS_GLOVES,
+                account(), Arrays.asList(
+                        step("skill", "Fishing 49 → 53"),
+                        step("quest", "Heroes' Quest"),
+                        step("goal", "Barrows gloves")), 2, 1L);
+        ProgressViewPanel panel = new ProgressViewPanel();
+
+        panel.setPlan(plan);
+
+        assertTrue(panel.getPlanText().contains("Step 3 of 3"));
+    }
+
+    private static StrategicPlanStep step(String id, String objective)
+    {
+        return new StrategicPlanStep(id, GoalNodeKind.ACTIVITY, objective,
+                "Proven path", PlanCompletionCondition.none(), null);
+    }
+
+    private static AccountSnapshot account()
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        for (Skill skill : Skill.values())
+        {
+            levels.put(skill, 70);
+            xp.put(skill, 0);
+        }
+        return new AccountSnapshot("Progress", 7L, 0, "MAIN",
+                MembershipStatus.P2P, 1, 70 * Skill.values().length,
+                0L, levels, xp);
     }
 
     private static void paint(ProgressViewPanel panel, int width, int height)

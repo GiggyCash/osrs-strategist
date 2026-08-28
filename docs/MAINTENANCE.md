@@ -16,6 +16,12 @@ Future GitHub Actions should:
 
 Do not let an automated scraper silently publish strategy changes.
 
+The current cross-system architecture and instructions for adding methods,
+Slayer tasks, infrastructure, quests, and gear are in
+[PRODUCT_COMPLETION_ARCHITECTURE.md](PRODUCT_COMPLETION_ARCHITECTURE.md).
+External facts used by typed catalogs are indexed in
+[STRATEGIC_DATA_SOURCES.md](STRATEGIC_DATA_SOURCES.md).
+
 ## Your normal update workflow
 1. Jagex updates OSRS.
 2. Automated checks or community reports flag likely affected content.

@@ -22,6 +22,12 @@ Last audited: 2026-08-29.
 | F2P fly-fishing location | [Free-to-play Fishing training](https://oldschool.runescape.wiki/w/Free-to-play_Fishing_training) | Barbarian Village is a concrete fly-fishing loop. The catalog does not copy variable XP-rate estimates. |
 | Fairy-ring access checks | [Fairy rings](https://oldschool.runescape.wiki/w/Fairy_rings), [Dramen staff](https://oldschool.runescape.wiki/w/Dramen_staff) | The network becomes available during Fairytale II after the relevant permission; staff-free access needs separate diary evidence. This remains in `TransportCatalog`/dependency evidence, not a location bonus. |
 
+## Training method properties
+
+| Structured data | Source | Fact retained locally |
+| --- | --- | --- |
+| High Level Alchemy attention | [High Level Alchemy](https://oldschool.runescape.wiki/w/High_Level_Alchemy), [game ticks](https://oldschool.runescape.wiki/w/Ticks) | One cast consumes one item and can be repeated every five ticks (3 seconds). Repeated training therefore needs regular input and is classified ACTIVE, not AFK/LOW attention. This changes session fit through method properties rather than a named-method winner rule. |
+
 ## Resource and account-mode value
 
 | Structured rule | Source | Fact retained locally |
