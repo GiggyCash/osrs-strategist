@@ -79,6 +79,20 @@ public class VariableMethodGuidanceServiceTest
         assertFalse(guidance.getAction().matches(".*about [0-9]+ .*swords.*"));
     }
 
+    @Test
+    public void herbRunDoesNotInventAHighValueSeedWhenNoneIsObserved()
+    {
+        StrategyDataBundle data = data(Skill.FARMING, 90,
+                new ItemStackSnapshot(952, "Spade", 1));
+        RecommendationGuidance guidance = service.build(
+                data, Skill.FARMING, 90, 91,
+                plan("farming_herbs_expanded", Skill.FARMING), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Herblore value"));
+        assertFalse(guidance.getAction().contains("torstol seed"));
+    }
+
     private static StrategyDataBundle data(
             Skill skill,
             int level,

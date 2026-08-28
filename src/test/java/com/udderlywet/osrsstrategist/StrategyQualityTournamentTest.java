@@ -42,15 +42,15 @@ public class StrategyQualityTournamentTest
 
         assertWinner("cooking_wines", ready, Skill.COOKING, 70,
                 StrategyMode.EFFICIENT, SessionIntent.ONE_HOUR);
-        assertWinner("cooking_hosidius", ready, Skill.COOKING, 70,
-                StrategyMode.RELAXED, SessionIntent.ONE_HOUR);
-        assertWinner("cooking_hosidius", ready, Skill.COOKING, 70,
-                StrategyMode.EFFICIENT, SessionIntent.AFK);
+        assertLowAttentionCookingWinner(ready, StrategyMode.RELAXED,
+                SessionIntent.ONE_HOUR);
+        assertLowAttentionCookingWinner(ready, StrategyMode.EFFICIENT,
+                SessionIntent.AFK);
 
         StrategyDataBundle noWineSupplies = data(0, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
-        assertWinner("cooking_hosidius", noWineSupplies, Skill.COOKING, 70,
+        assertLowAttentionCookingWinner(noWineSupplies,
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN);
         assertWinner("cooking_wines", noWineSupplies, Skill.COOKING, 70,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
@@ -58,16 +58,20 @@ public class StrategyQualityTournamentTest
         StrategyDataBundle iron = data(1, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
-        assertWinner("cooking_hosidius", iron, Skill.COOKING, 70,
-                StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
+        assertLowAttentionCookingWinner(iron, StrategyMode.EFFICIENT,
+                SessionIntent.LONG_SESSION);
     }
 
     @Test
     public void runecraftStyleChangesGotrVersusZmiAndEssenceTypesStayDistinct()
     {
+        Map<String, QuestStatus> completed = quests();
+        completed.put("Temple of the Eye", QuestStatus.COMPLETE);
         StrategyDataBundle ready = data(0, MembershipStatus.P2P,
-                items(item(ItemID.BLANKRUNE_HIGH, "Pure essence", 2_000)),
-                quests(), minigames("guardians-of-the-rift"), false);
+                items(item(ItemID.BLANKRUNE_HIGH, "Pure essence", 2_000),
+                        item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1),
+                        item(ItemID.CHISEL, "Chisel", 1)),
+                completed, minigames(), false);
         assertWinner("runecraft_gotr", ready, Skill.RUNECRAFT, 70,
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR);
         assertWinner("runecraft_zmi", ready, Skill.RUNECRAFT, 70,
@@ -89,6 +93,7 @@ public class StrategyQualityTournamentTest
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Tai Bwo Wannai Trio", QuestStatus.COMPLETE);
+        completed.put("Fairytale II - Cure a Queen", QuestStatus.COMPLETE);
         StrategyDataBundle ready = data(1, MembershipStatus.P2P,
                 items(item(ItemID.TBWT_KARAMBWAN_VESSEL,
                                 "Karambwan vessel", 1),
@@ -142,12 +147,23 @@ public class StrategyQualityTournamentTest
     }
 
     @Test
+    public void fishCookingRetainsItsRawFoodOpportunityCost()
+    {
+        Map<String, MethodCostTier> costs = new HashMap<>();
+        for (CuratedTrainingMethod method :
+                new ExpandedTrainingMethodCatalog().methodsFor(Skill.COOKING))
+        {
+            costs.put(method.getMethod().getId(),
+                    method.getMetadata().getCostTier());
+        }
+        assertEquals(MethodCostTier.LOW, costs.get("cooking_f2p_fish"));
+        assertEquals(MethodCostTier.LOW, costs.get("cooking_hosidius"));
+    }
+
+    @Test
     public void accountModeChangesWhetherLongSessionWineSetupIsWorthIt()
     {
         int[] accountTypes = {0, 1, 4, 2, 3};
-        String[] expected = {"cooking_wines", "cooking_hosidius",
-                "cooking_hosidius", "cooking_hosidius",
-                "cooking_hosidius"};
         for (int i = 0; i < accountTypes.length; i++)
         {
             StrategyDataBundle account = data(accountTypes[i],
@@ -156,8 +172,19 @@ public class StrategyQualityTournamentTest
                     quests(), minigames(), true);
             TrainingPlan plan = winner(account, Skill.COOKING, 70,
                     StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
-            assertEquals(AccountMode.fromTypeCode(accountTypes[i]).name(),
-                    expected[i], plan.getMethod().getId());
+            if (accountTypes[i] == 0)
+            {
+                assertEquals(AccountMode.fromTypeCode(accountTypes[i]).name(),
+                        "cooking_wines", plan.getMethod().getId());
+            }
+            else
+            {
+                assertEquals(AccountMode.fromTypeCode(accountTypes[i]).name(),
+                        AttentionLevel.LOW,
+                        plan.getMethod().getAttentionLevel());
+                assertFalse(AccountMode.fromTypeCode(accountTypes[i]).name(),
+                        "cooking_wines".equals(plan.getMethod().getId()));
+            }
             System.out.println("ACCOUNT_MODE_SENSITIVITY "
                     + AccountMode.fromTypeCode(accountTypes[i])
                     + " winner=" + plan.getMethod().getId());
@@ -212,11 +239,15 @@ public class StrategyQualityTournamentTest
         Map<String, QuestStatus> completed = quests();
         completed.put("Bone Voyage", QuestStatus.COMPLETE);
         completed.put("Tai Bwo Wannai Trio", QuestStatus.COMPLETE);
+        completed.put("Fairytale II - Cure a Queen", QuestStatus.COMPLETE);
+        completed.put("Temple of the Eye", QuestStatus.COMPLETE);
         return data(1, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 500),
                         item(ItemID.GRAPES, "Grapes", 500),
                         item(ItemID.JUG_WATER, "Jug of water", 500),
                         item(ItemID.BLANKRUNE_HIGH, "Pure essence", 2_000),
+                        item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1),
+                        item(ItemID.CHISEL, "Chisel", 1),
                         item(ItemID.AIRRUNE, "Air rune", 10_000),
                         item(ItemID.FIRERUNE, "Fire rune", 10_000),
                         item(ItemID.DEATHRUNE, "Death rune", 10_000),
@@ -240,6 +271,16 @@ public class StrategyQualityTournamentTest
     {
         assertEquals(expected,
                 winner(data, skill, level, mode, session).getMethod().getId());
+    }
+
+    private void assertLowAttentionCookingWinner(StrategyDataBundle data,
+            StrategyMode mode, SessionIntent session)
+    {
+        TrainingPlan plan = winner(data, Skill.COOKING, 70, mode, session);
+        assertEquals(AttentionLevel.LOW,
+                plan.getMethod().getAttentionLevel());
+        assertFalse("Unready wines must not be forced as diversity",
+                "cooking_wines".equals(plan.getMethod().getId()));
     }
 
     private TrainingPlan winner(StrategyDataBundle data, Skill skill, int level,

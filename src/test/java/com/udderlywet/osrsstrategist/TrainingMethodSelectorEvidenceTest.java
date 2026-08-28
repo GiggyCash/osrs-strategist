@@ -115,6 +115,42 @@ public class TrainingMethodSelectorEvidenceTest
         assertEquals("safe", plan.getMethod().getId());
     }
 
+    @Test
+    public void extraVerifiedRowsDoNotCreateASelectionAdvantage()
+    {
+        TrainingMethod oneCheck = method("one-check", 10.0);
+        TrainingMethod threeChecks = method("three-checks", 10.0);
+        TrainingMethodDatabase database = new TrainingMethodDatabase()
+        {
+            @Override
+            public List<TrainingMethod> methodsFor(Skill skill)
+            {
+                return Arrays.asList(oneCheck, threeChecks);
+            }
+        };
+        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()))
+        {
+            @Override
+            public List<RequirementCheck> evaluate(
+                    StrategyDataBundle data, TrainingMethod method)
+            {
+                RequirementCheck ready = new RequirementCheck(
+                        "access:ready", "Ready", RequirementState.VERIFIED,
+                        "Verified.");
+                return "one-check".equals(method.getId())
+                        ? Collections.singletonList(ready)
+                        : Arrays.asList(ready, ready, ready);
+            }
+        };
+
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence)
+                .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
+                        SessionIntent.PICK_FOR_ME);
+
+        assertEquals("one-check", plan.getMethod().getId());
+    }
+
     private static TrainingMethod method(String id, double score)
     {
         return new TrainingMethod(

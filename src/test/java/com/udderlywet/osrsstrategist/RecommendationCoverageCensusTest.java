@@ -244,12 +244,14 @@ public class RecommendationCoverageCensusTest
                     0, count(prepared, skill, CoverageClass.RECOVERY));
         }
         for (Skill skill : EnumSet.of(
-                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.COOKING, Skill.FISHING, Skill.RUNECRAFT,
                 Skill.FARMING, Skill.HUNTER))
         {
             assertEquals(skill.getName() + " observed-empty recovery debt",
                     0, count(observed, skill, CoverageClass.RECOVERY));
         }
+        assertTrue("Unknown spellbook must leave observed-empty Magic gated",
+                count(observed, Skill.MAGIC, CoverageClass.RECOVERY) > 0);
     }
 
     @Test
@@ -743,6 +745,11 @@ public class RecommendationCoverageCensusTest
         StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
                 .inventory(new InventorySnapshot(items))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()));
+        if (prepared)
+        {
+            builder.combatEvidence(new CombatEvidenceSnapshot(0,
+                    Collections.emptySet(), false, false, false));
+        }
         if (scenario.membership == MembershipStatus.P2P)
         {
             Map<String, CapabilityState> tools = new HashMap<>();

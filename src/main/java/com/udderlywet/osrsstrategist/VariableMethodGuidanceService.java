@@ -92,8 +92,8 @@ public class VariableMethodGuidanceService
             int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Load the vessel with raw karambwanji, fish the static spot until full, take the fairy ring to Zanaris, bank, return via DKP, and repeat until you gain " + format(xp) + " Fishing XP for level " + target + ".",
-                "Bring a karambwan vessel and raw karambwanji. "
+                "Load the vessel with raw karambwanji, fish the static spot until full, take fairy ring DKP to Zanaris, bank, return through the Zanaris ring to DKP, and repeat until you gain " + format(xp) + " Fishing XP for level " + target + ".",
+                "Bring a karambwan vessel, raw karambwanji, and a dramen or lunar staff unless staffless fairy-ring use is unlocked. "
                         + observed(items, "Karambwan vessel", "Raw karambwanji", "Fish barrel"),
                 "Karambwan fishing spot north of fairy ring DKP on north-east Karamja.",
                 "The static spot and stackable bait make this the low-attention option. Faster bank teleports can improve the loop later without being assumed here."
@@ -258,8 +258,8 @@ public class VariableMethodGuidanceService
                         data == null ? null : data.getFarming());
         if (patch == null) patch = "the verified herb patch";
         return new RecommendationGuidance(
-                "At " + patch + ", harvest any ready herbs, plant one " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring one " + seed + ", a seed dibber, and a spade. Compost is optional but protects yield. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+                "At " + patch + ", harvest any ready herbs, plant " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",
+                "Bring " + seed + ", a seed dibber, and a spade. Compost is optional but protects yield. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
                 patch + ".",
                 "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
         );
@@ -280,12 +280,9 @@ public class VariableMethodGuidanceService
         {
             if (level >= Integer.parseInt(tier[1])
                     && items.quantity(tier[0]) > 0)
-                return tier[0].toLowerCase(java.util.Locale.ROOT);
+                return "one " + tier[0].toLowerCase(java.util.Locale.ROOT);
         }
-        for (String[] tier : tiers)
-            if (level >= Integer.parseInt(tier[1]))
-                return tier[0].toLowerCase(java.util.Locale.ROOT);
-        return "guam seed";
+        return "one herb seed whose Herblore value you have decided to spend";
     }
 
     private static RecommendationGuidance farmingContracts(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)

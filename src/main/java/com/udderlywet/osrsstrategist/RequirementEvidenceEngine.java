@@ -118,8 +118,14 @@ public class RequirementEvidenceEngine
         }
         if ("runecraft_gotr".equals(method.getId()))
         {
-            return evaluateMinigameAccess(data, "guardians-of-the-rift",
-                    "Temple of the Eye access");
+            List<RequirementCheck> gotr = evaluateQuestCompletion(
+                    data, "Temple of the Eye", "quest:temple_of_the_eye");
+            gotr.add(usableToolCheck(data, ItemRequirementClass.PICKAXE,
+                    useGroupStorage, "resource:gotr_pickaxe", "Usable pickaxe"));
+            gotr.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:gotr_chisel", "Chisel",
+                            1, ItemID.CHISEL), useGroupStorage));
+            return gotr;
         }
         if ("runecraft_zmi".equals(method.getId()))
         {
@@ -167,17 +173,19 @@ public class RequirementEvidenceEngine
         List<RequirementCheck> checks = new ArrayList<>();
         CombatEvidenceSnapshot combat = data == null ? null
                 : data.getCombatEvidence();
-        if (combat != null)
-        {
-            boolean standard = combat.getSpellbookSelector() == 0;
-            checks.add(new RequirementCheck(
-                    "spellbook:standard", "Standard spellbook active",
-                    standard ? RequirementState.VERIFIED
-                            : RequirementState.BLOCKED,
-                    standard
-                            ? "The Standard spellbook is active."
-                            : "The observed spellbook cannot cast this Standard spell."));
-        }
+        boolean spellbookObserved = combat != null;
+        boolean standard = spellbookObserved
+                && combat.getSpellbookSelector() == 0;
+        checks.add(new RequirementCheck(
+                "spellbook:standard", "Standard spellbook active",
+                !spellbookObserved ? RequirementState.CHECK_NEEDED
+                        : standard ? RequirementState.VERIFIED
+                                : RequirementState.BLOCKED,
+                !spellbookObserved
+                        ? "The active spellbook has not been observed."
+                        : standard
+                                ? "The Standard spellbook is active."
+                                : "The observed spellbook cannot cast this Standard spell."));
         int airPerCast = "magic_f2p_fire_blast".equals(methodId) ? 4
                 : "magic_f2p_fire_bolt".equals(methodId) ? 3 : 1;
         checks.add(resourceReadinessService.evaluate(data,
@@ -279,7 +287,9 @@ public class RequirementEvidenceEngine
         }
         if ("fishing_tempoross".equals(method.getId()))
         {
-            return evaluateMinigameAccess(data, "tempoross", "Tempoross access");
+            // Membership and the method's 35 Fishing level gate are the only
+            // access requirements. Required tools are available at the cove.
+            return new ArrayList<>();
         }
         if ("fishing_karambwan".equals(method.getId()))
         {
@@ -298,15 +308,35 @@ public class RequirementEvidenceEngine
                             : "Tai Bwo Wannai Trio completion has not been observed."));
             TransportSnapshot transport = data == null ? null
                     : data.getTransport();
-            boolean fairyRings = transport != null
+            boolean observedFairyRoute = transport != null
                     && transport.hasVerifiedRoute("fairy-rings");
+            boolean fairyQuestComplete = quests != null
+                    && quests.statusOf("Fairytale II - Cure a Queen")
+                            == QuestStatus.COMPLETE;
+            boolean fairyRings = observedFairyRoute || fairyQuestComplete;
             checks.add(new RequirementCheck(
-                    "transport:fairy-rings", "Fairy ring network",
+                    "transport:fairy-rings", "Fairy ring banking loop",
                     fairyRings ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     fairyRings
-                            ? "Fairy ring transport is verified for this character."
-                            : "Fairy ring transport has not been verified for this character."));
+                            ? "Fairy ring access is supported by live transport or completed-quest evidence."
+                            : "Verify fairy ring access before using the DKP-to-Zanaris banking loop."));
+            DiarySnapshot diaries = data == null ? null : data.getDiaries();
+            boolean staffless = diaries != null
+                    && diaries.isTierComplete("Lumbridge & Draynor",
+                            DiaryTier.ELITE);
+            int staff = resourceReadinessService.observedQuantity(data,
+                    useGroupStorage, ItemID.DRAMEN_STAFF,
+                    ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF);
+            boolean staffReady = observedFairyRoute || staffless || staff > 0;
+            checks.add(new RequirementCheck(
+                    "resource:fairy_ring_staff",
+                    "Dramen/Lunar staff or staffless fairy rings",
+                    staffReady ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    staffReady
+                            ? "The observed route can use fairy rings without another staff check."
+                            : "Bring a dramen or lunar staff, or verify the staffless diary unlock."));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:karambwan_vessel",
                             "Karambwan vessel", 1,
@@ -382,20 +412,20 @@ public class RequirementEvidenceEngine
         return null;
     }
 
-    private static List<RequirementCheck> evaluateMinigameAccess(
-            StrategyDataBundle data, String minigameId, String label)
+    private static List<RequirementCheck> evaluateQuestCompletion(
+            StrategyDataBundle data, String questName, String id)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        MinigameSnapshot minigames = data == null ? null : data.getMinigames();
-        boolean unlocked = minigames != null
-                && minigames.isUnlocked(minigameId);
+        QuestSnapshot quests = data == null ? null : data.getQuests();
+        boolean complete = quests != null
+                && quests.statusOf(questName) == QuestStatus.COMPLETE;
         checks.add(new RequirementCheck(
-                "minigame:" + minigameId, label,
-                unlocked ? RequirementState.VERIFIED
+                id, questName + " completed",
+                complete ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
-                unlocked
-                        ? label + " is observed for this character."
-                        : label + " has not been observed for this character."));
+                complete
+                        ? questName + " completion is observed for this character."
+                        : questName + " completion has not been observed."));
         return checks;
     }
 
@@ -481,10 +511,26 @@ public class RequirementEvidenceEngine
             String label)
     {
         List<RequirementCheck> checks = new ArrayList<>();
+        checks.add(usableToolCheck(data, itemClass, useGroupStorage,
+                requirementId, label));
+        for (String requirement : method.getRequirements())
+        {
+            checks.add(generic(requirement));
+        }
+        return checks;
+    }
+
+    private static RequirementCheck usableToolCheck(
+            StrategyDataBundle data,
+            ItemRequirementClass itemClass,
+            boolean useGroupStorage,
+            String requirementId,
+            String label)
+    {
         ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
         int usable = items.quantityMatching(itemClass,
                 java.util.Collections.emptyList());
-        checks.add(new RequirementCheck(
+        return new RequirementCheck(
                 requirementId,
                 label,
                 usable > 0 ? RequirementState.VERIFIED
@@ -492,12 +538,7 @@ public class RequirementEvidenceEngine
                 usable > 0
                         ? label + " is observed in immediately usable ownership."
                         : "No " + label.toLowerCase()
-                                + " is observed in immediately usable ownership."));
-        for (String requirement : method.getRequirements())
-        {
-            checks.add(generic(requirement));
-        }
-        return checks;
+                                + " is observed in immediately usable ownership.");
     }
 
     /**
@@ -623,8 +664,9 @@ public class RequirementEvidenceEngine
 
         if ("farming_tithe".equals(method.getId()))
         {
-            List<RequirementCheck> tithe = evaluateMinigameAccess(
-                    data, "tithe-farm", "Tithe Farm access");
+            // Membership and the method's 34 Farming level gate are the only
+            // access requirements. Everything below is ordinary preparation.
+            List<RequirementCheck> tithe = new ArrayList<>();
             tithe.add(resourceReadinessService.evaluate(data,
                     farmingSupplyCatalog.spade(), useGroupStorage));
             tithe.add(resourceReadinessService.evaluate(data,

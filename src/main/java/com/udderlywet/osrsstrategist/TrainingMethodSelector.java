@@ -144,22 +144,19 @@ public class TrainingMethodSelector
         AccountMode mode = data == null || data.getAccount() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
-        int verifiedAccess = 0;
-        boolean allVerified = true;
+        boolean fullyReady = true;
         double missingResourcePenalty = 0.0;
         for (RequirementCheck check : checks)
         {
-            if (check.getState() != RequirementState.VERIFIED)
-                allVerified = false;
-            if (check.getState() == RequirementState.VERIFIED)
+            if (check == null)
             {
-                if (check.getId() == null
-                        || !check.getId().startsWith("resource:"))
-                    verifiedAccess++;
+                fullyReady = false;
+                continue;
             }
+            if (check.getState() != RequirementState.VERIFIED)
+                fullyReady = false;
             if (check.getState() == RequirementState.CHECK_NEEDED
-                    && check.getId() != null
-                    && check.getId().startsWith("resource:"))
+                    && RequirementActionability.isPreparationRequirement(check))
             {
                 double penalty = mode.isIronLike() ? 14.0 : 10.0;
                 if (sessionIntent == SessionIntent.QUICK_20_MIN) penalty += 4.0;
@@ -168,12 +165,11 @@ public class TrainingMethodSelector
                 missingResourcePenalty += penalty;
             }
         }
-        // Readiness is a plan-level advantage. Counting each declared item
-        // separately would reward catalogs for splitting one setup into many
-        // checks and distort method tournaments.
-        double readyResources = allVerified ? 16.0 : 0.0;
-        double readyAccess = Math.min(2.0, verifiedAccess * 0.75);
-        return readyResources + readyAccess - missingResourcePenalty;
+        // Readiness is plan-level: a requirement-free method and a method with
+        // every check verified get the same benefit. The number of evidence
+        // rows never adds score, so splitting one fact into several checks
+        // cannot change the winner.
+        return (fullyReady ? 10.0 : 0.0) - missingResourcePenalty;
     }
 
     private static final class ScoredPlan

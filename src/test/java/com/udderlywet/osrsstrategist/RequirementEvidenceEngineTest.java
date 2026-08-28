@@ -131,6 +131,51 @@ public class RequirementEvidenceEngineTest
         assertEquals(RequirementState.BLOCKED, checks.get(0).getState());
     }
 
+    @Test
+    public void unknownSpellbookCannotBecomeVerifiedFromRunesAlone()
+    {
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        TrainingMethod fireBlast = expanded("magic_f2p_fire_blast", Skill.MAGIC);
+
+        java.util.List<RequirementCheck> checks = engine.evaluate(
+                StrategyDataBundle.builder(account(1)).build(), fireBlast);
+
+        assertEquals("spellbook:standard", checks.get(0).getId());
+        assertEquals(RequirementState.CHECK_NEEDED, checks.get(0).getState());
+    }
+
+    @Test
+    public void realAccessRulesReplaceSyntheticMinigameUnlocks()
+    {
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        Map<String, QuestStatus> quests = new HashMap<>();
+        quests.put("Temple of the Eye", QuestStatus.COMPLETE);
+        StrategyDataBundle data = StrategyDataBundle.builder(account(80))
+                .quests(new QuestSnapshot(quests))
+                .bank(new BankSnapshot(java.util.Arrays.asList(
+                        new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+                                "Bronze pickaxe", 1),
+                        new ItemStackSnapshot(ItemID.CHISEL, "Chisel", 1)), 1L))
+                .build();
+
+        java.util.List<RequirementCheck> gotr = engine.evaluate(data,
+                expanded("runecraft_gotr", Skill.RUNECRAFT));
+        assertEquals("quest:temple_of_the_eye", gotr.get(0).getId());
+        assertEquals(RequirementState.VERIFIED, gotr.get(0).getState());
+        assertTrue(gotr.stream().allMatch(check ->
+                check.getState() == RequirementState.VERIFIED));
+
+        assertTrue(engine.evaluate(data,
+                expanded("fishing_tempoross", Skill.FISHING)).isEmpty());
+
+        java.util.List<RequirementCheck> tithe = engine.evaluate(data,
+                expanded("farming_tithe", Skill.FARMING));
+        assertTrue(tithe.stream().allMatch(check ->
+                check.getId().startsWith("resource:")));
+    }
+
     private static TrainingMethod method(String id)
     {
         return new TrainingMethodDatabase()
@@ -139,6 +184,14 @@ public class RequirementEvidenceEngineTest
                 .filter(candidate -> id.equals(candidate.getId()))
                 .findFirst()
                 .orElseThrow(AssertionError::new);
+    }
+
+    private static TrainingMethod expanded(String id, Skill skill)
+    {
+        return new ExpandedTrainingMethodCatalog().methodsFor(skill).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> id.equals(candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
     }
 
     private static AccountSnapshot account(int farmingLevel)
