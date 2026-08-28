@@ -45,7 +45,10 @@ public class GlobalDecisionSimulationTest
                 "Train Mining to 80", 63.0, 75, 80, 2);
         Recommendation upgrade = readyUpgrade(
                 "upgrade:dragon-defender", "Get Dragon defender", 38.0,
-                "Permanent melee off-hand upgrade.");
+                "Permanent melee off-hand upgrade.")
+                .withGoalProvenance(GoalDependencyProvenance.direct(
+                        GoalType.GEAR_TARGET, "upgrade:dragon-defender",
+                        Arrays.asList("Gear target", "Dragon defender")));
 
         List<Recommendation> queue = engine().buildPlayerQueue(
                 Arrays.asList(skill, upgrade), context);

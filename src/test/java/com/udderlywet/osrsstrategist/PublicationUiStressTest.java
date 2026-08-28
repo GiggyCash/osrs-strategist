@@ -80,10 +80,9 @@ public class PublicationUiStressTest
 
         String compact = RecommendationPresentation.compactText(fallback, context);
         String details = RecommendationPresentation.detailedText(fallback, context);
-        assertTrue(compact.contains("Bowfa requires members content"));
-        assertTrue(compact.contains("useful F2P progression for now"));
-        assertTrue(details.contains("GOAL\nBowfa"));
-        assertTrue(details.contains("WHY\nBowfa requires members content"));
+        assertFalse(compact.contains("GOAL"));
+        assertFalse(details.contains("GOAL"));
+        assertTrue(details.contains("WHY\nUnlocks willow trees"));
         assertFalse(details.contains("Bowfa — Bowfa"));
     }
 

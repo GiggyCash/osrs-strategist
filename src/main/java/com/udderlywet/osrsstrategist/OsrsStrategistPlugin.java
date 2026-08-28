@@ -377,6 +377,7 @@ public class OsrsStrategistPlugin extends Plugin
                 || !OverlayDisplayState.from(config).showsDetails())
         {
             recommendationDetailsOverlay.clear();
+            refreshMethodGuidanceOverlay();
         }
         else
         {
@@ -388,6 +389,7 @@ public class OsrsStrategistPlugin extends Plugin
                             recommendation,
                             account == null ? MembershipStatus.UNKNOWN
                                     : account.getMembershipStatus()));
+            methodGuidanceOverlay.clear();
         }
     }
 
@@ -433,7 +435,8 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void updateGuidance(StrategyResult result, StrategyDataBundle data)
     {
-        if (!config.showInGameGuidance()
+        if (!OverlayDisplayState.from(config).showsMethodGuidance(
+                    recommendationDetailsOverlay.hasRecommendation())
                 || result == null
                 || result.getRecommendations().isEmpty())
         {
@@ -443,6 +446,19 @@ public class OsrsStrategistPlugin extends Plugin
         GuidanceChecklist checklist = methodGuidanceService.build(
                 result.getRecommendations().get(0), data);
         methodGuidanceOverlay.update(checklist);
+    }
+
+    private void refreshMethodGuidanceOverlay()
+    {
+        if (!OverlayDisplayState.from(config).showsMethodGuidance(
+                    recommendationDetailsOverlay.hasRecommendation())
+                || latestRecommendations.isEmpty() || latestData == null)
+        {
+            methodGuidanceOverlay.clear();
+            return;
+        }
+        methodGuidanceOverlay.update(methodGuidanceService.build(
+                latestRecommendations.get(0), latestData));
     }
 
     private void syncPreferenceProfile()
@@ -637,7 +653,8 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel != null)
             panel.setDetailsOverlayEnabled(state.showsDetails());
         if (!state.showsDetails()) recommendationDetailsOverlay.clear();
-        if (!state.showsMethodGuidance())
+        if (!state.showsMethodGuidance(
+                recommendationDetailsOverlay.hasRecommendation()))
         {
             methodGuidanceOverlay.clear();
             return;

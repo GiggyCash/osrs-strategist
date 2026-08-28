@@ -36,6 +36,9 @@ public class RecommendationIntelligenceServiceTest
                 0,
                 guidance("Enter the Warriors' Guild and obtain the defender."));
 
+        gear = gear.withGoalProvenance(GoalDependencyProvenance.direct(
+                GoalType.GEAR_TARGET, gear.getId(), java.util.Arrays.asList(
+                        "Gear target", "Dragon defender")));
         assertTrue(service.rankScore(gear, context)
                 > service.rankScore(skill, context));
     }
@@ -93,6 +96,8 @@ public class RecommendationIntelligenceServiceTest
                 "skill:mining", "Train Mining to 80", 58.0,
                 Skill.MINING, 75, 80, 1, 60, AttentionLevel.LOW);
 
+        slayer = new GoalDependencyProvenanceService().attach(slayer, context);
+        mining = new GoalDependencyProvenanceService().attach(mining, context);
         assertTrue(service.rankScore(slayer, context)
                 > service.rankScore(mining, context));
     }

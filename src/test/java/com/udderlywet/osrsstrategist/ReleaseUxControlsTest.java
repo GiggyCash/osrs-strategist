@@ -52,8 +52,7 @@ public class ReleaseUxControlsTest
         panel.updateAccount("Player", "Main", MembershipStatus.F2P, 500);
         panel.updateGoal(GoalType.BOWFA);
         panel.updateRecommendations(Collections.singletonList(recommendation()));
-        assertTrue(panel.recommendationTextForTest()
-                .contains("requires members content"));
+        assertFalse(panel.recommendationTextForTest().contains("GOAL"));
         assertFalse(panel.recommendationTextForTest().trim().isEmpty());
     }
 
@@ -81,7 +80,7 @@ public class ReleaseUxControlsTest
     }
 
     @Test
-    public void alternativesIncludeMethodAndLocationInsteadOfBareCategories()
+    public void alternativesUseCompactLevelAndMethodLines()
     {
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
         Recommendation first = recommendation("skill:mining", "Train Mining to 40");
@@ -90,7 +89,8 @@ public class ReleaseUxControlsTest
 
         String text = panel.firstAlternativeTextForTest();
         assertTrue(text.contains("Concrete method"));
-        assertTrue(text.contains("Named location"));
+        assertTrue(text.contains("30 → 40"));
+        assertFalse(text.contains("Named location"));
     }
 
     private static OsrsStrategistPanel panel(String support,

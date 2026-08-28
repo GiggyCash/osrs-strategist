@@ -21,6 +21,7 @@ public class StrategyEngine
     private final RecommendationActionabilityPolicy actionabilityPolicy;
     private final RecommendationIntelligenceService intelligenceService;
     private final CandidateSafetyPolicy candidateSafetyPolicy;
+    private final GoalDependencyProvenanceService goalProvenanceService;
     private final RecommendationDeduplicator deduplicator =
             new RecommendationDeduplicator();
 
@@ -32,7 +33,8 @@ public class StrategyEngine
             StrategyCandidateRegistry candidateRegistry,
             RecommendationActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
-            CandidateSafetyPolicy candidateSafetyPolicy)
+            CandidateSafetyPolicy candidateSafetyPolicy,
+            GoalDependencyProvenanceService goalProvenanceService)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
@@ -46,6 +48,23 @@ public class StrategyEngine
                 : intelligenceService;
         this.candidateSafetyPolicy = candidateSafetyPolicy == null
                 ? new CandidateSafetyPolicy() : candidateSafetyPolicy;
+        this.goalProvenanceService = goalProvenanceService == null
+                ? new GoalDependencyProvenanceService() : goalProvenanceService;
+    }
+
+    /** Compatibility constructor retained for focused tests/older callers. */
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry,
+            RecommendationActionabilityPolicy actionabilityPolicy,
+            RecommendationIntelligenceService intelligenceService,
+            CandidateSafetyPolicy candidateSafetyPolicy)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, actionabilityPolicy, intelligenceService,
+                candidateSafetyPolicy, new GoalDependencyProvenanceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -59,7 +78,7 @@ public class StrategyEngine
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry,
                 candidateRegistry, actionabilityPolicy, intelligenceService,
-                new CandidateSafetyPolicy());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -73,7 +92,7 @@ public class StrategyEngine
         this(recommendationEngine, opportunityEngine, moduleRegistry,
                 candidateRegistry, actionabilityPolicy,
                 new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -86,7 +105,7 @@ public class StrategyEngine
         this(recommendationEngine, opportunityEngine, moduleRegistry,
                 candidateRegistry, new RecommendationActionabilityPolicy(),
                 new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -98,7 +117,7 @@ public class StrategyEngine
         this(recommendationEngine, opportunityEngine, moduleRegistry, null,
                 new RecommendationActionabilityPolicy(),
                 new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
     }
 
     public StrategyResult evaluate(
@@ -202,6 +221,11 @@ public class StrategyEngine
             Recommendation promoted = opportunityRecommendation(opportunity, context);
             if (promoted != null) pool.add(promoted);
         }
+
+        List<Recommendation> attributed = new ArrayList<>(pool.size());
+        for (Recommendation recommendation : pool)
+            attributed.add(goalProvenanceService.attach(recommendation, context));
+        pool = attributed;
 
         // Only after legality/actionability is known do we compare account value
         // across skills, quests, upgrades, detours, PvM, gear and minigames.
@@ -362,6 +386,8 @@ public class StrategyEngine
         List<Recommendation> secondary = new ArrayList<>();
         for (Recommendation recommendation : deduplicator.deduplicate(pool))
         {
+            recommendation = goalProvenanceService.attach(
+                    recommendation, context);
             String semanticKey = deduplicator.semanticKey(recommendation);
             if (context != null && (context.getPreferenceProfile()
                     .isOnCooldown(recommendation.getId())

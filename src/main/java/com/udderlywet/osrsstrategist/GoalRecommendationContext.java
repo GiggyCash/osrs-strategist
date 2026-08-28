@@ -6,14 +6,17 @@ public final class GoalRecommendationContext
     private final GoalType goal;
     private final GoalRecommendationRelationship relationship;
     private final String status;
+    private final GoalDependencyProvenance provenance;
 
     private GoalRecommendationContext(GoalType goal,
-            GoalRecommendationRelationship relationship, String status)
+            GoalRecommendationRelationship relationship, String status,
+            GoalDependencyProvenance provenance)
     {
         this.goal = goal == null ? GoalType.AUTOMATIC : goal;
         this.relationship = relationship == null
                 ? GoalRecommendationRelationship.AUTOMATIC : relationship;
         this.status = status == null ? "" : status;
+        this.provenance = provenance;
     }
 
     public static GoalRecommendationContext assess(GoalType goal,
@@ -23,7 +26,7 @@ public final class GoalRecommendationContext
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
-                    "Compass is choosing the best overall move.");
+                    "Compass is choosing the best overall move.", null);
 
         String name = displayName(safeGoal);
         if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
@@ -33,43 +36,49 @@ public final class GoalRecommendationContext
                             : GoalRecommendationRelationship.FALLBACK,
                     membership == MembershipStatus.UNKNOWN
                             ? "Confirm membership before advancing " + name + "."
-                            : name + " requires members content, so Compass is recommending useful F2P progression for now.");
+                            : name + " requires members content, so Compass is recommending useful F2P progression for now.",
+                    null);
 
         if (recommendation == null)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.CHECK_NEEDED,
-                    "Compass needs more account evidence before advancing " + name + ".");
+                    "Compass needs more account evidence before advancing " + name + ".",
+                    null);
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.BLOCKED,
-                    "This account cannot safely advance " + name + " yet.");
+                    "This account cannot safely advance " + name + " yet.",
+                    null);
 
-        double contribution = RecommendationIntelligenceService.goalValue(
-                recommendation, safeGoal);
-        if (contribution >= 28.0)
+        GoalDependencyProvenance provenance = recommendation.getGoalProvenance();
+        if (provenance != null
+                && provenance.proves(safeGoal, recommendation.getId()))
+        {
+            if (recommendation.getConfidence()
+                    == RecommendationConfidence.CHECK_NEEDED)
+                return new GoalRecommendationContext(safeGoal,
+                        GoalRecommendationRelationship.CHECK_NEEDED,
+                        "Verify the remaining state on "
+                                + provenance.compactPath() + ".",
+                        provenance);
+            boolean direct = provenance.getRelationship()
+                    == GoalRecommendationRelationship.DIRECT;
             return new GoalRecommendationContext(safeGoal,
-                    recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED
-                            ? GoalRecommendationRelationship.CHECK_NEEDED
-                            : GoalRecommendationRelationship.DIRECT,
-                    recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED
-                            ? "Confirm the remaining state for this " + name + " step."
-                            : "This directly advances " + name + ".");
-        if (contribution > 0.0)
-            return new GoalRecommendationContext(safeGoal,
-                    recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED
-                            ? GoalRecommendationRelationship.CHECK_NEEDED
-                            : GoalRecommendationRelationship.PREREQUISITE,
-                    recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED
-                            ? "Confirm this prerequisite before advancing " + name + "."
-                            : "This advances a " + name + " prerequisite.");
+                    provenance.getRelationship(),
+                    (direct ? "Directly advances " : "Required for ")
+                            + name + ": " + provenance.compactPath() + ".",
+                    provenance);
+        }
         return new GoalRecommendationContext(safeGoal,
                 GoalRecommendationRelationship.FALLBACK,
-                "Useful progression while no safe " + name + " step can lead.");
+                "", null);
     }
 
     public GoalType getGoal() { return goal; }
     public GoalRecommendationRelationship getRelationship() { return relationship; }
     public String getStatus() { return status; }
+    public GoalDependencyProvenance getProvenance() { return provenance; }
+    public boolean hasProvenRelationship() { return provenance != null; }
     public boolean isAutomatic()
     {
         return relationship == GoalRecommendationRelationship.AUTOMATIC;

@@ -21,4 +21,8 @@ final class OverlayDisplayState
 
     boolean showsDetails() { return details; }
     boolean showsMethodGuidance() { return methodGuidance; }
+    boolean showsMethodGuidance(boolean detailsVisible)
+    {
+        return methodGuidance && !detailsVisible;
+    }
 }

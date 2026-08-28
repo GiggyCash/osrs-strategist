@@ -98,7 +98,7 @@ public class SensibleWinnerScenarioMatrixTest
                 skill("skill:mining", Skill.MINING, 42, AttentionLevel.ACTIVE, 2, 20, 70, 71),
                 ready("money:generic", 44, "Earn spendable GP.")));
         values.add(goal("02 quest cape values prerequisite quest", GoalType.QUEST_CAPE, "quest:",
-                ready("quest:prerequisite", 32, "Completes a required quest."),
+                ready("quest:cook-s-assistant", 32, "Completes an unfinished quest."),
                 skill("skill:fishing", Skill.FISHING, 43, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(goal("03 barrows gloves values RFD", GoalType.BARROWS_GLOVES, "quest:",
                 ready("quest:recipe-for-disaster", 28, "Advance Recipe for Disaster."),
@@ -116,13 +116,19 @@ public class SensibleWinnerScenarioMatrixTest
                 ready("pvm:tztok_jad", 24, "Observed Fight Cave readiness."),
                 skill("skill:mining", Skill.MINING, 48, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(goal("07 diary cape values diary task", GoalType.DIARY_CAPE, "diary:",
-                ready("diary:kandarin-elite", 28, "Finish an actionable diary prerequisite."),
+                proven(GoalType.DIARY_CAPE,
+                        ready("diary:kandarin-elite", 28, "Finish an actionable diary requirement."),
+                        "Diary cape", "Kandarin Elite task"),
                 skill("skill:cooking", Skill.COOKING, 45, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(goal("08 elite CA values combat achievement", GoalType.ELITE_COMBAT_ACHIEVEMENTS, "combat-achievement:",
-                ready("combat-achievement:task", 27, "Complete a verified CA task."),
+                proven(GoalType.ELITE_COMBAT_ACHIEVEMENTS,
+                        ready("combat-achievement:task", 27, "Complete a verified CA task."),
+                        "Elite combat achievements", "Verified CA task"),
                 skill("skill:agility", Skill.AGILITY, 44, AttentionLevel.ACTIVE, 2, 20, 70, 71)));
         values.add(goal("09 raid ready values encounter preparation", GoalType.RAID_READY, "pvm:",
-                ready("pvm:raid-prep", 31, "Verified raid preparation."),
+                proven(GoalType.RAID_READY,
+                        ready("pvm:raid-prep", 31, "Verified raid preparation."),
+                        "Raid ready", "Verified raid preparation"),
                 skill("skill:firemaking", Skill.FIREMAKING, 46, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(goal("10 total 2000 values a skill level", GoalType.TOTAL_2000, "skill:",
                 skill("skill:crafting", Skill.CRAFTING, 31, AttentionLevel.ACTIVE, 2, 20, 70, 71),
@@ -134,7 +140,9 @@ public class SensibleWinnerScenarioMatrixTest
                 skill("skill:runecraft", Skill.RUNECRAFT, 29, AttentionLevel.ACTIVE, 2, 20, 62, 70),
                 ready("money:generic", 46, "Earn GP.")));
         values.add(goal("13 gear target values practical upgrade", GoalType.GEAR_TARGET, "upgrade:",
-                ready("upgrade:practical", 24, "Best practical target-specific upgrade."),
+                proven(GoalType.GEAR_TARGET,
+                        ready("upgrade:practical", 24, "Best practical target-specific upgrade."),
+                        "Gear target", "Selected practical upgrade"),
                 skill("skill:mining", Skill.MINING, 50, AttentionLevel.LOW, 2, 20, 70, 71)));
 
         // Session fit affects the global queue, including non-training work.
@@ -148,7 +156,7 @@ public class SensibleWinnerScenarioMatrixTest
                 ready("pvm:verified-boss", 42, "Verified long encounter preparation."),
                 ready("money:quick", 44, "Quick GP task.")));
         values.add(scenario("17 one hour fits quest block", ctx(max, SessionIntent.ONE_HOUR), "quest:",
-                ready("quest:one-hour", 44, "Actionable quest segment."),
+                ready("quest:one-hour", 46, "Actionable quest segment."),
                 ready("money:generic", 43, "Earn GP.")));
         values.add(scenario("18 short session values ready recurring", ctx(max, SessionIntent.QUICK_20_MIN), "opportunity:",
                 ready("opportunity:herb-run", 38, "Observed ready recurring work."),
@@ -161,10 +169,10 @@ public class SensibleWinnerScenarioMatrixTest
         values.add(scenario("20 efficient chooses shared unlock",
                 context(0, MembershipStatus.P2P, StrategyMode.EFFICIENT,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(70), false), "quest:",
-                ready("quest:shared-unlock", 42, "Shared prerequisite saves future time."),
+                ready("quest:shared-unlock", 45, "Shared prerequisite saves future time."),
                 ready("money:generic", 44, "Earn GP.")));
         values.add(scenario("21 balanced chooses multi-goal progress", max, "detour:",
-                ready("detour:shared", 42, "Also advances multiple goals."),
+                ready("detour:shared", 45, "Also advances multiple goals."),
                 ready("money:generic", 44, "Earn GP.")));
         values.add(scenario("22 relaxed chooses low-fatigue method",
                 context(0, MembershipStatus.P2P, StrategyMode.RELAXED,
@@ -242,7 +250,7 @@ public class SensibleWinnerScenarioMatrixTest
                 check("stash:unknown", 500, "Check the exact built state."),
                 skill("skill:fishing", Skill.FISHING, 28, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(scenario("40 transport fanout beats isolated detour", max, "detour:transport",
-                ready("detour:transport", 42, "Also advances multiple goals through a shared transport prerequisite and saves future time."),
+                ready("detour:transport", 46, "Also advances multiple goals through a shared transport prerequisite and saves future time."),
                 ready("money:generic", 45, "Earn GP.")));
         values.add(scenario("41 money is a tool when target needs it", max, "money:",
                 ready("money:target-shortfall", 54, "Earn only the verified target shortfall."),
@@ -343,6 +351,7 @@ public class SensibleWinnerScenarioMatrixTest
         StrategyDataBundle data = StrategyDataBundle.builder(account)
                 .inventory(new InventorySnapshot(Collections.emptyList()))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .quests(new QuestSnapshot(questStatuses()))
                 .build();
         return new StrategyContext(data, strategy, session,
                 QuestTolerance.NORMAL, goal, false, false, wilderness,
@@ -383,6 +392,23 @@ public class SensibleWinnerScenarioMatrixTest
         return new Recommendation(id, title(id), reason, score, null,
                 RecommendationConfidence.VERIFIED, 0, 0, guidance(),
                 CandidateSafetyEvidence.harmless(true));
+    }
+
+    private static Recommendation proven(GoalType goal,
+            Recommendation recommendation, String... path)
+    {
+        return recommendation.withGoalProvenance(
+                GoalDependencyProvenance.direct(goal,
+                        recommendation.getId(), Arrays.asList(path)));
+    }
+
+    private static Map<String, QuestStatus> questStatuses()
+    {
+        Map<String, QuestStatus> result = new LinkedHashMap<>();
+        result.put("Recipe for Disaster", QuestStatus.NOT_STARTED);
+        result.put("Song of the Elves", QuestStatus.NOT_STARTED);
+        result.put("Cook's Assistant", QuestStatus.NOT_STARTED);
+        return result;
     }
 
     private static Recommendation membersReady(String id, double score,

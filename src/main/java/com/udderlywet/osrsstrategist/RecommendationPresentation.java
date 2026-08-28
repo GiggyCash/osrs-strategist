@@ -112,11 +112,12 @@ public final class RecommendationPresentation
     {
         if (recommendation == null) return Collections.emptyList();
         List<Section> sections = new ArrayList<>();
-        if (goalContext != null && !goalContext.isAutomatic())
-            sections.add(new Section("GOAL", goalContext.getGoalName()));
+        if (goalContext != null && goalContext.hasProvenRelationship()
+                && hasText(goalContext.getStatus()))
+            sections.add(new Section("GOAL",
+                    compactSentence(goalContext.getStatus(), 160)));
 
-        String why = goalContext != null && !goalContext.isAutomatic()
-                ? goalContext.getStatus() : recommendation.getReason();
+        String why = recommendation.getReason();
         if (hasText(why))
             sections.add(new Section("WHY", compactSentence(why, 140)));
 
@@ -248,10 +249,9 @@ public final class RecommendationPresentation
     private static void appendGoalStatus(StringBuilder text,
             GoalRecommendationContext context)
     {
-        if (context == null || context.isAutomatic()) return;
+        if (context == null || !context.hasProvenRelationship()
+                || !hasText(context.getStatus())) return;
         text.append("<b>GOAL</b><br>")
-                .append(escape(context.getGoalName()))
-                .append("<br>")
                 .append(escape(compactSentence(context.getStatus(), 125)));
         appendBreak(text, 2);
     }

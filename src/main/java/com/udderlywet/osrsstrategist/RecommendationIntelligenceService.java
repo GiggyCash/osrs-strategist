@@ -4,18 +4,28 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
+import net.runelite.api.Experience;
 
 /** Global account-value ranking after all legal candidates enter one pool. */
 @Singleton
 public class RecommendationIntelligenceService
 {
     private final UimSetupCostService uimSetupCostService;
+    private final GoalDependencyProvenanceService goalProvenanceService;
 
     @Inject
-    public RecommendationIntelligenceService(UimSetupCostService uimSetupCostService)
+    public RecommendationIntelligenceService(UimSetupCostService uimSetupCostService,
+            GoalDependencyProvenanceService goalProvenanceService)
     {
         this.uimSetupCostService = uimSetupCostService == null
                 ? new UimSetupCostService() : uimSetupCostService;
+        this.goalProvenanceService = goalProvenanceService == null
+                ? new GoalDependencyProvenanceService() : goalProvenanceService;
+    }
+
+    public RecommendationIntelligenceService(UimSetupCostService uimSetupCostService)
+    {
+        this(uimSetupCostService, new GoalDependencyProvenanceService());
     }
 
     public RecommendationIntelligenceService()
@@ -40,6 +50,7 @@ public class RecommendationIntelligenceService
 
         score += readinessValue(recommendation, guidance);
         score += goalValue(recommendation, context.getActiveGoal());
+        score += questRewardValue(recommendation, context);
         score += sessionValue(recommendation, context.getSessionIntent());
         score += globalIntentValue(recommendation, context, id, reason);
         score += strategyModeValue(recommendation, context, id, reason);
@@ -70,76 +81,59 @@ public class RecommendationIntelligenceService
 
     static double goalValue(Recommendation recommendation, GoalType selectedGoal)
     {
-        if (recommendation == null) return 0.0;
-        GoalType goal = selectedGoal == null ? GoalType.AUTOMATIC : selectedGoal;
-        String id = lower(recommendation.getId());
-        String title = lower(recommendation.getTitle());
-        boolean skill = id.startsWith("skill:");
-        boolean quest = id.startsWith("quest:");
-        boolean gear = id.startsWith("gear:") || id.startsWith("upgrade:");
-        boolean pvm = id.startsWith("pvm:");
-        boolean diary = id.startsWith("diary:");
-        boolean ca = id.startsWith("combat-achievement:") || id.startsWith("combat_achievement:");
-        String identity = id + " " + title;
-
-        switch (goal)
+        if (recommendation == null || selectedGoal == null) return 0.0;
+        GoalDependencyProvenance provenance = recommendation.getGoalProvenance();
+        if (provenance == null
+                || !provenance.proves(selectedGoal, recommendation.getId()))
+            return 0.0;
+        double direct;
+        switch (selectedGoal)
         {
-            case AUTOMATIC:
-                return 0.0;
-            case MAX:
-                if (skill) return 8.0;
-                if (id.startsWith("detour:")) return 5.0;
-                if (gear) return 3.0;
-                if (quest) return 2.0;
-                return 0.0;
-            case QUEST_CAPE:
-                if (quest) return 28.0;
-                return skill ? 6.0 : 0.0;
-            case BARROWS_GLOVES:
-                if (containsAny(identity, "recipe-for-disaster", "recipe for disaster")) return 38.0;
-                if (quest) return 17.0;
-                return skill ? 5.0 : 0.0;
-            case FIRE_CAPE:
-                if (containsAny(identity, "fire-cape", "fire cape", "tztok_jad", "tzhaar fight cave")) return 45.0;
-                if (id.startsWith("skill:ranged") || id.startsWith("skill:prayer")) return 18.0;
-                return gear || pvm ? 14.0 : 0.0;
-            case PRIFDDINAS:
-                if (containsAny(identity, "song-of-the-elves", "song of the elves")) return 42.0;
-                if (quest) return 18.0;
-                return skill ? 8.0 : 0.0;
-            case BOWFA:
-                if (containsAny(identity, "bowfa", "crystal", "gauntlet")) return 38.0;
-                if (gear || pvm) return 15.0;
-                return quest ? 8.0 : 0.0;
-            case INFERNAL_CAPE:
-                if (containsAny(identity, "inferno", "infernal")) return 45.0;
-                return gear || pvm ? 20.0 : 0.0;
-            case DIARY_CAPE:
-                if (diary) return 30.0;
-                return skill || quest ? 8.0 : 0.0;
-            case ELITE_COMBAT_ACHIEVEMENTS:
-                if (ca) return 32.0;
-                return pvm || gear ? 16.0 : 0.0;
-            case RAID_READY:
-                if (pvm || gear) return 24.0;
-                if (id.startsWith("skill:slayer") || id.startsWith("skill:prayer")
-                        || id.startsWith("skill:magic") || id.startsWith("skill:ranged")) return 11.0;
-                return 0.0;
-            case TOTAL_2000:
-                return skill ? 19.0 : 0.0;
-            case SLAYER_85:
-                if (id.startsWith("skill:slayer")) return 45.0;
-                return containsAny(identity, "whip", "slayer") ? 20.0 : 0.0;
-            case BASE_70S:
-                if (skill && recommendation.getCurrentLevel() > 0 && recommendation.getCurrentLevel() < 70)
-                    return 23.0 + Math.min(8.0, (70 - recommendation.getCurrentLevel()) * 0.15);
-                return 0.0;
-            case GEAR_TARGET:
-                return gear ? 35.0 : pvm ? 15.0 : 0.0;
-            case CUSTOM:
-            default:
-                return 0.0;
+            case MAX: direct = 8.0; break;
+            case QUEST_CAPE: direct = 28.0; break;
+            case BARROWS_GLOVES: direct = 38.0; break;
+            case FIRE_CAPE: direct = 45.0; break;
+            case PRIFDDINAS: direct = 42.0; break;
+            case BOWFA: direct = 38.0; break;
+            case INFERNAL_CAPE: direct = 45.0; break;
+            case DIARY_CAPE: direct = 30.0; break;
+            case ELITE_COMBAT_ACHIEVEMENTS: direct = 32.0; break;
+            case RAID_READY: direct = 24.0; break;
+            case TOTAL_2000: direct = 19.0; break;
+            case SLAYER_85: direct = 45.0; break;
+            case BASE_70S: direct = 25.0; break;
+            case GEAR_TARGET: direct = 35.0; break;
+            default: direct = 0.0; break;
         }
+        return provenance.getRelationship() == GoalRecommendationRelationship.DIRECT
+                ? direct : Math.min(26.0, direct * 0.7);
+    }
+
+    private double questRewardValue(
+            Recommendation recommendation, StrategyContext context)
+    {
+        TrainingPlan plan = recommendation.getTrainingPlan();
+        if (plan == null || plan.getMethod() == null
+                || plan.getMethod().getSkill() == null
+                || recommendation.getTargetLevel() <= 0) return 0.0;
+        Skill skill = plan.getMethod().getSkill();
+        GoalQuestRewardForecast forecast = goalProvenanceService
+                .guaranteedRewardsBeforeManualTraining(context, skill);
+        if (!forecast.hasGuaranteedExperience()) return 0.0;
+        int currentXp = context.getData().getAccount().getSkillExperience(skill);
+        if (currentXp <= 0)
+            currentXp = Experience.getXpForLevel(
+                    context.getData().getAccount().getSkillLevel(skill));
+        int remaining = Math.max(0,
+                Experience.getXpForLevel(recommendation.getTargetLevel())
+                        - currentXp);
+        if (remaining <= 0) return 0.0;
+        double coverage = Math.min(1.0,
+                forecast.getExperience() / (double) remaining);
+        if (coverage >= 1.0) return -36.0;
+        if (coverage >= 0.75) return -28.0;
+        if (coverage >= 0.5) return -18.0;
+        return -10.0 * coverage;
     }
 
     private static double sessionValue(Recommendation recommendation, SessionIntent intent)

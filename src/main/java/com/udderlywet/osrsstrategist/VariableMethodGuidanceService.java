@@ -226,7 +226,7 @@ public class VariableMethodGuidanceService
             int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Rake one allotment, plant three potato seeds, leave while they grow, then return with a spade to harvest and replant. Repeat until you gain "
+                "Rake one allotment, plant three potato seeds, leave while they grow, then return with a spade to harvest and replant; repeat this loop until you gain "
                         + format(xp) + " Farming XP toward level " + target + ".",
                 "Bring three potato seeds, a rake, seed dibber, and spade. Buy tools from Sarah at the farm and potato seeds from Olivia in Draynor Village when missing. "
                         + observed(items, "Potato seed", "Rake", "Seed dibber", "Spade"),

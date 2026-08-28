@@ -27,7 +27,8 @@ public class MethodGuidanceService
         if (plan == null || plan.getMethod() == null) return null;
 
         TrainingMethod method = plan.getMethod();
-        if (method.getSkill() == Skill.FARMING)
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (method.getSkill() == Skill.FARMING && guidance == null)
         {
             return farmingRunPlanner.build(data, recommendation.getId());
         }
@@ -48,7 +49,6 @@ public class MethodGuidanceService
                     GuidanceStepState.COMPLETE));
         }
 
-        RecommendationGuidance guidance = recommendation.getGuidance();
         String bring = guidance == null ? null
                 : RecommendationPresentation.compactSentence(
                         guidance.getSupplies(), 120);

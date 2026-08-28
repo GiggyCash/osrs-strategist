@@ -17,6 +17,14 @@ public class OverlayLifecycleAndConfigTest
     }
 
     @Test
+    public void visibleDetailsSuppressDuplicateMethodOverlay()
+    {
+        OverlayDisplayState state = new OverlayDisplayState(true, true);
+        assertTrue(state.showsMethodGuidance(false));
+        assertFalse(state.showsMethodGuidance(true));
+    }
+
+    @Test
     public void lifecycleRegistrationAndRemovalAreIdempotent()
     {
         OverlayLifecycleGuard guard = new OverlayLifecycleGuard();

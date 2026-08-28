@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Typed long-term dependency graph.
@@ -13,11 +15,15 @@ import java.util.Map;
  * attached. The engine can therefore understand the shape of Max, Bowfa,
  * Quest Cape, raids, and similar goals without hard-coding one giant guide.</p>
  */
+@Singleton
 public final class GoalGraph
 {
     private final Map<GoalType, List<GoalDependency>> graph =
             new EnumMap<>(GoalType.class);
+    private final Map<GoalType, List<String>> questRoots =
+            new EnumMap<>(GoalType.class);
 
+    @Inject
     public GoalGraph()
     {
         register(GoalType.MAX,
@@ -31,8 +37,13 @@ public final class GoalGraph
                 dep("quest-cape:items", "Obtain required quest items and access", GoalNodeKind.RESOURCE));
 
         register(GoalType.BARROWS_GLOVES,
-                dep("barrows-gloves:rfd", "Recipe for Disaster prerequisite chain", GoalNodeKind.QUEST),
-                dep("barrows-gloves:skills", "Required quest and skill dependencies", GoalNodeKind.SKILL));
+                dep("barrows-gloves:rfd-start", "Recipe for Disaster start requirements", GoalNodeKind.QUEST),
+                dep("barrows-gloves:rfd-subquests", "All mandatory Recipe for Disaster subquests", GoalNodeKind.QUEST),
+                dep("barrows-gloves:quest-chain", "Prerequisite quest chain", GoalNodeKind.QUEST),
+                dep("barrows-gloves:quest-points", "175 quest points for the final chapter", GoalNodeKind.META),
+                dep("barrows-gloves:skills", "Actual skill requirements in the quest chain", GoalNodeKind.SKILL),
+                dep("barrows-gloves:combat", "Culinaromancer fights and quest combat readiness", GoalNodeKind.PVM_ENCOUNTER));
+        roots(GoalType.BARROWS_GLOVES, "Recipe for Disaster");
 
         register(GoalType.FIRE_CAPE,
                 dep("fire-cape:combat", "Conservative Fight Cave combat readiness", GoalNodeKind.SKILL),
@@ -42,12 +53,14 @@ public final class GoalGraph
         register(GoalType.PRIFDDINAS,
                 dep("prif:quest-chain", "Song of the Elves prerequisite chain", GoalNodeKind.QUEST),
                 dep("prif:skills", "Required skill levels", GoalNodeKind.SKILL));
+        roots(GoalType.PRIFDDINAS, "Song of the Elves");
 
         register(GoalType.BOWFA,
                 dep("bowfa:prif", "Prifddinas access", GoalNodeKind.ACCESS),
                 dep("bowfa:gauntlet", "Gauntlet progression and practical PvM readiness", GoalNodeKind.ACTIVITY),
                 dep("bowfa:seed", "Enhanced crystal weapon seed", GoalNodeKind.ITEM),
                 dep("bowfa:shards", "Required crystal shard resources", GoalNodeKind.RESOURCE));
+        roots(GoalType.BOWFA, "Song of the Elves");
 
         register(GoalType.INFERNAL_CAPE,
                 dep("infernal:access", "Inferno access and prerequisite combat progression", GoalNodeKind.ACCESS),
@@ -105,11 +118,24 @@ public final class GoalGraph
         return Collections.unmodifiableList(labels);
     }
 
+    /** Verified quest entry points whose transitive requirements can prove a path. */
+    public List<String> questRootsFor(GoalType goalType)
+    {
+        return questRoots.getOrDefault(goalType, Collections.emptyList());
+    }
+
     private void register(GoalType type, GoalDependency... dependencies)
     {
         List<GoalDependency> values = new ArrayList<>();
         Collections.addAll(values, dependencies);
         graph.put(type, Collections.unmodifiableList(values));
+    }
+
+    private void roots(GoalType type, String... roots)
+    {
+        List<String> values = new ArrayList<>();
+        Collections.addAll(values, roots);
+        questRoots.put(type, Collections.unmodifiableList(values));
     }
 
     private static GoalDependency dep(

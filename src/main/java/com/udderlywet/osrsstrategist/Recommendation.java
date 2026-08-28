@@ -19,6 +19,7 @@ public final class Recommendation
     private final int targetLevel;
     private final RecommendationGuidance guidance;
     private final CandidateSafetyEvidence safetyEvidence;
+    private final GoalDependencyProvenance goalProvenance;
 
     public Recommendation(
             String id,
@@ -107,6 +108,17 @@ public final class Recommendation
             int currentLevel, int targetLevel, RecommendationGuidance guidance,
             CandidateSafetyEvidence safetyEvidence)
     {
+        this(id, title, reason, score, trainingPlan, confidence, currentLevel,
+                targetLevel, guidance, safetyEvidence, null);
+    }
+
+    private Recommendation(
+            String id, String title, String reason, double score,
+            TrainingPlan trainingPlan, RecommendationConfidence confidence,
+            int currentLevel, int targetLevel, RecommendationGuidance guidance,
+            CandidateSafetyEvidence safetyEvidence,
+            GoalDependencyProvenance goalProvenance)
+    {
         this.id = id;
         this.title = title;
         this.reason = reason;
@@ -120,6 +132,7 @@ public final class Recommendation
         this.guidance = guidance;
         this.safetyEvidence = safetyEvidence == null
                 ? CandidateSafetyEvidence.unknown() : safetyEvidence;
+        this.goalProvenance = goalProvenance;
     }
 
     public String getId() { return id; }
@@ -132,4 +145,12 @@ public final class Recommendation
     public int getTargetLevel() { return targetLevel; }
     public RecommendationGuidance getGuidance() { return guidance; }
     public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
+    public GoalDependencyProvenance getGoalProvenance() { return goalProvenance; }
+
+    public Recommendation withGoalProvenance(GoalDependencyProvenance provenance)
+    {
+        return new Recommendation(id, title, reason, score, trainingPlan,
+                confidence, currentLevel, targetLevel, guidance, safetyEvidence,
+                provenance);
+    }
 }

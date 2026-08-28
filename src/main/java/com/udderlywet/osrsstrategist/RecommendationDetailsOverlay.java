@@ -53,6 +53,11 @@ public class RecommendationDetailsOverlay extends OverlayPanel
         goalContext = null;
     }
 
+    public synchronized boolean hasRecommendation()
+    {
+        return recommendation != null;
+    }
+
     @Override
     public synchronized Dimension render(Graphics2D graphics)
     {

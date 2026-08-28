@@ -29,8 +29,8 @@ public interface OsrsStrategistConfig extends Config
             description = "The long-term goal used to prioritize recommendations; Automatic applies no specific-goal bias")
     default PlayerGoal activeGoal() { return PlayerGoal.AUTOMATIC; }
 
-    @ConfigItem(keyName = CompassConfigKeys.QUEST_TOLERANCE, name = "Quest tolerance",
-            description = "How often quests should appear in recommendations")
+    @ConfigItem(keyName = CompassConfigKeys.QUEST_TOLERANCE, name = "Optional quests",
+            description = "How often elective quest detours should appear; quests required for the selected goal remain eligible")
     default QuestTolerance questTolerance() { return QuestTolerance.NORMAL; }
 
     @ConfigItem(keyName = CompassConfigKeys.ALLOW_WILDERNESS, name = "Wilderness methods",

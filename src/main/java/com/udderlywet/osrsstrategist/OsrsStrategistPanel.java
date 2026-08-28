@@ -58,7 +58,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
     private final JLabel activeGoal = label("Goal: Automatic");
     private final JLabel strategySummary = mutedLabel(
-            "Mode: Balanced<br>Session: Pick for me<br>Quests: Normal"
+            "Mode: Balanced<br>Session: Pick for me<br>Optional quests: Normal"
     );
     private final JTextArea firstUseHint = wrappingArea(
             "Compass starts with sensible defaults. Change Goal or Session only when you want to steer the plan.",
@@ -386,7 +386,7 @@ public class OsrsStrategistPanel extends PluginPanel
         strategySummary.setText(html(
                 "Mode: " + prettyName(mode.name())
                         + "<br>Session: " + intent
-                        + "<br>Quests: " + prettyName(tolerance.name())));
+                        + "<br>Optional quests: " + prettyName(tolerance.name())));
     }
 
     public void updateRecommendations(List<Recommendation> recommendations)
@@ -627,20 +627,26 @@ public class OsrsStrategistPanel extends PluginPanel
         return MembershipStatus.UNKNOWN;
     }
 
-    private static String alternativeText(Recommendation recommendation)
+    static String alternativeText(Recommendation recommendation)
     {
         if (recommendation == null) return "";
-        StringBuilder value = new StringBuilder("• ")
-                .append(safe(recommendation.getTitle()));
         TrainingPlan plan = recommendation.getTrainingPlan();
-        if (plan != null && plan.getMethod() != null)
-            value.append(" — ").append(safe(plan.getMethod().getName()));
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance != null && guidance.getLocation() != null
-                && !guidance.getLocation().trim().isEmpty())
-            value.append(" at ").append(RecommendationPresentation
-                    .compactSentence(guidance.getLocation(), 75));
-        return value.toString();
+        if (plan != null && plan.getMethod() != null
+                && plan.getMethod().getSkill() != null)
+        {
+            StringBuilder value = new StringBuilder()
+                    .append(plan.getMethod().getSkill().getName());
+            if (recommendation.getCurrentLevel() > 0
+                    && recommendation.getTargetLevel()
+                            > recommendation.getCurrentLevel())
+                value.append(' ').append(recommendation.getCurrentLevel())
+                        .append(" → ").append(recommendation.getTargetLevel());
+            value.append('\n').append(RecommendationPresentation.compactSentence(
+                    plan.getMethod().getName(), 58));
+            return value.toString();
+        }
+        return RecommendationPresentation.compactSentence(
+                safe(recommendation.getTitle()), 82);
     }
 
     private static void makeFullWidth(JButton button, int height)

@@ -23,21 +23,35 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
     private final QuestPriorityCatalog priorityCatalog;
     private final QuestKnowledgeCatalog knowledgeCatalog;
     private final QuestRequirementResolver requirementResolver;
+    private final GoalDependencyProvenanceService goalProvenanceService;
 
     public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog)
     {
         this(priorityCatalog, new QuestKnowledgeCatalog(),
-                new QuestRequirementResolver());
+                new QuestRequirementResolver(),
+                new GoalDependencyProvenanceService());
     }
 
     @Inject
     public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog,
             QuestKnowledgeCatalog knowledgeCatalog,
-            QuestRequirementResolver requirementResolver)
+            QuestRequirementResolver requirementResolver,
+            GoalDependencyProvenanceService goalProvenanceService)
     {
         this.priorityCatalog = priorityCatalog;
         this.knowledgeCatalog = knowledgeCatalog;
         this.requirementResolver = requirementResolver;
+        this.goalProvenanceService = goalProvenanceService == null
+                ? new GoalDependencyProvenanceService() : goalProvenanceService;
+    }
+
+    /** Compatibility constructor retained for focused tests. */
+    public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog,
+            QuestKnowledgeCatalog knowledgeCatalog,
+            QuestRequirementResolver requirementResolver)
+    {
+        this(priorityCatalog, knowledgeCatalog, requirementResolver,
+                new GoalDependencyProvenanceService());
     }
 
     @Override
@@ -93,7 +107,10 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             QuestDefinition definition = knowledgeCatalog.definitionFor(questName);
             QuestResolution resolution = definition == null ? null
                     : requirementResolver.resolve(definition, context);
-            double score = baseScore(context.getQuestTolerance());
+            boolean requiredForGoal = goalProvenanceService.isRequiredQuest(
+                    context.getActiveGoal(), questName, context);
+            double score = requiredForGoal ? 42.0
+                    : baseScore(context.getQuestTolerance());
             String reason;
 
             if (status == QuestStatus.IN_PROGRESS)
@@ -126,11 +143,8 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                 reason += " It is a verified prerequisite for another unfinished quest.";
             }
 
-            if (context.getActiveGoal() == GoalType.QUEST_CAPE) score += 18.0;
-            if (context.getActiveGoal() == GoalType.BARROWS_GLOVES
-                    && "Recipe for Disaster".equalsIgnoreCase(questName)) score += 25.0;
-            if (context.getActiveGoal() == GoalType.PRIFDDINAS
-                    && "Song of the Elves".equalsIgnoreCase(questName)) score += 30.0;
+            if (requiredForGoal)
+                reason += " It is on the selected goal's proven quest path; optional-quest preference does not suppress it.";
 
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);

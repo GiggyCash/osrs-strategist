@@ -30,7 +30,11 @@ public class GoalRecommendationContextTest
     {
         GoalRecommendationContext direct = GoalRecommendationContext.assess(
                 GoalType.BOWFA, recommendation("upgrade:bowfa",
-                        RecommendationConfidence.VERIFIED), MembershipStatus.P2P);
+                        RecommendationConfidence.VERIFIED).withGoalProvenance(
+                                GoalDependencyProvenance.direct(GoalType.BOWFA,
+                                        "upgrade:bowfa", java.util.Arrays.asList(
+                                                "Bowfa", "Enhanced crystal weapon seed"))),
+                MembershipStatus.P2P);
         GoalRecommendationContext fallback = GoalRecommendationContext.assess(
                 GoalType.BOWFA, recommendation("skill:woodcutting",
                         RecommendationConfidence.VERIFIED), MembershipStatus.P2P);
@@ -39,7 +43,7 @@ public class GoalRecommendationContextTest
                 direct.getRelationship());
         assertEquals(GoalRecommendationRelationship.FALLBACK,
                 fallback.getRelationship());
-        assertTrue(fallback.getStatus().contains("no safe Bowfa step"));
+        assertTrue(fallback.getStatus().isEmpty());
     }
 
     @Test
