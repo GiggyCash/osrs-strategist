@@ -7,6 +7,7 @@ import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class RecommendationIntelligenceServiceTest
@@ -103,13 +104,13 @@ public class RecommendationIntelligenceServiceTest
     }
 
     @Test
-    public void wildernessIsEffectivelyDisqualifiedWhenRiskDisabled()
+    public void typedRiskChangesRankButWildernessWordingDoesNot()
     {
         StrategyContext context = context(
                 account(MembershipStatus.P2P, 0, 85),
                 GoalType.GEAR_TARGET,
                 SessionIntent.LONG_SESSION);
-        Recommendation wilderness = new Recommendation(
+        Recommendation wildernessWording = new Recommendation(
                 "pvm:revenants",
                 "Kill revenants",
                 "Fast Wilderness money and drops.",
@@ -119,19 +120,27 @@ public class RecommendationIntelligenceServiceTest
                 0,
                 0,
                 guidance("Enter the Wilderness revenant caves."));
-        Recommendation safe = new Recommendation(
+        Recommendation neutralWording = new Recommendation(
                 "upgrade:fighter-torso",
                 "Get a Fighter torso",
                 "Safe account upgrade.",
-                25.0,
+                999.0,
                 null,
                 RecommendationConfidence.VERIFIED,
                 0,
                 0,
                 guidance("Play Barbarian Assault."));
 
-        assertTrue(service.rankScore(safe, context)
-                > service.rankScore(wilderness, context));
+        assertEquals(service.rankScore(neutralWording, context),
+                service.rankScore(wildernessWording, context), 0.001);
+
+        Recommendation typedRisk = wildernessWording.withStrategicValue(
+                RecommendationStrategicValue.builder()
+                        .riskBurden(1.0)
+                        .evidence("risk:wilderness")
+                        .build());
+        assertTrue(service.rankScore(neutralWording, context)
+                > service.rankScore(typedRisk, context));
     }
 
     private static Recommendation recommendation(

@@ -98,7 +98,11 @@ public class GlobalDecisionSimulationTest
                 "Train Fishing to 80", 38.0, 70, 80, 2);
         Recommendation dangerous = readyUpgrade(
                 "upgrade:bowfa", "Hunt Bowfa seed", 48.0,
-                "Run the Corrupted Gauntlet; a dangerous death can threaten UIM death storage.");
+                "Run the Corrupted Gauntlet; a dangerous death can threaten UIM death storage.")
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .riskBurden(1.0)
+                        .evidence("risk:uim-death-storage")
+                        .build());
 
         List<Recommendation> queue = engine().buildPlayerQueue(
                 Arrays.asList(dangerous, fishing), context);

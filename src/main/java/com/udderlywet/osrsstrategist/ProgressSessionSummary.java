@@ -1,0 +1,68 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import net.runelite.api.Skill;
+
+/** Compact persisted recap; raw XP events are intentionally not retained. */
+public final class ProgressSessionSummary
+{
+    private final long startedAtMillis;
+    private final long endedAtMillis;
+    private final long activeDurationMillis;
+    private final long totalXpGained;
+    private final int levelsGained;
+    private final Map<Skill, Integer> xpBySkill;
+
+    public ProgressSessionSummary(ProgressSessionSnapshot snapshot)
+    {
+        this(snapshot == null ? 0L : snapshot.getStartedAtMillis(),
+                snapshot == null ? 0L : snapshot.getUpdatedAtMillis(),
+                snapshot == null ? 0L : snapshot.getActiveDurationMillis(),
+                snapshot == null ? 0L : snapshot.getTotalXpGained(),
+                snapshot == null ? 0 : snapshot.getLevelsGained(),
+                gains(snapshot));
+    }
+
+    ProgressSessionSummary(
+            long startedAtMillis,
+            long endedAtMillis,
+            long activeDurationMillis,
+            long totalXpGained,
+            int levelsGained,
+            Map<Skill, Integer> xpBySkill)
+    {
+        this.startedAtMillis = Math.max(0L, startedAtMillis);
+        this.endedAtMillis = Math.max(this.startedAtMillis, endedAtMillis);
+        this.activeDurationMillis = Math.max(0L,
+                Math.min(activeDurationMillis,
+                        this.endedAtMillis - this.startedAtMillis));
+        this.totalXpGained = Math.max(0L, totalXpGained);
+        this.levelsGained = Math.max(0, levelsGained);
+        EnumMap<Skill, Integer> copy = new EnumMap<>(Skill.class);
+        if (xpBySkill != null)
+            for (Map.Entry<Skill, Integer> entry : xpBySkill.entrySet())
+                if (entry.getKey() != null && entry.getValue() != null
+                        && entry.getValue() > 0)
+                    copy.put(entry.getKey(), entry.getValue());
+        this.xpBySkill = Collections.unmodifiableMap(copy);
+    }
+
+    private static Map<Skill, Integer> gains(ProgressSessionSnapshot snapshot)
+    {
+        EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
+        if (snapshot != null)
+            for (SkillSessionProgress progress : snapshot.getSkills().values())
+                if (progress.getXpGained() > 0)
+                    result.put(progress.getSkill(), progress.getXpGained());
+        return result;
+    }
+
+    public long getStartedAtMillis() { return startedAtMillis; }
+    public long getEndedAtMillis() { return endedAtMillis; }
+    public long getActiveDurationMillis() { return activeDurationMillis; }
+    public long getTotalXpGained() { return totalXpGained; }
+    public int getLevelsGained() { return levelsGained; }
+    public Map<Skill, Integer> getXpBySkill() { return xpBySkill; }
+}

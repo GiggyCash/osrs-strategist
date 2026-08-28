@@ -15,6 +15,7 @@ public class RecommendationEngine
     private final CombatGuidanceService combatGuidanceService;
     private final SlayerGuidanceService slayerGuidanceService;
     private final SailingGuidanceService sailingGuidanceService;
+    private final SkillBreakpointService breakpointService;
 
     @Inject
     public RecommendationEngine(
@@ -22,13 +23,28 @@ public class RecommendationEngine
             RecommendationGuidanceService guidanceService,
             CombatGuidanceService combatGuidanceService,
             SlayerGuidanceService slayerGuidanceService,
-            SailingGuidanceService sailingGuidanceService)
+            SailingGuidanceService sailingGuidanceService,
+            SkillBreakpointService breakpointService)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
         this.combatGuidanceService = combatGuidanceService;
         this.slayerGuidanceService = slayerGuidanceService;
         this.sailingGuidanceService = sailingGuidanceService;
+        this.breakpointService = breakpointService == null
+                ? new SkillBreakpointService() : breakpointService;
+    }
+
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService,
+            CombatGuidanceService combatGuidanceService,
+            SlayerGuidanceService slayerGuidanceService,
+            SailingGuidanceService sailingGuidanceService)
+    {
+        this(trainingMethodSelector, guidanceService, combatGuidanceService,
+                slayerGuidanceService, sailingGuidanceService,
+                new SkillBreakpointService());
     }
 
     public RecommendationEngine(
@@ -118,7 +134,8 @@ public class RecommendationEngine
             PreferenceProfile preferenceProfile)
     {
         return topThree(recommendAll(data, strategyMode, sessionIntent,
-                useGroupStorage, allowWildernessMethods, preferenceProfile));
+                useGroupStorage, allowWildernessMethods, GoalType.AUTOMATIC,
+                preferenceProfile));
     }
 
     /** Full skill candidate pool for the global strategy queue. Do not trim here. */
@@ -130,11 +147,52 @@ public class RecommendationEngine
             boolean allowWildernessMethods,
             PreferenceProfile preferenceProfile)
     {
+        return recommendAllInternal(data, strategyMode, sessionIntent,
+                useGroupStorage, allowWildernessMethods, GoalType.AUTOMATIC,
+                preferenceProfile);
+    }
+
+    public List<Recommendation> recommendAll(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            boolean useGroupStorage,
+            boolean allowWildernessMethods,
+            GoalType activeGoal,
+            PreferenceProfile preferenceProfile)
+    {
+        // Focused queue tests historically override the public six-argument
+        // method with a synthetic pool. Preserve that extension seam when no
+        // production selector exists instead of entering the concrete skill
+        // generator with a null dependency.
+        if (trainingMethodSelector == null)
+            return recommendAll(data, strategyMode, sessionIntent,
+                    useGroupStorage, allowWildernessMethods,
+                    preferenceProfile);
+        return recommendAllInternal(data, strategyMode, sessionIntent,
+                useGroupStorage, allowWildernessMethods, activeGoal,
+                preferenceProfile);
+    }
+
+    private List<Recommendation> recommendAllInternal(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            boolean useGroupStorage,
+            boolean allowWildernessMethods,
+            GoalType activeGoal,
+            PreferenceProfile preferenceProfile)
+    {
         List<Recommendation> recommendations = new ArrayList<>();
-        if (data == null || data.getAccount() == null) return recommendations;
+        if (trainingMethodSelector == null || data == null
+                || data.getAccount() == null) return recommendations;
         AccountSnapshot snapshot = data.getAccount();
         PreferenceProfile safePreferences = preferenceProfile == null
                 ? new PreferenceProfile() : preferenceProfile;
+        StrategyContext context = new StrategyContext(data, strategyMode,
+                sessionIntent, QuestTolerance.NORMAL, activeGoal,
+                useGroupStorage, false, allowWildernessMethods,
+                safePreferences);
 
         for (Skill skill : Skill.values())
         {
@@ -152,13 +210,13 @@ public class RecommendationEngine
                     allowWildernessMethods, useGroupStorage);
             if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
 
-            int target = nextTarget(level);
-            double score = baseScore(skill, level, strategyMode);
+            SkillBreakpoint breakpoint = breakpointService.next(
+                    skill, level, context);
+            int target = breakpoint.getLevel();
+            double score = baseScore(level, breakpoint);
             score += safePreferences.weightFor(activityId) * 10.0;
             score += safePreferences.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
-            score += trainingPlan.getMethod().scoreFor(
-                    strategyMode, sessionIntent) * 0.35;
 
             RecommendationGuidance guidance = combatGuidanceService == null
                     ? null : combatGuidanceService.build(
@@ -186,10 +244,10 @@ public class RecommendationEngine
                         useGroupStorage);
             }
 
-            recommendations.add(new Recommendation(
+            Recommendation recommendation = new Recommendation(
                     activityId,
                     "Train " + skill.getName() + " to " + target,
-                    skillReason(skill),
+                    breakpoint.getLabel() + ".",
                     score,
                     trainingPlan,
                     trainingPlan.getConfidence(),
@@ -199,7 +257,13 @@ public class RecommendationEngine
                     CandidateSafetyEvidence.skill(
                             ContentAccessRules.isMethodAvailable(
                                     trainingPlan.getMethod(), MembershipStatus.F2P),
-                            skill)));
+                            skill));
+            recommendation = recommendation.withStrategicValue(
+                    RecommendationStrategicValue.builder()
+                            .unlockValue(breakpoint.strategicValue())
+                            .evidence(breakpoint.getEvidenceId())
+                            .build());
+            recommendations.add(recommendation);
         }
 
         recommendations.sort(Comparator.comparingDouble(
@@ -217,18 +281,12 @@ public class RecommendationEngine
         return new ArrayList<>(recommendations.subList(0, 3));
     }
 
-    private double baseScore(Skill skill, int level, StrategyMode strategyMode)
+    private double baseScore(int level, SkillBreakpoint breakpoint)
     {
-        double score = 20.0;
-        if (level < 10) score += 45.0;
-        else if (level < 20) score += 35.0;
-        else if (level < 30) score += 25.0;
-        else if (level < 40) score += 15.0;
-        else if (level < 50) score += 8.0;
-        score += progressionWeight(skill);
-        if (strategyMode == StrategyMode.EFFICIENT) score += efficientBonus(skill);
-        else if (strategyMode == StrategyMode.RELAXED) score += relaxedBonus(skill);
-        return score;
+        int distance = Math.max(1, breakpoint.getLevel() - level);
+        double proximity = distance <= 1 ? 12.0
+                : distance <= 3 ? 7.0 : distance <= 7 ? 3.0 : 0.0;
+        return 24.0 + proximity + breakpoint.strategicValue() * 20.0;
     }
 
     private double milestoneMomentum(int level, int target)
@@ -239,84 +297,4 @@ public class RecommendationEngine
         return 0.0;
     }
 
-    private double progressionWeight(Skill skill)
-    {
-        switch (skill)
-        {
-            case FARMING: return 18.0;
-            case HERBLORE: return 17.0;
-            case SLAYER: return 14.0;
-            case CONSTRUCTION: return 13.0;
-            case AGILITY: return 12.0;
-            case RUNECRAFT:
-            case SAILING: return 11.0;
-            case CRAFTING: return 9.0;
-            case MAGIC:
-            case PRAYER:
-            case HUNTER: return 8.0;
-            case SMITHING: return 7.0;
-            case MINING: return 6.0;
-            default: return 4.0;
-        }
-    }
-
-    private double efficientBonus(Skill skill)
-    {
-        switch (skill)
-        {
-            case FARMING:
-            case HERBLORE:
-            case SLAYER:
-            case CONSTRUCTION:
-            case AGILITY:
-            case RUNECRAFT: return 6.0;
-            default: return 0.0;
-        }
-    }
-
-    private double relaxedBonus(Skill skill)
-    {
-        switch (skill)
-        {
-            case FISHING:
-            case WOODCUTTING:
-            case MINING:
-            case COOKING:
-            case FLETCHING:
-            case FIREMAKING: return 8.0;
-            default: return 0.0;
-        }
-    }
-
-    private int nextTarget(int level)
-    {
-        if (level < 10) return 10;
-        if (level < 20) return 20;
-        if (level < 30) return 30;
-        if (level < 40) return 40;
-        if (level < 50) return 50;
-        if (level < 60) return 60;
-        if (level < 70) return 70;
-        if (level < 80) return 80;
-        if (level < 90) return 90;
-        return 99;
-    }
-
-    private String skillReason(Skill skill)
-    {
-        switch (skill)
-        {
-            case FARMING: return "Supports recurring runs, supplies, and later goals.";
-            case HERBLORE: return "Unlocks useful potions and supports later PvM.";
-            case SLAYER: return "Builds combat while unlocking monsters, drops, and gear.";
-            case CONSTRUCTION: return "Builds POH travel, utility, and storage options.";
-            case AGILITY: return "Supports shortcuts, Graceful progression, quests, and diaries.";
-            case RUNECRAFT: return "Opens rune options and useful training activities.";
-            case SAILING: return "Opens ports, voyages, and sea progression.";
-            case CRAFTING: return "Supports equipment, jewelry, quests, and upgrades.";
-            case MAGIC: return "Improves combat, teleports, and account utility.";
-            case PRAYER: return "Unlocks stronger protection and combat prayers.";
-            default: return "Useful progress toward broader account goals.";
-        }
-    }
 }

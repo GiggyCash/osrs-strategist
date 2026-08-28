@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.List;
-import java.util.Locale;
 import javax.inject.Singleton;
 
 /**
@@ -52,20 +51,10 @@ public class UimSetupCostService
         boolean lootingBagObserved = hasObservedItems(
                 storage, StorageCapability.LOOTING_BAG);
 
-        String text = lower(recommendation.getId()) + " "
-                + lower(recommendation.getTitle()) + " "
-                + lower(recommendation.getReason());
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance != null)
-        {
-            text += " " + lower(guidance.getAction())
-                    + " " + lower(guidance.getSupplies())
-                    + " " + lower(guidance.getNote());
-        }
-
-        boolean dangerous = containsAny(text,
-                "dangerous death", "wilderness", "wildy",
-                "corrupted gauntlet", "gauntlet", "boss fight");
+        RecommendationStrategicValue strategic =
+                recommendation.getStrategicValue();
+        boolean dangerous = method != null && method.isWilderness()
+                || strategic.getRiskBurden() >= 0.5;
 
         // Active death storage is not a small inconvenience. A dangerous death
         // can delete or otherwise invalidate a carefully prepared UIM state, so
@@ -75,23 +64,12 @@ public class UimSetupCostService
         if (dangerous && deathpileObserved) value -= 22.0;
 
         if ((deathStorageObserved || deathpileObserved || lootingBagObserved)
-                && recommendation.getId() != null
-                && recommendation.getId().startsWith("detour:"))
+                && strategic.getOpportunityCost() >= 0.5
+                && strategic.getSetupReuse() < 0.5)
         {
             value -= 10.0;
         }
-
-        if (containsAny(text,
-                "normal bank", "grand exchange", "banked supplies"))
-        {
-            value -= 15.0;
-        }
-        if (containsAny(text,
-                "just in time", "uim", "preserve the current inventory",
-                "retrieval-only"))
-        {
-            value += 7.0;
-        }
+        value += strategic.getSetupReuse() * 7.0;
         return value;
     }
 
@@ -122,20 +100,5 @@ public class UimSetupCostService
             if (item != null && item.getQuantity() > 0) return true;
         }
         return false;
-    }
-
-    private static boolean containsAny(String haystack, String... needles)
-    {
-        if (haystack == null) return false;
-        for (String needle : needles)
-        {
-            if (needle != null && haystack.contains(lower(needle))) return true;
-        }
-        return false;
-    }
-
-    private static String lower(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT);
     }
 }

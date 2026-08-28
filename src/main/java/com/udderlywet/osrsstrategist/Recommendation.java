@@ -20,6 +20,7 @@ public final class Recommendation
     private final RecommendationGuidance guidance;
     private final CandidateSafetyEvidence safetyEvidence;
     private final GoalDependencyProvenance goalProvenance;
+    private final RecommendationStrategicValue strategicValue;
 
     public Recommendation(
             String id,
@@ -109,7 +110,8 @@ public final class Recommendation
             CandidateSafetyEvidence safetyEvidence)
     {
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
-                targetLevel, guidance, safetyEvidence, null);
+                targetLevel, guidance, safetyEvidence, null,
+                RecommendationStrategicValue.neutral());
     }
 
     private Recommendation(
@@ -117,7 +119,8 @@ public final class Recommendation
             TrainingPlan trainingPlan, RecommendationConfidence confidence,
             int currentLevel, int targetLevel, RecommendationGuidance guidance,
             CandidateSafetyEvidence safetyEvidence,
-            GoalDependencyProvenance goalProvenance)
+            GoalDependencyProvenance goalProvenance,
+            RecommendationStrategicValue strategicValue)
     {
         this.id = id;
         this.title = title;
@@ -133,6 +136,8 @@ public final class Recommendation
         this.safetyEvidence = safetyEvidence == null
                 ? CandidateSafetyEvidence.unknown() : safetyEvidence;
         this.goalProvenance = goalProvenance;
+        this.strategicValue = strategicValue == null
+                ? RecommendationStrategicValue.neutral() : strategicValue;
     }
 
     public String getId() { return id; }
@@ -146,11 +151,27 @@ public final class Recommendation
     public RecommendationGuidance getGuidance() { return guidance; }
     public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
     public GoalDependencyProvenance getGoalProvenance() { return goalProvenance; }
+    public RecommendationStrategicValue getStrategicValue() { return strategicValue; }
 
     public Recommendation withGoalProvenance(GoalDependencyProvenance provenance)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, guidance, safetyEvidence,
-                provenance);
+                provenance, strategicValue);
+    }
+
+    public Recommendation withStrategicValue(
+            RecommendationStrategicValue value)
+    {
+        return new Recommendation(id, title, reason, score, trainingPlan,
+                confidence, currentLevel, targetLevel, guidance, safetyEvidence,
+                goalProvenance, value);
+    }
+
+    public Recommendation withGuidance(RecommendationGuidance value)
+    {
+        return new Recommendation(id, title, reason, score, trainingPlan,
+                confidence, currentLevel, targetLevel, value, safetyEvidence,
+                goalProvenance, strategicValue);
     }
 }

@@ -43,7 +43,11 @@ public class UimSetupCostServiceTest
                         "Run the Corrupted Gauntlet.",
                         "The activity supplies its own temporary equipment.",
                         "Prifddinas.",
-                        "A dangerous death can threaten current UIM death storage."));
+                        "A dangerous death can threaten current UIM death storage."))
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .riskBurden(1.0)
+                        .evidence("risk:dangerous-death")
+                        .build());
 
         assertTrue(service.score(safe, context) - service.score(dangerous, context) >= 30.0);
     }
@@ -67,7 +71,11 @@ public class UimSetupCostServiceTest
                         "Process the herbs.",
                         "Acquire materials just in time and preserve the current inventory setup for UIM.",
                         "Nearest practical loop.",
-                        "UIM-aware route."));
+                        "UIM-aware route."))
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .setupReuse(1.0)
+                        .evidence("setup:preserved")
+                        .build());
 
         assertTrue(service.score(uim, context) > service.score(generic, context));
     }

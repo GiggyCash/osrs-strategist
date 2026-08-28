@@ -10,6 +10,7 @@ public final class StrategyCandidate
     private final RecommendationConfidence confidence;
     private final RecommendationGuidance guidance;
     private final CandidateSafetyEvidence safetyEvidence;
+    private final RecommendationStrategicValue strategicValue;
 
     public StrategyCandidate(
             String id,
@@ -19,7 +20,8 @@ public final class StrategyCandidate
             RecommendationConfidence confidence)
     {
         this(id, title, reason, score, confidence, null,
-                CandidateSafetyEvidence.unknown());
+                CandidateSafetyEvidence.unknown(),
+                RecommendationStrategicValue.neutral());
     }
 
     public StrategyCandidate(
@@ -31,13 +33,24 @@ public final class StrategyCandidate
             RecommendationGuidance guidance)
     {
         this(id, title, reason, score, confidence, guidance,
-                CandidateSafetyEvidence.unknown());
+                CandidateSafetyEvidence.unknown(),
+                RecommendationStrategicValue.neutral());
     }
 
     public StrategyCandidate(
             String id, String title, String reason, double score,
             RecommendationConfidence confidence, RecommendationGuidance guidance,
             CandidateSafetyEvidence safetyEvidence)
+    {
+        this(id, title, reason, score, confidence, guidance, safetyEvidence,
+                RecommendationStrategicValue.neutral());
+    }
+
+    public StrategyCandidate(
+            String id, String title, String reason, double score,
+            RecommendationConfidence confidence, RecommendationGuidance guidance,
+            CandidateSafetyEvidence safetyEvidence,
+            RecommendationStrategicValue strategicValue)
     {
         this.id = id;
         this.title = title;
@@ -49,6 +62,8 @@ public final class StrategyCandidate
         this.guidance = guidance;
         this.safetyEvidence = safetyEvidence == null
                 ? CandidateSafetyEvidence.unknown() : safetyEvidence;
+        this.strategicValue = strategicValue == null
+                ? RecommendationStrategicValue.neutral() : strategicValue;
     }
 
     public String getId() { return id; }
@@ -58,6 +73,10 @@ public final class StrategyCandidate
     public RecommendationConfidence getConfidence() { return confidence; }
     public RecommendationGuidance getGuidance() { return guidance; }
     public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
+    public RecommendationStrategicValue getStrategicValue()
+    {
+        return strategicValue;
+    }
 
     public Recommendation toRecommendation()
     {
@@ -71,6 +90,6 @@ public final class StrategyCandidate
                 0,
                 0,
                 guidance,
-                safetyEvidence);
+                safetyEvidence).withStrategicValue(strategicValue);
     }
 }

@@ -89,6 +89,32 @@ public class GoalDependencyProvenanceService
         return questPath(goal, questName, context) != null;
     }
 
+    /** Nearest still-unmet, proven skill requirement on the selected goal path. */
+    public int nextRequiredSkillLevel(
+            GoalType goal, Skill skill, StrategyContext context)
+    {
+        if (goal == null || skill == null || context == null
+                || context.getData() == null
+                || context.getData().getAccount() == null) return 0;
+        int current = context.getData().getAccount().getSkillLevel(skill);
+        if (isDirectSkillGoal(goal, skill))
+        {
+            int target = goal == GoalType.BASE_70S ? 70
+                    : goal == GoalType.SLAYER_85 ? 85 : 99;
+            return current < target ? target : 0;
+        }
+        int nearest = Integer.MAX_VALUE;
+        for (String quest : requiredQuestNames(goal, context))
+        {
+            QuestDefinition definition = quests.definitionFor(quest);
+            if (definition == null) continue;
+            int level = definition.getSkillRequirements()
+                    .getOrDefault(skill, 0);
+            if (level > current) nearest = Math.min(nearest, level);
+        }
+        return nearest == Integer.MAX_VALUE ? 0 : nearest;
+    }
+
     public GoalQuestRewardForecast guaranteedRewardsBeforeManualTraining(
             StrategyContext context, Skill skill)
     {

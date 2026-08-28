@@ -18,6 +18,9 @@ import net.runelite.api.gameval.VarbitID;
 public class LiveSlayerStateReader
 {
     private static final int BOSS_TASK_ID = 98;
+    // RuneLite's own Slayer plugin uses value 7 to select the separate
+    // Krystilia streak. No other numeric master mapping is inferred here.
+    private static final int KRYSTILIA_MASTER_ID = 7;
 
     private final Client client;
     private int cachedTick = -1;
@@ -46,10 +49,21 @@ public class LiveSlayerStateReader
 
         int amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
         int points = Math.max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
+        int masterId = client.getVarbitValue(VarbitID.SLAYER_MASTER);
+        int streak = Math.max(0, client.getVarbitValue(
+                masterId == KRYSTILIA_MASTER_ID
+                        ? VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED
+                        : VarbitID.SLAYER_TASKS_COMPLETED));
+        int questPoints = Math.max(0, client.getVarpValue(VarPlayerID.QP));
+        boolean lumbridgeElite = client.getVarbitValue(
+                VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) > 0;
+        int blockCapacity = SlayerPointEconomy.blockCapacity(
+                questPoints, lumbridgeElite);
         if (amount <= 0)
         {
             cached = new SlayerSnapshot(
-                    null, 0, null, null, points,
+                    null, 0, null, null, points, streak, questPoints,
+                    blockCapacity, null,
                     RecommendationConfidence.VERIFIED);
             cachedTick = tick;
             return cached;
@@ -66,7 +80,8 @@ public class LiveSlayerStateReader
                         DBTableID.SlayerTaskSublist.COL_TASK_SUBTABLE_ID,
                         0,
                         client.getVarbitValue(VarbitID.SLAYER_TARGET_BOSSID));
-                if (rows.isEmpty()) return unresolved(amount, points, tick);
+                if (rows.isEmpty()) return unresolved(amount, points, streak,
+                        questPoints, blockCapacity, tick);
                 taskRow = (Integer) client.getDBTableField(
                         rows.get(0),
                         DBTableID.SlayerTaskSublist.COL_TASK,
@@ -79,7 +94,8 @@ public class LiveSlayerStateReader
                         DBTableID.SlayerTask.COL_ID,
                         0,
                         taskId);
-                if (rows.isEmpty()) return unresolved(amount, points, tick);
+                if (rows.isEmpty()) return unresolved(amount, points, streak,
+                        questPoints, blockCapacity, tick);
                 taskRow = rows.get(0);
             }
 
@@ -112,13 +128,18 @@ public class LiveSlayerStateReader
                     null,
                     taskLocation,
                     points,
+                    streak,
+                    questPoints,
+                    blockCapacity,
+                    null,
                     RecommendationConfidence.VERIFIED);
             cachedTick = tick;
             return cached;
         }
         catch (RuntimeException ex)
         {
-            return unresolved(amount, points, tick);
+            return unresolved(amount, points, streak, questPoints,
+                    blockCapacity, tick);
         }
     }
 
@@ -128,7 +149,8 @@ public class LiveSlayerStateReader
         cached = null;
     }
 
-    private SlayerSnapshot unresolved(int amount, int points, int tick)
+    private SlayerSnapshot unresolved(int amount, int points, int streak,
+            int questPoints, int blockCapacity, int tick)
     {
         cached = new SlayerSnapshot(
                 null,
@@ -136,6 +158,10 @@ public class LiveSlayerStateReader
                 null,
                 null,
                 points,
+                streak,
+                questPoints,
+                blockCapacity,
+                null,
                 RecommendationConfidence.CHECK_NEEDED);
         cachedTick = tick;
         return cached;

@@ -43,7 +43,7 @@ final class RecommendationStabilizer
         for (Recommendation candidate : current)
             if (candidate != stillValid) stable.add(candidate);
         return new StrategyResult(stable, fresh.getOpportunities(),
-                fresh.getSignals());
+                fresh.getSignals(), fresh.getPlan());
     }
 
     private static boolean sameCheckpoint(

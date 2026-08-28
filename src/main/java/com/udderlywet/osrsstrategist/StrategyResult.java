@@ -17,6 +17,7 @@ public final class StrategyResult
     private final List<Recommendation> recommendations;
     private final List<Opportunity> opportunities;
     private final List<StrategySignal> signals;
+    private final StrategicPlan plan;
 
     public StrategyResult(
             List<Recommendation> recommendations,
@@ -25,7 +26,8 @@ public final class StrategyResult
         this(
                 recommendations,
                 opportunities,
-                Collections.emptyList()
+                Collections.emptyList(),
+                null
         );
     }
 
@@ -33,6 +35,15 @@ public final class StrategyResult
             List<Recommendation> recommendations,
             List<Opportunity> opportunities,
             List<StrategySignal> signals)
+    {
+        this(recommendations, opportunities, signals, null);
+    }
+
+    public StrategyResult(
+            List<Recommendation> recommendations,
+            List<Opportunity> opportunities,
+            List<StrategySignal> signals,
+            StrategicPlan plan)
     {
         this.recommendations = Collections.unmodifiableList(
                 new ArrayList<>(recommendations)
@@ -43,6 +54,7 @@ public final class StrategyResult
         this.signals = Collections.unmodifiableList(
                 new ArrayList<>(signals)
         );
+        this.plan = plan;
     }
 
     public List<Recommendation> getRecommendations()
@@ -58,5 +70,16 @@ public final class StrategyResult
     public List<StrategySignal> getSignals()
     {
         return signals;
+    }
+
+    public StrategicPlan getPlan()
+    {
+        return plan;
+    }
+
+    public StrategyResult withPlan(StrategicPlan value)
+    {
+        return new StrategyResult(recommendations, opportunities, signals,
+                value);
     }
 }

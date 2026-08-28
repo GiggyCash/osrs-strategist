@@ -24,6 +24,14 @@ public class StrategyEngine
     private final GoalDependencyProvenanceService goalProvenanceService;
     private final RecommendationDeduplicator deduplicator =
             new RecommendationDeduplicator();
+    private final StrategicPlanService strategicPlanService =
+            new StrategicPlanService();
+    private final InfrastructureRecommendationValueService infrastructureValue =
+            new InfrastructureRecommendationValueService();
+    private final MethodRecommendationValueService methodValue =
+            new MethodRecommendationValueService();
+    private final QuestRecommendationValueService questValue =
+            new QuestRecommendationValueService();
 
     @Inject
     public StrategyEngine(
@@ -196,6 +204,7 @@ public class StrategyEngine
                         context.getSessionIntent(),
                         context.isUseGroupStorage(),
                         context.isAllowWildernessMethods(),
+                        context.getActiveGoal(),
                         context.getPreferenceProfile()));
 
         if (candidateRegistry != null)
@@ -203,7 +212,11 @@ public class StrategyEngine
             for (StrategyCandidateProvider provider : candidateRegistry.getProviders())
             {
                 List<StrategyCandidate> candidates = provider.candidates(context);
-                if (candidates == null) continue;
+                if (candidates == null || candidates.isEmpty()) continue;
+                Set<String> superseded = provider.supersededCandidateIds();
+                if (superseded != null && !superseded.isEmpty())
+                    pool.removeIf(value -> value != null
+                            && superseded.contains(value.getId()));
                 for (StrategyCandidate candidate : candidates)
                 {
                     if (candidate == null
@@ -224,7 +237,10 @@ public class StrategyEngine
 
         List<Recommendation> attributed = new ArrayList<>(pool.size());
         for (Recommendation recommendation : pool)
-            attributed.add(goalProvenanceService.attach(recommendation, context));
+            attributed.add(methodValue.attach(questValue.attach(
+                    infrastructureValue.attach(
+                            goalProvenanceService.attach(recommendation,
+                                    context), context), context), context));
         pool = attributed;
 
         // Only after legality/actionability is known do we compare account value
@@ -253,7 +269,10 @@ public class StrategyEngine
         signals.sort(Comparator.comparingDouble(
                 StrategySignal::getScoreDelta).reversed());
 
-        return new StrategyResult(recommendations, opportunities, signals);
+        StrategicPlan plan = strategicPlanService.build(
+                recommendations, context, System.currentTimeMillis());
+        return new StrategyResult(recommendations, opportunities, signals,
+                plan);
     }
 
     Recommendation opportunityRecommendation(

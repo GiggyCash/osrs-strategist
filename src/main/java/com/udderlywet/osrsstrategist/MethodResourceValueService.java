@@ -1,0 +1,83 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Singleton;
+import net.runelite.api.Experience;
+import net.runelite.api.Skill;
+
+/** Values exact deterministic method inputs through sustainable pipelines. */
+@Singleton
+public final class MethodResourceValueService
+{
+    private final RuneLiteSkillActionCatalog actions =
+            new RuneLiteSkillActionCatalog();
+    private final MethodExecutionProfileCatalog profiles =
+            new MethodExecutionProfileCatalog();
+    private final SkillingXpModifierService modifiers =
+            new SkillingXpModifierService();
+    private final AdaptiveActionSelector selector =
+            new AdaptiveActionSelector();
+    private final MethodInputResolver inputs = new MethodInputResolver();
+    private final ResourcePipelinePolicyCatalog policies =
+            new ResourcePipelinePolicyCatalog();
+    private final SustainableResourceValueService resources =
+            new SustainableResourceValueService();
+
+    public Recommendation attach(
+            Recommendation recommendation, StrategyContext context)
+    {
+        TrainingPlan plan = recommendation == null
+                ? null : recommendation.getTrainingPlan();
+        TrainingMethod method = plan == null ? null : plan.getMethod();
+        if (method == null || method.getSkill() == null || context == null
+                || context.getData() == null
+                || context.getData().getAccount() == null
+                || recommendation.getTargetLevel() <= 0)
+            return recommendation;
+        MethodExecutionProfile profile = profiles.forMethod(method.getId());
+        if (profile == null) return recommendation;
+
+        AccountSnapshot account = context.getData().getAccount();
+        Skill skill = method.getSkill();
+        int currentXp = account.getSkillExperience(skill);
+        if (currentXp <= 0)
+            currentXp = Experience.getXpForLevel(
+                    account.getSkillLevel(skill));
+        int targetXp = Experience.getXpForLevel(
+                recommendation.getTargetLevel());
+        double multiplier = profile.getXpMultiplier()
+                * modifiers.modifier(context.getData(), skill,
+                        context.isUseGroupStorage()).getMultiplier();
+        RuneLiteSkillActionDefinition action = selector.select(
+                context.getData(), profile, actions.actionsFor(skill),
+                account.getSkillLevel(skill), account.getMembershipStatus(),
+                currentXp, targetXp, multiplier,
+                context.isUseGroupStorage());
+        if (action == null || action.getXp() <= 0) return recommendation;
+        int count = (int) Math.ceil(Math.max(0, targetXp - currentXp)
+                / (action.getXp() * multiplier));
+        List<ResourcePipelineRequest> requests = new ArrayList<>();
+        for (ResolvedMethodInput input : inputs.resolve(profile, action, count))
+        {
+            ResourcePipelinePolicy policy = policies.forInput(input.getName());
+            if (policy == null) continue;
+            requests.add(new ResourcePipelineRequest(
+                    new ResourceNeed(input.getItemId(), input.getName(),
+                            input.getQuantity()),
+                    policy.getUseKind(), policy.getScarcity(),
+                    policy.isTradeable()));
+        }
+        if (requests.isEmpty()) return recommendation;
+        ResourcePortfolioAssessment assessment = resources.assessAll(
+                context, requests);
+        return recommendation.withStrategicValue(
+                recommendation.getStrategicValue().merge(
+                        RecommendationStrategicValue.builder()
+                                .resourceFit(assessment.getScoreAdjustment()
+                                        / 12.0)
+                                .evidence("resource-pipeline:"
+                                        + method.getId())
+                                .build()));
+    }
+}

@@ -2,6 +2,7 @@ package com.udderlywet.osrsstrategist;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -99,6 +100,11 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JButton dislikeButton = actionButton("Dislike");
     private final JButton refreshButton = actionButton("Refresh Plan");
     private final JButton supportButton = actionButton("Support Compass");
+    private final JButton doNextViewButton = actionButton("Do Next");
+    private final JButton progressViewButton = actionButton("Progress");
+    private final CardLayout viewLayout = new CardLayout();
+    private final JPanel viewCards = new JPanel(viewLayout);
+    private final ProgressViewPanel progressView = new ProgressViewPanel();
 
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
@@ -159,7 +165,26 @@ public class OsrsStrategistPanel extends PluginPanel
         buildRecommendationCard(content);
         buildSecondaryCards(content);
         buildFooter(content);
-        add(content, BorderLayout.NORTH);
+        JPanel primary = new JPanel(new BorderLayout());
+        primary.setBackground(StrategistTheme.BACKGROUND);
+        primary.add(content, BorderLayout.NORTH);
+
+        JPanel navigation = new JPanel(new GridLayout(1, 2, 6, 0));
+        navigation.setBackground(StrategistTheme.BACKGROUND);
+        navigation.setBorder(BorderFactory.createEmptyBorder(
+                8, CONTENT_PADDING, 0, CONTENT_PADDING));
+        navigation.add(doNextViewButton);
+        navigation.add(progressViewButton);
+        doNextViewButton.addActionListener(event ->
+                viewLayout.show(viewCards, "do-next"));
+        progressViewButton.addActionListener(event ->
+                viewLayout.show(viewCards, "progress"));
+
+        viewCards.setBackground(StrategistTheme.BACKGROUND);
+        viewCards.add(primary, "do-next");
+        viewCards.add(progressView, "progress");
+        add(navigation, BorderLayout.NORTH);
+        add(viewCards, BorderLayout.CENTER);
     }
 
     private void buildHeader(JPanel content)
@@ -371,6 +396,25 @@ public class OsrsStrategistPanel extends PluginPanel
         activeGoal.setText(html("Goal: "
                 + GoalRecommendationContext.displayName(safeGoal)));
         renderRecommendationBody();
+    }
+
+    public void updateProgress(
+            ProgressSessionSnapshot snapshot, StrategicPlan plan)
+    {
+        updateProgress(snapshot, plan, null);
+    }
+
+    public void updateProgress(ProgressSessionSnapshot snapshot,
+            StrategicPlan plan, ProgressHistory history)
+    {
+        progressView.setSnapshot(snapshot);
+        progressView.setPlan(plan);
+        progressView.setHistory(history);
+    }
+
+    ProgressViewPanel getProgressView()
+    {
+        return progressView;
     }
 
     public void updateStrategy(StrategyMode mode, QuestTolerance tolerance)

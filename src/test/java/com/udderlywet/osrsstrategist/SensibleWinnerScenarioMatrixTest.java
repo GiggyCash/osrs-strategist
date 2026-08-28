@@ -153,13 +153,13 @@ public class SensibleWinnerScenarioMatrixTest
                 skill("skill:afk", Skill.WOODCUTTING, 38, AttentionLevel.AFK, 2, 30, 70, 71),
                 skill("skill:active", Skill.MINING, 48, AttentionLevel.ACTIVE, 2, 30, 70, 71)));
         values.add(scenario("16 long session chooses substantial activity", ctx(max, SessionIntent.LONG_SESSION), "pvm:",
-                ready("pvm:verified-boss", 42, "Verified long encounter preparation."),
+                unlock(ready("pvm:verified-boss", 42, "Verified long encounter preparation.")),
                 ready("money:quick", 44, "Quick GP task.")));
         values.add(scenario("17 one hour fits quest block", ctx(max, SessionIntent.ONE_HOUR), "quest:",
                 ready("quest:one-hour", 46, "Actionable quest segment."),
                 ready("money:generic", 43, "Earn GP.")));
         values.add(scenario("18 short session values ready recurring", ctx(max, SessionIntent.QUICK_20_MIN), "opportunity:",
-                ready("opportunity:herb-run", 38, "Observed ready recurring work."),
+                readyResource(ready("opportunity:herb-run", 38, "Observed ready recurring work."), 0.0),
                 ready("quest:long", 47, "Long quest.")));
         values.add(scenario("19 AFK avoids active PvM", ctx(max, SessionIntent.AFK), "skill:",
                 skill("skill:afk-fishing", Skill.FISHING, 39, AttentionLevel.AFK, 1, 30, 70, 71),
@@ -169,10 +169,10 @@ public class SensibleWinnerScenarioMatrixTest
         values.add(scenario("20 efficient chooses shared unlock",
                 context(0, MembershipStatus.P2P, StrategyMode.EFFICIENT,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(70), false), "quest:",
-                ready("quest:shared-unlock", 45, "Shared prerequisite saves future time."),
+                shared(ready("quest:shared-unlock", 45, "Shared prerequisite saves future time.")),
                 ready("money:generic", 44, "Earn GP.")));
         values.add(scenario("21 balanced chooses multi-goal progress", max, "detour:",
-                ready("detour:shared", 45, "Also advances multiple goals."),
+                shared(ready("detour:shared", 45, "Also advances multiple goals.")),
                 ready("money:generic", 44, "Earn GP.")));
         values.add(scenario("22 relaxed chooses low-fatigue method",
                 context(0, MembershipStatus.P2P, StrategyMode.RELAXED,
@@ -188,9 +188,9 @@ public class SensibleWinnerScenarioMatrixTest
         // Account-mode economics and setup safety.
         values.add(scenario("24 main prefers direct money tool",
                 accountContext(0), "money:", ready("money:direct", 42, "Earn GP for the target."),
-                ready("detour:self-source", 44, "Self-source a side route.")));
+                accountFit(ready("detour:self-source", 44, "Self-source a side route."), -0.5)));
         values.add(scenario("25 Iron values self-source detour",
-                accountContext(1), "detour:", ready("detour:self-source", 37, "Self-source supplies while training."),
+                accountContext(1), "detour:", readyResource(ready("detour:self-source", 37, "Self-source supplies while training."), 1.0),
                 ready("money:generic", 45, "Grand Exchange value.")));
         values.add(scenario("26 UIM values low setup",
                 accountContext(2), "skill:low-setup",
@@ -198,19 +198,19 @@ public class SensibleWinnerScenarioMatrixTest
                 skill("skill:bank-heavy", Skill.CRAFTING, 47, AttentionLevel.LOW, 15, 30, 70, 71)));
         values.add(scenario("27 HCIM refuses Wilderness winner",
                 accountContext(3), "skill:", skill("skill:safe", Skill.FISHING, 25, AttentionLevel.LOW, 2, 20, 70, 71),
-                ready("pvm:wilderness-boss", 500, "Dangerous Wilderness encounter.")));
+                irreversible("pvm:wilderness-boss", 500, "Dangerous Wilderness encounter.")));
         values.add(scenario("28 GIM values useful self-source upgrade",
-                accountContext(4), "upgrade:", ready("upgrade:group-useful", 39, "Self-source supplies useful to the group."),
+                accountContext(4), "upgrade:", readyResource(ready("upgrade:group-useful", 39, "Self-source supplies useful to the group."), 0.8),
                 ready("money:generic", 45, "GE value only.")));
         values.add(scenario("29 HCGIM refuses risky encounter",
                 accountContext(5), "skill:", skill("skill:safe", Skill.COOKING, 28, AttentionLevel.LOW, 2, 20, 70, 71),
                 irreversible("pvm:risky", 200, "High risk encounter.")));
         values.add(scenario("30 UGIM values shared self-source detour",
-                accountContext(6), "detour:", ready("detour:shared-resource", 37, "Self-source supplies while advancing another goal."),
+                accountContext(6), "detour:", shared(readyResource(ready("detour:shared-resource", 37, "Self-source supplies while advancing another goal."), 1.0)),
                 ready("money:generic", 46, "GE value only.")));
         values.add(scenario("31 UIM rejects bank-heavy reason",
                 accountContext(2), "skill:", skill("skill:safe", Skill.AGILITY, 35, AttentionLevel.LOW, 2, 20, 70, 71),
-                ready("upgrade:banked", 49, "Open the bank and reorganise stored gear.")));
+                burden(ready("upgrade:banked", 49, "Open the bank and reorganise stored gear."))));
 
         // Membership and restricted-build final safety boundaries.
         values.add(scenario("32 unknown membership fails closed to F2P-safe action",
@@ -250,14 +250,14 @@ public class SensibleWinnerScenarioMatrixTest
                 check("stash:unknown", 500, "Check the exact built state."),
                 skill("skill:fishing", Skill.FISHING, 28, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(scenario("40 transport fanout beats isolated detour", max, "detour:transport",
-                ready("detour:transport", 46, "Also advances multiple goals through a shared transport prerequisite and saves future time."),
+                shared(ready("detour:transport", 46, "Also advances multiple goals through a shared transport prerequisite and saves future time.")),
                 ready("money:generic", 45, "Earn GP.")));
         values.add(scenario("41 money is a tool when target needs it", max, "money:",
                 ready("money:target-shortfall", 54, "Earn only the verified target shortfall."),
                 skill("skill:firemaking", Skill.FIREMAKING, 39, AttentionLevel.LOW, 2, 20, 70, 71)));
         values.add(scenario("42 money does not override valuable unlock", max, "quest:",
                 ready("money:generic", 41, "Generic GP."),
-                ready("quest:shared-unlock", 44, "Shared prerequisite saves future time.")));
+                shared(ready("quest:shared-unlock", 44, "Shared prerequisite saves future time."))));
         values.add(scenario("43 quest check loses to ready action", max, "skill:",
                 check("quest:unknown", 500, "Unknown access."),
                 skill("skill:mining", Skill.MINING, 25, AttentionLevel.LOW, 2, 20, 70, 71)));
@@ -392,6 +392,59 @@ public class SensibleWinnerScenarioMatrixTest
         return new Recommendation(id, title(id), reason, score, null,
                 RecommendationConfidence.VERIFIED, 0, 0, guidance(),
                 CandidateSafetyEvidence.harmless(true));
+    }
+
+    private static Recommendation unlock(Recommendation recommendation)
+    {
+        return recommendation.withStrategicValue(
+                RecommendationStrategicValue.builder()
+                        .unlockValue(0.5)
+                        .evidence("scenario:unlock")
+                        .build());
+    }
+
+    private static Recommendation shared(Recommendation recommendation)
+    {
+        return recommendation.withStrategicValue(
+                recommendation.getStrategicValue().merge(
+                        RecommendationStrategicValue.builder()
+                                .unlockValue(0.5)
+                                .sharedDependencyValue(1.0)
+                                .evidence("scenario:shared-dependency")
+                                .build()));
+    }
+
+    private static Recommendation readyResource(Recommendation recommendation,
+            double accountFit)
+    {
+        return recommendation.withStrategicValue(
+                RecommendationStrategicValue.builder()
+                        .accountModeFit(accountFit)
+                        .resourceFit(1.0)
+                        .setupReuse(1.0)
+                        .evidence("scenario:ready-resource")
+                        .build());
+    }
+
+    private static Recommendation accountFit(Recommendation recommendation,
+            double fit)
+    {
+        return recommendation.withStrategicValue(
+                RecommendationStrategicValue.builder()
+                        .accountModeFit(fit)
+                        .evidence("scenario:account-fit")
+                        .build());
+    }
+
+    private static Recommendation burden(Recommendation recommendation)
+    {
+        return recommendation.withStrategicValue(
+                RecommendationStrategicValue.builder()
+                        .accountModeFit(-1.0)
+                        .resourceFit(-1.0)
+                        .opportunityCost(1.0)
+                        .evidence("scenario:typed-burden")
+                        .build());
     }
 
     private static Recommendation proven(GoalType goal,

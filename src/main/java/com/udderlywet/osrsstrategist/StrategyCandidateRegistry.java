@@ -23,6 +23,7 @@ public class StrategyCandidateRegistry
             GearCandidateProvider gearProvider,
             ProgressionUpgradeCandidateProvider progressionUpgradeProvider,
             ResourceDetourCandidateProvider resourceDetourProvider,
+            SlayerCandidateProvider slayerProvider,
             MoneyMakingCandidateProvider moneyProvider,
             MinigameCandidateProvider minigameProvider,
             CollectionLogCandidateProvider collectionLogProvider)
@@ -36,6 +37,7 @@ public class StrategyCandidateRegistry
                         combatAchievementProvider,
                         progressionUpgradeProvider,
                         resourceDetourProvider,
+                        slayerProvider,
                         gearProvider,
                         moneyProvider,
                         minigameProvider,
