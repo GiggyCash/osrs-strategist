@@ -258,12 +258,14 @@ public class UniversalActionRecipeResolver
         if (lower.equals("tiara"))
         {
             add(inputs, "Silver bar", actions);
-            return exact(inputs, "Bring a tiara mould and use a furnace.");
+            return exact(inputs,
+                    "Bring a tiara mould to the Edgeville furnace, smelt each silver bar into a tiara, bank, and repeat.");
         }
         if (lower.equals("gold tiara"))
         {
             add(inputs, "Gold bar", actions);
-            return exact(inputs, "Bring a tiara mould and use a furnace.");
+            return exact(inputs,
+                    "Bring a tiara mould to the Edgeville furnace, smelt each gold bar into a gold tiara, bank, and repeat.");
         }
         if (lower.contains("battlestaff") || lower.contains("battlestave"))
         {

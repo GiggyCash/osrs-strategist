@@ -63,7 +63,7 @@ public class SlayerTaskProfileCatalog
                     a("Bag of salt", "Brine sabre"),
                     "Fremennik Slayer Dungeon unless the live task location overrides it.",
                     "Use a build-legal style and keep the finishing item available.",
-                    "Rockslugs need salt or an appropriate alternative to finish them at low Hitpoints."),
+                    "Use a bag of salt below 5 Hitpoints to finish each rockslug; an equipped brine sabre finishes it automatically without consuming salt."),
             p("desert-lizards", a("desert lizard", "desert lizards"),
                     a("Ice cooler"),
                     "Use the Kharidian Desert task area allowed by the assignment.",

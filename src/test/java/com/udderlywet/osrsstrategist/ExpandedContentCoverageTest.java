@@ -107,6 +107,20 @@ public class ExpandedContentCoverageTest
         assertTrue(method.getInstructions().contains("20 minutes"));
     }
 
+    @Test
+    public void elfThievingNamesOneContainedTarget()
+    {
+        TrainingMethod method = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.THIEVING).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> "thieving_elves".equals(candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertTrue(method.getInstructions().contains("Lindir"));
+        assertTrue(method.getInstructions().contains("POH portal"));
+        assertFalse(method.getInstructions().contains("appropriate elf"));
+    }
+
     private static void assertHasIntensity(
             List<CuratedTrainingMethod> methods,
             TrainingIntensity intensity)

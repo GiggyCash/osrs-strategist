@@ -722,7 +722,7 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.LOW, 20, 6,
                 "Sins of the Father and Darkmeyer access", "Vyre outfit and healing setup");
         add(Skill.THIEVING, "thieving_elves", 85, 99,
-                "Prifddinas elves", "Pickpocket an appropriate elf clan when crystal shards, teleport seeds, and profit are the priority.",
+                "Prifddinas elves", "Pickpocket Lindir inside his house beside the Prifddinas POH portal and repeat with the verified healing setup.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 6,
                 "Song of the Elves and Prifddinas access", "Healing and dodgy-necklace setup");

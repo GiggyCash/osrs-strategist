@@ -185,7 +185,7 @@ public class TrainingMethodDatabase
                 "Use the active run checklist to work through reachable herb and tree patches. Each observed planted patch turns complete until it becomes actionable again.",
                 13, 15, 13, AttentionLevel.LOW, 10, 5,
                 Arrays.asList("9 Farming", "Seeds/saplings", "Tools/Tool Leprechaun state", "Reachable patches"), RecommendationConfidence.CHECK_NEEDED);
-        add("sailing_unlocked", Skill.SAILING, 1, 99,
+        addGeneric("sailing_unlocked", Skill.SAILING, 1, 99,
                 "Choose the best confirmed Sailing activity",
                 "Only select an exact Sailing activity after confirming its port, activity, and progression unlocks.",
                 10, 12, 9, AttentionLevel.MODERATE, 20, 5,

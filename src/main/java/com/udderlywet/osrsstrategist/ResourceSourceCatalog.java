@@ -174,8 +174,8 @@ public class ResourceSourceCatalog
                 "Use giant seaweed/sand and Superglass Make in immediate Crafting batches to control inventory pressure.");
         add("bowstrings", tokens("bow string", "bow strings", "flax"),
                 "Buy bowstrings if the current margin makes stringing worthwhile; otherwise prefer faster Fletching routes.",
-                "Pick/spin flax or use verified Temple Trekking/reward sources when bowstrings are strategically useful.",
-                "Use a nearby flax/spinning or reward route and string bows immediately rather than storing large batches.");
+                "Pick flax in the field south of Seers' Village, spin it in the spinning-wheel building west of the field, and bank the bowstrings at Seers' Village.",
+                "Pick flax in the field south of Seers' Village, spin it in the building immediately west, then string the current bows before leaving instead of storing a batch.");
         add("feathers", tokens("feather", "feathers"),
                 "Buy feathers from GE/shops according to current price and required quantity.",
                 "Use feather shops, bird drops, or fishing-related supply sources.",

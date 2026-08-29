@@ -160,6 +160,7 @@ public class UniversalActionRecipeResolverTest
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Silver bar", 30);
+        assertTrue(recipe.getSetup().contains("Edgeville furnace"));
     }
 
     @Test

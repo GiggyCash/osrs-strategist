@@ -57,4 +57,18 @@ public class ResourceSourceCatalogTest
                 "Dragon bones", AccountMode.IRONMAN, true);
         assertTrue(wildy.size() >= noWildy.size());
     }
+
+    @Test
+    public void selfSourcedBowstringsNameOneCompleteRoute()
+    {
+        for (AccountMode mode : new AccountMode[]{AccountMode.IRONMAN,
+                AccountMode.ULTIMATE_IRONMAN})
+        {
+            String route = catalog.suggestions("Bow string", mode, false)
+                    .get(0);
+            assertTrue(mode.name(), route.contains("south of Seers' Village"));
+            assertTrue(mode.name(), route.contains("west"));
+            assertFalse(mode.name(), route.toLowerCase().contains("nearby"));
+        }
+    }
 }
