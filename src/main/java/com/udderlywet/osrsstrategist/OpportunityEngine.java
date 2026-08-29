@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
@@ -74,19 +73,42 @@ public class OpportunityEngine
             ClueTier tier = ClueTier.fromText(clue.getClueType());
             if (tier.isAvailableFor(membership))
             {
+                ClueStepSnapshot step = clue.getCurrentStep();
+                List<String> preparation = new ArrayList<>();
+                if (step == null)
+                    preparation.add("Open the clue scroll so RuneLite can identify the current step");
+                else
+                {
+                    preparation.addAll(step.getItemRequirements());
+                    if (step.isRequiresSpade()) preparation.add("Spade");
+                    if (step.isRequiresLight()) preparation.add("Light source");
+                    if (step.hasEnemy()) preparation.add(
+                            "Legal combat setup for " + step.getEnemy());
+                    if (step.isWilderness()) preparation.add(
+                            "Explicit Wilderness risk approval");
+                    if (step.hasStashUnit()) preparation.add(
+                            "Observe the " + step.getStashUnit()
+                                    + " STASH contents before counting them");
+                }
+                boolean ready = step != null
+                        && tier == ClueTier.BEGINNER
+                        && !step.requiresPreparation();
                 opportunities.add(new Opportunity(
                         "opportunity:clue",
                         OpportunityType.CLUE,
-                        clue.getClueType() == null ? "Pending clue" : clue.getClueType() + " clue",
-                        clue.getConfidence() == RecommendationConfidence.VERIFIED,
-                        clue.getConfidence(),
-                        Arrays.asList(
-                                "Required clue equipment", "Spade when needed",
-                                "Teleports/transport", "Combat supplies when needed",
-                                "Verified STASH state when relevant"),
+                        clue.getClueType() == null ? "Pending clue"
+                                : clue.getClueType() + " clue"
+                                + (step == null ? "" : ": " + step.getKind()),
+                        ready,
+                        ready ? RecommendationConfidence.VERIFIED
+                                : RecommendationConfidence.CHECK_NEEDED,
+                        preparation,
                         false,
-                        CandidateSafetyEvidence.potentiallyIrreversible(
-                                tier == ClueTier.BEGINNER)
+                        step != null && step.hasEnemy()
+                                ? CandidateSafetyEvidence.potentiallyIrreversible(
+                                        tier == ClueTier.BEGINNER)
+                                : CandidateSafetyEvidence.harmless(
+                                        tier == ClueTier.BEGINNER)
                 ));
             }
         }

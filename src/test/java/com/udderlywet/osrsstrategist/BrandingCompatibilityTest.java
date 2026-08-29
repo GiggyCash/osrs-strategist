@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginDependency;
+import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -21,6 +23,9 @@ public class BrandingCompatibilityTest
         PluginDescriptor descriptor = OsrsStrategistPlugin.class
                 .getAnnotation(PluginDescriptor.class);
         assertEquals("Gielinor Compass", descriptor.name());
+        PluginDependency dependency = OsrsStrategistPlugin.class
+                .getAnnotation(PluginDependency.class);
+        assertEquals(ClueScrollPlugin.class, dependency.value());
 
         OsrsStrategistPanel panel = new OsrsStrategistPanel(
                 (id, action) -> { }, null);

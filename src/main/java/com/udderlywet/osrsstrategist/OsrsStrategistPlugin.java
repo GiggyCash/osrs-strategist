@@ -18,7 +18,9 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.RuneScapeProfileChanged;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -30,6 +32,7 @@ import net.runelite.client.util.LinkBrowser;
         description = "Decides your next safe, useful move from observed account state",
         tags = {"strategy", "progression", "goals", "ironman", "uim", "gim", "clues", "slayer"}
 )
+@PluginDependency(ClueScrollPlugin.class)
 public class OsrsStrategistPlugin extends Plugin
 {
     private static final double COMPLETION_VARIETY_PENALTY = -10.0;

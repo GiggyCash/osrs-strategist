@@ -139,7 +139,7 @@ Preparation checks include suitable seeds/saplings, tools, compost where appropr
 
 ### Clues
 
-Clues age upward in priority without becoming spammy. Checklist reasoning can include equipment, spade, transports, food, combat, STASH state, account mode, and inventory pressure. Completion/step datasets must be verified before exact guidance is shown.
+Clues age upward in priority without becoming spammy. RuneLite's live Clue Scroll service supplies the currently opened step, including typed equipment, spade/light, enemy, location, and STASH evidence. Compass uses that evidence for specific PREP/HOLD/DO guidance, but continues to fail closed on unobserved access and STASH contents.
 
 ## Skills and methods
 

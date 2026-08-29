@@ -2,6 +2,7 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Singleton;
 
 /** Lets an observed clue become actual DO NEXT work without making it spammy. */
@@ -44,34 +45,139 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                 + preferences.weightFor(id) * 10.0;
 
         if (context.isCollectionistMode()) score += 6.0;
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN) score += 2.0;
+        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN) score -= 6.0;
+        if (context.getSessionIntent() == SessionIntent.QUICK_20_MIN) score += 4.0;
+        if (context.getSessionIntent() == SessionIntent.AFK) score -= 8.0;
+        if (context.getStrategyMode() == StrategyMode.EFFICIENT
+                && (tier == ClueTier.BEGINNER || tier == ClueTier.EASY))
+            score -= 7.0;
 
         String type = tier == ClueTier.UNKNOWN
                 ? "clue"
                 : tier.name().toLowerCase() + " clue";
+        ClueStepSnapshot step = clue.getCurrentStep();
         StringBuilder reason = new StringBuilder();
         reason.append("Clears the pending ").append(type)
-                .append(" slot and can advance Collection Log progress. ")
-                .append("Before starting, check the current step, required equipment, spade, teleports, food/combat needs, and any observed STASH state.");
+                .append(" slot and can advance Collection Log progress.");
         if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
-            reason.append(" UIM routing also checks inventory pressure and only counts STASH/POH/other storage when the relevant capability and contents are verified.");
+            reason.append(" UIM setup disruption and inventory pressure reduce its interruption value; no unobserved storage is counted.");
         }
-        if (context.getAccountMode() == AccountMode.HARDCORE_IRONMAN
-                || context.getAccountMode() == AccountMode.HARDCORE_GROUP_IRONMAN)
+        if (step == null)
         {
-            reason.append(" Hardcore accounts must verify the clue step is not a Wilderness or otherwise unsafe step before it can become Ready.");
+            reason.append(" RuneLite has not identified the open clue step, so Compass will not invent its location or requirements.");
+        }
+        else
+            reason.append(" RuneLite identified the current ")
+                    .append(step.getKind()).append(" and its concrete setup.");
+
+        boolean hardcore = context.getAccountMode() == AccountMode.HARDCORE_IRONMAN
+                || context.getAccountMode() == AccountMode.HARDCORE_GROUP_IRONMAN;
+        boolean wildernessHold = step != null && step.isWilderness()
+                && (!context.isAllowWildernessMethods() || hardcore);
+        if (wildernessHold)
+        {
+            score -= hardcore ? 30.0 : 18.0;
+            reason.append(hardcore
+                    ? " This observed Wilderness step is not selected for a Hardcore account."
+                    : " Wilderness routing is disabled, so this clue should wait.");
+        }
+
+        String title;
+        String candidateId;
+        RecommendationGuidance guidance;
+        RecommendationConfidence confidence;
+        if (step == null)
+        {
+            title = "Inspect " + type;
+            candidateId = "verify:clue-current-step";
+            guidance = new RecommendationGuidance(
+                    "Open the clue scroll once so RuneLite can identify the current step.",
+                    null, "Inventory", "Compass will reassess the exact step immediately.");
+            confidence = RecommendationConfidence.CHECK_NEEDED;
+        }
+        else if (wildernessHold)
+        {
+            title = "Hold " + type + " — Wilderness step";
+            candidateId = "prepare:clue-wilderness-hold";
+            guidance = new RecommendationGuidance(
+                    context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                            ? "Keep the clue in inventory and continue the current non-Wilderness plan."
+                            : "Bank the clue and continue the current non-Wilderness plan.",
+                    supplies(step), step.getLocation(),
+                    "Do not route this step while the current risk policy forbids it.");
+            confidence = RecommendationConfidence.CHECK_NEEDED;
+        }
+        else
+        {
+            title = (step.requiresPreparation() ? "Prepare " : "Do ")
+                    + type + ": " + step.getKind();
+            candidateId = step.requiresPreparation()
+                    ? "prepare:clue-current-step" : id;
+            guidance = new RecommendationGuidance(step.getAction(),
+                    supplies(step), step.getLocation(), note(step));
+            // RuneLite proves the step, not every quest/access requirement.
+            // Beginner steps are the only F2P-safe tier and can lead when no
+            // additional setup, combat, light or Wilderness evidence remains.
+            confidence = tier == ClueTier.BEGINNER
+                    && !step.requiresPreparation()
+                    ? RecommendationConfidence.VERIFIED
+                    : RecommendationConfidence.CHECK_NEEDED;
         }
 
         result.add(new StrategyCandidate(
-                id,
-                "Complete " + type,
+                candidateId,
+                title,
                 reason.toString(),
                 score,
-                RecommendationConfidence.CHECK_NEEDED,
-                null,
-                CandidateSafetyEvidence.potentiallyIrreversible(tier == ClueTier.BEGINNER)
+                confidence,
+                guidance,
+                step != null && step.hasEnemy()
+                        ? CandidateSafetyEvidence.potentiallyIrreversible(
+                                tier == ClueTier.BEGINNER)
+                        : CandidateSafetyEvidence.harmless(
+                                tier == ClueTier.BEGINNER),
+                RecommendationStrategicValue.builder()
+                        .accountModeFit(context.getAccountMode()
+                                == AccountMode.ULTIMATE_IRONMAN ? -0.35 : 0.0)
+                        .riskBurden(step != null && (step.isWilderness()
+                                || step.hasEnemy()) ? 0.8 : 0.0)
+                        .opportunityCost(context.getSessionIntent()
+                                == SessionIntent.AFK ? 0.7 : 0.15)
+                        .evidence(step == null
+                                ? "runelite:clue-tier"
+                                : "runelite:clue-current-step")
+                        .build()
         ));
         return result;
+    }
+
+    private static String supplies(ClueStepSnapshot step)
+    {
+        if (step == null) return null;
+        List<String> values = new ArrayList<>(step.getItemRequirements());
+        if (step.isRequiresSpade()) values.add("Spade");
+        if (step.isRequiresLight()) values.add("Light source");
+        if (step.hasEnemy()) values.add("Food and a legal setup for " + step.getEnemy());
+        if (values.isEmpty()) return null;
+        return String.join(", ", values);
+    }
+
+    private static String note(ClueStepSnapshot step)
+    {
+        if (step == null) return null;
+        List<String> values = new ArrayList<>();
+        if (step.hasStashUnit())
+            values.add("STASH: " + display(step.getStashUnit())
+                    + "; contents count only when observed");
+        if (step.isWilderness()) values.add("Wilderness step");
+        return values.isEmpty() ? null : String.join(". ", values) + ".";
+    }
+
+    private static String display(String value)
+    {
+        if (value == null || value.isEmpty()) return "";
+        String lower = value.toLowerCase(Locale.ROOT);
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

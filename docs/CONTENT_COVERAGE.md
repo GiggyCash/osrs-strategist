@@ -186,11 +186,11 @@ depends on that fallback.
 
 ## Clues and STASH-aware planning
 
-`LiveClueStateReader` detects actual clue scrolls in observed inventory and, for non-UIM accounts, an observed bank. It recognizes Beginner/Easy/Medium/Hard/Elite/Master and keeps clue age stable. It preserves prior clue state during challenge/puzzle intermediate items and never treats an unopened bank as proof that a clue vanished.
+`LiveClueStateReader` detects actual clue scrolls in observed inventory and, for non-UIM accounts, an observed bank. It recognizes Beginner/Easy/Medium/Hard/Elite/Master and keeps clue age stable. It preserves prior clue state during challenge/puzzle intermediate items and never treats an unopened bank as proof that a clue vanished. Through an explicit dependency on RuneLite's Clue Scroll plugin, an opened clue also contributes its actual subtype, current solution/action, marked location, equipment requirements, spade/light requirements, enemy, Wilderness classification, and STASH identity.
 
-Clue recommendations are tier-aware, become gradually more important with age, receive Collectionist weighting, and carry explicit UIM and Hardcore safety guidance.
+Clue recommendations are tier-aware, become gradually more important with age, receive Collectionist weighting, and account for quick/AFK intent, UIM setup disruption, and Hardcore risk before interrupting a plan. Tier-only evidence asks the player to open the scroll once; exact step evidence produces one coherent PREP/HOLD/DO instruction instead of a generic clue checklist. Wilderness steps are held when risk is disabled and never become a Hardcore route merely because the step is known.
 
-All 119 current RuneLite STASH identities are represented in the offline catalogue with tier, world coordinates, current clue/equipment evidence, Construction level, exact build materials, Wilderness classification, and fail-closed built/filled state. The development-time generator reads the pinned RuneLite sources without adding runtime networking, reflection, or process execution. Current clue readiness remains `Check Needed` until the active clue step and exact STASH built/filled state are observed; RuneLite Clue Helper still owns execution.
+All 119 current RuneLite STASH identities are represented in the offline catalogue with tier, world coordinates, current clue/equipment evidence, Construction level, exact build materials, Wilderness classification, and fail-closed built/filled state. The development-time generator reads the pinned RuneLite sources without adding runtime networking, reflection, or process execution. RuneLite supplies the active clue step at runtime; exact per-unit STASH built/filled state remains unknown until observed and is never inferred from Construction level.
 
 ## Collection Log and progression objectives
 
@@ -236,7 +236,7 @@ The architecture is no longer the main blocker. The remaining work is primarily 
 - direct live observation of each individual diary task's completion state
 - every individual Combat Achievement task and mechanic
 - full per-boss phase/gear/DPS/special-attack/consumable modeling
-- direct observation of the active clue step and per-unit STASH built/filled state (the full static 119-unit catalogue and dependency planner are present)
+- direct observation of per-unit STASH built/filled state (active clue-step observation and the full static 119-unit catalogue/dependency planner are present)
 - every Collection Log item/source/drop relationship
 - exhaustive item-source/shop/drop-rate database
 - live Main price/GE economics
