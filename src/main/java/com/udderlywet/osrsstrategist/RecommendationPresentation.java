@@ -128,8 +128,15 @@ public final class RecommendationPresentation
                             ? "BLOCKED BY" : "NEEDED",
                     compactSentence(needed, 140)));
 
-        String current = recommendation.getGuidance() != null
-                ? recommendation.getGuidance().getAction() : recommendation.getTitle();
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        // Reserve the fourth compact slot for the executable current step.
+        if (sections.size() < 3 && guidance != null
+                && hasText(guidance.getLocation()))
+            sections.add(new Section("WHERE",
+                    compactSentence(guidance.getLocation(), 140)));
+
+        String current = guidance != null
+                ? guidance.getAction() : recommendation.getTitle();
         if (hasText(current))
             sections.add(new Section("CURRENT STEP",
                     compactSentence(current, 150)));
@@ -264,7 +271,9 @@ public final class RecommendationPresentation
                 if (check != null && hasText(check.getLabel()))
                     return check.getLabel();
         RecommendationGuidance guidance = recommendation.getGuidance();
-        if (guidance != null && hasText(guidance.getSupplies()))
+        if (recommendation.getConfidence()
+                    == RecommendationConfidence.CHECK_NEEDED
+                && guidance != null && hasText(guidance.getSupplies()))
             return guidance.getSupplies();
         if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
             return "Confirm the account state Compass cannot safely observe.";

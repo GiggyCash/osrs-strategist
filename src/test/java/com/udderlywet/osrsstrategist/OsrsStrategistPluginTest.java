@@ -26,21 +26,45 @@ public class OsrsStrategistPluginTest
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
         plugin.onVarbitChanged(null);
         plugin.onVarbitChanged(null);
-        assertTrue(plugin.consumeVarbitRefreshPending());
-        assertFalse(plugin.consumeVarbitRefreshPending());
-        assertTrue(plugin.consumePohRefreshPending());
-        assertFalse(plugin.consumePohRefreshPending());
+        assertTrue(plugin.consumeStrategyRefreshPending(10_000L));
+        assertFalse(plugin.consumeStrategyRefreshPending(10_001L));
+        assertTrue(plugin.consumePohRefreshPending(10_000L));
+        assertFalse(plugin.consumePohRefreshPending(10_001L));
+    }
+
+    @Test
+    public void burstyStrategicEventsRemainPendingUntilRefreshInterval()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        plugin.onVarbitChanged(null);
+        assertTrue(plugin.consumeStrategyRefreshPending(10_000L));
+
+        plugin.onVarbitChanged(null);
+        assertFalse(plugin.consumeStrategyRefreshPending(11_999L));
+        // The throttled event was retained rather than discarded.
+        assertTrue(plugin.consumeStrategyRefreshPending(12_000L));
+        assertFalse(plugin.consumeStrategyRefreshPending(12_001L));
+    }
+
+    @Test
+    public void farmingReadsAreBoundedAndClockRegressionDoesNotStallThem()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        assertTrue(plugin.consumeFarmingObservation(10_000L));
+        assertFalse(plugin.consumeFarmingObservation(11_999L));
+        assertTrue(plugin.consumeFarmingObservation(12_000L));
+        assertTrue(plugin.consumeFarmingObservation(9_000L));
     }
 
     @Test
     public void pohSceneScansAreCoalescedBehindObjectEvidence()
     {
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
-        assertFalse(plugin.consumePohRefreshPending());
+        assertFalse(plugin.consumePohRefreshPending(10_000L));
         plugin.onGameObjectSpawned((GameObjectSpawned) null);
         plugin.onGameObjectSpawned((GameObjectSpawned) null);
-        assertTrue(plugin.consumePohRefreshPending());
-        assertFalse(plugin.consumePohRefreshPending());
+        assertTrue(plugin.consumePohRefreshPending(10_000L));
+        assertFalse(plugin.consumePohRefreshPending(10_001L));
     }
 
     @Test
@@ -61,7 +85,7 @@ public class OsrsStrategistPluginTest
     {
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
         plugin.onItemContainerChanged((ItemContainerChanged) null);
-        assertFalse(plugin.consumeAccountRefreshPending());
+        assertFalse(plugin.consumeStrategyRefreshPending(10_000L));
         assertTrue(OsrsStrategistPlugin.isStrategicContainer(
                 net.runelite.api.gameval.InventoryID.INV));
         assertTrue(OsrsStrategistPlugin.isStrategicContainer(

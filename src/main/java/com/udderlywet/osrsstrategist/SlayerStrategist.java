@@ -229,7 +229,8 @@ public class SlayerStrategist
                 slayer.getTaskName());
         SlayerMasterProfile master = masters.match(slayer.getMasterName());
 
-        if (unsafeWilderness(context, slayer, master))
+        if (unsafeWilderness(context, slayer, master,
+                strategy.isWildernessBound(slayer.getTaskName())))
             return wildernessAlternative(slayer, taskStrategy, master);
 
         RecommendationGuidance base = guidanceService.build(data,
@@ -247,6 +248,32 @@ public class SlayerStrategist
             return encounterPreparation(slayer, master, taskStrategy,
                     readiness);
         }
+
+        PvmReadiness alternative = alternativeReadiness(data, taskStrategy);
+        if (alternative != null && alternative.isReadyForRecommendation()
+                && alternativeWorthUsing(context, taskStrategy))
+            return bossAlternative(slayer, master, taskStrategy);
+
+        double value = taskValue(taskStrategy, context);
+        boolean milestone = slayer.getTaskStreak() != null
+                && SlayerPointEconomy.isBonusCompletion(slayer.getTaskStreak() + 1);
+        Integer weight = master == null ? null
+                : taskStrategy.weightFor(master.getId());
+
+        // Decide whether the assignment is worth keeping before asking the
+        // player to disturb their setup. A bad task should be skipped or
+        // blocked, not preceded by pointless gear and supply preparation.
+        if (!milestone && value <= -1.0 && weight != null && weight >= 8
+                && slayer.hasKnownFreeBlockSlot()
+                && slayer.getPoints() >= master.getBlockCost())
+            return block(slayer, master, taskStrategy, value, weight);
+
+        if (!milestone && value < 0.5
+                && SlayerPointEconomy.hasSustainableSkipBalance(
+                        slayer.getPoints(), master == null
+                                ? SlayerPointEconomy.SKIP_COST
+                                : master.getCancelCost()))
+            return skip(slayer, master, taskStrategy, value);
 
         ObservedItemIndex items = new ObservedItemIndex(data,
                 context.isUseGroupStorage());
@@ -270,31 +297,13 @@ public class SlayerStrategist
                             + styleName(taskStrategy.getRequiredCombatStyle())
                             + "-only damage requirement.");
 
-        PvmReadiness alternative = alternativeReadiness(data, taskStrategy);
-        if (alternative != null && alternative.isReadyForRecommendation()
-                && alternativeWorthUsing(context, taskStrategy))
-            return bossAlternative(slayer, master, taskStrategy);
+        if (requiresCarriedHealing(taskStrategy)
+                && carriedHealingName(data.getInventory()) == null)
+            return supplyPreparation(context, slayer, master, taskStrategy,
+                    base);
 
         base = concreteTaskGuidance(base, taskMechanics, taskStrategy,
                 items, weapon, observedStyle, slayer, data.getInventory());
-
-        double value = taskValue(taskStrategy, context);
-        boolean milestone = slayer.getTaskStreak() != null
-                && SlayerPointEconomy.isBonusCompletion(slayer.getTaskStreak() + 1);
-        Integer weight = master == null ? null
-                : taskStrategy.weightFor(master.getId());
-
-        if (!milestone && value <= -1.0 && weight != null && weight >= 8
-                && slayer.hasKnownFreeBlockSlot()
-                && slayer.getPoints() >= master.getBlockCost())
-            return block(slayer, master, taskStrategy, value, weight);
-
-        if (!milestone && value < 0.5
-                && SlayerPointEconomy.hasSustainableSkipBalance(
-                        slayer.getPoints(), master == null
-                                ? SlayerPointEconomy.SKIP_COST
-                                : master.getCancelCost()))
-            return skip(slayer, master, taskStrategy, value);
 
         String reason = milestone
                 ? "Complete this safe task: the next completion is a verified Slayer point milestone, so preserving the streak outweighs an ordinary skip."
@@ -409,9 +418,11 @@ public class SlayerStrategist
     }
 
     private static boolean unsafeWilderness(StrategyContext context,
-            SlayerSnapshot slayer, SlayerMasterProfile master)
+            SlayerSnapshot slayer, SlayerMasterProfile master,
+            boolean taskIsWildernessBound)
     {
         boolean wilderness = master != null && master.isWilderness();
+        wilderness |= taskIsWildernessBound;
         String area = normalize(slayer.getTaskLocation());
         wilderness |= area.contains("wilderness") || area.contains("revenant caves");
         return wilderness && (!context.isAllowWildernessMethods()
@@ -480,6 +491,45 @@ public class SlayerStrategist
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 48.0,
                 RecommendationConfidence.CHECK_NEEDED, reason, guidance);
+    }
+
+    private static SlayerDecisionResult supplyPreparation(
+            StrategyContext context, SlayerSnapshot slayer,
+            SlayerMasterProfile master, SlayerTaskStrategicProfile task,
+            RecommendationGuidance base)
+    {
+        StrategyDataBundle data = context.getData();
+        String storedFood = storedHealingName(data, context.isUseGroupStorage());
+        String action;
+        String supplies;
+        AccountMode mode = context.getAccountMode();
+        if (storedFood != null)
+        {
+            action = "Bank before travelling and withdraw " + storedFood
+                    + " for one " + slayer.getTaskName()
+                    + " trip, then return to Compass with it carried.";
+            supplies = "Keep " + storedFood
+                    + " in the inventory with the observed combat weapon and mandatory task item. Compass will not guess doses or a fixed trip quantity.";
+        }
+        else if (mode == AccountMode.MAIN)
+        {
+            action = "Buy cooked swordfish at the Grand Exchange, bank them, and carry a trip's healing before travelling to "
+                    + slayer.getTaskName() + ".";
+            supplies = "Cooked swordfish are a concrete tradeable fallback because no recognised healing food is observed in the carried inventory or bank. Recheck Compass after withdrawing them.";
+        }
+        else
+        {
+            String route = selfSourcedFoodRoute(data.getAccount());
+            action = route + " Carry the cooked food, then return to Compass before starting "
+                    + slayer.getTaskName() + ".";
+            supplies = "No recognised carried or immediately usable stored healing is observed. Self-source the named food instead of receiving a Grand Exchange instruction.";
+        }
+        return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
+                SlayerTaskDecision.PREP_FIRST, master, task, 50.0,
+                RecommendationConfidence.CHECK_NEEDED,
+                "This kept assignment has material duration, setup, or danger, but no recognised healing item is carried.",
+                new RecommendationGuidance(action, supplies,
+                        base.getLocation(), base.getNote()));
     }
 
     private static SlayerDecisionResult bossAlternative(SlayerSnapshot slayer,
@@ -612,16 +662,120 @@ public class SlayerStrategist
                     .append(strategy.getRequiredItemUse()
                             == SlayerRequiredItemUse.EQUIPPED
                             ? " equipped" : " carried or equipped as required");
+        String healing = carriedHealingName(inventory);
         supplies.append(". ");
-        if (inventory == null || inventory.getItems().isEmpty())
-            supplies.append("No consumable inventory is observed; begin only a short safe trip and bank before supplies run out.");
+        if (healing != null)
+            supplies.append("Carry the observed ").append(healing)
+                    .append(" as healing; no fixed trip quantity is claimed because damage and trip length vary.");
         else
-            supplies.append("Keep the currently carried inventory; Compass has not inferred doses, charges, or healing value from item names.");
+            supplies.append("This low-burden route does not require Compass to claim a fixed food inventory; leave if the observed setup stops being safe.");
         String action = "Kill the remaining " + slayer.getRemaining() + " "
                 + slayer.getTaskName() + " using " + weapon + " ("
                 + styleName(observedStyle) + "). " + mechanics.getStyleGuidance();
         return new RecommendationGuidance(action, supplies.toString(),
                 base.getLocation(), base.getNote());
+    }
+
+    private static boolean requiresCarriedHealing(
+            SlayerTaskStrategicProfile task)
+    {
+        return task.getInherentRisk() != RiskLevel.LOW
+                || task.getCompletionBurden() >= 3
+                || task.getSetupBurden() >= 3;
+    }
+
+    private static String carriedHealingName(InventorySnapshot inventory)
+    {
+        return inventory == null ? null : healingName(inventory.getItems());
+    }
+
+    private static String storedHealingName(StrategyDataBundle data,
+            boolean useGroupStorage)
+    {
+        if (data == null || data.getAccount() == null) return null;
+        AccountMode mode = AccountMode.fromTypeCode(
+                data.getAccount().getAccountTypeCode());
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() != null)
+        {
+            String found = healingName(data.getBank().getItems());
+            if (found != null) return found;
+        }
+        if (useGroupStorage && mode.isGroupIronman()
+                && data.getGroupStorage() != null
+                && data.getGroupStorage().isObserved())
+        {
+            String found = healingName(data.getGroupStorage().getItems());
+            if (found != null) return found;
+        }
+        if (data.getStorage() != null)
+        {
+            for (java.util.Map.Entry<StorageCapability, List<ItemStackSnapshot>>
+                    entry : data.getStorage().getObservedContents().entrySet())
+            {
+                if (!data.getStorage().verified(entry.getKey())) continue;
+                if (mode == AccountMode.ULTIMATE_IRONMAN
+                        && (entry.getKey() == StorageCapability.LOOTING_BAG
+                        || entry.getKey() == StorageCapability.DEATH_STORAGE
+                        || entry.getKey() == StorageCapability.DEATHPILE))
+                    continue;
+                String found = healingName(entry.getValue());
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    /** Conservative edible-name evidence; raw and burnt items never count. */
+    private static String healingName(Iterable<ItemStackSnapshot> observed)
+    {
+        if (observed == null) return null;
+        String best = null;
+        int bestRank = 0;
+        for (ItemStackSnapshot item : observed)
+        {
+            if (item == null || item.getQuantity() <= 0) continue;
+            String name = normalize(item.getName());
+            if (name.startsWith("raw ") || name.startsWith("burnt ")) continue;
+            int rank = healingRank(name);
+            if (rank > bestRank)
+            {
+                bestRank = rank;
+                best = item.getName();
+            }
+        }
+        return best;
+    }
+
+    private static int healingRank(String name)
+    {
+        if (name.equals("cooked moonlight antelope")
+                || name.equals("dark crab") || name.equals("anglerfish")
+                || name.equals("manta ray")) return 5;
+        if (name.equals("shark") || name.equals("sea turtle")
+                || name.equals("cooked sunlight antelope")
+                || name.startsWith("saradomin brew(")) return 4;
+        if (name.equals("karambwan") || name.equals("tuna potato")
+                || name.equals("swordfish") || name.equals("monkfish")) return 3;
+        if (name.equals("lobster") || name.equals("bass")
+                || name.endsWith(" pizza")) return 2;
+        if (name.equals("salmon") || name.equals("trout")
+                || name.equals("cake") || name.equals("chocolate cake")
+                || name.equals("slice of cake")
+                || name.equals("chocolate slice")) return 1;
+        return 0;
+    }
+
+    private static String selfSourcedFoodRoute(AccountSnapshot account)
+    {
+        int fishing = account == null ? 1 : account.getSkillLevel(Skill.FISHING);
+        int cooking = account == null ? 1 : account.getSkillLevel(Skill.COOKING);
+        if (fishing >= 50 && cooking >= 45)
+            return "Take a harpoon to Catherby's south-east shore, catch tuna and swordfish, cook the catch on the range just east of the bank, and bank the cooked fish.";
+        if (fishing >= 40 && cooking >= 40)
+            return "Take a lobster pot to Catherby's south-east shore, cage lobsters, cook them on the range just east of the bank, and bank the cooked lobsters.";
+        if (fishing >= 20 && cooking >= 15)
+            return "Take a fly fishing rod and feathers to Barbarian Village, catch trout and salmon, cook them on the permanent fire by the fishing spots, and bank the cooked fish in Edgeville.";
+        return "Take a small fishing net, tinderbox, and several logs to the east Lumbridge Swamp shore; net shrimp, light a fire there, cook them, and bank the cooked supply in Lumbridge Castle.";
     }
 
     private static String firstReadyItem(ObservedItemIndex items,

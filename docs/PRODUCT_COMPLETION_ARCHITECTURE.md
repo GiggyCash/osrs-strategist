@@ -272,11 +272,14 @@ wrapped Swing components and the existing text scaling/theme conventions.
 XP events update the small progress model and repaint the Progress surface;
 they do not run the full strategist on every drop. Catalogs are local,
 runtime Wiki requests are forbidden, histories are bounded, and expensive
-planning stays out of per-tick polling. Personal-POH furniture scans are
-coalesced behind login, varbit, and scene-object events and run once on the
-following game tick; build mode remains the ownership gate, but a full scene
-walk is never performed continuously merely because the player is standing in
-their house.
+planning stays out of per-tick polling. Inventory/gear/bank and varbit bursts
+retain one pending rerank and are coalesced to a two-second boundary; the newest
+state is never discarded. Farming varbit reads and personal-POH furniture scans
+use the same bound. POH scans remain gated behind login, varbit, and scene-object
+events plus own-house build mode, so a full scene walk is never performed
+continuously merely because the player is standing in their house. Immutable
+Farming catalogs/evaluators are reused across evaluations instead of allocated
+inside every candidate pass.
 
 ## Verification workflow
 

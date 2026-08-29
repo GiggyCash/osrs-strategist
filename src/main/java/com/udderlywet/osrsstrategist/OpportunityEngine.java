@@ -17,6 +17,11 @@ import javax.inject.Singleton;
 @Singleton
 public class OpportunityEngine
 {
+    private final FarmingAccessCatalog farmingAccessCatalog =
+            new FarmingAccessCatalog();
+    private final FarmingSupplyCatalog farmingSupplyCatalog =
+            new FarmingSupplyCatalog();
+
     public List<Opportunity> evaluate(AccountSnapshot snapshot)
     {
         if (snapshot == null) return Collections.emptyList();
@@ -39,7 +44,8 @@ public class OpportunityEngine
         {
             addBirdhouseOpportunity(opportunities, data, recurring, now);
 
-            addHerbRunOpportunity(opportunities, data, recurring, now);
+            addHerbRunOpportunity(opportunities, data, recurring, now,
+                    farmingAccessCatalog, farmingSupplyCatalog);
 
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:tree-run", OpportunityType.TREE_RUN,
@@ -134,7 +140,8 @@ public class OpportunityEngine
 
     private static void addHerbRunOpportunity(List<Opportunity> result,
             StrategyDataBundle data, RecurringOpportunitySnapshot recurring,
-            long now)
+            long now, FarmingAccessCatalog accessCatalog,
+            FarmingSupplyCatalog supplyCatalog)
     {
         String id = "opportunity:herb-run";
         if (recurring == null || recurring.readyAt(id) == null) return;
@@ -144,14 +151,14 @@ public class OpportunityEngine
         if (!inventoryHas(inventory, "spade")) missing.add("Carry a spade");
         if (!inventoryHas(inventory, "seed dibber")) missing.add("Carry a seed dibber");
         int farmingLevel = data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
-        ResourceRequirement herbSeeds = new FarmingSupplyCatalog()
-                .herbSeedsForLevel(farmingLevel);
+        ResourceRequirement herbSeeds = supplyCatalog.herbSeedsForLevel(
+                farmingLevel);
         if (!inventoryHasAnyId(inventory, herbSeeds.getItemIds()))
             missing.add("Carry one guam seed");
         if (farmingLevel < 9)
             missing.add("Reach Farming level 9 for the modeled herb patches");
         FarmingSnapshot farming = data.getFarming();
-        if (!hasReachableHerbPatch(farming))
+        if (!hasReachableHerbPatch(farming, accessCatalog))
             missing.add("Verify at least one reachable herb patch");
 
         boolean ready = recurring.isReadyNow(id, now);
@@ -262,10 +269,11 @@ public class OpportunityEngine
         return quantity;
     }
 
-    private static boolean hasReachableHerbPatch(FarmingSnapshot farming)
+    private static boolean hasReachableHerbPatch(FarmingSnapshot farming,
+            FarmingAccessCatalog catalog)
     {
         if (farming == null) return false;
-        for (FarmingAccessDefinition patch : new FarmingAccessCatalog().all())
+        for (FarmingAccessDefinition patch : catalog.all())
             if (patch.isHerbPatch() && farming.isPatchReachable(patch.getId()))
                 return true;
         return false;

@@ -61,7 +61,7 @@ public class FeedbackRecoveryTest
         assertEquals(1, history.snapshot().size());
         assertTrue(((java.util.List<?>) get(plugin,
                 "latestRecommendations")).isEmpty());
-        assertTrue(plugin.consumeAccountRefreshPending());
+        assertTrue(plugin.consumeStrategyRefreshPending(10_000L));
     }
 
     @Test

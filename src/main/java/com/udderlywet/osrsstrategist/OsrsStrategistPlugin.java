@@ -43,6 +43,8 @@ public class OsrsStrategistPlugin extends Plugin
     private static final double COMPLETION_VARIETY_PENALTY = -10.0;
     private static final long COMPLETION_VARIETY_DURATION_MILLIS = 30L * 60L * 1000L;
     private static final long PROGRESS_CHECKPOINT_INTERVAL_MILLIS = 60_000L;
+    /** Bursty varp/container events must not rebuild the full strategy each tick. */
+    static final long STRATEGY_REFRESH_INTERVAL_MILLIS = 2_000L;
 
     @Inject private OsrsStrategistConfig config;
     @Inject private ConfigManager configManager;
@@ -95,6 +97,9 @@ public class OsrsStrategistPlugin extends Plugin
     private boolean diaryRefreshPending;
     private boolean progressCheckpointPending;
     private long lastProgressCheckpointAtMillis;
+    private long lastStrategyRefreshAtMillis = Long.MIN_VALUE;
+    private long lastPohObservationAtMillis = Long.MIN_VALUE;
+    private long lastFarmingObservationAtMillis = Long.MIN_VALUE;
     private final OverlayLifecycleGuard overlayLifecycle =
             new OverlayLifecycleGuard();
     private final RecommendationStabilizer recommendationStabilizer =
@@ -170,6 +175,9 @@ public class OsrsStrategistPlugin extends Plugin
         latestPlan = null;
         varbitRefreshPending = false;
         accountRefreshPending = false;
+        lastStrategyRefreshAtMillis = Long.MIN_VALUE;
+        lastPohObservationAtMillis = Long.MIN_VALUE;
+        lastFarmingObservationAtMillis = Long.MIN_VALUE;
         pohRefreshPending = false;
         diaryRefreshPending = false;
         panel = null;
@@ -188,18 +196,19 @@ public class OsrsStrategistPlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick event)
     {
+        long now = System.currentTimeMillis();
         boolean accessChanged = accessObservationService.observeCurrentLocation();
-        boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
-        boolean pohChanged = consumePohRefreshPending()
+        boolean farmChanged = consumeFarmingObservation(now)
+                && farmingRunObservationService.observeCurrentPatches();
+        boolean pohChanged = consumePohRefreshPending(now)
                 && strategyDataAssembler.observePoh();
         boolean diaryChanged = consumeDiaryRefreshPending()
                 && strategyDataAssembler.observeOpenDiary();
-        boolean liveStateChanged = consumeVarbitRefreshPending();
-        boolean observedStateChanged = consumeAccountRefreshPending();
         checkpointProgressSession();
-        if (accessChanged || farmChanged || pohChanged || diaryChanged
-                || liveStateChanged
-                || observedStateChanged) updateAccountPanel();
+        if (accessChanged || farmChanged || pohChanged || diaryChanged)
+            accountRefreshPending = true;
+        if (consumeStrategyRefreshPending(now))
+            updateAccountPanel();
     }
 
     @Subscribe
@@ -234,25 +243,14 @@ public class OsrsStrategistPlugin extends Plugin
         pohRefreshPending = true;
     }
 
-    boolean consumeVarbitRefreshPending()
+    boolean consumePohRefreshPending(long nowMillis)
     {
-        boolean pending = varbitRefreshPending;
-        varbitRefreshPending = false;
-        return pending;
-    }
-
-    boolean consumeAccountRefreshPending()
-    {
-        boolean pending = accountRefreshPending;
-        accountRefreshPending = false;
-        return pending;
-    }
-
-    boolean consumePohRefreshPending()
-    {
-        boolean pending = pohRefreshPending;
+        if (!pohRefreshPending) return false;
+        if (!intervalElapsed(nowMillis, lastPohObservationAtMillis))
+            return false;
         pohRefreshPending = false;
-        return pending;
+        lastPohObservationAtMillis = nowMillis;
+        return true;
     }
 
     boolean consumeDiaryRefreshPending()
@@ -260,6 +258,37 @@ public class OsrsStrategistPlugin extends Plugin
         boolean pending = diaryRefreshPending;
         diaryRefreshPending = false;
         return pending;
+    }
+
+    /**
+     * Coalesces unrelated varbit bursts and repeated inventory mutations while
+     * retaining the pending refresh. Delaying a rerank by at most two seconds
+     * avoids client-thread catalog scans on every 600 ms game tick.
+     */
+    boolean consumeStrategyRefreshPending(long nowMillis)
+    {
+        if (!varbitRefreshPending && !accountRefreshPending) return false;
+        if (!intervalElapsed(nowMillis, lastStrategyRefreshAtMillis))
+            return false;
+        varbitRefreshPending = false;
+        accountRefreshPending = false;
+        lastStrategyRefreshAtMillis = nowMillis;
+        return true;
+    }
+
+    boolean consumeFarmingObservation(long nowMillis)
+    {
+        if (!intervalElapsed(nowMillis, lastFarmingObservationAtMillis))
+            return false;
+        lastFarmingObservationAtMillis = nowMillis;
+        return true;
+    }
+
+    private static boolean intervalElapsed(long nowMillis, long previousMillis)
+    {
+        return previousMillis == Long.MIN_VALUE
+                || nowMillis < previousMillis
+                || nowMillis - previousMillis >= STRATEGY_REFRESH_INTERVAL_MILLIS;
     }
 
     @Subscribe
@@ -330,6 +359,9 @@ public class OsrsStrategistPlugin extends Plugin
         loadedProgressProfileKey = null;
         progressCheckpointPending = false;
         lastProgressCheckpointAtMillis = 0L;
+        lastStrategyRefreshAtMillis = Long.MIN_VALUE;
+        lastPohObservationAtMillis = Long.MIN_VALUE;
+        lastFarmingObservationAtMillis = Long.MIN_VALUE;
         latestRecommendations = Collections.emptyList();
         latestPlan = null;
         latestData = null;
@@ -501,6 +533,7 @@ public class OsrsStrategistPlugin extends Plugin
     private void refreshStrategyImmediately()
     {
         if (panel == null || latestData == null) return;
+        lastStrategyRefreshAtMillis = System.currentTimeMillis();
         final long generation = uiGeneration.next();
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluateAndStabilize(latestData, profile);
@@ -751,6 +784,7 @@ public class OsrsStrategistPlugin extends Plugin
     private void updateAccountPanel()
     {
         if (panel == null) return;
+        lastStrategyRefreshAtMillis = System.currentTimeMillis();
         final long generation = uiGeneration.next();
         StrategyDataBundle data = strategyDataAssembler.read();
         if (data == null || data.getAccount() == null)

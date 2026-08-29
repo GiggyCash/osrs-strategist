@@ -114,9 +114,55 @@ public class RealProviderStrategyTournamentTest
         for (String slop : Arrays.asList(
                 "strategist will verify", "choose the best",
                 "best available", "use a nearby", "a training area",
-                "get supplies", "whatever"))
+                "get supplies", "whatever", "use any", "choose a suitable",
+                "use a reachable", "an appropriate", "as needed",
+                "use an altar", "use an anvil", "use a furnace"))
             assertFalse(label + " contains '" + slop + "': " + visible,
                     visible.contains(slop));
+        assertTrue(label + " lacks WHERE: " + visible,
+                visible.contains("where"));
+        assertTrue(label + " lacks DO: " + visible,
+                visible.contains("do"));
+    }
+
+    @Test
+    public void allStrategyAndSessionPropertiesReachActualProviderQueue()
+    {
+        StrategyEngine engine = engine();
+        RecommendationActionabilityPolicy actionability =
+                new RecommendationActionabilityPolicy();
+        CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
+        int scenarios = 0;
+        for (Scenario account : ACCOUNTS)
+        {
+            for (int level : new int[]{5, 50, 85})
+            {
+                StrategyDataBundle data = data(account, level);
+                for (StrategyMode mode : StrategyMode.values())
+                {
+                    for (SessionIntent session : SessionIntent.values())
+                    {
+                        StrategyResult result = engine.evaluate(data, mode,
+                                session, QuestTolerance.NORMAL,
+                                GoalType.AUTOMATIC, true, false, false,
+                                new PreferenceProfile());
+                        String label = account.name + " level=" + level
+                                + " mode=" + mode + " session=" + session;
+                        assertFalse(label, result.getRecommendations().isEmpty());
+                        Recommendation lead = result.getRecommendations().get(0);
+                        assertTrue(label, actionability.canLeadQueue(lead));
+                        assertTrue(label, safety.isAllowed(lead,
+                                new StrategyContext(data, mode, session,
+                                        QuestTolerance.NORMAL,
+                                        GoalType.AUTOMATIC, true, false,
+                                        false, new PreferenceProfile())));
+                        assertSpecific(label, lead);
+                        scenarios++;
+                    }
+                }
+            }
+        }
+        assertTrue("Property matrix must remain broad", scenarios >= 300);
     }
 
     private static StrategyEngine engine()

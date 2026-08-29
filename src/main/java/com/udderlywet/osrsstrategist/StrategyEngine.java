@@ -31,6 +31,8 @@ public class StrategyEngine
     private final MethodRecommendationValueService methodValue;
     private final QuestRecommendationValueService questValue =
             new QuestRecommendationValueService();
+    private static final FarmingAccessCatalog FARMING_ACCESS_CATALOG =
+            new FarmingAccessCatalog();
 
     @Inject
     public StrategyEngine(
@@ -384,8 +386,7 @@ public class StrategyEngine
                 ? null : context.getData().getFarming();
         if (farming == null) return null;
         List<String> names = new ArrayList<>();
-        for (FarmingAccessDefinition definition :
-                new FarmingAccessCatalog().all())
+        for (FarmingAccessDefinition definition : FARMING_ACCESS_CATALOG.all())
         {
             if (definition.isHerbPatch()
                     && farming.isPatchReachable(definition.getId()))

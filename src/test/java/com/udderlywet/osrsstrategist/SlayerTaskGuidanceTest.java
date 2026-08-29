@@ -256,6 +256,22 @@ public class SlayerTaskGuidanceTest
         assertEquals(151, identities.all().size());
     }
 
+    @Test
+    public void reviewedTaskLocationsNameAConcreteDestination()
+    {
+        SlayerTaskProfileCatalog profiles = new SlayerTaskProfileCatalog();
+        for (SlayerTaskProfile profile : profiles.all())
+        {
+            String location = profile.getPreferredLocation().toLowerCase();
+            assertFalse(profile.getId(), location.contains("reachable location"));
+            assertFalse(profile.getId(), location.contains("suitable location"));
+            assertFalse(profile.getId(), location.contains("task-valid"));
+            assertFalse(profile.getId(), location.contains("nearby bank"));
+            assertFalse(profile.getId(), location.contains("best available location"));
+            assertFalse(profile.getId(), location.contains("safest non-wilderness"));
+        }
+    }
+
     private static StrategyDataBundle data(
             AccountSnapshot account,
             SlayerSnapshot slayer,

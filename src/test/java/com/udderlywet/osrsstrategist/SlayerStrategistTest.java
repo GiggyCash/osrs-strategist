@@ -271,6 +271,54 @@ public class SlayerStrategistTest
     }
 
     @Test
+    public void uselessNonemptyInventoryCannotVerifyDemandingTaskSupplies()
+    {
+        SlayerSnapshot task = snapshot("Dust devils", 140, "Duradel",
+                null, 500, 21, 300, 6, 2);
+        StrategyContext context = context(0, task, StrategyMode.EFFICIENT,
+                SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
+                Collections.singletonList(new ItemStackSnapshot(
+                        4164, "Facemask", 1,
+                        net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())),
+                Collections.singletonList(new ItemStackSnapshot(
+                        952, "Spade", 1)), null);
+
+        SlayerDecisionResult result = strategist.assess(context);
+
+        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertTrue(result.getReason().contains("no recognised healing"));
+        assertFalse(result.getGuidance().getSupplies().contains(
+                "Keep the currently carried inventory"));
+    }
+
+    @Test
+    public void preparationUsesBestObservedFoodAndRejectsIngredientNames()
+    {
+        SlayerSnapshot task = snapshot("Dust devils", 140, "Duradel",
+                null, 500, 21, 300, 6, 2);
+        java.util.List<ItemStackSnapshot> bank = Arrays.asList(
+                new ItemStackSnapshot(1887, "Cake tin", 1),
+                new ItemStackSnapshot(331, "Raw salmon", 20),
+                new ItemStackSnapshot(333, "Trout", 10),
+                new ItemStackSnapshot(385, "Shark", 5));
+        StrategyContext context = contextWithBank(0, task,
+                StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
+                GoalType.SLAYER_85, false,
+                Collections.singletonList(new ItemStackSnapshot(
+                        4164, "Facemask", 1,
+                        net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())),
+                Collections.singletonList(new ItemStackSnapshot(
+                        952, "Spade", 1)), bank, null);
+
+        SlayerDecisionResult result = strategist.assess(context);
+
+        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertTrue(result.getGuidance().getAction().contains("withdraw Shark"));
+        assertFalse(result.getGuidance().getAction().contains("Cake tin"));
+        assertFalse(result.getGuidance().getAction().contains("Raw salmon"));
+    }
+
+    @Test
     public void magicOnlyTaskRejectsObservedMeleeWeaponBeforeDoDecision()
     {
         SlayerSnapshot task = snapshot("Cave krakens", 110, "Duradel",
@@ -386,6 +434,19 @@ public class SlayerStrategistTest
     }
 
     @Test
+    public void intrinsicallyWildernessTaskIsRejectedWithoutLocationText()
+    {
+        SlayerSnapshot task = snapshot("Green dragons", 60, "Vannaka",
+                null, 500, 21, 300, 6, 1);
+        SlayerDecisionResult result = strategist.assess(context(0, task,
+                StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
+                GoalType.AUTOMATIC, false, Collections.emptyList(), null));
+
+        assertEquals(SlayerTaskDecision.ALTERNATIVE, result.getDecision());
+        assertTrue(result.getGuidance().getAction().contains("Do not enter"));
+    }
+
+    @Test
     public void lowPointBalanceDoesNotSpendTheLastSkipOnOrdinaryDislike()
     {
         SlayerSnapshot task = snapshot("Hellhounds", 180, "Duradel",
@@ -454,6 +515,31 @@ public class SlayerStrategistTest
             boolean wilderness, java.util.List<ItemStackSnapshot> items,
             PvmSnapshot pvm)
     {
+        return context(typeCode, slayer, mode, intent, goal, wilderness,
+                items, Arrays.asList(
+                        new ItemStackSnapshot(385, "Shark", 1),
+                        new ItemStackSnapshot(385, "Shark", 1),
+                        new ItemStackSnapshot(385, "Shark", 1)), pvm);
+    }
+
+    private static StrategyContext context(int typeCode, SlayerSnapshot slayer,
+            StrategyMode mode, SessionIntent intent, GoalType goal,
+            boolean wilderness, java.util.List<ItemStackSnapshot> items,
+            java.util.List<ItemStackSnapshot> inventoryItems,
+            PvmSnapshot pvm)
+    {
+        return contextWithBank(typeCode, slayer, mode, intent, goal,
+                wilderness, items, inventoryItems, Collections.emptyList(), pvm);
+    }
+
+    private static StrategyContext contextWithBank(int typeCode,
+            SlayerSnapshot slayer, StrategyMode mode, SessionIntent intent,
+            GoalType goal, boolean wilderness,
+            java.util.List<ItemStackSnapshot> items,
+            java.util.List<ItemStackSnapshot> inventoryItems,
+            java.util.List<ItemStackSnapshot> bankItems,
+            PvmSnapshot pvm)
+    {
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Shilo Village", QuestStatus.COMPLETE);
         quests.put("Lost City", QuestStatus.COMPLETE);
@@ -466,8 +552,8 @@ public class SlayerStrategistTest
         StrategyDataBundle data = StrategyDataBundle.builder(account(typeCode))
                 .slayer(slayer)
                 .quests(new QuestSnapshot(quests))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .bank(new BankSnapshot(bankItems, 1L))
+                .inventory(new InventorySnapshot(inventoryItems))
                 .equipment(new EquipmentSnapshot(equipment))
                 .pvm(pvm)
                 .build();

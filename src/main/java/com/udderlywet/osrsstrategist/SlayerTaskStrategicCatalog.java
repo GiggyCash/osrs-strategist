@@ -46,7 +46,8 @@ public class SlayerTaskStrategicCatalog
             "pirates", "rogues", "scorpions", "shades", "skeletons",
             "wolves", "zombies");
     private static final Set<String> INTRINSIC_WILDERNESS = ids(
-            "lava-dragons", "mammoths", "revenants");
+            "black-knights", "dark-warriors", "earth-warriors", "ents", "green-dragons",
+            "lava-dragons", "magic-axes", "mammoths", "revenants", "rogues");
     private static final Map<String, String> DIRECT_BOSS_IDS = bossIds();
 
     private final SlayerTaskProfileCatalog taskProfiles;
@@ -219,6 +220,21 @@ public class SlayerTaskStrategicCatalog
     public Collection<SlayerTaskStrategicProfile> all()
     {
         return byProfileId.values();
+    }
+
+    /**
+     * True only for task identities whose maintained ordinary route is
+     * Wilderness-bound. Risk severity alone is deliberately not used as a
+     * proxy: a future dangerous non-Wilderness task must not be mislabeled.
+     */
+    public boolean isWildernessBound(String taskName)
+    {
+        SlayerTaskProfile mechanics = taskProfiles.profileFor(taskName);
+        if (mechanics == null) return false;
+        SlayerTaskStrategicProfile profile = byProfileId.get(mechanics.getId());
+        return INTRINSIC_WILDERNESS.contains(mechanics.getId())
+                || (profile != null && profile.isDirectEncounter()
+                        && profile.getInherentRisk() == RiskLevel.HIGH);
     }
 
     private static void add(Map<String, SlayerTaskStrategicProfile> values,

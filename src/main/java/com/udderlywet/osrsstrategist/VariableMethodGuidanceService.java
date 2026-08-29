@@ -12,6 +12,9 @@ import net.runelite.api.Skill;
 @Singleton
 public class VariableMethodGuidanceService
 {
+    private static final FarmingAccessEvaluator FARMING_ACCESS =
+            new FarmingAccessEvaluator(new FarmingAccessCatalog());
+
     public RecommendationGuidance build(
             StrategyDataBundle data,
             Skill skill,
@@ -235,8 +238,8 @@ public class VariableMethodGuidanceService
         int level = data.getAccount().getSkillLevel(Skill.FARMING);
         String seed = highestObservedAllotmentSeed(items, level);
         if (seed == null) return null;
-        String patch = new FarmingAccessEvaluator(new FarmingAccessCatalog())
-                .firstReachablePatchName(data.getFarming());
+        String patch = FARMING_ACCESS.firstReachablePatchName(
+                data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
                 "At " + patch + ", harvest each ready allotment, plant three "
@@ -283,9 +286,8 @@ public class VariableMethodGuidanceService
                 : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
         String seed = herbSeed(items, level);
         if (seed == null) return null;
-        String patch = new FarmingAccessEvaluator(new FarmingAccessCatalog())
-                .firstReachableHerbPatchName(
-                        data == null ? null : data.getFarming());
+        String patch = FARMING_ACCESS.firstReachableHerbPatchName(
+                data == null ? null : data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
                 "At " + patch + ", harvest any ready herbs, plant " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",

@@ -64,6 +64,19 @@ public class RecommendationPresentationCompactTest
     }
 
     @Test
+    public void verifiedDetailsDoNotMislabelCarriedSetupAsMissing()
+    {
+        Recommendation verified = recommendation(
+                "Cook the carried fish and bank the output.",
+                "Carry the observed raw salmon.");
+        String details = RecommendationPresentation.detailedText(verified);
+
+        assertTrue(details.contains("WHERE"));
+        assertFalse(details.contains("NEEDED"));
+        assertTrue(details.contains("CURRENT STEP"));
+    }
+
+    @Test
     public void compactSentenceNeverCutsIntoHugeWordWallBeyondBudget()
     {
         String value = "This is useful compact text followed by a very long explanation that should be shortened without destroying the full details presentation.";
