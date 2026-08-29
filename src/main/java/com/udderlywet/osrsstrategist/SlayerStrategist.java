@@ -671,9 +671,33 @@ public class SlayerStrategist
             supplies.append("This low-burden route does not require Compass to claim a fixed food inventory; leave if the observed setup stops being safe.");
         String action = "Kill the remaining " + slayer.getRemaining() + " "
                 + slayer.getTaskName() + " using " + weapon + " ("
-                + styleName(observedStyle) + "). " + mechanics.getStyleGuidance();
+                + styleName(observedStyle) + ").";
+        String technique = concreteTechnique(mechanics.getStyleGuidance());
+        if (!technique.isEmpty()) action += " " + technique;
         return new RecommendationGuidance(action, supplies.toString(),
                 base.getLocation(), base.getNote());
+    }
+
+    /**
+     * Once live equipment has selected a weapon and style, do not append an
+     * older catalog sentence that delegates that same choice back to the
+     * player. Task-specific execution such as a safespot or finishing item is
+     * still retained when it does not contradict the observed loadout.
+     */
+    private static String concreteTechnique(String guidance)
+    {
+        String normalized = normalize(guidance);
+        if (normalized.isEmpty()
+                || normalized.startsWith("use any ")
+                || normalized.startsWith("choose ")
+                || normalized.startsWith("use a sustainable ")
+                || normalized.startsWith("use a build-legal ")
+                || normalized.startsWith("melee is a practical default")
+                || normalized.startsWith("crush is generally appropriate")
+                || normalized.contains("sustainable build-legal setup")
+                || normalized.contains("owned gear should decide"))
+            return "";
+        return guidance.trim();
     }
 
     private static boolean requiresCarriedHealing(

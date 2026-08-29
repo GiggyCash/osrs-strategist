@@ -24,6 +24,7 @@ public final class TrainingMethod
     private final boolean membersOnly;
     private final boolean wilderness;
     private final boolean progressionProtected;
+    private final boolean delegatesMethodChoice;
 
     public TrainingMethod(
             String id,
@@ -89,6 +90,32 @@ public final class TrainingMethod
             boolean wilderness,
             boolean progressionProtected)
     {
+        this(id, skill, minLevel, maxLevel, name, instructions,
+                efficientScore, balancedScore, relaxedScore, attentionLevel,
+                minimumSessionMinutes, setupMinutes, requirements, confidence,
+                membersOnly, wilderness, progressionProtected, false);
+    }
+
+    public TrainingMethod(
+            String id,
+            Skill skill,
+            int minLevel,
+            int maxLevel,
+            String name,
+            String instructions,
+            double efficientScore,
+            double balancedScore,
+            double relaxedScore,
+            AttentionLevel attentionLevel,
+            int minimumSessionMinutes,
+            int setupMinutes,
+            List<String> requirements,
+            RecommendationConfidence confidence,
+            boolean membersOnly,
+            boolean wilderness,
+            boolean progressionProtected,
+            boolean delegatesMethodChoice)
+    {
         this.id = id;
         this.skill = skill;
         this.minLevel = minLevel;
@@ -108,6 +135,7 @@ public final class TrainingMethod
         this.membersOnly = membersOnly;
         this.wilderness = wilderness;
         this.progressionProtected = progressionProtected;
+        this.delegatesMethodChoice = delegatesMethodChoice;
     }
 
     public String getId() { return id; }
@@ -124,6 +152,7 @@ public final class TrainingMethod
     public boolean isMembersOnly() { return membersOnly; }
     public boolean isWilderness() { return wilderness; }
     public boolean isProgressionProtected() { return progressionProtected; }
+    public boolean delegatesMethodChoice() { return delegatesMethodChoice; }
 
     public boolean supportsLevel(int level)
     {

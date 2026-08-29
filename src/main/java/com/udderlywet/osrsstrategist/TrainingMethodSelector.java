@@ -209,7 +209,7 @@ public class TrainingMethodSelector
             {
                 // These legacy catch-alls delegate the meaningful method choice
                 // back to the player and can outrank their concrete successors.
-                if (isDeprecatedGenericMethod(method)) continue;
+                if (method.delegatesMethodChoice()) continue;
                 candidates.add(new CuratedTrainingMethod(method,
                         TrainingMethodMetadata.legacy(method)));
             }
@@ -236,34 +236,6 @@ public class TrainingMethodSelector
             unique.put(id, candidate);
         }
         return new ArrayList<>(unique.values());
-    }
-
-    private static boolean isDeprecatedGenericMethod(TrainingMethod method)
-    {
-        if (method == null || method.getId() == null) return false;
-        switch (method.getId())
-        {
-            case "runecraft_best_rune":
-            case "magic_utility":
-            case "cooking_banked":
-            case "fishing_best":
-            case "construction_standard":
-            case "construction_homes":
-            case "farming_early":
-            case "farming_herbs":
-            case "hunter_traps":
-            case "hunter_birdhouses":
-            case "prayer_bones":
-            case "herblore_bank":
-            case "thieving_best_target":
-            case "crafting_banked":
-            case "fletching_logs":
-            case "firemaking_logs":
-            case "woodcutting_best":
-                return true;
-            default:
-                return false;
-        }
     }
 
     private static MembershipStatus membershipStatus(StrategyDataBundle data)

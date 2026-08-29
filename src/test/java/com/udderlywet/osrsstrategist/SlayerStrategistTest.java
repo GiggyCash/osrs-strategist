@@ -267,6 +267,9 @@ public class SlayerStrategistTest
                 result.getConfidence());
         assertTrue(result.getGuidance().getAction().contains("remaining 140"));
         assertTrue(result.getGuidance().getAction().contains("Abyssal whip"));
+        assertFalse(result.getGuidance().getAction().contains("Use any"));
+        assertFalse(result.getGuidance().getAction().contains("Choose"));
+        assertFalse(result.getGuidance().getAction().contains("owned gear"));
         assertTrue(result.getReason().contains("properties"));
     }
 

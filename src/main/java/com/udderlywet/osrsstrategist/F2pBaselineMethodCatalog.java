@@ -60,10 +60,6 @@ public class F2pBaselineMethodCatalog
                 "F2P bow training",
                 "Edgeville Monastery: attack monks on Rapid style with the observed shortbow and matching arrows; ask a monk to heal you when needed.",
                 AttentionLevel.MODERATE);
-        baseline(Skill.MAGIC, "magic_f2p_baseline", 1, 99,
-                "F2P spell training",
-                "Edgeville Monastery: cast the Standard-spellbook combat spell named in DO on monks, then buy rune shortfalls from Aubury south of Varrock East Bank.",
-                AttentionLevel.MODERATE);
         baseline(Skill.PRAYER, "prayer_f2p_bones", 1, 99,
                 "Bury F2P bones",
                 "Lumbridge Castle bank: withdraw the bone type named in DO, bury the full inventory, bank, and repeat.",

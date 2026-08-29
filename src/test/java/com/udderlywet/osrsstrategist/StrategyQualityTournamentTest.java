@@ -177,6 +177,23 @@ public class StrategyQualityTournamentTest
     }
 
     @Test
+    public void legacyChoiceDelegationIsTypedCatalogData()
+    {
+        TrainingMethodDatabase legacy = new TrainingMethodDatabase();
+        TrainingMethod genericMagic = legacy.methodsFor(Skill.MAGIC).stream()
+                .filter(method -> "magic_utility".equals(method.getId()))
+                .findFirst().orElse(null);
+        TrainingMethod concreteCombat = legacy.methodsFor(Skill.ATTACK).stream()
+                .filter(method -> "attack_combat".equals(method.getId()))
+                .findFirst().orElse(null);
+
+        assertNotNull(genericMagic);
+        assertTrue(genericMagic.delegatesMethodChoice());
+        assertNotNull(concreteCombat);
+        assertFalse(concreteCombat.delegatesMethodChoice());
+    }
+
+    @Test
     public void afkMagicWinnerIsExecutableAndUsesObservedSplashingSetup()
     {
         StrategyDataBundle ready = magicSplashingData(true);
@@ -244,6 +261,7 @@ public class StrategyQualityTournamentTest
         Set<String> fishing = new HashSet<>();
         Set<String> runecraft = new HashSet<>();
         Set<String> farming = new HashSet<>();
+        Set<String> magic = new HashSet<>();
         for (StrategyMode mode : StrategyMode.values())
         {
             for (SessionIntent session : SessionIntent.values())
@@ -258,6 +276,11 @@ public class StrategyQualityTournamentTest
                             prepared, skill, 80, mode, session, false, false);
                     assertTrue(skill.getName() + " has no legal tournament route",
                             !ranked.isEmpty());
+                    assertFalse(skill.getName()
+                                    + " winner has unresolved access evidence: "
+                                    + ranked.get(0).getMethod().getId(),
+                            RequirementActionability
+                                    .hasHardUnresolvedRequirement(ranked.get(0)));
                     String first = ranked.get(0).getMethod().getId();
                     String second = ranked.size() > 1
                             ? ranked.get(1).getMethod().getId() : "none";
@@ -266,6 +289,7 @@ public class StrategyQualityTournamentTest
                     if (skill == Skill.FISHING) fishing.add(first);
                     if (skill == Skill.RUNECRAFT) runecraft.add(first);
                     if (skill == Skill.FARMING) farming.add(first);
+                    if (skill == Skill.MAGIC) magic.add(first);
                     System.out.println("METHOD_TOURNAMENT " + skill.getName()
                             + " " + mode + " " + session + " winner="
                             + first + " runnerUp=" + second);
@@ -277,6 +301,8 @@ public class StrategyQualityTournamentTest
         assertTrue("Fishing remains universal", fishing.size() >= 2);
         assertTrue("Runecraft remains universal", runecraft.size() >= 2);
         assertTrue("Farming remains universal", farming.size() >= 2);
+        assertFalse("A generic Magic fallback must not dominate concrete bands",
+                magic.contains("magic_f2p_baseline"));
     }
 
     private StrategyDataBundle tournamentData()
@@ -308,7 +334,15 @@ public class StrategyQualityTournamentTest
                         item(ItemID.WATERING_CAN_8, "Watering can(8)", 8)),
                 completed,
                 minigames("tempoross", "guardians-of-the-rift",
-                        "tithe-farm"), true);
+                        "tithe-farm"), true,
+                items(item(1, "Iron full helm", 1),
+                        item(2, "Iron platebody", 1),
+                        item(3, "Iron platelegs", 1),
+                        item(4, "Iron kiteshield", 1),
+                        item(5, "Fancy boots", 1),
+                        item(6, "Cursed goblin staff", 1)),
+                new CombatEvidenceSnapshot(0,
+                        EnumSet.noneOf(Prayer.class), false, false, false));
     }
 
     private Recommendation onlyMagicRecommendation(StrategyDataBundle data)
@@ -409,6 +443,16 @@ public class StrategyQualityTournamentTest
             Map<String, QuestStatus> quests, MinigameSnapshot minigames,
             boolean easyKourendDiary)
     {
+        return data(accountType, membership, inventory, quests, minigames,
+                easyKourendDiary, Collections.emptyList(), null);
+    }
+
+    private static StrategyDataBundle data(int accountType,
+            MembershipStatus membership, List<ItemStackSnapshot> inventory,
+            Map<String, QuestStatus> quests, MinigameSnapshot minigames,
+            boolean easyKourendDiary, List<ItemStackSnapshot> equipment,
+            CombatEvidenceSnapshot combatEvidence)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         int total = 0;
@@ -439,7 +483,7 @@ public class StrategyQualityTournamentTest
         tools.put("spade", CapabilityState.VERIFIED);
         return StrategyDataBundle.builder(account)
                 .inventory(new InventorySnapshot(inventory))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(equipment))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .quests(new QuestSnapshot(quests))
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
@@ -450,6 +494,7 @@ public class StrategyQualityTournamentTest
                 .farming(new FarmingSnapshot(
                         Collections.singleton("falador"), tools,
                         Collections.emptyMap()))
+                .combatEvidence(combatEvidence)
                 .build();
     }
 
