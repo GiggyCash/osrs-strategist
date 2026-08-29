@@ -102,6 +102,8 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JButton supportButton = actionButton("Support Compass");
     private final JButton doNextViewButton = actionButton("Do Next");
     private final JButton progressViewButton = actionButton("Progress");
+    private final JPanel recommendationControls = new JPanel();
+    private final JPanel feedbackPanel = new JPanel();
     private final CardLayout viewLayout = new CardLayout();
     private final JPanel viewCards = new JPanel(viewLayout);
     private final ProgressViewPanel progressView = new ProgressViewPanel();
@@ -283,10 +285,17 @@ public class OsrsStrategistPanel extends PluginPanel
 
         makeFullWidth(detailsButton, 34);
 
-        recommendationCard.add(detailsButton);
-        recommendationCard.add(Box.createVerticalStrut(9));
-        recommendationCard.add(eyebrow("FEEDBACK"));
-        recommendationCard.add(Box.createVerticalStrut(6));
+        recommendationControls.setLayout(new BoxLayout(
+                recommendationControls, BoxLayout.Y_AXIS));
+        recommendationControls.setOpaque(false);
+        recommendationControls.setAlignmentX(LEFT_ALIGNMENT);
+        recommendationControls.add(detailsButton);
+        recommendationControls.add(Box.createVerticalStrut(9));
+        feedbackPanel.setLayout(new BoxLayout(feedbackPanel, BoxLayout.Y_AXIS));
+        feedbackPanel.setOpaque(false);
+        feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
+        feedbackPanel.add(eyebrow("FEEDBACK"));
+        feedbackPanel.add(Box.createVerticalStrut(6));
         JPanel feedbackGrid = new JPanel(new GridLayout(2, 2, 6, 6));
         feedbackGrid.setOpaque(false);
         feedbackGrid.setAlignmentX(LEFT_ALIGNMENT);
@@ -294,10 +303,12 @@ public class OsrsStrategistPanel extends PluginPanel
         feedbackGrid.add(laterButton);
         feedbackGrid.add(notTodayButton);
         feedbackGrid.add(dislikeButton);
-        recommendationCard.add(feedbackGrid);
-        recommendationCard.add(Box.createVerticalStrut(8));
+        feedbackPanel.add(feedbackGrid);
+        feedbackPanel.add(Box.createVerticalStrut(8));
         setWrappedText(feedbackStatus, "", TEXT_WIDTH);
-        recommendationCard.add(feedbackStatus);
+        feedbackPanel.add(feedbackStatus);
+        recommendationControls.add(feedbackPanel);
+        recommendationCard.add(recommendationControls);
 
         detailsButton.addActionListener(event -> toggleDetails());
         laterButton.addActionListener(event -> submitFeedback(FeedbackAction.LATER));
@@ -550,6 +561,8 @@ public class OsrsStrategistPanel extends PluginPanel
         {
             progressText.setText(html(""));
             progressBar.setValue(0);
+            progressText.setVisible(false);
+            progressBar.setVisible(false);
             return;
         }
 
@@ -568,6 +581,8 @@ public class OsrsStrategistPanel extends PluginPanel
                                         / Math.max(1, target - start))));
         progressText.setText(html("Level " + current + " → " + target));
         progressBar.setValue(percent);
+        progressText.setVisible(true);
+        progressBar.setVisible(true);
     }
 
     private void toggleDetails()
@@ -614,9 +629,12 @@ public class OsrsStrategistPanel extends PluginPanel
     private void setRecommendationButtonsEnabled(boolean enabled)
     {
         detailsButton.setEnabled(enabled && detailsOverlayEnabled);
+        detailsButton.setVisible(enabled && detailsOverlayEnabled);
         laterButton.setEnabled(enabled);
         notTodayButton.setEnabled(enabled);
         dislikeButton.setEnabled(enabled);
+        feedbackPanel.setVisible(enabled);
+        recommendationControls.setVisible(enabled);
     }
 
     public void setDetailsOverlayEnabled(boolean enabled)
@@ -625,6 +643,8 @@ public class OsrsStrategistPanel extends PluginPanel
         if (!enabled) clearDetailsOverlay();
         setRecommendationButtonsEnabled(currentRecommendation != null
                 && !FallbackRecommendationFactory.isFallback(currentRecommendation));
+        revalidate();
+        repaint();
     }
 
     public void closeDetails() { clearDetailsOverlay(); }
@@ -639,11 +659,15 @@ public class OsrsStrategistPanel extends PluginPanel
     boolean isSupportVisible() { return supportButton.isVisible(); }
     boolean isFirstUseHintVisible() { return firstUseHint.isVisible(); }
     boolean isDetailsControlEnabled() { return detailsButton.isEnabled(); }
+    boolean isDetailsControlVisible() { return detailsButton.isVisible(); }
+    boolean isFeedbackVisibleForTest() { return feedbackPanel.isVisible(); }
+    boolean isProgressVisibleForTest() { return progressBar.isVisible(); }
     void clickSupportForTest() { supportButton.doClick(); }
     String recommendationTextForTest() { return recommendationBody.getText(); }
     boolean areAlternativesVisibleForTest() { return alternativesCard.isVisible(); }
     boolean areOpportunitiesVisibleForTest() { return opportunitiesCard.isVisible(); }
     String firstAlternativeTextForTest() { return alternativeOne.getText(); }
+    String firstOpportunityTextForTest() { return opportunityOne.getText(); }
     java.util.List<String> feedbackLabelsForTest()
     {
         return java.util.Arrays.asList(
@@ -804,9 +828,16 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static String opportunityText(Opportunity opportunity)
     {
-        String state = opportunity.isReady()
-                ? "Ready"
-                : confidenceName(opportunity.getConfidence());
+        boolean actionable = opportunity.isReady()
+                && (opportunity.isSetupVerified()
+                || opportunity.getPreparation().isEmpty());
+        String state;
+        if (actionable)
+            state = "Ready";
+        else if (!opportunity.getPreparation().isEmpty())
+            state = "Prep: " + opportunity.getPreparation().get(0);
+        else
+            state = "Wait";
         return "• " + safe(opportunity.getTitle()) + "\n" + state;
     }
 
@@ -831,13 +862,6 @@ public class OsrsStrategistPanel extends PluginPanel
         if (text == null || text.isEmpty()) return "Unknown";
         String lower = text.toLowerCase().replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
-    }
-
-    private static String confidenceName(RecommendationConfidence confidence)
-    {
-        if (confidence == RecommendationConfidence.VERIFIED) return "Verified";
-        if (confidence == RecommendationConfidence.BLOCKED) return "Blocked";
-        return "Check Needed";
     }
 
     private static String safe(String value)

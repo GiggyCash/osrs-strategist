@@ -64,9 +64,11 @@ public class ReleaseUxControlsTest
         String before = panel.recommendationTextForTest();
         panel.setDetailsOverlayEnabled(false);
         assertFalse(panel.isDetailsControlEnabled());
+        assertFalse(panel.isDetailsControlVisible());
         assertEquals(before, panel.recommendationTextForTest());
         panel.setDetailsOverlayEnabled(true);
         assertTrue(panel.isDetailsControlEnabled());
+        assertTrue(panel.isDetailsControlVisible());
     }
 
     @Test
@@ -91,6 +93,36 @@ public class ReleaseUxControlsTest
         assertTrue(text.contains("Concrete method"));
         assertTrue(text.contains("30 → 40"));
         assertFalse(text.contains("Named location"));
+    }
+
+    @Test
+    public void fallbackHidesControlsThatCannotDoAnything()
+    {
+        OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
+        panel.updateRecommendations(Collections.emptyList());
+
+        assertFalse(panel.isDetailsControlVisible());
+        assertFalse(panel.isFeedbackVisibleForTest());
+        assertFalse(panel.isProgressVisibleForTest());
+    }
+
+    @Test
+    public void opportunityCardExplainsFirstPreparationInsteadOfDebugConfidence()
+    {
+        OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
+        Opportunity herb = new Opportunity("opportunity:herb-run",
+                OpportunityType.HERB_RUN, "Herb run", true,
+                RecommendationConfidence.VERIFIED,
+                Collections.singletonList("Carry a spade"), false,
+                CandidateSafetyEvidence.skill(false,
+                        net.runelite.api.Skill.FARMING));
+
+        panel.updateOpportunities(Collections.singletonList(herb));
+
+        assertTrue(panel.firstOpportunityTextForTest()
+                .contains("Prep: Carry a spade"));
+        assertFalse(panel.firstOpportunityTextForTest()
+                .contains("Check Needed"));
     }
 
     private static OsrsStrategistPanel panel(String support,

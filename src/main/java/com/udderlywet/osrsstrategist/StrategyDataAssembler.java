@@ -165,8 +165,6 @@ public class StrategyDataAssembler
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
-        observePoh();
-
         return StrategyDataBundle.builder(account)
                 .inventory(inventory)
                 .bank(bank)

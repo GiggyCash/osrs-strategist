@@ -243,14 +243,23 @@ public class OsrsStrategistPlugin extends Plugin
     @Subscribe
     public void onItemContainerChanged(ItemContainerChanged event)
     {
-        if (event != null
-                && event.getContainerId()
+        if (event == null || !isStrategicContainer(event.getContainerId())) return;
+        if (event.getContainerId()
                         == net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP
                 && liveItemStateReader != null)
         {
             liveItemStateReader.observeGroupStorage(event.getItemContainer());
         }
         accountRefreshPending = true;
+    }
+
+    static boolean isStrategicContainer(int containerId)
+    {
+        return containerId == net.runelite.api.gameval.InventoryID.INV
+                || containerId == net.runelite.api.gameval.InventoryID.WORN
+                || containerId == net.runelite.api.gameval.InventoryID.BANK
+                || containerId
+                        == net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP;
     }
 
     @Subscribe

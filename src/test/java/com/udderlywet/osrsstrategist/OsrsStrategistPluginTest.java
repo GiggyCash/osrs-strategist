@@ -28,13 +28,21 @@ public class OsrsStrategistPluginTest
     }
 
     @Test
-    public void containerBurstsCoalesceIntoOnePendingRefresh()
+    public void onlyStrategicContainersTriggerFullAccountRefresh()
     {
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
         plugin.onItemContainerChanged((ItemContainerChanged) null);
-        plugin.onItemContainerChanged((ItemContainerChanged) null);
-        assertTrue(plugin.consumeAccountRefreshPending());
         assertFalse(plugin.consumeAccountRefreshPending());
+        assertTrue(OsrsStrategistPlugin.isStrategicContainer(
+                net.runelite.api.gameval.InventoryID.INV));
+        assertTrue(OsrsStrategistPlugin.isStrategicContainer(
+                net.runelite.api.gameval.InventoryID.WORN));
+        assertTrue(OsrsStrategistPlugin.isStrategicContainer(
+                net.runelite.api.gameval.InventoryID.BANK));
+        assertTrue(OsrsStrategistPlugin.isStrategicContainer(
+                net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP));
+        assertFalse(OsrsStrategistPlugin.isStrategicContainer(
+                net.runelite.api.gameval.InventoryID.GENERALSHOP1));
     }
 
     @SuppressWarnings("unchecked")
