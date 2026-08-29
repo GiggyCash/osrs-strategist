@@ -65,6 +65,29 @@ public class ProgressViewPanelTest
     }
 
     @Test
+    public void milestoneOnlySessionRecapShowsAccountProgress()
+    {
+        ProgressMilestone milestone = new ProgressMilestone(
+                "infrastructure:poh-fairy-ring",
+                ProgressMilestoneType.INFRASTRUCTURE,
+                "POH upgrade: fairy ring", null, GoalType.AUTOMATIC.name(),
+                10L);
+        ProgressSessionSummary summary = new ProgressSessionSummary(
+                0L, 10L, 0L, 0L, 0, Collections.emptyMap(),
+                Collections.singletonList(milestone));
+        ProgressHistory history = new ProgressHistory();
+        history.replaceAll(Collections.singletonList(summary),
+                Collections.singletonList(milestone), Collections.emptyList());
+        ProgressViewPanel panel = new ProgressViewPanel();
+
+        panel.setHistory(history);
+
+        assertTrue(panel.getLastSessionText().contains("+0 XP"));
+        assertTrue(panel.getLastSessionText().contains(
+                "Account progress: POH upgrade: fairy ring"));
+    }
+
+    @Test
     public void planProgressCountIncludesCurrentAndTargetSteps()
     {
         StrategicPlan plan = new StrategicPlan(GoalType.BARROWS_GLOVES,

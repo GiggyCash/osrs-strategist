@@ -32,6 +32,10 @@ public final class AccountProgressMilestoneDetector
         storage(previous.getStorage(), current.getStorage(), goal, nowMillis,
                 result);
         poh(previous.getPoh(), current.getPoh(), goal, nowMillis, result);
+        diaries(previous.getDiaries(), current.getDiaries(), goal, nowMillis,
+                result);
+        slayer(previous.getSlayer(), current.getSlayer(), goal, nowMillis,
+                result);
         previous = current;
         return result;
     }
@@ -101,10 +105,38 @@ public final class AccountProgressMilestoneDetector
                         "POH upgrade: " + display(entry.getKey()), goal, now));
     }
 
+    private static void diaries(DiarySnapshot before, DiarySnapshot after,
+            GoalType goal, long now, List<ProgressMilestone> result)
+    {
+        if (before == null || after == null) return;
+        for (String region : after.getRegions())
+            for (DiaryTier tier : DiaryTier.values())
+                if (after.isTierComplete(region, tier)
+                        && !before.isTierComplete(region, tier))
+                    result.add(milestone("diary:" + slug(region) + ":"
+                                    + tier.name().toLowerCase(Locale.ROOT),
+                            ProgressMilestoneType.DIARY,
+                            region + " " + display(tier.name())
+                                    + " diary complete", goal, now));
+    }
+
+    private static void slayer(SlayerSnapshot before, SlayerSnapshot after,
+            GoalType goal, long now, List<ProgressMilestone> result)
+    {
+        if (before == null || after == null) return;
+        for (SlayerReward reward : SlayerReward.values())
+            if (after.getRewards().isUnlocked(reward)
+                    && !before.getRewards().isUnlocked(reward))
+                result.add(milestone("slayer-unlock:" + reward.getId(),
+                        ProgressMilestoneType.SLAYER_UNLOCK,
+                        "Slayer unlock: " + reward.getDisplayName(), goal,
+                        now));
+    }
+
     private static ProgressMilestone milestone(String id,
             ProgressMilestoneType type, String title, GoalType goal, long now)
     {
-        return new ProgressMilestone(id + ":" + now, type, title,
+        return new ProgressMilestone(id, type, title,
                 "Observed from live account state.",
                 goal == null ? null : goal.name(), now);
     }

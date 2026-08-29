@@ -23,7 +23,8 @@ The sidebar answers four practical questions:
 The secondary **Progress** view uses observed XP events to show session XP,
 active time, a measured recent rate/ETA when enough samples exist, the current
 NOW/NEXT/TARGET plan, bounded charts, milestones, and the previous session
-recap. It remains local and character-namespaced.
+recap. Recaps retain meaningful account unlocks even for low-XP sessions. It
+remains local and character-namespaced.
 
 Quest Helper remains the detailed quest walkthrough. RuneLite's Clue Scroll
 plugin remains the detailed clue solver. Compass chooses the next useful move;

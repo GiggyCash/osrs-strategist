@@ -52,6 +52,26 @@ public class AccountProgressMilestoneDetectorTest
                 GoalType.BARROWS_GLOVES, 2L).isEmpty());
     }
 
+    @Test
+    public void detectsDiaryTierAndSlayerRewardWithoutRepeatingThem()
+    {
+        AccountProgressMilestoneDetector detector =
+                new AccountProgressMilestoneDetector();
+        detector.observe(progressData(false), GoalType.AUTOMATIC, 1L);
+
+        java.util.List<ProgressMilestone> first = detector.observe(
+                progressData(true), GoalType.AUTOMATIC, 2L);
+        java.util.List<ProgressMilestone> duplicate = detector.observe(
+                progressData(true), GoalType.AUTOMATIC, 3L);
+
+        assertEquals(2, first.size());
+        assertTrue(first.stream().anyMatch(value -> value.getType()
+                == ProgressMilestoneType.DIARY));
+        assertTrue(first.stream().anyMatch(value -> value.getType()
+                == ProgressMilestoneType.SLAYER_UNLOCK));
+        assertTrue(duplicate.isEmpty());
+    }
+
     private static StrategyDataBundle data(long hash, QuestStatus quest,
             boolean unlocked)
     {
@@ -77,6 +97,27 @@ public class AccountProgressMilestoneDetectorTest
                         ? Collections.singleton("spirit-trees")
                         : Collections.emptySet()))
                 .storage(new StorageSnapshot(storage))
+                .build();
+    }
+
+    private static StrategyDataBundle progressData(boolean complete)
+    {
+        StrategyDataBundle base = data(9L, QuestStatus.NOT_STARTED, false);
+        Map<DiaryTier, Boolean> tiers = new EnumMap<>(DiaryTier.class);
+        tiers.put(DiaryTier.MEDIUM, complete);
+        Map<String, Map<DiaryTier, Boolean>> regions = new HashMap<>();
+        regions.put("Varrock", tiers);
+        Map<SlayerReward, CapabilityState> rewards =
+                new EnumMap<>(SlayerReward.class);
+        rewards.put(SlayerReward.BIGGER_AND_BADDER, complete
+                ? CapabilityState.VERIFIED : CapabilityState.BLOCKED);
+        return StrategyDataBundle.builder(base.getAccount())
+                .diaries(new DiarySnapshot(Collections.emptyMap(),
+                        Collections.emptyMap(), regions))
+                .slayer(new SlayerSnapshot(null, 0, "Nieve", null, 0,
+                        10, 100, 2, 0,
+                        new SlayerRewardSnapshot(rewards),
+                        RecommendationConfidence.VERIFIED))
                 .build();
     }
 }

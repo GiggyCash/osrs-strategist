@@ -174,6 +174,16 @@ public final class ProgressViewPanel extends JPanel
                 .ifPresent(value -> text.append("\nTop: ")
                         .append(value.getKey().getName()).append(" +")
                         .append(format(value.getValue())));
+        if (!summary.getMilestones().isEmpty())
+        {
+            int first = Math.max(0, summary.getMilestones().size() - 2);
+            text.append("\nAccount progress: ");
+            for (int index = first; index < summary.getMilestones().size(); index++)
+            {
+                if (index > first) text.append("; ");
+                text.append(summary.getMilestones().get(index).getTitle());
+            }
+        }
         lastSession.setText(text.toString());
         lastSessionCard.setVisible(true);
     }

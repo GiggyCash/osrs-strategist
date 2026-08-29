@@ -73,6 +73,56 @@ public class ProgressAnalyticsServiceTest
     }
 
     @Test
+    public void crossSkillOutOfOrderEventsCannotInflateTimeOrReorderBuckets()
+    {
+        ProgressAnalyticsService service = new ProgressAnalyticsService();
+        service.beginSession(account(Skill.FISHING, 10, 1_000), 1_000L);
+        assertTrue(service.record(Skill.FISHING, 1_100, 10, 61_000L));
+        assertFalse(service.record(Skill.MINING, 100, 2, 60_000L));
+        assertTrue(service.record(Skill.FISHING, 1_200, 10, 62_000L));
+
+        ProgressSessionSnapshot snapshot = service.snapshot(62_000L);
+        assertEquals(1_000L, snapshot.getActiveDurationMillis());
+        assertEquals(1, snapshot.getBuckets().size());
+    }
+
+    @Test
+    public void lowerAbsoluteXpClearsPriorAccountSessionEvidence()
+    {
+        ProgressAnalyticsService service = readyService();
+        service.setTarget(new ProgressTarget("skill:fishing", "fly-fishing",
+                Skill.FISHING, 20));
+        service.recordMilestone(new ProgressMilestone("quest:test",
+                ProgressMilestoneType.QUEST, "Test complete", null, null,
+                46_000L));
+
+        assertFalse(service.record(Skill.FISHING, 500, 5, 47_000L));
+        ProgressSessionSnapshot snapshot = service.snapshot(47_000L);
+
+        assertEquals(0L, snapshot.getTotalXpGained());
+        assertEquals(0L, snapshot.getActiveDurationMillis());
+        assertTrue(snapshot.getBuckets().isEmpty());
+        assertTrue(snapshot.getMilestones().isEmpty());
+        assertEquals(ProgressTargetProjection.State.NO_TARGET,
+                snapshot.getTargetProjection().getState());
+    }
+
+    @Test
+    public void logoutPauseRetainsGainsButNeverCountsOfflineGap()
+    {
+        ProgressAnalyticsService service = readyService();
+        long activeBefore = service.snapshot(46_000L).getActiveDurationMillis();
+
+        service.pause(47_000L);
+        service.record(Skill.FISHING, 1_350, 12, 107_000L);
+        ProgressSessionSnapshot snapshot = service.snapshot(107_000L);
+
+        assertEquals(350L, snapshot.getTotalXpGained());
+        assertEquals(activeBefore, snapshot.getActiveDurationMillis());
+        assertFalse(snapshot.getSkills().get(Skill.FISHING).getRate().isReady());
+    }
+
+    @Test
     public void targetEtaIsSafeAndMethodChangeRebasesMeasuredRate()
     {
         ProgressAnalyticsService service = readyService();

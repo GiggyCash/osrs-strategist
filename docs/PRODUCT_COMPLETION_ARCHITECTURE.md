@@ -233,22 +233,33 @@ It records per-skill/session XP, levels, active duration, bounded five-minute
 buckets, recent measured rate, target XP remaining, ETA, and meaningful
 milestones. A measured rate requires multiple samples over sufficient elapsed
 time; idle gaps are excluded and insufficient evidence shows calculating
-rather than a fabricated rate.
+rather than a fabricated rate. Logout/loading explicitly closes the current
+active/rate segment even when the gap is short. Cross-skill events must be
+globally time-ordered, and an absolute-XP rebase clears all volatile session
+evidence instead of retaining another character's chart or milestones.
 
 `ProgressHistory` retains at most 30 sessions, 100 milestones, and 288 buckets.
 `ProgressHistoryCodec` tolerates missing/corrupt state and
 `AccountProgressHistoryStore` namespaces data by RuneLite character profile.
+History normalization sorts sessions and buckets, merges same-time buckets,
+and deduplicates stable milestone/session identities. A replaceable active
+session preview is saved at most once per minute, limiting crash or late
+profile-switch loss without writing RuneLite configuration on every XP drop.
+Schema 2 retains typed account milestones inside each session recap and still
+loads schema-1 XP history safely.
 Recommendation feedback/completion history remains separately bounded at 200
 events. There is no network telemetry.
 
 `AccountProgressMilestoneDetector` recognises successive observed quest,
-transport, storage, and POH changes. It rebaselines on account switch and never
-turns the first snapshot into a list of achievements.
+transport, storage, POH, diary-tier, and Slayer-reward changes. It rebaselines
+on account switch, uses stable event identities, and never turns the first
+snapshot into a list of achievements.
 
 The sidebar uses a calm DO NEXT / Progress switch. Progress shows session XP,
 levels, active time, current target/rate/ETA, NOW/NEXT/TARGET, a lightweight
 bounded chart, recent milestones, and the last session recap. It does not show
-fake weighted goal percentages.
+fake weighted goal percentages. The recap includes account progress even when
+the session's durable unlock mattered more than its XP total.
 
 ## UI and performance
 

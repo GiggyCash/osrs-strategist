@@ -2,7 +2,13 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import net.runelite.api.Skill;
 
 /** Character-local, strictly bounded progress archive. */
 public final class ProgressHistory
@@ -23,7 +29,16 @@ public final class ProgressHistory
             sessions.add(new ProgressSessionSummary(snapshot));
         milestones.addAll(snapshot.getMilestones());
         buckets.addAll(snapshot.getBuckets());
-        trim();
+        normalizeAndTrim();
+    }
+
+    /** Returns a checkpoint document without closing the in-memory session. */
+    public ProgressHistory checkpoint(ProgressSessionSnapshot snapshot)
+    {
+        ProgressHistory copy = new ProgressHistory();
+        copy.replaceAll(sessions, milestones, buckets);
+        copy.archive(snapshot);
+        return copy;
     }
 
     void replaceAll(
@@ -37,7 +52,7 @@ public final class ProgressHistory
         if (nextSessions != null) sessions.addAll(nextSessions);
         if (nextMilestones != null) milestones.addAll(nextMilestones);
         if (nextBuckets != null) buckets.addAll(nextBuckets);
-        trim();
+        normalizeAndTrim();
     }
 
     public List<ProgressSessionSummary> getSessions()
@@ -62,11 +77,67 @@ public final class ProgressHistory
         buckets.clear();
     }
 
-    private void trim()
+    private void normalizeAndTrim()
     {
+        sessions.sort(Comparator.comparingLong(
+                ProgressSessionSummary::getStartedAtMillis).thenComparingLong(
+                ProgressSessionSummary::getEndedAtMillis));
+        Map<String, ProgressSessionSummary> uniqueSessions =
+                new LinkedHashMap<>();
+        for (ProgressSessionSummary session : sessions)
+            uniqueSessions.putIfAbsent(sessionKey(session), session);
+        sessions.clear();
+        sessions.addAll(uniqueSessions.values());
+
+        milestones.sort(Comparator.comparingLong(
+                ProgressMilestone::getOccurredAtMillis));
+        Map<String, ProgressMilestone> uniqueMilestones = new LinkedHashMap<>();
+        for (ProgressMilestone milestone : milestones)
+            uniqueMilestones.putIfAbsent(milestone.getId(), milestone);
+        milestones.clear();
+        milestones.addAll(uniqueMilestones.values());
+
+        TreeMap<Long, EnumMap<Skill, Integer>> mergedBuckets = new TreeMap<>();
+        for (ProgressTimeBucket bucket : buckets)
+        {
+            EnumMap<Skill, Integer> merged = mergedBuckets.computeIfAbsent(
+                    bucket.getStartedAtMillis(), ignored ->
+                            new EnumMap<>(Skill.class));
+            for (Map.Entry<Skill, Integer> entry
+                    : bucket.getXpBySkill().entrySet())
+                merged.merge(entry.getKey(), Math.max(0, entry.getValue()),
+                        ProgressHistory::saturatingAdd);
+        }
+        buckets.clear();
+        for (Map.Entry<Long, EnumMap<Skill, Integer>> entry
+                : mergedBuckets.entrySet())
+            buckets.add(new ProgressTimeBucket(entry.getKey(), entry.getValue()));
+
         trimOldest(sessions, MAX_SESSIONS);
         trimOldest(milestones, MAX_MILESTONES);
         trimOldest(buckets, MAX_BUCKETS);
+    }
+
+    private static String sessionKey(ProgressSessionSummary value)
+    {
+        return value.getStartedAtMillis() + ":" + value.getEndedAtMillis()
+                + ":" + value.getActiveDurationMillis() + ":"
+                + value.getTotalXpGained() + ":" + value.getLevelsGained()
+                + ":" + value.getXpBySkill() + ":" + milestoneIds(value);
+    }
+
+    private static String milestoneIds(ProgressSessionSummary value)
+    {
+        StringBuilder result = new StringBuilder();
+        for (ProgressMilestone milestone : value.getMilestones())
+            result.append(milestone.getId()).append('|');
+        return result.toString();
+    }
+
+    private static int saturatingAdd(int first, int second)
+    {
+        long result = (long) first + second;
+        return (int) Math.min(Integer.MAX_VALUE, Math.max(0L, result));
     }
 
     private static void trimOldest(List<?> values, int limit)

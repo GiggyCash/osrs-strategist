@@ -106,7 +106,8 @@ public class ProgressAnalyticsService
             Skill skill, int absoluteXp, int level, long nowMillis)
     {
         if (skill == null || overall(skill) || !validXp(absoluteXp)
-                || level <= 0 || nowMillis < startedAtMillis)
+                || level <= 0 || nowMillis < startedAtMillis
+                || nowMillis < updatedAtMillis)
             return false;
 
         MutableSkill state = skills.get(skill);
@@ -127,8 +128,11 @@ public class ProgressAnalyticsService
         if (absoluteXp < previousXp)
         {
             // Account resets, stale profile transitions and RuneLite rebases
-            // must never turn into negative session progress.
-            state.rebaseline(absoluteXp, level);
+            // must never retain another account's chart, milestones, target,
+            // or active-time totals. The next complete account read will fill
+            // the other skill baselines again.
+            reset(nowMillis);
+            skills.put(skill, new MutableSkill(absoluteXp, level));
             return false;
         }
         if (absoluteXp == previousXp) return false;
@@ -160,6 +164,19 @@ public class ProgressAnalyticsService
     public synchronized void clearTarget()
     {
         target = null;
+    }
+
+    /** Ends the current active/rate segment without discarding session gains. */
+    public synchronized void pause(long nowMillis)
+    {
+        updatedAtMillis = Math.max(updatedAtMillis,
+                Math.max(startedAtMillis, nowMillis));
+        lastProgressAtMillis = 0L;
+        for (MutableSkill state : skills.values())
+        {
+            state.lastProgressAtMillis = 0L;
+            state.rateIntervals.clear();
+        }
     }
 
     /** Adds a typed non-XP milestone once per session. */
@@ -329,15 +346,6 @@ public class ProgressAnalyticsService
             currentLevel = level;
         }
 
-        private void rebaseline(int xp, int level)
-        {
-            startingXp = xp;
-            currentXp = xp;
-            startingLevel = level;
-            currentLevel = level;
-            lastProgressAtMillis = 0L;
-            rateIntervals.clear();
-        }
     }
 
     private static final class RateInterval

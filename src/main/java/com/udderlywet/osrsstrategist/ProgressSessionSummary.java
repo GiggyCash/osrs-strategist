@@ -1,19 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.List;
 import net.runelite.api.Skill;
 
 /** Compact persisted recap; raw XP events are intentionally not retained. */
 public final class ProgressSessionSummary
 {
+    private static final int MAX_MILESTONES = 100;
     private final long startedAtMillis;
     private final long endedAtMillis;
     private final long activeDurationMillis;
     private final long totalXpGained;
     private final int levelsGained;
     private final Map<Skill, Integer> xpBySkill;
+    private final List<ProgressMilestone> milestones;
 
     public ProgressSessionSummary(ProgressSessionSnapshot snapshot)
     {
@@ -22,7 +26,8 @@ public final class ProgressSessionSummary
                 snapshot == null ? 0L : snapshot.getActiveDurationMillis(),
                 snapshot == null ? 0L : snapshot.getTotalXpGained(),
                 snapshot == null ? 0 : snapshot.getLevelsGained(),
-                gains(snapshot));
+                gains(snapshot), snapshot == null
+                        ? Collections.emptyList() : snapshot.getMilestones());
     }
 
     ProgressSessionSummary(
@@ -32,6 +37,20 @@ public final class ProgressSessionSummary
             long totalXpGained,
             int levelsGained,
             Map<Skill, Integer> xpBySkill)
+    {
+        this(startedAtMillis, endedAtMillis, activeDurationMillis,
+                totalXpGained, levelsGained, xpBySkill,
+                Collections.emptyList());
+    }
+
+    ProgressSessionSummary(
+            long startedAtMillis,
+            long endedAtMillis,
+            long activeDurationMillis,
+            long totalXpGained,
+            int levelsGained,
+            Map<Skill, Integer> xpBySkill,
+            List<ProgressMilestone> milestones)
     {
         this.startedAtMillis = Math.max(0L, startedAtMillis);
         this.endedAtMillis = Math.max(this.startedAtMillis, endedAtMillis);
@@ -47,6 +66,11 @@ public final class ProgressSessionSummary
                         && entry.getValue() > 0)
                     copy.put(entry.getKey(), entry.getValue());
         this.xpBySkill = Collections.unmodifiableMap(copy);
+        List<ProgressMilestone> milestoneCopy = new ArrayList<>(
+                milestones == null ? Collections.emptyList() : milestones);
+        while (milestoneCopy.size() > MAX_MILESTONES)
+            milestoneCopy.remove(0);
+        this.milestones = Collections.unmodifiableList(milestoneCopy);
     }
 
     private static Map<Skill, Integer> gains(ProgressSessionSnapshot snapshot)
@@ -65,4 +89,5 @@ public final class ProgressSessionSummary
     public long getTotalXpGained() { return totalXpGained; }
     public int getLevelsGained() { return levelsGained; }
     public Map<Skill, Integer> getXpBySkill() { return xpBySkill; }
+    public List<ProgressMilestone> getMilestones() { return milestones; }
 }

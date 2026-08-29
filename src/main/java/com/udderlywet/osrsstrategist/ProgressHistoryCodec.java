@@ -14,7 +14,7 @@ import net.runelite.api.Skill;
 /** Versioned fail-closed persistence codec for bounded local progress data. */
 final class ProgressHistoryCodec
 {
-    private static final int SCHEMA_VERSION = 1;
+    private static final int SCHEMA_VERSION = 2;
     private static final long MAX_ACCOUNT_XP = 5_000_000_000L;
     private static final int MAX_SESSION_LEVELS = 3_000;
 
@@ -35,23 +35,12 @@ final class ProgressHistoryCodec
             object.addProperty("totalXpGained", value.getTotalXpGained());
             object.addProperty("levelsGained", value.getLevelsGained());
             object.add("xpBySkill", skills(value.getXpBySkill()));
+            object.add("milestones", milestones(value.getMilestones()));
             sessions.add(object);
         }
         root.add("sessions", sessions);
 
-        JsonArray milestones = new JsonArray();
-        for (ProgressMilestone value : history.getMilestones())
-        {
-            JsonObject object = new JsonObject();
-            object.addProperty("id", value.getId());
-            object.addProperty("type", value.getType().name());
-            object.addProperty("title", value.getTitle());
-            addOptional(object, "detail", value.getDetail());
-            addOptional(object, "goalId", value.getGoalId());
-            object.addProperty("occurredAtMillis", value.getOccurredAtMillis());
-            milestones.add(object);
-        }
-        root.add("milestones", milestones);
+        root.add("milestones", milestones(history.getMilestones()));
 
         JsonArray buckets = new JsonArray();
         for (ProgressTimeBucket value : history.getBuckets())
@@ -69,8 +58,9 @@ final class ProgressHistoryCodec
     {
         ProgressHistory history = new ProgressHistory();
         JsonObject root = object(gson, json);
-        if (root == null || integer(root.get("schemaVersion"), -1)
-                != SCHEMA_VERSION)
+        int schema = root == null ? -1
+                : integer(root.get("schemaVersion"), -1);
+        if (schema != 1 && schema != SCHEMA_VERSION)
             return history;
         try
         {
@@ -105,8 +95,13 @@ final class ProgressHistoryCodec
                     || xp > MAX_ACCOUNT_XP || levels < 0
                     || levels > MAX_SESSION_LEVELS)
                 continue;
+            Map<Skill, Integer> skills = readSkills(object.get("xpBySkill"));
+            long skillTotal = skills.values().stream()
+                    .mapToLong(Integer::longValue).sum();
+            if (skillTotal != xp) continue;
             result.add(new ProgressSessionSummary(started, ended, active, xp,
-                    levels, readSkills(object.get("xpBySkill"))));
+                    levels, skills,
+                    readMilestones(object.get("milestones"))));
         }
         return result;
     }
@@ -136,6 +131,25 @@ final class ProgressHistoryCodec
             {
                 // Removed/unknown milestone types do not become fake progress.
             }
+        }
+        return result;
+    }
+
+    private static JsonArray milestones(List<ProgressMilestone> values)
+    {
+        JsonArray result = new JsonArray();
+        if (values == null) return result;
+        for (ProgressMilestone value : values)
+        {
+            if (value == null) continue;
+            JsonObject object = new JsonObject();
+            object.addProperty("id", value.getId());
+            object.addProperty("type", value.getType().name());
+            object.addProperty("title", value.getTitle());
+            addOptional(object, "detail", value.getDetail());
+            addOptional(object, "goalId", value.getGoalId());
+            object.addProperty("occurredAtMillis", value.getOccurredAtMillis());
+            result.add(object);
         }
         return result;
     }
@@ -177,7 +191,8 @@ final class ProgressHistoryCodec
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
         {
             int xp = integer(entry.getValue(), -1);
-            if (xp <= 0) continue;
+            if (xp <= 0 || xp > ProgressAnalyticsService.MAX_SKILL_XP)
+                continue;
             try
             {
                 Skill skill = Skill.valueOf(entry.getKey());

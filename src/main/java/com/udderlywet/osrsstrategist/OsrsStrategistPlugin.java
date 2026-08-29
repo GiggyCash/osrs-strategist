@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
+import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
@@ -37,6 +38,7 @@ public class OsrsStrategistPlugin extends Plugin
 {
     private static final double COMPLETION_VARIETY_PENALTY = -10.0;
     private static final long COMPLETION_VARIETY_DURATION_MILLIS = 30L * 60L * 1000L;
+    private static final long PROGRESS_CHECKPOINT_INTERVAL_MILLIS = 60_000L;
 
     @Inject private OsrsStrategistConfig config;
     @Inject private ConfigManager configManager;
@@ -85,6 +87,8 @@ public class OsrsStrategistPlugin extends Plugin
             new AtomicBoolean();
     private boolean varbitRefreshPending;
     private boolean accountRefreshPending;
+    private boolean progressCheckpointPending;
+    private long lastProgressCheckpointAtMillis;
     private final OverlayLifecycleGuard overlayLifecycle =
             new OverlayLifecycleGuard();
     private final RecommendationStabilizer recommendationStabilizer =
@@ -166,6 +170,8 @@ public class OsrsStrategistPlugin extends Plugin
     @Subscribe
     public void onGameStateChanged(GameStateChanged event)
     {
+        if (event == null || event.getGameState() != GameState.LOGGED_IN)
+            progressAnalyticsService.pause(System.currentTimeMillis());
         updateAccountPanel();
     }
 
@@ -177,6 +183,7 @@ public class OsrsStrategistPlugin extends Plugin
         boolean pohChanged = strategyDataAssembler.observePoh();
         boolean liveStateChanged = consumeVarbitRefreshPending();
         boolean observedStateChanged = consumeAccountRefreshPending();
+        checkpointProgressSession();
         if (accessChanged || farmChanged || pohChanged || liveStateChanged
                 || observedStateChanged) updateAccountPanel();
     }
@@ -209,7 +216,11 @@ public class OsrsStrategistPlugin extends Plugin
     public void onStatChanged(StatChanged event)
     {
         boolean progressChanged = progressAnalyticsService.record(event);
-        if (progressChanged) updateProgressPanel();
+        if (progressChanged)
+        {
+            progressCheckpointPending = true;
+            updateProgressPanel();
+        }
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         TrainingFatigueTracker.FatigueSignal fatigue = trainingFatigueTracker.record(
                 event.getSkill(), event.getXp(), profile.getStrategyMode());
@@ -258,6 +269,8 @@ public class OsrsStrategistPlugin extends Plugin
                 accountProgressHistoryStore.getActiveProfileKey()))
             archiveProgressSession();
         loadedProgressProfileKey = null;
+        progressCheckpointPending = false;
+        lastProgressCheckpointAtMillis = 0L;
         latestRecommendations = Collections.emptyList();
         latestPlan = null;
         latestData = null;
@@ -485,15 +498,16 @@ public class OsrsStrategistPlugin extends Plugin
                 && latestPlan != null
                 && !previousPlan.getCurrentStep().getId().equals(
                         latestPlan.getCurrentStep().getId()))
-            progressAnalyticsService.recordMilestone(new ProgressMilestone(
-                    "plan-step:" + previousPlan.getCurrentStep().getId()
-                            + ":" + System.currentTimeMillis(),
-                    ProgressMilestoneType.PLAN_STEP,
-                    previousPlan.getCurrentStep().getObjective()
-                            + " complete",
-                    "Completed a proven step on the active goal path.",
-                    profile.getActiveGoal().name(),
-                    System.currentTimeMillis()));
+            progressCheckpointPending |= progressAnalyticsService
+                    .recordMilestone(new ProgressMilestone(
+                            "plan-step:"
+                                    + previousPlan.getCurrentStep().getId(),
+                            ProgressMilestoneType.PLAN_STEP,
+                            previousPlan.getCurrentStep().getObjective()
+                                    + " complete",
+                            "Completed a proven step on the active goal path.",
+                            profile.getActiveGoal().name(),
+                            System.currentTimeMillis()));
         return fresh.withPlan(latestPlan);
     }
 
@@ -616,6 +630,8 @@ public class OsrsStrategistPlugin extends Plugin
                 ? new ProgressHistory() : accountProgressHistoryStore.load();
         progressAnalyticsService.beginSession(account);
         loadedProgressProfileKey = activeKey;
+        progressCheckpointPending = false;
+        lastProgressCheckpointAtMillis = System.currentTimeMillis();
     }
 
     private void archiveProgressSession()
@@ -635,6 +651,35 @@ public class OsrsStrategistPlugin extends Plugin
             savingProfileConfiguration = false;
         }
         progressAnalyticsService.reset();
+        progressCheckpointPending = false;
+    }
+
+    /**
+     * Persists a replaceable preview of the active session at most once per
+     * minute. A crash or late profile-change signal can therefore lose only
+     * the newest interval without writing configuration for every XP drop.
+     */
+    private void checkpointProgressSession()
+    {
+        if (!progressCheckpointPending || loadedProgressProfileKey == null
+                || !Objects.equals(loadedProgressProfileKey,
+                        accountProgressHistoryStore.getActiveProfileKey()))
+            return;
+        long now = System.currentTimeMillis();
+        if (now - lastProgressCheckpointAtMillis
+                < PROGRESS_CHECKPOINT_INTERVAL_MILLIS) return;
+        savingProfileConfiguration = true;
+        try
+        {
+            accountProgressHistoryStore.save(progressHistory.checkpoint(
+                    progressAnalyticsService.snapshot(now)));
+            progressCheckpointPending = false;
+            lastProgressCheckpointAtMillis = now;
+        }
+        finally
+        {
+            savingProfileConfiguration = false;
+        }
     }
 
     private PlayerStrategyProfile effectiveStrategyProfile()
@@ -678,7 +723,8 @@ public class OsrsStrategistPlugin extends Plugin
         for (ProgressMilestone milestone : progressMilestoneDetector.observe(
                 data, effectiveStrategyProfile().getActiveGoal(),
                 System.currentTimeMillis()))
-            progressAnalyticsService.recordMilestone(milestone);
+            progressCheckpointPending |= progressAnalyticsService
+                    .recordMilestone(milestone);
 
         TrackedMilestone completedCheckpoint = trackedMilestone;
         MilestoneCompletion completion = milestoneTracker.detectCompletion(
@@ -703,14 +749,17 @@ public class OsrsStrategistPlugin extends Plugin
             trackedMilestone = null;
             saveTrackedMilestone();
             milestoneRewardOverlay.show(completion);
-            progressAnalyticsService.recordMilestone(new ProgressMilestone(
-                    "skill-checkpoint:" + completion.getActivityId() + ":"
-                            + System.currentTimeMillis(),
-                    ProgressMilestoneType.SKILL_LEVEL,
-                    completion.getTitle(),
-                    "Completed the active Compass checkpoint.",
-                    effectiveStrategyProfile().getActiveGoal().name(),
-                    System.currentTimeMillis()));
+            progressCheckpointPending |= progressAnalyticsService
+                    .recordMilestone(new ProgressMilestone(
+                            "skill-checkpoint:" + completion.getActivityId()
+                                    + ":" + completion.getSkill().name()
+                                    .toLowerCase(java.util.Locale.ROOT) + ":"
+                                    + completion.getTargetLevel(),
+                            ProgressMilestoneType.SKILL_LEVEL,
+                            completion.getTitle(),
+                            "Completed the active Compass checkpoint.",
+                            effectiveStrategyProfile().getActiveGoal().name(),
+                            System.currentTimeMillis()));
         }
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
