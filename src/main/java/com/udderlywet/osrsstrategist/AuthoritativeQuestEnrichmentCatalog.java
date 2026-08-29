@@ -14,7 +14,7 @@ import java.util.Map;
 public final class AuthoritativeQuestEnrichmentCatalog
 {
     public static final String PROVENANCE =
-            "OSRS Wiki quest bucket and quest reward sections retrieved 2026-08-19";
+            "OSRS Wiki quest bucket and quest reward sections retrieved 2026-08-29";
     private static final String RESOURCE = "/content/quest-enrichment.tsv";
     private final Map<String, Record> records;
 
@@ -156,9 +156,10 @@ public final class AuthoritativeQuestEnrichmentCatalog
         if (state == EvidenceState.VALUE && blank)
             throw new IllegalStateException("Blank " + field
                     + " marked VALUE at line " + lineNumber);
-        if (state == EvidenceState.NONE && !blank)
+        if ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE)
+                && !blank)
             throw new IllegalStateException("Non-blank " + field
-                    + " marked NONE at line " + lineNumber);
+                    + " marked " + state + " at line " + lineNumber);
         if ((state == EvidenceState.SOURCE_MISSING
                 || state == EvidenceState.PARSE_FAILURE
                 || state == EvidenceState.UNSUPPORTED_STRUCTURE)

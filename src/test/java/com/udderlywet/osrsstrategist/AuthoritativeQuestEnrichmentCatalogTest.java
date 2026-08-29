@@ -62,4 +62,34 @@ public class AuthoritativeQuestEnrichmentCatalogTest
         assertEquals("Vale Totems (miniquest)", quest.getName());
         assertTrue(quest.hasStrictItemEvidence());
     }
+
+    @Test
+    public void distributedMiniquestRewardsUseTypedLocalStructureEvidence()
+    {
+        AuthoritativeQuestEnrichmentCatalog catalog =
+                new AuthoritativeQuestEnrichmentCatalog();
+
+        assertDistributedReward(catalog, "The Frozen Door", "Nex access");
+        assertDistributedReward(catalog, "Barbarian Training",
+                "Ancient Cavern");
+    }
+
+    private static void assertDistributedReward(
+            AuthoritativeQuestEnrichmentCatalog catalog, String questName,
+            String expectedUnlock)
+    {
+        AuthoritativeQuestEnrichmentCatalog.Record evidence =
+                catalog.recordFor(questName);
+        assertNotNull(evidence);
+        assertTrue(evidence.getRewards().isEmpty());
+        assertEquals(AuthoritativeQuestEnrichmentCatalog.EvidenceState.NOT_APPLICABLE,
+                evidence.getRewardState());
+        assertTrue(evidence.hasStrictRewardEvidence());
+
+        QuestDefinition definition = new QuestKnowledgeCatalog()
+                .definitionFor(questName);
+        assertNotNull(definition);
+        assertTrue(definition.getUnlocks().contains(expectedUnlock));
+        assertFalse(definition.hasFieldUncertainty());
+    }
 }

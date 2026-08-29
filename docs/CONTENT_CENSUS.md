@@ -4,7 +4,7 @@ Gielinor Compass keeps explicit local coverage manifests so new game content is
 not silently omitted. Runtime planning remains local; these manifests do not
 scrape the Wiki or any other service.
 
-The identity census was revalidated on 2026-08-25 against current RuneLite
+The identity census was revalidated on 2026-08-29 against current RuneLite
 master and the pinned RuneLite 1.12.35 build dependency:
 
 | Family | Authoritative identity source | Discovered | Structured | Partial | Conservative |
@@ -23,9 +23,13 @@ master and the pinned RuneLite 1.12.35 build dependency:
 
 “Represented” is not a claim of executable completeness. Quest records reconcile
 the Wiki requirement module with a pinned Wiki quest-details/rewards snapshot.
-The 2026-08-25 snapshot uses the evidence-aware schema for all 219 source rows:
+The 2026-08-29 snapshot uses the evidence-aware schema for all 219 source rows:
 explicit source NONE remains NONE, missing fields remain SOURCE_MISSING, and
-unsupported page structure remains UNSUPPORTED_STRUCTURE.
+unsupported page structure remains UNSUPPORTED_STRUCTURE. The Frozen Door and
+Barbarian Training intentionally distribute their unlocks through walkthrough
+sections rather than conventional reward sections; the generator proves those
+known structures as NOT_APPLICABLE while typed local quest definitions retain
+their requirements, checks, and durable unlocks.
 
 The executable quest-item census currently reports 211 identities, 195 with an
 item source field, 81 deterministically executable-or-verified-NONE, 130

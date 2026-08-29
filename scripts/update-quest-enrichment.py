@@ -21,9 +21,21 @@ USER_AGENT = (
 
 VALUE = "VALUE"
 NONE = "NONE"
+NOT_APPLICABLE = "NOT_APPLICABLE"
 SOURCE_MISSING = "SOURCE_MISSING"
 PARSE_FAILURE = "PARSE_FAILURE"
 UNSUPPORTED_STRUCTURE = "UNSUPPORTED_STRUCTURE"
+
+# These miniquests intentionally distribute durable unlocks through their
+# walkthrough sections instead of publishing a conventional Rewards section.
+# QuestKnowledgeCatalog owns their typed unlocks; this manifest proves the
+# source structure was recognised rather than incorrectly inferring no reward.
+DISTRIBUTED_REWARD_SECTIONS = {
+    "The Frozen Door": ("The Evil Within",),
+    "Barbarian Training": (
+        "Farming", "Smithing", "Herblore", "Required for completing"
+    ),
+}
 
 
 def request(parameters):
@@ -95,6 +107,11 @@ def reward_sections(names):
                     r"(?ims)(The rewarded XP .*?)(?=^==[^=]|\Z)", source
                 )
             if not match or not match.group(1).strip():
+                expected = DISTRIBUTED_REWARD_SECTIONS.get(title)
+                if expected and all(has_heading(source, heading)
+                                    for heading in expected):
+                    result[title] = ("", NOT_APPLICABLE)
+                    continue
                 # The source was read successfully but does not use a supported
                 # rewards section. This is uncertainty, not a parser crash and
                 # not proof that the activity has no rewards.
@@ -104,6 +121,12 @@ def reward_sections(names):
         for title in batch:
             result.setdefault(title, ("", SOURCE_MISSING))
     return result
+
+
+def has_heading(source, heading):
+    return re.search(
+        r"(?im)^==+\s*" + re.escape(heading) + r"\s*==+\s*$", source
+    ) is not None
 
 
 def escape(value):
