@@ -90,6 +90,34 @@ public class SlayerStrategistTest
     }
 
     @Test
+    public void extensionPurchaseRequiresMatchingGoalSessionAndLiveLockState()
+    {
+        EnumMap<SlayerReward, CapabilityState> rewardStates =
+                new EnumMap<>(SlayerReward.class);
+        for (SlayerReward reward : SlayerReward.values())
+            rewardStates.put(reward, CapabilityState.VERIFIED);
+        rewardStates.put(SlayerReward.EXTEND_NECHRYAELS,
+                CapabilityState.BLOCKED);
+        SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
+                200, 20, 300, 6, null,
+                new SlayerRewardSnapshot(rewardStates),
+                RecommendationConfidence.VERIFIED);
+
+        SlayerDecisionResult longSession = strategist.assess(context(1,
+                noTask, StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
+                GoalType.SLAYER_85, false, Collections.emptyList(), null));
+        assertEquals(SlayerReward.EXTEND_NECHRYAELS,
+                longSession.getRecommendedReward());
+        assertTrue(longSession.getGuidance().getNote()
+                .contains("cancellation reserve"));
+
+        SlayerDecisionResult quickSession = strategist.assess(context(1,
+                noTask, StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
+                GoalType.SLAYER_85, false, Collections.emptyList(), null));
+        assertNull(quickSession.getRecommendedReward());
+    }
+
+    @Test
     public void milestonePointEconomyMateriallyInfluencesMasterScore()
     {
         SlayerSnapshot noTask = snapshot(null, 0, null, null,

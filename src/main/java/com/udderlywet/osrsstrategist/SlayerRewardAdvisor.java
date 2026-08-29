@@ -55,6 +55,38 @@ public class SlayerRewardAdvisor
                 66.0,
                 "Boss assignments can align future tasks with the selected PvM objective; access requirements remain independently checked.");
 
+        boolean longXpSession = context.getSessionIntent()
+                == SessionIntent.LONG_SESSION
+                && (context.getActiveGoal() == GoalType.SLAYER_85
+                    || context.getActiveGoal() == GoalType.MAX);
+        add(candidates, slayer, SlayerReward.EXTEND_DUST_DEVILS,
+                longXpSession && slayerLevel >= 65, 64.0,
+                "Longer dust-devil assignments preserve a high-value multitarget Magic setup during a long Slayer or Max session.");
+        add(candidates, slayer, SlayerReward.EXTEND_NECHRYAELS,
+                longXpSession && slayerLevel >= 80, 65.0,
+                "Longer nechryael assignments preserve a high-value multitarget Magic setup during a long Slayer or Max session.");
+        add(candidates, slayer, SlayerReward.EXTEND_ABYSSAL_DEMONS,
+                longXpSession && slayerLevel >= 85, 61.0,
+                "Longer abyssal-demon assignments fit the selected long Slayer progression goal without changing task legality.");
+        add(candidates, slayer, SlayerReward.EXTEND_BLOODVELDS,
+                context.getAccountMode().isIronLike()
+                        && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
+                        && slayerLevel >= 50,
+                58.0,
+                "Longer bloodveld assignments can retain an Iron account's useful drop and combat-training setup when session time supports it.");
+        add(candidates, slayer, SlayerReward.EXTEND_GARGOYLES,
+                context.getAccountMode().isIronLike()
+                        && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
+                        && slayerLevel >= 75,
+                57.0,
+                "Longer gargoyle assignments can retain a profitable low-attention setup for an Iron account, but do not outrank core permanent unlocks.");
+        add(candidates, slayer, SlayerReward.EXTEND_KRAKEN,
+                slayerLevel >= 87
+                        && (context.getActiveGoal() == GoalType.GEAR_TARGET
+                            || context.getStrategyMode() == StrategyMode.RELAXED),
+                56.0,
+                "Longer cave-kraken assignments suit a verified gear objective or low-attention strategy after higher-value permanent unlocks.");
+
         return candidates.stream().max(Comparator.comparingDouble(
                 SlayerRewardAdvice::getScore)).orElse(null);
     }

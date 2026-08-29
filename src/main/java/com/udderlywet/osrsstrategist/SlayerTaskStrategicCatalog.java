@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,6 +183,11 @@ public class SlayerTaskStrategicCatalog
     public int size()
     {
         return byProfileId.size();
+    }
+
+    public Collection<SlayerTaskStrategicProfile> all()
+    {
+        return byProfileId.values();
     }
 
     private static void add(Map<String, SlayerTaskStrategicProfile> values,

@@ -160,8 +160,10 @@ affordable permanent reward when its account/goal value exceeds immediately
 requesting another task. It currently reasons about Bigger and Badder, Slayer
 helmet crafting, broad ammunition, Slayer-ring crafting, Task Storage, boss
 tasks, and TzHaar tasks while retaining a 30-point cancellation reserve.
-Extensions are observed for future contextual decisions but are not purchased
-merely because the points exist.
+Reviewed extensions for dust devils, nechryaels, abyssal demons, bloodvelds,
+gargoyles, and cave kraken can also lead when account mode, selected goal,
+Slayer level, and session length make the longer future assignments worthwhile;
+they are never purchased merely because the points exist.
 
 To add a Slayer task:
 
@@ -172,9 +174,9 @@ To add a Slayer task:
 4. add exact TASK/WHERE/STYLE/BRING/DO guidance;
 5. never infer an observed task, master, block slot, or point balance.
 
-Broad reward unlock purchasing, extensions, and exhaustive task coverage are
-not claimed. Those require reviewed reward economics and additional observable
-state.
+Exhaustive strategic scoring for every long-tail task and reward is not
+claimed. Unknown task economics remain PREP_FIRST instead of receiving a
+guessed keep, skip, or block score.
 
 ## Quest ordering, goal paths, and plans
 

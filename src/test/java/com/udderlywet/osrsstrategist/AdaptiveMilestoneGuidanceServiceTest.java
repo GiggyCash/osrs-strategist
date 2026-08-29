@@ -41,6 +41,30 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
+    public void curseGuidanceCountsVerifiedSpellRunesAndSplashSetup()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.MAGIC, "curse", "Curse", 19, 29));
+        AccountSnapshot account = account(0, MembershipStatus.P2P,
+                Skill.MAGIC, 19, Experience.getXpForLevel(19));
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        RecommendationGuidance guidance = service.build(
+                data, Skill.MAGIC, 19, 20,
+                plan("magic_f2p_curse", Skill.MAGIC), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Curse"));
+        assertTrue(guidance.getSupplies().contains("Body rune"));
+        assertTrue(guidance.getSupplies().contains("Earth rune"));
+        assertTrue(guidance.getSupplies().contains("Water rune"));
+        assertTrue(guidance.getSupplies().contains("-64 Magic attack"));
+    }
+
+    @Test
     public void equippedFireStaffRemovesFireRuneShortfallFromHighAlchemy()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(

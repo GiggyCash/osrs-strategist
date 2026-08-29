@@ -84,7 +84,7 @@ public class SlayerStrategist
         String milestone = next > 0 && SlayerPointEconomy.isBonusCompletion(next)
                 ? " This is task " + next + ", so its verified milestone point value is part of the choice."
                 : "";
-        String reason = "Chosen from eligible masters by task XP potential, point value, "
+        String reason = "Chosen from eligible masters by the reviewed assignment-pool value, task XP potential, point value, "
                 + "supply value, setup burden and location constraints." + milestone;
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Get your next Slayer assignment from " + choice.getDisplayName()
@@ -192,7 +192,7 @@ public class SlayerStrategist
                 RecommendationConfidence.VERIFIED, reason, base);
     }
 
-    private static double masterScore(SlayerMasterProfile master,
+    private double masterScore(SlayerMasterProfile master,
             StrategyContext context, SlayerSnapshot slayer)
     {
         double score = master.getExperiencePotential() * 40.0
@@ -235,7 +235,29 @@ public class SlayerStrategist
         }
         score += context.getPreferenceProfile().weightFor(
                 "slayer:master:" + master.getId()) * 10.0;
+        score += reviewedPoolValue(master, context) * 1.25;
         return score;
+    }
+
+    /**
+     * Uses only reviewed task/master weights. Unknown or conditional long-tail
+     * assignments contribute nothing instead of being assigned guessed value.
+     */
+    private double reviewedPoolValue(SlayerMasterProfile master,
+            StrategyContext context)
+    {
+        double weightedValue = 0.0;
+        int reviewedWeight = 0;
+        for (SlayerTaskStrategicProfile task : strategy.all())
+        {
+            Integer weight = task.weightFor(master.getId());
+            if (weight == null || weight <= 0) continue;
+            weightedValue += weight * taskValue(task, context);
+            reviewedWeight += weight;
+        }
+        // A thin partial table must not masquerade as the master's full pool.
+        if (reviewedWeight < 50) return 0.0;
+        return weightedValue / reviewedWeight;
     }
 
     private static double taskValue(SlayerTaskStrategicProfile task,

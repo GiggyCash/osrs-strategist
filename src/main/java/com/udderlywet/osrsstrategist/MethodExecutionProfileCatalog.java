@@ -134,6 +134,11 @@ public class MethodExecutionProfileCatalog
                 "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
                 "shrimp", "sardine", "herring", "trout", "pike",
                 "salmon", "tuna", "lobster", "swordfish"));
+        add(p("cooking_f2p_fish_baseline", "fish cooked", "fish cooked",
+                rawAction(),
+                "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
+                "shrimp", "sardine", "herring", "trout", "pike",
+                "salmon", "tuna", "lobster", "swordfish"));
         add(pm("cooking_wines", "jug of wine made", "jugs of wine made",
                 rules(fixedRule("Grapes", 1.0), fixedRule("Jug of water", 1.0)),
                 "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
@@ -275,8 +280,11 @@ public class MethodExecutionProfileCatalog
                 rules(fixedRule("Nature rune", 1.0), fixedRule("Fire rune", 5.0)),
                 "A fire-rune staff replaces the five fire runes per cast. The item being alched must still be selected from a verified safe alch list before execution.",
                 "high_level_alchemy", "high_alchemy"));
-        add(p("magic_f2p_curse", "curse cast", "curse casts", none(),
-                "Rune requirements depend on the exact curse spell selected; no rune quantity is shown until that spell is resolved.",
+        add(pm("magic_f2p_curse", "Curse cast", "Curse casts",
+                rules(fixedRule("Body rune", 1.0),
+                        fixedRule("Earth rune", 3.0),
+                        fixedRule("Water rune", 2.0)),
+                "Curse grants 29 Magic XP whether it hits or misses. The conservative material count does not assume an elemental staff.",
                 "curse"));
 
         add(new MethodExecutionProfile(

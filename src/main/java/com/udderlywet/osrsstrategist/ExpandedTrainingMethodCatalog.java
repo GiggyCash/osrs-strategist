@@ -149,10 +149,10 @@ public class ExpandedTrainingMethodCatalog
                 true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
                 "Air and mind rune supply");
         add(Skill.MAGIC, "magic_f2p_curse", 19, 99,
-                "F2P curse casting", "Use curse-style utility casting for lower-cost F2P Magic experience when appropriate.",
+                "Curse splashing", "Cage under the Varrock Palace stairs: reduce Magic attack to -64 or lower, repeatedly cast Curse on the caged Monk of Zamorak, and keep the client active at least once every 20 minutes.",
                 TrainingIntensity.RELAXED, MethodCostTier.LOW, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
-                "Verified Curse splash target and equipment setup",
+                "Magic attack bonus of -64 or lower",
                 "Earth, water, and body rune supply");
         add(Skill.MAGIC, "magic_f2p_fire_bolt", 35, 58,
                 "Fire Bolt at Wizards' Tower", "Top floor of Wizards' Tower: cast Fire Bolt through the cage at the lesser demon, wait for it to respawn, and repeat.",

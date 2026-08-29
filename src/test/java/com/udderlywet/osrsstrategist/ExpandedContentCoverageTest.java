@@ -75,6 +75,21 @@ public class ExpandedContentCoverageTest
         assertEquals(14, method.getMaxLevel());
     }
 
+    @Test
+    public void curseMethodNamesTheVerifiedTargetAndFailureThreshold()
+    {
+        TrainingMethod method = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.MAGIC).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> "magic_f2p_curse".equals(
+                        candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertTrue(method.getInstructions().contains("Varrock Palace"));
+        assertTrue(method.getInstructions().contains("-64"));
+        assertTrue(method.getInstructions().contains("Monk of Zamorak"));
+    }
+
     private static void assertHasIntensity(
             List<CuratedTrainingMethod> methods,
             TrainingIntensity intensity)

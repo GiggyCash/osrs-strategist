@@ -244,6 +244,8 @@ public class AdaptiveMilestoneGuidanceService
             return "Bring three air runes, four fire runes, and one chaos rune per Fire Bolt; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
         if ("magic_f2p_fire_blast".equals(methodId))
             return "Bring four air runes, five fire runes, and one death rune per Fire Blast; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
+        if ("magic_f2p_curse".equals(methodId))
+            return "Bring one body rune, three earth runes, and two water runes per Curse. Equip full metal armour plus vambraces or a cursed goblin staff until the equipment panel shows -64 Magic attack or lower.";
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
             return "Bring a hammer and saw.";

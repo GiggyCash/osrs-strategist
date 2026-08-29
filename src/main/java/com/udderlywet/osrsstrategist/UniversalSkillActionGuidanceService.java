@@ -335,11 +335,13 @@ public class UniversalSkillActionGuidanceService
     {
         Set<String> result = new HashSet<>();
         if (method == null) return result;
+        String skillToken = stem(normalize(method.getSkill().getName()));
         String text = normalize(method.getId() + " "
                 + method.getName() + " " + method.getInstructions());
         for (String token : text.split("[^a-z0-9]+"))
         {
-            if (token.length() < 3 || STOP_WORDS.contains(token)) continue;
+            if (token.length() < 3 || STOP_WORDS.contains(token)
+                    || stem(token).equals(skillToken)) continue;
             result.add(stem(token));
         }
         return result;

@@ -27,6 +27,7 @@ Last audited: 2026-08-29.
 | Structured data | Source | Fact retained locally |
 | --- | --- | --- |
 | High Level Alchemy attention | [High Level Alchemy](https://oldschool.runescape.wiki/w/High_Level_Alchemy), [game ticks](https://oldschool.runescape.wiki/w/Ticks) | One cast consumes one item and can be repeated every five ticks (3 seconds). Repeated training therefore needs regular input and is classified ACTIVE, not AFK/LOW attention. This changes session fit through method properties rather than a named-method winner rule. |
+| Curse splashing | [Curse](https://oldschool.runescape.wiki/w/Curse), [Splashing](https://oldschool.runescape.wiki/w/Splashing), [Monk of Zamorak](https://oldschool.runescape.wiki/w/Monk_of_Zamorak) | Curse is F2P at 19 Magic, grants 29 XP on either hit or miss, and consumes one body, three earth, and two water runes without staff substitution. A Magic attack bonus of -64 or lower guarantees a splash; the caged level-17 Monk of Zamorak under the Varrock Palace stairs is a verified F2P target. |
 
 ## Resource and account-mode value
 

@@ -254,6 +254,13 @@ public class TrainingMethodSelector
             case "farming_herbs":
             case "hunter_traps":
             case "hunter_birdhouses":
+            case "prayer_bones":
+            case "herblore_bank":
+            case "thieving_best_target":
+            case "crafting_banked":
+            case "fletching_logs":
+            case "firemaking_logs":
+            case "woodcutting_best":
                 return true;
             default:
                 return false;
