@@ -14,7 +14,7 @@ master and the pinned RuneLite 1.12.35 build dependency:
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
 | PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 locally verifiable | 67 preparation-only; all 71 have specific preparation | 0 |
-| Slayer assignments | RuneLite Slayer `Task` enum | 151 | 151 mapped to 147 specific profiles / 227 aliases | readiness stays evidence-bound | 0 |
+| Slayer assignments | RuneLite Slayer `Task` enum | 151 | 151 mapped to 146 specific profiles / 227 aliases | readiness stays evidence-bound | 0 |
 | Contextual gear and acquisition | Maintained target/context catalogs | 41 acquisition targets / 17 context ladders | 7 decision kinds operational | live value/readiness checked | 0 |
 | Resource dependencies and sources | Deterministic recipes and account-aware source families | 41 recipes / 60 source families | quantity/yield/account routes | unknown live supply checked | 0 |
 | Achievement Diary tasks | RuneLite Achievement Diary definitions | 378 tasks / 12 regions / 48 tiers | 378 represented | alternatives remain explicit checks | 0 |

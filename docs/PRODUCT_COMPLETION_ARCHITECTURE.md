@@ -140,16 +140,28 @@ encounter model.
 ## Slayer strategist
 
 `LiveSlayerStateReader` models UNKNOWN, NO_TASK, and ASSIGNED from stable
-RuneLite task/count/points/streak state. `SlayerStrategist` can produce DO,
+RuneLite task/count/points/streak state. It also decodes the assigning-master
+varbit, master-specific block-slot varbits, and reviewed reward/extension
+varbits; a zero unlock varbit is therefore known locked, not missing evidence.
+`SlayerStrategist` can produce DO,
 SKIP, BLOCK, PREP_FIRST, or ALTERNATIVE, then `SlayerCandidateProvider` exposes
 that one workflow action to the shared queue.
 
-The reviewed local catalog currently covers 13 strategic task families plus
-master requirements, task weights used by those decisions, risk, setup,
-required items, resource value, and selected alternatives. Point decisions
-respect cancellation cost, block cost, known free slots, and streak bonuses.
-Unknown assigned master or occupied block slots fail closed; live BLOCK advice
-normally cannot lead until those facts are proven.
+The reviewed local catalog currently covers 54 detailed strategic task
+families plus master requirements, task weights used by those decisions, risk,
+setup, required items, resource value, and selected alternatives. The wider
+151-identity RuneLite corpus retains task-specific mechanical guidance but is
+not given a guessed strategic keep/block score. Point decisions respect
+cancellation cost, per-master block cost, observed free slots, and streak
+bonuses. Unknown master or block state still fails closed.
+
+Between assignments, `SlayerRewardAdvisor` can lead with a verified locked,
+affordable permanent reward when its account/goal value exceeds immediately
+requesting another task. It currently reasons about Bigger and Badder, Slayer
+helmet crafting, broad ammunition, Slayer-ring crafting, Task Storage, boss
+tasks, and TzHaar tasks while retaining a 30-point cancellation reserve.
+Extensions are observed for future contextual decisions but are not purchased
+merely because the points exist.
 
 To add a Slayer task:
 

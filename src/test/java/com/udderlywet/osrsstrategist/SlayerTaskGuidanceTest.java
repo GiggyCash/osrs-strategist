@@ -33,6 +33,20 @@ public class SlayerTaskGuidanceTest
         assertTrue(catalog.profileFor("Drakes").getPreferredLocation()
                 .contains("Mount Karuulm"));
     }
+
+    @Test
+    public void reviewedStrategicCorpusCoversEveryDetailedTaskFamily()
+    {
+        SlayerTaskStrategicCatalog catalog = new SlayerTaskStrategicCatalog();
+        assertEquals(54, catalog.size());
+        assertNotNull(catalog.profileFor("Aberrant spectres"));
+        assertNotNull(catalog.profileFor("Cave krakens"));
+        assertNotNull(catalog.profileFor("Dagannoths"));
+        assertNotNull(catalog.profileFor("Dark beasts"));
+        assertNotNull(catalog.profileFor("Hydras"));
+        assertNotNull(catalog.profileFor("Fossil Island Wyverns"));
+        assertNotNull(catalog.profileFor("Molanisks"));
+    }
     private final SlayerGuidanceService service = new SlayerGuidanceService();
 
     @Test

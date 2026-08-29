@@ -50,6 +50,46 @@ public class SlayerStrategistTest
     }
 
     @Test
+    public void liveLockedRewardCanLeadBeforeTheNextAssignment()
+    {
+        EnumMap<SlayerReward, CapabilityState> rewardStates =
+                new EnumMap<>(SlayerReward.class);
+        for (SlayerReward reward : SlayerReward.values())
+            rewardStates.put(reward, CapabilityState.BLOCKED);
+        SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
+                100, 20, 300, 6, null,
+                new SlayerRewardSnapshot(rewardStates),
+                RecommendationConfidence.VERIFIED);
+
+        StrategyContext context = context(1, noTask, StrategyMode.EFFICIENT,
+                SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
+                Collections.emptyList(), null);
+        SlayerDecisionResult result = strategist.assess(context);
+
+        assertEquals(SlayerReward.BIGGER_AND_BADDER,
+                result.getRecommendedReward());
+        assertTrue(result.getGuidance().getAction()
+                .contains("Bigger and Badder"));
+        assertTrue(result.getGuidance().getNote().contains("30-point"));
+        StrategyCandidate candidate = new SlayerCandidateProvider()
+                .candidates(context).get(0);
+        assertEquals("slayer:unlock:bigger-and-badder", candidate.getId());
+    }
+
+    @Test
+    public void unknownRewardOwnershipDoesNotCreateAPurchaseClaim()
+    {
+        SlayerSnapshot noTask = snapshot(null, 0, null, null,
+                500, 20, 300, 6, null);
+        SlayerDecisionResult result = strategist.assess(context(0, noTask,
+                StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
+                GoalType.SLAYER_85, false, Collections.emptyList(), null));
+
+        assertNull(result.getRecommendedReward());
+        assertEquals("duradel", result.getMaster().getId());
+    }
+
+    @Test
     public void milestonePointEconomyMateriallyInfluencesMasterScore()
     {
         SlayerSnapshot noTask = snapshot(null, 0, null, null,

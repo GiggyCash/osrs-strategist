@@ -46,7 +46,12 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
         SlayerSnapshot slayer = context.getData().getSlayer();
         String id;
         String title;
-        if (result.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
+        if (result.getRecommendedReward() != null)
+        {
+            id = "slayer:unlock:" + result.getRecommendedReward().getId();
+            title = "Unlock " + result.getRecommendedReward().getDisplayName();
+        }
+        else if (result.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
         {
             id = "verify:slayer-assignment";
             title = "Check your Slayer assignment";
@@ -121,6 +126,9 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
         }
         if (context != null && context.getActiveGoal() == GoalType.SLAYER_85)
             builder.unlockValue(1.0);
+        if (result.getRecommendedReward() != null)
+            builder.unlockValue(1.0).infrastructureValue(0.6)
+                    .evidence("slayer:live-reward-varbit");
         return builder.build();
     }
 }

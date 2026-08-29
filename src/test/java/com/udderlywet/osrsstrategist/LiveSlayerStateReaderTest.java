@@ -39,6 +39,21 @@ public class LiveSlayerStateReaderTest
 
         assertEquals(Integer.valueOf(8), snapshot.getTaskStreak());
         assertEquals(Integer.valueOf(6), snapshot.getBlockSlotCapacity());
+        assertEquals("Krystilia", snapshot.getMasterName());
+        assertEquals(Integer.valueOf(0), snapshot.getOccupiedBlockSlots());
+        assertEquals(CapabilityState.BLOCKED,
+                snapshot.getRewards().stateOf(SlayerReward.BIGGER_AND_BADDER));
+    }
+
+    @Test
+    public void assigningMasterVarbitUsesVerifiedGameMapping()
+    {
+        assertNull(LiveSlayerStateReader.masterName(0));
+        assertEquals("Turael/Aya", LiveSlayerStateReader.masterName(1));
+        assertEquals("Duradel/Kuradal", LiveSlayerStateReader.masterName(5));
+        assertEquals("Nieve/Steve", LiveSlayerStateReader.masterName(6));
+        assertEquals("Konar quo Maten", LiveSlayerStateReader.masterName(8));
+        assertEquals("Spria", LiveSlayerStateReader.masterName(9));
     }
 
     private static Client client(int taskCount, int questPoints, int points,

@@ -12,6 +12,7 @@ public final class SlayerSnapshot
     private final Integer questPoints;
     private final Integer blockSlotCapacity;
     private final Integer occupiedBlockSlots;
+    private final SlayerRewardSnapshot rewards;
     private final RecommendationConfidence confidence;
 
     /** Compatibility constructor retained for older callers. */
@@ -50,6 +51,24 @@ public final class SlayerSnapshot
             Integer occupiedBlockSlots,
             RecommendationConfidence confidence)
     {
+        this(taskName, remaining, masterName, taskLocation, points, taskStreak,
+                questPoints, blockSlotCapacity, occupiedBlockSlots, null,
+                confidence);
+    }
+
+    public SlayerSnapshot(
+            String taskName,
+            int remaining,
+            String masterName,
+            String taskLocation,
+            int points,
+            Integer taskStreak,
+            Integer questPoints,
+            Integer blockSlotCapacity,
+            Integer occupiedBlockSlots,
+            SlayerRewardSnapshot rewards,
+            RecommendationConfidence confidence)
+    {
         this.taskName = taskName;
         this.remaining = Math.max(0, remaining);
         this.masterName = masterName;
@@ -59,6 +78,7 @@ public final class SlayerSnapshot
         this.questPoints = nonNegative(questPoints);
         this.blockSlotCapacity = nonNegative(blockSlotCapacity);
         this.occupiedBlockSlots = nonNegative(occupiedBlockSlots);
+        this.rewards = rewards == null ? SlayerRewardSnapshot.unknown() : rewards;
         this.confidence = confidence == null
                 ? RecommendationConfidence.CHECK_NEEDED
                 : confidence;
@@ -89,6 +109,7 @@ public final class SlayerSnapshot
     public Integer getQuestPoints() { return questPoints; }
     public Integer getBlockSlotCapacity() { return blockSlotCapacity; }
     public Integer getOccupiedBlockSlots() { return occupiedBlockSlots; }
+    public SlayerRewardSnapshot getRewards() { return rewards; }
     public RecommendationConfidence getConfidence() { return confidence; }
 
     public boolean hasTask()

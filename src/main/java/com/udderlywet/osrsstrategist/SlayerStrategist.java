@@ -22,12 +22,14 @@ public class SlayerStrategist
     private final SlayerTaskProfileCatalog mechanics;
     private final SlayerTaskStrategicCatalog strategy;
     private final SlayerGuidanceService guidanceService;
+    private final SlayerRewardAdvisor rewardAdvisor;
 
     @Inject
     public SlayerStrategist(SlayerMasterCatalog masters,
             SlayerTaskProfileCatalog mechanics,
             SlayerTaskStrategicCatalog strategy,
-            SlayerGuidanceService guidanceService)
+            SlayerGuidanceService guidanceService,
+            SlayerRewardAdvisor rewardAdvisor)
     {
         this.masters = masters == null ? new SlayerMasterCatalog() : masters;
         this.mechanics = mechanics == null
@@ -36,12 +38,14 @@ public class SlayerStrategist
                 ? new SlayerTaskStrategicCatalog(this.mechanics) : strategy;
         this.guidanceService = guidanceService == null
                 ? new SlayerGuidanceService(this.mechanics) : guidanceService;
+        this.rewardAdvisor = rewardAdvisor == null
+                ? new SlayerRewardAdvisor() : rewardAdvisor;
     }
 
     public SlayerStrategist()
     {
         this(new SlayerMasterCatalog(), new SlayerTaskProfileCatalog(),
-                null, null);
+                null, null, null);
     }
 
     public SlayerDecisionResult assess(StrategyContext context)
@@ -65,6 +69,9 @@ public class SlayerStrategist
     private SlayerDecisionResult chooseMaster(StrategyContext context,
             SlayerSnapshot slayer)
     {
+        SlayerRewardAdvice rewardAdvice = rewardAdvisor.recommend(context, slayer);
+        if (rewardAdvice != null) return rewardPurchase(rewardAdvice, slayer);
+
         List<SlayerMasterProfile> eligible = masters.eligible(context);
         SlayerMasterProfile choice = eligible.stream()
                 .max(Comparator.comparingDouble(p -> masterScore(p, context, slayer)))
@@ -90,6 +97,26 @@ public class SlayerStrategist
         return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
                 choice, null, score, RecommendationConfidence.VERIFIED,
                 reason, guidance);
+    }
+
+    private static SlayerDecisionResult rewardPurchase(
+            SlayerRewardAdvice advice, SlayerSnapshot slayer)
+    {
+        SlayerReward reward = advice.getReward();
+        int remaining = slayer.getPoints() - reward.getPointCost();
+        String reason = advice.getReason()
+                + " Live varbit evidence shows the reward is locked, and the purchase leaves "
+                + remaining + " points, including a 30-point cancellation reserve.";
+        RecommendationGuidance guidance = new RecommendationGuidance(
+                "Buy " + reward.getDisplayName() + " for "
+                        + reward.getPointCost() + " Slayer points, then return to Compass for the next master.",
+                "No task loadout is needed. The live snapshot shows "
+                        + slayer.getPoints() + " points and confirms this reward is not unlocked.",
+                "Open the Slayer Rewards interface with any Slayer master.",
+                reason);
+        return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
+                null, null, advice.getScore(), RecommendationConfidence.VERIFIED,
+                reason, guidance, null, reward);
     }
 
     private SlayerDecisionResult evaluateTask(StrategyContext context,

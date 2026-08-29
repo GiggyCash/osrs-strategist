@@ -107,7 +107,7 @@ public class ContentCoverageManifestTest
         assertEquals(new SlayerTaskProfileCatalog().all().size(),
                 ids(new SlayerTaskProfileCatalog().all().stream()
                         .map(SlayerTaskProfile::getId).toArray(String[]::new)).size());
-        assertEquals(147, new SlayerTaskProfileCatalog().all().size());
+        assertEquals(146, new SlayerTaskProfileCatalog().all().size());
 
         SlayerTaskIdentityCatalog canonical = new SlayerTaskIdentityCatalog();
         assertEquals(151, canonical.all().size());
