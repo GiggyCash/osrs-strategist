@@ -28,8 +28,8 @@ public final class MinigameSetupCatalog
         add(profile("forestry", item("Axe", "Bronze axe", "Iron axe",
                         "Steel axe", "Black axe", "Mithril axe", "Adamant axe",
                         "Rune axe", "Dragon axe", "Infernal axe", "Crystal axe"),
-                "A Forestry-enabled tree area",
-                "Cut the selected tree and join nearby Forestry events when they are useful."));
+                "A level-appropriate Forestry tree cluster",
+                "Cut the named tree, bank each inventory, and complete spawned Forestry events."));
         add(profile("vale-totems", all(item("Knife", "Fletching knife"),
                         any(item("Axe", "Bronze axe", "Iron axe", "Steel axe",
                                         "Black axe", "Mithril axe", "Adamant axe",

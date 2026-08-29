@@ -34,6 +34,8 @@ public final class RecommendationDeduplicator
     {
         if (candidate == null) return "";
         TrainingPlan plan = candidate.getTrainingPlan();
+        String activity = canonicalActivity(candidate, plan);
+        if (activity != null) return "activity:" + activity;
         if (plan != null && plan.getMethod() != null
                 && candidate.getTargetLevel() > 0)
             return "skill-level:" + normalize(plan.getMethod().getSkill().getName())
@@ -65,7 +67,39 @@ public final class RecommendationDeduplicator
                 Math.max(first.getScore(), second.getScore()) + sharedBenefitBonus,
                 primary.getTrainingPlan(), primary.getConfidence(),
                 primary.getCurrentLevel(), primary.getTargetLevel(),
-                primary.getGuidance(), primary.getSafetyEvidence());
+                primary.getGuidance(), primary.getSafetyEvidence())
+                .withStrategicValue(first.getStrategicValue().merge(
+                        second.getStrategicValue()));
+    }
+
+    private static String canonicalActivity(Recommendation candidate,
+            TrainingPlan plan)
+    {
+        String id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
+        if (id.startsWith("minigame:")) return id.substring("minigame:".length());
+        if (plan == null || plan.getMethod() == null) return null;
+        String method = safe(plan.getMethod().getId()).toLowerCase(Locale.ROOT);
+        switch (method)
+        {
+            case "firemaking_wintertodt": return "wintertodt";
+            case "fishing_tempoross": return "tempoross";
+            case "runecraft_gotr": return "guardians-of-the-rift";
+            case "smithing_giants_foundry": return "giants-foundry";
+            case "construction_mahogany_homes": return "mahogany-homes";
+            case "farming_tithe": return "tithe-farm";
+            case "mining_mlm": return "motherlode-mine";
+            case "mining_volcanic": return "volcanic-mine";
+            case "mining_blast_mine": return "blast-mine";
+            case "thieving_pyramid": return "pyramid-plunder";
+            case "fishing_aerial": return "aerial-fishing";
+            case "fishing_drift_net": return "drift-net-fishing";
+            case "thieving_artefacts": return "stealing-artefacts";
+            case "woodcutting_forestry": return "forestry";
+            case "mining_stars": return "shooting-stars";
+            case "smithing_blast_furnace_gold":
+            case "smithing_blast_furnace_bars": return "blast-furnace";
+            default: return null;
+        }
     }
 
     private static Recommendation better(Recommendation first,

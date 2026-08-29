@@ -217,7 +217,7 @@ public class ExpandedTrainingMethodCatalog
         add(Skill.MINING, "mining_stars", 10, 99,
                 "Shooting Stars", "Mine discovered stars for very low-attention Mining and stardust rewards.",
                 TrainingIntensity.AFK, MethodCostTier.PROFITABLE, RiskLevel.NONE,
-                false, true, true, true, false, AttentionLevel.AFK, 20, 3,
+                true, true, true, true, false, AttentionLevel.AFK, 20, 3,
                 "Reachable Shooting Star");
         add(Skill.MINING, "mining_granite_3t", 45, 99,
                 "3-tick granite", "Use tick manipulation on granite for high Mining XP when a sweaty session is desired.",

@@ -60,6 +60,30 @@ public class RecommendationDeduplicatorTest
         assertEquals(first.get(0).getId(), second.get(0).getId());
     }
 
+    @Test
+    public void skillAndMinigameVersionsOfSameLoopBecomeOneAction()
+    {
+        Recommendation skill = skillMethod("skill:firemaking",
+                "Train Firemaking to 70", "firemaking_wintertodt", 40,
+                "skill-breakpoint");
+        Recommendation minigame = new Recommendation("minigame:wintertodt",
+                "Wintertodt", "Pyromancer progression.", 42, null,
+                RecommendationConfidence.VERIFIED, 0, 0, guidance(),
+                CandidateSafetyEvidence.skill(false, Skill.FIREMAKING))
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .resourceFit(0.6).evidence("wintertodt-rewards").build());
+
+        List<Recommendation> result = new RecommendationDeduplicator()
+                .deduplicate(Arrays.asList(skill, minigame));
+
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).getReason().contains("Pyromancer"));
+        assertTrue(result.get(0).getStrategicValue().getEvidenceIds()
+                .contains("skill-breakpoint"));
+        assertTrue(result.get(0).getStrategicValue().getEvidenceIds()
+                .contains("wintertodt-rewards"));
+    }
+
     private static Recommendation skill(String id, String title,
             String reason, double score)
     {
@@ -74,6 +98,22 @@ public class RecommendationDeduplicatorTest
                         RecommendationConfidence.VERIFIED),
                 RecommendationConfidence.VERIFIED, 60, 70, guidance(),
                 CandidateSafetyEvidence.skill(false, skill));
+    }
+
+    private static Recommendation skillMethod(String id, String title,
+            String methodId, double score, String evidence)
+    {
+        TrainingMethod method = new TrainingMethod(methodId, Skill.FIREMAKING,
+                1, 99, title, "Do the method.", 1, 1, 1,
+                AttentionLevel.LOW, 20, 2, Collections.emptyList(),
+                RecommendationConfidence.VERIFIED);
+        return new Recommendation(id, title, "Firemaking breakpoint.", score,
+                new TrainingPlan(method, "route",
+                        RecommendationConfidence.VERIFIED),
+                RecommendationConfidence.VERIFIED, 60, 70, guidance(),
+                CandidateSafetyEvidence.skill(false, Skill.FIREMAKING))
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .unlockValue(0.5).evidence(evidence).build());
     }
 
     private static RecommendationGuidance guidance()

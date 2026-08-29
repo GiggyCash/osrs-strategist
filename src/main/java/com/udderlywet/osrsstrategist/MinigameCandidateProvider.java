@@ -76,7 +76,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
             boolean verified = setup != null && itemResult.isSatisfied();
             RecommendationGuidance guidance = setup == null
                     ? verificationGuidance(definition)
-                    : new RecommendationGuidance(
+                    : "forestry".equals(definition.getId())
+                            ? forestryGuidance(account, verified, itemResult)
+                            : new RecommendationGuidance(
                             verified ? "Start " + definition.getName() + "."
                                     : itemResult.getAction() + " before " + definition.getName() + ".",
                             verified ? setup.getInstructions() : itemResult.getAction(),
@@ -110,6 +112,45 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                 "Carry the supplies you intend to use. Compass will keep this as preparation until the required setup can be proven.",
                 "Use the verified in-game unlock for " + activity + ".",
                 definition.getRewardFocus() + ".");
+    }
+
+    private static RecommendationGuidance forestryGuidance(
+            AccountSnapshot account, boolean verified,
+            ItemRequirementResult itemResult)
+    {
+        int level = account.getSkillLevel(net.runelite.api.Skill.WOODCUTTING);
+        boolean f2p = account.getMembershipStatus() != MembershipStatus.P2P;
+        String tree;
+        String location;
+        if (level < 30)
+        {
+            tree = "oak trees";
+            location = "the oak trees immediately east of Draynor Village bank";
+        }
+        else if (f2p || level < 45)
+        {
+            tree = "willow trees";
+            location = "the willow trees south of Draynor Village bank";
+        }
+        else if (level < 60)
+        {
+            tree = "maple trees";
+            location = "the maple trees north of Seers' Village bank";
+        }
+        else
+        {
+            tree = "yew trees";
+            location = "the yew trees at Seers' Village church";
+        }
+        return new RecommendationGuidance(
+                verified
+                        ? "Switch to an official Forestry world, cut " + tree
+                                + ", bank each inventory, and complete every event that spawns."
+                        : itemResult.getAction() + " before starting Forestry.",
+                verified ? "Bring the observed axe and a Forestry kit when owned."
+                        : itemResult.getAction(),
+                location + ".",
+                "The tree and location match the current Woodcutting level; event frequency varies, so no event count is invented.");
     }
 
     private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)

@@ -90,6 +90,23 @@ public class MinigamePlanningDepthTest
                 candidates.get(0).getConfidence());
     }
 
+    @Test
+    public void forestryUsesLevelAppropriateNamedLocation()
+    {
+        StrategyCandidate oak = find(candidates(0, 20,
+                Collections.singleton("forestry"),
+                Collections.singletonList(item("Rune axe")),
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "forestry");
+        assertTrue(oak.getGuidance().getLocation().contains("east of Draynor"));
+
+        StrategyCandidate maple = find(candidates(0, 50,
+                Collections.singleton("forestry"),
+                Collections.singletonList(item("Rune axe")),
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "forestry");
+        assertTrue(maple.getGuidance().getLocation().contains("Seers' Village"));
+        assertTrue(maple.getGuidance().getAction().contains("maple trees"));
+    }
+
     private List<StrategyCandidate> candidates(int type, int level,
             java.util.Set<String> unlocked, List<ItemStackSnapshot> bank,
             StrategyMode mode, SessionIntent intent)

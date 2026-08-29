@@ -130,7 +130,7 @@ public class MinigameCatalog
         add("shooting-stars", "Shooting Stars", Skill.MINING, 10, true,
                 RiskLevel.NONE, AttentionLevel.LOW, allModes(),
                 "Mining XP, stardust, celestial ring progression and gem rewards");
-        add("forestry", "Forestry", Skill.WOODCUTTING, 1, true,
+        add("forestry", "Forestry", Skill.WOODCUTTING, 15, true,
                 RiskLevel.NONE, AttentionLevel.MODERATE, allModes(),
                 "Woodcutting group events, anima-infused bark and Forestry rewards");
         add("champions-challenge", "Champions' Challenge", null, 1, false,
