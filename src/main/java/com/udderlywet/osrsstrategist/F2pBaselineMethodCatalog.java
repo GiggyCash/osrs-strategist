@@ -46,27 +46,27 @@ public class F2pBaselineMethodCatalog
     {
         baseline(Skill.ATTACK, "attack_f2p_baseline", 1, 99,
                 "F2P melee Attack",
-                "Use the best legal F2P melee weapon you own on a nearby low-risk monster and select an Attack-training style.",
+                "Edgeville Monastery: fight monks with an observed F2P melee weapon on Accurate style and ask a monk to heal you when needed.",
                 AttentionLevel.MODERATE);
         baseline(Skill.STRENGTH, "strength_f2p_baseline", 1, 99,
                 "F2P melee Strength",
-                "Use the best legal F2P melee weapon you own on a nearby low-risk monster and select a Strength-training style.",
+                "Edgeville Monastery: fight monks with an observed F2P melee weapon on Aggressive style and ask a monk to heal you when needed.",
                 AttentionLevel.MODERATE);
         baseline(Skill.DEFENCE, "defence_f2p_baseline", 1, 99,
                 "F2P defensive melee",
-                "Use the best legal F2P melee weapon you own and a defensive training style on a low-risk monster that respects the account build.",
+                "Edgeville Monastery: fight monks with an observed F2P melee weapon on Defensive style and ask a monk to heal you when needed.",
                 AttentionLevel.MODERATE);
         baseline(Skill.RANGED, "ranged_f2p_baseline", 1, 99,
                 "F2P bow training",
-                "Use the best F2P shortbow and arrows your Ranged level permits on a safe low-defence target.",
+                "Edgeville Monastery: attack monks on Rapid style with the observed shortbow and matching arrows; ask a monk to heal you when needed.",
                 AttentionLevel.MODERATE);
         baseline(Skill.MAGIC, "magic_f2p_baseline", 1, 99,
                 "F2P spell training",
-                "Use the best sensible F2P combat or utility spell that preserves the account build and fits the available rune supply.",
+                "Edgeville Monastery: cast the Standard-spellbook combat spell named in DO on monks, then buy rune shortfalls from Aubury south of Varrock East Bank.",
                 AttentionLevel.MODERATE);
         baseline(Skill.PRAYER, "prayer_f2p_bones", 1, 99,
                 "Bury F2P bones",
-                "Bury the best practical F2P bones you can obtain without breaking the account's combat restrictions.",
+                "Lumbridge Castle bank: withdraw the bone type named in DO, bury the full inventory, bank, and repeat.",
                 AttentionLevel.MODERATE);
     }
 
@@ -74,33 +74,33 @@ public class F2pBaselineMethodCatalog
     {
         baseline(Skill.MINING, "mining_f2p_copper_tin", 1, 14,
                 "Mine copper or tin",
-                "Bring any usable pickaxe and mine copper or tin at a reachable F2P mine until iron becomes available at 15 Mining.",
+                "East Lumbridge Swamp mine: bring the observed pickaxe, mine copper, drop the ore when full, and repeat until 15 Mining.",
                 AttentionLevel.MODERATE);
         baseline(Skill.MINING, "mining_f2p_iron_baseline", 15, 99,
                 "Mine iron ore",
-                "Bring your best usable F2P pickaxe and mine iron at a convenient three-rock or banked location.",
+                "Varrock East mine: bring the observed pickaxe, mine iron, drop the ore when full, and repeat.",
                 AttentionLevel.ACTIVE);
 
         baseline(Skill.FISHING, "fishing_f2p_shrimps", 1, 19,
                 "Net shrimps",
-                "Use a small fishing net at a reachable F2P net spot. Move to fly fishing from 20 Fishing when that route fits the session.",
+                "Lumbridge Swamp fishing spots beside the Fishing tutor: net shrimp, drop the catch when full, and repeat until 20 Fishing.",
                 AttentionLevel.LOW);
         baseline(Skill.FISHING, "fishing_f2p_fly_baseline", 20, 99,
                 "Fly-fish trout and salmon",
-                "Bring a fly fishing rod and feathers and fish trout and salmon at a convenient F2P river spot.",
+                "Barbarian Village river: bring a fly fishing rod and feathers, catch trout and salmon, drop the fish when full, and repeat.",
                 AttentionLevel.MODERATE);
 
         baseline(Skill.WOODCUTTING, "woodcutting_f2p_trees", 1, 14,
                 "Cut regular trees",
-                "Bring any usable axe and cut regular trees until oak trees unlock at 15 Woodcutting.",
+                "Trees west of Lumbridge Castle: bring the observed axe, cut regular logs, drop them when full, and repeat until 15 Woodcutting.",
                 AttentionLevel.LOW);
         baseline(Skill.WOODCUTTING, "woodcutting_f2p_oaks", 15, 29,
                 "Cut oak trees",
-                "Bring your best usable F2P axe and cut oak trees until willows unlock at 30 Woodcutting.",
+                "Oak trees east of Draynor Village bank: bring the observed axe, cut oaks, bank the logs, and repeat until 30 Woodcutting.",
                 AttentionLevel.LOW);
         baseline(Skill.WOODCUTTING, "woodcutting_f2p_willows_baseline", 30, 99,
                 "Cut willow trees",
-                "Bring your best usable F2P axe and cut willows at a convenient banked or drop-training location.",
+                "Willow trees south of Draynor Village bank: bring the observed axe, cut willows, bank the logs, and repeat.",
                 AttentionLevel.LOW);
     }
 
@@ -113,24 +113,24 @@ public class F2pBaselineMethodCatalog
 
         baseline(Skill.FIREMAKING, "firemaking_f2p_logs", 1, 99,
                 "Burn F2P logs",
-                "Use a tinderbox to burn the best sensible F2P log tier your level and supply support.",
+                "Grand Exchange south-east corner: withdraw the log type named in DO and a tinderbox, burn east-to-west rows, bank, and repeat.",
                 AttentionLevel.MODERATE);
 
         baseline(Skill.SMITHING, "smithing_f2p_bronze", 1, 14,
                 "Smith bronze items",
-                "Use bronze bars on a F2P anvil and make the highest practical bronze item unlocked at your level.",
+                "Varrock West Bank: keep a hammer, withdraw bronze bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
                 AttentionLevel.MODERATE);
         baseline(Skill.SMITHING, "smithing_f2p_iron", 15, 29,
                 "Smith iron items",
-                "Use iron bars on a F2P anvil and make the highest practical iron item unlocked at your level.",
+                "Varrock West Bank: keep a hammer, withdraw iron bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
                 AttentionLevel.MODERATE);
         baseline(Skill.SMITHING, "smithing_f2p_steel", 30, 47,
                 "Smith steel items",
-                "Use steel bars on a F2P anvil and make the highest practical steel item unlocked at your level.",
+                "Varrock West Bank: keep a hammer, withdraw steel bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
                 AttentionLevel.MODERATE);
         baseline(Skill.SMITHING, "smithing_f2p_platebody_baseline", 48, 99,
                 "Smith F2P platebodies",
-                "Smith the best practical F2P platebody tier supported by your Smithing level and bar supply.",
+                "Varrock West Bank: keep a hammer, withdraw five bars per trip, smith the platebody named in DO at the anvils immediately south, bank, and repeat.",
                 AttentionLevel.MODERATE);
 
         baseline(Skill.CRAFTING, "crafting_f2p_leather_gloves", 1, 7,
@@ -139,11 +139,11 @@ public class F2pBaselineMethodCatalog
                 AttentionLevel.MODERATE);
         baseline(Skill.CRAFTING, "crafting_f2p_gold_amulets", 8, 22,
                 "Craft gold amulets",
-                "Smelt gold bars with an amulet mould at a F2P furnace when gold supply is practical.",
+                "Al Kharid furnace: carry an amulet mould, smelt observed gold bars into gold amulets, bank immediately south, and repeat.",
                 AttentionLevel.MODERATE);
         baseline(Skill.CRAFTING, "crafting_f2p_tiaras", 23, 99,
                 "Craft silver tiaras",
-                "Use silver bars with a tiara mould at a F2P furnace for a simple repeatable Crafting route.",
+                "Al Kharid furnace: carry a tiara mould, smelt observed silver bars into tiaras, bank immediately south, and repeat.",
                 AttentionLevel.MODERATE);
     }
 

@@ -103,4 +103,24 @@ public class F2pCoverageMatrixTest
             }
         }
     }
+
+    @Test
+    public void fallbackRoutesNeverDelegateMethodOrLocationChoice()
+    {
+        String[] forbidden = {"best practical", "best sensible",
+                "best available", "nearby low-risk", "convenient",
+                "reachable f2p", "f2p anvil", "a f2p furnace"};
+        F2pBaselineMethodCatalog baseline = new F2pBaselineMethodCatalog();
+        for (Skill skill : Skill.values())
+        {
+            for (CuratedTrainingMethod candidate : baseline.methodsFor(skill))
+            {
+                String text = candidate.getMethod().getInstructions()
+                        .toLowerCase(java.util.Locale.ROOT);
+                for (String phrase : forbidden)
+                    assertFalse(candidate.getMethod().getId() + ": " + phrase,
+                            text.contains(phrase));
+            }
+        }
+    }
 }

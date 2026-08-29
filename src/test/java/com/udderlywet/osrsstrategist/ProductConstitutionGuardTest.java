@@ -65,6 +65,9 @@ public class ProductConstitutionGuardTest
                 "Choose the best available method.", "Any bank.")));
         assertFalse(policy.canLeadQueue(nonSkill(
                 "Start the activity.", "Use a nearby furnace.")));
+        assertFalse(policy.canLeadQueue(nonSkill(
+                "Complete the named loop.",
+                "Cut the best sensible tree at the best available location.")));
         assertTrue(policy.canLeadQueue(nonSkill(
                 "Withdraw iron bars, smith them, bank, and repeat.",
                 "Varrock West anvils, just south of the bank.")));

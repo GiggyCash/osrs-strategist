@@ -10,6 +10,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -229,6 +230,51 @@ public class AdaptiveMilestoneGuidanceServiceTest
         assertTrue(guidance.getAction().contains(
                 "about " + expectedWithOutfit + " fish caught"));
         assertTrue(guidance.getNote().contains("full Angler/Spirit Angler outfit"));
+    }
+
+    @Test
+    public void salamandersResolveExactTrapCountAndHabitat()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.HUNTER, "red_salamander",
+                        "Red salamander", 59, 272));
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                account(1, MembershipStatus.P2P, Skill.HUNTER, 60,
+                        Experience.getXpForLevel(60)))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        item(954, "Rope", 4),
+                        item(303, "Small fishing net", 4))))
+                .build();
+
+        RecommendationGuidance guidance = service.build(data, Skill.HUNTER,
+                60, 61, plan("hunter_salamanders", Skill.HUNTER), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains(
+                "4 small fishing nets and 4 ropes"));
+        assertEquals("Red salamander net-trap trees south of the Ourania Cave entrance.",
+                guidance.getLocation());
+    }
+
+    @Test
+    public void uimInventoryProcessingNeverRoutesThroughABank()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.CRAFTING, "sapphire", "Sapphire", 20, 50));
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                account(2, MembershipStatus.P2P, Skill.CRAFTING, 20,
+                        Experience.getXpForLevel(20)))
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        item(1623, "Uncut sapphire", 20))))
+                .build();
+
+        RecommendationGuidance guidance = service.build(data, Skill.CRAFTING,
+                20, 21, plan("crafting_gems", Skill.CRAFTING), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getLocation().contains(
+                "immediately usable carried materials"));
+        assertFalse(guidance.getLocation().toLowerCase().contains("bank"));
     }
 
     private static AdaptiveMilestoneGuidanceService serviceWith(

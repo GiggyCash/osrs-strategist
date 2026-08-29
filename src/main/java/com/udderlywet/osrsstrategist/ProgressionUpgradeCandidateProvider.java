@@ -615,7 +615,7 @@ public class ProgressionUpgradeCandidateProvider
         if (score < 25.0) return;
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Play Fishing Trawler and keep contribution at or above the reward threshold each game until the missing Angler pieces are obtained.",
-                "Bring the normal Fishing Trawler repair/activity supplies appropriate to the chosen contribution method. Outfit pieces are RNG rewards, so no fake exact game count is shown.",
+                "Bring 300 swamp paste, one rope, and one bailing bucket. Patch ten leaks for 50 contribution, then help bail or repair until the voyage ends; the Khazard General Store sells every missing item. Outfit pieces are RNG rewards, so no fake exact game count is shown.",
                 "Fishing Trawler at Port Khazard. Inspect the trawler net after qualifying games for rewards.",
                 "You currently have " + pieces + "/4 observed Angler/Spirit Angler pieces. The full set gives the Fishing XP set bonus and also unlocks minnow access; detour only when that remaining account value justifies it."
         );

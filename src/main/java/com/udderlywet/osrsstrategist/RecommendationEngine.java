@@ -205,44 +205,40 @@ public class RecommendationEngine
             String activityId = "skill:" + skill.name().toLowerCase();
             if (safePreferences.isOnCooldown(activityId)) continue;
 
-            TrainingPlan trainingPlan = trainingMethodSelector.select(
-                    data, skill, level, strategyMode, sessionIntent,
-                    allowWildernessMethods, useGroupStorage);
-            if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
-
             SkillBreakpoint breakpoint = breakpointService.next(
                     skill, level, context);
             int target = breakpoint.getLevel();
+            TrainingPlan trainingPlan = null;
+            RecommendationGuidance guidance = null;
+            TrainingPlan highestRankedPlan = null;
+            for (TrainingPlan candidate : trainingMethodSelector.rankedCandidates(
+                    data, skill, level, strategyMode, sessionIntent,
+                    allowWildernessMethods, useGroupStorage))
+            {
+                if (highestRankedPlan == null) highestRankedPlan = candidate;
+                RecommendationGuidance candidateGuidance = buildGuidance(
+                        data, skill, level, target, candidate, sessionIntent,
+                        useGroupStorage);
+                // Some activities can only be rendered truthfully once live
+                // resources or state identify a concrete execution loop. A
+                // higher-scoring but unrenderable route must not consume the
+                // skill's only candidate and hide a ready lower-ranked route.
+                if (candidateGuidance == null) continue;
+                trainingPlan = candidate;
+                guidance = candidateGuidance;
+                break;
+            }
+            // Keep the historical diagnostic candidate when this engine was
+            // constructed without a renderer capable of any method in the
+            // skill. The final actionability boundary still prevents it from
+            // leading DO NEXT; this also preserves focused selector callers.
+            if (trainingPlan == null) trainingPlan = highestRankedPlan;
+            if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
+
             double score = baseScore(level, breakpoint);
             score += safePreferences.weightFor(activityId) * 10.0;
             score += safePreferences.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
-
-            RecommendationGuidance guidance = combatGuidanceService == null
-                    ? null : combatGuidanceService.build(
-                            data, skill, level, target, trainingPlan,
-                            sessionIntent, useGroupStorage);
-
-            if (guidance == null && skill == Skill.SLAYER
-                    && slayerGuidanceService != null)
-            {
-                guidance = slayerGuidanceService.build(
-                        data, level, target, useGroupStorage);
-            }
-
-            if (guidance == null && skill == Skill.SAILING
-                    && sailingGuidanceService != null)
-            {
-                guidance = sailingGuidanceService.build(
-                        data, level, target, trainingPlan);
-            }
-
-            if (guidance == null && guidanceService != null)
-            {
-                guidance = guidanceService.build(
-                        data, skill, level, target, trainingPlan,
-                        useGroupStorage);
-            }
 
             Recommendation recommendation = new Recommendation(
                     activityId,
@@ -269,6 +265,43 @@ public class RecommendationEngine
         recommendations.sort(Comparator.comparingDouble(
                 Recommendation::getScore).reversed());
         return recommendations;
+    }
+
+    private RecommendationGuidance buildGuidance(
+            StrategyDataBundle data,
+            Skill skill,
+            int level,
+            int target,
+            TrainingPlan trainingPlan,
+            SessionIntent sessionIntent,
+            boolean useGroupStorage)
+    {
+        RecommendationGuidance guidance = combatGuidanceService == null
+                ? null : combatGuidanceService.build(
+                        data, skill, level, target, trainingPlan,
+                        sessionIntent, useGroupStorage);
+
+        if (guidance == null && skill == Skill.SLAYER
+                && slayerGuidanceService != null)
+        {
+            guidance = slayerGuidanceService.build(
+                    data, level, target, useGroupStorage);
+        }
+
+        if (guidance == null && skill == Skill.SAILING
+                && sailingGuidanceService != null)
+        {
+            guidance = sailingGuidanceService.build(
+                    data, level, target, trainingPlan);
+        }
+
+        if (guidance == null && guidanceService != null)
+        {
+            guidance = guidanceService.build(
+                    data, skill, level, target, trainingPlan,
+                    useGroupStorage);
+        }
+        return guidance;
     }
 
     private static List<Recommendation> topThree(

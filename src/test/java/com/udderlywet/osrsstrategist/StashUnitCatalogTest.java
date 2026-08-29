@@ -74,6 +74,8 @@ public class StashUnitCatalogTest
         StashBuildPlan plan = new StashDependencyPlanner().plan(
                 unit, StashUnitState.NOT_BUILT, context);
         assertEquals(GoalNodeKind.TRAINING_METHOD, plan.nextAction().getKind());
+        assertTrue(plan.nextAction().getAction().contains("oak larders"));
+        assertFalse(plan.nextAction().getAction().contains("Choose"));
         assertTrue(plan.getSteps().stream().anyMatch(step ->
                 step.getKind() == GoalNodeKind.SKILL_LEVEL
                         && step.getAction().contains("88")));

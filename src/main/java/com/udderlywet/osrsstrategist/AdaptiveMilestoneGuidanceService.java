@@ -131,14 +131,16 @@ public class AdaptiveMilestoneGuidanceService
                 ? null
                 : resources == null ? null : resources.getGuidance();
         String routeSetup = routeSetup(
-                data, plan.getMethod().getId(), useGroupStorage);
+                data, plan.getMethod().getId(), action, currentLevel,
+                useGroupStorage);
         if (routeSetup != null)
         {
             supplies = supplies == null || supplies.trim().isEmpty()
                     ? routeSetup : routeSetup + " " + supplies;
         }
 
-        String location = plan.getMethod().getInstructions();
+        String location = routeLocation(data, plan.getMethod().getId(),
+                action, plan.getMethod().getInstructions());
         String note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
@@ -201,6 +203,7 @@ public class AdaptiveMilestoneGuidanceService
 
     /** Reusable tools are not consumed recipes, but still belong in BRING. */
     private static String routeSetup(StrategyDataBundle data, String methodId,
+            RuneLiteSkillActionDefinition action, int currentLevel,
             boolean useGroupStorage)
     {
         if (methodId == null) return null;
@@ -238,6 +241,12 @@ public class AdaptiveMilestoneGuidanceService
                     : "Buy one bird snare from Aleck's Hunter Emporium in Yanille before walking south to the Hunter area.";
         if ("hunter_falconry".equals(methodId))
             return "Bring 500 coins. Unequip weapon, shield, and gloves before renting the gyr falcon from Matthias.";
+        if ("hunter_salamanders".equals(methodId))
+        {
+            int traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
+            return "Bring " + traps + " small fishing nets and " + traps
+                    + " ropes; set every available net trap and drop each catch.";
+        }
         if ("magic_f2p_combat".equals(methodId))
             return "Bring one mind rune and one air rune per Wind Strike; if short, buy both from Aubury's Rune Shop just south of Varrock East Bank.";
         if ("magic_f2p_fire_bolt".equals(methodId))
@@ -260,6 +269,41 @@ public class AdaptiveMilestoneGuidanceService
                     + " tiara.";
         }
         return null;
+    }
+
+    private static String routeLocation(StrategyDataBundle data,
+            String methodId, RuneLiteSkillActionDefinition action,
+            String fallback)
+    {
+        String actionName = action == null || action.getName() == null
+                ? "" : action.getName().toLowerCase(Locale.ROOT);
+        if ("hunter_salamanders".equals(methodId))
+        {
+            if (actionName.contains("red salamander"))
+                return "Red salamander net-trap trees south of the Ourania Cave entrance.";
+            if (actionName.contains("orange salamander"))
+                return "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge.";
+            return "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis.";
+        }
+
+        AccountMode mode = data == null || data.getAccount() == null
+                ? AccountMode.UNKNOWN
+                : AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode());
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            if ("crafting_gems".equals(methodId)
+                    || "fletching_bows".equals(methodId)
+                    || "herblore_low_potions".equals(methodId))
+            {
+                return "Your current safe non-Wilderness tile; process only the immediately usable carried materials named in DO.";
+            }
+            if ("firemaking_f2p_logs".equals(methodId))
+            {
+                return "Grand Exchange south-east corner: burn the immediately usable carried logs named in DO in east-to-west rows.";
+            }
+        }
+        return fallback;
     }
 
     private static String firstObserved(

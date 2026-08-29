@@ -41,13 +41,13 @@ public class VariableMethodGuidanceService
             case "runecraft_gotr": return gotr(targetLevel, xpNeeded, items);
             case "runecraft_zmi": return zmi(targetLevel, xpNeeded, items);
             case "mining_mlm": return motherlode(targetLevel, xpNeeded, items);
-            case "mining_stars": return shootingStars(targetLevel, xpNeeded, items);
+            case "mining_stars": return shootingStars(data, targetLevel, xpNeeded, items);
             case "mining_volcanic": return volcanicMine(targetLevel, xpNeeded, items);
             case "mining_blast_mine": return blastMine(targetLevel, xpNeeded, items);
             case "smithing_foundry":
             case "smithing_giants_foundry": return giantsFoundry(targetLevel, xpNeeded, items);
             case "construction_homes":
-            case "construction_mahogany_homes": return mahoganyHomes(targetLevel, xpNeeded, items);
+            case "construction_mahogany_homes": return mahoganyHomes(data, targetLevel, xpNeeded, items);
             case "herblore_mixology": return mixology(targetLevel, xpNeeded, items);
             case "farming_tithe": return titheFarm(data, targetLevel, xpNeeded, items);
             case "farming_allotments_expanded": return farmingAllotments(data, targetLevel, xpNeeded, items);
@@ -55,9 +55,9 @@ public class VariableMethodGuidanceService
             case "farming_falador_watermelons": return faladorWatermelons(targetLevel, xpNeeded, items);
             case "farming_herbs_expanded": return farmingHerbs(data, targetLevel, xpNeeded, items);
             case "farming_contracts": return farmingContracts(data, targetLevel, xpNeeded, items);
-            case "hunter_rumours": return hunterRumours(targetLevel, xpNeeded, items);
+            case "hunter_rumours": return hunterRumours(data, targetLevel, xpNeeded, items);
             case "hunter_herbiboar": return herbiboar(targetLevel, xpNeeded, items);
-            case "woodcutting_forestry": return forestry(targetLevel, xpNeeded, items);
+            case "woodcutting_forestry": return forestry(data, targetLevel, xpNeeded, items);
             case "thieving_pyramid": return pyramidPlunder(targetLevel, xpNeeded, items);
             case "thieving_varlamore": return varlamoreThieving(targetLevel, xpNeeded, items);
             default: return null;
@@ -68,7 +68,7 @@ public class VariableMethodGuidanceService
     {
         return new RecommendationGuidance(
                 "Chop bruma roots, feed and repair braziers, reach at least 500 personal points, then repeat until you gain " + format(xp) + " Firemaking XP for level " + target + ". Fletch only when needed to secure the 500-point threshold.",
-                "Equip four warm items, bring a knife and hammer, and use food appropriate to your Hitpoints level. " + observed(items, "Bruma torch", "Warm gloves", "Pyromancer hood", "Pyromancer garb", "Pyromancer robe", "Pyromancer boots"),
+                "Equip four warm items and bring a knife, hammer, and cakes. Each cake bite heals at least 4 Hitpoints and restores 35% warmth under the current warmth system. " + observed(items, "Cake", "Bruma torch", "Warm gloves", "Pyromancer hood", "Pyromancer garb", "Pyromancer robe", "Pyromancer boots"),
                 "Wintertodt camp in northern Great Kourend.",
                 "Round length, interruptions, fletching, and player levels change XP per game. Exact XP remaining is shown without inventing a fixed kill count."
         );
@@ -134,14 +134,21 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance shootingStars(int target, int xp, ObservedItemIndex items)
+    private static RecommendationGuidance shootingStars(
+            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        MembershipStatus membership = data.getAccount().getMembershipStatus();
+        String scout = membership == MembershipStatus.P2P
+                ? "Use an unobstructed POH telescope to obtain the landing region and time, then check each named landing site in that region."
+                : "Check the 21 free-to-play landing sites after a star wave; begin with the safe Falador mine and Varrock mine sites and stop only when a crashed star is visible.";
         String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                "Mine a reachable Shooting Star until it depletes or you gain " + format(xp) + " Mining XP toward level " + target + ".",
+                scout + " Mine the located star until it depletes or you gain " + format(xp) + " Mining XP toward level " + target + ".",
                 "Bring " + pickaxe + ". Keep stardust when Celestial ring or charge rewards still matter. " + observed(items, "Celestial ring", "Celestial signet"),
-                "Use a discovered star location that respects the account's membership, access, and Wilderness-risk settings.",
-                "Star tier changes while mining and affects XP. Exact swing counts would be false precision; this is primarily the low-attention Mining option."
+                membership == MembershipStatus.P2P
+                        ? "The exact non-Wilderness crash site found from the telescope's named region."
+                        : "A visible crashed star at a free-to-play Falador or Varrock mine landing site.",
+                "Stars land at random from fixed sites, so Compass cannot truthfully name an active crash site without observing one. Star tier changes while mining and affects XP; exact swing counts would be false precision."
         );
     }
 
@@ -169,20 +176,31 @@ public class VariableMethodGuidanceService
 
     private static RecommendationGuidance giantsFoundry(int target, int xp, ObservedItemIndex items)
     {
+        FoundryAlloy alloy = foundryAlloy(items);
+        if (alloy == null) return null;
         return new RecommendationGuidance(
-                "Take a Giants' Foundry commission and use the best commission-compatible alloy your account can sustain until you gain " + format(xp) + " Smithing XP toward level " + target + ".",
-                "Each commissioned sword consumes 28 bars' worth of metal. Prefer banked metal on Iron-style accounts and preserve quest or upgrade items. " + observed(items, "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
-                "Choose the best owned moulds for the commission, pour the 28-bar alloy, then work the sword through each temperature station while staying inside the target band.",
-                "Mould choice, alloy, commission, and mistakes change XP per sword. Each commission uses 28 bars, but the number of swords needed is variable."
+                "Ask Kovac for a commission. Load " + alloy.description
+                        + " into the crucible. For each blade section, select the owned mould with the highest green score shown for that commission, pour the sword, then work every temperature station inside its target band. Repeat for "
+                        + format(xp) + " Smithing XP toward level " + target + ".",
+                "Bring " + alloy.description + "; each commissioned sword consumes 28 bars' worth of metal. "
+                        + observed(items, "Iron bar", "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
+                "Giants' Foundry beneath Kovac's workshop, east of Al Kharid.",
+                "The 14/14 adjacent-metal alloy is a verified default when both metals are observed. Mould score, commission, and mistakes change XP per sword, so no fixed sword count is shown."
         );
     }
 
-    private static RecommendationGuidance mahoganyHomes(int target, int xp, ObservedItemIndex items)
+    private static RecommendationGuidance mahoganyHomes(
+            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data.getAccount().getSkillLevel(Skill.CONSTRUCTION);
+        ContractTier tier = contractTier(level, items);
+        if (tier == null) return null;
         return new RecommendationGuidance(
-                "Take the highest Mahogany Homes contract tier your level and plank supply can sustain, then complete contracts until you gain " + format(xp) + " Construction XP toward level " + target + ".",
-                "Bring a hammer, saw, contract-city teleports, and the matching plank tier. Use a plank sack when owned. " + observed(items, "Plank sack", "Oak plank", "Teak plank", "Mahogany plank", "Steel bar"),
-                "Get a contract, travel to the named client, repair every marked hotspot, then take the next contract.",
+                "Ask Amy for a " + tier.name + " contract, travel to the named client, repair every marked hotspot, speak to the client, and take another " + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
+                "Bring a hammer, saw, at least 15 " + tier.plank.toLowerCase(java.util.Locale.ROOT)
+                        + ", one steel bar, and teleports for Falador, Varrock, East Ardougne, and Hosidius. Use a plank sack when owned. "
+                        + observed(items, "Plank sack", tier.plank, "Steel bar"),
+                "Amy at Mahogany Homes, immediately south of Falador Park.",
                 "Furniture mix varies by client, so exact planks and XP per contract require the live contract state. No universal contract count is fabricated."
         );
     }
@@ -190,8 +208,8 @@ public class VariableMethodGuidanceService
     private static RecommendationGuidance mixology(int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Fill Mastering Mixology orders until you gain " + format(xp) + " Herblore XP toward level " + target + ". Prioritize orders that support the reward goal you are currently protecting.",
-                "Convert spare eligible herbs into paste while preserving herbs needed for higher-value combat potions. " + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed"),
+                "Complete all three displayed potion orders together for the 40% resin bonus, then take the next three. Repeat until you gain " + format(xp) + " Herblore XP toward level " + target + ".",
+                "Bring herbs already committed to Mixology and convert them into the displayed Mox, Aga, and Lye paste shortfalls. " + observed(items, "Mox paste", "Aga paste", "Lye paste", "Digweed"),
                 "Alchemical Society in Aldarin.",
                 "Order combinations change continuously. Exact paste-to-level counts require live order state; XP per order is not assumed constant."
         );
@@ -214,10 +232,21 @@ public class VariableMethodGuidanceService
 
     private static RecommendationGuidance farmingAllotments(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data.getAccount().getSkillLevel(Skill.FARMING);
+        String seed = highestObservedAllotmentSeed(items, level);
+        if (seed == null) return null;
+        String patch = new FarmingAccessEvaluator(new FarmingAccessCatalog())
+                .firstReachablePatchName(data.getFarming());
+        if (patch == null) return null;
         return new RecommendationGuidance(
-                "Run every verified reachable allotment patch that is ready, then replant using the best useful seed supply. You need " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring a rake, seed dibber, spade, compost plan, and the selected allotment seeds. " + observed(items, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
-                "Use the Farming checklist for observed patches instead of assuming every unlocked patch is currently empty or ready.",
+                "At " + patch + ", harvest each ready allotment, plant three "
+                        + seed.toLowerCase(java.util.Locale.ROOT)
+                        + " in each cleared allotment, compost, and return after the crop is ready. Repeat for "
+                        + format(xp) + " Farming XP to level " + target + ".",
+                "Bring six " + seed.toLowerCase(java.util.Locale.ROOT)
+                        + ", a rake, seed dibber, spade, and compost. "
+                        + observed(items, seed, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
+                patch + ".",
                 "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
         );
     }
@@ -253,10 +282,11 @@ public class VariableMethodGuidanceService
         int level = data == null || data.getAccount() == null ? 9
                 : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
         String seed = herbSeed(items, level);
+        if (seed == null) return null;
         String patch = new FarmingAccessEvaluator(new FarmingAccessCatalog())
                 .firstReachableHerbPatchName(
                         data == null ? null : data.getFarming());
-        if (patch == null) patch = "the verified herb patch";
+        if (patch == null) return null;
         return new RecommendationGuidance(
                 "At " + patch + ", harvest any ready herbs, plant " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",
                 "Bring " + seed + ", a seed dibber, and a spade. Compost is optional but protects yield. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
@@ -282,25 +312,39 @@ public class VariableMethodGuidanceService
                     && items.quantity(tier[0]) > 0)
                 return "one " + tier[0].toLowerCase(java.util.Locale.ROOT);
         }
-        return "one herb seed whose Herblore value you have decided to spend";
+        return null;
     }
 
     private static RecommendationGuidance farmingContracts(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data.getAccount().getSkillLevel(Skill.FARMING);
+        String tier = level >= 85 ? "hard" : level >= 65 ? "medium" : "easy";
         return new RecommendationGuidance(
-                "Complete the current Farming Guild contract when its crop is ready, then take the highest practical contract tier. Farming still needs " + format(xp) + " XP to level " + target + ".",
+                "Ask Guildmaster Jane for a " + tier + " contract. Grow the named crop inside the Farming Guild, check its health or finish harvesting it, claim the seed pack, and request another " + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
                 "Keep common contract seeds and planting tools available when storage allows. " + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
-                "Use the Farming Guild contract area. Pre-plant only crops that do not block a more valuable active Farming objective.",
+                "Guildmaster Jane in the central Farming Guild greenhouse, Kebos Lowlands.",
                 "Contracts are primarily a seed-supply progression loop, not constant XP per contract. They should be surfaced as a detour when the seed value outweighs continuous training."
         );
     }
 
-    private static RecommendationGuidance hunterRumours(int target, int xp, ObservedItemIndex items)
+    private static RecommendationGuidance hunterRumours(
+            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data.getAccount().getSkillLevel(Skill.HUNTER);
+        boolean master = level >= 91 && data.getQuests() != null
+                && data.getQuests().statusOf("At First Light") == QuestStatus.COMPLETE;
+        String tier = master ? "Master" : level >= 72 ? "Expert"
+                : level >= 57 ? "Adept" : "Novice";
+        String hunter = master ? "Guild Hunter Wolf"
+                : level >= 72 ? "Guild Hunter Teco"
+                : level >= 57 ? "Guild Hunter Ornus"
+                : "Huntmaster Gilman";
         return new RecommendationGuidance(
-                "Take the highest Hunter Rumour tier you can access and complete the assigned creature until you gain " + format(xp) + " Hunter XP toward level " + target + ".",
+                "Get a " + tier + " rumour from " + hunter
+                        + ". Hunt the named creature until it drops the rare part, return the part for the loot sack, and take another rumour. Repeat for "
+                        + format(xp) + " Hunter XP toward level " + target + ".",
                 "Bring the trap or tool required by the assigned creature and your hunter's whistle when available. " + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
-                "Get the rumour at the Hunter Guild, travel to the assigned creature, obtain its rare piece, then return it for the reward sack and next assignment.",
+                hunter + " in the Burrow beneath the Hunter Guild, Varlamore.",
                 "Assignment and rare-part RNG change XP per rumour. Creature-specific loadouts should replace this generic setup once the current rumour can be observed directly."
         );
     }
@@ -315,14 +359,104 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance forestry(int target, int xp, ObservedItemIndex items)
+    private static RecommendationGuidance forestry(
+            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
     {
+        int level = data.getAccount().getSkillLevel(Skill.WOODCUTTING);
+        String tree = level >= 60 ? "yew trees" : level >= 45
+                ? "maple trees" : level >= 30 ? "willow trees" : "oak trees";
+        String location = level >= 60
+                ? "Yew trees beside Seers' Village church."
+                : level >= 45
+                        ? "Maple trees immediately north of Seers' Village bank."
+                        : level >= 30
+                                ? "Willow trees south of Draynor Village bank."
+                                : "Oak trees east of Draynor Village bank.";
+        String axe = axe(items);
         return new RecommendationGuidance(
-                "Cut the best reachable Forestry-enabled tree and participate in nearby events when they appear until you gain " + format(xp) + " Woodcutting XP toward level " + target + ".",
-                "Bring your best usable axe and Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
-                "Choose a populated Forestry tree area that fits the selected tree tier and access state. Stay with the tree group so event downtime does not become wasted travel.",
+                "On an official Forestry world, cut " + tree
+                        + " and complete each event that spawns until you gain "
+                        + format(xp) + " Woodcutting XP toward level " + target + ".",
+                "Bring " + axe + " and a Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
+                location,
                 "Event frequency and event type vary, so exact event counts are not meaningful. The planner treats Forestry as varied Woodcutting plus reward progression."
         );
+    }
+
+    private static FoundryAlloy foundryAlloy(ObservedItemIndex items)
+    {
+        String[][] adjacent = {
+                {"Runite bar", "Adamantite bar"},
+                {"Adamantite bar", "Mithril bar"},
+                {"Mithril bar", "Steel bar"},
+                {"Steel bar", "Iron bar"}
+        };
+        for (String[] pair : adjacent)
+        {
+            if (items.quantity(pair[0]) >= 14 && items.quantity(pair[1]) >= 14)
+                return new FoundryAlloy("14 " + pair[0].toLowerCase(java.util.Locale.ROOT)
+                        + " and 14 " + pair[1].toLowerCase(java.util.Locale.ROOT));
+        }
+        String[] metals = {"Runite bar", "Adamantite bar", "Mithril bar",
+                "Steel bar", "Iron bar"};
+        for (String metal : metals)
+            if (items.quantity(metal) >= 28)
+                return new FoundryAlloy("28 " + metal.toLowerCase(java.util.Locale.ROOT));
+        return null;
+    }
+
+    private static ContractTier contractTier(int level, ObservedItemIndex items)
+    {
+        ContractTier[] tiers = {
+                new ContractTier("Expert", "Mahogany plank", 70),
+                new ContractTier("Adept", "Teak plank", 50),
+                new ContractTier("Novice", "Oak plank", 20),
+                new ContractTier("Beginner", "Plank", 1)
+        };
+        for (ContractTier tier : tiers)
+            if (level >= tier.level && items.quantity(tier.plank) >= 15)
+                return tier;
+        return null;
+    }
+
+    private static String highestObservedAllotmentSeed(
+            ObservedItemIndex items, int level)
+    {
+        String[][] tiers = {
+                {"Snape grass seed", "61"}, {"Watermelon seed", "47"},
+                {"Strawberry seed", "31"}, {"Sweetcorn seed", "20"},
+                {"Tomato seed", "12"}, {"Cabbage seed", "7"},
+                {"Onion seed", "5"}, {"Potato seed", "1"}
+        };
+        for (String[] tier : tiers)
+            if (level >= Integer.parseInt(tier[1])
+                    && items.quantity(tier[0]) >= 6)
+                return tier[0];
+        return null;
+    }
+
+    private static final class FoundryAlloy
+    {
+        private final String description;
+
+        private FoundryAlloy(String description)
+        {
+            this.description = description;
+        }
+    }
+
+    private static final class ContractTier
+    {
+        private final String name;
+        private final String plank;
+        private final int level;
+
+        private ContractTier(String name, String plank, int level)
+        {
+            this.name = name;
+            this.plank = plank;
+            this.level = level;
+        }
     }
 
     private static RecommendationGuidance pyramidPlunder(int target, int xp, ObservedItemIndex items)
@@ -338,9 +472,9 @@ public class VariableMethodGuidanceService
     private static RecommendationGuidance varlamoreThieving(int target, int xp, ObservedItemIndex items)
     {
         return new RecommendationGuidance(
-                "Use the unlocked Varlamore citizen and house-robbery loop until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
-                "Bring only the healing and teleport support needed for the chosen loop; keep enough inventory room for valuables. " + observed(items, "Dodgy necklace", "Rogue top", "Rogue trousers", "Rogue gloves", "Rogue boots"),
-                "Use the Varlamore Thieving area unlocked by your current quest/access state and stay on the low-friction loop rather than mixing in unrelated travel.",
+                "Pickpocket wealthy citizens when a street urchin distracts them until you obtain a house key. Unlock an empty house, search the wardrobes, chests, and jewellery cases, take each flashing-object bonus, escape through the window, and repeat until you gain " + format(xp) + " Thieving XP toward level " + target + ".",
+                "Bring a chisel for blessed bone statuettes and leave inventory space for valuables. " + observed(items, "House key", "Chisel", "Dodgy necklace", "Rogue top", "Rogue trousers", "Rogue gloves", "Rogue boots"),
+                "Wealthy citizens in the Civitas illa Fortis bazaar, then Caius', Victor's, or Lavinia's empty house in the south-west city.",
                 "House availability and loop timing vary, so exact XP remaining is shown without claiming a fixed number of robberies."
         );
     }
@@ -368,6 +502,15 @@ public class VariableMethodGuidanceService
                 "Steel pickaxe", "Iron pickaxe", "Bronze pickaxe"};
         for (String name : names) if (items.has(name)) return name;
         return "a bronze pickaxe; get one free from the Mining tutor at the east Lumbridge Swamp mine before leaving";
+    }
+
+    private static String axe(ObservedItemIndex items)
+    {
+        String[] names = {"Crystal axe", "Infernal axe", "Dragon axe",
+                "Rune axe", "Adamant axe", "Mithril axe", "Black axe",
+                "Steel axe", "Iron axe", "Bronze axe"};
+        for (String name : names) if (items.has(name)) return name;
+        return "a bronze axe; buy one from Bob's Brilliant Axes in Lumbridge before leaving";
     }
 
     private static String firstObserved(

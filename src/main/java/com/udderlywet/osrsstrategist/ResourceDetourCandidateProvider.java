@@ -119,7 +119,7 @@ public class ResourceDetourCandidateProvider
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
                         "Do a Wintertodt Firemaking session and keep useful log rewards from the supply crates. Stop using it as a Construction detour once direct plank sourcing clearly becomes the better account-time tradeoff.",
-                        "Only " + logs + " useful logs and " + planks + " planks are currently observed. Bring the normal cold-damage survival and Firemaking tools appropriate to the account. Crate contents are random, so no exact crate count is promised.",
+                        "Only " + logs + " useful logs and " + planks + " planks are currently observed. Equip four warm items and bring a knife, hammer, and cakes; each cake bite restores 35% warmth. Crate contents are random, so no exact crate count is promised.",
                         "Wintertodt Camp in northern Great Kourend.",
                         "This route earns Firemaking progress while creating a chance at useful logs. It is intentionally excluded from automatic Hardcore routing here because a resource detour is not worth adding avoidable survival risk."
                 );

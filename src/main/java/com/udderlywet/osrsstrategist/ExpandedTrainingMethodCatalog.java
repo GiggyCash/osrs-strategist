@@ -499,7 +499,7 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.LOW, 20, 5,
                 "Glassmaking supplies");
         add(Skill.CRAFTING, "crafting_gems", 20, 99,
-                "Cut gems", "Cut the best sensible banked or purchased gems for straightforward Crafting experience.",
+                "Cut gems", "Grand Exchange bank: withdraw a chisel and the uncut gem named in DO, cut the full inventory, bank, and repeat.",
                 TrainingIntensity.EFFICIENT, MethodCostTier.HIGH, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.MODERATE, 20, 2,
                 "Uncut gem supply");
@@ -525,7 +525,7 @@ public class ExpandedTrainingMethodCatalog
                 false, true, true, true, false, AttentionLevel.LOW, 10, 1,
                 "Knife and log supply");
         add(Skill.FLETCHING, "fletching_bows", 5, 99,
-                "Longbows and shortbows", "Fletch the best sensible bow tier for a relaxed, often inexpensive or profitable route.",
+                "Longbows and shortbows", "Grand Exchange bank: withdraw a knife and the log type named in DO, fletch the full inventory into the named unstrung bow, bank, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.LOW, 20, 2,
                 "Knife and log supply");
@@ -546,7 +546,7 @@ public class ExpandedTrainingMethodCatalog
                 "Bolt component supply");
 
         add(Skill.FIREMAKING, "firemaking_f2p_logs", 1, 99,
-                "Burn logs", "Burn the best sensible F2P logs in a clear line for conventional Firemaking training.",
+                "Burn logs", "Grand Exchange south-east corner: withdraw the log type named in DO and a tinderbox, burn east-to-west rows, bank, and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
                 true, true, true, true, false, AttentionLevel.ACTIVE, 15, 2,
                 "Tinderbox and log supply");
@@ -603,7 +603,7 @@ public class ExpandedTrainingMethodCatalog
                 "Enter the Abyss", "Essence, pouches and altar access", "Wilderness risk accepted");
 
         add(Skill.HERBLORE, "herblore_low_potions", 3, 37,
-                "Early potions", "Clean herbs and make the best useful low-level potion supported by the account's herb and secondary supply.",
+                "Early potions", "Grand Exchange bank: withdraw the herb, vial of water, and secondary named in DO; make a full inventory of that potion, bank, and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.MODERATE, RiskLevel.NONE,
                 false, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
                 "Herb and secondary supply");

@@ -2,9 +2,11 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.Arrays;
 import java.util.Map;
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -18,7 +20,9 @@ public class VariableGuidanceWiringTest
     {
         VariableMethodGuidanceService service = new VariableMethodGuidanceService();
         RecommendationGuidance guidance = service.build(
-                data(Skill.SMITHING, 70),
+                data(Skill.SMITHING, 70,
+                        item(ItemID.RUNITE_BAR, "Runite bar", 14),
+                        item(ItemID.ADAMANTITE_BAR, "Adamantite bar", 14)),
                 Skill.SMITHING,
                 70,
                 80,
@@ -35,7 +39,8 @@ public class VariableGuidanceWiringTest
     {
         VariableMethodGuidanceService service = new VariableMethodGuidanceService();
         RecommendationGuidance guidance = service.build(
-                data(Skill.CONSTRUCTION, 70),
+                data(Skill.CONSTRUCTION, 70,
+                        item(ItemID.PLANK_MAHOGANY, "Mahogany plank", 20)),
                 Skill.CONSTRUCTION,
                 70,
                 80,
@@ -43,7 +48,8 @@ public class VariableGuidanceWiringTest
                 true);
 
         assertNotNull(guidance);
-        assertTrue(guidance.getAction().contains("Mahogany Homes"));
+        assertTrue(guidance.getAction().contains("Expert contract"));
+        assertTrue(guidance.getLocation().contains("Mahogany Homes"));
         assertTrue(guidance.getNote().contains("live contract"));
     }
 
@@ -68,6 +74,12 @@ public class VariableGuidanceWiringTest
 
     private static StrategyDataBundle data(Skill skill, int level)
     {
+        return data(skill, level, new ItemStackSnapshot[0]);
+    }
+
+    private static StrategyDataBundle data(Skill skill, int level,
+            ItemStackSnapshot... items)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill s : Skill.values())
@@ -88,9 +100,14 @@ public class VariableGuidanceWiringTest
                 levels,
                 xp);
         return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .bank(new BankSnapshot(Arrays.asList(items), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
                 .build();
+    }
+
+    private static ItemStackSnapshot item(int id, String name, int quantity)
+    {
+        return new ItemStackSnapshot(id, name, quantity);
     }
 
     private static TrainingPlan plan(String id, Skill skill)

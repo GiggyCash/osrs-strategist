@@ -34,6 +34,10 @@ final class RecommendationQualityPolicy
             "highest mahogany homes contract",
             "highest fruit seed tier",
             "best commission-compatible alloy",
+            "highest practical contract",
+            "best owned mould",
+            "best useful seed",
+            "best reachable forestry",
             "prioritize orders",
             "fits the selected",
             "train this skill",
@@ -74,6 +78,7 @@ final class RecommendationQualityPolicy
     private static final List<String> UNRESOLVED_SUPPLIES = Arrays.asList(
             "selected allotment seed",
             "selected herb seed",
+            "herblore value you have decided",
             "suitable seed",
             "matching observed weapon",
             "appropriate to the account",
@@ -101,6 +106,7 @@ final class RecommendationQualityPolicy
         RecommendationGuidance guidance = recommendation.getGuidance();
         if (guidance == null || !hasText(guidance.getAction())) return false;
         if (containsAny(guidance.getAction(), GENERIC_ACTIONS)) return false;
+        if (containsAny(guidance.getLocation(), GENERIC_ACTIONS)) return false;
         if (containsAny(guidance.getLocation(), GENERIC_LOCATIONS)) return false;
         if (containsAny(guidance.getSupplies(), UNRESOLVED_SUPPLIES)) return false;
 

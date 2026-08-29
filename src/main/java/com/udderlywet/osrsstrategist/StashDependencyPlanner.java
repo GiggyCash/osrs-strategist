@@ -64,7 +64,7 @@ public final class StashDependencyPlanner
                     "Train Construction from " + level + " to " + requiredLevel,
                     RecommendationConfidence.VERIFIED));
             steps.add(step(GoalNodeKind.TRAINING_METHOD,
-                    "Choose an account-appropriate Construction method for the current session.",
+                    constructionRoute(level, requiredLevel),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
@@ -102,5 +102,21 @@ public final class StashDependencyPlanner
             RecommendationConfidence confidence)
     {
         return new StashDependencyStep(kind, action, confidence);
+    }
+
+    private static String constructionRoute(int currentLevel, int targetLevel)
+    {
+        if (targetLevel <= 32)
+        {
+            return "In a verified POH Parlour, build and remove crude wooden chairs with two planks and two steel nails each until "
+                    + targetLevel + " Construction.";
+        }
+        if (currentLevel < 33)
+        {
+            return "In a verified POH Parlour, build and remove crude wooden chairs to 33 Construction; then use a verified POH Kitchen to build and remove oak larders with eight oak planks each until "
+                    + targetLevel + " Construction.";
+        }
+        return "In a verified POH Kitchen, build and remove oak larders with eight oak planks each until "
+                + targetLevel + " Construction.";
     }
 }
