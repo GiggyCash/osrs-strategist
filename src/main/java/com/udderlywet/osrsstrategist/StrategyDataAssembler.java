@@ -15,6 +15,7 @@ public class StrategyDataAssembler
     private final LiveCombatAchievementReader combatAchievementReader;
     private final LiveClueStateReader clueStateReader;
     private final LiveSlayerStateReader slayerStateReader;
+    private final LivePohStateReader pohStateReader;
     private final LiveEconomyReader economyReader;
     private final LiveCombatEvidenceReader combatEvidenceReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
@@ -35,6 +36,7 @@ public class StrategyDataAssembler
             LiveCombatAchievementReader combatAchievementReader,
             LiveClueStateReader clueStateReader,
             LiveSlayerStateReader slayerStateReader,
+            LivePohStateReader pohStateReader,
             LiveEconomyReader economyReader,
             LiveCombatEvidenceReader combatEvidenceReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
@@ -51,6 +53,7 @@ public class StrategyDataAssembler
         this.combatAchievementReader = combatAchievementReader;
         this.clueStateReader = clueStateReader;
         this.slayerStateReader = slayerStateReader;
+        this.pohStateReader = pohStateReader;
         this.economyReader = economyReader;
         this.combatEvidenceReader = combatEvidenceReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
@@ -71,7 +74,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, null, questStateReader,
-                null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null,
                 accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
@@ -162,6 +165,7 @@ public class StrategyDataAssembler
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.getFarming());
+        observePoh();
 
         return StrategyDataBundle.builder(account)
                 .inventory(inventory)
@@ -189,6 +193,22 @@ public class StrategyDataAssembler
                 .combatEvidence(combatEvidenceReader == null
                         ? null : combatEvidenceReader.read())
                 .build();
+    }
+
+    /** Polls only the ownership-proven build-mode scene for POH changes. */
+    public synchronized boolean observePoh()
+    {
+        if (pohStateReader == null) return false;
+        AccountSnapshot account = accountReader.read();
+        if (account == null || !account.hasStableAccountIdentity()
+                || lastAccountIdentity == null
+                || !lastAccountIdentity.equals(accountIdentity(account)))
+            return false;
+        PohSnapshot observed = pohStateReader.read();
+        if (observed == null || observed.equals(observedStateStore.getPoh()))
+            return false;
+        observedStateStore.setPoh(observed);
+        return true;
     }
 
     public synchronized void clearForAccountChange()

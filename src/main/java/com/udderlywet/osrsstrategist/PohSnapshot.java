@@ -3,6 +3,7 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Player-owned-house capability snapshot.
@@ -55,5 +56,21 @@ public final class PohSnapshot
     public Map<String, CapabilityState> getFurniture()
     {
         return furniture;
+    }
+
+    @Override
+    public boolean equals(Object other)
+    {
+        if (this == other) return true;
+        if (!(other instanceof PohSnapshot)) return false;
+        PohSnapshot that = (PohSnapshot) other;
+        return houseAccess == that.houseAccess
+                && furniture.equals(that.furniture);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(houseAccess, furniture);
     }
 }

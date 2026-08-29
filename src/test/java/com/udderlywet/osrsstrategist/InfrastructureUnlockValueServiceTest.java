@@ -24,9 +24,11 @@ public class InfrastructureUnlockValueServiceTest
     @Test
     public void catalogContainsOnlyAuditedConcreteMilestones()
     {
-        assertEquals(5, catalog.all().size());
-        assertEquals(46,
+        assertEquals(12, catalog.all().size());
+        assertEquals(42,
                 catalog.get("poh-costume-room").getRequiredLevel());
+        assertEquals(46,
+                catalog.get("poh-armour-case").getRequiredLevel());
         assertEquals(50,
                 catalog.get("poh-portal-chamber").getRequiredLevel());
         assertTrue(catalog.get("poh-costume-room").getAction()
@@ -61,7 +63,7 @@ public class InfrastructureUnlockValueServiceTest
         assertTrue(uim.canRecommendAcquisition());
         assertTrue(uim.getContributions().stream().anyMatch(value ->
                 value.getDimension()
-                        == AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE
+                        == AccountStrategicDimension.POH_VALUE
                         && value.getEffectivePriority()
                         == StrategicPriority.HIGH));
     }
@@ -146,13 +148,11 @@ public class InfrastructureUnlockValueServiceTest
     private static StrategyDataBundle costumeData(AccountMode mode,
             MembershipStatus membership, CapabilityState costume)
     {
-        Map<StorageCapability, CapabilityState> storage =
-                new EnumMap<>(StorageCapability.class);
-        storage.put(StorageCapability.POH_COSTUME_ROOM, costume);
+        Map<String, CapabilityState> furniture = new HashMap<>();
+        furniture.put(LivePohStateReader.COSTUME_ROOM, costume);
         return StrategyDataBundle.builder(account(mode, membership, 70))
                 .poh(new PohSnapshot(CapabilityState.VERIFIED,
-                        Collections.emptyMap()))
-                .storage(new StorageSnapshot(storage))
+                        furniture))
                 .build();
     }
 

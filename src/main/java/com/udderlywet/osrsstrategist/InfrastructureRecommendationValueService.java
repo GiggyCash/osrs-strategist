@@ -62,15 +62,16 @@ public final class InfrastructureRecommendationValueService
                 ? null : training.getMethod().getSkill();
         int current = skill == null ? 0 : context.getData().getAccount()
                 .getSkillLevel(skill);
-        if (skill == definition.getRequiredSkill()
-                && current < definition.getRequiredLevel()
+        int required = definition.getRequiredSkills().getOrDefault(skill, 0);
+        if (skill != null && required > 0
+                && current < required
                 && recommendation.getTargetLevel()
-                        >= definition.getRequiredLevel()) return true;
+                        >= required) return true;
 
-        String quest = definition.getRequiredQuest();
-        if (quest != null && recommendation.getId() != null
-                && recommendation.getId().equals("quest:" + slug(quest)))
-            return true;
+        for (String quest : definition.getRequiredQuests().keySet())
+            if (recommendation.getId() != null
+                    && recommendation.getId().equals("quest:" + slug(quest)))
+                return true;
         return recommendation.getId() != null
                 && recommendation.getId().equals(
                         "infrastructure:" + definition.getId());

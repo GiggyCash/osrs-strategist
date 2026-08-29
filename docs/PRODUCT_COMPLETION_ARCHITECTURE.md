@@ -10,7 +10,8 @@ requirement, actionability, and presentation gates.
 1. `RecommendationEngine` generates all legal skill candidates and targets the
    nearest proven breakpoint rather than an arbitrary round number.
 2. Candidate providers add quests, upgrades, Slayer workflow actions, PvM,
-   diaries, clues, resources, minigames, and other activities to the same pool.
+   diaries, clues, infrastructure, resources, minigames, and other activities
+   to the same pool.
 3. A provider may supersede a generic candidate only when it emits a usable
    typed replacement. For example, live Slayer workflow owns `skill:slayer`
    only after it can produce an assignment action.
@@ -59,10 +60,20 @@ infrastructure as unknown and never invents it from Group Storage.
 
 ## Infrastructure and unlocks
 
-`InfrastructureMilestoneCatalog` currently contains reviewed milestones for
-POH access, first useful costume-room equipment storage, Portal Chamber, fairy
-rings, and spirit trees. Each definition carries requirements, benefits,
-substitute rules, and observable completion evidence.
+`InfrastructureMilestoneCatalog` contains reviewed milestones for POH access,
+the Costume room and oak armour case, a configured Portal Chamber, Superior
+Garden and restoration pool, Portal Nexus, basic jewellery box, POH fairy
+ring/spirit tree, and the wider fairy-ring/spirit-tree networks. Definitions
+support multiple skill and quest requirements and carry typed benefits plus
+observable completion evidence.
+
+`LivePohStateReader` scans the complete scene only while RuneLite proves that
+the current character is in their own house with building mode enabled. It
+records both present and absent tracked furniture. Public and teammate houses
+produce no personal evidence, and the observation is retained only after the
+stable account identity matches. `InfrastructureCandidateProvider` turns that
+evidence into either one exact own-house verification step or an explicit
+build-preparation action; F2P never receives these candidates.
 
 `InfrastructureUnlockValueService` distinguishes complete, eligible,
 evidence-needed, and not-applicable states. Value attaches only to the actual
@@ -78,9 +89,11 @@ To add an infrastructure unlock:
 
 1. verify mechanics and add the source to `STRATEGIC_DATA_SOURCES.md`;
 2. add one typed `InfrastructureMilestoneDefinition` with observable evidence;
-3. add semantic tests for mode value, substitutes, unknown state, and the
+3. extend the own-house object classification when the capability is visible
+   in RuneLite's scene, without weakening the building-mode ownership gate;
+4. add semantic tests for mode value, substitutes, unknown state, and the
    exact prerequisite action;
-4. do not expose a direct candidate unless its build/use action is executable.
+5. do not expose a direct candidate unless its build/use action is executable.
 
 ## Travel and method locations
 

@@ -110,18 +110,19 @@ public final class InfrastructureUnlockValueService
     {
         AccountSnapshot account = data == null ? null : data.getAccount();
         if (account == null) return RequirementState.CHECK_NEEDED;
-        if (definition.getRequiredSkill() != null
-                && account.getSkillLevel(definition.getRequiredSkill())
-                < definition.getRequiredLevel())
-            return RequirementState.BLOCKED;
+        for (Map.Entry<net.runelite.api.Skill, Integer> skill
+                : definition.getRequiredSkills().entrySet())
+            if (account.getSkillLevel(skill.getKey()) < skill.getValue())
+                return RequirementState.BLOCKED;
 
-        if (definition.getRequiredQuest() != null)
+        for (Map.Entry<String, Boolean> quest
+                : definition.getRequiredQuests().entrySet())
         {
             QuestSnapshot quests = data.getQuests();
             if (quests == null) return RequirementState.CHECK_NEEDED;
-            QuestStatus status = quests.statusOf(definition.getRequiredQuest());
+            QuestStatus status = quests.statusOf(quest.getKey());
             boolean satisfied = status == QuestStatus.COMPLETE
-                    || definition.isQuestStartSufficient()
+                    || quest.getValue()
                     && status == QuestStatus.IN_PROGRESS;
             if (!satisfied)
                 return status == QuestStatus.UNKNOWN

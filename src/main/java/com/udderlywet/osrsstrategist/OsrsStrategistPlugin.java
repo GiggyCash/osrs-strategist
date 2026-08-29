@@ -174,9 +174,10 @@ public class OsrsStrategistPlugin extends Plugin
     {
         boolean accessChanged = accessObservationService.observeCurrentLocation();
         boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
+        boolean pohChanged = strategyDataAssembler.observePoh();
         boolean liveStateChanged = consumeVarbitRefreshPending();
         boolean observedStateChanged = consumeAccountRefreshPending();
-        if (accessChanged || farmChanged || liveStateChanged
+        if (accessChanged || farmChanged || pohChanged || liveStateChanged
                 || observedStateChanged) updateAccountPanel();
     }
 

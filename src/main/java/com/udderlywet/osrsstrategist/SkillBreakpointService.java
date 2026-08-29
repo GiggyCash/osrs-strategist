@@ -57,8 +57,10 @@ public final class SkillBreakpointService
 
         InfrastructureMilestoneDefinition infrastructureTarget = context == null
                 ? null : infrastructure.all().stream()
-                .filter(value -> value.getRequiredSkill() == skill
-                        && value.getRequiredLevel() > currentLevel)
+                .filter(value -> value.getRequiredSkills()
+                        .getOrDefault(skill, 0) > currentLevel)
+                .filter(value -> isNextMissingSkill(value, skill,
+                        context.getData().getAccount()))
                 .filter(value -> {
                     InfrastructureMilestoneState state = infrastructureValue
                             .assess(value.getId(), context).getState();
@@ -66,11 +68,11 @@ public final class SkillBreakpointService
                             && state != InfrastructureMilestoneState.NOT_APPLICABLE;
                 })
                 .min(Comparator.comparingInt(
-                        InfrastructureMilestoneDefinition::getRequiredLevel))
+                        value -> value.getRequiredSkills().get(skill)))
                 .orElse(null);
         if (infrastructureTarget != null)
             return new SkillBreakpoint(skill,
-                    infrastructureTarget.getRequiredLevel(),
+                    infrastructureTarget.getRequiredSkills().get(skill),
                     "Unlock " + infrastructureTarget.getName(),
                     SkillBreakpoint.Kind.INFRASTRUCTURE_UNLOCK,
                     "infrastructure:" + infrastructureTarget.getId());
@@ -119,5 +121,25 @@ public final class SkillBreakpointService
         if (account == MembershipStatus.F2P)
             return action == MembershipStatus.F2P;
         return action == MembershipStatus.F2P || action == MembershipStatus.P2P;
+    }
+
+    private static boolean isNextMissingSkill(
+            InfrastructureMilestoneDefinition definition, Skill requested,
+            AccountSnapshot account)
+    {
+        Skill next = null;
+        int smallestGap = Integer.MAX_VALUE;
+        for (java.util.Map.Entry<Skill, Integer> requirement
+                : definition.getRequiredSkills().entrySet())
+        {
+            int gap = requirement.getValue()
+                    - account.getSkillLevel(requirement.getKey());
+            if (gap > 0 && gap < smallestGap)
+            {
+                smallestGap = gap;
+                next = requirement.getKey();
+            }
+        }
+        return requested == next;
     }
 }

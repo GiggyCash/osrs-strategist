@@ -117,7 +117,10 @@ item/access setup, Wilderness risk, and reusable fan-out.
 Only observed `TransportSnapshot` routes count as verified. Unknown membership
 fails closed for members routes; Hardcore accounts do not auto-route Wilderness
 teleports. POH portal, mounted, spirit-tree, and fairy-ring capabilities require
-observed furniture state and are never inferred from Construction level.
+observed furniture state and are never inferred from Construction level. The
+plugin can now prove tracked furniture present or absent from a complete scene
+scan only in the current character's own POH build mode; public houses and
+unknown ownership do not update the personal snapshot.
 
 ## Combat Achievements
 
