@@ -152,6 +152,13 @@ public class SlayerStrategist
         if (weapon == null)
             return preparation(slayer, master, taskStrategy, base,
                     "No recognised combat weapon is observed in the live weapon slot.");
+        CombatStyle observedStyle = weaponStyle(weapon);
+        if (taskStrategy.getRequiredCombatStyle() != null
+                && observedStyle != taskStrategy.getRequiredCombatStyle())
+            return preparation(slayer, master, taskStrategy, base,
+                    "The equipped " + weapon + " does not satisfy the task's "
+                            + styleName(taskStrategy.getRequiredCombatStyle())
+                            + "-only damage requirement.");
 
         PvmReadiness alternative = alternativeReadiness(data, taskStrategy);
         if (alternative != null && alternative.isReadyForRecommendation()
@@ -159,7 +166,7 @@ public class SlayerStrategist
             return bossAlternative(slayer, master, taskStrategy);
 
         base = concreteTaskGuidance(base, taskMechanics, taskStrategy,
-                items, weapon, data.getInventory());
+                items, weapon, observedStyle, slayer, data.getInventory());
 
         double value = taskValue(taskStrategy, context);
         boolean milestone = slayer.getTaskStreak() != null
@@ -428,6 +435,8 @@ public class SlayerStrategist
         if (AccountModePolicy.isRiskSensitive(context.getAccountMode()))
             return false;
         return context.getActiveGoal() == GoalType.ELITE_COMBAT_ACHIEVEMENTS
+                || context.getActiveGoal() == GoalType.GEAR_TARGET
+                || context.getActiveGoal() == GoalType.RAID_READY
                 || (context.getAccountMode().isIronLike()
                     && task.getResourceValue() <= 2);
     }
@@ -435,7 +444,8 @@ public class SlayerStrategist
     private static RecommendationGuidance concreteTaskGuidance(
             RecommendationGuidance base, SlayerTaskProfile mechanics,
             SlayerTaskStrategicProfile strategy, ObservedItemIndex items,
-            String weapon, InventorySnapshot inventory)
+            String weapon, CombatStyle observedStyle, SlayerSnapshot slayer,
+            InventorySnapshot inventory)
     {
         String required = firstReadyItem(items,
                 mechanics.getRequiredProtection(), strategy.getRequiredItemUse());
@@ -450,7 +460,10 @@ public class SlayerStrategist
             supplies.append("No consumable inventory is observed; begin only a short safe trip and bank before supplies run out.");
         else
             supplies.append("Keep the currently carried inventory; Compass has not inferred doses, charges, or healing value from item names.");
-        return new RecommendationGuidance(base.getAction(), supplies.toString(),
+        String action = "Kill the remaining " + slayer.getRemaining() + " "
+                + slayer.getTaskName() + " using " + weapon + " ("
+                + styleName(observedStyle) + "). " + mechanics.getStyleGuidance();
+        return new RecommendationGuidance(action, supplies.toString(),
                 base.getLocation(), base.getNote());
     }
 
@@ -482,6 +495,34 @@ public class SlayerStrategist
                 return item.getName();
         }
         return null;
+    }
+
+    private static CombatStyle weaponStyle(String weapon)
+    {
+        String name = normalize(weapon);
+        if (containsAny(name, "bow", "crossbow", "blowpipe", "ballista",
+                "atlatl")) return CombatStyle.RANGED;
+        if (containsAny(name, "staff", "wand", "trident", "sceptre",
+                "scepter", "shadow")) return CombatStyle.MAGIC;
+        if (containsAny(name, "mace", "maul", "bludgeon"))
+            return CombatStyle.MELEE_CRUSH;
+        if (containsAny(name, "spear", "hasta", "fang", "lance"))
+            return CombatStyle.MELEE_STAB;
+        return CombatStyle.MELEE_SLASH;
+    }
+
+    private static String styleName(CombatStyle style)
+    {
+        if (style == null) return "combat";
+        switch (style)
+        {
+            case MAGIC: return "Magic";
+            case RANGED: return "Ranged";
+            case MELEE_CRUSH: return "Melee crush";
+            case MELEE_STAB: return "Melee stab";
+            case MELEE_SLASH: return "Melee slash";
+            default: return "hybrid";
+        }
     }
 
     private static boolean containsAny(String value, String... terms)

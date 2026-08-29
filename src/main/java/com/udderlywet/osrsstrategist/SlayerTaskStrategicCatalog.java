@@ -28,46 +28,55 @@ public class SlayerTaskStrategicCatalog
                 ? new SlayerTaskProfileCatalog() : taskProfiles;
         Map<String, SlayerTaskStrategicProfile> values = new HashMap<>();
         add(values, taskEquipped("dust-devils", 5, 4, 3, 4, AttentionLevel.ACTIVE,
-                weights("duradel", 5), null));
+                weights("duradel", 5, "nieve", 6, "chaeldar", 9, "konar", 6), null));
         add(values, task("nechryaels", 5, 4, 3, 4, AttentionLevel.ACTIVE,
-                weights("duradel", 9), null));
+                weights("duradel", 9, "nieve", 7, "chaeldar", 12, "konar", 7), null));
         add(values, taskEquipped("smoke-devils", 5, 3, 3, 4, AttentionLevel.ACTIVE,
-                weights("duradel", 9), null));
+                weights("duradel", 9, "nieve", 7, "konar", 7),
+                alt("pvm:thermonuclear_smoke_devil",
+                        "Thermonuclear smoke devil", "Smoke Devil Dungeon")));
         add(values, task("bloodvelds", 3, 4, 3, 2, AttentionLevel.LOW,
-                weights("duradel", 8), null));
+                weights("duradel", 8, "nieve", 9, "chaeldar", 8, "konar", 9), null));
         add(values, task("gargoyles", 2, 4, 4, 2, AttentionLevel.LOW,
-                weights("duradel", 8, "nieve", 6, "chaeldar", 11), null));
+                weights("duradel", 8, "nieve", 6, "chaeldar", 11, "konar", 6),
+                alt("pvm:grotesque_guardians", "Grotesque Guardians",
+                        "Slayer Tower rooftop")));
         add(values, task("hellhounds", 2, 1, 5, 2, AttentionLevel.LOW,
-                weights("duradel", 10, "nieve", 8, "chaeldar", 9),
+                weights("duradel", 10, "nieve", 8, "chaeldar", 9, "konar", 8),
                 alt("pvm:cerberus", "Cerberus", "Taverley Dungeon")));
         add(values, task("abyssal-demons", 4, 4, 5, 4, AttentionLevel.ACTIVE,
-                weights("duradel", 12), null));
+                weights("duradel", 12, "nieve", 9, "chaeldar", 12, "konar", 9),
+                alt("pvm:abyssal_sire",
+                        "Abyssal Sire", "Abyssal Nexus")));
         add(values, task("greater-demons", 2, 2, 4, 2, AttentionLevel.LOW,
-                weights("duradel", 9, "nieve", 7, "chaeldar", 9),
+                weights("duradel", 9, "nieve", 7, "chaeldar", 9, "konar", 7),
                 alt("pvm:kril_tsutsaroth", "K'ril Tsutsaroth",
                         "God Wars Dungeon")));
         add(values, task("black-demons", 2, 2, 5, 3, AttentionLevel.MODERATE,
-                weights("duradel", 8), null));
+                weights("duradel", 8, "nieve", 9, "chaeldar", 10, "konar", 9), null));
         add(values, taskEquipped("kurasks", 2, 4, 3, 3, AttentionLevel.MODERATE,
-                weights("duradel", 4, "chaeldar", 12, "nieve", 3), null));
+                weights("duradel", 4, "chaeldar", 12, "nieve", 3, "konar", 3), null));
         add(values, taskEquipped("skeletal-wyverns", 2, 4, 5, 4, AttentionLevel.MODERATE,
-                weights("duradel", 7), null));
+                weights("duradel", 7, "nieve", 5, "chaeldar", 7, "konar", 5), null));
         add(values, task("drakes", 2, 3, 5, 4, AttentionLevel.MODERATE,
-                weights("duradel", 8), null));
+                weights("duradel", 8, "nieve", 7, "konar", 10), null));
         add(values, task("kalphites", 4, 1, 2, 2, AttentionLevel.MODERATE,
-                weights("duradel", 9, "nieve", 9, "chaeldar", 11), null));
+                weights("duradel", 9, "nieve", 9, "chaeldar", 11, "konar", 9),
+                alt("pvm:kalphite_queen", "Kalphite Queen",
+                        "Kalphite Queen lair")));
         add(values, taskEquipped("aberrant-spectres", 2, 4, 4, 3,
                 AttentionLevel.MODERATE,
-                weights("duradel", 7, "nieve", 6, "chaeldar", 8), null));
+                weights("duradel", 7, "nieve", 6, "chaeldar", 8, "konar", 6), null));
         add(values, taskEquipped("turoths", 2, 3, 3, 3,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("nieve", 3, "chaeldar", 10, "konar", 3), null));
         add(values, taskEquipped("banshees", 2, 2, 2, 2,
                 AttentionLevel.LOW, weights(), null));
         add(values, taskEquipped("cockatrices", 2, 2, 2, 3,
                 AttentionLevel.LOW, weights(), null));
         add(values, taskEquipped("basilisks", 2, 3, 4, 3,
                 AttentionLevel.MODERATE,
-                weights("duradel", 7, "chaeldar", 7), null));
+                weights("duradel", 7, "nieve", 6, "chaeldar", 7, "konar", 5), null));
         add(values, taskEquipped("wall-beasts", 1, 1, 2, 3,
                 AttentionLevel.MODERATE, weights(), null));
         add(values, task("rockslugs", 1, 1, 2, 2, AttentionLevel.LOW,
@@ -75,26 +84,30 @@ public class SlayerTaskStrategicCatalog
         add(values, task("desert-lizards", 1, 1, 2, 3,
                 AttentionLevel.MODERATE, weights(), null));
         add(values, taskEquipped("cave-horrors", 2, 3, 4, 4,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("duradel", 4, "nieve", 5, "chaeldar", 10), null));
         add(values, task("mogres", 1, 1, 2, 3, AttentionLevel.MODERATE,
                 weights(), null));
         add(values, task("killerwatts", 1, 1, 3, 4, AttentionLevel.ACTIVE,
                 weights(), null));
         add(values, task("fever-spiders", 1, 2, 2, 3,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE, weights("chaeldar", 7), null));
         add(values, task("brine-rats", 2, 2, 3, 3, AttentionLevel.LOW,
-                weights("chaeldar", 7), null));
+                weights("nieve", 3, "chaeldar", 7, "konar", 2), null));
         add(values, task("wyrms", 3, 3, 4, 3, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("duradel", 8, "nieve", 7, "konar", 10), null));
         add(values, task("hydras", 4, 5, 5, 4, AttentionLevel.ACTIVE,
-                weights(), alt("pvm:alchemical_hydra", "Alchemical Hydra",
+                weights("konar", 10), alt("pvm:alchemical_hydra", "Alchemical Hydra",
                         "Mount Karuulm")));
         add(values, taskEquipped("vampyres", 2, 3, 4, 4,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("duradel", 8, "nieve", 6, "konar", 4), null));
         add(values, task("waterfiends", 1, 2, 5, 4,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("duradel", 2, "konar", 2), null));
         add(values, task("dagannoths", 5, 3, 3, 3, AttentionLevel.ACTIVE,
-                weights(), alt("pvm:dagannoth_kings", "Dagannoth Kings",
+                weights("duradel", 9, "nieve", 8, "chaeldar", 11, "konar", 8),
+                alt("pvm:dagannoth_kings", "Dagannoth Kings",
                         "Waterbirth Island Dungeon")));
         add(values, task("crawling-hands", 1, 1, 2, 1,
                 AttentionLevel.LOW, weights(), null));
@@ -107,35 +120,40 @@ public class SlayerTaskStrategicCatalog
         add(values, task("infernal-mages", 2, 2, 3, 2,
                 AttentionLevel.LOW, weights(), null));
         add(values, task("jellies", 3, 2, 3, 3, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("chaeldar", 10, "konar", 6), null));
         add(values, taskEquipped("harpie-bug-swarms", 1, 1, 3, 4,
                 AttentionLevel.MODERATE, weights(), null));
         add(values, task("zygomites", 2, 3, 3, 3, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("duradel", 2, "nieve", 2, "chaeldar", 7, "konar", 2), null));
         add(values, task("dark-beasts", 2, 3, 2, 3, AttentionLevel.AFK,
-                weights(), null));
-        add(values, task("cave-kraken", 2, 3, 4, 3, AttentionLevel.LOW,
-                weights("duradel", 9), alt("pvm:kraken", "Kraken",
+                weights("duradel", 11, "nieve", 5, "konar", 5), null));
+        add(values, taskMagic("cave-kraken", 2, 3, 4, 3, AttentionLevel.LOW,
+                weights("duradel", 9, "nieve", 6, "chaeldar", 12, "konar", 9),
+                alt("pvm:kraken", "Kraken",
                         "Kraken Cove")));
         add(values, taskEquipped("warped-creatures", 2, 3, 4, 4,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("duradel", 8, "nieve", 6, "chaeldar", 6, "konar", 4), null));
         add(values, task("sulphur-lizards", 2, 2, 3, 3,
                 AttentionLevel.MODERATE, weights(), null));
         add(values, task("spiritual-creatures", 2, 3, 4, 5,
-                AttentionLevel.ACTIVE, weights(), null));
+                AttentionLevel.ACTIVE,
+                weights("duradel", 7, "nieve", 6, "chaeldar", 12), null));
         add(values, task("elves", 2, 2, 4, 4, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("duradel", 4, "nieve", 4, "chaeldar", 8), null));
         add(values, task("ankous", 3, 2, 3, 2, AttentionLevel.LOW,
-                weights("duradel", 5), null));
+                weights("duradel", 5, "nieve", 5, "konar", 5), null));
         add(values, task("suqahs", 3, 1, 4, 4, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("duradel", 8, "nieve", 8), null));
         add(values, task("trolls", 3, 2, 4, 3, AttentionLevel.MODERATE,
-                weights(), null));
+                weights("duradel", 6, "nieve", 6, "chaeldar", 11, "konar", 6), null));
         add(values, task("blue-dragons", 2, 4, 4, 3,
-                AttentionLevel.MODERATE, weights("chaeldar", 8),
+                AttentionLevel.MODERATE,
+                weights("duradel", 4, "nieve", 4, "chaeldar", 8, "konar", 4),
                 alt("pvm:vorkath", "Vorkath", "Ungael")));
         add(values, task("black-dragons", 2, 3, 2, 3,
-                AttentionLevel.MODERATE, weights(),
+                AttentionLevel.MODERATE,
+                weights("duradel", 9, "nieve", 6, "konar", 6),
                 alt("pvm:king_black_dragon", "King Black Dragon",
                         "King Black Dragon Lair")));
         add(values, task("steel-dragons", 1, 3, 5, 4,
@@ -143,7 +161,8 @@ public class SlayerTaskStrategicCatalog
         add(values, task("mithril-dragons", 1, 3, 3, 5,
                 AttentionLevel.ACTIVE, weights(), null));
         add(values, task("fossil-island-wyverns", 1, 3, 5, 5,
-                AttentionLevel.MODERATE, weights(), null));
+                AttentionLevel.MODERATE,
+                weights("duradel", 7, "nieve", 5, "chaeldar", 7, "konar", 5), null));
         add(values, taskEquipped("molanisks", 1, 1, 2, 4,
                 AttentionLevel.MODERATE, weights(), null));
         this.byProfileId = Collections.unmodifiableMap(values);
@@ -189,6 +208,18 @@ public class SlayerTaskStrategicCatalog
     {
         return new SlayerTaskStrategicProfile(id, xp, resources, length, setup,
                 attention, RiskLevel.LOW, SlayerRequiredItemUse.EQUIPPED,
+                weights, alternative == null ? null : alternative.id,
+                alternative == null ? null : alternative.name,
+                alternative == null ? null : alternative.location);
+    }
+
+    private static SlayerTaskStrategicProfile taskMagic(String id, int xp,
+            int resources, int length, int setup, AttentionLevel attention,
+            Map<String, Integer> weights, Alternative alternative)
+    {
+        return new SlayerTaskStrategicProfile(id, xp, resources, length, setup,
+                attention, RiskLevel.LOW,
+                SlayerRequiredItemUse.CARRIED_OR_EQUIPPED, CombatStyle.MAGIC,
                 weights, alternative == null ? null : alternative.id,
                 alternative == null ? null : alternative.name,
                 alternative == null ? null : alternative.location);

@@ -47,6 +47,32 @@ public class SlayerTaskGuidanceTest
         assertNotNull(catalog.profileFor("Fossil Island Wyverns"));
         assertNotNull(catalog.profileFor("Molanisks"));
     }
+
+    @Test
+    public void reviewedHighLevelMasterWeightsMatchCurrentAssignmentTables()
+    {
+        SlayerTaskStrategicCatalog catalog = new SlayerTaskStrategicCatalog();
+        assertEquals(Integer.valueOf(12),
+                catalog.profileFor("Abyssal demons").weightFor("duradel"));
+        assertEquals(Integer.valueOf(9),
+                catalog.profileFor("Abyssal demons").weightFor("nieve"));
+        assertEquals(Integer.valueOf(11),
+                catalog.profileFor("Dark beasts").weightFor("duradel"));
+        assertEquals(Integer.valueOf(5),
+                catalog.profileFor("Dark beasts").weightFor("nieve"));
+        assertEquals(Integer.valueOf(9),
+                catalog.profileFor("Cave krakens").weightFor("duradel"));
+        assertEquals(Integer.valueOf(6),
+                catalog.profileFor("Cave krakens").weightFor("nieve"));
+        assertEquals(Integer.valueOf(2),
+                catalog.profileFor("Waterfiends").weightFor("duradel"));
+        assertEquals(Integer.valueOf(10),
+                catalog.profileFor("Hydras").weightFor("konar"));
+        assertEquals(Integer.valueOf(10),
+                catalog.profileFor("Wyrms").weightFor("konar"));
+        assertEquals(Integer.valueOf(12),
+                catalog.profileFor("Cave krakens").weightFor("chaeldar"));
+    }
     private final SlayerGuidanceService service = new SlayerGuidanceService();
 
     @Test

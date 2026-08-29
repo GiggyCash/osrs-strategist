@@ -16,6 +16,7 @@ public final class SlayerTaskStrategicProfile
     private final AttentionLevel attention;
     private final RiskLevel inherentRisk;
     private final SlayerRequiredItemUse requiredItemUse;
+    private final CombatStyle requiredCombatStyle;
     private final Map<String, Integer> assignmentWeights;
     private final String alternativeActivityId;
     private final String alternativeName;
@@ -29,6 +30,21 @@ public final class SlayerTaskStrategicProfile
             String alternativeActivityId, String alternativeName,
             String alternativeLocation)
     {
+        this(taskProfileId, xpQuality, resourceValue, completionBurden,
+                setupBurden, attention, inherentRisk, requiredItemUse, null,
+                assignmentWeights, alternativeActivityId, alternativeName,
+                alternativeLocation);
+    }
+
+    public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
+            int resourceValue, int completionBurden, int setupBurden,
+            AttentionLevel attention, RiskLevel inherentRisk,
+            SlayerRequiredItemUse requiredItemUse,
+            CombatStyle requiredCombatStyle,
+            Map<String, Integer> assignmentWeights,
+            String alternativeActivityId, String alternativeName,
+            String alternativeLocation)
+    {
         this.taskProfileId = taskProfileId;
         this.xpQuality = scale(xpQuality);
         this.resourceValue = scale(resourceValue);
@@ -38,6 +54,7 @@ public final class SlayerTaskStrategicProfile
         this.inherentRisk = inherentRisk == null ? RiskLevel.LOW : inherentRisk;
         this.requiredItemUse = requiredItemUse == null
                 ? SlayerRequiredItemUse.CARRIED_OR_EQUIPPED : requiredItemUse;
+        this.requiredCombatStyle = requiredCombatStyle;
         this.assignmentWeights = Collections.unmodifiableMap(
                 assignmentWeights == null ? Collections.emptyMap()
                         : new HashMap<>(assignmentWeights));
@@ -54,6 +71,7 @@ public final class SlayerTaskStrategicProfile
     public AttentionLevel getAttention() { return attention; }
     public RiskLevel getInherentRisk() { return inherentRisk; }
     public SlayerRequiredItemUse getRequiredItemUse() { return requiredItemUse; }
+    public CombatStyle getRequiredCombatStyle() { return requiredCombatStyle; }
     public String getAlternativeActivityId() { return alternativeActivityId; }
     public String getAlternativeName() { return alternativeName; }
     public String getAlternativeLocation() { return alternativeLocation; }

@@ -139,8 +139,23 @@ public class SlayerStrategistTest
         assertEquals(SlayerTaskDecision.DO, result.getDecision());
         assertEquals(RecommendationConfidence.VERIFIED,
                 result.getConfidence());
-        assertTrue(result.getGuidance().getAction().contains("140 kills remain"));
+        assertTrue(result.getGuidance().getAction().contains("remaining 140"));
+        assertTrue(result.getGuidance().getAction().contains("Abyssal whip"));
         assertTrue(result.getReason().contains("properties"));
+    }
+
+    @Test
+    public void magicOnlyTaskRejectsObservedMeleeWeaponBeforeDoDecision()
+    {
+        SlayerSnapshot task = snapshot("Cave krakens", 110, "Duradel",
+                null, 500, 21, 300, 6, 2);
+        SlayerDecisionResult result = strategist.assess(context(0, task,
+                StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
+                GoalType.SLAYER_85, false, Collections.emptyList(), null));
+
+        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertTrue(result.getReason().contains("Magic-only"));
+        assertTrue(result.getReason().contains("Abyssal whip"));
     }
 
     @Test
