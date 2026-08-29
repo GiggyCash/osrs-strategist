@@ -1,19 +1,27 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.EnumMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.gameval.VarbitID;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.Widget;
+import net.runelite.client.util.Text;
 
 /** Reads all 12 regions x 4 Achievement Diary tier states directly from RuneLite. */
 @Singleton
 public class LiveDiaryStateReader
 {
     private final Client client;
+    private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
+    private final Map<String, Boolean> observedTaskCompletion = new HashMap<>();
 
     @Inject
     public LiveDiaryStateReader(Client client)
@@ -90,7 +98,148 @@ public class LiveDiaryStateReader
                 VarbitID.WILDERNESS_EASY_COUNT, VarbitID.WILDERNESS_MED_COUNT,
                 VarbitID.WILDERNESS_HARD_COUNT, VarbitID.WILDERNESS_ELITE_COUNT);
 
-        return new DiarySnapshot(completed, totals, tiers);
+        return new DiarySnapshot(completed, totals, tiers,
+                observedTaskCompletion);
+    }
+
+    /**
+     * Captures exact completed/incomplete rows while an Achievement Diary page
+     * is visible. Rows not present on the open page remain unknown.
+     */
+    public boolean observeOpenDiary()
+    {
+        if (client.getGameState() != GameState.LOGGED_IN) return false;
+        Widget title = client.getWidget(InterfaceID.Journalscroll.TITLE);
+        Widget layer = client.getWidget(InterfaceID.Journalscroll.TEXTLAYER);
+        if (title == null || layer == null) return false;
+        Widget[] children = layer.getStaticChildren();
+        if (children == null || children.length == 0) return false;
+        String region = regionFor(title.getText());
+        if (region == null && children[0] != null)
+            region = regionFor(children[0].getText());
+        if (region == null) return false;
+
+        Map<String, Boolean> before = new HashMap<>(observedTaskCompletion);
+        List<String> rows = new ArrayList<>();
+        for (Widget child : children)
+            if (child != null && child.getText() != null)
+                rows.add(child.getText());
+        observedTaskCompletion.putAll(observedTasksFromRows(
+                region, rows, taskCatalog));
+        return !before.equals(observedTaskCompletion);
+    }
+
+    static Map<String, Boolean> observedTasksFromRows(String region,
+            List<String> rows, DiaryTaskCatalog catalog)
+    {
+        Map<String, Boolean> result = new HashMap<>();
+        if (region == null || rows == null || catalog == null) return result;
+        List<DiaryTaskDefinition> regionTasks = catalog.all();
+        String buffered = "";
+        boolean bufferedComplete = false;
+        for (String raw : rows)
+        {
+            if (raw == null) continue;
+            String row = normalizeSpace(Text.removeTags(raw));
+            if (row.isEmpty()) continue;
+            boolean struck = raw.toLowerCase(Locale.ROOT).contains("<str>");
+
+            Match direct = match(regionTasks, region, row);
+            if (direct != null)
+            {
+                result.put(direct.task.getId(), struck);
+                buffered = "";
+                bufferedComplete = false;
+                continue;
+            }
+
+            String combined = buffered.isEmpty() ? row : buffered + " " + row;
+            Match wrapped = match(regionTasks, region, combined);
+            if (wrapped != null)
+            {
+                result.put(wrapped.task.getId(),
+                        bufferedComplete || struck);
+                buffered = "";
+                bufferedComplete = false;
+                continue;
+            }
+
+            if (isTaskPrefix(regionTasks, region, combined))
+            {
+                buffered = combined;
+                bufferedComplete = bufferedComplete || struck;
+            }
+            else if (isTaskPrefix(regionTasks, region, row))
+            {
+                buffered = row;
+                bufferedComplete = struck;
+            }
+            else
+            {
+                buffered = "";
+                bufferedComplete = false;
+            }
+        }
+        return result;
+    }
+
+    public void clear()
+    {
+        observedTaskCompletion.clear();
+    }
+
+    private static Match match(List<DiaryTaskDefinition> tasks,
+            String region, String row)
+    {
+        for (DiaryTaskDefinition task : tasks)
+        {
+            if (!task.getRegion().equals(region)) continue;
+            String instruction = normalizeSpace(task.getTask());
+            if (row.equals(instruction)
+                    || row.startsWith(instruction + " ("))
+                return new Match(task);
+        }
+        return null;
+    }
+
+    private static boolean isTaskPrefix(List<DiaryTaskDefinition> tasks,
+            String region, String row)
+    {
+        for (DiaryTaskDefinition task : tasks)
+            if (task.getRegion().equals(region)
+                    && normalizeSpace(task.getTask()).startsWith(row))
+                return true;
+        return false;
+    }
+
+    private static String regionFor(String rawTitle)
+    {
+        String title = Text.removeTags(rawTitle == null ? "" : rawTitle)
+                .toLowerCase(Locale.ROOT);
+        if (title.contains("ardougne")) return "Ardougne";
+        if (title.contains("desert")) return "Desert";
+        if (title.contains("falador")) return "Falador";
+        if (title.contains("fremennik")) return "Fremennik";
+        if (title.contains("kandarin")) return "Kandarin";
+        if (title.contains("karamja")) return "Karamja";
+        if (title.contains("kourend")) return "Kourend & Kebos";
+        if (title.contains("lumbridge")) return "Lumbridge & Draynor";
+        if (title.contains("morytania")) return "Morytania";
+        if (title.contains("varrock")) return "Varrock";
+        if (title.contains("western")) return "Western Provinces";
+        if (title.contains("wilderness")) return "Wilderness";
+        return null;
+    }
+
+    private static String normalizeSpace(String value)
+    {
+        return value == null ? "" : value.trim().replaceAll("\\s+", " ");
+    }
+
+    private static final class Match
+    {
+        private final DiaryTaskDefinition task;
+        private Match(DiaryTaskDefinition task) { this.task = task; }
     }
 
     private void add(Map<String, Integer> completed,

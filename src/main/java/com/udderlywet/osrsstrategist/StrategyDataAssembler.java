@@ -216,6 +216,12 @@ public class StrategyDataAssembler
         return true;
     }
 
+    /** Reads individual diary rows only while the journal page exposes them. */
+    public synchronized boolean observeOpenDiary()
+    {
+        return diaryStateReader != null && diaryStateReader.observeOpenDiary();
+    }
+
     public synchronized void clearForAccountChange()
     {
         lastAccountIdentity = null;
@@ -227,6 +233,7 @@ public class StrategyDataAssembler
     {
         itemStateReader.clearAccountCaches();
         if (slayerStateReader != null) slayerStateReader.clear();
+        if (diaryStateReader != null) diaryStateReader.clear();
         accessMemoryStore.clearCacheForAccountChange();
         farmingRunStateStore.clearCacheForAccountChange();
         observedStateStore.clearForAccountChange();

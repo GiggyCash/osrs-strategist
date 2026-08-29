@@ -432,9 +432,9 @@ public class SlayerStrategist
                 RecommendationConfidence.CHECK_NEEDED,
                 "Live state does not prove whether the account has an assignment.",
                 new RecommendationGuidance(
-                        "Check your assignment once with an enchanted gem, Slayer ring, Slayer helmet, or a Slayer master, then reopen Compass.",
+                        "Talk to Turael or Aya in Burthorpe and ask about your current assignment, then reopen Compass after the task name and count appear.",
                         "Do not prepare a task-specific loadout until the assignment name and count are visible.",
-                        "Use the nearest safe Slayer task-check option already available to the account.",
+                        "Turael and Aya, in the house south-east of Burthorpe Castle.",
                         "Unknown assignment state is kept unknown; Compass does not treat missing evidence as no task."));
     }
 

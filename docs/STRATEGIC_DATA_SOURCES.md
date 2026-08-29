@@ -62,6 +62,12 @@ data; `SustainableResourceValueService` does not infer either from prose.
 | --- | --- | --- |
 | Recipe for Disaster Goblin generals | [Freeing the Goblin generals](https://oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_the_Goblin_generals), [Recipe for Disaster](https://oldschool.runescape.wiki/w/Recipe_for_Disaster) | The subquest requires Another Cook's Quest/Cook's Assistant and Goblin Diplomacy and awards 1,000 Farming, Cooking, and Crafting XP. It has no Farming-level requirement. The reward can reduce a near-term manual Farming grind, but Farming is never labeled a Barrows-gloves prerequisite. |
 
+## Live Achievement Diary decisions
+
+| Structured data | Source | Fact retained locally |
+| --- | --- | --- |
+| Tier and individual-task completion | Pinned RuneLite `VarbitID` diary tier/count constants, [`DiaryRequirementsPlugin`](https://github.com/runelite/runelite/tree/master/runelite-client/src/main/java/net/runelite/client/plugins/achievementdiary) | Tier/count varbits are continuously readable. Exact individual completion is retained only after the corresponding public journal row is observed; RuneLite's struck/unstruck row is authoritative, absent rows remain unknown, and all 378 task/prerequisite definitions remain local. |
+
 ## Live Slayer decisions
 
 | Structured data | Source | Fact retained locally |

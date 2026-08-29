@@ -16,6 +16,8 @@ import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -90,6 +92,7 @@ public class OsrsStrategistPlugin extends Plugin
     private boolean varbitRefreshPending;
     private boolean accountRefreshPending;
     private boolean pohRefreshPending;
+    private boolean diaryRefreshPending;
     private boolean progressCheckpointPending;
     private long lastProgressCheckpointAtMillis;
     private final OverlayLifecycleGuard overlayLifecycle =
@@ -168,6 +171,7 @@ public class OsrsStrategistPlugin extends Plugin
         varbitRefreshPending = false;
         accountRefreshPending = false;
         pohRefreshPending = false;
+        diaryRefreshPending = false;
         panel = null;
         navButton = null;
     }
@@ -188,11 +192,21 @@ public class OsrsStrategistPlugin extends Plugin
         boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
         boolean pohChanged = consumePohRefreshPending()
                 && strategyDataAssembler.observePoh();
+        boolean diaryChanged = consumeDiaryRefreshPending()
+                && strategyDataAssembler.observeOpenDiary();
         boolean liveStateChanged = consumeVarbitRefreshPending();
         boolean observedStateChanged = consumeAccountRefreshPending();
         checkpointProgressSession();
-        if (accessChanged || farmChanged || pohChanged || liveStateChanged
+        if (accessChanged || farmChanged || pohChanged || diaryChanged
+                || liveStateChanged
                 || observedStateChanged) updateAccountPanel();
+    }
+
+    @Subscribe
+    public void onWidgetLoaded(WidgetLoaded event)
+    {
+        if (event != null && event.getGroupId() == InterfaceID.JOURNALSCROLL)
+            diaryRefreshPending = true;
     }
 
     /**
@@ -238,6 +252,13 @@ public class OsrsStrategistPlugin extends Plugin
     {
         boolean pending = pohRefreshPending;
         pohRefreshPending = false;
+        return pending;
+    }
+
+    boolean consumeDiaryRefreshPending()
+    {
+        boolean pending = diaryRefreshPending;
+        diaryRefreshPending = false;
         return pending;
     }
 

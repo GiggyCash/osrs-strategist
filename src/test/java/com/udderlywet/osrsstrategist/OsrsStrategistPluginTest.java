@@ -6,6 +6,8 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.gameval.InterfaceID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -39,6 +41,19 @@ public class OsrsStrategistPluginTest
         plugin.onGameObjectSpawned((GameObjectSpawned) null);
         assertTrue(plugin.consumePohRefreshPending());
         assertFalse(plugin.consumePohRefreshPending());
+    }
+
+    @Test
+    public void diaryJournalReadsAreCoalescedBehindWidgetEvidence()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        assertFalse(plugin.consumeDiaryRefreshPending());
+        WidgetLoaded loaded = new WidgetLoaded();
+        loaded.setGroupId(InterfaceID.JOURNALSCROLL);
+        plugin.onWidgetLoaded(loaded);
+        plugin.onWidgetLoaded(loaded);
+        assertTrue(plugin.consumeDiaryRefreshPending());
+        assertFalse(plugin.consumeDiaryRefreshPending());
     }
 
     @Test

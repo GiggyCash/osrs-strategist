@@ -202,6 +202,17 @@ Clue recommendations are tier-aware, become gradually more important with age, r
 
 All 119 current RuneLite STASH identities are represented in the offline catalogue with tier, world coordinates, current clue/equipment evidence, Construction level, exact build materials, Wilderness classification, and fail-closed built/filled state. The development-time generator reads the pinned RuneLite sources without adding runtime networking, reflection, or process execution. RuneLite supplies the active clue step at runtime; exact per-unit STASH built/filled state remains unknown until observed and is never inferred from Construction level.
 
+## Achievement Diaries
+
+RuneLite varbits prove each region's completed task count and claimed tier
+states. Individual task completion is observed only from the public diary
+journal rows while that region is open: struck rows are complete, unstruck rows
+are incomplete, and absent rows stay unknown. Compass therefore asks for one
+specific page observation, ingests it automatically on the next game tick, and
+can select an observed incomplete task only after its structured RuneLite skill
+and quest requirements are met. Wilderness opt-in and restricted/Hardcore build
+safety remain final gates.
+
 ## Collection Log and progression objectives
 
 Observed category totals/completion counts can produce near-complete Collection Log recommendations. Missing one, two, or three slots receives increasing priority; Collectionist mode broadens the behavior.
@@ -250,7 +261,6 @@ These are suggestions only. A normal developing account can temporarily resemble
 The architecture is no longer the main blocker. The remaining work is primarily deeper structured content:
 
 - exact prerequisite/item/step graph for every quest
-- direct live observation of each individual diary task's completion state
 - every individual Combat Achievement task and mechanic
 - full per-boss phase/gear/DPS/special-attack/consumable modeling
 - direct observation of per-unit STASH built/filled state (active clue-step observation and the full static 119-unit catalogue/dependency planner are present)

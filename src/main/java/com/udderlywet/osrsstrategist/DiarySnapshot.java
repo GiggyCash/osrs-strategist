@@ -12,19 +12,30 @@ public final class DiarySnapshot
     private final Map<String, Integer> completedTasksByRegion;
     private final Map<String, Integer> totalTasksByRegion;
     private final Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion;
+    private final Map<String, Boolean> observedTaskCompletion;
 
     public DiarySnapshot(
             Map<String, Integer> completedTasksByRegion,
             Map<String, Integer> totalTasksByRegion)
     {
         this(completedTasksByRegion, totalTasksByRegion,
-                Collections.emptyMap());
+                Collections.emptyMap(), Collections.emptyMap());
     }
 
     public DiarySnapshot(
             Map<String, Integer> completedTasksByRegion,
             Map<String, Integer> totalTasksByRegion,
             Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion)
+    {
+        this(completedTasksByRegion, totalTasksByRegion,
+                completedTiersByRegion, Collections.emptyMap());
+    }
+
+    public DiarySnapshot(
+            Map<String, Integer> completedTasksByRegion,
+            Map<String, Integer> totalTasksByRegion,
+            Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion,
+            Map<String, Boolean> observedTaskCompletion)
     {
         this.completedTasksByRegion = Collections.unmodifiableMap(
                 completedTasksByRegion == null
@@ -48,6 +59,10 @@ public final class DiarySnapshot
             }
         }
         this.completedTiersByRegion = Collections.unmodifiableMap(tiers);
+        this.observedTaskCompletion = Collections.unmodifiableMap(
+                observedTaskCompletion == null
+                        ? new HashMap<>()
+                        : new HashMap<>(observedTaskCompletion));
     }
 
     public int completedIn(String region)
@@ -83,5 +98,16 @@ public final class DiarySnapshot
     public Map<String, Map<DiaryTier, Boolean>> getCompletedTiersByRegion()
     {
         return completedTiersByRegion;
+    }
+
+    /** Null means the individual task row has not been observed. */
+    public Boolean taskCompletion(String taskId)
+    {
+        return observedTaskCompletion.get(taskId);
+    }
+
+    public Map<String, Boolean> getObservedTaskCompletion()
+    {
+        return observedTaskCompletion;
     }
 }
