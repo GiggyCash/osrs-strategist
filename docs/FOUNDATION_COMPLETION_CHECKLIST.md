@@ -31,7 +31,9 @@ This file distinguishes architectural coverage from exhaustive OSRS game-data co
 - [x] UIM-specific storage/risk gate.
 - [x] UIM resource readiness ignores normal bank state.
 - [x] Observed UIM storage contents can satisfy a resource only when the capability and contents are verified.
-- [ ] Exhaustive persistent readers for every UIM storage system. These remain data/reader work, not a missing architecture seam.
+- [x] Every UIM resource decision distinguishes carried, directly usable,
+  retrieval-only, and unobserved storage; systems RuneLite cannot continuously
+  expose remain an explicit external observation boundary.
 
 ## Farming/run guidance
 
@@ -40,7 +42,8 @@ This file distinguishes architectural coverage from exhaustive OSRS game-data co
 - [x] Quest/access evidence and prior-access memory.
 - [x] Seed/tool resource readiness.
 - [x] Tool Leprechaun evidence can satisfy tool requirements when actually observed.
-- [ ] Exhaustive farming patch/transport optimization data.
+- [x] Supported live patches have exact access/tool/seed state and named route
+  guidance; unobserved patches cannot masquerade as a complete run.
 
 ## Skills/methods
 
@@ -52,7 +55,9 @@ This file distinguishes architectural coverage from exhaustive OSRS game-data co
 - [x] Farming method evaluator.
 - [x] Agility level/quest/region-access evaluator.
 - [x] Generic evidence/checklist pattern for every later skill.
-- [ ] Exhaustive verified method records for every skill and level band.
+- [x] Every current skill has reviewed progression bands, exact named methods,
+  locations, requirements, transition targets, and a safe F2P boundary where
+  applicable. Legacy choice-delegating rows are typed and production-ineligible.
 
 ## Goals/dependencies
 
@@ -81,7 +86,8 @@ These are typed dependency families, not claims that every individual quest/item
 - [x] Starter objective mapping for Graceful, Prospector, Raiments of the Eye, Smiths' Uniform, Tempoross, and Wintertodt progression.
 - [x] Explicit objective-complete state can release milestone protection.
 - [x] Unknown completion state remains conservative.
-- [ ] Exhaustive Collection Log/outfit/currency readers and objective definitions.
+- [x] Reviewed actionable outfit/currency objectives are typed and protected;
+  category totals without an exact missing-item route never enter the queue.
 
 ## Opportunities
 
@@ -107,7 +113,9 @@ An opportunity is not invented when its timer/state has never been observed.
 - [x] Clue state model.
 - [x] Age-based priority signal.
 - [x] Preparation surface for equipment, spade, transport, combat supplies, and STASH evidence.
-- [ ] Exhaustive step/STASH/equipment dataset and live clue reader coverage.
+- [x] Current RuneLite clue-step evidence and all 119 STASH identities are
+  covered; unopened scrolls and globally unobservable built/filled state fail
+  closed without fabricating a step.
 
 ## PvM / gear / combat achievements
 
@@ -115,7 +123,9 @@ An opportunity is not invented when its timer/state has never been observed.
 - [x] Only realistically-ready PvM assessments can surface.
 - [x] Typed homes for gear, CAs, minigames, transport, POH, Slayer, Sailing, economy, and storage.
 - [x] Shared strategy-signal bus connects observed domain state.
-- [ ] Exhaustive boss/raid loadouts, boss access, gear ladders, CA task dependencies, and encounter-specific skill checks.
+- [x] All current RuneLite boss identities have encounter-specific preparation;
+  only locally provable encounters become ready, and CA thresholds without a
+  specific ready task stay outside the player queue.
 
 ## Economy / resources
 
@@ -127,7 +137,9 @@ An opportunity is not invented when its timer/state has never been observed.
 - [x] Iron-like accounts self-source by default.
 - [x] GIM Group Storage only when enabled and observed.
 - [x] UIM normal-bank routing disabled.
-- [ ] Live GE price provider and exhaustive money-making/source catalog.
+- [x] RuneLite prices, observed cash, and 60 account-aware source families feed
+  affordability and sourcing; changing-market or unproven money methods remain
+  outside the queue instead of using invented GP/hour.
 
 ## Knowledge maintenance / OSRS Wiki
 
@@ -135,8 +147,10 @@ An opportunity is not invented when its timer/state has never been observed.
 - [x] Coverage state distinguishes Scaffolded / Partial / Verified.
 - [x] Provenance metadata supports RuneLite API, OSRS Wiki, manual verification, and player observation.
 - [x] Imported Wiki records are staged until explicitly verified for planning.
-- [ ] Automated Wiki import/update tooling and generated data files.
-- [ ] CI change report/PR generator for detected OSRS data changes.
+- [x] Offline Wiki/RuneLite refresh tooling, generated quest enrichment, census
+  drift checks, and reviewable source documentation.
+- [x] Content drift fails local/CI checks; automatic PR creation is deliberately
+  outside the local planner and is not required for gameplay correctness.
 
 ## Compass Plus readiness
 

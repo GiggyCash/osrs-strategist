@@ -127,6 +127,14 @@ public final class UniversalDependencyPlanner
                         if (context.getData().getAccount().getSkillLevel(skill) < 70)
                             traversal.skill(skill, 70, root, 1);
                 break;
+            case MAX:
+                if (context != null && context.getData() != null
+                        && context.getData().getAccount() != null)
+                    for (Skill skill : Skill.values())
+                        if (context.getData().getAccount()
+                                .getSkillLevel(skill) < 99)
+                            traversal.skill(skill, 99, root, 1);
+                break;
             case GEAR_TARGET:
                 traversal.add("gear:target-unselected", GoalNodeKind.GEAR,
                         "Select the encounter and practical gear target before resolving acquisition",

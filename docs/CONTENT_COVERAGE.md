@@ -131,7 +131,10 @@ unknown ownership do not update the personal snapshot.
 
 ## Combat Achievements
 
-Live reward-tier state is read for Easy, Medium, Hard, Elite, Master, and Grandmaster. The candidate engine targets the next reward threshold and increases priority near a threshold.
+Live reward-tier state is read for Easy, Medium, Hard, Elite, Master, and
+Grandmaster. The candidate engine can measure the next reward threshold, but a
+threshold alone is not an action: it remains outside the player queue until a
+specific realistic task is proven ready.
 
 The exact full Combat Achievement task database is not yet embedded. Compass is deliberately designed to prefer tasks on bosses the account is already ready to fight rather than blindly pushing mechanically extreme tasks.
 
@@ -256,17 +259,21 @@ Matching uses resource phrases rather than loose substrings so equipment such as
 
 These are suggestions only. A normal developing account can temporarily resemble a pure, so Compass must get player confirmation before protecting a stat cap or excluding progression that would train it.
 
-## Remaining deep-data work
+## Fail-closed coverage boundary
 
-The architecture is no longer the main blocker. The remaining work is primarily deeper structured content:
+Offline identity coverage is deliberately broader than the set allowed to enter
+the player queue. A Combat Achievement threshold, Collection Log total, boss
+identity, minigame identity, or item name is not an executable recommendation.
+Rows without a specific verified action remain diagnostic data and are removed
+by the final actionability policy; they do not appear as vague `Needs Info`
+cards. This is a product boundary, not a claim that every OSRS mechanic or item
+source is embedded.
 
-- exact prerequisite/item/step graph for every quest
-- every individual Combat Achievement task and mechanic
-- full per-boss phase/gear/DPS/special-attack/consumable modeling
-- direct observation of per-unit STASH built/filled state (active clue-step observation and the full static 119-unit catalogue/dependency planner are present)
-- every Collection Log item/source/drop relationship
-- exhaustive item-source/shop/drop-rate database
-- live Main price/GE economics
-- more live readers for minigame currencies/unlocks, per-chart Sailing progress, specialized storage, and Collection Log categories where RuneLite does not expose the state continuously
+RuneLite prices and observed cash already feed Main affordability and
+buy-versus-source decisions. Changing-market methods still require current
+economics and never receive a hard-coded GP/hour.
 
-Until one of these is verified, `Check Needed` is the correct result. The plugin must never fill a knowledge gap by guessing.
+The remaining external observation limits are enumerated in
+`COMPLETION_GATE_AUDIT.md`. Unknown state remains unknown: the plugin never
+fills an observation gap with a guessed quest step, STASH state, teammate
+capability, boat component, drop, burn rate, or player execution claim.

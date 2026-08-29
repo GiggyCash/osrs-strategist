@@ -144,6 +144,21 @@ public class UniversalDependencyPlannerTest
     }
 
     @Test
+    public void maxGoalExpandsEveryObservedUnmaxedSkill()
+    {
+        UniversalDependencyResolution result = new UniversalDependencyPlanner()
+                .resolveGoal(GoalType.MAX,
+                        context(MembershipStatus.P2P, 98));
+        long skillTargets = result.getNodes().stream()
+                .filter(node -> node.getKind() == GoalNodeKind.SKILL_LEVEL)
+                .count();
+
+        assertEquals(Skill.values().length, skillTargets);
+        assertFalse(result.isNodeLimited());
+        assertNotNull(result.nextAction());
+    }
+
+    @Test
     public void deterministicResourceRecipesPreserveYieldAndPartialOwnership()
     {
         StrategyContext context = context(MembershipStatus.P2P, 99,
