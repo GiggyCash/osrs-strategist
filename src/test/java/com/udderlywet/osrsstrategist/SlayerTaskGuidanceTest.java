@@ -37,8 +37,12 @@ public class SlayerTaskGuidanceTest
     @Test
     public void reviewedStrategicCorpusCoversEveryDetailedTaskFamily()
     {
+        SlayerTaskProfileCatalog mechanics = new SlayerTaskProfileCatalog();
         SlayerTaskStrategicCatalog catalog = new SlayerTaskStrategicCatalog();
-        assertEquals(54, catalog.size());
+        assertEquals(mechanics.all().size(), catalog.size());
+        for (SlayerTaskProfile profile : mechanics.all())
+            assertNotNull(profile.getId(), catalog.profileFor(
+                    profile.getAliases().get(0)));
         assertNotNull(catalog.profileFor("Aberrant spectres"));
         assertNotNull(catalog.profileFor("Cave krakens"));
         assertNotNull(catalog.profileFor("Dagannoths"));
@@ -46,6 +50,10 @@ public class SlayerTaskGuidanceTest
         assertNotNull(catalog.profileFor("Hydras"));
         assertNotNull(catalog.profileFor("Fossil Island Wyverns"));
         assertNotNull(catalog.profileFor("Molanisks"));
+        assertEquals(RiskLevel.HIGH,
+                catalog.profileFor("Revenants").getInherentRisk());
+        assertTrue(catalog.profileFor("Vorkath").isDirectEncounter());
+        assertNotNull(catalog.profileFor("Venators"));
     }
 
     @Test
@@ -72,6 +80,12 @@ public class SlayerTaskGuidanceTest
                 catalog.profileFor("Wyrms").weightFor("konar"));
         assertEquals(Integer.valueOf(12),
                 catalog.profileFor("Cave krakens").weightFor("chaeldar"));
+        assertEquals(Integer.valueOf(10),
+                catalog.profileFor("Araxytes").weightFor("duradel"));
+        assertEquals(Integer.valueOf(11),
+                catalog.profileFor("Custodian Stalkers").weightFor("chaeldar"));
+        assertEquals(Integer.valueOf(7),
+                catalog.profileFor("Gryphons").weightFor("nieve"));
     }
     private final SlayerGuidanceService service = new SlayerGuidanceService();
 

@@ -5,5 +5,6 @@ public enum SlayerAssignmentState
 {
     UNKNOWN,
     NO_TASK,
+    CHOICE_PENDING,
     ASSIGNED
 }

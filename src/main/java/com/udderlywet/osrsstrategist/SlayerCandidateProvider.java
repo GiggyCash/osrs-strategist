@@ -56,6 +56,14 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
             id = "verify:slayer-assignment";
             title = "Check your Slayer assignment";
         }
+        else if (result.getAssignmentState() == SlayerAssignmentState.CHOICE_PENDING)
+        {
+            id = "slayer:choose-task";
+            title = result.getRecommendedOffer() == null
+                    ? "Review Mortimer's task choices"
+                    : "Choose " + result.getRecommendedOffer().getTaskName()
+                            + " from Mortimer";
+        }
         else if (result.getAssignmentState() == SlayerAssignmentState.NO_TASK)
         {
             id = "slayer:get-task";

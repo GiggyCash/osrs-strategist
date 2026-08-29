@@ -13,6 +13,7 @@ public final class SlayerDecisionResult
     private final RecommendationGuidance guidance;
     private final String selectedAlternativeName;
     private final SlayerReward recommendedReward;
+    private final SlayerTaskOffer recommendedOffer;
 
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
             SlayerTaskDecision decision, SlayerMasterProfile master,
@@ -21,7 +22,7 @@ public final class SlayerDecisionResult
             RecommendationGuidance guidance)
     {
         this(assignmentState, decision, master, taskProfile, score,
-                confidence, reason, guidance, null, null);
+                confidence, reason, guidance, null, null, null);
     }
 
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
@@ -31,7 +32,7 @@ public final class SlayerDecisionResult
             RecommendationGuidance guidance, String selectedAlternativeName)
     {
         this(assignmentState, decision, master, taskProfile, score, confidence,
-                reason, guidance, selectedAlternativeName, null);
+                reason, guidance, selectedAlternativeName, null, null);
     }
 
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
@@ -40,6 +41,18 @@ public final class SlayerDecisionResult
             RecommendationConfidence confidence, String reason,
             RecommendationGuidance guidance, String selectedAlternativeName,
             SlayerReward recommendedReward)
+    {
+        this(assignmentState, decision, master, taskProfile, score, confidence,
+                reason, guidance, selectedAlternativeName, recommendedReward,
+                null);
+    }
+
+    public SlayerDecisionResult(SlayerAssignmentState assignmentState,
+            SlayerTaskDecision decision, SlayerMasterProfile master,
+            SlayerTaskStrategicProfile taskProfile, double score,
+            RecommendationConfidence confidence, String reason,
+            RecommendationGuidance guidance, String selectedAlternativeName,
+            SlayerReward recommendedReward, SlayerTaskOffer recommendedOffer)
     {
         this.assignmentState = assignmentState == null
                 ? SlayerAssignmentState.UNKNOWN : assignmentState;
@@ -53,6 +66,7 @@ public final class SlayerDecisionResult
         this.guidance = guidance;
         this.selectedAlternativeName = selectedAlternativeName;
         this.recommendedReward = recommendedReward;
+        this.recommendedOffer = recommendedOffer;
     }
 
     public SlayerAssignmentState getAssignmentState() { return assignmentState; }
@@ -65,4 +79,5 @@ public final class SlayerDecisionResult
     public RecommendationGuidance getGuidance() { return guidance; }
     public String getSelectedAlternativeName() { return selectedAlternativeName; }
     public SlayerReward getRecommendedReward() { return recommendedReward; }
+    public SlayerTaskOffer getRecommendedOffer() { return recommendedOffer; }
 }

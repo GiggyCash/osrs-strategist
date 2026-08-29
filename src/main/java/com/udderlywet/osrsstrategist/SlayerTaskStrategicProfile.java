@@ -21,6 +21,7 @@ public final class SlayerTaskStrategicProfile
     private final String alternativeActivityId;
     private final String alternativeName;
     private final String alternativeLocation;
+    private final boolean directEncounter;
 
     public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
             int resourceValue, int completionBurden, int setupBurden,
@@ -33,7 +34,7 @@ public final class SlayerTaskStrategicProfile
         this(taskProfileId, xpQuality, resourceValue, completionBurden,
                 setupBurden, attention, inherentRisk, requiredItemUse, null,
                 assignmentWeights, alternativeActivityId, alternativeName,
-                alternativeLocation);
+                alternativeLocation, false);
     }
 
     public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
@@ -44,6 +45,21 @@ public final class SlayerTaskStrategicProfile
             Map<String, Integer> assignmentWeights,
             String alternativeActivityId, String alternativeName,
             String alternativeLocation)
+    {
+        this(taskProfileId, xpQuality, resourceValue, completionBurden,
+                setupBurden, attention, inherentRisk, requiredItemUse,
+                requiredCombatStyle, assignmentWeights, alternativeActivityId,
+                alternativeName, alternativeLocation, false);
+    }
+
+    public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
+            int resourceValue, int completionBurden, int setupBurden,
+            AttentionLevel attention, RiskLevel inherentRisk,
+            SlayerRequiredItemUse requiredItemUse,
+            CombatStyle requiredCombatStyle,
+            Map<String, Integer> assignmentWeights,
+            String alternativeActivityId, String alternativeName,
+            String alternativeLocation, boolean directEncounter)
     {
         this.taskProfileId = taskProfileId;
         this.xpQuality = scale(xpQuality);
@@ -61,6 +77,7 @@ public final class SlayerTaskStrategicProfile
         this.alternativeActivityId = alternativeActivityId;
         this.alternativeName = alternativeName;
         this.alternativeLocation = alternativeLocation;
+        this.directEncounter = directEncounter;
     }
 
     public String getTaskProfileId() { return taskProfileId; }
@@ -75,6 +92,7 @@ public final class SlayerTaskStrategicProfile
     public String getAlternativeActivityId() { return alternativeActivityId; }
     public String getAlternativeName() { return alternativeName; }
     public String getAlternativeLocation() { return alternativeLocation; }
+    public boolean isDirectEncounter() { return directEncounter; }
 
     public Integer weightFor(String masterId)
     {

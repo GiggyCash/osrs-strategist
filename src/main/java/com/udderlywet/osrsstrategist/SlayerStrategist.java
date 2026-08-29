@@ -61,9 +61,110 @@ public class SlayerStrategist
         if (slayer == null
                 || slayer.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
             return unknownAssignment();
+        if (slayer.getAssignmentState() == SlayerAssignmentState.CHOICE_PENDING)
+            return chooseMortimerOffer(context, slayer);
         if (slayer.getAssignmentState() == SlayerAssignmentState.NO_TASK)
             return chooseMaster(context, slayer);
         return evaluateTask(context, slayer);
+    }
+
+    private SlayerDecisionResult chooseMortimerOffer(StrategyContext context,
+            SlayerSnapshot slayer)
+    {
+        SlayerMasterProfile master = masters.byId("mortimer");
+        for (SlayerTaskOffer offer : slayer.getTaskOffers())
+        {
+            if (offer.getTaskName() == null || offer.getModifierName() == null
+                    || strategy.profileFor(offer.getTaskName()) == null)
+                return unresolvedMortimerChoice(master);
+        }
+        SlayerTaskOffer choice = slayer.getTaskOffers().stream()
+                .max(Comparator.comparingDouble(o -> offerValue(o, context)))
+                .orElse(null);
+        if (choice == null) return unresolvedMortimerChoice(master);
+        SlayerTaskStrategicProfile profile = strategy.profileFor(
+                choice.getTaskName());
+        double value = offerValue(choice, context);
+        String modifier = describeModifier(choice);
+        String reason = "The live Mortimer interface exposes every offered task and modifier. "
+                + "Compass compared task XP, resources, duration, attention, setup and the modifier's value for this account and session.";
+        RecommendationGuidance guidance = new RecommendationGuidance(
+                "Select " + choice.getTaskName() + " with " + modifier
+                        + " in Mortimer's task-choice interface, then reopen Compass after the assignment count appears.",
+                "Do not prepare a combat loadout until the choice becomes the live assignment; its exact protection and supplies are evaluated next.",
+                "Mortimer's task-choice interface in Wyrmscraig Cavern.",
+                reason);
+        return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
+                null, master, profile, 62.0 + value,
+                RecommendationConfidence.VERIFIED, reason, guidance, null,
+                null, choice);
+    }
+
+    private SlayerDecisionResult unresolvedMortimerChoice(
+            SlayerMasterProfile master)
+    {
+        String reason = "At least one live Mortimer option or its modifier is not covered by the pinned RuneLite game data and reviewed task catalog.";
+        return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
+                SlayerTaskDecision.PREP_FIRST, master, null, 34.0,
+                RecommendationConfidence.CHECK_NEEDED, reason,
+                new RecommendationGuidance(
+                        "Keep Mortimer's task-choice interface open and reopen Compass after every task and modifier name is visible.",
+                        "Do not select a task while Compass can see only part of the choice set.",
+                        "Mortimer's task-choice interface in Wyrmscraig Cavern.",
+                        reason));
+    }
+
+    private double offerValue(SlayerTaskOffer offer, StrategyContext context)
+    {
+        SlayerTaskStrategicProfile profile = strategy.profileFor(
+                offer.getTaskName());
+        if (profile == null) return -1000.0;
+        double value = taskValue(profile, context);
+        String modifier = normalize(offer.getModifierName());
+        double magnitude = Math.min(3.0, Math.max(.5,
+                offer.getModifierValue() / 10.0));
+        double direction = offer.isNegativeModifier() ? -1.0 : 1.0;
+        if (modifier.contains("xp"))
+        {
+            double fit = context.getStrategyMode() == StrategyMode.EFFICIENT
+                    || context.getActiveGoal() == GoalType.SLAYER_85
+                    ? 3.0 : 1.8;
+            value += direction * magnitude * fit;
+        }
+        else if (modifier.contains("superior"))
+            value += direction * magnitude
+                    * (context.getAccountMode().isIronLike() ? 3.2 : 2.3);
+        else if (modifier.contains("point"))
+            value += direction * magnitude
+                    * (slayerPoints(context) < 150 ? 3.0 : 1.6);
+        else if (modifier.contains("clue"))
+            value += direction * magnitude
+                    * (context.getAccountMode().isIronLike() ? 2.4 : 1.2);
+        else if (modifier.contains("quant"))
+        {
+            double taskFit = profile.getXpQuality() + profile.getResourceValue()
+                    - profile.getCompletionBurden();
+            double sessionFit = context.getSessionIntent() == SessionIntent.LONG_SESSION
+                    ? 1.0 : context.getSessionIntent() == SessionIntent.QUICK_20_MIN
+                            ? -1.0 : 0.0;
+            value += direction * magnitude * (taskFit + sessionFit) * .7;
+        }
+        return value;
+    }
+
+    private static int slayerPoints(StrategyContext context)
+    {
+        SlayerSnapshot slayer = context.getData().getSlayer();
+        return slayer == null ? 0 : slayer.getPoints();
+    }
+
+    private static String describeModifier(SlayerTaskOffer offer)
+    {
+        String prefix = offer.isNegativeModifier() ? "the reduced " : "the ";
+        return prefix + offer.getModifierName()
+                + (offer.getModifierValue() > 0
+                        ? " modifier (" + offer.getModifierValue() + ")"
+                        : " modifier");
     }
 
     private SlayerDecisionResult chooseMaster(StrategyContext context,
@@ -138,6 +239,15 @@ public class SlayerStrategist
         if (taskMechanics == null || taskStrategy == null || base == null)
             return unreviewedTask(slayer, master, taskStrategy, base);
 
+        if (taskStrategy.isDirectEncounter())
+        {
+            PvmReadiness readiness = alternativeReadiness(data, taskStrategy);
+            if (readiness != null && readiness.isReadyForRecommendation())
+                return bossAlternative(slayer, master, taskStrategy);
+            return encounterPreparation(slayer, master, taskStrategy,
+                    readiness);
+        }
+
         ObservedItemIndex items = new ObservedItemIndex(data,
                 context.isUseGroupStorage());
         if (!taskMechanics.getRequiredProtection().isEmpty()
@@ -181,7 +291,9 @@ public class SlayerStrategist
 
         if (!milestone && value < 0.5
                 && SlayerPointEconomy.hasSustainableSkipBalance(
-                        slayer.getPoints()))
+                        slayer.getPoints(), master == null
+                                ? SlayerPointEconomy.SKIP_COST
+                                : master.getCancelCost()))
             return skip(slayer, master, taskStrategy, value);
 
         String reason = milestone
@@ -387,6 +499,26 @@ public class SlayerStrategist
                 guidance, task.getAlternativeName());
     }
 
+    private static SlayerDecisionResult encounterPreparation(
+            SlayerSnapshot slayer, SlayerMasterProfile master,
+            SlayerTaskStrategicProfile task, PvmReadiness readiness)
+    {
+        String missing = readiness == null || readiness.getMissingRequirements().isEmpty()
+                ? "Open the encounter preparation so Compass can verify its requirements and carried setup."
+                : "Resolve: " + String.join(", ", readiness.getMissingRequirements()) + ".";
+        RecommendationGuidance guidance = new RecommendationGuidance(
+                "Prepare for " + task.getAlternativeName()
+                        + " before accepting this boss-task route. " + missing,
+                "Do not use a generic Slayer loadout; the encounter readiness check must verify equipment and carried supplies.",
+                task.getAlternativeLocation() + ".",
+                "A direct boss assignment is live, but a task count is not proof that the encounter is ready or safe.");
+        return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
+                SlayerTaskDecision.PREP_FIRST, master, task, 49.0,
+                RecommendationConfidence.CHECK_NEEDED,
+                "Encounter-specific readiness is required before a direct boss task can lead.",
+                guidance);
+    }
+
     private static SlayerDecisionResult block(SlayerSnapshot slayer,
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
             double value, int weight)
@@ -411,11 +543,14 @@ public class SlayerStrategist
     {
         String who = master == null ? "any Slayer master"
                 : master.getDisplayName();
+        int cost = master == null ? SlayerPointEconomy.SKIP_COST
+                : master.getCancelCost();
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Spend 30 Slayer points to cancel " + slayer.getTaskName()
+                "Spend " + cost + " Slayer points to cancel " + slayer.getTaskName()
                         + ", then get a replacement assignment.",
                 "The live snapshot shows " + slayer.getPoints()
-                        + " points, enough for the verified 30-point cancellation cost.",
+                        + " points, enough for the verified " + cost
+                        + "-point cancellation cost.",
                 "Open Slayer rewards with " + who + ".",
                 "The task's XP, resources, length, setup and session fit fall below the keep threshold; no block is claimed without known weight and slot evidence.");
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,

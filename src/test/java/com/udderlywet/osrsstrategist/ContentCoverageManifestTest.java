@@ -107,7 +107,9 @@ public class ContentCoverageManifestTest
         assertEquals(new SlayerTaskProfileCatalog().all().size(),
                 ids(new SlayerTaskProfileCatalog().all().stream()
                         .map(SlayerTaskProfile::getId).toArray(String[]::new)).size());
-        assertEquals(146, new SlayerTaskProfileCatalog().all().size());
+        // RuneLite's DB-backed Slayer task rows can lead its older plugin Task
+        // enum when newly released assignments arrive (currently Venators).
+        assertEquals(147, new SlayerTaskProfileCatalog().all().size());
 
         SlayerTaskIdentityCatalog canonical = new SlayerTaskIdentityCatalog();
         assertEquals(151, canonical.all().size());
@@ -121,7 +123,7 @@ public class ContentCoverageManifestTest
             for (String alias : profile.getAliases())
                 assertTrue("duplicate Slayer alias: " + alias,
                         aliases.add(alias.toLowerCase(java.util.Locale.ROOT).trim()));
-        assertEquals(227, aliases.size());
+        assertEquals(230, aliases.size());
     }
 
     private static void assertUniqueAndExplained(List<ContentCoverageEntry> entries)

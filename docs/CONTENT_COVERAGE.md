@@ -186,9 +186,9 @@ boss, minigame, skill, shop, or resource logic.
 
 ## Slayer
 
-The development-time catalog is generated from all 151 canonical RuneLite
-Slayer assignment identities. Every identity maps to one of 146 task-specific
-profiles through 227 audited aliases. Guidance separates mandatory protection,
+The development-time catalog is generated from the pinned canonical RuneLite
+Slayer assignment identities. Every identity maps to a task-specific mechanics
+profile and a conservative reviewed strategic profile. Guidance separates mandatory protection,
 location/access, style, cannon and multitarget-Magic evidence, Wilderness and
 boss variants, Iron objectives, and keep/extend/skip/block value. An unknown
 future task still receives conservative guidance, but no current canonical task

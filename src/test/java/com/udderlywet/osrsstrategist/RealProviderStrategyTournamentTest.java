@@ -1,0 +1,249 @@
+package com.udderlywet.osrsstrategist;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import net.runelite.api.Experience;
+import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+/** Adversarial matrix through the actual multi-domain provider registry. */
+public class RealProviderStrategyTournamentTest
+{
+    private static final GoalType[] PUBLIC_GOALS = {
+            GoalType.AUTOMATIC, GoalType.BARROWS_GLOVES,
+            GoalType.FIRE_CAPE, GoalType.QUEST_CAPE, GoalType.PRIFDDINAS,
+            GoalType.BOWFA, GoalType.INFERNAL_CAPE, GoalType.MAX
+    };
+    private static final Scenario[] ACCOUNTS = {
+            new Scenario("F2P Main", MembershipStatus.F2P, 0),
+            new Scenario("P2P Main", MembershipStatus.P2P, 0),
+            new Scenario("Iron", MembershipStatus.P2P, 1),
+            new Scenario("UIM", MembershipStatus.P2P, 2),
+            new Scenario("HCIM", MembershipStatus.P2P, 3),
+            new Scenario("GIM", MembershipStatus.P2P, 4),
+            new Scenario("HCGIM", MembershipStatus.P2P, 5),
+            new Scenario("Unranked GIM", MembershipStatus.P2P, 6),
+            new Scenario("Unknown membership", MembershipStatus.UNKNOWN, 0)
+    };
+
+    @Test
+    public void actualProvidersAlwaysReturnOneSafeSpecificLead()
+    {
+        StrategyEngine engine = engine();
+        RecommendationActionabilityPolicy actionability =
+                new RecommendationActionabilityPolicy();
+        CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
+        Set<String> winningDomains = new HashSet<>();
+        int scenarios = 0;
+        for (Scenario account : ACCOUNTS)
+        {
+            for (int level : new int[]{5, 50, 85})
+            {
+                StrategyDataBundle data = data(account, level);
+                // Goal breadth is the expensive dimension because each public
+                // dependency graph is resolved through every real provider.
+                // QUICK and AFK are opposing session properties; the focused
+                // selector tournament covers all three strategy modes.
+                for (StrategyMode mode : Collections.singletonList(
+                        StrategyMode.BALANCED))
+                {
+                    for (SessionIntent session : Arrays.asList(
+                            SessionIntent.QUICK_20_MIN,
+                            SessionIntent.AFK))
+                    {
+                        for (GoalType goal : PUBLIC_GOALS)
+                        {
+                            StrategyResult result = engine.evaluate(data, mode,
+                                    session, QuestTolerance.NORMAL, goal,
+                                    true, false, false,
+                                    new PreferenceProfile());
+                            String label = account.name + " level=" + level
+                                    + " mode=" + mode + " session=" + session
+                                    + " goal=" + goal;
+                            assertFalse(label, result.getRecommendations().isEmpty());
+                            Recommendation lead = result.getRecommendations().get(0);
+                            assertTrue(label + " => " + lead.getId(),
+                                    actionability.canLeadQueue(lead));
+                            StrategyContext context = new StrategyContext(data,
+                                    mode, session, QuestTolerance.NORMAL, goal,
+                                    true, false, false,
+                                    new PreferenceProfile());
+                            assertTrue(label + " unsafe => " + lead.getId(),
+                                    safety.isAllowed(lead, context));
+                            assertSpecific(label, lead);
+                            winningDomains.add(
+                                    StrategyEngine.alternativeDimension(lead));
+                            if (account.membership != MembershipStatus.P2P)
+                                assertTrue(label + " leaked members content",
+                                        lead.getSafetyEvidence().getAccess()
+                                                == CandidateSafetyEvidence.Access.F2P_SAFE);
+                            scenarios++;
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue("Matrix must remain broad", scenarios >= 400);
+        assertTrue("Real providers must compete across several domains: "
+                        + winningDomains,
+                winningDomains.size() >= 3);
+    }
+
+    private static void assertSpecific(String label, Recommendation lead)
+    {
+        RecommendationGuidance guidance = lead.getGuidance();
+        assertTrue(label + " missing guidance", guidance != null);
+        assertFalse(label + " missing action",
+                guidance.getAction() == null || guidance.getAction().trim().isEmpty());
+        assertFalse(label + " missing location",
+                guidance.getLocation() == null || guidance.getLocation().trim().isEmpty());
+        String visible = RecommendationPresentation.compactText(lead)
+                .toLowerCase(Locale.ROOT);
+        for (String slop : Arrays.asList(
+                "strategist will verify", "choose the best",
+                "best available", "use a nearby", "a training area",
+                "get supplies", "whatever"))
+            assertFalse(label + " contains '" + slop + "': " + visible,
+                    visible.contains(slop));
+    }
+
+    private static StrategyEngine engine()
+    {
+        TrainingMethodSelector selector = new TrainingMethodSelector(
+                new TrainingMethodDatabase(),
+                new RequirementEvidenceEngine(
+                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
+                        new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+                new ExpandedTrainingMethodCatalog(),
+                new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+        StrategyCandidateRegistry registry = new StrategyCandidateRegistry(
+                Arrays.asList(
+                        new ClueCandidateProvider(),
+                        new PvmCandidateProvider(),
+                        new QuestCandidateProvider(new QuestPriorityCatalog()),
+                        new DiaryCandidateProvider(),
+                        new CombatAchievementCandidateProvider(),
+                        new InfrastructureCandidateProvider(
+                                new InfrastructureMilestoneCatalog(),
+                                new InfrastructureUnlockValueService()),
+                        new ProgressionUpgradeCandidateProvider(),
+                        new ResourceDetourCandidateProvider(),
+                        new SlayerCandidateProvider(),
+                        new GearCandidateProvider(new GearProgressionCatalog()),
+                        new MoneyMakingCandidateProvider(new MoneyMakingCatalog()),
+                        new MinigameCandidateProvider(new MinigameCatalog()),
+                        new CollectionLogCandidateProvider()));
+        return new StrategyEngine(new RecommendationEngine(selector), null,
+                null, registry, new RecommendationActionabilityPolicy(),
+                new RecommendationIntelligenceService(),
+                new CandidateSafetyPolicy(),
+                new GoalDependencyProvenanceService());
+    }
+
+    private static StrategyDataBundle data(Scenario scenario, int level)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        int total = 0;
+        long totalXp = 0L;
+        for (Skill skill : Skill.values())
+        {
+            int value = skill == Skill.HITPOINTS ? Math.max(10, level) : level;
+            levels.put(skill, value);
+            int valueXp = value <= 1 ? 0 : Experience.getXpForLevel(value);
+            xp.put(skill, valueXp);
+            total += value;
+            totalXp += valueXp;
+        }
+        AccountSnapshot account = new AccountSnapshot(scenario.name,
+                50_000L + scenario.type, scenario.type,
+                AccountMode.fromTypeCode(scenario.type).name(),
+                scenario.membership,
+                scenario.membership == MembershipStatus.P2P ? 1 : 0,
+                total, totalXp, levels, xp);
+
+        Map<String, QuestStatus> questStates = new HashMap<>();
+        questStates.put("Cook's Assistant", QuestStatus.NOT_STARTED);
+        questStates.put("The Restless Ghost", QuestStatus.NOT_STARTED);
+        if (scenario.membership == MembershipStatus.P2P)
+        {
+            questStates.put("Waterfall Quest", QuestStatus.NOT_STARTED);
+            questStates.put("Tree Gnome Village", QuestStatus.NOT_STARTED);
+            questStates.put("Monkey Madness I", QuestStatus.NOT_STARTED);
+        }
+
+        StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(preparedItems()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .quests(new QuestSnapshot(questStates));
+        if (scenario.type != 2)
+            builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
+        if (scenario.membership == MembershipStatus.P2P)
+        {
+            builder.slayer(new SlayerSnapshot(null, 0, null, 0,
+                    RecommendationConfidence.VERIFIED));
+            builder.poh(observedEmptyPoh());
+        }
+        if (AccountMode.fromTypeCode(scenario.type).isGroupIronman())
+            builder.groupStorage(new GroupStorageSnapshot(true,
+                    Collections.emptyList()));
+        return builder.build();
+    }
+
+    private static PohSnapshot observedEmptyPoh()
+    {
+        Map<String, CapabilityState> furniture = new HashMap<>();
+        for (InfrastructureMilestoneDefinition definition
+                : new InfrastructureMilestoneCatalog().all())
+            if (definition.getEvidenceKind()
+                    == InfrastructureEvidenceKind.POH_FURNITURE)
+                furniture.put(definition.getEvidenceKey(),
+                        CapabilityState.BLOCKED);
+        return new PohSnapshot(CapabilityState.VERIFIED, furniture);
+    }
+
+    private static List<ItemStackSnapshot> preparedItems()
+    {
+        List<ItemStackSnapshot> items = new ArrayList<>();
+        items.add(new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+                "Bronze pickaxe", 1));
+        items.add(new ItemStackSnapshot(ItemID.BRONZE_AXE,
+                "Bronze axe", 1));
+        items.add(new ItemStackSnapshot(ItemID.TINDERBOX,
+                "Tinderbox", 1));
+        items.add(new ItemStackSnapshot(ItemID.NET,
+                "Small fishing net", 1));
+        items.add(new ItemStackSnapshot(ItemID.FLY_FISHING_ROD,
+                "Fly fishing rod", 1));
+        items.add(new ItemStackSnapshot(ItemID.FEATHER, "Feather", 5_000));
+        items.add(new ItemStackSnapshot(ItemID.HAMMER, "Hammer", 1));
+        items.add(new ItemStackSnapshot(ItemID.KNIFE, "Knife", 1));
+        return items;
+    }
+
+    private static final class Scenario
+    {
+        private final String name;
+        private final MembershipStatus membership;
+        private final int type;
+
+        private Scenario(String name, MembershipStatus membership, int type)
+        {
+            this.name = name;
+            this.membership = membership;
+            this.type = type;
+        }
+    }
+}

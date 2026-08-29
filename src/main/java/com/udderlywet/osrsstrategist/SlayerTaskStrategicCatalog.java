@@ -2,8 +2,11 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -19,6 +22,33 @@ import javax.inject.Singleton;
 @Singleton
 public class SlayerTaskStrategicCatalog
 {
+    private static final Set<String> STRONG_XP = ids(
+            "aquanites", "araxytes", "custodian-stalkers", "fire-giants",
+            "gryphons", "lizardmen", "lesser-nagua", "venators");
+    private static final Set<String> STRONG_RESOURCES = ids(
+            "araxytes", "chaos-druids", "flesh-crawlers", "frost-dragons",
+            "green-dragons", "lava-dragons", "lizardmen", "red-dragons",
+            "revenants", "venators");
+    private static final Set<String> HIGH_BURDEN = ids(
+            "aquanites", "crocodiles", "custodian-stalkers", "frost-dragons",
+            "jungle-horrors", "metal-dragons", "scabarites", "sea-snakes",
+            "terror-dogs", "venators");
+    private static final Set<String> HIGH_SETUP = ids(
+            "aquanites", "araxytes", "aviansies", "custodian-stalkers",
+            "frost-dragons", "gryphons", "jungle-horrors", "lava-dragons",
+            "revenants", "scabarites", "sea-snakes", "terror-dogs",
+            "venators");
+    private static final Set<String> LOW_ATTENTION = ids(
+            "bats", "bears", "black-knights", "cows", "crabs", "dogs",
+            "dwarves", "flesh-crawlers", "ghosts", "ghouls", "goblins",
+            "hill-giants", "hobgoblins", "ice-giants", "ice-warriors",
+            "icefiends", "lesser-demons", "minotaurs", "moss-giants",
+            "pirates", "rogues", "scorpions", "shades", "skeletons",
+            "wolves", "zombies");
+    private static final Set<String> INTRINSIC_WILDERNESS = ids(
+            "lava-dragons", "mammoths", "revenants");
+    private static final Map<String, String> DIRECT_BOSS_IDS = bossIds();
+
     private final SlayerTaskProfileCatalog taskProfiles;
     private final Map<String, SlayerTaskStrategicProfile> byProfileId;
 
@@ -122,7 +152,7 @@ public class SlayerTaskStrategicCatalog
                 AttentionLevel.LOW, weights(), null));
         add(values, task("jellies", 3, 2, 3, 3, AttentionLevel.MODERATE,
                 weights("chaeldar", 10, "konar", 6), null));
-        add(values, taskEquipped("harpie-bug-swarms", 1, 1, 3, 4,
+        add(values, task("harpie-bug-swarms", 1, 1, 3, 4,
                 AttentionLevel.MODERATE, weights(), null));
         add(values, task("zygomites", 2, 3, 3, 3, AttentionLevel.MODERATE,
                 weights("duradel", 2, "nieve", 2, "chaeldar", 7, "konar", 2), null));
@@ -148,24 +178,25 @@ public class SlayerTaskStrategicCatalog
                 weights("duradel", 8, "nieve", 8), null));
         add(values, task("trolls", 3, 2, 4, 3, AttentionLevel.MODERATE,
                 weights("duradel", 6, "nieve", 6, "chaeldar", 11, "konar", 6), null));
-        add(values, task("blue-dragons", 2, 4, 4, 3,
+        add(values, taskEquipped("blue-dragons", 2, 4, 4, 3,
                 AttentionLevel.MODERATE,
                 weights("duradel", 4, "nieve", 4, "chaeldar", 8, "konar", 4),
                 alt("pvm:vorkath", "Vorkath", "Ungael")));
-        add(values, task("black-dragons", 2, 3, 2, 3,
+        add(values, taskEquipped("black-dragons", 2, 3, 2, 3,
                 AttentionLevel.MODERATE,
                 weights("duradel", 9, "nieve", 6, "konar", 6),
                 alt("pvm:king_black_dragon", "King Black Dragon",
                         "King Black Dragon Lair")));
-        add(values, task("steel-dragons", 1, 3, 5, 4,
+        add(values, taskEquipped("steel-dragons", 1, 3, 5, 4,
                 AttentionLevel.MODERATE, weights(), null));
-        add(values, task("mithril-dragons", 1, 3, 3, 5,
+        add(values, taskEquipped("mithril-dragons", 1, 3, 3, 5,
                 AttentionLevel.ACTIVE, weights(), null));
-        add(values, task("fossil-island-wyverns", 1, 3, 5, 5,
+        add(values, taskEquipped("fossil-island-wyverns", 1, 3, 5, 5,
                 AttentionLevel.MODERATE,
                 weights("duradel", 7, "nieve", 5, "chaeldar", 7, "konar", 5), null));
-        add(values, taskEquipped("molanisks", 1, 1, 2, 4,
+        add(values, task("molanisks", 1, 1, 2, 4,
                 AttentionLevel.MODERATE, weights(), null));
+        addReviewedLongTail(values);
         this.byProfileId = Collections.unmodifiableMap(values);
     }
 
@@ -194,6 +225,131 @@ public class SlayerTaskStrategicCatalog
             SlayerTaskStrategicProfile profile)
     {
         values.put(profile.getTaskProfileId(), profile);
+    }
+
+    /**
+     * Completes the mechanics census with conservative, reviewed ordinal
+     * economics. Exact weights are included only where the current assignment
+     * tables establish them; unknown weights remain unknown and can never
+     * trigger a block recommendation.
+     */
+    private void addReviewedLongTail(
+            Map<String, SlayerTaskStrategicProfile> values)
+    {
+        for (SlayerTaskProfile mechanics : taskProfiles.all())
+        {
+            String id = mechanics.getId();
+            if (values.containsKey(id)) continue;
+            String bossId = DIRECT_BOSS_IDS.get(id);
+            if (bossId != null)
+            {
+                String name = mechanics.getAliases().isEmpty()
+                        ? id : mechanics.getAliases().get(0);
+                add(values, directBoss(id, bossId, name,
+                        mechanics.getPreferredLocation(),
+                        mechanics.isWildernessVariantKnown()));
+                continue;
+            }
+
+            int xp = STRONG_XP.contains(id) ? 4 : 2;
+            int resources = STRONG_RESOURCES.contains(id) ? 4 : 2;
+            int burden = HIGH_BURDEN.contains(id) ? 4 : 2;
+            int setup = HIGH_SETUP.contains(id) ? 4 : 2;
+            AttentionLevel attention = LOW_ATTENTION.contains(id)
+                    ? AttentionLevel.LOW : AttentionLevel.MODERATE;
+            RiskLevel risk = INTRINSIC_WILDERNESS.contains(id)
+                    ? RiskLevel.HIGH : RiskLevel.LOW;
+            add(values, new SlayerTaskStrategicProfile(id, xp, resources,
+                    burden, setup, attention, risk,
+                    mechanics.getRequiredProtection().isEmpty()
+                            ? SlayerRequiredItemUse.CARRIED_OR_EQUIPPED
+                            : SlayerRequiredItemUse.EQUIPPED,
+                    null, reviewedWeights(id), null, null, null, false));
+        }
+    }
+
+    private static SlayerTaskStrategicProfile directBoss(String id,
+            String activityId, String name, String location,
+            boolean wilderness)
+    {
+        return new SlayerTaskStrategicProfile(id, 3, 3, 4, 5,
+                AttentionLevel.ACTIVE,
+                wilderness ? RiskLevel.HIGH : RiskLevel.MEDIUM,
+                SlayerRequiredItemUse.CARRIED_OR_EQUIPPED, null, weights(),
+                activityId, name, location, true);
+    }
+
+    private static Map<String, Integer> reviewedWeights(String id)
+    {
+        switch (id)
+        {
+            case "aquanites":
+                return weights("duradel", 5, "nieve", 5);
+            case "araxytes":
+                return weights("duradel", 10, "nieve", 8);
+            case "aviansies":
+                return weights("duradel", 8);
+            case "custodian-stalkers":
+                return weights("chaeldar", 11, "nieve", 8);
+            case "fire-giants":
+                return weights("duradel", 7);
+            case "frost-dragons":
+                return weights("duradel", 5, "nieve", 5);
+            case "gryphons":
+                return weights("duradel", 7, "nieve", 7,
+                        "chaeldar", 10, "vannaka", 10);
+            case "lesser-nagua":
+                return weights("chaeldar", 4);
+            default:
+                return weights();
+        }
+    }
+
+    private static Set<String> ids(String... values)
+    {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(values)));
+    }
+
+    private static Map<String, String> bossIds()
+    {
+        Map<String, String> values = new HashMap<>();
+        putBoss(values, "abyssal-sire-task", "abyssal_sire");
+        putBoss(values, "araxxor-task", "araxxor");
+        putBoss(values, "barrows-task", "barrows_chests");
+        putBoss(values, "callisto-task", "callisto");
+        putBoss(values, "cerberus-task", "cerberus");
+        putBoss(values, "chaos-elemental-task", "chaos_elemental");
+        putBoss(values, "chaos-fanatic-task", "chaos_fanatic");
+        putBoss(values, "crazy-archaeologist-task", "crazy_archaeologist");
+        putBoss(values, "deranged-archaeologist-task", "deranged_archaeologist");
+        putBoss(values, "duke-sucellus-task", "duke_sucellus");
+        putBoss(values, "giant-mole-task", "giant_mole");
+        putBoss(values, "graardor-task", "general_graardor");
+        putBoss(values, "grotesque-guardians-task", "grotesque_guardians");
+        putBoss(values, "jad-task", "tztok_jad");
+        putBoss(values, "kreearra-task", "kreearra");
+        putBoss(values, "kril-task", "kril_tsutsaroth");
+        putBoss(values, "leviathan-task", "the_leviathan");
+        putBoss(values, "maggot-king-task", "maggot_king");
+        putBoss(values, "phantom-muspah-task", "phantom_muspah");
+        putBoss(values, "sarachnis-task", "sarachnis");
+        putBoss(values, "scorpia-task", "scorpia");
+        putBoss(values, "shellbane-gryphon-task", "shellbane_gryphon");
+        putBoss(values, "vardorvis-task", "vardorvis");
+        putBoss(values, "venenatis-task", "venenatis");
+        putBoss(values, "vetion-task", "vetion");
+        putBoss(values, "vorkath-task", "vorkath");
+        putBoss(values, "whisperer-task", "the_whisperer");
+        putBoss(values, "zilyana-task", "commander_zilyana");
+        putBoss(values, "zuk-task", "tzkal_zuk");
+        putBoss(values, "zulrah-task", "zulrah");
+        return Collections.unmodifiableMap(values);
+    }
+
+    private static void putBoss(Map<String, String> values, String taskId,
+            String activityId)
+    {
+        values.put(taskId, "pvm:" + activityId);
     }
 
     private static SlayerTaskStrategicProfile task(String id, int xp,

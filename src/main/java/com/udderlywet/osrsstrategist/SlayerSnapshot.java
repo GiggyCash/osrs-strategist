@@ -1,5 +1,9 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /** Current Slayer task and point-economy evidence observed from RuneLite. */
 public final class SlayerSnapshot
 {
@@ -13,6 +17,8 @@ public final class SlayerSnapshot
     private final Integer blockSlotCapacity;
     private final Integer occupiedBlockSlots;
     private final SlayerRewardSnapshot rewards;
+    private final List<SlayerTaskOffer> taskOffers;
+    private final Boolean mortimerIntroduced;
     private final RecommendationConfidence confidence;
 
     /** Compatibility constructor retained for older callers. */
@@ -24,7 +30,7 @@ public final class SlayerSnapshot
             RecommendationConfidence confidence)
     {
         this(taskName, remaining, masterName, null, points,
-                null, null, null, null, confidence);
+                null, null, null, null, null, null, null, confidence);
     }
 
     public SlayerSnapshot(
@@ -36,7 +42,7 @@ public final class SlayerSnapshot
             RecommendationConfidence confidence)
     {
         this(taskName, remaining, masterName, taskLocation, points,
-                null, null, null, null, confidence);
+                null, null, null, null, null, null, null, confidence);
     }
 
     public SlayerSnapshot(
@@ -53,6 +59,7 @@ public final class SlayerSnapshot
     {
         this(taskName, remaining, masterName, taskLocation, points, taskStreak,
                 questPoints, blockSlotCapacity, occupiedBlockSlots, null,
+                null, null,
                 confidence);
     }
 
@@ -69,6 +76,26 @@ public final class SlayerSnapshot
             SlayerRewardSnapshot rewards,
             RecommendationConfidence confidence)
     {
+        this(taskName, remaining, masterName, taskLocation, points, taskStreak,
+                questPoints, blockSlotCapacity, occupiedBlockSlots, rewards,
+                null, null, confidence);
+    }
+
+    public SlayerSnapshot(
+            String taskName,
+            int remaining,
+            String masterName,
+            String taskLocation,
+            int points,
+            Integer taskStreak,
+            Integer questPoints,
+            Integer blockSlotCapacity,
+            Integer occupiedBlockSlots,
+            SlayerRewardSnapshot rewards,
+            List<SlayerTaskOffer> taskOffers,
+            Boolean mortimerIntroduced,
+            RecommendationConfidence confidence)
+    {
         this.taskName = taskName;
         this.remaining = Math.max(0, remaining);
         this.masterName = masterName;
@@ -79,6 +106,9 @@ public final class SlayerSnapshot
         this.blockSlotCapacity = nonNegative(blockSlotCapacity);
         this.occupiedBlockSlots = nonNegative(occupiedBlockSlots);
         this.rewards = rewards == null ? SlayerRewardSnapshot.unknown() : rewards;
+        this.taskOffers = Collections.unmodifiableList(taskOffers == null
+                ? new ArrayList<>() : new ArrayList<>(taskOffers));
+        this.mortimerIntroduced = mortimerIntroduced;
         this.confidence = confidence == null
                 ? RecommendationConfidence.CHECK_NEEDED
                 : confidence;
@@ -92,6 +122,9 @@ public final class SlayerSnapshot
                 null,
                 null,
                 0,
+                null,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -110,6 +143,8 @@ public final class SlayerSnapshot
     public Integer getBlockSlotCapacity() { return blockSlotCapacity; }
     public Integer getOccupiedBlockSlots() { return occupiedBlockSlots; }
     public SlayerRewardSnapshot getRewards() { return rewards; }
+    public List<SlayerTaskOffer> getTaskOffers() { return taskOffers; }
+    public Boolean isMortimerIntroduced() { return mortimerIntroduced; }
     public RecommendationConfidence getConfidence() { return confidence; }
 
     public boolean hasTask()
@@ -120,6 +155,7 @@ public final class SlayerSnapshot
     public SlayerAssignmentState getAssignmentState()
     {
         if (hasTask()) return SlayerAssignmentState.ASSIGNED;
+        if (!taskOffers.isEmpty()) return SlayerAssignmentState.CHOICE_PENDING;
         if (confidence == RecommendationConfidence.VERIFIED && remaining == 0)
             return SlayerAssignmentState.NO_TASK;
         return SlayerAssignmentState.UNKNOWN;

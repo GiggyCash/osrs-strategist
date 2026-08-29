@@ -41,7 +41,14 @@ public class SlayerMasterCatalog
                             1.0, .66, .58, .08, false),
                     master("krystilia", names("Krystilia"), "Edgeville",
                             1, 1, null, 25, 100,
-                            .72, .86, .48, 1.0, true)
+                            .72, .86, .48, 1.0, true),
+                    specialMaster("spria", names("Spria"), "Draynor Village",
+                            0, 1, "A Porcine of Interest", false,
+                            0, 30, 40, .20, .15, .15, .08, false),
+                    specialMaster("mortimer", names("Mortimer"),
+                            "Wyrmscraig Cavern", 100, 70,
+                            "Fallen From Grace", true,
+                            0, 100, 120, .96, .90, .55, .45, false)
             ));
 
     public List<SlayerMasterProfile> all()
@@ -83,12 +90,23 @@ public class SlayerMasterCatalog
         List<SlayerMasterProfile> result = new ArrayList<>();
         for (SlayerMasterProfile profile : profiles)
         {
+            // Spria has Turael's zero-point pool plus Sourhogs but cannot
+            // replace another master's task. Without a proximity goal Turael's
+            // replacement flexibility strictly dominates her for a new task.
+            if ("spria".equals(profile.getId())) continue;
             if (profile.isWilderness() && !context.isAllowWildernessMethods()) continue;
-            if (combat < profile.getMinimumCombat()
+            if ("mortimer".equals(profile.getId()))
+            {
+                SlayerSnapshot live = context.getData().getSlayer();
+                boolean capeIntroduction = slayer >= 99 && live != null
+                        && Boolean.TRUE.equals(live.isMortimerIntroduced());
+                if (!capeIntroduction && (combat < profile.getMinimumCombat()
+                        || slayer < profile.getMinimumSlayer())) continue;
+            }
+            else if (combat < profile.getMinimumCombat()
                     || slayer < profile.getMinimumSlayer()) continue;
             if (profile.getRequiredQuest() != null
-                    && (quests == null || quests.statusOf(profile.getRequiredQuest())
-                    != QuestStatus.COMPLETE)) continue;
+                    && !questRequirementMet(profile, quests)) continue;
             result.add(profile);
         }
         return result;
@@ -99,9 +117,30 @@ public class SlayerMasterCatalog
             int points, int blockCost, double xp, double supplies,
             double setup, double constraint, boolean wilderness)
     {
+        return specialMaster(id, names, location, combat, slayer, quest,
+                false, points, SlayerPointEconomy.SKIP_COST, blockCost,
+                xp, supplies, setup, constraint, wilderness);
+    }
+
+    private static SlayerMasterProfile specialMaster(String id,
+            List<String> names, String location, int combat, int slayer,
+            String quest, boolean questStartSuffices, int points,
+            int cancelCost, int blockCost, double xp, double supplies,
+            double setup, double constraint, boolean wilderness)
+    {
         return new SlayerMasterProfile(id, names, location, combat, slayer,
-                quest, points, blockCost, xp, supplies, setup, constraint,
-                wilderness);
+                quest, questStartSuffices, points, cancelCost, blockCost, xp,
+                supplies, setup, constraint, wilderness);
+    }
+
+    private static boolean questRequirementMet(SlayerMasterProfile profile,
+            QuestSnapshot quests)
+    {
+        if (quests == null) return false;
+        QuestStatus status = quests.statusOf(profile.getRequiredQuest());
+        return status == QuestStatus.COMPLETE
+                || profile.isQuestStartSufficient()
+                && status == QuestStatus.IN_PROGRESS;
     }
 
     private static List<String> names(String... values)

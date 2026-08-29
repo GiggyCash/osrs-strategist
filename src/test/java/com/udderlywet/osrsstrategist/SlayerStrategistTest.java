@@ -35,6 +35,83 @@ public class SlayerStrategistTest
     }
 
     @Test
+    public void mortimerLiveChoiceIsResolvedFromTaskAndModifierProperties()
+    {
+        SlayerSnapshot choice = new SlayerSnapshot(null, 0, "Mortimer", null,
+                250, null, 300, 2, 0, null, Arrays.asList(
+                        new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
+                        new SlayerTaskOffer("Hellhounds", "Quantity", 10, false)),
+                true, RecommendationConfidence.VERIFIED);
+        StrategyContext context = context(0, choice, StrategyMode.EFFICIENT,
+                SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
+                Collections.emptyList(), null);
+
+        SlayerDecisionResult result = strategist.assess(context);
+
+        assertEquals(SlayerAssignmentState.CHOICE_PENDING,
+                result.getAssignmentState());
+        assertEquals("Dust devils", result.getRecommendedOffer().getTaskName());
+        assertTrue(result.getGuidance().getAction().contains("Slayer XP"));
+        StrategyCandidate candidate = new SlayerCandidateProvider()
+                .candidates(context).get(0);
+        assertEquals("slayer:choose-task", candidate.getId());
+        assertEquals("Choose Dust devils from Mortimer", candidate.getTitle());
+    }
+
+    @Test
+    public void incompleteMortimerChoiceFailsClosedInsteadOfHidingAnOption()
+    {
+        SlayerSnapshot choice = new SlayerSnapshot(null, 0, "Mortimer", null,
+                250, null, 300, 2, 0, null, Arrays.asList(
+                        new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
+                        new SlayerTaskOffer(null, null, 0, false)),
+                true, RecommendationConfidence.VERIFIED);
+
+        SlayerDecisionResult result = strategist.assess(context(0, choice,
+                StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
+                GoalType.SLAYER_85, false, Collections.emptyList(), null));
+
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                result.getConfidence());
+        assertNull(result.getRecommendedOffer());
+        assertTrue(result.getGuidance().getAction().contains("Keep Mortimer"));
+    }
+
+    @Test
+    public void directBossTaskRequiresEncounterReadinessNotGenericSlayerGear()
+    {
+        SlayerSnapshot task = snapshot("Vorkath", 12, "Duradel", null,
+                500, 21, 300, 6, 2);
+
+        SlayerDecisionResult result = strategist.assess(context(0, task,
+                StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
+                GoalType.GEAR_TARGET, false, Collections.emptyList(), null));
+
+        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertTrue(result.getGuidance().getAction().contains("Vorkath"));
+        assertTrue(result.getGuidance().getSupplies().contains("generic Slayer"));
+    }
+
+    @Test
+    public void mortimerCancellationUsesItsHundredPointEconomy()
+    {
+        SlayerSnapshot lowPoints = snapshot("Hellhounds", 180, "Mortimer",
+                null, 150, null, 300, 2, 2);
+        SlayerDecisionResult keep = strategist.assess(context(0, lowPoints,
+                StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
+                GoalType.AUTOMATIC, false, Collections.emptyList(), null));
+        assertEquals(SlayerTaskDecision.DO, keep.getDecision());
+
+        SlayerSnapshot sustainable = snapshot("Hellhounds", 180, "Mortimer",
+                null, 200, null, 300, 2, 2);
+        SlayerDecisionResult skip = strategist.assess(context(0, sustainable,
+                StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
+                GoalType.AUTOMATIC, false, Collections.emptyList(), null));
+        assertEquals(SlayerTaskDecision.SKIP, skip.getDecision());
+        assertTrue(skip.getGuidance().getAction().contains("100 Slayer points"));
+    }
+
+    @Test
     public void ordinaryNoTaskSelectionUsesMasterProperties()
     {
         SlayerSnapshot noTask = snapshot(null, 0, null, null,
@@ -47,6 +124,27 @@ public class SlayerStrategistTest
         assertNull(result.getDecision());
         assertEquals("duradel", result.getMaster().getId());
         assertTrue(result.getGuidance().getAction().contains("Duradel/Kuradal"));
+    }
+
+    @Test
+    public void currentSpecialMasterRulesRemainDistinct()
+    {
+        SlayerMasterCatalog catalog = new SlayerMasterCatalog();
+        SlayerMasterProfile spria = catalog.byId("spria");
+        SlayerMasterProfile mortimer = catalog.byId("mortimer");
+
+        assertEquals(0, spria.getNormalPoints());
+        assertEquals(40, spria.getBlockCost());
+        assertEquals(100, mortimer.getCancelCost());
+        assertEquals(120, mortimer.getBlockCost());
+        StrategyContext eligible = context(0, snapshot(null, 0, null, null,
+                0, 0, 300, 6, 0), StrategyMode.BALANCED,
+                SessionIntent.PICK_FOR_ME, GoalType.AUTOMATIC, false,
+                Collections.emptyList(), null);
+        assertTrue(catalog.eligible(eligible).stream()
+                .anyMatch(p -> "mortimer".equals(p.getId())));
+        assertFalse(catalog.eligible(eligible).stream()
+                .anyMatch(p -> "spria".equals(p.getId())));
     }
 
     @Test
@@ -347,6 +445,8 @@ public class SlayerStrategistTest
         assertEquals(7, SlayerPointEconomy.blockCapacity(300, true));
         assertFalse(SlayerPointEconomy.hasSustainableSkipBalance(30));
         assertTrue(SlayerPointEconomy.hasSustainableSkipBalance(60));
+        assertFalse(SlayerPointEconomy.hasSustainableSkipBalance(150, 100));
+        assertTrue(SlayerPointEconomy.hasSustainableSkipBalance(200, 100));
     }
 
     private static StrategyContext context(int typeCode, SlayerSnapshot slayer,
@@ -358,6 +458,7 @@ public class SlayerStrategistTest
         quests.put("Shilo Village", QuestStatus.COMPLETE);
         quests.put("Lost City", QuestStatus.COMPLETE);
         quests.put("Priest in Peril", QuestStatus.COMPLETE);
+        quests.put("Fallen From Grace", QuestStatus.IN_PROGRESS);
         java.util.List<ItemStackSnapshot> equipment = new java.util.ArrayList<>();
         equipment.add(new ItemStackSnapshot(4151, "Abyssal whip", 1,
                 net.runelite.api.EquipmentInventorySlot.WEAPON.getSlotIdx()));

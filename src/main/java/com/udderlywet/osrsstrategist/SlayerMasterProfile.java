@@ -13,7 +13,9 @@ public final class SlayerMasterProfile
     private final int minimumCombat;
     private final int minimumSlayer;
     private final String requiredQuest;
+    private final boolean questStartSuffices;
     private final int normalPoints;
+    private final int cancelCost;
     private final int blockCost;
     private final double experiencePotential;
     private final double supplyValue;
@@ -23,7 +25,8 @@ public final class SlayerMasterProfile
 
     public SlayerMasterProfile(String id, List<String> names, String location,
             int minimumCombat, int minimumSlayer, String requiredQuest,
-            int normalPoints, int blockCost, double experiencePotential,
+            boolean questStartSuffices, int normalPoints, int cancelCost,
+            int blockCost, double experiencePotential,
             double supplyValue, double setupBurden, double locationConstraint,
             boolean wilderness)
     {
@@ -33,7 +36,9 @@ public final class SlayerMasterProfile
         this.minimumCombat = Math.max(0, minimumCombat);
         this.minimumSlayer = Math.max(1, minimumSlayer);
         this.requiredQuest = requiredQuest;
+        this.questStartSuffices = questStartSuffices;
         this.normalPoints = Math.max(0, normalPoints);
+        this.cancelCost = Math.max(0, cancelCost);
         this.blockCost = Math.max(0, blockCost);
         this.experiencePotential = bounded(experiencePotential);
         this.supplyValue = bounded(supplyValue);
@@ -49,7 +54,9 @@ public final class SlayerMasterProfile
     public int getMinimumCombat() { return minimumCombat; }
     public int getMinimumSlayer() { return minimumSlayer; }
     public String getRequiredQuest() { return requiredQuest; }
+    public boolean isQuestStartSufficient() { return questStartSuffices; }
     public int getNormalPoints() { return normalPoints; }
+    public int getCancelCost() { return cancelCost; }
     public int getBlockCost() { return blockCost; }
     public double getExperiencePotential() { return experiencePotential; }
     public double getSupplyValue() { return supplyValue; }

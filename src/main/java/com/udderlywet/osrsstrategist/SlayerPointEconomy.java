@@ -36,6 +36,13 @@ public final class SlayerPointEconomy
     /** Avoids spending the account's final cancellation on an ordinary dislike. */
     public static boolean hasSustainableSkipBalance(int points)
     {
-        return points >= SKIP_COST * 2;
+        return hasSustainableSkipBalance(points, SKIP_COST);
+    }
+
+    /** Retains one further cancellation at the current master's actual cost. */
+    public static boolean hasSustainableSkipBalance(int points, int cancelCost)
+    {
+        int cost = Math.max(1, cancelCost);
+        return points >= cost * 2;
     }
 }

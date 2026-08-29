@@ -1,6 +1,8 @@
 package com.udderlywet.osrsstrategist;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +25,7 @@ public class LiveSlayerStateReader
     // RuneLite's own Slayer plugin uses value 7 to select the separate
     // Krystilia streak. No other numeric master mapping is inferred here.
     private static final int KRYSTILIA_MASTER_ID = 7;
+    private static final int MORTIMER_MASTER_ID = 10;
 
     private final Client client;
     private int cachedTick = -1;
@@ -52,23 +55,26 @@ public class LiveSlayerStateReader
         int amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
         int points = Math.max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
         int masterId = client.getVarbitValue(VarbitID.SLAYER_MASTER);
+        List<SlayerTaskOffer> offers = amount <= 0
+                ? readMortimerOffers() : java.util.Collections.emptyList();
+        if (!offers.isEmpty()) masterId = MORTIMER_MASTER_ID;
         String masterName = masterName(masterId);
         SlayerRewardSnapshot rewards = readRewards();
-        int streak = Math.max(0, client.getVarbitValue(
-                masterId == KRYSTILIA_MASTER_ID
-                        ? VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED
-                        : VarbitID.SLAYER_TASKS_COMPLETED));
+        Integer streak = streak(masterId);
         int questPoints = Math.max(0, client.getVarpValue(VarPlayerID.QP));
         boolean lumbridgeElite = client.getVarbitValue(
                 VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) > 0;
-        int blockCapacity = SlayerPointEconomy.blockCapacity(
-                questPoints, lumbridgeElite);
+        int blockCapacity = masterId == MORTIMER_MASTER_ID ? 2
+                : SlayerPointEconomy.blockCapacity(questPoints, lumbridgeElite);
         Integer occupiedBlockSlots = occupiedBlockSlots(masterId, blockCapacity);
+        boolean mortimerIntroduced = client.getVarbitValue(
+                VarbitID.MORTIMER_INTRODUCTION) > 0;
         if (amount <= 0)
         {
             cached = new SlayerSnapshot(
                     null, 0, masterName, null, points, streak, questPoints,
-                    blockCapacity, occupiedBlockSlots, rewards,
+                    blockCapacity, occupiedBlockSlots, rewards, offers,
+                    mortimerIntroduced,
                     RecommendationConfidence.VERIFIED);
             cachedTick = tick;
             return cached;
@@ -76,38 +82,12 @@ public class LiveSlayerStateReader
 
         try
         {
-            int taskId = client.getVarpValue(VarPlayerID.SLAYER_TARGET);
-            int taskRow;
-            if (taskId == BOSS_TASK_ID)
-            {
-                var rows = client.getDBRowsByValue(
-                        DBTableID.SlayerTaskSublist.ID,
-                        DBTableID.SlayerTaskSublist.COL_TASK_SUBTABLE_ID,
-                        0,
-                        client.getVarbitValue(VarbitID.SLAYER_TARGET_BOSSID));
-                if (rows.isEmpty()) return unresolved(amount, masterName,
-                        points, streak, questPoints, blockCapacity, rewards, tick);
-                taskRow = (Integer) client.getDBTableField(
-                        rows.get(0),
-                        DBTableID.SlayerTaskSublist.COL_TASK,
-                        0)[0];
-            }
-            else
-            {
-                var rows = client.getDBRowsByValue(
-                        DBTableID.SlayerTask.ID,
-                        DBTableID.SlayerTask.COL_ID,
-                        0,
-                        taskId);
-                if (rows.isEmpty()) return unresolved(amount, masterName,
-                        points, streak, questPoints, blockCapacity, rewards, tick);
-                taskRow = rows.get(0);
-            }
-
-            String taskName = (String) client.getDBTableField(
-                    taskRow,
-                    DBTableID.SlayerTask.COL_NAME_UPPERCASE,
-                    0)[0];
+            String taskName = taskName(
+                    client.getVarpValue(VarPlayerID.SLAYER_TARGET),
+                    client.getVarbitValue(VarbitID.SLAYER_TARGET_BOSSID));
+            if (taskName == null) return unresolved(amount, masterName,
+                    points, streak, questPoints, blockCapacity, rewards,
+                    mortimerIntroduced, tick);
 
             String taskLocation = null;
             int areaId = client.getVarpValue(VarPlayerID.SLAYER_AREA);
@@ -138,6 +118,8 @@ public class LiveSlayerStateReader
                     blockCapacity,
                     occupiedBlockSlots,
                     rewards,
+                    java.util.Collections.emptyList(),
+                    mortimerIntroduced,
                     RecommendationConfidence.VERIFIED);
             cachedTick = tick;
             return cached;
@@ -145,7 +127,7 @@ public class LiveSlayerStateReader
         catch (RuntimeException ex)
         {
             return unresolved(amount, masterName, points, streak, questPoints,
-                    blockCapacity, rewards, tick);
+                    blockCapacity, rewards, mortimerIntroduced, tick);
         }
     }
 
@@ -156,8 +138,8 @@ public class LiveSlayerStateReader
     }
 
     private SlayerSnapshot unresolved(int amount, String masterName,
-            int points, int streak, int questPoints, int blockCapacity,
-            SlayerRewardSnapshot rewards, int tick)
+            int points, Integer streak, int questPoints, int blockCapacity,
+            SlayerRewardSnapshot rewards, boolean mortimerIntroduced, int tick)
     {
         cached = new SlayerSnapshot(
                 null,
@@ -170,9 +152,107 @@ public class LiveSlayerStateReader
                 blockCapacity,
                 null,
                 rewards,
+                java.util.Collections.emptyList(),
+                mortimerIntroduced,
                 RecommendationConfidence.CHECK_NEEDED);
         cachedTick = tick;
         return cached;
+    }
+
+    private Integer streak(int masterId)
+    {
+        if (masterId == MORTIMER_MASTER_ID)
+        {
+            // RuneLite exposes Mortimer's live choices/modifiers but no public
+            // separate completed-task counter. Never substitute normal streak.
+            return null;
+        }
+        return Math.max(0, client.getVarbitValue(
+                masterId == KRYSTILIA_MASTER_ID
+                        ? VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED
+                        : VarbitID.SLAYER_TASKS_COMPLETED));
+    }
+
+    private List<SlayerTaskOffer> readMortimerOffers()
+    {
+        List<SlayerTaskOffer> offers = new ArrayList<>();
+        addOffer(offers, VarbitID.SLAYER_CHOOSE_TASK_1,
+                VarbitID.SLAYER_CHOOSE_TASK_1_BOSS_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_1_MODIFIER_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_1_MODIFIER_VALUE,
+                VarbitID.SLAYER_CHOOSE_TASK_1_MODIFIER_NEGATIVE);
+        addOffer(offers, VarbitID.SLAYER_CHOOSE_TASK_2,
+                VarbitID.SLAYER_CHOOSE_TASK_2_BOSS_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_2_MODIFIER_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_2_MODIFIER_VALUE,
+                VarbitID.SLAYER_CHOOSE_TASK_2_MODIFIER_NEGATIVE);
+        addOffer(offers, VarbitID.SLAYER_CHOOSE_TASK_3,
+                VarbitID.SLAYER_CHOOSE_TASK_3_BOSS_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_3_MODIFIER_ID,
+                VarbitID.SLAYER_CHOOSE_TASK_3_MODIFIER_VALUE,
+                VarbitID.SLAYER_CHOOSE_TASK_3_MODIFIER_NEGATIVE);
+        return offers;
+    }
+
+    private void addOffer(List<SlayerTaskOffer> offers, int taskVarbit,
+            int bossVarbit, int modifierVarbit, int valueVarbit,
+            int negativeVarbit)
+    {
+        int taskId = client.getVarbitValue(taskVarbit);
+        if (taskId <= 0) return;
+        String task = null;
+        String modifier = null;
+        int value = client.getVarbitValue(valueVarbit);
+        boolean negative = client.getVarbitValue(negativeVarbit) > 0;
+        try
+        {
+            task = taskName(taskId, client.getVarbitValue(bossVarbit));
+            modifier = modifierName(
+                    client.getVarbitValue(modifierVarbit));
+        }
+        catch (RuntimeException ignored)
+        {
+            // Preserve the option as unresolved. Omitting it could make a
+            // decoded alternative look best when the hidden option is better.
+        }
+        offers.add(new SlayerTaskOffer(task, modifier, value, negative));
+    }
+
+    private String taskName(int taskId, int bossId)
+    {
+        int taskRow;
+        if (taskId == BOSS_TASK_ID)
+        {
+            var rows = client.getDBRowsByValue(
+                    DBTableID.SlayerTaskSublist.ID,
+                    DBTableID.SlayerTaskSublist.COL_TASK_SUBTABLE_ID,
+                    0, bossId);
+            if (rows.isEmpty()) return null;
+            taskRow = (Integer) client.getDBTableField(rows.get(0),
+                    DBTableID.SlayerTaskSublist.COL_TASK, 0)[0];
+        }
+        else
+        {
+            var rows = client.getDBRowsByValue(DBTableID.SlayerTask.ID,
+                    DBTableID.SlayerTask.COL_ID, 0, taskId);
+            if (rows.isEmpty()) return null;
+            taskRow = rows.get(0);
+        }
+        Object[] values = client.getDBTableField(taskRow,
+                DBTableID.SlayerTask.COL_NAME_UPPERCASE, 0);
+        return values == null || values.length == 0
+                ? null : (String) values[0];
+    }
+
+    private String modifierName(int modifierId)
+    {
+        var rows = client.getDBRowsByValue(DBTableID.SlayerModifiers.ID,
+                DBTableID.SlayerModifiers.COL_ID, 0, modifierId);
+        if (rows.isEmpty()) return null;
+        Object[] values = client.getDBTableField(rows.get(0),
+                DBTableID.SlayerModifiers.COL_NAME, 0);
+        return values == null || values.length == 0
+                ? null : (String) values[0];
     }
 
     private SlayerRewardSnapshot readRewards()
@@ -198,6 +278,7 @@ public class LiveSlayerStateReader
             case 7: return "Krystilia";
             case 8: return "Konar quo Maten";
             case 9: return "Spria";
+            case 10: return "Mortimer";
             default: return null;
         }
     }
@@ -282,6 +363,9 @@ public class LiveSlayerStateReader
                         VarbitID.SLAYER_BLOCKED_KONAR_5,
                         VarbitID.SLAYER_BLOCKED_KONAR_6,
                         VarbitID.SLAYER_BLOCKED_KONAR_DIARY};
+            case 10:
+                return new int[]{VarbitID.SLAYER_BLOCKED_MORTIMER_1,
+                        VarbitID.SLAYER_BLOCKED_MORTIMER_2};
             default:
                 return null;
         }

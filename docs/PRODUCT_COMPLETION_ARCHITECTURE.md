@@ -152,19 +152,22 @@ encounter model.
 
 ## Slayer strategist
 
-`LiveSlayerStateReader` models UNKNOWN, NO_TASK, and ASSIGNED from stable
+`LiveSlayerStateReader` models UNKNOWN, NO_TASK, CHOICE_PENDING, and ASSIGNED from stable
 RuneLite task/count/points/streak state. It also decodes the assigning-master
 varbit, master-specific block-slot varbits, and reviewed reward/extension
-varbits; a zero unlock varbit is therefore known locked, not missing evidence.
+varbits. Mortimer's live task/modifier choices, two block slots, introduction
+state, and distinct costs are decoded from pinned RuneLite DB/varbit data; his
+unexposed separate streak remains unknown rather than borrowing the ordinary
+streak. A zero unlock varbit is therefore known locked, not missing evidence.
 `SlayerStrategist` can produce DO,
 SKIP, BLOCK, PREP_FIRST, or ALTERNATIVE, then `SlayerCandidateProvider` exposes
 that one workflow action to the shared queue.
 
-The reviewed local catalog currently covers 54 detailed strategic task
-families plus master requirements, task weights used by those decisions, risk,
-setup, required items, resource value, and selected alternatives. The wider
-151-identity RuneLite corpus retains task-specific mechanical guidance but is
-not given a guessed strategic keep/block score. Point decisions respect
+The reviewed local catalog gives every current mechanics family conservative
+ordinal strategic economics plus master requirements, verified task weights,
+risk, setup, required items, resource value, and selected alternatives. Direct
+boss tasks cannot inherit a generic Slayer loadout and require verified
+encounter readiness. Point decisions respect
 cancellation cost, per-master block cost, observed free slots, and streak
 bonuses. Unknown master or block state still fails closed.
 
@@ -187,9 +190,8 @@ To add a Slayer task:
 4. add exact TASK/WHERE/STYLE/BRING/DO guidance;
 5. never infer an observed task, master, block slot, or point balance.
 
-Exhaustive strategic scoring for every long-tail task and reward is not
-claimed. Unknown task economics remain PREP_FIRST instead of receiving a
-guessed keep, skip, or block score.
+Unknown future task economics remain PREP_FIRST instead of receiving a guessed
+keep, skip, or block score.
 
 ## Quest ordering, goal paths, and plans
 
