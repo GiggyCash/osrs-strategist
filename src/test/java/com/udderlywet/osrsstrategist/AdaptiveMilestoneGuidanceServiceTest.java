@@ -66,6 +66,31 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
+    public void fireStrikeSplashingNamesAutocastAndExactRuneInputs()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.MAGIC, "fire_strike", "Fire Strike", 13, 11.5f));
+        AccountSnapshot account = account(0, MembershipStatus.P2P,
+                Skill.MAGIC, 13, Experience.getXpForLevel(13));
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        RecommendationGuidance guidance = service.build(
+                data, Skill.MAGIC, 13, 14,
+                plan("magic_f2p_fire_strike_splash", Skill.MAGIC), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Fire Strike"));
+        assertTrue(guidance.getSupplies().contains("Air rune"));
+        assertTrue(guidance.getSupplies().contains("Fire rune"));
+        assertTrue(guidance.getSupplies().contains("Mind rune"));
+        assertTrue(guidance.getSupplies().contains("autocast"));
+        assertTrue(guidance.getLocation().contains("Varrock Palace"));
+    }
+
+    @Test
     public void equippedFireStaffRemovesFireRuneShortfallFromHighAlchemy()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(

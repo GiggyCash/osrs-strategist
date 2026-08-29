@@ -1,6 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Collections;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -146,6 +147,34 @@ public class RequirementEvidenceEngineTest
     }
 
     @Test
+    public void lowAttentionSplashingRequiresObservedRunesSpellbookAndEquipment()
+    {
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
+                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        TrainingMethod method = expanded(
+                "magic_f2p_fire_strike_splash", Skill.MAGIC);
+        StrategyDataBundle ready = StrategyDataBundle.builder(account(1))
+                .combatEvidence(new CombatEvidenceSnapshot(0,
+                        Collections.emptySet(), false, false, false))
+                .inventory(new InventorySnapshot(Arrays.asList(
+                        new ItemStackSnapshot(ItemID.AIRRUNE, "Air rune", 2),
+                        new ItemStackSnapshot(ItemID.FIRERUNE, "Fire rune", 3),
+                        new ItemStackSnapshot(ItemID.MINDRUNE, "Mind rune", 1))))
+                .equipment(new EquipmentSnapshot(Arrays.asList(
+                        equipped("Iron full helm"), equipped("Iron platebody"),
+                        equipped("Iron platelegs"), equipped("Iron kiteshield"),
+                        equipped("Fancy boots"), equipped("Cursed goblin staff"))))
+                .build();
+
+        java.util.List<RequirementCheck> checks = engine.evaluate(ready, method);
+
+        assertTrue(checks.stream().allMatch(check ->
+                check.getState() == RequirementState.VERIFIED));
+        assertEquals("equipment:f2p_splashing",
+                checks.get(checks.size() - 1).getId());
+    }
+
+    @Test
     public void realAccessRulesReplaceSyntheticMinigameUnlocks()
     {
         RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
@@ -215,5 +244,10 @@ public class RequirementEvidenceEngineTest
                 levels,
                 xp
         );
+    }
+
+    private static ItemStackSnapshot equipped(String name)
+    {
+        return new ItemStackSnapshot(name.hashCode(), name, 1);
     }
 }

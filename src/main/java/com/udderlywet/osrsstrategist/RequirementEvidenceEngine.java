@@ -88,7 +88,9 @@ public class RequirementEvidenceEngine
         if (method.getSkill() == Skill.MAGIC
                 && ("magic_f2p_combat".equals(method.getId())
                     || "magic_f2p_fire_bolt".equals(method.getId())
-                    || "magic_f2p_fire_blast".equals(method.getId())))
+                    || "magic_f2p_fire_blast".equals(method.getId())
+                    || "magic_f2p_fire_strike_splash".equals(method.getId())
+                    || "magic_f2p_curse".equals(method.getId())))
         {
             return evaluateF2pCombatMagic(data, method.getId(),
                     useGroupStorage);
@@ -186,14 +188,37 @@ public class RequirementEvidenceEngine
                         : standard
                                 ? "The Standard spellbook is active."
                                 : "The observed spellbook cannot cast this Standard spell."));
+        if ("magic_f2p_curse".equals(methodId))
+        {
+            checks.add(resource(data, useGroupStorage, "curse_body",
+                    "Body rune", 1, ItemID.BODYRUNE));
+            checks.add(resource(data, useGroupStorage, "curse_earth",
+                    "Earth runes", 3, ItemID.EARTHRUNE));
+            checks.add(resource(data, useGroupStorage, "curse_water",
+                    "Water runes", 2, ItemID.WATERRUNE));
+            checks.add(splashingEquipmentCheck(data));
+            return checks;
+        }
+        boolean fireStrikeSplash =
+                "magic_f2p_fire_strike_splash".equals(methodId);
         int airPerCast = "magic_f2p_fire_blast".equals(methodId) ? 4
-                : "magic_f2p_fire_bolt".equals(methodId) ? 3 : 1;
+                : "magic_f2p_fire_bolt".equals(methodId) ? 3
+                : fireStrikeSplash ? 2 : 1;
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement(
                         "resource:combat_magic_air",
                         "Air runes for one cast", airPerCast,
                         ItemID.AIRRUNE),
                 useGroupStorage));
+        if (fireStrikeSplash)
+        {
+            checks.add(resource(data, useGroupStorage, "splash_fire",
+                    "Fire runes", 3, ItemID.FIRERUNE));
+            checks.add(resource(data, useGroupStorage, "splash_mind",
+                    "Mind rune", 1, ItemID.MINDRUNE));
+            checks.add(splashingEquipmentCheck(data));
+            return checks;
+        }
         if ("magic_f2p_fire_bolt".equals(methodId)
                 || "magic_f2p_fire_blast".equals(methodId))
         {
@@ -218,6 +243,62 @@ public class RequirementEvidenceEngine
                         "Mind rune", 1, ItemID.MINDRUNE),
                 useGroupStorage));
         return checks;
+    }
+
+    private RequirementCheck resource(StrategyDataBundle data,
+            boolean useGroupStorage, String id, String label, int quantity,
+            int itemId)
+    {
+        return resourceReadinessService.evaluate(data,
+                new ResourceRequirement("resource:" + id, label, quantity,
+                        itemId), useGroupStorage);
+    }
+
+    private static RequirementCheck splashingEquipmentCheck(
+            StrategyDataBundle data)
+    {
+        EquipmentSnapshot equipment = data == null ? null : data.getEquipment();
+        boolean verified = equipment != null && hasSplashingSet(equipment);
+        return new RequirementCheck("equipment:f2p_splashing",
+                "Equip a metal full helm, platebody, platelegs or plateskirt, kiteshield, Stronghold-style boots, and a cursed goblin staff",
+                verified ? RequirementState.VERIFIED
+                        : RequirementState.CHECK_NEEDED,
+                verified
+                        ? "The observed cursed-staff metal setup is the verified -68 Magic attack route."
+                        : "Claim a cursed goblin staff from Diango in Draynor, equip the named metal pieces and Stronghold boots, then confirm -64 or lower in Equipment Stats.");
+    }
+
+    private static boolean hasSplashingSet(EquipmentSnapshot equipment)
+    {
+        boolean helm = false;
+        boolean body = false;
+        boolean legs = false;
+        boolean shield = false;
+        boolean boots = false;
+        boolean staff = false;
+        for (ItemStackSnapshot item : equipment.getEquippedItems())
+        {
+            if (item == null || item.getName() == null
+                    || item.getQuantity() <= 0) continue;
+            String name = item.getName().toLowerCase(java.util.Locale.ROOT);
+            helm |= isMetal(name, "full helm");
+            body |= isMetal(name, "platebody");
+            legs |= isMetal(name, "platelegs") || isMetal(name, "plateskirt");
+            shield |= isMetal(name, "kiteshield");
+            boots |= name.equals("fancy boots") || name.equals("fighting boots")
+                    || name.equals("decorative boots");
+            staff |= name.equals("cursed goblin staff");
+        }
+        return helm && body && legs && shield && boots && staff;
+    }
+
+    private static boolean isMetal(String name, String piece)
+    {
+        if (name == null || !name.endsWith(piece)) return false;
+        return name.startsWith("bronze ") || name.startsWith("iron ")
+                || name.startsWith("steel ") || name.startsWith("black ")
+                || name.startsWith("mithril ") || name.startsWith("adamant ")
+                || name.startsWith("rune ") || name.startsWith("gilded ");
     }
 
     private List<RequirementCheck> evaluateCookedFish(

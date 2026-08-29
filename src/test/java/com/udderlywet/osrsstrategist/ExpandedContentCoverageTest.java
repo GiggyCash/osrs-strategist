@@ -88,6 +88,23 @@ public class ExpandedContentCoverageTest
         assertTrue(method.getInstructions().contains("Varrock Palace"));
         assertTrue(method.getInstructions().contains("-64"));
         assertTrue(method.getInstructions().contains("Monk of Zamorak"));
+        assertEquals(AttentionLevel.ACTIVE, method.getAttentionLevel());
+        assertFalse(method.getInstructions().contains("20 minutes"));
+    }
+
+    @Test
+    public void fireStrikeSplashingIsTheActualLowAttentionMagicRoute()
+    {
+        TrainingMethod method = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.MAGIC).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(candidate -> "magic_f2p_fire_strike_splash".equals(
+                        candidate.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertEquals(AttentionLevel.AFK, method.getAttentionLevel());
+        assertTrue(method.getInstructions().contains("autocast"));
+        assertTrue(method.getInstructions().contains("20 minutes"));
     }
 
     private static void assertHasIntensity(

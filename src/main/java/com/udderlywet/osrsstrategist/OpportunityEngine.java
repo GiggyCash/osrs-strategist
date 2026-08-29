@@ -147,7 +147,7 @@ public class OpportunityEngine
         ResourceRequirement herbSeeds = new FarmingSupplyCatalog()
                 .herbSeedsForLevel(farmingLevel);
         if (!inventoryHasAnyId(inventory, herbSeeds.getItemIds()))
-            missing.add("Carry a suitable herb seed");
+            missing.add("Carry one guam seed");
         if (farmingLevel < 9)
             missing.add("Reach Farming level 9 for the modeled herb patches");
         FarmingSnapshot farming = data.getFarming();
@@ -178,9 +178,9 @@ public class OpportunityEngine
         if (inventoryQuantity(inventory, "clockwork") < 4)
             missing.add("Carry 4 clockworks");
         if (matchingQuantity(inventory, " log", "logs") < 4)
-            missing.add("Carry 4 suitable logs");
+            missing.add("Carry 4 regular logs");
         if (birdhouseSeedQuantity(inventory) < 40)
-            missing.add("Carry 40 suitable hop or herb seeds");
+            missing.add("Carry 40 barley seeds");
         if (data.getAccount().getSkillLevel(net.runelite.api.Skill.HUNTER) < 5)
             missing.add("Reach Hunter level 5");
         if (data.getAccount().getSkillLevel(net.runelite.api.Skill.CRAFTING) < 5)

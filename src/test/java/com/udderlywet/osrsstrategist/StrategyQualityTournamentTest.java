@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Experience;
+import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
@@ -176,6 +177,35 @@ public class StrategyQualityTournamentTest
     }
 
     @Test
+    public void afkMagicWinnerIsExecutableAndUsesObservedSplashingSetup()
+    {
+        StrategyDataBundle ready = magicSplashingData(true);
+        Recommendation magic = onlyMagicRecommendation(ready);
+
+        assertEquals("magic_f2p_fire_strike_splash",
+                magic.getTrainingPlan().getMethod().getId());
+        assertEquals(RecommendationConfidence.VERIFIED,
+                magic.getConfidence());
+        assertTrue("guidance=" + magic.getGuidance().getAction() + " | "
+                        + magic.getGuidance().getSupplies() + " | "
+                        + magic.getGuidance().getLocation(),
+                new RecommendationQualityPolicy().isPresentable(magic));
+        assertFalse("hard unresolved requirement",
+                RequirementActionability.hasHardUnresolvedRequirement(
+                        magic.getTrainingPlan()));
+        assertTrue(RecommendationPresentation.compactText(magic),
+                new RecommendationActionabilityPolicy()
+                .canLeadQueue(magic));
+        assertTrue(magic.getGuidance().getSupplies().contains("autocast"));
+
+        Recommendation withoutSetup = onlyMagicRecommendation(
+                magicSplashingData(false));
+        assertFalse("The final queue must reject an unobserved -64 setup",
+                new RecommendationActionabilityPolicy()
+                        .canLeadQueue(withoutSetup));
+    }
+
+    @Test
     public void accountModeChangesWhetherLongSessionWineSetupIsWorthIt()
     {
         int[] accountTypes = {0, 1, 4, 2, 3};
@@ -279,6 +309,73 @@ public class StrategyQualityTournamentTest
                 completed,
                 minigames("tempoross", "guardians-of-the-rift",
                         "tithe-farm"), true);
+    }
+
+    private Recommendation onlyMagicRecommendation(StrategyDataBundle data)
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog()
+        {
+            @Override
+            public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+            {
+                if (skill != Skill.MAGIC) return Collections.emptyList();
+                return Collections.singletonList(
+                        new RuneLiteSkillActionDefinition(Skill.MAGIC,
+                                "runelite:magic:fire_strike", "Fire Strike",
+                                13, 11.5f, null, MembershipStatus.F2P));
+            }
+        };
+        RecommendationGuidanceService guidance =
+                new RecommendationGuidanceService(
+                        new AdaptiveMilestoneGuidanceService(catalog,
+                                new MethodExecutionProfileCatalog()));
+        List<Recommendation> recommendations = new RecommendationEngine(
+                selector, guidance)
+                .recommendAll(data, StrategyMode.RELAXED, SessionIntent.AFK,
+                        false, false, GoalType.AUTOMATIC,
+                        new PreferenceProfile());
+        assertEquals(1, recommendations.size());
+        assertEquals(Skill.MAGIC, recommendations.get(0).getTrainingPlan()
+                .getMethod().getSkill());
+        return recommendations.get(0);
+    }
+
+    private static StrategyDataBundle magicSplashingData(boolean equipped)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
+        int total = 0;
+        long totalXp = 0L;
+        for (Skill skill : Skill.values())
+        {
+            int level = skill == Skill.MAGIC ? 80 : 99;
+            levels.put(skill, level);
+            int skillXp = Experience.getXpForLevel(level);
+            xp.put(skill, skillXp);
+            total += level;
+            totalXp += skillXp;
+        }
+        AccountSnapshot account = new AccountSnapshot("Magic tournament",
+                90_099L, 0, AccountMode.MAIN.name(), MembershipStatus.P2P,
+                1, total, totalXp, levels, xp);
+        List<ItemStackSnapshot> equipment = equipped
+                ? items(item(1, "Iron full helm", 1),
+                        item(2, "Iron platebody", 1),
+                        item(3, "Iron platelegs", 1),
+                        item(4, "Iron kiteshield", 1),
+                        item(5, "Fancy boots", 1),
+                        item(6, "Cursed goblin staff", 1))
+                : Collections.emptyList();
+        return StrategyDataBundle.builder(account)
+                .inventory(new InventorySnapshot(items(
+                        item(ItemID.AIRRUNE, "Air rune", 10_000),
+                        item(ItemID.FIRERUNE, "Fire rune", 10_000),
+                        item(ItemID.MINDRUNE, "Mind rune", 10_000))))
+                .equipment(new EquipmentSnapshot(equipment))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .combatEvidence(new CombatEvidenceSnapshot(0,
+                        EnumSet.noneOf(Prayer.class), false, false, false))
+                .build();
     }
 
     private void assertWinner(String expected, StrategyDataBundle data,

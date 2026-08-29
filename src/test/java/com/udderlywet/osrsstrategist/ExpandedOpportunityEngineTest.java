@@ -63,7 +63,7 @@ public class ExpandedOpportunityEngineTest
                         new HashSet<>(Collections.singletonList("falador")),
                         Collections.emptyMap(), Collections.emptyMap())).build();
         assertTrue(new OpportunityEngine().evaluate(wrongSeed).get(0)
-                .getPreparation().contains("Carry a suitable herb seed"));
+                .getPreparation().contains("Carry one guam seed"));
 
         StrategyDataBundle ready = StrategyDataBundle.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
@@ -91,6 +91,8 @@ public class ExpandedOpportunityEngineTest
         assertTrue(!missing.isSetupVerified());
         assertTrue(missing.getPreparation().contains(
                 "Complete Bone Voyage for Fossil Island access"));
+        assertTrue(missing.getPreparation().contains("Carry 4 regular logs"));
+        assertTrue(missing.getPreparation().contains("Carry 40 barley seeds"));
 
         StrategyDataBundle treeSeeds = StrategyDataBundle.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))

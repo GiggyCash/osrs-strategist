@@ -149,11 +149,17 @@ public class ExpandedTrainingMethodCatalog
                 true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
                 "Air and mind rune supply");
         add(Skill.MAGIC, "magic_f2p_curse", 19, 99,
-                "Curse splashing", "Cage under the Varrock Palace stairs: reduce Magic attack to -64 or lower, repeatedly cast Curse on the caged Monk of Zamorak, and keep the client active at least once every 20 minutes.",
-                TrainingIntensity.RELAXED, MethodCostTier.LOW, RiskLevel.NONE,
-                true, true, true, true, false, AttentionLevel.MODERATE, 15, 3,
+                "Curse splashing", "Cage under the Varrock Palace stairs: reduce Magic attack to -64 or lower and manually recast Curse on the caged Monk of Zamorak every spell cycle.",
+                TrainingIntensity.BALANCED, MethodCostTier.LOW, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.ACTIVE, 15, 3,
                 "Magic attack bonus of -64 or lower",
                 "Earth, water, and body rune supply");
+        add(Skill.MAGIC, "magic_f2p_fire_strike_splash", 13, 99,
+                "Fire Strike splashing", "Cage under the Varrock Palace stairs: equip the verified -64 Magic attack setup, autocast Fire Strike on the caged Monk of Zamorak, and interact once every 20 minutes.",
+                TrainingIntensity.AFK, MethodCostTier.LOW, RiskLevel.NONE,
+                true, true, true, true, false, AttentionLevel.AFK, 20, 4,
+                "Verified -64 Magic attack splashing equipment",
+                "Air, fire, and mind rune supply");
         add(Skill.MAGIC, "magic_f2p_fire_bolt", 35, 58,
                 "Fire Bolt at Wizards' Tower", "Top floor of Wizards' Tower: cast Fire Bolt through the cage at the lesser demon, wait for it to respawn, and repeat.",
                 TrainingIntensity.BALANCED, MethodCostTier.HIGH, RiskLevel.NONE,

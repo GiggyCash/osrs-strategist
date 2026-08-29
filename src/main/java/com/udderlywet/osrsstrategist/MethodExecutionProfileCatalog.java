@@ -286,6 +286,12 @@ public class MethodExecutionProfileCatalog
                         fixedRule("Water rune", 2.0)),
                 "Curse grants 29 Magic XP whether it hits or misses. The conservative material count does not assume an elemental staff.",
                 "curse"));
+        add(pm("magic_f2p_fire_strike_splash", "Fire Strike cast",
+                "Fire Strike casts", rules(fixedRule("Air rune", 2.0),
+                        fixedRule("Fire rune", 3.0),
+                        fixedRule("Mind rune", 1.0)),
+                "Fire Strike can be autocast for 20-minute splashing intervals; the conservative count does not assume an elemental staff.",
+                "fire_strike"));
 
         add(new MethodExecutionProfile(
                 "prayer_f2p_bones", "bone buried", "bones buried",

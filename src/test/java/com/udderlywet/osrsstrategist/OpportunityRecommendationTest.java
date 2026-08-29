@@ -9,7 +9,6 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -49,7 +48,7 @@ public class OpportunityRecommendationTest
     }
 
     @Test
-    public void readyTimerWithUnverifiedPreparationCannotLead()
+    public void readyHerbTimerWithoutVerifiedPatchCannotBePromoted()
     {
         StrategyEngine engine = engine();
         Recommendation preparation = engine.opportunityRecommendation(
@@ -57,8 +56,33 @@ public class OpportunityRecommendationTest
                         "Herb run", true, RecommendationConfidence.VERIFIED,
                         Collections.singletonList("Seeds")),
                 context(account(MembershipStatus.P2P), new PreferenceProfile()));
-        assertNotNull(preparation);
-        assertFalse(new RecommendationActionabilityPolicy().canLeadQueue(preparation));
+        assertNull(preparation);
+    }
+
+    @Test
+    public void readyHerbRunNamesTheVerifiedPatchRoute()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(MembershipStatus.P2P))
+                .farming(new FarmingSnapshot(
+                        Collections.singleton("falador"),
+                        Collections.emptyMap(), Collections.emptyMap()))
+                .build();
+        StrategyContext context = new StrategyContext(data,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MAX, false, false, false,
+                new PreferenceProfile());
+        Recommendation recommendation = engine().opportunityRecommendation(
+                new Opportunity("opportunity:herb-run",
+                        OpportunityType.HERB_RUN, "Herb run", true,
+                        RecommendationConfidence.VERIFIED,
+                        Collections.emptyList(), true), context);
+
+        assertNotNull(recommendation);
+        assertEquals("Falador patches.",
+                recommendation.getGuidance().getLocation());
+        assertTrue(new RecommendationActionabilityPolicy()
+                .canLeadQueue(recommendation));
     }
 
     @Test

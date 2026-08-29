@@ -143,6 +143,53 @@ public class RecommendationIntelligenceServiceTest
                 > service.rankScore(typedRisk, context));
     }
 
+    @Test
+    public void relaxedModePricesAttentionAndSetupReuseNotNames()
+    {
+        StrategyContext context = context(
+                account(MembershipStatus.P2P, 0, 85),
+                GoalType.AUTOMATIC,
+                SessionIntent.PICK_FOR_ME,
+                StrategyMode.RELAXED);
+        Recommendation lowAttention = recommendation(
+                "opaque:a", "Intense-sounding route", 40.0,
+                Skill.FISHING, 85, 90, 3, 30, AttentionLevel.LOW)
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .setupReuse(0.75)
+                        .evidence("test:setup-reuse")
+                        .build());
+        Recommendation active = recommendation(
+                "opaque:b", "Relaxed AFK best method", 44.0,
+                Skill.FISHING, 85, 90, 3, 30, AttentionLevel.ACTIVE);
+
+        assertTrue(service.rankScore(lowAttention, context)
+                > service.rankScore(active, context));
+    }
+
+    @Test
+    public void efficientModePricesTypedUnlockAndSharedDependencyValue()
+    {
+        StrategyContext context = context(
+                account(MembershipStatus.P2P, 0, 70),
+                GoalType.AUTOMATIC,
+                SessionIntent.PICK_FOR_ME,
+                StrategyMode.EFFICIENT);
+        Recommendation useful = recommendation(
+                "opaque:a", "Ordinary route", 40.0,
+                Skill.AGILITY, 70, 72, 4, 30, AttentionLevel.MODERATE)
+                .withStrategicValue(RecommendationStrategicValue.builder()
+                        .unlockValue(0.8)
+                        .sharedDependencyValue(0.7)
+                        .evidence("test:typed-account-value")
+                        .build());
+        Recommendation proseOnly = recommendation(
+                "opaque:b", "Best efficient unlock for many goals", 45.0,
+                Skill.AGILITY, 70, 72, 4, 30, AttentionLevel.MODERATE);
+
+        assertTrue(service.rankScore(useful, context)
+                > service.rankScore(proseOnly, context));
+    }
+
     private static Recommendation recommendation(
             String id,
             String title,
@@ -200,6 +247,15 @@ public class RecommendationIntelligenceServiceTest
             GoalType goal,
             SessionIntent intent)
     {
+        return context(account, goal, intent, StrategyMode.BALANCED);
+    }
+
+    private static StrategyContext context(
+            AccountSnapshot account,
+            GoalType goal,
+            SessionIntent intent,
+            StrategyMode mode)
+    {
         StrategyDataBundle data = StrategyDataBundle.builder(account)
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
@@ -207,7 +263,7 @@ public class RecommendationIntelligenceServiceTest
                 .build();
         return new StrategyContext(
                 data,
-                StrategyMode.BALANCED,
+                mode,
                 intent,
                 QuestTolerance.NORMAL,
                 goal,

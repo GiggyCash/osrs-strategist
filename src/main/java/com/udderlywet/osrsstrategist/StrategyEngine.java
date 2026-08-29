@@ -309,7 +309,7 @@ public class StrategyEngine
 
         boolean setupVerified = opportunity.isSetupVerified();
         if (!setupVerified && opportunity.getPreparation().isEmpty()) return null;
-        String location = opportunityLocation(opportunity.getType());
+        String location = opportunityLocation(opportunity.getType(), context);
         String action = opportunityAction(opportunity.getType(),
                 opportunity.getTitle());
         if (location == null || action == null) return null;
@@ -361,7 +361,8 @@ public class StrategyEngine
         }
     }
 
-    private static String opportunityLocation(OpportunityType type)
+    private static String opportunityLocation(
+            OpportunityType type, StrategyContext context)
     {
         if (type == null) return null;
         switch (type)
@@ -369,12 +370,31 @@ public class StrategyEngine
             case BIRDHOUSE_RUN:
                 return "The four birdhouse spaces on Fossil Island.";
             case HERB_RUN:
-                return "The reachable herb patches in the active Farming checklist.";
+                return verifiedHerbPatchRoute(context);
             case BATTLESTAVES:
                 return "Zaff's Superior Staves in central Varrock.";
             default:
                 return null;
         }
+    }
+
+    private static String verifiedHerbPatchRoute(StrategyContext context)
+    {
+        FarmingSnapshot farming = context == null || context.getData() == null
+                ? null : context.getData().getFarming();
+        if (farming == null) return null;
+        List<String> names = new ArrayList<>();
+        for (FarmingAccessDefinition definition :
+                new FarmingAccessCatalog().all())
+        {
+            if (definition.isHerbPatch()
+                    && farming.isPatchReachable(definition.getId()))
+            {
+                names.add(definition.getDisplayName());
+            }
+        }
+        if (names.isEmpty()) return null;
+        return String.join(" -> ", names) + ".";
     }
 
     private static CandidateSafetyEvidence opportunitySafety(Opportunity opportunity)

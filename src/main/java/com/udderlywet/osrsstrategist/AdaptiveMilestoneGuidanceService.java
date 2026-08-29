@@ -255,6 +255,8 @@ public class AdaptiveMilestoneGuidanceService
             return "Bring four air runes, five fire runes, and one death rune per Fire Blast; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
         if ("magic_f2p_curse".equals(methodId))
             return "Bring one body rune, three earth runes, and two water runes per Curse. Equip full metal armour plus vambraces or a cursed goblin staff until the equipment panel shows -64 Magic attack or lower.";
+        if ("magic_f2p_fire_strike_splash".equals(methodId))
+            return "Bring two air runes, three fire runes, and one mind rune per Fire Strike. Keep the verified cursed-staff metal setup equipped and enable Fire Strike autocast.";
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
             return "Bring a hammer and saw.";
@@ -284,6 +286,11 @@ public class AdaptiveMilestoneGuidanceService
             if (actionName.contains("orange salamander"))
                 return "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge.";
             return "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis.";
+        }
+        if ("magic_f2p_curse".equals(methodId)
+                || "magic_f2p_fire_strike_splash".equals(methodId))
+        {
+            return "The caged Monk of Zamorak under the Varrock Palace stairs.";
         }
 
         AccountMode mode = data == null || data.getAccount() == null
