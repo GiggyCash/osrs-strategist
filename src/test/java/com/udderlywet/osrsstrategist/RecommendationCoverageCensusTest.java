@@ -331,6 +331,7 @@ public class RecommendationCoverageCensusTest
         EnumSet<Skill> priority = EnumSet.of(
                 Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
+                Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
         RecommendationActionabilityPolicy policy =
                 new RecommendationActionabilityPolicy();
@@ -764,6 +765,18 @@ public class RecommendationCoverageCensusTest
                     tools, Collections.emptyMap()));
             if (prepared)
             {
+                Map<String, QuestStatus> quests = new HashMap<>();
+                quests.put("Pandemonium", QuestStatus.COMPLETE);
+                builder.quests(new QuestSnapshot(quests));
+                builder.sailing(new SailingSnapshot(
+                        new HashSet<>(java.util.Arrays.asList(
+                                SailingSnapshot.PORT_SARIM,
+                                SailingSnapshot.PORT_PANDEMONIUM)),
+                        new HashSet<>(java.util.Arrays.asList(
+                                SailingSnapshot.ACTIVITY_COURIER,
+                                SailingSnapshot.ACTIVITY_SEA_CHARTING,
+                                SailingSnapshot.ACTIVITY_BOAT_OWNED)),
+                        RecommendationConfidence.VERIFIED));
                 Map<String, CapabilityState> poh = new HashMap<>();
                 poh.put("room:parlour", CapabilityState.VERIFIED);
                 poh.put("room:kitchen", CapabilityState.VERIFIED);
@@ -820,6 +833,7 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.PLANK_OAK, "Oak plank", 10_000));
         items.add(item(ItemID.NAILS, "Steel nails", 10_000));
         items.add(item(ItemID.POH_SAW, "Saw", 1));
+        items.add(item(ItemID.SAILING_LOG, "Captain's log", 1));
         return items;
     }
 

@@ -146,8 +146,7 @@ public class UniversalSkillActionGuidanceService
         }
 
         String location = plan.getMethod().getInstructions();
-        if (isAnvilSmithingMethod(plan.getMethod())
-                && data.getAccount().getMembershipStatus() == MembershipStatus.F2P)
+        if (isAnvilSmithingMethod(plan.getMethod()))
         {
             location = F2P_ANVIL_ROUTE;
         }

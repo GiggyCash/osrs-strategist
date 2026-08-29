@@ -53,6 +53,11 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
 
             String id = method.getId();
             if (context.getPreferenceProfile().isOnCooldown(id)) continue;
+            RecommendationGuidance guidance = guidanceFor(method, context);
+            // A catalog identity is not a recommendation. Price-sensitive,
+            // encounter-dependent, or access-dependent methods stay hidden
+            // until Compass can publish one coherent executable loop.
+            if (guidance == null) continue;
             double score = 25.0;
             if (observedCashPressure) score += 12.0;
             if (explicitGearNeed) score += 7.0;
@@ -71,15 +76,54 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     "Make money: " + method.getName(),
                     method.getDescription() + priceNote,
                     score,
-                    RecommendationConfidence.CHECK_NEEDED,
-                    null,
-                    safetyFor(method)
+                    RecommendationConfidence.VERIFIED,
+                    guidance,
+                    safetyFor(method),
+                    strategicValue(method, mode)
             ));
         }
 
         result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
+    }
+
+    private static RecommendationGuidance guidanceFor(
+            MoneyMakingDefinition method, StrategyContext context)
+    {
+        if (method == null || context == null) return null;
+        if (!"money:agility-pyramid".equals(method.getId())) return null;
+        AccountMode mode = context.getAccountMode();
+        if (!mode.isIronLike()
+                || mode == AccountMode.HARDCORE_IRONMAN
+                || mode == AccountMode.HARDCORE_GROUP_IRONMAN
+                || context.getData().getAccount().getSkillLevel(
+                        net.runelite.api.Skill.AGILITY) < 60)
+        {
+            return null;
+        }
+        return new RecommendationGuidance(
+                "Climb the Agility Pyramid, take the pyramid top, sell it to Simon Templeton for 10,000 coins, and repeat.",
+                "Buy four waterskin(4)s from the Pollnivneach general store and ten jugs of wine from Ali the Barman before each batch; restock before the final waterskin empties.",
+                "Pollnivneach shops -> Agility Pyramid west of Nardah -> Simon Templeton beside the pyramid.",
+                "Level 60 is the conservative cash breakpoint. Obstacle failures and damage vary, so Compass does not promise a lap rate or exact hourly coins.");
+    }
+
+    private static RecommendationStrategicValue strategicValue(
+            MoneyMakingDefinition method, AccountMode mode)
+    {
+        if (method != null && "money:agility-pyramid".equals(method.getId())
+                && mode != null && mode.isIronLike())
+        {
+            return RecommendationStrategicValue.builder()
+                    .accountModeFit(0.8)
+                    .resourceFit(0.75)
+                    .riskBurden(0.3)
+                    .evidence("wiki:agility-pyramid-fixed-top-value")
+                    .evidence("wiki:ironman-agility-pyramid-cash")
+                    .build();
+        }
+        return RecommendationStrategicValue.neutral();
     }
 
     private static CandidateSafetyEvidence safetyFor(MoneyMakingDefinition method)

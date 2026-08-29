@@ -45,7 +45,7 @@ rotation, logout/relogin restoration, and A/B/A account isolation.
 ## Skills and training methods
 
 All current `Skill.values()` have curated Compass methods, including Sailing.
-The development census currently records 177 distinct strategic methods across
+The development census currently records 178 distinct strategic methods across
 24 skills plus 1,528 RuneLite calculator actions used only as execution
 evidence. Current-live level overrides are applied explicitly when the pinned
 RuneLite calculator lags a verified game update.
@@ -65,6 +65,13 @@ Methods carry:
 Major skills contain multiple real alternatives rather than one fixed route. Examples include tick-manipulation, conventional efficient, budget/self-source, relaxed, AFK, minigame, and progression-unlock methods where applicable.
 
 For additional breadth, `RuneLiteSkillActionCatalog` dynamically adapts RuneLite's maintained skill-calculator actions for Agility, Cooking, Construction, Crafting, Firemaking, Fishing, Fletching, Herblore, Hunter, Magic, Mining, Prayer, Runecraft, Smithing, Thieving, and Woodcutting. Compass's curated method layer decides which action is sensible for the account instead of treating every calculator action as a recommendation.
+
+Sailing uses a separate live boundary because RuneLite has no calculator enum
+for it. Pandemonium completion proves the exact Port Sarim-Pandemonium starter
+courier loop; pinned RuneLite varplayers prove owned boat slots, active port
+tasks, and completed Barracuda Trials. Individual chart checkboxes and fitted
+boat components remain hard evidence/preparation gates where they cannot yet be
+mapped safely.
 
 ## F2P
 
@@ -213,6 +220,13 @@ The stable catalog includes F2P, skilling, recurring, Iron-friendly, PvM, raids,
 
 Main methods that depend on economics require live-price verification. Iron/UIM methods are judged for resource value and self-sourcing rather than pretending GE value is the account's objective.
 
+The production candidate boundary currently promotes only the deterministic
+Agility Pyramid cash loop: non-Hardcore Iron accounts at 60 Agility or higher
+receive the exact 10,000-coin top hand-in and Pollnivneach resupply route. Other
+catalog identities remain hidden until their live price, access, resource, or
+encounter evidence can support equally concrete guidance; a catalog row alone
+is never presented as money-making advice.
+
 ## Resource acquisition
 
 `ResourceSourceCatalog` supplies common concrete routes for logs/planks, ores/bars/cannonballs, seeds/herbs/secondaries, runes/essence, food, glass, bowstrings, feathers, gems, bones, and related progression inputs.
@@ -243,6 +257,6 @@ The architecture is no longer the main blocker. The remaining work is primarily 
 - every Collection Log item/source/drop relationship
 - exhaustive item-source/shop/drop-rate database
 - live Main price/GE economics
-- more live readers for minigame currencies/unlocks, Slayer state, Sailing unlocks, storage, and Collection Log categories where RuneLite does not expose the state continuously
+- more live readers for minigame currencies/unlocks, per-chart Sailing progress, specialized storage, and Collection Log categories where RuneLite does not expose the state continuously
 
 Until one of these is verified, `Check Needed` is the correct result. The plugin must never fill a knowledge gap by guessing.

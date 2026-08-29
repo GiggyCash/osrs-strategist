@@ -80,6 +80,10 @@ public class RequirementEvidenceEngine
         {
             return evaluateAgility(data, method);
         }
+        if (method.getSkill() == Skill.SAILING)
+        {
+            return evaluateSailing(data, method, useGroupStorage);
+        }
         if (method.getSkill() == Skill.RUNECRAFT
                 && runecraftSupplyCatalog.supports(method.getId()))
         {
@@ -242,6 +246,64 @@ public class RequirementEvidenceEngine
                         "resource:wind_strike_mind",
                         "Mind rune", 1, ItemID.MINDRUNE),
                 useGroupStorage));
+        return checks;
+    }
+
+    private List<RequirementCheck> evaluateSailing(
+            StrategyDataBundle data, TrainingMethod method,
+            boolean useGroupStorage)
+    {
+        List<RequirementCheck> checks = evaluateQuestCompletion(
+                data, "Pandemonium", "quest:pandemonium");
+        String id = method.getId();
+        if ("sailing_courier".equals(id))
+        {
+            SailingSnapshot sailing = data == null ? null : data.getSailing();
+            boolean route = sailing != null
+                    && sailing.hasPort(SailingSnapshot.PORT_SARIM)
+                    && sailing.hasPort(SailingSnapshot.PORT_PANDEMONIUM)
+                    && sailing.hasActivity(SailingSnapshot.ACTIVITY_COURIER);
+            checks.add(new RequirementCheck(
+                    "sailing:courier-route",
+                    "Port Sarim-Pandemonium courier route",
+                    route ? RequirementState.VERIFIED
+                            : RequirementState.CHECK_NEEDED,
+                    route
+                            ? "Pandemonium completion verifies both starter ports and courier access."
+                            : "The starter courier route has not been verified from live quest state."));
+            checks.add(resourceReadinessService.evaluate(data,
+                    new ResourceRequirement("resource:captains-log",
+                            "Captain's log", 1,
+                            ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG),
+                    useGroupStorage));
+            return checks;
+        }
+        if ("sailing_charting".equals(id))
+        {
+            checks.add(new RequirementCheck(
+                    "sailing:uncompleted-chart", "Exact uncompleted sea-chart",
+                    RequirementState.CHECK_NEEDED,
+                    "RuneLite exposes aggregate chart completion state, but Compass does not yet map every Captain's-log checkbox to an exact next location."));
+            return checks;
+        }
+        if (id != null && id.startsWith("sailing_barracuda_"))
+        {
+            if (id.contains("jubbly"))
+                checks.addAll(evaluateQuestCompletion(data,
+                        "Zogre Flesh Eaters", "quest:zogre-flesh-eaters"));
+            if (id.contains("gwenith"))
+                checks.addAll(evaluateQuestCompletion(data,
+                        "Regicide", "quest:regicide"));
+            checks.add(new RequirementCheck(
+                    "preparation:sailing-trial-boat", "Trial-ready boat",
+                    RequirementState.CHECK_NEEDED,
+                    "The required hull and facilities are known ordinary boat preparation; current fitted components are not exposed as a stable ready-state here."));
+            return checks;
+        }
+        checks.add(new RequirementCheck(
+                "sailing:live-route", "Exact safe Sailing route and boat state",
+                RequirementState.CHECK_NEEDED,
+                "The selected activity needs live boat facilities and route access that have not been verified."));
         return checks;
     }
 

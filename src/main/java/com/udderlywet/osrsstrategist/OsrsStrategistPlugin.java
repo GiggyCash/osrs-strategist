@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.GameObjectDespawned;
+import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
@@ -87,6 +89,7 @@ public class OsrsStrategistPlugin extends Plugin
             new AtomicBoolean();
     private boolean varbitRefreshPending;
     private boolean accountRefreshPending;
+    private boolean pohRefreshPending;
     private boolean progressCheckpointPending;
     private long lastProgressCheckpointAtMillis;
     private final OverlayLifecycleGuard overlayLifecycle =
@@ -124,6 +127,7 @@ public class OsrsStrategistPlugin extends Plugin
         clientToolbar.addNavigation(navButton);
         registerOverlays();
         trainingFatigueTracker.clear();
+        pohRefreshPending = true;
         syncPreferenceProfile();
         syncStrategyProfile();
         syncMilestoneProfile();
@@ -163,6 +167,7 @@ public class OsrsStrategistPlugin extends Plugin
         latestPlan = null;
         varbitRefreshPending = false;
         accountRefreshPending = false;
+        pohRefreshPending = false;
         panel = null;
         navButton = null;
     }
@@ -172,6 +177,7 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (event == null || event.getGameState() != GameState.LOGGED_IN)
             progressAnalyticsService.pause(System.currentTimeMillis());
+        pohRefreshPending = true;
         updateAccountPanel();
     }
 
@@ -180,7 +186,8 @@ public class OsrsStrategistPlugin extends Plugin
     {
         boolean accessChanged = accessObservationService.observeCurrentLocation();
         boolean farmChanged = farmingRunObservationService.observeCurrentPatches();
-        boolean pohChanged = strategyDataAssembler.observePoh();
+        boolean pohChanged = consumePohRefreshPending()
+                && strategyDataAssembler.observePoh();
         boolean liveStateChanged = consumeVarbitRefreshPending();
         boolean observedStateChanged = consumeAccountRefreshPending();
         checkpointProgressSession();
@@ -196,6 +203,21 @@ public class OsrsStrategistPlugin extends Plugin
     public void onVarbitChanged(VarbitChanged event)
     {
         varbitRefreshPending = true;
+        // Entering build mode and furniture state transitions are varbit/object
+        // backed. Coalesce them into one ownership-gated scene scan.
+        pohRefreshPending = true;
+    }
+
+    @Subscribe
+    public void onGameObjectSpawned(GameObjectSpawned event)
+    {
+        pohRefreshPending = true;
+    }
+
+    @Subscribe
+    public void onGameObjectDespawned(GameObjectDespawned event)
+    {
+        pohRefreshPending = true;
     }
 
     boolean consumeVarbitRefreshPending()
@@ -209,6 +231,13 @@ public class OsrsStrategistPlugin extends Plugin
     {
         boolean pending = accountRefreshPending;
         accountRefreshPending = false;
+        return pending;
+    }
+
+    boolean consumePohRefreshPending()
+    {
+        boolean pending = pohRefreshPending;
+        pohRefreshPending = false;
         return pending;
     }
 
@@ -389,6 +418,7 @@ public class OsrsStrategistPlugin extends Plugin
         // are intentionally left untouched.
         latestRecommendations = Collections.emptyList();
         accountRefreshPending = true;
+        pohRefreshPending = true;
         if (recommendationDetailsOverlay != null)
             recommendationDetailsOverlay.clear();
         refreshStrategyImmediately();

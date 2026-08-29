@@ -135,6 +135,25 @@ public class RequirementActionabilityTest
     }
 
     @Test
+    public void knownTypedBoatSetupCanLeadPreparation()
+    {
+        RequirementCheck check = new RequirementCheck(
+                "preparation:sailing-trial-boat", "Trial-ready boat",
+                RequirementState.CHECK_NEEDED,
+                "Fit an iron helm, oak mast, and linen sails.");
+        TrainingPlan plan = new TrainingPlan(
+                method("sailing_barracuda_tantrum", Skill.SAILING),
+                "test", RecommendationConfidence.CHECK_NEEDED,
+                Collections.singletonList(check));
+
+        assertFalse(RequirementActionability.hasHardUnresolvedRequirement(plan));
+        assertTrue(RequirementActionability.isActionablePreparation(plan,
+                new RecommendationGuidance("Run Tempor Tantrum.",
+                        "Fit an iron helm, oak mast, and linen sails.",
+                        "Rum-dashed Ralph north-west of The Storm Tempor.", null)));
+    }
+
+    @Test
     public void locationDoesNotMasqueradeAsALogSupply()
     {
         RequirementCheck check = new RequirementCheck(

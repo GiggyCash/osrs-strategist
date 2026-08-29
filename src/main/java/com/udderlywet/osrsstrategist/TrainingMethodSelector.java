@@ -220,8 +220,7 @@ public class TrainingMethodSelector
         // Basic F2P routes are also valid on members worlds. Keep them available
         // to P2P accounts as concrete low-level Runecraft routes and as a safe
         // fallback when a higher-level members method is not currently usable.
-        if (f2pBaselineCatalog != null
-                && (membership != MembershipStatus.P2P || skill == Skill.RUNECRAFT))
+        if (f2pBaselineCatalog != null)
         {
             candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
         }

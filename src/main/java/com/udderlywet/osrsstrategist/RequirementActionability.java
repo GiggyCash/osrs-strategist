@@ -71,6 +71,17 @@ public final class RequirementActionability
         String id = normalize(check.getId());
         String label = normalize(check.getLabel());
 
+        // Domain evaluators reserve preparation:* for a fully understood,
+        // reversible setup such as fitting specified boat parts. Unknown area,
+        // quest, risk, and live-assignment gates retain their typed IDs.
+        if (id.startsWith("preparation:"))
+        {
+            String evidence = normalize(check.getEvidence());
+            return !evidence.contains("unknown")
+                    && !evidence.contains("additional access/risk")
+                    && !evidence.contains("cannot be observed");
+        }
+
         // ResourceReadinessService uses typed resource:* checks. A known tool
         // or material shortfall is ordinary preparation, not uncertainty about
         // whether a quest, region, spellbook, or activity is available.

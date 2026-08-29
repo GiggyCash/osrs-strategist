@@ -5,6 +5,7 @@ import net.runelite.client.externalplugins.ExternalPluginManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.GameObjectSpawned;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -25,6 +26,19 @@ public class OsrsStrategistPluginTest
         plugin.onVarbitChanged(null);
         assertTrue(plugin.consumeVarbitRefreshPending());
         assertFalse(plugin.consumeVarbitRefreshPending());
+        assertTrue(plugin.consumePohRefreshPending());
+        assertFalse(plugin.consumePohRefreshPending());
+    }
+
+    @Test
+    public void pohSceneScansAreCoalescedBehindObjectEvidence()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        assertFalse(plugin.consumePohRefreshPending());
+        plugin.onGameObjectSpawned((GameObjectSpawned) null);
+        plugin.onGameObjectSpawned((GameObjectSpawned) null);
+        assertTrue(plugin.consumePohRefreshPending());
+        assertFalse(plugin.consumePohRefreshPending());
     }
 
     @Test

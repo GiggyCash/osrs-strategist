@@ -31,11 +31,27 @@ public class SailingGuidanceServiceTest
                 plan("sailing_barracuda_tantrum"));
 
         assertNotNull(guidance);
-        assertTrue(guidance.getAction().contains("Marlin-rank"));
+        assertTrue(guidance.getAction().contains("Swordfish, Shark, then Marlin"));
         assertTrue(guidance.getAction().contains("1,250 XP each"));
         assertTrue(guidance.getSupplies().contains("iron helm"));
         assertTrue(guidance.getSupplies().contains("oak masts"));
         assertTrue(guidance.getNote().contains("one-time rank bonuses"));
+    }
+
+    @Test
+    public void courierGivesOneExactStarterLoopAndLogRecovery()
+    {
+        RecommendationGuidance guidance = service.build(
+                StrategyDataBundle.builder(account(10,
+                                Experience.getXpForLevel(10)))
+                        .quests(completed("Pandemonium"))
+                        .build(),
+                10, 15, plan("sailing_courier"));
+
+        assertTrue(guidance.getAction().contains("Port Sarim notice board"));
+        assertTrue(guidance.getAction().contains("The Pandemonium"));
+        assertTrue(guidance.getSupplies().contains("Junior Jim"));
+        assertTrue(guidance.getLocation().contains("loading bay"));
     }
 
     @Test

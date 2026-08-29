@@ -270,7 +270,11 @@ wrapped Swing components and the existing text scaling/theme conventions.
 XP events update the small progress model and repaint the Progress surface;
 they do not run the full strategist on every drop. Catalogs are local,
 runtime Wiki requests are forbidden, histories are bounded, and expensive
-planning stays out of per-tick polling.
+planning stays out of per-tick polling. Personal-POH furniture scans are
+coalesced behind login, varbit, and scene-object events and run once on the
+following game tick; build mode remains the ownership gate, but a full scene
+walk is never performed continuously merely because the player is standing in
+their house.
 
 ## Verification workflow
 

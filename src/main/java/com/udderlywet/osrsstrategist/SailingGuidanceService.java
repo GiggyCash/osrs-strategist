@@ -78,7 +78,7 @@ public class SailingGuidanceService
                     "The Gwenith Glide",
                     16050,
                     "Use a skiff with at least an adamant keel and complete Regicide before attempting the high-level trial.",
-                    "Gwenith Glide starts from its Barracuda Trial location in the western/northern Sailing progression area.");
+                    "Start at the Gwenith Glide Barracuda Trial marker in the waters west of Prifddinas.");
         }
         else if (methodId.contains("jubbly"))
         {
@@ -86,7 +86,7 @@ public class SailingGuidanceService
                     "The Jubbly Jive",
                     6200,
                     "Use a skiff with at least a mithril helm and an inoculation station.",
-                    "Jubbly Jive is the level-55 Barracuda Trial in Backwater.");
+                    "Start beside Gurtob at the Jubbly Jive marker in Backwater.");
         }
         else
         {
@@ -94,12 +94,12 @@ public class SailingGuidanceService
                     "The Tempor Tantrum",
                     1250,
                     "Use a skiff with at least an iron helm, oak masts, and linen sails.",
-                    "Tempor Tantrum starts near The Storm Tempor.");
+                    "Start with Rum-dashed Ralph at the trial marker north-west of The Storm Tempor.");
         }
 
         int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
-        String action = "Aim for Marlin-rank completions of " + trial.name
-                + ". After one-time rank bonuses are already claimed, about "
+        String action = "Complete any unclaimed Swordfish, Shark, then Marlin rank for "
+                + trial.name + ". Once those one-time ranks are claimed, about "
                 + marlinCompletions + " Marlin completion"
                 + (marlinCompletions == 1 ? "" : "s")
                 + " at " + format(trial.marlinXp)
@@ -135,11 +135,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = "Take courier Port Tasks between ports you already have unlocked and stack compatible pickups/deliveries. You need "
+        String action = "Take a courier task from the Port Sarim notice board, load its marked cargo at the loading bay, sail to The Pandemonium, and deliver it. Take the return task when offered. You need "
                 + format(xpNeeded) + " Sailing XP to level " + targetLevel + ".";
-        String supplies = "Use your current verified boat. At 15 Sailing, a skiff costs 15,000 coins and unlocks the practical salvaging setup; do not buy it early if the account cannot afford it.";
-        String where = "Use notice boards at verified ports and prefer tasks that can be chained along the same route instead of dead-heading the boat between jobs.";
-        String note = "Port Task XP varies with the assignment, so exact remaining XP is shown but a task count waits for a concrete live assignment.";
+        String supplies = "Bring the Captain's log and use the raft awarded by Pandemonium. If the log is missing, reclaim it from Junior Jim in Port Sarim or from your boat's cargo hold.";
+        String where = "Use the notice board and loading bay on Port Sarim's Sailing dock, then the matching dock at The Pandemonium for the return leg.";
+        String note = "Port Task XP and destination vary with the live assignment, so Compass does not invent a task count. Accept compatible return work before sailing back empty.";
         return new RecommendationGuidance(action, supplies, where, note);
     }
 

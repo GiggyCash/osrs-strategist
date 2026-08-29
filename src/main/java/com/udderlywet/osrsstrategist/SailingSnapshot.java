@@ -13,6 +13,16 @@ import java.util.Set;
  */
 public final class SailingSnapshot
 {
+    public static final String PORT_SARIM = "port:sarim";
+    public static final String PORT_PANDEMONIUM = "port:pandemonium";
+    public static final String ACTIVITY_COURIER = "activity:courier";
+    public static final String ACTIVITY_ACTIVE_PORT_TASK = "activity:active-port-task";
+    public static final String ACTIVITY_SEA_CHARTING = "activity:sea-charting";
+    public static final String ACTIVITY_BOAT_OWNED = "activity:boat-owned";
+    public static final String TRIAL_TEMPOR_COMPLETE = "trial:tempor-complete";
+    public static final String TRIAL_JUBBLY_COMPLETE = "trial:jubbly-complete";
+    public static final String TRIAL_GWENITH_COMPLETE = "trial:gwenith-complete";
+
     private final Set<String> verifiedPorts;
     private final Set<String> verifiedActivities;
     private final RecommendationConfidence confidence;

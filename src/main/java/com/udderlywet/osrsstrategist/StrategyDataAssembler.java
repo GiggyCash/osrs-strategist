@@ -16,6 +16,7 @@ public class StrategyDataAssembler
     private final LiveClueStateReader clueStateReader;
     private final LiveSlayerStateReader slayerStateReader;
     private final LivePohStateReader pohStateReader;
+    private final LiveSailingStateReader sailingStateReader;
     private final LiveEconomyReader economyReader;
     private final LiveCombatEvidenceReader combatEvidenceReader;
     private final PvmReadinessAnalyzer pvmReadinessAnalyzer;
@@ -37,6 +38,7 @@ public class StrategyDataAssembler
             LiveClueStateReader clueStateReader,
             LiveSlayerStateReader slayerStateReader,
             LivePohStateReader pohStateReader,
+            LiveSailingStateReader sailingStateReader,
             LiveEconomyReader economyReader,
             LiveCombatEvidenceReader combatEvidenceReader,
             PvmReadinessAnalyzer pvmReadinessAnalyzer,
@@ -54,6 +56,7 @@ public class StrategyDataAssembler
         this.clueStateReader = clueStateReader;
         this.slayerStateReader = slayerStateReader;
         this.pohStateReader = pohStateReader;
+        this.sailingStateReader = sailingStateReader;
         this.economyReader = economyReader;
         this.combatEvidenceReader = combatEvidenceReader;
         this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
@@ -74,7 +77,7 @@ public class StrategyDataAssembler
             ObservedStateStore observedStateStore)
     {
         this(accountReader, itemStateReader, null, questStateReader,
-                null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null,
                 accessMemoryStore, farmingRunStateStore,
                 farmingAccessEvaluator, observedStateStore);
     }
@@ -155,6 +158,10 @@ public class StrategyDataAssembler
                 ? null : slayerStateReader.read();
         SlayerSnapshot slayer = liveSlayer != null
                 ? liveSlayer : observedStateStore.getSlayer();
+        SailingSnapshot liveSailing = sailingStateReader == null
+                ? null : sailingStateReader.read(quests);
+        SailingSnapshot sailing = liveSailing != null
+                ? liveSailing : observedStateStore.getSailing();
 
         PvmSnapshot observedPvm = observedStateStore.getPvm();
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
@@ -184,7 +191,7 @@ public class StrategyDataAssembler
                 .groupStorage(groupStorage)
                 .slayer(slayer)
                 .farming(farming)
-                .sailing(observedStateStore.getSailing())
+                .sailing(sailing)
                 .minigames(observedStateStore.getMinigames())
                 .pvm(pvm)
                 .recurringOpportunities(observedStateStore.getRecurringOpportunities())

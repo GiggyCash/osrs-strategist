@@ -260,6 +260,8 @@ public class AdaptiveMilestoneGuidanceService
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
             return "Bring a hammer and saw.";
+        if ("smithing_f2p_platebodies".equals(methodId))
+            return "Bring a hammer and the matching bars named in BRING; each platebody consumes five bars.";
         if ("thieving_lumbridge_people".equals(methodId))
             return "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed.";
         if ("thieving_ardy_knights".equals(methodId))
@@ -291,6 +293,10 @@ public class AdaptiveMilestoneGuidanceService
                 || "magic_f2p_fire_strike_splash".equals(methodId))
         {
             return "The caged Monk of Zamorak under the Varrock Palace stairs.";
+        }
+        if ("smithing_f2p_platebodies".equals(methodId))
+        {
+            return "Varrock West Bank: keep the hammer, withdraw five matching bars per platebody, smith at the anvils immediately south, bank, and repeat.";
         }
 
         AccountMode mode = data == null || data.getAccount() == null
