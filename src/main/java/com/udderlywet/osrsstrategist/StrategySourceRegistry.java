@@ -187,7 +187,7 @@ public final class StrategySourceRegistry
             case TITHE_FARM:
                 return "oldid=15299958 (2026-08-14T04:17:57Z)";
             case SAILING_TRAINING:
-                return "oldid=15323443 (2026-08-28T19:16:42Z)";
+                return "oldid=15325294 (2026-08-30T03:38:55Z)";
             case SHIPWRECK_SALVAGING:
                 return "oldid=15323162 (2026-08-28T14:49:43Z)";
             case PVM_STRATEGY:

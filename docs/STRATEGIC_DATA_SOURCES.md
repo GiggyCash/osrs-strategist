@@ -97,6 +97,11 @@ registry coverage.
 | Farming seed breakpoints | [Allotment patch](https://oldschool.runescape.wiki/w/Allotment_patch), [Herb patch](https://oldschool.runescape.wiki/w/Herb_patch) | Allotment guidance selects only an observed six-seed planting supply at a level-legal tier (potato 1 through snape grass 61). Herb guidance selects only an observed level-legal seed (guam 9 through torstol 85); it does not ask the player to decide which Herblore resource to spend. |
 | Sailing starter route, salvaging, and trials | [Pandemonium](https://oldschool.runescape.wiki/w/Pandemonium), [Sailing training](https://oldschool.runescape.wiki/w/Sailing_training), [Shipwreck salvaging](https://oldschool.runescape.wiki/w/Shipwreck_salvaging), [Port task](https://oldschool.runescape.wiki/w/Port_task), [Barracuda Trials](https://oldschool.runescape.wiki/w/Barracuda_Trials), pinned RuneLite `VarPlayerID` Sailing constants | Pandemonium proves the starter raft, Captain's log access, Port Sarim/Pandemonium courier loop, and sea-charting access. The retained level-15 salvage method is limited to small shipwrecks in the Kharidian Sea, unloading at Pandemonium's salvage station, and a fitted salvaging hook. Higher tiers remain preparation-only until boat capabilities and water hazards are proven. RuneLite varplayers prove owned boat slots, active port tasks, and completed Tempor/Jubbly/Gwenith trials. |
 
+The Sailing training revision was re-reviewed on 2026-08-30 after the Wiki
+corrected Summer Shore courier XP estimates. Compass retains no numeric Summer
+Shore XP rate or exact trip count, so the derived route/capability data required
+no semantic change; the reviewed revision pin moved to `15325294`.
+
 ## Resource and account-mode value
 
 | Structured rule | Source | Fact retained locally |
