@@ -6,6 +6,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 
+/**
+ * Chooses the best training method for one skill.
+ *
+ * <p>The selector accepts the entire StrategyDataBundle even though the first
+ * generation of scoring only uses part of it. That is deliberate: bank state,
+ * account mode, equipment, quests, transport, GIM storage, UIM capabilities,
+ * and other verified observations can be added to method scoring without
+ * changing this API or rebuilding the recommendation pipeline.</p>
+ */
 @Singleton
 public class TrainingMethodSelector
 {
@@ -17,7 +26,26 @@ public class TrainingMethodSelector
         this.database = database;
     }
 
+    /**
+     * Compatibility overload used by focused unit tests and older callers.
+     */
     public TrainingPlan select(
+            Skill skill,
+            int currentLevel,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent)
+    {
+        return select(
+                null,
+                skill,
+                currentLevel,
+                strategyMode,
+                sessionIntent
+        );
+    }
+
+    public TrainingPlan select(
+            StrategyDataBundle data,
             Skill skill,
             int currentLevel,
             StrategyMode strategyMode,
@@ -42,14 +70,46 @@ public class TrainingMethodSelector
             return null;
         }
 
+        RecommendationConfidence confidence =
+                assessConfidence(data, best);
+
         return new TrainingPlan(
                 best,
                 buildExplanation(
                         best,
                         strategyMode,
                         sessionIntent
-                )
+                ),
+                confidence
         );
+    }
+
+    /**
+     * Starter confidence evaluation. Generic method definitions remain
+     * CHECK_NEEDED until a reader/evaluator can prove their requirements.
+     * Future requirement evaluators will plug in here rather than into the UI.
+     */
+    private RecommendationConfidence assessConfidence(
+            StrategyDataBundle data,
+            TrainingMethod method)
+    {
+        if (method.getConfidence()
+                == RecommendationConfidence.BLOCKED)
+        {
+            return RecommendationConfidence.BLOCKED;
+        }
+
+        if (method.getRequirements().isEmpty()
+                && method.getConfidence()
+                == RecommendationConfidence.VERIFIED)
+        {
+            return RecommendationConfidence.VERIFIED;
+        }
+
+        // Having a full data bundle is not the same as having verified every
+        // requirement inside it. Never upgrade confidence merely because data
+        // exists; a requirement evaluator must explicitly prove readiness.
+        return RecommendationConfidence.CHECK_NEEDED;
     }
 
     private String buildExplanation(

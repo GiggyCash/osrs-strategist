@@ -4,6 +4,11 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
+/**
+ * User-facing defaults. Learned likes/dislikes remain per-character in the
+ * RuneScape profile store; these settings describe how the player wants the
+ * planner to behave right now.
+ */
 @ConfigGroup(OsrsStrategistConfig.GROUP)
 public interface OsrsStrategistConfig extends Config
 {
@@ -30,6 +35,16 @@ public interface OsrsStrategistConfig extends Config
     }
 
     @ConfigItem(
+            keyName = "activeGoal",
+            name = "Big goal",
+            description = "The long-term goal Strategist should optimize around"
+    )
+    default GoalType activeGoal()
+    {
+        return GoalType.MAX;
+    }
+
+    @ConfigItem(
             keyName = "questTolerance",
             name = "Quest tolerance",
             description = "How often quests should appear in recommendations"
@@ -42,7 +57,7 @@ public interface OsrsStrategistConfig extends Config
     @ConfigItem(
             keyName = "useGroupStorage",
             name = "Use Group Storage",
-            description = "For GIM accounts, count useful items already present in Group Storage"
+            description = "For GIM accounts, count useful items actually observed in Group Storage"
     )
     default boolean useGroupStorage()
     {
@@ -52,9 +67,29 @@ public interface OsrsStrategistConfig extends Config
     @ConfigItem(
             keyName = "bankAware",
             name = "Bank-aware strategy",
-            description = "Use the most recent bank snapshot when weighing options"
+            description = "Use the most recent verified bank snapshot when weighing options"
     )
     default boolean bankAware()
+    {
+        return true;
+    }
+
+    @ConfigItem(
+            keyName = "collectionistMode",
+            name = "Collectionist mode",
+            description = "Give a little more weight to useful or near-complete collection-log opportunities"
+    )
+    default boolean collectionistMode()
+    {
+        return false;
+    }
+
+    @ConfigItem(
+            keyName = "riskWarnings",
+            name = "Risk warnings",
+            description = "Warn before irreversible or high-risk account actions"
+    )
+    default boolean riskWarnings()
     {
         return true;
     }

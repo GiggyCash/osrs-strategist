@@ -5,11 +5,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -36,37 +36,28 @@ import net.runelite.client.ui.NavigationButton;
 )
 public class OsrsStrategistPlugin extends Plugin
 {
-    @Inject
-    private OsrsStrategistConfig config;
+    @Inject private OsrsStrategistConfig config;
+    @Inject private ClientToolbar clientToolbar;
+    @Inject private StrategyDataAssembler strategyDataAssembler;
+    @Inject private StrategyEngine strategyEngine;
+    @Inject private AccountPreferenceStore accountPreferenceStore;
+    @Inject private AccountStrategyProfileStore accountStrategyProfileStore;
 
-    @Inject
-    private ClientToolbar clientToolbar;
-
-    @Inject
-    private AccountReader accountReader;
-
-    @Inject
-    private RecommendationEngine recommendationEngine;
-
-    @Inject
-    private AccountPreferenceStore accountPreferenceStore;
-
-    private final PreferenceProfile preferenceProfile =
-            new PreferenceProfile();
+    /** Learned likes/dislikes and recommendation cooldowns for this character. */
+    private final PreferenceProfile preferenceProfile = new PreferenceProfile();
 
     private String loadedPreferenceProfileKey;
-    private boolean savingPreferenceProfile;
-    private AccountSnapshot latestSnapshot;
+    private String loadedStrategyProfileKey;
+    private boolean savingProfileConfiguration;
+    private PlayerStrategyProfile strategyProfile;
+    private StrategyDataBundle latestData;
     private NavigationButton navButton;
     private OsrsStrategistPanel panel;
 
     @Provides
-    OsrsStrategistConfig provideConfig(
-            ConfigManager manager)
+    OsrsStrategistConfig provideConfig(ConfigManager manager)
     {
-        return manager.getConfig(
-                OsrsStrategistConfig.class
-        );
+        return manager.getConfig(OsrsStrategistConfig.class);
     }
 
     @Override
@@ -76,11 +67,9 @@ public class OsrsStrategistPlugin extends Plugin
                 this::applyRecommendationFeedback
         );
 
-        BufferedImage icon = createTemporaryIcon();
-
         navButton = NavigationButton.builder()
                 .tooltip("OSRS Strategist")
-                .icon(icon)
+                .icon(createTemporaryIcon())
                 .priority(5)
                 .panel(panel)
                 .build();
@@ -88,6 +77,7 @@ public class OsrsStrategistPlugin extends Plugin
         clientToolbar.addNavigation(navButton);
 
         syncPreferenceProfile();
+        syncStrategyProfile();
         updateAccountPanel();
     }
 
@@ -100,23 +90,34 @@ public class OsrsStrategistPlugin extends Plugin
         }
 
         preferenceProfile.clear();
+        strategyDataAssembler.clearForAccountChange();
         loadedPreferenceProfileKey = null;
-        savingPreferenceProfile = false;
-        latestSnapshot = null;
+        loadedStrategyProfileKey = null;
+        savingProfileConfiguration = false;
+        strategyProfile = null;
+        latestData = null;
         panel = null;
         navButton = null;
     }
 
     @Subscribe
-    public void onGameStateChanged(
-            GameStateChanged event)
+    public void onGameStateChanged(GameStateChanged event)
     {
         updateAccountPanel();
     }
 
     @Subscribe
-    public void onStatChanged(
-            StatChanged event)
+    public void onStatChanged(StatChanged event)
+    {
+        updateAccountPanel();
+    }
+
+    /**
+     * Inventory/equipment/bank changes can alter the best training method even
+     * when no skill level changes, so refresh the strategy when containers move.
+     */
+    @Subscribe
+    public void onItemContainerChanged(ItemContainerChanged event)
     {
         updateAccountPanel();
     }
@@ -125,26 +126,50 @@ public class OsrsStrategistPlugin extends Plugin
     public void onRuneScapeProfileChanged(
             RuneScapeProfileChanged event)
     {
-        loadedPreferenceProfileKey = null;
-
-        if (savingPreferenceProfile)
+        // The first write to RuneLite profile config can itself create a profile
+        // and fire this event. Ignore that internal transition while saving.
+        if (savingProfileConfiguration)
         {
             return;
         }
 
+        loadedPreferenceProfileKey = null;
+        loadedStrategyProfileKey = null;
+        strategyDataAssembler.clearForAccountChange();
+
         syncPreferenceProfile();
+        syncStrategyProfile();
         updateAccountPanel();
     }
 
     @Subscribe
-    public void onConfigChanged(
-            ConfigChanged event)
+    public void onConfigChanged(ConfigChanged event)
     {
-        if (OsrsStrategistConfig.GROUP.equals(
-                event.getGroup()))
+        if (!OsrsStrategistConfig.GROUP.equals(event.getGroup()))
         {
-            updateAccountPanel();
+            return;
         }
+
+        // A settings change while logged in becomes this character's explicit
+        // strategy profile instead of silently affecting every account forever.
+        strategyProfile = PlayerStrategyProfile.fromConfig(config);
+
+        if (accountStrategyProfileStore.getActiveProfileKey() != null)
+        {
+            savingProfileConfiguration = true;
+            try
+            {
+                accountStrategyProfileStore.save(strategyProfile);
+            }
+            finally
+            {
+                savingProfileConfiguration = false;
+            }
+            loadedStrategyProfileKey =
+                    accountStrategyProfileStore.getActiveProfileKey();
+        }
+
+        updateAccountPanel();
     }
 
     void applyRecommendationFeedback(
@@ -159,43 +184,47 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         preferenceProfile.apply(activityId, action);
 
-        refreshRecommendationsImmediately();
+        // Rotate the recommendation before persisting so button feedback feels
+        // immediate even if profile storage takes a moment.
+        refreshStrategyImmediately();
 
-        savingPreferenceProfile = true;
-
+        savingProfileConfiguration = true;
         try
         {
-            accountPreferenceStore.save(
-                    preferenceProfile
-            );
+            accountPreferenceStore.save(preferenceProfile);
         }
         finally
         {
-            savingPreferenceProfile = false;
+            savingProfileConfiguration = false;
         }
 
         loadedPreferenceProfileKey =
                 accountPreferenceStore.getActiveProfileKey();
     }
 
-    private void refreshRecommendationsImmediately()
+    private void refreshStrategyImmediately()
     {
-        if (panel == null || latestSnapshot == null)
+        if (panel == null || latestData == null)
         {
             return;
         }
 
-        List<Recommendation> recommendations =
-                recommendationEngine.recommend(
-                        latestSnapshot,
-                        config.strategyMode(),
-                        config.sessionIntent(),
-                        preferenceProfile
-                );
+        PlayerStrategyProfile profile = effectiveStrategyProfile();
+        StrategyResult result = strategyEngine.evaluate(
+                latestData,
+                profile.getStrategyMode(),
+                profile.getSessionIntent(),
+                profile.getQuestTolerance(),
+                profile.getActiveGoal(),
+                profile.isUseGroupStorage(),
+                profile.isCollectionistMode(),
+                preferenceProfile
+        );
 
         Runnable update = () ->
         {
-            panel.updateRecommendations(recommendations);
+            panel.updateRecommendations(result.getRecommendations());
+            panel.updateOpportunities(result.getOpportunities());
             panel.revalidate();
             panel.repaint();
         };
@@ -212,31 +241,52 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void syncPreferenceProfile()
     {
-        String activeProfileKey =
-                accountPreferenceStore.getActiveProfileKey();
+        String activeKey = accountPreferenceStore.getActiveProfileKey();
 
-        if (Objects.equals(
-                loadedPreferenceProfileKey,
-                activeProfileKey)
-                && activeProfileKey != null)
+        if (Objects.equals(loadedPreferenceProfileKey, activeKey)
+                && activeKey != null)
         {
             return;
         }
 
         preferenceProfile.clear();
 
-        if (activeProfileKey == null)
+        if (activeKey == null)
         {
             loadedPreferenceProfileKey = null;
             return;
         }
 
-        accountPreferenceStore.loadInto(
-                preferenceProfile
-        );
+        accountPreferenceStore.loadInto(preferenceProfile);
+        loadedPreferenceProfileKey = activeKey;
+    }
 
-        loadedPreferenceProfileKey =
-                activeProfileKey;
+    private void syncStrategyProfile()
+    {
+        String activeKey = accountStrategyProfileStore.getActiveProfileKey();
+
+        if (Objects.equals(loadedStrategyProfileKey, activeKey)
+                && activeKey != null
+                && strategyProfile != null)
+        {
+            return;
+        }
+
+        PlayerStrategyProfile defaults =
+                PlayerStrategyProfile.fromConfig(config);
+
+        strategyProfile = accountStrategyProfileStore
+                .loadOrDefault(defaults);
+        loadedStrategyProfileKey = activeKey;
+    }
+
+    private PlayerStrategyProfile effectiveStrategyProfile()
+    {
+        if (strategyProfile == null)
+        {
+            strategyProfile = PlayerStrategyProfile.fromConfig(config);
+        }
+        return strategyProfile;
     }
 
     private void updateAccountPanel()
@@ -246,66 +296,66 @@ public class OsrsStrategistPlugin extends Plugin
             return;
         }
 
-        AccountSnapshot snapshot =
-                accountReader.read();
+        StrategyDataBundle data = strategyDataAssembler.read();
 
-        if (snapshot == null)
+        if (data == null || data.getAccount() == null)
         {
-            latestSnapshot = null;
+            latestData = null;
+            PlayerStrategyProfile profile = effectiveStrategyProfile();
 
-            SwingUtilities.invokeLater(
-                    () ->
-                    {
-                        panel.updateAccount(
-                                "Waiting for login...",
-                                "Unknown",
-                                0
-                        );
-
-                        panel.updateStrategy(
-                                config.strategyMode(),
-                                config.questTolerance()
-                        );
-
-                        panel.updateRecommendations(
-                                Collections.emptyList()
-                        );
-                    }
-            );
-
+            SwingUtilities.invokeLater(() ->
+            {
+                panel.updateAccount(
+                        "Waiting for login...",
+                        "Unknown",
+                        0
+                );
+                panel.updateGoal(profile.getActiveGoal());
+                panel.updateStrategy(
+                        profile.getStrategyMode(),
+                        profile.getSessionIntent(),
+                        profile.getQuestTolerance()
+                );
+                panel.updateRecommendations(Collections.emptyList());
+                panel.updateOpportunities(Collections.emptyList());
+            });
             return;
         }
 
-        latestSnapshot = snapshot;
+        latestData = data;
         syncPreferenceProfile();
+        syncStrategyProfile();
 
-        List<Recommendation> recommendations =
-                recommendationEngine.recommend(
-                        snapshot,
-                        config.strategyMode(),
-                        config.sessionIntent(),
-                        preferenceProfile
-                );
-
-        SwingUtilities.invokeLater(
-                () ->
-                {
-                    panel.updateAccount(
-                            snapshot.getPlayerName(),
-                            snapshot.getAccountTypeName(),
-                            snapshot.getTotalLevel()
-                    );
-
-                    panel.updateStrategy(
-                            config.strategyMode(),
-                            config.questTolerance()
-                    );
-
-                    panel.updateRecommendations(
-                            recommendations
-                    );
-                }
+        PlayerStrategyProfile profile = effectiveStrategyProfile();
+        StrategyResult result = strategyEngine.evaluate(
+                data,
+                profile.getStrategyMode(),
+                profile.getSessionIntent(),
+                profile.getQuestTolerance(),
+                profile.getActiveGoal(),
+                profile.isUseGroupStorage(),
+                profile.isCollectionistMode(),
+                preferenceProfile
         );
+
+        AccountSnapshot account = data.getAccount();
+
+        SwingUtilities.invokeLater(() ->
+        {
+            panel.updateAccount(
+                    account.getPlayerName(),
+                    account.getAccountTypeName(),
+                    account.getTotalLevel()
+            );
+            panel.updateGoal(profile.getActiveGoal());
+            panel.updateStrategy(
+                    profile.getStrategyMode(),
+                    profile.getSessionIntent(),
+                    profile.getQuestTolerance()
+            );
+            panel.updateRecommendations(result.getRecommendations());
+            panel.updateOpportunities(result.getOpportunities());
+        });
     }
 
     private BufferedImage createTemporaryIcon()
@@ -317,10 +367,8 @@ public class OsrsStrategistPlugin extends Plugin
         );
 
         Graphics2D graphics = image.createGraphics();
-
         graphics.setColor(new Color(60, 45, 30));
         graphics.fillRect(0, 0, 16, 16);
-
         graphics.setColor(new Color(212, 167, 44));
         graphics.drawOval(1, 1, 13, 13);
         graphics.drawLine(8, 3, 8, 13);
