@@ -8,7 +8,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Protects the compact-sidebar UX from accidentally becoming a wall of text.
+ * Protects the compact-sidebar UX from accidentally becoming a wall of text
+ * while also ensuring Check Needed always tells the player what is unresolved.
  */
 public class RecommendationPresentationTest
 {
@@ -22,15 +23,17 @@ public class RecommendationPresentationTest
         );
 
         assertTrue(compact.contains("BEST METHOD"));
-        assertTrue(compact.contains("PREP"));
+        assertTrue(compact.contains("CHECK NEEDED"));
+        assertTrue(compact.contains("Planks/materials"));
         assertFalse(compact.contains("WHY IT MATTERS"));
         assertFalse(compact.contains("HOW"));
         assertFalse(compact.contains("Current:"));
+        assertFalse(compact.contains("Verified POH access"));
         assertTrue("Compact copy should stay short", compact.length() < 450);
     }
 
     @Test
-    public void detailedViewExposesInstructionsAndReasoning()
+    public void detailedViewExposesInstructionsReasoningAndEvidence()
     {
         String detailed = RecommendationPresentation.detailedHtml(
                 recommendation()
@@ -38,7 +41,10 @@ public class RecommendationPresentationTest
 
         assertTrue(detailed.contains("HOW"));
         assertTrue(detailed.contains("WHY IT MATTERS"));
-        assertTrue(detailed.contains("FULL PREP"));
+        assertTrue(detailed.contains("READINESS"));
+        assertTrue(detailed.contains("POH access"));
+        assertTrue(detailed.contains("Planks/materials"));
+        assertTrue(detailed.contains("Need to confirm materials"));
     }
 
     private static Recommendation recommendation()
@@ -66,7 +72,28 @@ public class RecommendationPresentationTest
 
         TrainingPlan plan = new TrainingPlan(
                 method,
-                "Selected for the current strategy style."
+                "Selected for the current strategy style.",
+                RecommendationConfidence.CHECK_NEEDED,
+                Arrays.asList(
+                        new RequirementCheck(
+                                "poh",
+                                "POH access",
+                                RequirementState.VERIFIED,
+                                "Verified POH access"
+                        ),
+                        new RequirementCheck(
+                                "planks",
+                                "Planks/materials",
+                                RequirementState.CHECK_NEEDED,
+                                "Need to confirm materials"
+                        ),
+                        new RequirementCheck(
+                                "transport",
+                                "Transport",
+                                RequirementState.CHECK_NEEDED,
+                                "Need to confirm transport"
+                        )
+                )
         );
 
         return new Recommendation(
