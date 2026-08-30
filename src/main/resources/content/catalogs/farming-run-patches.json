@@ -1,0 +1,147 @@
+[
+  {
+    "id": "herb_falador",
+    "displayName": "Falador",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      12083
+    ],
+    "varbitId": 4774
+  },
+  {
+    "id": "herb_catherby",
+    "displayName": "Catherby",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      11062
+    ],
+    "varbitId": 4774
+  },
+  {
+    "id": "herb_ardougne",
+    "displayName": "Ardougne",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      10548
+    ],
+    "varbitId": 4774
+  },
+  {
+    "id": "herb_hosidius",
+    "displayName": "Hosidius",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      6967
+    ],
+    "varbitId": 4774
+  },
+  {
+    "id": "herb_morytania",
+    "displayName": "Morytania",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      14391
+    ],
+    "varbitId": 4774,
+    "requiredQuest": "Priest in Peril"
+  },
+  {
+    "id": "herb_troll_stronghold",
+    "displayName": "Troll Stronghold",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      11321
+    ],
+    "varbitId": 4771,
+    "requiredQuest": "My Arm\u0027s Big Adventure"
+  },
+  {
+    "id": "herb_weiss",
+    "displayName": "Weiss",
+    "kind": "HERB",
+    "minimumLevel": 9,
+    "regionIds": [
+      11325
+    ],
+    "varbitId": 4771,
+    "requiredQuest": "Making Friends with My Arm"
+  },
+  {
+    "id": "herb_farming_guild",
+    "displayName": "Farming Guild",
+    "kind": "HERB",
+    "minimumLevel": 65,
+    "regionIds": [
+      4922
+    ],
+    "varbitId": 4775
+  },
+  {
+    "id": "tree_lumbridge",
+    "displayName": "Lumbridge",
+    "kind": "TREE",
+    "minimumLevel": 15,
+    "regionIds": [
+      12594
+    ],
+    "varbitId": 4771
+  },
+  {
+    "id": "tree_taverley",
+    "displayName": "Taverley",
+    "kind": "TREE",
+    "minimumLevel": 15,
+    "regionIds": [
+      11573,
+      11829
+    ],
+    "varbitId": 4771
+  },
+  {
+    "id": "tree_varrock",
+    "displayName": "Varrock",
+    "kind": "TREE",
+    "minimumLevel": 15,
+    "regionIds": [
+      12854
+    ],
+    "varbitId": 4771
+  },
+  {
+    "id": "tree_falador",
+    "displayName": "Falador",
+    "kind": "TREE",
+    "minimumLevel": 15,
+    "regionIds": [
+      11828,
+      12084
+    ],
+    "varbitId": 4771
+  },
+  {
+    "id": "tree_gnome_stronghold",
+    "displayName": "Gnome Stronghold",
+    "kind": "TREE",
+    "minimumLevel": 15,
+    "regionIds": [
+      9781
+    ],
+    "varbitId": 4771
+  },
+  {
+    "id": "tree_farming_guild",
+    "displayName": "Farming Guild",
+    "kind": "TREE",
+    "minimumLevel": 65,
+    "regionIds": [
+      4922
+    ],
+    "varbitId": 7905
+  }
+]

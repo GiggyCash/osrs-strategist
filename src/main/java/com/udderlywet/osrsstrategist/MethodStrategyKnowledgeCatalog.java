@@ -49,97 +49,14 @@ public final class MethodStrategyKnowledgeCatalog
 
     public MethodStrategyKnowledgeCatalog()
     {
-        addExact(new MethodStrategyProfile(
-                "smithing_f2p_uim_bronze",
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.LOCAL_PROCESSING,
-                new MethodInventoryFootprint(3, 2, 2,
-                        InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
-                0.85,
-                "Nearby copper and tin make this a cheap first Smithing level without conventional banking.",
-                Arrays.asList(StrategySourceId.UIM_SMITHING,
-                        StrategySourceId.F2P_IRONMAN_GENERAL,
-                        StrategySourceId.RUNELITE_MECHANICS)));
-        addExact(new MethodStrategyProfile(
-                "cooking_f2p_uim_carried_fish",
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.LOCAL_PROCESSING,
-                new MethodInventoryFootprint(0, 1, 0,
-                        InventoryFlow.CONSUMES_CARRIED_INPUTS, false),
-                0.8,
-                "Cooking carried or locally caught fish turns the current inventory into useful food without a bank setup.",
-                Arrays.asList(StrategySourceId.UIM_COOKING,
-                        StrategySourceId.F2P_IRONMAN_GENERAL,
-                        StrategySourceId.F2P_SKILL_TRAINING)));
-        addExact(new MethodStrategyProfile(
-                "runecraft_f2p_uim_local",
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.LOCAL_PROCESSING,
-                new MethodInventoryFootprint(0, 1, 0,
-                        InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
-                0.75,
-                "Mining and immediately crafting essence is a concrete F2P UIM route that never assumes a banked essence reserve.",
-                Arrays.asList(StrategySourceId.UIM_RUNECRAFT,
-                        StrategySourceId.F2P_IRONMAN_GENERAL,
-                        StrategySourceId.F2P_SKILL_TRAINING)));
-        addExact(uim("crafting_charter_glass", 4,
-                InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS,
-                "Charter-shop glassblowing sources and processes materials in one repeatable UIM loop.",
-                StrategySourceId.UIM_CRAFTING));
-        addExact(sharedForMain("smithing_giants_foundry", 3,
-                "Giants' Foundry is a reviewed profit/resource-efficiency alternative when buying faster Smithing inputs is poor value.",
-                StrategySourceId.GIANTS_FOUNDRY));
-        addExact(sharedIronUim(
-                "smithing_giants_foundry", 3,
-                "Giants' Foundry stretches self-sourced metal and advances a useful permanent outfit.",
-                StrategySourceId.IRONMAN_SMITHING,
-                StrategySourceId.UIM_SMITHING));
-        addExact(sharedForMain("construction_mahogany_homes", 4,
-                "Mahogany Homes is a reviewed lower-cost alternative when saving tradeable planks matters more than maximum conventional speed.",
-                StrategySourceId.MAHOGANY_HOMES));
-        addExact(sharedIronUim(
-                "construction_mahogany_homes", 4,
-                "Mahogany Homes reduces plank burn while building high-value account infrastructure.",
-                StrategySourceId.IRONMAN_CONSTRUCTION,
-                StrategySourceId.UIM_CONSTRUCTION));
-        addExact(sharedForNonUim("prayer_bonecrusher_passive", 0,
-                "A charged bonecrusher can turn a verified compatible combat plan into passive Prayer progress without a separate training detour.",
-                StrategySourceId.GENERAL_SKILL_TRAINING));
-        addExact(uim(
-                "prayer_bonecrusher_passive", 0,
-                InventoryFlow.NEUTRAL,
-                "The carried bonecrusher converts compatible combat drops into Prayer progress without growing inventory.",
-                StrategySourceId.UIM_PRAYER));
-        addExact(uimNoBank(
-                "thieving_uim_lumbridge_people",
-                "Pickpocketing Lumbridge men and women with monastery healing is a slow but concrete bank-free early fallback.",
-                StrategySourceId.UIM_THIEVING));
-        addExact(uimNoBank(
-                "thieving_uim_fruit_stalls",
-                "Hosidius fruit stalls provide a safe bank-free fallback whose freshly stolen fruit can be dropped without dismantling carried setup.",
-                StrategySourceId.UIM_THIEVING));
-        addExact(shared(
-                "fishing_f2p_fly", MethodBankingBehavior.NONE, 1,
-                "Dropping the catch is a concrete low-setup route when food supply is not the current goal."));
-        addExact(shared(
-                "mining_f2p_iron", MethodBankingBehavior.NONE, 1,
-                "Power-mining iron is a concrete low-setup route when the ore is not needed by another plan."));
-        addExact(shared(
-                "agility_rooftops", MethodBankingBehavior.NONE, 0,
-                "Rooftop training needs little inventory and advances reusable movement progression."));
-        addExact(new MethodStrategyProfile(
-                "sailing_salvage_small",
-                StrategyKnowledgeTier.VERIFIED_SHARED, ALL_KNOWN,
-                MethodBankingBehavior.NONE,
-                new MethodInventoryFootprint(3, 1, 2,
-                        InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, false),
-                0.45,
-                "Small-shipwreck salvaging is an exact low-intensity baseline; higher wrecks require separately proven boat and water-hazard capability.",
-                Arrays.asList(StrategySourceId.SAILING_TRAINING,
-                        StrategySourceId.SHIPWRECK_SALVAGING)));
+        for (MethodStrategyProfile profile : BundledCatalogLoader.array(
+                "/content/catalogs/method-strategy-profiles.json",
+                MethodStrategyProfile[].class))
+        {
+            if (profile.getMethodId() == null || profile.getTier() == null)
+                throw new IllegalStateException("Incomplete bundled method strategy profile");
+            addExact(profile);
+        }
     }
 
     public MethodStrategyProfile profileFor(TrainingMethod method,

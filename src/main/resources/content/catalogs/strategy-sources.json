@@ -1,0 +1,681 @@
+[
+  {
+    "id": "GENERAL_SKILL_TRAINING",
+    "url": "https://oldschool.runescape.wiki/w/Skill_training_guides",
+    "subject": "General, Main, Ironman, and UIM training-guide index",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15231153 (2026-06-10T08:54:42Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "shared-skilling",
+      "main-skilling",
+      "f2p-skilling",
+      "method-transitions"
+    ]
+  },
+  {
+    "id": "F2P_SKILL_TRAINING",
+    "url": "https://oldschool.runescape.wiki/w/Skill_training_guides",
+    "subject": "Free-to-play training families",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15231153 (2026-06-10T08:54:42Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "shared-skilling",
+      "main-skilling",
+      "f2p-skilling",
+      "method-transitions"
+    ]
+  },
+  {
+    "id": "IRONMAN_GENERAL",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_guide",
+    "subject": "Ironman progression and self-sufficient strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15316742 (2026-08-22T21:08:30Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-progression",
+      "self-source-pipelines",
+      "quest-compression"
+    ]
+  },
+  {
+    "id": "F2P_IRONMAN_GENERAL",
+    "url": "https://oldschool.runescape.wiki/w/Free-to-play_Ironman_guide",
+    "subject": "F2P Ironman, Hardcore, Group, and UIM progression",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15315034 (2026-08-21T03:38:38Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-progression",
+      "self-source-pipelines",
+      "quest-compression"
+    ]
+  },
+  {
+    "id": "UIM_GENERAL",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide",
+    "subject": "Ultimate Ironman progression and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15215498 (2026-05-23T07:11:07Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-progression",
+      "setup-reuse",
+      "infrastructure-value"
+    ]
+  },
+  {
+    "id": "UIM_ITEM_MANAGEMENT",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management",
+    "subject": "UIM inventory, storage, retrieval, and risk mechanics",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15321539 (2026-08-26T21:44:21Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-inventory-footprints",
+      "uim-storage",
+      "uim-dangerous-storage"
+    ]
+  },
+  {
+    "id": "ITEM_RETRIEVAL_SERVICES",
+    "url": "https://oldschool.runescape.wiki/w/Item_Retrieval_Service",
+    "subject": "Exact Item Retrieval Service location, fee, and second-death mechanics",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15124878 (2026-02-10T18:40:49Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-dangerous-storage",
+      "item-retrieval-fees",
+      "second-death-rules"
+    ]
+  },
+  {
+    "id": "IRONMAN_SKILL_GUIDES",
+    "url": "https://oldschool.runescape.wiki/w/Skill_training_guides",
+    "subject": "Account-specific Ironman skill methods",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15231153 (2026-06-10T08:54:42Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-resource-pipelines"
+    ]
+  },
+  {
+    "id": "UIM_SKILL_GUIDES",
+    "url": "https://oldschool.runescape.wiki/w/Skill_training_guides",
+    "subject": "Account-specific UIM skill methods and footprints",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15231153 (2026-06-10T08:54:42Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_SMITHING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Smithing",
+    "subject": "Ironman Smithing methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15177119 (2026-04-15T12:20:44Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-smithing"
+    ]
+  },
+  {
+    "id": "UIM_SMITHING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Smithing",
+    "subject": "Ultimate Ironman Smithing methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15288833 (2026-08-06T08:39:11Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-smithing",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_CRAFTING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Crafting",
+    "subject": "Ironman Crafting methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15316213 (2026-08-22T05:11:35Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-crafting"
+    ]
+  },
+  {
+    "id": "UIM_CRAFTING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Crafting",
+    "subject": "Ultimate Ironman Crafting methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15305169 (2026-08-18T12:54:21Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-crafting",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_HERBLORE",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Herblore",
+    "subject": "Ironman Herblore methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15312412 (2026-08-20T02:31:31Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-herblore"
+    ]
+  },
+  {
+    "id": "UIM_HERBLORE",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Herblore",
+    "subject": "Ultimate Ironman Herblore methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319540 (2026-08-25T06:48:22Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-herblore",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_CONSTRUCTION",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Construction",
+    "subject": "Ironman Construction methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15280023 (2026-07-29T12:57:18Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-construction"
+    ]
+  },
+  {
+    "id": "UIM_CONSTRUCTION",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Construction",
+    "subject": "Ultimate Ironman Construction methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319378 (2026-08-25T05:44:38Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-construction",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_RUNECRAFT",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Runecraft",
+    "subject": "Ironman Runecraft methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15317928 (2026-08-24T07:51:27Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-runecraft"
+    ]
+  },
+  {
+    "id": "UIM_RUNECRAFT",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Runecraft",
+    "subject": "Ultimate Ironman Runecraft methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15322506 (2026-08-27T22:10:28Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-runecraft",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_PRAYER",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Prayer",
+    "subject": "Ironman Prayer methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15322576 (2026-08-28T02:05:38Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-prayer"
+    ]
+  },
+  {
+    "id": "UIM_PRAYER",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Prayer",
+    "subject": "Ultimate Ironman Prayer methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15316277 (2026-08-22T05:31:45Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-prayer",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_FARMING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Farming",
+    "subject": "Ironman Farming methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15321988 (2026-08-27T11:25:17Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-farming"
+    ]
+  },
+  {
+    "id": "UIM_FARMING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Farming",
+    "subject": "Ultimate Ironman Farming methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15315479 (2026-08-21T06:53:29Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-farming",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_COOKING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Cooking",
+    "subject": "Ironman Cooking methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15296981 (2026-08-13T11:55:26Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-cooking"
+    ]
+  },
+  {
+    "id": "UIM_COOKING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Cooking",
+    "subject": "Ultimate Ironman Cooking methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15217261 (2026-05-26T07:43:36Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-cooking",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_FLETCHING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Fletching",
+    "subject": "Ironman Fletching methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15301621 (2026-08-14T23:19:41Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-fletching"
+    ]
+  },
+  {
+    "id": "UIM_FLETCHING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Fletching",
+    "subject": "Ultimate Ironman Fletching methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d14972436 (2025-08-23T04:06:41Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-fletching",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_FISHING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Fishing",
+    "subject": "Ironman Fishing methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15322232 (2026-08-27T18:32:27Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-fishing"
+    ]
+  },
+  {
+    "id": "UIM_FISHING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Fishing",
+    "subject": "Ultimate Ironman Fishing methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15318352 (2026-08-25T00:25:11Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-fishing",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_MINING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Mining",
+    "subject": "Ironman Mining methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15292446 (2026-08-11T01:48:19Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-mining"
+    ]
+  },
+  {
+    "id": "UIM_MINING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Mining",
+    "subject": "Ultimate Ironman Mining methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15276637 (2026-07-27T14:03:35Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-mining",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_WOODCUTTING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Woodcutting",
+    "subject": "Ironman Woodcutting methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15257822 (2026-07-08T18:21:33Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-woodcutting"
+    ]
+  },
+  {
+    "id": "UIM_WOODCUTTING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Woodcutting",
+    "subject": "Ultimate Ironman Woodcutting methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15232438 (2026-06-12T12:56:55Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-woodcutting",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_HUNTER",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Hunter",
+    "subject": "Ironman Hunter methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15287846 (2026-08-05T16:13:51Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-hunter"
+    ]
+  },
+  {
+    "id": "UIM_HUNTER",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Hunter",
+    "subject": "Ultimate Ironman Hunter methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15154715 (2026-03-24T01:26:43Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-hunter",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_FIREMAKING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Firemaking",
+    "subject": "Ironman Firemaking methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15316626 (2026-08-22T17:35:56Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-firemaking"
+    ]
+  },
+  {
+    "id": "UIM_FIREMAKING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Firemaking",
+    "subject": "Ultimate Ironman Firemaking methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15122261 (2026-02-06T08:15:26Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-firemaking",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "IRONMAN_THIEVING",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Thieving",
+    "subject": "Ironman Thieving methods and resource strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15267141 (2026-07-18T23:34:41Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "iron-skilling",
+      "iron-thieving"
+    ]
+  },
+  {
+    "id": "UIM_THIEVING",
+    "url": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Thieving",
+    "subject": "Ultimate Ironman Thieving methods, inventory, and setup strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15316625 (2026-08-22T17:35:40Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "uim-skilling",
+      "uim-thieving",
+      "uim-method-footprints"
+    ]
+  },
+  {
+    "id": "OPTIMAL_QUEST_GUIDE",
+    "url": "https://oldschool.runescape.wiki/w/Optimal_quest_guide",
+    "subject": "Quest ordering and early experience compression",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319535 (2026-08-25T06:47:14Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "quest-ordering",
+      "quest-xp-value"
+    ]
+  },
+  {
+    "id": "SLAYER_TRAINING",
+    "url": "https://oldschool.runescape.wiki/w/Slayer_training",
+    "subject": "Slayer task, master, skip, block, and extension strategy",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319310 (2026-08-25T05:21:09Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "slayer-tasks",
+      "slayer-points",
+      "slayer-resource-value"
+    ]
+  },
+  {
+    "id": "IRONMAN_SLAYER",
+    "url": "https://oldschool.runescape.wiki/w/Ironman_Guide/Slayer",
+    "subject": "Ironman Slayer resources and task economics",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319945 (2026-08-25T18:42:46Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "slayer-tasks",
+      "slayer-points",
+      "slayer-resource-value"
+    ]
+  },
+  {
+    "id": "CLUE_STASH",
+    "url": "https://oldschool.runescape.wiki/w/STASH",
+    "subject": "Clue equipment storage mechanics",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319948 (2026-08-25T18:56:28Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "clues",
+      "stash",
+      "uim-clue-storage"
+    ]
+  },
+  {
+    "id": "POH_STORAGE",
+    "url": "https://oldschool.runescape.wiki/w/Costume_room",
+    "subject": "POH equipment-storage capabilities",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15035574 (2025-11-19T01:31:46Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "poh",
+      "costume-storage",
+      "uim-infrastructure"
+    ]
+  },
+  {
+    "id": "MINIGAME_GUIDES",
+    "url": "https://oldschool.runescape.wiki/w/Minigames",
+    "subject": "Minigame requirements and progression rewards",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15304433 (2026-08-17T17:39:24Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "minigames",
+      "minigame-inventory"
+    ]
+  },
+  {
+    "id": "WINTERTODT",
+    "url": "https://oldschool.runescape.wiki/w/Wintertodt",
+    "subject": "Wintertodt requirements, warmth, tools, and execution",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15317763 (2026-08-24T04:51:43Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "minigames",
+      "wintertodt",
+      "minigame-inventory",
+      "hardcore-risk"
+    ]
+  },
+  {
+    "id": "GIANTS_FOUNDRY",
+    "url": "https://oldschool.runescape.wiki/w/Giants%27_Foundry",
+    "subject": "Giants\u0027 Foundry commissions, materials, moulds, and execution",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15307204 (2026-08-19T16:12:34Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "minigames",
+      "giants-foundry",
+      "smithing-resources",
+      "minigame-inventory"
+    ]
+  },
+  {
+    "id": "MAHOGANY_HOMES",
+    "url": "https://oldschool.runescape.wiki/w/Mahogany_Homes",
+    "subject": "Mahogany Homes contracts, tier materials, travel, and rewards",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15318320 (2026-08-24T23:36:19Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "minigames",
+      "mahogany-homes",
+      "construction-resources",
+      "minigame-inventory"
+    ]
+  },
+  {
+    "id": "TITHE_FARM",
+    "url": "https://oldschool.runescape.wiki/w/Tithe_Farm",
+    "subject": "Tithe Farm tools, level-tier seeds, inventory, and rewards",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15299958 (2026-08-14T04:17:57Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "minigames",
+      "tithe-farm",
+      "farming-resources",
+      "minigame-inventory"
+    ]
+  },
+  {
+    "id": "SAILING_TRAINING",
+    "url": "https://oldschool.runescape.wiki/w/Sailing_training",
+    "subject": "Current Sailing methods, transitions, facilities, and boat progression",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15325294 (2026-08-30T03:38:55Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "shared-skilling",
+      "sailing",
+      "sailing-transitions",
+      "boat-infrastructure"
+    ]
+  },
+  {
+    "id": "SHIPWRECK_SALVAGING",
+    "url": "https://oldschool.runescape.wiki/w/Shipwreck_salvaging",
+    "subject": "Shipwreck levels, boat hazards, salvage flow, and inventory behavior",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15323162 (2026-08-28T14:49:43Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "sailing",
+      "shipwreck-salvaging",
+      "sailing-inventory",
+      "boat-capabilities"
+    ]
+  },
+  {
+    "id": "PVM_STRATEGY",
+    "url": "https://oldschool.runescape.wiki/w/Guide:Bossing_Ladder",
+    "subject": "Encounter preparation and useful PvM unlocks",
+    "reviewedDate": "2026-08-30",
+    "revision": "oldid\u003d15319480 (2026-08-25T06:16:24Z)",
+    "license": "CC BY-NC-SA 3.0",
+    "derivedStrategyFamilies": [
+      "pvm-readiness",
+      "gear-progression",
+      "hardcore-risk"
+    ]
+  },
+  {
+    "id": "RUNELITE_MECHANICS",
+    "url": "https://github.com/runelite/runelite",
+    "subject": "RuneLite-maintained live and mechanical evidence",
+    "reviewedDate": "2026-08-30",
+    "revision": "RuneLite 1.12.35",
+    "license": "BSD-2-Clause",
+    "derivedStrategyFamilies": [
+      "live-state",
+      "mechanical-evidence",
+      "stash-identities",
+      "quest-identities"
+    ]
+  }
+]

@@ -1,0 +1,1374 @@
+[
+  {
+    "itemId": 2,
+    "itemName": "Cannonball",
+    "action": "Smith the required cannonballs from steel bars after Dwarf Cannon.",
+    "opportunityCost": 35,
+    "outputQuantity": 4,
+    "prerequisites": [
+      {
+        "id": "quest:dwarf-cannon",
+        "label": "Dwarf Cannon",
+        "kind": "QUEST",
+        "level": 0
+      },
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 35",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 35
+      },
+      {
+        "id": "resource:2353",
+        "label": "Steel bar",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 2353,
+          "itemName": "Steel bar",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2353,
+    "itemName": "Steel bar",
+    "action": "Smelt steel bars from iron ore and coal at a verified furnace.",
+    "opportunityCost": 20,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 30",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 30
+      },
+      {
+        "id": "resource:440",
+        "label": "Iron ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 440,
+          "itemName": "Iron ore",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:453",
+        "label": "Coal",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 453,
+          "itemName": "Coal",
+          "quantity": 2
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1775,
+    "itemName": "Molten glass",
+    "action": "Make molten glass from a bucket of sand and soda ash at a furnace.",
+    "opportunityCost": 18,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 1",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 1
+      },
+      {
+        "id": "resource:1783",
+        "label": "Bucket of sand",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1783,
+          "itemName": "Bucket of sand",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:1781",
+        "label": "Soda ash",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1781,
+          "itemName": "Soda ash",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2349,
+    "itemName": "Bronze bar",
+    "action": "Smelt a bronze bar from one copper ore and one tin ore at a furnace.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 1",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 1
+      },
+      {
+        "id": "resource:436",
+        "label": "Copper ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 436,
+          "itemName": "Copper ore",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:438",
+        "label": "Tin ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 438,
+          "itemName": "Tin ore",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2357,
+    "itemName": "Gold bar",
+    "action": "Smelt the gold ore at a furnace.",
+    "opportunityCost": 12,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 40",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 40
+      },
+      {
+        "id": "resource:444",
+        "label": "Gold ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 444,
+          "itemName": "Gold ore",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1781,
+    "itemName": "Soda ash",
+    "action": "Cook seaweed on a range or fire to make soda ash.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:cooking",
+        "label": "Cooking 1",
+        "kind": "SKILL",
+        "skill": "COOKING",
+        "level": 1
+      },
+      {
+        "id": "resource:401",
+        "label": "Seaweed",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 401,
+          "itemName": "Seaweed",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1777,
+    "itemName": "Bow string",
+    "action": "Spin flax into bow string at a spinning wheel.",
+    "opportunityCost": 10,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 10",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 10
+      },
+      {
+        "id": "resource:1779",
+        "label": "Flax",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1779,
+          "itemName": "Flax",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2351,
+    "itemName": "Iron bar",
+    "action": "Smelt iron ore at a verified furnace.",
+    "opportunityCost": 10,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 15",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 15
+      },
+      {
+        "id": "resource:440",
+        "label": "Iron ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 440,
+          "itemName": "Iron ore",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2355,
+    "itemName": "Silver bar",
+    "action": "Smelt silver ore at a verified furnace.",
+    "opportunityCost": 10,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 20",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 20
+      },
+      {
+        "id": "resource:442",
+        "label": "Silver ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 442,
+          "itemName": "Silver ore",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2359,
+    "itemName": "Mithril bar",
+    "action": "Smelt mithril ore with four coal at a verified furnace.",
+    "opportunityCost": 25,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 50",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 50
+      },
+      {
+        "id": "resource:447",
+        "label": "Mithril ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 447,
+          "itemName": "Mithril ore",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:453",
+        "label": "Coal",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 453,
+          "itemName": "Coal",
+          "quantity": 4
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2361,
+    "itemName": "Adamantite bar",
+    "action": "Smelt adamantite ore with six coal at a verified furnace.",
+    "opportunityCost": 30,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 70",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 70
+      },
+      {
+        "id": "resource:449",
+        "label": "Adamantite ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 449,
+          "itemName": "Adamantite ore",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:453",
+        "label": "Coal",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 453,
+          "itemName": "Coal",
+          "quantity": 6
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 2363,
+    "itemName": "Runite bar",
+    "action": "Smelt runite ore with eight coal at a verified furnace.",
+    "opportunityCost": 35,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:smithing",
+        "label": "Smithing 85",
+        "kind": "SKILL",
+        "skill": "SMITHING",
+        "level": 85
+      },
+      {
+        "id": "resource:451",
+        "label": "Runite ore",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 451,
+          "itemName": "Runite ore",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:453",
+        "label": "Coal",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 453,
+          "itemName": "Coal",
+          "quantity": 8
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1759,
+    "itemName": "Ball of wool",
+    "action": "Spin wool into a ball of wool at a spinning wheel.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 1",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 1
+      },
+      {
+        "id": "resource:1737",
+        "label": "Wool",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1737,
+          "itemName": "Wool",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 229,
+    "itemName": "Vial",
+    "action": "Use a glassblowing pipe on molten glass to make an empty vial.",
+    "opportunityCost": 12,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 33",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 33
+      },
+      {
+        "id": "gear:glassblowing-pipe",
+        "label": "Glassblowing pipe",
+        "kind": "GEAR",
+        "level": 0
+      },
+      {
+        "id": "resource:1775",
+        "label": "Molten glass",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1775,
+          "itemName": "Molten glass",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 52,
+    "itemName": "Arrow shaft",
+    "action": "Cut normal logs into arrow shafts.",
+    "opportunityCost": 8,
+    "outputQuantity": 15,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 1",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 1
+      },
+      {
+        "id": "resource:1511",
+        "label": "Logs",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1511,
+          "itemName": "Logs",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 53,
+    "itemName": "Headless arrow",
+    "action": "Attach feathers to arrow shafts to make headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 1",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 1
+      },
+      {
+        "id": "resource:52",
+        "label": "Arrow shaft",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 52,
+          "itemName": "Arrow shaft",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 882,
+    "itemName": "Bronze arrow",
+    "action": "Attach bronze arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 1",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 1
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:39",
+        "label": "Bronze arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 39,
+          "itemName": "Bronze arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 884,
+    "itemName": "Iron arrow",
+    "action": "Attach iron arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 15",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 15
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:40",
+        "label": "Iron arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 40,
+          "itemName": "Iron arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 886,
+    "itemName": "Steel arrow",
+    "action": "Attach steel arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 30",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 30
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:41",
+        "label": "Steel arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 41,
+          "itemName": "Steel arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 888,
+    "itemName": "Mithril arrow",
+    "action": "Attach mithril arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 45",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 45
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:42",
+        "label": "Mithril arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 42,
+          "itemName": "Mithril arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 890,
+    "itemName": "Adamant arrow",
+    "action": "Attach adamant arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 60",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 60
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:43",
+        "label": "Adamant arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 43,
+          "itemName": "Adamant arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 892,
+    "itemName": "Rune arrow",
+    "action": "Attach rune arrowheads to headless arrows.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 75",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 75
+      },
+      {
+        "id": "resource:53",
+        "label": "Headless arrow",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 53,
+          "itemName": "Headless arrow",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:44",
+        "label": "Rune arrowhead",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 44,
+          "itemName": "Rune arrowhead",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 806,
+    "itemName": "Bronze dart",
+    "action": "Attach feathers to bronze dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 1",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 1
+      },
+      {
+        "id": "resource:819",
+        "label": "Bronze dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 819,
+          "itemName": "Bronze dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 807,
+    "itemName": "Iron dart",
+    "action": "Attach feathers to iron dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 22",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 22
+      },
+      {
+        "id": "resource:820",
+        "label": "Iron dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 820,
+          "itemName": "Iron dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 808,
+    "itemName": "Steel dart",
+    "action": "Attach feathers to steel dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 37",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 37
+      },
+      {
+        "id": "resource:821",
+        "label": "Steel dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 821,
+          "itemName": "Steel dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 809,
+    "itemName": "Mithril dart",
+    "action": "Attach feathers to mithril dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 52",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 52
+      },
+      {
+        "id": "resource:822",
+        "label": "Mithril dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 822,
+          "itemName": "Mithril dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 810,
+    "itemName": "Adamant dart",
+    "action": "Attach feathers to adamant dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 67",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 67
+      },
+      {
+        "id": "resource:823",
+        "label": "Adamant dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 823,
+          "itemName": "Adamant dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 811,
+    "itemName": "Rune dart",
+    "action": "Attach feathers to rune dart tips.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:fletching",
+        "label": "Fletching 81",
+        "kind": "SKILL",
+        "skill": "FLETCHING",
+        "level": 81
+      },
+      {
+        "id": "resource:824",
+        "label": "Rune dart tip",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 824,
+          "itemName": "Rune dart tip",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:314",
+        "label": "Feather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 314,
+          "itemName": "Feather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1059,
+    "itemName": "Leather gloves",
+    "action": "Sew leather gloves.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 1",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 1
+      },
+      {
+        "id": "resource:1741",
+        "label": "Leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1741,
+          "itemName": "Leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1061,
+    "itemName": "Leather boots",
+    "action": "Sew leather boots.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 7",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 7
+      },
+      {
+        "id": "resource:1741",
+        "label": "Leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1741,
+          "itemName": "Leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1167,
+    "itemName": "Leather cowl",
+    "action": "Sew leather cowl.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 9",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 9
+      },
+      {
+        "id": "resource:1741",
+        "label": "Leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1741,
+          "itemName": "Leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1063,
+    "itemName": "Leather vambraces",
+    "action": "Sew leather vambraces.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 11",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 11
+      },
+      {
+        "id": "resource:1741",
+        "label": "Leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1741,
+          "itemName": "Leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1129,
+    "itemName": "Leather body",
+    "action": "Sew leather body.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 14",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 14
+      },
+      {
+        "id": "resource:1741",
+        "label": "Leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1741,
+          "itemName": "Leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1131,
+    "itemName": "Hardleather body",
+    "action": "Sew a hardleather body.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 28",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 28
+      },
+      {
+        "id": "resource:1743",
+        "label": "Hard leather",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1743,
+          "itemName": "Hard leather",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1397,
+    "itemName": "Air battlestaff",
+    "action": "Attach the charged air orb to a battlestaff.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 66",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 66
+      },
+      {
+        "id": "resource:1391",
+        "label": "Battlestaff",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1391,
+          "itemName": "Battlestaff",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:573",
+        "label": "Air orb",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 573,
+          "itemName": "Air orb",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1395,
+    "itemName": "Water battlestaff",
+    "action": "Attach the charged water orb to a battlestaff.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 54",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 54
+      },
+      {
+        "id": "resource:1391",
+        "label": "Battlestaff",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1391,
+          "itemName": "Battlestaff",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:571",
+        "label": "Water orb",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 571,
+          "itemName": "Water orb",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1399,
+    "itemName": "Earth battlestaff",
+    "action": "Attach the charged earth orb to a battlestaff.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 58",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 58
+      },
+      {
+        "id": "resource:1391",
+        "label": "Battlestaff",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1391,
+          "itemName": "Battlestaff",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:575",
+        "label": "Earth orb",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 575,
+          "itemName": "Earth orb",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1393,
+    "itemName": "Fire battlestaff",
+    "action": "Attach the charged fire orb to a battlestaff.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 62",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 62
+      },
+      {
+        "id": "resource:1391",
+        "label": "Battlestaff",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1391,
+          "itemName": "Battlestaff",
+          "quantity": 1
+        },
+        "level": 0
+      },
+      {
+        "id": "resource:569",
+        "label": "Fire orb",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 569,
+          "itemName": "Fire orb",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 1919,
+    "itemName": "Beer glass",
+    "action": "Blow molten glass into a beer glass.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 1",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 1
+      },
+      {
+        "id": "resource:1775",
+        "label": "Molten glass",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1775,
+          "itemName": "Molten glass",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 4527,
+    "itemName": "Candle lantern",
+    "action": "Blow molten glass into a candle lantern.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 4",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 4
+      },
+      {
+        "id": "resource:1775",
+        "label": "Molten glass",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1775,
+          "itemName": "Molten glass",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  },
+  {
+    "itemId": 6667,
+    "itemName": "Fishbowl",
+    "action": "Blow molten glass into a fishbowl.",
+    "opportunityCost": 8,
+    "outputQuantity": 1,
+    "prerequisites": [
+      {
+        "id": "skill:crafting",
+        "label": "Crafting 42",
+        "kind": "SKILL",
+        "skill": "CRAFTING",
+        "level": 42
+      },
+      {
+        "id": "resource:1775",
+        "label": "Molten glass",
+        "kind": "RESOURCE",
+        "resource": {
+          "itemId": 1775,
+          "itemName": "Molten glass",
+          "quantity": 1
+        },
+        "level": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,424 @@
+[
+  {
+    "activityId": "tempoross",
+    "items": {
+      "kind": "ITEM",
+      "itemNames": [
+        "Harpoon",
+        "Barb-tail harpoon",
+        "Dragon harpoon",
+        "Infernal harpoon",
+        "Crystal harpoon"
+      ],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": []
+    },
+    "location": "Ruins of Unkah",
+    "supplies": "An observed harpoon; rope, buckets and hammers are available on the island.",
+    "instructions": "Fish harpoonfish, cook the catch, load both cannons, and tether during every wave until Tempoross is subdued."
+  },
+  {
+    "activityId": "guardians-of-the-rift",
+    "items": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Pickaxe",
+            "Bronze pickaxe",
+            "Iron pickaxe",
+            "Steel pickaxe",
+            "Black pickaxe",
+            "Mithril pickaxe",
+            "Adamant pickaxe",
+            "Rune pickaxe",
+            "Dragon pickaxe",
+            "Infernal pickaxe",
+            "Crystal pickaxe",
+            "Gilded pickaxe",
+            "3rd age pickaxe"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Chisel"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        }
+      ]
+    },
+    "location": "Temple of the Eye",
+    "supplies": "An observed pickaxe and chisel.",
+    "instructions": "Mine guardian fragments, craft essence, then charge and enter the best legal altar available."
+  },
+  {
+    "activityId": "motherlode-mine",
+    "items": {
+      "kind": "ITEM",
+      "itemNames": [
+        "Pickaxe",
+        "Bronze pickaxe",
+        "Iron pickaxe",
+        "Steel pickaxe",
+        "Black pickaxe",
+        "Mithril pickaxe",
+        "Adamant pickaxe",
+        "Rune pickaxe",
+        "Dragon pickaxe",
+        "Infernal pickaxe",
+        "Crystal pickaxe",
+        "Gilded pickaxe",
+        "3rd age pickaxe"
+      ],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": []
+    },
+    "location": "Motherlode Mine beneath Falador",
+    "supplies": "An observed pickaxe.",
+    "instructions": "Mine pay-dirt, clean it through the hopper, and collect the sack before it reaches capacity."
+  },
+  {
+    "activityId": "forestry",
+    "items": {
+      "kind": "ITEM",
+      "itemNames": [
+        "Axe",
+        "Bronze axe",
+        "Iron axe",
+        "Steel axe",
+        "Black axe",
+        "Mithril axe",
+        "Adamant axe",
+        "Rune axe",
+        "Dragon axe",
+        "Infernal axe",
+        "Crystal axe"
+      ],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": []
+    },
+    "location": "A level-appropriate Forestry tree cluster",
+    "supplies": "An observed usable axe; bring a Forestry kit when owned.",
+    "instructions": "Cut the named tree, bank each inventory, and complete spawned Forestry events."
+  },
+  {
+    "activityId": "vale-totems",
+    "items": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Knife",
+            "Fletching knife"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ANY_OF",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": [
+            {
+              "kind": "ITEM",
+              "itemNames": [
+                "Axe",
+                "Bronze axe",
+                "Iron axe",
+                "Steel axe",
+                "Black axe",
+                "Mithril axe",
+                "Adamant axe",
+                "Rune axe",
+                "Dragon axe",
+                "Infernal axe",
+                "Crystal axe"
+              ],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            },
+            {
+              "kind": "ITEM",
+              "itemNames": [
+                "Logs",
+                "Oak logs",
+                "Willow logs",
+                "Maple logs",
+                "Yew logs",
+                "Magic logs",
+                "Redwood logs"
+              ],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "location": "Auburn Valley",
+    "supplies": "An observed knife plus an axe or usable logs.",
+    "instructions": "Build, carve and decorate a matching totem, then claim the ent offerings."
+  },
+  {
+    "activityId": "wintertodt",
+    "items": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM_CLASS",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "CARRIED_OR_EQUIPPED",
+          "itemClass": "AXE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Tinderbox",
+            "Bruma torch"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "CHECK_NEEDED",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "Equip four verified warm-clothing pieces and carry food that heals at least 4 Hitpoints, or an exact rejuvenation-potion setup",
+          "children": []
+        }
+      ]
+    },
+    "location": "Wintertodt Camp in northern Great Kourend",
+    "supplies": "A usable axe, tinderbox or bruma torch, four warm items, and warmth-restoring food or rejuvenation potions. Knives and hammers are available inside.",
+    "instructions": "Chop bruma roots, feed and repair braziers, keep warmth above zero, and earn at least 500 personal points before the round ends."
+  },
+  {
+    "activityId": "giants-foundry",
+    "items": {
+      "kind": "ITEM",
+      "itemNames": [
+        "Iron bar",
+        "Steel bar",
+        "Mithril bar",
+        "Adamantite bar",
+        "Runite bar"
+      ],
+      "quantity": 28,
+      "quantityMode": "AT_LEAST",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": []
+    },
+    "location": "Giants\u0027 Foundry beneath Kovac\u0027s workshop, east of Al Kharid",
+    "supplies": "At least 28 observed eligible bars; adjacent-metal alloys are evaluated by the skilling method when both supplies are known.",
+    "instructions": "Take Kovac\u0027s commission, choose the highest-scoring owned moulds, load exactly 28 bars\u0027 worth into the crucible, pour the preform, and keep each station inside its temperature band."
+  },
+  {
+    "activityId": "mahogany-homes",
+    "items": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Hammer"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Saw",
+            "Amy\u0027s saw"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "CHECK_NEEDED",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "Take a live Mahogany Homes contract, then observe its tier and exact plank and steel-bar shortfall",
+          "children": []
+        }
+      ]
+    },
+    "location": "Amy immediately south of Falador Park",
+    "supplies": "A hammer, saw, the plank type for the live contract tier, any required steel bar, and verified travel to the named client.",
+    "instructions": "Take the highest useful contract tier whose materials are observed, repair every marked hotspot at the named client\u0027s house, speak to the client, and return for another contract."
+  },
+  {
+    "activityId": "tithe-farm",
+    "items": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Spade"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": [
+            "Seed dibber"
+          ],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        },
+        {
+          "kind": "ANY_OF",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": [
+            {
+              "kind": "ITEM",
+              "itemNames": [
+                "Gricoller\u0027s can"
+              ],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            },
+            {
+              "kind": "ITEM",
+              "itemNames": [
+                "Watering can(8)",
+                "Watering can(7)",
+                "Watering can(6)",
+                "Watering can(5)",
+                "Watering can(4)",
+                "Watering can(3)",
+                "Watering can(2)",
+                "Watering can(1)"
+              ],
+              "quantity": 8,
+              "quantityMode": "AT_LEAST",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "location": "Tithe Farm in Hosidius",
+    "supplies": "A spade, seed dibber, and either Gricoller\u0027s can or eight filled watering cans.",
+    "instructions": "Take the seed for the observed Farming level, plant and immediately water a manageable plot cycle, revisit every watering stage, then harvest and deposit the fruit."
+  }
+]

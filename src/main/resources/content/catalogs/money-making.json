@@ -1,0 +1,517 @@
+[
+  {
+    "id": "money:f2p-ogresses",
+    "name": "Ogress drops",
+    "description": "Safespot ogress warriors/shamans and bank or alch useful rune drops.",
+    "primarySkill": "RANGED",
+    "minimumLevel": 40,
+    "freeToPlay": true,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "LOW",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:f2p-iron",
+    "name": "Mine iron ore",
+    "description": "Mine and bank iron when ore value/resources matter more than pure Mining XP.",
+    "primarySkill": "MINING",
+    "minimumLevel": 15,
+    "freeToPlay": true,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:f2p-high-alch",
+    "name": "High-alch verified items",
+    "description": "High-alch only items observed as safe to consume and economically sensible.",
+    "primarySkill": "MAGIC",
+    "minimumLevel": 55,
+    "freeToPlay": true,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:f2p-crafting",
+    "name": "F2P jewellery/crafting margin",
+    "description": "Use current prices before buying inputs; irons instead treat the products as useful alch/resource conversion.",
+    "primarySkill": "CRAFTING",
+    "minimumLevel": 20,
+    "freeToPlay": true,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:f2p-boss-keys",
+    "name": "Obor/Bryophyta/Brutus drops",
+    "description": "Use already-earned access/keys for F2P boss drops when the account is combat-ready.",
+    "primarySkill": "ATTACK",
+    "minimumLevel": 40,
+    "freeToPlay": true,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:herb-runs",
+    "name": "Herb runs",
+    "description": "Run the most profitable/strategically useful verified herb seeds and patches using live price data for Main accounts.",
+    "primarySkill": "FARMING",
+    "minimumLevel": 32,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:birdhouses",
+    "name": "Birdhouse runs",
+    "description": "Complete ready birdhouse runs for nests, seeds, Hunter XP, and tradeable value.",
+    "primarySkill": "HUNTER",
+    "minimumLevel": 5,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:wealthy-citizens",
+    "name": "Varlamore wealthy citizens",
+    "description": "Use the Varlamore pickpocket/house-robbery loop for low-intensity Thieving and coin/value generation.",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 50,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "LOW",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:ardy-knights",
+    "name": "Ardougne knights",
+    "description": "Pickpocket knights when success rate, healing, and coin generation fit the session.",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 55,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "LOW",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:vyres",
+    "name": "Pickpocket vyres",
+    "description": "Pickpocket vyres only after Darkmeyer access and a sustainable healing/teleport setup are confirmed.",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 82,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:elves",
+    "name": "Pickpocket elves",
+    "description": "Pickpocket elves after Prifddinas access when current crystal/shard and tradeable rewards justify it.",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 85,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:blast-furnace",
+    "name": "Blast Furnace processing",
+    "description": "Use live prices before buying ore on a Main; irons can use banked ore when bars are strategically valuable.",
+    "primarySkill": "SMITHING",
+    "minimumLevel": 40,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:blood-runes",
+    "name": "Blood rune crafting",
+    "description": "Craft blood runes when the unlocked route provides useful runes or strong tradeable value.",
+    "primarySkill": "RUNECRAFT",
+    "minimumLevel": 77,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:sepulchre",
+    "name": "Hallowed Sepulchre loot",
+    "description": "Run the deepest safe unlocked Sepulchre floors for Agility XP and valuable loot.",
+    "primarySkill": "AGILITY",
+    "minimumLevel": 52,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:agility-pyramid",
+    "name": "Agility Pyramid cash",
+    "description": "Trade pyramid tops for coins when the desert route, food/water protection, and Agility level make it sensible.",
+    "primarySkill": "AGILITY",
+    "minimumLevel": 30,
+    "freeToPlay": false,
+    "supportedModes": [
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:giants-foundry",
+    "name": "Giants\u0027 Foundry contracts",
+    "description": "Turn available metal into Smithing XP, outfit progress, and direct coin rewards.",
+    "primarySkill": "SMITHING",
+    "minimumLevel": 15,
+    "freeToPlay": false,
+    "supportedModes": [
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:slayer-alchs",
+    "name": "Slayer alch drops",
+    "description": "Accumulate and safely high-alch suitable Slayer drops while progressing combat and Slayer.",
+    "primarySkill": "SLAYER",
+    "minimumLevel": 40,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:battlestaves",
+    "name": "Battlestaff conversion",
+    "description": "Use unlocked daily battlestaves/orb supply only when the account can source the components efficiently.",
+    "primarySkill": "CRAFTING",
+    "minimumLevel": 54,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:contracts-seeds",
+    "name": "Farming contracts and seed value",
+    "description": "Treat Farming contracts as seed/resource generation on irons rather than forcing a GP/hour comparison.",
+    "primarySkill": "FARMING",
+    "minimumLevel": 45,
+    "freeToPlay": false,
+    "supportedModes": [
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:vorkath",
+    "name": "Vorkath",
+    "description": "Use the PvM readiness engine and target-specific gear before considering Vorkath as a money method.",
+    "primarySkill": "RANGED",
+    "minimumLevel": 75,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:zulrah",
+    "name": "Zulrah",
+    "description": "Use verified Zulrah access, combat readiness, supplies, and current drop values.",
+    "primarySkill": "RANGED",
+    "minimumLevel": 75,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:gauntlet",
+    "name": "Corrupted Gauntlet",
+    "description": "Use after Song of the Elves and only when current skills and risk settings support repeated Gauntlet attempts.",
+    "primarySkill": "RANGED",
+    "minimumLevel": 75,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": false
+  },
+  {
+    "id": "money:slayer-bosses",
+    "name": "Slayer bosses",
+    "description": "Use task-compatible bosses only when the account is realistically ready and the risk/reward fits its mode.",
+    "primarySkill": "SLAYER",
+    "minimumLevel": 75,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:raids",
+    "name": "Raids",
+    "description": "Treat raids as profit only after raid-specific readiness, team/solo plan, supplies, and gear switches are verified.",
+    "primarySkill": "RANGED",
+    "minimumLevel": 80,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": false,
+    "requiresLivePrices": true
+  },
+  {
+    "id": "money:wilderness-bosses",
+    "name": "Wilderness bosses",
+    "description": "High-value Wilderness PvM. Never surface without explicit Wilderness acceptance; never default for Hardcore.",
+    "primarySkill": "ATTACK",
+    "minimumLevel": 70,
+    "freeToPlay": false,
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "wilderness": true,
+    "requiresLivePrices": true
+  }
+]

@@ -1,0 +1,196 @@
+[
+  {
+    "id": "turael",
+    "names": [
+      "Turael/Aya",
+      "Turael",
+      "Aya"
+    ],
+    "location": "Burthorpe",
+    "minimumCombat": 0,
+    "minimumSlayer": 1,
+    "questStartSuffices": false,
+    "normalPoints": 0,
+    "cancelCost": 30,
+    "blockCost": 40,
+    "experiencePotential": 0.2,
+    "supplyValue": 0.15,
+    "setupBurden": 0.15,
+    "locationConstraint": 0.05,
+    "wilderness": false
+  },
+  {
+    "id": "mazchna",
+    "names": [
+      "Mazchna/Achtryn",
+      "Mazchna",
+      "Achtryn"
+    ],
+    "location": "Canifis",
+    "minimumCombat": 20,
+    "minimumSlayer": 1,
+    "requiredQuest": "Priest in Peril",
+    "questStartSuffices": false,
+    "normalPoints": 6,
+    "cancelCost": 30,
+    "blockCost": 50,
+    "experiencePotential": 0.32,
+    "supplyValue": 0.25,
+    "setupBurden": 0.28,
+    "locationConstraint": 0.08,
+    "wilderness": false
+  },
+  {
+    "id": "vannaka",
+    "names": [
+      "Vannaka"
+    ],
+    "location": "Edgeville Dungeon",
+    "minimumCombat": 40,
+    "minimumSlayer": 1,
+    "questStartSuffices": false,
+    "normalPoints": 8,
+    "cancelCost": 30,
+    "blockCost": 60,
+    "experiencePotential": 0.45,
+    "supplyValue": 0.32,
+    "setupBurden": 0.3,
+    "locationConstraint": 0.08,
+    "wilderness": false
+  },
+  {
+    "id": "chaeldar",
+    "names": [
+      "Chaeldar"
+    ],
+    "location": "Zanaris",
+    "minimumCombat": 70,
+    "minimumSlayer": 1,
+    "requiredQuest": "Lost City",
+    "questStartSuffices": false,
+    "normalPoints": 10,
+    "cancelCost": 30,
+    "blockCost": 70,
+    "experiencePotential": 0.66,
+    "supplyValue": 0.48,
+    "setupBurden": 0.48,
+    "locationConstraint": 0.1,
+    "wilderness": false
+  },
+  {
+    "id": "konar",
+    "names": [
+      "Konar quo Maten",
+      "Konar"
+    ],
+    "location": "Mount Karuulm",
+    "minimumCombat": 75,
+    "minimumSlayer": 1,
+    "questStartSuffices": false,
+    "normalPoints": 18,
+    "cancelCost": 30,
+    "blockCost": 80,
+    "experiencePotential": 0.76,
+    "supplyValue": 0.78,
+    "setupBurden": 0.62,
+    "locationConstraint": 1.0,
+    "wilderness": false
+  },
+  {
+    "id": "nieve",
+    "names": [
+      "Nieve/Steve",
+      "Nieve",
+      "Steve"
+    ],
+    "location": "Tree Gnome Stronghold",
+    "minimumCombat": 85,
+    "minimumSlayer": 1,
+    "questStartSuffices": false,
+    "normalPoints": 12,
+    "cancelCost": 30,
+    "blockCost": 90,
+    "experiencePotential": 0.88,
+    "supplyValue": 0.58,
+    "setupBurden": 0.42,
+    "locationConstraint": 0.08,
+    "wilderness": false
+  },
+  {
+    "id": "duradel",
+    "names": [
+      "Duradel/Kuradal",
+      "Duradel",
+      "Kuradal"
+    ],
+    "location": "Shilo Village",
+    "minimumCombat": 100,
+    "minimumSlayer": 50,
+    "requiredQuest": "Shilo Village",
+    "questStartSuffices": false,
+    "normalPoints": 15,
+    "cancelCost": 30,
+    "blockCost": 100,
+    "experiencePotential": 1.0,
+    "supplyValue": 0.66,
+    "setupBurden": 0.58,
+    "locationConstraint": 0.08,
+    "wilderness": false
+  },
+  {
+    "id": "krystilia",
+    "names": [
+      "Krystilia"
+    ],
+    "location": "Edgeville",
+    "minimumCombat": 1,
+    "minimumSlayer": 1,
+    "questStartSuffices": false,
+    "normalPoints": 25,
+    "cancelCost": 30,
+    "blockCost": 100,
+    "experiencePotential": 0.72,
+    "supplyValue": 0.86,
+    "setupBurden": 0.48,
+    "locationConstraint": 1.0,
+    "wilderness": true
+  },
+  {
+    "id": "spria",
+    "names": [
+      "Spria"
+    ],
+    "location": "Draynor Village",
+    "minimumCombat": 0,
+    "minimumSlayer": 1,
+    "requiredQuest": "A Porcine of Interest",
+    "questStartSuffices": false,
+    "normalPoints": 0,
+    "cancelCost": 30,
+    "blockCost": 40,
+    "experiencePotential": 0.2,
+    "supplyValue": 0.15,
+    "setupBurden": 0.15,
+    "locationConstraint": 0.08,
+    "wilderness": false
+  },
+  {
+    "id": "mortimer",
+    "names": [
+      "Mortimer"
+    ],
+    "location": "Wyrmscraig Cavern",
+    "minimumCombat": 100,
+    "minimumSlayer": 70,
+    "requiredQuest": "Fallen From Grace",
+    "questStartSuffices": true,
+    "normalPoints": 0,
+    "cancelCost": 100,
+    "blockCost": 120,
+    "experiencePotential": 0.96,
+    "supplyValue": 0.9,
+    "setupBurden": 0.55,
+    "locationConstraint": 0.45,
+    "wilderness": false
+  }
+]

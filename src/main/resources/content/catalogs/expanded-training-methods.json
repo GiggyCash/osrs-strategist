@@ -1,0 +1,6138 @@
+[
+  {
+    "method": {
+      "id": "attack_f2p_low",
+      "skill": "ATTACK",
+      "minLevel": 1,
+      "maxLevel": 35,
+      "name": "Low-level F2P melee",
+      "instructions": "Fight low-defence F2P monsters with the best weapon available for the chosen style.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "attack_f2p_giants",
+      "skill": "ATTACK",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "F2P giants",
+      "instructions": "Train on hill or moss giants when you want simple combat plus useful drops and Prayer supplies.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "attack_crabs",
+      "skill": "ATTACK",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Crab training",
+      "instructions": "Use sand, ammonite, or another unlocked crab area for low-attention melee experience.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Unlocked crab area"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "attack_slayer",
+      "skill": "ATTACK",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "Train through Slayer",
+      "instructions": "Use the requested melee style during suitable Slayer tasks so combat and Slayer progress together.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Current Slayer task suitable for melee"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "attack_scurrius",
+      "skill": "ATTACK",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Scurrius",
+      "instructions": "Use Scurrius as active combat practice when the account has the supplies and encounter access for it.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Scurrius readiness and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "attack_nmz",
+      "skill": "ATTACK",
+      "minLevel": 70,
+      "maxLevel": 99,
+      "name": "Nightmare Zone",
+      "instructions": "Use an unlocked Nightmare Zone setup for long, low-attention melee sessions.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 45,
+      "setupMinutes": 8,
+      "requirements": [
+        "Nightmare Zone quest bosses unlocked"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_f2p_low",
+      "skill": "DEFENCE",
+      "minLevel": 1,
+      "maxLevel": 35,
+      "name": "Low-level F2P melee",
+      "instructions": "Fight low-defence F2P monsters with the best weapon available for the chosen style.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_f2p_giants",
+      "skill": "DEFENCE",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "F2P giants",
+      "instructions": "Train on hill or moss giants when you want simple combat plus useful drops and Prayer supplies.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_crabs",
+      "skill": "DEFENCE",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Crab training",
+      "instructions": "Use sand, ammonite, or another unlocked crab area for low-attention melee experience.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Unlocked crab area"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_slayer",
+      "skill": "DEFENCE",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "Train through Slayer",
+      "instructions": "Use the requested melee style during suitable Slayer tasks so combat and Slayer progress together.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Current Slayer task suitable for melee"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_scurrius",
+      "skill": "DEFENCE",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Scurrius",
+      "instructions": "Use Scurrius as active combat practice when the account has the supplies and encounter access for it.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Scurrius readiness and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "defence_nmz",
+      "skill": "DEFENCE",
+      "minLevel": 70,
+      "maxLevel": 99,
+      "name": "Nightmare Zone",
+      "instructions": "Use an unlocked Nightmare Zone setup for long, low-attention melee sessions.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 45,
+      "setupMinutes": 8,
+      "requirements": [
+        "Nightmare Zone quest bosses unlocked"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_f2p_low",
+      "skill": "STRENGTH",
+      "minLevel": 1,
+      "maxLevel": 35,
+      "name": "Low-level F2P melee",
+      "instructions": "Fight low-defence F2P monsters with the best weapon available for the chosen style.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_f2p_giants",
+      "skill": "STRENGTH",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "F2P giants",
+      "instructions": "Train on hill or moss giants when you want simple combat plus useful drops and Prayer supplies.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_crabs",
+      "skill": "STRENGTH",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Crab training",
+      "instructions": "Use sand, ammonite, or another unlocked crab area for low-attention melee experience.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Unlocked crab area"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_slayer",
+      "skill": "STRENGTH",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "Train through Slayer",
+      "instructions": "Use the requested melee style during suitable Slayer tasks so combat and Slayer progress together.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Current Slayer task suitable for melee"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_scurrius",
+      "skill": "STRENGTH",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Scurrius",
+      "instructions": "Use Scurrius as active combat practice when the account has the supplies and encounter access for it.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Scurrius readiness and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "strength_nmz",
+      "skill": "STRENGTH",
+      "minLevel": 70,
+      "maxLevel": 99,
+      "name": "Nightmare Zone",
+      "instructions": "Use an unlocked Nightmare Zone setup for long, low-attention melee sessions.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 45,
+      "setupMinutes": 8,
+      "requirements": [
+        "Nightmare Zone quest bosses unlocked"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hitpoints_combat",
+      "skill": "HITPOINTS",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Train through combat",
+      "instructions": "Let Hitpoints rise naturally while training combat skills or completing PvM progression.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 0,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hitpoints_slayer",
+      "skill": "HITPOINTS",
+      "minLevel": 10,
+      "maxLevel": 99,
+      "name": "Train through Slayer",
+      "instructions": "Gain Hitpoints passively while doing safe, account-appropriate Slayer tasks.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_f2p_bows",
+      "skill": "RANGED",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "F2P bows and safespots",
+      "instructions": "Use the best available F2P bow/ammunition and safespot appropriate monsters where practical.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_f2p_ogress",
+      "skill": "RANGED",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Safespot ogresses",
+      "instructions": "Safespot ogresses for a relaxed F2P Ranged method with alchable drops.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Corsair Cove access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_crabs",
+      "skill": "RANGED",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Ranged at crabs",
+      "instructions": "Use an unlocked crab area for low-attention Ranged experience.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Unlocked crab area"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_cannon_slayer",
+      "skill": "RANGED",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Cannon Slayer tasks",
+      "instructions": "Use a dwarf multicannon on tasks where it is allowed and strategically worth the ammunition cost.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 8,
+      "requirements": [
+        "Dwarf Cannon",
+        "Cannon-eligible Slayer task",
+        "Cannonball supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_chinning",
+      "skill": "RANGED",
+      "minLevel": 45,
+      "maxLevel": 99,
+      "name": "Chinchompas",
+      "instructions": "Use chinchompas in a verified multi-target training location for very fast active Ranged experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 10,
+      "requirements": [
+        "Multi-target training location",
+        "Large chinchompa supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_slayer",
+      "skill": "RANGED",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Ranged through Slayer",
+      "instructions": "Range suitable Slayer tasks to combine Ranged, Slayer, drops, and account progression.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Current Slayer task suitable for Ranged"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_f2p_bones",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Bury F2P bones",
+      "instructions": "Bury bones obtained while training or killing giants when playing F2P or conserving resources.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 5,
+      "setupMinutes": 0,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_gilded_altar",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Gilded altar",
+      "instructions": "Offer bones at a lit gilded altar when a safe house route and bone supply are available.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 8,
+      "requirements": [
+        "Bone supply",
+        "Lit gilded altar access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_ensouled_heads",
+      "skill": "PRAYER",
+      "minLevel": 16,
+      "maxLevel": 99,
+      "name": "Ensouled heads",
+      "instructions": "Reanimate and defeat ensouled creatures for a self-source-friendly Prayer route.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Arceuus reanimation access",
+        "Ensouled head supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_blessed_shards",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Blessed bone shards",
+      "instructions": "Process and offer blessed bone shards when the Varlamore route and supplies are verified.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "Blessed bone shard route and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_ectofuntus",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Ectofuntus",
+      "instructions": "Grind bones and offer bonemeal with slime at the Ectofuntus when conserving bones matters more than speed.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "Ghosts Ahoy or verified Port Phasmatys route",
+        "Bone, pot and bucket-of-slime supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_bonecrusher_passive",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Bonecrusher during combat",
+      "instructions": "Carry a charged bonecrusher during suitable combat or Slayer when passive Prayer XP and inventory saving outweigh the charge cost.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Morytania hard diary reward",
+        "Bonecrusher charges",
+        "Suitable combat activity"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "LOW",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_chaos_altar",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Chaos altar",
+      "instructions": "Offer bones at the Wilderness Chaos Altar only when Wilderness risk is explicitly enabled and accepted.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 8,
+      "requirements": [
+        "Bone supply",
+        "Wilderness risk accepted"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "MODERATE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_f2p_combat",
+      "skill": "MAGIC",
+      "minLevel": 1,
+      "maxLevel": 34,
+      "name": "Wind Strike on monks",
+      "instructions": "Edgeville Monastery, west of Edgeville: cast Wind Strike on monks, ask a monk to heal you when needed, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [
+        "Air and mind rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_f2p_curse",
+      "skill": "MAGIC",
+      "minLevel": 19,
+      "maxLevel": 99,
+      "name": "Curse splashing",
+      "instructions": "Cage under the Varrock Palace stairs: reduce Magic attack to -64 or lower and manually recast Curse on the caged Monk of Zamorak every spell cycle.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [
+        "Magic attack bonus of -64 or lower",
+        "Earth, water, and body rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_f2p_fire_strike_splash",
+      "skill": "MAGIC",
+      "minLevel": 13,
+      "maxLevel": 99,
+      "name": "Fire Strike splashing",
+      "instructions": "Cage under the Varrock Palace stairs: equip the verified -64 Magic attack setup, autocast Fire Strike on the caged Monk of Zamorak, and interact once every 20 minutes.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Verified -64 Magic attack splashing equipment",
+        "Air, fire, and mind rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_f2p_fire_bolt",
+      "skill": "MAGIC",
+      "minLevel": 35,
+      "maxLevel": 58,
+      "name": "Fire Bolt at Wizards\u0027 Tower",
+      "instructions": "Top floor of Wizards\u0027 Tower: cast Fire Bolt through the cage at the lesser demon, wait for it to respawn, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Air, fire, and chaos rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_f2p_fire_blast",
+      "skill": "MAGIC",
+      "minLevel": 59,
+      "maxLevel": 99,
+      "name": "Fire Blast at Wizards\u0027 Tower",
+      "instructions": "Top floor of Wizards\u0027 Tower: cast Fire Blast through the cage at the lesser demon, wait for it to respawn, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Air, fire, and death rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_high_alch",
+      "skill": "MAGIC",
+      "minLevel": 55,
+      "maxLevel": 99,
+      "name": "High Level Alchemy",
+      "instructions": "High-alch verified items during movement or downtime, accounting for item value before consuming them.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [
+        "Nature rune supply",
+        "Safe alch item list"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_bursting",
+      "skill": "MAGIC",
+      "minLevel": 70,
+      "maxLevel": 93,
+      "name": "Ancient burst training",
+      "instructions": "Burst verified multi-target monsters when spellbook, runes, and supplies are ready.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 10,
+      "requirements": [
+        "Ancient Magicks",
+        "Multi-target location",
+        "Rune and prayer supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_barraging",
+      "skill": "MAGIC",
+      "minLevel": 94,
+      "maxLevel": 99,
+      "name": "Ice Barrage training",
+      "instructions": "Barrage verified multi-target monsters for very high Magic experience when cost is acceptable.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 10,
+      "requirements": [
+        "Ancient Magicks",
+        "Multi-target location",
+        "Large rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_slayer",
+      "skill": "MAGIC",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Magic through Slayer",
+      "instructions": "Use burst/barrage or conventional Magic on suitable Slayer tasks for multi-skill progress.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Suitable Slayer task"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "magic_lunar_utility",
+      "skill": "MAGIC",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Lunar utility spells",
+      "instructions": "Use an economically sensible Lunar utility spell such as Bake Pie, String Jewellery, or Plank Make when its output advances another account goal.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Lunar Diplomacy and Lunar spellbook",
+        "Runes and matching production inputs"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_f2p_fish",
+      "skill": "COOKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Cook fish at Al Kharid",
+      "instructions": "Al Kharid bank and range: withdraw one inventory of the selected raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [
+        "Raw fish supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_wines",
+      "skill": "COOKING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Jugs of wine",
+      "instructions": "Make jugs of wine for fast bankstanding Cooking when the grape cost/supply is acceptable.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [
+        "Grape and jug-of-water supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_hosidius",
+      "skill": "COOKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Hosidius kitchen",
+      "instructions": "Hosidius Kitchen: withdraw raw food from the bank chest, cook it on the kitchen range, bank, and repeat; use this route when its lower burn rate matters.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Hosidius kitchen access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_karambwan_1t",
+      "skill": "COOKING",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "One-tick karambwans",
+      "instructions": "Use one-tick karambwan cooking for very high active Cooking experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Raw karambwan supply and cooking access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_gnome_restaurant",
+      "skill": "COOKING",
+      "minLevel": 29,
+      "maxLevel": 99,
+      "name": "Gnome Restaurant deliveries",
+      "instructions": "Prepare and deliver gnome food when varied Cooking, delivery rewards, and collection goals matter more than raw XP.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Gnome Restaurant access",
+        "Gnome ingredient and transport setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_lumbridge_trees",
+      "skill": "WOODCUTTING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Lumbridge trees",
+      "instructions": "Trees west of Lumbridge Castle: cut regular logs, drop them when full, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_draynor_oaks",
+      "skill": "WOODCUTTING",
+      "minLevel": 15,
+      "maxLevel": 29,
+      "name": "Draynor oaks",
+      "instructions": "Oak trees beside Draynor Village bank: cut oaks, bank the logs, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_f2p_willows",
+      "skill": "WOODCUTTING",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "F2P willows",
+      "instructions": "Willow trees beside Draynor Village bank: cut willows, bank the logs, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_teaks",
+      "skill": "WOODCUTTING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Teak trees",
+      "instructions": "Cut teak trees for strong conventional Woodcutting experience.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Reachable teak trees"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_tick_teaks",
+      "skill": "WOODCUTTING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Tick-manipulated teaks",
+      "instructions": "Use tick manipulation on teak trees when maximizing active Woodcutting experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Tick-manipulation supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_forestry",
+      "skill": "WOODCUTTING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Forestry",
+      "instructions": "Join Forestry events while cutting appropriate trees for social, varied Woodcutting progression.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Forestry-enabled tree location"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_sulliusceps",
+      "skill": "WOODCUTTING",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Sulliusceps",
+      "instructions": "Cut sulliusceps for strong experience and fossil progression when Fossil Island access is ready.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Fossil Island and mushroom transport access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_redwoods",
+      "skill": "WOODCUTTING",
+      "minLevel": 90,
+      "maxLevel": 99,
+      "name": "Redwoods",
+      "instructions": "Cut redwoods for one of the most relaxed high-level Woodcutting methods.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 3,
+      "requirements": [
+        "Woodcutting Guild redwood access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fletching_arrow_shafts",
+      "skill": "FLETCHING",
+      "minLevel": 1,
+      "maxLevel": 20,
+      "name": "Arrow shafts",
+      "instructions": "Fletch logs into arrow shafts for cheap early Fletching and future ammunition supplies.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [
+        "Knife and log supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fletching_bows",
+      "skill": "FLETCHING",
+      "minLevel": 5,
+      "maxLevel": 99,
+      "name": "Longbows and shortbows",
+      "instructions": "Grand Exchange bank: withdraw a knife and the log type named in DO, fletch the full inventory into the named unstrung bow, bank, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [
+        "Knife and log supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fletching_darts",
+      "skill": "FLETCHING",
+      "minLevel": 10,
+      "maxLevel": 99,
+      "name": "Darts",
+      "instructions": "Fletch dart tips and feathers during movement or downtime for fast zero-time-friendly experience.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [
+        "Dart tip and feather supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fletching_broad_arrows",
+      "skill": "FLETCHING",
+      "minLevel": 52,
+      "maxLevel": 99,
+      "name": "Broad arrows",
+      "instructions": "Make broad arrows for fast Fletching when Slayer unlocks and material supply are ready.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Broader Fletching Slayer unlock",
+        "Broad arrow supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fletching_bolts",
+      "skill": "FLETCHING",
+      "minLevel": 9,
+      "maxLevel": 99,
+      "name": "Bolts",
+      "instructions": "Fletch bolts when the ammunition is useful for the account or profitable to make.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [
+        "Bolt component supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_f2p_fly",
+      "skill": "FISHING",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Fly fishing",
+      "instructions": "Barbarian Village fishing spots: catch trout and salmon, drop the fish when full, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_barbarian",
+      "skill": "FISHING",
+      "minLevel": 48,
+      "maxLevel": 99,
+      "name": "Barbarian fishing",
+      "instructions": "Barbarian fish for strong Fishing XP plus passive Agility and Strength experience.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 4,
+      "requirements": [
+        "Barbarian Fishing training"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_3t_barb",
+      "skill": "FISHING",
+      "minLevel": 48,
+      "maxLevel": 99,
+      "name": "3-tick Barbarian fishing",
+      "instructions": "Use tick manipulation at Barbarian Fishing for high active Fishing experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Barbarian Fishing",
+        "Tick-manipulation supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_karambwan",
+      "skill": "FISHING",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Karambwans",
+      "instructions": "Fish karambwans for long AFK intervals and a valuable food supply.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Karambwan fishing access",
+        "Karambwanji supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_tempoross",
+      "skill": "FISHING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Tempoross",
+      "instructions": "Subdue Tempoross for Fishing experience, uniques, and useful account supplies.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Tempoross access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_minnows",
+      "skill": "FISHING",
+      "minLevel": 82,
+      "maxLevel": 99,
+      "name": "Minnows",
+      "instructions": "Fish minnows when shark-equivalent food supply is more important than maximum AFK time.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Fishing Guild minnow platform access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_anglers",
+      "skill": "FISHING",
+      "minLevel": 82,
+      "maxLevel": 99,
+      "name": "Anglerfish",
+      "instructions": "Fish anglerfish for very relaxed experience and high-value food.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Piscarilius anglerfish access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_dark_crabs",
+      "skill": "FISHING",
+      "minLevel": 85,
+      "maxLevel": 99,
+      "name": "Dark crabs",
+      "instructions": "Fish dark crabs only when Wilderness risk is explicitly accepted.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 8,
+      "requirements": [
+        "Wilderness resource area access and risk accepted"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_aerial",
+      "skill": "FISHING",
+      "minLevel": 43,
+      "maxLevel": 99,
+      "name": "Aerial fishing",
+      "instructions": "Use aerial fishing when combined Fishing/Hunter XP and Molch pearl rewards justify the high attention.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "35 Hunter",
+        "Lake Molch access",
+        "Cormorant glove setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_drift_net",
+      "skill": "FISHING",
+      "minLevel": 47,
+      "maxLevel": 99,
+      "name": "Drift net fishing",
+      "instructions": "Run drift nets for strong combined Fishing and Hunter progress when the net cost and underwater setup are worthwhile.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "44 Hunter",
+        "Fossil Island underwater access",
+        "Drift net supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_infernal_eels",
+      "skill": "FISHING",
+      "minLevel": 80,
+      "maxLevel": 99,
+      "name": "Infernal eels",
+      "instructions": "Fish and process infernal eels for a relaxed, bank-light route with Tokkul and onyx-bolt-tip rewards.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Mor Ul Rek access",
+        "Oily fishing rod and bait",
+        "Hammer"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_sacred_eels",
+      "skill": "FISHING",
+      "minLevel": 87,
+      "maxLevel": 99,
+      "name": "Sacred eels",
+      "instructions": "Fish and process sacred eels when Zulrah scales and low-attention profit are strategically useful.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Zul-Andra access",
+        "Fishing rod, bait and knife"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_lumbridge_shrimps",
+      "skill": "FISHING",
+      "minLevel": 1,
+      "maxLevel": 19,
+      "name": "Lumbridge shrimp",
+      "instructions": "Lumbridge Swamp fishing spots beside the Fishing tutor: net shrimp, drop the catch when full, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "firemaking_f2p_logs",
+      "skill": "FIREMAKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Burn logs",
+      "instructions": "Grand Exchange south-east corner: withdraw the log type named in DO and a tinderbox, burn east-to-west rows, bank, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [
+        "Tinderbox and log supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "firemaking_wintertodt",
+      "skill": "FIREMAKING",
+      "minLevel": 50,
+      "maxLevel": 99,
+      "name": "Wintertodt",
+      "instructions": "Subdue Wintertodt for Firemaking experience, collection-log progress, and useful supplies.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Wintertodt access and safe food/warm clothing"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "firemaking_campfires",
+      "skill": "FIREMAKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Campfires",
+      "instructions": "Add logs to campfires when you prefer slower, lower-attention Firemaking over line lighting.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [
+        "Log supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "firemaking_shades",
+      "skill": "FIREMAKING",
+      "minLevel": 5,
+      "maxLevel": 99,
+      "name": "Shade pyres",
+      "instructions": "Burn the best safe shade remains and pyre logs available when Prayer XP, keys, and Shade reward progression are useful.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Shades of Mort\u0027ton access",
+        "Shade remains, pyre logs and tinderbox"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_f2p_jewellery",
+      "skill": "CRAFTING",
+      "minLevel": 5,
+      "maxLevel": 99,
+      "name": "F2P jewellery",
+      "instructions": "Craft gold or gem jewellery appropriate to the available F2P materials and Magic plans.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Gold/gem supply and mould"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_glass",
+      "skill": "CRAFTING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Molten glass",
+      "instructions": "Make and blow molten glass for a self-source-friendly Crafting route.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Glassmaking supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_gems",
+      "skill": "CRAFTING",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Cut gems",
+      "instructions": "Grand Exchange bank: withdraw a chisel and the uncut gem named in DO, cut the full inventory, bank, and repeat.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [
+        "Uncut gem supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_battlestaves",
+      "skill": "CRAFTING",
+      "minLevel": 54,
+      "maxLevel": 99,
+      "name": "Battlestaves",
+      "instructions": "Charge or combine battlestaves when the orb/staff supply and alch economics are favorable.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Battlestaff and orb supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_dhide",
+      "skill": "CRAFTING",
+      "minLevel": 63,
+      "maxLevel": 99,
+      "name": "Dragonhide bodies",
+      "instructions": "Craft dragonhide bodies when hides are available and fast bankstanding experience is worth the cost.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Dragonhide and thread supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_charter_glass",
+      "skill": "CRAFTING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Charter-ship glass",
+      "instructions": "Buy or gather seaweed and sand near a charter route, make molten glass, and blow the best useful item when a bank-light loop suits the account.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Reachable charter ship stock",
+        "Glassblowing pipe and glassmaking runes or furnace"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_platebodies",
+      "skill": "SMITHING",
+      "minLevel": 48,
+      "maxLevel": 99,
+      "name": "F2P platebodies",
+      "instructions": "Smith the best practical platebody tier for solid F2P Smithing experience and alchable products.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Appropriate bar supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_cannonballs",
+      "skill": "SMITHING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Cannonballs",
+      "instructions": "Smith cannonballs when a low-attention session and future Slayer ammunition are valuable.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Dwarf Cannon",
+        "Steel bar supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_blast_furnace_gold",
+      "skill": "SMITHING",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Blast Furnace gold",
+      "instructions": "Smelt gold ore at Blast Furnace with the best verified gauntlet setup for fast Smithing experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "Blast Furnace access",
+        "Gold ore supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_giants_foundry",
+      "skill": "SMITHING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Giants\u0027 Foundry",
+      "instructions": "Forge swords at Giants\u0027 Foundry for resource-efficient Smithing, profit, and outfit rewards.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 25,
+      "setupMinutes": 6,
+      "requirements": [
+        "Giants\u0027 Foundry access",
+        "Metal supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_dart_tips",
+      "skill": "SMITHING",
+      "minLevel": 4,
+      "maxLevel": 99,
+      "name": "Dart tips",
+      "instructions": "Smith dart tips for a slower, low-attention route when the bars have better strategic value as ammunition.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Dart Smithing unlock and bar supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_blast_furnace_bars",
+      "skill": "SMITHING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Blast Furnace bars",
+      "instructions": "Smelt the most strategically useful unlocked bar at Blast Furnace when coal savings, output value, or iron supply justify the setup.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "Blast Furnace access and operating coins",
+        "Ore, coal and transport setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_lumbridge_copper",
+      "skill": "MINING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Lumbridge copper",
+      "instructions": "East Lumbridge Swamp mine: mine copper, drop the ore when full, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_f2p_iron",
+      "skill": "MINING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Power-mine iron",
+      "instructions": "Varrock East mine, southeast of Varrock: mine iron, drop the ore when full, and repeat.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_mlm",
+      "skill": "MINING",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "Motherlode Mine",
+      "instructions": "Mine pay-dirt for a relaxed mix of Mining experience, ores, nuggets, and Prospector progression.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_stars",
+      "skill": "MINING",
+      "minLevel": 10,
+      "maxLevel": 99,
+      "name": "Shooting Stars",
+      "instructions": "Mine discovered stars for very low-attention Mining and stardust rewards.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Reachable Shooting Star"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_granite_3t",
+      "skill": "MINING",
+      "minLevel": 45,
+      "maxLevel": 99,
+      "name": "3-tick granite",
+      "instructions": "Use tick manipulation on granite for high Mining XP when a sweaty session is desired.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Desert heat protection and tick-manipulation supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_calcified",
+      "skill": "MINING",
+      "minLevel": 41,
+      "maxLevel": 99,
+      "name": "Calcified rocks",
+      "instructions": "Mine calcified rocks for a low-attention Varlamore method with Prayer-related rewards.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Calcified rocks access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_gem_rocks",
+      "skill": "MINING",
+      "minLevel": 40,
+      "maxLevel": 99,
+      "name": "Gem rocks",
+      "instructions": "Mine gem rocks when gems and profit are useful alongside solid Mining experience.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Gem rock access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_volcanic",
+      "skill": "MINING",
+      "minLevel": 50,
+      "maxLevel": 99,
+      "name": "Volcanic Mine",
+      "instructions": "Run Volcanic Mine when team/access requirements are met for strong Mining experience with moderate attention.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 8,
+      "requirements": [
+        "Volcanic Mine access and team/readiness"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_blast_mine",
+      "skill": "MINING",
+      "minLevel": 43,
+      "maxLevel": 99,
+      "name": "Blast Mine",
+      "instructions": "Use Blast Mine when ore rewards are valuable and the active explosive loop fits the session.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Blast Mine access and dynamite"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_sandstone",
+      "skill": "MINING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Sandstone",
+      "instructions": "Mine sandstone in the Kharidian Desert when active Mining XP and future sandstone/grinder resources are both useful.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Desert heat protection",
+        "Quarry transport and inventory plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "FREE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "mining_amethyst",
+      "skill": "MINING",
+      "minLevel": 92,
+      "maxLevel": 99,
+      "name": "Amethyst",
+      "instructions": "Mine amethyst for low-attention Mining and valuable high-level ammunition materials.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 4,
+      "requirements": [
+        "Mining Guild amethyst area access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "herblore_low_potions",
+      "skill": "HERBLORE",
+      "minLevel": 3,
+      "maxLevel": 37,
+      "name": "Early potions",
+      "instructions": "Grand Exchange bank: withdraw the herb, vial of water, and secondary named in DO; make a full inventory of that potion, bank, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [
+        "Herb and secondary supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "herblore_prayer_potions",
+      "skill": "HERBLORE",
+      "minLevel": 38,
+      "maxLevel": 62,
+      "name": "Prayer potions",
+      "instructions": "Make prayer potions when ranarrs and snape grass are strategically available.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Ranarr and snape grass supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "herblore_restores",
+      "skill": "HERBLORE",
+      "minLevel": 63,
+      "maxLevel": 80,
+      "name": "Super restores",
+      "instructions": "Make super restores when the account has sufficient snapdragon and red spider egg supply.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Snapdragon and red spider egg supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "herblore_brews",
+      "skill": "HERBLORE",
+      "minLevel": 81,
+      "maxLevel": 99,
+      "name": "Saradomin brews",
+      "instructions": "Make brews when toadflax and crushed nests are available and the PvM supply value is high.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Toadflax and crushed nest supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "VERY_HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "herblore_mixology",
+      "skill": "HERBLORE",
+      "minLevel": 60,
+      "maxLevel": 99,
+      "name": "Mastering Mixology",
+      "instructions": "Use Mastering Mixology for reagent-efficient Herblore and its progression rewards.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 25,
+      "setupMinutes": 6,
+      "requirements": [
+        "Mastering Mixology access and reagent supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_rooftops",
+      "skill": "AGILITY",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Rooftop courses",
+      "instructions": "Run the best verified rooftop course for the current level, balancing XP and Marks of grace.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Reachable rooftop course"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_canifis_marks",
+      "skill": "AGILITY",
+      "minLevel": 40,
+      "maxLevel": 59,
+      "name": "Canifis rooftop for Graceful",
+      "instructions": "Prioritize Canifis rooftops while Marks of grace and Graceful remain a protected progression objective.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Canifis access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_seers",
+      "skill": "AGILITY",
+      "minLevel": 60,
+      "maxLevel": 79,
+      "name": "Seers\u0027 Village rooftop",
+      "instructions": "Run Seers\u0027 Village rooftop for strong conventional Agility and Marks of grace progression.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 3,
+      "requirements": [
+        "Seers\u0027 Village course access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_sep",
+      "skill": "AGILITY",
+      "minLevel": 52,
+      "maxLevel": 99,
+      "name": "Hallowed Sepulchre",
+      "instructions": "Run the deepest unlocked Hallowed Sepulchre floors for high active Agility XP and valuable rewards.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Hallowed Sepulchre access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_prif",
+      "skill": "AGILITY",
+      "minLevel": 75,
+      "maxLevel": 99,
+      "name": "Prifddinas Agility Course",
+      "instructions": "Use the Prifddinas course for a relaxed high-level rooftop-style alternative when unlocked.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Prifddinas access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_wildy_expanded",
+      "skill": "AGILITY",
+      "minLevel": 52,
+      "maxLevel": 99,
+      "name": "Wilderness Agility Course",
+      "instructions": "Use the Wilderness course only when the player explicitly accepts Wilderness risk.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 7,
+      "requirements": [
+        "Wilderness risk accepted"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_colossal_wyrm",
+      "skill": "AGILITY",
+      "minLevel": 50,
+      "maxLevel": 99,
+      "name": "Colossal Wyrm courses",
+      "instructions": "Run the live longer basic or advanced course when its lower-input rhythm, bone shards, and termite rewards fit the session; do not use the pre-update per-lap XP value.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Colossal Wyrm course access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "agility_brimhaven_arena",
+      "skill": "AGILITY",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Brimhaven Agility Arena",
+      "instructions": "Tag the active arena pillars and spend tickets when the varied obstacle loop and reward goals fit the session.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Brimhaven arena access and entrance coins"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_fruit_stalls",
+      "skill": "THIEVING",
+      "minLevel": 25,
+      "maxLevel": 54,
+      "name": "Hosidius fruit stalls",
+      "instructions": "Steal from both fruit stalls in the easternmost house near the Hosidius beach, drop the fruit while moving between them, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_lumbridge_people",
+      "skill": "THIEVING",
+      "minLevel": 1,
+      "maxLevel": 24,
+      "name": "Lumbridge pickpockets",
+      "instructions": "Pickpocket men and women around Lumbridge Castle, use the nearby bank for food, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_uim_lumbridge_people",
+      "skill": "THIEVING",
+      "minLevel": 1,
+      "maxLevel": 24,
+      "name": "UIM Lumbridge pickpockets",
+      "instructions": "Pickpocket men and women around Lumbridge Castle, stop before another failure could be unsafe, ask a monk at Edgeville Monastery to heal you, and repeat without banking.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_uim_fruit_stalls",
+      "skill": "THIEVING",
+      "minLevel": 25,
+      "maxLevel": 99,
+      "name": "UIM Hosidius fruit stalls",
+      "instructions": "Steal from both fruit stalls in the easternmost house near the Hosidius beach, drop only the freshly stolen fruit while moving between them, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_blackjack",
+      "skill": "THIEVING",
+      "minLevel": 45,
+      "maxLevel": 99,
+      "name": "Blackjacking",
+      "instructions": "Blackjack appropriate NPCs for very high, click-intensive Thieving experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Blackjacking quest/access requirements"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_ardy_knights",
+      "skill": "THIEVING",
+      "minLevel": 55,
+      "maxLevel": 99,
+      "name": "Ardougne knights",
+      "instructions": "Ardougne Marketplace: pickpocket a knight already lured into a house or bank safespot, open coin pouches before the cap, heal, and repeat.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Food or healing supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_pyramid",
+      "skill": "THIEVING",
+      "minLevel": 21,
+      "maxLevel": 99,
+      "name": "Pyramid Plunder",
+      "instructions": "Run Pyramid Plunder for active Thieving XP and sceptre collection-log progression.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Sophanem/Pyramid Plunder access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_varlamore",
+      "skill": "THIEVING",
+      "minLevel": 50,
+      "maxLevel": 99,
+      "name": "Varlamore wealthy citizens",
+      "instructions": "Use Varlamore pickpocketing and house robbery loops for lower-intensity Thieving.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Varlamore Thieving access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_artefacts",
+      "skill": "THIEVING",
+      "minLevel": 49,
+      "maxLevel": 99,
+      "name": "Stealing artefacts",
+      "instructions": "Steal and deliver artefacts in Port Piscarilius for active Thieving with useful multiskill movement windows.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Port Piscarilius artefact access",
+        "Guard route and stamina plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_stone_chests",
+      "skill": "THIEVING",
+      "minLevel": 64,
+      "maxLevel": 99,
+      "name": "Stone chests",
+      "instructions": "Loot stone chests when medium clues, gems, and lower-intensity Thieving rewards are strategically useful.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Lizardman Temple chest access",
+        "Food or healing plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_vyres",
+      "skill": "THIEVING",
+      "minLevel": 82,
+      "maxLevel": 99,
+      "name": "Vyres",
+      "instructions": "Pickpocket vyres when blood shards, profit, and a sustainable bank/altar route outweigh faster XP methods.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Sins of the Father and Darkmeyer access",
+        "Vyre outfit and healing setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_elves",
+      "skill": "THIEVING",
+      "minLevel": 85,
+      "maxLevel": 99,
+      "name": "Prifddinas elves",
+      "instructions": "Pickpocket Lindir inside his house beside the Prifddinas POH portal and repeat with the verified healing setup.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Song of the Elves and Prifddinas access",
+        "Healing and dodgy-necklace setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "thieving_rogues_chest",
+      "skill": "THIEVING",
+      "minLevel": 84,
+      "maxLevel": 99,
+      "name": "Rogues\u0027 Castle chests",
+      "instructions": "Loot Rogues\u0027 Castle chests only when Wilderness risk is explicitly accepted and the account has an escape/death-loss plan.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 7,
+      "requirements": [
+        "Wilderness risk accepted",
+        "Deep-Wilderness escape and loss plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_safe_assignments",
+      "skill": "SLAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Conservative Slayer",
+      "instructions": "Use the best safe unlocked Slayer master and favor low-risk assignments with a reliable escape/supply plan.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_highest_master",
+      "skill": "SLAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Highest practical Slayer master",
+      "instructions": "Use the highest practical unlocked master, accounting for block list, points, gear, and task suitability.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Unlocked Slayer master and task state"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_burst_tasks",
+      "skill": "SLAYER",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Burst/Barrage Slayer",
+      "instructions": "Prioritize unlocked multi-target tasks that can be safely burst or barraged when rune supply supports it.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 8,
+      "requirements": [
+        "Suitable burst task",
+        "Ancient Magicks and rune supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_cannon_tasks",
+      "skill": "SLAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Cannon Slayer",
+      "instructions": "Use a cannon on eligible tasks when cannonball cost or self-sourced supply is justified by the time saved.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 8,
+      "requirements": [
+        "Dwarf Cannon",
+        "Cannon-eligible task",
+        "Cannonball supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_bossing",
+      "skill": "SLAYER",
+      "minLevel": 75,
+      "maxLevel": 99,
+      "name": "Slayer bossing",
+      "instructions": "Use suitable boss variants only when gear, supplies, experience, and risk settings support them.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 10,
+      "requirements": [
+        "Boss task and PvM readiness"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_point_boosting",
+      "skill": "SLAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Slayer point boosting",
+      "instructions": "Use short low-tier tasks before each bonus task only when the points unlock a worthwhile block, extension, or item sooner than normal Slayer.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 6,
+      "requirements": [
+        "Two practical Slayer masters and live task streak",
+        "Point-spend goal"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "slayer_wilderness",
+      "skill": "SLAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Wilderness Slayer",
+      "instructions": "Use Wilderness Slayer only when explicitly enabled, with task-specific risk, death-loss, and escape planning.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 8,
+      "requirements": [
+        "Wilderness risk accepted",
+        "Krystilia access and disposable setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_allotments_expanded",
+      "skill": "FARMING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Allotment runs",
+      "instructions": "Plant the best useful available allotments when seeds, tools, compost, and reachable patches are confirmed.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 5,
+      "requirements": [
+        "Reachable allotment patches and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_falador_potatoes",
+      "skill": "FARMING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Falador potato allotments",
+      "instructions": "South Falador Farm: rake one allotment, plant three potato seeds, leave it to grow, return with a spade, harvest, and replant.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [
+        "Falador patch, potato seeds, and farming tools"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_falador_watermelons",
+      "skill": "FARMING",
+      "minLevel": 47,
+      "maxLevel": 99,
+      "name": "Falador watermelon allotments",
+      "instructions": "South Falador Farm: rake one allotment, plant three watermelon seeds, leave it to grow, return with a spade, harvest, and replant.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [
+        "Falador patch, watermelon seeds, and farming tools"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_herbs_expanded",
+      "skill": "FARMING",
+      "minLevel": 9,
+      "maxLevel": 99,
+      "name": "Herb runs",
+      "instructions": "Run verified herb patches with the best strategically useful seed supply available.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 5,
+      "requirements": [
+        "Herb seeds, tools, compost, teleports and reachable patches"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_trees",
+      "skill": "FARMING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Tree runs",
+      "instructions": "Plant and check the best sensible tree tier supported by the account\u0027s seed and payment supply.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 6,
+      "requirements": [
+        "Tree seeds, payments and reachable patches"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_fruit_trees",
+      "skill": "FARMING",
+      "minLevel": 27,
+      "maxLevel": 99,
+      "name": "Fruit tree runs",
+      "instructions": "Add fruit trees to Farming runs when seeds and transport unlocks make the route worthwhile.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 12,
+      "setupMinutes": 7,
+      "requirements": [
+        "Fruit tree seeds and reachable patches"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_tithe",
+      "skill": "FARMING",
+      "minLevel": 34,
+      "maxLevel": 99,
+      "name": "Tithe Farm",
+      "instructions": "Use Tithe Farm for active Farming experience and its useful unlock rewards when a continuous session fits.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 4,
+      "requirements": [
+        "Tithe Farm access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_contracts",
+      "skill": "FARMING",
+      "minLevel": 45,
+      "maxLevel": 99,
+      "name": "Farming contracts",
+      "instructions": "Complete Farming Guild contracts opportunistically to build a sustainable seed supply.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 5,
+      "setupMinutes": 3,
+      "requirements": [
+        "Farming Guild contract access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_seaweed",
+      "skill": "FARMING",
+      "minLevel": 23,
+      "maxLevel": 99,
+      "name": "Giant seaweed runs",
+      "instructions": "Plant and harvest giant seaweed when Crafting glass supply and a short recurring run fit the account.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 8,
+      "setupMinutes": 6,
+      "requirements": [
+        "Fossil Island underwater seaweed patches",
+        "Seaweed spores, compost and diving setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_hardwood",
+      "skill": "FARMING",
+      "minLevel": 35,
+      "maxLevel": 99,
+      "name": "Hardwood tree runs",
+      "instructions": "Maintain teak, mahogany, and other unlocked hardwood patches for infrequent high-value Farming cycles.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 8,
+      "setupMinutes": 7,
+      "requirements": [
+        "Reachable hardwood patches",
+        "Saplings, compost and payment plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "farming_hespori",
+      "skill": "FARMING",
+      "minLevel": 65,
+      "maxLevel": 99,
+      "name": "Hespori",
+      "instructions": "Plant and defeat Hespori when ready for Farming XP, anima seeds, and bottomless-bucket progression.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 6,
+      "requirements": [
+        "Farming Guild Hespori cave access",
+        "Hespori seed and combat readiness"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_body",
+      "skill": "RUNECRAFT",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "F2P body runes",
+      "instructions": "Craft body runes or the best unlocked F2P rune using bank/altar routes that fit the account.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Talisman/tiara and essence supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_lava",
+      "skill": "RUNECRAFT",
+      "minLevel": 23,
+      "maxLevel": 99,
+      "name": "Lava runes",
+      "instructions": "Craft lava runes with binding supplies and fast teleports for high active Runecraft experience.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 8,
+      "requirements": [
+        "Fire altar access",
+        "Binding necklace and earth-rune setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_gotr",
+      "skill": "RUNECRAFT",
+      "minLevel": 27,
+      "maxLevel": 99,
+      "name": "Guardians of the Rift",
+      "instructions": "Play Guardians of the Rift for balanced Runecraft experience, outfit progress, and runes.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Temple of the Eye access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_zmi",
+      "skill": "RUNECRAFT",
+      "minLevel": 27,
+      "maxLevel": 99,
+      "name": "Ourania Altar",
+      "instructions": "Use the Ourania/ZMI altar for a lower-friction conventional Runecraft route.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Ourania Altar route and essence supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_blood",
+      "skill": "RUNECRAFT",
+      "minLevel": 77,
+      "maxLevel": 99,
+      "name": "Blood runes",
+      "instructions": "Craft blood runes for relaxed high-level experience and a valuable rune supply.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Unlocked blood-rune route"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_soul",
+      "skill": "RUNECRAFT",
+      "minLevel": 90,
+      "maxLevel": 99,
+      "name": "Soul runes",
+      "instructions": "Craft soul runes for relaxed high-level Runecraft experience when the route is unlocked.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 5,
+      "requirements": [
+        "Unlocked soul-rune route"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_abyss",
+      "skill": "RUNECRAFT",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Abyss altar runs",
+      "instructions": "Use the Abyss for the most useful unlocked altar only when the short Wilderness crossing and required protection are accepted.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Enter the Abyss",
+        "Essence, pouches and altar access",
+        "Wilderness risk accepted"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_birdhouses",
+      "skill": "HUNTER",
+      "minLevel": 5,
+      "maxLevel": 99,
+      "name": "Birdhouse runs",
+      "instructions": "Complete birdhouse runs when passive nests and low-time progress fit the account; live August 2026 XP is lower by tier, so do not treat them as the default fastest Hunter route.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 5,
+      "setupMinutes": 5,
+      "requirements": [
+        "Birdhouse access and supplies"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_salamanders",
+      "skill": "HUNTER",
+      "minLevel": 29,
+      "maxLevel": 99,
+      "name": "Salamanders",
+      "instructions": "Catch the best practical salamander for active Hunter experience.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Reachable salamander habitat"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "VERY_LOW",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_chins",
+      "skill": "HUNTER",
+      "minLevel": 53,
+      "maxLevel": 99,
+      "name": "Chinchompas",
+      "instructions": "Catch chinchompas when you value tradable profit or a future Ranged supply.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_red_chins",
+      "skill": "HUNTER",
+      "minLevel": 63,
+      "maxLevel": 99,
+      "name": "Red chinchompas",
+      "instructions": "Catch red chinchompas for high Hunter experience and valuable Ranged ammunition.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Red chinchompa area access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_rumours",
+      "skill": "HUNTER",
+      "minLevel": 46,
+      "maxLevel": 99,
+      "name": "Hunter Rumours",
+      "instructions": "Complete Hunter Rumours for varied training, rewards, and account progression.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 25,
+      "setupMinutes": 5,
+      "requirements": [
+        "Hunter Guild rumour access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_herbiboar",
+      "skill": "HUNTER",
+      "minLevel": 80,
+      "maxLevel": 99,
+      "name": "Herbiboar",
+      "instructions": "Track herbiboar for relaxed Hunter experience plus herbs and Herblore supplies.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 25,
+      "setupMinutes": 5,
+      "requirements": [
+        "Fossil Island herbiboar access"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_bird_traps",
+      "skill": "HUNTER",
+      "minLevel": 1,
+      "maxLevel": 28,
+      "name": "Feldip bird snares",
+      "instructions": "Feldip Hunter area south of Yanille: catch crimson swifts, switching to tropical wagtails at 19 Hunter; reset collapsed traps and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [
+        "Bird snare"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_falconry",
+      "skill": "HUNTER",
+      "minLevel": 43,
+      "maxLevel": 99,
+      "name": "Piscatoris falconry",
+      "instructions": "Piscatoris falconry area: rent a gyr falcon from Matthias, catch spotted kebbits (dark kebbits from 57), retrieve the falcon, drop the loot, and repeat.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "500 coins for falcon rental"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_deadfall_kebbits",
+      "skill": "HUNTER",
+      "minLevel": 23,
+      "maxLevel": 56,
+      "name": "Deadfall kebbits",
+      "instructions": "Use the live two-deadfall limit and log-preservation behavior for Wild, Barb-tailed, Prickly, or Sabre-toothed kebbits appropriate to the current level.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Verified deadfall habitat",
+        "Knife, axe, and a small log buffer"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_deadfall_pyre_foxes",
+      "skill": "HUNTER",
+      "minLevel": 57,
+      "maxLevel": 99,
+      "name": "Pyre fox deadfalls",
+      "instructions": "Hunt Pyre foxes with the live faster two-deadfall loop when their rewards, Rumour task, or active Hunter progress justify the travel.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 4,
+      "requirements": [
+        "Pyre fox habitat access",
+        "Knife, axe, and a small log buffer"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_maniacal_monkeys",
+      "skill": "HUNTER",
+      "minLevel": 60,
+      "maxLevel": 99,
+      "name": "Maniacal monkeys",
+      "instructions": "Trap maniacal monkeys for low-attention Hunter when Kruk\u0027s Dungeon access and banana supply are ready.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 25,
+      "setupMinutes": 7,
+      "requirements": [
+        "Monkey Madness II Kruk\u0027s Dungeon access",
+        "Banana supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_sunlight_antelopes",
+      "skill": "HUNTER",
+      "minLevel": 72,
+      "maxLevel": 90,
+      "name": "Sunlight antelopes",
+      "instructions": "Hunt sunlight antelopes when their antlers and meat are useful alongside active Hunter XP.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Sunlight antelope area access",
+        "Pitfall tools and logs"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_black_chins",
+      "skill": "HUNTER",
+      "minLevel": 73,
+      "maxLevel": 99,
+      "name": "Black chinchompas",
+      "instructions": "Hunt black chinchompas only when the player explicitly accepts Wilderness risk and has an escape plan.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 6,
+      "requirements": [
+        "Wilderness risk accepted",
+        "Box traps and escape plan"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": true,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "HIGH",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": false,
+      "hardcoreSafe": false,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "hunter_moonlight_antelopes",
+      "skill": "HUNTER",
+      "minLevel": 91,
+      "maxLevel": 99,
+      "name": "Moonlight antelopes",
+      "instructions": "Hunt moonlight antelopes for high-level active Hunter and their useful antler/meat rewards.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Moonlight antelope area access",
+        "Pitfall tools and logs"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_oak_larders",
+      "skill": "CONSTRUCTION",
+      "minLevel": 33,
+      "maxLevel": 73,
+      "name": "Oak larders",
+      "instructions": "At the oak larder hotspot in a verified POH Kitchen, enter building mode, build an oak larder with eight oak planks, remove it, and repeat.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Verified POH Kitchen, oak planks, hammer, and saw"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_crude_chairs",
+      "skill": "CONSTRUCTION",
+      "minLevel": 1,
+      "maxLevel": 32,
+      "name": "Crude wooden chairs",
+      "instructions": "In a verified POH Parlour, enter building mode, build a crude wooden chair with two planks and two nails, remove it, and repeat.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 3,
+      "requirements": [
+        "Verified POH Parlour, planks, nails, hammer, and saw"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_oak_doors",
+      "skill": "CONSTRUCTION",
+      "minLevel": 74,
+      "maxLevel": 99,
+      "name": "Oak dungeon doors",
+      "instructions": "Build and remove oak dungeon doors for fast high-level oak-plank Construction.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Dungeon room and oak plank supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_mahogany_tables",
+      "skill": "CONSTRUCTION",
+      "minLevel": 52,
+      "maxLevel": 99,
+      "name": "Mahogany tables",
+      "instructions": "Build mahogany tables when maximum conventional Construction speed justifies the plank cost.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Dining room and mahogany plank supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "VERY_HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": false,
+      "uimFriendly": false,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_mahogany_homes",
+      "skill": "CONSTRUCTION",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Mahogany Homes",
+      "instructions": "Complete Mahogany Homes contracts for lower-cost Construction and outfit/tool rewards.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Mahogany Homes contract and plank supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "MODERATE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_mythical_capes",
+      "skill": "CONSTRUCTION",
+      "minLevel": 47,
+      "maxLevel": 99,
+      "name": "Mounted mythical capes",
+      "instructions": "Build and remove mounted mythical capes when teak-plank efficiency matters and Dragon Slayer II is complete.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Dragon Slayer II",
+        "Quest hall, teak planks and mythical cape"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "construction_teak_benches",
+      "skill": "CONSTRUCTION",
+      "minLevel": 66,
+      "maxLevel": 99,
+      "name": "Teak garden benches",
+      "instructions": "Build and remove teak garden benches for fast active Construction when the plank cost and POH setup are justified.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Superior garden and teak plank supply"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "HIGH",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_charting",
+      "skill": "SAILING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Sea charting",
+      "instructions": "Complete reachable one-time sea charting objectives while moving through Sailing progression.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 15,
+      "setupMinutes": 5,
+      "requirements": [
+        "Pandemonium completed",
+        "Required charting tools and reachable sea region"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "FREE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_courier",
+      "skill": "SAILING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Courier port tasks",
+      "instructions": "Stack compatible courier tasks between unlocked ports and combine them with other Sailing travel when practical.",
+      "efficientScore": 14.0,
+      "balancedScore": 17.0,
+      "relaxedScore": 12.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 5,
+      "requirements": [
+        "Pandemonium completed",
+        "Boat and unlocked notice boards"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_salvage_small",
+      "skill": "SAILING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Shipwreck salvaging",
+      "instructions": "Salvage the best safe unlocked shipwreck tier for relaxed Sailing experience and loot.",
+      "efficientScore": 5.0,
+      "balancedScore": 11.0,
+      "relaxedScore": 22.0,
+      "attentionLevel": "AFK",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 6,
+      "requirements": [
+        "Suitable salvaging hook",
+        "Boat safe for the selected waters"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "AFK",
+      "costTier": "PROFITABLE",
+      "riskLevel": "LOW",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_barracuda_tantrum",
+      "skill": "SAILING",
+      "minLevel": 30,
+      "maxLevel": 54,
+      "name": "Barracuda Trials: Tempor Tantrum",
+      "instructions": "Run the first Barracuda Trial when the boat and route are verified ready.",
+      "efficientScore": 19.0,
+      "balancedScore": 15.0,
+      "relaxedScore": 5.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 8,
+      "requirements": [
+        "Tempor Tantrum unlocked",
+        "Trial-ready boat"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "EFFICIENT",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_barracuda_jubbly",
+      "skill": "SAILING",
+      "minLevel": 55,
+      "maxLevel": 71,
+      "name": "Barracuda Trials: Jubbly Jive",
+      "instructions": "Run Jubbly Jive for active mid-level Sailing when unlocked and the boat is ready.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 8,
+      "requirements": [
+        "Jubbly Jive unlocked",
+        "Trial-ready boat"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "LOW",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_barracuda_gwenith",
+      "skill": "SAILING",
+      "minLevel": 72,
+      "maxLevel": 99,
+      "name": "Barracuda Trials: Gwenith Glide",
+      "instructions": "Run Gwenith Glide for high-level active Sailing when quest and boat requirements are verified.",
+      "efficientScore": 22.0,
+      "balancedScore": 9.0,
+      "relaxedScore": -4.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 20,
+      "setupMinutes": 10,
+      "requirements": [
+        "Gwenith Glide and Regicide access",
+        "High-level trial-ready boat"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "SWEATY",
+      "costTier": "MODERATE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  },
+  {
+    "method": {
+      "id": "sailing_deep_sea_trawling",
+      "skill": "SAILING",
+      "minLevel": 60,
+      "maxLevel": 99,
+      "name": "Deep Sea Trawling",
+      "instructions": "Use Deep Sea Trawling when hybrid Fishing/Sailing progress and valuable fish matter more than maximum Sailing XP.",
+      "efficientScore": 8.0,
+      "balancedScore": 14.0,
+      "relaxedScore": 19.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 30,
+      "setupMinutes": 10,
+      "requirements": [
+        "Deep Sea Trawling access and safe boat setup"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": true,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "RELAXED",
+      "costTier": "PROFITABLE",
+      "riskLevel": "MEDIUM",
+      "freeToPlayAllowed": false,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": []
+    }
+  }
+]

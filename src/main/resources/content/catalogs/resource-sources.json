@@ -1,0 +1,1401 @@
+[
+  {
+    "id": "logs",
+    "nameTokens": [
+      "logs",
+      "log"
+    ],
+    "mainRoute": "Buy if current GE price beats the time value of chopping; otherwise cut the required tree tier.",
+    "ironRoute": "Cut the required tree tier or use verified PvM/minigame log rewards already available to the account.",
+    "uimRoute": "Cut only the quantity needed near the destination, or use verified noted/reward sources that do not create long-term inventory pressure.",
+    "freeToPlayItemNames": [
+      "Logs",
+      "Oak logs",
+      "Willow logs",
+      "Maple logs",
+      "Yew logs"
+    ],
+    "freeToPlayMainRoute": "Compare the exact F2P log price with cutting the matching tree tier.",
+    "freeToPlayIronRoute": "Cut the matching F2P tree tier with an observed usable axe.",
+    "freeToPlayUimRoute": "Cut only the immediate quantity from the matching F2P tree tier with an observed usable axe.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "planks",
+    "nameTokens": [
+      "plank",
+      "planks"
+    ],
+    "mainRoute": "Compare GE planks with converting owned logs at a sawmill or through Plank Make.",
+    "ironRoute": "Convert self-sourced logs at an unlocked sawmill/Plank Make route; use Managing Miscellania only when already unlocked and funded.",
+    "uimRoute": "Prefer just-in-time sawmill/Plank Make conversion and verified POH/transport routes; never assume banked plank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "nails",
+    "nameTokens": [
+      "nail",
+      "nails"
+    ],
+    "mainRoute": "Buy the required nail tier or smith from suitable bars if that is cheaper.",
+    "ironRoute": "Smith nails from suitable bars or use a verified shop source.",
+    "uimRoute": "Smith/buy only the immediate quantity needed for the current Construction step.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "ores",
+    "nameTokens": [
+      "ore",
+      "coal"
+    ],
+    "mainRoute": "Compare GE ore prices with mining time and any Blast Furnace processing plan.",
+    "ironRoute": "Mine the required ore, obtain it from verified PvM/minigame rewards, or use an unlocked shop where appropriate.",
+    "uimRoute": "Mine/process in small batches near the destination; avoid routes that depend on normal bank storage.",
+    "freeToPlayItemNames": [
+      "Copper ore",
+      "Tin ore",
+      "Blurite ore",
+      "Iron ore",
+      "Silver ore",
+      "Coal",
+      "Gold ore",
+      "Mithril ore",
+      "Adamantite ore",
+      "Runite ore"
+    ],
+    "freeToPlayMainRoute": "Compare the exact ore\u0027s Grand Exchange price with mining its F2P rock.",
+    "freeToPlayIronRoute": "Mine the exact F2P ore at a verified non-Wilderness rock; use a Wilderness rock only when risk is enabled.",
+    "freeToPlayUimRoute": "Mine only the immediate quantity at a verified F2P rock and process it without a conventional bank loop.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bars",
+    "nameTokens": [
+      "bar",
+      "bars"
+    ],
+    "mainRoute": "Buy bars only after comparing ore+processing cost with finished-bar price.",
+    "ironRoute": "Smelt self-sourced ore, use Blast Furnace when unlocked, or reclaim bars from verified rewards/drops.",
+    "uimRoute": "Use Blast Furnace or nearby furnaces in just-in-time batches and immediately consume the bars in the target activity.",
+    "freeToPlayItemNames": [
+      "Bronze bar",
+      "Iron bar",
+      "Steel bar",
+      "Silver bar",
+      "Gold bar",
+      "Mithril bar",
+      "Adamantite bar",
+      "Runite bar"
+    ],
+    "freeToPlayMainRoute": "Compare the exact F2P bar with buying and with smelting its verified ore recipe at a named furnace.",
+    "freeToPlayIronRoute": "Mine the exact ores and smelt the F2P bar at a named reachable furnace.",
+    "freeToPlayUimRoute": "Mine and smelt one immediate F2P batch, then consume it in the target step without conventional banking.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "cannonballs",
+    "nameTokens": [
+      "cannonball",
+      "cannonballs"
+    ],
+    "mainRoute": "Compare buying cannonballs with the time saved on the planned Slayer/combat task.",
+    "ironRoute": "Smith steel bars into cannonballs when Dwarf Cannon and the mould are available; preserve steel if other progression needs are higher.",
+    "uimRoute": "Smith only the batch needed for the planned task; account for mould and inventory slots before starting.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "herb-seeds",
+    "nameTokens": [
+      "seed",
+      "seeds"
+    ],
+    "mainRoute": "Buy the seed only if expected herb value/XP and current price justify it.",
+    "ironRoute": "Prioritize Farming contracts, Master Farmers, Slayer/PvM seed drops, birdhouses, and existing seed packs.",
+    "uimRoute": "Prioritize seed packs/contracts and immediately usable seeds; verify seed-box access before treating it as storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "herbs",
+    "nameTokens": [
+      "grimy",
+      "ranarr",
+      "snapdragon",
+      "toadflax",
+      "kwuarm",
+      "cadantine",
+      "lantadyme",
+      "dwarf weed",
+      "torstol",
+      "irit",
+      "avantoe",
+      "harralander",
+      "tarromin",
+      "guam",
+      "marrentill"
+    ],
+    "mainRoute": "Compare buying herbs with farming them and the value of the finished potion.",
+    "ironRoute": "Farm herbs, use Slayer/PvM herb drops, and use kingdom/herb rewards only when those systems are unlocked.",
+    "uimRoute": "Favor herb runs and immediately process herbs into needed potions; verify herb-sack/storage capability before counting it.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "snape-grass",
+    "nameTokens": [
+      "snape grass"
+    ],
+    "mainRoute": "Buy or farm snape grass according to current price and potion volume.",
+    "ironRoute": "Grow snape grass at allotments or gather from a verified spawn when farming is not yet practical.",
+    "uimRoute": "Grow/gather only the immediate potion batch to minimize carried secondaries.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "red-spider-eggs",
+    "nameTokens": [
+      "red spiders\u0027 eggs",
+      "red spider eggs"
+    ],
+    "mainRoute": "Buy eggs after comparing current price with collection time.",
+    "ironRoute": "Use a safe verified spawn or unlocked repeatable source; avoid dangerous collection routes on Hardcore.",
+    "uimRoute": "Collect in small batches close to the potion-making route and avoid storage assumptions.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bird-nests",
+    "nameTokens": [
+      "bird nest",
+      "bird nests",
+      "crushed nest",
+      "crushed nests"
+    ],
+    "mainRoute": "Buy nests only after comparing current brew economics with birdhouse/nest acquisition time.",
+    "ironRoute": "Birdhouse runs, woodcutting nests, and verified PvM rewards are preferred self-sources.",
+    "uimRoute": "Birdhouse runs are the preferred low-inventory-pressure source; crush/process nests near use.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "runes",
+    "nameTokens": [
+      "air rune",
+      "mind rune",
+      "water rune",
+      "earth rune",
+      "fire rune",
+      "body rune",
+      "cosmic rune",
+      "chaos rune",
+      "nature rune",
+      "law rune",
+      "death rune",
+      "astral rune",
+      "blood rune",
+      "soul rune",
+      "wrath rune"
+    ],
+    "mainRoute": "Compare GE rune cost with shop stock and Runecraft time for the planned spell volume.",
+    "ironRoute": "Runecraft, Guardians of the Rift, rune shops, and verified monster drops are standard self-sources.",
+    "uimRoute": "Use rune shops/GOTR/Runecraft in task-sized batches; verify rune pouch before counting it as storage.",
+    "freeToPlayItemNames": [
+      "Air rune",
+      "Mind rune",
+      "Water rune",
+      "Earth rune",
+      "Fire rune",
+      "Body rune",
+      "Cosmic rune",
+      "Chaos rune",
+      "Nature rune",
+      "Law rune",
+      "Death rune"
+    ],
+    "freeToPlayMainRoute": "Compare the exact rune\u0027s Grand Exchange price with an observed F2P rune shop or unlocked altar.",
+    "freeToPlayIronRoute": "Use an observed F2P rune-shop stock, monster drop, or unlocked altar for the exact rune.",
+    "freeToPlayUimRoute": "Acquire the task-sized stack from an observed F2P shop/drop or craft it at the exact unlocked altar; only a carried verified rune pouch counts.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "essence",
+    "nameTokens": [
+      "pure essence",
+      "rune essence",
+      "daeyalt essence"
+    ],
+    "mainRoute": "Buy essence when cheaper than sourcing time unless a training route specifically benefits from self-sourcing.",
+    "ironRoute": "Use verified mining, PvM drops, or Daeyalt access when appropriate to the target Runecraft method.",
+    "uimRoute": "Acquire essence immediately before the Runecraft session; avoid accumulating unusable inventory stacks.",
+    "freeToPlayItemNames": [
+      "Rune essence"
+    ],
+    "freeToPlayMainRoute": "Compare rune essence on the Grand Exchange with mining it through Sedridor after Rune Mysteries.",
+    "freeToPlayIronRoute": "Mine rune essence through Sedridor after Rune Mysteries.",
+    "freeToPlayUimRoute": "Mine only the immediate rune-essence inventory through Sedridor, then carry it directly to the target altar.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "raw-fish",
+    "nameTokens": [
+      "raw shrimp",
+      "raw anchovies",
+      "raw sardine",
+      "raw herring",
+      "raw trout",
+      "raw salmon",
+      "raw tuna",
+      "raw shark",
+      "raw karambwan",
+      "raw monkfish",
+      "raw swordfish",
+      "raw lobster",
+      "raw anglerfish",
+      "raw manta ray"
+    ],
+    "mainRoute": "Buy raw food only when Cooking XP or finished-food value justifies the current spread.",
+    "ironRoute": "Fish the required food or use verified minigame/PvM food rewards.",
+    "uimRoute": "Fish and cook in the same route where possible; keep only the immediate combat/quest supply.",
+    "freeToPlayItemNames": [
+      "Raw shrimps",
+      "Raw anchovies",
+      "Raw sardine",
+      "Raw herring",
+      "Raw trout",
+      "Raw salmon",
+      "Raw tuna",
+      "Raw lobster",
+      "Raw swordfish"
+    ],
+    "freeToPlayMainRoute": "Compare buying the exact raw F2P fish with catching it at its verified net, bait, cage, harpoon, or fly-fishing spot.",
+    "freeToPlayIronRoute": "Catch the exact F2P fish at a verified reachable spot with its named fishing tool and bait.",
+    "freeToPlayUimRoute": "Catch and immediately cook the exact F2P fish at a verified fire/range route; retain only the required supply.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "cooked-food",
+    "nameTokens": [
+      "shrimps",
+      "anchovies",
+      "sardine",
+      "herring",
+      "trout",
+      "salmon",
+      "tuna",
+      "shark",
+      "karambwan",
+      "anglerfish",
+      "manta ray",
+      "lobster",
+      "swordfish",
+      "moonlight antelope"
+    ],
+    "mainRoute": "Buy food according to encounter risk and current price rather than always using the most expensive option.",
+    "ironRoute": "Fish/hunt/cook sustainable food or use verified PvM/minigame supplies appropriate to the encounter.",
+    "uimRoute": "Choose food that fits available inventory slots and resupply route; do not assume a banked reserve.",
+    "freeToPlayItemNames": [
+      "Shrimps",
+      "Anchovies",
+      "Sardine",
+      "Herring",
+      "Trout",
+      "Salmon",
+      "Tuna",
+      "Lobster",
+      "Swordfish"
+    ],
+    "freeToPlayMainRoute": "Compare the exact cooked F2P fish price with catching and cooking it at a verified route.",
+    "freeToPlayIronRoute": "Catch and cook the exact F2P fish with its named fishing tool and a verified fire/range.",
+    "freeToPlayUimRoute": "Catch and cook only the immediate F2P food supply in one route so no conventional reserve is assumed.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "glass",
+    "nameTokens": [
+      "molten glass",
+      "bucket of sand",
+      "soda ash",
+      "giant seaweed"
+    ],
+    "mainRoute": "Compare buying molten glass/materials with Superglass Make and sand/seaweed processing.",
+    "ironRoute": "Grow giant seaweed, obtain sand through verified collection/mining, and use Superglass Make when unlocked.",
+    "uimRoute": "Use giant seaweed/sand and Superglass Make in immediate Crafting batches to control inventory pressure.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bowstrings",
+    "nameTokens": [
+      "bow string",
+      "bow strings",
+      "flax"
+    ],
+    "mainRoute": "Buy bowstrings if the current margin makes stringing worthwhile; otherwise prefer faster Fletching routes.",
+    "ironRoute": "Pick flax in the field south of Seers\u0027 Village, spin it in the spinning-wheel building west of the field, and bank the bowstrings at Seers\u0027 Village.",
+    "uimRoute": "Pick flax in the field south of Seers\u0027 Village, spin it in the building immediately west, then string the current bows before leaving instead of storing a batch.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "feathers",
+    "nameTokens": [
+      "feather",
+      "feathers"
+    ],
+    "mainRoute": "Buy feathers from GE/shops according to current price and required quantity.",
+    "ironRoute": "Use feather shops, bird drops, or fishing-related supply sources.",
+    "uimRoute": "Shop-buy the immediate stack needed; feathers are stackable and UIM-friendly once acquired.",
+    "freeToPlayItemNames": [
+      "Feather",
+      "Feathers"
+    ],
+    "freeToPlayMainRoute": "Compare feathers on the Grand Exchange with buying an exact stack from a verified F2P fishing shop.",
+    "freeToPlayIronRoute": "Buy the exact stack from Gerrant\u0027s Fishy Business in Port Sarim or use observed bird drops.",
+    "freeToPlayUimRoute": "Buy only the immediate stack from Gerrant\u0027s Fishy Business in Port Sarim; feathers remain one carried stack.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "gems",
+    "nameTokens": [
+      "uncut sapphire",
+      "uncut emerald",
+      "uncut ruby",
+      "uncut diamond",
+      "uncut dragonstone"
+    ],
+    "mainRoute": "Compare uncut gem price with the finished product and XP value.",
+    "ironRoute": "Mine gem rocks, use Mining/PvM rewards, or cut banked gems already earned.",
+    "uimRoute": "Gem rocks and immediate cutting are preferred; only retain gems with a clear near-term use.",
+    "freeToPlayItemNames": [
+      "Uncut sapphire",
+      "Uncut emerald",
+      "Uncut ruby",
+      "Uncut diamond"
+    ],
+    "freeToPlayMainRoute": "Compare the exact uncut F2P gem price with a verified ore/drop source.",
+    "freeToPlayIronRoute": "Use an observed F2P ore/drop source for the exact gem; do not assume members-only gem rocks.",
+    "freeToPlayUimRoute": "Use only an observed F2P ore/drop source and cut the gem immediately when that is the target step.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bones",
+    "nameTokens": [
+      "bones",
+      "big bones",
+      "dragon bones",
+      "wyrm bones",
+      "wyvern bones",
+      "superior dragon bones"
+    ],
+    "mainRoute": "Buy the bone tier that gives the best current cost per Prayer XP for the chosen altar method.",
+    "ironRoute": "Use bones from planned combat/Slayer/PvM. Prefer safe dragons or other verified sources over Wilderness routes on risk-sensitive accounts.",
+    "uimRoute": "Use just-in-time combat-to-altar routes or other verified UIM-safe methods; never recommend banking bones.",
+    "freeToPlayItemNames": [
+      "Bones",
+      "Big bones"
+    ],
+    "freeToPlayMainRoute": "Compare buying Bones or Big bones with obtaining them during a planned F2P combat route.",
+    "freeToPlayIronRoute": "Obtain Bones or Big bones from the exact planned F2P creature, preferring a non-Wilderness route.",
+    "freeToPlayUimRoute": "Bury Bones or Big bones immediately during the exact F2P combat route instead of building a banked supply.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "dragon-bones-wilderness",
+    "nameTokens": [
+      "dragon bones"
+    ],
+    "mainRoute": "Green dragons can be fast but are a Wilderness option and should only be compared when risk is enabled.",
+    "ironRoute": "Green dragons are optional Wilderness sourcing; safer blue/other dragon routes should be preferred on Hardcore.",
+    "uimRoute": "Wilderness dragon routes require explicit risk acceptance and a UIM death/storage safety check before recommendation.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": true,
+    "riskLevel": "HIGH"
+  },
+  {
+    "id": "compost",
+    "nameTokens": [
+      "compost",
+      "supercompost",
+      "ultracompost"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise make or buy it near the Farming route.",
+    "ironRoute": "Self-source the exact requirement: make or buy it near the Farming route.",
+    "uimRoute": "Use a task-sized, immediately consumable route: make or buy it near the Farming route; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "allotment-seeds",
+    "nameTokens": [
+      "potato seed",
+      "onion seed",
+      "cabbage seed",
+      "tomato seed",
+      "sweetcorn seed",
+      "watermelon seed",
+      "snape grass seed"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise use seed shops, contracts, pickpocketing, or verified drops.",
+    "ironRoute": "Self-source the exact requirement: use seed shops, contracts, pickpocketing, or verified drops.",
+    "uimRoute": "Use a task-sized, immediately consumable route: use seed shops, contracts, pickpocketing, or verified drops; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "tree-seeds",
+    "nameTokens": [
+      "acorn",
+      "willow seed",
+      "maple seed",
+      "yew seed",
+      "magic seed"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise use bird nests, contracts, seed packs, or verified PvM drops.",
+    "ironRoute": "Self-source the exact requirement: use bird nests, contracts, seed packs, or verified PvM drops.",
+    "uimRoute": "Use a task-sized, immediately consumable route: use bird nests, contracts, seed packs, or verified PvM drops; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "fruit-tree-seeds",
+    "nameTokens": [
+      "apple tree seed",
+      "banana tree seed",
+      "orange tree seed",
+      "curry tree seed",
+      "pineapple seed",
+      "papaya tree seed",
+      "palm tree seed",
+      "dragonfruit tree seed"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise use bird nests, contracts, seed packs, or verified PvM drops.",
+    "ironRoute": "Self-source the exact requirement: use bird nests, contracts, seed packs, or verified PvM drops.",
+    "uimRoute": "Use a task-sized, immediately consumable route: use bird nests, contracts, seed packs, or verified PvM drops; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "eye-of-newt",
+    "nameTokens": [
+      "eye of newt"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise buy from a verified Herblore shop or obtain from a known spawn.",
+    "ironRoute": "Self-source the exact requirement: buy from a verified Herblore shop or obtain from a known spawn.",
+    "uimRoute": "Use a task-sized, immediately consumable route: buy from a verified Herblore shop or obtain from a known spawn; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "limpwurt-root",
+    "nameTokens": [
+      "limpwurt root"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise farm limpwurts or use verified monster drops.",
+    "ironRoute": "Self-source the exact requirement: farm limpwurts or use verified monster drops.",
+    "uimRoute": "Use a task-sized, immediately consumable route: farm limpwurts or use verified monster drops; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "white-berries",
+    "nameTokens": [
+      "white berries"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise farm bushes or use a verified safe spawn/drop source.",
+    "ironRoute": "Self-source the exact requirement: farm bushes or use a verified safe spawn/drop source.",
+    "uimRoute": "Use a task-sized, immediately consumable route: farm bushes or use a verified safe spawn/drop source; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "mort-myres",
+    "nameTokens": [
+      "mort myre fungus",
+      "mort myre stem",
+      "mort myre pear"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise gather in Mort Myre only after the required Morytania access and blessing are verified.",
+    "ironRoute": "Self-source the exact requirement: gather in Mort Myre only after the required Morytania access and blessing are verified.",
+    "uimRoute": "Use a task-sized, immediately consumable route: gather in Mort Myre only after the required Morytania access and blessing are verified; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "potato-cactus",
+    "nameTokens": [
+      "potato cactus"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise farm cactus patches or use verified reward/drop sources.",
+    "ironRoute": "Self-source the exact requirement: farm cactus patches or use verified reward/drop sources.",
+    "uimRoute": "Use a task-sized, immediately consumable route: farm cactus patches or use verified reward/drop sources; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "zammy-wine",
+    "nameTokens": [
+      "wine of zamorak"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise use a verified telegrab, temple, or PvM source without assuming a dangerous route.",
+    "ironRoute": "Self-source the exact requirement: use a verified telegrab, temple, or PvM source without assuming a dangerous route.",
+    "uimRoute": "Use a task-sized, immediately consumable route: use a verified telegrab, temple, or PvM source without assuming a dangerous route; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "blue-dragon-scale",
+    "nameTokens": [
+      "blue dragon scale",
+      "ground blue dragon scale"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise collect scales only from a verified reachable blue-dragon area.",
+    "ironRoute": "Self-source the exact requirement: collect scales only from a verified reachable blue-dragon area.",
+    "uimRoute": "Use a task-sized, immediately consumable route: collect scales only from a verified reachable blue-dragon area; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "unfinished-potions",
+    "nameTokens": [
+      "potion (unf)",
+      "unfinished potion"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise combine the verified clean herb with a vial of water.",
+    "ironRoute": "Self-source the exact requirement: combine the verified clean herb with a vial of water.",
+    "uimRoute": "Use a task-sized, immediately consumable route: combine the verified clean herb with a vial of water; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "finished-potions",
+    "nameTokens": [
+      "prayer potion",
+      "super restore",
+      "antipoison",
+      "stamina potion",
+      "ranging potion",
+      "super combat potion",
+      "sanfew serum"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise make from verified herbs and secondaries; mains may compare buying the finished potion.",
+    "ironRoute": "Self-source the exact requirement: make from verified herbs and secondaries; mains may compare buying the finished potion.",
+    "uimRoute": "Use a task-sized, immediately consumable route: make from verified herbs and secondaries; mains may compare buying the finished potion; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "vials",
+    "nameTokens": [
+      "vial",
+      "vial of water"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise buy vials or blow them from molten glass when that detour is worthwhile.",
+    "ironRoute": "Self-source the exact requirement: buy vials or blow them from molten glass when that detour is worthwhile.",
+    "uimRoute": "Use a task-sized, immediately consumable route: buy vials or blow them from molten glass when that detour is worthwhile; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "hides",
+    "nameTokens": [
+      "cowhide",
+      "snake hide",
+      "yak hide"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise obtain from a safe verified creature source before tanning.",
+    "ironRoute": "Self-source the exact requirement: obtain from a safe verified creature source before tanning.",
+    "uimRoute": "Use a task-sized, immediately consumable route: obtain from a safe verified creature source before tanning; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Cowhide"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with kill cattle in a verified F2P cow field and collect the cowhides.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: kill cattle in a verified F2P cow field and collect the cowhides.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: kill cattle in a verified F2P cow field and collect the cowhides; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "leather",
+    "nameTokens": [
+      "leather",
+      "hard leather"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise tan the matching hide at a verified tanner; mains may compare buying it.",
+    "ironRoute": "Self-source the exact requirement: tan the matching hide at a verified tanner; mains may compare buying it.",
+    "uimRoute": "Use a task-sized, immediately consumable route: tan the matching hide at a verified tanner; mains may compare buying it; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Leather",
+      "Hard leather"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with take cowhide to Ellis in Al Kharid and pay for the exact Leather or Hard leather quantity.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: take cowhide to Ellis in Al Kharid and pay for the exact Leather or Hard leather quantity.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: take cowhide to Ellis in Al Kharid and pay for the exact Leather or Hard leather quantity; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "dragon-leather",
+    "nameTokens": [
+      "green dragon leather",
+      "blue dragon leather",
+      "red dragon leather",
+      "black dragon leather"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise tan self-sourced dragonhides or buy the exact leather on a Main.",
+    "ironRoute": "Self-source the exact requirement: tan self-sourced dragonhides or buy the exact leather on a Main.",
+    "uimRoute": "Use a task-sized, immediately consumable route: tan self-sourced dragonhides or buy the exact leather on a Main; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "dragonhides",
+    "nameTokens": [
+      "green dragonhide",
+      "blue dragonhide",
+      "red dragonhide",
+      "black dragonhide"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise use a safe verified dragon source; Wilderness dragons require explicit risk acceptance.",
+    "ironRoute": "Self-source the exact requirement: use a safe verified dragon source; Wilderness dragons require explicit risk acceptance.",
+    "uimRoute": "Use a task-sized, immediately consumable route: use a safe verified dragon source; Wilderness dragons require explicit risk acceptance; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "jewellery",
+    "nameTokens": [
+      "sapphire ring",
+      "emerald ring",
+      "ruby ring",
+      "diamond ring",
+      "dragonstone ring",
+      "sapphire necklace",
+      "emerald necklace",
+      "ruby necklace",
+      "diamond necklace"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise craft from the matching bar, gem, and mould or buy on a Main.",
+    "ironRoute": "Self-source the exact requirement: craft from the matching bar, gem, and mould or buy on a Main.",
+    "uimRoute": "Use a task-sized, immediately consumable route: craft from the matching bar, gem, and mould or buy on a Main; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "charged-orbs",
+    "nameTokens": [
+      "air orb",
+      "water orb",
+      "earth orb",
+      "fire orb"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise charge an unpowered orb at the verified elemental obelisk.",
+    "ironRoute": "Self-source the exact requirement: charge an unpowered orb at the verified elemental obelisk.",
+    "uimRoute": "Use a task-sized, immediately consumable route: charge an unpowered orb at the verified elemental obelisk; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "battlestaves",
+    "nameTokens": [
+      "battlestaff",
+      "air battlestaff",
+      "water battlestaff",
+      "earth battlestaff",
+      "fire battlestaff"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise buy from verified staff shops/rewards or attach a charged orb for the elemental staff.",
+    "ironRoute": "Self-source the exact requirement: buy from verified staff shops/rewards or attach a charged orb for the elemental staff.",
+    "uimRoute": "Use a task-sized, immediately consumable route: buy from verified staff shops/rewards or attach a charged orb for the elemental staff; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "clay",
+    "nameTokens": [
+      "clay",
+      "soft clay"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise mine clay and add water, or buy the exact form when account mode permits.",
+    "ironRoute": "Self-source the exact requirement: mine clay and add water, or buy the exact form when account mode permits.",
+    "uimRoute": "Use a task-sized, immediately consumable route: mine clay and add water, or buy the exact form when account mode permits; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Clay",
+      "Soft clay"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with mine Clay at a verified F2P clay rock and use a carried water container when Soft clay is required.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: mine Clay at a verified F2P clay rock and use a carried water container when Soft clay is required.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: mine Clay at a verified F2P clay rock and use a carried water container when Soft clay is required; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "wool",
+    "nameTokens": [
+      "wool",
+      "ball of wool"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise shear sheep and spin wool, or use a verified shop.",
+    "ironRoute": "Self-source the exact requirement: shear sheep and spin wool, or use a verified shop.",
+    "uimRoute": "Use a task-sized, immediately consumable route: shear sheep and spin wool, or use a verified shop; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Wool",
+      "Ball of wool"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with shear a Lumbridge sheep and spin the Wool on the Lumbridge Castle spinning wheel when Ball of wool is required.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: shear a Lumbridge sheep and spin the Wool on the Lumbridge Castle spinning wheel when Ball of wool is required.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: shear a Lumbridge sheep and spin the Wool on the Lumbridge Castle spinning wheel when Ball of wool is required; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "sand",
+    "nameTokens": [
+      "bucket of sand"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise collect or mine buckets of sand using a verified route.",
+    "ironRoute": "Self-source the exact requirement: collect or mine buckets of sand using a verified route.",
+    "uimRoute": "Use a task-sized, immediately consumable route: collect or mine buckets of sand using a verified route; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "seaweed",
+    "nameTokens": [
+      "seaweed",
+      "giant seaweed",
+      "soda ash"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise gather/farm seaweed and cook ordinary seaweed when soda ash is required.",
+    "ironRoute": "Self-source the exact requirement: gather/farm seaweed and cook ordinary seaweed when soda ash is required.",
+    "uimRoute": "Use a task-sized, immediately consumable route: gather/farm seaweed and cook ordinary seaweed when soda ash is required; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "arrows",
+    "nameTokens": [
+      "bronze arrow",
+      "iron arrow",
+      "steel arrow",
+      "mithril arrow",
+      "adamant arrow",
+      "rune arrow",
+      "amethyst arrow"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise fletch shafts, feathers, and matching arrowheads or buy compatible ammunition.",
+    "ironRoute": "Self-source the exact requirement: fletch shafts, feathers, and matching arrowheads or buy compatible ammunition.",
+    "uimRoute": "Use a task-sized, immediately consumable route: fletch shafts, feathers, and matching arrowheads or buy compatible ammunition; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Bronze arrow",
+      "Iron arrow",
+      "Steel arrow",
+      "Mithril arrow",
+      "Adamant arrow",
+      "Rune arrow"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with buy the exact compatible arrow tier from a verified F2P ranged shop or use an observed monster drop.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: buy the exact compatible arrow tier from a verified F2P ranged shop or use an observed monster drop.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: buy the exact compatible arrow tier from a verified F2P ranged shop or use an observed monster drop; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bolts",
+    "nameTokens": [
+      "bronze bolts",
+      "iron bolts",
+      "steel bolts",
+      "mithril bolts",
+      "adamant bolts",
+      "runite bolts",
+      "broad bolts"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise combine matching unfinished bolts, feathers, and tips where applicable.",
+    "ironRoute": "Self-source the exact requirement: combine matching unfinished bolts, feathers, and tips where applicable.",
+    "uimRoute": "Use a task-sized, immediately consumable route: combine matching unfinished bolts, feathers, and tips where applicable; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "darts",
+    "nameTokens": [
+      "bronze dart",
+      "iron dart",
+      "steel dart",
+      "mithril dart",
+      "adamant dart",
+      "rune dart",
+      "amethyst dart"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise attach feathers to matching dart tips after the Smithing unlock is available.",
+    "ironRoute": "Self-source the exact requirement: attach feathers to matching dart tips after the Smithing unlock is available.",
+    "uimRoute": "Use a task-sized, immediately consumable route: attach feathers to matching dart tips after the Smithing unlock is available; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "javelins",
+    "nameTokens": [
+      "bronze javelin",
+      "iron javelin",
+      "steel javelin",
+      "mithril javelin",
+      "adamant javelin",
+      "rune javelin"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise attach matching heads to javelin shafts or use verified ammunition rewards.",
+    "ironRoute": "Self-source the exact requirement: attach matching heads to javelin shafts or use verified ammunition rewards.",
+    "uimRoute": "Use a task-sized, immediately consumable route: attach matching heads to javelin shafts or use verified ammunition rewards; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "bow-components",
+    "nameTokens": [
+      "shortbow (u)",
+      "longbow (u)",
+      "bow string"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise cut the matching logs and spin or source bow strings.",
+    "ironRoute": "Self-source the exact requirement: cut the matching logs and spin or source bow strings.",
+    "uimRoute": "Use a task-sized, immediately consumable route: cut the matching logs and spin or source bow strings; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "crossbow-components",
+    "nameTokens": [
+      "crossbow stock",
+      "crossbow limb",
+      "crossbow string",
+      "crossbow (u)"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise craft matching stocks and limbs, then add a crossbow string.",
+    "ironRoute": "Self-source the exact requirement: craft matching stocks and limbs, then add a crossbow string.",
+    "uimRoute": "Use a task-sized, immediately consumable route: craft matching stocks and limbs, then add a crossbow string; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "raw-meat",
+    "nameTokens": [
+      "raw beef",
+      "raw chicken",
+      "raw rat meat",
+      "raw bear meat",
+      "raw chompy",
+      "raw yak meat"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise hunt or kill a safe verified creature that provides the exact meat.",
+    "ironRoute": "Self-source the exact requirement: hunt or kill a safe verified creature that provides the exact meat.",
+    "uimRoute": "Use a task-sized, immediately consumable route: hunt or kill a safe verified creature that provides the exact meat; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Raw beef",
+      "Raw chicken",
+      "Raw rat meat",
+      "Raw bear meat"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with kill the exact verified F2P cow, chicken, rat, or bear source and collect its meat.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: kill the exact verified F2P cow, chicken, rat, or bear source and collect its meat.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: kill the exact verified F2P cow, chicken, rat, or bear source and collect its meat; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "hunter-food",
+    "nameTokens": [
+      "antelope meat",
+      "dashing kebbit meat",
+      "pyre fox meat"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise hunt the unlocked creature and cook the meat using its verified recipe.",
+    "ironRoute": "Self-source the exact requirement: hunt the unlocked creature and cook the meat using its verified recipe.",
+    "uimRoute": "Use a task-sized, immediately consumable route: hunt the unlocked creature and cook the meat using its verified recipe; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "ashes",
+    "nameTokens": [
+      "ashes",
+      "fiendish ashes",
+      "vile ashes",
+      "malicious ashes",
+      "abyssal ashes",
+      "infernal ashes"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise obtain the required ash tier from a verified demon or fire source.",
+    "ironRoute": "Self-source the exact requirement: obtain the required ash tier from a verified demon or fire source.",
+    "uimRoute": "Use a task-sized, immediately consumable route: obtain the required ash tier from a verified demon or fire source; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Ashes"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with let an ordinary F2P fire burn out or use an observed ordinary Ashes spawn.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: let an ordinary F2P fire burn out or use an observed ordinary Ashes spawn.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: let an ordinary F2P fire burn out or use an observed ordinary Ashes spawn; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "teleport-jewellery",
+    "nameTokens": [
+      "games necklace",
+      "dueling ring",
+      "ring of wealth",
+      "glory",
+      "skills necklace",
+      "combat bracelet",
+      "slayer ring"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise craft and enchant the matching jewellery or buy charged variants on a Main.",
+    "ironRoute": "Self-source the exact requirement: craft and enchant the matching jewellery or buy charged variants on a Main.",
+    "uimRoute": "Use a task-sized, immediately consumable route: craft and enchant the matching jewellery or buy charged variants on a Main; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "teleport-tablets",
+    "nameTokens": [
+      "teleport to house",
+      "varrock teleport",
+      "falador teleport",
+      "camelot teleport",
+      "ardougne teleport"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise make tablets in an observed suitable POH or buy them on a Main.",
+    "ironRoute": "Self-source the exact requirement: make tablets in an observed suitable POH or buy them on a Main.",
+    "uimRoute": "Use a task-sized, immediately consumable route: make tablets in an observed suitable POH or buy them on a Main; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "construction-stone",
+    "nameTokens": [
+      "limestone brick",
+      "marble block",
+      "gold leaf",
+      "magic stone"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise buy from the verified Construction supplier only when the target build justifies the cost.",
+    "ironRoute": "Self-source the exact requirement: buy from the verified Construction supplier only when the target build justifies the cost.",
+    "uimRoute": "Use a task-sized, immediately consumable route: buy from the verified Construction supplier only when the target build justifies the cost; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "quest-tools",
+    "nameTokens": [
+      "rope",
+      "spade",
+      "hammer",
+      "chisel",
+      "tinderbox",
+      "knife",
+      "bucket",
+      "pot"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise obtain from a nearby verified tool shop or spawn.",
+    "ironRoute": "Self-source the exact requirement: obtain from a nearby verified tool shop or spawn.",
+    "uimRoute": "Use a task-sized, immediately consumable route: obtain from a nearby verified tool shop or spawn; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [
+      "Rope",
+      "Spade",
+      "Hammer",
+      "Chisel",
+      "Tinderbox",
+      "Knife",
+      "Bucket",
+      "Pot"
+    ],
+    "freeToPlayMainRoute": "Compare a Grand Exchange purchase with use the exact named F2P general/tool shop or item spawn recorded by the quest route.",
+    "freeToPlayIronRoute": "Self-source the exact F2P requirement: use the exact named F2P general/tool shop or item spawn recorded by the quest route.",
+    "freeToPlayUimRoute": "Obtain only the immediate F2P quantity: use the exact named F2P general/tool shop or item spawn recorded by the quest route; do not rely on a conventional bank.",
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "F2P_IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  },
+  {
+    "id": "poison-protection",
+    "nameTokens": [
+      "antipoison",
+      "antidote",
+      "anti-venom"
+    ],
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise make, buy, or obtain the exact antipoison tier before the dangerous route.",
+    "ironRoute": "Self-source the exact requirement: make, buy, or obtain the exact antipoison tier before the dangerous route.",
+    "uimRoute": "Use a task-sized, immediately consumable route: make, buy, or obtain the exact antipoison tier before the dangerous route; do not assume conventional bank storage.",
+    "freeToPlayItemNames": [],
+    "sourceIds": [
+      "GENERAL_SKILL_TRAINING",
+      "IRONMAN_GENERAL",
+      "UIM_GENERAL"
+    ],
+    "wilderness": false,
+    "riskLevel": "NONE"
+  }
+]

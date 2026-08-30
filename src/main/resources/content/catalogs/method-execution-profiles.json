@@ -1,0 +1,1248 @@
+[
+  {
+    "methodId": "farming_fruit_trees",
+    "actionTerms": [
+      "apple_tree",
+      "banana_tree",
+      "orange_tree",
+      "curry_tree",
+      "pineapple_plant",
+      "papaya_tree",
+      "palm_tree",
+      "dragonfruit_tree"
+    ],
+    "unitSingular": "fruit-tree cycle",
+    "unitPlural": "fruit-tree cycles",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "SAPLING_FOR_TREE",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Each action represents one fruit-tree planting/check-health cycle at the selected tier.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "mining_granite_3t",
+    "actionTerms": [
+      "granite"
+    ],
+    "unitSingular": "granite success",
+    "unitPlural": "granite successes",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Tick manipulation changes actions per hour, not XP awarded by each successful mined rock.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "prayer_gilded_altar",
+    "actionTerms": [
+      "dragon_bones"
+    ],
+    "unitSingular": "bone offered",
+    "unitPlural": "bones offered",
+    "xpMultiplier": 3.5,
+    "inputs": [
+      {
+        "mode": "ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Applies the standard lit gilded-altar 3.5x base Prayer XP multiplier to the selected bone action.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "thieving_lumbridge_people",
+    "actionTerms": [
+      "runelite:thieving:man",
+      "runelite:thieving:woman"
+    ],
+    "unitSingular": "successful pickpocket",
+    "unitPlural": "successful pickpockets",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "construction_oak_doors",
+    "actionTerms": [
+      "oak_dungeon_door"
+    ],
+    "unitSingular": "oak dungeon door built",
+    "unitPlural": "oak dungeon doors built",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Oak plank",
+        "quantityPerAction": 10.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_lumbridge_trees",
+    "actionTerms": [
+      "runelite:woodcutting:logs"
+    ],
+    "unitSingular": "log cut",
+    "unitPlural": "logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_tick_teaks",
+    "actionTerms": [
+      "teak"
+    ],
+    "unitSingular": "teak log cut",
+    "unitPlural": "teak logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Tick manipulation changes speed, not base XP per successful teak log.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_redwoods",
+    "actionTerms": [
+      "redwood"
+    ],
+    "unitSingular": "redwood log cut",
+    "unitPlural": "redwood logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_wildy_expanded",
+    "actionTerms": [
+      "wilderness_agility_course"
+    ],
+    "unitSingular": "lap",
+    "unitPlural": "laps",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "mining_lumbridge_copper",
+    "actionTerms": [
+      "copper_ore"
+    ],
+    "unitSingular": "copper ore mined",
+    "unitPlural": "copper ores mined",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fletching_arrow_shafts",
+    "actionTerms": [
+      "arrow_shaft"
+    ],
+    "unitSingular": "arrow shaft made",
+    "unitPlural": "arrow shafts made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Logs",
+        "quantityPerAction": 0.06666666666666667
+      }
+    ],
+    "note": "One normal log makes 15 arrow shafts; RuneLite records XP per shaft.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_f2p_fire_bolt",
+    "actionTerms": [
+      "fire_bolt"
+    ],
+    "unitSingular": "Fire Bolt cast",
+    "unitPlural": "Fire Bolt casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Air rune",
+        "quantityPerAction": 3.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Fire rune",
+        "quantityPerAction": 4.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Chaos rune",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "This safe baseline counts the full rune cost; staff substitution is not assumed without an equipment-aware input plan.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_barbarian",
+    "actionTerms": [
+      "leaping"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Selects the highest unlocked leaping fish. Passive Agility/Strength XP is extra.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fletching_bolts",
+    "actionTerms": [
+      "bronze_bolts",
+      "iron_bolts",
+      "steel_bolts",
+      "mithril_bolts",
+      "adamant_bolts",
+      "runite_bolts",
+      "dragon_bolts"
+    ],
+    "unitSingular": "bolt fletched",
+    "unitPlural": "bolts fletched",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "UNFINISHED_BOLT",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Models the basic feathering step for metal bolts; gem-tipping variants need a separate gem-input profile.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_canifis_marks",
+    "actionTerms": [
+      "canifis_rooftop"
+    ],
+    "unitSingular": "lap",
+    "unitPlural": "laps",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Canifis lap XP; Marks of grace are tracked as a separate progression objective.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_dark_crabs",
+    "actionTerms": [
+      "dark_crab"
+    ],
+    "unitSingular": "dark crab caught",
+    "unitPlural": "dark crabs caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "thieving_ardy_knights",
+    "actionTerms": [
+      "ardougne_knight",
+      "knight_of_ardougne"
+    ],
+    "unitSingular": "successful pickpocket",
+    "unitPlural": "successful pickpockets",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Failed pickpockets do not award XP, so this is the number of successful pickpockets needed.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_f2p_combat",
+    "actionTerms": [
+      "wind_strike"
+    ],
+    "unitSingular": "Wind Strike cast",
+    "unitPlural": "Wind Strike casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Air rune",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Mind rune",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "This baseline deliberately counts one air rune and one mind rune per cast; staff substitution is not assumed without an equipment-aware input plan.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "thieving_blackjack",
+    "actionTerms": [
+      "blackjack",
+      "bandit"
+    ],
+    "unitSingular": "successful pickpocket",
+    "unitPlural": "successful pickpockets",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Counts successful blackjacking pickpockets. Failed actions award no XP and therefore are not part of the milestone count.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_lumbridge_shrimps",
+    "actionTerms": [
+      "shrimp",
+      "anchovies"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "From level 15 the net spot yields both shrimp and anchovies, so a shrimp-only exact count is not valid.",
+    "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
+  },
+  {
+    "methodId": "cooking_f2p_fish",
+    "actionTerms": [
+      "shrimp",
+      "sardine",
+      "herring",
+      "trout",
+      "pike",
+      "salmon",
+      "tuna",
+      "lobster",
+      "swordfish"
+    ],
+    "unitSingular": "fish cooked",
+    "unitPlural": "fish cooked",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "RAW_ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "smithing_f2p_uim_bronze",
+    "actionTerms": [
+      "bronze"
+    ],
+    "unitSingular": "bronze item smithed",
+    "unitPlural": "bronze items smithed",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "BAR_FOR_SMITHED_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Copper and tin are mined and processed locally; the loop never requires conventional banking.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_f2p_curse",
+    "actionTerms": [
+      "curse"
+    ],
+    "unitSingular": "Curse cast",
+    "unitPlural": "Curse casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Body rune",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Earth rune",
+        "quantityPerAction": 3.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Water rune",
+        "quantityPerAction": 2.0
+      }
+    ],
+    "note": "Curse grants 29 Magic XP whether it hits or misses. The conservative material count does not assume an elemental staff.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_sep",
+    "actionTerms": [
+      "hallowed_sepulchre"
+    ],
+    "unitSingular": "floor completion",
+    "unitPlural": "floor completions",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Uses the deepest unlocked floor represented by RuneLite. Current live floor thresholds are 77 Agility for floor 4 and 87 for floor 5; both permit boosts.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "herblore_restores",
+    "actionTerms": [
+      "super_restore"
+    ],
+    "unitSingular": "super restore made",
+    "unitPlural": "super restores made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Snapdragon",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Red spiders\u0027 eggs",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Vial of water",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Counts all three consumed materials for each super restore.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_birdhouses",
+    "actionTerms": [
+      "bird_house"
+    ],
+    "unitSingular": "birdhouse emptied",
+    "unitPlural": "birdhouses emptied",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run. Nest yields are variable; the August 2026 five-roll/tripled-success change must not be presented as an exact yield.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "smithing_f2p_platebodies",
+    "actionTerms": [
+      "platebody"
+    ],
+    "unitSingular": "platebody smithed",
+    "unitPlural": "platebodies smithed",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "BAR_FOR_SMITHED_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Each platebody uses five bars, so the action count converts directly into the matching bar total.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_f2p_fly",
+    "actionTerms": [
+      "trout",
+      "salmon"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Fly fishing consumes one feather per catch. From level 30 the spot yields both trout and salmon, so a single-fish exact count is not valid.",
+    "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
+  },
+  {
+    "methodId": "mining_calcified",
+    "actionTerms": [
+      "calcified_rocks"
+    ],
+    "unitSingular": "calcified rock success",
+    "unitPlural": "calcified rock successes",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_salamanders",
+    "actionTerms": [
+      "swamp_lizard",
+      "orange_salamander",
+      "red_salamander"
+    ],
+    "unitSingular": "salamander caught",
+    "unitPlural": "salamanders caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Black salamanders are deliberately excluded because they are a Wilderness method.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "cooking_karambwan_1t",
+    "actionTerms": [
+      "cooked_karambwan"
+    ],
+    "unitSingular": "karambwan cooked",
+    "unitPlural": "karambwans cooked",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "RAW_ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Raw quantity should include a burn allowance appropriate to current Cooking level/location; a dedicated high-level burn model remains preferable.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "mining_f2p_iron",
+    "actionTerms": [
+      "iron_ore"
+    ],
+    "unitSingular": "iron ore mined",
+    "unitPlural": "iron ores mined",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_seers",
+    "actionTerms": [
+      "seers_village_rooftop"
+    ],
+    "unitSingular": "lap",
+    "unitPlural": "laps",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Seers lap XP before diary bonus adjustments.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_minnows",
+    "actionTerms": [
+      "minnow"
+    ],
+    "unitSingular": "minnow catch",
+    "unitPlural": "minnow catches",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_prif",
+    "actionTerms": [
+      "prifddinas_agility_course"
+    ],
+    "unitSingular": "lap",
+    "unitPlural": "laps",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_falconry",
+    "actionTerms": [
+      "spotted_kebbit",
+      "dark_kebbit",
+      "dashing_kebbit"
+    ],
+    "unitSingular": "kebbit caught",
+    "unitPlural": "kebbits caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Selects spotted kebbits, adding dark kebbits from 57 Hunter and dashing kebbits from 69.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_anglers",
+    "actionTerms": [
+      "anglerfish"
+    ],
+    "unitSingular": "anglerfish caught",
+    "unitPlural": "anglerfish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_f2p_willows",
+    "actionTerms": [
+      "willow"
+    ],
+    "unitSingular": "willow log cut",
+    "unitPlural": "willow logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "mining_gem_rocks",
+    "actionTerms": [
+      "gem_rocks"
+    ],
+    "unitSingular": "gem rock mined",
+    "unitPlural": "gem rocks mined",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Each successful gem-rock mine gives the fixed Mining XP represented by RuneLite; the gem received is variable.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_chins",
+    "actionTerms": [
+      ":chinchompa"
+    ],
+    "unitSingular": "chinchompa caught",
+    "unitPlural": "chinchompas caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "herblore_brews",
+    "actionTerms": [
+      "saradomin_brew"
+    ],
+    "unitSingular": "Saradomin brew made",
+    "unitPlural": "Saradomin brews made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Toadflax",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Crushed nest",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Vial of water",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Counts all three consumed materials for each Saradomin brew.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "firemaking_f2p_logs",
+    "actionTerms": [
+      "logs"
+    ],
+    "unitSingular": "log burned",
+    "unitPlural": "logs burned",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "smithing_dart_tips",
+    "actionTerms": [
+      "dart_tip"
+    ],
+    "unitSingular": "bar smithed",
+    "unitPlural": "bars smithed",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "BAR_FOR_SMITHED_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "The action XP is per bar used to smith dart tips.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_3t_barb",
+    "actionTerms": [
+      "leaping"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Three-ticking changes speed, not the Fishing XP of each successful catch.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fletching_bows",
+    "actionTerms": [
+      "shortbow_u",
+      "longbow_u"
+    ],
+    "unitSingular": "unstrung bow fletched",
+    "unitPlural": "unstrung bows fletched",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "LOG_FOR_BOW",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Uses unstrung shortbow/longbow actions so the supply count is logs, not bowstrings.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_bird_traps",
+    "actionTerms": [
+      "crimson_swift",
+      "tropical_wagtail"
+    ],
+    "unitSingular": "bird caught",
+    "unitPlural": "birds caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "farming_trees",
+    "actionTerms": [
+      "oak_tree",
+      "willow_tree",
+      "teak_tree",
+      "maple_tree",
+      "mahogany_tree",
+      "yew_tree",
+      "camphor_tree",
+      "magic_tree",
+      "ironwood_tree",
+      "celastrus_tree",
+      "redwood_tree",
+      "rosewood_tree"
+    ],
+    "unitSingular": "tree cycle",
+    "unitPlural": "tree cycles",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "SAPLING_FOR_TREE",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Each action represents planting/checking one tree cycle at the selected tier. Protection payments and compost are optional risk/yield choices, so they remain route-level setup rather than mandatory per-tree materials.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "thieving_fruit_stalls",
+    "actionTerms": [
+      "fruit_stall"
+    ],
+    "unitSingular": "successful steal",
+    "unitPlural": "successful steals",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_sulliusceps",
+    "actionTerms": [
+      "sulliuscep"
+    ],
+    "unitSingular": "sulliuscep cut",
+    "unitPlural": "sulliusceps cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "crafting_gems",
+    "actionTerms": [
+      "sapphire",
+      "emerald",
+      "ruby",
+      "diamond",
+      "dragonstone",
+      "onyx",
+      "zenyte"
+    ],
+    "unitSingular": "gem cut",
+    "unitPlural": "gems cut",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "UNCUT_GEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_f2p_fire_strike_splash",
+    "actionTerms": [
+      "fire_strike"
+    ],
+    "unitSingular": "Fire Strike cast",
+    "unitPlural": "Fire Strike casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Air rune",
+        "quantityPerAction": 2.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Fire rune",
+        "quantityPerAction": 3.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Mind rune",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Fire Strike can be autocast for 20-minute splashing intervals; the conservative count does not assume an elemental staff.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_f2p_fly_baseline",
+    "actionTerms": [
+      "trout",
+      "salmon"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Fly fishing consumes one feather per catch. From level 30 the spot yields both trout and salmon, so a single-fish exact count is not valid.",
+    "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
+  },
+  {
+    "methodId": "runecraft_f2p_body",
+    "actionTerms": [
+      "body_rune"
+    ],
+    "unitSingular": "essence crafted",
+    "unitPlural": "essence crafted",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Rune essence",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Runecraft XP is based on essence crafted, not the number of runes produced by level multipliers.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "construction_oak_larders",
+    "actionTerms": [
+      "oak_larder"
+    ],
+    "unitSingular": "oak larder built",
+    "unitPlural": "oak larders built",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Oak plank",
+        "quantityPerAction": 8.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "construction_mahogany_tables",
+    "actionTerms": [
+      "mahogany_table"
+    ],
+    "unitSingular": "mahogany table built",
+    "unitPlural": "mahogany tables built",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Mahogany plank",
+        "quantityPerAction": 6.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_f2p_shrimps",
+    "actionTerms": [
+      "shrimp",
+      "anchovies"
+    ],
+    "unitSingular": "fish caught",
+    "unitPlural": "fish caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "From level 15 the net spot yields both shrimp and anchovies, so a shrimp-only exact count is not valid.",
+    "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
+  },
+  {
+    "methodId": "runecraft_lava",
+    "actionTerms": [
+      "lava_rune"
+    ],
+    "unitSingular": "essence crafted",
+    "unitPlural": "essence crafted",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Pure essence",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Binding necklace/elemental-rune charges are setup resources and are not yet reduced to a per-essence count.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_high_alch",
+    "actionTerms": [
+      "high_level_alchemy",
+      "high_alchemy"
+    ],
+    "unitSingular": "High Alchemy cast",
+    "unitPlural": "High Alchemy casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Nature rune",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Fire rune",
+        "quantityPerAction": 5.0
+      }
+    ],
+    "note": "A fire-rune staff replaces the five fire runes per cast. The item being alched must still be selected from a verified safe alch list before execution.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "hunter_red_chins",
+    "actionTerms": [
+      "carnivorous_chinchompa"
+    ],
+    "unitSingular": "red chinchompa caught",
+    "unitPlural": "red chinchompas caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_draynor_oaks",
+    "actionTerms": [
+      "oak_logs"
+    ],
+    "unitSingular": "oak log cut",
+    "unitPlural": "oak logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "construction_crude_chairs",
+    "actionTerms": [
+      "crude_wooden_chair"
+    ],
+    "unitSingular": "crude wooden chair built",
+    "unitPlural": "crude wooden chairs built",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Plank",
+        "quantityPerAction": 2.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Steel nails",
+        "quantityPerAction": 2.0
+      }
+    ],
+    "note": "Bring a hammer and saw. Steel nails or better reduce bending; the count is the minimum consumed by successful builds.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "cooking_f2p_fish_baseline",
+    "actionTerms": [
+      "shrimp",
+      "sardine",
+      "herring",
+      "trout",
+      "pike",
+      "salmon",
+      "tuna",
+      "lobster",
+      "swordfish"
+    ],
+    "unitSingular": "fish cooked",
+    "unitPlural": "fish cooked",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "RAW_ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "runecraft_blood",
+    "actionTerms": [
+      "blood_rune"
+    ],
+    "unitSingular": "essence crafted",
+    "unitPlural": "essence crafted",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Pure essence",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "magic_f2p_fire_blast",
+    "actionTerms": [
+      "fire_blast"
+    ],
+    "unitSingular": "Fire Blast cast",
+    "unitPlural": "Fire Blast casts",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Air rune",
+        "quantityPerAction": 4.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Fire rune",
+        "quantityPerAction": 5.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Death rune",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "This safe baseline counts the full rune cost; staff substitution is not assumed without an equipment-aware input plan.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "prayer_f2p_bones",
+    "actionTerms": [
+      "bones"
+    ],
+    "unitSingular": "bone buried",
+    "unitPlural": "bones buried",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "ACTION_ITEM",
+        "quantityPerAction": 0.0
+      }
+    ],
+    "note": "Selects the highest sensible F2P bone action available to the calculator.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fletching_darts",
+    "actionTerms": [
+      "bronze_dart",
+      "iron_dart",
+      "steel_dart",
+      "mithril_dart",
+      "adamant_dart",
+      "rune_dart",
+      "amethyst_dart",
+      "dragon_dart"
+    ],
+    "unitSingular": "dart fletched",
+    "unitPlural": "darts fletched",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "DART_TIP_FOR_DART",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Quantities are per dart. This route is only selected after the relevant dart-making unlock is available.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "runecraft_soul",
+    "actionTerms": [
+      "soul_rune"
+    ],
+    "unitSingular": "essence crafted",
+    "unitPlural": "essence crafted",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Pure essence",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "agility_rooftops",
+    "actionTerms": [
+      "rooftop"
+    ],
+    "unitSingular": "lap",
+    "unitPlural": "laps",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "note": "Base lap XP from RuneLite; diary/course bonuses can reduce the final lap count.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fletching_broad_arrows",
+    "actionTerms": [
+      "broad_arrows"
+    ],
+    "unitSingular": "broad arrow made",
+    "unitPlural": "broad arrows made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Headless arrow",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Broad arrowhead",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Requires the broader Fletching Slayer unlock before this route can be selected.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "cooking_wines",
+    "actionTerms": [
+      "jug_of_wine"
+    ],
+    "unitSingular": "jug of wine made",
+    "unitPlural": "jugs of wine made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Grapes",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Jug of water",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "herblore_prayer_potions",
+    "actionTerms": [
+      "prayer_potion"
+    ],
+    "unitSingular": "potion made",
+    "unitPlural": "potions made",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Ranarr weed",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Snape grass",
+        "quantityPerAction": 1.0
+      },
+      {
+        "mode": "FIXED",
+        "fixedName": "Vial of water",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Counts all three consumed materials for each prayer potion.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "fishing_karambwan",
+    "actionTerms": [
+      "karambwan"
+    ],
+    "unitSingular": "karambwan caught",
+    "unitPlural": "karambwans caught",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "woodcutting_teaks",
+    "actionTerms": [
+      "teak"
+    ],
+    "unitSingular": "teak log cut",
+    "unitPlural": "teak logs cut",
+    "xpMultiplier": 1.0,
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS"
+  },
+  {
+    "methodId": "smithing_cannonballs",
+    "actionTerms": [
+      "cannonball"
+    ],
+    "unitSingular": "steel bar processed",
+    "unitPlural": "steel bars processed",
+    "xpMultiplier": 1.0,
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Steel bar",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "RuneLite\u0027s cannonball action XP is per steel bar processed.",
+    "progressEstimateMode": "EXACT_ACTIONS"
+  }
+]

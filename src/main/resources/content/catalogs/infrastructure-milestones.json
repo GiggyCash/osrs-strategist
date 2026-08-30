@@ -1,0 +1,266 @@
+[
+  {
+    "id": "poh-access",
+    "name": "Player-owned house",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 1,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 1
+    },
+    "requiredQuests": {},
+    "evidenceKind": "POH_ACCESS",
+    "benefits": {
+      "POH_PLATFORM": "MODERATE"
+    },
+    "action": "Buy a starter house from an Estate agent for 1,000 coins (or complete Daddy\u0027s Home), enter it once, and verify house access.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Construction"
+  },
+  {
+    "id": "poh-costume-room",
+    "name": "POH Costume room",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 42,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 42
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-access",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-costume-room",
+    "benefits": {
+      "POH_PLATFORM": "HIGH",
+      "STORAGE": "LOW"
+    },
+    "action": "In your own POH in building mode, build a Costume room for 50,000 coins.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Costume_room"
+  },
+  {
+    "id": "poh-armour-case",
+    "name": "Oak armour case",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 46,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 46
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-costume-room",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-armour-case",
+    "benefits": {
+      "INVENTORY_RELIEF": "HIGH",
+      "STORAGE": "HIGH",
+      "SETUP_REUSE": "MODERATE",
+      "STORABLE_EQUIPMENT": "HIGH"
+    },
+    "action": "In your Costume room, use a hammer, saw, and 3 oak planks to build an oak armour case.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Oak_armour_case"
+  },
+  {
+    "id": "poh-portal-chamber",
+    "name": "Configured POH portal",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 50,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "MAGIC": 25,
+      "CONSTRUCTION": 50
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-access",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-permanent-portal",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "MODERATE"
+    },
+    "action": "Build a Portal chamber for 100,000 coins, a teleport focus with 2 limestone bricks, and a teak portal with 3 teak planks; direct it to Varrock with 300 air runes, 100 fire runes, and 100 law runes.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Portal_chamber"
+  },
+  {
+    "id": "poh-superior-garden",
+    "name": "POH superior garden",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 65,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 65
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-access",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-superior-garden",
+    "benefits": {
+      "POH_PLATFORM": "HIGH",
+      "TRAVEL_NETWORK": "MODERATE",
+      "SETUP_REUSE": "MODERATE"
+    },
+    "action": "In your own POH in building mode, build a Superior garden for 75,000 coins.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Construction"
+  },
+  {
+    "id": "poh-restoration-pool",
+    "name": "Restoration pool",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 65,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 65
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-superior-garden",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-restoration-pool",
+    "benefits": {
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "MODERATE"
+    },
+    "action": "In your Superior garden, use a hammer and saw to build a restoration pool with 5 limestone bricks, 5 buckets of water, 1,000 soul runes, and 1,000 body runes.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Pool_space"
+  },
+  {
+    "id": "poh-portal-nexus",
+    "name": "Marble portal nexus",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 72,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 72
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-access",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-portal-nexus",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "MODERATE"
+    },
+    "action": "Build a Portal nexus room for 200,000 coins, then use a hammer, saw, and 4 marble blocks to build its four-destination marble portal nexus. Add destinations only when their 1,000-cast rune cost is worth the permanent slot.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Portal_nexus"
+  },
+  {
+    "id": "poh-spirit-tree",
+    "name": "POH spirit tree",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 75,
+    "requiredQuest": "Tree Gnome Village",
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "FARMING": 83,
+      "CONSTRUCTION": 75
+    },
+    "requiredQuests": {
+      "Tree Gnome Village": false
+    },
+    "prerequisiteMilestoneId": "poh-superior-garden",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-spirit-tree",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "HIGH"
+    },
+    "action": "In your Superior garden, use a filled watering can and a self-grown spirit sapling to plant the POH spirit tree.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Spirit_tree"
+  },
+  {
+    "id": "poh-basic-jewellery-box",
+    "name": "Basic jewellery box",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 81,
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 81
+    },
+    "requiredQuests": {},
+    "prerequisiteMilestoneId": "poh-access",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-jewellery-box",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "MODERATE"
+    },
+    "action": "In an Achievement Gallery, use a hammer and saw to build a basic jewellery box with 1 bolt of cloth, 1 steel bar, 3 games necklaces(8), and 3 rings of dueling(8).",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Achievement_gallery"
+  },
+  {
+    "id": "poh-fairy-ring",
+    "name": "POH fairy ring",
+    "membersOnly": true,
+    "requiredSkill": "CONSTRUCTION",
+    "requiredLevel": 85,
+    "requiredQuest": "Fairytale II - Cure a Queen",
+    "questStartSuffices": false,
+    "requiredSkills": {
+      "CONSTRUCTION": 85
+    },
+    "requiredQuests": {
+      "Fairytale II - Cure a Queen": false
+    },
+    "prerequisiteMilestoneId": "poh-superior-garden",
+    "evidenceKind": "POH_FURNITURE",
+    "evidenceKey": "poh-fairy-ring",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "HIGH",
+      "SELF_SUFFICIENCY": "HIGH"
+    },
+    "action": "In your Superior garden, use a filled watering can, 10 unnoted mushrooms, and the fairy enchantment bought after Fairytale II to plant a fairy ring.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Fairy_ring_(Construction)"
+  },
+  {
+    "id": "fairy-ring-network",
+    "name": "Fairy ring network",
+    "membersOnly": true,
+    "requiredLevel": 0,
+    "requiredQuest": "Fairytale II - Cure a Queen",
+    "questStartSuffices": true,
+    "requiredSkills": {},
+    "requiredQuests": {
+      "Fairytale II - Cure a Queen": true
+    },
+    "evidenceKind": "TRANSPORT_ROUTE",
+    "evidenceKey": "fairy-rings",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "MODERATE",
+      "SELF_SUFFICIENCY": "MODERATE"
+    },
+    "action": "Advance Fairytale II until the Fairy Godfather grants permission, carry a dramen or lunar staff unless staff-free access is verified, and verify the route before relying on it.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Fairy_rings"
+  },
+  {
+    "id": "spirit-tree-access",
+    "name": "Spirit tree access",
+    "membersOnly": true,
+    "requiredLevel": 0,
+    "requiredQuest": "Tree Gnome Village",
+    "questStartSuffices": false,
+    "requiredSkills": {},
+    "requiredQuests": {
+      "Tree Gnome Village": false
+    },
+    "evidenceKind": "TRANSPORT_ROUTE",
+    "evidenceKey": "spirit-trees",
+    "benefits": {
+      "TRAVEL_NETWORK": "HIGH",
+      "SETUP_REUSE": "MODERATE"
+    },
+    "action": "Complete Tree Gnome Village for initial spirit-tree access; The Grand Tree separately expands bidirectional network access. Verify the needed route before relying on it.",
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Spirit_tree"
+  }
+]

@@ -1,0 +1,260 @@
+[
+  {
+    "id": "objective:graceful",
+    "title": "Graceful outfit",
+    "methodId": "agility_rooftop",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:graceful",
+    "title": "Graceful outfit",
+    "methodId": "agility_rooftops",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:graceful",
+    "title": "Graceful outfit",
+    "methodId": "agility_canifis_marks",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:prospector",
+    "title": "Prospector outfit",
+    "methodId": "mining_mlm",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:prospector",
+    "title": "Prospector outfit",
+    "methodId": "mining_motherlode",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:coal-bag",
+    "title": "Coal bag",
+    "methodId": "mining_mlm",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:gem-bag",
+    "title": "Gem bag",
+    "methodId": "mining_mlm",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:raiments",
+    "title": "Raiments of the Eye",
+    "methodId": "runecraft_gotr",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:abyssal-needle",
+    "title": "Abyssal needle",
+    "methodId": "runecraft_gotr",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:lantern",
+    "title": "Abyssal lantern",
+    "methodId": "runecraft_gotr",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:smiths-uniform",
+    "title": "Smiths\u0027 Uniform",
+    "methodId": "smithing_foundry",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:smiths-uniform",
+    "title": "Smiths\u0027 Uniform",
+    "methodId": "smithing_giants_foundry",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:double-ammo-mould",
+    "title": "Double ammo mould",
+    "methodId": "smithing_giants_foundry",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:tempoross",
+    "title": "Tempoross collection-log progression",
+    "methodId": "fishing_tempoross",
+    "type": "COLLECTION_LOG"
+  },
+  {
+    "id": "objective:fish-barrel",
+    "title": "Fish barrel",
+    "methodId": "fishing_tempoross",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:tackle-box",
+    "title": "Tackle box",
+    "methodId": "fishing_tempoross",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:spirit-anglers",
+    "title": "Spirit angler outfit",
+    "methodId": "fishing_tempoross",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:wintertodt",
+    "title": "Wintertodt collection-log progression",
+    "methodId": "firemaking_wintertodt",
+    "type": "COLLECTION_LOG"
+  },
+  {
+    "id": "objective:pyromancer",
+    "title": "Pyromancer outfit",
+    "methodId": "firemaking_wintertodt",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:tome-fire",
+    "title": "Tome of fire",
+    "methodId": "firemaking_wintertodt",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:farmers-outfit",
+    "title": "Farmer\u0027s outfit",
+    "methodId": "farming_tithe",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:seed-box",
+    "title": "Seed box",
+    "methodId": "farming_tithe",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:herb-sack",
+    "title": "Herb sack",
+    "methodId": "farming_tithe",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:carpenter",
+    "title": "Carpenter\u0027s outfit",
+    "methodId": "construction_mahogany_homes",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:plank-sack",
+    "title": "Plank sack",
+    "methodId": "construction_mahogany_homes",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:rogue",
+    "title": "Rogue equipment",
+    "methodId": "thieving_rogues_den",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:angler",
+    "title": "Angler outfit",
+    "methodId": "fishing_trawler",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:lumberjack",
+    "title": "Lumberjack outfit",
+    "methodId": "temple_trekking",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:void",
+    "title": "Void Knight equipment",
+    "methodId": "pest_control",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:elite-void",
+    "title": "Elite Void Knight equipment",
+    "methodId": "pest_control",
+    "type": "OUTFIT"
+  },
+  {
+    "id": "objective:fighter-torso",
+    "title": "Fighter torso",
+    "methodId": "barbarian_assault",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:dragon-defender",
+    "title": "Dragon defender",
+    "methodId": "warriors_guild",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:imbued-god-cape",
+    "title": "Imbued god cape",
+    "methodId": "mage_arena_2",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:rune-pouch",
+    "title": "Rune pouch",
+    "methodId": "slayer_rewards",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:herb-sack-slayer",
+    "title": "Herb sack",
+    "methodId": "slayer_rewards",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:slayer-helm",
+    "title": "Slayer helmet",
+    "methodId": "slayer_rewards",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:bonecrusher",
+    "title": "Bonecrusher",
+    "methodId": "morytania_diary",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:ash-sanctifier",
+    "title": "Ash sanctifier",
+    "methodId": "kourend_diary",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:explorers-ring",
+    "title": "Explorer\u0027s ring progression",
+    "methodId": "lumbridge_diary",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:ardougne-cloak",
+    "title": "Ardougne cloak progression",
+    "methodId": "ardougne_diary",
+    "type": "UNTRADEABLE"
+  },
+  {
+    "id": "objective:crystal-bowfa",
+    "title": "Bow of faerdhinen and crystal armour",
+    "methodId": "corrupted_gauntlet",
+    "type": "GEAR"
+  },
+  {
+    "id": "objective:barrows",
+    "title": "Useful Barrows equipment",
+    "methodId": "barrows",
+    "type": "GEAR"
+  },
+  {
+    "id": "objective:moons",
+    "title": "Moons of Peril equipment",
+    "methodId": "perilous_moons",
+    "type": "GEAR"
+  }
+]

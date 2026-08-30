@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Dwarf Cannon",
+    "scoreBonus": 10.0,
+    "reason": "Unlocks the dwarf multicannon"
+  },
+  {
+    "name": "Tai Bwo Wannai Trio",
+    "scoreBonus": 8.0,
+    "reason": "Unlocks cooked karambwan progression"
+  },
+  {
+    "name": "Tears of Guthix",
+    "scoreBonus": 9.0,
+    "reason": "Unlocks a recurring lowest-skill XP opportunity"
+  },
+  {
+    "name": "King\u0027s Ransom",
+    "scoreBonus": 13.0,
+    "reason": "Unlocks the route to Chivalry and Piety"
+  },
+  {
+    "name": "Children of the Sun",
+    "scoreBonus": 12.0,
+    "reason": "Unlocks Varlamore"
+  },
+  {
+    "name": "Making Friends with My Arm",
+    "scoreBonus": 9.0,
+    "reason": "Unlocks Weiss and basalt transport progression"
+  },
+  {
+    "name": "Desert Treasure II - The Fallen Empire",
+    "scoreBonus": 16.0,
+    "reason": "Unlocks major late-game PvM progression"
+  },
+  {
+    "name": "Perilous Moons",
+    "scoreBonus": 11.0,
+    "reason": "Unlocks Cam Torum and Neypotzli progression"
+  },
+  {
+    "name": "Current Affairs",
+    "scoreBonus": 8.0,
+    "reason": "Expands Sailing sea charting"
+  },
+  {
+    "name": "Dragon Slayer II",
+    "scoreBonus": 18.0,
+    "reason": "Unlocks Vorkath, Ava\u0027s assembler, ferocious gloves, and Mythical cape progression"
+  },
+  {
+    "name": "Lunar Diplomacy",
+    "scoreBonus": 14.0,
+    "reason": "Unlocks the Lunar spellbook"
+  },
+  {
+    "name": "Prying Times",
+    "scoreBonus": 8.0,
+    "reason": "Expands Sailing sea charting"
+  },
+  {
+    "name": "Beneath Cursed Sands",
+    "scoreBonus": 17.0,
+    "reason": "Unlocks Tombs of Amascut"
+  },
+  {
+    "name": "The Slug Menace",
+    "scoreBonus": 7.0,
+    "reason": "Unlocks proselyte armour"
+  },
+  {
+    "name": "Recipe for Disaster",
+    "scoreBonus": 18.0,
+    "reason": "Progresses Culinaromancer\u0027s gloves toward Barrows gloves"
+  },
+  {
+    "name": "Royal Trouble",
+    "scoreBonus": 7.0,
+    "reason": "Improves Managing Miscellania"
+  },
+  {
+    "name": "Bone Voyage",
+    "scoreBonus": 14.0,
+    "reason": "Unlocks Fossil Island"
+  },
+  {
+    "name": "Family Crest",
+    "scoreBonus": 7.0,
+    "reason": "Unlocks Family gauntlet progression"
+  },
+  {
+    "name": "Priest in Peril",
+    "scoreBonus": 12.0,
+    "reason": "Unlocks Morytania"
+  },
+  {
+    "name": "Monkey Madness II",
+    "scoreBonus": 14.0,
+    "reason": "Major combat, transport, and PvM progression"
+  },
+  {
+    "name": "Song of the Elves",
+    "scoreBonus": 22.0,
+    "reason": "Unlocks Prifddinas and major account progression"
+  },
+  {
+    "name": "Cabin Fever",
+    "scoreBonus": 8.0,
+    "reason": "Unlocks Mos Le\u0027Harmless and pirate progression"
+  },
+  {
+    "name": "Throne of Miscellania",
+    "scoreBonus": 10.0,
+    "reason": "Unlocks Managing Miscellania"
+  },
+  {
+    "name": "Fairytale I - Growing Pains",
+    "scoreBonus": 9.0,
+    "reason": "Core Farming and fairy-ring progression"
+  },
+  {
+    "name": "Below Ice Mountain",
+    "scoreBonus": 8.0,
+    "reason": "Unlocks the Ruins of Camdozaal"
+  },
+  {
+    "name": "The Fremennik Trials",
+    "scoreBonus": 10.0,
+    "reason": "Unlocks core Fremennik progression"
+  },
+  {
+    "name": "Regicide",
+    "scoreBonus": 10.0,
+    "reason": "Unlocks deeper Tirannwn progression"
+  },
+  {
+    "name": "Sins of the Father",
+    "scoreBonus": 16.0,
+    "reason": "Unlocks Darkmeyer and major Morytania progression"
+  },
+  {
+    "name": "Monkey Madness I",
+    "scoreBonus": 12.0,
+    "reason": "Major melee weapon and area progression"
+  },
+  {
+    "name": "The Fremennik Isles",
+    "scoreBonus": 9.0,
+    "reason": "Unlocks helm and Fremennik equipment progression"
+  },
+  {
+    "name": "Watchtower",
+    "scoreBonus": 7.0,
+    "reason": "Unlocks Watchtower Teleport and deeper ogre-area progression"
+  },
+  {
+    "name": "Animal Magnetism",
+    "scoreBonus": 12.0,
+    "reason": "Unlocks Ava\u0027s ranged devices"
+  },
+  {
+    "name": "Fairytale II - Cure a Queen",
+    "scoreBonus": 15.0,
+    "reason": "Unlocks fairy-ring transport early in the quest"
+  },
+  {
+    "name": "Rune Mysteries",
+    "scoreBonus": 7.0,
+    "reason": "Runecraft progression unlock"
+  },
+  {
+    "name": "Dream Mentor",
+    "scoreBonus": 8.0,
+    "reason": "Unlocks additional Lunar spells"
+  },
+  {
+    "name": "Dragon Slayer I",
+    "scoreBonus": 10.0,
+    "reason": "Major early combat equipment progression"
+  },
+  {
+    "name": "Lost City",
+    "scoreBonus": 10.0,
+    "reason": "Unlocks Zanaris and dragon weapon progression"
+  },
+  {
+    "name": "Pandemonium",
+    "scoreBonus": 18.0,
+    "reason": "Unlocks Sailing progression"
+  },
+  {
+    "name": "A Kingdom Divided",
+    "scoreBonus": 12.0,
+    "reason": "Unlocks major Arceuus spellbook progression"
+  },
+  {
+    "name": "Druidic Ritual",
+    "scoreBonus": 14.0,
+    "reason": "Unlocks Herblore progression"
+  },
+  {
+    "name": "Desert Treasure I",
+    "scoreBonus": 16.0,
+    "reason": "Unlocks Ancient Magicks"
+  },
+  {
+    "name": "Mourning\u0027s End Part I",
+    "scoreBonus": 8.0,
+    "reason": "Unlocks Lletya progression"
+  }
+]

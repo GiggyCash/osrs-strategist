@@ -1,0 +1,742 @@
+[
+  {
+    "id": "dragon-defender",
+    "itemName": "Dragon defender",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Warriors\u0027 Guild",
+        "action": "Earn access, then progress through defenders to the dragon defender"
+      },
+      {
+        "kind": "SKILL",
+        "target": "Attack and Strength",
+        "action": "Verify the Warriors\u0027 Guild entry requirement"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "fighter-torso",
+    "itemName": "Fighter torso",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Barbarian Assault",
+        "action": "Earn the required role points and queen kill"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "barrows-gloves",
+    "itemName": "Barrows gloves",
+    "style": "HYBRID",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Recipe for Disaster",
+        "action": "Complete the required subquests and Culinaromancer fight"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "fire-cape",
+    "itemName": "Fire cape",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Fight Caves",
+        "action": "Prepare for and defeat TzTok-Jad"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "infernal-cape",
+    "itemName": "Infernal cape",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Inferno",
+        "action": "Only target after account readiness; player skill remains unknown"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Fire cape",
+        "action": "Verify the Fight Caves prerequisite"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "helm-of-neitiznot",
+    "itemName": "Helm of neitiznot",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "The Fremennik Isles",
+        "action": "Complete the quest, then obtain the helm from the verified quest source"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "neitiznot-faceguard",
+    "itemName": "Neitiznot faceguard",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "RESOURCE",
+        "target": "Basilisk jaw",
+        "action": "Obtain the jaw from the verified Basilisk Knight route or buy it on a Main"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Helm of neitiznot",
+        "action": "Own the base helm before combining"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "dragon-boots",
+    "itemName": "Dragon boots",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Spiritual mages",
+        "action": "Use a verified God Wars spiritual-mage Slayer route or buy on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "primordial-boots",
+    "itemName": "Primordial boots",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Cerberus",
+        "action": "Obtain the primordial crystal or buy it on a Main"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Dragon boots",
+        "action": "Own dragon boots before combining"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "ferocious-gloves",
+    "itemName": "Ferocious gloves",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Alchemical Hydra",
+        "action": "Obtain hydra leather or buy it on a Main"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Barrows gloves",
+        "action": "Use the verified conversion route"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "avernic-defender",
+    "itemName": "Avernic defender",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Theatre of Blood",
+        "action": "Obtain an avernic defender hilt or buy it on a Main"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Dragon defender",
+        "action": "Own a dragon defender before combining"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "abyssal-whip",
+    "itemName": "Abyssal whip",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Abyssal demons",
+        "action": "Obtain from abyssal demons with the Slayer requirement or buy on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "osmumten-s-fang",
+    "itemName": "Osmumten\u0027s fang",
+    "style": "MELEE_STAB",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Tombs of Amascut",
+        "action": "Obtain as a raid reward or buy on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "arclight",
+    "itemName": "Arclight",
+    "style": "MELEE_SLASH",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Shadow of the Storm",
+        "action": "Obtain Darklight through the verified quest chain"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Ancient shards",
+        "action": "Charge the weapon using self-sourced ancient shards"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "zombie-axe",
+    "itemName": "Zombie axe",
+    "style": "MELEE_CRUSH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Defender of Varrock",
+        "action": "Reach the armoured-zombie access point"
+      },
+      {
+        "kind": "BOSS",
+        "target": "Armoured zombies",
+        "action": "Obtain the axe drop or buy it on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "rune-crossbow",
+    "itemName": "Rune crossbow",
+    "style": "RANGED",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "RESOURCE",
+        "target": "Runite limbs",
+        "action": "Smith or obtain verified runite limbs"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Yew stock",
+        "action": "Fletch a yew stock and assemble the crossbow; Mains may buy the finished item"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "magic-shortbow-i",
+    "itemName": "Magic shortbow (i)",
+    "style": "RANGED",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "RESOURCE",
+        "target": "Magic shortbow",
+        "action": "Fletch or buy the base bow"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Magic shortbow scroll",
+        "action": "Obtain the imbue scroll through its verified reward source"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "toxic-blowpipe",
+    "itemName": "Toxic blowpipe",
+    "style": "RANGED",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Zulrah",
+        "action": "Obtain a tanzanite fang or buy the completed weapon on a Main"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Zulrah\u0027s scales",
+        "action": "Maintain a verified charge supply"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "bow-of-faerdhinen",
+    "itemName": "Bow of faerdhinen",
+    "style": "RANGED",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Song of the Elves",
+        "action": "Unlock Prifddinas and the Gauntlet"
+      },
+      {
+        "kind": "BOSS",
+        "target": "The Gauntlet",
+        "action": "Obtain an enhanced crystal weapon seed"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Crystal shards",
+        "action": "Gather the shards needed for creation and charging"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "crystal-armour",
+    "itemName": "Crystal armour",
+    "style": "RANGED",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Song of the Elves",
+        "action": "Unlock Prifddinas and the Gauntlet"
+      },
+      {
+        "kind": "BOSS",
+        "target": "The Gauntlet",
+        "action": "Obtain crystal armour seeds"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Crystal shards",
+        "action": "Gather creation and charge resources"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "ava-s-accumulator",
+    "itemName": "Ava\u0027s accumulator",
+    "style": "RANGED",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Animal Magnetism",
+        "action": "Complete the quest and obtain the device"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "ava-s-assembler",
+    "itemName": "Ava\u0027s assembler",
+    "style": "RANGED",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Dragon Slayer II",
+        "action": "Unlock Vorkath"
+      },
+      {
+        "kind": "BOSS",
+        "target": "Vorkath",
+        "action": "Obtain Vorkath\u0027s head"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Ava\u0027s accumulator",
+        "action": "Upgrade the existing Ava device"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "necklace-of-anguish",
+    "itemName": "Necklace of anguish",
+    "style": "RANGED",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "SKILL",
+        "target": "Crafting",
+        "action": "Verify the zenyte jewellery Crafting level or buy on a Main"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Zenyte",
+        "action": "Self-source the gem and enchant it on Iron accounts"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "elite-void-ranged",
+    "itemName": "Elite void ranged",
+    "style": "RANGED",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Pest Control",
+        "action": "Earn Void equipment and the elite upgrade requirements"
+      },
+      {
+        "kind": "VERIFY",
+        "target": "Western Provinces diary",
+        "action": "Complete the required diary tier before the elite upgrade"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "iban-s-staff",
+    "itemName": "Iban\u0027s staff",
+    "style": "MAGIC",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Underground Pass",
+        "action": "Complete the quest and obtain the staff"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "ancient-staff",
+    "itemName": "Ancient staff",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Desert Treasure I",
+        "action": "Unlock Ancient Magicks and the verified staff source"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "warped-sceptre",
+    "itemName": "Warped sceptre",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "The Path of Glouphrie",
+        "action": "Unlock warped creatures"
+      },
+      {
+        "kind": "BOSS",
+        "target": "Warped creatures",
+        "action": "Obtain the sceptre or buy it on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "trident-of-the-seas",
+    "itemName": "Trident of the seas",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Cave kraken",
+        "action": "Obtain while assigned cave kraken or buy it on a Main"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Runes and coins",
+        "action": "Verify the charge supply before recommending use"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "master-wand",
+    "itemName": "Master wand",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Mage Training Arena",
+        "action": "Earn the required points in each room"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "imbued-god-cape",
+    "itemName": "Imbued god cape",
+    "style": "MAGIC",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Mage Arena II",
+        "action": "Complete the Wilderness miniquest with explicit risk acceptance"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "occult-necklace",
+    "itemName": "Occult necklace",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Smoke devils",
+        "action": "Obtain with the Slayer requirement or buy on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "tormented-bracelet",
+    "itemName": "Tormented bracelet",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "SKILL",
+        "target": "Crafting",
+        "action": "Verify the zenyte jewellery Crafting level or buy on a Main"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Zenyte",
+        "action": "Self-source and enchant the bracelet on Iron accounts"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "elidinis-ward",
+    "itemName": "Elidinis\u0027 ward",
+    "style": "MAGIC",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "BOSS",
+        "target": "Tombs of Amascut",
+        "action": "Obtain as a raid reward or buy on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "black-mask",
+    "itemName": "Black mask",
+    "style": "MELEE_SLASH",
+    "tradeable": true,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Cabin Fever",
+        "action": "Unlock Mos Le\u0027Harmless cave horrors"
+      },
+      {
+        "kind": "BOSS",
+        "target": "Cave horrors",
+        "action": "Obtain the mask or buy it on a Main"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "slayer-helmet",
+    "itemName": "Slayer helmet",
+    "style": "HYBRID",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "SKILL",
+        "target": "Crafting 55",
+        "action": "Meet the Crafting requirement"
+      },
+      {
+        "kind": "RESOURCE",
+        "target": "Slayer helmet components",
+        "action": "Unlock Malevolent Masquerade and assemble the verified components"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "slayer-helmet-i",
+    "itemName": "Slayer helmet (i)",
+    "style": "HYBRID",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "VERIFY",
+        "target": "Slayer helmet or black mask",
+        "action": "Own the base equipment"
+      },
+      {
+        "kind": "MINIGAME",
+        "target": "Imbue source",
+        "action": "Use a currently supported Nightmare Zone, Soul Wars, or scroll route"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "graceful-outfit",
+    "itemName": "Graceful outfit",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Rooftop Agility",
+        "action": "Collect marks of grace while training on eligible rooftop courses"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "prospector-kit",
+    "itemName": "Prospector kit",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Motherlode Mine",
+        "action": "Earn golden nuggets and buy the useful outfit pieces"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "angler-s-outfit",
+    "itemName": "Angler\u0027s outfit",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Fishing Trawler",
+        "action": "Complete reward rolls until the required pieces are owned"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "raiments-of-the-eye",
+    "itemName": "Raiments of the Eye",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "QUEST",
+        "target": "Temple of the Eye",
+        "action": "Unlock Guardians of the Rift"
+      },
+      {
+        "kind": "MINIGAME",
+        "target": "Guardians of the Rift",
+        "action": "Earn abyssal pearls and buy the outfit pieces"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  },
+  {
+    "id": "smiths-uniform",
+    "itemName": "Smiths\u0027 uniform",
+    "tradeable": false,
+    "steps": [
+      {
+        "kind": "MINIGAME",
+        "target": "Giants\u0027 Foundry",
+        "action": "Earn reputation and buy the uniform pieces"
+      }
+    ],
+    "valueRule": "Skip this route when a better owned alternative exists or the time/setup cost is disproportionate to the active goal.",
+    "provenance": "RuneLite 1.12.35 identities and OSRS Wiki item/activity pages; audited 2026-08-19"
+  }
+]

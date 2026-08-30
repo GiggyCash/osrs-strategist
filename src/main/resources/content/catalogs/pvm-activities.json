@@ -1,0 +1,641 @@
+[
+  {
+    "id": "pvm:abyssal_sire",
+    "name": "Abyssal Sire",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:alchemical_hydra",
+    "name": "Alchemical Hydra",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:amoxliatl",
+    "name": "Amoxliatl",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:araxxor",
+    "name": "Araxxor",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:artio",
+    "name": "Artio",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:barrows_chests",
+    "name": "Barrows Chests",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:brutus",
+    "name": "Brutus",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": true,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:bryophyta",
+    "name": "Bryophyta",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": true,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:callisto",
+    "name": "Callisto",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:calvarion",
+    "name": "Calvar\u0027ion",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:cerberus",
+    "name": "Cerberus",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:chambers_of_xeric",
+    "name": "Chambers of Xeric",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:chambers_of_xeric_challenge_mode",
+    "name": "Chambers of Xeric: Challenge Mode",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:chaos_elemental",
+    "name": "Chaos Elemental",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:chaos_fanatic",
+    "name": "Chaos Fanatic",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:commander_zilyana",
+    "name": "Commander Zilyana",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:corporeal_beast",
+    "name": "Corporeal Beast",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:crazy_archaeologist",
+    "name": "Crazy Archaeologist",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:dagannoth_prime",
+    "name": "Dagannoth Prime",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:dagannoth_rex",
+    "name": "Dagannoth Rex",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:dagannoth_supreme",
+    "name": "Dagannoth Supreme",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:deranged_archaeologist",
+    "name": "Deranged Archaeologist",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:doom_of_mokhaiotl",
+    "name": "Doom of Mokhaiotl",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:duke_sucellus",
+    "name": "Duke Sucellus",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:general_graardor",
+    "name": "General Graardor",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:giant_mole",
+    "name": "Giant Mole",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:grotesque_guardians",
+    "name": "Grotesque Guardians",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:hespori",
+    "name": "Hespori",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:kalphite_queen",
+    "name": "Kalphite Queen",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:king_black_dragon",
+    "name": "King Black Dragon",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:kraken",
+    "name": "Kraken",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:kreearra",
+    "name": "Kree\u0027Arra",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:kril_tsutsaroth",
+    "name": "K\u0027ril Tsutsaroth",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:lunar_chests",
+    "name": "Lunar Chests",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:mad_angel",
+    "name": "Mad Angel",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:maggot_king",
+    "name": "Maggot King",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:mimic",
+    "name": "Mimic",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:nex",
+    "name": "Nex",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:nightmare",
+    "name": "Nightmare",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:phosanis_nightmare",
+    "name": "Phosani\u0027s Nightmare",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:obor",
+    "name": "Obor",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": true,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:phantom_muspah",
+    "name": "Phantom Muspah",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:sarachnis",
+    "name": "Sarachnis",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:scorpia",
+    "name": "Scorpia",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:scurrius",
+    "name": "Scurrius",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:shellbane_gryphon",
+    "name": "Shellbane Gryphon",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:skotizo",
+    "name": "Skotizo",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:sol_heredit",
+    "name": "Sol Heredit",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:spindel",
+    "name": "Spindel",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:tempoross",
+    "name": "Tempoross",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": true
+  },
+  {
+    "id": "pvm:the_gauntlet",
+    "name": "The Gauntlet",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:the_corrupted_gauntlet",
+    "name": "The Corrupted Gauntlet",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:the_hueycoatl",
+    "name": "The Hueycoatl",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:the_leviathan",
+    "name": "The Leviathan",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:the_royal_titans",
+    "name": "The Royal Titans",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:the_whisperer",
+    "name": "The Whisperer",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:theatre_of_blood",
+    "name": "Theatre of Blood",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:theatre_of_blood_hard_mode",
+    "name": "Theatre of Blood: Hard Mode",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:thermonuclear_smoke_devil",
+    "name": "Thermonuclear Smoke Devil",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:tombs_of_amascut",
+    "name": "Tombs of Amascut",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:tombs_of_amascut_expert",
+    "name": "Tombs of Amascut: Expert Mode",
+    "wilderness": false,
+    "raid": true,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:tzkal_zuk",
+    "name": "TzKal-Zuk",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:tztok_jad",
+    "name": "TzTok-Jad",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:vardorvis",
+    "name": "Vardorvis",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:venenatis",
+    "name": "Venenatis",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:vetion",
+    "name": "Vet\u0027ion",
+    "wilderness": true,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:vorkath",
+    "name": "Vorkath",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:wintertodt",
+    "name": "Wintertodt",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:yama",
+    "name": "Yama",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:zalcano",
+    "name": "Zalcano",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  },
+  {
+    "id": "pvm:zulrah",
+    "name": "Zulrah",
+    "wilderness": false,
+    "raid": false,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "hardcoreSafeByDefault": false
+  }
+]

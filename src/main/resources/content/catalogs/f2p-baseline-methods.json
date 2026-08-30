@@ -1,0 +1,1040 @@
+[
+  {
+    "method": {
+      "id": "attack_f2p_baseline",
+      "skill": "ATTACK",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "F2P melee Attack",
+      "instructions": "Edgeville Monastery: fight monks with an observed F2P melee weapon on Accurate style and ask a monk to heal you when needed.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "defence_f2p_baseline",
+      "skill": "DEFENCE",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "F2P defensive melee",
+      "instructions": "Edgeville Monastery: fight monks with an observed F2P melee weapon on Defensive style and ask a monk to heal you when needed.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "strength_f2p_baseline",
+      "skill": "STRENGTH",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "F2P melee Strength",
+      "instructions": "Edgeville Monastery: fight monks with an observed F2P melee weapon on Aggressive style and ask a monk to heal you when needed.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "ranged_f2p_baseline",
+      "skill": "RANGED",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "F2P bow training",
+      "instructions": "Edgeville Monastery: attack monks on Rapid style with the observed shortbow and matching arrows; ask a monk to heal you when needed.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "prayer_f2p_bones",
+      "skill": "PRAYER",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Bury F2P bones",
+      "instructions": "Lumbridge Castle bank: withdraw the bone type named in DO, bury the full inventory, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_f2p_fish_baseline",
+      "skill": "COOKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Cook F2P fish",
+      "instructions": "Al Kharid bank and range: withdraw one inventory of raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "cooking_f2p_uim_carried_fish",
+      "skill": "COOKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Cook carried fish without banking",
+      "instructions": "Cook immediately carried fish on the permanent Barbarian Village fire; when short, catch trout and salmon at the adjacent river with a fly fishing rod and feathers.",
+      "efficientScore": 4.0,
+      "balancedScore": 8.0,
+      "relaxedScore": 6.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "uim-f2p-strategy"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_f2p_trees",
+      "skill": "WOODCUTTING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Cut regular trees",
+      "instructions": "Trees west of Lumbridge Castle: bring the observed axe, cut regular logs, drop them when full, and repeat until 15 Woodcutting.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_f2p_oaks",
+      "skill": "WOODCUTTING",
+      "minLevel": 15,
+      "maxLevel": 29,
+      "name": "Cut oak trees",
+      "instructions": "Oak trees east of Draynor Village bank: bring the observed axe, cut oaks, bank the logs, and repeat until 30 Woodcutting.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "woodcutting_f2p_willows_baseline",
+      "skill": "WOODCUTTING",
+      "minLevel": 30,
+      "maxLevel": 99,
+      "name": "Cut willow trees",
+      "instructions": "Willow trees south of Draynor Village bank: bring the observed axe, cut willows, bank the logs, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_f2p_shrimps",
+      "skill": "FISHING",
+      "minLevel": 1,
+      "maxLevel": 19,
+      "name": "Small-net fishing",
+      "instructions": "Lumbridge Swamp fishing spots beside the Fishing tutor: net shrimp, drop the catch when full, and repeat until 20 Fishing.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "LOW",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "fishing_f2p_fly_baseline",
+      "skill": "FISHING",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Fly fishing",
+      "instructions": "Barbarian Village river: bring a fly fishing rod and feathers, catch trout and salmon, drop the fish when full, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "firemaking_f2p_logs",
+      "skill": "FIREMAKING",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Burn F2P logs",
+      "instructions": "Grand Exchange south-east corner: withdraw the log type named in DO and a tinderbox, burn east-to-west rows, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_f2p_leather_gloves",
+      "skill": "CRAFTING",
+      "minLevel": 1,
+      "maxLevel": 7,
+      "name": "Craft leather gloves",
+      "instructions": "Use a needle and thread on leather to make leather gloves until a stronger F2P Crafting action unlocks.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_f2p_gold_amulets",
+      "skill": "CRAFTING",
+      "minLevel": 8,
+      "maxLevel": 22,
+      "name": "Craft gold amulets",
+      "instructions": "Al Kharid furnace: carry an amulet mould, smelt observed gold bars into gold amulets, bank immediately south, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "crafting_f2p_tiaras",
+      "skill": "CRAFTING",
+      "minLevel": 23,
+      "maxLevel": 99,
+      "name": "Craft silver tiaras",
+      "instructions": "Al Kharid furnace: carry a tiara mould, smelt observed silver bars into tiaras, bank immediately south, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_bronze",
+      "skill": "SMITHING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Smith bronze items",
+      "instructions": "Varrock West Bank: keep a hammer, withdraw bronze bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_uim_bronze",
+      "skill": "SMITHING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Mine, smelt, and smith bronze in Lumbridge",
+      "instructions": "Mine one copper and one tin at the east Lumbridge Swamp mine, smelt them at the Lumbridge furnace, then smith the bronze bar on the nearby rusted anvil. Repeat without using a bank.",
+      "efficientScore": 4.0,
+      "balancedScore": 8.0,
+      "relaxedScore": 6.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "uim-f2p-strategy"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_iron",
+      "skill": "SMITHING",
+      "minLevel": 15,
+      "maxLevel": 29,
+      "name": "Smith iron items",
+      "instructions": "Varrock West Bank: keep a hammer, withdraw iron bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_steel",
+      "skill": "SMITHING",
+      "minLevel": 30,
+      "maxLevel": 47,
+      "name": "Smith steel items",
+      "instructions": "Varrock West Bank: keep a hammer, withdraw steel bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "smithing_f2p_platebody_baseline",
+      "skill": "SMITHING",
+      "minLevel": 48,
+      "maxLevel": 99,
+      "name": "Smith F2P platebodies",
+      "instructions": "Varrock West Bank: keep a hammer, withdraw five bars per trip, smith the platebody named in DO at the anvils immediately south, bank, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "mining_f2p_copper_tin",
+      "skill": "MINING",
+      "minLevel": 1,
+      "maxLevel": 14,
+      "name": "Mine copper or tin",
+      "instructions": "East Lumbridge Swamp mine: bring the observed pickaxe, mine copper, drop the ore when full, and repeat until 15 Mining.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "mining_f2p_iron_baseline",
+      "skill": "MINING",
+      "minLevel": 15,
+      "maxLevel": 99,
+      "name": "Mine iron ore",
+      "instructions": "Varrock East mine: bring the observed pickaxe, mine iron, drop the ore when full, and repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "ACTIVE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 1,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_uim_local",
+      "skill": "RUNECRAFT",
+      "minLevel": 1,
+      "maxLevel": 99,
+      "name": "Mine and craft F2P essence without banking",
+      "instructions": "Mine rune essence through Sedridor in the Wizards\u0027 Tower, carry it directly to the highest useful F2P altar whose talisman or tiara is observed, craft it, and repeat.",
+      "efficientScore": 4.0,
+      "balancedScore": 8.0,
+      "relaxedScore": 6.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 2,
+      "requirements": [],
+      "confidence": "VERIFIED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "FREE",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "uim-f2p-strategy"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_air",
+      "skill": "RUNECRAFT",
+      "minLevel": 1,
+      "maxLevel": 1,
+      "name": "Craft air runes",
+      "instructions": "Air Altar southwest of Falador. Bank in Falador, run to the altar, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Air talisman or air tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_mind",
+      "skill": "RUNECRAFT",
+      "minLevel": 2,
+      "maxLevel": 4,
+      "name": "Craft mind runes",
+      "instructions": "Mind Altar north of Falador between Ice Mountain and Goblin Village. Bank in Falador, run north, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Mind talisman or mind tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_water",
+      "skill": "RUNECRAFT",
+      "minLevel": 5,
+      "maxLevel": 8,
+      "name": "Craft water runes",
+      "instructions": "Water Altar in Lumbridge Swamp. Bank in Draynor Village, run southeast to the altar, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Water talisman or water tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_earth",
+      "skill": "RUNECRAFT",
+      "minLevel": 9,
+      "maxLevel": 13,
+      "name": "Craft earth runes",
+      "instructions": "Earth Altar northeast of Varrock, south of the Lumber Yard. Bank at Varrock East, run to the altar, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Earth talisman or earth tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_fire",
+      "skill": "RUNECRAFT",
+      "minLevel": 14,
+      "maxLevel": 19,
+      "name": "Craft fire runes",
+      "instructions": "Fire Altar north of Al Kharid, west of Emir\u0027s Arena. Bank in Al Kharid, run to the altar, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Fire talisman or fire tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  },
+  {
+    "method": {
+      "id": "runecraft_f2p_body",
+      "skill": "RUNECRAFT",
+      "minLevel": 20,
+      "maxLevel": 99,
+      "name": "Craft body runes",
+      "instructions": "Body Altar south of Edgeville Monastery. Bank in Edgeville, run to the altar, craft, repeat.",
+      "efficientScore": 5.0,
+      "balancedScore": 6.0,
+      "relaxedScore": 7.0,
+      "attentionLevel": "MODERATE",
+      "minimumSessionMinutes": 10,
+      "setupMinutes": 3,
+      "requirements": [
+        "Rune or pure essence",
+        "Body talisman or body tiara"
+      ],
+      "confidence": "CHECK_NEEDED",
+      "membersOnly": false,
+      "wilderness": false,
+      "progressionProtected": false,
+      "delegatesMethodChoice": false
+    },
+    "metadata": {
+      "intensity": "BALANCED",
+      "costTier": "VERY_LOW",
+      "riskLevel": "NONE",
+      "freeToPlayAllowed": true,
+      "selfSourceFriendly": true,
+      "uimFriendly": true,
+      "hardcoreSafe": true,
+      "tags": [
+        "f2p-baseline"
+      ]
+    }
+  }
+]

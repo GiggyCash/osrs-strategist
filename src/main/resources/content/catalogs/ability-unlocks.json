@@ -1,0 +1,113 @@
+[
+  {
+    "id": "ancient-magicks",
+    "name": "Ancient Magicks",
+    "kind": "SPELLBOOK",
+    "quest": "Desert Treasure I",
+    "level": 0,
+    "secondaryLevel": 0,
+    "accessCheck": "Verify the Ancient spellbook is currently selected before relying on Ancient spells"
+  },
+  {
+    "id": "lunar-spellbook",
+    "name": "Lunar spellbook",
+    "kind": "SPELLBOOK",
+    "quest": "Lunar Diplomacy",
+    "level": 0,
+    "secondaryLevel": 0,
+    "accessCheck": "Verify the Lunar spellbook is currently selected before relying on Lunar spells"
+  },
+  {
+    "id": "arceuus-spellbook",
+    "name": "Arceuus spellbook",
+    "kind": "SPELLBOOK",
+    "level": 0,
+    "secondaryLevel": 0,
+    "accessCheck": "Verify access to a current spellbook-switching route and that Arceuus is selected"
+  },
+  {
+    "id": "chivalry",
+    "name": "Chivalry",
+    "kind": "PRAYER",
+    "quest": "King\u0027s Ransom",
+    "skill": "PRAYER",
+    "level": 60,
+    "secondarySkill": "DEFENCE",
+    "secondaryLevel": 65,
+    "accessCheck": "Complete the Knight Waves training and verify the prayer unlock"
+  },
+  {
+    "id": "piety",
+    "name": "Piety",
+    "kind": "PRAYER",
+    "quest": "King\u0027s Ransom",
+    "skill": "PRAYER",
+    "level": 70,
+    "secondarySkill": "DEFENCE",
+    "secondaryLevel": 70,
+    "accessCheck": "Complete the Knight Waves training and verify the prayer unlock"
+  },
+  {
+    "id": "preserve",
+    "name": "Preserve",
+    "kind": "PRAYER",
+    "skill": "PRAYER",
+    "level": 55,
+    "secondaryLevel": 0,
+    "requiredItem": "Torn prayer scroll",
+    "encounterId": "pvm:chambers_of_xeric",
+    "accessCheck": "Read the scroll and verify the prayer is unlocked"
+  },
+  {
+    "id": "rigour",
+    "name": "Rigour",
+    "kind": "PRAYER",
+    "skill": "PRAYER",
+    "level": 74,
+    "secondaryLevel": 0,
+    "requiredItem": "Dexterous prayer scroll",
+    "encounterId": "pvm:chambers_of_xeric",
+    "accessCheck": "Read the scroll and verify the prayer is unlocked"
+  },
+  {
+    "id": "augury",
+    "name": "Augury",
+    "kind": "PRAYER",
+    "skill": "PRAYER",
+    "level": 77,
+    "secondaryLevel": 0,
+    "requiredItem": "Arcane prayer scroll",
+    "encounterId": "pvm:chambers_of_xeric",
+    "accessCheck": "Read the scroll and verify the prayer is unlocked"
+  },
+  {
+    "id": "iban-blast",
+    "name": "Iban Blast",
+    "kind": "SPELL",
+    "quest": "Underground Pass",
+    "skill": "MAGIC",
+    "level": 50,
+    "secondaryLevel": 0,
+    "requiredItem": "Iban\u0027s staff",
+    "accessCheck": "Verify the staff is charged and the current spellbook/runes support the cast"
+  },
+  {
+    "id": "ice-barrage",
+    "name": "Ice Barrage",
+    "kind": "SPELL",
+    "quest": "Desert Treasure I",
+    "skill": "MAGIC",
+    "level": 94,
+    "secondaryLevel": 0,
+    "accessCheck": "Select Ancient Magicks and verify the exact carried rune combination before use"
+  },
+  {
+    "id": "barrows-teleport",
+    "name": "Barrows Teleport",
+    "kind": "SPELL",
+    "skill": "MAGIC",
+    "level": 83,
+    "secondaryLevel": 0,
+    "accessCheck": "Select the Arceuus spellbook and verify exact carried runes before relying on the route"
+  }
+]

@@ -1,0 +1,2425 @@
+[
+  {
+    "id": "dust-devils",
+    "aliases": [
+      "dust devil",
+      "dust devils"
+    ],
+    "requiredProtection": [
+      "Slayer helmet",
+      "Slayer helmet (i)",
+      "Facemask"
+    ],
+    "preferredLocation": "Catacombs of Kourend unless the live assignment specifies another area.",
+    "styleGuidance": "Magic bursting/barraging is strong in multicombat when the build, rune supply and budget support it; otherwise use a build-legal conventional style.",
+    "mechanicsNote": "A facemask or Slayer helmet must be worn. Never route to the Wilderness Slayer Cave unless Wilderness methods are explicitly enabled.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "VERIFIED",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Do not skip automatically: compare rune/prayer cost and the assigned location against the account\u0027s current goals."
+  },
+  {
+    "id": "aberrant-spectres",
+    "aliases": [
+      "aberrant spectre",
+      "aberrant spectres"
+    ],
+    "requiredProtection": [
+      "Slayer helmet",
+      "Slayer helmet (i)",
+      "Nose peg"
+    ],
+    "preferredLocation": "Slayer Tower or another non-Wilderness location allowed by the assignment.",
+    "styleGuidance": "Use a build-legal style and protect against their Magic attacks when appropriate.",
+    "mechanicsNote": "A nose peg or Slayer helmet is mandatory protection against their stat-draining fumes.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "gargoyles",
+    "aliases": [
+      "gargoyle",
+      "gargoyles"
+    ],
+    "requiredProtection": [
+      "Rock hammer",
+      "Rock thrownhammer",
+      "Granite hammer"
+    ],
+    "preferredLocation": "Slayer Tower. Use the basement only when the live task/access state supports it.",
+    "styleGuidance": "Melee is a practical default; crush and Magic are useful weaknesses, but owned gear should decide the actual style.",
+    "mechanicsNote": "A rock hammer or equivalent is required to finish ordinary gargoyles. Gargoyle Smasher can automate the finishing blow when unlocked.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "kurasks",
+    "aliases": [
+      "kurask",
+      "kurasks"
+    ],
+    "requiredProtection": [
+      "Leaf-bladed spear",
+      "Leaf-bladed sword",
+      "Leaf-bladed battleaxe",
+      "Broad bolts",
+      "Broad arrows",
+      "Slayer\u0027s staff"
+    ],
+    "preferredLocation": "Fremennik Slayer Dungeon unless the assignment specifies another legal location.",
+    "styleGuidance": "Use a leaf-bladed weapon, broad ammunition, or Magic Dart. Ordinary weapons cannot damage Kurasks.",
+    "mechanicsNote": "This task has a hard weapon restriction, so at least one legal damage option must be verified before the setup is ready.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "turoths",
+    "aliases": [
+      "turoth",
+      "turoths"
+    ],
+    "requiredProtection": [
+      "Leaf-bladed spear",
+      "Leaf-bladed sword",
+      "Leaf-bladed battleaxe",
+      "Broad bolts",
+      "Broad arrows",
+      "Slayer\u0027s staff"
+    ],
+    "preferredLocation": "Fremennik Slayer Dungeon unless the live assignment specifies another legal location.",
+    "styleGuidance": "Use a leaf-bladed weapon, broad ammunition, or Magic Dart.",
+    "mechanicsNote": "Turoths share the leafy damage restriction with Kurasks, so ordinary weapons should never be suggested.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "banshees",
+    "aliases": [
+      "banshee",
+      "banshees",
+      "twisted banshee",
+      "twisted banshees"
+    ],
+    "requiredProtection": [
+      "Slayer helmet",
+      "Slayer helmet (i)",
+      "Earmuffs"
+    ],
+    "preferredLocation": "Slayer Tower ground floor, in the banshee rooms near the entrance.",
+    "styleGuidance": "Use any build-legal combat style after the hearing protection requirement is satisfied.",
+    "mechanicsNote": "Earmuffs or a Slayer helmet protect against the Banshee scream mechanic.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cockatrices",
+    "aliases": [
+      "cockatrice",
+      "cockatrices"
+    ],
+    "requiredProtection": [
+      "Mirror shield"
+    ],
+    "preferredLocation": "Fremennik Slayer Dungeon unless the task specifies another legal area.",
+    "styleGuidance": "Use a one-handed build-legal weapon with the mirror shield.",
+    "mechanicsNote": "The mirror-shield mechanic constrains the off-hand slot, so two-handed weapon recommendations should not be used by default.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "basilisks",
+    "aliases": [
+      "basilisk",
+      "basilisks"
+    ],
+    "requiredProtection": [
+      "Mirror shield"
+    ],
+    "preferredLocation": "Fremennik Slayer Dungeon for ordinary basilisks unless the assignment points to another variant.",
+    "styleGuidance": "Use a one-handed build-legal weapon with the required gaze protection for ordinary basilisks.",
+    "mechanicsNote": "Basilisk Knights have separate quest access and setup and should not be treated as identical to ordinary basilisks.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "wall-beasts",
+    "aliases": [
+      "wall beast",
+      "wall beasts"
+    ],
+    "requiredProtection": [
+      "Spiny helmet",
+      "Slayer helmet",
+      "Slayer helmet (i)"
+    ],
+    "preferredLocation": "Lumbridge Swamp Caves.",
+    "styleGuidance": "Use any build-legal style after head protection is equipped.",
+    "mechanicsNote": "A spiny helmet or Slayer helmet protects from the wall-beast grab while moving through their attack points.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "rockslugs",
+    "aliases": [
+      "rockslug",
+      "rockslugs",
+      "rock slug",
+      "rock slugs"
+    ],
+    "requiredProtection": [
+      "Bag of salt",
+      "Brine sabre"
+    ],
+    "preferredLocation": "Fremennik Slayer Dungeon unless the live task location overrides it.",
+    "styleGuidance": "Use a build-legal style and keep the finishing item available.",
+    "mechanicsNote": "Use a bag of salt below 5 Hitpoints to finish each rockslug; an equipped brine sabre finishes it automatically without consuming salt.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "desert-lizards",
+    "aliases": [
+      "desert lizard",
+      "desert lizards"
+    ],
+    "requiredProtection": [
+      "Ice cooler"
+    ],
+    "preferredLocation": "Use the Kharidian Desert task area allowed by the assignment.",
+    "styleGuidance": "Use a build-legal style and keep Ice coolers in the inventory.",
+    "mechanicsNote": "Desert lizards require an Ice cooler to finish them at low Hitpoints.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "nechryaels",
+    "aliases": [
+      "nechryael",
+      "nechryaels",
+      "greater nechryael",
+      "greater nechryaels"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The greater-nechryael room in the Catacombs of Kourend; use the live area instead when Konar specifies one.",
+    "styleGuidance": "Multitarget Magic can be efficient when the build and rune supply support it; otherwise use a legal conventional style.",
+    "mechanicsNote": "Variants and summons make fixed supply or kill-time estimates unreliable.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "VERIFIED",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Keep or extend only when the live location, rune supply, and combat goals make multitarget Magic worthwhile."
+  },
+  {
+    "id": "bloodvelds",
+    "aliases": [
+      "bloodveld",
+      "bloodvelds",
+      "mutated bloodveld",
+      "mutated bloodvelds"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Slayer Tower second floor for ordinary bloodvelds; use the live area instead when Konar specifies one.",
+    "styleGuidance": "Choose the style from owned gear and the exact assigned location.",
+    "mechanicsNote": "Locations differ enough that cannon or multicombat availability needs live location evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cave-horrors",
+    "aliases": [
+      "cave horror",
+      "cave horrors"
+    ],
+    "requiredProtection": [
+      "Witchwood icon",
+      "Slayer helmet",
+      "Slayer helmet (i)"
+    ],
+    "preferredLocation": "Mos Le\u0027Harmless Caves after Cabin Fever.",
+    "styleGuidance": "Use a build-legal style while the required head/neck protection is equipped.",
+    "mechanicsNote": "A witchwood icon or Slayer helmet protects against the cave horror scream; Mos Le\u0027Harmless access must also be verified.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [
+      "Black mask"
+    ],
+    "taskDecisionGuidance": "For Iron accounts, the black mask is a major Slayer progression objective."
+  },
+  {
+    "id": "mogres",
+    "aliases": [
+      "mogre",
+      "mogres"
+    ],
+    "requiredProtection": [
+      "Fishing explosive",
+      "Super fishing explosive"
+    ],
+    "preferredLocation": "Mudskipper Point after the Mogre miniquest setup is complete.",
+    "styleGuidance": "Use a build-legal combat style after luring a mogre with the explosive.",
+    "mechanicsNote": "The fishing explosive is used on an ominous fishing spot to make a mogre appear.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "killerwatts",
+    "aliases": [
+      "killerwatt",
+      "killerwatts"
+    ],
+    "requiredProtection": [
+      "Insulated boots"
+    ],
+    "preferredLocation": "Killerwatt plane through the Draynor Manor portal.",
+    "styleGuidance": "Use a build-legal style with insulated boots equipped.",
+    "mechanicsNote": "Insulated boots are mandatory protection from the plane\u0027s electrical damage.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "fever-spiders",
+    "aliases": [
+      "fever spider",
+      "fever spiders"
+    ],
+    "requiredProtection": [
+      "Slayer gloves"
+    ],
+    "preferredLocation": "Braindeath Island brewery basement after Rum Deal access is verified.",
+    "styleGuidance": "Use a build-legal style with Slayer gloves equipped.",
+    "mechanicsNote": "Slayer gloves are mandatory; verify Rum Deal access before travelling.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "brine-rats",
+    "aliases": [
+      "brine rat",
+      "brine rats"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Brine Rat Cavern after Olaf\u0027s Quest.",
+    "styleGuidance": "Use a build-legal sustainable style; the exact weapon should come from owned gear.",
+    "mechanicsNote": "The cavern is quest-gated, so Olaf\u0027s Quest completion must be observed before routing here.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [
+      "Brine sabre"
+    ],
+    "taskDecisionGuidance": "Iron accounts may value the brine sabre drop for underwater combat progression."
+  },
+  {
+    "id": "skeletal-wyverns",
+    "aliases": [
+      "skeletal wyvern",
+      "skeletal wyverns"
+    ],
+    "requiredProtection": [
+      "Elemental shield",
+      "Mind shield",
+      "Dragonfire shield",
+      "Ancient wyvern shield"
+    ],
+    "preferredLocation": "Asgarnian Ice Dungeon.",
+    "styleGuidance": "Use a one-handed build-legal weapon with a verified wyvern-breath shield.",
+    "mechanicsNote": "Ordinary antifire protection does not replace a valid wyvern shield; the off-hand requirement rules out two-handed defaults.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "smoke-devils",
+    "aliases": [
+      "smoke devil",
+      "smoke devils",
+      "thermonuclear smoke devil"
+    ],
+    "requiredProtection": [
+      "Slayer helmet",
+      "Slayer helmet (i)",
+      "Facemask"
+    ],
+    "preferredLocation": "Smoke Devil Dungeon for the ordinary task unless a live boss choice is explicit.",
+    "styleGuidance": "Multitarget Magic is effective for ordinary smoke devils when runes, spellbook, prayer and location are verified.",
+    "mechanicsNote": "A facemask or Slayer helmet is mandatory. Do not silently turn the assignment into a boss task.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "VERIFIED",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare barrage cost with the player\u0027s Slayer and Magic goals before extending."
+  },
+  {
+    "id": "wyrms",
+    "aliases": [
+      "wyrm",
+      "wyrms"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Mount Karuulm; verify heat protection before entering the dungeon.",
+    "styleGuidance": "Use a build-legal ranged or melee setup selected from owned gear.",
+    "mechanicsNote": "Karuulm dungeon heat protection/access must be verified; do not assume generic boots satisfy it.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "drakes",
+    "aliases": [
+      "drake",
+      "drakes"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Mount Karuulm; verify heat protection before entering the dungeon.",
+    "styleGuidance": "Use a sustainable build-legal setup and verify the chosen anti-dragonfire coverage.",
+    "mechanicsNote": "Drake breath and Karuulm heat are separate preparation concerns; neither should be inferred from a generic combat loadout.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "hydras",
+    "aliases": [
+      "hydra",
+      "hydras",
+      "alchemical hydra"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Mount Karuulm. Ordinary hydras and the Alchemical Hydra are different encounters.",
+    "styleGuidance": "Use the assignment\u0027s ordinary-monster setup unless the live state explicitly selects the boss encounter.",
+    "mechanicsNote": "Verify Karuulm heat protection and do not promote a generic hydra assignment to boss readiness.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "vampyres",
+    "aliases": [
+      "vampyre",
+      "vampyres",
+      "vampire",
+      "vampires"
+    ],
+    "requiredProtection": [
+      "Silver weapon",
+      "Ivandis flail",
+      "Blisterwood flail"
+    ],
+    "preferredLocation": "The feral vampyres in the Haunted Woods, south-east of the fairy ring; use a higher tier only when its weapon and quest access are proven.",
+    "styleGuidance": "The legal weapon depends on the exact vampyre tier and quest progression.",
+    "mechanicsNote": "Vampyre tiers have different immunity and weapon rules, so verify the live variant before choosing a weapon.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "waterfiends",
+    "aliases": [
+      "waterfiend",
+      "waterfiends"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Ancient Cavern after the pyre-ship stage of Barbarian Training, using the whirlpool south of the Barbarian Outpost.",
+    "styleGuidance": "Crush is generally appropriate, but the actual weapon must be build-legal and owned.",
+    "mechanicsNote": "Ancient Cavern access and aggressive surrounding monsters make this an access/setup check, not a generic low-risk location.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "kalphites",
+    "aliases": [
+      "kalphite",
+      "kalphites"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Kalphite Cave east of Shantay Pass while assigned kalphites.",
+    "styleGuidance": "Choose a sustainable build-legal style for the exact kalphite variant.",
+    "mechanicsNote": "Cannon and multicombat suitability depend on the selected room; Kalphite Queen is a separate PvM encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "dagannoths",
+    "aliases": [
+      "dagannoth",
+      "dagannoths"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The dagannoth rooms in the Catacombs of Kourend.",
+    "styleGuidance": "Use a sustainable legal style; multitarget options depend on the exact room.",
+    "mechanicsNote": "Lighthouse, Catacombs and Waterbirth variants have different access and combat context; Dagannoth Kings are separate PvM encounters.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "black-demons",
+    "aliases": [
+      "black demon",
+      "black demons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The black-demon room in the Catacombs of Kourend.",
+    "styleGuidance": "Use a safespot or sustainable build-legal setup appropriate to the exact variant.",
+    "mechanicsNote": "Demonic gorillas and Wilderness variants require their own quest, mechanics and risk evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "greater-demons",
+    "aliases": [
+      "greater demon",
+      "greater demons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The greater-demon room in the Catacombs of Kourend.",
+    "styleGuidance": "Use a sustainable build-legal style selected from owned gear.",
+    "mechanicsNote": "Tormented demons, Kril Tsutsaroth and Wilderness variants are separate encounters and must not inherit ordinary-task readiness.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Keep or skip according to the assigned location and current combat goals."
+  },
+  {
+    "id": "crawling-hands",
+    "aliases": [
+      "crawling hand",
+      "crawling hands"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Slayer Tower after Morytania access is verified.",
+    "styleGuidance": "Use any build-legal conventional style.",
+    "mechanicsNote": "The Slayer Tower route requires Priest in Peril access; do not route an F2P or unverified account there.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cave-crawlers",
+    "aliases": [
+      "cave crawler",
+      "cave crawlers"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Fremennik Slayer Dungeon when that access route is available.",
+    "styleGuidance": "Use a sustainable build-legal style and carry poison protection.",
+    "mechanicsNote": "Cave crawlers poison; verify an antipoison source before treating the setup as ready.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cave-slimes",
+    "aliases": [
+      "cave slime",
+      "cave slimes"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Lumbridge Swamp Caves with a verified safe light source.",
+    "styleGuidance": "Use a sustainable build-legal style and carry poison protection.",
+    "mechanicsNote": "The cave route needs a safe light source and cave slimes can poison.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "pyrefiends",
+    "aliases": [
+      "pyrefiend",
+      "pyrefiends"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Fremennik Slayer Dungeon, in the pyrefiend chamber.",
+    "styleGuidance": "Use a build-legal style chosen from owned gear.",
+    "mechanicsNote": "Do not infer a Wilderness route or cannon placement without live location evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "infernal-mages",
+    "aliases": [
+      "infernal mage",
+      "infernal mages"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Slayer Tower after Morytania access is verified.",
+    "styleGuidance": "Use a build-legal setup with appropriate Magic defence or protection.",
+    "mechanicsNote": "Slayer Tower access and the monster\u0027s Magic attacks should be included in preparation.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "jellies",
+    "aliases": [
+      "jelly",
+      "jellies",
+      "warped jelly",
+      "warped jellies"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The jelly room in the Catacombs of Kourend for multitarget combat; use the live area instead when Konar specifies one.",
+    "styleGuidance": "Use a build-legal style; multitarget Magic is location-dependent.",
+    "mechanicsNote": "Ordinary and warped variants occupy different areas, so burst or barrage suitability needs live location evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "harpie-bug-swarms",
+    "aliases": [
+      "harpie bug swarm",
+      "harpie bug swarms"
+    ],
+    "requiredProtection": [
+      "Lit bug lantern"
+    ],
+    "preferredLocation": "North-east of Tai Bwo Wannai after Karamja access is verified.",
+    "styleGuidance": "Use a build-legal one-handed or two-handed style after the lit lantern is carried.",
+    "mechanicsNote": "A lit bug lantern is required to damage harpie bug swarms.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "zygomites",
+    "aliases": [
+      "zygomite",
+      "zygomites",
+      "mutated zygomite",
+      "mutated zygomites"
+    ],
+    "requiredProtection": [
+      "Fungicide spray"
+    ],
+    "preferredLocation": "Zanaris, around the Cosmic Altar path for ordinary zygomites.",
+    "styleGuidance": "Use a build-legal style and keep fungicide charges available.",
+    "mechanicsNote": "Fungicide spray is required to finish zygomites; verify remaining charges rather than assuming a bottle is usable.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "abyssal-demons",
+    "aliases": [
+      "abyssal demon",
+      "abyssal demons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Slayer Tower or Catacombs of Kourend when the chosen route is already accessible.",
+    "styleGuidance": "Use a build-legal melee setup or verified multitarget Magic setup for the exact room.",
+    "mechanicsNote": "Teleporting attacks and room layout affect positioning; Abyssal Sire is a separate boss encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [
+      "Abyssal whip"
+    ],
+    "taskDecisionGuidance": "Iron accounts may value the abyssal whip drop; extension depends on the selected location and goal."
+  },
+  {
+    "id": "dark-beasts",
+    "aliases": [
+      "dark beast",
+      "dark beasts"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Mourner Tunnels only after the required elf quest access is observed.",
+    "styleGuidance": "Use a sustainable build-legal combat style from owned gear.",
+    "mechanicsNote": "Do not route here until Mourner Tunnels access is proven.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [
+      "Dark bow"
+    ],
+    "taskDecisionGuidance": "Usually decide from current unlock goals and whether the dark bow drop matters to the account."
+  },
+  {
+    "id": "cave-kraken",
+    "aliases": [
+      "cave kraken",
+      "cave krakens"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Kraken Cove while assigned cave kraken.",
+    "styleGuidance": "Use Magic and disturb the whirlpool with a ranged or Magic attack.",
+    "mechanicsNote": "The Kraken boss is a separate encounter; ordinary cave kraken still require an active assignment.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "warped-creatures",
+    "aliases": [
+      "warped terrorbird",
+      "warped terrorbirds",
+      "warped tortoise",
+      "warped tortoises"
+    ],
+    "requiredProtection": [
+      "Crystal chime"
+    ],
+    "preferredLocation": "Poison Waste Slayer Dungeon after The Path of Glouphrie.",
+    "styleGuidance": "Use a build-legal style after weakening the creature with the crystal chime.",
+    "mechanicsNote": "The Path of Glouphrie access and crystal chime are mandatory; ordinary weapons alone do not bypass the defence mechanic.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "sulphur-lizards",
+    "aliases": [
+      "sulphur lizard",
+      "sulphur lizards"
+    ],
+    "requiredProtection": [
+      "Boots of stone",
+      "Boots of brimstone",
+      "Granite boots"
+    ],
+    "preferredLocation": "Mount Karuulm after the dungeon heat-protection route is verified.",
+    "styleGuidance": "Use a sustainable build-legal style.",
+    "mechanicsNote": "A valid Karuulm heat-protection item must be equipped before entering the dangerous floor.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "spiritual-creatures",
+    "aliases": [
+      "spiritual ranger",
+      "spiritual rangers",
+      "spiritual mage",
+      "spiritual mages",
+      "spiritual warrior",
+      "spiritual warriors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "God Wars Dungeon only after the live route and faction protection are verified.",
+    "styleGuidance": "Match the build-legal style to the assigned spiritual creature and owned gear.",
+    "mechanicsNote": "God protection, dungeon access and the exact spiritual variant must be checked before travel.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "elves",
+    "aliases": [
+      "elf",
+      "elves"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Iorwerth Camp in Tirannwn after the Regicide access required for the assignment.",
+    "styleGuidance": "Use a sustainable build-legal style selected from owned gear.",
+    "mechanicsNote": "Elf locations have materially different quest and transport requirements; do not assume Prifddinas access.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ankous",
+    "aliases": [
+      "ankou",
+      "ankous"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security, level 4: Sepulchre of Death.",
+    "styleGuidance": "Use a safespot or sustainable build-legal setup appropriate to the chosen room.",
+    "mechanicsNote": "Wilderness and Catacombs variants need separate risk and access evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "suqahs",
+    "aliases": [
+      "suqah",
+      "suqahs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Lunar Isle only after Lunar Diplomacy access and transport are observed.",
+    "styleGuidance": "Use a sustainable build-legal style with food or protection appropriate to their mixed attacks.",
+    "mechanicsNote": "Do not route to Lunar Isle until the quest access and return transport are proven.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "trolls",
+    "aliases": [
+      "troll",
+      "trolls"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Troll Stronghold approach above Death Plateau after that mountain route is unlocked.",
+    "styleGuidance": "Use a sustainable build-legal style for the exact troll variant.",
+    "mechanicsNote": "Troll variants, multicombat areas and access routes differ; cannon suitability needs live location evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "blue-dragons",
+    "aliases": [
+      "blue dragon",
+      "blue dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "The blue-dragon room in the Isle of Souls Dungeon, reached through the portal south of Edgeville bank.",
+    "styleGuidance": "Use a build-legal ranged, Magic or one-handed melee setup with dragonfire protection.",
+    "mechanicsNote": "Verify the selected protection and location; ordinary antifire assumptions do not replace live equipment evidence.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "black-dragons",
+    "aliases": [
+      "black dragon",
+      "black dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "Taverley Dungeon\u0027s upper task-only lair; kill the baby black dragons for the short route.",
+    "styleGuidance": "Use a build-legal style with compatible dragonfire protection.",
+    "mechanicsNote": "King Black Dragon and Wilderness variants are separate PvM/risk contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "steel-dragons",
+    "aliases": [
+      "steel dragon",
+      "steel dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "The steel dragons in the Catacombs of Kourend\u0027s Dragon\u0027s Den.",
+    "styleGuidance": "Use a build-legal setup with verified dragonfire protection and appropriate damage type.",
+    "mechanicsNote": "Metal dragons combine dragonfire and strong conventional attacks; food and potion quantities remain setup-dependent.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "mithril-dragons",
+    "aliases": [
+      "mithril dragon",
+      "mithril dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "Ancient Cavern only after Barbarian Training access is observed.",
+    "styleGuidance": "Use a build-legal setup with verified dragonfire protection and a safe escape plan.",
+    "mechanicsNote": "Ancient Cavern access and the dragon\u0027s multiple attack styles make this a higher-risk preparation task.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "fossil-island-wyverns",
+    "aliases": [
+      "fossil island wyverns",
+      "spitting wyvern",
+      "spitting wyverns",
+      "taloned wyvern",
+      "taloned wyverns",
+      "long-tailed wyvern",
+      "long-tailed wyverns",
+      "ancient wyvern",
+      "ancient wyverns"
+    ],
+    "requiredProtection": [
+      "Elemental shield",
+      "Mind shield",
+      "Dragonfire shield",
+      "Ancient wyvern shield"
+    ],
+    "preferredLocation": "Wyvern Cave after Fossil Island access is verified.",
+    "styleGuidance": "Use a one-handed build-legal weapon with valid wyvern-breath protection.",
+    "mechanicsNote": "Fossil Island access and the exact wyvern variant must be known; ordinary antifire does not replace a valid shield.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "aviansies",
+    "aliases": [
+      "Aviansies"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "God Wars Dungeon after route and faction protection are verified.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use Ranged and verify the assigned aviansie variant.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "bandits",
+    "aliases": [
+      "Bandits"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Kharidian Bandit Camp, south of the Bedabin Camp; use the live area instead when Konar specifies one.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Wilderness variants require explicit risk acceptance.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "bats",
+    "aliases": [
+      "Bats"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Taverley Dungeon, in the giant-bat rooms near the entrance.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any build-legal conventional style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "bears",
+    "aliases": [
+      "Bears"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The bear spawns by Ardougne Mine, east of East Ardougne and north of the Legends\u0027 Guild.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Callisto and Artio are separate Wilderness boss decisions.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "black-knights",
+    "aliases": [
+      "Black Knights"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Black Knight camp north of Venenatis in the Wilderness, only when Wilderness methods are enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable gear and the live Krystilia area restriction.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cave-bugs",
+    "aliases": [
+      "Cave bugs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Lumbridge Swamp Caves with a verified safe light source.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Bring cave access equipment and use a build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "chaos-druids",
+    "aliases": [
+      "Chaos druids"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Taverley Dungeon, in the chaos-druid chamber immediately north of the skeleton room.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Their herb drops can matter to Iron accounts; compare travel with the task size.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "cows",
+    "aliases": [
+      "Cows"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The cow field east of the River Lum, across Lumbridge\u0027s eastern bridge.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any legal style; hides can support early Crafting.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "crabs",
+    "aliases": [
+      "Crabs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Sand Crabs along the Hosidius coast, south of the Woodcutting Guild.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "This is a low-attention route; use the live area instead when Konar specifies one.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "crocodiles",
+    "aliases": [
+      "Crocodiles"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The River Elid banks north of Nardah, with desert heat protection and waterskins.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a sustainable legal style and verify desert supplies.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "dark-warriors",
+    "aliases": [
+      "Dark warriors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Dark Warriors\u0027 Fortress in level 14 Wilderness, only when Wilderness methods are enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable gear and keep the Edgeville escape route clear.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "dogs",
+    "aliases": [
+      "Dogs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "McGrubor\u0027s Wood, entering through the loose railing on the north side.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Temple Guardian and dangerous variants require separate access checks.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "dwarves",
+    "aliases": [
+      "Dwarves"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Dwarven Mine beneath Ice Mountain, in the dwarf rooms near the Falador entrance.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any build-legal conventional style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "earth-warriors",
+    "aliases": [
+      "Earth warriors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The earth-warrior room in Edgeville Dungeon\u0027s level 7 Wilderness section, only when risk is enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Do not route a Hardcore account into the Wilderness.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ents",
+    "aliases": [
+      "Ents"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The ent cluster north-east of the Chaos Temple in the Wilderness, only when risk is enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable gear and preserve useful log drops only when they do not increase risk.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "fire-giants",
+    "aliases": [
+      "Fire giants"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The fire-giant room in the Catacombs of Kourend.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a safespot or sustainable legal setup; Branda is a separate boss encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "flesh-crawlers",
+    "aliases": [
+      "Fleshcrawlers"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security, level 2: Catacomb of Famine.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a sustainable build-legal style and value herb drops on early Irons.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ghosts",
+    "aliases": [
+      "Ghosts"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Taverley Dungeon, in the ghost room beyond the animated axes.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Revenants and boss variants are separate risk contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ghouls",
+    "aliases": [
+      "Ghouls"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The ghoul graveyard west of Canifis after Priest in Peril.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "goblins",
+    "aliases": [
+      "Goblins"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The goblin spawns east of the River Lum, across Lumbridge\u0027s eastern bridge.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "God Wars sergeants are separate encounter contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "green-dragons",
+    "aliases": [
+      "Green dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "The level 12 Wilderness green-dragon area north of Goblin Village, only when Wilderness methods are enabled.",
+    "styleGuidance": "Use a compatible one-handed or otherwise verified dragonfire-safe setup.",
+    "mechanicsNote": "Dragonfire protection and the exact location must be verified separately.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "hellhounds",
+    "aliases": [
+      "Hellhounds"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The hellhound room in the Catacombs of Kourend.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Cerberus requires its own Slayer/boss readiness decision.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "hill-giants",
+    "aliases": [
+      "Hill giants"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The hill-giant room in Edgeville Dungeon, entered with a brass key from the hut west of the Cooking Guild.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a sustainable legal style; Obor is a separate keyed encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "hobgoblins",
+    "aliases": [
+      "Hobgoblins"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The peninsula west of the Crafting Guild.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "icefiends",
+    "aliases": [
+      "Icefiends"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Ice Mountain summit, north of the Dwarven Mine entrance.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ice-giants",
+    "aliases": [
+      "Ice giants"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Asgarnian Ice Dungeon, in the ice giant room beyond the muggers and pirates.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Eldric is a separate boss encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "ice-warriors",
+    "aliases": [
+      "Ice warriors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Asgarnian Ice Dungeon, in the ice warrior room beside the ice giants.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "jungle-horrors",
+    "aliases": [
+      "Jungle horrors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Mos Le\u0027Harmless only after Cabin Fever access is observed.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a legal style and verify island transport.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "lava-dragons",
+    "aliases": [
+      "Lava Dragons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Wilderness Lava Dragon Isle only with explicit risk acceptance.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable risk-aware gear, dragonfire protection, and an escape route.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "lesser-demons",
+    "aliases": [
+      "Lesser demons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Karamja Volcano Dungeon, using the rock safespots around the lesser-demon room.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a safespot or sustainable build-legal setup.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "lizardmen",
+    "aliases": [
+      "Lizardmen"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Lizardman Settlement in the western Kourend canyon.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Shamans require separate protection and encounter preparation.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "magic-axes",
+    "aliases": [
+      "Magic axes"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Magic Axe Hut in level 54 Wilderness, only when Wilderness methods are enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Hardcore accounts should replace the task rather than enter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "minotaurs",
+    "aliases": [
+      "Minotaurs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security, level 1: Vault of War.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any low-risk build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "monkeys",
+    "aliases": [
+      "Monkeys"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The monkey colony north-west of Musa Point on Karamja.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Demonic gorillas are a separate mechanics-heavy encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "moss-giants",
+    "aliases": [
+      "Moss giants"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Varrock Sewers, in the moss-giant chamber beyond the red spiders.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a sustainable style; Bryophyta is a separate keyed encounter.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "otherworldly-beings",
+    "aliases": [
+      "Otherworldly beings"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Zanaris only after fairy-ring access is proven.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "pirates",
+    "aliases": [
+      "Pirates"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The pirate spawns around Brimhaven\u0027s docks and northern shoreline.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "red-dragons",
+    "aliases": [
+      "Red dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "Forthos Dungeon\u0027s red-dragon area; kill baby red dragons for the shorter safe route when they count for the assignment.",
+    "styleGuidance": "Use a compatible one-handed or otherwise verified dragonfire-safe setup.",
+    "mechanicsNote": "Dragonfire protection and the exact location must be verified separately.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "revenants",
+    "aliases": [
+      "Revenants"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Revenant Caves only with explicit Wilderness risk acceptance.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable gear, verify bracelet/ether decisions, and keep a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "rogues",
+    "aliases": [
+      "Rogues"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Rogues\u0027 Castle in level 52 Wilderness, only when Wilderness methods are enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use disposable gear and a tested deep-Wilderness escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "scabarites",
+    "aliases": [
+      "Scabarites"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Sophanem Dungeon after Contact!, using the north-eastern scarab rooms.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Verify desert supplies before travel.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "scorpions",
+    "aliases": [
+      "Scorpions"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The scorpion pit in the Dwarven Mine beneath Ice Mountain.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Scorpia and Wilderness variants are separate risk contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "sea-snakes",
+    "aliases": [
+      "Sea snakes"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Miscellania and Etceteria Dungeon after Royal Trouble.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use the island fairy-ring or Miscellania teleport route already available to the account.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "shades",
+    "aliases": [
+      "Shades"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security, level 4: Sepulchre of Death.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Shade-burning supplies are a separate minigame/resource decision.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "shadow-warriors",
+    "aliases": [
+      "Shadow warriors"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Legends\u0027 Guild basement only after access is proven.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "skeletons",
+    "aliases": [
+      "Skeletons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The skeleton room in the Catacombs of Kourend.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Vet\u0027ion, Calvar\u0027ion and Wilderness variants are separate risk contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "sourhogs",
+    "aliases": [
+      "Sourhog",
+      "Sourhogs"
+    ],
+    "requiredProtection": [
+      "Reinforced goggles",
+      "Slayer helmet",
+      "Slayer helmet (i)"
+    ],
+    "preferredLocation": "Sourhog Cave after A Porcine of Interest.",
+    "styleGuidance": "Equip reinforced goggles or a Slayer helmet before entering, then use a build-legal combat style.",
+    "mechanicsNote": "Without the verified eye protection, Sourhogs heavily drain Attack and Defence and deal unavoidable damage.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "terror-dogs",
+    "aliases": [
+      "Terror dogs"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Tarn\u0027s Lair only after Haunted Mine/lair access is proven.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Verify the dungeon route and supplies before travel.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "tzhaar",
+    "aliases": [
+      "Tzhaar"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The TzHaar city combat ring beneath Karamja Volcano; Jad and Zuk remain separate challenge routes.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use the ordinary TzHaar route unless the live assignment is the direct boss task.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "werewolves",
+    "aliases": [
+      "Werewolves"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The werewolf spawns outside Canifis bank after Priest in Peril.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Verify the exact variant; Wolfbane mechanics are quest-context dependent.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "wolves",
+    "aliases": [
+      "Wolves"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "White Wolf Mountain, on the path between Catherby and Taverley.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use any sustainable build-legal style.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "zombies",
+    "aliases": [
+      "Zombies"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security, level 2: Catacomb of Famine.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Vorkath and Zogre variants are separate access/mechanics contexts.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "aquanites",
+    "aliases": [
+      "Aquanites"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Use only the live assignment\u0027s verified Sailing route and aquanite area.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Verify the current variant, protection and return route before leaving port.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "araxytes",
+    "aliases": [
+      "Araxytes"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Araxyte Lair only after the live Slayer and access requirements are satisfied.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Choose a task setup independently from Araxxor boss readiness.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "catablepon",
+    "aliases": [
+      "Catablepon"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Stronghold of Security after the exact room route is verified.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Use a sustainable build-legal style and account for their stat-draining attack.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "custodian-stalkers",
+    "aliases": [
+      "Custodian Stalkers"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Use the live assignment\u0027s verified Custodia access route.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Do not infer new-content mechanics or protection from the task name alone.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "frost-dragons",
+    "aliases": [
+      "Frost dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "Grimstone only after the required Sailing access is observed; verify icy-breath protection separately.",
+    "styleGuidance": "Use a compatible one-handed or otherwise verified dragonfire-safe setup.",
+    "mechanicsNote": "Dragonfire protection and the exact location must be verified separately.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "gryphons",
+    "aliases": [
+      "Gryphons"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The Great Conch after Troubled Tortugans and live gryphon-task access are observed.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Shellbane Gryphon is a separate task-gated PvM preparation decision.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "lesser-nagua",
+    "aliases": [
+      "Lesser Nagua"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Neypotzli\u0027s Earthbound Cavern, in the lesser nagua rooms unlocked by Perilous Moons.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Verify a sustainable setup before travel.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "mammoths",
+    "aliases": [
+      "Mammoths"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "The mammoth area north-east of the Ferox Enclave in the Wilderness, only when risk is enabled.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Hardcore accounts need a safe task replacement; use disposable gear when Wilderness risk is accepted.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "metal-dragons",
+    "aliases": [
+      "Metal dragons"
+    ],
+    "requiredProtection": [
+      "Anti-dragon shield",
+      "Dragonfire shield",
+      "Dragonfire ward"
+    ],
+    "preferredLocation": "The bronze, iron, and steel dragons in the Catacombs of Kourend\u0027s Dragon\u0027s Den.",
+    "styleGuidance": "Use the lowest practical tier that counts for the grouped assignment with a one-handed dragonfire-safe setup.",
+    "mechanicsNote": "Verify an equipped dragonfire shield instead of using a universal metal-dragon loadout.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "molanisks",
+    "aliases": [
+      "Molanisks"
+    ],
+    "requiredProtection": [
+      "Slayer bell"
+    ],
+    "preferredLocation": "Dorgesh-Kaan South Dungeon after access is verified.",
+    "styleGuidance": "Use a Slayer bell to make the molanisk attackable, then use a build-legal style.",
+    "mechanicsNote": "The bell and dungeon access must both be observed.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "spiritual-creature-task",
+    "aliases": [
+      "Spiritual creatures"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "God Wars Dungeon after route and faction protection are verified.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Resolve the exact ranger, mage, or warrior variant before choosing gear.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "warped-creature-task",
+    "aliases": [
+      "Warped Creatures"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Poison Waste Slayer Dungeon after The Path of Glouphrie.",
+    "styleGuidance": "Choose a sustainable build-legal style from observed gear.",
+    "mechanicsNote": "Carry the crystal chime and resolve the live terrorbird or tortoise variant.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "venators",
+    "aliases": [
+      "Venator",
+      "Venators"
+    ],
+    "requiredProtection": [
+      "Blisterwood flail",
+      "Sunspear"
+    ],
+    "preferredLocation": "Vampyrium after The Blood Moon Rises; use the live task route rather than an inferred Morytania spawn.",
+    "styleGuidance": "Use a verified tier-3 vampyrebane weapon and react to the Venator\u0027s melee/ranged special sequence.",
+    "mechanicsNote": "Venators require 74 Slayer and The Blood Moon Rises. They are cannon-, thrall-, poison- and venom-resistant; an ordinary weapon cannot replace tier-3 vampyrebane equipment.",
+    "cannonEligibility": "BLOCKED",
+    "multiTargetMagicEligibility": "BLOCKED",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [
+      "Blood shard",
+      "Dragon arrowtips",
+      "Dragon dart tips"
+    ],
+    "taskDecisionGuidance": "They are an active, long Mortimer option whose blood-shard and ammunition value can justify the setup for an Iron account."
+  },
+  {
+    "id": "abyssal-sire-task",
+    "aliases": [
+      "The Abyssal Sire"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "araxxor-task",
+    "aliases": [
+      "Araxxor"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "barrows-task",
+    "aliases": [
+      "Barrows Brothers"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "callisto-task",
+    "aliases": [
+      "Callisto"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "cerberus-task",
+    "aliases": [
+      "Cerberus"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "chaos-elemental-task",
+    "aliases": [
+      "The Chaos Elemental"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "chaos-fanatic-task",
+    "aliases": [
+      "The Chaos Fanatic"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "crazy-archaeologist-task",
+    "aliases": [
+      "Crazy Archaeologists"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "deranged-archaeologist-task",
+    "aliases": [
+      "Deranged Archaeologist"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "duke-sucellus-task",
+    "aliases": [
+      "Duke Sucellus"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "graardor-task",
+    "aliases": [
+      "General Graardor"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "giant-mole-task",
+    "aliases": [
+      "The Giant Mole"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "grotesque-guardians-task",
+    "aliases": [
+      "The Grotesque Guardians"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "jad-task",
+    "aliases": [
+      "TzTok-Jad"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "kreearra-task",
+    "aliases": [
+      "Kree\u0027arra"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "kril-task",
+    "aliases": [
+      "K\u0027ril Tsutsaroth"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "maggot-king-task",
+    "aliases": [
+      "The Maggot King"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "phantom-muspah-task",
+    "aliases": [
+      "The Phantom Muspah"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "sarachnis-task",
+    "aliases": [
+      "Sarachnis"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "scorpia-task",
+    "aliases": [
+      "Scorpia"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "shellbane-gryphon-task",
+    "aliases": [
+      "The Shellbane Gryphon"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "leviathan-task",
+    "aliases": [
+      "The Leviathan"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "whisperer-task",
+    "aliases": [
+      "The Whisperer"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "vardorvis-task",
+    "aliases": [
+      "Vardorvis"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "venenatis-task",
+    "aliases": [
+      "Venenatis"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "vetion-task",
+    "aliases": [
+      "Vet\u0027ion"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": true,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "vorkath-task",
+    "aliases": [
+      "Vorkath"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "zilyana-task",
+    "aliases": [
+      "Commander Zilyana"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "zuk-task",
+    "aliases": [
+      "TzKal-Zuk"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  },
+  {
+    "id": "zulrah-task",
+    "aliases": [
+      "Zulrah"
+    ],
+    "requiredProtection": [],
+    "preferredLocation": "Open the matching encounter preparation before travelling.",
+    "styleGuidance": "Use only an encounter-verified setup, not generic Slayer gear.",
+    "mechanicsNote": "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.",
+    "cannonEligibility": "UNKNOWN",
+    "multiTargetMagicEligibility": "UNKNOWN",
+    "wildernessVariantKnown": false,
+    "ironObjectives": [],
+    "taskDecisionGuidance": "Prioritize the boss variant only when its drops, CA, collection goal or Slayer value justify the setup."
+  }
+]

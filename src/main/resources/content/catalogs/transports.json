@@ -1,0 +1,650 @@
+[
+  {
+    "id": "fairy-rings",
+    "name": "Fairy ring network",
+    "category": "FAIRY_RING",
+    "membersOnly": true,
+    "quest": "Fairytale II - Cure a Queen",
+    "questStartSuffices": true,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a dramen or lunar staff unless the staff-free diary unlock is observed",
+    "wilderness": false,
+    "uses": [
+      "quest routes",
+      "Slayer locations",
+      "clues",
+      "skilling routes"
+    ]
+  },
+  {
+    "id": "spirit-trees",
+    "name": "Spirit tree network",
+    "category": "SPIRIT_TREE",
+    "membersOnly": true,
+    "quest": "Tree Gnome Village",
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify each destination node needed by the route",
+    "wilderness": false,
+    "uses": [
+      "gnome quest chain",
+      "Grand Exchange",
+      "Tree Gnome Stronghold",
+      "Battlefield of Khazard"
+    ]
+  },
+  {
+    "id": "gnome-gliders",
+    "name": "Gnome glider network",
+    "category": "GNOME",
+    "membersOnly": true,
+    "quest": "The Grand Tree",
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the destination is unlocked and reachable",
+    "wilderness": false,
+    "uses": [
+      "Karamja",
+      "White Wolf Mountain",
+      "Al Kharid",
+      "Feldip Hills"
+    ]
+  },
+  {
+    "id": "gnome-stronghold-transport",
+    "name": "Gnome stronghold local transport",
+    "category": "GNOME",
+    "membersOnly": true,
+    "quest": "The Grand Tree",
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the local tree/glider route",
+    "wilderness": false,
+    "uses": [
+      "Grand Tree",
+      "Agility routes",
+      "gnome quest starts"
+    ]
+  },
+  {
+    "id": "minecart-networks",
+    "name": "Minecart networks",
+    "category": "MINECART",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the specific minecart network, fare, and destination unlock",
+    "wilderness": false,
+    "uses": [
+      "Keldagrim",
+      "Kebos and Kourend",
+      "mines",
+      "quest routes"
+    ]
+  },
+  {
+    "id": "scheduled-boats",
+    "name": "Scheduled ferries and boats",
+    "category": "BOAT",
+    "membersOnly": false,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the departure, fare, quest access, and destination",
+    "wilderness": false,
+    "uses": [
+      "Karamja",
+      "Entrana",
+      "fishing platforms",
+      "islands"
+    ]
+  },
+  {
+    "id": "charter-ships",
+    "name": "Charter ships",
+    "category": "CHARTER",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify both charter ports are accessible and carry the current fare",
+    "wilderness": false,
+    "uses": [
+      "port network",
+      "quest routing",
+      "shop access",
+      "clues"
+    ]
+  },
+  {
+    "id": "ectophial",
+    "name": "Ectophial",
+    "category": "ITEM_TELEPORT",
+    "membersOnly": true,
+    "quest": "Ghosts Ahoy",
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry the Ectophial and verify it is usable",
+    "wilderness": false,
+    "uses": [
+      "Port Phasmatys",
+      "Morytania farming",
+      "Slayer routes"
+    ]
+  },
+  {
+    "id": "standard-spellbook-teleports",
+    "name": "Standard spellbook teleports",
+    "category": "STANDARD_SPELL",
+    "membersOnly": false,
+    "questStartSuffices": false,
+    "skill": "MAGIC",
+    "level": 1,
+    "itemOrAccessCheck": "Verify the exact spell level, runes, quest and destination access",
+    "wilderness": false,
+    "uses": [
+      "cities",
+      "POH",
+      "quest routes",
+      "clues"
+    ]
+  },
+  {
+    "id": "ancient-magicks-teleports",
+    "name": "Ancient Magicks teleports",
+    "category": "ANCIENT_SPELL",
+    "membersOnly": true,
+    "quest": "Desert Treasure I",
+    "questStartSuffices": false,
+    "skill": "MAGIC",
+    "level": 54,
+    "itemOrAccessCheck": "Use the Ancient spellbook and verify the exact spell/runes",
+    "wilderness": true,
+    "uses": [
+      "Wilderness routes",
+      "ancient locations",
+      "clues"
+    ]
+  },
+  {
+    "id": "lunar-teleports",
+    "name": "Lunar spellbook teleports",
+    "category": "LUNAR_SPELL",
+    "membersOnly": true,
+    "quest": "Lunar Diplomacy",
+    "questStartSuffices": false,
+    "skill": "MAGIC",
+    "level": 65,
+    "itemOrAccessCheck": "Use the Lunar spellbook and verify the exact spell/runes",
+    "wilderness": false,
+    "uses": [
+      "Lunar Isle",
+      "group utility",
+      "farming and quest routes"
+    ]
+  },
+  {
+    "id": "arceuus-teleports",
+    "name": "Arceuus spellbook teleports",
+    "category": "ARCEUUS_SPELL",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "MAGIC",
+    "level": 60,
+    "itemOrAccessCheck": "Verify Arceuus spellbook access, exact spell level and runes",
+    "wilderness": false,
+    "uses": [
+      "Kourend",
+      "reanimation",
+      "Barrows",
+      "quest routes"
+    ]
+  },
+  {
+    "id": "games-necklace",
+    "name": "Games necklace",
+    "category": "JEWELLERY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a charged games necklace",
+    "wilderness": false,
+    "uses": [
+      "Burthorpe",
+      "Wintertodt",
+      "Tears of Guthix",
+      "Corporeal Beast cave"
+    ]
+  },
+  {
+    "id": "ring-of-dueling",
+    "name": "Ring of dueling",
+    "category": "JEWELLERY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a charged ring of dueling",
+    "wilderness": false,
+    "uses": [
+      "Emir\u0027s Arena",
+      "Castle Wars",
+      "Ferox Enclave"
+    ]
+  },
+  {
+    "id": "amulet-of-glory",
+    "name": "Amulet of glory",
+    "category": "JEWELLERY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a charged amulet of glory",
+    "wilderness": false,
+    "uses": [
+      "Edgeville",
+      "Karamja",
+      "Draynor",
+      "Al Kharid"
+    ]
+  },
+  {
+    "id": "skills-necklace",
+    "name": "Skills necklace",
+    "category": "JEWELLERY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a charged skills necklace",
+    "wilderness": false,
+    "uses": [
+      "skill guilds",
+      "Farming Guild",
+      "Woodcutting Guild"
+    ]
+  },
+  {
+    "id": "necklace-of-passage",
+    "name": "Necklace of passage",
+    "category": "JEWELLERY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Carry a charged necklace of passage",
+    "wilderness": false,
+    "uses": [
+      "Wizards\u0027 Tower",
+      "The Outpost",
+      "Eagles\u0027 Eyrie"
+    ]
+  },
+  {
+    "id": "slayer-ring",
+    "name": "Slayer ring",
+    "category": "SLAYER",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "CRAFTING",
+    "level": 75,
+    "itemOrAccessCheck": "Verify Slayer reward unlock or an owned charged ring",
+    "wilderness": false,
+    "uses": [
+      "Slayer Tower",
+      "Fremennik Slayer Dungeon",
+      "Tarn\u0027s Lair",
+      "Dark beasts"
+    ]
+  },
+  {
+    "id": "diary-equipment-teleports",
+    "name": "Achievement Diary equipment teleports",
+    "category": "DIARY",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the exact diary tier and owned reward item",
+    "wilderness": false,
+    "uses": [
+      "regional task routes",
+      "farming",
+      "Slayer",
+      "clues"
+    ]
+  },
+  {
+    "id": "minigame-teleports",
+    "name": "Minigame grouping teleports",
+    "category": "MINIGAME",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the activity unlock, cooldown, and destination restrictions",
+    "wilderness": false,
+    "uses": [
+      "minigames",
+      "quest routes",
+      "regional travel"
+    ]
+  },
+  {
+    "id": "quest-item-teleports",
+    "name": "Quest item teleports",
+    "category": "QUEST",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "level": 0,
+    "itemOrAccessCheck": "Verify the specific quest completion, item, charges, and destination",
+    "wilderness": false,
+    "uses": [
+      "quest hubs",
+      "repeatable activities",
+      "regional travel"
+    ]
+  },
+  {
+    "id": "poh-portal-nexus",
+    "name": "POH portal chamber or nexus",
+    "category": "POH",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "CONSTRUCTION",
+    "level": 50,
+    "itemOrAccessCheck": "Verify the exact destination is installed",
+    "pohFurniture": "portal-nexus",
+    "wilderness": false,
+    "uses": [
+      "spell destinations",
+      "house-centred routes",
+      "clues",
+      "boss returns"
+    ]
+  },
+  {
+    "id": "poh-mounted-teleports",
+    "name": "POH mounted and jewellery teleports",
+    "category": "POH",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "CONSTRUCTION",
+    "level": 47,
+    "itemOrAccessCheck": "Verify the exact mounted item or jewellery box tier",
+    "pohFurniture": "mounted-teleports",
+    "wilderness": false,
+    "uses": [
+      "jewellery destinations",
+      "quest routes",
+      "skilling loops"
+    ]
+  },
+  {
+    "id": "poh-spirit-tree",
+    "name": "POH spirit tree",
+    "category": "POH",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "CONSTRUCTION",
+    "level": 75,
+    "itemOrAccessCheck": "Verify the spirit tree is built; never infer it from Construction level",
+    "pohFurniture": "spirit-tree",
+    "wilderness": false,
+    "uses": [
+      "spirit tree network",
+      "house hub"
+    ]
+  },
+  {
+    "id": "poh-fairy-ring",
+    "name": "POH fairy ring",
+    "category": "POH",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "CONSTRUCTION",
+    "level": 80,
+    "itemOrAccessCheck": "Verify the fairy ring is built; never infer it from Construction level",
+    "pohFurniture": "fairy-ring",
+    "wilderness": false,
+    "uses": [
+      "fairy ring network",
+      "house hub"
+    ]
+  },
+  {
+    "id": "sailing-ports-boats",
+    "name": "Sailing ports and player-owned boats",
+    "category": "SAILING",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "SAILING",
+    "level": 1,
+    "itemOrAccessCheck": "Observe the current boat class, port discoveries, crew/cargo setup, and route before relying on Sailing transport",
+    "wilderness": false,
+    "uses": [
+      "current ports",
+      "island access",
+      "Sailing activities",
+      "quest routes"
+    ]
+  },
+  {
+    "id": "draynor-manor-west-gap",
+    "name": "Draynor Manor west fence gap",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 49,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Draynor routes",
+      "manor clue and quest routing"
+    ]
+  },
+  {
+    "id": "river-lum-champions-stones",
+    "name": "River Lum stepping stones south of the Champions\u0027 Guild",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 52,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Champions\u0027 Guild routes",
+      "east-west River Lum travel"
+    ]
+  },
+  {
+    "id": "giants-plateau-gap",
+    "name": "Giant\u0027s Plateau south-west shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 54,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "desert access",
+      "Giant\u0027s Plateau activities"
+    ]
+  },
+  {
+    "id": "edgeville-dungeon-pipe",
+    "name": "Southern Edgeville Dungeon pipe",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 60,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Edgeville Dungeon travel",
+      "routes without a Brass key"
+    ]
+  },
+  {
+    "id": "arceuus-library-middle-drop",
+    "name": "Arceuus Library middle-floor drop",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 52,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Arceuus Library navigation",
+      "library activity routes"
+    ]
+  },
+  {
+    "id": "arceuus-library-top-drop",
+    "name": "Arceuus Library top-floor drop",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 62,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Arceuus Library navigation",
+      "library activity routes"
+    ]
+  },
+  {
+    "id": "sophanem-river-elid-stones",
+    "name": "River Elid stepping stones north of Sophanem",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 79,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Sophanem routes",
+      "desert clue travel"
+    ]
+  },
+  {
+    "id": "mos-le-harmless-island-stones",
+    "name": "Mos le\u0027Harmless island stepping stones",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 82,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Mos le\u0027Harmless routes",
+      "Treasure Trail travel"
+    ]
+  },
+  {
+    "id": "pollnivneach-west-plateau",
+    "name": "Pollnivneach west plateau shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 83,
+    "itemOrAccessCheck": "Verify live route access before relying on the shortcut",
+    "wilderness": false,
+    "uses": [
+      "Ali the Hag routes",
+      "desert plateau travel"
+    ]
+  },
+  {
+    "id": "river-lum-broken-raft",
+    "name": "River Lum broken raft barehanded shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 48,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "River Lum travel",
+      "former grapple route"
+    ]
+  },
+  {
+    "id": "falador-rough-wall",
+    "name": "Falador rough wall barehanded shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 52,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "Falador travel",
+      "former grapple route"
+    ]
+  },
+  {
+    "id": "catherby-taverley-rock-climb",
+    "name": "Catherby-Taverley two-way rock climb",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 68,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "Catherby travel",
+      "Taverley travel"
+    ]
+  },
+  {
+    "id": "water-obelisk-catherby-crossing",
+    "name": "Water Obelisk-Catherby barehanded crossing",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 72,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "Water Obelisk access",
+      "Catherby travel"
+    ]
+  },
+  {
+    "id": "yanille-rough-wall",
+    "name": "Yanille rough wall barehanded shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 69,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "Yanille travel",
+      "former grapple route"
+    ]
+  },
+  {
+    "id": "karamja-volcano-strong-trees",
+    "name": "Karamja Volcano strong-tree shortcut",
+    "category": "AGILITY_SHORTCUT",
+    "membersOnly": true,
+    "questStartSuffices": false,
+    "skill": "AGILITY",
+    "level": 78,
+    "itemOrAccessCheck": "No grapple is needed for travel, but an Achievement Diary task may still require using one",
+    "wilderness": false,
+    "uses": [
+      "Karamja Volcano travel",
+      "former grapple route"
+    ]
+  }
+]

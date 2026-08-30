@@ -1,0 +1,335 @@
+[
+  {
+    "id": "f2p-melee",
+    "contextId": "general",
+    "style": "MELEE_SLASH",
+    "tier": "F2P",
+    "recommendedItems": [
+      "Rune full helm",
+      "Rune platebody or rune chainbody",
+      "Rune platelegs/plateskirt",
+      "Amulet of strength or power",
+      "Rune kiteshield"
+    ],
+    "weaponGuidance": "Rune scimitar",
+    "note": "F2P melee swaps platebody/chainbody and strength/power amulet depending on the target.",
+    "freeToPlay": true,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "f2p-ranged",
+    "contextId": "general",
+    "style": "RANGED",
+    "tier": "F2P",
+    "recommendedItems": [
+      "Green d\u0027hide body",
+      "Green d\u0027hide chaps",
+      "Green d\u0027hide vambraces",
+      "Amulet of power",
+      "Coif"
+    ],
+    "weaponGuidance": "Maple shortbow or another legal F2P ranged weapon appropriate to the target",
+    "note": "Ammunition economics and target defence matter more than a single static weapon order.",
+    "freeToPlay": true,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "f2p-magic",
+    "contextId": "general",
+    "style": "MAGIC",
+    "tier": "F2P",
+    "recommendedItems": [
+      "Wizard hat",
+      "Wizard robe top",
+      "Magic amulet"
+    ],
+    "weaponGuidance": "Elemental staff and strongest economical F2P spell for the target",
+    "note": "Magic accuracy, rune cost, and safespot access should drive the practical setup.",
+    "freeToPlay": true,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "melee-budget",
+    "contextId": "general",
+    "style": "MELEE_SLASH",
+    "tier": "BUDGET",
+    "recommendedItems": [
+      "Helm of neitiznot",
+      "Fighter torso",
+      "Barrows legs",
+      "Dragon defender",
+      "Barrows gloves",
+      "Dragon boots",
+      "Amulet of fury",
+      "Fire cape"
+    ],
+    "weaponGuidance": "Dragon scimitar, abyssal whip, or another target-appropriate weapon",
+    "note": "Prioritize high-value untradeables before expensive marginal upgrades.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "melee-mid",
+    "contextId": "general",
+    "style": "MELEE_SLASH",
+    "tier": "MIDGAME",
+    "recommendedItems": [
+      "Neitiznot faceguard",
+      "Bandos chestplate",
+      "Bandos tassets",
+      "Dragon/Avernic defender",
+      "Ferocious gloves",
+      "Primordial boots",
+      "Amulet of torture or rancour",
+      "Fire/Infernal cape"
+    ],
+    "weaponGuidance": "Abyssal tentacle, Osmumten\u0027s fang, or target-appropriate upgrade",
+    "note": "Fang is stab-focused; slash and crush targets can prefer a different weapon.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "melee-high-stab",
+    "contextId": "boss-stab",
+    "style": "MELEE_STAB",
+    "tier": "HIGH_END",
+    "recommendedItems": [
+      "Torva or target-appropriate offensive armour",
+      "Amulet of rancour",
+      "Ferocious gloves",
+      "Ultor/Bellator/Lightbearer as encounter demands",
+      "Infernal cape",
+      "Avernic defender"
+    ],
+    "weaponGuidance": "Osmumten\u0027s fang or stronger encounter-specific stab weapon",
+    "note": "Defence, accuracy scaling, special attacks, and mechanics can change the weapon order.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "melee-bis-slash",
+    "contextId": "boss-slash",
+    "style": "MELEE_SLASH",
+    "tier": "BIS",
+    "recommendedItems": [
+      "Oathplate or Torva pieces depending the encounter",
+      "Amulet of rancour",
+      "Infernal cape",
+      "Ferocious gloves",
+      "Avernic defender",
+      "Avernic treads/Primordial boots as applicable",
+      "Ultor/Bellator/Lightbearer by target"
+    ],
+    "weaponGuidance": "Scythe of vitur, Soulreaper axe, or another encounter-specific slash weapon",
+    "note": "There is no universal slash BIS: size, defence, slash resistance, specials, and mechanics can change the winner.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": false
+  },
+  {
+    "id": "melee-bis-crush",
+    "contextId": "boss-crush",
+    "style": "MELEE_CRUSH",
+    "tier": "BIS",
+    "recommendedItems": [
+      "Inquisitor/Oathplate/Torva mix as the target demands",
+      "Amulet of rancour",
+      "Infernal cape",
+      "Ferocious gloves",
+      "Ultor/Bellator/Lightbearer by target"
+    ],
+    "weaponGuidance": "Best encounter-specific crush weapon",
+    "note": "Crush BIS is highly target-dependent; target-specific accuracy bonuses can beat generic strength armour.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": false
+  },
+  {
+    "id": "ranged-budget",
+    "contextId": "general",
+    "style": "RANGED",
+    "tier": "BUDGET",
+    "recommendedItems": [
+      "Blessed/black d\u0027hide",
+      "Ava\u0027s accumulator/assembler",
+      "Barrows gloves",
+      "Amulet of fury or anguish",
+      "God blessing"
+    ],
+    "weaponGuidance": "Rune crossbow, magic shortbow (i), or toxic blowpipe when unlocked",
+    "note": "Weapon and ammunition cost plus target defence matter more than one static DPS ranking.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "ranged-mid-bowfa",
+    "contextId": "general",
+    "style": "RANGED",
+    "tier": "MIDGAME",
+    "recommendedItems": [
+      "Crystal helm",
+      "Crystal body",
+      "Crystal legs",
+      "Ava\u0027s assembler",
+      "Necklace of anguish",
+      "Barrows gloves/Zaryte vambraces when available"
+    ],
+    "weaponGuidance": "Bow of faerdhinen",
+    "note": "Bowfa plus crystal is a major self-contained progression package, especially for Iron accounts.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "ranged-high",
+    "contextId": "boss-ranged",
+    "style": "RANGED",
+    "tier": "HIGH_END",
+    "recommendedItems": [
+      "Masori (fortified where appropriate)",
+      "Necklace of anguish",
+      "Ava\u0027s assembler or Dizana\u0027s quiver",
+      "Zaryte vambraces",
+      "Venator ring/Lightbearer by encounter"
+    ],
+    "weaponGuidance": "Twisted bow, Zaryte crossbow, Bowfa, or blowpipe depending on target and phase",
+    "note": "Magic level, defence, ruby-bolt scaling, and phase mechanics can change weapon order.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "ranged-bis",
+    "contextId": "boss-ranged",
+    "style": "RANGED",
+    "tier": "BIS",
+    "recommendedItems": [
+      "Masori (f) or encounter-specific crystal/void switch",
+      "Necklace of anguish",
+      "Dizana\u0027s quiver",
+      "Zaryte vambraces",
+      "Pegasian boots/encounter alternative",
+      "Venator ring or Lightbearer when special attacks matter"
+    ],
+    "weaponGuidance": "Twisted bow / Zaryte crossbow / Bowfa / blowpipe according to the encounter",
+    "note": "A target-specific model is required before calling one of these weapons BIS.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": false
+  },
+  {
+    "id": "magic-budget",
+    "contextId": "general",
+    "style": "MAGIC",
+    "tier": "BUDGET",
+    "recommendedItems": [
+      "Mystic or Bloodbark/Ahrim pieces",
+      "God cape/imbued god cape when unlocked",
+      "Occult necklace when available",
+      "Barrows gloves"
+    ],
+    "weaponGuidance": "Ancient staff, Iban\u0027s staff, or trident-family weapon as progression allows",
+    "note": "Spellbook, autocast, rune cost, and target magic defence determine the practical setup.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "magic-mid",
+    "contextId": "general",
+    "style": "MAGIC",
+    "tier": "MIDGAME",
+    "recommendedItems": [
+      "Ahrim/Blue moon/Virtus progression",
+      "Occult necklace",
+      "Tormented bracelet",
+      "Imbued god cape",
+      "Elidinis\u0027 ward when using one-handed weapons"
+    ],
+    "weaponGuidance": "Trident of the swamp, Sanguinesti staff, or encounter-specific spell",
+    "note": "Ancient-spell tasks can favor Virtus even when another robe set is better for powered staves.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": true
+  },
+  {
+    "id": "magic-bis",
+    "contextId": "boss-magic",
+    "style": "MAGIC",
+    "tier": "BIS",
+    "recommendedItems": [
+      "Ancestral robes or encounter-specific Virtus switch",
+      "Occult necklace",
+      "Tormented bracelet",
+      "Imbued god cape",
+      "Magus ring",
+      "Eternal boots/encounter alternative",
+      "Elidinis\u0027 ward (f) for compatible one-handed setups"
+    ],
+    "weaponGuidance": "Tumeken\u0027s shadow, Sanguinesti/trident-family weapon, or spell-specific weapon by encounter",
+    "note": "Shadow scales strongly with magic-damage gear, while Ancient Magicks and one-handed setups can require different BIS gear.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": false
+  },
+  {
+    "id": "raid-budget",
+    "contextId": "raids",
+    "style": "HYBRID",
+    "tier": "BUDGET",
+    "recommendedItems": [
+      "Fighter torso/Barrows melee pieces",
+      "Blessed d\u0027hide ranged switch",
+      "Ahrim/mystic magic switch",
+      "Barrows gloves",
+      "Fury"
+    ],
+    "weaponGuidance": "Entry-level melee, ranged, and magic weapons appropriate to the raid",
+    "note": "Build switches around encounter coverage before chasing tiny single-style upgrades.",
+    "freeToPlay": false,
+    "selfSourceFriendly": true,
+    "uimFriendly": true,
+    "hardcoreSafe": false
+  },
+  {
+    "id": "raid-bis",
+    "contextId": "raids",
+    "style": "HYBRID",
+    "tier": "BIS",
+    "recommendedItems": [
+      "Contextual Oathplate/Torva melee switch",
+      "Masori (f) ranged switch",
+      "Ancestral/Virtus magic switch",
+      "Rancour/anguish/occult switches",
+      "Infernal cape/Dizana\u0027s quiver/imbued god cape switches"
+    ],
+    "weaponGuidance": "Scythe/fang or encounter melee; Tbow/ZCB/Bowfa/blowpipe ranged; Shadow or encounter magic",
+    "note": "Raid BIS is room-, invocation-, inventory-, special-attack-, and team-role-dependent.",
+    "freeToPlay": false,
+    "selfSourceFriendly": false,
+    "uimFriendly": false,
+    "hardcoreSafe": false
+  }
+]

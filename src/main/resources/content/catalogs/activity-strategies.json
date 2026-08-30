@@ -1,0 +1,446 @@
+[
+  {
+    "candidatePrefix": "slayer:do-task",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 4,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.9,
+    "strategicReason": "Continuing the observed Slayer assignment preserves the current combat setup; task mechanics and supplies remain live-state decisions.",
+    "sources": [
+      "SLAYER_TRAINING",
+      "IRONMAN_SLAYER"
+    ]
+  },
+  {
+    "candidatePrefix": "slayer:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 2,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.45,
+    "strategicReason": "The live Slayer assignment and point state stay authoritative while reviewed task strategy informs the available decision family.",
+    "sources": [
+      "SLAYER_TRAINING",
+      "IRONMAN_SLAYER"
+    ]
+  },
+  {
+    "candidatePrefix": "quest:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 3,
+      "flow": "GROWS_NONSTACKABLE_OUTPUTS",
+      "tearsDownCurrentSetup": true
+    },
+    "setupReuse": 0.1,
+    "strategicReason": "Quest value is strategic rather than a hard prerequisite; UIM execution also needs room for required, temporary, and reward items.",
+    "sources": [
+      "OPTIMAL_QUEST_GUIDE",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "clue:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 2,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 2,
+      "flow": "GROWS_NONSTACKABLE_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.25,
+    "strategicReason": "Clue interruption value depends on the observed step, its exact equipment, travel, risk, and any verified STASH—not an assumed storage state.",
+    "sources": [
+      "CLUE_STASH",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "pvm:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 6,
+      "persistentRequiredSlots": 5,
+      "temporarySlots": 4,
+      "flow": "GROWS_NONSTACKABLE_OUTPUTS",
+      "tearsDownCurrentSetup": true
+    },
+    "setupReuse": 0.2,
+    "strategicReason": "Encounter readiness requires an executable loadout and supply space; stats alone do not prove readiness.",
+    "sources": [
+      "PVM_STRATEGY",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "pvm:the_gauntlet",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.85,
+    "strategicReason": "The Gauntlet supplies its temporary setup inside the activity, so a normal external loadout is not an execution requirement.",
+    "sources": [
+      "PVM_STRATEGY",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "pvm:the_corrupted_gauntlet",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.85,
+    "strategicReason": "The Corrupted Gauntlet supplies its temporary setup inside the activity, while death risk still remains a separate account-mode decision.",
+    "sources": [
+      "PVM_STRATEGY",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:gauntlet",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.85,
+    "strategicReason": "The Gauntlet supplies its temporary setup inside the activity, so an external bank loadout is not an execution requirement.",
+    "sources": [
+      "MINIGAME_GUIDES"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:wintertodt",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 4,
+      "persistentRequiredSlots": 3,
+      "temporarySlots": 1,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.55,
+    "strategicReason": "Wintertodt readiness depends on observed warmth protection, a usable axe, a lighting tool, and a safe warmth-restoration plan.",
+    "sources": [
+      "WINTERTODT",
+      "UIM_FIREMAKING"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:giants-foundry",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 2,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 1,
+      "flow": "CONSUMES_CARRIED_INPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.65,
+    "strategicReason": "Giants\u0027 Foundry consumes observed eligible metal in commissioned batches and rewards both Smithing progress and coins without assuming a universal alloy.",
+    "sources": [
+      "GIANTS_FOUNDRY",
+      "IRONMAN_SMITHING",
+      "UIM_SMITHING"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:mahogany-homes",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 5,
+      "persistentRequiredSlots": 3,
+      "temporarySlots": 2,
+      "flow": "CONSUMES_CARRIED_INPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.8,
+    "strategicReason": "Mahogany Homes is only executable after the live contract tier, plank supply, occasional steel-bar need, and client travel are resolved.",
+    "sources": [
+      "MAHOGANY_HOMES",
+      "IRONMAN_CONSTRUCTION",
+      "UIM_CONSTRUCTION"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:tithe-farm",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 12,
+      "persistentRequiredSlots": 10,
+      "temporarySlots": 2,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.45,
+    "strategicReason": "Tithe Farm requires a plan-relative watering/tool footprint and uses the seed tier proven by the live Farming level.",
+    "sources": [
+      "TITHE_FARM",
+      "IRONMAN_FARMING",
+      "UIM_FARMING"
+    ]
+  },
+  {
+    "candidatePrefix": "minigame:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 4,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 3,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.35,
+    "strategicReason": "Minigame value is weighed against its observed requirements, setup, rewards, and inventory behavior.",
+    "sources": [
+      "MINIGAME_GUIDES",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "upgrade:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 1,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 1,
+      "flow": "GROWS_NONSTACKABLE_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.3,
+    "strategicReason": "An upgrade must justify its acquisition chain, replacement horizon, and—for UIM—the slot or verified storage it will occupy.",
+    "sources": [
+      "PVM_STRATEGY",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "prepare:infrastructure:",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 6,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 5,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.75,
+    "strategicReason": "Reusable POH infrastructure can reduce future travel and setup costs, but only observed personal-house capabilities count.",
+    "sources": [
+      "POH_STORAGE",
+      "UIM_GENERAL"
+    ]
+  },
+  {
+    "candidatePrefix": "prepare:infrastructure:poh-armour-case",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 1,
+      "flow": "CONSUMES_CARRIED_INPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "setupReuse": 0.9,
+    "strategicReason": "An oak armour case is a compact, verified Costume-room storage build, but only its accepted equipment categories gain space.",
+    "sources": [
+      "POH_STORAGE",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "candidatePrefix": "verify:poh-build-mode",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": true
+    },
+    "setupReuse": 0.0,
+    "strategicReason": "A build-mode scan verifies the character\u0027s own POH without inventing furniture or teammate infrastructure.",
+    "sources": [
+      "POH_STORAGE",
+      "RUNELITE_MECHANICS"
+    ]
+  }
+]

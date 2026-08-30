@@ -1,0 +1,77 @@
+[
+  {
+    "methodId": "prayer_ectofuntus",
+    "locations": [
+      {
+        "id": "ectofuntus",
+        "name": "Ectofuntus, north of Port Phasmatys",
+        "ordinaryTravelBurden": 9,
+        "advantageousRouteId": "ectophial",
+        "verifiedRouteTravelBurden": 2,
+        "membersOnly": true,
+        "wilderness": false
+      }
+    ],
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Ectofuntus"
+  },
+  {
+    "methodId": "farming_fruit_trees",
+    "locations": [
+      {
+        "id": "catherby-fruit-tree",
+        "name": "Fruit tree patch east of Catherby",
+        "ordinaryTravelBurden": 6,
+        "verifiedRouteTravelBurden": 6,
+        "membersOnly": true,
+        "wilderness": false
+      },
+      {
+        "id": "gnome-stronghold-fruit-tree",
+        "name": "Tree Gnome Stronghold fruit tree patch",
+        "ordinaryTravelBurden": 9,
+        "advantageousRouteId": "spirit-tree-gnome-stronghold",
+        "verifiedRouteTravelBurden": 2,
+        "membersOnly": true,
+        "wilderness": false
+      }
+    ],
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Fruit_tree_patch/Patches"
+  },
+  {
+    "methodId": "farming_trees",
+    "locations": [
+      {
+        "id": "falador-tree",
+        "name": "Falador Park tree patch",
+        "ordinaryTravelBurden": 5,
+        "verifiedRouteTravelBurden": 5,
+        "membersOnly": true,
+        "wilderness": false
+      },
+      {
+        "id": "gnome-stronghold-tree",
+        "name": "Tree Gnome Stronghold tree patch",
+        "ordinaryTravelBurden": 9,
+        "advantageousRouteId": "spirit-tree-gnome-stronghold",
+        "verifiedRouteTravelBurden": 2,
+        "membersOnly": true,
+        "wilderness": false
+      }
+    ],
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Tree_patch"
+  },
+  {
+    "methodId": "fishing_f2p_fly",
+    "locations": [
+      {
+        "id": "barbarian-village-fly",
+        "name": "Barbarian Village fishing spots",
+        "ordinaryTravelBurden": 2,
+        "verifiedRouteTravelBurden": 2,
+        "membersOnly": false,
+        "wilderness": false
+      }
+    ],
+    "sourceUrl": "https://oldschool.runescape.wiki/w/Free-to-play_Fishing_training"
+  }
+]

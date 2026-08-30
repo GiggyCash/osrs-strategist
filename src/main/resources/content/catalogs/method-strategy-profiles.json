@@ -1,0 +1,387 @@
+[
+  {
+    "methodId": "agility_rooftops",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.55,
+    "playerReason": "Rooftop training needs little inventory and advances reusable movement progression.",
+    "sources": [
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "prayer_bonecrusher_passive",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.45,
+    "playerReason": "A charged bonecrusher can turn a verified compatible combat plan into passive Prayer progress without a separate training detour.",
+    "sources": [
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "prayer_bonecrusher_passive",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.8,
+    "playerReason": "The carried bonecrusher converts compatible combat drops into Prayer progress without growing inventory.",
+    "sources": [
+      "UIM_PRAYER",
+      "UIM_SKILL_GUIDES",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "methodId": "crafting_charter_glass",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 4,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 3,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.8,
+    "playerReason": "Charter-shop glassblowing sources and processes materials in one repeatable UIM loop.",
+    "sources": [
+      "UIM_CRAFTING",
+      "UIM_SKILL_GUIDES",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "methodId": "smithing_giants_foundry",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 1,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.45,
+    "playerReason": "Giants\u0027 Foundry is a reviewed profit/resource-efficiency alternative when buying faster Smithing inputs is poor value.",
+    "sources": [
+      "GIANTS_FOUNDRY",
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "smithing_giants_foundry",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 1,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.75,
+    "playerReason": "Giants\u0027 Foundry stretches self-sourced metal and advances a useful permanent outfit.",
+    "sources": [
+      "IRONMAN_SMITHING",
+      "UIM_SMITHING",
+      "IRONMAN_SKILL_GUIDES",
+      "UIM_SKILL_GUIDES"
+    ]
+  },
+  {
+    "methodId": "thieving_uim_fruit_stalls",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.35,
+    "playerReason": "Hosidius fruit stalls provide a safe bank-free fallback whose freshly stolen fruit can be dropped without dismantling carried setup.",
+    "sources": [
+      "UIM_THIEVING",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "methodId": "fishing_f2p_fly",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 1,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.55,
+    "playerReason": "Dropping the catch is a concrete low-setup route when food supply is not the current goal.",
+    "sources": [
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "sailing_salvage_small",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 2,
+      "flow": "GROWS_NONSTACKABLE_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.45,
+    "playerReason": "Small-shipwreck salvaging is an exact low-intensity baseline; higher wrecks require separately proven boat and water-hazard capability.",
+    "sources": [
+      "SAILING_TRAINING",
+      "SHIPWRECK_SALVAGING"
+    ]
+  },
+  {
+    "methodId": "runecraft_f2p_uim_local",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 0,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.75,
+    "playerReason": "Mining and immediately crafting essence is a concrete F2P UIM route that never assumes a banked essence reserve.",
+    "sources": [
+      "UIM_RUNECRAFT",
+      "F2P_IRONMAN_GENERAL",
+      "F2P_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "cooking_f2p_uim_carried_fish",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 0,
+      "flow": "CONSUMES_CARRIED_INPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.8,
+    "playerReason": "Cooking carried or locally caught fish turns the current inventory into useful food without a bank setup.",
+    "sources": [
+      "UIM_COOKING",
+      "F2P_IRONMAN_GENERAL",
+      "F2P_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "construction_mahogany_homes",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 4,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 2,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.45,
+    "playerReason": "Mahogany Homes is a reviewed lower-cost alternative when saving tradeable planks matters more than maximum conventional speed.",
+    "sources": [
+      "MAHOGANY_HOMES",
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "construction_mahogany_homes",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 4,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 2,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.75,
+    "playerReason": "Mahogany Homes reduces plank burn while building high-value account infrastructure.",
+    "sources": [
+      "IRONMAN_CONSTRUCTION",
+      "UIM_CONSTRUCTION",
+      "IRONMAN_SKILL_GUIDES",
+      "UIM_SKILL_GUIDES"
+    ]
+  },
+  {
+    "methodId": "mining_f2p_iron",
+    "tier": "VERIFIED_SHARED",
+    "accountModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN",
+      "UNKNOWN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 1,
+      "persistentRequiredSlots": 1,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.55,
+    "playerReason": "Power-mining iron is a concrete low-setup route when the ore is not needed by another plan.",
+    "sources": [
+      "GENERAL_SKILL_TRAINING"
+    ]
+  },
+  {
+    "methodId": "thieving_uim_lumbridge_people",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "NONE",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 0,
+      "persistentRequiredSlots": 0,
+      "temporarySlots": 0,
+      "flow": "NEUTRAL",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.35,
+    "playerReason": "Pickpocketing Lumbridge men and women with monastery healing is a slow but concrete bank-free early fallback.",
+    "sources": [
+      "UIM_THIEVING",
+      "UIM_ITEM_MANAGEMENT"
+    ]
+  },
+  {
+    "methodId": "smithing_f2p_uim_bronze",
+    "tier": "VERIFIED_ACCOUNT_SPECIFIC",
+    "accountModes": [
+      "ULTIMATE_IRONMAN"
+    ],
+    "bankingBehavior": "LOCAL_PROCESSING",
+    "inventoryFootprint": {
+      "minimumPracticalFreeSlots": 3,
+      "persistentRequiredSlots": 2,
+      "temporarySlots": 2,
+      "flow": "REPLACES_INPUTS_WITH_OUTPUTS",
+      "tearsDownCurrentSetup": false
+    },
+    "accountValueFit": 0.85,
+    "playerReason": "Nearby copper and tin make this a cheap first Smithing level without conventional banking.",
+    "sources": [
+      "UIM_SMITHING",
+      "F2P_IRONMAN_GENERAL",
+      "RUNELITE_MECHANICS"
+    ]
+  }
+]

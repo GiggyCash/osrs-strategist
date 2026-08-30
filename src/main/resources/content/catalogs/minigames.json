@@ -1,0 +1,824 @@
+[
+  {
+    "id": "wintertodt",
+    "name": "Wintertodt",
+    "primarySkill": "FIREMAKING",
+    "minimumLevel": 50,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Firemaking XP, Pyromancer, Tome of fire, supplies and Collection Log",
+    "combatActivity": false
+  },
+  {
+    "id": "tempoross",
+    "name": "Tempoross",
+    "primarySkill": "FISHING",
+    "minimumLevel": 35,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Fishing XP, Spirit angler, supplies, and live 6,000-Spirit-Flake Fish Barrel or Tackle Box purchases",
+    "combatActivity": false
+  },
+  {
+    "id": "guardians-of-the-rift",
+    "name": "Guardians of the Rift",
+    "primarySkill": "RUNECRAFT",
+    "minimumLevel": 27,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Runecraft XP, Raiments of the Eye, runes, and the live 750-Abyssal-Pearl Abyssal Needle purchase",
+    "combatActivity": false
+  },
+  {
+    "id": "giants-foundry",
+    "name": "Giants\u0027 Foundry",
+    "primarySkill": "SMITHING",
+    "minimumLevel": 15,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Smithing XP, coins, Smiths\u0027 Uniform and mould progression",
+    "combatActivity": false
+  },
+  {
+    "id": "mahogany-homes",
+    "name": "Mahogany Homes",
+    "primarySkill": "CONSTRUCTION",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Construction XP, Carpenter outfit and plank sack",
+    "combatActivity": false
+  },
+  {
+    "id": "tithe-farm",
+    "name": "Tithe Farm",
+    "primarySkill": "FARMING",
+    "minimumLevel": 34,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Farming XP, Farmer outfit, seed box, herb sack and farming rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "pest-control",
+    "name": "Pest Control",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Void and Elite Void equipment",
+    "combatActivity": true
+  },
+  {
+    "id": "barbarian-assault",
+    "name": "Barbarian Assault",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Fighter torso, role levels and Kandarin diary progression",
+    "combatActivity": true
+  },
+  {
+    "id": "fishing-trawler",
+    "name": "Fishing Trawler",
+    "primarySkill": "FISHING",
+    "minimumLevel": 15,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "LOW",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Angler outfit and Fishing Trawler Collection Log",
+    "combatActivity": false
+  },
+  {
+    "id": "rogues-den",
+    "name": "Rogues\u0027 Den",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 50,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Rogue equipment for double pickpocket loot",
+    "combatActivity": false
+  },
+  {
+    "id": "mage-training-arena",
+    "name": "Mage Training Arena",
+    "primarySkill": "MAGIC",
+    "minimumLevel": 7,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Mage\u0027s book, Infinity pieces, Bones to Peaches and master wand progression",
+    "combatActivity": false
+  },
+  {
+    "id": "volcanic-mine",
+    "name": "Volcanic Mine",
+    "primarySkill": "MINING",
+    "minimumLevel": 50,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Strong Mining XP, volcanic mine rewards and collection progress",
+    "combatActivity": false
+  },
+  {
+    "id": "blast-mine",
+    "name": "Blast Mine",
+    "primarySkill": "MINING",
+    "minimumLevel": 43,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Mining XP and higher-tier ores",
+    "combatActivity": false
+  },
+  {
+    "id": "hallowed-sepulchre",
+    "name": "Hallowed Sepulchre",
+    "primarySkill": "AGILITY",
+    "minimumLevel": 52,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Agility XP, Hallowed marks, graceful recolour/tools and valuable loot",
+    "combatActivity": false
+  },
+  {
+    "id": "pyramid-plunder",
+    "name": "Pyramid Plunder",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 21,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Thieving XP and Pharaoh\u0027s sceptre progression",
+    "combatActivity": false
+  },
+  {
+    "id": "soul-wars",
+    "name": "Soul Wars",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Zeal, imbues and collection-log rewards",
+    "combatActivity": true
+  },
+  {
+    "id": "last-man-standing",
+    "name": "Last Man Standing",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "PvP practice and LMS reward points without risking normal gear",
+    "combatActivity": false
+  },
+  {
+    "id": "castle-wars",
+    "name": "Castle Wars",
+    "minimumLevel": 1,
+    "freeToPlay": true,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "F2P/P2P minigame rewards and Collection Log",
+    "combatActivity": true
+  },
+  {
+    "id": "trouble-brewing",
+    "name": "Trouble Brewing",
+    "primarySkill": "COOKING",
+    "minimumLevel": 40,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Pieces of eight and Trouble Brewing rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "shades-of-mortton",
+    "name": "Shades of Mort\u0027ton",
+    "primarySkill": "FIREMAKING",
+    "minimumLevel": 20,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Shade keys, prayer/firemaking progression and collection rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "brimhaven-agility-arena",
+    "name": "Brimhaven Agility Arena",
+    "primarySkill": "AGILITY",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Agility XP, tickets and graceful recolour rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "gnome-restaurant",
+    "name": "Gnome Restaurant",
+    "primarySkill": "COOKING",
+    "minimumLevel": 29,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Cooking deliveries, useful travel rewards and Collection Log",
+    "combatActivity": false
+  },
+  {
+    "id": "temple-trekking",
+    "name": "Temple Trekking / Burgh de Rott Ramble",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Lumberjack outfit and resource rewards",
+    "combatActivity": true
+  },
+  {
+    "id": "warriors-guild",
+    "name": "Warriors\u0027 Guild cyclopes",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Dragon defender progression",
+    "combatActivity": true
+  },
+  {
+    "id": "motherlode-mine",
+    "name": "Motherlode Mine",
+    "primarySkill": "MINING",
+    "minimumLevel": 30,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Prospector, coal bag, gem bag, ores and Mining XP",
+    "combatActivity": false
+  },
+  {
+    "id": "barracuda-trials",
+    "name": "Barracuda Trials",
+    "primarySkill": "SAILING",
+    "minimumLevel": 30,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Active Sailing XP and Sailing trial progression",
+    "combatActivity": false
+  },
+  {
+    "id": "deep-sea-trawling",
+    "name": "Deep Sea Trawling",
+    "primarySkill": "SAILING",
+    "minimumLevel": 60,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "LOW",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Hybrid Sailing/Fishing progression and deep-sea rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "nightmare-zone",
+    "name": "Nightmare Zone",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "LOW",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Combat training, imbues and points after the required quest bosses are unlocked",
+    "combatActivity": true
+  },
+  {
+    "id": "blast-furnace",
+    "name": "Blast Furnace",
+    "primarySkill": "SMITHING",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Bar processing, Smithing XP, coal bag value and Blast Furnace shop access",
+    "combatActivity": false
+  },
+  {
+    "id": "sorceresss-garden",
+    "name": "Sorceress\u0027s Garden",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Thieving XP, sq\u0027irk juice and seasonal garden progression",
+    "combatActivity": false
+  },
+  {
+    "id": "tai-bwo-wannai-cleanup",
+    "name": "Tai Bwo Wannai Cleanup",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Trading sticks, village favour, gout tuber and Karamja progression",
+    "combatActivity": true
+  },
+  {
+    "id": "aerial-fishing",
+    "name": "Aerial Fishing",
+    "primarySkill": "FISHING",
+    "minimumLevel": 43,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Fishing and Hunter XP, Molch pearls and pearl fishing equipment",
+    "combatActivity": false
+  },
+  {
+    "id": "drift-net-fishing",
+    "name": "Drift Net Fishing",
+    "primarySkill": "FISHING",
+    "minimumLevel": 47,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Combined Fishing and Hunter XP after Fossil Island underwater access",
+    "combatActivity": false
+  },
+  {
+    "id": "chompy-hunting",
+    "name": "Chompy bird hunting",
+    "primarySkill": "RANGED",
+    "minimumLevel": 30,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Chompy kill progression, ogre hats and Western Provinces diary value",
+    "combatActivity": true
+  },
+  {
+    "id": "gnome-ball",
+    "name": "Gnome Ball",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Agility experience and gnomeball activity progress",
+    "combatActivity": false
+  },
+  {
+    "id": "stealing-artefacts",
+    "name": "Stealing artefacts",
+    "primarySkill": "THIEVING",
+    "minimumLevel": 49,
+    "freeToPlay": false,
+    "riskLevel": "LOW",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Thieving XP through Port Piscarilius artefact deliveries",
+    "combatActivity": false
+  },
+  {
+    "id": "underwater-agility-thieving",
+    "name": "Underwater Agility and Thieving",
+    "primarySkill": "AGILITY",
+    "minimumLevel": 48,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Combined Agility and Thieving XP in Fossil Island\u0027s underwater area",
+    "combatActivity": false
+  },
+  {
+    "id": "shooting-stars",
+    "name": "Shooting Stars",
+    "primarySkill": "MINING",
+    "minimumLevel": 10,
+    "freeToPlay": true,
+    "riskLevel": "NONE",
+    "attention": "LOW",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Mining XP, stardust, celestial ring progression and gem rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "forestry",
+    "name": "Forestry",
+    "primarySkill": "WOODCUTTING",
+    "minimumLevel": 15,
+    "freeToPlay": true,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Woodcutting group events, anima-infused bark and Forestry rewards",
+    "combatActivity": false
+  },
+  {
+    "id": "champions-challenge",
+    "name": "Champions\u0027 Challenge",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "MEDIUM",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Use an observed champion\u0027s scroll for Slayer and Hitpoints XP, banners and champion\u0027s cape progression; each champion has distinct combat restrictions",
+    "combatActivity": true
+  },
+  {
+    "id": "rat-pits",
+    "name": "Rat Pits",
+    "minimumLevel": 1,
+    "freeToPlay": false,
+    "riskLevel": "HIGH",
+    "attention": "ACTIVE",
+    "supportedModes": [
+      "MAIN"
+    ],
+    "rewardFocus": "Optional cat-growth and coin-betting activity after the relevant Ratcatchers pit is unlocked; protect the cat from death",
+    "combatActivity": false
+  },
+  {
+    "id": "vale-totems",
+    "name": "Vale Totems",
+    "primarySkill": "FLETCHING",
+    "minimumLevel": 20,
+    "freeToPlay": false,
+    "riskLevel": "NONE",
+    "attention": "MODERATE",
+    "supportedModes": [
+      "MAIN",
+      "IRONMAN",
+      "ULTIMATE_IRONMAN",
+      "HARDCORE_IRONMAN",
+      "GROUP_IRONMAN",
+      "HARDCORE_GROUP_IRONMAN",
+      "UNRANKED_GROUP_IRONMAN"
+    ],
+    "rewardFocus": "Fletching XP, Vale offerings, research points, Fletching knife and bow string spool progression after the Vale Totems miniquest",
+    "combatActivity": false
+  }
+]
