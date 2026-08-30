@@ -16,16 +16,33 @@ public final class FinalExecutionPlanValidator
         TrainingPlan plan = recommendation.getTrainingPlan();
         MethodStrategyProfile profile = plan == null
                 ? null : plan.getStrategyProfile();
-        if (profile == null) return recommendation;
 
         CandidateSafetyEvidence evidence = recommendation.getSafetyEvidence();
         RecommendationGuidance guidance = recommendation.getGuidance();
-        if (profile.getBankingBehavior()
+        if (profile != null && profile.getBankingBehavior()
                         == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
                 || guidance != null && guidance.getBankingBehavior()
                         == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP)
         {
             evidence = evidence.requiringConventionalBank();
+        }
+        if (guidance != null && guidance.getStorageCapability() != null)
+        {
+            StorageCapability capability = guidance.getStorageCapability();
+            UimStorageDecision decision = guidance.getStorageDecision();
+            boolean storageUnverified = decision == null
+                    || !decision.isAllowed()
+                    || decision.getConfidence()
+                            != RecommendationConfidence.VERIFIED;
+            boolean incompleteDangerDisclosure =
+                    UimStorageMechanics.isDangerous(capability)
+                    && (guidance.getRiskDisclosure() == null
+                    || !guidance.getRiskDisclosure()
+                            .isAcknowledgementRequired());
+            if (storageUnverified
+                    || UimStorageMechanics.isTooGenericToRecommend(capability)
+                    || incompleteDangerDisclosure)
+                evidence = evidence.withUnverifiedDangerousStorage();
         }
         return recommendation.withSafetyEvidence(evidence);
     }

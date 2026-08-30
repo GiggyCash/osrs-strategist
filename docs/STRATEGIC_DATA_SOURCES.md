@@ -16,8 +16,12 @@ passages. Wiki/Jagex media is not imported: file assets can carry different
 Jagex or per-file licenses and require an independent review.
 
 The local source registry was reviewed 2026-08-30. Runtime networking remains
-disabled. `content-freshness.json` includes the `strategy-sources` family so a
-changed development snapshot can be reported by the existing change detector.
+disabled. `strategy-source-snapshot.json` pins exact MediaWiki revision IDs and
+maps each page to the derived strategy families requiring review.
+`python3 scripts/review-strategy-sources.py --validate` is the offline refresh
+gate. A maintainer may deliberately run `--check-live` during development; it
+uses the stable MediaWiki Action API and reports changed source IDs, revisions,
+timestamps, and affected strategy families without modifying local data.
 
 ## Strategy foundation sources
 
@@ -29,6 +33,12 @@ changed development snapshot can be reported by the existing change detector.
 | Quest ordering | [Optimal quest guide](https://oldschool.runescape.wiki/w/Optimal_quest_guide), Iron/UIM quest guides | Strategic ordering and early XP compression only; typed quest prerequisites/rewards remain authoritative. |
 | Slayer | [Slayer training](https://oldschool.runescape.wiki/w/Slayer_training), [Ironman Slayer](https://oldschool.runescape.wiki/w/Ironman_Guide/Slayer) | Task economics, master/weight-aware block strategy, point reserve, account resource value, and cannon replacement burden. Live assignment state remains RuneLite evidence. |
 | Storage/clues/POH | [STASH](https://oldschool.runescape.wiki/w/STASH), [Costume room](https://oldschool.runescape.wiki/w/Costume_room), UIM item management | Capability-specific storage rules; built/filled/owned state is never inferred from static data. |
+| PvM and gear context | [Bossing Ladder](https://oldschool.runescape.wiki/w/Guide:Bossing_Ladder), encounter pages, and local RuneLite boss identities | Known-good readiness and progression context. Stats alone never prove an executable encounter loadout, and guide order is not a universal BIS ladder. |
+
+The reviewed revisions are developer provenance, not player-facing copy. A
+source being account-specific is never an unconditional score bonus; only the
+derived properties (resource route, inventory fit, setup reuse, risk, or
+unlock value) can affect a decision.
 
 The stable enum IDs are used by method profiles rather than repeating source
 URLs in every row. `StrategyKnowledgeFoundationTest` requires complete source
@@ -80,6 +90,7 @@ registry coverage.
 | --- | --- | --- |
 | Iron Slayer consumable opportunity cost | [Ironman Slayer guide](https://oldschool.runescape.wiki/w/Ironman_Guide/Slayer) | Cannonball time can make cannon use unattractive for an Iron even when the same executable method is convenient for a Main. The evaluator represents replacement burden; it does not force a named task or method winner. |
 | UIM consumable/storage pressure | [Ultimate Ironman guide](https://oldschool.runescape.wiki/w/Ultimate_ironman_guide), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Conventional bank contents are not usable UIM supply; containers and retrieval systems have distinct setup/risk consequences. Exact future consumption is never invented. |
+| Exact dangerous retrieval systems | [Item Retrieval Service](https://oldschool.runescape.wiki/w/Item_Retrieval_Service), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Hespori, Zulrah, and Volcanic Mine services are distinct capabilities. The generic legacy death-storage bucket cannot authorize a route; another unsafe death can permanently destroy retrieval-service contents, so dangerous storage is last-resort and visibly disclosed. |
 
 General acquisition wording continues to come from `ResourceSourceCatalog`.
 Specific quantities and tradeability must be supplied by typed item/activity

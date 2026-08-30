@@ -30,6 +30,8 @@ public class StrategyEngine
             new InfrastructureRecommendationValueService();
     private final MethodRecommendationValueService methodValue;
     private final FinalExecutionPlanValidator finalExecutionValidator;
+    private final ActivityStrategyKnowledgeService activityStrategyKnowledge =
+            new ActivityStrategyKnowledgeService();
     private final QuestRecommendationValueService questValue =
             new QuestRecommendationValueService();
     private static final FarmingAccessCatalog FARMING_ACCESS_CATALOG =
@@ -266,7 +268,9 @@ public class StrategyEngine
                     {
                         continue;
                     }
-                    pool.add(candidate.toRecommendation());
+                    Recommendation sourced = activityStrategyKnowledge.attach(
+                            candidate.toRecommendation(), context);
+                    if (sourced != null) pool.add(sourced);
                 }
             }
         }

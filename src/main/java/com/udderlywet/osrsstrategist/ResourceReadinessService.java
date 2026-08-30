@@ -202,9 +202,7 @@ public class ResourceReadinessService
     private static boolean requiresAdditionalAccessCheck(
             StorageCapability capability)
     {
-        return capability == StorageCapability.LOOTING_BAG
-                || capability == StorageCapability.DEATH_STORAGE
-                || capability == StorageCapability.DEATHPILE;
+        return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
 
     private static boolean isUim(StrategyDataBundle data)

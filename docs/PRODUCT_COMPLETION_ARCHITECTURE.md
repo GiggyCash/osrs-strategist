@@ -102,6 +102,21 @@ selected strategy profile and the final `RecommendationGuidance` carry this
 typed behavior. The final validator converts any conventional dependency into
 the safety flag consumed by `CandidateSafetyPolicy`.
 
+`ActivityStrategyKnowledgeCatalog` extends plan-relative footprint checks to
+questing, current Slayer assignments, clues, minigames, gear upgrades, PvM,
+and infrastructure before the final queue. This is deliberately not another
+recommendation engine: existing providers still use live evidence and create
+the candidate, sourced strategy constrains practical fit, and the common
+intelligence layer still makes the choice.
+
+UIM storage systems remain distinct. The generic legacy `DEATH_STORAGE`
+observation cannot authorize a plan. Hespori, Zulrah, and Volcanic Mine Item
+Retrieval Services have exact capability identities; looting bag and
+deathpiles retain separate behavior. Any dangerous-storage guidance requires a
+verified `UimStorageDecision`, a prominent HIGH RISK disclosure, and explicit
+acknowledgement. Missing exact access, compatibility, capacity, or disclosure
+fails final execution validation.
+
 ## Infrastructure and unlocks
 
 `InfrastructureMilestoneCatalog` contains reviewed milestones for POH access,

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "reviewedDate": "2026-08-30",
+  "license": "OSRS Wiki text: CC BY-NC-SA 3.0; RuneLite: BSD-2-Clause",
+  "runtimeNetworking": false,
+  "sources": [
+    {"id":"GENERAL_SKILL_TRAINING","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["shared-skilling","main-skilling","method-transitions"]},
+    {"id":"F2P_SKILL_TRAINING","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["f2p-skilling"]},
+    {"id":"IRONMAN_GENERAL","apiTitle":"Ironman guide","reviewedRevision":15316742,"reviewedTimestamp":"2026-08-22T21:08:30Z","derivedFamilies":["iron-progression","self-source-pipelines","quest-compression"]},
+    {"id":"F2P_IRONMAN_GENERAL","apiTitle":"Free-to-play Ironman guide","reviewedRevision":15315034,"reviewedTimestamp":"2026-08-21T03:38:38Z","derivedFamilies":["iron-progression","f2p-skilling","self-source-pipelines"]},
+    {"id":"UIM_GENERAL","apiTitle":"Ultimate Ironman Guide","reviewedRevision":15215498,"reviewedTimestamp":"2026-05-23T07:11:07Z","derivedFamilies":["uim-progression","setup-reuse","infrastructure-value"]},
+    {"id":"UIM_ITEM_MANAGEMENT","apiTitle":"Ultimate Ironman Guide/Item Management","reviewedRevision":15321539,"reviewedTimestamp":"2026-08-26T21:44:21Z","derivedFamilies":["uim-inventory-footprints","uim-storage","uim-dangerous-storage"]},
+    {"id":"IRONMAN_SKILL_GUIDES","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["iron-skilling","iron-resource-pipelines"]},
+    {"id":"UIM_SKILL_GUIDES","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["uim-skilling","uim-method-footprints"]},
+    {"id":"OPTIMAL_QUEST_GUIDE","apiTitle":"Optimal quest guide","reviewedRevision":15319535,"reviewedTimestamp":"2026-08-25T06:47:14Z","derivedFamilies":["quest-ordering","quest-xp-value"]},
+    {"id":"SLAYER_TRAINING","apiTitle":"Slayer training","reviewedRevision":15319310,"reviewedTimestamp":"2026-08-25T05:21:09Z","derivedFamilies":["slayer-tasks","slayer-points"]},
+    {"id":"IRONMAN_SLAYER","apiTitle":"Ironman Guide/Slayer","reviewedRevision":15319945,"reviewedTimestamp":"2026-08-25T18:42:46Z","derivedFamilies":["slayer-resource-value","iron-slayer"]},
+    {"id":"CLUE_STASH","apiTitle":"STASH","reviewedRevision":15319948,"reviewedTimestamp":"2026-08-25T18:56:28Z","derivedFamilies":["clues","stash","uim-clue-storage"]},
+    {"id":"POH_STORAGE","apiTitle":"Costume room","reviewedRevision":15035574,"reviewedTimestamp":"2025-11-19T01:31:46Z","derivedFamilies":["poh","costume-storage","uim-infrastructure"]},
+    {"id":"MINIGAME_GUIDES","apiTitle":"Minigames","reviewedRevision":15304433,"reviewedTimestamp":"2026-08-17T17:39:24Z","derivedFamilies":["minigames","minigame-inventory"]},
+    {"id":"PVM_STRATEGY","apiTitle":"Guide:Bossing Ladder","reviewedRevision":15319480,"reviewedTimestamp":"2026-08-25T06:16:24Z","derivedFamilies":["pvm-readiness","gear-progression","hardcore-risk"]},
+    {"id":"RUNELITE_MECHANICS","url":"https://github.com/runelite/runelite","reviewedRevision":"RuneLite 1.12.35","derivedFamilies":["live-state","mechanical-evidence","stash-identities","quest-identities"]}
+  ]
+}

@@ -13,7 +13,14 @@ public enum StorageCapability
     LOOTING_BAG,
     POH_COSTUME_ROOM,
     POH_STORAGE,
+    /**
+     * Legacy observation bucket retained for snapshot compatibility only.
+     * It is not specific enough to authorize a storage recommendation.
+     */
     DEATH_STORAGE,
+    HESPORI_ITEM_RETRIEVAL,
+    ZULRAH_ITEM_RETRIEVAL,
+    VOLCANIC_MINE_ITEM_RETRIEVAL,
     DEATHPILE,
     SEED_BOX,
     HERB_SACK,

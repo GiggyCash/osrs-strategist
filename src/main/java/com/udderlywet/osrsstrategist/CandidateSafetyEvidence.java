@@ -25,14 +25,24 @@ public final class CandidateSafetyEvidence
     private final BuildEffect buildEffect;
     private final Skill affectedSkill;
     private final boolean conventionalBankRequired;
+    private final boolean unverifiedDangerousStorage;
 
     private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
             Skill affectedSkill, boolean conventionalBankRequired)
+    {
+        this(access, buildEffect, affectedSkill, conventionalBankRequired,
+                false);
+    }
+
+    private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
+            Skill affectedSkill, boolean conventionalBankRequired,
+            boolean unverifiedDangerousStorage)
     {
         this.access = access == null ? Access.UNKNOWN : access;
         this.buildEffect = buildEffect == null ? BuildEffect.UNKNOWN : buildEffect;
         this.affectedSkill = affectedSkill;
         this.conventionalBankRequired = conventionalBankRequired;
+        this.unverifiedDangerousStorage = unverifiedDangerousStorage;
     }
 
     public static CandidateSafetyEvidence unknown()
@@ -68,7 +78,13 @@ public final class CandidateSafetyEvidence
     public CandidateSafetyEvidence requiringConventionalBank()
     {
         return new CandidateSafetyEvidence(access, buildEffect,
-                affectedSkill, true);
+                affectedSkill, true, unverifiedDangerousStorage);
+    }
+
+    public CandidateSafetyEvidence withUnverifiedDangerousStorage()
+    {
+        return new CandidateSafetyEvidence(access, buildEffect,
+                affectedSkill, conventionalBankRequired, true);
     }
 
     private static Access access(boolean freeToPlay)
@@ -82,5 +98,9 @@ public final class CandidateSafetyEvidence
     public boolean isConventionalBankRequired()
     {
         return conventionalBankRequired;
+    }
+    public boolean hasUnverifiedDangerousStorage()
+    {
+        return unverifiedDangerousStorage;
     }
 }

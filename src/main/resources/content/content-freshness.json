@@ -17,7 +17,7 @@
     {"id":"gear","source":"maintained contextual acquisition catalog","snapshotDate":"2026-08-25","generatorVersion":"contextual-gear/3","recordCount":41,"status":"STRUCTURED"},
     {"id":"resource-dependencies","source":"maintained deterministic recipes","snapshotDate":"2026-08-25","generatorVersion":"manual/2","recordCount":41,"status":"PARTIAL"},
     {"id":"resource-sources","source":"maintained account-aware source families","snapshotDate":"2026-08-25","generatorVersion":"manual/2","recordCount":60,"status":"STRUCTURED"},
-    {"id":"strategy-sources","source":"reviewed OSRS Wiki strategy guides plus RuneLite mechanics","snapshotDate":"2026-08-30","generatorVersion":"StrategySourceRegistry/1","recordCount":16,"status":"STRUCTURED"}
+    {"id":"strategy-sources","source":"pinned OSRS Wiki MediaWiki revisions plus RuneLite mechanics","snapshotDate":"2026-08-30","generatorVersion":"StrategySourceRegistry/2 + review-strategy-sources.py/1","recordCount":16,"status":"STRUCTURED"}
   ],
   "announcedNotLive": [
     {"id":"summer-sweep-up-remaining-2026-09-02","effectiveDate":"2026-09-02","planningEnabled":false}

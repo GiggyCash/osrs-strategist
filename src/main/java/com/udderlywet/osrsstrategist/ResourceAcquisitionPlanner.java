@@ -302,9 +302,7 @@ public class ResourceAcquisitionPlanner
     private static boolean requiresAdditionalAccessCheck(
             StorageCapability capability)
     {
-        return capability == StorageCapability.LOOTING_BAG
-                || capability == StorageCapability.DEATH_STORAGE
-                || capability == StorageCapability.DEATHPILE;
+        return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
 
     private static ResourceAcquisitionPlan checkNeeded(

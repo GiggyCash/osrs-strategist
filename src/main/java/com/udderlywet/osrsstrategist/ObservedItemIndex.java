@@ -197,9 +197,7 @@ public final class ObservedItemIndex
 
     private static boolean isRestrictedUimStorage(StorageCapability capability)
     {
-        return capability == StorageCapability.LOOTING_BAG
-                || capability == StorageCapability.DEATH_STORAGE
-                || capability == StorageCapability.DEATHPILE;
+        return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
 
     private static int quantityIn(

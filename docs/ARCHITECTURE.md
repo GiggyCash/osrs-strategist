@@ -71,6 +71,11 @@ execution is genuinely common.
 `MethodInventoryFootprint` describes minimum practical free slots, persistent
 and temporary slots, inventory flow, and setup teardown. UIM viability is
 relative to that proposed method, not a free-slot score in isolation.
+`ActivityStrategyKnowledgeCatalog` applies the same plan-relative boundary to
+quest, Slayer, clue, minigame, upgrade, PvM, and POH candidates before they
+enter the common ranking pool. A full observed inventory can remove a quest or
+ordinary PvM loadout while preserving an inside-instance or current-setup
+activity that genuinely needs no additional slots.
 
 The implemented account-value boundary uses `RecommendationStrategicValue`.
 Typed goal provenance, infrastructure, unlock, travel, resource, setup reuse,
@@ -102,9 +107,20 @@ Main accounts only:
 - money-making alternatives
 - buy-vs-gather comparison
 
-## 6. UimStoragePlanner
-Models storage and inventory pressure without guessing.
-The planner asks CapabilityService before proposing POH, STASH, Tool Leprechaun, looting bag, death storage, or deathpile actions.
+## 6. UIM storage and inventory resolution
+Storage is capability-specific and fails closed. POH furniture, STASH, Tool
+Leprechaun, containers, looting bag, exact Item Retrieval Services, and an
+on-ground deathpile retain different identities and retrieval rules.
+`UimCapabilityService` requires observed access, item compatibility, and live
+capacity/preconditions together. The legacy `DEATH_STORAGE` snapshot bucket is
+too generic to authorize any recommendation; exact Hespori, Zulrah, and
+Volcanic Mine retrieval capabilities are modeled separately.
+
+Death-based storage is not ordinary inventory optimization. It carries a high
+or irreversible burden, cannot satisfy normal resource readiness, and must
+have a typed `RecommendationRiskDisclosure` requiring explicit acknowledgement
+before detailed steps. Final execution validation rejects generic, unverified,
+or undisclosed dangerous-storage guidance.
 
 ## 7. OpportunityEngine
 One generic engine for recurring and short detours:

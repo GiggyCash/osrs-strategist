@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
 /**
@@ -38,6 +39,8 @@ public final class MethodStrategyKnowledgeCatalog
                     "runecraft_f2p_body")));
 
     private final Map<String, MethodStrategyProfile> exact = new HashMap<>();
+    private final Map<String, MethodStrategyProfile> generated =
+            new ConcurrentHashMap<>();
 
     public MethodStrategyKnowledgeCatalog()
     {
@@ -115,6 +118,15 @@ public final class MethodStrategyKnowledgeCatalog
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
+        String key = mode.name() + ':' + method.getId();
+        return generated.computeIfAbsent(key, ignored -> genericProfile(
+                method, metadata, mode, bankLoop, modes));
+    }
+
+    private static MethodStrategyProfile genericProfile(TrainingMethod method,
+            TrainingMethodMetadata metadata, AccountMode mode,
+            boolean bankLoop, Set<AccountMode> modes)
+    {
         StrategySourceId source = metadata.isFreeToPlayAllowed()
                 ? StrategySourceId.F2P_SKILL_TRAINING
                 : StrategySourceId.GENERAL_SKILL_TRAINING;

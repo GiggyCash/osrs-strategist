@@ -14,6 +14,8 @@ public final class RecommendationGuidance
     private final String location;
     private final String note;
     private final MethodBankingBehavior bankingBehavior;
+    private final UimStorageDecision storageDecision;
+    private final RecommendationRiskDisclosure riskDisclosure;
 
     public RecommendationGuidance(
             String action,
@@ -22,7 +24,7 @@ public final class RecommendationGuidance
             String note)
     {
         this(action, supplies, location, note,
-                MethodBankingBehavior.UNKNOWN);
+                MethodBankingBehavior.UNKNOWN, null, null);
     }
 
     public RecommendationGuidance(
@@ -32,12 +34,26 @@ public final class RecommendationGuidance
             String note,
             MethodBankingBehavior bankingBehavior)
     {
+        this(action, supplies, location, note, bankingBehavior, null, null);
+    }
+
+    public RecommendationGuidance(
+            String action,
+            String supplies,
+            String location,
+            String note,
+            MethodBankingBehavior bankingBehavior,
+            UimStorageDecision storageDecision,
+            RecommendationRiskDisclosure riskDisclosure)
+    {
         this.action = action;
         this.supplies = supplies;
         this.location = location;
         this.note = note;
         this.bankingBehavior = bankingBehavior == null
                 ? MethodBankingBehavior.UNKNOWN : bankingBehavior;
+        this.storageDecision = storageDecision;
+        this.riskDisclosure = riskDisclosure;
     }
 
     public String getAction()
@@ -65,10 +81,34 @@ public final class RecommendationGuidance
         return bankingBehavior;
     }
 
+    public StorageCapability getStorageCapability()
+    {
+        return storageDecision == null ? null
+                : storageDecision.getCapability();
+    }
+
+    public UimStorageDecision getStorageDecision()
+    {
+        return storageDecision;
+    }
+
+    public RecommendationRiskDisclosure getRiskDisclosure()
+    {
+        return riskDisclosure;
+    }
+
     public RecommendationGuidance withBankingBehavior(
             MethodBankingBehavior value)
     {
         return new RecommendationGuidance(action, supplies, location, note,
-                value);
+                value, storageDecision, riskDisclosure);
+    }
+
+    public RecommendationGuidance withStorageDecision(
+            UimStorageDecision decision,
+            RecommendationRiskDisclosure disclosure)
+    {
+        return new RecommendationGuidance(action, supplies, location, note,
+                bankingBehavior, decision, disclosure);
     }
 }

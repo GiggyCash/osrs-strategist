@@ -138,6 +138,12 @@ specific realistic task is proven ready.
 
 The exact full Combat Achievement task database is not yet embedded. Compass is deliberately designed to prefer tasks on bosses the account is already ready to fight rather than blindly pushing mechanically extreme tasks.
 
+**FUTURE — Combat Achievement Strategist:** build task-level, encounter-aware
+planning through Grandmaster Combat Achievements on top of the same sourced
+PvM, gear, account-mode, risk, and live-readiness knowledge. This task does not
+implement that product feature; the current threshold reader remains a
+non-actionable progress signal until a specific safe task is proven ready.
+
 ## PvM, bosses, and raids
 
 `PvmActivityCatalog` dynamically enumerates every RuneLite `HiscoreSkill` whose type is `BOSS`. This keeps identity coverage aligned with the RuneLite version in use, including raids and newly added hiscore bosses.

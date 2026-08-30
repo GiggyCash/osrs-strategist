@@ -82,7 +82,13 @@ public final class StorageSnapshot
      */
     public List<ItemStackSnapshot> getDeathStorageItems()
     {
-        return contentsOf(StorageCapability.DEATH_STORAGE);
+        List<ItemStackSnapshot> observed = new ArrayList<>();
+        observed.addAll(contentsOf(StorageCapability.DEATH_STORAGE));
+        observed.addAll(contentsOf(StorageCapability.HESPORI_ITEM_RETRIEVAL));
+        observed.addAll(contentsOf(StorageCapability.ZULRAH_ITEM_RETRIEVAL));
+        observed.addAll(contentsOf(
+                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL));
+        return Collections.unmodifiableList(observed);
     }
 
     public int quantityOf(StorageCapability capability, int itemId)

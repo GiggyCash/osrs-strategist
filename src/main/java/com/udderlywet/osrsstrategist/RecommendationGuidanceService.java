@@ -463,9 +463,7 @@ public class RecommendationGuidanceService
         {
             StorageCapability capability = entry.getKey();
             if (!storage.verified(capability)
-                    || capability == StorageCapability.LOOTING_BAG
-                    || capability == StorageCapability.DEATH_STORAGE
-                    || capability == StorageCapability.DEATHPILE)
+                    || UimStorageMechanics.isRestrictedRetrieval(capability))
             {
                 continue;
             }

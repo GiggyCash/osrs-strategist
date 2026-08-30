@@ -45,7 +45,13 @@ public class UimSetupCostService
 
         StorageSnapshot storage = data.getStorage();
         boolean deathStorageObserved = hasObservedItems(
-                storage, StorageCapability.DEATH_STORAGE);
+                storage, StorageCapability.DEATH_STORAGE)
+                || hasObservedItems(storage,
+                        StorageCapability.HESPORI_ITEM_RETRIEVAL)
+                || hasObservedItems(storage,
+                        StorageCapability.ZULRAH_ITEM_RETRIEVAL)
+                || hasObservedItems(storage,
+                        StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL);
         boolean deathpileObserved = hasObservedItems(
                 storage, StorageCapability.DEATHPILE);
         boolean lootingBagObserved = hasObservedItems(

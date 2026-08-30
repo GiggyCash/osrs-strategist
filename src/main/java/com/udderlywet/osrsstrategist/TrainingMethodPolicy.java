@@ -75,47 +75,10 @@ public class TrainingMethodPolicy
         double score = intensityAdjustment(
                 metadata.getIntensity(), strategyMode, sessionIntent);
 
-        if (mode != null && mode.isIronLike())
-        {
-            if (metadata.isSelfSourceFriendly()) score += 3.0;
-            switch (metadata.getCostTier())
-            {
-                case VERY_HIGH: score -= 12.0; break;
-                case HIGH: score -= 8.0; break;
-                case MODERATE: score -= 3.0; break;
-                case PROFITABLE: score += 4.0; break;
-                default: break;
-            }
-        }
-
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            if (metadata.isUimFriendly()) score += 8.0;
-
-            // UIM setup changes can be much more expensive than a normal bank
-            // switch. Outside Efficient mode, prefer methods that are easier to
-            // sustain for a real play session instead of bouncing the player
-            // between click-heavy inventory layouts every milestone.
-            if (strategyMode != StrategyMode.EFFICIENT)
-            {
-                switch (metadata.getIntensity())
-                {
-                    case AFK: score += 6.0; break;
-                    case RELAXED: score += 7.0; break;
-                    case BALANCED: score += 2.0; break;
-                    case SWEATY: score -= 8.0; break;
-                    default: break;
-                }
-            }
-        }
-
-        if ((mode == AccountMode.HARDCORE_IRONMAN
-                || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                && metadata.isHardcoreSafe())
-        {
-            score += 4.0;
-        }
-
+        // Account-specific method value now comes from sourced strategy
+        // profiles and live readiness in TrainingMethodSelector. Keep this
+        // policy focused on play-style fit and real risk instead of layering
+        // arbitrary Iron/UIM/method-cost bonuses over the knowledge model.
         if (AccountModePolicy.isRiskSensitive(mode))
         {
             if (metadata.getRiskLevel() == RiskLevel.MEDIUM) score -= 5.0;

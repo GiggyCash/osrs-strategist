@@ -4,6 +4,7 @@ set -eu
 # This workflow validates generated evidence before tests. It deliberately does
 # not overwrite hand-authored strategy catalogs or perform runtime networking.
 python3 scripts/validate-content-freshness.py
+python3 scripts/review-strategy-sources.py --validate
 python3 scripts/detect-content-changes.py --self-test
 python3 scripts/update-quest-enrichment.py --help >/dev/null
 ./gradlew test --tests '*QuestItemEvidenceParserTest' \

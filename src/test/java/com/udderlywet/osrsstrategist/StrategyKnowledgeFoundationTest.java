@@ -33,9 +33,14 @@ public class StrategyKnowledgeFoundationTest
             assertNotNull(source.getUrl());
             assertNotNull(source.getReviewedDate());
             assertFalse(source.getUrl().trim().isEmpty());
+            assertNotNull(source.getRevision());
+            assertFalse(source.getRevision().trim().isEmpty());
+            assertFalse(source.getDerivedStrategyFamilies().isEmpty());
         }
         assertEquals("CC BY-NC-SA 3.0",
                 registry.get(StrategySourceId.UIM_GENERAL).getLicense());
+        assertTrue(registry.get(StrategySourceId.PVM_STRATEGY).getUrl()
+                .contains("Guide:Bossing_Ladder"));
     }
 
     @Test

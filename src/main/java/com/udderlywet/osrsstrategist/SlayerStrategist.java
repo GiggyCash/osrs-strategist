@@ -738,9 +738,8 @@ public class SlayerStrategist
             {
                 if (!data.getStorage().verified(entry.getKey())) continue;
                 if (mode == AccountMode.ULTIMATE_IRONMAN
-                        && (entry.getKey() == StorageCapability.LOOTING_BAG
-                        || entry.getKey() == StorageCapability.DEATH_STORAGE
-                        || entry.getKey() == StorageCapability.DEATHPILE))
+                        && UimStorageMechanics.isRestrictedRetrieval(
+                                entry.getKey()))
                     continue;
                 String found = healingName(entry.getValue());
                 if (found != null) return found;

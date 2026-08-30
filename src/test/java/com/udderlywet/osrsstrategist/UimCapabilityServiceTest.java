@@ -64,6 +64,47 @@ public class UimCapabilityServiceTest
                 StorageCapability.DEATHPILE));
     }
 
+    @Test
+    public void genericDeathStorageCanNeverAuthorizeAPlan()
+    {
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.DEATH_STORAGE,
+                CapabilityState.VERIFIED);
+        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+                .storage(new StorageSnapshot(states))
+                .build();
+
+        UimStorageDecision decision = service.evaluateStorage(data,
+                StorageCapability.DEATH_STORAGE,
+                CapabilityState.VERIFIED, CapabilityState.VERIFIED);
+        assertFalse(decision.isAllowed());
+        assertTrue(decision.getExplanation().contains("exact service"));
+    }
+
+    @Test
+    public void exactRetrievalServiceStillRequiresAllEvidence()
+    {
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                CapabilityState.VERIFIED);
+        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+                .storage(new StorageSnapshot(states))
+                .build();
+
+        assertFalse(service.evaluateStorage(data,
+                StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                CapabilityState.UNKNOWN, CapabilityState.VERIFIED)
+                .isAllowed());
+        assertTrue(service.evaluateStorage(data,
+                StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                CapabilityState.VERIFIED, CapabilityState.VERIFIED)
+                .isAllowed());
+        assertTrue(service.shouldRequireExplicitWarning(
+                StorageCapability.HESPORI_ITEM_RETRIEVAL));
+    }
+
     private static AccountSnapshot account(int typeCode)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);

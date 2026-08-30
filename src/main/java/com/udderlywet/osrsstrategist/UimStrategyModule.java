@@ -18,6 +18,9 @@ public class UimStrategyModule implements StrategyModule
             StorageCapability.SEED_BOX,
             StorageCapability.HERB_SACK,
             StorageCapability.DEATH_STORAGE,
+            StorageCapability.HESPORI_ITEM_RETRIEVAL,
+            StorageCapability.ZULRAH_ITEM_RETRIEVAL,
+            StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
             StorageCapability.DEATHPILE
     );
 
@@ -92,9 +95,7 @@ public class UimStrategyModule implements StrategyModule
                         : RecommendationConfidence.VERIFIED
         ));
 
-        if (storage != null
-                && (storage.verified(StorageCapability.DEATH_STORAGE)
-                || storage.verified(StorageCapability.DEATHPILE)))
+        if (storage != null && hasDangerousStorage(storage))
         {
             signals.add(new StrategySignal(
                     "uim:death-storage-risk",
@@ -106,5 +107,13 @@ public class UimStrategyModule implements StrategyModule
         }
 
         return signals;
+    }
+
+    private static boolean hasDangerousStorage(StorageSnapshot storage)
+    {
+        for (StorageCapability capability : StorageCapability.values())
+            if (UimStorageMechanics.isDangerous(capability)
+                    && storage.verified(capability)) return true;
+        return storage.verified(StorageCapability.DEATH_STORAGE);
     }
 }

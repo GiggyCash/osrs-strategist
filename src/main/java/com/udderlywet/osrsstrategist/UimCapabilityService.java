@@ -38,6 +38,14 @@ public class UimCapabilityService
                     "UIM capability routing only applies to Ultimate Ironman accounts.");
         }
 
+        if (UimStorageMechanics.isTooGenericToRecommend(capability))
+        {
+            return decision(capability, false,
+                    RecommendationConfidence.CHECK_NEEDED,
+                    RiskLevel.HIGH,
+                    "Generic death-storage evidence does not identify the retrieval service, access, withdrawal order, or second-death rules. Verify an exact service first.");
+        }
+
         StorageSnapshot storage = data.getStorage();
         CapabilityState capabilityState = storage == null
                 ? CapabilityState.UNKNOWN
@@ -102,7 +110,8 @@ public class UimCapabilityService
 
     private static RiskLevel riskFor(StorageCapability capability)
     {
-        if (capability == StorageCapability.DEATH_STORAGE)
+        if (capability == StorageCapability.DEATH_STORAGE
+                || UimStorageMechanics.isExactItemRetrievalService(capability))
         {
             return RiskLevel.HIGH;
         }

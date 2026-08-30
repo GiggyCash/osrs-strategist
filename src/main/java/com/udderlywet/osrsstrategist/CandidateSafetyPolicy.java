@@ -19,6 +19,8 @@ public class CandidateSafetyPolicy
                     == AccountMode.ULTIMATE_IRONMAN
                 && (recommendation.getSafetyEvidence()
                         .isConventionalBankRequired()
+                    || recommendation.getSafetyEvidence()
+                        .hasUnverifiedDangerousStorage()
                     || recommendation.getGuidance() != null
                         && recommendation.getGuidance().getBankingBehavior()
                             == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP))

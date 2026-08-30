@@ -26,6 +26,7 @@ public final class RecommendationPresentation
         TrainingPlan plan = recommendation.getTrainingPlan();
 
         appendGoalStatus(text, goalContext);
+        appendRiskDisclosure(text, recommendation.getGuidance());
 
         if (plan == null || plan.getMethod() == null)
         {
@@ -112,6 +113,11 @@ public final class RecommendationPresentation
     {
         if (recommendation == null) return Collections.emptyList();
         List<Section> sections = new ArrayList<>();
+        RecommendationGuidance guidance = recommendation.getGuidance();
+        if (guidance != null && guidance.getRiskDisclosure() != null)
+            sections.add(new Section(
+                    guidance.getRiskDisclosure().getHeading(),
+                    guidance.getRiskDisclosure().getMessage()));
         if (goalContext != null && goalContext.hasProvenRelationship()
                 && hasText(goalContext.getStatus()))
             sections.add(new Section("GOAL",
@@ -128,7 +134,6 @@ public final class RecommendationPresentation
                             ? "BLOCKED BY" : "NEEDED",
                     compactSentence(needed, 140)));
 
-        RecommendationGuidance guidance = recommendation.getGuidance();
         // Reserve the fourth compact slot for the executable current step.
         if (sections.size() < 3 && guidance != null
                 && hasText(guidance.getLocation()))
@@ -184,6 +189,19 @@ public final class RecommendationPresentation
             appendBreak(text, 2);
             text.append("<b>DO</b><br>Start the activity using the verified setup.");
         }
+    }
+
+    private static void appendRiskDisclosure(StringBuilder text,
+            RecommendationGuidance guidance)
+    {
+        if (guidance == null || guidance.getRiskDisclosure() == null) return;
+        RecommendationRiskDisclosure disclosure = guidance.getRiskDisclosure();
+        text.append("<b>").append(escape(disclosure.getHeading()))
+                .append("</b><br>")
+                .append(escape(compactSentence(disclosure.getMessage(), 180)));
+        if (disclosure.isAcknowledgementRequired())
+            text.append("<br>Open Details and acknowledge the risk before viewing execution steps.");
+        appendBreak(text, 2);
     }
 
     /** The primary card must contain the executable loop, not only its inputs. */

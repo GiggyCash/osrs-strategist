@@ -65,6 +65,9 @@ public class MethodGuidanceService
                 ? "Level " + recommendation.getCurrentLevel() + " → "
                         + recommendation.getTargetLevel() : null;
         String important = guidance == null ? null
+                : guidance.getRiskDisclosure() != null
+                ? guidance.getRiskDisclosure().getHeading() + ": "
+                        + guidance.getRiskDisclosure().getMessage()
                 : criticalNote(guidance.getNote());
 
         return new GuidanceChecklist(
