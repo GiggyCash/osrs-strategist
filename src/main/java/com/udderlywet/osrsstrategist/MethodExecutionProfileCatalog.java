@@ -152,6 +152,10 @@ public class MethodExecutionProfileCatalog
                 barForSmithing(),
                 "Each platebody uses five bars, so the action count converts directly into the matching bar total.",
                 "platebody"));
+        add(p("smithing_f2p_uim_bronze", "bronze item smithed",
+                "bronze items smithed", barForSmithing(),
+                "Copper and tin are mined and processed locally; the loop never requires conventional banking.",
+                "bronze"));
         add(p("smithing_cannonballs", "steel bar processed", "steel bars processed",
                 fixed("Steel bar", 1.0),
                 "RuneLite's cannonball action XP is per steel bar processed.",

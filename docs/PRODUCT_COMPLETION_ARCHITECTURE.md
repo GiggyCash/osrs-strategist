@@ -7,7 +7,9 @@ requirement, actionability, and presentation gates.
 
 ## Recommendation decision flow
 
-1. `RecommendationEngine` generates all legal skill candidates and targets the
+1. `MethodStrategyKnowledgeCatalog` generates only sourced shared or
+   account-applicable method profiles for the observed mode. `RecommendationEngine`
+   turns those legal profiles into skill candidates and targets the
    nearest proven breakpoint rather than an arbitrary round number.
 2. Candidate providers add quests, upgrades, Slayer workflow actions, PvM,
    diaries, clues, infrastructure, resources, minigames, and other activities
@@ -20,7 +22,9 @@ requirement, actionability, and presentation gates.
 5. Infrastructure, quest-path, method travel, deterministic resource, and
    producer-owned strategic properties are attached as
    `RecommendationStrategicValue`.
-6. `CandidateSafetyPolicy` and `RecommendationActionabilityPolicy` reject
+6. `FinalExecutionPlanValidator` validates typed execution behavior after the
+   method, resource plan, inventory fit, location, travel route, and guidance
+   are resolved. `CandidateSafetyPolicy` and `RecommendationActionabilityPolicy` reject
    illegal, blocked, hard-unknown, or non-executable work.
 7. `RecommendationIntelligenceService` compares the remaining candidates. It
    consumes typed properties; player-facing prose and method identity do not
@@ -31,6 +35,25 @@ requirement, actionability, and presentation gates.
 
 Presentability is a gate, not a score bonus. A recommendation does not become
 strategically good merely because its evidence or copy is easy to render.
+
+Source specificity is also not a score bonus. An account-specific profile is
+valuable only through its real properties—inventory fit, resource route,
+setup, risk, or account utility—and can lose to a better-fitting shared method.
+
+## Strategy knowledge and provenance
+
+`StrategySourceRegistry` gives stable IDs to reviewed Wiki/RuneLite source
+families, including subject, URL, reviewed date, revision label, and license.
+`MethodStrategyProfile` links a method to applicable account modes, evidence
+tier, banking behavior, inventory footprint, account-value fit, a concise
+causal player reason, and source IDs. The Wiki supplies strategic knowledge;
+RuneLite remains authoritative for the character's live state; Compass still
+compares and selects the action.
+
+Wiki text is not copied into runtime records. Maintainers retain facts and
+short paraphrased strategic properties under clean provenance. OSRS Wiki text
+is identified as CC BY-NC-SA 3.0; media has separate per-file licensing and is
+not imported by this workflow. See `STRATEGIC_DATA_SOURCES.md`.
 
 ## Account strategic priorities
 
@@ -57,6 +80,27 @@ dimensions:
 RuneLite does not expose reliable teammate levels, roles, POH furniture, or
 specialisations. `GimGroupStrategyService` therefore reports teammate
 infrastructure as unknown and never invents it from Group Storage.
+
+For training methods the difference is now earlier: the selector obtains
+verified account-specific plus verified shared profiles before scoring. The
+F2P UIM Smithing level-1 route, for example, mines copper and tin in east
+Lumbridge, processes them at the Lumbridge furnace/anvil, and never instantiates
+the Main/standard-Iron Varrock West bank loop.
+
+## UIM inventory and final execution
+
+`MethodInventoryFootprint` records a method-relative minimum practical free
+slot count, persistent and temporary item footprint, qualitative input/output
+flow, and whether the method tears down the current setup. A full inventory can
+therefore remove a method before ranking while a genuinely zero-slot activity
+remains viable. The engine does not translate this into generic "make space",
+bank, or drop advice.
+
+`MethodBankingBehavior` distinguishes no-bank/local processing, optional bank
+use, conventional bank loops, and UIM-compatible noted-item services. Both the
+selected strategy profile and the final `RecommendationGuidance` carry this
+typed behavior. The final validator converts any conventional dependency into
+the safety flag consumed by `CandidateSafetyPolicy`.
 
 ## Infrastructure and unlocks
 

@@ -12,6 +12,7 @@ REQUIRED = {
     "quests", "miniquests", "training-methods", "pvm", "slayer",
     "minigames", "diaries", "transportation", "clues", "stash",
     "gear", "resource-dependencies", "resource-sources",
+    "strategy-sources",
 }
 
 

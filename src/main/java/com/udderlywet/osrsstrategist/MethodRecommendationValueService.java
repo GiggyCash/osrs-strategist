@@ -59,7 +59,8 @@ public final class MethodRecommendationValueService
         return result.withGuidance(new RecommendationGuidance(
                 guidance.getAction(), guidance.getSupplies(),
                 assessment.getLocation().getName() + ".",
-                append(guidance.getNote(), assessment.getEvidence())));
+                append(guidance.getNote(), assessment.getEvidence()),
+                guidance.getBankingBehavior()));
     }
 
     private static String append(String first, String second)

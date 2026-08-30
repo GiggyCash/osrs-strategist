@@ -43,7 +43,7 @@ public class LiveItemStateReader
 
         return items == null
                 ? null
-                : new InventorySnapshot(items);
+                : new InventorySnapshot(items, true);
     }
 
     public EquipmentSnapshot readEquipment()

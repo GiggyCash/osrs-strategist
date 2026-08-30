@@ -6,6 +6,34 @@ Runtime recommendation rendering does not fetch these pages.
 
 Last audited: 2026-08-29.
 
+## Licensing and attribution
+
+OSRS Wiki page text is published under CC BY-NC-SA 3.0. Compass retains source
+titles/URLs and reviewed revisions in `StrategySourceRegistry`, records that
+facts were transformed into concise local strategy properties, and links this
+registry for attribution and re-verification. It does not copy large guide
+passages. Wiki/Jagex media is not imported: file assets can carry different
+Jagex or per-file licenses and require an independent review.
+
+The local source registry was reviewed 2026-08-30. Runtime networking remains
+disabled. `content-freshness.json` includes the `strategy-sources` family so a
+changed development snapshot can be reported by the existing change detector.
+
+## Strategy foundation sources
+
+| Source family | Source | Structured use |
+| --- | --- | --- |
+| General/Main training | [Skill training guides](https://oldschool.runescape.wiki/w/Skill_training_guides), linked pay-to-play and F2P guides | Practical methods, level bands, attention/cost tradeoffs, and Main opportunity-cost context. Guide order never becomes a hard requirement. |
+| Iron progression | [Ironman guide](https://oldschool.runescape.wiki/w/Ironman_guide), [F2P Ironman guide](https://oldschool.runescape.wiki/w/Free-to-play_Ironman_guide), linked Iron skill guides | Self-sufficient candidates, quest-XP compression, sustainable resource families, and useful multi-purpose outputs. |
+| UIM progression | [Ultimate Ironman Guide](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management), linked UIM skill guides | Inventory footprint, setup persistence, storability, local processing, retrieval burden, and dangerous-storage boundaries. |
+| Quest ordering | [Optimal quest guide](https://oldschool.runescape.wiki/w/Optimal_quest_guide), Iron/UIM quest guides | Strategic ordering and early XP compression only; typed quest prerequisites/rewards remain authoritative. |
+| Slayer | [Slayer training](https://oldschool.runescape.wiki/w/Slayer_training), [Ironman Slayer](https://oldschool.runescape.wiki/w/Ironman_Guide/Slayer) | Task economics, master/weight-aware block strategy, point reserve, account resource value, and cannon replacement burden. Live assignment state remains RuneLite evidence. |
+| Storage/clues/POH | [STASH](https://oldschool.runescape.wiki/w/STASH), [Costume room](https://oldschool.runescape.wiki/w/Costume_room), UIM item management | Capability-specific storage rules; built/filled/owned state is never inferred from static data. |
+
+The stable enum IDs are used by method profiles rather than repeating source
+URLs in every row. `StrategyKnowledgeFoundationTest` requires complete source
+registry coverage.
+
 ## Account infrastructure
 
 | Structured data | Source | Fact retained locally |
@@ -14,6 +42,12 @@ Last audited: 2026-08-29.
 | Core POH rooms and furniture | [Construction](https://oldschool.runescape.wiki/w/Construction), [Costume room](https://oldschool.runescape.wiki/w/Costume_room), [Oak armour case](https://oldschool.runescape.wiki/w/Oak_armour_case), [Portal chamber](https://oldschool.runescape.wiki/w/Portal_chamber), [Portal nexus](https://oldschool.runescape.wiki/w/Portal_nexus), [Pool space](https://oldschool.runescape.wiki/w/Pool_space), [Achievement gallery](https://oldschool.runescape.wiki/w/Achievement_gallery) | Retained exact milestones include Costume room 42/50,000 coins; oak armour case 46/3 oak planks; configured starter portal 50 with its frame, focus, spell level, and 100-cast rune cost; Superior Garden/restoration pool 65; marble nexus 72; and basic jewellery box 81. Higher-cost infrastructure remains preparation work until its materials are actually obtained. |
 | POH natural transport | [Spirit tree](https://oldschool.runescape.wiki/w/Spirit_tree), [Fairy ring (Construction)](https://oldschool.runescape.wiki/w/Fairy_ring_(Construction)), [Fairy rings](https://oldschool.runescape.wiki/w/Fairy_rings) | A POH spirit tree requires 75 Construction, 83 Farming, a spirit sapling, and Tree Gnome Village network access. A POH fairy ring requires 85 Construction, full Fairytale II completion for the enchantment, 10 unnoted mushrooms, and a filled watering can. |
 | Live personal-house evidence | RuneLite [`VarbitID.POH_BUILDING_MODE`](https://github.com/runelite/runelite/blob/master/runelite-api/src/main/java/net/runelite/api/gameval/VarbitID.java), [`PohIcons`](https://github.com/runelite/runelite/blob/master/runelite-client/src/main/java/net/runelite/client/plugins/poh/PohIcons.java) | A scene scan is attributed to the character only in own-house building mode. RuneLite-maintained object identities classify configured portals, storage, pools, jewellery, altars, and natural transport; a public POH is never treated as personal infrastructure. |
+
+## Live UIM F2P Smithing proof
+
+| Structured rule | Source | Fact retained locally |
+| --- | --- | --- |
+| Level-1 local bronze loop | [Free-to-play Ironman guide](https://oldschool.runescape.wiki/w/Free-to-play_Ironman_guide), [Lumbridge](https://oldschool.runescape.wiki/w/Lumbridge), [Smithing](https://oldschool.runescape.wiki/w/Smithing) | A UIM can mine copper and tin at east Lumbridge Swamp, smelt bronze at the Lumbridge furnace, and smith bronze on the nearby restricted anvil without conventional banking. The loop needs practical inventory room for tools and ores; a full inventory makes this plan non-viable rather than producing generic space/drop advice. |
 
 ## Travel and locations
 

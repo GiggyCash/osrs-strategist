@@ -17,8 +17,12 @@ public class CandidateSafetyPolicy
         AccountSnapshot account = context.getData().getAccount();
         if (AccountMode.fromTypeCode(account.getAccountTypeCode())
                     == AccountMode.ULTIMATE_IRONMAN
-                && recommendation.getSafetyEvidence()
-                        .isConventionalBankRequired()) return false;
+                && (recommendation.getSafetyEvidence()
+                        .isConventionalBankRequired()
+                    || recommendation.getGuidance() != null
+                        && recommendation.getGuidance().getBankingBehavior()
+                            == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP))
+            return false;
         return isAllowed(recommendation.getSafetyEvidence(), account);
     }
 

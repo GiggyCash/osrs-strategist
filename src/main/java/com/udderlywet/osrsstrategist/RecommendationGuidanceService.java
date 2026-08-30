@@ -81,6 +81,16 @@ public class RecommendationGuidanceService
             TrainingPlan trainingPlan,
             boolean useGroupStorage)
     {
+        RecommendationGuidance uimBronze = uimF2pBronzeGuidance(
+                data, skill, targetLevel, trainingPlan);
+        if (uimBronze != null) return uimBronze;
+        RecommendationGuidance uimCooking = uimF2pCookingGuidance(
+                data, skill, targetLevel, trainingPlan);
+        if (uimCooking != null) return uimCooking;
+        RecommendationGuidance uimRunecraft = uimF2pRunecraftGuidance(
+                data, skill, targetLevel, trainingPlan);
+        if (uimRunecraft != null) return uimRunecraft;
+
         RecommendationGuidance cooking = earlyCookingGuidance(
                 data, skill, currentLevel, targetLevel,
                 trainingPlan, useGroupStorage);
@@ -105,6 +115,85 @@ public class RecommendationGuidanceService
                 : universalGuidance.build(
                         data, skill, currentLevel, targetLevel,
                         trainingPlan, useGroupStorage);
+    }
+
+    private static RecommendationGuidance uimF2pBronzeGuidance(
+            StrategyDataBundle data, Skill skill, int targetLevel,
+            TrainingPlan plan)
+    {
+        if (data == null || data.getAccount() == null
+                || skill != Skill.SMITHING || plan == null
+                || plan.getMethod() == null
+                || !"smithing_f2p_uim_bronze".equals(
+                        plan.getMethod().getId())
+                || AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode())
+                        != AccountMode.ULTIMATE_IRONMAN)
+            return null;
+        return new RecommendationGuidance(
+                "Mine one copper ore and one tin ore, smelt them into a bronze bar, smith the highest bronze item that fits the carried bars, and repeat until Smithing level "
+                        + targetLevel + ".",
+                "Bring a pickaxe and hammer; buy a hammer from Lumbridge General Store if it is missing.",
+                "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle.",
+                "The loop sources and consumes each pair of ores locally, so no conventional bank or stored bar supply is assumed.",
+                MethodBankingBehavior.LOCAL_PROCESSING);
+    }
+
+    private static RecommendationGuidance uimF2pCookingGuidance(
+            StrategyDataBundle data, Skill skill, int targetLevel,
+            TrainingPlan plan)
+    {
+        if (data == null || data.getAccount() == null
+                || skill != Skill.COOKING || plan == null
+                || plan.getMethod() == null
+                || !"cooking_f2p_uim_carried_fish".equals(
+                        plan.getMethod().getId())
+                || AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode())
+                        != AccountMode.ULTIMATE_IRONMAN)
+            return null;
+        return new RecommendationGuidance(
+                "Cook the carried raw fish on the permanent fire. If the carried supply runs out first, fly-fish trout and salmon at the adjacent river and cook each inventory until Cooking level "
+                        + targetLevel + ".",
+                "Bring the carried raw fish. For the resupply loop, bring a fly fishing rod and feathers.",
+                "Barbarian Village river and the permanent fire immediately east of the fishing spots.",
+                "Inputs become useful food in place, so the loop is viable without conventional banking or an empty inventory.",
+                MethodBankingBehavior.LOCAL_PROCESSING);
+    }
+
+    private static RecommendationGuidance uimF2pRunecraftGuidance(
+            StrategyDataBundle data, Skill skill, int targetLevel,
+            TrainingPlan plan)
+    {
+        if (data == null || data.getAccount() == null
+                || skill != Skill.RUNECRAFT || plan == null
+                || plan.getMethod() == null
+                || !"runecraft_f2p_uim_local".equals(
+                        plan.getMethod().getId())
+                || AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode())
+                        != AccountMode.ULTIMATE_IRONMAN)
+            return null;
+        int level = data.getAccount().getSkillLevel(Skill.RUNECRAFT);
+        String rune = level >= 20 ? "body" : level >= 14 ? "fire"
+                : level >= 9 ? "earth" : level >= 5 ? "water"
+                : level >= 2 ? "mind" : "air";
+        String altar = level >= 20 ? "Body Altar south of Edgeville Monastery"
+                : level >= 14 ? "Fire Altar north of Al Kharid"
+                : level >= 9 ? "Earth Altar northeast of Varrock"
+                : level >= 5 ? "Water Altar in Lumbridge Swamp"
+                : level >= 2 ? "Mind Altar north of Falador"
+                : "Air Altar southwest of Falador";
+        return new RecommendationGuidance(
+                "Mine one carried inventory of rune essence through Sedridor, walk it to the "
+                        + altar + ", craft " + rune
+                        + " runes, and repeat until Runecraft level "
+                        + targetLevel + ".",
+                "Bring the " + rune + " talisman or wear the " + rune
+                        + " tiara; leave the remaining slots for rune essence.",
+                "Wizards' Tower rune-essence mine, then the " + altar + ".",
+                "Essence is mined and consumed one trip at a time; no conventional bank or banked essence is assumed.",
+                MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
     private RecommendationGuidance earlyCookingGuidance(

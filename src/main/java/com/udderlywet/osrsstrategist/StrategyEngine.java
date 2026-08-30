@@ -29,6 +29,7 @@ public class StrategyEngine
     private final InfrastructureRecommendationValueService infrastructureValue =
             new InfrastructureRecommendationValueService();
     private final MethodRecommendationValueService methodValue;
+    private final FinalExecutionPlanValidator finalExecutionValidator;
     private final QuestRecommendationValueService questValue =
             new QuestRecommendationValueService();
     private static final FarmingAccessCatalog FARMING_ACCESS_CATALOG =
@@ -44,7 +45,8 @@ public class StrategyEngine
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService,
-            MethodRecommendationValueService methodValue)
+            MethodRecommendationValueService methodValue,
+            FinalExecutionPlanValidator finalExecutionValidator)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
@@ -62,6 +64,25 @@ public class StrategyEngine
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
         this.methodValue = methodValue == null
                 ? new MethodRecommendationValueService() : methodValue;
+        this.finalExecutionValidator = finalExecutionValidator == null
+                ? new FinalExecutionPlanValidator() : finalExecutionValidator;
+    }
+
+    public StrategyEngine(
+            RecommendationEngine recommendationEngine,
+            OpportunityEngine opportunityEngine,
+            StrategyModuleRegistry moduleRegistry,
+            StrategyCandidateRegistry candidateRegistry,
+            RecommendationActionabilityPolicy actionabilityPolicy,
+            RecommendationIntelligenceService intelligenceService,
+            CandidateSafetyPolicy candidateSafetyPolicy,
+            GoalDependencyProvenanceService goalProvenanceService,
+            MethodRecommendationValueService methodValue)
+    {
+        this(recommendationEngine, opportunityEngine, moduleRegistry,
+                candidateRegistry, actionabilityPolicy, intelligenceService,
+                candidateSafetyPolicy, goalProvenanceService, methodValue,
+                new FinalExecutionPlanValidator());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -258,10 +279,10 @@ public class StrategyEngine
 
         List<Recommendation> attributed = new ArrayList<>(pool.size());
         for (Recommendation recommendation : pool)
-            attributed.add(methodValue.attach(questValue.attach(
+            attributed.add(finalExecutionValidator.validate(methodValue.attach(questValue.attach(
                     infrastructureValue.attach(
                             goalProvenanceService.attach(recommendation,
-                                    context), context), context), context));
+                                    context), context), context), context), context));
         pool = attributed;
 
         // Only after legality/actionability is known do we compare account value

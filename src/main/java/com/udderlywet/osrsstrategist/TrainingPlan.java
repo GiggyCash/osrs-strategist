@@ -17,6 +17,7 @@ public final class TrainingPlan
     private final String whyThisMethod;
     private final RecommendationConfidence confidence;
     private final List<RequirementCheck> requirementChecks;
+    private final MethodStrategyProfile strategyProfile;
 
     public TrainingPlan(
             TrainingMethod method,
@@ -28,7 +29,8 @@ public final class TrainingPlan
                 method == null
                         ? RecommendationConfidence.CHECK_NEEDED
                         : method.getConfidence(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                null
         );
     }
 
@@ -41,7 +43,8 @@ public final class TrainingPlan
                 method,
                 whyThisMethod,
                 confidence,
-                Collections.emptyList()
+                Collections.emptyList(),
+                null
         );
     }
 
@@ -50,6 +53,16 @@ public final class TrainingPlan
             String whyThisMethod,
             RecommendationConfidence confidence,
             List<RequirementCheck> requirementChecks)
+    {
+        this(method, whyThisMethod, confidence, requirementChecks, null);
+    }
+
+    public TrainingPlan(
+            TrainingMethod method,
+            String whyThisMethod,
+            RecommendationConfidence confidence,
+            List<RequirementCheck> requirementChecks,
+            MethodStrategyProfile strategyProfile)
     {
         this.method = method;
         this.whyThisMethod = whyThisMethod;
@@ -61,6 +74,7 @@ public final class TrainingPlan
                         ? new ArrayList<>()
                         : new ArrayList<>(requirementChecks)
         );
+        this.strategyProfile = strategyProfile;
     }
 
     public TrainingMethod getMethod()
@@ -81,5 +95,10 @@ public final class TrainingPlan
     public List<RequirementCheck> getRequirementChecks()
     {
         return requirementChecks;
+    }
+
+    public MethodStrategyProfile getStrategyProfile()
+    {
+        return strategyProfile;
     }
 }

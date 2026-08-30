@@ -13,6 +13,7 @@ public final class RecommendationGuidance
     private final String supplies;
     private final String location;
     private final String note;
+    private final MethodBankingBehavior bankingBehavior;
 
     public RecommendationGuidance(
             String action,
@@ -20,10 +21,23 @@ public final class RecommendationGuidance
             String location,
             String note)
     {
+        this(action, supplies, location, note,
+                MethodBankingBehavior.UNKNOWN);
+    }
+
+    public RecommendationGuidance(
+            String action,
+            String supplies,
+            String location,
+            String note,
+            MethodBankingBehavior bankingBehavior)
+    {
         this.action = action;
         this.supplies = supplies;
         this.location = location;
         this.note = note;
+        this.bankingBehavior = bankingBehavior == null
+                ? MethodBankingBehavior.UNKNOWN : bankingBehavior;
     }
 
     public String getAction()
@@ -44,5 +58,17 @@ public final class RecommendationGuidance
     public String getNote()
     {
         return note;
+    }
+
+    public MethodBankingBehavior getBankingBehavior()
+    {
+        return bankingBehavior;
+    }
+
+    public RecommendationGuidance withBankingBehavior(
+            MethodBankingBehavior value)
+    {
+        return new RecommendationGuidance(action, supplies, location, note,
+                value);
     }
 }

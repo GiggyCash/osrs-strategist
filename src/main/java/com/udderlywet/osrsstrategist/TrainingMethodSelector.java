@@ -18,6 +18,8 @@ public class TrainingMethodSelector
     private final ExpandedTrainingMethodCatalog expandedCatalog;
     private final F2pBaselineMethodCatalog f2pBaselineCatalog;
     private final TrainingMethodPolicy methodPolicy;
+    private final MethodStrategyKnowledgeCatalog strategyCatalog;
+    private final MethodStrategyService strategyService;
 
     @Inject
     public TrainingMethodSelector(
@@ -25,13 +27,32 @@ public class TrainingMethodSelector
             RequirementEvidenceEngine requirementEvidenceEngine,
             ExpandedTrainingMethodCatalog expandedCatalog,
             F2pBaselineMethodCatalog f2pBaselineCatalog,
-            TrainingMethodPolicy methodPolicy)
+            TrainingMethodPolicy methodPolicy,
+            MethodStrategyKnowledgeCatalog strategyCatalog,
+            MethodStrategyService strategyService)
     {
         this.database = database;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
         this.expandedCatalog = expandedCatalog;
         this.f2pBaselineCatalog = f2pBaselineCatalog;
         this.methodPolicy = methodPolicy;
+        this.strategyCatalog = strategyCatalog == null
+                ? new MethodStrategyKnowledgeCatalog() : strategyCatalog;
+        this.strategyService = strategyService == null
+                ? new MethodStrategyService() : strategyService;
+    }
+
+    public TrainingMethodSelector(
+            TrainingMethodDatabase database,
+            RequirementEvidenceEngine requirementEvidenceEngine,
+            ExpandedTrainingMethodCatalog expandedCatalog,
+            F2pBaselineMethodCatalog f2pBaselineCatalog,
+            TrainingMethodPolicy methodPolicy)
+    {
+        this(database, requirementEvidenceEngine, expandedCatalog,
+                f2pBaselineCatalog, methodPolicy,
+                new MethodStrategyKnowledgeCatalog(),
+                new MethodStrategyService());
     }
 
     /** Compatibility constructor keeps focused legacy-selector tests isolated. */
@@ -40,7 +61,9 @@ public class TrainingMethodSelector
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
         this(database, requirementEvidenceEngine, null, null,
-                new TrainingMethodPolicy());
+                new TrainingMethodPolicy(),
+                new MethodStrategyKnowledgeCatalog(),
+                new MethodStrategyService());
     }
 
     public TrainingMethodSelector(TrainingMethodDatabase database)
@@ -87,15 +110,23 @@ public class TrainingMethodSelector
         List<CuratedTrainingMethod> methods = candidates(data, skill);
         MembershipStatus membershipStatus = membershipStatus(data);
         List<ScoredPlan> ranked = new ArrayList<>();
+        AccountMode mode = data == null || data.getAccount() == null
+                ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode());
 
         for (CuratedTrainingMethod candidate : methods)
         {
             TrainingMethod method = candidate.getMethod();
             TrainingMethodMetadata metadata = candidate.getMetadata();
+            MethodStrategyProfile strategyProfile = strategyCatalog.profileFor(
+                    method, metadata, mode);
+            MethodStrategyAssessment strategyAssessment = strategyService.assess(
+                    data, strategyProfile);
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
                     || method.getConfidence() == RecommendationConfidence.BLOCKED
-                    || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods))
+                    || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods)
+                    || !strategyAssessment.isViable())
             {
                 continue;
             }
@@ -114,13 +145,14 @@ public class TrainingMethodSelector
             // route the player can actually begin. Hard-gated methods can
             // return once their quest/access evidence is observed.
             TrainingPlan assessed = new TrainingPlan(method, "", confidence,
-                    checks);
+                    checks, strategyProfile);
             boolean hardRequirementUnknown =
                     RequirementActionability.hasHardUnresolvedRequirement(
                             assessed);
 
             double score = method.scoreFor(strategyMode, sessionIntent)
                     + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent)
+                    + strategyAssessment.getScoreAdjustment()
                     + readinessAdjustment(data, checks, sessionIntent);
             // Retain a hard-gated plan as diagnostic/secondary information when
             // every route is unknown, but it must lose to any executable route
@@ -128,7 +160,8 @@ public class TrainingMethodSelector
             if (hardRequirementUnknown) score -= 10_000.0;
             ranked.add(new ScoredPlan(new TrainingPlan(method,
                     buildExplanation(method, metadata, strategyMode,
-                            sessionIntent, data), confidence, checks), score));
+                            sessionIntent, data, strategyAssessment), confidence,
+                    checks, strategyProfile), score));
         }
 
         ranked.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed());
@@ -269,23 +302,26 @@ public class TrainingMethodSelector
 
     private String buildExplanation(TrainingMethod method,
             TrainingMethodMetadata metadata, StrategyMode strategyMode,
-            SessionIntent sessionIntent, StrategyDataBundle data)
+            SessionIntent sessionIntent, StrategyDataBundle data,
+            MethodStrategyAssessment strategyAssessment)
     {
         StringBuilder reason = new StringBuilder();
-        reason.append("Selected for ").append(pretty(strategyMode.name())).append(" strategy");
+        if (strategyAssessment != null
+                && strategyAssessment.getExplanation() != null
+                && !strategyAssessment.getExplanation().trim().isEmpty())
+        {
+            reason.append(strategyAssessment.getExplanation().trim());
+        }
+        else
+        {
+            reason.append("Reviewed for ").append(pretty(strategyMode.name()))
+                    .append(" strategy");
+        }
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
-            reason.append(" and ").append(pretty(sessionIntent.name())).append(" sessions");
-        reason.append(". Attention: ").append(pretty(method.getAttentionLevel().name())).append(".");
-        if (metadata != null)
-            reason.append(" Method profile: ").append(pretty(metadata.getIntensity().name()))
-                    .append(", ").append(pretty(metadata.getCostTier().name())).append(" cost.");
-        AccountMode mode = data == null || data.getAccount() == null
-                ? AccountMode.UNKNOWN
-                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
-        if (mode != AccountMode.UNKNOWN)
-            reason.append(" Account mode: ").append(pretty(mode.name())).append(".");
+            reason.append(" It also fits ").append(pretty(sessionIntent.name()))
+                    .append(" sessions.");
         if (method.isWilderness())
-            reason.append(" Wilderness method enabled by this character's settings.");
+            reason.append(" Wilderness risk is enabled for this character.");
         return reason.toString();
     }
 

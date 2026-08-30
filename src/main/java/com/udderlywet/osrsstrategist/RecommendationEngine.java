@@ -219,6 +219,13 @@ public class RecommendationEngine
                 RecommendationGuidance candidateGuidance = buildGuidance(
                         data, skill, level, target, candidate, sessionIntent,
                         useGroupStorage);
+                if (candidateGuidance != null
+                        && candidate.getStrategyProfile() != null)
+                {
+                    candidateGuidance = candidateGuidance.withBankingBehavior(
+                            candidate.getStrategyProfile()
+                                    .getBankingBehavior());
+                }
                 // Some activities can only be rendered truthfully once live
                 // resources or state identify a concrete execution loop. A
                 // higher-scoring but unrenderable route must not consume the
@@ -240,10 +247,13 @@ public class RecommendationEngine
             score += safePreferences.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
 
+            String primaryReason = trainingPlan.getWhyThisMethod();
+            if (primaryReason == null || primaryReason.trim().isEmpty())
+                primaryReason = breakpoint.getLabel() + ".";
             Recommendation recommendation = new Recommendation(
                     activityId,
                     "Train " + skill.getName() + " to " + target,
-                    breakpoint.getLabel() + ".",
+                    primaryReason,
                     score,
                     trainingPlan,
                     trainingPlan.getConfidence(),

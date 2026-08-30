@@ -262,6 +262,8 @@ public class AdaptiveMilestoneGuidanceService
             return "Bring a hammer and saw.";
         if ("smithing_f2p_platebodies".equals(methodId))
             return "Bring a hammer and the matching bars named in BRING; each platebody consumes five bars.";
+        if ("smithing_f2p_uim_bronze".equals(methodId))
+            return "Bring a hammer and pickaxe; buy the hammer from Lumbridge General Store if it is missing.";
         if ("thieving_lumbridge_people".equals(methodId))
             return "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed.";
         if ("thieving_ardy_knights".equals(methodId))
@@ -297,6 +299,10 @@ public class AdaptiveMilestoneGuidanceService
         if ("smithing_f2p_platebodies".equals(methodId))
         {
             return "Varrock West Bank: keep the hammer, withdraw five matching bars per platebody, smith at the anvils immediately south, bank, and repeat.";
+        }
+        if ("smithing_f2p_uim_bronze".equals(methodId))
+        {
+            return "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle.";
         }
 
         AccountMode mode = data == null || data.getAccount() == null

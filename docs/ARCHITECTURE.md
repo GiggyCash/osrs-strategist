@@ -60,6 +60,18 @@ Scores valid activities. Suggested score families:
 
 Invalid methods receive no score at all.
 
+`StrategySourceRegistry` and `MethodStrategyKnowledgeCatalog` form the local
+strategy-knowledge boundary. Sources are reviewed during development and
+reduced to concise typed properties; runtime never queries the Wiki. The
+selector asks for profiles applicable to the observed account mode before
+ranking. A Main bank loop is therefore not generated for UIM and then repaired
+after selection. Shared methods remain one shared record when their practical
+execution is genuinely common.
+
+`MethodInventoryFootprint` describes minimum practical free slots, persistent
+and temporary slots, inventory flow, and setup teardown. UIM viability is
+relative to that proposed method, not a free-slot score in isolation.
+
 The implemented account-value boundary uses `RecommendationStrategicValue`.
 Typed goal provenance, infrastructure, unlock, travel, resource, setup reuse,
 shared-dependency, risk, and opportunity-cost properties are attached before
@@ -75,6 +87,11 @@ The final decision boundary is ordered as:
 6. choose DO NEXT only from candidates that satisfy the actionability contract.
 
 Provider filtering is an early optimization, not the security boundary.
+
+`FinalExecutionPlanValidator` runs after guidance and travel resolution. It
+propagates the resolved typed banking behavior into final safety evidence, so a
+method cannot pass early UIM checks and later acquire a conventional withdraw /
+bank / repeat loop.
 
 ## 5. EconomyPlanner
 Main accounts only:

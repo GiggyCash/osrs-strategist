@@ -106,6 +106,10 @@ public class F2pBaselineMethodCatalog
                 "Cook F2P fish",
                 "Al Kharid bank and range: withdraw one inventory of raw fish, cook it on the range immediately north of the bank, bank, and repeat.",
                 AttentionLevel.LOW);
+        uimBaseline(Skill.COOKING, "cooking_f2p_uim_carried_fish", 1, 99,
+                "Cook carried fish without banking",
+                "Cook immediately carried fish on the permanent Barbarian Village fire; when short, catch trout and salmon at the adjacent river with a fly fishing rod and feathers.",
+                AttentionLevel.LOW);
 
         baseline(Skill.FIREMAKING, "firemaking_f2p_logs", 1, 99,
                 "Burn F2P logs",
@@ -115,6 +119,10 @@ public class F2pBaselineMethodCatalog
         baseline(Skill.SMITHING, "smithing_f2p_bronze", 1, 14,
                 "Smith bronze items",
                 "Varrock West Bank: keep a hammer, withdraw bronze bars, use the anvils immediately south, smith the item named in DO, bank, and repeat.",
+                AttentionLevel.MODERATE);
+        uimBaseline(Skill.SMITHING, "smithing_f2p_uim_bronze", 1, 14,
+                "Mine, smelt, and smith bronze in Lumbridge",
+                "Mine one copper and one tin at the east Lumbridge Swamp mine, smelt them at the Lumbridge furnace, then smith the bronze bar on the nearby rusted anvil. Repeat without using a bank.",
                 AttentionLevel.MODERATE);
         baseline(Skill.SMITHING, "smithing_f2p_iron", 15, 29,
                 "Smith iron items",
@@ -145,6 +153,10 @@ public class F2pBaselineMethodCatalog
 
     private void runecraft()
     {
+        uimBaseline(Skill.RUNECRAFT, "runecraft_f2p_uim_local", 1, 99,
+                "Mine and craft F2P essence without banking",
+                "Mine rune essence through Sedridor in the Wizards' Tower, carry it directly to the highest useful F2P altar whose talisman or tiara is observed, craft it, and repeat.",
+                AttentionLevel.MODERATE);
         rune("runecraft_f2p_air", 1, 1,
                 "Craft air runes",
                 "Air Altar southwest of Falador. Bank in Falador, run to the altar, craft, repeat.",
@@ -253,6 +265,22 @@ public class F2pBaselineMethodCatalog
                 true,
                 Collections.singletonList("f2p-baseline"));
         bySkill.computeIfAbsent(Skill.RUNECRAFT, ignored -> new ArrayList<>())
+                .add(new CuratedTrainingMethod(method, metadata));
+    }
+
+    private void uimBaseline(Skill skill, String id, int minLevel,
+            int maxLevel, String name, String instructions,
+            AttentionLevel attention)
+    {
+        TrainingMethod method = new TrainingMethod(id, skill, minLevel,
+                maxLevel, name, instructions, 4.0, 8.0, 6.0, attention,
+                10, 2, Collections.emptyList(),
+                RecommendationConfidence.VERIFIED, false, false, false);
+        TrainingMethodMetadata metadata = new TrainingMethodMetadata(
+                TrainingIntensity.BALANCED, MethodCostTier.FREE,
+                RiskLevel.NONE, true, true, true, true,
+                Collections.singletonList("uim-f2p-strategy"));
+        bySkill.computeIfAbsent(skill, ignored -> new ArrayList<>())
                 .add(new CuratedTrainingMethod(method, metadata));
     }
 }
