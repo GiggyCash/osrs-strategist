@@ -10,12 +10,18 @@ public final class AccountSnapshot
     private final String playerName;
     private final int accountTypeCode;
     private final String accountTypeName;
+    private final MembershipStatus membershipStatus;
+    private final int membershipCredit;
     private final int totalLevel;
     private final long totalExperience;
 
     private final Map<Skill, Integer> skillLevels;
     private final Map<Skill, Integer> skillExperience;
 
+    /**
+     * Compatibility constructor for tests and callers that do not yet supply
+     * membership state.
+     */
     public AccountSnapshot(
             String playerName,
             int accountTypeCode,
@@ -25,9 +31,37 @@ public final class AccountSnapshot
             Map<Skill, Integer> skillLevels,
             Map<Skill, Integer> skillExperience)
     {
+        this(
+                playerName,
+                accountTypeCode,
+                accountTypeName,
+                MembershipStatus.UNKNOWN,
+                0,
+                totalLevel,
+                totalExperience,
+                skillLevels,
+                skillExperience
+        );
+    }
+
+    public AccountSnapshot(
+            String playerName,
+            int accountTypeCode,
+            String accountTypeName,
+            MembershipStatus membershipStatus,
+            int membershipCredit,
+            int totalLevel,
+            long totalExperience,
+            Map<Skill, Integer> skillLevels,
+            Map<Skill, Integer> skillExperience)
+    {
         this.playerName = playerName;
         this.accountTypeCode = accountTypeCode;
         this.accountTypeName = accountTypeName;
+        this.membershipStatus = membershipStatus == null
+                ? MembershipStatus.UNKNOWN
+                : membershipStatus;
+        this.membershipCredit = membershipCredit;
         this.totalLevel = totalLevel;
         this.totalExperience = totalExperience;
 
@@ -53,6 +87,16 @@ public final class AccountSnapshot
     public String getAccountTypeName()
     {
         return accountTypeName;
+    }
+
+    public MembershipStatus getMembershipStatus()
+    {
+        return membershipStatus;
+    }
+
+    public int getMembershipCredit()
+    {
+        return membershipCredit;
     }
 
     public int getTotalLevel()
