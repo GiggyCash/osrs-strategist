@@ -88,7 +88,7 @@ public class CombatGuidanceService
         String supplies = unarmed
                 ? "No supplies required for the first trip."
                 : supplyGuidance(account, skill, build, route, weapon, items);
-        if (skill == Skill.RANGED && supplies == null) return null;
+        if (supplies == null) return null;
         String location = route.location;
         String note = route.note;
         if (build != RestrictedBuildType.STANDARD)
@@ -313,7 +313,26 @@ public class CombatGuidanceService
         }
         if (route.location.contains("Scurrius"))
         {
-            return "Bring food, prayer restoration, and combat boosts appropriate to the account. Rat-bone weapon progression should replace generic training gear once obtained.";
+            String food = firstObserved(items, "Manta ray", "Shark",
+                    "Sea turtle", "Monkfish", "Swordfish", "Lobster",
+                    "Tuna", "Cake", "Jug of wine");
+            if (food == null) return null;
+            String prayer = firstObserved(items, "Prayer potion(4)",
+                    "Prayer potion(3)", "Prayer potion(2)",
+                    "Prayer potion(1)", "Super restore(4)",
+                    "Super restore(3)", "Super restore(2)",
+                    "Super restore(1)");
+            String boost = firstObserved(items, "Super combat potion(4)",
+                    "Super combat potion(3)", "Super combat potion(2)",
+                    "Super combat potion(1)", "Super attack(4)",
+                    "Super strength(4)", "Ranging potion(4)");
+            StringBuilder result = new StringBuilder("Bring ")
+                    .append(weapon).append(" and the observed ")
+                    .append(food).append(" food stack");
+            if (prayer != null) result.append(", plus ").append(prayer);
+            if (boost != null) result.append(" and ").append(boost);
+            result.append(". Leave and restock before the final reliable healing item is consumed; rat-bone weapons replace the ordinary weapon only after one is observed.");
+            return result.toString();
         }
         return "Bring " + weapon
                 + "; no other supplies are required for the first trip. Leave if the target damages you faster than you recover.";

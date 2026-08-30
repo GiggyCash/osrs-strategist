@@ -65,6 +65,24 @@ public final class StrategySourceRegistry
         wiki(values, StrategySourceId.MINIGAME_GUIDES,
                 "https://oldschool.runescape.wiki/w/Minigames",
                 "Minigame requirements and progression rewards");
+        wiki(values, StrategySourceId.WINTERTODT,
+                "https://oldschool.runescape.wiki/w/Wintertodt",
+                "Wintertodt requirements, warmth, tools, and execution");
+        wiki(values, StrategySourceId.GIANTS_FOUNDRY,
+                "https://oldschool.runescape.wiki/w/Giants%27_Foundry",
+                "Giants' Foundry commissions, materials, moulds, and execution");
+        wiki(values, StrategySourceId.MAHOGANY_HOMES,
+                "https://oldschool.runescape.wiki/w/Mahogany_Homes",
+                "Mahogany Homes contracts, tier materials, travel, and rewards");
+        wiki(values, StrategySourceId.TITHE_FARM,
+                "https://oldschool.runescape.wiki/w/Tithe_Farm",
+                "Tithe Farm tools, level-tier seeds, inventory, and rewards");
+        wiki(values, StrategySourceId.SAILING_TRAINING,
+                "https://oldschool.runescape.wiki/w/Sailing_training",
+                "Current Sailing methods, transitions, facilities, and boat progression");
+        wiki(values, StrategySourceId.SHIPWRECK_SALVAGING,
+                "https://oldschool.runescape.wiki/w/Shipwreck_salvaging",
+                "Shipwreck levels, boat hazards, salvage flow, and inventory behavior");
         wiki(values, StrategySourceId.PVM_STRATEGY,
                 "https://oldschool.runescape.wiki/w/Guide:Bossing_Ladder",
                 "Encounter preparation and useful PvM unlocks");
@@ -155,6 +173,18 @@ public final class StrategySourceRegistry
                 return "oldid=15035574 (2025-11-19T01:31:46Z)";
             case MINIGAME_GUIDES:
                 return "oldid=15304433 (2026-08-17T17:39:24Z)";
+            case WINTERTODT:
+                return "oldid=15317763 (2026-08-24T04:51:43Z)";
+            case GIANTS_FOUNDRY:
+                return "oldid=15307204 (2026-08-19T16:12:34Z)";
+            case MAHOGANY_HOMES:
+                return "oldid=15318320 (2026-08-24T23:36:19Z)";
+            case TITHE_FARM:
+                return "oldid=15299958 (2026-08-14T04:17:57Z)";
+            case SAILING_TRAINING:
+                return "oldid=15323443 (2026-08-28T19:16:42Z)";
+            case SHIPWRECK_SALVAGING:
+                return "oldid=15323162 (2026-08-28T14:49:43Z)";
             case PVM_STRATEGY:
                 return "oldid=15319480 (2026-08-25T06:16:24Z)";
             default:
@@ -214,6 +244,24 @@ public final class StrategySourceRegistry
                         "uim-infrastructure");
             case MINIGAME_GUIDES:
                 return Arrays.asList("minigames", "minigame-inventory");
+            case WINTERTODT:
+                return Arrays.asList("minigames", "wintertodt",
+                        "minigame-inventory", "hardcore-risk");
+            case GIANTS_FOUNDRY:
+                return Arrays.asList("minigames", "giants-foundry",
+                        "smithing-resources", "minigame-inventory");
+            case MAHOGANY_HOMES:
+                return Arrays.asList("minigames", "mahogany-homes",
+                        "construction-resources", "minigame-inventory");
+            case TITHE_FARM:
+                return Arrays.asList("minigames", "tithe-farm",
+                        "farming-resources", "minigame-inventory");
+            case SAILING_TRAINING:
+                return Arrays.asList("shared-skilling", "sailing",
+                        "sailing-transitions", "boat-infrastructure");
+            case SHIPWRECK_SALVAGING:
+                return Arrays.asList("sailing", "shipwreck-salvaging",
+                        "sailing-inventory", "boat-capabilities");
             case PVM_STRATEGY:
                 return Arrays.asList("pvm-readiness", "gear-progression",
                         "hardcore-risk");

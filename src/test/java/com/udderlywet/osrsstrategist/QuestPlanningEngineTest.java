@@ -114,6 +114,40 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void exactUimQuestSlotRequirementChangesReadiness()
+    {
+        QuestDefinition definition = new QuestDefinition("Slot test", false,
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), ItemRequirementExpression.itemClass(
+                        ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
+                        ItemRequirementScope.CARRIED), 0,
+                Collections.emptyList(), "Verified start",
+                Collections.emptyList(), Collections.emptyMap());
+        QuestRequirementResolver resolver = new QuestRequirementResolver();
+
+        QuestResolution blocked = resolver.resolve(definition,
+                context(StrategyDataBundle.builder(uimAccount())
+                        .inventory(new InventorySnapshot(slots(28), true))
+                        .equipment(new EquipmentSnapshot(
+                                Collections.emptyList())).build()));
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                blocked.getConfidence());
+        assertTrue(blocked.getGuidance().getAction()
+                .contains("requires 5 free inventory slots; only 0"));
+        assertFalse(blocked.getGuidance().getAction().toLowerCase()
+                .contains("make space"));
+
+        QuestResolution ready = resolver.resolve(definition,
+                context(StrategyDataBundle.builder(uimAccount())
+                        .inventory(new InventorySnapshot(slots(23), true))
+                        .equipment(new EquipmentSnapshot(
+                                Collections.emptyList())).build()));
+        assertEquals(RecommendationConfidence.VERIFIED,
+                ready.getConfidence());
+        assertTrue(ready.getGuidance().getAction().contains("Start Slot test"));
+    }
+
+    @Test
     public void corpusCoversCommonTransportEquipmentAndCombatUnlockChains()
     {
         QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
@@ -281,6 +315,24 @@ public class QuestPlanningEngineTest
     private static ItemStackSnapshot item(String name)
     {
         return new ItemStackSnapshot(1, name, 1);
+    }
+
+    private static List<ItemStackSnapshot> slots(int occupied)
+    {
+        List<ItemStackSnapshot> result = new java.util.ArrayList<>();
+        for (int slot = 0; slot < occupied; slot++)
+            result.add(new ItemStackSnapshot(10_000 + slot,
+                    "Setup item " + slot, 1, slot));
+        return result;
+    }
+
+    private static AccountSnapshot uimAccount()
+    {
+        AccountSnapshot base = account(MembershipStatus.P2P, 70, 70, 70);
+        return new AccountSnapshot("Quest UIM", 2, "Ultimate Ironman",
+                MembershipStatus.P2P, 1, base.getTotalLevel(),
+                base.getTotalExperience(), base.getSkillLevels(),
+                base.getSkillExperience());
     }
 
     private static AccountSnapshot account(MembershipStatus membership,

@@ -45,6 +45,13 @@ public final class MethodStrategyService
 
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
         InventorySnapshot inventory = data.getInventory();
+        if (mode == AccountMode.ULTIMATE_IRONMAN
+                && footprint != null
+                && footprint.getMinimumPracticalFreeSlots() > 0
+                && (inventory == null
+                || !inventory.hasCompleteSlotObservation()))
+            return new MethodStrategyAssessment(false, 0.0,
+                    "Exact live inventory slots are required before this UIM method can be generated.");
         int occupied = UimSetupCostService.occupiedInventorySlots(inventory);
         int free = Math.max(0, 28 - occupied);
         if (mode == AccountMode.ULTIMATE_IRONMAN

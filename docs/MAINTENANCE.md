@@ -47,6 +47,12 @@ At minimum:
 - UIM with confirmed Tool Leprechaun tools may count them for farm-run prep
 - full-inventory UIM skill/activity candidates must prove a zero-slot route or
   be replaced/held before ranking
+- a partial UIM inventory snapshot must not prove capacity for any non-zero
+  method or activity footprint
+- recurring UIM pressure must require two distinct observed inventory layouts;
+  repeated reranks of one layout must not manufacture infrastructure demand
+- minigame BRING and DO fields must remain separate and describe one execution
+  plan
 - every catalog instruction containing an explicit conventional bank loop must
   remain excluded from UIM profile generation
 - imported quest free-slot counts must be preserved and checked against exact

@@ -58,10 +58,10 @@ public final class ActivityStrategyKnowledgeService
             UimInventoryResolutionService inventoryResolution)
     {
         InventorySnapshot inventory = data == null ? null : data.getInventory();
-        if (inventory == null || !inventory.hasCompleteSlotObservation())
-            return true;
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
         if (footprint == null) return true;
+        if (inventory == null || !inventory.hasCompleteSlotObservation())
+            return footprint.getMinimumPracticalFreeSlots() == 0;
         UimInventoryResolution result = inventoryResolution.resolve(data,
                 footprint, false, false, java.util.Collections.emptyList());
         return result.getKind() == UimInventoryResolutionKind.USE_AS_IS;

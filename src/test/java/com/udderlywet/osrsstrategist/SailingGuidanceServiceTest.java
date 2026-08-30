@@ -95,6 +95,33 @@ public class SailingGuidanceServiceTest
         assertTrue(guidance.getSupplies().contains("enough verified cash"));
     }
 
+    @Test
+    public void salvagingNamesOneExactSafeBaselineWithoutDroppingItems()
+    {
+        RecommendationGuidance guidance = service.build(
+                StrategyDataBundle.builder(account(53,
+                                Experience.getXpForLevel(53)))
+                        .quests(completed("Pandemonium")).build(),
+                53, 54, plan("sailing_salvage_small"));
+
+        assertTrue(guidance.getAction().contains("Small shipwreck"));
+        assertTrue(guidance.getLocation().contains("Kharidian Sea"));
+        assertTrue(guidance.getLocation().contains("The Pandemonium"));
+        assertTrue(guidance.getSupplies().contains("no item-dropping"));
+        assertTrue(new RecommendationQualityPolicy().isPresentable(
+                recommendation(guidance)));
+    }
+
+    private static Recommendation recommendation(
+            RecommendationGuidance guidance)
+    {
+        return new Recommendation("skill:sailing", "Train Sailing to 54",
+                "Exact salvage baseline.", 10.0,
+                plan("sailing_salvage_small"),
+                RecommendationConfidence.VERIFIED, 53, 54, guidance,
+                CandidateSafetyEvidence.skill(false, Skill.SAILING));
+    }
+
     private static TrainingPlan plan(String id)
     {
         TrainingMethod method = new TrainingMethod(

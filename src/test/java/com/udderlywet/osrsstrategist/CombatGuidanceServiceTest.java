@@ -115,6 +115,43 @@ public class CombatGuidanceServiceTest
         assertTrue(guidance == null);
     }
 
+    @Test
+    public void scurriusNamesObservedFoodInsteadOfDelegatingSupplies()
+    {
+        AccountSnapshot account = standard(70);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .bank(new BankSnapshot(java.util.Arrays.asList(
+                        new ItemStackSnapshot(4151, "Abyssal whip", 1),
+                        new ItemStackSnapshot(385, "Shark", 20)), 1L))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .build();
+
+        RecommendationGuidance guidance = service.build(data, Skill.ATTACK,
+                70, 71, plan("attack_scurrius", Skill.ATTACK),
+                SessionIntent.ONE_HOUR, true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("observed Shark"));
+        assertFalse(guidance.getSupplies().contains("appropriate"));
+    }
+
+    @Test
+    public void scurriusWithoutObservedHealingStaysHidden()
+    {
+        AccountSnapshot account = standard(70);
+        StrategyDataBundle data = StrategyDataBundle.builder(account)
+                .bank(new BankSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(4151, "Abyssal whip", 1)), 1L))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .build();
+
+        assertNull(service.build(data, Skill.ATTACK, 70, 71,
+                plan("attack_scurrius", Skill.ATTACK),
+                SessionIntent.ONE_HOUR, true));
+    }
+
     private static TrainingPlan plan(String id, Skill skill)
     {
         TrainingMethod method = new TrainingMethod(

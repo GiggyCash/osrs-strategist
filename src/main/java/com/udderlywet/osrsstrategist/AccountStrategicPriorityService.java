@@ -40,8 +40,10 @@ public final class AccountStrategicPriorityService
         boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN;
 
-        int occupied = data == null || data.getInventory() == null
-                ? -1 : data.getInventory().getItems().size();
+        InventorySnapshot inventory = data == null ? null : data.getInventory();
+        int occupied = inventory == null
+                || !inventory.hasCompleteSlotObservation() ? -1
+                : UimSetupCostService.occupiedInventorySlots(inventory);
         put(result, AccountStrategicDimension.INVENTORY_PRESSURE,
                 uim ? occupied >= 24 ? StrategicPriority.CRITICAL
                         : StrategicPriority.HIGH : StrategicPriority.LOW,

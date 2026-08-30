@@ -26,8 +26,8 @@ def load_and_validate():
     ids = [source.get("id") for source in sources]
     if len(ids) != len(set(ids)):
         fail("duplicate source id")
-    if len(sources) != 46:
-        fail("expected 46 registered sources, found %d" % len(sources))
+    if len(sources) != 52:
+        fail("expected 52 registered sources, found %d" % len(sources))
     for source in sources:
         if not source.get("id") or not source.get("reviewedRevision"):
             fail("source is missing identity or reviewed revision")

@@ -175,6 +175,10 @@ public class TransportCatalogTest
                 AccountMode.fromTypeCode(type).name(), membership, 1,
                 level * Skill.values().length, 0L, levels, xp);
         StrategyDataBundle data = StrategyDataBundle.builder(account)
+                // These route scenarios model a live, fully observed empty
+                // inventory. UIM training-method generation must not treat an
+                // omitted persisted snapshot as proof of free slots.
+                .inventory(new InventorySnapshot(Collections.emptyList(), true))
                 .quests(new QuestSnapshot(questStates))
                 .transport(new TransportSnapshot(new HashSet<>(routes)))
                 .poh(new PohSnapshot(CapabilityState.UNKNOWN, furniture))

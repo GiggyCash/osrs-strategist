@@ -118,6 +118,16 @@ public final class MethodStrategyKnowledgeCatalog
         exact.put("agility_rooftops", shared(
                 "agility_rooftops", MethodBankingBehavior.NONE, 0,
                 "Rooftop training needs little inventory and advances reusable movement progression."));
+        exact.put("sailing_salvage_small", new MethodStrategyProfile(
+                "sailing_salvage_small",
+                StrategyKnowledgeTier.VERIFIED_SHARED, ALL_KNOWN,
+                MethodBankingBehavior.NONE,
+                new MethodInventoryFootprint(3, 1, 2,
+                        InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, false),
+                0.45,
+                "Small-shipwreck salvaging is an exact low-intensity baseline; higher wrecks require separately proven boat and water-hazard capability.",
+                Arrays.asList(StrategySourceId.SAILING_TRAINING,
+                        StrategySourceId.SHIPWRECK_SALVAGING)));
     }
 
     public MethodStrategyProfile profileFor(TrainingMethod method,
@@ -213,6 +223,8 @@ public final class MethodStrategyKnowledgeCatalog
     private static StrategySourceId accountSkillSource(
             net.runelite.api.Skill skill, AccountMode mode, boolean f2p)
     {
+        if (skill == net.runelite.api.Skill.SAILING)
+            return StrategySourceId.SAILING_TRAINING;
         if (skill == null || mode == null || !mode.isIronLike())
             return f2p ? StrategySourceId.F2P_SKILL_TRAINING
                     : StrategySourceId.GENERAL_SKILL_TRAINING;

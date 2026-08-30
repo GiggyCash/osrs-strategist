@@ -49,7 +49,58 @@ public class MinigamePlanningDepthTest
                 Collections.singletonList(item("Dragon harpoon")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
         assertEquals(RecommendationConfidence.VERIFIED, ready.getConfidence());
-        assertTrue(ready.getGuidance().getAction().contains("Start Tempoross"));
+        assertTrue(ready.getGuidance().getAction()
+                .contains("Fish harpoonfish"));
+        assertTrue(ready.getGuidance().getSupplies()
+                .contains("observed harpoon"));
+    }
+
+    @Test
+    public void exactMajorMinigameSetupsUseObservedMaterials()
+    {
+        StrategyCandidate foundry = find(candidates(0, 80,
+                Collections.singleton("giants-foundry"),
+                Collections.singletonList(item("Steel bar", 28)),
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
+                "giants-foundry");
+        assertEquals(RecommendationConfidence.VERIFIED,
+                foundry.getConfidence());
+        assertTrue(foundry.getGuidance().getAction()
+                .contains("exactly 28 bars' worth"));
+
+        StrategyCandidate tithe = find(candidates(0, 80,
+                Collections.singleton("tithe-farm"), Arrays.asList(
+                        item("Spade"), item("Seed dibber"),
+                        item("Gricoller's can")), StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR), "tithe-farm");
+        assertEquals(RecommendationConfidence.VERIFIED,
+                tithe.getConfidence());
+        assertTrue(tithe.getGuidance().getAction()
+                .contains("seed for the observed Farming level"));
+    }
+
+    @Test
+    public void variableSafetyAndContractEvidenceRemainPreparation()
+    {
+        StrategyCandidate wintertodt = find(candidates(0, 80,
+                Collections.singleton("wintertodt"), Arrays.asList(
+                        item("Rune axe"), item("Tinderbox")),
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
+                "wintertodt");
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                wintertodt.getConfidence());
+        assertTrue(wintertodt.getGuidance().getAction()
+                .contains("four verified warm-clothing pieces"));
+
+        StrategyCandidate homes = find(candidates(0, 80,
+                Collections.singleton("mahogany-homes"), Arrays.asList(
+                        item("Hammer"), item("Saw")),
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
+                "mahogany-homes");
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                homes.getConfidence());
+        assertTrue(homes.getGuidance().getAction()
+                .contains("live Mahogany Homes contract"));
     }
 
     @Test
@@ -155,6 +206,11 @@ public class MinigamePlanningDepthTest
 
     private static ItemStackSnapshot item(String name)
     {
-        return new ItemStackSnapshot(name.hashCode(), name, 1);
+        return item(name, 1);
+    }
+
+    private static ItemStackSnapshot item(String name, int quantity)
+    {
+        return new ItemStackSnapshot(name.hashCode(), name, quantity);
     }
 }

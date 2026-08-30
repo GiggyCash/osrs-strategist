@@ -12,14 +12,25 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
 {
     private final InfrastructureMilestoneCatalog catalog;
     private final InfrastructureUnlockValueService values;
+    private final UimRecurringPressureService recurringPressure;
 
     @Inject
     public InfrastructureCandidateProvider(
             InfrastructureMilestoneCatalog catalog,
-            InfrastructureUnlockValueService values)
+            InfrastructureUnlockValueService values,
+            UimRecurringPressureService recurringPressure)
     {
         this.catalog = catalog;
         this.values = values;
+        this.recurringPressure = recurringPressure == null
+                ? new UimRecurringPressureService() : recurringPressure;
+    }
+
+    public InfrastructureCandidateProvider(
+            InfrastructureMilestoneCatalog catalog,
+            InfrastructureUnlockValueService values)
+    {
+        this(catalog, values, new UimRecurringPressureService());
     }
 
     @Override
@@ -43,12 +54,16 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
             return result;
         }
 
+        UimRecurringPressureAssessment pressure =
+                recurringPressure.observe(context);
+
         for (InfrastructureMilestoneDefinition definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
                     definition.getId(), context);
             if (!assessment.canRecommendAcquisition()) continue;
-            result.add(buildCandidate(definition, assessment, context));
+            result.add(buildCandidate(definition, assessment, context,
+                    pressure));
         }
         return result;
     }
@@ -82,7 +97,8 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
     private static StrategyCandidate buildCandidate(
             InfrastructureMilestoneDefinition definition,
             InfrastructureValueAssessment assessment,
-            StrategyContext context)
+            StrategyContext context,
+            UimRecurringPressureAssessment pressure)
     {
         double utility = assessment.getStrategicValue().ordinal()
                 / (double) StrategicPriority.CRITICAL.ordinal();
@@ -95,12 +111,22 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
             score -= expensiveSetup(definition.getId()) ? 12.0 : 3.0;
         if (context.getSessionIntent() == SessionIntent.AFK) score -= 8.0;
         if (context.getStrategyMode() == StrategyMode.EFFICIENT) score += 2.0;
+        boolean recurringRelief = pressure != null && pressure.isRepeated()
+                && (definition.getBenefits().containsKey(
+                        InfrastructureBenefit.INVENTORY_RELIEF)
+                || definition.getBenefits().containsKey(
+                        InfrastructureBenefit.STORAGE));
+        if (recurringRelief) score += 12.0;
 
         String modeReason = context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                 ? " It reduces UIM inventory pressure, travel, or future setup churn without counting conventional bank storage."
                 : AccountModePolicy.requiresSelfSourcing(context.getAccountMode())
                 ? " Its reusable utility reduces future self-sourced travel or setup costs."
                 : " Its repeat utility is weighed against tradeable and public-house substitutes; neither substitute is assumed available.";
+        if (recurringRelief)
+            modeReason += " Distinct observed inventory layouts have blocked "
+                    + String.join(" and ", pressure.getBlockedFamilies())
+                    + ", so this is recurring pressure rather than a one-off full inventory.";
         return new StrategyCandidate(
                 "prepare:infrastructure:" + definition.getId(),
                 "Build " + definition.getName(),
@@ -121,7 +147,10 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
                         .setupReuse(utility * 0.7)
                         .resourceFit(expensiveSetup(definition.getId())
                                 ? -0.75 : -0.25)
+                        .unlockValue(recurringRelief ? 0.8 : 0.0)
                         .evidence("infrastructure:" + definition.getId())
+                        .evidence(recurringRelief
+                                ? "uim:recurring-inventory-pressure" : null)
                         .build());
     }
 

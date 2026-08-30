@@ -48,6 +48,12 @@
     {"id":"CLUE_STASH","apiTitle":"STASH","reviewedRevision":15319948,"reviewedTimestamp":"2026-08-25T18:56:28Z","derivedFamilies":["clues","stash","uim-clue-storage"]},
     {"id":"POH_STORAGE","apiTitle":"Costume room","reviewedRevision":15035574,"reviewedTimestamp":"2025-11-19T01:31:46Z","derivedFamilies":["poh","costume-storage","uim-infrastructure"]},
     {"id":"MINIGAME_GUIDES","apiTitle":"Minigames","reviewedRevision":15304433,"reviewedTimestamp":"2026-08-17T17:39:24Z","derivedFamilies":["minigames","minigame-inventory"]},
+    {"id":"WINTERTODT","apiTitle":"Wintertodt","reviewedRevision":15317763,"reviewedTimestamp":"2026-08-24T04:51:43Z","derivedFamilies":["minigames","wintertodt","minigame-inventory","hardcore-risk"]},
+    {"id":"GIANTS_FOUNDRY","apiTitle":"Giants' Foundry","reviewedRevision":15307204,"reviewedTimestamp":"2026-08-19T16:12:34Z","derivedFamilies":["minigames","giants-foundry","smithing-resources","minigame-inventory"]},
+    {"id":"MAHOGANY_HOMES","apiTitle":"Mahogany Homes","reviewedRevision":15318320,"reviewedTimestamp":"2026-08-24T23:36:19Z","derivedFamilies":["minigames","mahogany-homes","construction-resources","minigame-inventory"]},
+    {"id":"TITHE_FARM","apiTitle":"Tithe Farm","reviewedRevision":15299958,"reviewedTimestamp":"2026-08-14T04:17:57Z","derivedFamilies":["minigames","tithe-farm","farming-resources","minigame-inventory"]},
+    {"id":"SAILING_TRAINING","apiTitle":"Sailing training","reviewedRevision":15323443,"reviewedTimestamp":"2026-08-28T19:16:42Z","derivedFamilies":["shared-skilling","sailing","sailing-transitions","boat-infrastructure"]},
+    {"id":"SHIPWRECK_SALVAGING","apiTitle":"Shipwreck salvaging","reviewedRevision":15323162,"reviewedTimestamp":"2026-08-28T14:49:43Z","derivedFamilies":["sailing","shipwreck-salvaging","sailing-inventory","boat-capabilities"]},
     {"id":"PVM_STRATEGY","apiTitle":"Guide:Bossing Ladder","reviewedRevision":15319480,"reviewedTimestamp":"2026-08-25T06:16:24Z","derivedFamilies":["pvm-readiness","gear-progression","hardcore-risk"]},
     {"id":"RUNELITE_MECHANICS","url":"https://github.com/runelite/runelite","reviewedRevision":"RuneLite 1.12.35","derivedFamilies":["live-state","mechanical-evidence","stash-identities","quest-identities"]}
   ]

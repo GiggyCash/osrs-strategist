@@ -50,9 +50,10 @@ public class UimStrategyModule implements StrategyModule
 
         StrategyDataBundle data = context.getData();
         InventorySnapshot inventory = data == null ? null : data.getInventory();
-        if (inventory != null)
+        if (inventory != null && inventory.hasCompleteSlotObservation())
         {
-            int occupiedStacks = inventory.getItems().size();
+            int occupiedStacks = UimSetupCostService
+                    .occupiedInventorySlots(inventory);
             if (occupiedStacks >= 24)
             {
                 signals.add(new StrategySignal(

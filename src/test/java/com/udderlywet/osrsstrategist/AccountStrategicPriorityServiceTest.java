@@ -82,6 +82,23 @@ public class AccountStrategicPriorityServiceTest
     }
 
     @Test
+    public void unobservedUimSlotsRemainCheckNeeded()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(account(
+                        AccountMode.ULTIMATE_IRONMAN,
+                        MembershipStatus.P2P, 70))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+        AccountStrategicPriority value = service.assess(
+                AccountMode.ULTIMATE_IRONMAN, data, false).get(
+                AccountStrategicDimension.INVENTORY_PRESSURE);
+
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                value.getConfidence());
+        assertTrue(value.getReason().contains("not observed"));
+    }
+
+    @Test
     public void hardcoreRiskIsHigherThanOrdinaryIronRisk()
     {
         AccountStrategicPriorityProfile iron = service.assess(

@@ -79,9 +79,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     : "forestry".equals(definition.getId())
                             ? forestryGuidance(account, verified, itemResult)
                             : new RecommendationGuidance(
-                            verified ? "Start " + definition.getName() + "."
+                            verified ? setup.getInstructions()
                                     : itemResult.getAction() + " before " + definition.getName() + ".",
-                            verified ? setup.getInstructions() : itemResult.getAction(),
+                            verified ? setup.getSupplies() : itemResult.getAction(),
                             setup.getLocation(), definition.getRewardFocus() + ".");
 
             result.add(new StrategyCandidate(

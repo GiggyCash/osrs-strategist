@@ -742,9 +742,15 @@ public class RecommendationCoverageCensusTest
                 scenario.membership == MembershipStatus.P2P ? 1 : 0,
                 totalLevel, totalXp, levels, xp);
         List<ItemStackSnapshot> items = prepared
-                ? preparedItems() : Collections.emptyList();
+                ? AccountMode.fromTypeCode(scenario.type)
+                        == AccountMode.ULTIMATE_IRONMAN
+                        ? uimPreparedItems() : preparedItems()
+                : Collections.emptyList();
         StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(items))
+                // Census scenarios model a complete live container, including
+                // the observed-empty case. UIM generation must not confuse it
+                // with a persisted list whose slot completeness is unknown.
+                .inventory(new InventorySnapshot(items, true))
                 .equipment(new EquipmentSnapshot(Collections.emptyList()));
         if (prepared)
         {
@@ -834,6 +840,45 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.NAILS, "Steel nails", 10_000));
         items.add(item(ItemID.POH_SAW, "Saw", 1));
         items.add(item(ItemID.SAILING_LOG, "Captain's log", 1));
+        return items;
+    }
+
+    /**
+     * A physically possible broad UIM setup for coverage testing. It carries
+     * the core tools/inputs used by the asserted families and intentionally
+     * leaves seven slots free; the ordinary-account omnibus fixture has more
+     * than 28 distinct stacks and must never masquerade as a UIM inventory.
+     */
+    private static List<ItemStackSnapshot> uimPreparedItems()
+    {
+        List<ItemStackSnapshot> items = new ArrayList<>();
+        items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
+        items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
+        items.add(item(ItemID.SHORTBOW, "Shortbow", 1));
+        items.add(item(ItemID.BRONZE_ARROW, "Bronze arrow", 10_000));
+        items.add(item(ItemID.NET, "Small fishing net", 1));
+        items.add(item(ItemID.RAW_SALMON, "Raw salmon", 10_000));
+        items.add(item(ItemID.HAMMER, "Hammer", 1));
+        items.add(item(ItemID.POH_SAW, "Saw", 1));
+        items.add(item(ItemID.WOODPLANK, "Plank", 10_000));
+        items.add(item(ItemID.NAILS, "Steel nails", 10_000));
+        items.add(item(ItemID.BLANKRUNE, "Rune essence", 10_000));
+        items.add(item(ItemID.AIR_TALISMAN, "Air talisman", 1));
+        items.add(item(ItemID.HUNTING_SNARE, "Bird snare", 1));
+        items.add(item(ItemID.AIRRUNE, "Air rune", 10_000));
+        items.add(item(ItemID.MINDRUNE, "Mind rune", 10_000));
+        items.add(item(ItemID.FIRERUNE, "Fire rune", 100_000));
+        items.add(item(ItemID.CHAOSRUNE, "Chaos rune", 10_000));
+        items.add(item(ItemID.POTATO_SEED, "Potato seed", 1_000));
+        items.add(item(ItemID.RAKE, "Rake", 1));
+        items.add(item(ItemID.DIBBER, "Seed dibber", 1));
+        items.add(item(ItemID.SPADE, "Spade", 1));
+        for (int slot = 0; slot < items.size(); slot++)
+        {
+            ItemStackSnapshot item = items.get(slot);
+            items.set(slot, new ItemStackSnapshot(item.getItemId(),
+                    item.getName(), item.getQuantity(), slot));
+        }
         return items;
     }
 

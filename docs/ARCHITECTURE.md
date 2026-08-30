@@ -84,6 +84,18 @@ enter the common ranking pool. A full observed inventory can remove a quest or
 ordinary PvM loadout while preserving an inside-instance or current-setup
 activity that genuinely needs no additional slots.
 
+Any UIM method/activity with a non-zero footprint requires a complete live
+inventory-slot observation. A partial snapshot cannot prove free capacity and
+therefore fails closed. Zero-footprint activities such as an internally
+supplied instance may remain viable when their separate access evidence is
+complete.
+
+`MinigameSetupProfile` keeps required items, player-carried supplies, location,
+and the gameplay action distinct. This preserves the player contract across
+METHOD, BRING, WHERE, and DO instead of allowing an execution loop to leak into
+the supply field. Variable-contract activities remain CHECK_NEEDED until the
+live contract and exact materials are known.
+
 Imported quest free-slot requirements retain their exact count and are checked
 against complete live slot observation. An unmet slot requirement remains
 ineligible until it actually fits; Compass does not turn it into generic
@@ -153,6 +165,12 @@ storage, build only high-value recurring storage, then consider restricted
 retrieval. Exact death-storage services are considered only for a major blocked
 transition after every safer option fails. There is no generic bank, drop-item,
 or generic death-bank resolution.
+
+`UimRecurringPressureService` can increase safe storage/infrastructure value
+only after two distinct, completely observed inventory layouts each block at
+least two sourced activity families by their own footprints. Repeated reranks
+of the same layout do not count, state is bounded per account, and the signal
+never fabricates existing furniture or make dangerous storage eligible.
 
 ## 7. OpportunityEngine
 One generic engine for recurring and short detours:

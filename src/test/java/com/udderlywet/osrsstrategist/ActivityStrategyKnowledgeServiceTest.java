@@ -45,7 +45,9 @@ public class ActivityStrategyKnowledgeServiceTest
         StrategyDataBundle data = StrategyDataBundle.builder(uim())
                 .inventory(new InventorySnapshot(Collections.emptyList()))
                 .build();
-        assertNotNull(service.attach(candidate("quest:waterfall-quest"),
+        assertNull(service.attach(candidate("quest:waterfall-quest"),
+                context(data)));
+        assertNotNull(service.attach(candidate("pvm:the_gauntlet"),
                 context(data)));
     }
 

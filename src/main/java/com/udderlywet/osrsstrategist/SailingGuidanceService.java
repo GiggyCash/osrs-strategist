@@ -118,14 +118,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = "Salvage the highest safe shipwreck tier unlocked at Sailing "
-                + currentLevel + " until you gain " + format(xpNeeded)
-                + " XP toward level " + targetLevel + ". Sort salvage when the resources matter; discard it only when pure Sailing XP matters more.";
-        String supplies = currentLevel >= 15
-                ? "Use a skiff with a cargo hold and a salvaging hook. If you do not own a skiff yet, buy one for 15,000 coins before committing to this route."
-                : "Reach 15 Sailing before using the skiff + salvaging-hook route.";
-        String where = "Use the highest shipwreck tier your Sailing level and boat can safely reach, with a nearby salvaging station when you want the resources.";
-        String note = "Salvaging XP depends on the shipwreck tier and interaction loop, so exact XP remaining is shown without a false universal salvage count. Iron-style accounts get extra value from sorting the resources instead of dropping salvage.";
+        String action = "Sail beside a visible Small shipwreck, deploy the fitted salvaging hook, move to the next marked wreck when it sinks, and return to sort the Small salvage before inventory and cargo capacity are exhausted. Gain "
+                + format(xpNeeded) + " XP toward level " + targetLevel + ".";
+        String supplies = "Use a raft, skiff, or sloop whose live boat setup proves a salvaging hook is fitted. Keep enough cargo capacity for Small salvage; no item-dropping loop is assumed.";
+        String where = "The Small shipwreck markers in the Kharidian Sea, with the salvaging station at The Pandemonium as the return point.";
+        String note = "Small shipwrecks require 15 Sailing and give variable progress because hook success and wreck uptime vary. Higher wreck tiers stay separate until their water hazards and the live boat build are proven.";
         return new RecommendationGuidance(action, supplies, where, note);
     }
 

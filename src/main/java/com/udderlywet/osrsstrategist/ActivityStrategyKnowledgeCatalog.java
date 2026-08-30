@@ -61,6 +61,29 @@ public final class ActivityStrategyKnowledgeCatalog
                 InventoryFlow.NEUTRAL, 0.85,
                 "The Gauntlet supplies its temporary setup inside the activity, so an external bank loadout is not an execution requirement.",
                 StrategySourceId.MINIGAME_GUIDES));
+        values.add(profile("minigame:wintertodt", 4, 3, 1,
+                InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, 0.55,
+                "Wintertodt readiness depends on observed warmth protection, a usable axe, a lighting tool, and a safe warmth-restoration plan.",
+                StrategySourceId.WINTERTODT,
+                StrategySourceId.UIM_FIREMAKING));
+        values.add(profile("minigame:giants-foundry", 2, 1, 1,
+                InventoryFlow.CONSUMES_CARRIED_INPUTS, 0.65,
+                "Giants' Foundry consumes observed eligible metal in commissioned batches and rewards both Smithing progress and coins without assuming a universal alloy.",
+                StrategySourceId.GIANTS_FOUNDRY,
+                StrategySourceId.IRONMAN_SMITHING,
+                StrategySourceId.UIM_SMITHING));
+        values.add(profile("minigame:mahogany-homes", 5, 3, 2,
+                InventoryFlow.CONSUMES_CARRIED_INPUTS, 0.8,
+                "Mahogany Homes is only executable after the live contract tier, plank supply, occasional steel-bar need, and client travel are resolved.",
+                StrategySourceId.MAHOGANY_HOMES,
+                StrategySourceId.IRONMAN_CONSTRUCTION,
+                StrategySourceId.UIM_CONSTRUCTION));
+        values.add(profile("minigame:tithe-farm", 12, 10, 2,
+                InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, 0.45,
+                "Tithe Farm requires a plan-relative watering/tool footprint and uses the seed tier proven by the live Farming level.",
+                StrategySourceId.TITHE_FARM,
+                StrategySourceId.IRONMAN_FARMING,
+                StrategySourceId.UIM_FARMING));
         values.add(profile("minigame:", 4, 2, 3,
                 InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, 0.35,
                 "Minigame value is weighed against its observed requirements, setup, rewards, and inventory behavior.",
@@ -76,6 +99,11 @@ public final class ActivityStrategyKnowledgeCatalog
                 "Reusable POH infrastructure can reduce future travel and setup costs, but only observed personal-house capabilities count.",
                 StrategySourceId.POH_STORAGE,
                 StrategySourceId.UIM_GENERAL));
+        values.add(profile("prepare:infrastructure:poh-armour-case", 3, 2, 1,
+                InventoryFlow.CONSUMES_CARRIED_INPUTS, 0.9,
+                "An oak armour case is a compact, verified Costume-room storage build, but only its accepted equipment categories gain space.",
+                StrategySourceId.POH_STORAGE,
+                StrategySourceId.UIM_ITEM_MANAGEMENT));
         values.add(profile("verify:poh-build-mode", 0, 0, 0,
                 InventoryFlow.NEUTRAL, 0.0,
                 "A build-mode scan verifies the character's own POH without inventing furniture or teammate infrastructure.",
