@@ -7,13 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Explicit registry of strategy modules.
- *
- * <p>Using a small registry avoids hidden Guice multibinding magic while the
- * project is young. It also gives a new maintainer one obvious place to see
- * which reasoning subsystems participate in the final strategy.</p>
- */
+/** Explicit registry showing every reasoning domain that contributes signals. */
 @Singleton
 public class StrategyModuleRegistry
 {
@@ -23,8 +17,10 @@ public class StrategyModuleRegistry
     public StrategyModuleRegistry(
             GoalStrategyModule goalModule,
             AccountModeStrategyModule accountModeModule,
+            UimStrategyModule uimModule,
             ClueStrategyModule clueModule,
             ProgressionStrategyModule progressionModule,
+            AccountSystemsStrategyModule accountSystemsModule,
             PvmStrategyModule pvmModule)
     {
         modules = Collections.unmodifiableList(
@@ -32,8 +28,10 @@ public class StrategyModuleRegistry
                         Arrays.asList(
                                 goalModule,
                                 accountModeModule,
+                                uimModule,
                                 clueModule,
                                 progressionModule,
+                                accountSystemsModule,
                                 pvmModule
                         )
                 )

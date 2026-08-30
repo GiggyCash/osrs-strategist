@@ -42,6 +42,7 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private AccountPreferenceStore accountPreferenceStore;
     @Inject private AccountStrategyProfileStore accountStrategyProfileStore;
     @Inject private AccountMilestoneStore accountMilestoneStore;
+    @Inject private AccountRecommendationHistoryStore accountRecommendationHistoryStore;
     @Inject private MilestoneTracker milestoneTracker;
     @Inject private SkillIconLoader skillIconLoader;
     @Inject private AccessObservationService accessObservationService;
@@ -50,9 +51,11 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private MethodGuidanceOverlay methodGuidanceOverlay;
 
     private final PreferenceProfile preferenceProfile = new PreferenceProfile();
+    private final RecommendationHistory recommendationHistory = new RecommendationHistory();
     private String loadedPreferenceProfileKey;
     private String loadedStrategyProfileKey;
     private String loadedMilestoneProfileKey;
+    private String loadedHistoryProfileKey;
     private boolean savingProfileConfiguration;
     private PlayerStrategyProfile strategyProfile;
     private TrackedMilestone trackedMilestone;
@@ -82,6 +85,7 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         syncStrategyProfile();
         syncMilestoneProfile();
+        syncRecommendationHistory();
         updateAccountPanel();
     }
 
@@ -94,12 +98,14 @@ public class OsrsStrategistPlugin extends Plugin
         milestoneRewardOverlay.clear();
         methodGuidanceOverlay.clear();
         preferenceProfile.clear();
+        recommendationHistory.clear();
         strategyDataAssembler.clearForAccountChange();
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
         loadedPreferenceProfileKey = null;
         loadedStrategyProfileKey = null;
         loadedMilestoneProfileKey = null;
+        loadedHistoryProfileKey = null;
         savingProfileConfiguration = false;
         strategyProfile = null;
         trackedMilestone = null;
@@ -141,7 +147,9 @@ public class OsrsStrategistPlugin extends Plugin
         loadedPreferenceProfileKey = null;
         loadedStrategyProfileKey = null;
         loadedMilestoneProfileKey = null;
+        loadedHistoryProfileKey = null;
         trackedMilestone = null;
+        recommendationHistory.clear();
         strategyDataAssembler.clearForAccountChange();
         accessObservationService.clearForAccountChange();
         farmingRunObservationService.clearForAccountChange();
@@ -149,6 +157,7 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         syncStrategyProfile();
         syncMilestoneProfile();
+        syncRecommendationHistory();
         updateAccountPanel();
     }
 
@@ -177,7 +186,16 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (activityId == null || action == null) return;
         syncPreferenceProfile();
+        syncRecommendationHistory();
         preferenceProfile.apply(activityId, action);
+
+        RecommendationHistoryAction historyAction = historyAction(action);
+        if (historyAction != null)
+        {
+            recommendationHistory.add(activityId, null, historyAction);
+            saveRecommendationHistory();
+        }
+
         refreshStrategyImmediately();
         savePreferenceProfile();
     }
@@ -187,7 +205,10 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel == null || latestData == null) return;
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(latestData, profile);
-        updateTrackedMilestone(result.getRecommendations());
+        updateTrackedMilestone(
+                result.getRecommendations(),
+                latestData.getCollectionLog()
+        );
         updateGuidance(result, latestData);
 
         Runnable update = () ->
@@ -261,6 +282,20 @@ public class OsrsStrategistPlugin extends Plugin
         loadedMilestoneProfileKey = activeKey;
     }
 
+    private void syncRecommendationHistory()
+    {
+        String activeKey = accountRecommendationHistoryStore.getActiveProfileKey();
+        if (Objects.equals(loadedHistoryProfileKey, activeKey) && activeKey != null) return;
+        recommendationHistory.clear();
+        if (activeKey == null)
+        {
+            loadedHistoryProfileKey = null;
+            return;
+        }
+        accountRecommendationHistoryStore.loadInto(recommendationHistory);
+        loadedHistoryProfileKey = activeKey;
+    }
+
     private PlayerStrategyProfile effectiveStrategyProfile()
     {
         if (strategyProfile == null) strategyProfile = PlayerStrategyProfile.fromConfig(config);
@@ -292,15 +327,13 @@ public class OsrsStrategistPlugin extends Plugin
         syncPreferenceProfile();
         syncStrategyProfile();
         syncMilestoneProfile();
+        syncRecommendationHistory();
 
         TrackedMilestone completedCheckpoint = trackedMilestone;
         MilestoneCompletion completion = milestoneTracker.detectCompletion(
                 completedCheckpoint, data.getAccount());
         if (completion != null)
         {
-            // A short skill target may finish while a meaningful outfit/collection
-            // objective is still active. Protected methods do not receive the
-            // usual variety penalty, so Graceful/Prospector-style grinds can continue.
             if (completedCheckpoint == null
                     || !completedCheckpoint.isProgressionProtected())
             {
@@ -309,6 +342,14 @@ public class OsrsStrategistPlugin extends Plugin
                         COMPLETION_VARIETY_DURATION_MILLIS);
                 savePreferenceProfile();
             }
+
+            recommendationHistory.add(
+                    completion.getActivityId(),
+                    completion.getTitle(),
+                    RecommendationHistoryAction.COMPLETED
+            );
+            saveRecommendationHistory();
+
             trackedMilestone = null;
             saveTrackedMilestone();
             milestoneRewardOverlay.show(completion);
@@ -316,7 +357,10 @@ public class OsrsStrategistPlugin extends Plugin
 
         PlayerStrategyProfile profile = effectiveStrategyProfile();
         StrategyResult result = evaluate(data, profile);
-        updateTrackedMilestone(result.getRecommendations());
+        updateTrackedMilestone(
+                result.getRecommendations(),
+                data.getCollectionLog()
+        );
         updateGuidance(result, data);
         AccountSnapshot account = data.getAccount();
 
@@ -332,9 +376,14 @@ public class OsrsStrategistPlugin extends Plugin
         });
     }
 
-    private void updateTrackedMilestone(List<Recommendation> recommendations)
+    private void updateTrackedMilestone(
+            List<Recommendation> recommendations,
+            CollectionLogSnapshot collectionLog)
     {
-        TrackedMilestone candidate = milestoneTracker.fromRecommendations(recommendations);
+        TrackedMilestone candidate = milestoneTracker.fromRecommendations(
+                recommendations,
+                collectionLog
+        );
         if (milestoneTracker.sameCheckpoint(trackedMilestone, candidate)) return;
         trackedMilestone = candidate;
         saveTrackedMilestone();
@@ -354,6 +403,20 @@ public class OsrsStrategistPlugin extends Plugin
         loadedPreferenceProfileKey = accountPreferenceStore.getActiveProfileKey();
     }
 
+    private void saveRecommendationHistory()
+    {
+        savingProfileConfiguration = true;
+        try
+        {
+            accountRecommendationHistoryStore.save(recommendationHistory);
+        }
+        finally
+        {
+            savingProfileConfiguration = false;
+        }
+        loadedHistoryProfileKey = accountRecommendationHistoryStore.getActiveProfileKey();
+    }
+
     private void saveTrackedMilestone()
     {
         savingProfileConfiguration = true;
@@ -366,6 +429,22 @@ public class OsrsStrategistPlugin extends Plugin
             savingProfileConfiguration = false;
         }
         loadedMilestoneProfileKey = accountMilestoneStore.getActiveProfileKey();
+    }
+
+    private static RecommendationHistoryAction historyAction(FeedbackAction action)
+    {
+        switch (action)
+        {
+            case LATER:
+                return RecommendationHistoryAction.LATER;
+            case NOT_TODAY:
+                return RecommendationHistoryAction.NOT_TODAY;
+            case DISLIKE:
+                return RecommendationHistoryAction.DISLIKE;
+            case DO_THIS:
+            default:
+                return null;
+        }
     }
 
     private BufferedImage createTemporaryIcon()

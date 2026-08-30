@@ -1,14 +1,14 @@
 # OSRS Strategist Foundation Map
 
-This document is a maintainer-facing map of the plugin's architecture. The goal is to keep the reasoning engine understandable even as OSRS content coverage becomes very large.
+This is the maintainer-facing map for the planner. The architecture is intentionally broader than the current verified OSRS dataset.
 
 ## Core data flow
 
 ```text
-RuneLite / player-confirmed observations
+RuneLite live state + verified player observations
         |
         v
-Readers + ObservedStateStore
+Readers / per-character stores / ObservedStateStore
         |
         v
 StrategyDataAssembler
@@ -21,128 +21,208 @@ StrategyContext
         |
         v
 StrategyEngine
-   |         |          |
-   v         v          v
-Recommendation  Opportunity  Strategy modules
-Engine          Engine        + signals
-        \        |        /
-         \       |       /
-          v      v      v
-           StrategyResult
-                |
-                v
-        Compact RuneLite panel
-        + optional Details view
+   |             |                |
+   v             v                v
+Recommendation  Opportunity       Strategy modules
+Engine          Engine            + signals
+   |                              |
+   v                              |
+Method selector/evidence           |
+        \                          /
+         \                        /
+          v                      v
+             StrategyResult
+                  |
+                  +--> compact RuneLite sidebar
+                  +--> movable method checklist
+                  +--> milestone reward overlay
 ```
 
-Resource requirements use a second reusable path:
+## Recommendation pipeline
+
+1. Read current account state.
+2. Hard-filter impossible content: membership, account mode, Wilderness policy, level, known blockers.
+3. Evaluate method requirements from evidence.
+4. Skip dynamically blocked methods and try the next candidate.
+5. Score usable work with strategy style, session intent, milestone momentum, preference learning, and temporary cooldown/variety state.
+6. Blend specialized domain signals through `StrategyModuleRegistry`.
+7. Show one best move plus concise alternatives/opportunities.
+
+## Account modes
+
+Use `AccountModePolicy` instead of scattering restrictions through feature code.
+
+### Main
+
+- GE is permitted but not automatically wise.
+- `MainEconomyPlanner` requires verified cash plus verified price/time inputs before a buy can be considered verified.
+- Insufficient GP routes to money-making/resource review, not automatic gear sales.
+- `ProtectedItemProfile` and future built-in protection both veto disposal suggestions.
+
+### Iron / hardcore
+
+- Self-source by default.
+- Hardcore variants are risk-sensitive.
+
+### GIM
+
+- Iron-like by default.
+- Group Storage is usable only when enabled and actually observed.
+- Teammate requests are not normal local recommendations.
+
+### UIM
+
+UIM must never inherit a bank-centric fallback.
 
 ```text
-ResourceNeed
-    |
-    v
-ResourceAcquisitionPlanner
-    |
-    +--> confirmed inventory
-    +--> confirmed bank (non-UIM)
-    +--> observed GIM Group Storage when enabled
-    +--> GE candidate for Main (still requires price/GP validation)
-    +--> self-source family for Iron/UIM
-    |
-    v
-ResourceAcquisitionPlan
+Resource need
+   |
+   +--> inventory
+   |
+   +--> observed contents in VERIFIED UIM storage
+   |       |
+   |       +--> ordinary safe storage: can satisfy readiness
+   |       +--> death storage/deathpile: explicit risk check remains
+   |
+   +--> verified self-source route
+   |
+   v
+Check Needed when the route/capability is not proven
 ```
 
-## What is live now
+`UimCapabilityService` requires:
 
-The foundation can already read or persist these pieces of state:
+1. The storage capability itself is verified.
+2. The item is verified compatible.
+3. Capacity/current preconditions are verified.
 
-- Player name, account type, total level, skill levels, and skill XP.
-- Inventory and equipment while RuneLite exposes their containers.
-- A bank snapshot only after RuneLite has actually exposed the bank container. An unopened bank is never treated as an empty bank.
-- Per-character recommendation preferences and cooldowns.
-- Per-character explicit strategy settings through `PlayerStrategyProfile`.
-- Strategy style, session intent, quest tolerance, active big goal, Group Storage preference, and collectionist weighting.
-- Skill recommendations, starter training-method selection, milestone momentum, and immediate feedback rotation.
-- Training-method selection already receives the full account-state bundle, so later bank/gear/quest/account-mode evaluators can be added without changing the pipeline.
-- Resource acquisition guardrails for Main, Ironman, GIM, and UIM.
-- Player-defined protected-item storage and shared risk-warning policy types.
+Death storage is high risk; deathpile is irreversible-risk class. Merely knowing that these mechanics exist is never permission to recommend them.
 
-## Scaffolded systems awaiting verified readers/game data
+## Resource readiness/acquisition
 
-These systems now have typed homes in the architecture but must not be described as fully implemented until their readers and game data are verified:
+Two related layers exist:
 
-- Quest and miniquest progression.
-- Achievement Diaries.
-- Clue and STASH state.
-- Combat Achievements.
-- Collection Log opportunity scoring.
-- Main-account economy, live GE price/affordability decisions, built-in protected-item rules, high alchs, and money making.
-- GIM Group Storage live item observations.
-- UIM storage/capability state, including Tool Leprechaun, STASH, looting bag, POH storage, death storage, and deathpile safety.
-- Farming patches, Tool Leprechaun contents, herb/tree runs, and farming contracts.
-- Sailing ports and activities.
-- Slayer task/master/points state.
-- PvM readiness, bosses, raids, gear ladders, and practical upgrade paths.
-- Minigame unlocks and currencies.
-- Transport routes and POH furniture.
-- Broader recurring opportunities such as Tears of Guthix and Kingdom.
+- `ResourceReadinessService`: do we already have what the method needs?
+- `ResourceAcquisitionPlanner`: where should a missing resource come from next?
 
-## No-guessing rule
+Unknown sources stay unknown. Bank unopened is not empty. Group Storage unseen is not empty. UIM storage possible is not the same as item stored there.
 
-`UNKNOWN`, `CHECK_NEEDED`, and `BLOCKED` are intentional states.
+## Evidence and memory
 
-Do not write logic that silently turns an unobserved source into an empty or unavailable source. Examples:
+Evidence is `Verified`, `Check Needed`, or `Blocked`.
 
-- Bank not opened != empty bank.
-- Group Storage not inspected != empty Group Storage.
-- Tool Leprechaun access != every tool is stored there.
-- A possible POH furniture upgrade != the player already built it.
-- A Sailing activity existing in OSRS != this character has unlocked it.
-- A Main being able to use the GE != a purchase is affordable or strategically wise.
+Positive area observations can persist per RuneScape profile. Quest state can prove access. Farming patch state can be directly observed. Storage and resource evidence must be based on actual observation or explicit confirmation.
 
-When RuneLite cannot verify a state, either leave it unknown or ask the player to confirm it once and persist that confirmation.
+Future one-time confirmations should flow into per-character capability stores rather than adding global booleans.
 
-## Account-mode rules
+## Farming / active guidance
 
-Use `AccountModePolicy` instead of scattering restrictions throughout planners.
+The farming observer records supported patch state from RuneLite game state. The guidance layer can show:
 
-- Main may use the GE, but purchases still need economy validation.
-- Iron-like accounts self-source by default.
-- GIM may use Group Storage only when the option is enabled and the storage has actually been observed.
-- UIM storage routes require verified capabilities, and normal bank-routing logic is ignored.
-- HCIM/HCGIM/UIM are treated as risk-sensitive for irreversible or dangerous recommendations.
+- planted/growing,
+- ready,
+- empty,
+- diseased,
+- dead,
+- check needed.
 
-No planner should automate clicks, movement, combat, banking, or gameplay interaction. Strategist is an adviser only.
+Prep uses the shared resource-readiness layer. The same `GuidanceChecklist` model is intentionally reusable by non-Farming methods.
 
-## Safety rules
+## Goal graph
 
-`ProtectedItemProfile` is the player's explicit "never recommend selling/disposing of this" list. Future built-in protection rules for rare, quest, clue, and hard-to-replace progression items should be additive to that list, never a replacement for it.
+`GoalGraph` is a typed dependency-family graph, not a fixed guide. It currently has typed paths for Max, Quest Cape, Barrows Gloves, Prifddinas, Bowfa, Infernal Cape, Diary Cape, Elite Combat Achievements, Raid Ready, 2000 total, 85 Slayer, Base 70s, and gear/custom targets.
 
-`RiskPolicy` and `RiskWarning` provide one shared language for expensive or irreversible suggestions. Examples include UIM death strategies, dropping valuables, consuming scarce resources, destroying quest/clue items, selling hard-to-replace gear, or spending a very large share of available GP.
+Exact prerequisite nodes should come from structured verified game data over time.
 
-An irreversible recommendation should require explicit player confirmation before it can be presented as a normal plan.
+## Longer progression objectives
 
-## UI rule
+`ProgressionObjectiveCatalog` separates useful long grinds from tiny skill checkpoints. Graceful, Prospector, Raiments, Smiths' Uniform, Tempoross, and Wintertodt are starter examples.
 
-The sidebar is intentionally concise. Default recommendations should show:
+A completed skill checkpoint can still trigger the reward popup. If the longer objective remains known or conservatively assumed incomplete, the normal short-term variety penalty is suppressed. Explicit verified completion releases that protection.
 
-1. What to do.
-2. The target/checkpoint.
-3. Best method.
-4. Attention/confidence.
-5. A short prep preview.
+## Opportunities
 
-Detailed instructions and deeper reasoning belong behind `Details`. The engine may become sophisticated without making the default panel a wall of text.
+`OpportunityEngine` is generic. Timed content only appears when a ready-time key has actually been observed.
 
-## Adding future OSRS content
+Typed families currently include birdhouses, herb/tree runs, farming contracts, Tears, Kingdom, Kingdom approval, battlestaves, dynamite, daily diary rewards, clues, and a future cooldown seam.
 
-Prefer this order:
+## Domain modules
 
-1. Add or update structured game data.
-2. Add a reader only if new live account state is required.
-3. Add a strategy module only if the content introduces a genuinely new reasoning domain.
-4. Add fake-account tests.
-5. Let GitHub Actions compile/test before local RuneLite testing.
+`StrategyModuleRegistry` provides one bus for specialized reasoning:
 
-The long-term maintenance goal is for most Jagex content updates to change data definitions and tests rather than the central strategy algorithm.
+- Goal strategy.
+- Account-mode strategy.
+- UIM strategy.
+- Clues.
+- Progression/quests/CAs/CLOG.
+- Account systems: Slayer, Sailing, minigames, transport, POH, economy.
+- PvM.
+
+New domains should add a module only when they need genuinely new reasoning. Ordinary content records should usually be data, not Java switches.
+
+## Game knowledge / OSRS Wiki
+
+`GameKnowledgeManifest` enumerates every major planned knowledge domain and marks coverage as Scaffolded, Partial, or Verified.
+
+`KnowledgeRecordMetadata` records source and revision. `GameKnowledgeImportPolicy` requires a record to be explicitly validated before it can affect planning. This supports a future workflow like:
+
+```text
+OSRS Wiki / RuneLite source changes
+        |
+        v
+staged structured records + provenance
+        |
+        v
+validation/tests/change report
+        |
+        v
+reviewed repository update
+        |
+        v
+local production dataset
+```
+
+Do not make the production plugin self-modify or blindly trust a live Wiki edit.
+
+## Strategist Plus seam
+
+Core strategy has no knowledge of billing.
+
+```text
+Local planner --------------------------> always available
+
+StrategistEntitlementService
+        |
+        +--> optional future hosted feature entitlement
+        |
+        v
+StrategistRemoteGateway
+        |
+        v
+CURRENT BUILD: disabled, no network endpoint/transmission
+```
+
+Potential hosted capabilities are cloud sync, cross-device history, GIM team planning, remote reminders, web dashboard, and online reasoning. See `STRATEGIST_PLUS_ARCHITECTURE.md`.
+
+## Knowledge coverage versus architecture coverage
+
+Do not say a domain is complete merely because it has a class/interface. The repository includes `FOUNDATION_COMPLETION_CHECKLIST.md` specifically to prevent this confusion.
+
+Most future expansion should be:
+
+1. Structured data.
+2. A live reader only when necessary.
+3. Evidence evaluator.
+4. Fake-account tests.
+5. GitHub Actions validation.
+
+## Safety invariants
+
+- No click/movement/combat/banking automation.
+- No normal bank routing for UIM.
+- No Group Storage assumption.
+- No unverified UIM storage route.
+- No uncontrolled Wilderness suggestion when disabled.
+- No automatic sale of protected items.
+- No remote data transfer in the current build.
+- Unknown state stays unknown.

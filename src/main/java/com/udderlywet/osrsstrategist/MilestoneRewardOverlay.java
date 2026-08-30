@@ -8,18 +8,12 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
-/**
- * Short-lived top-center reward card for completed Strategist checkpoints.
- *
- * <p>It intentionally behaves more like a Collection Log notification than a
- * permanent overlay: celebrate the win, then disappear and return attention to
- * gameplay. Future non-skill short-term goals can reuse the same reward surface.</p>
- */
+/** Short-lived CLOG-style reward surface for any Strategist completion. */
 public class MilestoneRewardOverlay extends OverlayPanel
 {
     private static final long DISPLAY_MILLIS = 6500L;
 
-    private MilestoneCompletion activeCompletion;
+    private StrategistRewardNotification activeReward;
     private long hideAtMillis;
 
     @Inject
@@ -32,20 +26,27 @@ public class MilestoneRewardOverlay extends OverlayPanel
 
     public synchronized void show(MilestoneCompletion completion)
     {
-        activeCompletion = completion;
-        hideAtMillis = System.currentTimeMillis() + DISPLAY_MILLIS;
+        show(StrategistRewardNotification.fromMilestone(completion));
+    }
+
+    public synchronized void show(StrategistRewardNotification reward)
+    {
+        activeReward = reward;
+        hideAtMillis = reward == null
+                ? 0L
+                : System.currentTimeMillis() + DISPLAY_MILLIS;
     }
 
     public synchronized void clear()
     {
-        activeCompletion = null;
+        activeReward = null;
         hideAtMillis = 0L;
     }
 
     @Override
     public synchronized Dimension render(Graphics2D graphics)
     {
-        if (activeCompletion == null
+        if (activeReward == null
                 || System.currentTimeMillis() >= hideAtMillis)
         {
             clear();
@@ -55,22 +56,20 @@ public class MilestoneRewardOverlay extends OverlayPanel
         panelComponent.getChildren().clear();
         panelComponent.getChildren().add(
                 TitleComponent.builder()
-                        .text("STRATEGIST MILESTONE")
+                        .text(activeReward.getHeader())
                         .color(StrategistTheme.GOLD)
                         .build()
         );
         panelComponent.getChildren().add(
                 LineComponent.builder()
-                        .left(activeCompletion.getSkill().getName())
-                        .right(activeCompletion.getStartedAtLevel()
-                                + " → "
-                                + activeCompletion.getTargetLevel())
+                        .left(activeReward.getLeft())
+                        .right(activeReward.getRight())
                         .build()
         );
         panelComponent.getChildren().add(
                 LineComponent.builder()
-                        .left("Goal complete")
-                        .right("Next move ready")
+                        .left(activeReward.getFooterLeft())
+                        .right(activeReward.getFooterRight())
                         .build()
         );
 
