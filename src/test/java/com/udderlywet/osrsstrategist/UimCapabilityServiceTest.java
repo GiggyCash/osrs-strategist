@@ -105,6 +105,43 @@ public class UimCapabilityServiceTest
                 StorageCapability.HESPORI_ITEM_RETRIEVAL));
     }
 
+    @Test
+    public void everyDangerousSystemHasCompleteDistinctReviewedMechanics()
+    {
+        StorageCapability[] exact = {
+                StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                StorageCapability.ZULRAH_ITEM_RETRIEVAL,
+                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
+                StorageCapability.DEATHPILE
+        };
+        for (StorageCapability capability : exact)
+        {
+            UimStorageMechanicProfile profile =
+                    UimStorageMechanics.profile(capability);
+            assertTrue(capability.name(), profile != null);
+            assertTrue(capability.name(),
+                    profile.hasCompleteRecommendationRules());
+            assertTrue(capability.name(),
+                    profile.getSource() == StrategySourceId.ITEM_RETRIEVAL_SERVICES
+                    || profile.getSource()
+                            == StrategySourceId.UIM_ITEM_MANAGEMENT);
+        }
+        assertTrue(UimStorageMechanics.profile(
+                StorageCapability.ZULRAH_ITEM_RETRIEVAL).getCost()
+                .contains("Free for Ultimate Ironmen"));
+        assertTrue(UimStorageMechanics.profile(
+                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL).getCost()
+                .contains("150 numulite"));
+        assertTrue(UimStorageMechanics.profile(
+                StorageCapability.HESPORI_ITEM_RETRIEVAL).getCost()
+                .contains("25,000 coins"));
+        assertTrue(UimStorageMechanics.profile(StorageCapability.DEATHPILE)
+                .getExpiration().contains("60 minutes"));
+        assertFalse(UimStorageMechanics.profile(
+                StorageCapability.DEATH_STORAGE)
+                .hasCompleteRecommendationRules());
+    }
+
     private static AccountSnapshot account(int typeCode)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);

@@ -72,6 +72,10 @@ The machine-readable source ledger is
 date on which live-vs-announced semantics were reviewed, not a promise that
 every partial domain is exhaustive.
 
+The freshness validator cross-checks the strategy-source family count and date
+against `strategy-source-snapshot.json`; adding a pinned Wiki page without
+updating the main freshness manifest therefore fails the offline refresh gate.
+
 Run the safe refresh check with:
 
 ```sh

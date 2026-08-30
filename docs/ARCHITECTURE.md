@@ -68,12 +68,23 @@ ranking. A Main bank loop is therefore not generated for UIM and then repaired
 after selection. Shared methods remain one shared record when their practical
 execution is genuinely common.
 
+One method ID may have both a shared profile and a materially different
+account-specific variant. The selector chooses the most specific applicable
+record before ranking; adding an Iron/UIM variant therefore cannot accidentally
+remove Giants' Foundry, Mahogany Homes, or another valid shared activity from
+Main generation.
+
 High-impact Iron and UIM method profiles cite direct per-skill guide source
 IDs, not only the training-guide index. The conventional-bank behavior census
 also rejects every explicit withdraw/bank/bankstanding route from UIM profile
 generation. Account-aware resolved guidance follows the same rule: Forestry,
 for example, banks renewable logs for ordinary accounts but drops only the
 freshly produced logs—not carried setup items—for UIM.
+
+Shared fallback footprints are derived from typed skill family, deterministic
+execution inputs, and setup duration. Method IDs and player-facing names do not
+decide inventory behavior; materially different account routes use exact
+sourced profiles.
 
 `MethodInventoryFootprint` describes minimum practical free slots, persistent
 and temporary slots, inventory flow, and setup teardown. UIM viability is
@@ -149,6 +160,12 @@ capacity/preconditions together. The legacy `DEATH_STORAGE` snapshot bucket is
 too generic to authorize any recommendation; exact Hespori, Zulrah, and
 Volcanic Mine retrieval capabilities are modeled separately.
 
+`UimStorageMechanicProfile` also requires each restricted system to retain its
+own reviewed location, access, eligible-item, insertion/deposit, retrieval,
+cost, expiration, second-death, risk, and source fields. A live capability flag
+cannot authorize a restricted route if that local mechanic profile is absent
+or incomplete.
+
 Death-based storage is not ordinary inventory optimization. It carries a high
 or irreversible burden, cannot satisfy normal resource readiness, and must
 have a typed `RecommendationRiskDisclosure` requiring explicit acknowledgement
@@ -168,7 +185,9 @@ or generic death-bank resolution.
 
 `UimRecurringPressureService` can increase safe storage/infrastructure value
 only after two distinct, completely observed inventory layouts each block at
-least two sourced activity families by their own footprints. Repeated reranks
+least two sourced activity families by their own footprints. Requirement-free,
+level-legal sourced skilling routes participate without pretending an unknown
+quest/resource requirement is ready. Repeated reranks
 of the same layout do not count, state is bounded per account, and the signal
 never fabricates existing furniture or make dangerous storage eligible.
 

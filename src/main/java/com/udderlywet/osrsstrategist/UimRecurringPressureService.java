@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Singleton;
+import net.runelite.api.Skill;
 
 /**
  * Remembers distinct exact inventory layouts only when multiple live activity
@@ -20,6 +21,10 @@ public final class UimRecurringPressureService
     private final Map<String, LinkedHashSet<Integer>> layouts = new HashMap<>();
     private final ActivityStrategyKnowledgeCatalog activityCatalog =
             new ActivityStrategyKnowledgeCatalog();
+    private final MethodStrategyKnowledgeCatalog methodCatalog =
+            new MethodStrategyKnowledgeCatalog();
+    private final List<CuratedTrainingMethod> skillingMethods =
+            skillingMethods();
 
     public synchronized UimRecurringPressureAssessment observe(
             StrategyContext context)
@@ -50,6 +55,9 @@ public final class UimRecurringPressureService
         int free = Math.max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
 
+        if (blockedSkilling(context.getData().getAccount(), free))
+            result.add("skilling");
+
         QuestSnapshot quests = context.getData().getQuests();
         if (quests != null && quests.getQuests().values().stream().anyMatch(
                 status -> status == QuestStatus.NOT_STARTED
@@ -73,6 +81,33 @@ public final class UimRecurringPressureService
                     break;
                 }
         return result;
+    }
+
+    private boolean blockedSkilling(AccountSnapshot account, int free)
+    {
+        if (account == null) return false;
+        for (CuratedTrainingMethod candidate : skillingMethods)
+        {
+            TrainingMethod method = candidate.getMethod();
+            TrainingMethodMetadata metadata = candidate.getMetadata();
+            if (method == null || metadata == null
+                    || !metadata.isUimFriendly()
+                    || !method.supportsLevel(account.getSkillLevel(
+                            method.getSkill()))
+                    || method.getConfidence()
+                            != RecommendationConfidence.VERIFIED
+                    || !method.getRequirements().isEmpty()
+                    || !AccountBuildPolicy.allowsMethod(account, method)
+                    || !ContentAccessRules.isMethodAvailable(method,
+                            account.getMembershipStatus())) continue;
+            MethodStrategyProfile profile = methodCatalog.profileFor(method,
+                    metadata, AccountMode.ULTIMATE_IRONMAN);
+            if (profile != null && profile.getInventoryFootprint() != null
+                    && profile.getInventoryFootprint()
+                            .getMinimumPracticalFreeSlots() > free)
+                return true;
+        }
+        return false;
     }
 
     private boolean blocked(String candidateId, int free)
@@ -102,5 +137,19 @@ public final class UimRecurringPressureService
             value = 31 * value + (item == null ? 0 : item.getQuantity());
         }
         return value;
+    }
+
+    private static List<CuratedTrainingMethod> skillingMethods()
+    {
+        List<CuratedTrainingMethod> result = new ArrayList<>();
+        ExpandedTrainingMethodCatalog expanded =
+                new ExpandedTrainingMethodCatalog();
+        F2pBaselineMethodCatalog f2p = new F2pBaselineMethodCatalog();
+        for (Skill skill : Skill.values())
+        {
+            result.addAll(expanded.methodsFor(skill));
+            result.addAll(f2p.methodsFor(skill));
+        }
+        return java.util.Collections.unmodifiableList(result);
     }
 }

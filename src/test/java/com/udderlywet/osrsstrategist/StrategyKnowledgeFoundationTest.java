@@ -69,6 +69,28 @@ public class StrategyKnowledgeFoundationTest
     }
 
     @Test
+    public void sharedFootprintsComeFromTypedPropertiesNotMethodIds()
+    {
+        TrainingMethod agilityWithMiningId = method("mining_named_agility",
+                Skill.AGILITY);
+        TrainingMethod miningWithAgilityId = method("agility_named_mining",
+                Skill.MINING);
+        TrainingMethodMetadata metadata = new TrainingMethodMetadata(
+                TrainingIntensity.BALANCED, MethodCostTier.FREE,
+                RiskLevel.NONE, true, true, true, true,
+                Collections.emptyList());
+        MethodStrategyKnowledgeCatalog catalog =
+                new MethodStrategyKnowledgeCatalog();
+
+        assertEquals(0, catalog.profileFor(agilityWithMiningId, metadata,
+                        AccountMode.ULTIMATE_IRONMAN)
+                .getInventoryFootprint().getMinimumPracticalFreeSlots());
+        assertEquals(1, catalog.profileFor(miningWithAgilityId, metadata,
+                        AccountMode.ULTIMATE_IRONMAN)
+                .getInventoryFootprint().getMinimumPracticalFreeSlots());
+    }
+
+    @Test
     public void everyExplicitConventionalBankLoopIsExcludedFromUimGeneration()
     {
         MethodStrategyKnowledgeCatalog knowledge =
@@ -202,6 +224,14 @@ public class StrategyKnowledgeFoundationTest
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,
                 GoalType.AUTOMATIC, false, false,
                 new PreferenceProfile());
+    }
+
+    private static TrainingMethod method(String id, Skill skill)
+    {
+        return new TrainingMethod(id, skill, 1, 99, "Typed method",
+                "Use the typed route.", 1, 1, 1, AttentionLevel.MODERATE,
+                10, 1, Collections.emptyList(),
+                RecommendationConfidence.VERIFIED, false, false, false);
     }
 
     private static StrategyDataBundle data(int type,

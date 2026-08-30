@@ -7,8 +7,11 @@ requirement, actionability, and presentation gates.
 
 ## Recommendation decision flow
 
-1. `MethodStrategyKnowledgeCatalog` generates only sourced shared or
-   account-applicable method profiles for the observed mode. `RecommendationEngine`
+1. `MethodStrategyKnowledgeCatalog` selects only sourced shared or
+   account-applicable method profiles for the observed mode. One method ID may
+   have a shared profile and material account-specific variants, so adding an
+   Iron/UIM strategy never removes the reviewed shared activity from Main
+   generation. `RecommendationEngine`
    turns those legal profiles into skill candidates and targets the
    nearest proven breakpoint rather than an arbitrary round number.
 2. Candidate providers add quests, upgrades, Slayer workflow actions, PvM,
@@ -54,6 +57,13 @@ Wiki text is not copied into runtime records. Maintainers retain facts and
 short paraphrased strategic properties under clean provenance. OSRS Wiki text
 is identified as CC BY-NC-SA 3.0; media has separate per-file licensing and is
 not imported by this workflow. See `STRATEGIC_DATA_SOURCES.md`.
+
+`strategy-source-snapshot.json` pins reviewed page revision/timestamp metadata.
+The development-time source-review script can compare those pins with the
+MediaWiki API; runtime recommendation code never performs Wiki I/O. The normal
+content-freshness validator cross-checks the source count and latest review
+date against that snapshot, preventing the aggregate manifest from drifting
+silently when a source is added.
 
 ## Account strategic priorities
 
@@ -116,6 +126,19 @@ deathpiles retain separate behavior. Any dangerous-storage guidance requires a
 verified `UimStorageDecision`, a prominent HIGH RISK disclosure, and explicit
 acknowledgement. Missing exact access, compatibility, capacity, or disclosure
 fails final execution validation.
+
+Each restricted retrieval capability also has a local
+`UimStorageMechanicProfile` naming its location, access, eligible-item,
+deposit/insertion, retrieval, fee, expiry, second-death, risk, and provenance
+rules. A live capability observation cannot authorize use unless this profile
+is complete. In particular, a looting bag is not modeled as 28 generic slots,
+and generic death storage remains deliberately recommendation-ineligible.
+
+`UimRecurringPressureService` now considers otherwise executable quest,
+activity, and requirement-free skilling plans that repeatedly fail only their
+typed inventory footprint. It can raise safe infrastructure value after a
+real repeated pattern; a single full inventory or an already-blocked method
+does not create a Construction project.
 
 ## Infrastructure and unlocks
 
@@ -350,10 +373,15 @@ equipment, varbit, quest, Slayer, and scene-event burst that follows login.
 For every strategic data change:
 
 1. update `STRATEGIC_DATA_SOURCES.md` with the verified mechanic and date;
-2. change typed data rather than adding an identity-based winner bonus;
-3. add semantic/invariant tests;
-4. run `./gradlew clean test` and `./scripts/check-content-census.sh`;
-5. run `git diff --check` and inspect player-facing copy.
+2. register the stable source ID and pin its MediaWiki revision/timestamp in
+   `strategy-source-snapshot.json`;
+3. change typed data rather than adding an identity-based winner bonus;
+4. add semantic/invariant tests;
+5. run `./scripts/review-strategy-sources.py --check-live` during development
+   and review every changed page before moving its pin;
+6. run `./gradlew clean test`, `./scripts/refresh-content.sh`, and the content
+   census/freshness validators;
+7. run `git diff --check` and inspect player-facing copy.
 
 The exact current content limits belong in the final engineering report and
 source registry. Documentation must not turn an internal evaluator into a

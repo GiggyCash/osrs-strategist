@@ -40,6 +40,9 @@ public final class StrategySourceRegistry
         wiki(values, StrategySourceId.UIM_ITEM_MANAGEMENT,
                 "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management",
                 "UIM inventory, storage, retrieval, and risk mechanics");
+        wiki(values, StrategySourceId.ITEM_RETRIEVAL_SERVICES,
+                "https://oldschool.runescape.wiki/w/Item_Retrieval_Service",
+                "Exact Item Retrieval Service location, fee, and second-death mechanics");
         wiki(values, StrategySourceId.IRONMAN_SKILL_GUIDES,
                 "https://oldschool.runescape.wiki/w/Skill_training_guides",
                 "Account-specific Ironman skill methods");
@@ -161,6 +164,8 @@ public final class StrategySourceRegistry
                 return "oldid=15215498 (2026-05-23T07:11:07Z)";
             case UIM_ITEM_MANAGEMENT:
                 return "oldid=15321539 (2026-08-26T21:44:21Z)";
+            case ITEM_RETRIEVAL_SERVICES:
+                return "oldid=15124878 (2026-02-10T18:40:49Z)";
             case OPTIMAL_QUEST_GUIDE:
                 return "oldid=15319535 (2026-08-25T06:47:14Z)";
             case SLAYER_TRAINING:
@@ -225,6 +230,9 @@ public final class StrategySourceRegistry
             case UIM_ITEM_MANAGEMENT:
                 return Arrays.asList("uim-inventory-footprints",
                         "uim-storage", "uim-dangerous-storage");
+            case ITEM_RETRIEVAL_SERVICES:
+                return Arrays.asList("uim-dangerous-storage",
+                        "item-retrieval-fees", "second-death-rules");
             case IRONMAN_SKILL_GUIDES:
                 return Arrays.asList("iron-skilling",
                         "iron-resource-pipelines");

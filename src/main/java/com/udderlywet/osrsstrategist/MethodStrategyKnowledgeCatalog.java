@@ -40,13 +40,16 @@ public final class MethodStrategyKnowledgeCatalog
                     "runecraft_f2p_body", "thieving_lumbridge_people",
                     "thieving_ardy_knights", "thieving_vyres")));
 
-    private final Map<String, MethodStrategyProfile> exact = new HashMap<>();
+    private final Map<String, java.util.List<MethodStrategyProfile>> exact =
+            new HashMap<>();
     private final Map<String, MethodStrategyProfile> generated =
             new ConcurrentHashMap<>();
+    private final MethodExecutionProfileCatalog executionProfiles =
+            new MethodExecutionProfileCatalog();
 
     public MethodStrategyKnowledgeCatalog()
     {
-        exact.put("smithing_f2p_uim_bronze", new MethodStrategyProfile(
+        addExact(new MethodStrategyProfile(
                 "smithing_f2p_uim_bronze",
                 StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
                 EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
@@ -58,7 +61,7 @@ public final class MethodStrategyKnowledgeCatalog
                 Arrays.asList(StrategySourceId.UIM_SMITHING,
                         StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.RUNELITE_MECHANICS)));
-        exact.put("cooking_f2p_uim_carried_fish", new MethodStrategyProfile(
+        addExact(new MethodStrategyProfile(
                 "cooking_f2p_uim_carried_fish",
                 StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
                 EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
@@ -70,7 +73,7 @@ public final class MethodStrategyKnowledgeCatalog
                 Arrays.asList(StrategySourceId.UIM_COOKING,
                         StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.F2P_SKILL_TRAINING)));
-        exact.put("runecraft_f2p_uim_local", new MethodStrategyProfile(
+        addExact(new MethodStrategyProfile(
                 "runecraft_f2p_uim_local",
                 StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
                 EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
@@ -82,43 +85,52 @@ public final class MethodStrategyKnowledgeCatalog
                 Arrays.asList(StrategySourceId.UIM_RUNECRAFT,
                         StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.F2P_SKILL_TRAINING)));
-        exact.put("crafting_charter_glass", uim("crafting_charter_glass", 4,
+        addExact(uim("crafting_charter_glass", 4,
                 InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS,
                 "Charter-shop glassblowing sources and processes materials in one repeatable UIM loop.",
                 StrategySourceId.UIM_CRAFTING));
-        exact.put("smithing_giants_foundry", sharedIronUim(
+        addExact(sharedForMain("smithing_giants_foundry", 3,
+                "Giants' Foundry is a reviewed profit/resource-efficiency alternative when buying faster Smithing inputs is poor value.",
+                StrategySourceId.GIANTS_FOUNDRY));
+        addExact(sharedIronUim(
                 "smithing_giants_foundry", 3,
                 "Giants' Foundry stretches self-sourced metal and advances a useful permanent outfit.",
                 StrategySourceId.IRONMAN_SMITHING,
                 StrategySourceId.UIM_SMITHING));
-        exact.put("construction_mahogany_homes", sharedIronUim(
+        addExact(sharedForMain("construction_mahogany_homes", 4,
+                "Mahogany Homes is a reviewed lower-cost alternative when saving tradeable planks matters more than maximum conventional speed.",
+                StrategySourceId.MAHOGANY_HOMES));
+        addExact(sharedIronUim(
                 "construction_mahogany_homes", 4,
                 "Mahogany Homes reduces plank burn while building high-value account infrastructure.",
                 StrategySourceId.IRONMAN_CONSTRUCTION,
                 StrategySourceId.UIM_CONSTRUCTION));
-        exact.put("prayer_bonecrusher_passive", uim(
+        addExact(sharedForNonUim("prayer_bonecrusher_passive", 0,
+                "A charged bonecrusher can turn a verified compatible combat plan into passive Prayer progress without a separate training detour.",
+                StrategySourceId.GENERAL_SKILL_TRAINING));
+        addExact(uim(
                 "prayer_bonecrusher_passive", 0,
                 InventoryFlow.NEUTRAL,
                 "The carried bonecrusher converts compatible combat drops into Prayer progress without growing inventory.",
                 StrategySourceId.UIM_PRAYER));
-        exact.put("thieving_uim_lumbridge_people", uimNoBank(
+        addExact(uimNoBank(
                 "thieving_uim_lumbridge_people",
                 "Pickpocketing Lumbridge men and women with monastery healing is a slow but concrete bank-free early fallback.",
                 StrategySourceId.UIM_THIEVING));
-        exact.put("thieving_uim_fruit_stalls", uimNoBank(
+        addExact(uimNoBank(
                 "thieving_uim_fruit_stalls",
                 "Hosidius fruit stalls provide a safe bank-free fallback whose freshly stolen fruit can be dropped without dismantling carried setup.",
                 StrategySourceId.UIM_THIEVING));
-        exact.put("fishing_f2p_fly", shared(
+        addExact(shared(
                 "fishing_f2p_fly", MethodBankingBehavior.NONE, 1,
                 "Dropping the catch is a concrete low-setup route when food supply is not the current goal."));
-        exact.put("mining_f2p_iron", shared(
+        addExact(shared(
                 "mining_f2p_iron", MethodBankingBehavior.NONE, 1,
                 "Power-mining iron is a concrete low-setup route when the ore is not needed by another plan."));
-        exact.put("agility_rooftops", shared(
+        addExact(shared(
                 "agility_rooftops", MethodBankingBehavior.NONE, 0,
                 "Rooftop training needs little inventory and advances reusable movement progression."));
-        exact.put("sailing_salvage_small", new MethodStrategyProfile(
+        addExact(new MethodStrategyProfile(
                 "sailing_salvage_small",
                 StrategyKnowledgeTier.VERIFIED_SHARED, ALL_KNOWN,
                 MethodBankingBehavior.NONE,
@@ -134,8 +146,18 @@ public final class MethodStrategyKnowledgeCatalog
             TrainingMethodMetadata metadata, AccountMode mode)
     {
         if (method == null || metadata == null || mode == null) return null;
-        MethodStrategyProfile specific = exact.get(method.getId());
-        if (specific != null) return specific.supports(mode) ? specific : null;
+        java.util.List<MethodStrategyProfile> specific = exact.get(
+                method.getId());
+        if (specific != null)
+        {
+            MethodStrategyProfile selected = null;
+            for (MethodStrategyProfile profile : specific)
+                if (profile.supports(mode)
+                        && (selected == null || profile.getTier().ordinal()
+                                < selected.getTier().ordinal()))
+                    selected = profile;
+            return selected;
+        }
 
         boolean bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.getId());
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
@@ -149,12 +171,14 @@ public final class MethodStrategyKnowledgeCatalog
 
         String key = mode.name() + ':' + method.getId();
         return generated.computeIfAbsent(key, ignored -> genericProfile(
-                method, metadata, mode, bankLoop, modes));
+                method, metadata, mode, bankLoop, modes,
+                executionProfiles.forMethod(method.getId())));
     }
 
     private static MethodStrategyProfile genericProfile(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode,
-            boolean bankLoop, Set<AccountMode> modes)
+            boolean bankLoop, Set<AccountMode> modes,
+            MethodExecutionProfile executionProfile)
     {
         StrategySourceId source = accountSkillSource(
                 method.getSkill(), mode, metadata.isFreeToPlayAllowed());
@@ -165,25 +189,52 @@ public final class MethodStrategyKnowledgeCatalog
                 StrategyKnowledgeTier.VERIFIED_SHARED, modes,
                 bankLoop ? MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
                         : MethodBankingBehavior.NONE,
-                inferredFootprint(method, metadata),
+                typedFootprint(method, metadata, executionProfile),
                 metadata.isSelfSourceFriendly() && mode.isIronLike() ? 0.55 : 0.35,
                 reason, Collections.singletonList(source));
     }
 
-    private static MethodInventoryFootprint inferredFootprint(
-            TrainingMethod method, TrainingMethodMetadata metadata)
+    /**
+     * Conservative family defaults use typed skill/input/setup properties.
+     * Account-specific routes with materially different behavior stay in the
+     * exact sourced records above; method names and IDs never change a
+     * footprint.
+     */
+    private static MethodInventoryFootprint typedFootprint(
+            TrainingMethod method, TrainingMethodMetadata metadata,
+            MethodExecutionProfile executionProfile)
     {
-        String id = method.getId() == null ? "" : method.getId();
-        if (id.contains("agility") || id.contains("thieving")
-                || id.contains("combat") || id.contains("slayer"))
-            return MethodInventoryFootprint.lowPressure();
-        if (id.contains("mining") || id.contains("fishing")
-                || id.contains("woodcutting"))
-            return new MethodInventoryFootprint(1, 1, 0,
-                    InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, false);
+        boolean tearsDown = method.getSetupMinutes() >= 8;
+        switch (method.getSkill())
+        {
+            case AGILITY:
+            case ATTACK:
+            case STRENGTH:
+            case DEFENCE:
+            case HITPOINTS:
+            case RANGED:
+            case MAGIC:
+            case SLAYER:
+            case THIEVING:
+                return new MethodInventoryFootprint(0, 0, 0,
+                        InventoryFlow.NEUTRAL, tearsDown);
+            case MINING:
+            case FISHING:
+            case WOODCUTTING:
+                return new MethodInventoryFootprint(1, 1, 0,
+                        InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, tearsDown);
+            case HUNTER:
+                return new MethodInventoryFootprint(3, 2, 1,
+                        InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, tearsDown);
+            default:
+                break;
+        }
+        boolean consumesInputs = executionProfile != null
+                && !executionProfile.getInputs().isEmpty();
         return new MethodInventoryFootprint(2, 1, 1,
-                InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS,
-                method.getSetupMinutes() >= 8);
+                consumesInputs ? InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS
+                        : InventoryFlow.NEUTRAL,
+                tearsDown);
     }
 
     private static MethodStrategyProfile uim(String id, int slots,
@@ -218,6 +269,32 @@ public final class MethodStrategyKnowledgeCatalog
                 Arrays.asList(ironSource, uimSource,
                         StrategySourceId.IRONMAN_SKILL_GUIDES,
                         StrategySourceId.UIM_SKILL_GUIDES));
+    }
+
+    private static MethodStrategyProfile sharedForMain(String id, int slots,
+            String reason, StrategySourceId source)
+    {
+        return new MethodStrategyProfile(id,
+                StrategyKnowledgeTier.VERIFIED_SHARED,
+                EnumSet.of(AccountMode.MAIN), MethodBankingBehavior.NONE,
+                new MethodInventoryFootprint(slots, Math.min(2, slots),
+                        Math.max(0, slots - 2),
+                        InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
+                0.45, reason, Arrays.asList(source,
+                        StrategySourceId.GENERAL_SKILL_TRAINING));
+    }
+
+    private static MethodStrategyProfile sharedForNonUim(String id, int slots,
+            String reason, StrategySourceId source)
+    {
+        EnumSet<AccountMode> modes = EnumSet.allOf(AccountMode.class);
+        modes.remove(AccountMode.ULTIMATE_IRONMAN);
+        return new MethodStrategyProfile(id,
+                StrategyKnowledgeTier.VERIFIED_SHARED, modes,
+                MethodBankingBehavior.NONE,
+                new MethodInventoryFootprint(slots, slots > 0 ? 1 : 0, 0,
+                        InventoryFlow.NEUTRAL, false), 0.45, reason,
+                Collections.singletonList(source));
     }
 
     private static StrategySourceId accountSkillSource(
@@ -285,5 +362,11 @@ public final class MethodStrategyKnowledgeCatalog
                 new MethodInventoryFootprint(slots, slots > 0 ? 1 : 0, 0,
                         InventoryFlow.NEUTRAL, false), 0.55, reason,
                 Collections.singletonList(StrategySourceId.GENERAL_SKILL_TRAINING));
+    }
+
+    private void addExact(MethodStrategyProfile profile)
+    {
+        exact.computeIfAbsent(profile.getMethodId(),
+                ignored -> new java.util.ArrayList<>()).add(profile);
     }
 }

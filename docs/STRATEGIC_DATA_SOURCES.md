@@ -15,7 +15,7 @@ registry for attribution and re-verification. It does not copy large guide
 passages. Wiki/Jagex media is not imported: file assets can carry different
 Jagex or per-file licenses and require an independent review.
 
-The local 52-source registry was reviewed 2026-08-30. Runtime networking
+The local 53-source registry was reviewed 2026-08-30. Runtime networking
 remains disabled. `strategy-source-snapshot.json` pins exact MediaWiki revision IDs and
 maps each page to the derived strategy families requiring review.
 `python3 scripts/review-strategy-sources.py --validate` is the offline refresh
@@ -103,7 +103,7 @@ registry coverage.
 | --- | --- | --- |
 | Iron Slayer consumable opportunity cost | [Ironman Slayer guide](https://oldschool.runescape.wiki/w/Ironman_Guide/Slayer) | Cannonball time can make cannon use unattractive for an Iron even when the same executable method is convenient for a Main. The evaluator represents replacement burden; it does not force a named task or method winner. |
 | UIM consumable/storage pressure | [Ultimate Ironman guide](https://oldschool.runescape.wiki/w/Ultimate_ironman_guide), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Conventional bank contents are not usable UIM supply; containers and retrieval systems have distinct setup/risk consequences. Exact future consumption is never invented. |
-| Exact dangerous retrieval systems | [Item Retrieval Service](https://oldschool.runescape.wiki/w/Item_Retrieval_Service), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Hespori, Zulrah, and Volcanic Mine services are distinct capabilities. The generic legacy death-storage bucket cannot authorize a route; another unsafe death can permanently destroy retrieval-service contents, so dangerous storage is last-resort and visibly disclosed. |
+| Exact dangerous retrieval systems | [Item Retrieval Service](https://oldschool.runescape.wiki/w/Item_Retrieval_Service), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Hespori, Zulrah, Volcanic Mine, deathpile, and looting-bag profiles retain distinct location, access, eligible-item, deposit, retrieval, cost, expiration, second-death, and risk rules. Hespori costs 25,000 coins; Zulrah retrieval is free for UIM; Volcanic Mine costs 150 numulite; a deathpile lasts 60 logged-in minutes. The generic legacy death-storage bucket cannot authorize a route, and another unsafe death permanently destroys Item Retrieval Service contents, so dangerous storage is last-resort and visibly disclosed. |
 
 General acquisition wording continues to come from `ResourceSourceCatalog`.
 Specific quantities and tradeability must be supplied by typed item/activity

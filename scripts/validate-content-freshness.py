@@ -8,6 +8,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "src/main/resources/content/content-freshness.json"
+STRATEGY_SNAPSHOT = ROOT / "src/main/resources/content/strategy-source-snapshot.json"
 REQUIRED = {
     "quests", "miniquests", "training-methods", "pvm", "slayer",
     "minigames", "diaries", "transportation", "clues", "stash",
@@ -44,6 +45,13 @@ for entry in families:
         fail(entry["id"] + " has an invalid recordCount")
     if entry.get("status") not in {"STRUCTURED", "PARTIAL", "SCAFFOLDED"}:
         fail(entry["id"] + " has an invalid status")
+strategy_entry = next(entry for entry in families
+        if entry.get("id") == "strategy-sources")
+strategy_snapshot = json.loads(STRATEGY_SNAPSHOT.read_text(encoding="utf-8"))
+if strategy_entry.get("recordCount") != len(strategy_snapshot.get("sources", [])):
+    fail("strategy-sources recordCount does not match the pinned source snapshot")
+if strategy_entry.get("snapshotDate") != strategy_snapshot.get("reviewedDate"):
+    fail("strategy-sources snapshotDate does not match the pinned review date")
 for change in data.get("announcedNotLive", []):
     dt.date.fromisoformat(change["effectiveDate"])
     if change.get("planningEnabled") is not False:

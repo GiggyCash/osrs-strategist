@@ -10,6 +10,7 @@
     {"id":"F2P_IRONMAN_GENERAL","apiTitle":"Free-to-play Ironman guide","reviewedRevision":15315034,"reviewedTimestamp":"2026-08-21T03:38:38Z","derivedFamilies":["iron-progression","f2p-skilling","self-source-pipelines"]},
     {"id":"UIM_GENERAL","apiTitle":"Ultimate Ironman Guide","reviewedRevision":15215498,"reviewedTimestamp":"2026-05-23T07:11:07Z","derivedFamilies":["uim-progression","setup-reuse","infrastructure-value"]},
     {"id":"UIM_ITEM_MANAGEMENT","apiTitle":"Ultimate Ironman Guide/Item Management","reviewedRevision":15321539,"reviewedTimestamp":"2026-08-26T21:44:21Z","derivedFamilies":["uim-inventory-footprints","uim-storage","uim-dangerous-storage"]},
+    {"id":"ITEM_RETRIEVAL_SERVICES","apiTitle":"Item Retrieval Service","reviewedRevision":15124878,"reviewedTimestamp":"2026-02-10T18:40:49Z","derivedFamilies":["uim-dangerous-storage","item-retrieval-fees","second-death-rules"]},
     {"id":"IRONMAN_SKILL_GUIDES","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["iron-skilling","iron-resource-pipelines"]},
     {"id":"UIM_SKILL_GUIDES","apiTitle":"Skill training guides","reviewedRevision":15231153,"reviewedTimestamp":"2026-06-10T08:54:42Z","derivedFamilies":["uim-skilling","uim-method-footprints"]},
     {"id":"IRONMAN_SMITHING","apiTitle":"Ironman Guide/Smithing","reviewedRevision":15177119,"reviewedTimestamp":"2026-04-15T12:20:44Z","derivedFamilies":["iron-skilling","iron-smithing"]},

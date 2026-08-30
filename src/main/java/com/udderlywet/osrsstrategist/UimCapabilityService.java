@@ -46,6 +46,18 @@ public class UimCapabilityService
                     "Generic death-storage evidence does not identify the retrieval service, access, withdrawal order, or second-death rules. Verify an exact service first.");
         }
 
+        if (UimStorageMechanics.isRestrictedRetrieval(capability))
+        {
+            UimStorageMechanicProfile mechanic =
+                    UimStorageMechanics.profile(capability);
+            if (mechanic == null
+                    || !mechanic.hasCompleteRecommendationRules())
+                return decision(capability, false,
+                        RecommendationConfidence.CHECK_NEEDED,
+                        riskFor(capability),
+                        "The exact location, access, item, retrieval, cost, expiry, and second-death rules are not completely modeled.");
+        }
+
         StorageSnapshot storage = data.getStorage();
         CapabilityState capabilityState = storage == null
                 ? CapabilityState.UNKNOWN
@@ -110,6 +122,9 @@ public class UimCapabilityService
 
     private static RiskLevel riskFor(StorageCapability capability)
     {
+        UimStorageMechanicProfile profile =
+                UimStorageMechanics.profile(capability);
+        if (profile != null) return profile.getRisk();
         if (capability == StorageCapability.DEATH_STORAGE
                 || UimStorageMechanics.isExactItemRetrievalService(capability))
         {

@@ -105,6 +105,40 @@ public class AccountModePairRedTeamTest
     }
 
     @Test
+    public void sharedActivitiesRemainAvailableBesideAccountSpecificVariants()
+    {
+        ExpandedTrainingMethodCatalog methods =
+                new ExpandedTrainingMethodCatalog();
+        MethodStrategyKnowledgeCatalog knowledge =
+                new MethodStrategyKnowledgeCatalog();
+        for (String id : Arrays.asList("smithing_giants_foundry",
+                "construction_mahogany_homes",
+                "prayer_bonecrusher_passive"))
+        {
+            CuratedTrainingMethod method = Arrays.stream(Skill.values())
+                    .flatMap(skill -> methods.methodsFor(skill).stream())
+                    .filter(value -> id.equals(value.getMethod().getId()))
+                    .findFirst().orElseThrow(AssertionError::new);
+            MethodStrategyProfile main = knowledge.profileFor(
+                    method.getMethod(), method.getMetadata(), AccountMode.MAIN);
+            MethodStrategyProfile iron = knowledge.profileFor(
+                    method.getMethod(), method.getMetadata(),
+                    AccountMode.IRONMAN);
+            MethodStrategyProfile uim = knowledge.profileFor(
+                    method.getMethod(), method.getMetadata(),
+                    AccountMode.ULTIMATE_IRONMAN);
+            assertNotNull(id + " Main", main);
+            assertNotNull(id + " Iron", iron);
+            assertNotNull(id + " UIM", uim);
+            assertEquals(id + " Main tier", StrategyKnowledgeTier.VERIFIED_SHARED,
+                    main.getTier());
+            assertEquals(id + " UIM tier",
+                    StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
+                    uim.getTier());
+        }
+    }
+
+    @Test
     public void mainIronGimAndUimResourceRoutesUseModeEvidence()
     {
         ResourceNeed need = new ResourceNeed(5000, "Steel bar", 10);
