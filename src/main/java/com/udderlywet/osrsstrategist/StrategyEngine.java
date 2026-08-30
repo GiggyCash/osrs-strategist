@@ -7,18 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Top-level strategist coordinator.
- *
- * <p>Everything that can influence a recommendation eventually enters through
- * this class. Skill training stays in {@link RecommendationEngine}; recurring
- * activities stay in {@link OpportunityEngine}; specialized systems contribute
- * structured {@link StrategySignal}s through {@link StrategyModule}s.</p>
- *
- * <p>This prevents the plugin from becoming one enormous switch statement as
- * quests, PvM, clues, diaries, economy, storage, Sailing, and new Jagex content
- * are added.</p>
- */
 @Singleton
 public class StrategyEngine
 {
@@ -37,25 +25,14 @@ public class StrategyEngine
         this.moduleRegistry = moduleRegistry;
     }
 
-    /**
-     * Compatibility entry point for early tests and callers.
-     */
     public StrategyResult evaluate(
             StrategyDataBundle data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
     {
-        return evaluate(
-                data,
-                strategyMode,
-                sessionIntent,
-                QuestTolerance.NORMAL,
-                GoalType.MAX,
-                true,
-                false,
-                preferenceProfile
-        );
+        return evaluate(data, strategyMode, sessionIntent, QuestTolerance.NORMAL,
+                GoalType.MAX, true, false, false, preferenceProfile);
     }
 
     public StrategyResult evaluate(
@@ -68,63 +45,44 @@ public class StrategyEngine
             boolean collectionistMode,
             PreferenceProfile preferenceProfile)
     {
+        return evaluate(data, strategyMode, sessionIntent, questTolerance,
+                activeGoal, useGroupStorage, collectionistMode, false,
+                preferenceProfile);
+    }
+
+    public StrategyResult evaluate(
+            StrategyDataBundle data,
+            StrategyMode strategyMode,
+            SessionIntent sessionIntent,
+            QuestTolerance questTolerance,
+            GoalType activeGoal,
+            boolean useGroupStorage,
+            boolean collectionistMode,
+            boolean allowWildernessMethods,
+            PreferenceProfile preferenceProfile)
+    {
         if (data == null || data.getAccount() == null)
         {
-            return new StrategyResult(
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList()
-            );
+            return new StrategyResult(Collections.emptyList(),
+                    Collections.emptyList(), Collections.emptyList());
         }
 
         StrategyContext context = new StrategyContext(
-                data,
-                strategyMode,
-                sessionIntent,
-                questTolerance,
-                activeGoal,
-                useGroupStorage,
-                collectionistMode,
-                preferenceProfile
-        );
+                data, strategyMode, sessionIntent, questTolerance, activeGoal,
+                useGroupStorage, collectionistMode, allowWildernessMethods,
+                preferenceProfile);
 
-        // Pass the full verified bundle into the skill/method pipeline. This is
-        // the seam that lets future method scoring consider banked resources,
-        // account mode, quests, equipment, transport, and storage safely.
-        List<Recommendation> recommendations =
-                recommendationEngine.recommend(
-                        data,
-                        context.getStrategyMode(),
-                        context.getSessionIntent(),
-                        context.getPreferenceProfile()
-                );
-
-        List<Opportunity> opportunities =
-                opportunityEngine.evaluate(data);
-
+        List<Recommendation> recommendations = recommendationEngine.recommend(
+                data, context.getStrategyMode(), context.getSessionIntent(),
+                context.isAllowWildernessMethods(), context.getPreferenceProfile());
+        List<Opportunity> opportunities = opportunityEngine.evaluate(data);
         List<StrategySignal> signals = new ArrayList<>();
-
         for (StrategyModule module : moduleRegistry.getModules())
         {
-            List<StrategySignal> moduleSignals =
-                    module.analyze(context);
-
-            if (moduleSignals != null)
-            {
-                signals.addAll(moduleSignals);
-            }
+            List<StrategySignal> moduleSignals = module.analyze(context);
+            if (moduleSignals != null) signals.addAll(moduleSignals);
         }
-
-        signals.sort(
-                Comparator.comparingDouble(
-                        StrategySignal::getScoreDelta
-                ).reversed()
-        );
-
-        return new StrategyResult(
-                recommendations,
-                opportunities,
-                signals
-        );
+        signals.sort(Comparator.comparingDouble(StrategySignal::getScoreDelta).reversed());
+        return new StrategyResult(recommendations, opportunities, signals);
     }
 }
