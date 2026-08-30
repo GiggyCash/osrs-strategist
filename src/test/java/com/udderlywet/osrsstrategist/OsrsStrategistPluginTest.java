@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import java.awt.image.BufferedImage;
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -113,6 +114,16 @@ public class OsrsStrategistPluginTest
 
         assertTrue(plugin.consumeStrategyRefreshPending(10_000L));
         assertFalse(plugin.consumeStrategyRefreshPending(10_001L));
+    }
+
+    @Test
+    public void missingNavigationIconCannotCrashPluginStartup()
+    {
+        BufferedImage fallback = OsrsStrategistPlugin.loadPluginIcon(
+                OsrsStrategistPluginTest.class, "/missing-compass-icon.png");
+        assertTrue(fallback != null);
+        assertTrue(fallback.getWidth() > 0);
+        assertTrue(fallback.getHeight() > 0);
     }
 
     @SuppressWarnings("unchecked")

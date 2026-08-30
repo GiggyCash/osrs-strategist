@@ -116,7 +116,10 @@ public class RealProviderStrategyTournamentTest
                 "best available", "use a nearby", "a training area",
                 "get supplies", "whatever", "use any", "choose a suitable",
                 "use a reachable", "an appropriate", "as needed",
-                "use an altar", "use an anvil", "use a furnace"))
+                "use an altar", "use an anvil", "use a furnace",
+                "current level band", "strategic value", "candidate",
+                "evidence score", "typed requirement", "ranking",
+                "provenance", "weighting", "resolver"))
             assertFalse(label + " contains '" + slop + "': " + visible,
                     visible.contains(slop));
         assertTrue(label + " lacks WHERE: " + visible,

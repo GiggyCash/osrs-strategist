@@ -69,7 +69,7 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
             String priceNote = method.isRequiresLivePrices()
-                    ? " Main-account profit ranking requires current prices before comparing GP/hour."
+                    ? " Comparing Main-account profit requires current prices before showing GP/hour."
                     : "";
             result.add(new StrategyCandidate(
                     id,

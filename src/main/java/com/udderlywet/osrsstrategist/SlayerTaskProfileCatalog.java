@@ -414,7 +414,7 @@ public class SlayerTaskProfileCatalog
     {
         String risk = wilderness
                 ? "This is a Wilderness boss task: require explicit risk acceptance, disposable gear and a tested escape."
-                : "Use the encounter-specific PvM readiness profile; a live Slayer assignment does not prove gear, supplies or player execution.";
+                : "Use the encounter-specific PvM readiness check; a live Slayer assignment does not prove gear, supplies or player execution.";
         return p(id, a(alias), Collections.emptyList(),
                 "Open the matching encounter preparation before travelling.",
                 "Use only an encounter-verified setup, not generic Slayer gear.",

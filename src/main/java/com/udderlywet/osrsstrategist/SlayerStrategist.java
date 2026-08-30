@@ -472,7 +472,7 @@ public class SlayerStrategist
                 : new RecommendationGuidance(
                         "Review the shown task mechanics and verify a legal weapon, protection and supplies before beginning the assignment.",
                         base.getSupplies(), base.getLocation(),
-                        "The assignment is decoded, but no reviewed strategic profile exists; Compass will not invent a do/skip/block verdict. " + base.getNote());
+                        "Compass recognises the assignment but has not reviewed it deeply enough to invent a do, skip, or block verdict. " + base.getNote());
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 40.0,
                 RecommendationConfidence.CHECK_NEEDED,
@@ -583,7 +583,7 @@ public class SlayerStrategist
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.BLOCK, master, task, 59.0 - value,
                 RecommendationConfidence.VERIFIED,
-                "High assignment weight, low strategic value, enough points and a verified free slot justify a block.",
+                "This frequently assigned task is a weak fit for the account, and the observed points and free block slot make blocking it practical.",
                 guidance);
     }
 

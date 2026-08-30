@@ -78,11 +78,11 @@ public class F2pBaselineMethodCatalog
                 AttentionLevel.ACTIVE);
 
         baseline(Skill.FISHING, "fishing_f2p_shrimps", 1, 19,
-                "Net shrimps",
+                "Small-net fishing",
                 "Lumbridge Swamp fishing spots beside the Fishing tutor: net shrimp, drop the catch when full, and repeat until 20 Fishing.",
                 AttentionLevel.LOW);
         baseline(Skill.FISHING, "fishing_f2p_fly_baseline", 20, 99,
-                "Fly-fish trout and salmon",
+                "Fly fishing",
                 "Barbarian Village river: bring a fly fishing rod and feathers, catch trout and salmon, drop the fish when full, and repeat.",
                 AttentionLevel.MODERATE);
 

@@ -156,7 +156,7 @@ public class UniversalSkillActionGuidanceService
 
         StringBuilder note = new StringBuilder();
         note.append("Action XP comes from RuneLite's maintained skill-calculator data. ")
-                .append("This fallback appears only after membership and recipe checks pass.");
+                .append("Compass shows this option only after its membership and recipe checks pass.");
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
             note.append(" Count assumes the ")

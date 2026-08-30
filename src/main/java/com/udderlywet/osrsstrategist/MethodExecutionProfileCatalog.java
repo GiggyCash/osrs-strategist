@@ -78,7 +78,15 @@ public class MethodExecutionProfileCatalog
                 fixed("Feather", 1.0),
                 "Fly fishing consumes one feather per catch. From level 30 the spot yields both trout and salmon, so a single-fish exact count is not valid.",
                 "trout", "salmon"));
+        add(pv("fishing_f2p_fly_baseline", "fish caught", "fish caught",
+                fixed("Feather", 1.0),
+                "Fly fishing consumes one feather per catch. From level 30 the spot yields both trout and salmon, so a single-fish exact count is not valid.",
+                "trout", "salmon"));
         add(pv("fishing_lumbridge_shrimps", "fish caught", "fish caught",
+                none(),
+                "From level 15 the net spot yields both shrimp and anchovies, so a shrimp-only exact count is not valid.",
+                "shrimp", "anchovies"));
+        add(pv("fishing_f2p_shrimps", "fish caught", "fish caught",
                 none(),
                 "From level 15 the net spot yields both shrimp and anchovies, so a shrimp-only exact count is not valid.",
                 "shrimp", "anchovies"));

@@ -37,7 +37,7 @@ public final class WorthDoingNowService
                     "Setup would consume the available session.");
         if (net >= 0.05)
             return result(WorthDoingNowState.DO_NOW, net,
-                    "Verified readiness and current strategic value outweigh the burdens.");
+                    "The account is ready, and the activity's current benefit outweighs its setup and risk.");
         if (net <= -0.35)
             return result(WorthDoingNowState.SKIP, net,
                     "Risk or opportunity cost materially outweighs current value.");

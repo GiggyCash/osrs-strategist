@@ -314,8 +314,8 @@ public class TrainingMethodSelector
         }
         else
         {
-            reason.append("Reviewed for ").append(pretty(strategyMode.name()))
-                    .append(" strategy");
+            reason.append("This method suits ")
+                    .append(pretty(strategyMode.name())).append(" play.");
         }
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
             reason.append(" It also fits ").append(pretty(sessionIntent.name()))

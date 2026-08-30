@@ -246,11 +246,11 @@ public class AdaptiveMilestoneGuidanceService
                     ? "Buy a bronze axe from Bob's Brilliant Axes in Lumbridge before starting."
                     : "Bring your " + axe + ".";
         }
-        if ("fishing_f2p_fly".equals(methodId))
+        if (isFlyFishingMethod(methodId))
             return items.has("Fly fishing rod")
                     ? "Bring your fly fishing rod."
                     : "Buy a fly fishing rod from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village.";
-        if ("fishing_lumbridge_shrimps".equals(methodId))
+        if (isNetFishingMethod(methodId))
             return "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed.";
         if ("hunter_bird_traps".equals(methodId))
             return items.has("Bird snare")
@@ -308,9 +308,9 @@ public class AdaptiveMilestoneGuidanceService
                 return "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge.";
             return "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis.";
         }
-        if ("fishing_f2p_fly".equals(methodId))
+        if (isFlyFishingMethod(methodId))
             return "Barbarian Village fishing spots on the River Lum.";
-        if ("fishing_lumbridge_shrimps".equals(methodId))
+        if (isNetFishingMethod(methodId))
             return "Lumbridge Swamp net fishing spots beside the Fishing tutor.";
         if ("magic_f2p_curse".equals(methodId)
                 || "magic_f2p_fire_strike_splash".equals(methodId))
@@ -465,10 +465,10 @@ public class AdaptiveMilestoneGuidanceService
                         .VARIABLE_OUTPUT_RANGE)
         {
             String names = outputNames(outputs).toLowerCase(Locale.ROOT);
-            if ("fishing_f2p_fly".equals(method.getId()))
+            if (isFlyFishingMethod(method.getId()))
                 return "Fly-fish " + names
                         + ", drop the catch when your inventory fills, and repeat.";
-            if ("fishing_lumbridge_shrimps".equals(method.getId()))
+            if (isNetFishingMethod(method.getId()))
                 return "Use the small net to catch " + names
                         + ", drop the catch when your inventory fills, and repeat.";
         }
@@ -487,6 +487,18 @@ public class AdaptiveMilestoneGuidanceService
         int colon = instructions.indexOf(':');
         if (colon < 3) return null;
         return instructions.substring(0, colon).trim() + ".";
+    }
+
+    private static boolean isFlyFishingMethod(String methodId)
+    {
+        return "fishing_f2p_fly".equals(methodId)
+                || "fishing_f2p_fly_baseline".equals(methodId);
+    }
+
+    private static boolean isNetFishingMethod(String methodId)
+    {
+        return "fishing_lumbridge_shrimps".equals(methodId)
+                || "fishing_f2p_shrimps".equals(methodId);
     }
 
     private static String firstObserved(

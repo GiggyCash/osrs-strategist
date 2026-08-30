@@ -131,7 +131,7 @@ public class CombatGuidanceService
                         "Port Sarim docks and shoreline.",
                         "Fight seagulls and stay on Defensive style.",
                         4.0,
-                        "Use Defensive style only. Seagulls are efficient for the low-damage Defence-pure profile because accuracy matters more than loot.");
+                        "Use Defensive style only. Seagulls suit a low-damage Defence pure because accuracy matters more than loot.");
             }
 
             CombatRoute crab = bestCrab(data, intent);

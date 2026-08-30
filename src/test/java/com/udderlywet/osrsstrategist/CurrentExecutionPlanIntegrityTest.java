@@ -76,6 +76,39 @@ public class CurrentExecutionPlanIntegrityTest
     }
 
     @Test
+    public void guaranteedF2pFallbackUsesTheSameFishingStages()
+    {
+        TrainingMethod fallback = new F2pBaselineMethodCatalog()
+                .methodsFor(Skill.FISHING).stream()
+                .map(CuratedTrainingMethod::getMethod)
+                .filter(value -> "fishing_f2p_fly_baseline".equals(
+                        value.getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+        TrainingPlan fallbackPlan = plan(fallback);
+        CurrentExecutionStageResolver resolver =
+                new CurrentExecutionStageResolver(fishingActions,
+                        new MethodExecutionProfileCatalog());
+
+        assertEquals("Fly fishing", fallback.getName());
+        assertEquals(30, resolver.resolve(fallbackPlan, 20, 53));
+
+        RecommendationGuidance guidance =
+                new AdaptiveMilestoneGuidanceService(fishingActions,
+                        new MethodExecutionProfileCatalog(),
+                        new SkillingXpModifierService())
+                        .build(data(20, 2, Arrays.asList(
+                                item(ItemID.FLY_FISHING_ROD,
+                                        "Fly fishing rod", 1),
+                                item(ItemID.FEATHER, "Feather", 250))),
+                                Skill.FISHING, 20, 30, fallbackPlan, true);
+        assertTrue(guidance.getAction().contains("trout"));
+        assertFalse(guidance.getAction().toLowerCase().contains("salmon"));
+        assertTrue(guidance.getProgress().contains("with Trout"));
+        assertTrue(guidance.getSupplies().contains("Feather"));
+        assertTrue(guidance.getLocation().contains("Barbarian Village"));
+    }
+
+    @Test
     public void finiteUimFeathersAreCurrentStockNotWholePlanReadiness()
     {
         StrategyDataBundle data = data(30, 2,

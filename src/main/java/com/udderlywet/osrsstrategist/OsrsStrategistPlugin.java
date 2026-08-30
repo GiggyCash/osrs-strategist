@@ -1031,7 +1031,20 @@ public class OsrsStrategistPlugin extends Plugin
 
     private BufferedImage loadPluginIcon()
     {
-        return ImageUtil.loadImageResource(getClass(),
-                "/gielinor-compass-icon.png");
+        return loadPluginIcon(getClass(), "/gielinor-compass-icon.png");
+    }
+
+    static BufferedImage loadPluginIcon(Class<?> owner, String resource)
+    {
+        try
+        {
+            BufferedImage icon = ImageUtil.loadImageResource(owner, resource);
+            if (icon != null) return icon;
+        }
+        catch (RuntimeException ignored)
+        {
+            // A packaging mistake must not prevent RuneLite from starting.
+        }
+        return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     }
 }

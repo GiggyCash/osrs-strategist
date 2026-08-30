@@ -183,8 +183,8 @@ public final class MethodStrategyKnowledgeCatalog
         StrategySourceId source = accountSkillSource(
                 method.getSkill(), mode, metadata.isFreeToPlayAllowed());
         String reason = metadata.isSelfSourceFriendly() && mode.isIronLike()
-                ? "This method has a concrete self-sufficient resource route for the current level band."
-                : "This is a reviewed practical method for the current level, session, and play style.";
+                ? "This route lets your account source its own supplies and is usable at your current level."
+                : "This method is usable at your current level and suits this session and play style.";
         return new MethodStrategyProfile(method.getId(),
                 StrategyKnowledgeTier.VERIFIED_SHARED, modes,
                 bankLoop ? MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
