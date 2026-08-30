@@ -123,7 +123,7 @@ public final class RecommendationPresentation
             sections.add(new Section("GOAL",
                     compactSentence(goalContext.getStatus(), 160)));
 
-        String why = recommendation.getReason();
+        String why = playerWhy(recommendation);
         if (hasText(why))
             sections.add(new Section("WHY", compactSentence(why, 140)));
 
@@ -147,11 +147,20 @@ public final class RecommendationPresentation
                     compactSentence(current, 150)));
 
         if (sections.size() < 4 && hasText(recommendation.getReason())
+                && recommendation.getGoalProvenance() == null
                 && !sameSentence(why, recommendation.getReason()))
             sections.add(new Section("NEXT",
                     compactSentence(recommendation.getReason(), 130)));
         return Collections.unmodifiableList(sections.subList(0,
                 Math.min(4, sections.size())));
+    }
+
+    private static String playerWhy(Recommendation recommendation)
+    {
+        if (recommendation != null
+                && recommendation.getGoalProvenance() != null)
+            return recommendation.getGoalProvenance().playerReason();
+        return recommendation == null ? null : recommendation.getReason();
     }
 
     private static void appendNonSkillCompact(

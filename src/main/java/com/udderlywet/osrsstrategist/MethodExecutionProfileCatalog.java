@@ -74,11 +74,14 @@ public class MethodExecutionProfileCatalog
                 "Each successful gem-rock mine gives the fixed Mining XP represented by RuneLite; the gem received is variable.",
                 "gem_rocks"));
 
-        add(p("fishing_f2p_fly", "fish caught", "fish caught", none(),
-                "Selects the highest unlocked trout/salmon action in the route.",
+        add(pv("fishing_f2p_fly", "fish caught", "fish caught",
+                fixed("Feather", 1.0),
+                "Fly fishing consumes one feather per catch. From level 30 the spot yields both trout and salmon, so a single-fish exact count is not valid.",
                 "trout", "salmon"));
-        add(p("fishing_lumbridge_shrimps", "shrimp caught", "shrimp caught", none(), null,
-                "shrimp"));
+        add(pv("fishing_lumbridge_shrimps", "fish caught", "fish caught",
+                none(),
+                "From level 15 the net spot yields both shrimp and anchovies, so a shrimp-only exact count is not valid.",
+                "shrimp", "anchovies"));
         add(p("fishing_barbarian", "fish caught", "fish caught", none(),
                 "Selects the highest unlocked leaping fish. Passive Agility/Strength XP is extra.",
                 "leaping"));
@@ -345,6 +348,21 @@ public class MethodExecutionProfileCatalog
     {
         return new MethodExecutionProfile(
                 id, singular, plural, 1.0, inputs, note, terms);
+    }
+
+    private MethodExecutionProfile pv(
+            String id,
+            String singular,
+            String plural,
+            MethodExecutionProfile input,
+            String note,
+            String... terms)
+    {
+        return new MethodExecutionProfile(
+                id, singular, plural, 1.0, input.getInputs(), note,
+                MethodExecutionProfile.ProgressEstimateMode
+                        .VARIABLE_OUTPUT_RANGE,
+                terms);
     }
 
     private static MethodExecutionProfile none()

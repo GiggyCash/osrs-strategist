@@ -25,6 +25,8 @@ public class CandidateSafetyPolicy
                         && recommendation.getGuidance().getBankingBehavior()
                             == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP))
             return false;
+        if (recommendation.getSafetyEvidence().hasInvalidCurrentExecution())
+            return false;
         return isAllowed(recommendation.getSafetyEvidence(), account);
     }
 
@@ -39,6 +41,8 @@ public class CandidateSafetyPolicy
     private static boolean isAllowed(CandidateSafetyEvidence evidence,
             AccountSnapshot account)
     {
+
+        if (evidence.hasInvalidCurrentExecution()) return false;
 
         // Unannotated content is never assumed F2P-safe. This is the final
         // protection against a new provider forgetting its early access filter.

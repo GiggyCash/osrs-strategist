@@ -16,6 +16,16 @@ import java.util.List;
  */
 public final class MethodExecutionProfile
 {
+    public enum ProgressEstimateMode
+    {
+        /** Every successful action represented by the chosen row awards one XP value. */
+        EXACT_ACTIONS,
+        /** One repeated interaction can yield several differently valued outputs. */
+        VARIABLE_OUTPUT_RANGE,
+        /** Only XP remaining is safe to show. */
+        XP_ONLY
+    }
+
     public enum InputMode
     {
         NONE,
@@ -37,6 +47,7 @@ public final class MethodExecutionProfile
     private final double xpMultiplier;
     private final List<MethodInputRule> inputs;
     private final String note;
+    private final ProgressEstimateMode progressEstimateMode;
 
     /** Compatibility constructor for profiles with one material rule. */
     public MethodExecutionProfile(
@@ -62,6 +73,7 @@ public final class MethodExecutionProfile
                                 fixedInputName,
                                 fixedInputPerAction)),
                 note,
+                ProgressEstimateMode.EXACT_ACTIONS,
                 actionTerms
         );
     }
@@ -75,6 +87,20 @@ public final class MethodExecutionProfile
             String note,
             String... actionTerms)
     {
+        this(methodId, unitSingular, unitPlural, xpMultiplier, inputs, note,
+                ProgressEstimateMode.EXACT_ACTIONS, actionTerms);
+    }
+
+    public MethodExecutionProfile(
+            String methodId,
+            String unitSingular,
+            String unitPlural,
+            double xpMultiplier,
+            List<MethodInputRule> inputs,
+            String note,
+            ProgressEstimateMode progressEstimateMode,
+            String... actionTerms)
+    {
         this.methodId = methodId;
         this.actionTerms = Collections.unmodifiableList(
                 new ArrayList<>(Arrays.asList(actionTerms)));
@@ -84,6 +110,8 @@ public final class MethodExecutionProfile
         this.inputs = Collections.unmodifiableList(
                 inputs == null ? new ArrayList<>() : new ArrayList<>(inputs));
         this.note = note;
+        this.progressEstimateMode = progressEstimateMode == null
+                ? ProgressEstimateMode.XP_ONLY : progressEstimateMode;
     }
 
     public String getMethodId() { return methodId; }
@@ -93,6 +121,10 @@ public final class MethodExecutionProfile
     public double getXpMultiplier() { return xpMultiplier; }
     public List<MethodInputRule> getInputs() { return inputs; }
     public String getNote() { return note; }
+    public ProgressEstimateMode getProgressEstimateMode()
+    {
+        return progressEstimateMode;
+    }
 
     /** Compatibility accessors return the first input rule, if one exists. */
     public InputMode getInputMode()

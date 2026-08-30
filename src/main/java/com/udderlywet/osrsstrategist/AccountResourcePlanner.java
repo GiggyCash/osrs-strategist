@@ -188,12 +188,20 @@ public class AccountResourcePlanner
         }
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            text.append("Acquire ").append(shortfall)
-                    .append(" just in time. Only inventory, equipment, and verified directly usable storage count; a normal bank never counts for UIM.");
+            List<String> routes = sourceRoutes(missingInputs, mode,
+                    data == null || data.getAccount() == null
+                            ? MembershipStatus.UNKNOWN
+                            : data.getAccount().getMembershipStatus(), true);
+            text.append("Current-stage shortfall: ").append(shortfall)
+                    .append(". Use the verified carried stock first and resupply only when that batch runs low; do not carry the whole distant plan by default.");
+            if (!routes.isEmpty())
+                text.append(" Route: ").append(routes.get(0));
+            text.append(" Only inventory, equipment, and verified directly usable storage count; a normal bank never counts for UIM.");
         }
         else if (mode.isGroupIronman())
         {
-            text.append("Self-source ").append(shortfall).append(".");
+            text.append("Self-source ").append(shortfall)
+                    .append(" in practical batches.");
             if (groupIncluded && groupObserved)
             {
                 text.append(" Observed Group Storage was already included before calculating this shortfall.");
@@ -205,7 +213,14 @@ public class AccountResourcePlanner
         }
         else if (mode.isIronLike())
         {
-            text.append("Self-source ").append(shortfall).append(".");
+            List<String> routes = sourceRoutes(missingInputs, mode,
+                    data == null || data.getAccount() == null
+                            ? MembershipStatus.UNKNOWN
+                            : data.getAccount().getMembershipStatus(), false);
+            text.append("Self-source ").append(shortfall)
+                    .append(" in practical batches.");
+            if (!routes.isEmpty())
+                text.append(" Route: ").append(routes.get(0));
         }
         else
         {
@@ -292,6 +307,20 @@ public class AccountResourcePlanner
                 if (!routes.contains(route)) routes.add(route);
             }
         }
+        return routes;
+    }
+
+    private List<String> sourceRoutes(List<ResolvedMethodInput> missingInputs,
+            AccountMode mode, MembershipStatus membership,
+            boolean justInTime)
+    {
+        if (resourceSourceCatalog == null || missingInputs == null)
+            return java.util.Collections.emptyList();
+        List<String> routes = new ArrayList<>();
+        for (ResolvedMethodInput input : missingInputs)
+            for (String route : resourceSourceCatalog.suggestions(
+                    input.getName(), mode, membership, justInTime))
+                if (!routes.contains(route)) routes.add(route);
         return routes;
     }
 

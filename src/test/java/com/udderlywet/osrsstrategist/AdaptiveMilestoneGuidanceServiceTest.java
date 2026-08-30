@@ -164,7 +164,8 @@ public class AdaptiveMilestoneGuidanceServiceTest
         assertNotNull(guidance);
         assertTrue(guidance.getSupplies().contains(
                 "normal bank never counts for UIM"));
-        assertTrue(guidance.getSupplies().contains("Acquire"));
+        assertTrue(guidance.getSupplies().contains("Current-stage shortfall"));
+        assertTrue(guidance.getSupplies().contains("resupply only"));
     }
 
     @Test
@@ -232,14 +233,16 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
-    public void fullAnglerOutfitReducesExactFishingActionCount()
+    public void mixedFlyFishingUsesAnOutfitAdjustedRangeNotSalmonPrecision()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.FISHING, "trout", "Trout", 20, 50),
                 action(Skill.FISHING, "salmon", "Salmon", 30, 70));
         int currentXp = Experience.getXpForLevel(70);
         int targetXp = Experience.getXpForLevel(80);
         int xpNeeded = targetXp - currentXp;
-        int expectedWithOutfit = (int) Math.ceil(xpNeeded / (70.0 * 1.025));
+        int lower = (int) Math.ceil(xpNeeded / (70.0 * 1.025));
+        int upper = (int) Math.ceil(xpNeeded / (50.0 * 1.025));
 
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.FISHING, 70, currentXp);
@@ -257,8 +260,10 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 plan("fishing_f2p_fly", Skill.FISHING), true);
 
         assertNotNull(guidance);
-        assertTrue(guidance.getAction().contains(
-                "about " + expectedWithOutfit + " fish caught"));
+        assertTrue(guidance.getProgress().contains(
+                String.format(java.util.Locale.ROOT, "%,d–%,d", lower, upper)));
+        assertTrue(guidance.getProgress().contains("Trout and Salmon"));
+        assertFalse(guidance.getProgress().contains("with Salmon"));
         assertTrue(guidance.getNote().contains("full Angler/Spirit Angler outfit"));
     }
 

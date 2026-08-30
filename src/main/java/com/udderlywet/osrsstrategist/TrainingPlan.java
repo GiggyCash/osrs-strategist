@@ -18,6 +18,7 @@ public final class TrainingPlan
     private final RecommendationConfidence confidence;
     private final List<RequirementCheck> requirementChecks;
     private final MethodStrategyProfile strategyProfile;
+    private final int currentStageTargetLevel;
 
     public TrainingPlan(
             TrainingMethod method,
@@ -64,6 +65,18 @@ public final class TrainingPlan
             List<RequirementCheck> requirementChecks,
             MethodStrategyProfile strategyProfile)
     {
+        this(method, whyThisMethod, confidence, requirementChecks,
+                strategyProfile, 0);
+    }
+
+    private TrainingPlan(
+            TrainingMethod method,
+            String whyThisMethod,
+            RecommendationConfidence confidence,
+            List<RequirementCheck> requirementChecks,
+            MethodStrategyProfile strategyProfile,
+            int currentStageTargetLevel)
+    {
         this.method = method;
         this.whyThisMethod = whyThisMethod;
         this.confidence = confidence == null
@@ -75,6 +88,7 @@ public final class TrainingPlan
                         : new ArrayList<>(requirementChecks)
         );
         this.strategyProfile = strategyProfile;
+        this.currentStageTargetLevel = Math.max(0, currentStageTargetLevel);
     }
 
     public TrainingMethod getMethod()
@@ -100,5 +114,20 @@ public final class TrainingPlan
     public MethodStrategyProfile getStrategyProfile()
     {
         return strategyProfile;
+    }
+
+    /**
+     * The next level at which the visible execution plan must be rebuilt. This
+     * is deliberately separate from the recommendation's distant objective.
+     */
+    public int getCurrentStageTargetLevel()
+    {
+        return currentStageTargetLevel;
+    }
+
+    public TrainingPlan withCurrentStageTargetLevel(int targetLevel)
+    {
+        return new TrainingPlan(method, whyThisMethod, confidence,
+                requirementChecks, strategyProfile, targetLevel);
     }
 }

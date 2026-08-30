@@ -59,7 +59,11 @@ public class MethodGuidanceService
                 ? method.getInstructions()
                 : guidance.getAction();
         action = RecommendationPresentation.compactSentence(action, 135);
-        String progress = recommendation.getCurrentLevel() > 0
+        String progress = guidance != null
+                && guidance.getProgress() != null
+                && !guidance.getProgress().trim().isEmpty()
+                ? guidance.getProgress()
+                : recommendation.getCurrentLevel() > 0
                 && recommendation.getTargetLevel()
                         > recommendation.getCurrentLevel()
                 ? "Level " + recommendation.getCurrentLevel() + " → "

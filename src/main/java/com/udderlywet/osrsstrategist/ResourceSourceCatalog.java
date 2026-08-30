@@ -254,8 +254,8 @@ public class ResourceSourceCatalog
                 "Shop-buy the immediate stack needed; feathers are stackable and UIM-friendly once acquired.",
                 tokens("Feather", "Feathers"),
                 "Compare feathers on the Grand Exchange with buying an exact stack from a verified F2P fishing shop.",
-                "Buy the exact stack from a verified F2P fishing shop or use observed bird drops.",
-                "Buy only the immediate stack from a verified F2P fishing shop; feathers remain one carried stack.");
+                "Buy the exact stack from Gerrant's Fishy Business in Port Sarim or use observed bird drops.",
+                "Buy only the immediate stack from Gerrant's Fishy Business in Port Sarim; feathers remain one carried stack.");
         addF2p("gems", tokens("uncut sapphire", "uncut emerald", "uncut ruby",
                         "uncut diamond", "uncut dragonstone"),
                 "Compare uncut gem price with the finished product and XP value.",

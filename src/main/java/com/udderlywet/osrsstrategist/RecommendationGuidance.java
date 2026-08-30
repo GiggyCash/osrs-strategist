@@ -12,6 +12,7 @@ public final class RecommendationGuidance
     private final String action;
     private final String supplies;
     private final String location;
+    private final String progress;
     private final String note;
     private final MethodBankingBehavior bankingBehavior;
     private final UimStorageDecision storageDecision;
@@ -23,7 +24,7 @@ public final class RecommendationGuidance
             String location,
             String note)
     {
-        this(action, supplies, location, note,
+        this(action, supplies, location, null, note,
                 MethodBankingBehavior.UNKNOWN, null, null);
     }
 
@@ -34,7 +35,7 @@ public final class RecommendationGuidance
             String note,
             MethodBankingBehavior bankingBehavior)
     {
-        this(action, supplies, location, note, bankingBehavior, null, null);
+        this(action, supplies, location, null, note, bankingBehavior, null, null);
     }
 
     public RecommendationGuidance(
@@ -46,9 +47,24 @@ public final class RecommendationGuidance
             UimStorageDecision storageDecision,
             RecommendationRiskDisclosure riskDisclosure)
     {
+        this(action, supplies, location, null, note, bankingBehavior,
+                storageDecision, riskDisclosure);
+    }
+
+    private RecommendationGuidance(
+            String action,
+            String supplies,
+            String location,
+            String progress,
+            String note,
+            MethodBankingBehavior bankingBehavior,
+            UimStorageDecision storageDecision,
+            RecommendationRiskDisclosure riskDisclosure)
+    {
         this.action = action;
         this.supplies = supplies;
         this.location = location;
+        this.progress = progress;
         this.note = note;
         this.bankingBehavior = bankingBehavior == null
                 ? MethodBankingBehavior.UNKNOWN : bankingBehavior;
@@ -76,6 +92,11 @@ public final class RecommendationGuidance
         return note;
     }
 
+    public String getProgress()
+    {
+        return progress;
+    }
+
     public MethodBankingBehavior getBankingBehavior()
     {
         return bankingBehavior;
@@ -100,7 +121,8 @@ public final class RecommendationGuidance
     public RecommendationGuidance withBankingBehavior(
             MethodBankingBehavior value)
     {
-        return new RecommendationGuidance(action, supplies, location, note,
+        return new RecommendationGuidance(action, supplies, location, progress,
+                note,
                 value, storageDecision, riskDisclosure);
     }
 
@@ -108,7 +130,14 @@ public final class RecommendationGuidance
             UimStorageDecision decision,
             RecommendationRiskDisclosure disclosure)
     {
-        return new RecommendationGuidance(action, supplies, location, note,
+        return new RecommendationGuidance(action, supplies, location, progress,
+                note,
                 bankingBehavior, decision, disclosure);
+    }
+
+    public RecommendationGuidance withProgress(String value)
+    {
+        return new RecommendationGuidance(action, supplies, location, value,
+                note, bankingBehavior, storageDecision, riskDisclosure);
     }
 }

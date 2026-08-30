@@ -19,6 +19,30 @@ public final class FinalExecutionPlanValidator
 
         CandidateSafetyEvidence evidence = recommendation.getSafetyEvidence();
         RecommendationGuidance guidance = recommendation.getGuidance();
+        if (plan != null)
+        {
+            TrainingMethod method = plan.getMethod();
+            int current = recommendation.getCurrentLevel();
+            int stageTarget = plan.getCurrentStageTargetLevel() > 0
+                    ? plan.getCurrentStageTargetLevel()
+                    : recommendation.getTargetLevel();
+            boolean invalid = method == null
+                    || blank(method.getName())
+                    || current <= 0
+                    || !method.supportsLevel(current)
+                    || stageTarget <= current
+                    || recommendation.getTargetLevel() > 0
+                        && stageTarget > recommendation.getTargetLevel()
+                    || context != null && context.getData() != null
+                        && context.getData().getAccount() != null
+                        && !ContentAccessRules.isMethodAvailable(method,
+                                context.getData().getAccount()
+                                        .getMembershipStatus())
+                    || guidance == null
+                    || blank(guidance.getAction())
+                    || blank(guidance.getLocation());
+            if (invalid) evidence = evidence.withInvalidCurrentExecution();
+        }
         if (profile != null && profile.getBankingBehavior()
                         == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
                 || guidance != null && guidance.getBankingBehavior()
@@ -45,5 +69,10 @@ public final class FinalExecutionPlanValidator
                 evidence = evidence.withUnverifiedDangerousStorage();
         }
         return recommendation.withSafetyEvidence(evidence);
+    }
+
+    private static boolean blank(String value)
+    {
+        return value == null || value.trim().isEmpty();
     }
 }

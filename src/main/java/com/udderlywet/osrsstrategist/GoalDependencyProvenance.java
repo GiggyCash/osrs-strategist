@@ -62,4 +62,20 @@ public final class GoalDependencyProvenance
     {
         return String.join(" → ", path);
     }
+
+    /** Causal player copy derived only from the validated dependency path. */
+    public String playerReason()
+    {
+        String goalName = path.isEmpty() ? goal.toString() : path.get(0);
+        String action = path.get(path.size() - 1);
+        if (relationship == GoalRecommendationRelationship.DIRECT)
+            return action + " directly advances your " + goalName + " goal.";
+        if (path.size() >= 3)
+        {
+            String parent = path.get(path.size() - 2);
+            return action + " is required for " + parent
+                    + ", which is on your " + goalName + " path.";
+        }
+        return action + " is required for your " + goalName + " goal.";
+    }
 }

@@ -2,6 +2,7 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Experience;
@@ -115,15 +116,28 @@ public class AdaptiveMilestoneGuidanceService
 
         double xpPerAction = action.getXp() * combinedMultiplier;
         if (xpPerAction <= 0) return null;
-        int actionsNeeded = divideRoundUp(xpNeeded, xpPerAction);
+        List<RuneLiteSkillActionDefinition> routeOutputs =
+                unlockedRouteOutputs(actionCatalog.actionsFor(skill), profile,
+                        currentLevel, data.getAccount().getMembershipStatus());
+        boolean variableOutput = profile.getProgressEstimateMode()
+                    == MethodExecutionProfile.ProgressEstimateMode
+                            .VARIABLE_OUTPUT_RANGE
+                && hasDifferentXp(routeOutputs);
+        int minimumActions = variableOutput
+                ? divideRoundUp(xpNeeded,
+                        maximumXp(routeOutputs) * combinedMultiplier)
+                : divideRoundUp(xpNeeded, xpPerAction);
+        int maximumActions = variableOutput
+                ? divideRoundUp(xpNeeded,
+                        minimumXp(routeOutputs) * combinedMultiplier)
+                : minimumActions;
 
-        String actionText = format(xpNeeded) + " XP remaining — about "
-                + actionsNeeded + " " + profile.unit(actionsNeeded)
-                + " with " + action.getName() + " to level "
-                + targetLevel + ".";
+        String progressText = progressText(profile, action, routeOutputs,
+                xpNeeded, minimumActions, maximumActions, targetLevel,
+                variableOutput);
 
         List<ResolvedMethodInput> inputs = inputResolver.resolve(
-                profile, action, actionsNeeded);
+                profile, action, maximumActions);
         AccountResourcePlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, inputs, useGroupStorage);
@@ -141,6 +155,8 @@ public class AdaptiveMilestoneGuidanceService
 
         String location = routeLocation(data, plan.getMethod().getId(),
                 action, plan.getMethod().getInstructions());
+        String actionText = executionAction(plan.getMethod(), profile, action,
+                routeOutputs);
         String note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
@@ -174,11 +190,12 @@ public class AdaptiveMilestoneGuidanceService
             note += " UIM shortfalls are intentionally based on immediately usable supplies, not retrieval-only storage.";
         }
 
-        return new RecommendationGuidance(
+        RecommendationGuidance result = new RecommendationGuidance(
                 actionText,
                 supplies,
                 location,
                 note);
+        return result.withProgress(progressText);
     }
 
     /**
@@ -230,9 +247,9 @@ public class AdaptiveMilestoneGuidanceService
                     : "Bring your " + axe + ".";
         }
         if ("fishing_f2p_fly".equals(methodId))
-            return items.has("Fly fishing rod") && items.has("Feather")
-                    ? "Bring your fly fishing rod and feathers."
-                    : "Buy a fly fishing rod and feather packs from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village.";
+            return items.has("Fly fishing rod")
+                    ? "Bring your fly fishing rod."
+                    : "Buy a fly fishing rod from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village.";
         if ("fishing_lumbridge_shrimps".equals(methodId))
             return "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed.";
         if ("hunter_bird_traps".equals(methodId))
@@ -291,6 +308,10 @@ public class AdaptiveMilestoneGuidanceService
                 return "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge.";
             return "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis.";
         }
+        if ("fishing_f2p_fly".equals(methodId))
+            return "Barbarian Village fishing spots on the River Lum.";
+        if ("fishing_lumbridge_shrimps".equals(methodId))
+            return "Lumbridge Swamp net fishing spots beside the Fishing tutor.";
         if ("magic_f2p_curse".equals(methodId)
                 || "magic_f2p_fire_strike_splash".equals(methodId))
         {
@@ -322,7 +343,150 @@ public class AdaptiveMilestoneGuidanceService
                 return "Grand Exchange south-east corner: burn the immediately usable carried logs named in DO in east-to-west rows.";
             }
         }
-        return fallback;
+        String explicit = locationBeforeColon(fallback);
+        return explicit == null ? fallback : explicit;
+    }
+
+    private static String progressText(MethodExecutionProfile profile,
+            RuneLiteSkillActionDefinition selected,
+            List<RuneLiteSkillActionDefinition> outputs,
+            int xpNeeded, int minimumActions, int maximumActions,
+            int targetLevel, boolean variableOutput)
+    {
+        if (profile.getProgressEstimateMode()
+                == MethodExecutionProfile.ProgressEstimateMode.XP_ONLY)
+            return format(xpNeeded) + " XP remaining to level "
+                    + targetLevel + ".";
+        if (variableOutput)
+            return format(xpNeeded) + " XP remaining — approximately "
+                    + format(minimumActions) + "–"
+                    + format(maximumActions) + " "
+                    + profile.unit(maximumActions) + " across "
+                    + outputNames(outputs) + " to level " + targetLevel + ".";
+        return format(xpNeeded) + " XP remaining — "
+                + format(maximumActions) + " "
+                + profile.unit(maximumActions) + " with "
+                + selected.getName() + " to level " + targetLevel + ".";
+    }
+
+    private static List<RuneLiteSkillActionDefinition> unlockedRouteOutputs(
+            List<RuneLiteSkillActionDefinition> actions,
+            MethodExecutionProfile profile, int currentLevel,
+            MembershipStatus membership)
+    {
+        List<RuneLiteSkillActionDefinition> result = new ArrayList<>();
+        if (actions == null || profile == null) return result;
+        for (RuneLiteSkillActionDefinition action : actions)
+        {
+            if (action == null || action.getXp() <= 0
+                    || action.getLevel() > currentLevel
+                    || !membershipAllowed(action.getMembership(), membership)
+                    || !matches(action, profile.getActionTerms())) continue;
+            result.add(action);
+        }
+        return result;
+    }
+
+    private static boolean membershipAllowed(MembershipStatus action,
+            MembershipStatus account)
+    {
+        if (action == MembershipStatus.F2P) return true;
+        return action == MembershipStatus.P2P
+                && account == MembershipStatus.P2P;
+    }
+
+    private static boolean matches(RuneLiteSkillActionDefinition action,
+            List<String> terms)
+    {
+        if (terms == null || terms.isEmpty()) return false;
+        String haystack = normalize(action.getId()) + " "
+                + normalize(action.getName()) + " "
+                + normalize(action.getCategory());
+        for (String term : terms)
+            if (haystack.contains(normalize(term))) return true;
+        return false;
+    }
+
+    private static boolean hasDifferentXp(
+            List<RuneLiteSkillActionDefinition> actions)
+    {
+        if (actions == null || actions.size() < 2) return false;
+        float first = actions.get(0).getXp();
+        for (RuneLiteSkillActionDefinition action : actions)
+            if (Math.abs(action.getXp() - first) > 0.001f) return true;
+        return false;
+    }
+
+    private static double minimumXp(List<RuneLiteSkillActionDefinition> actions)
+    {
+        double value = Double.POSITIVE_INFINITY;
+        for (RuneLiteSkillActionDefinition action : actions)
+            value = Math.min(value, action.getXp());
+        return value;
+    }
+
+    private static double maximumXp(List<RuneLiteSkillActionDefinition> actions)
+    {
+        double value = 0.0;
+        for (RuneLiteSkillActionDefinition action : actions)
+            value = Math.max(value, action.getXp());
+        return value;
+    }
+
+    private static String outputNames(List<RuneLiteSkillActionDefinition> actions)
+    {
+        List<String> names = new ArrayList<>();
+        for (RuneLiteSkillActionDefinition action : actions)
+            if (action.getName() != null && !names.contains(action.getName()))
+                names.add(action.getName());
+        if (names.size() == 2) return names.get(0) + " and " + names.get(1);
+        return String.join(", ", names);
+    }
+
+    private static String routeAction(String instructions, String methodName)
+    {
+        if (instructions == null || instructions.trim().isEmpty())
+            return methodName;
+        int colon = instructions.indexOf(':');
+        String action = colon >= 0 && colon + 1 < instructions.length()
+                ? instructions.substring(colon + 1).trim()
+                : instructions.trim();
+        if (action.isEmpty()) return methodName;
+        return Character.toUpperCase(action.charAt(0)) + action.substring(1);
+    }
+
+    private static String executionAction(TrainingMethod method,
+            MethodExecutionProfile profile,
+            RuneLiteSkillActionDefinition selected,
+            List<RuneLiteSkillActionDefinition> outputs)
+    {
+        if (profile != null && profile.getProgressEstimateMode()
+                == MethodExecutionProfile.ProgressEstimateMode
+                        .VARIABLE_OUTPUT_RANGE)
+        {
+            String names = outputNames(outputs).toLowerCase(Locale.ROOT);
+            if ("fishing_f2p_fly".equals(method.getId()))
+                return "Fly-fish " + names
+                        + ", drop the catch when your inventory fills, and repeat.";
+            if ("fishing_lumbridge_shrimps".equals(method.getId()))
+                return "Use the small net to catch " + names
+                        + ", drop the catch when your inventory fills, and repeat.";
+        }
+        String instruction = routeAction(method.getInstructions(),
+                method.getName());
+        if (selected == null || selected.getName() == null
+                || normalize(instruction).contains(
+                        normalize(selected.getName())))
+            return instruction;
+        return selected.getName() + ": " + instruction;
+    }
+
+    private static String locationBeforeColon(String instructions)
+    {
+        if (instructions == null) return null;
+        int colon = instructions.indexOf(':');
+        if (colon < 3) return null;
+        return instructions.substring(0, colon).trim() + ".";
     }
 
     private static String firstObserved(
@@ -339,5 +503,11 @@ public class AdaptiveMilestoneGuidanceService
             return String.format(Locale.ROOT, "%,d", (long) Math.rint(value));
         }
         return String.format(Locale.ROOT, "%,.1f", value);
+    }
+
+    private static String normalize(String value)
+    {
+        return value == null ? "" : value.toLowerCase(Locale.ROOT)
+                .replace('-', '_').replace(' ', '_');
     }
 }

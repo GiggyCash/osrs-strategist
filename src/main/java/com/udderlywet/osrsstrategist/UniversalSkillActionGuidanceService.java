@@ -103,17 +103,17 @@ public class UniversalSkillActionGuidanceService
                 action, actions, data.getAccount().getMembershipStatus());
         if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
 
-        String actionText;
+        String progressText;
         if (skill == Skill.RUNECRAFT)
         {
-            actionText = format(xpNeeded) + " XP remaining. Craft "
+            progressText = format(xpNeeded) + " XP remaining. Craft "
                     + pluralRunes(action.getName()) + " with about "
                     + format(actions) + " essence to reach level "
                     + targetLevel + ".";
         }
         else
         {
-            actionText = format(xpNeeded) + " XP remaining - about "
+            progressText = format(xpNeeded) + " XP remaining - about "
                     + format(actions) + " "
                     + playerAction(skill, action.getName(), actions)
                     + " to level " + targetLevel + ".";
@@ -145,7 +145,10 @@ public class UniversalSkillActionGuidanceService
             }
         }
 
-        String location = plan.getMethod().getInstructions();
+        String location = locationBeforeColon(
+                plan.getMethod().getInstructions());
+        String actionText = executionAction(skill, action,
+                plan.getMethod().getInstructions());
         if (isAnvilSmithingMethod(plan.getMethod()))
         {
             location = F2P_ANVIL_ROUTE;
@@ -175,7 +178,40 @@ public class UniversalSkillActionGuidanceService
         }
 
         return new RecommendationGuidance(
-                actionText, supplies, location, note.toString());
+                actionText, supplies, location, note.toString())
+                .withProgress(progressText);
+    }
+
+    private static String executionAction(Skill skill,
+            RuneLiteSkillActionDefinition action, String instructions)
+    {
+        if (skill == Skill.RUNECRAFT)
+            return "Craft " + pluralRunes(action.getName())
+                    + " at the named altar, return for another essence load, and repeat.";
+        String loop = actionAfterColon(instructions);
+        if (loop == null) loop = instructions;
+        if (loop == null || loop.trim().isEmpty())
+            return "Repeat " + action.getName() + ".";
+        if (normalize(loop).contains(normalize(action.getName()))) return loop;
+        return action.getName() + ": " + loop;
+    }
+
+    private static String locationBeforeColon(String instructions)
+    {
+        if (instructions == null) return null;
+        int colon = instructions.indexOf(':');
+        if (colon < 3) return instructions;
+        return instructions.substring(0, colon).trim() + ".";
+    }
+
+    private static String actionAfterColon(String instructions)
+    {
+        if (instructions == null) return null;
+        int colon = instructions.indexOf(':');
+        if (colon < 0 || colon + 1 >= instructions.length()) return null;
+        String value = instructions.substring(colon + 1).trim();
+        return value.isEmpty() ? null
+                : Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
     private Choice choose(

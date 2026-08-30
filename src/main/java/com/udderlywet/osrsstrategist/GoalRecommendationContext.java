@@ -58,15 +58,14 @@ public final class GoalRecommendationContext
                     == RecommendationConfidence.CHECK_NEEDED)
                 return new GoalRecommendationContext(safeGoal,
                         GoalRecommendationRelationship.CHECK_NEEDED,
-                        "Verify the remaining state on "
-                                + provenance.compactPath() + ".",
+                        "Prepare the next step toward " + name + ".",
                         provenance);
             boolean direct = provenance.getRelationship()
                     == GoalRecommendationRelationship.DIRECT;
             return new GoalRecommendationContext(safeGoal,
                     provenance.getRelationship(),
-                    (direct ? "Directly advances " : "Required for ")
-                            + name + ": " + provenance.compactPath() + ".",
+                    direct ? "Directly advances " + name + "."
+                            : "Advances the proven path to " + name + ".",
                     provenance);
         }
         return new GoalRecommendationContext(safeGoal,

@@ -16,6 +16,7 @@ public class RecommendationEngine
     private final SlayerGuidanceService slayerGuidanceService;
     private final SailingGuidanceService sailingGuidanceService;
     private final SkillBreakpointService breakpointService;
+    private final CurrentExecutionStageResolver executionStageResolver;
 
     @Inject
     public RecommendationEngine(
@@ -24,7 +25,8 @@ public class RecommendationEngine
             CombatGuidanceService combatGuidanceService,
             SlayerGuidanceService slayerGuidanceService,
             SailingGuidanceService sailingGuidanceService,
-            SkillBreakpointService breakpointService)
+            SkillBreakpointService breakpointService,
+            CurrentExecutionStageResolver executionStageResolver)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
@@ -33,6 +35,21 @@ public class RecommendationEngine
         this.sailingGuidanceService = sailingGuidanceService;
         this.breakpointService = breakpointService == null
                 ? new SkillBreakpointService() : breakpointService;
+        this.executionStageResolver = executionStageResolver == null
+                ? new CurrentExecutionStageResolver() : executionStageResolver;
+    }
+
+    public RecommendationEngine(
+            TrainingMethodSelector trainingMethodSelector,
+            RecommendationGuidanceService guidanceService,
+            CombatGuidanceService combatGuidanceService,
+            SlayerGuidanceService slayerGuidanceService,
+            SailingGuidanceService sailingGuidanceService,
+            SkillBreakpointService breakpointService)
+    {
+        this(trainingMethodSelector, guidanceService, combatGuidanceService,
+                slayerGuidanceService, sailingGuidanceService,
+                breakpointService, new CurrentExecutionStageResolver());
     }
 
     public RecommendationEngine(
@@ -217,7 +234,9 @@ public class RecommendationEngine
             {
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
                 RecommendationGuidance candidateGuidance = buildGuidance(
-                        data, skill, level, target, candidate, sessionIntent,
+                        data, skill, level,
+                        executionStageResolver.resolve(candidate, level, target),
+                        candidate, sessionIntent,
                         useGroupStorage);
                 if (candidateGuidance != null
                         && candidate.getStrategyProfile() != null)
@@ -231,7 +250,8 @@ public class RecommendationEngine
                 // higher-scoring but unrenderable route must not consume the
                 // skill's only candidate and hide a ready lower-ranked route.
                 if (candidateGuidance == null) continue;
-                trainingPlan = candidate;
+                trainingPlan = candidate.withCurrentStageTargetLevel(
+                        executionStageResolver.resolve(candidate, level, target));
                 guidance = candidateGuidance;
                 break;
             }

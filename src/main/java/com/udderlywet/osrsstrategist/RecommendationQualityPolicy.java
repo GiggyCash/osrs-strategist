@@ -114,7 +114,9 @@ final class RecommendationQualityPolicy
         TrainingPlan plan = recommendation.getTrainingPlan();
         if (plan != null)
         {
-            if (plan.getMethod() == null || !hasText(guidance.getLocation())) return false;
+            if (plan.getMethod() == null
+                    || !hasText(plan.getMethod().getName())
+                    || !hasText(guidance.getLocation())) return false;
             if (containsAny(plan.getMethod().getName(), GENERIC_ACTIONS))
             {
                 return false;

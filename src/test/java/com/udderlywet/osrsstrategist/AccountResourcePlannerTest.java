@@ -150,7 +150,7 @@ public class AccountResourcePlannerTest
         ResourcePlanEntry entry = plan.getEntries().get(0);
         assertEquals(20, entry.getUsableOwned());
         assertEquals(250, entry.getRestrictedOwned());
-        assertTrue(plan.getGuidance().contains("just in time"));
+        assertTrue(plan.getGuidance().contains("resupply only"));
         assertTrue(plan.getGuidance().contains("retrieval-only UIM storage"));
         assertFalse(plan.getGuidance().contains("5,020"));
     }
