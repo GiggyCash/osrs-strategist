@@ -632,14 +632,14 @@ public class OsrsStrategistPlugin extends Plugin
         TrainingPlan plan = top.getTrainingPlan();
         if (plan == null || plan.getMethod() == null
                 || plan.getMethod().getSkill() == null
-                || top.getTargetLevel() < 2)
+                || top.getCurrentExecutionTargetLevel() < 2)
         {
             progressAnalyticsService.clearTarget();
             return;
         }
         progressAnalyticsService.setTarget(new ProgressTarget(top.getId(),
                 plan.getMethod().getId(), plan.getMethod().getSkill(),
-                top.getTargetLevel()));
+                top.getCurrentExecutionTargetLevel()));
     }
 
     private void updateProgressPanel()

@@ -121,6 +121,56 @@ public class CurrentExecutionPlanIntegrityTest
     }
 
     @Test
+    public void allVisibleConsumersShareTheActiveStageBoundary()
+    {
+        TrainingPlan current = plan(method("fishing_lumbridge_shrimps", 1, 19,
+                "Lumbridge shrimp")).withCurrentStageTargetLevel(20);
+        Recommendation recommendation = new Recommendation(
+                "skill:fishing", "Train Fishing to 53", "Goal path", 50,
+                current, RecommendationConfidence.VERIFIED, 18, 53,
+                new RecommendationGuidance("Net shrimp and anchovies.",
+                        "Bring a small fishing net.",
+                        "Lumbridge Swamp fishing spots.", null),
+                CandidateSafetyEvidence.skill(true, Skill.FISHING));
+        StrategyContext strategyContext = context(
+                data(18, 2, Collections.emptyList()));
+        recommendation = recommendation.withGoalProvenance(
+                GoalDependencyProvenance.prerequisite(
+                        GoalType.BARROWS_GLOVES, recommendation.getId(),
+                        Arrays.asList("Barrows gloves", "Heroes' Quest",
+                                "Fishing 53")));
+
+        assertEquals(20, recommendation.getCurrentExecutionTargetLevel());
+        GuidanceChecklist checklist = new MethodGuidanceService(
+                new FarmingRunPlanner(new FarmingRunCatalog()))
+                .build(recommendation, null);
+        assertEquals("Level 18 → 20", checklist.getProgress());
+        StrategicPlan strategicPlan = new StrategicPlanService().build(
+                Collections.singletonList(recommendation),
+                strategyContext, 1L);
+        assertEquals("skill:fishing:20",
+                strategicPlan.getCurrentStep().getId());
+    }
+
+    @Test
+    public void malformedStageCannotFallThroughToTheDistantTarget()
+    {
+        Recommendation recommendation = new Recommendation(
+                "skill:fishing", "Train Fishing to 53", "Goal path", 50,
+                plan(method("fishing_lumbridge_shrimps", 1, 19,
+                        "Lumbridge shrimp")).withCurrentStageTargetLevel(18),
+                RecommendationConfidence.VERIFIED, 18, 53,
+                new RecommendationGuidance("Net fish.", "Bring a net.",
+                        "Lumbridge Swamp fishing spots.", null),
+                CandidateSafetyEvidence.skill(true, Skill.FISHING));
+
+        assertEquals(18, recommendation.getCurrentExecutionTargetLevel());
+        Recommendation validated = new FinalExecutionPlanValidator().validate(
+                recommendation, context(data(18, 2, Collections.emptyList())));
+        assertTrue(validated.getSafetyEvidence().hasInvalidCurrentExecution());
+    }
+
+    @Test
     public void everyCuratedSkillMethodStopsBeforeItsLevelBandEnds()
     {
         ExpandedTrainingMethodCatalog catalog =

@@ -83,9 +83,7 @@ public final class StrategicPlanService
                 && recommendation.getTargetLevel() > 0)
         {
             Skill skill = training.getMethod().getSkill();
-            int currentTarget = training.getCurrentStageTargetLevel() > 0
-                    ? training.getCurrentStageTargetLevel()
-                    : recommendation.getTargetLevel();
+            int currentTarget = recommendation.getCurrentExecutionTargetLevel();
             return new StrategicPlanStep(
                     "skill:" + skill.name().toLowerCase(Locale.ROOT) + ":"
                             + currentTarget,

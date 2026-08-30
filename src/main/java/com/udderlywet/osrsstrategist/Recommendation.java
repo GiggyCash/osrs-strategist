@@ -153,6 +153,14 @@ public final class Recommendation
     public GoalDependencyProvenance getGoalProvenance() { return goalProvenance; }
     public RecommendationStrategicValue getStrategicValue() { return strategicValue; }
 
+    /** Active execution boundary; the distant strategic objective stays targetLevel. */
+    public int getCurrentExecutionTargetLevel()
+    {
+        int stage = trainingPlan == null
+                ? 0 : trainingPlan.getCurrentStageTargetLevel();
+        return stage > 0 ? stage : targetLevel;
+    }
+
     public Recommendation withGoalProvenance(GoalDependencyProvenance provenance)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,

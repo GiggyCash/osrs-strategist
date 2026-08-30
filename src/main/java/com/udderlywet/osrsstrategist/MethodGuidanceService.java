@@ -64,10 +64,10 @@ public class MethodGuidanceService
                 && !guidance.getProgress().trim().isEmpty()
                 ? guidance.getProgress()
                 : recommendation.getCurrentLevel() > 0
-                && recommendation.getTargetLevel()
+                && recommendation.getCurrentExecutionTargetLevel()
                         > recommendation.getCurrentLevel()
                 ? "Level " + recommendation.getCurrentLevel() + " → "
-                        + recommendation.getTargetLevel() : null;
+                        + recommendation.getCurrentExecutionTargetLevel() : null;
         String important = guidance == null ? null
                 : guidance.getRiskDisclosure() != null
                 ? guidance.getRiskDisclosure().getHeading() + ": "

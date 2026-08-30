@@ -560,10 +560,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private void updateProgress(Recommendation recommendation)
     {
         int current = recommendation.getCurrentLevel();
-        TrainingPlan plan = recommendation.getTrainingPlan();
-        int target = plan != null && plan.getCurrentStageTargetLevel() > 0
-                ? plan.getCurrentStageTargetLevel()
-                : recommendation.getTargetLevel();
+        int target = recommendation.getCurrentExecutionTargetLevel();
         if (current <= 0 || target <= current)
         {
             progressText.setText(html(""));

@@ -23,9 +23,7 @@ public final class FinalExecutionPlanValidator
         {
             TrainingMethod method = plan.getMethod();
             int current = recommendation.getCurrentLevel();
-            int stageTarget = plan.getCurrentStageTargetLevel() > 0
-                    ? plan.getCurrentStageTargetLevel()
-                    : recommendation.getTargetLevel();
+            int stageTarget = recommendation.getCurrentExecutionTargetLevel();
             boolean invalid = method == null
                     || blank(method.getName())
                     || current <= 0
