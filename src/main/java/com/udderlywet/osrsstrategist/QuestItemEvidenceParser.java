@@ -266,8 +266,19 @@ public final class QuestItemEvidenceParser
             return itemClass(ItemRequirementClass.POISON_CURE);
         if (text.startsWith("a water container"))
             return itemClass(ItemRequirementClass.WATER_CONTAINER);
-        if (text.matches("(?:up to )?(?:#|\\d+|one|two|three|four|five) (?:free |empty )?inventory slots?.*"))
-            return itemClass(ItemRequirementClass.EMPTY_INVENTORY_SPACE);
+        Matcher slots = Pattern.compile(
+                "^(?:up to )?(#|\\d+|one|two|three|four|five) (?:free |empty )?inventory slots?.*")
+                .matcher(text);
+        if (slots.matches())
+        {
+            int required = smallNumber(slots.group(1));
+            return required <= 0
+                    ? ItemRequirementExpression.checkNeeded(
+                            "Check the quest's exact free-inventory-slot requirement")
+                    : ItemRequirementExpression.itemClass(
+                            ItemRequirementClass.EMPTY_INVENTORY_SPACE,
+                            required, ItemRequirementScope.CARRIED);
+        }
         if (text.startsWith("something to cut webs"))
             return itemClass(ItemRequirementClass.WEB_CUTTING_TOOL);
         if (text.matches("(?:an? )?cat or (?:a )?kitten(?:[ .(].*)?"))
@@ -345,6 +356,28 @@ public final class QuestItemEvidenceParser
     {
         return ItemRequirementExpression.itemClass(itemClass, 1,
                 ItemRequirementScope.OWNED_OR_RETRIEVABLE);
+    }
+
+    private static int smallNumber(String value)
+    {
+        if (value == null || value.isEmpty() || "#".equals(value)) return 0;
+        switch (value)
+        {
+            case "one": return 1;
+            case "two": return 2;
+            case "three": return 3;
+            case "four": return 4;
+            case "five": return 5;
+            default:
+                try
+                {
+                    return Integer.parseInt(value);
+                }
+                catch (NumberFormatException ex)
+                {
+                    return 0;
+                }
+        }
     }
 
     private static boolean isStructuralOrOptional(String line)

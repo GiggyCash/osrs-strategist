@@ -1,11 +1,27 @@
 package com.udderlywet.osrsstrategist;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /** Applies live account and plan-relative inventory evidence before ranking. */
 @Singleton
 public final class MethodStrategyService
 {
+    private final UimInventoryResolutionService inventoryResolution;
+
+    @Inject
+    public MethodStrategyService(
+            UimInventoryResolutionService inventoryResolution)
+    {
+        this.inventoryResolution = inventoryResolution == null
+                ? new UimInventoryResolutionService() : inventoryResolution;
+    }
+
+    public MethodStrategyService()
+    {
+        this(new UimInventoryResolutionService());
+    }
+
     public MethodStrategyAssessment assess(StrategyDataBundle data,
             MethodStrategyProfile profile)
     {
@@ -33,13 +49,15 @@ public final class MethodStrategyService
         int free = Math.max(0, 28 - occupied);
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && inventory != null
-                && inventory.hasCompleteSlotObservation()
-                && free < footprint.getMinimumPracticalFreeSlots())
-            return new MethodStrategyAssessment(false, 0.0,
-                    "This method needs at least "
-                            + footprint.getMinimumPracticalFreeSlots()
-                            + " practical free inventory slots; " + free
-                            + " are currently observed.");
+                && inventory.hasCompleteSlotObservation())
+        {
+            UimInventoryResolution resolution = inventoryResolution.resolve(
+                    data, footprint, false, false,
+                    java.util.Collections.emptyList());
+            if (resolution.getKind() != UimInventoryResolutionKind.USE_AS_IS)
+                return new MethodStrategyAssessment(false, 0.0,
+                        resolution.getReason());
+        }
 
         double score = profile.getAccountValueFit() * 8.0;
         if (mode == AccountMode.ULTIMATE_IRONMAN && inventory != null

@@ -26,17 +26,19 @@ public final class MethodStrategyKnowledgeCatalog
                     "cooking_hosidius", "cooking_wines",
                     "fishing_karambwan", "mining_mlm",
                     "firemaking_f2p_logs",
+                    "woodcutting_draynor_oaks",
                     "smithing_f2p_bronze", "smithing_f2p_iron",
                     "smithing_f2p_steel", "smithing_f2p_platebodies",
                     "smithing_f2p_platebody_baseline",
                     "crafting_f2p_gold_amulets", "crafting_f2p_tiaras",
-                    "crafting_gems", "fletching_bows",
+                    "crafting_gems", "crafting_dhide", "fletching_bows",
                     "woodcutting_f2p_oaks", "woodcutting_f2p_willows",
                     "woodcutting_f2p_willows_baseline",
                     "herblore_low_potions", "runecraft_f2p_air",
                     "runecraft_f2p_mind", "runecraft_f2p_water",
                     "runecraft_f2p_earth", "runecraft_f2p_fire",
-                    "runecraft_f2p_body")));
+                    "runecraft_f2p_body", "thieving_lumbridge_people",
+                    "thieving_ardy_knights", "thieving_vyres")));
 
     private final Map<String, MethodStrategyProfile> exact = new HashMap<>();
     private final Map<String, MethodStrategyProfile> generated =
@@ -53,7 +55,8 @@ public final class MethodStrategyKnowledgeCatalog
                         InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
                 0.85,
                 "Nearby copper and tin make this a cheap first Smithing level without conventional banking.",
-                Arrays.asList(StrategySourceId.F2P_IRONMAN_GENERAL,
+                Arrays.asList(StrategySourceId.UIM_SMITHING,
+                        StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.RUNELITE_MECHANICS)));
         exact.put("cooking_f2p_uim_carried_fish", new MethodStrategyProfile(
                 "cooking_f2p_uim_carried_fish",
@@ -64,7 +67,8 @@ public final class MethodStrategyKnowledgeCatalog
                         InventoryFlow.CONSUMES_CARRIED_INPUTS, false),
                 0.8,
                 "Cooking carried or locally caught fish turns the current inventory into useful food without a bank setup.",
-                Arrays.asList(StrategySourceId.F2P_IRONMAN_GENERAL,
+                Arrays.asList(StrategySourceId.UIM_COOKING,
+                        StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.F2P_SKILL_TRAINING)));
         exact.put("runecraft_f2p_uim_local", new MethodStrategyProfile(
                 "runecraft_f2p_uim_local",
@@ -75,21 +79,36 @@ public final class MethodStrategyKnowledgeCatalog
                         InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
                 0.75,
                 "Mining and immediately crafting essence is a concrete F2P UIM route that never assumes a banked essence reserve.",
-                Arrays.asList(StrategySourceId.F2P_IRONMAN_GENERAL,
+                Arrays.asList(StrategySourceId.UIM_RUNECRAFT,
+                        StrategySourceId.F2P_IRONMAN_GENERAL,
                         StrategySourceId.F2P_SKILL_TRAINING)));
         exact.put("crafting_charter_glass", uim("crafting_charter_glass", 4,
                 InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS,
-                "Charter-shop glassblowing sources and processes materials in one repeatable UIM loop."));
+                "Charter-shop glassblowing sources and processes materials in one repeatable UIM loop.",
+                StrategySourceId.UIM_CRAFTING));
         exact.put("smithing_giants_foundry", sharedIronUim(
                 "smithing_giants_foundry", 3,
-                "Giants' Foundry stretches self-sourced metal and advances a useful permanent outfit."));
+                "Giants' Foundry stretches self-sourced metal and advances a useful permanent outfit.",
+                StrategySourceId.IRONMAN_SMITHING,
+                StrategySourceId.UIM_SMITHING));
         exact.put("construction_mahogany_homes", sharedIronUim(
                 "construction_mahogany_homes", 4,
-                "Mahogany Homes reduces plank burn while building high-value account infrastructure."));
+                "Mahogany Homes reduces plank burn while building high-value account infrastructure.",
+                StrategySourceId.IRONMAN_CONSTRUCTION,
+                StrategySourceId.UIM_CONSTRUCTION));
         exact.put("prayer_bonecrusher_passive", uim(
                 "prayer_bonecrusher_passive", 0,
                 InventoryFlow.NEUTRAL,
-                "The carried bonecrusher converts compatible combat drops into Prayer progress without growing inventory."));
+                "The carried bonecrusher converts compatible combat drops into Prayer progress without growing inventory.",
+                StrategySourceId.UIM_PRAYER));
+        exact.put("thieving_uim_lumbridge_people", uimNoBank(
+                "thieving_uim_lumbridge_people",
+                "Pickpocketing Lumbridge men and women with monastery healing is a slow but concrete bank-free early fallback.",
+                StrategySourceId.UIM_THIEVING));
+        exact.put("thieving_uim_fruit_stalls", uimNoBank(
+                "thieving_uim_fruit_stalls",
+                "Hosidius fruit stalls provide a safe bank-free fallback whose freshly stolen fruit can be dropped without dismantling carried setup.",
+                StrategySourceId.UIM_THIEVING));
         exact.put("fishing_f2p_fly", shared(
                 "fishing_f2p_fly", MethodBankingBehavior.NONE, 1,
                 "Dropping the catch is a concrete low-setup route when food supply is not the current goal."));
@@ -127,9 +146,8 @@ public final class MethodStrategyKnowledgeCatalog
             TrainingMethodMetadata metadata, AccountMode mode,
             boolean bankLoop, Set<AccountMode> modes)
     {
-        StrategySourceId source = metadata.isFreeToPlayAllowed()
-                ? StrategySourceId.F2P_SKILL_TRAINING
-                : StrategySourceId.GENERAL_SKILL_TRAINING;
+        StrategySourceId source = accountSkillSource(
+                method.getSkill(), mode, metadata.isFreeToPlayAllowed());
         String reason = metadata.isSelfSourceFriendly() && mode.isIronLike()
                 ? "This method has a concrete self-sufficient resource route for the current level band."
                 : "This is a reviewed practical method for the current level, session, and play style.";
@@ -159,7 +177,7 @@ public final class MethodStrategyKnowledgeCatalog
     }
 
     private static MethodStrategyProfile uim(String id, int slots,
-            InventoryFlow flow, String reason)
+            InventoryFlow flow, String reason, StrategySourceId source)
     {
         return new MethodStrategyProfile(id,
                 StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
@@ -167,12 +185,13 @@ public final class MethodStrategyKnowledgeCatalog
                 MethodBankingBehavior.LOCAL_PROCESSING,
                 new MethodInventoryFootprint(slots, 1, Math.max(0, slots - 1),
                         flow, slots >= 8), 0.8, reason,
-                Arrays.asList(StrategySourceId.UIM_SKILL_GUIDES,
+                Arrays.asList(source, StrategySourceId.UIM_SKILL_GUIDES,
                         StrategySourceId.UIM_ITEM_MANAGEMENT));
     }
 
     private static MethodStrategyProfile sharedIronUim(String id, int slots,
-            String reason)
+            String reason, StrategySourceId ironSource,
+            StrategySourceId uimSource)
     {
         return new MethodStrategyProfile(id,
                 StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
@@ -186,8 +205,64 @@ public final class MethodStrategyKnowledgeCatalog
                         Math.max(0, slots - 2),
                         InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
                 0.75, reason,
-                Arrays.asList(StrategySourceId.IRONMAN_SKILL_GUIDES,
+                Arrays.asList(ironSource, uimSource,
+                        StrategySourceId.IRONMAN_SKILL_GUIDES,
                         StrategySourceId.UIM_SKILL_GUIDES));
+    }
+
+    private static StrategySourceId accountSkillSource(
+            net.runelite.api.Skill skill, AccountMode mode, boolean f2p)
+    {
+        if (skill == null || mode == null || !mode.isIronLike())
+            return f2p ? StrategySourceId.F2P_SKILL_TRAINING
+                    : StrategySourceId.GENERAL_SKILL_TRAINING;
+        boolean uim = mode == AccountMode.ULTIMATE_IRONMAN;
+        switch (skill)
+        {
+            case SMITHING: return uim ? StrategySourceId.UIM_SMITHING
+                    : StrategySourceId.IRONMAN_SMITHING;
+            case CRAFTING: return uim ? StrategySourceId.UIM_CRAFTING
+                    : StrategySourceId.IRONMAN_CRAFTING;
+            case HERBLORE: return uim ? StrategySourceId.UIM_HERBLORE
+                    : StrategySourceId.IRONMAN_HERBLORE;
+            case CONSTRUCTION: return uim ? StrategySourceId.UIM_CONSTRUCTION
+                    : StrategySourceId.IRONMAN_CONSTRUCTION;
+            case RUNECRAFT: return uim ? StrategySourceId.UIM_RUNECRAFT
+                    : StrategySourceId.IRONMAN_RUNECRAFT;
+            case PRAYER: return uim ? StrategySourceId.UIM_PRAYER
+                    : StrategySourceId.IRONMAN_PRAYER;
+            case FARMING: return uim ? StrategySourceId.UIM_FARMING
+                    : StrategySourceId.IRONMAN_FARMING;
+            case COOKING: return uim ? StrategySourceId.UIM_COOKING
+                    : StrategySourceId.IRONMAN_COOKING;
+            case FLETCHING: return uim ? StrategySourceId.UIM_FLETCHING
+                    : StrategySourceId.IRONMAN_FLETCHING;
+            case FISHING: return uim ? StrategySourceId.UIM_FISHING
+                    : StrategySourceId.IRONMAN_FISHING;
+            case MINING: return uim ? StrategySourceId.UIM_MINING
+                    : StrategySourceId.IRONMAN_MINING;
+            case WOODCUTTING: return uim ? StrategySourceId.UIM_WOODCUTTING
+                    : StrategySourceId.IRONMAN_WOODCUTTING;
+            case HUNTER: return uim ? StrategySourceId.UIM_HUNTER
+                    : StrategySourceId.IRONMAN_HUNTER;
+            case FIREMAKING: return uim ? StrategySourceId.UIM_FIREMAKING
+                    : StrategySourceId.IRONMAN_FIREMAKING;
+            case THIEVING: return uim ? StrategySourceId.UIM_THIEVING
+                    : StrategySourceId.IRONMAN_THIEVING;
+            default: return uim ? StrategySourceId.UIM_SKILL_GUIDES
+                    : StrategySourceId.IRONMAN_SKILL_GUIDES;
+        }
+    }
+
+    private static MethodStrategyProfile uimNoBank(String id, String reason,
+            StrategySourceId source)
+    {
+        return new MethodStrategyProfile(id,
+                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
+                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
+                MethodBankingBehavior.NONE,
+                MethodInventoryFootprint.lowPressure(), 0.35, reason,
+                Arrays.asList(source, StrategySourceId.UIM_ITEM_MANAGEMENT));
     }
 
     private static MethodStrategyProfile shared(String id,

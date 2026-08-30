@@ -95,6 +95,7 @@ final class RecommendationQualityPolicy
             "selected weapon",
             "spare eligible herbs",
             "preserving herbs needed",
+            "inventory-slot preparation is unresolved",
             "choose the",
             "whichever");
 

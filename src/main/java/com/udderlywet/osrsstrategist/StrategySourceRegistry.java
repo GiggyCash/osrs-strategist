@@ -46,6 +46,7 @@ public final class StrategySourceRegistry
         wiki(values, StrategySourceId.UIM_SKILL_GUIDES,
                 "https://oldschool.runescape.wiki/w/Skill_training_guides",
                 "Account-specific UIM skill methods and footprints");
+        accountSkillSources(values);
         wiki(values, StrategySourceId.OPTIMAL_QUEST_GUIDE,
                 "https://oldschool.runescape.wiki/w/Optimal_quest_guide",
                 "Quest ordering and early experience compression");
@@ -104,6 +105,36 @@ public final class StrategySourceRegistry
             case IRONMAN_SKILL_GUIDES:
             case UIM_SKILL_GUIDES:
                 return "oldid=15231153 (2026-06-10T08:54:42Z)";
+            case IRONMAN_SMITHING: return "oldid=15177119 (2026-04-15T12:20:44Z)";
+            case UIM_SMITHING: return "oldid=15288833 (2026-08-06T08:39:11Z)";
+            case IRONMAN_CRAFTING: return "oldid=15316213 (2026-08-22T05:11:35Z)";
+            case UIM_CRAFTING: return "oldid=15305169 (2026-08-18T12:54:21Z)";
+            case IRONMAN_HERBLORE: return "oldid=15312412 (2026-08-20T02:31:31Z)";
+            case UIM_HERBLORE: return "oldid=15319540 (2026-08-25T06:48:22Z)";
+            case IRONMAN_CONSTRUCTION: return "oldid=15280023 (2026-07-29T12:57:18Z)";
+            case UIM_CONSTRUCTION: return "oldid=15319378 (2026-08-25T05:44:38Z)";
+            case IRONMAN_RUNECRAFT: return "oldid=15317928 (2026-08-24T07:51:27Z)";
+            case UIM_RUNECRAFT: return "oldid=15322506 (2026-08-27T22:10:28Z)";
+            case IRONMAN_PRAYER: return "oldid=15322576 (2026-08-28T02:05:38Z)";
+            case UIM_PRAYER: return "oldid=15316277 (2026-08-22T05:31:45Z)";
+            case IRONMAN_FARMING: return "oldid=15321988 (2026-08-27T11:25:17Z)";
+            case UIM_FARMING: return "oldid=15315479 (2026-08-21T06:53:29Z)";
+            case IRONMAN_COOKING: return "oldid=15296981 (2026-08-13T11:55:26Z)";
+            case UIM_COOKING: return "oldid=15217261 (2026-05-26T07:43:36Z)";
+            case IRONMAN_FLETCHING: return "oldid=15301621 (2026-08-14T23:19:41Z)";
+            case UIM_FLETCHING: return "oldid=14972436 (2025-08-23T04:06:41Z)";
+            case IRONMAN_FISHING: return "oldid=15322232 (2026-08-27T18:32:27Z)";
+            case UIM_FISHING: return "oldid=15318352 (2026-08-25T00:25:11Z)";
+            case IRONMAN_MINING: return "oldid=15292446 (2026-08-11T01:48:19Z)";
+            case UIM_MINING: return "oldid=15276637 (2026-07-27T14:03:35Z)";
+            case IRONMAN_WOODCUTTING: return "oldid=15257822 (2026-07-08T18:21:33Z)";
+            case UIM_WOODCUTTING: return "oldid=15232438 (2026-06-12T12:56:55Z)";
+            case IRONMAN_HUNTER: return "oldid=15287846 (2026-08-05T16:13:51Z)";
+            case UIM_HUNTER: return "oldid=15154715 (2026-03-24T01:26:43Z)";
+            case IRONMAN_FIREMAKING: return "oldid=15316626 (2026-08-22T17:35:56Z)";
+            case UIM_FIREMAKING: return "oldid=15122261 (2026-02-06T08:15:26Z)";
+            case IRONMAN_THIEVING: return "oldid=15267141 (2026-07-18T23:34:41Z)";
+            case UIM_THIEVING: return "oldid=15316625 (2026-08-22T17:35:40Z)";
             case IRONMAN_GENERAL:
                 return "oldid=15316742 (2026-08-22T21:08:30Z)";
             case F2P_IRONMAN_GENERAL:
@@ -133,6 +164,21 @@ public final class StrategySourceRegistry
 
     private static java.util.List<String> familiesFor(StrategySourceId id)
     {
+        if (id.name().startsWith("IRONMAN_")
+                && id != StrategySourceId.IRONMAN_GENERAL
+                && id != StrategySourceId.IRONMAN_SKILL_GUIDES
+                && id != StrategySourceId.IRONMAN_SLAYER)
+            return Arrays.asList("iron-skilling",
+                    "iron-" + id.name().substring("IRONMAN_".length())
+                            .toLowerCase());
+        if (id.name().startsWith("UIM_")
+                && id != StrategySourceId.UIM_GENERAL
+                && id != StrategySourceId.UIM_ITEM_MANAGEMENT
+                && id != StrategySourceId.UIM_SKILL_GUIDES)
+            return Arrays.asList("uim-skilling",
+                    "uim-" + id.name().substring("UIM_".length())
+                            .toLowerCase(),
+                    "uim-method-footprints");
         switch (id)
         {
             case GENERAL_SKILL_TRAINING:
@@ -174,5 +220,53 @@ public final class StrategySourceRegistry
             default:
                 return Collections.emptyList();
         }
+    }
+
+    private static void accountSkillSources(
+            Map<StrategySourceId, StrategySourceDefinition> values)
+    {
+        accountSkill(values, "Smithing", StrategySourceId.IRONMAN_SMITHING,
+                StrategySourceId.UIM_SMITHING);
+        accountSkill(values, "Crafting", StrategySourceId.IRONMAN_CRAFTING,
+                StrategySourceId.UIM_CRAFTING);
+        accountSkill(values, "Herblore", StrategySourceId.IRONMAN_HERBLORE,
+                StrategySourceId.UIM_HERBLORE);
+        accountSkill(values, "Construction", StrategySourceId.IRONMAN_CONSTRUCTION,
+                StrategySourceId.UIM_CONSTRUCTION);
+        accountSkill(values, "Runecraft", StrategySourceId.IRONMAN_RUNECRAFT,
+                StrategySourceId.UIM_RUNECRAFT);
+        accountSkill(values, "Prayer", StrategySourceId.IRONMAN_PRAYER,
+                StrategySourceId.UIM_PRAYER);
+        accountSkill(values, "Farming", StrategySourceId.IRONMAN_FARMING,
+                StrategySourceId.UIM_FARMING);
+        accountSkill(values, "Cooking", StrategySourceId.IRONMAN_COOKING,
+                StrategySourceId.UIM_COOKING);
+        accountSkill(values, "Fletching", StrategySourceId.IRONMAN_FLETCHING,
+                StrategySourceId.UIM_FLETCHING);
+        accountSkill(values, "Fishing", StrategySourceId.IRONMAN_FISHING,
+                StrategySourceId.UIM_FISHING);
+        accountSkill(values, "Mining", StrategySourceId.IRONMAN_MINING,
+                StrategySourceId.UIM_MINING);
+        accountSkill(values, "Woodcutting", StrategySourceId.IRONMAN_WOODCUTTING,
+                StrategySourceId.UIM_WOODCUTTING);
+        accountSkill(values, "Hunter", StrategySourceId.IRONMAN_HUNTER,
+                StrategySourceId.UIM_HUNTER);
+        accountSkill(values, "Firemaking", StrategySourceId.IRONMAN_FIREMAKING,
+                StrategySourceId.UIM_FIREMAKING);
+        accountSkill(values, "Thieving", StrategySourceId.IRONMAN_THIEVING,
+                StrategySourceId.UIM_THIEVING);
+    }
+
+    private static void accountSkill(
+            Map<StrategySourceId, StrategySourceDefinition> values,
+            String skill, StrategySourceId iron, StrategySourceId uim)
+    {
+        wiki(values, iron,
+                "https://oldschool.runescape.wiki/w/Ironman_Guide/" + skill,
+                "Ironman " + skill + " methods and resource strategy");
+        wiki(values, uim,
+                "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/" + skill,
+                "Ultimate Ironman " + skill
+                        + " methods, inventory, and setup strategy");
     }
 }

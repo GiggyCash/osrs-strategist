@@ -90,6 +90,9 @@ public class RecommendationGuidanceService
         RecommendationGuidance uimRunecraft = uimF2pRunecraftGuidance(
                 data, skill, targetLevel, trainingPlan);
         if (uimRunecraft != null) return uimRunecraft;
+        RecommendationGuidance uimThieving = uimThievingGuidance(
+                data, skill, targetLevel, trainingPlan);
+        if (uimThieving != null) return uimThieving;
 
         RecommendationGuidance cooking = earlyCookingGuidance(
                 data, skill, currentLevel, targetLevel,
@@ -194,6 +197,37 @@ public class RecommendationGuidanceService
                 "Wizards' Tower rune-essence mine, then the " + altar + ".",
                 "Essence is mined and consumed one trip at a time; no conventional bank or banked essence is assumed.",
                 MethodBankingBehavior.LOCAL_PROCESSING);
+    }
+
+    private static RecommendationGuidance uimThievingGuidance(
+            StrategyDataBundle data, Skill skill, int targetLevel,
+            TrainingPlan plan)
+    {
+        if (data == null || data.getAccount() == null
+                || skill != Skill.THIEVING || plan == null
+                || plan.getMethod() == null
+                || AccountMode.fromTypeCode(
+                        data.getAccount().getAccountTypeCode())
+                        != AccountMode.ULTIMATE_IRONMAN)
+            return null;
+        String id = plan.getMethod().getId();
+        if ("thieving_uim_lumbridge_people".equals(id))
+            return new RecommendationGuidance(
+                    "Pickpocket men and women around Lumbridge Castle, stop before another failed pickpocket could be unsafe, ask a monk at Edgeville Monastery to heal you, and repeat until Thieving level "
+                            + targetLevel + ".",
+                    "No carried supplies are required; preserve the current inventory and do not bank between healing trips.",
+                    "Men and women around Lumbridge Castle, with healing from the monks at Edgeville Monastery.",
+                    "This is a slow bank-free recovery route for early UIM Thieving; stronger routes can replace it when their access and setup are proven.",
+                    MethodBankingBehavior.NONE);
+        if ("thieving_uim_fruit_stalls".equals(id))
+            return new RecommendationGuidance(
+                    "Steal from both fruit stalls, drop only the freshly stolen fruit while moving between them, and repeat until Thieving level "
+                            + targetLevel + ".",
+                    "No carried supplies are required; preserve every pre-existing setup item.",
+                    "The two fruit stalls in the easternmost house near the Hosidius beach.",
+                    "This lower-rate fallback stays executable when a stronger UIM Thieving route or healing setup is not proven.",
+                    MethodBankingBehavior.NONE);
+        return null;
     }
 
     private RecommendationGuidance earlyCookingGuidance(

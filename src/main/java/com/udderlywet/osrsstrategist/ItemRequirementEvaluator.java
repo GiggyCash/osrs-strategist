@@ -133,6 +133,8 @@ public final class ItemRequirementEvaluator
         if (itemClass == null)
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     "Verify the required item class");
+        if (itemClass == ItemRequirementClass.EMPTY_INVENTORY_SPACE)
+            return freeInventorySlots(expression, data);
         if (!itemClass.isNameObservable())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     "Check and bring " + expression.label());
@@ -187,6 +189,24 @@ public final class ItemRequirementEvaluator
                 ? RequirementState.BLOCKED : RequirementState.CHECK_NEEDED,
                 (observed ? "Get " : "Check whether you own ") + shortfall
                         + " × " + target);
+    }
+
+    private static ItemRequirementResult freeInventorySlots(
+            ItemRequirementExpression expression, StrategyDataBundle data)
+    {
+        InventorySnapshot inventory = data == null ? null : data.getInventory();
+        if (inventory == null || !inventory.hasCompleteSlotObservation())
+            return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
+                    "Open the inventory tab so the required free slots can be verified");
+        int required = Math.max(1, expression.getQuantity());
+        int free = Math.max(0, 28
+                - UimSetupCostService.occupiedInventorySlots(inventory));
+        if (free >= required)
+            return new ItemRequirementResult(RequirementState.VERIFIED, "");
+        return new ItemRequirementResult(RequirementState.BLOCKED,
+                "The quest requires " + required
+                        + " free inventory slots; only " + free
+                        + " are observed, and the inventory-slot preparation is unresolved");
     }
 
     private static List<ResolvedMethodInput> bestAlternativeInputs(

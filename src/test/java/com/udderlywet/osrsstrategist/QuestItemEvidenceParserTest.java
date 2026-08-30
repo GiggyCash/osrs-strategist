@@ -235,6 +235,8 @@ public class QuestItemEvidenceParserTest
                         + "*Five empty inventory slots");
         assertTrue(result.getUnresolved().toString(), result.isFullyExecutable());
         assertEquals(4, result.getParsedLineCount());
+        assertEquals(5, result.getExpression().getChildren().get(3)
+                .getQuantity());
         for (ItemRequirementExpression child : result.getExpression().getChildren())
             assertTrue(child.getKind() == ItemRequirementExpression.Kind.ITEM_CLASS
                     || child.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED);

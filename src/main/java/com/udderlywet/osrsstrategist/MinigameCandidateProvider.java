@@ -142,15 +142,22 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
             tree = "yew trees";
             location = "the yew trees at Seers' Village church";
         }
+        boolean uim = AccountMode.fromTypeCode(account.getAccountTypeCode())
+                == AccountMode.ULTIMATE_IRONMAN;
+        String loop = uim
+                ? "Switch to an official Forestry world, cut " + tree
+                        + ", drop only the freshly cut logs when the inventory fills, and complete every event that spawns. Never drop carried setup items."
+                : "Switch to an official Forestry world, cut " + tree
+                        + ", bank each inventory, and complete every event that spawns.";
         return new RecommendationGuidance(
                 verified
-                        ? "Switch to an official Forestry world, cut " + tree
-                                + ", bank each inventory, and complete every event that spawns."
+                        ? loop
                         : itemResult.getAction() + " before starting Forestry.",
                 verified ? "Bring the observed axe and a Forestry kit when owned."
                         : itemResult.getAction(),
                 location + ".",
-                "The tree and location match the current Woodcutting level; event frequency varies, so no event count is invented.");
+                "The tree and location match the current Woodcutting level; event frequency varies, so no event count is invented."
+                        + (uim ? " Only renewable logs produced by this method are discarded." : ""));
     }
 
     private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)

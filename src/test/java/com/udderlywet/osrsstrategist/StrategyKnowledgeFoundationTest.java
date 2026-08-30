@@ -44,6 +44,66 @@ public class StrategyKnowledgeFoundationTest
     }
 
     @Test
+    public void highImpactIronAndUimMethodsUseDirectSkillGuideSources()
+    {
+        CuratedTrainingMethod gems = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.CRAFTING).stream()
+                .filter(value -> "crafting_gems".equals(
+                        value.getMethod().getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+        MethodStrategyKnowledgeCatalog catalog =
+                new MethodStrategyKnowledgeCatalog();
+
+        assertTrue(catalog.profileFor(gems.getMethod(), gems.getMetadata(),
+                        AccountMode.IRONMAN).getSources()
+                .contains(StrategySourceId.IRONMAN_CRAFTING));
+
+        CuratedTrainingMethod charter = new ExpandedTrainingMethodCatalog()
+                .methodsFor(Skill.CRAFTING).stream()
+                .filter(value -> "crafting_charter_glass".equals(
+                        value.getMethod().getId()))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertTrue(catalog.profileFor(charter.getMethod(),
+                        charter.getMetadata(), AccountMode.ULTIMATE_IRONMAN)
+                .getSources().contains(StrategySourceId.UIM_CRAFTING));
+    }
+
+    @Test
+    public void everyExplicitConventionalBankLoopIsExcludedFromUimGeneration()
+    {
+        MethodStrategyKnowledgeCatalog knowledge =
+                new MethodStrategyKnowledgeCatalog();
+        List<String> leaked = new ArrayList<>();
+        ExpandedTrainingMethodCatalog expanded =
+                new ExpandedTrainingMethodCatalog();
+        F2pBaselineMethodCatalog baseline = new F2pBaselineMethodCatalog();
+        for (Skill skill : Skill.values())
+        {
+            List<CuratedTrainingMethod> methods = new ArrayList<>();
+            methods.addAll(expanded.methodsFor(skill));
+            methods.addAll(baseline.methodsFor(skill));
+            for (CuratedTrainingMethod method : methods)
+            {
+                String instructions = method.getMethod().getInstructions()
+                        .toLowerCase(java.util.Locale.ROOT);
+                boolean conventional = instructions.contains("withdraw ")
+                        || instructions.contains("bankstanding")
+                        || instructions.contains("bank the logs")
+                        || instructions.contains("bank each inventory")
+                        || instructions.contains("bank immediately")
+                        || instructions.contains("use the nearby bank")
+                        || instructions.contains("bank/altar route");
+                if (conventional && knowledge.profileFor(method.getMethod(),
+                        method.getMetadata(), AccountMode.ULTIMATE_IRONMAN)
+                        != null)
+                    leaked.add(method.getMethod().getId());
+            }
+        }
+        assertTrue("UIM conventional bank profiles: " + leaked,
+                leaked.isEmpty());
+    }
+
+    @Test
     public void uimGeneratesLocalBronzeRouteBeforeRankingBankedBaseline()
     {
         StrategyDataBundle data = data(2, MembershipStatus.F2P,

@@ -686,6 +686,14 @@ public class ExpandedTrainingMethodCatalog
                 "Lumbridge pickpockets", "Pickpocket men and women around Lumbridge Castle, use the nearby bank for food, and repeat.",
                 TrainingIntensity.RELAXED, MethodCostTier.PROFITABLE, RiskLevel.LOW,
                 false, true, true, true, false, AttentionLevel.MODERATE, 15, 1);
+        add(Skill.THIEVING, "thieving_uim_lumbridge_people", 1, 24,
+                "UIM Lumbridge pickpockets", "Pickpocket men and women around Lumbridge Castle, stop before another failure could be unsafe, ask a monk at Edgeville Monastery to heal you, and repeat without banking.",
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.LOW,
+                false, true, true, true, false, AttentionLevel.MODERATE, 10, 1);
+        add(Skill.THIEVING, "thieving_uim_fruit_stalls", 25, 99,
+                "UIM Hosidius fruit stalls", "Steal from both fruit stalls in the easternmost house near the Hosidius beach, drop only the freshly stolen fruit while moving between them, and repeat.",
+                TrainingIntensity.RELAXED, MethodCostTier.FREE, RiskLevel.NONE,
+                false, true, true, true, false, AttentionLevel.MODERATE, 15, 3);
         add(Skill.THIEVING, "thieving_blackjack", 45, 99,
                 "Blackjacking", "Blackjack appropriate NPCs for very high, click-intensive Thieving experience.",
                 TrainingIntensity.SWEATY, MethodCostTier.PROFITABLE, RiskLevel.LOW,

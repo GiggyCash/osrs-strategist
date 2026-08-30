@@ -8,12 +8,21 @@ import javax.inject.Singleton;
 public final class ActivityStrategyKnowledgeService
 {
     private final ActivityStrategyKnowledgeCatalog catalog;
+    private final UimInventoryResolutionService inventoryResolution;
 
     @Inject
-    public ActivityStrategyKnowledgeService(ActivityStrategyKnowledgeCatalog catalog)
+    public ActivityStrategyKnowledgeService(ActivityStrategyKnowledgeCatalog catalog,
+            UimInventoryResolutionService inventoryResolution)
     {
         this.catalog = catalog == null
                 ? new ActivityStrategyKnowledgeCatalog() : catalog;
+        this.inventoryResolution = inventoryResolution == null
+                ? new UimInventoryResolutionService() : inventoryResolution;
+    }
+
+    public ActivityStrategyKnowledgeService(ActivityStrategyKnowledgeCatalog catalog)
+    {
+        this(catalog, new UimInventoryResolutionService());
     }
 
     public ActivityStrategyKnowledgeService()
@@ -31,7 +40,8 @@ public final class ActivityStrategyKnowledgeService
         if (profile == null) return recommendation;
 
         if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                && !fitsObservedInventory(context.getData(), profile))
+                && !fitsObservedInventory(context.getData(), profile,
+                        inventoryResolution))
             return null;
 
         RecommendationStrategicValue.Builder sourced =
@@ -44,15 +54,16 @@ public final class ActivityStrategyKnowledgeService
     }
 
     private static boolean fitsObservedInventory(StrategyDataBundle data,
-            ActivityStrategyProfile profile)
+            ActivityStrategyProfile profile,
+            UimInventoryResolutionService inventoryResolution)
     {
         InventorySnapshot inventory = data == null ? null : data.getInventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return true;
-        int free = Math.max(0, 28
-                - UimSetupCostService.occupiedInventorySlots(inventory));
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
-        return footprint == null
-                || free >= footprint.getMinimumPracticalFreeSlots();
+        if (footprint == null) return true;
+        UimInventoryResolution result = inventoryResolution.resolve(data,
+                footprint, false, false, java.util.Collections.emptyList());
+        return result.getKind() == UimInventoryResolutionKind.USE_AS_IS;
     }
 }

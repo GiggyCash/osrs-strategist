@@ -47,6 +47,10 @@ At minimum:
 - UIM with confirmed Tool Leprechaun tools may count them for farm-run prep
 - full-inventory UIM skill/activity candidates must prove a zero-slot route or
   be replaced/held before ranking
+- every catalog instruction containing an explicit conventional bank loop must
+  remain excluded from UIM profile generation
+- imported quest free-slot counts must be preserved and checked against exact
+  observed inventory slots
 - exact dangerous-storage instructions must use the View Risk Steps
   acknowledgement control; generic death storage remains ineligible
 - clue dislike should lower clue frequency gradually, not permanently

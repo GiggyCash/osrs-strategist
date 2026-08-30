@@ -4,7 +4,7 @@ This registry records external facts used by local structured strategy data.
 It is deliberately a re-verification index rather than copied guide prose.
 Runtime recommendation rendering does not fetch these pages.
 
-Last audited: 2026-08-29.
+Last audited: 2026-08-30.
 
 ## Licensing and attribution
 
@@ -22,6 +22,15 @@ maps each page to the derived strategy families requiring review.
 gate. A maintainer may deliberately run `--check-live` during development; it
 uses the stable MediaWiki Action API and reports changed source IDs, revisions,
 timestamps, and affected strategy families without modifying local data.
+
+The snapshot also pins the direct Ironman and Ultimate Ironman skill-guide
+pages for Smithing, Crafting, Herblore, Construction, Runecraft, Prayer,
+Farming, Cooking, Fletching, Fishing, Mining, Woodcutting, Hunter, and
+Firemaking. These are the families where acquisition, inventory, or setup most
+often differs materially from Main play. Direct Iron/UIM Thieving pages are
+also pinned because the bank-free recovery routes differ materially. Account-mode method profiles bind to
+the corresponding direct source ID, so a UIM Smithing guide change is detected
+even if the top-level training-guide index did not change.
 
 ## Strategy foundation sources
 

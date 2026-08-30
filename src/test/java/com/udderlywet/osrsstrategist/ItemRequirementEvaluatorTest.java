@@ -177,6 +177,28 @@ public class ItemRequirementEvaluatorTest
                 result.getAction());
     }
 
+    @Test
+    public void exactQuestInventorySlotsUseObservedLayout()
+    {
+        ItemRequirementExpression slots = ItemRequirementExpression.itemClass(
+                ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
+                ItemRequirementScope.CARRIED);
+        java.util.List<ItemStackSnapshot> twentyFour = new java.util.ArrayList<>();
+        for (int slot = 0; slot < 24; slot++)
+            twentyFour.add(new ItemStackSnapshot(20_000 + slot,
+                    "Persistent " + slot, 1, slot));
+        ItemRequirementResult blocked = evaluator.evaluate(slots,
+                bundle(2).inventory(new InventorySnapshot(twentyFour, true))
+                        .build(), false);
+        assertEquals(RequirementState.BLOCKED, blocked.getState());
+        assertTrue(blocked.getAction().contains("only 4 are observed"));
+
+        twentyFour.remove(twentyFour.size() - 1);
+        assertTrue(evaluator.evaluate(slots,
+                bundle(2).inventory(new InventorySnapshot(twentyFour, true))
+                        .build(), false).isSatisfied());
+    }
+
     private static StrategyDataBundle.Builder bundle(int type)
     {
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);

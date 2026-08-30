@@ -68,6 +68,13 @@ ranking. A Main bank loop is therefore not generated for UIM and then repaired
 after selection. Shared methods remain one shared record when their practical
 execution is genuinely common.
 
+High-impact Iron and UIM method profiles cite direct per-skill guide source
+IDs, not only the training-guide index. The conventional-bank behavior census
+also rejects every explicit withdraw/bank/bankstanding route from UIM profile
+generation. Account-aware resolved guidance follows the same rule: Forestry,
+for example, banks renewable logs for ordinary accounts but drops only the
+freshly produced logs—not carried setup items—for UIM.
+
 `MethodInventoryFootprint` describes minimum practical free slots, persistent
 and temporary slots, inventory flow, and setup teardown. UIM viability is
 relative to that proposed method, not a free-slot score in isolation.
@@ -76,6 +83,11 @@ quest, Slayer, clue, minigame, upgrade, PvM, and POH candidates before they
 enter the common ranking pool. A full observed inventory can remove a quest or
 ordinary PvM loadout while preserving an inside-instance or current-setup
 activity that genuinely needs no additional slots.
+
+Imported quest free-slot requirements retain their exact count and are checked
+against complete live slot observation. An unmet slot requirement remains
+ineligible until it actually fits; Compass does not turn it into generic
+"make space", bank, or drop advice for UIM.
 
 The implemented account-value boundary uses `RecommendationStrategicValue`.
 Typed goal provenance, infrastructure, unlock, travel, resource, setup reuse,

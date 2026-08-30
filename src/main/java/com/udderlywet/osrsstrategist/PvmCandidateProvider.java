@@ -116,11 +116,34 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
                     "TzHaar Fight Cave beneath Karamja volcano.",
                     "Readiness reflects observed carried setup and conservative access checks; it does not claim a universal best loadout.");
         }
+        if (definition != null && "pvm:obor".equals(definition.getId()))
+            return simpleReadyGuidance(title,
+                    "Enter Obor's lair through the locked gate in the Edgeville Dungeon hill-giant area, then complete the fight with the observed melee setup.",
+                    "Obor's lair gate in Edgeville Dungeon.",
+                    "Keep the observed melee weapon, giant key, carried food, and prayer restoration in the live readiness snapshot.");
+        if (definition != null && "pvm:bryophyta".equals(definition.getId()))
+            return simpleReadyGuidance(title,
+                    "Enter Bryophyta's lair through the locked gate in the Varrock Sewers moss-giant area, then complete the fight with the observed melee setup.",
+                    "Bryophyta's lair gate in Varrock Sewers.",
+                    "Keep the observed melee weapon, mossy key, carried food, and prayer restoration in the live readiness snapshot.");
+        if (definition != null && "pvm:scurrius".equals(definition.getId()))
+            return simpleReadyGuidance(title,
+                    "Enter the public Scurrius arena and complete one fight with the observed melee setup; use a rat-bone weapon only when it is actually equipped.",
+                    "Scurrius arena in Varrock Sewers.",
+                    "Keep the observed melee weapon, carried food, and prayer restoration in the live readiness snapshot.");
         return new RecommendationGuidance(
                 "Attempt " + title + " using the currently equipped and carried setup.",
                 "Keep the weapon, loadout, and minimum supplies that the live readiness check verified.",
                 "Use the exact non-Wilderness route recorded by the encounter readiness check.",
                 "This is conservative readiness, not a universal best-in-slot claim. Stop and reassess if the live setup changes.");
+    }
+
+    private static RecommendationGuidance simpleReadyGuidance(String title,
+            String action, String location, String supplies)
+    {
+        return new RecommendationGuidance(action, supplies, location,
+                "Readiness is limited to the observed carried setup for "
+                        + title + "; it does not claim mechanical execution or a universal best loadout.");
     }
 
     private static boolean progressionRelevant(PvmActivityDefinition definition,
