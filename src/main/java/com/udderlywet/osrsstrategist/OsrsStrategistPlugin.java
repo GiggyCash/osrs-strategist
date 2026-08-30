@@ -187,10 +187,23 @@ public class OsrsStrategistPlugin extends Plugin
     @Subscribe
     public void onGameStateChanged(GameStateChanged event)
     {
-        if (event == null || event.getGameState() != GameState.LOGGED_IN)
+        if (event == null) return;
+        if (event.getGameState() == GameState.LOGGED_IN)
+        {
+            // Login emits profile, inventory, equipment, varbit, quest and
+            // object bursts close together. Let the next game tick assemble
+            // one complete snapshot instead of synchronously evaluating here
+            // and then reranking the same state again two seconds later.
+            accountRefreshPending = true;
+            pohRefreshPending = true;
+            return;
+        }
+        if (progressAnalyticsService != null)
             progressAnalyticsService.pause(System.currentTimeMillis());
         pohRefreshPending = true;
-        updateAccountPanel();
+        // Publish the waiting state once when leaving an active character;
+        // intermediate loading-state events should not repeat full reads.
+        if (latestData != null) updateAccountPanel();
     }
 
     @Subscribe
@@ -384,7 +397,11 @@ public class OsrsStrategistPlugin extends Plugin
         syncStrategyProfile();
         syncMilestoneProfile();
         syncRecommendationHistory();
-        updateAccountPanel();
+        // RuneScapeProfileChanged and LOGGED_IN commonly arrive in the same
+        // burst. State above is already cleared fail-closed; defer the one
+        // expensive account assembly/rank to the coalesced game-tick path.
+        accountRefreshPending = true;
+        pohRefreshPending = true;
     }
 
     @Subscribe

@@ -6,7 +6,9 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.GameState;
 import net.runelite.api.gameval.InterfaceID;
 import org.junit.Test;
 
@@ -96,6 +98,21 @@ public class OsrsStrategistPluginTest
                 net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP));
         assertFalse(OsrsStrategistPlugin.isStrategicContainer(
                 net.runelite.api.gameval.InventoryID.GENERALSHOP1));
+    }
+
+    @Test
+    public void loginBurstDefersToOneCoalescedGameTickRefresh()
+    {
+        OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
+        GameStateChanged loggedIn = new GameStateChanged();
+        loggedIn.setGameState(GameState.LOGGED_IN);
+
+        plugin.onGameStateChanged(loggedIn);
+        plugin.onGameStateChanged(loggedIn);
+        plugin.onVarbitChanged(null);
+
+        assertTrue(plugin.consumeStrategyRefreshPending(10_000L));
+        assertFalse(plugin.consumeStrategyRefreshPending(10_001L));
     }
 
     @SuppressWarnings("unchecked")

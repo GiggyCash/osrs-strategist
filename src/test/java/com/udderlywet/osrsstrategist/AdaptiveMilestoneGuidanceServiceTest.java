@@ -38,7 +38,8 @@ public class AdaptiveMilestoneGuidanceServiceTest
         assertTrue(guidance.getAction().contains("High Level Alchemy"));
         assertTrue(guidance.getSupplies().contains("Nature rune"));
         assertTrue(guidance.getSupplies().contains("Fire rune"));
-        assertTrue(guidance.getSupplies().contains("Grand Exchange"));
+        assertTrue(guidance.getSupplies().contains(
+                "Do not assume the shortfall should be bought"));
     }
 
     @Test

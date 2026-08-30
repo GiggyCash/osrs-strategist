@@ -55,7 +55,10 @@ Use `AccountModePolicy` instead of scattering restrictions through feature code.
 ### Main
 
 - GE is permitted but not automatically wise.
-- `MainEconomyPlanner` requires verified cash plus verified price/time inputs before a buy can be considered verified.
+- Exact resource purchases require complete RuneLite prices and verified liquid
+  cash. Verified time estimates win when available; otherwise conservative
+  liquid-wealth bands distinguish low-burden purchases from meaningful spends
+  that should use a reviewed self-source family.
 - Insufficient GP routes to money-making/resource review, not automatic gear sales.
 - `ProtectedItemProfile` and future built-in protection both veto disposal suggestions.
 
@@ -73,6 +76,13 @@ Use `AccountModePolicy` instead of scattering restrictions through feature code.
 ### UIM
 
 UIM must never inherit a bank-centric fallback.
+
+Inventory resolution is ordered and relative to the proposed plan. Current
+setup fit and comparable low-footprint methods precede productive consumption,
+verified safe storage, worthwhile reusable storage construction, and
+restricted retrieval. Dangerous storage is last-resort, exact-mechanic only,
+and requires a visible acknowledgement action before steps are shown. Compass
+never resolves pressure by naming an arbitrary item to drop.
 
 ```text
 Resource need

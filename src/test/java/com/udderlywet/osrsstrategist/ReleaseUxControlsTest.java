@@ -72,6 +72,35 @@ public class ReleaseUxControlsTest
     }
 
     @Test
+    public void dangerousStorageUsesAnExplicitRiskStepControl()
+    {
+        AtomicReference<Recommendation> shown = new AtomicReference<>();
+        OsrsStrategistPanel panel = new OsrsStrategistPanel(
+                (id, feedback) -> { }, null, shown::set,
+                () -> { }, () -> { }, "", value -> { });
+        RecommendationGuidance guidance = new RecommendationGuidance(
+                "Follow only the verified retrieval sequence.",
+                "Exact observed setup", "Hespori cave", "Second deaths can delete stored items.")
+                .withStorageDecision(new UimStorageDecision(
+                        StorageCapability.HESPORI_ITEM_RETRIEVAL, true,
+                        RecommendationConfidence.VERIFIED, RiskLevel.HIGH,
+                        "Verified exact service"),
+                        RecommendationRiskDisclosure.deathStorage());
+        Recommendation dangerous = new Recommendation(
+                "uim:hespori-transition", "Death-storage transition",
+                "A major transition is otherwise blocked.", 1.0, null,
+                RecommendationConfidence.CHECK_NEEDED, 0, 0, guidance,
+                CandidateSafetyEvidence.harmless(false));
+
+        panel.updateRecommendations(Collections.singletonList(dangerous));
+        assertEquals("View Risk Steps", panel.detailsLabelForTest());
+        assertNull(shown.get());
+        panel.clickDetailsForTest();
+        assertEquals(dangerous, shown.get());
+        assertEquals("Hide Risk Steps", panel.detailsLabelForTest());
+    }
+
+    @Test
     public void emptySecondarySectionsDoNotOccupyTheSidebar()
     {
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });

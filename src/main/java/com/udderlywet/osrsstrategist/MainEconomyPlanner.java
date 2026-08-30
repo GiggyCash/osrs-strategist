@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 @Singleton
 public class MainEconomyPlanner
 {
+    private static final long MINIMUM_LIQUID_BUFFER = 10_000L;
+
     public MainPurchaseDecision evaluatePurchase(
             StrategyContext context,
             MainPurchaseCandidate candidate)
@@ -71,6 +73,56 @@ public class MainEconomyPlanner
         return decision(MainPurchaseChoice.BUY,
                 cost, coins, RecommendationConfidence.VERIFIED,
                 "The purchase is affordable and the verified estimate saves time versus self-sourcing. No sale or purchase is performed automatically.");
+    }
+
+    /**
+     * Uses deliberately broad liquid-wealth bands when no defensible time
+     * estimate exists. This avoids both fake GP/hour precision and the old
+     * rule that every observed Main shortfall should simply be bought.
+     */
+    public MainPurchaseDecision evaluateUnmeasuredPurchase(
+            AccountEconomySnapshot economy,
+            PurchaseCostEstimate estimate,
+            boolean reviewedSelfSourceRoute)
+    {
+        if (estimate == null || !estimate.isComplete()
+                || estimate.getTotalCost() <= 0)
+            return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
+                    economy == null ? 0L : economy.getCoins(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    "An exact live price is unavailable, so Compass will not assume the material is tradeable or cheap.");
+        if (economy == null
+                || economy.getConfidence() != RecommendationConfidence.VERIFIED)
+            return decision(MainPurchaseChoice.CHECK_NEEDED,
+                    estimate.getTotalCost(),
+                    economy == null ? 0L : economy.getCoins(),
+                    RecommendationConfidence.CHECK_NEEDED,
+                    "The price is known, but verified liquid coins are not.");
+
+        long cost = estimate.getTotalCost();
+        long coins = Math.max(0L, economy.getCoins());
+        if (coins < cost)
+            return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
+                    cost, coins, RecommendationConfidence.CHECK_NEEDED,
+                    "Verified liquid coins do not cover the purchase.");
+
+        long remaining = coins - cost;
+        boolean trivialSpend = cost <= 1_000L && coins >= 5_000L;
+        boolean lowBurden = cost <= coins / 10L
+                && remaining >= MINIMUM_LIQUID_BUFFER;
+        if (trivialSpend || lowBurden)
+            return decision(MainPurchaseChoice.BUY, cost, coins,
+                    RecommendationConfidence.VERIFIED,
+                    "The exact purchase is a low-burden use of verified liquid wealth.");
+
+        if (reviewedSelfSourceRoute)
+            return decision(MainPurchaseChoice.SELF_SOURCE, cost, coins,
+                    RecommendationConfidence.VERIFIED,
+                    "The purchase would consume a material share of verified liquid wealth, so the reviewed self-source family is preferred without pretending to know an exact GP/hour value.");
+
+        return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
+                RecommendationConfidence.CHECK_NEEDED,
+                "The purchase is affordable but materially burdens liquid wealth, and no reviewed self-source family is attached.");
     }
 
     public boolean maySuggestSale(

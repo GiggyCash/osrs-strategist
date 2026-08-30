@@ -107,6 +107,15 @@ Main accounts only:
 - money-making alternatives
 - buy-vs-gather comparison
 
+`AccountResourcePlanner` no longer turns every observed shortfall into an
+unconditional GE instruction. Every required item must receive an exact-name
+RuneLite price, the aggregate must be complete, and liquid coins must be
+observed. When no defensible time estimate exists, `MainEconomyPlanner` uses
+broad wealth-burden bands: small spends can become an executable purchase,
+while a material spend uses a reviewed resource-family route when one exists.
+Missing price/tradeability/economy evidence fails closed rather than presenting
+a fake exact optimization.
+
 ## 6. UIM storage and inventory resolution
 Storage is capability-specific and fails closed. POH furniture, STASH, Tool
 Leprechaun, containers, looting bag, exact Item Retrieval Services, and an
@@ -120,7 +129,18 @@ Death-based storage is not ordinary inventory optimization. It carries a high
 or irreversible burden, cannot satisfy normal resource readiness, and must
 have a typed `RecommendationRiskDisclosure` requiring explicit acknowledgement
 before detailed steps. Final execution validation rejects generic, unverified,
-or undisclosed dangerous-storage guidance.
+or undisclosed dangerous-storage guidance. The sidebar labels the only reveal
+control `View Risk Steps`; selecting that deliberately acknowledges the warning
+before the details overlay is shown. Ordinary recommendations retain the normal
+Details control.
+
+`UimInventoryResolutionService` orders plan-relative resolutions explicitly:
+fit the current inventory, use a reviewed low-footprint alternative, make
+productive use of a currently useful resource, use proven item-compatible safe
+storage, build only high-value recurring storage, then consider restricted
+retrieval. Exact death-storage services are considered only for a major blocked
+transition after every safer option fails. There is no generic bank, drop-item,
+or generic death-bank resolution.
 
 ## 7. OpportunityEngine
 One generic engine for recurring and short detours:

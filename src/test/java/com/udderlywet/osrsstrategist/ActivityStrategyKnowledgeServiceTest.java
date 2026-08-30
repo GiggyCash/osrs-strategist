@@ -33,6 +33,9 @@ public class ActivityStrategyKnowledgeServiceTest
         // These activities genuinely use the current/inside-instance setup.
         assertNotNull(service.attach(candidate("slayer:do-task"), context));
         assertNotNull(service.attach(candidate("minigame:gauntlet"), context));
+        assertNotNull(service.attach(candidate("pvm:the_gauntlet"), context));
+        assertNotNull(service.attach(candidate("pvm:the_corrupted_gauntlet"),
+                context));
         assertNotNull(service.attach(candidate("verify:poh-build-mode"), context));
     }
 

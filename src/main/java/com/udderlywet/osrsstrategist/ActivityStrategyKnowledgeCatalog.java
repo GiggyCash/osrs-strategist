@@ -47,6 +47,16 @@ public final class ActivityStrategyKnowledgeCatalog
                 "Encounter readiness requires an executable loadout and supply space; stats alone do not prove readiness.",
                 StrategySourceId.PVM_STRATEGY,
                 StrategySourceId.UIM_ITEM_MANAGEMENT));
+        values.add(profile("pvm:the_gauntlet", 0, 0, 0,
+                InventoryFlow.NEUTRAL, 0.85,
+                "The Gauntlet supplies its temporary setup inside the activity, so a normal external loadout is not an execution requirement.",
+                StrategySourceId.PVM_STRATEGY,
+                StrategySourceId.UIM_ITEM_MANAGEMENT));
+        values.add(profile("pvm:the_corrupted_gauntlet", 0, 0, 0,
+                InventoryFlow.NEUTRAL, 0.85,
+                "The Corrupted Gauntlet supplies its temporary setup inside the activity, while death risk still remains a separate account-mode decision.",
+                StrategySourceId.PVM_STRATEGY,
+                StrategySourceId.UIM_ITEM_MANAGEMENT));
         values.add(profile("minigame:gauntlet", 0, 0, 0,
                 InventoryFlow.NEUTRAL, 0.85,
                 "The Gauntlet supplies its temporary setup inside the activity, so an external bank loadout is not an execution requirement.",

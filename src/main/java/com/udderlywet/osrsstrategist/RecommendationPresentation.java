@@ -200,7 +200,7 @@ public final class RecommendationPresentation
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
         if (disclosure.isAcknowledgementRequired())
-            text.append("<br>Open Details and acknowledge the risk before viewing execution steps.");
+            text.append("<br>Select View Risk Steps to acknowledge this warning and reveal the execution steps.");
         appendBreak(text, 2);
     }
 

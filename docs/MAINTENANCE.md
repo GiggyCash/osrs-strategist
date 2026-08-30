@@ -36,12 +36,19 @@ External facts used by typed catalogs are indexed in
 At minimum:
 - rich Main should prefer sensible GE purchases
 - poor Main should compare money making, liquidation, and gathering
+- an unpriced or partially priced Main recipe must not be called a GE purchase
+- a material share of verified liquid Main wealth should prefer a reviewed
+  self-source family when no trustworthy time comparison exists
 - Iron should never recommend GE
 - GIM storage ON should use observed Group Storage
 - GIM storage OFF should behave like Iron
 - UIM without POH storage must not be told to use it
 - UIM with unknown Tool Leprechaun contents must not assume tools are there
 - UIM with confirmed Tool Leprechaun tools may count them for farm-run prep
+- full-inventory UIM skill/activity candidates must prove a zero-slot route or
+  be replaced/held before ranking
+- exact dangerous-storage instructions must use the View Risk Steps
+  acknowledgement control; generic death storage remains ineligible
 - clue dislike should lower clue frequency gradually, not permanently
 - critical quest requirement may still surface despite low quest tolerance
 - "Not today" should suppress immediate repeat recommendations

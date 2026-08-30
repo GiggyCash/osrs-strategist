@@ -19,17 +19,29 @@ import javax.inject.Singleton;
 public class AccountResourcePlanner
 {
     private final PurchaseCostAdvisor purchaseCostAdvisor;
+    private final MainEconomyPlanner mainEconomyPlanner;
+    private final ResourceSourceCatalog resourceSourceCatalog;
 
     @Inject
-    public AccountResourcePlanner(PurchaseCostAdvisor purchaseCostAdvisor)
+    public AccountResourcePlanner(PurchaseCostAdvisor purchaseCostAdvisor,
+            MainEconomyPlanner mainEconomyPlanner,
+            ResourceSourceCatalog resourceSourceCatalog)
     {
         this.purchaseCostAdvisor = purchaseCostAdvisor;
+        this.mainEconomyPlanner = mainEconomyPlanner;
+        this.resourceSourceCatalog = resourceSourceCatalog;
+    }
+
+    public AccountResourcePlanner(PurchaseCostAdvisor purchaseCostAdvisor)
+    {
+        this(purchaseCostAdvisor, new MainEconomyPlanner(),
+                new ResourceSourceCatalog());
     }
 
     /** Test/compatibility constructor that deliberately omits live prices. */
     public AccountResourcePlanner()
     {
-        this(null);
+        this(null, new MainEconomyPlanner(), new ResourceSourceCatalog());
     }
 
     public AccountResourcePlan plan(
@@ -169,21 +181,8 @@ public class AccountResourcePlanner
         String shortfall = join(missing);
         if (mode.usesGrandExchange())
         {
-            text.append("Buy ").append(shortfall)
-                    .append(" at the Grand Exchange.");
-            String costAdvice = purchaseCostAdvisor == null
-                    ? null
-                    : purchaseCostAdvisor.advice(
-                            data == null ? null : data.getEconomy(),
-                            missingInputs);
-            if (costAdvice != null)
-            {
-                text.append(" ").append(costAdvice);
-            }
-            else
-            {
-                text.append(" Exact quantities are known; live price or cash evidence is not complete enough for an exact GP total.");
-            }
+            appendMainOpportunityGuidance(text, data, shortfall,
+                    missingInputs);
         }
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
@@ -214,6 +213,80 @@ public class AccountResourcePlanner
 
         appendRestrictedUimNote(text, restricted);
         return text.toString();
+    }
+
+    private void appendMainOpportunityGuidance(StringBuilder text,
+            StrategyDataBundle data, String shortfall,
+            List<ResolvedMethodInput> missingInputs)
+    {
+        PurchaseCostEstimate estimate = purchaseCostAdvisor == null
+                ? PurchaseCostEstimate.unknown()
+                : purchaseCostAdvisor.estimate(missingInputs);
+        List<String> routes = mainRoutes(missingInputs);
+        MainPurchaseDecision decision = mainEconomyPlanner == null
+                ? null : mainEconomyPlanner.evaluateUnmeasuredPurchase(
+                        data == null ? null : data.getEconomy(), estimate,
+                        !routes.isEmpty());
+
+        if (decision != null && decision.getChoice() == MainPurchaseChoice.BUY)
+        {
+            text.append("Buy ").append(shortfall)
+                    .append(" at the Grand Exchange. ")
+                    .append("The exact live total is about ")
+                    .append(format(decision.getTotalCost()))
+                    .append(" coins; this is a low-burden use of the ")
+                    .append(format(decision.getObservedCoins()))
+                    .append(" verified liquid coins.");
+            return;
+        }
+
+        if (decision != null
+                && decision.getChoice() == MainPurchaseChoice.SELF_SOURCE)
+        {
+            text.append("Self-source ").append(shortfall).append(". ")
+                    .append("Buying would use about ")
+                    .append(format(decision.getTotalCost()))
+                    .append(" of ")
+                    .append(format(decision.getObservedCoins()))
+                    .append(" verified liquid coins. Reviewed route: ")
+                    .append(routes.get(0));
+            return;
+        }
+
+        if (decision != null && decision.getChoice()
+                == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
+        {
+            text.append("Do not start the Grand Exchange purchase yet: it costs about ")
+                    .append(format(decision.getTotalCost()))
+                    .append(" coins, but only ")
+                    .append(format(decision.getObservedCoins()))
+                    .append(" liquid coins are verified.");
+            if (!routes.isEmpty())
+                text.append(" Use this reviewed self-source route instead: ")
+                        .append(routes.get(0));
+            return;
+        }
+
+        text.append("Do not assume the shortfall should be bought: exact ")
+                .append("tradeability, live price, liquid coins, or opportunity cost is incomplete.");
+        if (!routes.isEmpty())
+            text.append(" Reviewed self-source route: ").append(routes.get(0));
+    }
+
+    private List<String> mainRoutes(List<ResolvedMethodInput> missingInputs)
+    {
+        if (resourceSourceCatalog == null || missingInputs == null)
+            return java.util.Collections.emptyList();
+        List<String> routes = new ArrayList<>();
+        for (ResolvedMethodInput input : missingInputs)
+        {
+            for (String route : resourceSourceCatalog.suggestions(
+                    input.getName(), AccountMode.MAIN, false))
+            {
+                if (!routes.contains(route)) routes.add(route);
+            }
+        }
+        return routes;
     }
 
     private static void appendRestrictedUimNote(
@@ -343,7 +416,7 @@ public class AccountResourcePlanner
         return text.toString();
     }
 
-    private static String format(int value)
+    private static String format(long value)
     {
         return String.format(Locale.ROOT, "%,d", Math.max(0, value));
     }

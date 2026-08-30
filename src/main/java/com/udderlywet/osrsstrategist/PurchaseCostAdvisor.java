@@ -29,23 +29,9 @@ public class PurchaseCostAdvisor
             AccountEconomySnapshot economy,
             List<ResolvedMethodInput> missing)
     {
-        if (marketPriceService == null || missing == null || missing.isEmpty())
-        {
-            return null;
-        }
-
-        long total = 0L;
-        for (ResolvedMethodInput input : missing)
-        {
-            if (input == null || input.getQuantity() <= 0) continue;
-            MarketPriceQuote quote = marketPriceService.quote(input.getName());
-            if (quote == null || !quote.hasPrice()) return null;
-            long itemTotal = safeMultiply(
-                    quote.getUnitPrice(),
-                    input.getQuantity());
-            total = safeAdd(total, itemTotal);
-        }
-        if (total <= 0) return null;
+        PurchaseCostEstimate estimate = estimate(missing);
+        if (!estimate.isComplete() || estimate.getTotalCost() <= 0) return null;
+        long total = estimate.getTotalCost();
 
         StringBuilder text = new StringBuilder();
         text.append("At current RuneLite market prices, that purchase is about ")
@@ -78,6 +64,32 @@ public class PurchaseCostAdvisor
             text.append(" Cash is not fully verified yet, so affordability is still Check Needed.");
         }
         return text.toString();
+    }
+
+    /**
+     * Resolves every exact-name quote or fails the aggregate closed. A partial
+     * price list must never make an entire method appear cheaper than it is.
+     */
+    public PurchaseCostEstimate estimate(List<ResolvedMethodInput> missing)
+    {
+        if (marketPriceService == null || missing == null || missing.isEmpty())
+            return PurchaseCostEstimate.unknown();
+
+        long total = 0L;
+        boolean sawInput = false;
+        for (ResolvedMethodInput input : missing)
+        {
+            if (input == null || input.getQuantity() <= 0) continue;
+            sawInput = true;
+            MarketPriceQuote quote = marketPriceService.quote(input.getName());
+            if (quote == null || !quote.hasPrice())
+                return PurchaseCostEstimate.unknown();
+            total = safeAdd(total, safeMultiply(
+                    quote.getUnitPrice(), input.getQuantity()));
+        }
+        return sawInput && total > 0
+                ? new PurchaseCostEstimate(true, total)
+                : PurchaseCostEstimate.unknown();
     }
 
     private static long safeMultiply(long a, long b)

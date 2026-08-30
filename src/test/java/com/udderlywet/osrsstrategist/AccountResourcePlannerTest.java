@@ -36,7 +36,7 @@ public class AccountResourcePlannerTest
     }
 
     @Test
-    public void mainGetsExactShortfallAfterBankObservation()
+    public void mainDoesNotAssumeAnUnpricedShortfallShouldBeBought()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
                 .inventory(new InventorySnapshot(Collections.singletonList(
@@ -53,8 +53,8 @@ public class AccountResourcePlannerTest
         assertTrue(plan.isPrimaryStorageObserved());
         assertEquals(200, plan.getTotalMissingUnits());
         assertTrue(plan.getGuidance().contains("Verified usable: 300 Yew logs"));
-        assertTrue(plan.getGuidance().contains("Buy 200 Yew logs"));
-        assertTrue(plan.getGuidance().contains("Grand Exchange"));
+        assertTrue(plan.getGuidance().contains("Do not assume the shortfall should be bought"));
+        assertTrue(plan.getGuidance().contains("Reviewed self-source route"));
     }
 
     @Test
@@ -165,7 +165,47 @@ public class AccountResourcePlannerTest
         assertEquals(100, plan.getTotalMissingUnits());
         assertEquals(0, plan.getEntries().get(1).getMissing());
         assertTrue(plan.getGuidance().contains("Fire rune supplied by Staff of fire"));
-        assertTrue(plan.getGuidance().contains("Buy 100 Nature rune"));
+        assertTrue(plan.getGuidance().contains("Do not assume the shortfall should be bought"));
+    }
+
+    @Test
+    public void lowBurdenExactMainPurchaseUsesLivePriceAndLiquidCash()
+    {
+        AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
+                new PurchaseCostAdvisor(new FixedPriceService(20)),
+                new MainEconomyPlanner(), new ResourceSourceCatalog());
+        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .economy(new AccountEconomySnapshot(100_000L, 100_000L,
+                        RecommendationConfidence.VERIFIED))
+                .build();
+
+        AccountResourcePlan plan = pricedPlanner.plan(data,
+                Collections.singletonList(need("Yew logs", 100)), false);
+
+        assertTrue(plan.getGuidance().contains("Buy 100 Yew logs"));
+        assertTrue(plan.getGuidance().contains("2,000 coins"));
+        assertTrue(plan.getGuidance().contains("low-burden"));
+    }
+
+    @Test
+    public void wealthBurdenCanMakeMainUseReviewedSelfSourceRoute()
+    {
+        AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
+                new PurchaseCostAdvisor(new FixedPriceService(500)),
+                new MainEconomyPlanner(), new ResourceSourceCatalog());
+        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .economy(new AccountEconomySnapshot(100_000L, 100_000L,
+                        RecommendationConfidence.VERIFIED))
+                .build();
+
+        AccountResourcePlan plan = pricedPlanner.plan(data,
+                Collections.singletonList(need("Yew logs", 100)), false);
+
+        assertTrue(plan.getGuidance().contains("Self-source 100 Yew logs"));
+        assertTrue(plan.getGuidance().contains("Reviewed route"));
+        assertFalse(plan.getGuidance().contains("Buy 100 Yew logs"));
     }
 
     @Test
@@ -232,5 +272,21 @@ public class AccountResourcePlannerTest
                 0L,
                 levels,
                 xp);
+    }
+
+    private static final class FixedPriceService extends MarketPriceService
+    {
+        private final int price;
+
+        private FixedPriceService(int price)
+        {
+            this.price = price;
+        }
+
+        @Override
+        public MarketPriceQuote quote(String exactItemName)
+        {
+            return new MarketPriceQuote(1, exactItemName, price);
+        }
     }
 }

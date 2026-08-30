@@ -110,6 +110,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
+    private String riskAcknowledgedRecommendationId;
     private boolean detailsOverlayEnabled = true;
     private GoalType selectedGoal = GoalType.AUTOMATIC;
     private MembershipStatus membership = MembershipStatus.UNKNOWN;
@@ -465,6 +466,9 @@ public class OsrsStrategistPanel extends PluginPanel
             setWrappedText(feedbackStatus, "", TEXT_WIDTH);
         }
         currentRecommendation = best;
+        if (recommendationChanged)
+            riskAcknowledgedRecommendationId = null;
+        updateDetailsButtonLabel();
 
         setRecommendationButtonsEnabled(
                 !FallbackRecommendationFactory.isFallback(best));
@@ -589,8 +593,12 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (currentRecommendation == null || !detailsOverlayEnabled) return;
         acknowledgeFirstUse();
+        if (requiresRiskAcknowledgement(currentRecommendation)
+                && !currentRecommendation.getId().equals(
+                        riskAcknowledgedRecommendationId))
+            riskAcknowledgedRecommendationId = currentRecommendation.getId();
         detailsVisible = !detailsVisible;
-        detailsButton.setText(detailsVisible ? "Hide Details" : "Details");
+        updateDetailsButtonLabel();
         detailsHandler.accept(detailsVisible ? currentRecommendation : null);
     }
 
@@ -598,7 +606,26 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (detailsVisible) detailsHandler.accept(null);
         detailsVisible = false;
-        detailsButton.setText("Details");
+        updateDetailsButtonLabel();
+    }
+
+    private void updateDetailsButtonLabel()
+    {
+        if (requiresRiskAcknowledgement(currentRecommendation))
+            detailsButton.setText(detailsVisible
+                    ? "Hide Risk Steps" : "View Risk Steps");
+        else
+            detailsButton.setText(detailsVisible ? "Hide Details" : "Details");
+    }
+
+    private static boolean requiresRiskAcknowledgement(
+            Recommendation recommendation)
+    {
+        if (recommendation == null || recommendation.getGuidance() == null
+                || recommendation.getGuidance().getRiskDisclosure() == null)
+            return false;
+        return recommendation.getGuidance().getRiskDisclosure()
+                .isAcknowledgementRequired();
     }
 
     private void renderRecommendationBody()
@@ -662,6 +689,8 @@ public class OsrsStrategistPanel extends PluginPanel
     boolean isDetailsControlVisible() { return detailsButton.isVisible(); }
     boolean isFeedbackVisibleForTest() { return feedbackPanel.isVisible(); }
     boolean isProgressVisibleForTest() { return progressBar.isVisible(); }
+    String detailsLabelForTest() { return detailsButton.getText(); }
+    void clickDetailsForTest() { detailsButton.doClick(); }
     void clickSupportForTest() { supportButton.doClick(); }
     String recommendationTextForTest() { return recommendationBody.getText(); }
     boolean areAlternativesVisibleForTest() { return alternativesCard.isVisible(); }

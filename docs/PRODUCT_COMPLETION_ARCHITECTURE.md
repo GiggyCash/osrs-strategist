@@ -340,6 +340,11 @@ continuously merely because the player is standing in their house. Immutable
 Farming catalogs/evaluators are reused across evaluations instead of allocated
 inside every candidate pass.
 
+Login and RuneScape-profile transitions only mark the live snapshot dirty. The
+first game tick performs one coalesced full observation/evaluation instead of
+evaluating immediately and repeating the same work for the inventory,
+equipment, varbit, quest, Slayer, and scene-event burst that follows login.
+
 ## Verification workflow
 
 For every strategic data change:
