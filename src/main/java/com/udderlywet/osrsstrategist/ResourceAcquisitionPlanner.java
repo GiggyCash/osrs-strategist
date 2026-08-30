@@ -115,8 +115,7 @@ public class ResourceAcquisitionPlanner
             }
         }
 
-        String sourceNote = sourceSuggestions(
-                need, mode, context.isAllowWildernessMethods());
+        String sourceNote = sourceSuggestions(need, context);
 
         // Do not turn an unobserved container into a proven shortfall. An
         // inventory read is required for every mode; ordinary accounts also
@@ -175,8 +174,7 @@ public class ResourceAcquisitionPlanner
         }
 
         AccountMode mode = context.getAccountMode();
-        String sourceNote = sourceSuggestions(
-                shortfall, mode, context.isAllowWildernessMethods());
+        String sourceNote = sourceSuggestions(shortfall, context);
         String prefix = "Confirmed shortfall: " + shortfall.getQuantity()
                 + " × " + shortfall.getItemName() + ". ";
 
@@ -228,7 +226,8 @@ public class ResourceAcquisitionPlanner
         if (sourceCatalog != null && context != null)
         {
             List<String> routes = sourceCatalog.suggestions(need.getItemName(),
-                    context.getAccountMode(), context.isAllowWildernessMethods());
+                    context.getAccountMode(), membership(context),
+                    context.isAllowWildernessMethods());
             for (String route : routes)
                 steps.add(new ResourceAcquisitionStep(
                         context.getAccountMode().usesGrandExchange()
@@ -264,14 +263,13 @@ public class ResourceAcquisitionPlanner
                 .resolveKnownShortfall(context, need);
     }
 
-    private String sourceSuggestions(
-            ResourceNeed need,
-            AccountMode mode,
-            boolean allowWilderness)
+    private String sourceSuggestions(ResourceNeed need, StrategyContext context)
     {
         if (sourceCatalog == null || need == null) return "";
         List<String> suggestions = sourceCatalog.suggestions(
-                need.getItemName(), mode, allowWilderness);
+                need.getItemName(), context == null ? AccountMode.UNKNOWN
+                        : context.getAccountMode(), membership(context),
+                context != null && context.isAllowWildernessMethods());
         if (suggestions.isEmpty())
         {
             return " No verified item-specific gathering, shop, crafting, minigame, or drop source is currently available for this resource.";
@@ -286,6 +284,14 @@ public class ResourceAcquisitionPlanner
             note.append(suggestions.get(i));
         }
         return note.toString();
+    }
+
+    private static MembershipStatus membership(StrategyContext context)
+    {
+        return context == null || context.getData() == null
+                || context.getData().getAccount() == null
+                ? MembershipStatus.UNKNOWN
+                : context.getData().getAccount().getMembershipStatus();
     }
 
     private static StoredResource findVerifiedStoredResource(

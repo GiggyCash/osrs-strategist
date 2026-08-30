@@ -45,7 +45,10 @@ public final class SustainableResourceValueService
         int observed = items.quantity(name);
         int required = Math.max(1, need.getQuantity());
         AccountMode mode = context.getAccountMode();
-        List<String> routes = sources.suggestions(name, mode,
+        MembershipStatus membership = context.getData().getAccount() == null
+                ? MembershipStatus.UNKNOWN
+                : context.getData().getAccount().getMembershipStatus();
+        List<String> routes = sources.suggestions(name, mode, membership,
                 context.isAllowWildernessMethods());
         boolean knownFamily = !sources.match(name).isEmpty();
 

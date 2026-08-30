@@ -218,12 +218,6 @@ public class QuestRequirementResolver
         if (context == null || input == null || context.getData() == null
                 || context.getData().getAccount() == null)
             return null;
-        // The dependency graph contains deterministic recipes, but its leaf
-        // source catalog is not yet membership-tagged. Keep this richer path
-        // behind verified P2P evidence until those source families are tagged.
-        if (context.getData().getAccount().getMembershipStatus()
-                != MembershipStatus.P2P)
-            return null;
         return resourcePlanner.resolveKnownShortfall(
                 context, input.getName(), input.getQuantity());
     }
@@ -233,13 +227,8 @@ public class QuestRequirementResolver
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null)
             return java.util.Collections.emptyList();
-        // ResourceSourceCatalog currently contains both members and general
-        // routes. Until each route carries explicit membership evidence, only
-        // surface those routes when P2P is verified.
-        if (context.getData().getAccount().getMembershipStatus()
-                != MembershipStatus.P2P)
-            return java.util.Collections.emptyList();
         return resourceSources.suggestions(itemName, context.getAccountMode(),
+                context.getData().getAccount().getMembershipStatus(),
                 context.isAllowWildernessMethods());
     }
 

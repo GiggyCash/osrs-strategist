@@ -221,6 +221,12 @@ Storage can add exact shared-resource evidence; it cannot prove future teammate
 production. Variable consumption, burn rates, RNG yield, and future Slayer
 workload are not presented as exact.
 
+Resource source families retain provenance and membership-specific route
+text. A verified P2P account may use the reviewed general family; F2P and
+unknown membership may resolve only explicitly enumerated F2P item names to a
+separate safe route. The same lookup is used by method inputs, quests, and
+recursive dependencies.
+
 ## Contextual gear
 
 The existing gear progression and acquisition catalogs remain encounter-aware:

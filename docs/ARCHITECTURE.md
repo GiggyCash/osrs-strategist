@@ -151,6 +151,13 @@ while a material spend uses a reviewed resource-family route when one exists.
 Missing price/tradeability/economy evidence fails closed rather than presenting
 a fake exact optimization.
 
+`ResourceSourceCatalog` keeps Main, Iron, and UIM wording plus source IDs on
+each acquisition family. Membership is an input to lookup. F2P and unknown
+membership resolve only item names explicitly listed with a separate F2P-safe
+route; a broad members family cannot leak through token matching. Quest and
+recursive resource planners consume this same typed lookup rather than
+suppressing every useful F2P source or guessing a members route.
+
 ## 6. UIM storage and inventory resolution
 Storage is capability-specific and fails closed. POH furniture, STASH, Tool
 Leprechaun, containers, looting bag, exact Item Retrieval Services, and an

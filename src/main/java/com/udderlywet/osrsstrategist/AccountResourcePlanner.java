@@ -224,7 +224,10 @@ public class AccountResourcePlanner
         PurchaseCostEstimate estimate = purchaseCostAdvisor == null
                 ? PurchaseCostEstimate.unknown()
                 : purchaseCostAdvisor.estimate(missingInputs);
-        List<String> routes = mainRoutes(missingInputs);
+        List<String> routes = mainRoutes(missingInputs,
+                data == null || data.getAccount() == null
+                        ? MembershipStatus.UNKNOWN
+                        : data.getAccount().getMembershipStatus());
         MainPurchaseDecision decision = mainEconomyPlanner == null
                 ? null : mainEconomyPlanner.evaluateUnmeasuredPurchase(
                         data == null ? null : data.getEconomy(), estimate,
@@ -275,7 +278,8 @@ public class AccountResourcePlanner
             text.append(" Reviewed self-source route: ").append(routes.get(0));
     }
 
-    private List<String> mainRoutes(List<ResolvedMethodInput> missingInputs)
+    private List<String> mainRoutes(List<ResolvedMethodInput> missingInputs,
+            MembershipStatus membership)
     {
         if (resourceSourceCatalog == null || missingInputs == null)
             return java.util.Collections.emptyList();
@@ -283,7 +287,7 @@ public class AccountResourcePlanner
         for (ResolvedMethodInput input : missingInputs)
         {
             for (String route : resourceSourceCatalog.suggestions(
-                    input.getName(), AccountMode.MAIN, false))
+                    input.getName(), AccountMode.MAIN, membership, false))
             {
                 if (!routes.contains(route)) routes.add(route);
             }

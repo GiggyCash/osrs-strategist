@@ -787,8 +787,13 @@ public final class UniversalDependencyPlanner
         private void addResourceSource(String name, int quantity,
                 String parent, int nodeDepth)
         {
-            List<String> suggestions = p2p() && context != null
+            List<String> suggestions = context != null
                     ? resources.suggestions(name, context.getAccountMode(),
+                            context.getData() == null
+                                    || context.getData().getAccount() == null
+                                    ? MembershipStatus.UNKNOWN
+                                    : context.getData().getAccount()
+                                            .getMembershipStatus(),
                             context.isAllowWildernessMethods())
                     : Collections.emptyList();
             String action;

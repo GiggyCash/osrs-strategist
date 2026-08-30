@@ -99,6 +99,29 @@ public class QuestItemAcquisitionGuidanceTest
         assertFalse(result.getGuidance().getAction().contains("Grand Exchange"));
     }
 
+    @Test
+    public void f2pIronQuestUsesOnlyAnExplicitF2pResourceRoute()
+    {
+        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+                "Raw beef", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
+        QuestDefinition quest = new QuestDefinition("F2P test quest", true,
+                Collections.emptyList(), Collections.<Skill, Integer>emptyMap(),
+                Collections.emptyList(), requirement, 0, Collections.emptyList(),
+                "Lumbridge", Collections.emptyList(),
+                Collections.<Skill, Integer>emptyMap());
+        StrategyDataBundle data = StrategyDataBundle.builder(
+                        account(1, MembershipStatus.F2P))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+
+        QuestResolution result = new QuestRequirementResolver().resolve(
+                quest, context(data, false));
+
+        assertTrue(result.getGuidance().getAction().contains("F2P cow"));
+        assertFalse(result.getGuidance().getAction().contains("members"));
+    }
+
     private static StrategyContext context(StrategyDataBundle data,
             boolean useGroupStorage)
     {
@@ -108,6 +131,12 @@ public class QuestItemAcquisitionGuidanceTest
 
     private static AccountSnapshot account(int type)
     {
+        return account(type, MembershipStatus.P2P);
+    }
+
+    private static AccountSnapshot account(int type,
+            MembershipStatus membership)
+    {
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);
         EnumMap<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -116,7 +145,7 @@ public class QuestItemAcquisitionGuidanceTest
             xp.put(skill, 0);
         }
         return new AccountSnapshot("Player", type, "test",
-                MembershipStatus.P2P, 0, 1500, 0L, levels, xp);
+                membership, 0, 1500, 0L, levels, xp);
     }
 
     private static ItemStackSnapshot item(String name, int quantity)

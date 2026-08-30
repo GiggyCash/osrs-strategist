@@ -106,8 +106,12 @@ registry coverage.
 | Exact dangerous retrieval systems | [Item Retrieval Service](https://oldschool.runescape.wiki/w/Item_Retrieval_Service), [UIM item management](https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management) | Hespori, Zulrah, Volcanic Mine, deathpile, and looting-bag profiles retain distinct location, access, eligible-item, deposit, retrieval, cost, expiration, second-death, and risk rules. Hespori costs 25,000 coins; Zulrah retrieval is free for UIM; Volcanic Mine costs 150 numulite; a deathpile lasts 60 logged-in minutes. The generic legacy death-storage bucket cannot authorize a route, and another unsafe death permanently destroys Item Retrieval Service contents, so dangerous storage is last-resort and visibly disclosed. |
 
 General acquisition wording continues to come from `ResourceSourceCatalog`.
-Specific quantities and tradeability must be supplied by typed item/activity
-data; `SustainableResourceValueService` does not infer either from prose.
+Every family retains source IDs for the general, Iron, UIM, and—where present—
+F2P guide foundations. F2P/unknown membership can use only exact item names
+with a separately written F2P-safe route; members-only variants in the same
+broad family remain unavailable. Specific quantities and tradeability must be
+supplied by typed item/activity data; `SustainableResourceValueService` does
+not infer either from prose.
 
 ## Contextual gear value
 
