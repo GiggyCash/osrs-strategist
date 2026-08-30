@@ -1,11 +1,16 @@
 package com.udderlywet.osrsstrategist;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.util.List;
+import java.util.function.BiConsumer;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import net.runelite.client.ui.ColorScheme;
@@ -36,14 +41,37 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel recommendationReason =
             wrapLabel("");
 
+    private final JLabel feedbackStatus =
+            wrapLabel("");
+
     private final JLabel alternativeOne =
             wrapLabel("");
 
     private final JLabel alternativeTwo =
             wrapLabel("");
 
-    public OsrsStrategistPanel()
+    private final JButton doThisButton =
+            feedbackButton("Do This");
+
+    private final JButton laterButton =
+            feedbackButton("Later");
+
+    private final JButton notTodayButton =
+            feedbackButton("Not Today");
+
+    private final JButton dislikeButton =
+            feedbackButton("Dislike");
+
+    private final BiConsumer<String, FeedbackAction> feedbackHandler;
+
+    private String currentRecommendationId;
+    private String currentRecommendationTitle;
+
+    public OsrsStrategistPanel(
+            BiConsumer<String, FeedbackAction> feedbackHandler)
     {
+        this.feedbackHandler = feedbackHandler;
+
         setLayout(new BorderLayout());
         setBackground(ColorScheme.DARK_GRAY_COLOR);
 
@@ -88,84 +116,82 @@ public class OsrsStrategistPanel extends PluginPanel
                 );
 
         content.add(title);
-
-        content.add(
-                Box.createVerticalStrut(4)
-        );
-
+        content.add(Box.createVerticalStrut(4));
         content.add(subtitle);
-
-        content.add(
-                Box.createVerticalStrut(16)
-        );
+        content.add(Box.createVerticalStrut(16));
 
         content.add(accountName);
-
-        content.add(
-                Box.createVerticalStrut(4)
-        );
-
+        content.add(Box.createVerticalStrut(4));
         content.add(accountType);
-
-        content.add(
-                Box.createVerticalStrut(4)
-        );
-
+        content.add(Box.createVerticalStrut(4));
         content.add(totalLevel);
 
-        content.add(
-                Box.createVerticalStrut(20)
-        );
-
-        content.add(
-                sectionHeader("STRATEGY")
-        );
-
+        content.add(Box.createVerticalStrut(20));
+        content.add(sectionHeader("STRATEGY"));
         content.add(strategyMode);
         content.add(questTolerance);
 
-        content.add(
-                Box.createVerticalStrut(20)
-        );
-
-        content.add(
-                sectionHeader("DO NEXT")
-        );
-
+        content.add(Box.createVerticalStrut(20));
+        content.add(sectionHeader("DO NEXT"));
         content.add(recommendationTitle);
-
-        content.add(
-                Box.createVerticalStrut(5)
-        );
-
+        content.add(Box.createVerticalStrut(5));
         content.add(recommendationReason);
+        content.add(Box.createVerticalStrut(10));
 
-        content.add(
-                Box.createVerticalStrut(20)
+        JPanel feedbackPanel = new JPanel(
+                new GridLayout(2, 2, 4, 4)
         );
 
+        feedbackPanel.setOpaque(false);
+        feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
+        feedbackPanel.setPreferredSize(
+                new Dimension(CONTENT_WIDTH, 58)
+        );
+        feedbackPanel.setMaximumSize(
+                new Dimension(CONTENT_WIDTH, 58)
+        );
+
+        feedbackPanel.add(doThisButton);
+        feedbackPanel.add(laterButton);
+        feedbackPanel.add(notTodayButton);
+        feedbackPanel.add(dislikeButton);
+
+        content.add(feedbackPanel);
+        content.add(Box.createVerticalStrut(5));
+        content.add(feedbackStatus);
+        content.add(Box.createVerticalStrut(3));
         content.add(
-                sectionHeader(
-                        "OTHER GOOD OPTIONS"
+                wrapLabel(
+                        "<i>Feedback is remembered for this account.</i>"
                 )
         );
 
-        content.add(alternativeOne);
-
-        content.add(
-                Box.createVerticalStrut(5)
+        doThisButton.addActionListener(
+                event -> submitFeedback(FeedbackAction.DO_THIS)
         );
 
+        laterButton.addActionListener(
+                event -> submitFeedback(FeedbackAction.LATER)
+        );
+
+        notTodayButton.addActionListener(
+                event -> submitFeedback(FeedbackAction.NOT_TODAY)
+        );
+
+        dislikeButton.addActionListener(
+                event -> submitFeedback(FeedbackAction.DISLIKE)
+        );
+
+        setFeedbackButtonsEnabled(false);
+
+        content.add(Box.createVerticalStrut(20));
+        content.add(sectionHeader("OTHER GOOD OPTIONS"));
+        content.add(alternativeOne);
+        content.add(Box.createVerticalStrut(5));
         content.add(alternativeTwo);
 
-        content.add(
-                Box.createVerticalStrut(20)
-        );
-
-        content.add(
-                sectionHeader("OPPORTUNITIES")
-        );
-
+        content.add(Box.createVerticalStrut(20));
+        content.add(sectionHeader("OPPORTUNITIES"));
         content.add(
                 wrapLabel(
                         "No active reminders yet."
@@ -243,6 +269,10 @@ public class OsrsStrategistPanel extends PluginPanel
         if (recommendations == null
                 || recommendations.isEmpty())
         {
+            currentRecommendationId = null;
+            currentRecommendationTitle = null;
+            setFeedbackButtonsEnabled(false);
+
             recommendationTitle.setText(
                     html(
                             "No recommendation available."
@@ -266,6 +296,10 @@ public class OsrsStrategistPanel extends PluginPanel
 
         Recommendation best =
                 recommendations.get(0);
+
+        currentRecommendationId = best.getId();
+        currentRecommendationTitle = best.getTitle();
+        setFeedbackButtonsEnabled(true);
 
         recommendationTitle.setText(
                 html(
@@ -315,6 +349,87 @@ public class OsrsStrategistPanel extends PluginPanel
             alternativeTwo.setText(
                     html("")
             );
+        }
+    }
+
+    private void submitFeedback(
+            FeedbackAction action)
+    {
+        if (currentRecommendationId == null
+                || feedbackHandler == null)
+        {
+            return;
+        }
+
+        String actedOnTitle = currentRecommendationTitle;
+        String actedOnId = currentRecommendationId;
+
+        feedbackStatus.setText(
+                html(
+                        feedbackStatusText(
+                                action,
+                                actedOnTitle
+                        )
+                )
+        );
+
+        feedbackHandler.accept(
+                actedOnId,
+                action
+        );
+    }
+
+    private void setFeedbackButtonsEnabled(
+            boolean enabled)
+    {
+        doThisButton.setEnabled(enabled);
+        laterButton.setEnabled(enabled);
+        notTodayButton.setEnabled(enabled);
+        dislikeButton.setEnabled(enabled);
+    }
+
+    private static JButton feedbackButton(
+            String text)
+    {
+        JButton button = new JButton(text);
+        button.setFocusable(false);
+        button.setFont(
+                button.getFont()
+                        .deriveFont(11f)
+        );
+        button.setMargin(
+                new Insets(2, 2, 2, 2)
+        );
+        return button;
+    }
+
+    private static String feedbackStatusText(
+            FeedbackAction action,
+            String title)
+    {
+        String activity = title == null
+                ? "Recommendation"
+                : title;
+
+        switch (action)
+        {
+            case DO_THIS:
+                return "<b>Selected:</b> " + activity;
+
+            case LATER:
+                return "<b>" + activity
+                        + "</b> snoozed for 1 hour.";
+
+            case NOT_TODAY:
+                return "<b>" + activity
+                        + "</b> snoozed for 24 hours.";
+
+            case DISLIKE:
+                return "<b>" + activity
+                        + "</b> marked as disliked and will appear less often.";
+
+            default:
+                return "<b>Feedback saved.</b>";
         }
     }
 
