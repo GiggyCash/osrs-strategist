@@ -4,15 +4,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class Opportunity
 {
+    @Getter
     private final String id;
+    @Getter
     private final OpportunityType type;
+    @Getter
     private final String title;
+    @Getter
     private final boolean ready;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final List<String> preparation;
+    @Getter
     private final boolean setupVerified;
+    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
 
     public Opportunity(
@@ -54,43 +64,11 @@ public final class Opportunity
                 ? CandidateSafetyEvidence.unknown() : safetyEvidence;
     }
 
-    public String getId()
-    {
-        return id;
-    }
 
-    public OpportunityType getType()
-    {
-        return type;
-    }
 
-    public String getTitle()
-    {
-        return title;
-    }
 
-    public boolean isReady()
-    {
-        return ready;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 
-    public List<String> getPreparation()
-    {
-        return preparation;
-    }
 
-    public boolean isSetupVerified()
-    {
-        return setupVerified;
-    }
 
-    public CandidateSafetyEvidence getSafetyEvidence()
-    {
-        return safetyEvidence;
-    }
 }

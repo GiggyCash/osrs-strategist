@@ -1,36 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class AgilityCourseDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String displayName;
+    @Getter
     private final int requiredLevel;
+    @Getter
     private final int regionId;
+    @Getter
     private final String requiredQuest;
+    @Getter
     private final boolean wilderness;
 
-    public AgilityCourseDefinition(
-            String id,
-            String displayName,
-            int requiredLevel,
-            int regionId,
-            String requiredQuest,
-            boolean wilderness)
-    {
-        this.id = id;
-        this.displayName = displayName;
-        this.requiredLevel = requiredLevel;
-        this.regionId = regionId;
-        this.requiredQuest = requiredQuest;
-        this.wilderness = wilderness;
-    }
 
-    public String getId() { return id; }
-    public String getDisplayName() { return displayName; }
-    public int getRequiredLevel() { return requiredLevel; }
-    public int getRegionId() { return regionId; }
-    public String getRequiredQuest() { return requiredQuest; }
-    public boolean isWilderness() { return wilderness; }
 
     public String observationKey()
     {

@@ -2,14 +2,22 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Objects;
 
+import lombok.Getter;
+
 /** One ordered, evidence-backed transition in the active goal plan. */
 public final class StrategicPlanStep
 {
+    @Getter
     private final String id;
+    @Getter
     private final GoalNodeKind kind;
+    @Getter
     private final String objective;
+    @Getter
     private final String reason;
+    @Getter
     private final PlanCompletionCondition completion;
+    @Getter
     private final String recommendationId;
 
     public StrategicPlanStep(
@@ -37,12 +45,6 @@ public final class StrategicPlanStep
         return completion.isComplete(data);
     }
 
-    public String getId() { return id; }
-    public GoalNodeKind getKind() { return kind; }
-    public String getObjective() { return objective; }
-    public String getReason() { return reason; }
-    public PlanCompletionCondition getCompletion() { return completion; }
-    public String getRecommendationId() { return recommendationId; }
 
     @Override
     public boolean equals(Object other)

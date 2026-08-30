@@ -1,11 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Plan-relative inventory requirements; deliberately avoids fake precision. */
 public final class MethodInventoryFootprint
 {
+    @Getter
     private final int minimumPracticalFreeSlots;
+    @Getter
     private final int persistentRequiredSlots;
+    @Getter
     private final int temporarySlots;
+    @Getter
     private final InventoryFlow flow;
     private final boolean tearsDownCurrentSetup;
 
@@ -27,9 +33,5 @@ public final class MethodInventoryFootprint
                 InventoryFlow.NEUTRAL, false);
     }
 
-    public int getMinimumPracticalFreeSlots() { return minimumPracticalFreeSlots; }
-    public int getPersistentRequiredSlots() { return persistentRequiredSlots; }
-    public int getTemporarySlots() { return temporarySlots; }
-    public InventoryFlow getFlow() { return flow; }
     public boolean tearsDownCurrentSetup() { return tearsDownCurrentSetup; }
 }

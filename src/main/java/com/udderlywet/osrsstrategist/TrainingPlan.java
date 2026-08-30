@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Selected method plus the confidence after evaluating the current account.
  *
@@ -13,10 +15,15 @@ import java.util.List;
  */
 public final class TrainingPlan
 {
+    @Getter
     private final TrainingMethod method;
+    @Getter
     private final String whyThisMethod;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final List<RequirementCheck> requirementChecks;
+    @Getter
     private final MethodStrategyProfile strategyProfile;
     private final int currentStageTargetLevel;
 
@@ -91,30 +98,10 @@ public final class TrainingPlan
         this.currentStageTargetLevel = Math.max(0, currentStageTargetLevel);
     }
 
-    public TrainingMethod getMethod()
-    {
-        return method;
-    }
 
-    public String getWhyThisMethod()
-    {
-        return whyThisMethod;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 
-    public List<RequirementCheck> getRequirementChecks()
-    {
-        return requirementChecks;
-    }
 
-    public MethodStrategyProfile getStrategyProfile()
-    {
-        return strategyProfile;
-    }
 
     /**
      * The next level at which the visible execution plan must be rebuilt. This

@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Ordered plan retained across recommendation refreshes for one account/goal. */
 public final class StrategicPlan
 {
+    @Getter
     private final GoalType goal;
     private final long accountHash;
     private final String playerName;
     private final AccountMode accountMode;
     private final MembershipStatus membership;
+    @Getter
     private final List<StrategicPlanStep> steps;
+    @Getter
     private final int currentIndex;
+    @Getter
     private final long createdAtMillis;
 
     public StrategicPlan(
@@ -90,14 +96,10 @@ public final class StrategicPlan
                 && membership == account.getMembershipStatus();
     }
 
-    public GoalType getGoal() { return goal; }
-    public List<StrategicPlanStep> getSteps() { return steps; }
-    public int getCurrentIndex() { return currentIndex; }
     public StrategicPlanStep getCurrentStep() { return steps.get(currentIndex); }
     public StrategicPlanStep getNextStep()
     {
         return currentIndex + 1 < steps.size()
                 ? steps.get(currentIndex + 1) : null;
     }
-    public long getCreatedAtMillis() { return createdAtMillis; }
 }

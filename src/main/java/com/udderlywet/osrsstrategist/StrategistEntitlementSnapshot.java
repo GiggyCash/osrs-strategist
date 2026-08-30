@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Immutable entitlement evidence for optional hosted Compass services.
  *
@@ -12,8 +14,11 @@ import java.util.Set;
  */
 public final class StrategistEntitlementSnapshot
 {
+    @Getter
     private final Set<StrategistFeature> hostedFeatures;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String source;
 
     public StrategistEntitlementSnapshot(
@@ -62,18 +67,6 @@ public final class StrategistEntitlementSnapshot
                 && hostedFeatures.contains(feature);
     }
 
-    public Set<StrategistFeature> getHostedFeatures()
-    {
-        return hostedFeatures;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 
-    public String getSource()
-    {
-        return source;
-    }
 }

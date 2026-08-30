@@ -1,8 +1,12 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 public final class ObservedFarmingPatchState
 {
+    @Getter
     private final FarmingPatchCycleState state;
+    @Getter
     private final long observedAtMillis;
 
     public ObservedFarmingPatchState(
@@ -13,6 +17,4 @@ public final class ObservedFarmingPatchState
         this.observedAtMillis = observedAtMillis;
     }
 
-    public FarmingPatchCycleState getState() { return state; }
-    public long getObservedAtMillis() { return observedAtMillis; }
 }

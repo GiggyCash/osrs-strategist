@@ -1,27 +1,20 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** One per-character interaction/completion event retained for later learning. */
+@RequiredArgsConstructor
 public final class RecommendationHistoryEntry
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String title;
+    @Getter
     private final RecommendationHistoryAction action;
+    @Getter
     private final long occurredAtMillis;
 
-    public RecommendationHistoryEntry(
-            String activityId,
-            String title,
-            RecommendationHistoryAction action,
-            long occurredAtMillis)
-    {
-        this.activityId = activityId;
-        this.title = title;
-        this.action = action;
-        this.occurredAtMillis = occurredAtMillis;
-    }
 
-    public String getActivityId() { return activityId; }
-    public String getTitle() { return title; }
-    public RecommendationHistoryAction getAction() { return action; }
-    public long getOccurredAtMillis() { return occurredAtMillis; }
 }

@@ -1,49 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class GearUpgrade
 {
+    @Getter
     private final String slotOrPurpose;
+    @Getter
     private final String currentItem;
+    @Getter
     private final String nextPracticalUpgrade;
+    @Getter
     private final String longTermUpgrade;
+    @Getter
     private final String bisTarget;
 
-    public GearUpgrade(
-            String slotOrPurpose,
-            String currentItem,
-            String nextPracticalUpgrade,
-            String longTermUpgrade,
-            String bisTarget)
-    {
-        this.slotOrPurpose = slotOrPurpose;
-        this.currentItem = currentItem;
-        this.nextPracticalUpgrade = nextPracticalUpgrade;
-        this.longTermUpgrade = longTermUpgrade;
-        this.bisTarget = bisTarget;
-    }
 
-    public String getSlotOrPurpose()
-    {
-        return slotOrPurpose;
-    }
 
-    public String getCurrentItem()
-    {
-        return currentItem;
-    }
 
-    public String getNextPracticalUpgrade()
-    {
-        return nextPracticalUpgrade;
-    }
 
-    public String getLongTermUpgrade()
-    {
-        return longTermUpgrade;
-    }
 
-    public String getBisTarget()
-    {
-        return bisTarget;
-    }
 }

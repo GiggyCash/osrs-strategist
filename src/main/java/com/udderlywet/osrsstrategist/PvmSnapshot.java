@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * Readiness assessments for bosses, raids, and other PvM activities.
  *
@@ -14,6 +16,7 @@ import java.util.Map;
  */
 public final class PvmSnapshot
 {
+    @Getter
     private final Map<String, PvmReadiness> readinessByActivity;
 
     public PvmSnapshot(Map<String, PvmReadiness> readinessByActivity)
@@ -35,8 +38,4 @@ public final class PvmSnapshot
         return readinessByActivity.get(activityId);
     }
 
-    public Map<String, PvmReadiness> getReadinessByActivity()
-    {
-        return readinessByActivity;
-    }
 }

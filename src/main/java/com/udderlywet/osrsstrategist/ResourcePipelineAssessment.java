@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Readiness plus replacement/opportunity value for one or more inputs. */
 public final class ResourcePipelineAssessment
 {
+    @Getter
     private final ResourcePipelineState state;
+    @Getter
     private final int scoreAdjustment;
+    @Getter
     private final int observedQuantity;
+    @Getter
     private final int requiredQuantity;
+    @Getter
     private final List<String> acquisitionRoutes;
+    @Getter
     private final String evidence;
 
     ResourcePipelineAssessment(ResourcePipelineState state,
@@ -27,10 +35,4 @@ public final class ResourcePipelineAssessment
         this.evidence = evidence;
     }
 
-    public ResourcePipelineState getState() { return state; }
-    public int getScoreAdjustment() { return scoreAdjustment; }
-    public int getObservedQuantity() { return observedQuantity; }
-    public int getRequiredQuantity() { return requiredQuantity; }
-    public List<String> getAcquisitionRoutes() { return acquisitionRoutes; }
-    public String getEvidence() { return evidence; }
 }

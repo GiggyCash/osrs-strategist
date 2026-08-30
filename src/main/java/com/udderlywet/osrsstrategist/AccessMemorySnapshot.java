@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * Per-character memory of places/capabilities Compass has directly observed.
  *
@@ -13,6 +15,7 @@ import java.util.Map;
  */
 public final class AccessMemorySnapshot
 {
+    @Getter
     private final Map<String, Long> lastObservedAtMillis;
 
     public AccessMemorySnapshot(Map<String, Long> values)
@@ -39,8 +42,4 @@ public final class AccessMemorySnapshot
         return lastObservedAtMillis.get(key);
     }
 
-    public Map<String, Long> getLastObservedAtMillis()
-    {
-        return lastObservedAtMillis;
-    }
 }

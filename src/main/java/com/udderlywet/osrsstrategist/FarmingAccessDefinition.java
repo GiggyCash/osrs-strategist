@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Small piece of verified game-data describing a Farming patch group.
  *
@@ -12,10 +14,15 @@ import java.util.Set;
  */
 public final class FarmingAccessDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String displayName;
+    @Getter
     private final Set<Integer> regionIds;
+    @Getter
     private final String requiredQuest;
+    @Getter
     private final boolean herbPatch;
 
     public FarmingAccessDefinition(
@@ -34,11 +41,6 @@ public final class FarmingAccessDefinition
         this.herbPatch = herbPatch;
     }
 
-    public String getId() { return id; }
-    public String getDisplayName() { return displayName; }
-    public Set<Integer> getRegionIds() { return regionIds; }
-    public String getRequiredQuest() { return requiredQuest; }
-    public boolean isHerbPatch() { return herbPatch; }
 
     public String observationKey()
     {

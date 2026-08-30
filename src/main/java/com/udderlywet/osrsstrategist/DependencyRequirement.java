@@ -1,29 +1,30 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import net.runelite.api.Skill;
 
 /** Typed prerequisite in a resource acquisition route. */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DependencyRequirement
 {
     public enum Kind { RESOURCE, QUEST, SKILL, GEAR }
 
+    @Getter
     private final String id;
+    @Getter
     private final String label;
+    @Getter
     private final Kind kind;
+    @Getter
     private final ResourceNeed resource;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int level;
 
-    private DependencyRequirement(String id, String label, Kind kind,
-            ResourceNeed resource, Skill skill, int level)
-    {
-        this.id = id;
-        this.label = label;
-        this.kind = kind;
-        this.resource = resource;
-        this.skill = skill;
-        this.level = level;
-    }
 
     public static DependencyRequirement resource(ResourceNeed need)
     {
@@ -49,12 +50,6 @@ public final class DependencyRequirement
                 Kind.GEAR, null, null, 0);
     }
 
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public Kind getKind() { return kind; }
-    public ResourceNeed getResource() { return resource; }
-    public Skill getSkill() { return skill; }
-    public int getLevel() { return level; }
 
     private static String normalize(String value)
     {

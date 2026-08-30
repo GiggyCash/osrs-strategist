@@ -1,12 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One explainable account-mode/state contribution. */
 public final class AccountStrategicPriority
 {
+    @Getter
     private final AccountStrategicDimension dimension;
+    @Getter
     private final StrategicPriority priority;
+    @Getter
     private final CapabilityState capabilityState;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String reason;
 
     public AccountStrategicPriority(
@@ -26,9 +33,4 @@ public final class AccountStrategicPriority
         this.reason = reason == null ? "" : reason;
     }
 
-    public AccountStrategicDimension getDimension() { return dimension; }
-    public StrategicPriority getPriority() { return priority; }
-    public CapabilityState getCapabilityState() { return capabilityState; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getReason() { return reason; }
 }

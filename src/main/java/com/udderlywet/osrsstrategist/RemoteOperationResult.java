@@ -1,15 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RemoteOperationResult
 {
+    @Getter
     private final boolean accepted;
+    @Getter
     private final String message;
 
-    private RemoteOperationResult(boolean accepted, String message)
-    {
-        this.accepted = accepted;
-        this.message = message;
-    }
 
     public static RemoteOperationResult disabled(String message)
     {
@@ -21,13 +23,5 @@ public final class RemoteOperationResult
         return new RemoteOperationResult(true, message);
     }
 
-    public boolean isAccepted()
-    {
-        return accepted;
-    }
 
-    public String getMessage()
-    {
-        return message;
-    }
 }

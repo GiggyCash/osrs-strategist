@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Bounded cross-domain acquisition path, ordered from next action to target. */
 public final class GearAcquisitionResolution
 {
+    @Getter
     private final String target;
+    @Getter
     private final List<GearAcquisitionStep> steps;
+    @Getter
     private final boolean cyclePrevented;
+    @Getter
     private final boolean depthLimited;
 
     public GearAcquisitionResolution(String target,
@@ -22,8 +28,4 @@ public final class GearAcquisitionResolution
         this.depthLimited = depthLimited;
     }
 
-    public String getTarget() { return target; }
-    public List<GearAcquisitionStep> getSteps() { return steps; }
-    public boolean isCyclePrevented() { return cyclePrevented; }
-    public boolean isDepthLimited() { return depthLimited; }
 }

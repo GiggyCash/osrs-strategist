@@ -4,19 +4,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** One contextual gear tier. Names stay data-driven until ownership is verified by item IDs. */
 public final class GearProgressionEntry
 {
+    @Getter
     private final String id;
+    @Getter
     private final String contextId;
+    @Getter
     private final CombatStyle style;
+    @Getter
     private final GearBudgetTier tier;
+    @Getter
     private final List<String> recommendedItems;
+    @Getter
     private final String weaponGuidance;
+    @Getter
     private final String note;
+    @Getter
     private final boolean freeToPlay;
+    @Getter
     private final boolean selfSourceFriendly;
+    @Getter
     private final boolean uimFriendly;
+    @Getter
     private final boolean hardcoreSafe;
 
     public GearProgressionEntry(
@@ -47,15 +60,4 @@ public final class GearProgressionEntry
         this.hardcoreSafe = hardcoreSafe;
     }
 
-    public String getId() { return id; }
-    public String getContextId() { return contextId; }
-    public CombatStyle getStyle() { return style; }
-    public GearBudgetTier getTier() { return tier; }
-    public List<String> getRecommendedItems() { return recommendedItems; }
-    public String getWeaponGuidance() { return weaponGuidance; }
-    public String getNote() { return note; }
-    public boolean isFreeToPlay() { return freeToPlay; }
-    public boolean isSelfSourceFriendly() { return selfSourceFriendly; }
-    public boolean isUimFriendly() { return uimFriendly; }
-    public boolean isHardcoreSafe() { return hardcoreSafe; }
 }

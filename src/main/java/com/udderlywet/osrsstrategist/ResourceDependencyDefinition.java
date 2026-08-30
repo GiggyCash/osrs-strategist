@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Verified self-source recipe/access route for one resource family. */
 public final class ResourceDependencyDefinition
 {
+    @Getter
     private final int itemId;
+    @Getter
     private final String itemName;
+    @Getter
     private final String action;
+    @Getter
     private final int opportunityCost;
+    @Getter
     private final int outputQuantity;
+    @Getter
     private final List<DependencyRequirement> prerequisites;
 
     public ResourceDependencyDefinition(int itemId, String action,
@@ -46,10 +54,4 @@ public final class ResourceDependencyDefinition
                 ? new ArrayList<>() : new ArrayList<>(prerequisites));
     }
 
-    public int getItemId() { return itemId; }
-    public String getItemName() { return itemName; }
-    public String getAction() { return action; }
-    public int getOpportunityCost() { return opportunityCost; }
-    public int getOutputQuantity() { return outputQuantity; }
-    public List<DependencyRequirement> getPrerequisites() { return prerequisites; }
 }

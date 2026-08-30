@@ -4,16 +4,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class GuidanceChecklist
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String title;
+    @Getter
     private final String subtitle;
+    @Getter
     private final List<GuidanceStep> steps;
+    @Getter
     private final String bring;
+    @Getter
     private final String where;
+    @Getter
     private final String action;
+    @Getter
     private final String progress;
+    @Getter
     private final String important;
 
     public GuidanceChecklist(
@@ -42,15 +53,6 @@ public final class GuidanceChecklist
         this.important = important;
     }
 
-    public String getActivityId() { return activityId; }
-    public String getTitle() { return title; }
-    public String getSubtitle() { return subtitle; }
-    public List<GuidanceStep> getSteps() { return steps; }
-    public String getBring() { return bring; }
-    public String getWhere() { return where; }
-    public String getAction() { return action; }
-    public String getProgress() { return progress; }
-    public String getImportant() { return important; }
 
     public int completeCount()
     {

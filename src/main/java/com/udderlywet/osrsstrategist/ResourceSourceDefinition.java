@@ -5,20 +5,34 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** A stable, human-readable acquisition family for common progression resources. */
 public final class ResourceSourceDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final List<String> nameTokens;
+    @Getter
     private final String mainRoute;
+    @Getter
     private final String ironRoute;
+    @Getter
     private final String uimRoute;
+    @Getter
     private final List<String> freeToPlayItemNames;
+    @Getter
     private final String freeToPlayMainRoute;
+    @Getter
     private final String freeToPlayIronRoute;
+    @Getter
     private final String freeToPlayUimRoute;
+    @Getter
     private final List<StrategySourceId> sourceIds;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final RiskLevel riskLevel;
 
     public ResourceSourceDefinition(String id, List<String> nameTokens,
@@ -61,16 +75,4 @@ public final class ResourceSourceDefinition
         this.riskLevel = riskLevel == null ? RiskLevel.NONE : riskLevel;
     }
 
-    public String getId() { return id; }
-    public List<String> getNameTokens() { return nameTokens; }
-    public String getMainRoute() { return mainRoute; }
-    public String getIronRoute() { return ironRoute; }
-    public String getUimRoute() { return uimRoute; }
-    public List<String> getFreeToPlayItemNames() { return freeToPlayItemNames; }
-    public String getFreeToPlayMainRoute() { return freeToPlayMainRoute; }
-    public String getFreeToPlayIronRoute() { return freeToPlayIronRoute; }
-    public String getFreeToPlayUimRoute() { return freeToPlayUimRoute; }
-    public List<StrategySourceId> getSourceIds() { return sourceIds; }
-    public boolean isWilderness() { return wilderness; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
 }

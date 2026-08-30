@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Read-only item ownership queries over the evidence Compass has actually
  * observed for the current character.
@@ -12,16 +14,12 @@ import java.util.Map;
  * group storage is usable, and UIM callers can explicitly exclude unsafe death
  * and looting-bag storage from immediately usable supply checks.</p>
  */
+@RequiredArgsConstructor
 public final class ObservedItemIndex
 {
     private final StrategyDataBundle data;
     private final boolean useGroupStorage;
 
-    public ObservedItemIndex(StrategyDataBundle data, boolean useGroupStorage)
-    {
-        this.data = data;
-        this.useGroupStorage = useGroupStorage;
-    }
 
     public boolean has(String... names)
     {

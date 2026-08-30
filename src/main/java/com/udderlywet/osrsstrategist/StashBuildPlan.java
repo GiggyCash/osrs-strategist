@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class StashBuildPlan
 {
+    @Getter
     private final StashUnitDefinition unit;
+    @Getter
     private final List<StashDependencyStep> steps;
 
     StashBuildPlan(StashUnitDefinition unit, List<StashDependencyStep> steps)
@@ -15,8 +19,6 @@ public final class StashBuildPlan
         this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
     }
 
-    public StashUnitDefinition getUnit() { return unit; }
-    public List<StashDependencyStep> getSteps() { return steps; }
     public StashDependencyStep nextAction()
     {
         return steps.isEmpty() ? null : steps.get(steps.size() - 1);

@@ -1,54 +1,30 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import net.runelite.api.Skill;
 
 /**
  * One detected completion event shown briefly in the sidebar.
  */
+@RequiredArgsConstructor
 public final class MilestoneCompletion
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String title;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int startedAtLevel;
+    @Getter
     private final int targetLevel;
 
-    public MilestoneCompletion(
-            String activityId,
-            String title,
-            Skill skill,
-            int startedAtLevel,
-            int targetLevel)
-    {
-        this.activityId = activityId;
-        this.title = title;
-        this.skill = skill;
-        this.startedAtLevel = startedAtLevel;
-        this.targetLevel = targetLevel;
-    }
 
-    public String getActivityId()
-    {
-        return activityId;
-    }
 
-    public String getTitle()
-    {
-        return title;
-    }
 
-    public Skill getSkill()
-    {
-        return skill;
-    }
 
-    public int getStartedAtLevel()
-    {
-        return startedAtLevel;
-    }
 
-    public int getTargetLevel()
-    {
-        return targetLevel;
-    }
 }

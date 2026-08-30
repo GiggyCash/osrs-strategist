@@ -1,16 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Locale;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** The recommendation Compass is currently watching for natural completion. */
 public final class TrackedMilestone
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String title;
+    @Getter
     private final String skillName;
+    @Getter
     private final int startedAtLevel;
+    @Getter
     private final int targetLevel;
+    @Getter
     private final boolean progressionProtected;
 
     public TrackedMilestone(
@@ -40,12 +49,6 @@ public final class TrackedMilestone
         this.progressionProtected = progressionProtected;
     }
 
-    public String getActivityId() { return activityId; }
-    public String getTitle() { return title; }
-    public String getSkillName() { return skillName; }
-    public int getStartedAtLevel() { return startedAtLevel; }
-    public int getTargetLevel() { return targetLevel; }
-    public boolean isProgressionProtected() { return progressionProtected; }
 
     public Skill getSkill()
     {

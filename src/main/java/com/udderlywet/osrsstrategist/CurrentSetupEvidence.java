@@ -1,9 +1,13 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Optional live evidence not currently carried by StrategyDataBundle. */
 public final class CurrentSetupEvidence
 {
+    @Getter
     private final String regionId;
+    @Getter
     private final String spellbookId;
 
     public CurrentSetupEvidence(String regionId, String spellbookId)
@@ -17,8 +21,6 @@ public final class CurrentSetupEvidence
         return new CurrentSetupEvidence(null, null);
     }
 
-    public String getRegionId() { return regionId; }
-    public String getSpellbookId() { return spellbookId; }
     public boolean hasRegion() { return regionId != null; }
     public boolean hasSpellbook() { return spellbookId != null; }
 

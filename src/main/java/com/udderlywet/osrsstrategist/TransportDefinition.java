@@ -3,22 +3,36 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** One reusable transport system; destinations are fan-out evidence, not score hacks. */
 public final class TransportDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final TransportCategory category;
+    @Getter
     private final boolean membersOnly;
+    @Getter
     private final String quest;
     private final boolean questStartSuffices;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int level;
+    @Getter
     private final String itemOrAccessCheck;
+    @Getter
     private final String pohFurniture;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final List<String> uses;
 
     TransportDefinition(String id, String name, TransportCategory category,
@@ -40,17 +54,6 @@ public final class TransportDefinition
         this.uses = Collections.unmodifiableList(new ArrayList<>(uses));
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public TransportCategory getCategory() { return category; }
-    public boolean isMembersOnly() { return membersOnly; }
-    public String getQuest() { return quest; }
     public boolean isQuestStartSufficient() { return questStartSuffices; }
-    public Skill getSkill() { return skill; }
-    public int getLevel() { return level; }
-    public String getItemOrAccessCheck() { return itemOrAccessCheck; }
-    public String getPohFurniture() { return pohFurniture; }
-    public boolean isWilderness() { return wilderness; }
-    public List<String> getUses() { return uses; }
     public int getFanOut() { return uses.size(); }
 }

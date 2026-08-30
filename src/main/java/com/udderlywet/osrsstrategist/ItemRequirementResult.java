@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Result of evaluating a composable item requirement against observed state. */
 public final class ItemRequirementResult
 {
+    @Getter
     private final RequirementState state;
+    @Getter
     private final String action;
     private final List<ResolvedMethodInput> missingInputs;
 
@@ -25,8 +29,6 @@ public final class ItemRequirementResult
                 ? new ArrayList<>() : new ArrayList<>(missingInputs));
     }
 
-    public RequirementState getState() { return state; }
-    public String getAction() { return action; }
     /** Exact, evidence-backed shortfalls only. Unknown storage never appears here. */
     public List<ResolvedMethodInput> getMissingInputs() { return missingInputs; }
     public boolean isSatisfied() { return state == RequirementState.VERIFIED; }

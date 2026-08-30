@@ -1,13 +1,21 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Bounded GIM resource value derived from one fresh storage observation. */
 public final class GroupResourceAssessment
 {
+    @Getter
     private final GroupResourceState state;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final int observedSharedQuantity;
+    @Getter
     private final int requiredQuantity;
+    @Getter
     private final double duplicateGrindAvoidance;
+    @Getter
     private final String reason;
 
     GroupResourceAssessment(GroupResourceState state,
@@ -23,12 +31,6 @@ public final class GroupResourceAssessment
         this.reason = reason == null ? "" : reason;
     }
 
-    public GroupResourceState getState() { return state; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public int getObservedSharedQuantity() { return observedSharedQuantity; }
-    public int getRequiredQuantity() { return requiredQuantity; }
-    public double getDuplicateGrindAvoidance() { return duplicateGrindAvoidance; }
-    public String getReason() { return reason; }
     public boolean satisfiesNeed()
     {
         return state == GroupResourceState.SHARED_STOCK_SATISFIES_NEED;

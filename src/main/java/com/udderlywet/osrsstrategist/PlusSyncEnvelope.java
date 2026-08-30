@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Future cloud-sync DTO. It contains only explicitly selected Compass data
  * categories. Game credentials, Jagex credentials, RuneLite credentials, chat,
@@ -13,8 +15,11 @@ public final class PlusSyncEnvelope
 {
     public static final int SCHEMA_VERSION = 1;
 
+    @Getter
     private final String profileToken;
+    @Getter
     private final long generatedAtMillis;
+    @Getter
     private final Set<PlusDataCategory> categories;
 
     public PlusSyncEnvelope(
@@ -32,18 +37,6 @@ public final class PlusSyncEnvelope
         this.categories = Collections.unmodifiableSet(copy);
     }
 
-    public String getProfileToken()
-    {
-        return profileToken;
-    }
 
-    public long getGeneratedAtMillis()
-    {
-        return generatedAtMillis;
-    }
 
-    public Set<PlusDataCategory> getCategories()
-    {
-        return categories;
-    }
 }

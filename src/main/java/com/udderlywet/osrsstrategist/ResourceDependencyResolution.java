@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Finite traversal result with explicit termination diagnostics. */
 public final class ResourceDependencyResolution
 {
+    @Getter
     private final List<ResolvedDependencyNode> nodes;
+    @Getter
     private final boolean cycleDetected;
+    @Getter
     private final boolean depthLimited;
+    @Getter
     private final boolean opportunityCostRejected;
+    @Getter
     private final boolean nodeLimited;
 
     public ResourceDependencyResolution(List<ResolvedDependencyNode> nodes,
@@ -31,11 +38,6 @@ public final class ResourceDependencyResolution
         this.nodeLimited = nodeLimited;
     }
 
-    public List<ResolvedDependencyNode> getNodes() { return nodes; }
-    public boolean isCycleDetected() { return cycleDetected; }
-    public boolean isDepthLimited() { return depthLimited; }
-    public boolean isOpportunityCostRejected() { return opportunityCostRejected; }
-    public boolean isNodeLimited() { return nodeLimited; }
     public ResolvedDependencyNode nextAction()
     {
         for (ResolvedDependencyNode node : nodes)

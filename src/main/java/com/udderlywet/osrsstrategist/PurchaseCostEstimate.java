@@ -1,9 +1,13 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Exact aggregate market-price evidence for a deterministic material list. */
 public final class PurchaseCostEstimate
 {
+    @Getter
     private final boolean complete;
+    @Getter
     private final long totalCost;
 
     public PurchaseCostEstimate(boolean complete, long totalCost)
@@ -12,8 +16,6 @@ public final class PurchaseCostEstimate
         this.totalCost = Math.max(0L, totalCost);
     }
 
-    public boolean isComplete() { return complete; }
-    public long getTotalCost() { return totalCost; }
 
     public static PurchaseCostEstimate unknown()
     {

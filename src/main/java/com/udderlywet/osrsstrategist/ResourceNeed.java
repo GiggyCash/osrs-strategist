@@ -1,13 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * One item requirement for an activity, training method, gear upgrade, or
  * preparation checklist.
  */
 public final class ResourceNeed
 {
+    @Getter
     private final int itemId;
+    @Getter
     private final String itemName;
+    @Getter
     private final int quantity;
 
     public ResourceNeed(int itemId, String itemName, int quantity)
@@ -17,7 +22,4 @@ public final class ResourceNeed
         this.quantity = Math.max(1, quantity);
     }
 
-    public int getItemId() { return itemId; }
-    public String getItemName() { return itemName; }
-    public int getQuantity() { return quantity; }
 }

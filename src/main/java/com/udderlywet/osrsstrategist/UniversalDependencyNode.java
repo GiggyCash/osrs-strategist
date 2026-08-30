@@ -4,13 +4,20 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** One typed, deduplicated node in the universal planning graph. */
 public final class UniversalDependencyNode
 {
+    @Getter
     private final String id;
+    @Getter
     private final GoalNodeKind kind;
+    @Getter
     private final String action;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final int depth;
     private int quantity;
     private final Set<String> parentIds = new LinkedHashSet<>();
@@ -41,11 +48,6 @@ public final class UniversalDependencyNode
                 ? Integer.MAX_VALUE : quantity + additional;
     }
 
-    public String getId() { return id; }
-    public GoalNodeKind getKind() { return kind; }
-    public String getAction() { return action; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public int getDepth() { return depth; }
     public int getQuantity() { return quantity; }
     public Set<String> getParentIds()
     {

@@ -1,20 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class PreparationItem
 {
+    @Getter
     private final String label;
+    @Getter
     private final int required;
+    @Getter
     private final int available;
 
-    public PreparationItem(String label, int required, int available)
-    {
-        this.label = label;
-        this.required = required;
-        this.available = available;
-    }
 
     public boolean ready() { return available >= required; }
-    public String getLabel() { return label; }
-    public int getRequired() { return required; }
-    public int getAvailable() { return available; }
 }

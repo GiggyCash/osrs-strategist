@@ -1,12 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One deduplicated result node in traversal order. */
 public final class ResolvedDependencyNode
 {
+    @Getter
     private final String id;
+    @Getter
     private final String action;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final int depth;
+    @Getter
     private final int requiredQuantity;
 
     public ResolvedDependencyNode(String id, String action,
@@ -26,9 +33,4 @@ public final class ResolvedDependencyNode
         this.requiredQuantity = Math.max(0, requiredQuantity);
     }
 
-    public String getId() { return id; }
-    public String getAction() { return action; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public int getDepth() { return depth; }
-    public int getRequiredQuantity() { return requiredQuantity; }
 }

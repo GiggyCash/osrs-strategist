@@ -5,15 +5,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Provenance for one reviewed strategic source family. */
 public final class StrategySourceDefinition
 {
+    @Getter
     private final StrategySourceId id;
+    @Getter
     private final String url;
+    @Getter
     private final String subject;
+    @Getter
     private final LocalDate reviewedDate;
+    @Getter
     private final String revision;
+    @Getter
     private final String license;
+    @Getter
     private final List<String> derivedStrategyFamilies;
 
     public StrategySourceDefinition(StrategySourceId id, String url,
@@ -39,14 +48,4 @@ public final class StrategySourceDefinition
                         : new ArrayList<>(derivedStrategyFamilies));
     }
 
-    public StrategySourceId getId() { return id; }
-    public String getUrl() { return url; }
-    public String getSubject() { return subject; }
-    public LocalDate getReviewedDate() { return reviewedDate; }
-    public String getRevision() { return revision; }
-    public String getLicense() { return license; }
-    public List<String> getDerivedStrategyFamilies()
-    {
-        return derivedStrategyFamilies;
-    }
 }

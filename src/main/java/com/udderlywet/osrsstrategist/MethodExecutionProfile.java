@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Connects a curated Compass method to a deterministic RuneLite skill action.
  *
@@ -40,13 +42,21 @@ public final class MethodExecutionProfile
         FIXED
     }
 
+    @Getter
     private final String methodId;
+    @Getter
     private final List<String> actionTerms;
+    @Getter
     private final String unitSingular;
+    @Getter
     private final String unitPlural;
+    @Getter
     private final double xpMultiplier;
+    @Getter
     private final List<MethodInputRule> inputs;
+    @Getter
     private final String note;
+    @Getter
     private final ProgressEstimateMode progressEstimateMode;
 
     /** Compatibility constructor for profiles with one material rule. */
@@ -114,17 +124,6 @@ public final class MethodExecutionProfile
                 ? ProgressEstimateMode.XP_ONLY : progressEstimateMode;
     }
 
-    public String getMethodId() { return methodId; }
-    public List<String> getActionTerms() { return actionTerms; }
-    public String getUnitSingular() { return unitSingular; }
-    public String getUnitPlural() { return unitPlural; }
-    public double getXpMultiplier() { return xpMultiplier; }
-    public List<MethodInputRule> getInputs() { return inputs; }
-    public String getNote() { return note; }
-    public ProgressEstimateMode getProgressEstimateMode()
-    {
-        return progressEstimateMode;
-    }
 
     /** Compatibility accessors return the first input rule, if one exists. */
     public InputMode getInputMode()

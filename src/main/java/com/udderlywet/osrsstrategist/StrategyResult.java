@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Complete output of one strategy evaluation.
  *
@@ -14,9 +16,13 @@ import java.util.List;
  */
 public final class StrategyResult
 {
+    @Getter
     private final List<Recommendation> recommendations;
+    @Getter
     private final List<Opportunity> opportunities;
+    @Getter
     private final List<StrategySignal> signals;
+    @Getter
     private final StrategicPlan plan;
 
     public StrategyResult(
@@ -57,25 +63,9 @@ public final class StrategyResult
         this.plan = plan;
     }
 
-    public List<Recommendation> getRecommendations()
-    {
-        return recommendations;
-    }
 
-    public List<Opportunity> getOpportunities()
-    {
-        return opportunities;
-    }
 
-    public List<StrategySignal> getSignals()
-    {
-        return signals;
-    }
 
-    public StrategicPlan getPlan()
-    {
-        return plan;
-    }
 
     public StrategyResult withPlan(StrategicPlan value)
     {

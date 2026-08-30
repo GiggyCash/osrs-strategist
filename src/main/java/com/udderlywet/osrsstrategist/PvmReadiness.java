@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class PvmReadiness
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final boolean realisticallyReady;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final List<String> missingRequirements;
 
     public PvmReadiness(
@@ -25,15 +31,7 @@ public final class PvmReadiness
         );
     }
 
-    public String getActivityId()
-    {
-        return activityId;
-    }
 
-    public boolean isRealisticallyReady()
-    {
-        return realisticallyReady;
-    }
 
     /** Conservative beta contract: observed carried setup is ready to attempt. */
     public boolean isReadyForRecommendation()
@@ -41,13 +39,5 @@ public final class PvmReadiness
         return realisticallyReady && confidence == RecommendationConfidence.VERIFIED;
     }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 
-    public List<String> getMissingRequirements()
-    {
-        return missingRequirements;
-    }
 }

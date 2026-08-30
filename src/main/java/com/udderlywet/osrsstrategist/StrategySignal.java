@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * A small, testable contribution from one subsystem to the strategy engine.
  *
@@ -9,10 +11,15 @@ package com.udderlywet.osrsstrategist;
  */
 public final class StrategySignal
 {
+    @Getter
     private final String id;
+    @Getter
     private final StrategySignalCategory category;
+    @Getter
     private final String summary;
+    @Getter
     private final double scoreDelta;
+    @Getter
     private final RecommendationConfidence confidence;
 
     public StrategySignal(
@@ -31,9 +38,4 @@ public final class StrategySignal
                 : confidence;
     }
 
-    public String getId() { return id; }
-    public StrategySignalCategory getCategory() { return category; }
-    public String getSummary() { return summary; }
-    public double getScoreDelta() { return scoreDelta; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 }

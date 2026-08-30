@@ -1,14 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Per-character planning preferences that survive logout/restart. */
-public final class PlayerStrategyProfile
+public class PlayerStrategyProfile
 {
+    @Getter
     private final StrategyMode strategyMode;
+    @Getter
     private final SessionIntent sessionIntent;
+    @Getter
     private final QuestTolerance questTolerance;
+    @Getter
     private final GoalType activeGoal;
+    @Getter
     private final boolean useGroupStorage;
+    @Getter
     private final boolean collectionistMode;
+    @Getter
     private final boolean allowWildernessMethods;
 
     public PlayerStrategyProfile(
@@ -54,13 +63,6 @@ public final class PlayerStrategyProfile
         );
     }
 
-    public StrategyMode getStrategyMode() { return strategyMode; }
-    public SessionIntent getSessionIntent() { return sessionIntent; }
-    public QuestTolerance getQuestTolerance() { return questTolerance; }
-    public GoalType getActiveGoal() { return activeGoal; }
-    public boolean isUseGroupStorage() { return useGroupStorage; }
-    public boolean isCollectionistMode() { return collectionistMode; }
-    public boolean isAllowWildernessMethods() { return allowWildernessMethods; }
 
     PlayerStrategyProfile sanitizedForPublicProduct()
     {

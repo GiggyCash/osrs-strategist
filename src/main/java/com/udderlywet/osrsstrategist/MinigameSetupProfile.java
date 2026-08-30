@@ -1,28 +1,22 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Locally verifiable setup contract for a progression minigame. */
+@RequiredArgsConstructor
 public final class MinigameSetupProfile
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final ItemRequirementExpression items;
+    @Getter
     private final String location;
+    @Getter
     private final String supplies;
+    @Getter
     private final String instructions;
 
-    public MinigameSetupProfile(String activityId,
-            ItemRequirementExpression items, String location,
-            String supplies, String instructions)
-    {
-        this.activityId = activityId;
-        this.items = items;
-        this.location = location;
-        this.supplies = supplies;
-        this.instructions = instructions;
-    }
 
-    public String getActivityId() { return activityId; }
-    public ItemRequirementExpression getItems() { return items; }
-    public String getLocation() { return location; }
-    public String getSupplies() { return supplies; }
-    public String getInstructions() { return instructions; }
 }

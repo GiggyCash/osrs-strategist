@@ -1,15 +1,22 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 
 /** The skill checkpoint currently being executed by the active plan. */
 public final class ProgressTarget
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String methodId;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int targetLevel;
+    @Getter
     private final int targetXp;
 
     public ProgressTarget(
@@ -29,9 +36,4 @@ public final class ProgressTarget
         this.targetXp = Experience.getXpForLevel(targetLevel);
     }
 
-    public String getActivityId() { return activityId; }
-    public String getMethodId() { return methodId; }
-    public Skill getSkill() { return skill; }
-    public int getTargetLevel() { return targetLevel; }
-    public int getTargetXp() { return targetXp; }
 }

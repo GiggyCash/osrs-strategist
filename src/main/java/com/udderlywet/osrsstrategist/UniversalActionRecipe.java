@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Exact or partial consumed-input model for one deterministic skill action. */
 public final class UniversalActionRecipe
 {
+    @Getter
     private final List<ResolvedMethodInput> inputs;
+    @Getter
     private final String setup;
     private final boolean exactInputs;
 
@@ -33,15 +37,7 @@ public final class UniversalActionRecipe
         return new UniversalActionRecipe(Collections.emptyList(), setup, false);
     }
 
-    public List<ResolvedMethodInput> getInputs()
-    {
-        return inputs;
-    }
 
-    public String getSetup()
-    {
-        return setup;
-    }
 
     public boolean hasExactInputs()
     {

@@ -1,10 +1,15 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One material rule consumed by a deterministic training action. */
 public final class MethodInputRule
 {
+    @Getter
     private final MethodExecutionProfile.InputMode mode;
+    @Getter
     private final String fixedName;
+    @Getter
     private final double quantityPerAction;
 
     public MethodInputRule(
@@ -19,7 +24,4 @@ public final class MethodInputRule
         this.quantityPerAction = Math.max(0.0, quantityPerAction);
     }
 
-    public MethodExecutionProfile.InputMode getMode() { return mode; }
-    public String getFixedName() { return fixedName; }
-    public double getQuantityPerAction() { return quantityPerAction; }
 }

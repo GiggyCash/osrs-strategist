@@ -5,11 +5,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.Getter;
+
 public final class DiaryTaskDefinition
 {
+    @Getter
     private final String region;
+    @Getter
     private final DiaryTier tier;
+    @Getter
     private final String task;
+    @Getter
     private final List<DiaryTaskRequirement> requirements;
 
     DiaryTaskDefinition(String region, DiaryTier tier, String task,
@@ -27,10 +33,6 @@ public final class DiaryTaskDefinition
         return "diary-task:" + normalize(region) + ":"
                 + tier.name().toLowerCase(Locale.ROOT) + ":" + normalize(task);
     }
-    public String getRegion() { return region; }
-    public DiaryTier getTier() { return tier; }
-    public String getTask() { return task; }
-    public List<DiaryTaskRequirement> getRequirements() { return requirements; }
     public boolean isTransportRelevant()
     {
         String value = task.toLowerCase(Locale.ROOT);

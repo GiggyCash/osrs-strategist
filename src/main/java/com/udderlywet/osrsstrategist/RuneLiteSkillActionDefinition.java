@@ -1,17 +1,27 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** One action exposed by RuneLite's maintained skill-calculator data. */
 public final class RuneLiteSkillActionDefinition
 {
+    @Getter
     private final Skill skill;
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final int level;
+    @Getter
     private final float xp;
+    @Getter
     private final String category;
+    @Getter
     private final MembershipStatus membership;
+    @Getter
     private final int itemId;
 
     public RuneLiteSkillActionDefinition(Skill skill, String id, String name,
@@ -34,12 +44,4 @@ public final class RuneLiteSkillActionDefinition
         this.itemId = itemId;
     }
 
-    public Skill getSkill() { return skill; }
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public int getLevel() { return level; }
-    public float getXp() { return xp; }
-    public String getCategory() { return category; }
-    public MembershipStatus getMembership() { return membership; }
-    public int getItemId() { return itemId; }
 }

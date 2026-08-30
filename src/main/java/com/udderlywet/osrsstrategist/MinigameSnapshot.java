@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Minigame unlocks and currencies observed on the account.
  *
@@ -16,7 +18,9 @@ import java.util.Set;
  */
 public final class MinigameSnapshot
 {
+    @Getter
     private final Set<String> unlocked;
+    @Getter
     private final Map<String, Integer> currencies;
 
     public MinigameSnapshot(
@@ -53,6 +57,4 @@ public final class MinigameSnapshot
         return currencies.getOrDefault(currencyId, 0);
     }
 
-    public Set<String> getUnlocked() { return unlocked; }
-    public Map<String, Integer> getCurrencies() { return currencies; }
 }

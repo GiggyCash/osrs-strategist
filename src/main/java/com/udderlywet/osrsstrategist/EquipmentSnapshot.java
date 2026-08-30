@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Immutable view of items currently equipped by the player. */
 public final class EquipmentSnapshot
 {
+    @Getter
     private final List<ItemStackSnapshot> equippedItems;
 
     public EquipmentSnapshot(List<ItemStackSnapshot> equippedItems)
@@ -16,10 +19,6 @@ public final class EquipmentSnapshot
         );
     }
 
-    public List<ItemStackSnapshot> getEquippedItems()
-    {
-        return equippedItems;
-    }
 
     /**
      * Resource checks must include equipment. This matters for things such as

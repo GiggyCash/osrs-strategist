@@ -4,19 +4,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Conservative task-specific Slayer knowledge without fake DPS precision. */
 public final class SlayerTaskProfile
 {
+    @Getter
     private final String id;
+    @Getter
     private final List<String> aliases;
+    @Getter
     private final List<String> requiredProtection;
+    @Getter
     private final String preferredLocation;
+    @Getter
     private final String styleGuidance;
+    @Getter
     private final String mechanicsNote;
+    @Getter
     private final CapabilityState cannonEligibility;
+    @Getter
     private final CapabilityState multiTargetMagicEligibility;
+    @Getter
     private final boolean wildernessVariantKnown;
+    @Getter
     private final List<String> ironObjectives;
+    @Getter
     private final String taskDecisionGuidance;
 
     public SlayerTaskProfile(
@@ -57,17 +70,6 @@ public final class SlayerTaskProfile
                 : taskDecisionGuidance;
     }
 
-    public String getId() { return id; }
-    public List<String> getAliases() { return aliases; }
-    public List<String> getRequiredProtection() { return requiredProtection; }
-    public String getPreferredLocation() { return preferredLocation; }
-    public String getStyleGuidance() { return styleGuidance; }
-    public String getMechanicsNote() { return mechanicsNote; }
-    public CapabilityState getCannonEligibility() { return cannonEligibility; }
-    public CapabilityState getMultiTargetMagicEligibility() { return multiTargetMagicEligibility; }
-    public boolean isWildernessVariantKnown() { return wildernessVariantKnown; }
-    public List<String> getIronObjectives() { return ironObjectives; }
-    public String getTaskDecisionGuidance() { return taskDecisionGuidance; }
 
     private static List<String> immutable(List<String> values)
     {

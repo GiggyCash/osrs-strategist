@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * One ranked action the player could take next.
  *
@@ -9,17 +11,29 @@ package com.udderlywet.osrsstrategist;
  */
 public final class Recommendation
 {
+    @Getter
     private final String id;
+    @Getter
     private final String title;
+    @Getter
     private final String reason;
+    @Getter
     private final double score;
+    @Getter
     private final TrainingPlan trainingPlan;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final int currentLevel;
+    @Getter
     private final int targetLevel;
+    @Getter
     private final RecommendationGuidance guidance;
+    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
+    @Getter
     private final GoalDependencyProvenance goalProvenance;
+    @Getter
     private final RecommendationStrategicValue strategicValue;
 
     public Recommendation(
@@ -140,18 +154,6 @@ public final class Recommendation
                 ? RecommendationStrategicValue.neutral() : strategicValue;
     }
 
-    public String getId() { return id; }
-    public String getTitle() { return title; }
-    public String getReason() { return reason; }
-    public double getScore() { return score; }
-    public TrainingPlan getTrainingPlan() { return trainingPlan; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public int getCurrentLevel() { return currentLevel; }
-    public int getTargetLevel() { return targetLevel; }
-    public RecommendationGuidance getGuidance() { return guidance; }
-    public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
-    public GoalDependencyProvenance getGoalProvenance() { return goalProvenance; }
-    public RecommendationStrategicValue getStrategicValue() { return strategicValue; }
 
     /** Active execution boundary; the distant strategic objective stays targetLevel. */
     public int getCurrentExecutionTargetLevel()

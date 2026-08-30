@@ -4,26 +4,44 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Verified local facts and reusable utility for one infrastructure unlock. */
 public final class InfrastructureMilestoneDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final boolean membersOnly;
+    @Getter
     private final Skill requiredSkill;
+    @Getter
     private final int requiredLevel;
+    @Getter
     private final String requiredQuest;
     private final boolean questStartSuffices;
+    @Getter
     private final Map<Skill, Integer> requiredSkills;
+    @Getter
     private final Map<String, Boolean> requiredQuests;
+    @Getter
     private final String prerequisiteMilestoneId;
+    @Getter
     private final InfrastructureEvidenceKind evidenceKind;
+    @Getter
     private final String evidenceKey;
+    @Getter
     private final StorageCapability storageCapability;
+    @Getter
     private final Map<InfrastructureBenefit, StrategicPriority> benefits;
+    @Getter
     private final String action;
+    @Getter
     private final String sourceUrl;
 
     InfrastructureMilestoneDefinition(String id, String name,
@@ -126,23 +144,5 @@ public final class InfrastructureMilestoneDefinition
         return Collections.singletonMap(quest, startSuffices);
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public boolean isMembersOnly() { return membersOnly; }
-    public Skill getRequiredSkill() { return requiredSkill; }
-    public int getRequiredLevel() { return requiredLevel; }
-    public String getRequiredQuest() { return requiredQuest; }
     public boolean isQuestStartSufficient() { return questStartSuffices; }
-    public Map<Skill, Integer> getRequiredSkills() { return requiredSkills; }
-    public Map<String, Boolean> getRequiredQuests() { return requiredQuests; }
-    public String getPrerequisiteMilestoneId() { return prerequisiteMilestoneId; }
-    public InfrastructureEvidenceKind getEvidenceKind() { return evidenceKind; }
-    public String getEvidenceKey() { return evidenceKey; }
-    public StorageCapability getStorageCapability() { return storageCapability; }
-    public Map<InfrastructureBenefit, StrategicPriority> getBenefits()
-    {
-        return benefits;
-    }
-    public String getAction() { return action; }
-    public String getSourceUrl() { return sourceUrl; }
 }

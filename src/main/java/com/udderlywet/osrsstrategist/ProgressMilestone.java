@@ -1,13 +1,21 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One meaningful account progression event suitable for a session recap. */
 public final class ProgressMilestone
 {
+    @Getter
     private final String id;
+    @Getter
     private final ProgressMilestoneType type;
+    @Getter
     private final String title;
+    @Getter
     private final String detail;
+    @Getter
     private final String goalId;
+    @Getter
     private final long occurredAtMillis;
 
     public ProgressMilestone(
@@ -31,10 +39,4 @@ public final class ProgressMilestone
         this.occurredAtMillis = Math.max(0L, occurredAtMillis);
     }
 
-    public String getId() { return id; }
-    public ProgressMilestoneType getType() { return type; }
-    public String getTitle() { return title; }
-    public String getDetail() { return detail; }
-    public String getGoalId() { return goalId; }
-    public long getOccurredAtMillis() { return occurredAtMillis; }
 }

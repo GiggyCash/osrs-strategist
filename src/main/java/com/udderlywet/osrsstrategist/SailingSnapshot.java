@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Sailing discovery/progression state.
  *
@@ -23,8 +25,11 @@ public final class SailingSnapshot
     public static final String TRIAL_JUBBLY_COMPLETE = "trial:jubbly-complete";
     public static final String TRIAL_GWENITH_COMPLETE = "trial:gwenith-complete";
 
+    @Getter
     private final Set<String> verifiedPorts;
+    @Getter
     private final Set<String> verifiedActivities;
+    @Getter
     private final RecommendationConfidence confidence;
 
     public SailingSnapshot(
@@ -66,7 +71,4 @@ public final class SailingSnapshot
         return activityId != null && verifiedActivities.contains(activityId);
     }
 
-    public Set<String> getVerifiedPorts() { return verifiedPorts; }
-    public Set<String> getVerifiedActivities() { return verifiedActivities; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 }

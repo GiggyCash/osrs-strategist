@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * Account-specific instructions attached to a ranked recommendation.
  *
@@ -9,13 +11,21 @@ package com.udderlywet.osrsstrategist;
  */
 public final class RecommendationGuidance
 {
+    @Getter
     private final String action;
+    @Getter
     private final String supplies;
+    @Getter
     private final String location;
+    @Getter
     private final String progress;
+    @Getter
     private final String note;
+    @Getter
     private final MethodBankingBehavior bankingBehavior;
+    @Getter
     private final UimStorageDecision storageDecision;
+    @Getter
     private final RecommendationRiskDisclosure riskDisclosure;
 
     public RecommendationGuidance(
@@ -72,35 +82,11 @@ public final class RecommendationGuidance
         this.riskDisclosure = riskDisclosure;
     }
 
-    public String getAction()
-    {
-        return action;
-    }
 
-    public String getSupplies()
-    {
-        return supplies;
-    }
 
-    public String getLocation()
-    {
-        return location;
-    }
 
-    public String getNote()
-    {
-        return note;
-    }
 
-    public String getProgress()
-    {
-        return progress;
-    }
 
-    public MethodBankingBehavior getBankingBehavior()
-    {
-        return bankingBehavior;
-    }
 
     public StorageCapability getStorageCapability()
     {
@@ -108,15 +94,7 @@ public final class RecommendationGuidance
                 : storageDecision.getCapability();
     }
 
-    public UimStorageDecision getStorageDecision()
-    {
-        return storageDecision;
-    }
 
-    public RecommendationRiskDisclosure getRiskDisclosure()
-    {
-        return riskDisclosure;
-    }
 
     public RecommendationGuidance withBankingBehavior(
             MethodBankingBehavior value)

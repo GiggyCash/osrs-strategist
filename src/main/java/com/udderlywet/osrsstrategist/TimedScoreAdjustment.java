@@ -1,5 +1,8 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * A temporary soft recommendation adjustment.
  *
@@ -8,28 +11,16 @@ package com.udderlywet.osrsstrategist;
  * completion uses this to encourage variety without preventing Compass from
  * recommending the same skill again when it is still clearly the best move.</p>
  */
+@RequiredArgsConstructor
 public final class TimedScoreAdjustment
 {
+    @Getter
     private final double scoreDelta;
+    @Getter
     private final long expiresAtMillis;
 
-    public TimedScoreAdjustment(
-            double scoreDelta,
-            long expiresAtMillis)
-    {
-        this.scoreDelta = scoreDelta;
-        this.expiresAtMillis = expiresAtMillis;
-    }
 
-    public double getScoreDelta()
-    {
-        return scoreDelta;
-    }
 
-    public long getExpiresAtMillis()
-    {
-        return expiresAtMillis;
-    }
 
     public boolean isExpired(long nowMillis)
     {

@@ -1,14 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Current boss/raid identity plus Compass safety metadata. */
 public final class PvmActivityDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final boolean raid;
+    @Getter
     private final boolean freeToPlay;
+    @Getter
     private final RiskLevel riskLevel;
+    @Getter
     private final boolean hardcoreSafeByDefault;
 
     public PvmActivityDefinition(String id, String name, boolean wilderness,
@@ -30,11 +39,4 @@ public final class PvmActivityDefinition
         this.hardcoreSafeByDefault = hardcoreSafeByDefault;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public boolean isWilderness() { return wilderness; }
-    public boolean isRaid() { return raid; }
-    public boolean isFreeToPlay() { return freeToPlay; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public boolean isHardcoreSafeByDefault() { return hardcoreSafeByDefault; }
 }

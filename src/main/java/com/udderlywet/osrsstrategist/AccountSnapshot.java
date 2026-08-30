@@ -3,20 +3,32 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 public final class AccountSnapshot
 {
+    @Getter
     private final String playerName;
     private final long accountHash;
+    @Getter
     private final int accountTypeCode;
+    @Getter
     private final String accountTypeName;
+    @Getter
     private final MembershipStatus membershipStatus;
+    @Getter
     private final int membershipCredit;
+    @Getter
     private final int totalLevel;
+    @Getter
     private final long totalExperience;
 
+    @Getter
     private final Map<Skill, Integer> skillLevels;
+    @Getter
     private final Map<Skill, Integer> skillExperience;
 
     /**
@@ -94,10 +106,6 @@ public final class AccountSnapshot
         );
     }
 
-    public String getPlayerName()
-    {
-        return playerName;
-    }
 
     /** Stable local character identity. Zero means RuneLite has not supplied it yet. */
     public long getAccountHash()
@@ -110,45 +118,13 @@ public final class AccountSnapshot
         return accountHash != 0L;
     }
 
-    public int getAccountTypeCode()
-    {
-        return accountTypeCode;
-    }
 
-    public String getAccountTypeName()
-    {
-        return accountTypeName;
-    }
 
-    public MembershipStatus getMembershipStatus()
-    {
-        return membershipStatus;
-    }
 
-    public int getMembershipCredit()
-    {
-        return membershipCredit;
-    }
 
-    public int getTotalLevel()
-    {
-        return totalLevel;
-    }
 
-    public long getTotalExperience()
-    {
-        return totalExperience;
-    }
 
-    public Map<Skill, Integer> getSkillLevels()
-    {
-        return skillLevels;
-    }
 
-    public Map<Skill, Integer> getSkillExperience()
-    {
-        return skillExperience;
-    }
 
     public int getSkillLevel(Skill skill)
     {

@@ -4,10 +4,14 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** Immutable snapshot of capabilities granted to the current Compass user. */
 public final class EntitlementSnapshot
 {
+    @Getter
     private final StrategistEdition edition;
+    @Getter
     private final Set<StrategistFeature> features;
 
     public EntitlementSnapshot(
@@ -39,18 +43,10 @@ public final class EntitlementSnapshot
         );
     }
 
-    public StrategistEdition getEdition()
-    {
-        return edition;
-    }
 
     public boolean has(StrategistFeature feature)
     {
         return feature != null && features.contains(feature);
     }
 
-    public Set<StrategistFeature> getFeatures()
-    {
-        return features;
-    }
 }

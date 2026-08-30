@@ -1,12 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Result of checking one proposed UIM storage route. */
 public final class UimStorageDecision
 {
+    @Getter
     private final StorageCapability capability;
+    @Getter
     private final boolean allowed;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final RiskLevel riskLevel;
+    @Getter
     private final String explanation;
 
     public UimStorageDecision(
@@ -23,9 +30,4 @@ public final class UimStorageDecision
         this.explanation = explanation;
     }
 
-    public StorageCapability getCapability() { return capability; }
-    public boolean isAllowed() { return allowed; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public String getExplanation() { return explanation; }
 }

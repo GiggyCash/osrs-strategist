@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * Generic cooldown/ready-time storage for recurring OSRS activities.
  *
@@ -13,6 +15,7 @@ import java.util.Map;
  */
 public final class RecurringOpportunitySnapshot
 {
+    @Getter
     private final Map<String, Long> readyAtMillis;
 
     public RecurringOpportunitySnapshot(Map<String, Long> readyAtMillis)
@@ -40,8 +43,4 @@ public final class RecurringOpportunitySnapshot
         return readyAt != null && readyAt <= nowMillis;
     }
 
-    public Map<String, Long> getReadyAtMillis()
-    {
-        return readyAtMillis;
-    }
 }

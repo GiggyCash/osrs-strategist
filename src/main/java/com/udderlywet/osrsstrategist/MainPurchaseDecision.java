@@ -1,11 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 public final class MainPurchaseDecision
 {
+    @Getter
     private final MainPurchaseChoice choice;
+    @Getter
     private final long totalCost;
+    @Getter
     private final long observedCoins;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String explanation;
 
     public MainPurchaseDecision(
@@ -24,9 +31,4 @@ public final class MainPurchaseDecision
         this.explanation = explanation;
     }
 
-    public MainPurchaseChoice getChoice() { return choice; }
-    public long getTotalCost() { return totalCost; }
-    public long getObservedCoins() { return observedCoins; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getExplanation() { return explanation; }
 }

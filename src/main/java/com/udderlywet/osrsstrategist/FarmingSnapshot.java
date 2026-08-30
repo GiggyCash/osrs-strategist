@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Farming-specific account state used by herb/tree/farming-contract planning.
  *
@@ -15,8 +17,11 @@ import java.util.Set;
  */
 public final class FarmingSnapshot
 {
+    @Getter
     private final Set<String> reachablePatchIds;
+    @Getter
     private final Map<String, CapabilityState> leprechaunTools;
+    @Getter
     private final Map<String, Long> patchReadyAtMillis;
 
     public FarmingSnapshot(
@@ -68,7 +73,4 @@ public final class FarmingSnapshot
         return patchReadyAtMillis.get(patchId);
     }
 
-    public Set<String> getReachablePatchIds() { return reachablePatchIds; }
-    public Map<String, CapabilityState> getLeprechaunTools() { return leprechaunTools; }
-    public Map<String, Long> getPatchReadyAtMillis() { return patchReadyAtMillis; }
 }

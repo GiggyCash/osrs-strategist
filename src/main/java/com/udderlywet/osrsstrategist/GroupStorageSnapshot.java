@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Latest Group Storage observation for a GIM account.
  *
@@ -16,7 +18,9 @@ public final class GroupStorageSnapshot
 {
     static final long FRESH_FOR_MILLIS = 5L * 60L * 1000L;
     private final boolean observed;
+    @Getter
     private final List<ItemStackSnapshot> items;
+    @Getter
     private final long observedAtMillis;
 
     public GroupStorageSnapshot(
@@ -55,12 +59,7 @@ public final class GroupStorageSnapshot
                 && age >= 0L && age <= FRESH_FOR_MILLIS;
     }
 
-    public long getObservedAtMillis() { return observedAtMillis; }
 
-    public List<ItemStackSnapshot> getItems()
-    {
-        return items;
-    }
 
     public boolean containsItem(int itemId)
     {

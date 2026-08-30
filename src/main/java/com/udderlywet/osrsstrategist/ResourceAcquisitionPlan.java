@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * Safe acquisition recommendation for one resource requirement.
  *
@@ -9,10 +11,15 @@ package com.udderlywet.osrsstrategist;
  */
 public final class ResourceAcquisitionPlan
 {
+    @Getter
     private final ResourceNeed need;
+    @Getter
     private final AcquisitionSource source;
+    @Getter
     private final int confirmedQuantity;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String note;
 
     public ResourceAcquisitionPlan(
@@ -31,11 +38,6 @@ public final class ResourceAcquisitionPlan
         this.note = note;
     }
 
-    public ResourceNeed getNeed() { return need; }
-    public AcquisitionSource getSource() { return source; }
-    public int getConfirmedQuantity() { return confirmedQuantity; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getNote() { return note; }
 
     public boolean hasEnoughConfirmed()
     {

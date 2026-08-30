@@ -4,15 +4,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Account-aware, multi-hop route for one meaningful gear target. */
 public final class GearAcquisitionRoute
 {
+    @Getter
     private final String id;
+    @Getter
     private final String itemName;
+    @Getter
     private final CombatStyle style;
+    @Getter
     private final boolean tradeable;
+    @Getter
     private final List<GearAcquisitionStep> steps;
+    @Getter
     private final String valueRule;
+    @Getter
     private final String provenance;
 
     public GearAcquisitionRoute(String id, String itemName, CombatStyle style,
@@ -28,11 +37,4 @@ public final class GearAcquisitionRoute
         this.provenance = provenance;
     }
 
-    public String getId() { return id; }
-    public String getItemName() { return itemName; }
-    public CombatStyle getStyle() { return style; }
-    public boolean isTradeable() { return tradeable; }
-    public List<GearAcquisitionStep> getSteps() { return steps; }
-    public String getValueRule() { return valueRule; }
-    public String getProvenance() { return provenance; }
 }

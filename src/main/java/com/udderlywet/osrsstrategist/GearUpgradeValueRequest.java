@@ -1,17 +1,26 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * Context that cannot safely be inferred from an item name. The encounter
  * model supplies benefit and goal relevance after validating them.
  */
 public final class GearUpgradeValueRequest
 {
+    @Getter
     private final GearProgressionEntry progression;
+    @Getter
     private final String targetItem;
+    @Getter
     private final GearMarginalBenefit marginalBenefit;
+    @Getter
     private final GearReplacementHorizon replacementHorizon;
+    @Getter
     private final GearStorageDisposition storageDisposition;
+    @Getter
     private final GearAcquisitionBurden acquisitionBurden;
+    @Getter
     private final boolean provenGoalRelevant;
 
     public GearUpgradeValueRequest(GearProgressionEntry progression,
@@ -34,11 +43,4 @@ public final class GearUpgradeValueRequest
         this.provenGoalRelevant = provenGoalRelevant;
     }
 
-    public GearProgressionEntry getProgression() { return progression; }
-    public String getTargetItem() { return targetItem; }
-    public GearMarginalBenefit getMarginalBenefit() { return marginalBenefit; }
-    public GearReplacementHorizon getReplacementHorizon() { return replacementHorizon; }
-    public GearStorageDisposition getStorageDisposition() { return storageDisposition; }
-    public GearAcquisitionBurden getAcquisitionBurden() { return acquisitionBurden; }
-    public boolean isProvenGoalRelevant() { return provenGoalRelevant; }
 }

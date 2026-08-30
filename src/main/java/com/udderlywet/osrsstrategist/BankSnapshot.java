@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class BankSnapshot
 {
+    @Getter
     private final List<ItemStackSnapshot> items;
+    @Getter
     private final long capturedAtMillis;
 
     public BankSnapshot(
@@ -19,15 +23,7 @@ public final class BankSnapshot
         this.capturedAtMillis = capturedAtMillis;
     }
 
-    public List<ItemStackSnapshot> getItems()
-    {
-        return items;
-    }
 
-    public long getCapturedAtMillis()
-    {
-        return capturedAtMillis;
-    }
 
     public int quantityOf(int itemId)
     {

@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Evidence-backed value of preserving the player's currently observed setup. */
 public final class SetupReuseAssessment
 {
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final int matchedProperties;
+    @Getter
     private final int requiredProperties;
+    @Getter
     private final int minutesAvoided;
+    @Getter
     private final double normalizedValue;
+    @Getter
     private final List<String> evidence;
 
     SetupReuseAssessment(RecommendationConfidence confidence,
@@ -26,12 +34,6 @@ public final class SetupReuseAssessment
         this.evidence = Collections.unmodifiableList(new ArrayList<>(evidence));
     }
 
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public int getMatchedProperties() { return matchedProperties; }
-    public int getRequiredProperties() { return requiredProperties; }
-    public int getMinutesAvoided() { return minutesAvoided; }
-    public double getNormalizedValue() { return normalizedValue; }
-    public List<String> getEvidence() { return evidence; }
 
     public RecommendationStrategicValue strategicValue(String evidenceId)
     {

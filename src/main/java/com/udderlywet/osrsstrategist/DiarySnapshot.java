@@ -7,11 +7,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+
 public final class DiarySnapshot
 {
     private final Map<String, Integer> completedTasksByRegion;
     private final Map<String, Integer> totalTasksByRegion;
+    @Getter
     private final Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion;
+    @Getter
     private final Map<String, Boolean> observedTaskCompletion;
 
     public DiarySnapshot(
@@ -95,10 +99,6 @@ public final class DiarySnapshot
         return tiers == null ? Collections.emptyMap() : tiers;
     }
 
-    public Map<String, Map<DiaryTier, Boolean>> getCompletedTiersByRegion()
-    {
-        return completedTiersByRegion;
-    }
 
     /** Null means the individual task row has not been observed. */
     public Boolean taskCompletion(String taskId)
@@ -106,8 +106,4 @@ public final class DiarySnapshot
         return observedTaskCompletion.get(taskId);
     }
 
-    public Map<String, Boolean> getObservedTaskCompletion()
-    {
-        return observedTaskCompletion;
-    }
 }

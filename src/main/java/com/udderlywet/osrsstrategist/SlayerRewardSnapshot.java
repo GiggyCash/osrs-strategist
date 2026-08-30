@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /** Live, per-character ownership evidence for reviewed Slayer rewards. */
 public final class SlayerRewardSnapshot
 {
+    @Getter
     private final Map<SlayerReward, CapabilityState> states;
 
     public SlayerRewardSnapshot(Map<SlayerReward, CapabilityState> states)
@@ -33,8 +36,4 @@ public final class SlayerRewardSnapshot
         return stateOf(reward) == CapabilityState.VERIFIED;
     }
 
-    public Map<SlayerReward, CapabilityState> getStates()
-    {
-        return states;
-    }
 }

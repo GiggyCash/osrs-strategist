@@ -1,11 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 public final class ClueSnapshot
 {
+    @Getter
     private final boolean cluePresent;
+    @Getter
     private final String clueType;
+    @Getter
     private final long firstSeenAtMillis;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final ClueStepSnapshot currentStep;
 
     public ClueSnapshot(
@@ -31,26 +38,9 @@ public final class ClueSnapshot
         this.currentStep = currentStep;
     }
 
-    public boolean isCluePresent()
-    {
-        return cluePresent;
-    }
 
-    public String getClueType()
-    {
-        return clueType;
-    }
 
-    public long getFirstSeenAtMillis()
-    {
-        return firstSeenAtMillis;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 
-    public ClueStepSnapshot getCurrentStep() { return currentStep; }
     public boolean hasObservedCurrentStep() { return currentStep != null; }
 }

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import lombok.RequiredArgsConstructor;
+
 /** Resolves gear and quest edges recursively without bypassing live evidence. */
+@RequiredArgsConstructor
 public final class GearAcquisitionResolver
 {
     private static final int MAX_DEPTH = 12;
@@ -15,12 +18,6 @@ public final class GearAcquisitionResolver
     private boolean cyclePrevented;
     private boolean depthLimited;
 
-    public GearAcquisitionResolver(GearAcquisitionCatalog gear,
-            QuestKnowledgeCatalog quests)
-    {
-        this.gear = gear;
-        this.quests = quests;
-    }
 
     public GearAcquisitionResolution resolve(String item,
             StrategyContext context)

@@ -5,19 +5,30 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** A composable, local-evidence item requirement shared by planning systems. */
 public final class ItemRequirementExpression
 {
     public enum Kind { ITEM, ITEM_CLASS, CHECK_NEEDED, ALL_OF, ANY_OF }
 
+    @Getter
     private final Kind kind;
+    @Getter
     private final List<String> itemNames;
+    @Getter
     private final int quantity;
+    @Getter
     private final ItemQuantityMode quantityMode;
+    @Getter
     private final ItemRequirementScope scope;
+    @Getter
     private final ItemRequirementClass itemClass;
+    @Getter
     private final List<String> excludedItemNames;
+    @Getter
     private final String checkAction;
+    @Getter
     private final List<ItemRequirementExpression> children;
 
     private ItemRequirementExpression(Kind kind, List<String> itemNames,
@@ -106,15 +117,6 @@ public final class ItemRequirementExpression
                 children == null ? Collections.emptyList() : Arrays.asList(children));
     }
 
-    public Kind getKind() { return kind; }
-    public List<String> getItemNames() { return itemNames; }
-    public int getQuantity() { return quantity; }
-    public ItemQuantityMode getQuantityMode() { return quantityMode; }
-    public ItemRequirementScope getScope() { return scope; }
-    public ItemRequirementClass getItemClass() { return itemClass; }
-    public List<String> getExcludedItemNames() { return excludedItemNames; }
-    public String getCheckAction() { return checkAction; }
-    public List<ItemRequirementExpression> getChildren() { return children; }
 
     public String label()
     {

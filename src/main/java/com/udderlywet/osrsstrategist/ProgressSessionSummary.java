@@ -3,20 +3,30 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Compact persisted recap; raw XP events are intentionally not retained. */
 public final class ProgressSessionSummary
 {
     private static final int MAX_MILESTONES = 100;
+    @Getter
     private final long startedAtMillis;
+    @Getter
     private final long endedAtMillis;
+    @Getter
     private final long activeDurationMillis;
+    @Getter
     private final long totalXpGained;
+    @Getter
     private final int levelsGained;
+    @Getter
     private final Map<Skill, Integer> xpBySkill;
+    @Getter
     private final List<ProgressMilestone> milestones;
 
     public ProgressSessionSummary(ProgressSessionSnapshot snapshot)
@@ -83,11 +93,4 @@ public final class ProgressSessionSummary
         return result;
     }
 
-    public long getStartedAtMillis() { return startedAtMillis; }
-    public long getEndedAtMillis() { return endedAtMillis; }
-    public long getActiveDurationMillis() { return activeDurationMillis; }
-    public long getTotalXpGained() { return totalXpGained; }
-    public int getLevelsGained() { return levelsGained; }
-    public Map<Skill, Integer> getXpBySkill() { return xpBySkill; }
-    public List<ProgressMilestone> getMilestones() { return milestones; }
 }

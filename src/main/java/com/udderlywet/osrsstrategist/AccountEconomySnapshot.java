@@ -1,33 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class AccountEconomySnapshot
 {
+    @Getter
     private final long coins;
+    @Getter
     private final long estimatedBankValue;
+    @Getter
     private final RecommendationConfidence confidence;
 
-    public AccountEconomySnapshot(
-            long coins,
-            long estimatedBankValue,
-            RecommendationConfidence confidence)
-    {
-        this.coins = coins;
-        this.estimatedBankValue = estimatedBankValue;
-        this.confidence = confidence;
-    }
 
-    public long getCoins()
-    {
-        return coins;
-    }
 
-    public long getEstimatedBankValue()
-    {
-        return estimatedBankValue;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 }

@@ -4,12 +4,18 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** An exact item-ID requirement that fresh Group Storage may satisfy. */
 public final class GroupResourceNeed
 {
+    @Getter
     private final String label;
+    @Getter
     private final Set<Integer> acceptableItemIds;
+    @Getter
     private final int quantity;
+    @Getter
     private final boolean reusable;
 
     public GroupResourceNeed(String label, Set<Integer> acceptableItemIds,
@@ -30,8 +36,4 @@ public final class GroupResourceNeed
         this.reusable = reusable;
     }
 
-    public String getLabel() { return label; }
-    public Set<Integer> getAcceptableItemIds() { return acceptableItemIds; }
-    public int getQuantity() { return quantity; }
-    public boolean isReusable() { return reusable; }
 }

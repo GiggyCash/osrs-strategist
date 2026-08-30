@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Immutable result of resolving a deterministic material list against the
  * account state Compass has actually observed.
  */
 public final class AccountResourcePlan
 {
+    @Getter
     private final AccountMode accountMode;
+    @Getter
     private final boolean primaryStorageObserved;
+    @Getter
     private final boolean groupStorageIncluded;
+    @Getter
     private final boolean groupStorageObserved;
+    @Getter
     private final List<ResourcePlanEntry> entries;
+    @Getter
     private final String guidance;
 
     public AccountResourcePlan(
@@ -34,12 +42,6 @@ public final class AccountResourcePlan
         this.guidance = guidance;
     }
 
-    public AccountMode getAccountMode() { return accountMode; }
-    public boolean isPrimaryStorageObserved() { return primaryStorageObserved; }
-    public boolean isGroupStorageIncluded() { return groupStorageIncluded; }
-    public boolean isGroupStorageObserved() { return groupStorageObserved; }
-    public List<ResourcePlanEntry> getEntries() { return entries; }
-    public String getGuidance() { return guidance; }
 
     public boolean isFullySupplied()
     {

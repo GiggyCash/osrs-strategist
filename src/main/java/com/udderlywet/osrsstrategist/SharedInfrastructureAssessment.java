@@ -1,21 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Explicit boundary for group capabilities RuneLite does not observe. */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SharedInfrastructureAssessment
 {
+    @Getter
     private final CapabilityState state;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String reason;
 
-    SharedInfrastructureAssessment(CapabilityState state,
-            RecommendationConfidence confidence, String reason)
-    {
-        this.state = state;
-        this.confidence = confidence;
-        this.reason = reason;
-    }
 
-    public CapabilityState getState() { return state; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getReason() { return reason; }
 }

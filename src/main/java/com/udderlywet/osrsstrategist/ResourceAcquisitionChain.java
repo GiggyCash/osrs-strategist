@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Ordered resource route from current ownership to the requested quantity. */
 public final class ResourceAcquisitionChain
 {
+    @Getter
     private final ResourceNeed need;
+    @Getter
     private final int shortfall;
+    @Getter
     private final List<ResourceAcquisitionStep> steps;
 
     public ResourceAcquisitionChain(ResourceNeed need, int shortfall,
@@ -19,9 +24,6 @@ public final class ResourceAcquisitionChain
         this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
     }
 
-    public ResourceNeed getNeed() { return need; }
-    public int getShortfall() { return shortfall; }
-    public List<ResourceAcquisitionStep> getSteps() { return steps; }
     public ResourceAcquisitionStep nextStep()
     {
         return steps.isEmpty() ? null : steps.get(0);

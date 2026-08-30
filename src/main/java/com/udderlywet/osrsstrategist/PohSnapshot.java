@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import lombok.Getter;
+
 /**
  * Player-owned-house capability snapshot.
  *
@@ -15,7 +17,9 @@ import java.util.Objects;
  */
 public final class PohSnapshot
 {
+    @Getter
     private final CapabilityState houseAccess;
+    @Getter
     private final Map<String, CapabilityState> furniture;
 
     public PohSnapshot(
@@ -40,10 +44,6 @@ public final class PohSnapshot
         );
     }
 
-    public CapabilityState getHouseAccess()
-    {
-        return houseAccess;
-    }
 
     public CapabilityState furnitureState(String furnitureId)
     {
@@ -53,10 +53,6 @@ public final class PohSnapshot
         );
     }
 
-    public Map<String, CapabilityState> getFurniture()
-    {
-        return furniture;
-    }
 
     @Override
     public boolean equals(Object other)

@@ -3,26 +3,43 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 public final class TrainingMethod
 {
+    @Getter
     private final String id;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int minLevel;
+    @Getter
     private final int maxLevel;
+    @Getter
     private final String name;
+    @Getter
     private final String instructions;
     private final double efficientScore;
     private final double balancedScore;
     private final double relaxedScore;
+    @Getter
     private final AttentionLevel attentionLevel;
+    @Getter
     private final int minimumSessionMinutes;
+    @Getter
     private final int setupMinutes;
+    @Getter
     private final List<String> requirements;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final boolean membersOnly;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final boolean progressionProtected;
     private final boolean delegatesMethodChoice;
 
@@ -138,20 +155,6 @@ public final class TrainingMethod
         this.delegatesMethodChoice = delegatesMethodChoice;
     }
 
-    public String getId() { return id; }
-    public Skill getSkill() { return skill; }
-    public int getMinLevel() { return minLevel; }
-    public int getMaxLevel() { return maxLevel; }
-    public String getName() { return name; }
-    public String getInstructions() { return instructions; }
-    public AttentionLevel getAttentionLevel() { return attentionLevel; }
-    public int getMinimumSessionMinutes() { return minimumSessionMinutes; }
-    public int getSetupMinutes() { return setupMinutes; }
-    public List<String> getRequirements() { return requirements; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public boolean isMembersOnly() { return membersOnly; }
-    public boolean isWilderness() { return wilderness; }
-    public boolean isProgressionProtected() { return progressionProtected; }
     public boolean delegatesMethodChoice() { return delegatesMethodChoice; }
 
     public boolean supportsLevel(int level)

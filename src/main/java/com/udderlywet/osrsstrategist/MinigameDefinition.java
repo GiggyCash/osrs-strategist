@@ -3,19 +3,32 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 public final class MinigameDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final Skill primarySkill;
+    @Getter
     private final int minimumLevel;
+    @Getter
     private final boolean freeToPlay;
+    @Getter
     private final RiskLevel riskLevel;
+    @Getter
     private final AttentionLevel attention;
+    @Getter
     private final Set<AccountMode> supportedModes;
+    @Getter
     private final String rewardFocus;
+    @Getter
     private final boolean combatActivity;
 
     public MinigameDefinition(String id, String name, Skill primarySkill,
@@ -46,15 +59,5 @@ public final class MinigameDefinition
         this.combatActivity = combatActivity;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public Skill getPrimarySkill() { return primarySkill; }
-    public int getMinimumLevel() { return minimumLevel; }
-    public boolean isFreeToPlay() { return freeToPlay; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public AttentionLevel getAttention() { return attention; }
-    public Set<AccountMode> getSupportedModes() { return supportedModes; }
-    public String getRewardFocus() { return rewardFocus; }
-    public boolean isCombatActivity() { return combatActivity; }
     public boolean supports(AccountMode mode) { return supportedModes.contains(mode); }
 }

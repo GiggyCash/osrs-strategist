@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Structured access/build evidence consumed by the final recommendation gate. */
@@ -21,9 +23,13 @@ public final class CandidateSafetyEvidence
         UNKNOWN
     }
 
+    @Getter
     private final Access access;
+    @Getter
     private final BuildEffect buildEffect;
+    @Getter
     private final Skill affectedSkill;
+    @Getter
     private final boolean conventionalBankRequired;
     private final boolean unverifiedDangerousStorage;
     private final boolean invalidCurrentExecution;
@@ -111,13 +117,6 @@ public final class CandidateSafetyEvidence
         return freeToPlay ? Access.F2P_SAFE : Access.MEMBERS_ONLY;
     }
 
-    public Access getAccess() { return access; }
-    public BuildEffect getBuildEffect() { return buildEffect; }
-    public Skill getAffectedSkill() { return affectedSkill; }
-    public boolean isConventionalBankRequired()
-    {
-        return conventionalBankRequired;
-    }
     public boolean hasUnverifiedDangerousStorage()
     {
         return unverifiedDangerousStorage;

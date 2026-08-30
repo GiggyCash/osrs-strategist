@@ -5,19 +5,31 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** One unfinished quest shared by one or more proven selected-goal paths. */
 public final class QuestPathStep
 {
+    @Getter
     private final String questName;
+    @Getter
     private final QuestStatus status;
+    @Getter
     private final Map<GoalType, List<String>> provenancePaths;
+    @Getter
     private final List<String> unfinishedDependents;
+    @Getter
     private final RecommendationConfidence readiness;
+    @Getter
     private final boolean eligibleNow;
+    @Getter
     private final int depth;
+    @Getter
     private final Map<Skill, Integer> guaranteedRewardXp;
+    @Getter
     private final double goalPathRewardValue;
 
     QuestPathStep(String questName, QuestStatus status,
@@ -54,25 +66,7 @@ public final class QuestPathStep
                 Math.min(1.0, goalPathRewardValue));
     }
 
-    public String getQuestName() { return questName; }
-    public QuestStatus getStatus() { return status; }
-    public Map<GoalType, List<String>> getProvenancePaths()
-    {
-        return provenancePaths;
-    }
-    public List<String> getUnfinishedDependents()
-    {
-        return unfinishedDependents;
-    }
-    public RecommendationConfidence getReadiness() { return readiness; }
-    public boolean isEligibleNow() { return eligibleNow; }
-    public int getDepth() { return depth; }
     public int getGoalCount() { return provenancePaths.size(); }
-    public Map<Skill, Integer> getGuaranteedRewardXp()
-    {
-        return guaranteedRewardXp;
-    }
-    public double getGoalPathRewardValue() { return goalPathRewardValue; }
 
     /** Bounded property value for the common recommendation decision layer. */
     public double sharedDependencyValue()

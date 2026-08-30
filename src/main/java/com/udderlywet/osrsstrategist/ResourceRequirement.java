@@ -2,14 +2,19 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Arrays;
 
+import lombok.Getter;
+
 /**
  * A reusable observed-resource requirement. itemIds are alternatives: quantities
  * across every listed ID are summed toward the requirement.
  */
 public final class ResourceRequirement
 {
+    @Getter
     private final String id;
+    @Getter
     private final String label;
+    @Getter
     private final int requiredQuantity;
     private final int[] itemIds;
 
@@ -25,8 +30,5 @@ public final class ResourceRequirement
         this.itemIds = itemIds == null ? new int[0] : Arrays.copyOf(itemIds, itemIds.length);
     }
 
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public int getRequiredQuantity() { return requiredQuantity; }
     public int[] getItemIds() { return Arrays.copyOf(itemIds, itemIds.length); }
 }

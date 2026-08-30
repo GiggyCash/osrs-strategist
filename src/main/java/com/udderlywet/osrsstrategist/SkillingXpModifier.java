@@ -1,9 +1,13 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** XP multiplier Compass can safely plan around because the required set is observed. */
 public final class SkillingXpModifier
 {
+    @Getter
     private final double multiplier;
+    @Getter
     private final String label;
 
     public SkillingXpModifier(double multiplier, String label)
@@ -12,8 +16,6 @@ public final class SkillingXpModifier
         this.label = label;
     }
 
-    public double getMultiplier() { return multiplier; }
-    public String getLabel() { return label; }
 
     public static SkillingXpModifier none()
     {

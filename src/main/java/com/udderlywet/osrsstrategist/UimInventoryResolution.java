@@ -1,32 +1,22 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Result of the ordered UIM inventory-resolution policy. */
+@RequiredArgsConstructor
 public final class UimInventoryResolution
 {
+    @Getter
     private final UimInventoryResolutionKind kind;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final UimStorageDecision storageDecision;
+    @Getter
     private final RecommendationRiskDisclosure riskDisclosure;
+    @Getter
     private final String reason;
 
-    public UimInventoryResolution(UimInventoryResolutionKind kind,
-            RecommendationConfidence confidence,
-            UimStorageDecision storageDecision,
-            RecommendationRiskDisclosure riskDisclosure, String reason)
-    {
-        this.kind = kind;
-        this.confidence = confidence;
-        this.storageDecision = storageDecision;
-        this.riskDisclosure = riskDisclosure;
-        this.reason = reason;
-    }
 
-    public UimInventoryResolutionKind getKind() { return kind; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public UimStorageDecision getStorageDecision() { return storageDecision; }
-    public RecommendationRiskDisclosure getRiskDisclosure()
-    {
-        return riskDisclosure;
-    }
-    public String getReason() { return reason; }
 }

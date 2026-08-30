@@ -1,10 +1,15 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One ordered, non-destructive step in a resource acquisition chain. */
 public final class ResourceAcquisitionStep
 {
+    @Getter
     private final AcquisitionSource source;
+    @Getter
     private final String action;
+    @Getter
     private final RecommendationConfidence confidence;
 
     public ResourceAcquisitionStep(AcquisitionSource source, String action,
@@ -16,7 +21,4 @@ public final class ResourceAcquisitionStep
                 ? RecommendationConfidence.CHECK_NEEDED : confidence;
     }
 
-    public AcquisitionSource getSource() { return source; }
-    public String getAction() { return action; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 }

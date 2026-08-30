@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Observed collection-log state plus explicitly proven long-form objectives.
  *
@@ -15,9 +17,13 @@ import java.util.Set;
  */
 public final class CollectionLogSnapshot
 {
+    @Getter
     private final Set<Integer> obtainedItemIds;
+    @Getter
     private final Set<String> completedObjectiveIds;
+    @Getter
     private final Map<String, Integer> categoryCompleted;
+    @Getter
     private final Map<String, Integer> categoryTotals;
 
     public CollectionLogSnapshot(Set<Integer> obtainedItemIds)
@@ -88,23 +94,7 @@ public final class CollectionLogSnapshot
         return categoryTotals.getOrDefault(category, 0);
     }
 
-    public Set<Integer> getObtainedItemIds()
-    {
-        return obtainedItemIds;
-    }
 
-    public Set<String> getCompletedObjectiveIds()
-    {
-        return completedObjectiveIds;
-    }
 
-    public Map<String, Integer> getCategoryCompleted()
-    {
-        return categoryCompleted;
-    }
 
-    public Map<String, Integer> getCategoryTotals()
-    {
-        return categoryTotals;
-    }
 }

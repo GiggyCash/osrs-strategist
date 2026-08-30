@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * Reviewed local mechanics for one UIM retrieval/storage system. These facts
  * do not prove that the live character has access or that a particular item is
@@ -7,17 +9,29 @@ package com.udderlywet.osrsstrategist;
  */
 public final class UimStorageMechanicProfile
 {
+    @Getter
     private final StorageCapability capability;
+    @Getter
     private final String location;
+    @Getter
     private final String accessRequirements;
+    @Getter
     private final String eligibleItems;
+    @Getter
     private final String insertionOrDepositRules;
+    @Getter
     private final String retrievalRules;
+    @Getter
     private final String cost;
+    @Getter
     private final String expiration;
+    @Getter
     private final String secondDeathBehavior;
+    @Getter
     private final RiskLevel risk;
+    @Getter
     private final StrategySourceId source;
+    @Getter
     private final boolean recommendationEligible;
 
     public UimStorageMechanicProfile(StorageCapability capability,
@@ -40,18 +54,6 @@ public final class UimStorageMechanicProfile
         this.recommendationEligible = recommendationEligible;
     }
 
-    public StorageCapability getCapability() { return capability; }
-    public String getLocation() { return location; }
-    public String getAccessRequirements() { return accessRequirements; }
-    public String getEligibleItems() { return eligibleItems; }
-    public String getInsertionOrDepositRules() { return insertionOrDepositRules; }
-    public String getRetrievalRules() { return retrievalRules; }
-    public String getCost() { return cost; }
-    public String getExpiration() { return expiration; }
-    public String getSecondDeathBehavior() { return secondDeathBehavior; }
-    public RiskLevel getRisk() { return risk; }
-    public StrategySourceId getSource() { return source; }
-    public boolean isRecommendationEligible() { return recommendationEligible; }
 
     public boolean hasCompleteRecommendationRules()
     {

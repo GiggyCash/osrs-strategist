@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 /** Explicit registry showing every reasoning domain that contributes signals. */
 @Singleton
 public class StrategyModuleRegistry
 {
+    @Getter
     private final List<StrategyModule> modules;
 
     @Inject
@@ -38,8 +42,4 @@ public class StrategyModuleRegistry
         );
     }
 
-    public List<StrategyModule> getModules()
-    {
-        return modules;
-    }
 }

@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Session-local evidence that distinct UIM setups hit the same constraints. */
 public final class UimRecurringPressureAssessment
 {
+    @Getter
     private final int distinctObservedLayouts;
+    @Getter
     private final List<String> blockedFamilies;
 
     UimRecurringPressureAssessment(int distinctObservedLayouts,
@@ -19,8 +23,6 @@ public final class UimRecurringPressureAssessment
                         : blockedFamilies));
     }
 
-    public int getDistinctObservedLayouts() { return distinctObservedLayouts; }
-    public List<String> getBlockedFamilies() { return blockedFamilies; }
     public boolean isRepeated()
     {
         return distinctObservedLayouts >= 2 && blockedFamilies.size() >= 2;

@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * One human-readable readiness check shown by the recommendation UI.
  *
@@ -8,9 +10,13 @@ package com.udderlywet.osrsstrategist;
  */
 public final class RequirementCheck
 {
+    @Getter
     private final String id;
+    @Getter
     private final String label;
+    @Getter
     private final RequirementState state;
+    @Getter
     private final String evidence;
 
     public RequirementCheck(
@@ -27,8 +33,4 @@ public final class RequirementCheck
         this.evidence = evidence;
     }
 
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public RequirementState getState() { return state; }
-    public String getEvidence() { return evidence; }
 }

@@ -6,16 +6,26 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** Sourced strategic properties layered over a mechanically legal method. */
 public final class MethodStrategyProfile
 {
+    @Getter
     private final String methodId;
+    @Getter
     private final StrategyKnowledgeTier tier;
+    @Getter
     private final Set<AccountMode> accountModes;
+    @Getter
     private final MethodBankingBehavior bankingBehavior;
+    @Getter
     private final MethodInventoryFootprint inventoryFootprint;
+    @Getter
     private final double accountValueFit;
+    @Getter
     private final String playerReason;
+    @Getter
     private final List<StrategySourceId> sources;
 
     public MethodStrategyProfile(String methodId, StrategyKnowledgeTier tier,
@@ -41,13 +51,5 @@ public final class MethodStrategyProfile
                 ? new ArrayList<>() : new ArrayList<>(sources));
     }
 
-    public String getMethodId() { return methodId; }
-    public StrategyKnowledgeTier getTier() { return tier; }
     public boolean supports(AccountMode mode) { return accountModes.contains(mode); }
-    public Set<AccountMode> getAccountModes() { return accountModes; }
-    public MethodBankingBehavior getBankingBehavior() { return bankingBehavior; }
-    public MethodInventoryFootprint getInventoryFootprint() { return inventoryFootprint; }
-    public double getAccountValueFit() { return accountValueFit; }
-    public String getPlayerReason() { return playerReason; }
-    public List<StrategySourceId> getSources() { return sources; }
 }

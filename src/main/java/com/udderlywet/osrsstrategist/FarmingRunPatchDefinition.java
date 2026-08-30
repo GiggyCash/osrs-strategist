@@ -4,14 +4,23 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 public final class FarmingRunPatchDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String displayName;
+    @Getter
     private final FarmingPatchKind kind;
+    @Getter
     private final int minimumLevel;
+    @Getter
     private final Set<Integer> regionIds;
+    @Getter
     private final int varbitId;
+    @Getter
     private final String requiredQuest;
 
     public FarmingRunPatchDefinition(
@@ -32,13 +41,6 @@ public final class FarmingRunPatchDefinition
         this.requiredQuest = requiredQuest;
     }
 
-    public String getId() { return id; }
-    public String getDisplayName() { return displayName; }
-    public FarmingPatchKind getKind() { return kind; }
-    public int getMinimumLevel() { return minimumLevel; }
-    public Set<Integer> getRegionIds() { return regionIds; }
-    public int getVarbitId() { return varbitId; }
-    public String getRequiredQuest() { return requiredQuest; }
 
     public boolean matchesRegion(int regionId)
     {

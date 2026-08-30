@@ -3,12 +3,17 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Compact event-driven XP aggregation used by charts and persistence. */
 public final class ProgressTimeBucket
 {
+    @Getter
     private final long startedAtMillis;
+    @Getter
     private final Map<Skill, Integer> xpBySkill;
 
     ProgressTimeBucket(long startedAtMillis, Map<Skill, Integer> xpBySkill)
@@ -19,8 +24,6 @@ public final class ProgressTimeBucket
         this.xpBySkill = Collections.unmodifiableMap(copy);
     }
 
-    public long getStartedAtMillis() { return startedAtMillis; }
-    public Map<Skill, Integer> getXpBySkill() { return xpBySkill; }
     public int getTotalXp()
     {
         long total = 0L;

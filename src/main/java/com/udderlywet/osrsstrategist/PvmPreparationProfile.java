@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Reviewable preparation evidence that may produce actions but never READY. */
 public final class PvmPreparationProfile
 {
+    @Getter
     private final String activityId;
+    @Getter
     private final String style;
+    @Getter
     private final List<String> checks;
+    @Getter
     private final String accountValue;
+    @Getter
     private final String provenance;
 
     public PvmPreparationProfile(String activityId, String style,
@@ -24,9 +31,4 @@ public final class PvmPreparationProfile
         this.provenance = provenance;
     }
 
-    public String getActivityId() { return activityId; }
-    public String getStyle() { return style; }
-    public List<String> getChecks() { return checks; }
-    public String getAccountValue() { return accountValue; }
-    public String getProvenance() { return provenance; }
 }

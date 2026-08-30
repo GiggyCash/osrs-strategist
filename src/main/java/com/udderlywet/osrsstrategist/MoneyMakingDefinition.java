@@ -3,21 +3,35 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Stable strategy metadata for a money/resource-producing activity. */
 public final class MoneyMakingDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final String description;
+    @Getter
     private final Skill primarySkill;
+    @Getter
     private final int minimumLevel;
+    @Getter
     private final boolean freeToPlay;
+    @Getter
     private final Set<AccountMode> supportedModes;
+    @Getter
     private final RiskLevel riskLevel;
+    @Getter
     private final AttentionLevel attention;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final boolean requiresLivePrices;
 
     public MoneyMakingDefinition(String id, String name, String description,
@@ -41,17 +55,6 @@ public final class MoneyMakingDefinition
         this.requiresLivePrices = requiresLivePrices;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public Skill getPrimarySkill() { return primarySkill; }
-    public int getMinimumLevel() { return minimumLevel; }
-    public boolean isFreeToPlay() { return freeToPlay; }
-    public Set<AccountMode> getSupportedModes() { return supportedModes; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public AttentionLevel getAttention() { return attention; }
-    public boolean isWilderness() { return wilderness; }
-    public boolean isRequiresLivePrices() { return requiresLivePrices; }
 
     public boolean supports(AccountMode mode)
     {

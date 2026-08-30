@@ -5,17 +5,27 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Immutable render-safe view of the current local progress session. */
 public final class ProgressSessionSnapshot
 {
+    @Getter
     private final long startedAtMillis;
+    @Getter
     private final long updatedAtMillis;
+    @Getter
     private final long activeDurationMillis;
+    @Getter
     private final Map<Skill, SkillSessionProgress> skills;
+    @Getter
     private final List<ProgressTimeBucket> buckets;
+    @Getter
     private final List<ProgressMilestone> milestones;
+    @Getter
     private final ProgressTargetProjection targetProjection;
 
     ProgressSessionSnapshot(
@@ -40,19 +50,9 @@ public final class ProgressSessionSnapshot
         this.targetProjection = targetProjection;
     }
 
-    public long getStartedAtMillis() { return startedAtMillis; }
-    public long getUpdatedAtMillis() { return updatedAtMillis; }
     public long getSessionDurationMillis()
     {
         return Math.max(0L, updatedAtMillis - startedAtMillis);
-    }
-    public long getActiveDurationMillis() { return activeDurationMillis; }
-    public Map<Skill, SkillSessionProgress> getSkills() { return skills; }
-    public List<ProgressTimeBucket> getBuckets() { return buckets; }
-    public List<ProgressMilestone> getMilestones() { return milestones; }
-    public ProgressTargetProjection getTargetProjection()
-    {
-        return targetProjection;
     }
 
     public long getTotalXpGained()

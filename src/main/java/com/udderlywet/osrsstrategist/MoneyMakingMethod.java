@@ -1,41 +1,22 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class MoneyMakingMethod
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final long estimatedGpPerHour;
+    @Getter
     private final RecommendationConfidence confidence;
 
-    public MoneyMakingMethod(
-            String id,
-            String name,
-            long estimatedGpPerHour,
-            RecommendationConfidence confidence)
-    {
-        this.id = id;
-        this.name = name;
-        this.estimatedGpPerHour = estimatedGpPerHour;
-        this.confidence = confidence;
-    }
 
-    public String getId()
-    {
-        return id;
-    }
 
-    public String getName()
-    {
-        return name;
-    }
 
-    public long getEstimatedGpPerHour()
-    {
-        return estimatedGpPerHour;
-    }
 
-    public RecommendationConfidence getConfidence()
-    {
-        return confidence;
-    }
 }

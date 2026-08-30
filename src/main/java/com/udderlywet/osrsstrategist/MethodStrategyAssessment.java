@@ -1,21 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Live account assessment of one sourced method profile. */
+@RequiredArgsConstructor
 public final class MethodStrategyAssessment
 {
+    @Getter
     private final boolean viable;
+    @Getter
     private final double scoreAdjustment;
+    @Getter
     private final String explanation;
 
-    public MethodStrategyAssessment(boolean viable, double scoreAdjustment,
-            String explanation)
-    {
-        this.viable = viable;
-        this.scoreAdjustment = scoreAdjustment;
-        this.explanation = explanation;
-    }
 
-    public boolean isViable() { return viable; }
-    public double getScoreAdjustment() { return scoreAdjustment; }
-    public String getExplanation() { return explanation; }
 }

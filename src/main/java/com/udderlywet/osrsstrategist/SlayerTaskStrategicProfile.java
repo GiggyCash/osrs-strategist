@@ -5,22 +5,37 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import lombok.Getter;
+
 /** Strategic task properties; decisions score these rather than task identities. */
 public final class SlayerTaskStrategicProfile
 {
+    @Getter
     private final String taskProfileId;
+    @Getter
     private final int xpQuality;
+    @Getter
     private final int resourceValue;
+    @Getter
     private final int completionBurden;
+    @Getter
     private final int setupBurden;
+    @Getter
     private final AttentionLevel attention;
+    @Getter
     private final RiskLevel inherentRisk;
+    @Getter
     private final SlayerRequiredItemUse requiredItemUse;
+    @Getter
     private final CombatStyle requiredCombatStyle;
     private final Map<String, Integer> assignmentWeights;
+    @Getter
     private final String alternativeActivityId;
+    @Getter
     private final String alternativeName;
+    @Getter
     private final String alternativeLocation;
+    @Getter
     private final boolean directEncounter;
 
     public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
@@ -80,19 +95,6 @@ public final class SlayerTaskStrategicProfile
         this.directEncounter = directEncounter;
     }
 
-    public String getTaskProfileId() { return taskProfileId; }
-    public int getXpQuality() { return xpQuality; }
-    public int getResourceValue() { return resourceValue; }
-    public int getCompletionBurden() { return completionBurden; }
-    public int getSetupBurden() { return setupBurden; }
-    public AttentionLevel getAttention() { return attention; }
-    public RiskLevel getInherentRisk() { return inherentRisk; }
-    public SlayerRequiredItemUse getRequiredItemUse() { return requiredItemUse; }
-    public CombatStyle getRequiredCombatStyle() { return requiredCombatStyle; }
-    public String getAlternativeActivityId() { return alternativeActivityId; }
-    public String getAlternativeName() { return alternativeName; }
-    public String getAlternativeLocation() { return alternativeLocation; }
-    public boolean isDirectEncounter() { return directEncounter; }
 
     public Integer weightFor(String masterId)
     {

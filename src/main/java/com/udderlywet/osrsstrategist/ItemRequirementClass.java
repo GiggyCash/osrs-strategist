@@ -2,6 +2,8 @@ package com.udderlywet.osrsstrategist;
 
 import java.util.Locale;
 
+import lombok.Getter;
+
 /**
  * A semantic item/preparation class from authoritative requirement evidence.
  *
@@ -35,7 +37,9 @@ public enum ItemRequirementClass
     MULTI_STYLE_OR_POISON("two combat styles or a suitable poisoned weapon", false),
     FULL_HAM_ROBE_SET("a full seven-piece H.A.M. robe set", false);
 
+    @Getter
     private final String label;
+    @Getter
     private final boolean nameObservable;
 
     ItemRequirementClass(String label, boolean nameObservable)
@@ -44,8 +48,6 @@ public enum ItemRequirementClass
         this.nameObservable = nameObservable;
     }
 
-    public String getLabel() { return label; }
-    public boolean isNameObservable() { return nameObservable; }
 
     public boolean matches(String itemName)
     {

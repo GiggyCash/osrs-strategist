@@ -1,35 +1,24 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Provenance attached to structured game-data records. */
+@RequiredArgsConstructor
 public final class KnowledgeRecordMetadata
 {
+    @Getter
     private final String recordId;
+    @Getter
     private final GameKnowledgeDomain domain;
+    @Getter
     private final KnowledgeSource source;
+    @Getter
     private final String sourceRevision;
+    @Getter
     private final long verifiedAtMillis;
+    @Getter
     private final boolean verifiedForPlanning;
 
-    public KnowledgeRecordMetadata(
-            String recordId,
-            GameKnowledgeDomain domain,
-            KnowledgeSource source,
-            String sourceRevision,
-            long verifiedAtMillis,
-            boolean verifiedForPlanning)
-    {
-        this.recordId = recordId;
-        this.domain = domain;
-        this.source = source;
-        this.sourceRevision = sourceRevision;
-        this.verifiedAtMillis = verifiedAtMillis;
-        this.verifiedForPlanning = verifiedForPlanning;
-    }
 
-    public String getRecordId() { return recordId; }
-    public GameKnowledgeDomain getDomain() { return domain; }
-    public KnowledgeSource getSource() { return source; }
-    public String getSourceRevision() { return sourceRevision; }
-    public long getVerifiedAtMillis() { return verifiedAtMillis; }
-    public boolean isVerifiedForPlanning() { return verifiedForPlanning; }
 }

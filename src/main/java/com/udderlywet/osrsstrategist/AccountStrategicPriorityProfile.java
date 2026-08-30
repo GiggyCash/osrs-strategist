@@ -4,10 +4,14 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 /** Immutable, exhaustive account strategic-priority profile. */
 public final class AccountStrategicPriorityProfile
 {
+    @Getter
     private final AccountMode accountMode;
+    @Getter
     private final Map<AccountStrategicDimension, AccountStrategicPriority>
             priorities;
 
@@ -28,7 +32,6 @@ public final class AccountStrategicPriorityProfile
         this.priorities = Collections.unmodifiableMap(copy);
     }
 
-    public AccountMode getAccountMode() { return accountMode; }
 
     public AccountStrategicPriority get(AccountStrategicDimension dimension)
     {
@@ -41,8 +44,4 @@ public final class AccountStrategicPriorityProfile
         return value == null ? StrategicPriority.NONE : value.getPriority();
     }
 
-    public Map<AccountStrategicDimension, AccountStrategicPriority> getPriorities()
-    {
-        return priorities;
-    }
 }

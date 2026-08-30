@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * One concrete place where a method can be executed.
  *
@@ -9,12 +11,19 @@ package com.udderlywet.osrsstrategist;
  */
 public final class MethodLocationOption
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final int ordinaryTravelBurden;
+    @Getter
     private final String advantageousRouteId;
+    @Getter
     private final int verifiedRouteTravelBurden;
+    @Getter
     private final boolean membersOnly;
+    @Getter
     private final boolean wilderness;
 
     public MethodLocationOption(String id, String name,
@@ -31,13 +40,6 @@ public final class MethodLocationOption
         this.wilderness = wilderness;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public int getOrdinaryTravelBurden() { return ordinaryTravelBurden; }
-    public String getAdvantageousRouteId() { return advantageousRouteId; }
-    public int getVerifiedRouteTravelBurden() { return verifiedRouteTravelBurden; }
-    public boolean isMembersOnly() { return membersOnly; }
-    public boolean isWilderness() { return wilderness; }
 
     int effectiveBurden(TransportSnapshot transport)
     {

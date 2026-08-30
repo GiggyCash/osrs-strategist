@@ -1,10 +1,15 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Exact material quantity resolved for one planned training segment. */
 public final class ResolvedMethodInput
 {
+    @Getter
     private final String name;
+    @Getter
     private final int itemId;
+    @Getter
     private final int quantity;
 
     public ResolvedMethodInput(String name, int itemId, int quantity)
@@ -14,7 +19,4 @@ public final class ResolvedMethodInput
         this.quantity = Math.max(0, quantity);
     }
 
-    public String getName() { return name; }
-    public int getItemId() { return itemId; }
-    public int getQuantity() { return quantity; }
 }

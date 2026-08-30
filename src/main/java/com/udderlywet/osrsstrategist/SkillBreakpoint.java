@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** One actual level target and the typed reason it matters. */
@@ -15,10 +17,15 @@ public final class SkillBreakpoint
         NEXT_LEVEL_FALLBACK
     }
 
+    @Getter
     private final Skill skill;
+    @Getter
     private final int level;
+    @Getter
     private final String label;
+    @Getter
     private final Kind kind;
+    @Getter
     private final String evidenceId;
 
     public SkillBreakpoint(Skill skill, int level, String label,
@@ -34,11 +41,6 @@ public final class SkillBreakpoint
         this.evidenceId = evidenceId == null ? "" : evidenceId;
     }
 
-    public Skill getSkill() { return skill; }
-    public int getLevel() { return level; }
-    public String getLabel() { return label; }
-    public Kind getKind() { return kind; }
-    public String getEvidenceId() { return evidenceId; }
 
     public double strategicValue()
     {

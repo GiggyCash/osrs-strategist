@@ -1,11 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One typed dependency inside a long-term goal graph. */
 public final class GoalDependency
 {
+    @Getter
     private final String id;
+    @Getter
     private final String label;
+    @Getter
     private final GoalNodeKind kind;
+    @Getter
     private final boolean required;
 
     public GoalDependency(
@@ -20,8 +26,4 @@ public final class GoalDependency
         this.required = required;
     }
 
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public GoalNodeKind getKind() { return kind; }
-    public boolean isRequired() { return required; }
 }

@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /**
  * One exact consumed-input requirement after Compass has compared the plan
  * with usable account storage.
@@ -10,12 +12,19 @@ package com.udderlywet.osrsstrategist;
  */
 public final class ResourcePlanEntry
 {
+    @Getter
     private final String name;
+    @Getter
     private final int itemId;
+    @Getter
     private final int required;
+    @Getter
     private final int usableOwned;
+    @Getter
     private final int missing;
+    @Getter
     private final int restrictedOwned;
+    @Getter
     private final String reusableSource;
 
     public ResourcePlanEntry(
@@ -36,13 +45,6 @@ public final class ResourcePlanEntry
         this.reusableSource = reusableSource;
     }
 
-    public String getName() { return name; }
-    public int getItemId() { return itemId; }
-    public int getRequired() { return required; }
-    public int getUsableOwned() { return usableOwned; }
-    public int getMissing() { return missing; }
-    public int getRestrictedOwned() { return restrictedOwned; }
-    public String getReusableSource() { return reusableSource; }
 
     public boolean isSatisfied()
     {

@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** A validated dependency path connecting one recommendation to one selected goal. */
 public final class GoalDependencyProvenance
 {
+    @Getter
     private final GoalType goal;
+    @Getter
     private final GoalRecommendationRelationship relationship;
+    @Getter
     private final String recommendationId;
+    @Getter
     private final List<String> path;
 
     private GoalDependencyProvenance(GoalType goal,
@@ -47,10 +53,6 @@ public final class GoalDependencyProvenance
                 recommendationId, path);
     }
 
-    public GoalType getGoal() { return goal; }
-    public GoalRecommendationRelationship getRelationship() { return relationship; }
-    public String getRecommendationId() { return recommendationId; }
-    public List<String> getPath() { return path; }
 
     public boolean proves(GoalType selectedGoal, String actionId)
     {

@@ -1,10 +1,15 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One live RuneLite market-price lookup result. */
 public final class MarketPriceQuote
 {
+    @Getter
     private final int itemId;
+    @Getter
     private final String itemName;
+    @Getter
     private final int unitPrice;
 
     public MarketPriceQuote(int itemId, String itemName, int unitPrice)
@@ -14,9 +19,6 @@ public final class MarketPriceQuote
         this.unitPrice = Math.max(0, unitPrice);
     }
 
-    public int getItemId() { return itemId; }
-    public String getItemName() { return itemName; }
-    public int getUnitPrice() { return unitPrice; }
 
     public boolean hasPrice()
     {

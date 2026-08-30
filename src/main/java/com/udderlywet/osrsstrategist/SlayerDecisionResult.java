@@ -1,18 +1,31 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Immutable explanation and execution payload from the Slayer strategist. */
 public final class SlayerDecisionResult
 {
+    @Getter
     private final SlayerAssignmentState assignmentState;
+    @Getter
     private final SlayerTaskDecision decision;
+    @Getter
     private final SlayerMasterProfile master;
+    @Getter
     private final SlayerTaskStrategicProfile taskProfile;
+    @Getter
     private final double score;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String reason;
+    @Getter
     private final RecommendationGuidance guidance;
+    @Getter
     private final String selectedAlternativeName;
+    @Getter
     private final SlayerReward recommendedReward;
+    @Getter
     private final SlayerTaskOffer recommendedOffer;
 
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
@@ -69,15 +82,4 @@ public final class SlayerDecisionResult
         this.recommendedOffer = recommendedOffer;
     }
 
-    public SlayerAssignmentState getAssignmentState() { return assignmentState; }
-    public SlayerTaskDecision getDecision() { return decision; }
-    public SlayerMasterProfile getMaster() { return master; }
-    public SlayerTaskStrategicProfile getTaskProfile() { return taskProfile; }
-    public double getScore() { return score; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getReason() { return reason; }
-    public RecommendationGuidance getGuidance() { return guidance; }
-    public String getSelectedAlternativeName() { return selectedAlternativeName; }
-    public SlayerReward getRecommendedReward() { return recommendedReward; }
-    public SlayerTaskOffer getRecommendedOffer() { return recommendedOffer; }
 }

@@ -1,6 +1,11 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** A measured XP rate, or an honest indication that evidence is insufficient. */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XpRateEstimate
 {
     public enum State
@@ -9,16 +14,13 @@ public final class XpRateEstimate
         READY
     }
 
+    @Getter
     private final State state;
+    @Getter
     private final long xpPerHour;
+    @Getter
     private final int timedIntervals;
 
-    private XpRateEstimate(State state, long xpPerHour, int timedIntervals)
-    {
-        this.state = state;
-        this.xpPerHour = xpPerHour;
-        this.timedIntervals = timedIntervals;
-    }
 
     public static XpRateEstimate calculating(int timedIntervals)
     {
@@ -32,8 +34,5 @@ public final class XpRateEstimate
                 Math.max(0, timedIntervals));
     }
 
-    public State getState() { return state; }
     public boolean isReady() { return state == State.READY; }
-    public long getXpPerHour() { return xpPerHour; }
-    public int getTimedIntervals() { return timedIntervals; }
 }

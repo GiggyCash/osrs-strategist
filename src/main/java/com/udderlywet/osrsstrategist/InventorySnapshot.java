@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class InventorySnapshot
 {
+    @Getter
     private final List<ItemStackSnapshot> items;
     private final boolean completeSlotObservation;
 
@@ -23,10 +26,6 @@ public final class InventorySnapshot
         this.completeSlotObservation = completeSlotObservation;
     }
 
-    public List<ItemStackSnapshot> getItems()
-    {
-        return items;
-    }
 
     public int quantityOf(int itemId)
     {

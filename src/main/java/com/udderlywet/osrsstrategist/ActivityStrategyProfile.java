@@ -6,14 +6,21 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Getter;
+
 /** Sourced strategic properties shared by non-skill candidate families. */
 public final class ActivityStrategyProfile
 {
+    @Getter
     private final String candidatePrefix;
     private final Set<AccountMode> accountModes;
+    @Getter
     private final MethodInventoryFootprint inventoryFootprint;
+    @Getter
     private final double setupReuse;
+    @Getter
     private final String strategicReason;
+    @Getter
     private final List<StrategySourceId> sources;
 
     public ActivityStrategyProfile(String candidatePrefix,
@@ -33,10 +40,5 @@ public final class ActivityStrategyProfile
                 ? new ArrayList<>() : new ArrayList<>(sources));
     }
 
-    public String getCandidatePrefix() { return candidatePrefix; }
     public boolean supports(AccountMode mode) { return accountModes.contains(mode); }
-    public MethodInventoryFootprint getInventoryFootprint() { return inventoryFootprint; }
-    public double getSetupReuse() { return setupReuse; }
-    public String getStrategicReason() { return strategicReason; }
-    public List<StrategySourceId> getSources() { return sources; }
 }

@@ -3,15 +3,23 @@ package com.udderlywet.osrsstrategist;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+
+import lombok.Getter;
+
 import net.runelite.api.Prayer;
 
 /** Directly observed spellbook selector and prayer state. */
 public final class CombatEvidenceSnapshot
 {
+    @Getter
     private final int spellbookSelector;
+    @Getter
     private final Set<Prayer> activePrayers;
+    @Getter
     private final boolean rigourUnlocked;
+    @Getter
     private final boolean auguryUnlocked;
+    @Getter
     private final boolean preserveUnlocked;
 
     public CombatEvidenceSnapshot(int spellbookSelector,
@@ -27,9 +35,4 @@ public final class CombatEvidenceSnapshot
         this.preserveUnlocked = preserveUnlocked;
     }
 
-    public int getSpellbookSelector() { return spellbookSelector; }
-    public Set<Prayer> getActivePrayers() { return activePrayers; }
-    public boolean isRigourUnlocked() { return rigourUnlocked; }
-    public boolean isAuguryUnlocked() { return auguryUnlocked; }
-    public boolean isPreserveUnlocked() { return preserveUnlocked; }
 }

@@ -4,8 +4,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 public final class QuestSnapshot
 {
+    @Getter
     private final Map<String, QuestStatus> quests;
 
     public QuestSnapshot(Map<String, QuestStatus> quests)
@@ -23,8 +26,4 @@ public final class QuestSnapshot
         );
     }
 
-    public Map<String, QuestStatus> getQuests()
-    {
-        return quests;
-    }
 }

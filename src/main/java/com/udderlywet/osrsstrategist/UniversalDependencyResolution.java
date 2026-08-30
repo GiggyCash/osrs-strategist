@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 public final class UniversalDependencyResolution
 {
+    @Getter
     private final List<UniversalDependencyNode> nodes;
+    @Getter
     private final boolean cyclePrevented;
+    @Getter
     private final boolean depthLimited;
+    @Getter
     private final boolean nodeLimited;
 
     UniversalDependencyResolution(List<UniversalDependencyNode> nodes,
@@ -20,10 +26,6 @@ public final class UniversalDependencyResolution
         this.nodeLimited = nodeLimited;
     }
 
-    public List<UniversalDependencyNode> getNodes() { return nodes; }
-    public boolean isCyclePrevented() { return cyclePrevented; }
-    public boolean isDepthLimited() { return depthLimited; }
-    public boolean isNodeLimited() { return nodeLimited; }
     public int getEdgeCount()
     {
         int count = 0;

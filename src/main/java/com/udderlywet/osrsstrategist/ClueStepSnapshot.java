@@ -4,17 +4,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Exact current-step evidence supplied by RuneLite's Clue Scroll plugin. */
 public final class ClueStepSnapshot
 {
+    @Getter
     private final String kind;
+    @Getter
     private final String action;
+    @Getter
     private final String location;
+    @Getter
     private final List<String> itemRequirements;
+    @Getter
     private final boolean requiresSpade;
+    @Getter
     private final boolean requiresLight;
+    @Getter
     private final String enemy;
+    @Getter
     private final boolean wilderness;
+    @Getter
     private final String stashUnit;
 
     public ClueStepSnapshot(String kind, String action, String location,
@@ -35,15 +46,6 @@ public final class ClueStepSnapshot
         this.stashUnit = clean(stashUnit);
     }
 
-    public String getKind() { return kind; }
-    public String getAction() { return action; }
-    public String getLocation() { return location; }
-    public List<String> getItemRequirements() { return itemRequirements; }
-    public boolean isRequiresSpade() { return requiresSpade; }
-    public boolean isRequiresLight() { return requiresLight; }
-    public String getEnemy() { return enemy; }
-    public boolean isWilderness() { return wilderness; }
-    public String getStashUnit() { return stashUnit; }
     public boolean hasEnemy() { return enemy != null; }
     public boolean hasStashUnit() { return stashUnit != null; }
 

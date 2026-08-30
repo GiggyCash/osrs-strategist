@@ -6,6 +6,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.Getter;
+
 /**
  * Verified/unknown state and observed contents for storage systems.
  *
@@ -15,6 +17,7 @@ import java.util.Map;
  */
 public final class StorageSnapshot
 {
+    @Getter
     private final Map<StorageCapability, CapabilityState> states;
     private final Map<StorageCapability, List<ItemStackSnapshot>> contents;
 
@@ -102,10 +105,6 @@ public final class StorageSnapshot
         return total;
     }
 
-    public Map<StorageCapability, CapabilityState> getStates()
-    {
-        return states;
-    }
 
     public Map<StorageCapability, List<ItemStackSnapshot>> getObservedContents()
     {

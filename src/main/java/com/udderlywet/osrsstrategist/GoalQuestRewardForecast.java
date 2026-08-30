@@ -3,13 +3,19 @@ package com.udderlywet.osrsstrategist;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Guaranteed XP available from unfinished quests on the selected goal path. */
 public final class GoalQuestRewardForecast
 {
+    @Getter
     private final Skill skill;
+    @Getter
     private final int experience;
+    @Getter
     private final List<String> sourceQuests;
 
     GoalQuestRewardForecast(Skill skill, int experience, List<String> sourceQuests)
@@ -20,8 +26,5 @@ public final class GoalQuestRewardForecast
                 new ArrayList<>(sourceQuests));
     }
 
-    public Skill getSkill() { return skill; }
-    public int getExperience() { return experience; }
-    public List<String> getSourceQuests() { return sourceQuests; }
     public boolean hasGuaranteedExperience() { return experience > 0; }
 }

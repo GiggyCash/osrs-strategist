@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Data descriptor connecting a training method to legal concrete locations. */
 public final class MethodLocationProfile
 {
+    @Getter
     private final String methodId;
+    @Getter
     private final List<MethodLocationOption> locations;
+    @Getter
     private final String sourceUrl;
 
     public MethodLocationProfile(String methodId,
@@ -20,7 +25,4 @@ public final class MethodLocationProfile
         this.sourceUrl = sourceUrl;
     }
 
-    public String getMethodId() { return methodId; }
-    public List<MethodLocationOption> getLocations() { return locations; }
-    public String getSourceUrl() { return sourceUrl; }
 }

@@ -1,30 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * A longer-running reward objective associated with a training method. These
  * objectives outrank tiny variety nudges until completion is actually known.
  */
+@RequiredArgsConstructor
 public final class ProgressionObjectiveDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String title;
+    @Getter
     private final String methodId;
+    @Getter
     private final ProgressionObjectiveType type;
 
-    public ProgressionObjectiveDefinition(
-            String id,
-            String title,
-            String methodId,
-            ProgressionObjectiveType type)
-    {
-        this.id = id;
-        this.title = title;
-        this.methodId = methodId;
-        this.type = type;
-    }
 
-    public String getId() { return id; }
-    public String getTitle() { return title; }
-    public String getMethodId() { return methodId; }
-    public ProgressionObjectiveType getType() { return type; }
 }

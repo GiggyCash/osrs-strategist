@@ -1,10 +1,15 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** One ordered, actionable edge in a STASH preparation chain. */
 public final class StashDependencyStep
 {
+    @Getter
     private final GoalNodeKind kind;
+    @Getter
     private final String action;
+    @Getter
     private final RecommendationConfidence confidence;
 
     public StashDependencyStep(GoalNodeKind kind, String action,
@@ -16,7 +21,4 @@ public final class StashDependencyStep
                 ? RecommendationConfidence.CHECK_NEEDED : confidence;
     }
 
-    public GoalNodeKind getKind() { return kind; }
-    public String getAction() { return action; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 }

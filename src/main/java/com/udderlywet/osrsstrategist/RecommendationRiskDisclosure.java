@@ -1,19 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Prominent, typed warning for an unusual player-visible dangerous action. */
+@RequiredArgsConstructor
 public final class RecommendationRiskDisclosure
 {
+    @Getter
     private final String heading;
+    @Getter
     private final String message;
+    @Getter
     private final boolean acknowledgementRequired;
 
-    public RecommendationRiskDisclosure(String heading, String message,
-            boolean acknowledgementRequired)
-    {
-        this.heading = heading;
-        this.message = message;
-        this.acknowledgementRequired = acknowledgementRequired;
-    }
 
     public static RecommendationRiskDisclosure deathStorage()
     {
@@ -22,10 +22,4 @@ public final class RecommendationRiskDisclosure
                 true);
     }
 
-    public String getHeading() { return heading; }
-    public String getMessage() { return message; }
-    public boolean isAcknowledgementRequired()
-    {
-        return acknowledgementRequired;
-    }
 }

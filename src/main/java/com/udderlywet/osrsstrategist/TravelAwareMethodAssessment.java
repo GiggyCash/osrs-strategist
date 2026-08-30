@@ -1,28 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Travel evidence and bounded value for a selected concrete method location. */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class TravelAwareMethodAssessment
 {
+    @Getter
     private final MethodLocationOption location;
+    @Getter
     private final int travelBurden;
+    @Getter
     private final int scoreAdjustment;
+    @Getter
     private final boolean verifiedRouteUsed;
+    @Getter
     private final String evidence;
 
-    TravelAwareMethodAssessment(MethodLocationOption location,
-            int travelBurden, int scoreAdjustment, boolean verifiedRouteUsed,
-            String evidence)
-    {
-        this.location = location;
-        this.travelBurden = travelBurden;
-        this.scoreAdjustment = scoreAdjustment;
-        this.verifiedRouteUsed = verifiedRouteUsed;
-        this.evidence = evidence;
-    }
 
-    public MethodLocationOption getLocation() { return location; }
-    public int getTravelBurden() { return travelBurden; }
-    public int getScoreAdjustment() { return scoreAdjustment; }
-    public boolean isVerifiedRouteUsed() { return verifiedRouteUsed; }
-    public String getEvidence() { return evidence; }
 }

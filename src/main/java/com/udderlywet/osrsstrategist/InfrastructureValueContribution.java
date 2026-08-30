@@ -1,12 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Property-level explanation of an infrastructure value assessment. */
 public final class InfrastructureValueContribution
 {
+    @Getter
     private final InfrastructureBenefit benefit;
+    @Getter
     private final AccountStrategicDimension dimension;
+    @Getter
     private final StrategicPriority accountPriority;
+    @Getter
     private final StrategicPriority milestoneUtility;
+    @Getter
     private final StrategicPriority effectivePriority;
 
     InfrastructureValueContribution(InfrastructureBenefit benefit,
@@ -21,9 +28,4 @@ public final class InfrastructureValueContribution
                 milestoneUtility);
     }
 
-    public InfrastructureBenefit getBenefit() { return benefit; }
-    public AccountStrategicDimension getDimension() { return dimension; }
-    public StrategicPriority getAccountPriority() { return accountPriority; }
-    public StrategicPriority getMilestoneUtility() { return milestoneUtility; }
-    public StrategicPriority getEffectivePriority() { return effectivePriority; }
 }

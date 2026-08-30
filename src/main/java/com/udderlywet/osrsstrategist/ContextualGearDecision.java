@@ -1,20 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class ContextualGearDecision
 {
+    @Getter
     private final GearDecisionKind kind;
+    @Getter
     private final String value;
+    @Getter
     private final RecommendationConfidence confidence;
 
-    ContextualGearDecision(GearDecisionKind kind, String value,
-            RecommendationConfidence confidence)
-    {
-        this.kind = kind;
-        this.value = value;
-        this.confidence = confidence;
-    }
 
-    public GearDecisionKind getKind() { return kind; }
-    public String getValue() { return value; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 }

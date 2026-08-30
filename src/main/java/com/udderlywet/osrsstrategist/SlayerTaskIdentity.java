@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** One canonical RuneLite Slayer assignment identity and its target aliases. */
 public final class SlayerTaskIdentity
 {
+    @Getter
     private final String enumIdentity;
+    @Getter
     private final String assignment;
+    @Getter
     private final List<String> targetAliases;
 
     SlayerTaskIdentity(String enumIdentity, String assignment,
@@ -20,7 +25,4 @@ public final class SlayerTaskIdentity
                 new ArrayList<>(targetAliases));
     }
 
-    public String getEnumIdentity() { return enumIdentity; }
-    public String getAssignment() { return assignment; }
-    public List<String> getTargetAliases() { return targetAliases; }
 }

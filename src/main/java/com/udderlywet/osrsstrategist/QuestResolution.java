@@ -1,11 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Actionability result for one fully identified quest. */
 public final class QuestResolution
 {
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final RecommendationGuidance guidance;
+    @Getter
     private final String reason;
+    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
 
     public QuestResolution(RecommendationConfidence confidence,
@@ -24,8 +30,4 @@ public final class QuestResolution
         this.safetyEvidence = safetyEvidence;
     }
 
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public RecommendationGuidance getGuidance() { return guidance; }
-    public String getReason() { return reason; }
-    public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
 }

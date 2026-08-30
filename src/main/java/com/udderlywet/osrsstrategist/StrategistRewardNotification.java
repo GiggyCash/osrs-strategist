@@ -1,30 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Reusable CLOG-style reward payload for skill and non-skill completions. */
+@RequiredArgsConstructor
 public final class StrategistRewardNotification
 {
+    @Getter
     private final String id;
+    @Getter
     private final String header;
+    @Getter
     private final String left;
+    @Getter
     private final String right;
+    @Getter
     private final String footerLeft;
+    @Getter
     private final String footerRight;
 
-    public StrategistRewardNotification(
-            String id,
-            String header,
-            String left,
-            String right,
-            String footerLeft,
-            String footerRight)
-    {
-        this.id = id;
-        this.header = header;
-        this.left = left;
-        this.right = right;
-        this.footerLeft = footerLeft;
-        this.footerRight = footerRight;
-    }
 
     public static StrategistRewardNotification fromMilestone(
             MilestoneCompletion completion)
@@ -40,10 +35,4 @@ public final class StrategistRewardNotification
         );
     }
 
-    public String getId() { return id; }
-    public String getHeader() { return header; }
-    public String getLeft() { return left; }
-    public String getRight() { return right; }
-    public String getFooterLeft() { return footerLeft; }
-    public String getFooterRight() { return footerRight; }
 }

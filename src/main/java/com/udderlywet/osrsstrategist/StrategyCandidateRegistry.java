@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import lombok.Getter;
 
 /** Registry for non-skill activities that may compete for the main queue. */
 @Singleton
 public class StrategyCandidateRegistry
 {
+    @Getter
     private final List<StrategyCandidateProvider> providers;
 
     @Inject
@@ -63,8 +67,4 @@ public class StrategyCandidateRegistry
                 providers == null ? Collections.emptyList() : providers));
     }
 
-    public List<StrategyCandidateProvider> getProviders()
-    {
-        return providers;
-    }
 }

@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Ordered unfinished quest work derived only from verified dependency edges. */
 public final class QuestPathPlan
 {
+    @Getter
     private final List<QuestPathStep> steps;
 
     QuestPathPlan(List<QuestPathStep> steps)
@@ -14,7 +17,6 @@ public final class QuestPathPlan
         this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
     }
 
-    public List<QuestPathStep> getSteps() { return steps; }
 
     public QuestPathStep nextEligibleStep()
     {

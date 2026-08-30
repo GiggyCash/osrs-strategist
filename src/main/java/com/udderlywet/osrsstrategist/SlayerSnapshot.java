@@ -4,21 +4,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Current Slayer task and point-economy evidence observed from RuneLite. */
 public final class SlayerSnapshot
 {
+    @Getter
     private final String taskName;
+    @Getter
     private final int remaining;
+    @Getter
     private final String masterName;
+    @Getter
     private final String taskLocation;
+    @Getter
     private final int points;
+    @Getter
     private final Integer taskStreak;
+    @Getter
     private final Integer questPoints;
+    @Getter
     private final Integer blockSlotCapacity;
+    @Getter
     private final Integer occupiedBlockSlots;
+    @Getter
     private final SlayerRewardSnapshot rewards;
+    @Getter
     private final List<SlayerTaskOffer> taskOffers;
     private final Boolean mortimerIntroduced;
+    @Getter
     private final RecommendationConfidence confidence;
 
     /** Compatibility constructor retained for older callers. */
@@ -133,19 +147,7 @@ public final class SlayerSnapshot
         );
     }
 
-    public String getTaskName() { return taskName; }
-    public int getRemaining() { return remaining; }
-    public String getMasterName() { return masterName; }
-    public String getTaskLocation() { return taskLocation; }
-    public int getPoints() { return points; }
-    public Integer getTaskStreak() { return taskStreak; }
-    public Integer getQuestPoints() { return questPoints; }
-    public Integer getBlockSlotCapacity() { return blockSlotCapacity; }
-    public Integer getOccupiedBlockSlots() { return occupiedBlockSlots; }
-    public SlayerRewardSnapshot getRewards() { return rewards; }
-    public List<SlayerTaskOffer> getTaskOffers() { return taskOffers; }
     public Boolean isMortimerIntroduced() { return mortimerIntroduced; }
-    public RecommendationConfidence getConfidence() { return confidence; }
 
     public boolean hasTask()
     {

@@ -1,6 +1,10 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** One machine-readable unresolved quest field. */
+@RequiredArgsConstructor
 public final class QuestUncertaintyEntry
 {
     public enum Category
@@ -10,18 +14,12 @@ public final class QuestUncertaintyEntry
         UNLOCKS, QUEST_POINTS, OTHER
     }
 
+    @Getter
     private final String questName;
+    @Getter
     private final Category category;
+    @Getter
     private final String detail;
 
-    public QuestUncertaintyEntry(String questName, Category category, String detail)
-    {
-        this.questName = questName;
-        this.category = category;
-        this.detail = detail;
-    }
 
-    public String getQuestName() { return questName; }
-    public Category getCategory() { return category; }
-    public String getDetail() { return detail; }
 }

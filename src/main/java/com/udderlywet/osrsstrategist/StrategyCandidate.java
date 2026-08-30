@@ -1,15 +1,25 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Generic non-skill work item that can compete for DO NEXT. */
 public final class StrategyCandidate
 {
+    @Getter
     private final String id;
+    @Getter
     private final String title;
+    @Getter
     private final String reason;
+    @Getter
     private final double score;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final RecommendationGuidance guidance;
+    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
+    @Getter
     private final RecommendationStrategicValue strategicValue;
 
     public StrategyCandidate(
@@ -66,17 +76,6 @@ public final class StrategyCandidate
                 ? RecommendationStrategicValue.neutral() : strategicValue;
     }
 
-    public String getId() { return id; }
-    public String getTitle() { return title; }
-    public String getReason() { return reason; }
-    public double getScore() { return score; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public RecommendationGuidance getGuidance() { return guidance; }
-    public CandidateSafetyEvidence getSafetyEvidence() { return safetyEvidence; }
-    public RecommendationStrategicValue getStrategicValue()
-    {
-        return strategicValue;
-    }
 
     public Recommendation toRecommendation()
     {

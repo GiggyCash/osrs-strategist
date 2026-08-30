@@ -1,26 +1,21 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class ContentCoverageEntry
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final ContentCoverageState state;
+    @Getter
     private final String reason;
+    @Getter
     private final String provenance;
 
-    public ContentCoverageEntry(String id, String name,
-            ContentCoverageState state, String reason, String provenance)
-    {
-        this.id = id;
-        this.name = name;
-        this.state = state;
-        this.reason = reason;
-        this.provenance = provenance;
-    }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public ContentCoverageState getState() { return state; }
-    public String getReason() { return reason; }
-    public String getProvenance() { return provenance; }
 }

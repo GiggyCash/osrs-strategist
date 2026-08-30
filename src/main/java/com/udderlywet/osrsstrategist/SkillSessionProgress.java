@@ -1,42 +1,32 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import net.runelite.api.Skill;
 
 /** Immutable per-skill progress for the current client session. */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SkillSessionProgress
 {
+    @Getter
     private final Skill skill;
+    @Getter
     private final int startingXp;
+    @Getter
     private final int currentXp;
+    @Getter
     private final int startingLevel;
+    @Getter
     private final int currentLevel;
+    @Getter
     private final XpRateEstimate rate;
 
-    SkillSessionProgress(
-            Skill skill,
-            int startingXp,
-            int currentXp,
-            int startingLevel,
-            int currentLevel,
-            XpRateEstimate rate)
-    {
-        this.skill = skill;
-        this.startingXp = startingXp;
-        this.currentXp = currentXp;
-        this.startingLevel = startingLevel;
-        this.currentLevel = currentLevel;
-        this.rate = rate;
-    }
 
-    public Skill getSkill() { return skill; }
-    public int getStartingXp() { return startingXp; }
-    public int getCurrentXp() { return currentXp; }
     public int getXpGained() { return Math.max(0, currentXp - startingXp); }
-    public int getStartingLevel() { return startingLevel; }
-    public int getCurrentLevel() { return currentLevel; }
     public int getLevelsGained()
     {
         return Math.max(0, currentLevel - startingLevel);
     }
-    public XpRateEstimate getRate() { return rate; }
 }

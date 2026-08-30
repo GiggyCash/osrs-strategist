@@ -1,21 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /** Verified item-family semantics required before resource value is scored. */
+@RequiredArgsConstructor
 public final class ResourcePipelinePolicy
 {
+    @Getter
     private final ResourceUseKind useKind;
+    @Getter
     private final ResourceScarcity scarcity;
+    @Getter
     private final boolean tradeable;
 
-    public ResourcePipelinePolicy(ResourceUseKind useKind,
-            ResourceScarcity scarcity, boolean tradeable)
-    {
-        this.useKind = useKind;
-        this.scarcity = scarcity;
-        this.tradeable = tradeable;
-    }
 
-    public ResourceUseKind getUseKind() { return useKind; }
-    public ResourceScarcity getScarcity() { return scarcity; }
-    public boolean isTradeable() { return tradeable; }
 }

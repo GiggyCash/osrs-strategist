@@ -1,20 +1,33 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Verified prerequisites for a prayer, spell, or spellbook unlock. */
 public final class AbilityUnlockDefinition
 {
+    @Getter
     private final String id;
+    @Getter
     private final String name;
+    @Getter
     private final GoalNodeKind kind;
+    @Getter
     private final String quest;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int level;
+    @Getter
     private final Skill secondarySkill;
+    @Getter
     private final int secondaryLevel;
+    @Getter
     private final String requiredItem;
+    @Getter
     private final String encounterId;
+    @Getter
     private final String accessCheck;
 
     AbilityUnlockDefinition(String id, String name, GoalNodeKind kind,
@@ -35,15 +48,4 @@ public final class AbilityUnlockDefinition
         this.accessCheck = accessCheck;
     }
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public GoalNodeKind getKind() { return kind; }
-    public String getQuest() { return quest; }
-    public Skill getSkill() { return skill; }
-    public int getLevel() { return level; }
-    public Skill getSecondarySkill() { return secondarySkill; }
-    public int getSecondaryLevel() { return secondaryLevel; }
-    public String getRequiredItem() { return requiredItem; }
-    public String getEncounterId() { return encounterId; }
-    public String getAccessCheck() { return accessCheck; }
 }

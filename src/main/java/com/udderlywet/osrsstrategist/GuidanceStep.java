@@ -1,10 +1,16 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 public final class GuidanceStep
 {
+    @Getter
     private final String id;
+    @Getter
     private final String label;
+    @Getter
     private final String detail;
+    @Getter
     private final GuidanceStepState state;
 
     public GuidanceStep(
@@ -19,9 +25,5 @@ public final class GuidanceStep
         this.state = state == null ? GuidanceStepState.CHECK_NEEDED : state;
     }
 
-    public String getId() { return id; }
-    public String getLabel() { return label; }
-    public String getDetail() { return detail; }
-    public GuidanceStepState getState() { return state; }
     public boolean isComplete() { return state == GuidanceStepState.COMPLETE; }
 }

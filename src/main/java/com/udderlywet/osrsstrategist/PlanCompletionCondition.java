@@ -1,6 +1,9 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.Objects;
+
+import lombok.Getter;
+
 import net.runelite.api.Skill;
 
 /** Observable completion rule for a strategic plan step. */
@@ -13,9 +16,13 @@ public final class PlanCompletionCondition
         NONE
     }
 
+    @Getter
     private final Kind kind;
+    @Getter
     private final Skill skill;
+    @Getter
     private final int level;
+    @Getter
     private final String quest;
 
     private PlanCompletionCondition(
@@ -60,10 +67,6 @@ public final class PlanCompletionCondition
         return false;
     }
 
-    public Kind getKind() { return kind; }
-    public Skill getSkill() { return skill; }
-    public int getLevel() { return level; }
-    public String getQuest() { return quest; }
 
     @Override
     public boolean equals(Object other)

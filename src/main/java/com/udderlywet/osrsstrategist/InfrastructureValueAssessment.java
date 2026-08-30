@@ -4,14 +4,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Typed result suitable for a future candidate strategic-value payload. */
 public final class InfrastructureValueAssessment
 {
+    @Getter
     private final InfrastructureMilestoneDefinition milestone;
+    @Getter
     private final InfrastructureMilestoneState state;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final StrategicPriority strategicValue;
+    @Getter
     private final List<InfrastructureValueContribution> contributions;
+    @Getter
     private final String reason;
 
     InfrastructureValueAssessment(InfrastructureMilestoneDefinition milestone,
@@ -30,15 +38,6 @@ public final class InfrastructureValueAssessment
         this.reason = reason == null ? "" : reason;
     }
 
-    public InfrastructureMilestoneDefinition getMilestone() { return milestone; }
-    public InfrastructureMilestoneState getState() { return state; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public StrategicPriority getStrategicValue() { return strategicValue; }
-    public List<InfrastructureValueContribution> getContributions()
-    {
-        return contributions;
-    }
-    public String getReason() { return reason; }
     public boolean canRecommendAcquisition()
     {
         return state == InfrastructureMilestoneState.ACTIONABLE

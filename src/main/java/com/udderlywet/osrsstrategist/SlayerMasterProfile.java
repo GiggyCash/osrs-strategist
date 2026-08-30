@@ -4,23 +4,39 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Verified Slayer-master mechanics plus property-driven strategic qualities. */
 public final class SlayerMasterProfile
 {
+    @Getter
     private final String id;
+    @Getter
     private final List<String> names;
+    @Getter
     private final String location;
+    @Getter
     private final int minimumCombat;
+    @Getter
     private final int minimumSlayer;
+    @Getter
     private final String requiredQuest;
     private final boolean questStartSuffices;
+    @Getter
     private final int normalPoints;
+    @Getter
     private final int cancelCost;
+    @Getter
     private final int blockCost;
+    @Getter
     private final double experiencePotential;
+    @Getter
     private final double supplyValue;
+    @Getter
     private final double setupBurden;
+    @Getter
     private final double locationConstraint;
+    @Getter
     private final boolean wilderness;
 
     public SlayerMasterProfile(String id, List<String> names, String location,
@@ -47,22 +63,8 @@ public final class SlayerMasterProfile
         this.wilderness = wilderness;
     }
 
-    public String getId() { return id; }
-    public List<String> getNames() { return names; }
     public String getDisplayName() { return names.get(0); }
-    public String getLocation() { return location; }
-    public int getMinimumCombat() { return minimumCombat; }
-    public int getMinimumSlayer() { return minimumSlayer; }
-    public String getRequiredQuest() { return requiredQuest; }
     public boolean isQuestStartSufficient() { return questStartSuffices; }
-    public int getNormalPoints() { return normalPoints; }
-    public int getCancelCost() { return cancelCost; }
-    public int getBlockCost() { return blockCost; }
-    public double getExperiencePotential() { return experiencePotential; }
-    public double getSupplyValue() { return supplyValue; }
-    public double getSetupBurden() { return setupBurden; }
-    public double getLocationConstraint() { return locationConstraint; }
-    public boolean isWilderness() { return wilderness; }
 
     public int pointsForCompletion(int completedAfterTask)
     {

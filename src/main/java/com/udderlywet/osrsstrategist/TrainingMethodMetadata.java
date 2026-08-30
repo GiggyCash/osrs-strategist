@@ -4,16 +4,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /** Strategy/account-mode metadata layered on top of a concrete training method. */
 public final class TrainingMethodMetadata
 {
+    @Getter
     private final TrainingIntensity intensity;
+    @Getter
     private final MethodCostTier costTier;
+    @Getter
     private final RiskLevel riskLevel;
+    @Getter
     private final boolean freeToPlayAllowed;
+    @Getter
     private final boolean selfSourceFriendly;
+    @Getter
     private final boolean uimFriendly;
+    @Getter
     private final boolean hardcoreSafe;
+    @Getter
     private final List<String> tags;
 
     public TrainingMethodMetadata(
@@ -37,14 +47,6 @@ public final class TrainingMethodMetadata
                 ? new ArrayList<>() : new ArrayList<>(tags));
     }
 
-    public TrainingIntensity getIntensity() { return intensity; }
-    public MethodCostTier getCostTier() { return costTier; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public boolean isFreeToPlayAllowed() { return freeToPlayAllowed; }
-    public boolean isSelfSourceFriendly() { return selfSourceFriendly; }
-    public boolean isUimFriendly() { return uimFriendly; }
-    public boolean isHardcoreSafe() { return hardcoreSafe; }
-    public List<String> getTags() { return tags; }
 
     public static TrainingMethodMetadata legacy(TrainingMethod method)
     {

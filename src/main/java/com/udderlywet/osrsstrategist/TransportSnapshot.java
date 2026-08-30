@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 /**
  * Transport and teleport options that the plugin has actually verified.
  *
@@ -13,6 +15,7 @@ import java.util.Set;
  */
 public final class TransportSnapshot
 {
+    @Getter
     private final Set<String> verifiedRoutes;
 
     public TransportSnapshot(Set<String> verifiedRoutes)
@@ -34,8 +37,4 @@ public final class TransportSnapshot
         return routeId != null && verifiedRoutes.contains(routeId);
     }
 
-    public Set<String> getVerifiedRoutes()
-    {
-        return verifiedRoutes;
-    }
 }

@@ -1,20 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public final class RestrictedBuildSuggestion
 {
+    @Getter
     private final RestrictedBuildType type;
+    @Getter
     private final RecommendationConfidence confidence;
+    @Getter
     private final String evidence;
 
-    public RestrictedBuildSuggestion(RestrictedBuildType type,
-            RecommendationConfidence confidence, String evidence)
-    {
-        this.type = type;
-        this.confidence = confidence;
-        this.evidence = evidence;
-    }
 
-    public RestrictedBuildType getType() { return type; }
-    public RecommendationConfidence getConfidence() { return confidence; }
-    public String getEvidence() { return evidence; }
 }

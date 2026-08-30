@@ -4,10 +4,15 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import lombok.Getter;
+
 public final class CombatAchievementSnapshot
 {
+    @Getter
     private final int completedTasks;
+    @Getter
     private final int earnedPoints;
+    @Getter
     private final Set<CombatAchievementTier> completedRewardTiers;
 
     public CombatAchievementSnapshot(
@@ -30,20 +35,8 @@ public final class CombatAchievementSnapshot
         this.completedRewardTiers = Collections.unmodifiableSet(tiers);
     }
 
-    public int getCompletedTasks()
-    {
-        return completedTasks;
-    }
 
-    public int getEarnedPoints()
-    {
-        return earnedPoints;
-    }
 
-    public Set<CombatAchievementTier> getCompletedRewardTiers()
-    {
-        return completedRewardTiers;
-    }
 
     public boolean isRewardTierComplete(CombatAchievementTier tier)
     {

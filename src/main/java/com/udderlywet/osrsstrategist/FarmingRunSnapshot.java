@@ -4,8 +4,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 public final class FarmingRunSnapshot
 {
+    @Getter
     private final Map<String, ObservedFarmingPatchState> states;
 
     public FarmingRunSnapshot(Map<String, ObservedFarmingPatchState> states)
@@ -24,8 +27,4 @@ public final class FarmingRunSnapshot
         return states.get(patchId);
     }
 
-    public Map<String, ObservedFarmingPatchState> getStates()
-    {
-        return states;
-    }
 }

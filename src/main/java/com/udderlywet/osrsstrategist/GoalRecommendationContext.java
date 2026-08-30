@@ -1,11 +1,17 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.Getter;
+
 /** Short, player-facing explanation of a recommendation's goal relationship. */
 public final class GoalRecommendationContext
 {
+    @Getter
     private final GoalType goal;
+    @Getter
     private final GoalRecommendationRelationship relationship;
+    @Getter
     private final String status;
+    @Getter
     private final GoalDependencyProvenance provenance;
 
     private GoalRecommendationContext(GoalType goal,
@@ -73,10 +79,6 @@ public final class GoalRecommendationContext
                 "", null);
     }
 
-    public GoalType getGoal() { return goal; }
-    public GoalRecommendationRelationship getRelationship() { return relationship; }
-    public String getStatus() { return status; }
-    public GoalDependencyProvenance getProvenance() { return provenance; }
     public boolean hasProvenRelationship() { return provenance != null; }
     public boolean isAutomatic()
     {

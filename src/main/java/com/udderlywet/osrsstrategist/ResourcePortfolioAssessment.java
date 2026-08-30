@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * Multi-resource result that preserves per-item units. Quantities from unlike
  * resources are intentionally never added together.
  */
 public final class ResourcePortfolioAssessment
 {
+    @Getter
     private final ResourcePipelineState state;
+    @Getter
     private final int scoreAdjustment;
+    @Getter
     private final List<ResourcePipelineAssessment> resources;
+    @Getter
     private final List<String> acquisitionRoutes;
 
     ResourcePortfolioAssessment(ResourcePipelineState state,
@@ -27,8 +33,4 @@ public final class ResourcePortfolioAssessment
                 new ArrayList<>(acquisitionRoutes));
     }
 
-    public ResourcePipelineState getState() { return state; }
-    public int getScoreAdjustment() { return scoreAdjustment; }
-    public List<ResourcePipelineAssessment> getResources() { return resources; }
-    public List<String> getAcquisitionRoutes() { return acquisitionRoutes; }
 }
