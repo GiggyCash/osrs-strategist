@@ -63,6 +63,8 @@ public class PluginHubComplianceTest
         assertTrue(properties.contains("support=https://github.com/GiggyCash/osrs-strategist/issues"));
         assertTrue(properties.contains("version=0.2.0"));
         assertTrue(properties.contains("build=standard"));
+        assertTrue(text("build.gradle")
+                .contains("runeLiteVersion = 'latest.release'"));
         assertTrue(text("build.gradle").contains("options.release.set(11)"));
         assertTrue(text("settings.gradle")
                 .contains("rootProject.name = 'osrs-strategist'"));

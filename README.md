@@ -36,7 +36,9 @@ Choose a goal, strategy, and session style—or leave the goal on Automatic.
 Compass filters out unsafe or unavailable actions, resolves known
 prerequisites, and ranks the remaining actionable choices. Details gives a
 short reason and blocker; Method Guidance gives a compact bring/where/do
-checklist.
+checklist. A distant objective can span several methods, but the visible
+METHOD, BRING, WHERE, DO, and progress always describe the stage the account
+can perform now.
 
 Later, Not Today, Dislike, and Do This teach Compass your preferences for the
 current account. You can reset that learned feedback without resetting account
@@ -64,8 +66,10 @@ the planner, not only the wording of training methods.
 
 ## Privacy and safety
 
-Planning is local. Compass makes no runtime network requests and does not send
-gameplay account evidence to a hosted Compass service. It does not automate
+Planning and account-specific state stay local. Compass ships no networking
+client and does not contact the Wiki, a hosted Compass service, or another
+third-party endpoint at runtime. It may read RuneLite's own maintained
+market-price cache for Main-account purchase comparisons. It does not automate
 gameplay, inject input, or expose raw RuneLite account hashes.
 
 ## Known limitations

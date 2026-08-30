@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 
-def runeLiteVersion = '1.12.35'
+def runeLiteVersion = 'latest.release'
 def pluginMainClass = 'com.udderlywet.osrsstrategist.OsrsStrategistPluginTest'
 
 dependencies {

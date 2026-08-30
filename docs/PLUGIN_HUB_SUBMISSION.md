@@ -22,7 +22,6 @@ repository with exactly:
 ```properties
 repository=https://github.com/GiggyCash/osrs-strategist.git
 commit=<FULL_SHA_PRINTED_BY_THE_COMMAND_ABOVE>
-authors=GiggyCash
 ```
 
 ## Submission steps
@@ -31,7 +30,10 @@ authors=GiggyCash
 2. Fork/clone `runelite/plugin-hub`; do not add the manifest to this repository.
 3. Add only `plugins/gielinor-compass` with the contents above.
 4. Run the Plugin Hub repository's current local validation if available.
-5. Open a pull request to RuneLite's `plugin-hub` repository.
+5. Open a pull request to RuneLite's `plugin-hub` repository and monitor both
+   the build workflow and RuneLite Plugin Hub Checks.
+6. If code changes during review, push the new plugin commit and update the
+   same manifest/PR to its new full SHA instead of opening another submission.
 
 Plugin Hub CI is expected to check manifest syntax, commit reachability,
 standard build, metadata, dependency/API rules, and automated review policies.
