@@ -59,7 +59,7 @@ public final class ContextualGearValueService
             return result(GearUpgradeValueState.OWNED, 0,
                     acquisition.forItem(request.getTargetItem()),
                     "The exact target is already present in usable observed storage.");
-        if (mode != AccountMode.ULTIMATE_IRONMAN && !items.bankObserved())
+        if (!items.primaryOwnershipObserved())
             return result(GearUpgradeValueState.NEEDS_EVIDENCE, -2,
                     acquisition.forItem(request.getTargetItem()),
                     "Open the bank before calling this exact item missing.");

@@ -208,6 +208,14 @@ deterministic method inputs. Unknown inputs receive no guessed tradeability or
 scarcity. Unlike resources are evaluated separately and never summed as one
 quantity.
 
+The ownership boundary is account-aware rather than a `bank != null` shortcut.
+Main/Iron require complete inventory, equipment, and bank observations before
+absence is actionable; opted-in GIM also requires fresh Group Storage. UIM
+requires inventory/equipment observations and ignores any conventional bank
+snapshot. Duplicate items are merged across verified UIM storage capabilities,
+but looting-bag/death-retrieval contributions remain retrieval steps rather
+than immediately usable supplies.
+
 Main, Iron, GIM, and UIM replacement economics differ. Fresh enabled Group
 Storage can add exact shared-resource evidence; it cannot prove future teammate
 production. Variable consumption, burn rates, RNG yield, and future Slayer

@@ -28,6 +28,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                         item(561, "Nature rune", 10),
                         item(554, "Fire rune", 50)), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .build();
 
         RecommendationGuidance guidance = service.build(
@@ -153,6 +154,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                         item(561, "Nature rune", 100000),
                         item(554, "Fire rune", 100000)), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .build();
 
         RecommendationGuidance guidance = service.build(
@@ -183,6 +185,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
         StrategyDataBundle data = StrategyDataBundle.builder(account)
                 .inventory(new InventorySnapshot(Collections.singletonList(
                         item(12791, "Rune pouch", 1))))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .storage(new StorageSnapshot(states, contents))
                 .build();
 
@@ -209,6 +212,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
         StrategyDataBundle data = StrategyDataBundle.builder(account)
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .groupStorage(new GroupStorageSnapshot(true, Arrays.asList(
                         item(257, "Ranarr weed", 100),
                         item(231, "Snape grass", 100),

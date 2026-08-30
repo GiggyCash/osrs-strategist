@@ -54,8 +54,7 @@ public class AccountResourcePlanner
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
         ObservedItemIndex observed = new ObservedItemIndex(data, useGroupStorage);
-        boolean primaryObserved = mode == AccountMode.ULTIMATE_IRONMAN
-                || observed.bankObserved();
+        boolean primaryObserved = observed.usableOwnershipObserved();
         boolean groupIncluded = useGroupStorage && mode.isGroupIronman();
         boolean groupObserved = observed.groupStorageObserved();
 
@@ -148,12 +147,15 @@ public class AccountResourcePlanner
             text.append("Reusable setup: ").append(join(reusable)).append(". ");
         }
 
-        // An unopened bank is unknown, never empty. Do not publish a fake Main
-        // or Iron shortfall until the ordinary bank has been observed once.
-        if (!primaryObserved && mode != AccountMode.ULTIMATE_IRONMAN)
+        // An unobserved ownership surface is unknown, never empty. UIM uses
+        // inventory/equipment evidence instead of the conventional bank.
+        if (!primaryObserved)
         {
-            text.append("Open your bank once to verify stored ")
-                    .append("materials before calculating the real shortfall.");
+            if (mode == AccountMode.ULTIMATE_IRONMAN)
+                text.append("Open the inventory and equipment tabs once; the directly usable UIM setup is not fully observed, so no shortfall is claimed yet.");
+            else
+                text.append("Open your bank once to verify stored ")
+                        .append("materials before calculating the real shortfall.");
             if (groupIncluded && !groupObserved)
             {
                 text.append(" Group Storage is also enabled but has not been observed yet.");

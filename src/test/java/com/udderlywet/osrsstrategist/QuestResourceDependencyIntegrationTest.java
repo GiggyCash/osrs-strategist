@@ -126,6 +126,7 @@ public class QuestResourceDependencyIntegrationTest
                 1, 1500, 0L, levels, xp);
         StrategyDataBundle data = StrategyDataBundle.builder(account)
                 .inventory(inventory)
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(bank)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .build();

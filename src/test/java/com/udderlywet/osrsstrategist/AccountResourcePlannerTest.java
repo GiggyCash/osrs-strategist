@@ -41,6 +41,7 @@ public class AccountResourcePlannerTest
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
                 .inventory(new InventorySnapshot(Collections.singletonList(
                         item("Yew logs", 25))))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Yew logs", 275)), 1L))
                 .build();
@@ -61,6 +62,8 @@ public class AccountResourcePlannerTest
     public void ironSelfSourcesInsteadOfUsingGrandExchange()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Ranarr weed", 40)), 1L))
                 .build();
@@ -79,6 +82,8 @@ public class AccountResourcePlannerTest
     public void groupStorageOnlyChangesShortfallWhenEnabledAndObserved()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account(4))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Oak plank", 100)), 1L))
                 .groupStorage(new GroupStorageSnapshot(true,
@@ -99,6 +104,8 @@ public class AccountResourcePlannerTest
     public void enabledButUnobservedGroupStorageIsNeverAssumedEmpty()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account(4))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Oak plank", 100)), 1L))
                 .groupStorage(GroupStorageSnapshot.unknown())
@@ -110,7 +117,8 @@ public class AccountResourcePlannerTest
                 true);
 
         assertEquals(400, plan.getTotalMissingUnits());
-        assertTrue(plan.getGuidance().contains("enabled but unobserved"));
+        assertTrue(plan.getGuidance().contains(
+                "enabled but has not been observed"));
     }
 
     @Test
@@ -127,6 +135,7 @@ public class AccountResourcePlannerTest
         StrategyDataBundle data = StrategyDataBundle.builder(account(2))
                 .inventory(new InventorySnapshot(Collections.singletonList(
                         item("Mahogany plank", 20))))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Mahogany plank", 5000)), 1L))
                 .storage(new StorageSnapshot(states, contents))
@@ -147,9 +156,25 @@ public class AccountResourcePlannerTest
     }
 
     @Test
+    public void partialUimSnapshotNeverBecomesAProvenShortfall()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+
+        AccountResourcePlan plan = planner.plan(data,
+                Collections.singletonList(need("Oak plank", 100)), false);
+
+        assertFalse(plan.isPrimaryStorageObserved());
+        assertTrue(plan.getGuidance().contains("not fully observed"));
+        assertFalse(plan.getGuidance().contains("Self-source 100"));
+    }
+
+    @Test
     public void equippedElementalStaffWaivesMatchingRuneConsumption()
     {
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
                 .equipment(new EquipmentSnapshot(Collections.singletonList(
                         item("Staff of fire", 1))))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
@@ -175,6 +200,8 @@ public class AccountResourcePlannerTest
                 new PurchaseCostAdvisor(new FixedPriceService(20)),
                 new MainEconomyPlanner(), new ResourceSourceCatalog());
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .economy(new AccountEconomySnapshot(100_000L, 100_000L,
                         RecommendationConfidence.VERIFIED))
@@ -195,6 +222,8 @@ public class AccountResourcePlannerTest
                 new PurchaseCostAdvisor(new FixedPriceService(500)),
                 new MainEconomyPlanner(), new ResourceSourceCatalog());
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .economy(new AccountEconomySnapshot(100_000L, 100_000L,
                         RecommendationConfidence.VERIFIED))

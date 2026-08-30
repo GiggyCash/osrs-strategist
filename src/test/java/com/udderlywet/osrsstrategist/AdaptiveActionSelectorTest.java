@@ -69,6 +69,24 @@ public class AdaptiveActionSelectorTest
         assertEquals("Yew longbow (u)", selected.getName());
     }
 
+    @Test
+    public void enabledUnobservedGroupStorageCannotBiasAnIronAction()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(account(4))
+                .bank(new BankSnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(1519, "Willow logs", 10000)), 1L))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .groupStorage(GroupStorageSnapshot.unknown())
+                .build();
+
+        RuneLiteSkillActionDefinition selected = selector.select(
+                data, profile, actions(), 70, MembershipStatus.P2P,
+                Experience.getXpForLevel(70),
+                Experience.getXpForLevel(80), 1.0, true);
+
+        assertEquals("Yew longbow (u)", selected.getName());
+    }
+
     private static List<RuneLiteSkillActionDefinition> actions()
     {
         return Arrays.asList(

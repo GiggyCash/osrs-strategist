@@ -233,15 +233,7 @@ public final class ItemRequirementEvaluator
             ObservedItemIndex items, boolean useGroupStorage)
     {
         if (data == null || data.getAccount() == null) return false;
-        AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-            return data.getInventory() != null && data.getEquipment() != null;
-        if (!items.bankObserved()) return false;
-        // When the player opted into Group Storage, an unobserved group store is
-        // unknown rather than empty. Do not publish a fake GIM shortfall.
-        return !mode.isGroupIronman() || !useGroupStorage
-                || items.groupStorageObserved();
+        return items.usableOwnershipObserved();
     }
 
     private static boolean isUim(StrategyDataBundle data)

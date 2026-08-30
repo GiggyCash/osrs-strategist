@@ -23,7 +23,10 @@ public class ResourceAcquisitionPlannerTest
     public void mainWithoutOwnedSupplyFallsBackToGeCheck()
     {
         ResourceAcquisitionPlan plan = planner.plan(
-                context(AccountMode.MAIN, null, null, null, true),
+                context(AccountMode.MAIN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        null, true),
                 planks
         );
 
@@ -38,7 +41,10 @@ public class ResourceAcquisitionPlannerTest
     public void ironWithoutOwnedSupplyRequiresSelfSource()
     {
         ResourceAcquisitionPlan plan = planner.plan(
-                context(AccountMode.IRONMAN, null, null, null, true),
+                context(AccountMode.IRONMAN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        null, true),
                 planks
         );
 
@@ -54,7 +60,9 @@ public class ResourceAcquisitionPlannerTest
         );
 
         ResourceAcquisitionPlan plan = planner.plan(
-                context(AccountMode.ULTIMATE_IRONMAN, null, bank, null, true),
+                context(AccountMode.ULTIMATE_IRONMAN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        bank, null, true),
                 planks
         );
 
@@ -70,11 +78,17 @@ public class ResourceAcquisitionPlannerTest
         );
 
         ResourceAcquisitionPlan enabled = planner.plan(
-                context(AccountMode.GROUP_IRONMAN, null, null, group, true),
+                context(AccountMode.GROUP_IRONMAN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        group, true),
                 planks
         );
         ResourceAcquisitionPlan disabled = planner.plan(
-                context(AccountMode.GROUP_IRONMAN, null, null, group, false),
+                context(AccountMode.GROUP_IRONMAN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        group, false),
                 planks
         );
 
@@ -84,6 +98,76 @@ public class ResourceAcquisitionPlannerTest
                 enabled.getConfidence()
         );
         assertEquals(AcquisitionSource.SELF_SOURCE, disabled.getSource());
+    }
+
+    @Test
+    public void unknownContainersNeverBecomeMainIronOrGimShortfalls()
+    {
+        assertEquals(AcquisitionSource.CHECK_NEEDED, planner.plan(
+                context(AccountMode.MAIN, null, null, null, false), planks)
+                .getSource());
+        assertEquals(AcquisitionSource.CHECK_NEEDED, planner.plan(
+                context(AccountMode.IRONMAN, null, null, null, false), planks)
+                .getSource());
+        assertEquals(AcquisitionSource.CHECK_NEEDED, planner.plan(
+                context(AccountMode.GROUP_IRONMAN,
+                        new InventorySnapshot(Collections.emptyList()),
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        GroupStorageSnapshot.unknown(), true), planks)
+                .getSource());
+    }
+
+    @Test
+    public void uimMergesDuplicateResourcesAcrossVerifiedSafeStorage()
+    {
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
+        states.put(StorageCapability.STASH, CapabilityState.VERIFIED);
+        Map<StorageCapability, java.util.List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.POH_STORAGE, Collections.singletonList(
+                new ItemStackSnapshot(960, "Plank", 4)));
+        contents.put(StorageCapability.STASH, Collections.singletonList(
+                new ItemStackSnapshot(960, "Plank", 3)));
+        StrategyContext uim = context(StrategyDataBundle.builder(
+                        account(AccountMode.ULTIMATE_IRONMAN))
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(960, "Plank", 3))))
+                .storage(new StorageSnapshot(states, contents)).build());
+
+        ResourceAcquisitionPlan plan = planner.plan(uim, planks);
+
+        assertEquals(AcquisitionSource.VERIFIED_STORAGE, plan.getSource());
+        assertEquals(10, plan.getConfirmedQuantity());
+        assertEquals(RecommendationConfidence.VERIFIED,
+                plan.getConfidence());
+    }
+
+    @Test
+    public void mergedRestrictedStorageStillRequiresExplicitRetrieval()
+    {
+        Map<StorageCapability, CapabilityState> states =
+                new EnumMap<>(StorageCapability.class);
+        states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
+        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
+        Map<StorageCapability, java.util.List<ItemStackSnapshot>> contents =
+                new EnumMap<>(StorageCapability.class);
+        contents.put(StorageCapability.POH_STORAGE, Collections.singletonList(
+                new ItemStackSnapshot(960, "Plank", 3)));
+        contents.put(StorageCapability.LOOTING_BAG, Collections.singletonList(
+                new ItemStackSnapshot(960, "Plank", 4)));
+        StrategyContext uim = context(StrategyDataBundle.builder(
+                        account(AccountMode.ULTIMATE_IRONMAN))
+                .inventory(new InventorySnapshot(Collections.singletonList(
+                        new ItemStackSnapshot(960, "Plank", 3))))
+                .storage(new StorageSnapshot(states, contents)).build());
+
+        ResourceAcquisitionPlan plan = planner.plan(uim, planks);
+
+        assertEquals(AcquisitionSource.VERIFIED_STORAGE, plan.getSource());
+        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+                plan.getConfidence());
     }
 
     private static StrategyContext context(
@@ -110,6 +194,13 @@ public class ResourceAcquisitionPlannerTest
                 false,
                 new PreferenceProfile()
         );
+    }
+
+    private static StrategyContext context(StrategyDataBundle data)
+    {
+        return new StrategyContext(data, StrategyMode.BALANCED,
+                SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,
+                GoalType.MAX, false, false, new PreferenceProfile());
     }
 
     private static AccountSnapshot account(AccountMode mode)

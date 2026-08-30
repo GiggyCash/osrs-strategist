@@ -301,6 +301,8 @@ public class QuestPlanningEngineTest
     {
         return StrategyDataBundle.builder(account)
                 .quests(new QuestSnapshot(Collections.singletonMap(quest, status)))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(bank, 1L)).build();
     }
 

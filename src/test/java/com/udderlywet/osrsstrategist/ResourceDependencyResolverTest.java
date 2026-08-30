@@ -109,7 +109,9 @@ public class ResourceDependencyResolverTest
     {
         ResourceNeed need = new ResourceNeed(920001, "Uncatalogued", 1);
         ResourceDependencyResolution main = resolver().resolve(
-                context(0, false, null, null, null), need);
+                context(0, false,
+                        new BankSnapshot(Collections.emptyList(), 1L),
+                        null, null), need);
         assertEquals(1, main.getNodes().size());
         assertTrue(main.nextAction().getAction().contains("GE"));
 

@@ -191,6 +191,15 @@ quest/resource requirement is ready. Repeated reranks
 of the same layout do not count, state is bounded per account, and the signal
 never fabricates existing furniture or make dangerous storage eligible.
 
+Ownership absence is account-aware evidence, not an account-mode shortcut.
+Main/Iron require observed inventory, equipment, and bank surfaces; opted-in
+GIM additionally requires fresh observed Group Storage. UIM requires observed
+inventory/equipment and ignores a conventional bank snapshot. Resource action
+selection waits for every enabled resource container before using material
+coverage. Duplicate UIM quantities are merged across verified storage systems,
+while any restricted-retrieval contribution remains CHECK_NEEDED until the
+exact retrieval plan is validated.
+
 ## 7. OpportunityEngine
 One generic engine for recurring and short detours:
 - herb runs

@@ -151,11 +151,25 @@ public class BetaSafetyRegressionTest
         StrategyDataBundle data = StrategyDataBundle.builder(uim)
                 .bank(bank)
                 .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .build();
 
         ObservedItemIndex items = new ObservedItemIndex(data, false);
         assertEquals(0, items.quantity("Raw shark"));
-        assertTrue(items.bankObserved());
+        assertFalse(items.bankObserved());
+        assertTrue(items.primaryOwnershipObserved());
+    }
+
+    @Test
+    public void uimModeAloneNeverProvesAnUnobservedInventoryEmpty()
+    {
+        StrategyDataBundle data = StrategyDataBundle.builder(account(
+                MembershipStatus.P2P, 2, 70, 1, 1, 1, 43)).build();
+
+        ObservedItemIndex items = new ObservedItemIndex(data, false);
+        assertFalse(items.bankObserved());
+        assertFalse(items.primaryOwnershipObserved());
+        assertFalse(items.usableOwnershipObserved());
     }
 
     @Test

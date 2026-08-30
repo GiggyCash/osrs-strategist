@@ -125,7 +125,7 @@ public class SlayerGuidanceService
                     + ". Normal bank state is ignored for UIM; inaccessible stored items require a retrieval step.";
         }
 
-        if (!items.bankObserved())
+        if (!items.primaryOwnershipObserved())
         {
             return "Open your bank once to verify the mandatory task item. Valid options include: "
                     + choices + ".";

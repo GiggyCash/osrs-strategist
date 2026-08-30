@@ -70,7 +70,7 @@ public final class SustainableResourceValueService
                             + replacementEvidence(request, mode, routes));
         }
 
-        if (mode != AccountMode.ULTIMATE_IRONMAN && !items.bankObserved())
+        if (!items.resourceContainersObserved())
         {
             return result(ResourcePipelineState.UNKNOWN_STORAGE, -2, observed,
                     required, routes,

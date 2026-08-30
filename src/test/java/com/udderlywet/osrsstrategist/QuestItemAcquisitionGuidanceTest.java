@@ -19,6 +19,8 @@ public class QuestItemAcquisitionGuidanceTest
         ItemRequirementExpression requirement = ItemRequirementExpression.item(
                 "Death rune", 5, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Death rune", 2)), 1L)).build();
 
@@ -37,6 +39,8 @@ public class QuestItemAcquisitionGuidanceTest
         ItemRequirementExpression requirement = ItemRequirementExpression.item(
                 "Rope", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         StrategyDataBundle data = StrategyDataBundle.builder(account(4))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .groupStorage(GroupStorageSnapshot.unknown()).build();
 
@@ -56,6 +60,8 @@ public class QuestItemAcquisitionGuidanceTest
                 ItemRequirementExpression.item("Chaos rune", 10,
                         ItemRequirementScope.OWNED_OR_RETRIEVABLE));
         StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
 
         ItemRequirementResult result = evaluator.evaluate(requirement, data, false);
@@ -77,6 +83,8 @@ public class QuestItemAcquisitionGuidanceTest
                 "Test location", Collections.singletonList("Test unlock"),
                 Collections.<Skill, Integer>emptyMap());
         StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
 
         QuestResolution result = new QuestRequirementResolver().resolve(

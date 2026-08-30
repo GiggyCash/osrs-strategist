@@ -45,8 +45,7 @@ public class AdaptiveActionSelector
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
         ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
-        boolean storageKnown = mode == AccountMode.ULTIMATE_IRONMAN
-                || data != null && data.getBank() != null;
+        boolean storageKnown = items.resourceContainersObserved();
 
         RuneLiteSkillActionDefinition best = null;
         double bestScore = Double.NEGATIVE_INFINITY;

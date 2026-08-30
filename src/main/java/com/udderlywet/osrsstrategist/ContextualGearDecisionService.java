@@ -22,7 +22,7 @@ public final class ContextualGearDecisionService
         ObservedItemIndex items = new ObservedItemIndex(
                 context == null ? null : context.getData(),
                 context != null && context.isUseGroupStorage());
-        boolean ownershipObserved = items.bankObserved();
+        boolean ownershipObserved = items.usableOwnershipObserved();
         List<String> owned = new ArrayList<>();
         List<String> unresolvedRoutes = new ArrayList<>();
         for (String target : entry.getRecommendedItems())

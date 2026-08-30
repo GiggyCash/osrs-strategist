@@ -62,8 +62,7 @@ public class ResourceAcquisitionPlanner
                     data.getStorage(), need.getItemId(), remaining);
             if (stored != null)
             {
-                boolean needsAccessCheck = requiresAdditionalAccessCheck(
-                        stored.capability);
+                boolean needsAccessCheck = stored.requiresAccessCheck();
                 confirmedQuantity = safeAdd(inventoryQuantity, stored.quantity);
                 return new ResourceAcquisitionPlan(
                         need,
@@ -74,10 +73,10 @@ public class ResourceAcquisitionPlanner
                                 : RecommendationConfidence.VERIFIED,
                         needsAccessCheck
                                 ? "Required quantity is observed across inventory and "
-                                        + pretty(stored.capability)
+                                        + pretty(stored.capabilities)
                                         + ", but retrieval needs an explicit UIM access/risk/precondition check."
                                 : "Required quantity is confirmed across inventory and observed "
-                                        + pretty(stored.capability) + "."
+                                        + pretty(stored.capabilities) + "."
                 );
             }
         }
@@ -118,6 +117,22 @@ public class ResourceAcquisitionPlanner
 
         String sourceNote = sourceSuggestions(
                 need, mode, context.isAllowWildernessMethods());
+
+        // Do not turn an unobserved container into a proven shortfall. An
+        // inventory read is required for every mode; ordinary accounts also
+        // require the bank, and opted-in GIM requires fresh Group Storage.
+        if (data.getInventory() == null)
+            return checkNeeded(need,
+                    "Open the inventory tab so carried resources can be observed before choosing an acquisition route.");
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
+            return checkNeeded(need,
+                    "Open the bank once so stored resources can be observed before choosing an acquisition route.");
+        if (AccountModePolicy.mayUseGroupStorage(mode,
+                context.isUseGroupStorage())
+                && (data.getGroupStorage() == null
+                || !data.getGroupStorage().isObserved()))
+            return checkNeeded(need,
+                    "Group Storage is enabled but unobserved; inspect it before treating the resource as missing.");
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
@@ -279,7 +294,10 @@ public class ResourceAcquisitionPlanner
             int needed)
     {
         if (storage == null) return null;
-        StoredResource restrictedFallback = null;
+        List<StorageCapability> safeCapabilities = new ArrayList<>();
+        List<StorageCapability> restrictedCapabilities = new ArrayList<>();
+        int safeQuantity = 0;
+        int restrictedQuantity = 0;
         for (Map.Entry<StorageCapability, java.util.List<ItemStackSnapshot>> entry
                 : storage.getObservedContents().entrySet())
         {
@@ -290,13 +308,27 @@ public class ResourceAcquisitionPlanner
             {
                 if (item.getItemId() == itemId) quantity += item.getQuantity();
             }
-            if (quantity < needed) continue;
-
-            StoredResource candidate = new StoredResource(capability, quantity);
-            if (!requiresAdditionalAccessCheck(capability)) return candidate;
-            if (restrictedFallback == null) restrictedFallback = candidate;
+            if (quantity <= 0) continue;
+            if (requiresAdditionalAccessCheck(capability))
+            {
+                restrictedCapabilities.add(capability);
+                restrictedQuantity = safeAdd(restrictedQuantity, quantity);
+            }
+            else
+            {
+                safeCapabilities.add(capability);
+                safeQuantity = safeAdd(safeQuantity, quantity);
+            }
         }
-        return restrictedFallback;
+        if (safeQuantity >= needed)
+            return new StoredResource(safeCapabilities, safeQuantity);
+        if (safeAdd(safeQuantity, restrictedQuantity) >= needed)
+        {
+            safeCapabilities.addAll(restrictedCapabilities);
+            return new StoredResource(safeCapabilities,
+                    safeAdd(safeQuantity, restrictedQuantity));
+        }
+        return null;
     }
 
     private static boolean requiresAdditionalAccessCheck(
@@ -353,15 +385,35 @@ public class ResourceAcquisitionPlanner
         return capability.name().toLowerCase().replace('_', ' ');
     }
 
+    private static String pretty(List<StorageCapability> capabilities)
+    {
+        if (capabilities == null || capabilities.isEmpty())
+            return "verified storage";
+        List<String> names = new ArrayList<>();
+        for (StorageCapability capability : capabilities)
+            names.add(pretty(capability));
+        if (names.size() == 1) return names.get(0);
+        return String.join(", ", names.subList(0, names.size() - 1))
+                + " and " + names.get(names.size() - 1);
+    }
+
     private static final class StoredResource
     {
-        private final StorageCapability capability;
+        private final List<StorageCapability> capabilities;
         private final int quantity;
 
-        private StoredResource(StorageCapability capability, int quantity)
+        private StoredResource(List<StorageCapability> capabilities,
+                int quantity)
         {
-            this.capability = capability;
+            this.capabilities = new ArrayList<>(capabilities);
             this.quantity = quantity;
+        }
+
+        private boolean requiresAccessCheck()
+        {
+            for (StorageCapability capability : capabilities)
+                if (requiresAdditionalAccessCheck(capability)) return true;
+            return false;
         }
     }
 }

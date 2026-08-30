@@ -78,6 +78,8 @@ public class FinalCandidateSafetyIntegrationTest
         AccountSnapshot defencePure = account(MembershipStatus.P2P,
                 1, 1, 60, 1, 43, 1, 70, 50);
         StrategyDataBundle data = StrategyDataBundle.builder(defencePure)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
         StrategyEngine engine = new StrategyEngine(null, null, null,
                 new StrategyCandidateRegistry(Collections.singletonList(

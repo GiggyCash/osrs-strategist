@@ -47,7 +47,7 @@ public class ResourceDetourCandidateProvider
 
         ObservedItemIndex items = new ObservedItemIndex(
                 context.getData(), context.isUseGroupStorage());
-        if (!items.bankObserved()) return result;
+        if (!items.resourceContainersObserved()) return result;
 
         plankDetours(context, account, items, result);
         result.sort(Comparator.comparingDouble(

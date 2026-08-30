@@ -177,9 +177,49 @@ public final class ObservedItemIndex
 
     public boolean bankObserved()
     {
+        return data != null && data.getAccount() != null
+                && accountMode() != AccountMode.ULTIMATE_IRONMAN
+                && data.getBank() != null;
+    }
+
+    /**
+     * True only when the mode's ordinary directly-usable ownership surface has
+     * been observed. UIM has no conventional bank, so a complete inventory and
+     * equipment snapshot replaces bank evidence; account mode alone never
+     * proves an empty inventory.
+     */
+    public boolean primaryOwnershipObserved()
+    {
         if (data == null || data.getAccount() == null) return false;
-        return accountMode() == AccountMode.ULTIMATE_IRONMAN
-                || data.getBank() != null;
+        if (data.getInventory() == null || data.getEquipment() == null)
+            return false;
+        if (accountMode() == AccountMode.ULTIMATE_IRONMAN)
+            return true;
+        return bankObserved();
+    }
+
+    /** Includes opted-in GIM Group Storage in the known ownership boundary. */
+    public boolean usableOwnershipObserved()
+    {
+        if (!primaryOwnershipObserved()) return false;
+        AccountMode mode = accountMode();
+        return !mode.isGroupIronman() || !useGroupStorage
+                || groupStorageObserved();
+    }
+
+    /**
+     * Evidence boundary for consumed resources, which never counts equipment
+     * but still must include every enabled ordinary resource container.
+     */
+    public boolean resourceContainersObserved()
+    {
+        if (data == null || data.getAccount() == null
+                || data.getInventory() == null) return false;
+        AccountMode mode = accountMode();
+        if (mode == AccountMode.ULTIMATE_IRONMAN) return true;
+        if (!bankObserved()) return false;
+        return !mode.isGroupIronman() || !useGroupStorage
+                || groupStorageObserved();
     }
 
     public boolean groupStorageObserved()

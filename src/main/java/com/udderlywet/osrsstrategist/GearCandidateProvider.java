@@ -114,7 +114,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items,
             StrategyContext context)
     {
-        if (!items.bankObserved() && mode != AccountMode.ULTIMATE_IRONMAN)
+        if (!items.primaryOwnershipObserved())
         {
             return new RecommendationGuidance(
                     "Open the bank once to compare this gear path with verified ownership.",

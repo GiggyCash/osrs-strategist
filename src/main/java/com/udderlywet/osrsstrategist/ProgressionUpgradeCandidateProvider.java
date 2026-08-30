@@ -646,7 +646,7 @@ public class ProgressionUpgradeCandidateProvider
             ObservedItemIndex items)
     {
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        return mode == AccountMode.ULTIMATE_IRONMAN || items.bankObserved();
+        return items.usableOwnershipObserved();
     }
 
     /** UIM retrieval-only storage still proves ownership even when not usable now. */

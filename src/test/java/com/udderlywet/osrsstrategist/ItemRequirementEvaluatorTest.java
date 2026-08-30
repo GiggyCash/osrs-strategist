@@ -59,6 +59,8 @@ public class ItemRequirementEvaluatorTest
         ItemRequirementExpression requirement = ItemRequirementExpression.item(
                 "Rope", 1, ItemRequirementScope.IMMEDIATELY_USABLE);
         StrategyDataBundle data = bundle(4)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L))
                 .groupStorage(new GroupStorageSnapshot(true,
                         Collections.singletonList(item("Rope", 1)))).build();
@@ -90,6 +92,21 @@ public class ItemRequirementEvaluatorTest
         ItemRequirementExpression retrievable = ItemRequirementExpression.item(
                 "Rope", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         assertTrue(evaluator.evaluate(retrievable, data, false).isSatisfied());
+    }
+
+    @Test
+    public void partialUimSnapshotLeavesUsableOwnershipUnknown()
+    {
+        StrategyDataBundle data = bundle(2)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .build();
+        ItemRequirementResult result = evaluator.evaluate(
+                ItemRequirementExpression.item("Rope", 1,
+                        ItemRequirementScope.IMMEDIATELY_USABLE),
+                data, false);
+
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().startsWith("Check whether you own"));
     }
 
     @Test
@@ -136,6 +153,8 @@ public class ItemRequirementEvaluatorTest
                 ItemRequirementClass.AXE, 1,
                 ItemRequirementScope.IMMEDIATELY_USABLE);
         StrategyDataBundle data = bundle(0)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Arrays.asList(item("Rune pickaxe", 1),
                         item("Dragon axe", 1)), 1L)).build();
         assertTrue(evaluator.evaluate(axe, data, false).isSatisfied());
@@ -144,6 +163,8 @@ public class ItemRequirementEvaluatorTest
                 ItemRequirementClass.CAT_OR_KITTEN, 1,
                 ItemRequirementScope.IMMEDIATELY_USABLE, "Overgrown cat");
         StrategyDataBundle overgrownOnly = bundle(0)
+                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .equipment(new EquipmentSnapshot(Collections.emptyList()))
                 .bank(new BankSnapshot(Collections.singletonList(
                         item("Overgrown cat", 1)), 1L)).build();
         assertEquals(RequirementState.BLOCKED,

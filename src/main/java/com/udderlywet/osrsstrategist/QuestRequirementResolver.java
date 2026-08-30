@@ -79,14 +79,7 @@ public class QuestRequirementResolver
         ObservedItemIndex items = new ObservedItemIndex(data,
                 context.isUseGroupStorage());
         // An inventory observation does not prove that an unobserved bank is empty.
-        boolean ownershipObserved = context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                || items.bankObserved();
-        if (context.getAccountMode().isGroupIronman()
-                && context.isUseGroupStorage()
-                && !items.groupStorageObserved())
-        {
-            ownershipObserved = false;
-        }
+        boolean ownershipObserved = items.usableOwnershipObserved();
         for (QuestDefinition.QuestItemRequirement requirement
                 : definition.getItemRequirements())
         {
