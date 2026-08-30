@@ -693,6 +693,19 @@ public class OsrsStrategistPanel extends PluginPanel
     void clickDetailsForTest() { detailsButton.doClick(); }
     void clickSupportForTest() { supportButton.doClick(); }
     String recommendationTextForTest() { return recommendationBody.getText(); }
+    int recommendationTextHeightForTest()
+    {
+        return recommendationBody.getPreferredSize().height;
+    }
+    int recommendationTextLineHeightForTest()
+    {
+        return recommendationBody.getFontMetrics(
+                recommendationBody.getFont()).getHeight();
+    }
+    int recommendationTextLineCountForTest()
+    {
+        return recommendationBody.getLineCount();
+    }
     boolean areAlternativesVisibleForTest() { return alternativesCard.isVisible(); }
     boolean areOpportunitiesVisibleForTest() { return opportunitiesCard.isVisible(); }
     String firstAlternativeTextForTest() { return alternativeOne.getText(); }
@@ -811,6 +824,13 @@ public class OsrsStrategistPanel extends PluginPanel
         if (area == null) return;
         String value = text == null ? "" : text;
         area.setText(value);
+        // setPreferredSize makes Swing cache the previous measurement. Clear
+        // all three explicit bounds before measuring new copy, otherwise an
+        // area initialized empty remains one line tall even after a resolved
+        // multi-line recommendation replaces it.
+        area.setPreferredSize(null);
+        area.setMinimumSize(null);
+        area.setMaximumSize(null);
         area.setSize(new Dimension(width, 10_000));
         Dimension preferred = area.getPreferredSize();
         int lineHeight = area.getFontMetrics(area.getFont()).getHeight();
