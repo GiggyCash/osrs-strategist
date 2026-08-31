@@ -11,8 +11,8 @@ import net.runelite.client.config.ConfigManager;
 @lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class FarmingRunStateStore
 {
-    static final String GROUP = "osrs-strategist-profile";
-    private static final String KEY = "farmingRunStates";
+    static final String GROUP = Text.get(1609);
+    private static final String KEY = Text.get(1705);
     private final ConfigManager configManager;
     private final Gson gson;
     private final Map<String, ObservedFarmingPatchState> states = new HashMap<>();

@@ -92,10 +92,10 @@ public class AccountReader
                 return "Ironman";
 
             case 2:
-                return "Ultimate Ironman";
+                return Text.get(1606);
 
             case 3:
-                return "Hardcore Ironman";
+                return Text.get(1607);
 
             case 4:
                 return "Group Ironman";

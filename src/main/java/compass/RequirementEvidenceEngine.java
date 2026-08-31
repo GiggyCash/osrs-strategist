@@ -50,7 +50,7 @@ public class RequirementEvidenceEngine
             boolean group)
     {
         if (method == null) return new ArrayList<>();
-        var id = method.getId();
+        var id = method.id;
         var skill = method.getSkill();
         var items = new ItemIndex(data, group);
         if (skill == Skill.FARMING) return farming(data, method, items);
@@ -59,14 +59,14 @@ public class RequirementEvidenceEngine
         if (skill == Skill.SAILING) return sailing(data, id, items);
         if (skill == Skill.RUNECRAFT && runecraftSupplies.supports(id))
             return runecraft(id, items);
-        if (skill == Skill.MAGIC && (id.equals("magic_f2p_combat")
-                || id.equals("magic_f2p_fire_bolt")
-                || id.equals("magic_f2p_fire_blast")
-                || id.equals("magic_f2p_fire_strike_splash")
+        if (skill == Skill.MAGIC && (id.equals(get(1625))
+                || id.equals(get(1626))
+                || id.equals(get(1627))
+                || id.equals(get(1628))
                 || id.equals("magic_f2p_curse"))) return magic(data, id, items);
-        if (skill == Skill.COOKING && id.equals("cooking_f2p_fish"))
+        if (skill == Skill.COOKING && id.equals(get(1735)))
             return cookedFish(data, items);
-        if (skill == Skill.COOKING && (id.equals("cooking_hosidius")
+        if (skill == Skill.COOKING && (id.equals(get(1577))
                 || id.equals("cooking_wines"))) return cooking(data, id, items);
         if (skill == Skill.FISHING)
         {
@@ -80,28 +80,28 @@ public class RequirementEvidenceEngine
         }
         if (id.equals("runecraft_gotr"))
         {
-            List<RequirementCheck> result = quest(data, "Temple of the Eye",
-                    "quest:temple_of_the_eye");
+            List<RequirementCheck> result = quest(data, get(1736),
+                    get(1737));
             result.add(tool(items, ItemRequirementClass.PICKAXE,
-                    "resource:gotr_pickaxe", "Usable pickaxe"));
-            result.add(item(items, "resource:gotr_chisel", "Chisel", 1,
+                    get(1738), "Usable pickaxe"));
+            result.add(item(items, get(1739), "Chisel", 1,
                     ItemID.CHISEL));
             return result;
         }
         if (id.equals("runecraft_zmi")) return list(item(items,
-                "resource:zmi_pure_essence", "Pure essence", 1,
+                get(1740), "Pure essence", 1,
                 ItemID.BLANKRUNE_HIGH));
-        if (id.equals("construction_crude_chairs"))
+        if (id.equals(get(1629)))
             return construction(data, items, false);
-        if (id.equals("construction_oak_larders"))
+        if (id.equals(get(1630)))
             return construction(data, items, true);
         if (skill == Skill.MINING || skill == Skill.WOODCUTTING)
         {
             ItemRequirementClass type = skill == Skill.MINING
                     ? ItemRequirementClass.PICKAXE : ItemRequirementClass.AXE;
             List<RequirementCheck> result = list(tool(items, type,
-                    skill == Skill.MINING ? "resource:usable-pickaxe"
-                            : "resource:usable-axe",
+                    skill == Skill.MINING ? get(1741)
+                            : get(1742),
                     skill == Skill.MINING ? "Usable pickaxe" : "Usable axe"));
             addGeneric(result, method);
             return result;
@@ -117,7 +117,7 @@ public class RequirementEvidenceEngine
         var combat = data == null ? null : data.combatEvidence();
         var observed = combat != null;
         List<RequirementCheck> result = list(new RequirementCheck(
-                "spellbook:standard", get(1534), observed
+                get(1743), get(1534), observed
                         ? combat.getSpellbookSelector() == 0
                         ? RequirementState.VERIFIED : RequirementState.BLOCKED
                         : RequirementState.CHECK_NEEDED,
@@ -125,38 +125,38 @@ public class RequirementEvidenceEngine
                         ? get(1535) : get(624)));
         if (id.equals("magic_f2p_curse"))
         {
-            result.add(item(items, "resource:curse_body", "Body rune", 1,
+            result.add(item(items, get(1744), "Body rune", 1,
                     ItemID.BODYRUNE));
-            result.add(item(items, "resource:curse_earth", "Earth runes", 3,
+            result.add(item(items, get(1745), "Earth runes", 3,
                     ItemID.EARTHRUNE));
-            result.add(item(items, "resource:curse_water", "Water runes", 2,
+            result.add(item(items, get(1746), "Water runes", 2,
                     ItemID.WATERRUNE));
             result.add(splashing(data));
             return result;
         }
-        var splash = id.equals("magic_f2p_fire_strike_splash");
-        int air = id.equals("magic_f2p_fire_blast") ? 4
-                : id.equals("magic_f2p_fire_bolt") ? 3 : splash ? 2 : 1;
-        result.add(item(items, "resource:combat_magic_air", get(1536),
+        var splash = id.equals(get(1628));
+        int air = id.equals(get(1627)) ? 4
+                : id.equals(get(1626)) ? 3 : splash ? 2 : 1;
+        result.add(item(items, get(1747), get(1536),
                 air, ItemID.AIRRUNE));
         if (splash)
         {
-            result.add(item(items, "resource:splash_fire", "Fire runes", 3,
+            result.add(item(items, get(1748), "Fire runes", 3,
                     ItemID.FIRERUNE));
-            result.add(item(items, "resource:splash_mind", "Mind rune", 1,
+            result.add(item(items, get(1749), "Mind rune", 1,
                     ItemID.MINDRUNE));
             result.add(splashing(data));
         }
-        else if (id.equals("magic_f2p_fire_bolt")
-                || id.equals("magic_f2p_fire_blast"))
+        else if (id.equals(get(1626))
+                || id.equals(get(1627)))
         {
             var blast = id.endsWith("blast");
-            result.add(item(items, "resource:combat_magic_fire", get(1537),
+            result.add(item(items, get(1750), get(1537),
                     blast ? 5 : 4, ItemID.FIRERUNE));
-            result.add(item(items, "resource:combat_magic_catalytic",
+            result.add(item(items, get(1751),
                     get(1538), 1, blast ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE));
         }
-        else result.add(item(items, "resource:wind_strike_mind", "Mind rune",
+        else result.add(item(items, get(1752), "Mind rune",
                 1, ItemID.MINDRUNE));
         return result;
     }
@@ -176,11 +176,11 @@ public class RequirementEvidenceEngine
             legs |= metal(name, "platelegs") || metal(name, "plateskirt");
             shield |= metal(name, "kiteshield");
             boots |= name.equals("fancy boots") || name.equals("fighting boots")
-                    || name.equals("decorative boots");
+                    || name.equals(get(1753));
             staff |= name.equals(get(1542));
         }
         var ready = helm && body && legs && shield && boots && staff;
-        return new RequirementCheck("equipment:f2p_splashing", get(661),
+        return new RequirementCheck(get(1754), get(661),
                 ready ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
                 get(ready ? 614 : 615));
     }
@@ -198,7 +198,7 @@ public class RequirementEvidenceEngine
             ItemIndex items)
     {
         List<RequirementCheck> result = quest(data, "Pandemonium",
-                "quest:pandemonium");
+                get(1755));
         if (id.equals("sailing_courier"))
         {
             var sailing = data == null ? null : data.sailing();
@@ -206,25 +206,25 @@ public class RequirementEvidenceEngine
                     && sailing.hasPort(SailingSnapshot.PORT_SARIM)
                     && sailing.hasPort(SailingSnapshot.PORT_PANDEMONIUM)
                     && sailing.hasActivity(SailingSnapshot.ACTIVITY_COURIER);
-            result.add(state("sailing:courier-route", get(1539), route,
+            result.add(state(get(1756), get(1539), route,
                     get(635), get(646)));
-            result.add(item(items, "resource:captains-log", "Captain's log", 1,
+            result.add(item(items, get(1757), "Captain's log", 1,
                     ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG));
         }
-        else if (id.equals("sailing_charting")) result.add(new RequirementCheck(
-                "sailing:uncompleted-chart", get(1540),
+        else if (id.equals(get(1758))) result.add(new RequirementCheck(
+                get(1759), get(1540),
                 RequirementState.CHECK_NEEDED, get(657)));
-        else if (id.startsWith("sailing_barracuda_"))
+        else if (id.startsWith(get(1760)))
         {
             if (id.contains("jubbly")) result.addAll(quest(data, get(1541),
-                    "quest:zogre-flesh-eaters"));
+                    get(1761)));
             if (id.contains("gwenith")) result.addAll(quest(data, "Regicide",
                     "quest:regicide"));
-            result.add(new RequirementCheck("preparation:sailing-trial-boat",
-                    "Trial-ready boat", RequirementState.CHECK_NEEDED,
+            result.add(new RequirementCheck(get(1762),
+                    get(1763), RequirementState.CHECK_NEEDED,
                     get(658)));
         }
-        else result.add(new RequirementCheck("sailing:live-route", get(659),
+        else result.add(new RequirementCheck(get(1764), get(659),
                     RequirementState.CHECK_NEEDED, get(660)));
         return result;
     }
@@ -240,7 +240,7 @@ public class RequirementEvidenceEngine
         int[] levels = {1, 1, 5, 15, 20, 25, 30, 40, 45};
         var count = 0;
         for (int required : levels) if (level >= required) count++;
-        return list(item(items, "resource:raw_fish", get(1543), 1,
+        return list(item(items, get(1765), get(1543), 1,
                 Arrays.copyOf(ids, count)));
     }
 
@@ -248,14 +248,14 @@ public class RequirementEvidenceEngine
             ItemIndex items)
     {
         if (id.equals("cooking_wines")) return list(
-                item(items, "resource:wine_grapes", "Grapes", 1, ItemID.GRAPES),
-                item(items, "resource:wine_water", "Jug of water", 1,
+                item(items, get(1766), "Grapes", 1, ItemID.GRAPES),
+                item(items, get(1767), "Jug of water", 1,
                         ItemID.JUG_WATER));
         var result = cookedFish(data, items);
         var diaries = data == null ? null : data.diaries();
         boolean ready = diaries != null
                 && diaries.isTierComplete("Kourend & Kebos", DiaryTier.EASY);
-        result.add(state("access:hosidius_kitchen", get(1544), ready,
+        result.add(state(get(1768), get(1544), ready,
                 get(616), get(617)));
         return result;
     }
@@ -263,14 +263,14 @@ public class RequirementEvidenceEngine
     private static List<RequirementCheck> fishing(GameData data, String id,
             ItemIndex items)
     {
-        if (id.equals("fishing_lumbridge_shrimps")
-                || id.equals("fishing_tempoross")) return new ArrayList<>();
+        if (id.equals(get(1639))
+                || id.equals(get(1673))) return new ArrayList<>();
         if (id.equals("fishing_f2p_fly")) return list(
-                item(items, "resource:fly_rod", "Fly fishing rod", 1,
+                item(items, get(1769), "Fly fishing rod", 1,
                         ItemID.FLY_FISHING_ROD),
-                item(items, "resource:fly_feathers", "Feathers", 1,
+                item(items, get(1770), "Feathers", 1,
                         ItemID.FEATHER));
-        if (!id.equals("fishing_karambwan")) return null;
+        if (!id.equals(get(1771))) return null;
         var quests = data == null ? null : data.quests();
         var trio = complete(quests, get(1545));
         var transport = data == null ? null : data.transport();
@@ -282,16 +282,16 @@ public class RequirementEvidenceEngine
                 get(1152), DiaryTier.ELITE);
         boolean staff = observedRoute || staffless || items.quantity(
                 ItemID.DRAMEN_STAFF, ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF) > 0;
-        return list(state("quest:tai_bwo_wannai_trio", get(1546), trio,
+        return list(state(get(1772), get(1546), trio,
                         get(618), get(619)),
-                state("transport:fairy-rings", get(1548), fairy,
+                state(get(1773), get(1548), fairy,
                         get(620), get(621)),
-                state("resource:fairy_ring_staff", get(622), staff,
+                state(get(1774), get(622), staff,
                         get(623), get(625)),
-                item(items, "resource:karambwan_vessel", "Karambwan vessel", 1,
+                item(items, get(1775), get(1776), 1,
                         ItemID.TBWT_KARAMBWAN_VESSEL,
                         ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
-                item(items, "resource:karambwanji", get(1549), 1,
+                item(items, get(1777), get(1549), 1,
                         ItemID.TBWT_RAW_KARAMBWANJI,
                         ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI));
     }
@@ -300,17 +300,17 @@ public class RequirementEvidenceEngine
             ItemIndex items)
     {
         if (id.equals("hunter_falconry")) return list(item(items,
-                "resource:falcon_rental", get(1550), 500, ItemID.COINS));
-        if (id.equals("hunter_bird_traps")) return list(item(items,
-                "resource:bird_snare", "Bird snare", 1, ItemID.HUNTING_SNARE));
-        if (!id.equals("hunter_herbiboar")) return null;
+                get(1778), get(1550), 500, ItemID.COINS));
+        if (id.equals(get(1623))) return list(item(items,
+                get(1779), "Bird snare", 1, ItemID.HUNTING_SNARE));
+        if (!id.equals(get(1678))) return null;
         int herblore = data == null || data.account() == null ? 1
                 : data.account().level(Skill.HERBLORE);
         var voyage = complete(data == null ? null : data.quests(), "Bone Voyage");
-        return list(new RequirementCheck("skill:herbiboar_herblore",
+        return list(new RequirementCheck(get(1780),
                         "31 Herblore", herblore >= 31 ? RequirementState.VERIFIED
                         : RequirementState.BLOCKED, get(1551) + herblore + "."),
-                state("quest:bone_voyage", get(1552), voyage,
+                state(get(1781), get(1552), voyage,
                         get(626), get(627)));
     }
 
@@ -323,22 +323,22 @@ public class RequirementEvidenceEngine
         CapabilityState room = poh == null ? CapabilityState.UNKNOWN
                 : poh.furnitureState(oak ? "room:kitchen" : "room:parlour");
         List<RequirementCheck> result = list(
-                capability("construction:poh", get(1554), house,
+                capability(get(1782), get(1554), house,
                         get(oak ? 631 : 629)),
-                capability(oak ? "construction:kitchen" : "construction:parlour",
+                capability(oak ? get(1783) : get(1784),
                         oak ? "POH Kitchen" : "POH Parlour", room,
                         get(oak ? 632 : 630)),
-                item(items, oak ? "resource:construction_oak_planks"
-                        : "resource:construction_planks",
+                item(items, oak ? get(1785)
+                        : get(1786),
                         oak ? "Oak planks" : "Planks", oak ? 8 : 2,
                         oak ? ItemID.PLANK_OAK : ItemID.WOODPLANK));
-        if (!oak) result.add(item(items, "resource:construction_nails", "Nails",
+        if (!oak) result.add(item(items, get(1787), "Nails",
                 2, ItemID.NAILS_BRONZE, ItemID.NAILS_IRON, ItemID.NAILS,
                 ItemID.NAILS_BLACK, ItemID.NAILS_MITHRIL, ItemID.NAILS_ADAMANT,
                 ItemID.NAILS_RUNE));
-        result.add(item(items, "resource:construction_hammer", "Hammer", 1,
+        result.add(item(items, get(1788), "Hammer", 1,
                 ItemID.HAMMER));
-        result.add(item(items, "resource:construction_saw", "Saw", 1,
+        result.add(item(items, get(1789), "Saw", 1,
                 ItemID.POH_SAW, ItemID.EYEGLO_CRYSTAL_SAW, ItemID.WEARABLE_SAW));
         return result;
     }
@@ -354,9 +354,9 @@ public class RequirementEvidenceEngine
 
     private List<RequirementCheck> agility(GameData data, String id)
     {
-        if (id.equals("agility_wilderness")) return list(
+        if (id.equals(get(1790))) return list(
                 agilityAccess.wildernessCourseCheck(data), new RequirementCheck(
-                        "agility:wilderness_risk", get(1556),
+                        get(1791), get(1556),
                         RequirementState.VERIFIED, get(636)));
         return list(agilityAccess.courseCheck(data,
                 agilityAccess.bestStandardCourse(data)));
@@ -365,33 +365,33 @@ public class RequirementEvidenceEngine
     private List<RequirementCheck> farming(GameData data, TrainingMethod method,
             ItemIndex items)
     {
-        var id = method.getId();
+        var id = method.id;
         var account = data == null ? null : data.account();
         var farming = data == null ? null : data.farming();
         var level = account == null ? 1 : account.level(Skill.FARMING);
         if (id.equals("farming_early"))
         {
             var patch = farmingAccess.firstReachablePatchName(farming);
-            return list(new RequirementCheck("farming:reachable_patch",
+            return list(new RequirementCheck(get(1792),
                     get(1557), patch == null ? RequirementState.CHECK_NEEDED
                     : RequirementState.VERIFIED, patch == null ? get(637)
                     : patch + get(638)), new RequirementCheck(
-                    "farming:supplies", get(1558),
+                    get(1793), get(1558),
                     RequirementState.CHECK_NEEDED, get(639)));
         }
-        if (id.equals("farming_falador_potatoes")
-                || id.equals("farming_falador_watermelons"))
+        if (id.equals(get(1794))
+                || id.equals(get(1795)))
         {
             var watermelon = id.endsWith("watermelons");
             var reachable = farming != null && farming.isPatchReachable("falador");
             RequirementCheck seeds = items.check(watermelon
                     ? farmingSupplies.watermelonSeeds()
                     : farmingSupplies.potatoSeeds());
-            List<RequirementCheck> result = list(state("farming:falador_patch",
+            List<RequirementCheck> result = list(state(get(1796),
                     get(1559), reachable, get(640), get(641)), seeds);
             if (watermelon && seeds.getState() != RequirementState.VERIFIED
                     && (account == null || account.level(Skill.THIEVING) < 38))
-                result.add(new RequirementCheck("farming:watermelon_seed_source",
+                result.add(new RequirementCheck(get(1797),
                         get(642), RequirementState.BLOCKED, get(643)));
             result.add(farmingTool(items, farming, farmingSupplies.rake(),
                     "rake", get(644)));
@@ -410,16 +410,16 @@ public class RequirementEvidenceEngine
             var water = cans >= 8 || items.quantity(ItemID.ZEAH_WATERINGCAN) > 0;
             return list(items.check(farmingSupplies.spade()),
                     items.check(farmingSupplies.dibber()),
-                    state("resource:tithe_watering", get(648), water,
+                    state(get(1798), get(648), water,
                             get(649), get(650)));
         }
-        if (id.equals("farming_herbs") || id.equals("farming_herbs_expanded"))
+        if (id.equals("farming_herbs") || id.equals(get(1799)))
         {
             var patch = farmingAccess.firstReachableHerbPatchName(farming);
             return list(new RequirementCheck("farming:level_9", "9 Farming",
                             level >= 9 ? RequirementState.VERIFIED
                             : RequirementState.BLOCKED, get(1560) + level + "."),
-                    new RequirementCheck("farming:herb_patch", get(1561),
+                    new RequirementCheck(get(1800), get(1561),
                             patch == null ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED, patch == null
                             ? get(651) : patch + get(652)),
@@ -442,7 +442,7 @@ public class RequirementEvidenceEngine
     {
         if (farming != null
                 && farming.leprechaunToolState(tool) == CapabilityState.VERIFIED)
-            return new RequirementCheck(need.getId(), need.getLabel(),
+            return new RequirementCheck(need.id, need.getLabel(),
                     RequirementState.VERIFIED, evidence == null
                     ? get(1569) : evidence);
         return items.check(need);

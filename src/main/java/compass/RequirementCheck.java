@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public final class RequirementCheck
 {
-    private final String id;
+    final String id;
     private final String label;
     private final RequirementState state;
     private final String evidence;

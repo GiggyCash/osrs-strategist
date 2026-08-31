@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public final class GearAcquisitionRoute
 {
-    private final String id;
+    final String id;
     private final String itemName;
     private final CombatStyle style;
     private final boolean tradeable;

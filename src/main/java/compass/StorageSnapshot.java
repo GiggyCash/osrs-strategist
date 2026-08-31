@@ -9,7 +9,7 @@ import lombok.Getter;
  *
  * <p>UNKNOWN remains different from unavailable. Contents are only stored when
  * actually observed. This is especially important for UIM, where a generic
- * "you can store this" assumption can create unsafe or impossible advice.</p>
+ * Text.get(1947) assumption can create unsafe or impossible advice.</p>
  */
 public final class StorageSnapshot
 {

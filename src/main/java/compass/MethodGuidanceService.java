@@ -24,14 +24,14 @@ public class MethodGuidanceService
         var guidance = recommendation.getGuidance();
         if (method.getSkill() == Skill.FARMING && guidance == null)
         {
-            return farmingRunPlanner.build(data, recommendation.getId());
+            return farmingRunPlanner.build(data, recommendation.id);
         }
 
         List<GuidanceStep> steps = new ArrayList<>();
         for (RequirementCheck check : plan.getRequirementChecks())
         {
             steps.add(new GuidanceStep(
-                    check.getId(), check.getLabel(), check.getEvidence(),
+                    check.id, check.getLabel(), check.getEvidence(),
                     convert(check.getState())));
         }
 
@@ -69,7 +69,7 @@ public class MethodGuidanceService
                 : criticalNote(guidance.getNote());
 
         return new GuidanceChecklist(
-                recommendation.getId(), method.getName(),
+                recommendation.id, method.getName(),
                 plan.getWhyThisMethod(), steps, bring, where, action,
                 progress, important);
     }

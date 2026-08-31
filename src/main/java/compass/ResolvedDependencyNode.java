@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public final class ResolvedDependencyNode
 {
-    private final String id;
+    final String id;
     private final String action;
     private final Confidence confidence;
     private final int depth;

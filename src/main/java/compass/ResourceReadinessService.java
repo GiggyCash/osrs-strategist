@@ -21,7 +21,7 @@ public class ResourceReadinessService
             CapabilityState alternate, String evidence)
     {
         return alternate == CapabilityState.VERIFIED
-                ? new RequirementCheck(need.getId(), need.getLabel(),
+                ? new RequirementCheck(need.id, need.getLabel(),
                         RequirementState.VERIFIED, evidence == null
                         ? Text.get(1569) : evidence)
                 : evaluate(data, need);

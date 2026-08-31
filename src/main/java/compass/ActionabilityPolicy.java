@@ -103,8 +103,8 @@ public class ActionabilityPolicy
 
     private static boolean isExplicitPreparation(Recommendation recommendation)
     {
-        String id = recommendation == null || recommendation.getId() == null
-                ? "" : recommendation.getId().toLowerCase(
+        String id = recommendation == null || recommendation.id == null
+                ? "" : recommendation.id.toLowerCase(
                         java.util.Locale.ROOT);
         return id.startsWith("prepare:")
                 || id.startsWith("preparation:")

@@ -183,7 +183,7 @@ public class SlayerGuidanceService
             note.append(get(779));
         if (AccountMode.fromTypeCode(account.modeCode()).isIronLike()
                 && !profile.getIronObjectives().isEmpty())
-            note.append("Iron objective: ").append(String.join(", ",
+            note.append(get(1953)).append(String.join(", ",
                     profile.getIronObjectives())).append(". ");
         if (hasText(profile.getTaskDecisionGuidance()))
             note.append(profile.getTaskDecisionGuidance()).append(" ");
@@ -244,7 +244,7 @@ public class SlayerGuidanceService
             return new SlayerMasterChoice("Chaeldar", "Zanaris",
                     get(783));
         if (combat >= 40)
-            return new SlayerMasterChoice("Vannaka", "Edgeville Dungeon",
+            return new SlayerMasterChoice("Vannaka", get(1954),
                     get(784));
         if (combat >= 20 && complete(quests, "Priest in Peril"))
             return new SlayerMasterChoice("Mazchna/Achtryn", "Canifis",

@@ -86,7 +86,7 @@ public final class ProgressHistory
                 ProgressMilestone::getOccurredAtMillis));
         Map<String, ProgressMilestone> uniqueMilestones = new LinkedHashMap<>();
         for (ProgressMilestone milestone : milestones)
-            uniqueMilestones.putIfAbsent(milestone.getId(), milestone);
+            uniqueMilestones.putIfAbsent(milestone.id, milestone);
         milestones.clear();
         milestones.addAll(uniqueMilestones.values());
 
@@ -123,7 +123,7 @@ public final class ProgressHistory
     {
         var result = new StringBuilder();
         for (ProgressMilestone milestone : value.getMilestones())
-            result.append(milestone.getId()).append('|');
+            result.append(milestone.id).append('|');
         return result.toString();
     }
 

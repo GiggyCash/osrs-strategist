@@ -82,14 +82,14 @@ final class ProfileJsonCodec
         {
             var value = asObject(entry.getValue());
             if (value == null || value.get("state") == null
-                    || !number(value.get("observedAtMillis"))) continue;
+                    || !number(value.get(Text.get(1909)))) continue;
             try
             {
                 FarmingPatchCycleState state = FarmingPatchCycleState.valueOf(
                         value.get("state").getAsString());
                 if (state != FarmingPatchCycleState.UNKNOWN)
                     result.put(entry.getKey(), new ObservedFarmingPatchState(
-                            state, value.get("observedAtMillis").getAsLong()));
+                            state, value.get(Text.get(1909)).getAsLong()));
             }
             catch (IllegalArgumentException ignored)
             {

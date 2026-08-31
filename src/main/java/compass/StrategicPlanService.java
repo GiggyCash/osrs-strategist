@@ -42,7 +42,7 @@ public final class StrategicPlanService
             GoalProvenance value = candidate == null
                     ? null : candidate.getGoalProvenance();
             if (value != null && value.proves(
-                    context.goal(), candidate.getId()))
+                    context.goal(), candidate.id))
             {
                 anchor = candidate;
                 provenance = value;
@@ -55,7 +55,7 @@ public final class StrategicPlanService
         Set<String> ids = new HashSet<>();
         var current = currentStep(anchor, provenance);
         steps.add(current);
-        ids.add(current.getId());
+        ids.add(current.id);
 
         var path = provenance.getPath();
         for (int i = path.size() - 2; i >= 0; i--)
@@ -63,7 +63,7 @@ public final class StrategicPlanService
             var label = path.get(i);
             StrategicPlanStep step = dependencyStep(label,
                     context.goal());
-            if (ids.add(step.getId())) steps.add(step);
+            if (ids.add(step.id)) steps.add(step);
         }
         return new StrategicPlan(context.goal(),
                 context.data().account(), steps, 0, nowMillis);
@@ -89,7 +89,7 @@ public final class StrategicPlanService
                     provenance.compactPath(),
                     PlanCompletionCondition.skillLevel(
                             skill, currentTarget),
-                    recommendation.getId());
+                    recommendation.id);
         }
 
         var quest = questName(recommendation);
@@ -98,13 +98,13 @@ public final class StrategicPlanService
                     "quest:" + slug(quest), GoalNodeKind.QUEST,
                     quest, provenance.compactPath(),
                     PlanCompletionCondition.questComplete(quest),
-                    recommendation.getId());
+                    recommendation.id);
 
         return new StrategicPlanStep(
-                "action:" + slug(recommendation.getId()),
+                "action:" + slug(recommendation.id),
                 GoalNodeKind.ACTIVITY,
                 recommendation.getTitle(), provenance.compactPath(),
-                PlanCompletionCondition.none(), recommendation.getId());
+                PlanCompletionCondition.none(), recommendation.id);
     }
 
     private StrategicPlanStep dependencyStep(String label, GoalType goal)
@@ -128,8 +128,8 @@ public final class StrategicPlanService
 
     private String questName(Recommendation recommendation)
     {
-        if (recommendation == null || recommendation.getId() == null
-                || !recommendation.getId().startsWith("quest:")) return null;
+        if (recommendation == null || recommendation.id == null
+                || !recommendation.id.startsWith("quest:")) return null;
         String title = recommendation.getTitle() == null ? ""
                 : recommendation.getTitle();
         title = title.replaceFirst(Text.get(1300), "");

@@ -18,44 +18,44 @@ public final class CurrentLiveSkillActionOverrides
     {
         Map<String, Integer> levels = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-08-12-sepulchre-floor-4", VALIDATION_DATE))
+                Text.get(1652), VALIDATION_DATE))
             levels.put(Text.get(201), 77);
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-08-12-sepulchre-floor-5", VALIDATION_DATE))
+                Text.get(1653), VALIDATION_DATE))
             levels.put(Text.get(202), 87);
         LEVELS = Collections.unmodifiableMap(levels);
 
         Map<String, Float> xp = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-08-19-birdhouse-xp", VALIDATION_DATE))
+                Text.get(1654), VALIDATION_DATE))
         {
-            xp.put("runelite:hunter:regular_bird_house", 112f);
-            xp.put("runelite:hunter:oak_bird_house", 168f);
-            xp.put("runelite:hunter:willow_bird_house", 224f);
-            xp.put("runelite:hunter:teak_bird_house", 280f);
-            xp.put("runelite:hunter:maple_bird_house", 369f);
-            xp.put("runelite:hunter:mahogany_bird_house", 480f);
-            xp.put("runelite:hunter:yew_bird_house", 612f);
-            xp.put("runelite:hunter:magic_bird_house", 969f);
-            xp.put("runelite:hunter:redwood_bird_house", 1200f);
+            xp.put(Text.get(1655), 112f);
+            xp.put(Text.get(1656), 168f);
+            xp.put(Text.get(1657), 224f);
+            xp.put(Text.get(1658), 280f);
+            xp.put(Text.get(1659), 369f);
+            xp.put(Text.get(1660), 480f);
+            xp.put(Text.get(1661), 612f);
+            xp.put(Text.get(1662), 969f);
+            xp.put(Text.get(1663), 1200f);
         }
         XP = Collections.unmodifiableMap(xp);
 
         Set<String> stale = new LinkedHashSet<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-08-12-colossal-wyrm-courses", VALIDATION_DATE))
+                Text.get(1664), VALIDATION_DATE))
         {
             stale.add(Text.get(203));
             stale.add(Text.get(204));
         }
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-08-19-hunter-methods", VALIDATION_DATE))
+                Text.get(1665), VALIDATION_DATE))
         {
-            stale.add("runelite:hunter:wild_kebbit");
-            stale.add("runelite:hunter:barb_tailed_kebbit");
-            stale.add("runelite:hunter:prickly_kebbit");
-            stale.add("runelite:hunter:sabre_toothed_kebbit");
-            stale.add("runelite:hunter:pyre_fox");
+            stale.add(Text.get(1666));
+            stale.add(Text.get(1667));
+            stale.add(Text.get(1668));
+            stale.add(Text.get(1669));
+            stale.add(Text.get(1670));
         }
         UNSAFE_STALE_XP = Collections.unmodifiableSet(stale);
     }

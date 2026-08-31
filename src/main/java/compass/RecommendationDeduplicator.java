@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public final class RecommendationDeduplicator
 {
     private static final Pattern TRAIN_TO = Pattern.compile(
-            "(?i)^train\\s+(.+?)(?:\\s+from\\s+\\d+)?\\s+to\\s+(\\d+)(?:\\D.*)?$");
+            Text.get(1898));
 
     public List<Recommendation> deduplicate(List<Recommendation> candidates)
     {
@@ -42,7 +42,7 @@ public final class RecommendationDeduplicator
             return "skill-level:" + Names.words(training.group(1))
                     + ":" + training.group(2);
 
-        var id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
+        var id = safe(candidate.id).toLowerCase(Locale.ROOT);
         if (id.startsWith("quest:") || id.startsWith("diary:")
                 || id.startsWith("clue:") || id.startsWith("stash:")
                 || id.startsWith("gear:") || id.startsWith("upgrade:")
@@ -59,7 +59,7 @@ public final class RecommendationDeduplicator
         var reason = mergeText(primary.getReason(), other.getReason());
         double sharedBenefitBonus = sameText(first.getReason(), second.getReason())
                 ? 0.0 : 3.0;
-        return new Recommendation(primary.getId(), primary.getTitle(), reason,
+        return new Recommendation(primary.id, primary.getTitle(), reason,
                 Math.max(first.getScore(), second.getScore()) + sharedBenefitBonus,
                 primary.plan(), primary.getConfidence(),
                 primary.getCurrentLevel(), primary.getTargetLevel(),
@@ -71,15 +71,15 @@ public final class RecommendationDeduplicator
     private static String canonicalActivity(Recommendation candidate,
             TrainingPlan plan)
     {
-        var id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
+        var id = safe(candidate.id).toLowerCase(Locale.ROOT);
         if (id.startsWith("minigame:")) return id.substring("minigame:".length());
         if (plan == null || plan.method() == null) return null;
-        var method = safe(plan.method().getId()).toLowerCase(Locale.ROOT);
+        var method = safe(plan.method().id).toLowerCase(Locale.ROOT);
         switch (method)
         {
             case "firemaking_wintertodt": return "wintertodt";
             case "fishing_tempoross": return "tempoross";
-            case "runecraft_gotr": return "guardians-of-the-rift";
+            case "runecraft_gotr": return Text.get(1899);
             case "smithing_giants_foundry": return "giants-foundry";
             case "construction_mahogany_homes": return "mahogany-homes";
             case "farming_tithe": return "tithe-farm";
@@ -88,8 +88,8 @@ public final class RecommendationDeduplicator
             case "mining_blast_mine": return "blast-mine";
             case "thieving_pyramid": return "pyramid-plunder";
             case "fishing_aerial": return "aerial-fishing";
-            case "fishing_drift_net": return "drift-net-fishing";
-            case "thieving_artefacts": return "stealing-artefacts";
+            case "fishing_drift_net": return Text.get(1900);
+            case "thieving_artefacts": return Text.get(1901);
             case "woodcutting_forestry": return "forestry";
             case "mining_stars": return "shooting-stars";
             case "smithing_blast_furnace_gold":
@@ -103,7 +103,7 @@ public final class RecommendationDeduplicator
     {
         if (second.getScore() > first.getScore()) return second;
         if (second.getScore() < first.getScore()) return first;
-        return safe(second.getId()).compareTo(safe(first.getId())) < 0
+        return safe(second.id).compareTo(safe(first.id)) < 0
                 ? second : first;
     }
 
@@ -113,7 +113,7 @@ public final class RecommendationDeduplicator
         var right = safe(second).trim();
         if (right.isEmpty() || sameText(left, right)) return left;
         if (left.isEmpty()) return right;
-        return left + " Also advances: " + right;
+        return left + Text.get(1902) + right;
     }
 
     private static boolean sameText(String first, String second)

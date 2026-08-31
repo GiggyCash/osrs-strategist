@@ -6,7 +6,7 @@ import java.util.*;
 final class PolicyLists
 {
     static final PolicyLists DATA = BundledCatalogLoader.array(
-            "/content/catalogs/policy-lists.json", PolicyLists[].class)[0];
+            Text.get(1908), PolicyLists[].class)[0];
     String[] one_defence_safe;
     String[] level_three_safe;
     String[] prayer_skiller_extra;

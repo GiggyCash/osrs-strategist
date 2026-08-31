@@ -13,7 +13,7 @@ public final class DependencyRequirement
 {
     public enum Kind { RESOURCE, QUEST, SKILL, GEAR }
 
-    private final String id;
+    final String id;
     private final String label;
     private final Kind kind;
     private final ResourceNeed resource;

@@ -16,7 +16,7 @@ import net.runelite.client.config.ConfigManager;
 @lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AccountAccessMemoryStore
 {
-    static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = Text.get(1609);
     private static final String KEY = "accessMemory";
     private final ConfigManager configManager;
     private final Gson gson;

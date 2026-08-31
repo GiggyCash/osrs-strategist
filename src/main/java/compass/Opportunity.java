@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public final class Opportunity
 {
-    private final String id;
+    final String id;
     private final OpportunityType type;
     private final String title;
     private final boolean ready;

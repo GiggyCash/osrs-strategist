@@ -136,7 +136,7 @@ public final class ItemRequirementEvaluator
             return freeInventorySlots(expression, data);
         if (!itemClass.isNameObservable())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
-                    "Check and bring " + expression.label());
+                    get(1692) + expression.label());
 
         int owned;
         boolean observed;

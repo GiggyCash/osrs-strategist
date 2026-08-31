@@ -13,7 +13,7 @@ public final class TravelRouteEvidenceCatalog
     public TravelRouteEvidenceCatalog()
     {
         add(new TravelRouteEvidenceDefinition(
-                "spirit-tree-gnome-stronghold", "The Grand Tree",
+                Text.get(1587), "The Grand Tree",
                 Collections.emptyList()));
         add(new TravelRouteEvidenceDefinition("ectophial", "Ghosts Ahoy",
                 Arrays.asList("Ectophial")));

@@ -67,7 +67,7 @@ public final class RequirementActionability
             return false;
         }
 
-        var id = Names.lower(check.getId());
+        var id = Names.lower(check.id);
         var label = Names.lower(check.getLabel());
 
         // Domain evaluators reserve preparation:* for a fully understood,
@@ -91,11 +91,11 @@ public final class RequirementActionability
             // preparation. The route must first model its extra access or
             // death-risk setup explicitly.
             return !evidence.contains(Text.get(1204))
-                    && !evidence.contains("verify that route");
+                    && !evidence.contains(Text.get(1805));
         }
         if (!id.startsWith("generic:")) return false;
 
-        // A combined label such as "Ourania route and essence supply" is an
+        // A combined label such as Text.get(1806) is an
         // access check, not ordinary shopping/banking preparation. Check hard
         // gates first so one supply word cannot accidentally make an unknown
         // quest, area, activity, room, assignment, or risk gate actionable.
@@ -117,7 +117,7 @@ public final class RequirementActionability
                 "supply", "supplies", "food", "healing", "rune", "runes",
                 "ammo", "ammunition", "arrow", "bolt", "dart", "cannonball",
                 "chinchompa", "bone", "bones", "head", "heads",
-                "essence", "talisman", "tiara", "binding necklace",
+                "essence", "talisman", "tiara", Text.get(1807),
                 "ore", "bars", "metal", "log", "logs", "plank",
                 "planks", "herb", "herbs", "secondary", "secondaries",
                 "seed", "seeds", "compost", "payment", "payments",

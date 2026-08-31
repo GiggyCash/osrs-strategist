@@ -56,7 +56,7 @@ public final class GoalRecommendationContext
 
         var provenance = recommendation.getGoalProvenance();
         if (provenance != null
-                && provenance.proves(safeGoal, recommendation.getId()))
+                && provenance.proves(safeGoal, recommendation.id))
         {
             if (recommendation.getConfidence()
                     == Confidence.CHECK_NEEDED)

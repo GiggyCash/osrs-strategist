@@ -257,7 +257,7 @@ public class SlayerStrategist
         boolean milestone = slayer.getTaskStreak() != null
                 && SlayerPointEconomy.isBonusCompletion(slayer.getTaskStreak() + 1);
         Integer weight = master == null ? null
-                : taskStrategy.weightFor(master.getId());
+                : taskStrategy.weightFor(master.id);
 
         // Decide whether the assignment is worth keeping before asking the
         // player to disturb their setup. A bad task should be skipped or
@@ -354,7 +354,7 @@ public class SlayerStrategist
                         - master.getNormalPoints();
         }
         score += context.preferenceProfile().weightFor(
-                "slayer:master:" + master.getId()) * 10.0;
+                "slayer:master:" + master.id) * 10.0;
         score += reviewedPoolValue(master, context) * 1.25;
         return score;
     }
@@ -370,7 +370,7 @@ public class SlayerStrategist
         var reviewedWeight = 0;
         for (SlayerTaskStrategicProfile task : strategy.all())
         {
-            var weight = task.weightFor(master.getId());
+            var weight = task.weightFor(master.id);
             if (weight == null || weight <= 0) continue;
             weightedValue += weight * taskValue(task, context);
             reviewedWeight += weight;
@@ -590,7 +590,7 @@ public class SlayerStrategist
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
             double value)
     {
-        String who = master == null ? "any Slayer master"
+        String who = master == null ? get(1968)
                 : master.getDisplayName();
         int cost = master == null ? SlayerPointEconomy.SKIP_COST
                 : master.getCancelCost();

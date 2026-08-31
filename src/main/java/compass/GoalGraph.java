@@ -14,9 +14,9 @@ public final class GoalGraph
         roots.put(GoalType.BARROWS_GLOVES,
                 Collections.singletonList(Text.get(1198)));
         roots.put(GoalType.PRIFDDINAS,
-                Collections.singletonList("Song of the Elves"));
+                Collections.singletonList(Text.get(1721)));
         roots.put(GoalType.BOWFA,
-                Collections.singletonList("Song of the Elves"));
+                Collections.singletonList(Text.get(1721)));
         QUEST_ROOTS = Collections.unmodifiableMap(roots);
     }
 

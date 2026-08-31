@@ -87,7 +87,7 @@ public final class AccountProgressMilestoneDetector
         if (before == null || after == null) return;
         if (after.getHouseAccess() == CapabilityState.VERIFIED
                 && before.getHouseAccess() != CapabilityState.VERIFIED)
-            result.add(milestone("infrastructure:poh-access",
+            result.add(milestone(Text.get(1610),
                     ProgressMilestoneType.INFRASTRUCTURE,
                     Text.get(1450), goal, now));
         for (Map.Entry<String, CapabilityState> entry
@@ -95,7 +95,7 @@ public final class AccountProgressMilestoneDetector
             if (entry.getValue() == CapabilityState.VERIFIED
                     && before.furnitureState(entry.getKey())
                             != CapabilityState.VERIFIED)
-                result.add(milestone("infrastructure:poh:"
+                result.add(milestone(Text.get(1611)
                                 + entry.getKey(),
                         ProgressMilestoneType.INFRASTRUCTURE,
                         "POH upgrade: " + display(entry.getKey()), goal, now));
@@ -123,7 +123,7 @@ public final class AccountProgressMilestoneDetector
         for (SlayerReward reward : SlayerReward.values())
             if (after.getRewards().isUnlocked(reward)
                     && !before.getRewards().isUnlocked(reward))
-                result.add(milestone("slayer-unlock:" + reward.getId(),
+                result.add(milestone("slayer-unlock:" + reward.id,
                         ProgressMilestoneType.SLAYER_UNLOCK,
                         "Slayer unlock: " + reward.getDisplayName(), goal,
                         now));

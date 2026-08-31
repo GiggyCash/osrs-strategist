@@ -20,7 +20,7 @@ public final class CurrentLiveContentChanges
 
     public static final class Entry
     {
-        private final String id;
+        final String id;
         private final LocalDate effectiveDate;
         private final Status status;
         private final String behavior;
@@ -45,34 +45,34 @@ public final class CurrentLiveContentChanges
 
     private static final String OFFICIAL = get(189);
     private static final List<Entry> ENTRIES = Collections.unmodifiableList(Arrays.asList(
-            new Entry("2026-08-12-sepulchre-floor-4", LocalDate.of(2026, 8, 12),
+            new Entry(get(1652), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(192), OFFICIAL),
-            new Entry("2026-08-12-sepulchre-floor-5", LocalDate.of(2026, 8, 12),
+            new Entry(get(1653), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(193), OFFICIAL),
-            new Entry("2026-08-12-colossal-wyrm-courses", LocalDate.of(2026, 8, 12),
+            new Entry(get(1664), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(194), OFFICIAL),
-            new Entry("2026-08-12-agility-shortcuts", LocalDate.of(2026, 8, 12),
+            new Entry(get(1685), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(195), OFFICIAL),
-            new Entry("2026-08-12-bonfire-tending", LocalDate.of(2026, 8, 12),
+            new Entry(get(1686), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(196), OFFICIAL),
-            new Entry("2026-08-19-birdhouse-nests", LocalDate.of(2026, 8, 19),
+            new Entry(get(1687), LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
                     get(197), OFFICIAL),
-            new Entry("2026-08-19-birdhouse-xp", LocalDate.of(2026, 8, 19),
+            new Entry(get(1654), LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
                     get(198), OFFICIAL),
-            new Entry("2026-08-19-hunter-methods", LocalDate.of(2026, 8, 19),
+            new Entry(get(1665), LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
                     get(199), OFFICIAL),
-            new Entry("2026-08-19-skilling-reward-shops", LocalDate.of(2026, 8, 19),
+            new Entry(get(1688), LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
                     get(190), OFFICIAL),
-            new Entry("2026-09-02-sweep-up-follow-up", LocalDate.of(2026, 9, 2),
+            new Entry(get(1689), LocalDate.of(2026, 9, 2),
                     Status.ANNOUNCED_NOT_LIVE,
                     get(191), OFFICIAL)
     ));

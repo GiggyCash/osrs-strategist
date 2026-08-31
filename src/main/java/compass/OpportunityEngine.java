@@ -17,9 +17,9 @@ import javax.inject.Singleton;
 public class OpportunityEngine
 {
     private static final Set<String> BIRDHOUSE_SEEDS = new HashSet<>(Arrays.asList(
-            "barley seed", "hammerstone seed", "asgarnian seed", "jute seed",
+            "barley seed", get(1883), "asgarnian seed", "jute seed",
             "yanillian seed", "krandorian seed", "wildblood seed", "guam seed",
-            "marrentill seed", "tarromin seed", "harralander seed", "ranarr seed",
+            "marrentill seed", "tarromin seed", get(1884), "ranarr seed",
             "toadflax seed", "irit seed", "avantoe seed", "kwuarm seed",
             "snapdragon seed", "cadantine seed", "lantadyme seed",
             "dwarf weed seed", "torstol seed"));
@@ -54,28 +54,28 @@ public class OpportunityEngine
                     farmingAccessCatalog, farmingSupplyCatalog);
 
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:tree-run", OpportunityType.TREE_RUN,
+                    get(1885), OpportunityType.TREE_RUN,
                     "Tree run", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:farming-contract", OpportunityType.FARMING_CONTRACT,
-                    "Farming contract", Collections.emptyList());
+                    get(1886), OpportunityType.FARMING_CONTRACT,
+                    get(1887), Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:tears-of-guthix", OpportunityType.TEARS_OF_GUTHIX,
+                    get(1888), OpportunityType.TEARS_OF_GUTHIX,
                     "Tears of Guthix", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:kingdom", OpportunityType.KINGDOM,
+                    get(1889), OpportunityType.KINGDOM,
                     "Kingdom", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:kingdom-approval", OpportunityType.KINGDOM_APPROVAL,
-                    "Kingdom approval", Collections.emptyList());
+                    get(1890), OpportunityType.KINGDOM_APPROVAL,
+                    get(1891), Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:battlestaves", OpportunityType.BATTLESTAVES,
+                    get(1892), OpportunityType.BATTLESTAVES,
                     get(1522), Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:dynamite", OpportunityType.DYNAMITE,
+                    get(1893), OpportunityType.DYNAMITE,
                     "Daily dynamite", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
-                    "opportunity:diary-daily", OpportunityType.DAILY_DIARY_REWARD,
+                    get(1894), OpportunityType.DAILY_DIARY_REWARD,
                     get(1523), Collections.emptyList());
         }
 
@@ -106,7 +106,7 @@ public class OpportunityEngine
                         && tier == ClueTier.BEGINNER
                         && !step.requiresPreparation();
                 opportunities.add(new Opportunity(
-                        "opportunity:clue",
+                        get(1895),
                         OpportunityType.CLUE,
                         clue.getClueType() == null ? "Pending clue"
                                 : clue.getClueType() + " clue"
@@ -149,7 +149,7 @@ public class OpportunityEngine
             long now, FarmingAccessCatalog accessCatalog,
             FarmingSupplyCatalog supplyCatalog)
     {
-        var id = "opportunity:herb-run";
+        var id = get(1896);
         if (recurring == null || recurring.readyAt(id) == null) return;
 
         List<String> missing = new ArrayList<>();
@@ -179,7 +179,7 @@ public class OpportunityEngine
             GameData data, RecurringOpportunitySnapshot recurring,
             long now)
     {
-        var id = "opportunity:birdhouse";
+        var id = get(1897);
         if (recurring == null || recurring.readyAt(id) == null) return;
         List<String> missing = new ArrayList<>();
         var quests = data.quests();
@@ -225,7 +225,7 @@ public class OpportunityEngine
     {
         if (farming == null) return false;
         for (FarmingAccessDefinition patch : catalog.all())
-            if (patch.isHerbPatch() && farming.isPatchReachable(patch.getId()))
+            if (patch.isHerbPatch() && farming.isPatchReachable(patch.id))
                 return true;
         return false;
     }

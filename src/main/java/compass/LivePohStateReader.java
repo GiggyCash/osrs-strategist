@@ -21,21 +21,21 @@ import net.runelite.client.plugins.poh.PohIcons;
 public class LivePohStateReader
 {
     public static final String ARMOUR_CASE = "poh-armour-case";
-    public static final String COSTUME_ROOM = "poh-costume-room";
-    public static final String PERMANENT_PORTAL = "poh-permanent-portal";
-    public static final String PORTAL_NEXUS = "poh-portal-nexus";
-    public static final String RESTORATION_POOL = "poh-restoration-pool";
-    public static final String SUPERIOR_GARDEN = "poh-superior-garden";
+    public static final String COSTUME_ROOM = Text.get(1709);
+    public static final String PERMANENT_PORTAL = Text.get(1710);
+    public static final String PORTAL_NEXUS = Text.get(1711);
+    public static final String RESTORATION_POOL = Text.get(1712);
+    public static final String SUPERIOR_GARDEN = Text.get(1713);
     public static final String ORNATE_POOL = "poh-ornate-pool";
-    public static final String JEWELLERY_BOX = "poh-jewellery-box";
-    public static final String ORNATE_JEWELLERY_BOX = "poh-ornate-jewellery-box";
-    public static final String SPELLBOOK_ALTAR = "poh-spellbook-altar";
-    public static final String OCCULT_ALTAR = "poh-occult-altar";
+    public static final String JEWELLERY_BOX = Text.get(1714);
+    public static final String ORNATE_JEWELLERY_BOX = Text.get(1715);
+    public static final String SPELLBOOK_ALTAR = Text.get(1716);
+    public static final String OCCULT_ALTAR = Text.get(1717);
     public static final String FAIRY_RING = "poh-fairy-ring";
     public static final String SPIRIT_TREE = "poh-spirit-tree";
-    public static final String SPIRITUAL_FAIRY_TREE = "poh-spiritual-fairy-tree";
-    public static final String MOUNTED_GLORY = "poh-mounted-glory";
-    public static final String ARMOUR_STAND = "poh-armour-stand";
+    public static final String SPIRITUAL_FAIRY_TREE = Text.get(1718);
+    public static final String MOUNTED_GLORY = Text.get(1719);
+    public static final String ARMOUR_STAND = Text.get(1720);
 
     private static final Set<String> TRACKED = new HashSet<>(Arrays.asList(
             COSTUME_ROOM, ARMOUR_CASE, PERMANENT_PORTAL, PORTAL_NEXUS,

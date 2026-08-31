@@ -9,7 +9,7 @@ import net.runelite.api.Skill;
 @Getter
 public final class MinigameDefinition
 {
-    private final String id;
+    final String id;
     private final String name;
     private final Skill primarySkill;
     private final int minimumLevel;

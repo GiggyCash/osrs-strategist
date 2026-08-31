@@ -18,7 +18,7 @@ import net.runelite.api.Skill;
 public class CombatGuidanceService
 {
     private static final Loadouts LOADOUTS = BundledCatalogLoader.array(
-            "/content/catalogs/combat-loadouts.json", Loadouts[].class)[0];
+            get(1682), Loadouts[].class)[0];
     public Guidance build(
             GameData data,
             Skill skill,
@@ -40,8 +40,8 @@ public class CombatGuidanceService
         var build = AccountBuildPolicy.effectiveBuild(account);
         if (!AccountBuildPolicy.allowsSkill(account, skill)) return null;
 
-        String methodId = plan.method().getId() == null
-                ? "" : plan.method().getId().toLowerCase();
+        String methodId = plan.method().id == null
+                ? "" : plan.method().id.toLowerCase();
         CombatRoute route = chooseRoute(
                 data, account, skill, currentLevel, build,
                 methodId, sessionIntent);
@@ -316,7 +316,7 @@ public class CombatGuidanceService
         if (weapon == null) return null;
         if (get(1345).equals(weapon))
             return get(182);
-        if ("Bow of faerdhinen".equals(weapon)
+        if (get(1683).equals(weapon)
                 || "Venator bow".equals(weapon)) return null;
         if (weapon.contains(get(1346))
                 || weapon.contains("Bone crossbow"))
@@ -347,7 +347,7 @@ public class CombatGuidanceService
             case ATTACK: return get(1317);
             case STRENGTH: return get(1318);
             case DEFENCE: return get(1319);
-            case RANGED: return "Rapid / Ranged XP";
+            case RANGED: return get(1684);
             default: return get(1347) + skill.getName() + " XP";
         }
     }

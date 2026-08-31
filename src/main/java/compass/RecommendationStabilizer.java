@@ -49,8 +49,8 @@ final class RecommendationStabilizer
             Recommendation previous, Recommendation current)
     {
         if (previous == null || current == null
-                || previous.getId() == null
-                || !previous.getId().equals(current.getId())) return false;
+                || previous.id == null
+                || !previous.id.equals(current.id)) return false;
         return previous.getTargetLevel() == current.getTargetLevel()
                 && safe(previous.getTitle()).equals(safe(current.getTitle()));
     }

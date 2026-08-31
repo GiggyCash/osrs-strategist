@@ -384,7 +384,7 @@ public class ResourceAcquisitionPlanner
     private static String pretty(List<StorageCapability> capabilities)
     {
         if (capabilities == null || capabilities.isEmpty())
-            return "verified storage";
+            return get(1955);
         List<String> names = new ArrayList<>();
         for (StorageCapability capability : capabilities)
             names.add(pretty(capability));

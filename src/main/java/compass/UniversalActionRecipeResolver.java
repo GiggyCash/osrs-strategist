@@ -10,7 +10,7 @@ import net.runelite.api.Skill;
 public class UniversalActionRecipeResolver
 {
     private static final Recipe[] EXACT = BundledCatalogLoader.array(
-            "/content/catalogs/action-recipes.json", Recipe[].class);
+            get(1582), Recipe[].class);
 
     public UniversalActionRecipe resolve(ActionDef action, int count,
             MembershipStatus membership)
@@ -98,9 +98,9 @@ public class UniversalActionRecipeResolver
                             "dragon")) + " dragon leather", hides);
         }
         if (contains(lower, "leather gloves", "leather boots", "cowl",
-                "leather vambraces", "leather body", "leather chaps", "coif"))
+                get(1583), "leather body", "leather chaps", "coif"))
             return recipe(get(1264), n, "Leather", 1);
-        if (contains(lower, "hardleather body", "hard leather body"))
+        if (contains(lower, get(1584), get(1585)))
             return recipe(get(1264), n, "Hard leather", 1);
         if (jewellery(lower))
         {

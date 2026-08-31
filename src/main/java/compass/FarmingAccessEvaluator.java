@@ -49,21 +49,21 @@ public class FarmingAccessEvaluator
         {
             if (safeMemory.hasObserved(definition.observationKey()))
             {
-                reachable.add(definition.getId());
+                reachable.add(definition.id);
                 continue;
             }
 
             var requiredQuest = definition.getRequiredQuest();
             if (requiredQuest == null)
             {
-                reachable.add(definition.getId());
+                reachable.add(definition.id);
                 continue;
             }
 
             if (quests != null
                     && quests.statusOf(requiredQuest) == QuestStatus.COMPLETE)
             {
-                reachable.add(definition.getId());
+                reachable.add(definition.id);
             }
         }
 
@@ -79,7 +79,7 @@ public class FarmingAccessEvaluator
 
         for (FarmingAccessDefinition definition : catalog.all())
         {
-            if (farming.isPatchReachable(definition.getId()))
+            if (farming.isPatchReachable(definition.id))
             {
                 return definition.getDisplayName();
             }
@@ -97,7 +97,7 @@ public class FarmingAccessEvaluator
         for (FarmingAccessDefinition definition : catalog.all())
         {
             if (definition.isHerbPatch()
-                    && farming.isPatchReachable(definition.getId()))
+                    && farming.isPatchReachable(definition.id))
             {
                 return definition.getDisplayName();
             }

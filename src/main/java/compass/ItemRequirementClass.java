@@ -18,10 +18,10 @@ public enum ItemRequirementClass
 {
     AXE("any usable axe", true),
     PICKAXE(get(1139), true),
-    BOW("any suitable bow", true),
+    BOW(get(1693), true),
     CROSSBOW(get(1140), true),
     CAT_OR_KITTEN("a cat or kitten", true),
-    FEATHER("a usable feather", true),
+    FEATHER(get(1694), true),
     NAILS(get(1141), true),
     MACHETE(get(1142), true),
     LIGHT_SOURCE(get(1143), false),

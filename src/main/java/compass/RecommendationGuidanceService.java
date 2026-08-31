@@ -17,7 +17,7 @@ import net.runelite.api.Skill;
 @Singleton
 public class RecommendationGuidanceService
 {
-    private static final String LOW_LEVEL_FISH_METHOD = "cooking_f2p_fish";
+    private static final String LOW_LEVEL_FISH_METHOD = get(1735);
     private static final double LOW_LEVEL_BURN_BUFFER = 2.5;
 
     private static final List<CookingStage> F2P_EARLY_COOKING = Arrays.asList(
@@ -125,8 +125,8 @@ public class RecommendationGuidanceService
         if (data == null || data.account() == null
                 || skill != Skill.SMITHING || plan == null
                 || plan.method() == null
-                || !"smithing_f2p_uim_bronze".equals(
-                        plan.method().getId())
+                || !get(1632).equals(
+                        plan.method().id)
                 || AccountMode.fromTypeCode(
                         data.account().modeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
@@ -147,8 +147,8 @@ public class RecommendationGuidanceService
         if (data == null || data.account() == null
                 || skill != Skill.COOKING || plan == null
                 || plan.method() == null
-                || !"cooking_f2p_uim_carried_fish".equals(
-                        plan.method().getId())
+                || !get(1857).equals(
+                        plan.method().id)
                 || AccountMode.fromTypeCode(
                         data.account().modeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
@@ -169,8 +169,8 @@ public class RecommendationGuidanceService
         if (data == null || data.account() == null
                 || skill != Skill.RUNECRAFT || plan == null
                 || plan.method() == null
-                || !"runecraft_f2p_uim_local".equals(
-                        plan.method().getId())
+                || !get(1858).equals(
+                        plan.method().id)
                 || AccountMode.fromTypeCode(
                         data.account().modeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
@@ -208,8 +208,8 @@ public class RecommendationGuidanceService
                         data.account().modeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        var id = plan.method().getId();
-        if ("thieving_uim_lumbridge_people".equals(id))
+        var id = plan.method().id;
+        if (get(1859).equals(id))
             return new Guidance(
                     get(668)
                             + targetLevel + ".",
@@ -217,7 +217,7 @@ public class RecommendationGuidanceService
                     get(670),
                     get(671),
                     MethodBankingBehavior.NONE);
-        if ("thieving_uim_fruit_stalls".equals(id))
+        if (get(1860).equals(id))
             return new Guidance(
                     get(672)
                             + targetLevel + ".",
@@ -241,7 +241,7 @@ public class RecommendationGuidanceService
                 || skill != Skill.COOKING
                 || trainingPlan == null
                 || trainingPlan.method() == null
-                || !LOW_LEVEL_FISH_METHOD.equals(trainingPlan.method().getId()))
+                || !LOW_LEVEL_FISH_METHOD.equals(trainingPlan.method().id))
         {
             return null;
         }
@@ -319,7 +319,7 @@ public class RecommendationGuidanceService
                     .append(stage.targetLevel)
                     .append(" (about ")
                     .append(stage.successfulCooks)
-                    .append(" successful cook")
+                    .append(get(1861))
                     .append(stage.successfulCooks == 1 ? "" : "s")
                     .append(").");
         }
@@ -333,114 +333,55 @@ public class RecommendationGuidanceService
             boolean useGroupStorage)
     {
         var mode = AccountMode.fromTypeCode(account.modeCode());
-
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            List<String> ownedParts = new ArrayList<>();
-            List<String> missingParts = new ArrayList<>();
-            for (StagePlan stage : stages)
-            {
-                int inventory = quantityByName(
-                        data.inventory() == null
-                                ? null : data.inventory().getItems(),
-                        stage.stage.rawItemName);
-                int storage = quantityByNameSafeUimStorage(
-                        data.storage(), stage.stage.rawItemName);
-                var verified = inventory + storage;
-                var missing = Math.max(0, stage.rawNeeded - verified);
-                ownedParts.add(verified + " "
-                        + stage.stage.rawItemName.toLowerCase());
-                if (missing > 0)
-                {
-                    missingParts.add(missing + " "
-                            + stage.stage.rawItemName.toLowerCase());
-                }
-            }
-
-            var text = new StringBuilder();
-            text.append("Plan for ").append(requiredSummary(stages))
-                    .append(get(1445))
-                    .append(joinNatural(ownedParts)).append(".");
-            if (missingParts.isEmpty())
-            {
-                text.append(get(678));
-            }
-            else
-            {
-                text.append(" Acquire ")
-                        .append(joinNatural(missingParts))
-                        .append(get(679));
-            }
-            return text.toString();
-        }
-
-        if (data.bank() == null)
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() == null)
         {
             return "Plan for " + requiredSummary(stages)
                     + get(680);
         }
-
+        var items = new ItemIndex(data, useGroupStorage);
         List<String> ownedParts = new ArrayList<>();
         List<String> missingParts = new ArrayList<>();
         for (StagePlan stage : stages)
         {
-            int inventoryQuantity = quantityByName(
-                    data.inventory() == null
-                            ? null : data.inventory().getItems(),
-                    stage.stage.rawItemName);
-            int bankQuantity = quantityByName(
-                    data.bank().getItems(), stage.stage.rawItemName);
-            var groupQuantity = 0;
-            if (useGroupStorage && mode.isGroupIronman()
-                    && data.groupStorage() != null
-                    && data.groupStorage().isObserved())
-            {
-                groupQuantity = quantityByName(
-                        data.groupStorage().getItems(),
-                        stage.stage.rawItemName);
-            }
-            var verified = bankQuantity + inventoryQuantity + groupQuantity;
+            var verified = items.quantity(stage.stage.rawItemName);
             var missing = Math.max(0, stage.rawNeeded - verified);
-
             ownedParts.add(verified + " "
                     + stage.stage.rawItemName.toLowerCase());
             if (missing > 0)
-            {
                 missingParts.add(missing + " "
                         + stage.stage.rawItemName.toLowerCase());
-            }
         }
 
         var text = new StringBuilder();
-        text.append("Plan for ")
-                .append(requiredSummary(stages))
-                .append(". Verified: ")
-                .append(joinNatural(ownedParts))
-                .append(".");
+        text.append("Plan for ").append(requiredSummary(stages));
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+            text.append(get(1445));
+        else text.append(". Verified: ");
+        text.append(joinNatural(ownedParts)).append(".");
 
         if (missingParts.isEmpty())
         {
-            text.append(get(681));
+            text.append(mode == AccountMode.ULTIMATE_IRONMAN
+                    ? get(678) : get(681));
             return text.toString();
         }
-
-        if (mode.usesGrandExchange())
+        var missing = joinNatural(missingParts);
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+            text.append(" Acquire ").append(missing).append(get(679));
+        else if (mode.usesGrandExchange())
         {
-            text.append(" Buy ").append(joinNatural(missingParts))
-                    .append(get(1446));
+            text.append(" Buy ").append(missing).append(get(1446));
         }
         else if (mode.isGroupIronman())
         {
-            text.append(" Source ").append(joinNatural(missingParts))
+            text.append(" Source ").append(missing)
                     .append(useGroupStorage
                             ? get(1447)
                             : ".");
         }
         else
         {
-            text.append(" Source ")
-                    .append(joinNatural(missingParts))
-                    .append(get(682));
+            text.append(" Source ").append(missing).append(get(682));
         }
         return text.toString();
     }
@@ -459,49 +400,12 @@ public class RecommendationGuidanceService
     private static String locationGuidance(QuestSnapshot quests)
     {
         if (quests != null
-                && quests.statusOf("Cook's Assistant") == QuestStatus.COMPLETE)
+                && quests.statusOf(get(1862)) == QuestStatus.COMPLETE)
         {
             return get(683);
         }
 
         return get(685);
-    }
-
-    private static int quantityByName(
-            List<ItemState> items,
-            String expectedName)
-    {
-        if (items == null || expectedName == null) return 0;
-        var total = 0;
-        for (ItemState item : items)
-        {
-            if (item != null && item.getName() != null
-                    && expectedName.equalsIgnoreCase(item.getName()))
-            {
-                total += Math.max(0, item.getQuantity());
-            }
-        }
-        return total;
-    }
-
-    private static int quantityByNameSafeUimStorage(
-            StorageSnapshot storage,
-            String expectedName)
-    {
-        if (storage == null || expectedName == null) return 0;
-        var total = 0;
-        for (Map.Entry<StorageCapability, List<ItemState>> entry
-                : storage.getObservedContents().entrySet())
-        {
-            var capability = entry.getKey();
-            if (!storage.verified(capability)
-                    || UimStorageMechanics.isRestrictedRetrieval(capability))
-            {
-                continue;
-            }
-            total += quantityByName(entry.getValue(), expectedName);
-        }
-        return total;
     }
 
     private static String joinNatural(List<String> parts)

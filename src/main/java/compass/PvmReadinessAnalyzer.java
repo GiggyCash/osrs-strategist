@@ -65,21 +65,21 @@ public class PvmReadinessAnalyzer
         Map<String, PvmReadiness> result = new HashMap<>();
         for (PvmActivityDefinition activity : catalog.all())
         {
-            var prior = priorFor(observed, activity.getId());
+            var prior = priorFor(observed, activity.id);
             if (prior != null
                     && prior.getConfidence() == Confidence.BLOCKED)
             {
-                result.put(activity.getId(), prior);
+                result.put(activity.id, prior);
                 continue;
             }
             List<String> missing = new ArrayList<>();
             PvmEvidenceProfile exact = evidenceProfiles == null ? null
-                    : evidenceProfiles.forActivity(activity.getId());
+                    : evidenceProfiles.forActivity(activity.id);
             PvmPreparationProfile preparation = preparationProfiles == null ? null
-                    : preparationProfiles.forActivity(activity.getId());
+                    : preparationProfiles.forActivity(activity.id);
             if (preparation == null)
             {
-                result.put(activity.getId(), new PvmReadiness(activity.getId(), false,
+                result.put(activity.id, new PvmReadiness(activity.id, false,
                         Confidence.CHECK_NEEDED,
                         Collections.singletonList(get(1565))));
                 continue;
@@ -142,8 +142,8 @@ public class PvmReadinessAnalyzer
                 addMissing(missing, get(452));
 
             var fullyVerified = exact != null && missing.isEmpty();
-            result.put(activity.getId(), new PvmReadiness(
-                    activity.getId(),
+            result.put(activity.id, new PvmReadiness(
+                    activity.id,
                     fullyVerified,
                     fullyVerified ? Confidence.VERIFIED
                             : Confidence.CHECK_NEEDED,

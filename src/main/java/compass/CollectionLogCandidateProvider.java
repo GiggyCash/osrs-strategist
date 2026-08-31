@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public class CollectionLogCandidateProvider implements CandidateProvider
 {
     @Override
-    public String getId() { return "collection-log-candidates"; }
+    public String getId() { return Text.get(1648); }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -40,7 +40,7 @@ public class CollectionLogCandidateProvider implements CandidateProvider
 
             result.add(new Recommendation(
                     id,
-                    "Collection Log: " + category,
+                    Text.get(1649) + category,
                     complete + "/" + total + Text.get(1369)
                             + missing + Text.get(200),
                     score,

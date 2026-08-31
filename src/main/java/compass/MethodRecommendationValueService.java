@@ -51,7 +51,7 @@ public final class MethodRecommendationValueService
                                 .travelFit(assessment.getScoreAdjustment()
                                         / 6.0)
                                 .evidence("travel:"
-                                        + assessment.getLocation().getId())
+                                        + assessment.getLocation().id)
                                 .build());
         var result = recommendation.withStrategicValue(value);
         var guidance = result.getGuidance();

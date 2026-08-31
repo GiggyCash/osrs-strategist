@@ -65,17 +65,17 @@ public class SkillingXpModifierService
     private static boolean hasAngler(ItemIndex items)
     {
         return items.has("Angler hat", get(1214))
-                && items.has("Angler top", "Spirit angler top")
+                && items.has("Angler top", get(1856))
                 && items.has("Angler waders", get(1215))
                 && items.has("Angler boots", get(1216));
     }
 
     private static boolean hasProspector(ItemIndex items)
     {
-        return items.has("Prospector helmet", get(1217))
-                && items.has("Prospector jacket", get(1218), "Varrock armour 4")
+        return items.has(get(1979), get(1217))
+                && items.has(get(1980), get(1218), get(1981))
                 && items.has("Prospector legs", get(1219))
-                && items.has("Prospector boots", get(1220));
+                && items.has(get(1982), get(1220));
     }
 
     private static boolean hasLumberjack(ItemIndex items)
@@ -83,12 +83,12 @@ public class SkillingXpModifierService
         return items.has("Lumberjack hat", "Forestry hat")
                 && items.has("Lumberjack top", "Forestry top")
                 && items.has("Lumberjack legs", "Forestry legs")
-                && items.has("Lumberjack boots", "Forestry boots");
+                && items.has(get(1983), "Forestry boots");
     }
 
     private static boolean hasFarmer(ItemIndex items)
     {
-        return items.has("Farmer's strawhat")
+        return items.has(get(1984))
                 && items.has("Farmer's jacket", "Farmer's shirt")
                 && items.has(get(1221))
                 && items.has("Farmer's boots");
@@ -99,14 +99,14 @@ public class SkillingXpModifierService
         return items.has("Pyromancer hood")
                 && items.has("Pyromancer garb")
                 && items.has("Pyromancer robe")
-                && items.has("Pyromancer boots");
+                && items.has(get(1985));
     }
 
     private static boolean hasCarpenter(ItemIndex items)
     {
         return items.has(get(1222))
-                && items.has("Carpenter's shirt")
+                && items.has(get(1986))
                 && items.has(get(1223))
-                && items.has("Carpenter's boots");
+                && items.has(get(1987));
     }
 }

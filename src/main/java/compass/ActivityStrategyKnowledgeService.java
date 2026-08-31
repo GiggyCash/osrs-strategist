@@ -36,7 +36,7 @@ public final class ActivityStrategyKnowledgeService
     {
         if (recommendation == null || context == null) return recommendation;
         ActivityStrategyProfile profile = catalog.profileFor(
-                recommendation.getId(), context.accountMode());
+                recommendation.id, context.accountMode());
         if (profile == null) return recommendation;
 
         if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN
@@ -48,7 +48,7 @@ public final class ActivityStrategyKnowledgeService
                 StrategicValue.builder()
                         .setupReuse(profile.getSetupReuse());
         for (StrategySourceId source : profile.getSources())
-            sourced.evidence("strategy-source:" + source.name());
+            sourced.evidence(Text.get(1608) + source.name());
         return recommendation.withStrategicValue(
                 recommendation.getStrategicValue().merge(sourced.build()));
     }

@@ -24,9 +24,9 @@ public class UniversalSkillActionGuidanceService
             "high", "low", "level", "fast", "active", "relaxed", "efficient"));
 
     private static final Set<String> GENERIC_ROUTE_IDS = new HashSet<>(Arrays.asList(
-            "cooking_hosidius",
-            "firemaking_campfires",
-            "herblore_low_potions"));
+            get(1577),
+            get(1578),
+            get(1579)));
 
     private static final String F2P_ANVIL_ROUTE =
             get(1007);
@@ -224,7 +224,7 @@ public class UniversalSkillActionGuidanceService
         var membership = data.account().membership();
         var routeTokens = routeTokens(method);
         var observed = new ItemIndex(data, useGroupStorage);
-        var genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
+        var genericRoute = GENERIC_ROUTE_IDS.contains(method.id);
         var anvilSmithing = isAnvilSmithingMethod(method);
         Choice best = null;
 
@@ -356,10 +356,10 @@ public class UniversalSkillActionGuidanceService
     private static boolean isOneTimeOrRewardAction(ActionDef action)
     {
         String text = Names.actionText(action.getName() + " "
-                + action.getCategory() + " " + action.getId());
+                + action.getCategory() + " " + action.id);
         return containsAny(text,
                 "quest reward", "experience lamp", "xp lamp", "diary reward",
-                get(1276), "book of knowledge", "genie lamp",
+                get(1276), get(1580), "genie lamp",
                 "museum quiz", "one time", "one-time", "tears of guthix");
     }
 
@@ -368,7 +368,7 @@ public class UniversalSkillActionGuidanceService
         Set<String> result = new HashSet<>();
         if (method == null) return result;
         var skillToken = stem(Names.actionText(method.getSkill().getName()));
-        String text = Names.actionText(method.getId() + " "
+        String text = Names.actionText(method.id + " "
                 + method.getName() + " " + method.getInstructions());
         for (String token : text.split("[^a-z0-9]+"))
         {
@@ -384,7 +384,7 @@ public class UniversalSkillActionGuidanceService
             ActionDef action)
     {
         String text = Names.actionText(action.getName() + " "
-                + action.getCategory() + " " + action.getId());
+                + action.getCategory() + " " + action.id);
         Set<String> actionTokens = new HashSet<>();
         for (String token : text.split("[^a-z0-9]+"))
         {
@@ -459,7 +459,7 @@ public class UniversalSkillActionGuidanceService
         {
             if (Names.actionText(name).endsWith(" bar"))
                 return name + " smelt" + (count == 1 ? "" : "s");
-            return name + " smithing action" + (count == 1 ? "" : "s");
+            return name + get(1581) + (count == 1 ? "" : "s");
         }
 
         String singular;

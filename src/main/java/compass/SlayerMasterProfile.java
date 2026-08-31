@@ -10,7 +10,7 @@ import lombok.Getter;
 public final class SlayerMasterProfile
 {
     @Getter
-    private final String id;
+    final String id;
     @Getter
     private final List<String> names;
     @Getter

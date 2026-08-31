@@ -89,7 +89,7 @@ public class ClueCandidateProvider implements CandidateProvider
         if (step == null)
         {
             title = "Inspect " + type;
-            candidateId = "verify:clue-current-step";
+            candidateId = get(1643);
             guidance = new Guidance(
                     get(138),
                     null, "Inventory", get(139));
@@ -98,7 +98,7 @@ public class ClueCandidateProvider implements CandidateProvider
         else if (wildernessHold)
         {
             title = "Hold " + type + get(1364);
-            candidateId = "prepare:clue-wilderness-hold";
+            candidateId = get(1644);
             guidance = new Guidance(
                     context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                             ? get(140)
@@ -112,7 +112,7 @@ public class ClueCandidateProvider implements CandidateProvider
             title = (step.requiresPreparation() ? "Prepare " : "Do ")
                     + type + ": " + step.getKind();
             candidateId = step.requiresPreparation()
-                    ? "prepare:clue-current-step" : id;
+                    ? get(1645) : id;
             guidance = new Guidance(step.getAction(),
                     supplies(step), step.getLocation(), note(step));
             // RuneLite proves the step, not every quest/access requirement.
@@ -144,8 +144,8 @@ public class ClueCandidateProvider implements CandidateProvider
                         .opportunityCost(context.intent()
                                 == SessionIntent.AFK ? 0.7 : 0.15)
                         .evidence(step == null
-                                ? "runelite:clue-tier"
-                                : "runelite:clue-current-step")
+                                ? get(1646)
+                                : get(1647))
                         .build()
         ));
         return result;

@@ -25,7 +25,7 @@ public class SlayerCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "slayer-strategist";
+        return Text.get(1969);
     }
 
     @Override
@@ -46,17 +46,17 @@ public class SlayerCandidateProvider implements CandidateProvider
         String title;
         if (result.getRecommendedReward() != null)
         {
-            id = "slayer:unlock:" + result.getRecommendedReward().getId();
+            id = "slayer:unlock:" + result.getRecommendedReward().id;
             title = "Unlock " + result.getRecommendedReward().getDisplayName();
         }
         else if (result.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
         {
-            id = "verify:slayer-assignment";
+            id = Text.get(1970);
             title = Text.get(1460);
         }
         else if (result.getAssignmentState() == SlayerAssignmentState.CHOICE_PENDING)
         {
-            id = "slayer:choose-task";
+            id = Text.get(1971);
             title = result.getRecommendedOffer() == null
                     ? Text.get(1461)
                     : "Choose " + result.getRecommendedOffer().getTaskName()
@@ -65,7 +65,7 @@ public class SlayerCandidateProvider implements CandidateProvider
         else if (result.getAssignmentState() == SlayerAssignmentState.NO_TASK)
         {
             id = "slayer:get-task";
-            title = "Get a task from " + result.getMaster().getDisplayName();
+            title = Text.get(1972) + result.getMaster().getDisplayName();
         }
         else
         {
@@ -74,19 +74,19 @@ public class SlayerCandidateProvider implements CandidateProvider
             switch (decision)
             {
                 case BLOCK:
-                    id = "slayer:block-task";
+                    id = Text.get(1973);
                     title = "Block " + task;
                     break;
                 case SKIP:
-                    id = "slayer:skip-task";
+                    id = Text.get(1974);
                     title = "Skip " + task;
                     break;
                 case PREP_FIRST:
-                    id = "prepare:slayer-task";
+                    id = Text.get(1975);
                     title = "Prepare for " + task;
                     break;
                 case ALTERNATIVE:
-                    id = "slayer:alternative";
+                    id = Text.get(1976);
                     title = result.getSelectedAlternativeName() != null
                             ? "Use " + result.getSelectedAlternativeName()
                             : Text.get(1462);
@@ -118,7 +118,7 @@ public class SlayerCandidateProvider implements CandidateProvider
     {
         StrategicValue.Builder builder =
                 StrategicValue.builder()
-                        .evidence("slayer:typed-decision");
+                        .evidence(Text.get(1977));
         var task = result.getTaskProfile();
         if (task != null)
         {
@@ -134,7 +134,7 @@ public class SlayerCandidateProvider implements CandidateProvider
             builder.unlockValue(1.0);
         if (result.getRecommendedReward() != null)
             builder.unlockValue(1.0).infrastructureValue(0.6)
-                    .evidence("slayer:live-reward-varbit");
+                    .evidence(Text.get(1978));
         return builder.build();
     }
 }

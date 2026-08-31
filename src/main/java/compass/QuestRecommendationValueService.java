@@ -24,11 +24,11 @@ public final class QuestRecommendationValueService
     public Recommendation attach(
             Recommendation recommendation, StrategyContext context)
     {
-        if (recommendation == null || recommendation.getId() == null
-                || !recommendation.getId().startsWith("quest:")
+        if (recommendation == null || recommendation.id == null
+                || !recommendation.id.startsWith("quest:")
                 || context == null) return recommendation;
         var plan = planner.plan(context);
-        var quest = recommendation.getId().substring("quest:".length());
+        var quest = recommendation.id.substring("quest:".length());
         var step = plan.stepForQuest(quest.replace('-', ' '));
         return step == null ? recommendation
                 : recommendation.withStrategicValue(

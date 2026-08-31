@@ -9,7 +9,7 @@ import net.runelite.api.Skill;
 public final class ActionDef
 {
     private final Skill skill;
-    private final String id;
+    final String id;
     private final String name;
     private final int level;
     private final float xp;

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public final class GearProgressionEntry
 {
-    private final String id;
+    final String id;
     private final String contextId;
     private final CombatStyle style;
     private final GearBudgetTier tier;

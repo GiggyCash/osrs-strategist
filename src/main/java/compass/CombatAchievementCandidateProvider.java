@@ -10,7 +10,7 @@ public class CombatAchievementCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "combat-achievement-candidates";
+        return Text.get(1650);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CombatAchievementCandidateProvider implements CandidateProvider
         var next = snapshot.nextRewardTier();
         if (next == null) return result;
 
-        var id = "combat-achievements:" + next.name().toLowerCase();
+        var id = Text.get(1651) + next.name().toLowerCase();
         if (context.preferenceProfile().isOnCooldown(id)) return result;
 
         var gap = Math.max(0, next.getRewardPoints() - snapshot.getEarnedPoints());

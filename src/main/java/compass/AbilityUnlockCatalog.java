@@ -15,8 +15,8 @@ public final class AbilityUnlockCatalog
     {
         for (AbilityUnlockDefinition value : BundledCatalogLoader.array(
                 Text.get(130), AbilityUnlockDefinition[].class))
-            if (definitions.put(Names.slug(value.getId()), value) != null)
-                throw new IllegalStateException(Text.get(1107) + value.getId());
+            if (definitions.put(Names.slug(value.id), value) != null)
+                throw new IllegalStateException(Text.get(1107) + value.id);
     }
     public AbilityUnlockDefinition get(String id)
     {

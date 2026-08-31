@@ -10,10 +10,10 @@ import javax.swing.text.JTextComponent;
 /** Idempotent font and control scaling scoped to the Compass component tree. */
 final class SidebarAccessibility
 {
-    private static final String BASE_FONT = "compass.base-font";
-    private static final String BASE_PREFERRED = "compass.base-preferred";
-    private static final String BASE_MINIMUM = "compass.base-minimum";
-    private static final String BASE_MAXIMUM = "compass.base-maximum";
+    private static final String BASE_FONT = Text.get(1943);
+    private static final String BASE_PREFERRED = Text.get(1944);
+    private static final String BASE_MINIMUM = Text.get(1945);
+    private static final String BASE_MAXIMUM = Text.get(1946);
 
     private SidebarAccessibility() {}
 

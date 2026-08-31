@@ -15,7 +15,7 @@ public class ResourceSourceCatalog
         sources = Collections.unmodifiableList(Arrays.asList(
                 BundledCatalogLoader.array(RESOURCE, ResourceSourceDefinition[].class)));
         for (ResourceSourceDefinition source : sources)
-            if (source.getId() == null || source.getNameTokens() == null)
+            if (source.id == null || source.getNameTokens() == null)
                 throw new IllegalStateException(Text.get(1171) + RESOURCE);
     }
 
@@ -28,8 +28,8 @@ public class ResourceSourceCatalog
         List<ResourceSourceDefinition> result = new ArrayList<>();
         for (ResourceSourceDefinition source : sources)
         {
-            if ("raw-fish".equals(source.getId()) && !normalized.startsWith("raw ")) continue;
-            if ("cooked-food".equals(source.getId()) && normalized.startsWith("raw ")) continue;
+            if ("raw-fish".equals(source.id) && !normalized.startsWith("raw ")) continue;
+            if ("cooked-food".equals(source.id) && normalized.startsWith("raw ")) continue;
             for (String token : source.getNameTokens())
                 if (containsPhrase(normalized, normalize(token)))
                 {

@@ -15,7 +15,7 @@ import lombok.Getter;
 @Getter
 public final class FarmingAccessDefinition
 {
-    private final String id;
+    final String id;
     private final String displayName;
     private final Set<Integer> regionIds;
     private final String requiredQuest;

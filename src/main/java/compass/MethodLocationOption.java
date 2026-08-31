@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 public final class MethodLocationOption
 {
-    private final String id;
+    final String id;
     private final String name;
     private final int ordinaryTravelBurden;
     private final String advantageousRouteId;

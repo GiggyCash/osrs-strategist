@@ -56,7 +56,7 @@ public class FarmingRunPlanner
         {
             if (farmingLevel < patch.getMinimumLevel()
                     || !isConfirmedReachable(data, patch)) continue;
-            steps.add(stepFor(patch, snapshot.stateOf(patch.getId())));
+            steps.add(stepFor(patch, snapshot.stateOf(patch.id)));
         }
 
         return new GuidanceChecklist(
@@ -107,7 +107,7 @@ public class FarmingRunPlanner
                 ? GuidanceStepState.COMPLETE
                 : GuidanceStepState.CHECK_NEEDED;
         steps.add(new GuidanceStep(
-                check.getId(), "Prep • " + check.getLabel(),
+                check.id, "Prep • " + check.getLabel(),
                 check.getEvidence(), state));
     }
 
@@ -137,33 +137,33 @@ public class FarmingRunPlanner
                 ? "Herb • " : "Tree • ";
         if (observed == null)
         {
-            return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+            return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
                     get(248),
                     GuidanceStepState.CHECK_NEEDED);
         }
         switch (observed.getState())
         {
             case GROWING:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
                         "Planted", GuidanceStepState.COMPLETE);
             case READY:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
                         patch.getKind() == FarmingPatchKind.TREE
                                 ? get(1465) : get(1466),
                         GuidanceStepState.ACTION);
             case EMPTY:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                        "Plant this patch", GuidanceStepState.ACTION);
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
+                        get(1695), GuidanceStepState.ACTION);
             case DISEASED:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
                         "Cure the crop", GuidanceStepState.WARNING);
             case DEAD:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                        "Clear and replant", GuidanceStepState.WARNING);
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
+                        get(1696), GuidanceStepState.WARNING);
             case UNKNOWN:
             default:
-                return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                        "Check patch state", GuidanceStepState.CHECK_NEEDED);
+                return new GuidanceStep(patch.id, prefix + patch.getDisplayName(),
+                        get(1697), GuidanceStepState.CHECK_NEEDED);
         }
     }
 }

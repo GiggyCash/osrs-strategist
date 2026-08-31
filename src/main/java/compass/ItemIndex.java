@@ -30,7 +30,7 @@ public final class ItemIndex
     {
         var observed = quantity(need.getItemIds());
         if (observed >= need.getRequiredQuantity())
-            return new RequirementCheck(need.getId(), need.getLabel(),
+            return new RequirementCheck(need.id, need.getLabel(),
                     RequirementState.VERIFIED, get(1435) + observed
                     + (accountMode() == AccountMode.ULTIMATE_IRONMAN
                             ? get(703) : get(704)
@@ -89,7 +89,7 @@ public final class ItemIndex
 
     private RequirementCheck checkNeeded(ResourceRequirement need, String evidence)
     {
-        return new RequirementCheck(need.getId(), need.getLabel(),
+        return new RequirementCheck(need.id, need.getLabel(),
                 RequirementState.CHECK_NEEDED, evidence);
     }
 

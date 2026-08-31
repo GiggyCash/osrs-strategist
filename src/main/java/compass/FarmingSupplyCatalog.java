@@ -51,28 +51,28 @@ public class FarmingSupplyCatalog
     public ResourceRequirement herbSeedsForLevel(int level)
     {
         return new ResourceRequirement(
-                "resource:herb_seeds", "Usable herb seed", 1,
+                Text.get(1698), Text.get(1699), 1,
                 unlockedItemIds(HERB_SEEDS, level));
     }
 
     public ResourceRequirement potatoSeeds()
     {
         return new ResourceRequirement(
-                "resource:potato_seeds", Text.get(1133), 3,
+                Text.get(1700), Text.get(1133), 3,
                 ItemID.POTATO_SEED);
     }
 
     public ResourceRequirement watermelonSeeds()
     {
         return new ResourceRequirement(
-                "resource:watermelon_seeds", Text.get(1134), 3,
+                Text.get(1701), Text.get(1134), 3,
                 ItemID.WATERMELON_SEED);
     }
 
     public ResourceRequirement treeSaplingsForLevel(int level)
     {
         return new ResourceRequirement(
-                "resource:tree_saplings", Text.get(1135), 1,
+                Text.get(1702), Text.get(1135), 1,
                 unlockedItemIds(TREE_SAPLINGS, level));
     }
 

@@ -12,7 +12,7 @@ public class DiaryCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "diary-candidates";
+        return get(1642);
     }
 
     @Override

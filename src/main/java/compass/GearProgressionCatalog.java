@@ -5,25 +5,15 @@ import javax.inject.Singleton;
 
 /** Encounter-context gear progression loaded from the bundled catalog. */
 @Singleton
-public class GearProgressionCatalog
+public class GearProgressionCatalog extends CatalogStore<GearProgressionEntry>
 {
-    private final List<GearProgressionEntry> entries = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array(Text.get(295),
-                    GearProgressionEntry[].class)));
-
-    public List<GearProgressionEntry> all() { return entries; }
+    public GearProgressionCatalog() { super(Text.get(295), GearProgressionEntry[].class); }
     public List<GearProgressionEntry> forStyle(CombatStyle style)
     {
-        List<GearProgressionEntry> result = new ArrayList<>();
-        for (GearProgressionEntry entry : entries)
-            if (entry.getStyle() == style) result.add(entry);
-        return Collections.unmodifiableList(result);
+        return filter(entry -> entry.getStyle() == style);
     }
     public List<GearProgressionEntry> forContext(String contextId)
     {
-        List<GearProgressionEntry> result = new ArrayList<>();
-        for (GearProgressionEntry entry : entries)
-            if (entry.getContextId().equals(contextId)) result.add(entry);
-        return Collections.unmodifiableList(result);
+        return filter(entry -> entry.getContextId().equals(contextId));
     }
 }

@@ -11,7 +11,7 @@ import net.runelite.api.Skill;
 @Getter
 public final class AbilityUnlockDefinition
 {
-    private final String id;
+    final String id;
     private final String name;
     private final GoalNodeKind kind;
     private final String quest;

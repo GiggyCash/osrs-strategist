@@ -28,7 +28,7 @@ public final class TravelAwareMethodValueService
             StrategyContext context)
     {
         MethodLocationProfile profile = method == null ? null
-                : catalog.forMethod(method.getId());
+                : catalog.forMethod(method.id);
         return assess(profile, context);
     }
 

@@ -51,7 +51,7 @@ public class QuestCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "quest-candidates";
+        return Text.get(1910);
     }
 
     @Override

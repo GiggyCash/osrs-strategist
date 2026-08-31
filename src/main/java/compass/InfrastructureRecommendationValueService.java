@@ -35,7 +35,7 @@ public final class InfrastructureRecommendationValueService
         for (InfrastructureMilestone definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
-                    definition.getId(), context);
+                    definition.id, context);
             if (assessment.getState() == InfrastructureMilestoneState.COMPLETE
                     || assessment.getState()
                             == InfrastructureMilestoneState.NOT_APPLICABLE)
@@ -47,7 +47,7 @@ public final class InfrastructureRecommendationValueService
                     .infrastructureValue(utility)
                     .accountModeFit(utility * 0.6)
                     .unlockValue(utility * 0.5)
-                    .evidence("infrastructure:" + definition.getId())
+                    .evidence("infrastructure:" + definition.id)
                     .build());
         }
         return recommendation.withStrategicValue(merged);
@@ -69,12 +69,12 @@ public final class InfrastructureRecommendationValueService
                         >= required) return true;
 
         for (String quest : definition.getRequiredQuests().keySet())
-            if (recommendation.getId() != null
-                    && recommendation.getId().equals("quest:" + slug(quest)))
+            if (recommendation.id != null
+                    && recommendation.id.equals("quest:" + slug(quest)))
                 return true;
-        return recommendation.getId() != null
-                && recommendation.getId().equals(
-                        "infrastructure:" + definition.getId());
+        return recommendation.id != null
+                && recommendation.id.equals(
+                        "infrastructure:" + definition.id);
     }
 
     private static String slug(String value)

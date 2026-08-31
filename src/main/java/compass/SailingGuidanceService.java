@@ -33,18 +33,18 @@ public class SailingGuidanceService
             return null;
         }
 
-        String id = plan.method().getId() == null
-                ? "" : plan.method().getId();
+        String id = plan.method().id == null
+                ? "" : plan.method().id;
         var currentXp = account.xp(Skill.SAILING);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         var targetXp = Experience.getXpForLevel(targetLevel);
         var xpNeeded = Math.max(0, targetXp - currentXp);
 
-        if (id.startsWith("sailing_barracuda_"))
+        if (id.startsWith(get(1760)))
         {
             return barracudaGuidance(data, id, targetLevel, xpNeeded);
         }
-        if ("sailing_salvage_small".equals(id))
+        if (get(1949).equals(id))
         {
             return salvageGuidance(data, currentLevel, targetLevel, xpNeeded);
         }
@@ -52,7 +52,7 @@ public class SailingGuidanceService
         {
             return courierGuidance(data, currentLevel, targetLevel, xpNeeded);
         }
-        if ("sailing_deep_sea_trawling".equals(id))
+        if (get(1950).equals(id))
         {
             return new Guidance(
                     get(1370) + format(xpNeeded)
@@ -76,7 +76,7 @@ public class SailingGuidanceService
         if (methodId.contains("gwenith"))
         {
             trial = new Trial(
-                    "The Gwenith Glide",
+                    get(1951),
                     16050,
                     get(765),
                     get(776));
@@ -120,7 +120,7 @@ public class SailingGuidanceService
             int xpNeeded)
     {
         var action = get(736)
-                + format(xpNeeded) + " XP toward level " + targetLevel + ".";
+                + format(xpNeeded) + get(1952) + targetLevel + ".";
         var supplies = get(737);
         var where = get(738);
         var note = get(739);

@@ -20,13 +20,13 @@ public final class DiaryTaskCatalog
     public static final String PROVENANCE =
             Text.get(213);
     private static final Pattern SKILL = Pattern.compile(
-            "new SkillRequirement\\(Skill\\.([A-Z_]+),\\s*(\\d+)\\)");
+            Text.get(1616));
     private static final Pattern QUEST = Pattern.compile(
-            "new QuestRequirement\\(Quest\\.([A-Z0-9_]+)(?:,\\s*(true|false))?\\)");
+            Text.get(1617));
     private static final Pattern COMBAT = Pattern.compile(
-            "new CombatLevelRequirement\\((\\d+)\\)");
+            Text.get(1618));
     private static final Pattern QUEST_POINTS = Pattern.compile(
-            "new QuestPointRequirement\\((\\d+)\\)");
+            Text.get(1619));
 
     private final List<DiaryTaskDefinition> tasks;
 
@@ -64,7 +64,7 @@ public final class DiaryTaskCatalog
     private static List<DiaryTaskDefinition> load()
     {
         InputStream stream = DiaryTaskCatalog.class.getResourceAsStream(
-                "/content/diary-tasks.tsv");
+                Text.get(1620));
         if (stream == null)
             throw new IllegalStateException(Text.get(1129));
         List<DiaryTaskDefinition> result = new ArrayList<>();
@@ -97,7 +97,7 @@ public final class DiaryTaskCatalog
     private static List<DiaryTaskRequirement> requirements(String raw)
     {
         List<DiaryTaskRequirement> result = new ArrayList<>();
-        if (raw.contains("new OrRequirement"))
+        if (raw.contains(Text.get(1621)))
         {
             result.add(DiaryTaskRequirement.alternative(
                     Text.get(214) + raw));

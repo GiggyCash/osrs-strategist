@@ -8,7 +8,7 @@ import net.runelite.client.ui.ColorScheme;
 /**
  * Central visual language for the Compass sidebar.
  *
- * <p>The goal is "RuneLite first, OSRS flavored second": charcoal surfaces,
+ * <p>The goal is Text.get(1706): charcoal surfaces,
  * muted gold accents, and restrained status colors. Keeping colors here avoids
  * turning individual panels into a pile of one-off styling decisions.</p>
  */

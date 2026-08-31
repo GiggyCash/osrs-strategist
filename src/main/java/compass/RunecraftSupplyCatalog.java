@@ -16,7 +16,7 @@ public class RunecraftSupplyCatalog
     public ResourceRequirement runeEssence()
     {
         return new ResourceRequirement(
-                "resource:runecraft_essence",
+                Text.get(1941),
                 Text.get(1172),
                 1,
                 ItemID.BLANKRUNE,
@@ -26,22 +26,22 @@ public class RunecraftSupplyCatalog
 
     public ResourceRequirement altarEntryFor(String methodId)
     {
-        if ("runecraft_f2p_air".equals(methodId))
+        if (Text.get(1875).equals(methodId))
             return entry("air", Text.get(1173),
                     ItemID.AIR_TALISMAN, ItemID.TIARA_AIR);
-        if ("runecraft_f2p_mind".equals(methodId))
+        if (Text.get(1876).equals(methodId))
             return entry("mind", Text.get(1174),
                     ItemID.MIND_TALISMAN, ItemID.TIARA_MIND);
-        if ("runecraft_f2p_water".equals(methodId))
+        if (Text.get(1877).equals(methodId))
             return entry("water", Text.get(1175),
                     ItemID.WATER_TALISMAN, ItemID.TIARA_WATER);
-        if ("runecraft_f2p_earth".equals(methodId))
+        if (Text.get(1878).equals(methodId))
             return entry("earth", Text.get(1176),
                     ItemID.EARTH_TALISMAN, ItemID.TIARA_EARTH);
-        if ("runecraft_f2p_fire".equals(methodId))
+        if (Text.get(1879).equals(methodId))
             return entry("fire", Text.get(1177),
                     ItemID.FIRE_TALISMAN, ItemID.TIARA_FIRE);
-        if ("runecraft_f2p_body".equals(methodId))
+        if (Text.get(1880).equals(methodId))
             return entry("body", Text.get(1178),
                     ItemID.BODY_TALISMAN, ItemID.TIARA_BODY);
         return null;
@@ -59,7 +59,7 @@ public class RunecraftSupplyCatalog
             int tiaraId)
     {
         return new ResourceRequirement(
-                "resource:runecraft_" + rune + "_entry",
+                Text.get(1942) + rune + "_entry",
                 label,
                 1,
                 talismanId,

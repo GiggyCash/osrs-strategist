@@ -10,7 +10,7 @@ import net.runelite.api.Skill;
 public final class InfrastructureMilestone
 {
     @Getter
-    private final String id;
+    final String id;
     @Getter
     private final String name;
     @Getter
@@ -67,7 +67,7 @@ public final class InfrastructureMilestone
             String action, String sourceUrl)
     {
         if (id == null || id.trim().isEmpty())
-            throw new IllegalArgumentException("infrastructure id");
+            throw new IllegalArgumentException(Text.get(1732));
         if (name == null || name.trim().isEmpty())
             throw new IllegalArgumentException(Text.get(1251));
         if (evidenceKind == null)

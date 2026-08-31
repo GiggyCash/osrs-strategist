@@ -36,7 +36,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "infrastructure-candidates";
+        return get(1726);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
         for (InfrastructureMilestone definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
-                    definition.getId(), context);
+                    definition.id, context);
             if (!assessment.canRecommendAcquisition()) continue;
             result.add(buildCandidate(definition, assessment, context,
                     pressure));
@@ -76,7 +76,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
                 : AccountModePolicy.requiresSelfSourcing(
                         context.accountMode()) ? 0.55 : 0.25;
         return new Recommendation(
-                "verify:poh-build-mode",
+                get(1727),
                 get(1424),
                 get(301),
                 34.0 + modeValue * 12.0,
@@ -90,7 +90,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
                 StrategicValue.builder()
                         .infrastructureValue(modeValue)
                         .accountModeFit(modeValue)
-                        .evidence("runelite:poh-building-mode")
+                        .evidence(get(1728))
                         .build());
     }
 
@@ -108,7 +108,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
         else if (AccountModePolicy.requiresSelfSourcing(context.accountMode()))
             score += 3.0;
         if (context.intent() == SessionIntent.QUICK_20_MIN)
-            score -= expensiveSetup(definition.getId()) ? 12.0 : 3.0;
+            score -= expensiveSetup(definition.id) ? 12.0 : 3.0;
         if (context.intent() == SessionIntent.AFK) score -= 8.0;
         if (context.mode() == StrategyMode.EFFICIENT) score += 2.0;
         boolean recurringRelief = pressure != null && pressure.isRepeated()
@@ -128,14 +128,14 @@ public class InfrastructureCandidateProvider implements CandidateProvider
                     + String.join(" and ", pressure.getBlockedFamilies())
                     + get(316);
         return new Recommendation(
-                "prepare:infrastructure:" + definition.getId(),
+                get(1729) + definition.id,
                 "Build " + definition.getName(),
                 get(302)
                         + modeReason,
                 score,
                 Confidence.CHECK_NEEDED,
                 new Guidance(
-                        definition.getAction(), materials(definition.getId()),
+                        definition.getAction(), materials(definition.id),
                         get(1426),
                         get(303)),
                 SafetyEvidence.skill(false, Skill.CONSTRUCTION),
@@ -145,20 +145,20 @@ public class InfrastructureCandidateProvider implements CandidateProvider
                                 == AccountMode.ULTIMATE_IRONMAN
                                 ? utility : utility * 0.55)
                         .setupReuse(utility * 0.7)
-                        .resourceFit(expensiveSetup(definition.getId())
+                        .resourceFit(expensiveSetup(definition.id)
                                 ? -0.75 : -0.25)
                         .unlockValue(recurringRelief ? 0.8 : 0.0)
-                        .evidence("infrastructure:" + definition.getId())
+                        .evidence("infrastructure:" + definition.id)
                         .evidence(recurringRelief
-                                ? "uim:recurring-inventory-pressure" : null)
+                                ? get(1730) : null)
                         .build());
     }
 
     private static boolean expensiveSetup(String id)
     {
-        return "poh-restoration-pool".equals(id)
-                || "poh-portal-nexus".equals(id)
-                || "poh-basic-jewellery-box".equals(id);
+        return get(1712).equals(id)
+                || get(1711).equals(id)
+                || get(1731).equals(id);
     }
 
     private static String materials(String id)

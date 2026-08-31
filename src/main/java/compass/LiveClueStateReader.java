@@ -324,7 +324,7 @@ public class LiveClueStateReader
 
     private static boolean isIntermediateClueItem(String name)
     {
-        return name.contains("challenge scroll")
+        return name.contains(get(1733))
                 || name.contains("puzzle box")
                 || name.contains("light box")
                 || name.contains("strange device")

@@ -31,7 +31,7 @@ public final class PlanContinuityService
             return rebuilt;
 
         if (rebuilt == null) return advanced;
-        if (current.getId().equals(rebuilt.getCurrentStep().getId()))
+        if (current.id.equals(rebuilt.getCurrentStep().id))
             return advanced;
 
         // Completing an intermediate target deliberately moves to the rebuilt
@@ -47,8 +47,8 @@ public final class PlanContinuityService
         if (recommendations == null) recommendations = Collections.emptyList();
         Set<String> result = new HashSet<>();
         for (Recommendation recommendation : recommendations)
-            if (recommendation != null && recommendation.getId() != null)
-                result.add(recommendation.getId());
+            if (recommendation != null && recommendation.id != null)
+                result.add(recommendation.id);
         return result;
     }
 }

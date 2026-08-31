@@ -70,7 +70,7 @@ public final class GoalProvenance
         if (path.size() >= 3)
         {
             var parent = path.get(path.size() - 2);
-            return action + " is required for " + parent
+            return action + Text.get(1708) + parent
                     + Text.get(1227) + goalName + " path.";
         }
         return action + Text.get(1228) + goalName + " goal.";

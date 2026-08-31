@@ -138,13 +138,11 @@ public final class UimRecurringPressureService
     private static List<CuratedTrainingMethod> skillingMethods()
     {
         List<CuratedTrainingMethod> result = new ArrayList<>();
-        ExpandedTrainingMethodCatalog expanded =
-                new ExpandedTrainingMethodCatalog();
-        var f2p = new F2pBaselineMethodCatalog();
+        var catalog = new TrainingMethodCatalog();
         for (Skill skill : Skill.values())
         {
-            result.addAll(expanded.methodsFor(skill));
-            result.addAll(f2p.methodsFor(skill));
+            result.addAll(catalog.curatedFor(skill));
+            result.addAll(catalog.f2pFor(skill));
         }
         return java.util.Collections.unmodifiableList(result);
     }

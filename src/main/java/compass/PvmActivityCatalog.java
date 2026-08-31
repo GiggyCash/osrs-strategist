@@ -11,18 +11,18 @@ public class PvmActivityCatalog
 {
     private static final Set<String> PROFILED = Collections.unmodifiableSet(
             new HashSet<>(Arrays.asList(
-                    "pvm:brutus", "pvm:obor", "pvm:bryophyta", "pvm:barrows_chests",
+                    "pvm:brutus", "pvm:obor", "pvm:bryophyta", Text.get(1815),
                     "pvm:scurrius", "pvm:giant_mole", "pvm:sarachnis", "pvm:hespori",
-                    "pvm:zulrah", "pvm:vorkath", "pvm:the_gauntlet",
-                    "pvm:the_corrupted_gauntlet", "pvm:tombs_of_amascut",
-                    "pvm:chambers_of_xeric", "pvm:theatre_of_blood",
-                    "pvm:alchemical_hydra", "pvm:cerberus", "pvm:araxxor", "pvm:kraken",
+                    "pvm:zulrah", "pvm:vorkath", Text.get(1816),
+                    Text.get(1817), Text.get(1818),
+                    Text.get(1819), Text.get(1820),
+                    Text.get(1821), "pvm:cerberus", "pvm:araxxor", "pvm:kraken",
                     "pvm:tztok_jad", "pvm:tzkal_zuk", "pvm:sol_heredit", "pvm:nex",
-                    "pvm:commander_zilyana", "pvm:general_graardor", "pvm:kreearra",
-                    "pvm:kril_tsutsaroth", "pvm:duke_sucellus", "pvm:the_leviathan",
-                    "pvm:vardorvis", "pvm:the_whisperer",
-                    "pvm:chambers_of_xeric_challenge_mode",
-                    "pvm:theatre_of_blood_hard_mode", "pvm:tombs_of_amascut_expert")));
+                    Text.get(1822), Text.get(1823), "pvm:kreearra",
+                    Text.get(1824), Text.get(1825), Text.get(1826),
+                    "pvm:vardorvis", Text.get(1827),
+                    Text.get(1828),
+                    Text.get(1829), Text.get(1830))));
     private final List<PvmActivityDefinition> activities;
     private final Map<String, PvmActivityDefinition> byId;
 
@@ -30,8 +30,8 @@ public class PvmActivityCatalog
     {
         Map<String, PvmActivityDefinition> values = new LinkedHashMap<>();
         for (PvmActivityDefinition value : BundledCatalogLoader.array(
-                "/content/catalogs/pvm-activities.json", PvmActivityDefinition[].class))
-            if (value.getId() == null || values.put(value.getId(), value) != null)
+                Text.get(1831), PvmActivityDefinition[].class))
+            if (value.id == null || values.put(value.id, value) != null)
                 throw new IllegalStateException(Text.get(1199));
         var bosses = 0;
         for (HiscoreSkill skill : HiscoreSkill.values())
@@ -55,7 +55,7 @@ public class PvmActivityCatalog
         if (raw == null) return null;
         var key = normalize(raw);
         for (PvmActivityDefinition value : activities)
-            if (normalize(value.getId()).equals(key)
+            if (normalize(value.id).equals(key)
                     || normalize(value.getName()).equals(key)) return value;
         return null;
     }

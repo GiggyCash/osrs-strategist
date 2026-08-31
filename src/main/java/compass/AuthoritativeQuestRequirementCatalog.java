@@ -8,7 +8,7 @@ import net.runelite.api.Skill;
 public final class AuthoritativeQuestRequirementCatalog
 {
     public static final String PROVENANCE = Text.get(55);
-    private static final String RESOURCE = "/content/quest-requirements.json";
+    private static final String RESOURCE = Text.get(1641);
     private final Map<String, Record> records;
 
     public AuthoritativeQuestRequirementCatalog()

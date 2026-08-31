@@ -68,7 +68,7 @@ public class GearCandidateProvider implements CandidateProvider
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                     && !entry.isHardcoreSafe()) continue;
 
-            var id = "gear:" + entry.getId();
+            var id = "gear:" + entry.id;
             if (context.preferenceProfile().isOnCooldown(id)) continue;
             var score = 23.0;
             if (context.goal() == GoalType.GEAR_TARGET) score += 25.0;

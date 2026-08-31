@@ -22,7 +22,7 @@ public class ResourceDetourCandidateProvider
     @Override
     public String getId()
     {
-        return "resource-detours";
+        return get(1956);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ResourceDetourCandidateProvider
         var fishing = account.level(Skill.FISHING);
         if (fishing >= 35 && fishing < 80)
         {
-            var id = "detour:tempoross-planks";
+            var id = get(1957);
             if (!context.preferenceProfile().isOnCooldown(id))
             {
                 var score = 27.0;
@@ -107,7 +107,7 @@ public class ResourceDetourCandidateProvider
                 && context.accountMode() != AccountMode.HARDCORE_IRONMAN
                 && context.accountMode() != AccountMode.HARDCORE_GROUP_IRONMAN)
         {
-            var id = "detour:wintertodt-logs";
+            var id = get(1958);
             if (!context.preferenceProfile().isOnCooldown(id))
             {
                 var score = 20.0;
@@ -118,7 +118,7 @@ public class ResourceDetourCandidateProvider
 
                 Guidance guidance = new Guidance(
                         get(606),
-                        "Only " + logs + " useful logs and " + planks + get(607),
+                        "Only " + logs + get(1959) + planks + get(607),
                         get(608),
                         get(609)
                 );

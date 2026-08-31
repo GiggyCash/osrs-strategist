@@ -13,7 +13,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return "progression-upgrades";
+        return get(1832);
     }
 
     @Override
@@ -106,10 +106,10 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
             questReward("salve-amulet", "Salve amulet", "Haunted Mine",
                     get(453), get(464), get(475),
                     items.has("Chisel"));
-            questReward("helm-of-neitiznot", "Helm of neitiznot",
+            questReward(get(1833), get(1834),
                     get(1394), get(486), get(497),
                     get(508), false);
-            questReward("ibans-staff", "Iban's staff", "Underground Pass",
+            questReward("ibans-staff", "Iban's staff", get(1835),
                     get(519), get(530), get(541), false);
         }
 
@@ -136,12 +136,12 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void dragonScimitar()
         {
-            var id = "upgrade:dragon-scimitar";
+            var id = get(1836);
             if (!members() || account.level(Skill.ATTACK) < 60
                     || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
-                    || !eligible(id) || !questComplete("Monkey Madness I")
+                    || !eligible(id) || !questComplete(get(1837))
                     || owns("Dragon scimitar", "Abyssal whip",
-                            "Blade of saeldor", get(1395))) return;
+                            get(1838), get(1395))) return;
             var cash = verifiedCoins(100_000L);
             String setup = mode == AccountMode.ULTIMATE_IRONMAN
                     ? get(459) : get(460);
@@ -156,16 +156,16 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void avaDevice()
         {
-            var id = "upgrade:ava-device";
+            var id = get(1839);
             var ranged = account.level(Skill.RANGED);
             if (!members() || ranged < 30
                     || !AccountBuildPolicy.allowsSkill(account, Skill.RANGED)
-                    || !eligible(id) || !questComplete("Animal Magnetism")
-                    || owns("Ava's attractor", "Ava's accumulator",
-                            "Ava's assembler", "Masori assembler",
+                    || !eligible(id) || !questComplete(get(1840))
+                    || owns("Ava's attractor", get(1841),
+                            "Ava's assembler", get(1842),
                             "Dizana's quiver")) return;
             String device = ranged >= 50
-                    ? "Ava's accumulator" : "Ava's attractor";
+                    ? get(1841) : "Ava's attractor";
             var replacement = ranged >= 50 ? get(469) : get(470);
             boolean ready = verifiedCoins(999L)
                     && (ranged < 50 || items.quantity("Steel arrow") >= 75);
@@ -182,7 +182,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void fighterTorso()
         {
-            var id = "upgrade:fighter-torso";
+            var id = get(1843);
             var build = AccountBuildPolicy.effectiveBuild(account);
             var defencePure = build == RestrictedBuildType.DEFENCE_PURE;
             boolean protectedBuild = build == RestrictedBuildType.SKILLER
@@ -195,8 +195,8 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             account.level(Skill.ATTACK),
                             account.level(Skill.STRENGTH)) < 40)
                     || !eligible(id)
-                    || owns("Fighter torso", "Fighter torso (l)",
-                            "Bandos chestplate", get(1398),
+                    || owns("Fighter torso", get(1844),
+                            get(1845), get(1398),
                             "Torva platebody", get(1399))) return;
             var score = mode.isIronLike() ? 48.0 : 37.0;
             if (defencePure) score += 8.0;
@@ -211,13 +211,13 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void abyssalWhip()
         {
-            var id = "upgrade:abyssal-whip";
+            var id = get(1846);
             var attack = account.level(Skill.ATTACK);
             if (!members() || attack < 70
                     || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
                     || !eligible(id)
-                    || owns("Abyssal whip", "Abyssal whip (or)",
-                            "Abyssal tentacle", "Blade of saeldor",
+                    || owns("Abyssal whip", get(1847),
+                            get(1848), get(1838),
                             get(1395), "Ghrazi rapier", "Osmumten's fang",
                             "Soulreaper axe", "Scythe of vitur")) return;
             var slayer = account.level(Skill.SLAYER);
@@ -251,7 +251,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void dragonDefender()
         {
-            var id = "upgrade:dragon-defender";
+            var id = get(1849);
             var attack = account.level(Skill.ATTACK);
             var strength = account.level(Skill.STRENGTH);
             if (!members() || !eligible(id)
@@ -260,7 +260,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     || !AccountBuildPolicy.allowsSkill(account, Skill.STRENGTH)
                     || (attack < 99 && strength < 99 && attack + strength < 130)
                     || owns("Dragon defender", get(1404),
-                            "Avernic defender", get(1405))) return;
+                            get(1850), get(1405))) return;
             double score = 45.0 + (goalIs(GoalType.GEAR_TARGET,
                     GoalType.RAID_READY) ? 8.0 : 0.0);
             add(id, get(1406), get(507), score,
@@ -272,10 +272,10 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void barrowsGloves()
         {
-            var id = "upgrade:barrows-gloves";
+            var id = get(1851);
             if (!members() || !eligible(id) || !questComplete(get(1198))
-                    || owns("Barrows gloves", "Ferocious gloves",
-                            "Zaryte vambraces")) return;
+                    || owns("Barrows gloves", get(1852),
+                            get(1853))) return;
             boolean elite = data.diaries() != null
                     && data.diaries().isTierComplete(get(1152),
                             DiaryTier.ELITE);
@@ -290,7 +290,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     ? "You have " + format(economy.getCoins())
                             + get(1407) + format(price) + ". You are "
                             + format(price - economy.getCoins()) + " coins short."
-                    : get(1408) + format(price) + " coin shop price.";
+                    : get(1408) + format(price) + get(1854);
             var score = 48.0;
             if (goalIs(GoalType.BARROWS_GLOVES)) score += 35.0;
             if (goalIs(GoalType.GEAR_TARGET, GoalType.RAID_READY)) score += 10.0;
@@ -305,9 +305,9 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
         {
             var id = "upgrade:bowfa";
             if (!members() || !goalIs(GoalType.BOWFA, GoalType.GEAR_TARGET,
-                    GoalType.RAID_READY) || !questComplete("Song of the Elves")
+                    GoalType.RAID_READY) || !questComplete(get(1721))
                     || !eligible(id)
-                    || owns("Bow of faerdhinen", get(1345))) return;
+                    || owns(get(1683), get(1345))) return;
             var seed = owns(get(1410));
             var shards = items.quantity("Crystal shard");
             var score = goalIs(GoalType.BOWFA) ? 78.0 : 54.0;
@@ -358,11 +358,11 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void anglerOutfit()
         {
-            var id = "upgrade:angler-outfit";
+            var id = get(1855);
             var fishing = account.level(Skill.FISHING);
             if (!members() || fishing < 15 || !eligible(id)) return;
             int pieces = (owns("Angler hat", get(1214)) ? 1 : 0)
-                    + (owns("Angler top", "Spirit angler top") ? 1 : 0)
+                    + (owns("Angler top", get(1856)) ? 1 : 0)
                     + (owns("Angler waders", get(1215)) ? 1 : 0)
                     + (owns("Angler boots", get(1216)) ? 1 : 0);
             if (pieces >= 4) return;

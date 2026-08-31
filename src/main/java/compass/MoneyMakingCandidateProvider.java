@@ -12,7 +12,7 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
     private final MoneyMakingCatalog catalog;
 
     @Override
-    public String getId() { return "money-candidates"; }
+    public String getId() { return Text.get(1801); }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -44,7 +44,7 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
                     || method.getRiskLevel() == RiskLevel.HIGH
                     || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)) continue;
 
-            var id = method.getId();
+            var id = method.id;
             if (context.preferenceProfile().isOnCooldown(id)) continue;
             var guidance = guidanceFor(method, context);
             // A catalog identity is not a recommendation. Price-sensitive,
@@ -85,7 +85,7 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
             MoneyMakingDefinition method, StrategyContext context)
     {
         if (method == null || context == null) return null;
-        if (!"money:agility-pyramid".equals(method.getId())) return null;
+        if (!Text.get(1802).equals(method.id)) return null;
         var mode = context.accountMode();
         if (!mode.isIronLike()
                 || mode == AccountMode.HARDCORE_IRONMAN
@@ -105,15 +105,15 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
     private static StrategicValue strategicValue(
             MoneyMakingDefinition method, AccountMode mode)
     {
-        if (method != null && "money:agility-pyramid".equals(method.getId())
+        if (method != null && Text.get(1802).equals(method.id)
                 && mode != null && mode.isIronLike())
         {
             return StrategicValue.builder()
                     .accountModeFit(0.8)
                     .resourceFit(0.75)
                     .riskBurden(0.3)
-                    .evidence("wiki:agility-pyramid-fixed-top-value")
-                    .evidence("wiki:ironman-agility-pyramid-cash")
+                    .evidence(Text.get(1803))
+                    .evidence(Text.get(1804))
                     .build();
         }
         return StrategicValue.neutral();

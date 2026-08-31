@@ -29,7 +29,7 @@ public class VariableMethodGuidanceService
         var items = new ItemIndex(data, useGroupStorage);
         for (Profile profile : PROFILES)
         {
-            if (!profile.matches(plan.method().getId())) continue;
+            if (!profile.matches(plan.method().id)) continue;
             var values = variables(profile, data, items);
             if (values == null) return null;
             values.putAll(common);
@@ -54,8 +54,8 @@ public class VariableMethodGuidanceService
         {
             case "tempoross":
                 String harpoon = first(items, "Dragon harpoon", "Crystal harpoon",
-                        "Infernal harpoon", "Harpoon");
-                v.put("temporossSupplies", harpoon == null ? get(1079)
+                        get(1570), "Harpoon");
+                v.put(get(1571), harpoon == null ? get(1079)
                         : "Bring " + harpoon + get(1090));
                 break;
             case "gotr":
@@ -115,9 +115,9 @@ public class VariableMethodGuidanceService
                         == QuestStatus.COMPLETE;
                 v.put("rumourTier", master ? "Master" : hunter >= 72 ? "Expert"
                         : hunter >= 57 ? "Adept" : "Novice");
-                v.put("hunter", master ? "Guild Hunter Wolf" : hunter >= 72
-                        ? "Guild Hunter Teco" : hunter >= 57
-                        ? get(1482) : "Huntmaster Gilman");
+                v.put("hunter", master ? get(1572) : hunter >= 72
+                        ? get(1573) : hunter >= 57
+                        ? get(1482) : get(1574));
                 break;
             case "forestry":
                 var level = data.account().level(Skill.WOODCUTTING);
@@ -133,7 +133,7 @@ public class VariableMethodGuidanceService
     }
 
     private static final String[][] ALLOTMENTS = {
-            {"Snape grass seed", "61"}, {"Watermelon seed", "47"},
+            {get(1575), "61"}, {"Watermelon seed", "47"},
             {"Strawberry seed", "31"}, {"Sweetcorn seed", "20"},
             {"Tomato seed", "12"}, {"Cabbage seed", "7"},
             {"Onion seed", "5"}, {"Potato seed", "1"}};
@@ -143,7 +143,7 @@ public class VariableMethodGuidanceService
             {"Snapdragon seed", "62"}, {"Kwuarm seed", "56"},
             {"Avantoe seed", "50"}, {"Irit seed", "44"},
             {"Toadflax seed", "38"}, {"Ranarr seed", "32"},
-            {"Harralander seed", "26"}, {"Tarromin seed", "19"},
+            {get(1576), "26"}, {"Tarromin seed", "19"},
             {"Marrentill seed", "14"}, {"Guam seed", "9"}};
 
     private static String tier(ItemIndex items, int level, int quantity,

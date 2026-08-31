@@ -5,18 +5,11 @@ import javax.inject.Singleton;
 
 /** Qualitative money-making methods loaded from the bundled catalog. */
 @Singleton
-public class MoneyMakingCatalog
+public class MoneyMakingCatalog extends CatalogStore<MoneyMakingDefinition>
 {
-    private final List<MoneyMakingDefinition> methods = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array("/content/catalogs/money-making.json",
-                    MoneyMakingDefinition[].class)));
-
-    public List<MoneyMakingDefinition> all() { return methods; }
+    public MoneyMakingCatalog() { super(Text.get(1734), MoneyMakingDefinition[].class); }
     public List<MoneyMakingDefinition> forAccount(AccountMode mode)
     {
-        List<MoneyMakingDefinition> result = new ArrayList<>();
-        for (MoneyMakingDefinition method : methods)
-            if (method.supports(mode)) result.add(method);
-        return Collections.unmodifiableList(result);
+        return filter(method -> method.supports(mode));
     }
 }

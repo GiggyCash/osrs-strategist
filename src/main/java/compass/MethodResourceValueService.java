@@ -38,7 +38,7 @@ public final class MethodResourceValueService
         if (method == null || method.getSkill() == null || context == null
                 || context.data() == null || context.data().account() == null
                 || recommendation.getTargetLevel() <= 0) return recommendation;
-        var profile = profiles.forMethod(method.getId());
+        var profile = profiles.forMethod(method.id);
         if (profile == null) return recommendation;
 
         var account = context.data().account();
@@ -77,7 +77,7 @@ public final class MethodResourceValueService
         if (!known) return recommendation;
         StrategicValue value = StrategicValue.builder()
                 .resourceFit(Math.max(-16, Math.min(6, score)) / 12.0)
-                .evidence("resource-pipeline:" + method.getId()).build()
+                .evidence(Text.get(1881) + method.id).build()
                 .merge(shared);
         return recommendation.withStrategicValue(
                 recommendation.getStrategicValue().merge(value));
@@ -113,7 +113,7 @@ public final class MethodResourceValueService
                 "nail", "log", "raw ", "grape", "jug of water", "feather",
                 "arrowhead", "headless arrow", "dart tip", "unfinished bolt",
                 "uncut ", "herb", "weed", "snape grass", "crushed nest",
-                "red spiders eggs", "sapling", "seed"})
+                Text.get(1882), "sapling", "seed"})
             if (value.contains(term)) return new int[]{1, 1};
         return null;
     }

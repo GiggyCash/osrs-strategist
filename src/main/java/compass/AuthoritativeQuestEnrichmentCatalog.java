@@ -8,7 +8,7 @@ import lombok.Getter;
 public final class AuthoritativeQuestEnrichmentCatalog
 {
     public static final String PROVENANCE = get(39);
-    private static final String RESOURCE = "/content/quest-enrichment.json";
+    private static final String RESOURCE = get(1586);
     private final Map<String, Record> records;
 
     public AuthoritativeQuestEnrichmentCatalog()

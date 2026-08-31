@@ -32,7 +32,7 @@ public class GoalDependencyProvenanceService
         var existing = recommendation.getGoalProvenance();
         if (context != null && existing != null
                 && existing.proves(context.goal(),
-                        recommendation.getId()))
+                        recommendation.id))
             return recommendation;
         var provenance = resolve(recommendation, context);
         return recommendation.withGoalProvenance(provenance);
@@ -53,9 +53,9 @@ public class GoalDependencyProvenanceService
             if (path == null) return null;
             return isDirectSkillGoal(goal, skill)
                     ? GoalProvenance.direct(goal,
-                            recommendation.getId(), path)
+                            recommendation.id, path)
                     : GoalProvenance.prerequisite(goal,
-                            recommendation.getId(), path);
+                            recommendation.id, path);
         }
 
         var quest = recommendationQuest(recommendation, context);
@@ -67,14 +67,14 @@ public class GoalDependencyProvenanceService
                     || path.size() == 2;
             return direct
                     ? GoalProvenance.direct(goal,
-                            recommendation.getId(), path)
+                            recommendation.id, path)
                     : GoalProvenance.prerequisite(goal,
-                            recommendation.getId(), path);
+                            recommendation.id, path);
         }
 
         var direct = directActivityPath(goal, recommendation);
         return direct == null ? null : GoalProvenance.direct(
-                goal, recommendation.getId(), direct);
+                goal, recommendation.id, direct);
     }
 
     public boolean isRequiredQuest(
@@ -201,7 +201,7 @@ public class GoalDependencyProvenanceService
             {
                 List<String> result = new ArrayList<>();
                 result.add(goal.toString());
-                if (goal == GoalType.BOWFA) result.add("Prifddinas access");
+                if (goal == GoalType.BOWFA) result.add(Text.get(1722));
                 result.addAll(path);
                 return result;
             }
@@ -273,7 +273,7 @@ public class GoalDependencyProvenanceService
             {
                 List<String> result = new ArrayList<>();
                 result.add(goal.toString());
-                if (goal == GoalType.BOWFA) result.add("Prifddinas access");
+                if (goal == GoalType.BOWFA) result.add(Text.get(1722));
                 result.addAll(path);
                 return result;
             }
@@ -382,13 +382,13 @@ public class GoalDependencyProvenanceService
     private static List<String> directActivityPath(
             GoalType goal, Recommendation recommendation)
     {
-        String identity = Names.words(recommendation.getId() + " "
+        String identity = Names.words(recommendation.id + " "
                 + recommendation.getTitle());
         switch (goal)
         {
             case FIRE_CAPE:
                 return contains(identity, "fire cape", "tztok jad",
-                        "tzhaar fight cave")
+                        Text.get(1723))
                         ? list(goal.toString(), Text.get(1325))
                         : null;
             case BOWFA:
@@ -413,7 +413,7 @@ public class GoalDependencyProvenanceService
     private static String recommendationQuest(
             Recommendation recommendation, StrategyContext context)
     {
-        var id = recommendation.getId();
+        var id = recommendation.id;
         if (id == null || !id.startsWith("quest:") || context.data() == null
                 || context.data().quests() == null) return null;
         var slug = id.substring("quest:".length());

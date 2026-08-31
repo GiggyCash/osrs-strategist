@@ -63,7 +63,7 @@ public final class SkillBreakpointService
                         context.data().account()))
                 .filter(value -> {
                     InfrastructureMilestoneState state = infrastructureValue
-                            .assess(value.getId(), context).getState();
+                            .assess(value.id, context).getState();
                     return state != InfrastructureMilestoneState.COMPLETE
                             && state != InfrastructureMilestoneState.NOT_APPLICABLE;
                 })
@@ -75,7 +75,7 @@ public final class SkillBreakpointService
                     infrastructureTarget.getRequiredSkills().get(skill),
                     "Unlock " + infrastructureTarget.getName(),
                     SkillBreakpoint.Kind.INFRASTRUCTURE_UNLOCK,
-                    "infrastructure:" + infrastructureTarget.getId());
+                    "infrastructure:" + infrastructureTarget.id);
 
         AbilityUnlockDefinition ability = abilities.all().stream()
                 .filter(value -> value.getSkill() == skill
@@ -87,7 +87,7 @@ public final class SkillBreakpointService
             return new SkillBreakpoint(skill, ability.getLevel(),
                     "Unlock " + ability.getName(),
                     SkillBreakpoint.Kind.ABILITY_UNLOCK,
-                    "ability:" + ability.getId());
+                    "ability:" + ability.id);
 
         MembershipStatus membership = context == null
                 || context.data() == null
@@ -104,7 +104,7 @@ public final class SkillBreakpointService
             return new SkillBreakpoint(skill, action.getLevel(),
                     "Unlock " + action.getName(),
                     SkillBreakpoint.Kind.TRAINING_ACTION_UNLOCK,
-                    action.getId());
+                    action.id);
 
         if (context != null && context.goal() == GoalType.MAX)
             return new SkillBreakpoint(skill, 99, Text.get(1302),

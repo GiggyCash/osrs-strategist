@@ -51,7 +51,7 @@ public class AdaptiveActionSelector
         int boundary = method.getMaxLevel() >= currentLevel
                 && method.getMaxLevel() < objective
                 ? method.getMaxLevel() + 1 : objective;
-        var profile = profiles.forMethod(method.getId());
+        var profile = profiles.forMethod(method.id);
         if (profile == null || method.getSkill() == null) return boundary;
         for (ActionDef action : actionCatalog.actionsFor(method.getSkill()))
             if (action != null && action.getLevel() > currentLevel
@@ -202,7 +202,7 @@ public class AdaptiveActionSelector
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;
-        String haystack = Names.actionKey(action.getId()) + " "
+        String haystack = Names.actionKey(action.id) + " "
                 + Names.actionKey(action.getName()) + " "
                 + Names.actionKey(action.getCategory());
         for (String term : terms)

@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public final class Recommendation
 {
-    private final String id;
+    final String id;
     private final String title;
     private final String reason;
     private final double score;

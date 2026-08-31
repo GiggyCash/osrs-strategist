@@ -76,7 +76,7 @@ public class RecommendationIntelligenceService
         if (recommendation == null || selectedGoal == null) return 0.0;
         var provenance = recommendation.getGoalProvenance();
         if (provenance == null
-                || !provenance.proves(selectedGoal, recommendation.getId()))
+                || !provenance.proves(selectedGoal, recommendation.id))
             return 0.0;
         double direct;
         switch (selectedGoal)

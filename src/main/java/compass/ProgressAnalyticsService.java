@@ -173,13 +173,13 @@ public class ProgressAnalyticsService
     /** Adds a typed non-XP milestone once per session. */
     public synchronized boolean recordMilestone(ProgressMilestone milestone)
     {
-        if (milestone == null || !milestoneIds.add(milestone.getId()))
+        if (milestone == null || !milestoneIds.add(milestone.id))
             return false;
         milestones.add(milestone);
         while (milestones.size() > MAX_SESSION_MILESTONES)
         {
             var removed = milestones.remove(0);
-            milestoneIds.remove(removed.getId());
+            milestoneIds.remove(removed.id);
         }
         updatedAtMillis = Math.max(updatedAtMillis,
                 milestone.getOccurredAtMillis());

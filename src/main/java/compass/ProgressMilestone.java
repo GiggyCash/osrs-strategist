@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public final class ProgressMilestone
 {
-    private final String id;
+    final String id;
     private final ProgressMilestoneType type;
     private final String title;
     private final String detail;

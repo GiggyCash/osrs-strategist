@@ -1,22 +1,15 @@
 package compass;
 
-import java.util.*;
 import javax.inject.Singleton;
 
 /** Persistent method objectives loaded from the bundled catalog. */
 @Singleton
-public class ProgressionObjectiveCatalog
+public class ProgressionObjectiveCatalog extends CatalogStore<ProgressionObjectiveDefinition>
 {
-    private final List<ProgressionObjectiveDefinition> objectives =
-            Collections.unmodifiableList(Arrays.asList(BundledCatalogLoader.array(
-                    Text.get(440),
-                    ProgressionObjectiveDefinition[].class)));
-    public List<ProgressionObjectiveDefinition> all() { return objectives; }
+    public ProgressionObjectiveCatalog() { super(Text.get(440), ProgressionObjectiveDefinition[].class); }
     public ProgressionObjectiveDefinition forMethod(String methodId)
     {
-        if (methodId == null) return null;
-        for (ProgressionObjectiveDefinition objective : objectives)
-            if (methodId.equals(objective.getMethodId())) return objective;
-        return null;
+        return methodId == null ? null
+                : find(value -> methodId.equals(value.getMethodId()));
     }
 }

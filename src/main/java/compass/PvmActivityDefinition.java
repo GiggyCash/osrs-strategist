@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public final class PvmActivityDefinition
 {
-    private String id;
+    String id;
     private String name;
     private boolean wilderness;
     private boolean raid;

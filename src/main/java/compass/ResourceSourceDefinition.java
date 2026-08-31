@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public final class ResourceSourceDefinition
 {
-    private final String id;
+    final String id;
     private final List<String> nameTokens;
     private final String mainRoute;
     private final String ironRoute;

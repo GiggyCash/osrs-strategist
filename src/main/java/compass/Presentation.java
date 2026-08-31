@@ -46,7 +46,7 @@ public final class Presentation
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
-            text.append("<b>NEEDED</b><br>");
+            text.append(get(1911));
             var shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
@@ -60,7 +60,7 @@ public final class Presentation
             {
                 text.append("<br>• +")
                         .append(unresolved.size() - shown)
-                        .append(" more in Details");
+                        .append(get(1912));
             }
         }
         return text.toString();
@@ -169,11 +169,11 @@ public final class Presentation
         var guidance = recommendation.getGuidance();
         if (recommendation.getConfidence() == Confidence.BLOCKED)
         {
-            text.append("<b>ACTIVITY</b><br>Blocked")
+            text.append(get(1913))
                     .append(get(692));
             return;
         }
-        text.append("<b>ACTIVITY</b><br>")
+        text.append(get(1914))
                 .append(escape(compactSentence(recommendation.getTitle(), 110)));
         if (recommendation.getConfidence() != Confidence.VERIFIED)
         {
@@ -220,14 +220,14 @@ public final class Presentation
         if (meaningfulSupplies(guidance.getSupplies()))
         {
             appendBreak(text, 2);
-            text.append("<b>BRING</b><br>")
+            text.append(get(1915))
                     .append(escape(compactSentence(guidance.getSupplies(),
                             COMPACT_SUPPLIES_CHARS)));
         }
         if (hasText(guidance.getLocation()))
         {
             appendBreak(text, 2);
-            text.append("<b>WHERE</b><br>")
+            text.append(get(1916))
                     .append(escape(compactSentence(guidance.getLocation(),
                             COMPACT_LOCATION_CHARS)));
         }
@@ -332,7 +332,7 @@ public final class Presentation
             Recommendation recommendation,
             TrainingMethod method)
     {
-        text.append("<b>METHOD</b><br>")
+        text.append(get(1917))
                 .append(escape(method.getName()));
     }
 
@@ -346,7 +346,7 @@ public final class Presentation
         if (html == null || html.isEmpty()) return "";
         return html
                 .replaceAll("(?i)<br\\s*/?>", "\n")
-                .replaceAll("(?i)</?(b|i|strong|em|html|div)(?:\\s+[^>]*)?>", "")
+                .replaceAll(get(1918), "")
                 .replaceAll("<[^>]+>", "")
                 .replace("&amp;", "&")
                 .replace("&lt;", "<")

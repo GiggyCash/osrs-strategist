@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class AgilityCourseDefinition
 {
-    private final String id;
+    final String id;
     private final String displayName;
     private final int requiredLevel;
     private final int regionId;

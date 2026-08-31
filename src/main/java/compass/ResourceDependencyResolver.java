@@ -173,7 +173,7 @@ public class ResourceDependencyResolver
             visit(context, requirement.getResource(), depth, active, state, false);
             return;
         }
-        if (state.nodes.containsKey(requirement.getId())) return;
+        if (state.nodes.containsKey(requirement.id)) return;
         if (state.nodes.size() >= maxNodes)
         {
             state.nodeLimit = true;
@@ -207,8 +207,8 @@ public class ResourceDependencyResolver
             action = "Complete " + requirement.getLabel() + ".";
         else if (requirement.getKind() == DependencyRequirement.Kind.SKILL)
             action = "Train " + requirement.getLabel() + Text.get(1332);
-        else action = "Equip or obtain " + requirement.getLabel() + ".";
-        add(state, requirement.getId(), action, verified
+        else action = Text.get(1925) + requirement.getLabel() + ".";
+        add(state, requirement.id, action, verified
                 ? Confidence.VERIFIED
                 : Confidence.CHECK_NEEDED, depth);
     }

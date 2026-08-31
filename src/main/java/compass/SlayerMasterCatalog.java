@@ -15,7 +15,7 @@ public class SlayerMasterCatalog
 {
     private final List<SlayerMasterProfile> profiles =
             Collections.unmodifiableList(Arrays.asList(BundledCatalogLoader.array(
-                    "/content/catalogs/slayer-masters.json",
+                    Text.get(1948),
                     SlayerMasterProfile[].class)));
 
     public List<SlayerMasterProfile> all()
@@ -27,7 +27,7 @@ public class SlayerMasterCatalog
     {
         var key = Names.words(id);
         for (SlayerMasterProfile profile : profiles)
-            if (Names.words(profile.getId()).equals(key)) return profile;
+            if (Names.words(profile.id).equals(key)) return profile;
         return null;
     }
 
@@ -37,7 +37,7 @@ public class SlayerMasterCatalog
         if (key.isEmpty()) return null;
         for (SlayerMasterProfile profile : profiles)
         {
-            if (Names.words(profile.getId()).equals(key)) return profile;
+            if (Names.words(profile.id).equals(key)) return profile;
             for (String alias : profile.getNames())
                 if (Names.words(alias).equals(key)) return profile;
         }
@@ -60,9 +60,9 @@ public class SlayerMasterCatalog
             // Spria has Turael's zero-point pool plus Sourhogs but cannot
             // replace another master's task. Without a proximity goal Turael's
             // replacement flexibility strictly dominates her for a new task.
-            if ("spria".equals(profile.getId())) continue;
+            if ("spria".equals(profile.id)) continue;
             if (profile.isWilderness() && !context.allowsWilderness()) continue;
-            if ("mortimer".equals(profile.getId()))
+            if ("mortimer".equals(profile.id))
             {
                 var live = context.data().slayer();
                 boolean capeIntroduction = slayer >= 99 && live != null

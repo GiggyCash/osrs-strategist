@@ -141,7 +141,7 @@ public class AccountResourcePlanner
         text.append("Need ").append(join(required)).append(". ");
         if (!reusable.isEmpty())
         {
-            text.append("Reusable setup: ").append(join(reusable)).append(". ");
+            text.append(get(1588)).append(join(reusable)).append(". ");
         }
 
         // An unobserved ownership surface is unknown, never empty. UIM uses
@@ -162,7 +162,7 @@ public class AccountResourcePlanner
 
         if (!verified.isEmpty())
         {
-            text.append("Verified usable: ")
+            text.append(get(1589))
                     .append(join(verified)).append(". ");
         }
 
@@ -275,7 +275,7 @@ public class AccountResourcePlanner
         {
             text.append(get(74))
                     .append(format(decision.getTotalCost()))
-                    .append(" coins, but only ")
+                    .append(get(1590))
                     .append(format(decision.getObservedCoins()))
                     .append(get(1383));
             if (!routes.isEmpty())
@@ -345,35 +345,35 @@ public class AccountResourcePlanner
         if ("fire rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of fire", "Fire battlestaff", "Mystic fire staff",
-                    "Lava battlestaff", "Mystic lava staff",
-                    "Steam battlestaff", get(1385),
-                    "Smoke battlestaff", get(1386),
+                    "Staff of fire", get(1591), get(1592),
+                    get(1593), get(1594),
+                    get(1595), get(1385),
+                    get(1596), get(1386),
                     "Tome of fire");
         }
         if ("water rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of water", "Water battlestaff", get(1387),
-                    "Mud battlestaff", "Mystic mud staff",
-                    "Steam battlestaff", get(1385),
-                    "Mist battlestaff", "Mystic mist staff");
+                    "Staff of water", get(1597), get(1387),
+                    "Mud battlestaff", get(1598),
+                    get(1595), get(1385),
+                    get(1599), get(1600));
         }
         if ("earth rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of earth", "Earth battlestaff", get(1388),
-                    "Lava battlestaff", "Mystic lava staff",
-                    "Mud battlestaff", "Mystic mud staff",
-                    "Dust battlestaff", "Mystic dust staff");
+                    "Staff of earth", get(1601), get(1388),
+                    get(1593), get(1594),
+                    "Mud battlestaff", get(1598),
+                    get(1602), get(1603));
         }
         if ("air rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of air", "Air battlestaff", "Mystic air staff",
-                    "Smoke battlestaff", get(1386),
-                    "Mist battlestaff", "Mystic mist staff",
-                    "Dust battlestaff", "Mystic dust staff");
+                    "Staff of air", "Air battlestaff", get(1604),
+                    get(1596), get(1386),
+                    get(1599), get(1600),
+                    get(1602), get(1603));
         }
         return null;
     }

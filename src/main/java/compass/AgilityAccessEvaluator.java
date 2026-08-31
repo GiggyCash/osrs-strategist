@@ -58,7 +58,7 @@ public class AgilityAccessEvaluator
         if (level < course.getRequiredLevel())
         {
             return new RequirementCheck(
-                    "agility:" + course.getId(),
+                    "agility:" + course.id,
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
                     "Requires " + course.getRequiredLevel()
@@ -69,7 +69,7 @@ public class AgilityAccessEvaluator
         if (account.membership() != MembershipStatus.P2P)
         {
             return new RequirementCheck(
-                    "agility:" + course.getId(),
+                    "agility:" + course.id,
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
                     get(1)
@@ -104,15 +104,15 @@ public class AgilityAccessEvaluator
                     || status == QuestStatus.IN_PROGRESS)
             {
                 return new RequirementCheck(
-                        "agility:" + course.getId(),
+                        "agility:" + course.id,
                         course.getDisplayName(),
                         RequirementState.BLOCKED,
-                        quest + " is not complete."
+                        quest + get(1690)
                 );
             }
             return unknown(
                     course,
-                    "Quest state for " + quest + get(1393)
+                    get(1691) + quest + get(1393)
             );
         }
 
@@ -139,7 +139,7 @@ public class AgilityAccessEvaluator
             String evidence)
     {
         return new RequirementCheck(
-                "agility:" + course.getId(),
+                "agility:" + course.id,
                 course.getDisplayName(),
                 RequirementState.VERIFIED,
                 evidence
@@ -151,7 +151,7 @@ public class AgilityAccessEvaluator
             String evidence)
     {
         return new RequirementCheck(
-                "agility:" + course.getId(),
+                "agility:" + course.id,
                 course.getDisplayName(),
                 RequirementState.CHECK_NEEDED,
                 evidence

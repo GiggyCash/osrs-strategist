@@ -17,8 +17,8 @@ public class LiveDiaryStateReader
 {
     private static final String[] REGIONS = {
             "Ardougne", "Desert", "Falador", "Fremennik", "Kandarin",
-            "Karamja", "Kourend & Kebos", "Lumbridge & Draynor",
-            "Morytania", "Varrock", "Western Provinces", "Wilderness"
+            "Karamja", "Kourend & Kebos", compass.Text.get(1152),
+            "Morytania", "Varrock", compass.Text.get(1724), "Wilderness"
     };
     /** Tier-completion varbits followed by the four completed-task counts. */
     private static final int[][] VARBITS = {

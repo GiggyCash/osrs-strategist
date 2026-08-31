@@ -8,28 +8,22 @@ import net.runelite.api.Skill;
 @Singleton
 public class TrainingMethodSelector
 {
-    private final TrainingMethodDatabase database;
+    private final TrainingMethodCatalog catalog;
     private final RequirementEvidenceEngine requirementEvidenceEngine;
-    private final ExpandedTrainingMethodCatalog expandedCatalog;
-    private final F2pBaselineMethodCatalog f2pBaselineCatalog;
     private final TrainingMethodPolicy methodPolicy;
     private final MethodStrategyKnowledgeCatalog strategyCatalog;
     private final MethodStrategyService strategyService;
 
     @Inject
     public TrainingMethodSelector(
-            TrainingMethodDatabase database,
+            TrainingMethodCatalog catalog,
             RequirementEvidenceEngine requirementEvidenceEngine,
-            ExpandedTrainingMethodCatalog expandedCatalog,
-            F2pBaselineMethodCatalog f2pBaselineCatalog,
             TrainingMethodPolicy methodPolicy,
             MethodStrategyKnowledgeCatalog strategyCatalog,
             MethodStrategyService strategyService)
     {
-        this.database = database;
+        this.catalog = catalog;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
-        this.expandedCatalog = expandedCatalog;
-        this.f2pBaselineCatalog = f2pBaselineCatalog;
         this.methodPolicy = methodPolicy;
         this.strategyCatalog = strategyCatalog == null
                 ? new MethodStrategyKnowledgeCatalog() : strategyCatalog;
@@ -37,33 +31,24 @@ public class TrainingMethodSelector
                 ? new MethodStrategyService() : strategyService;
     }
 
-    public TrainingMethodSelector(
-            TrainingMethodDatabase database,
-            RequirementEvidenceEngine requirementEvidenceEngine,
-            ExpandedTrainingMethodCatalog expandedCatalog,
-            F2pBaselineMethodCatalog f2pBaselineCatalog,
-            TrainingMethodPolicy methodPolicy)
-    {
-        this(database, requirementEvidenceEngine, expandedCatalog,
-                f2pBaselineCatalog, methodPolicy,
-                new MethodStrategyKnowledgeCatalog(),
-                new MethodStrategyService());
-    }
-
-    /** Compatibility constructor keeps focused legacy-selector tests isolated. */
-    public TrainingMethodSelector(
-            TrainingMethodDatabase database,
+    public TrainingMethodSelector(TrainingMethodCatalog catalog,
             RequirementEvidenceEngine requirementEvidenceEngine)
     {
-        this(database, requirementEvidenceEngine, null, null,
-                new TrainingMethodPolicy(),
-                new MethodStrategyKnowledgeCatalog(),
-                new MethodStrategyService());
+        this(catalog, requirementEvidenceEngine, new TrainingMethodPolicy(),
+                new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
     }
 
-    public TrainingMethodSelector(TrainingMethodDatabase database)
+    public TrainingMethodSelector(TrainingMethodCatalog catalog)
     {
-        this(database, null);
+        this(catalog, null);
+    }
+
+    TrainingMethodSelector(TrainingMethodCatalog catalog,
+            RequirementEvidenceEngine evidence, TrainingMethodCatalog ignoredCurated,
+            TrainingMethodCatalog ignoredF2p, TrainingMethodPolicy policy)
+    {
+        this(new TrainingMethodCatalog(), evidence, policy, new MethodStrategyKnowledgeCatalog(),
+                new MethodStrategyService());
     }
 
     public TrainingPlan select(Skill skill, int currentLevel,
@@ -219,13 +204,11 @@ public class TrainingMethodSelector
         List<CuratedTrainingMethod> candidates = new ArrayList<>();
         var membership = membershipStatus(data);
 
-        if (expandedCatalog == null)
+        if (catalog.legacyOnly())
         {
-            for (TrainingMethod method : database.methodsFor(skill))
-            {
+            for (TrainingMethod method : catalog.legacyFor(skill))
                 candidates.add(new CuratedTrainingMethod(method,
                         TrainingMethodMetadata.legacy(method)));
-            }
             return candidates;
         }
 
@@ -233,7 +216,7 @@ public class TrainingMethodSelector
         // therefore uses only catalogs whose membership compatibility is explicit.
         if (membership == MembershipStatus.P2P)
         {
-            for (TrainingMethod method : database.methodsFor(skill))
+            for (TrainingMethod method : catalog.legacyFor(skill))
             {
                 // These legacy catch-alls delegate the meaningful method choice
                 // back to the player and can outrank their concrete successors.
@@ -243,15 +226,12 @@ public class TrainingMethodSelector
             }
         }
 
-        candidates.addAll(expandedCatalog.methodsFor(skill));
+        candidates.addAll(catalog.curatedFor(skill));
 
         // Basic F2P routes are also valid on members worlds. Keep them available
         // to P2P accounts as concrete low-level Runecraft routes and as a safe
         // fallback when a higher-level members method is not currently usable.
-        if (f2pBaselineCatalog != null)
-        {
-            candidates.addAll(f2pBaselineCatalog.methodsFor(skill));
-        }
+        candidates.addAll(catalog.f2pFor(skill));
         // Several routes exist in both the protected legacy catalog and the
         // richer expanded catalog. A duplicate must never masquerade as the
         // runner-up in Other Good Options or method-tournament diagnostics.
@@ -259,7 +239,7 @@ public class TrainingMethodSelector
         Map<String, CuratedTrainingMethod> unique = new LinkedHashMap<>();
         for (CuratedTrainingMethod candidate : candidates)
         {
-            var id = candidate.method().getId();
+            var id = candidate.method().id;
             if (unique.containsKey(id)) unique.remove(id);
             unique.put(id, candidate);
         }

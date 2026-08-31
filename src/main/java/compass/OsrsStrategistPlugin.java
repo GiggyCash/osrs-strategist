@@ -466,7 +466,7 @@ public class OsrsStrategistPlugin extends Plugin
         syncProfileState();
         Recommendation current = null;
         for (Recommendation recommendation : latestRecommendations)
-            if (activityId.equals(recommendation.getId()))
+            if (activityId.equals(recommendation.id))
             {
                 current = recommendation;
                 break;
@@ -570,12 +570,12 @@ public class OsrsStrategistPlugin extends Plugin
         if (previousPlan != null && previousPlan.matchesContext(context)
                 && previousPlan.getCurrentStep().isComplete(data)
                 && latestPlan != null
-                && !previousPlan.getCurrentStep().getId().equals(
-                        latestPlan.getCurrentStep().getId()))
+                && !previousPlan.getCurrentStep().id.equals(
+                        latestPlan.getCurrentStep().id))
             progressCheckpointPending |= progressAnalyticsService
                     .recordMilestone(new ProgressMilestone(
                             "plan-step:"
-                                    + previousPlan.getCurrentStep().getId(),
+                                    + previousPlan.getCurrentStep().id,
                             ProgressMilestoneType.PLAN_STEP,
                             previousPlan.getCurrentStep().getObjective()
                                     + " complete",
@@ -601,8 +601,8 @@ public class OsrsStrategistPlugin extends Plugin
             progressAnalyticsService.clearTarget();
             return;
         }
-        progressAnalyticsService.setTarget(new ProgressTarget(top.getId(),
-                plan.method().getId(), plan.method().getSkill(),
+        progressAnalyticsService.setTarget(new ProgressTarget(top.id,
+                plan.method().id, plan.method().getSkill(),
                 top.getCurrentExecutionTargetLevel()));
     }
 

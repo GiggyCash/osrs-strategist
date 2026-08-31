@@ -74,7 +74,7 @@ public class MilestoneTracker
         }
 
         return new TrackedMilestone(
-                best.getId(), best.getTitle(), skill.name(),
+                best.id, best.getTitle(), skill.name(),
                 best.getCurrentLevel(), best.getTargetLevel(),
                 progressionProtected
         );
@@ -90,10 +90,10 @@ public class MilestoneTracker
 
     public static Skill skillFor(Recommendation recommendation)
     {
-        if (recommendation == null || recommendation.getId() == null) return null;
+        if (recommendation == null || recommendation.id == null) return null;
         var prefix = "skill:";
-        if (!recommendation.getId().startsWith(prefix)) return null;
-        String name = recommendation.getId().substring(prefix.length())
+        if (!recommendation.id.startsWith(prefix)) return null;
+        String name = recommendation.id.substring(prefix.length())
                 .toUpperCase(Locale.ROOT);
         try
         {

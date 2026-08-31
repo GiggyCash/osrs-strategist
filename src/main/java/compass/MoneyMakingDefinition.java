@@ -12,7 +12,7 @@ import net.runelite.api.Skill;
 @Getter
 public final class MoneyMakingDefinition
 {
-    private final String id;
+    final String id;
     private final String name;
     private final String description;
     private final Skill primarySkill;

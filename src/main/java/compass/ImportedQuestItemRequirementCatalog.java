@@ -8,7 +8,7 @@ import java.util.*;
  */
 public final class ImportedQuestItemRequirementCatalog
 {
-    private static final String RESOURCE = "/content/quest-item-requirements.json";
+    private static final String RESOURCE = Text.get(1725);
     private final Map<String, Result> requirements;
 
     public ImportedQuestItemRequirementCatalog()

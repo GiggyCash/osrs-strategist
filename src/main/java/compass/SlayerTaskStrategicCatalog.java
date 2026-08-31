@@ -37,7 +37,7 @@ public class SlayerTaskStrategicCatalog
     public SlayerTaskStrategicProfile profileFor(String taskName)
     {
         var mechanics = taskProfiles.profileFor(taskName);
-        return mechanics == null ? null : byProfileId.get(mechanics.getId());
+        return mechanics == null ? null : byProfileId.get(mechanics.id);
     }
 
     public int size() { return byProfileId.size(); }
@@ -47,8 +47,8 @@ public class SlayerTaskStrategicCatalog
     {
         var mechanics = taskProfiles.profileFor(taskName);
         if (mechanics == null) return false;
-        var profile = byProfileId.get(mechanics.getId());
-        return INTRINSIC_WILDERNESS.contains(mechanics.getId())
+        var profile = byProfileId.get(mechanics.id);
+        return INTRINSIC_WILDERNESS.contains(mechanics.id)
                 || (profile != null && profile.isDirectEncounter()
                         && profile.getInherentRisk() == RiskLevel.HIGH);
     }

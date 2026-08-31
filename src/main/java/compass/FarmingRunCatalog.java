@@ -5,17 +5,11 @@ import javax.inject.Singleton;
 
 /** Farming run patches loaded from the bundled catalog. */
 @Singleton
-public class FarmingRunCatalog
+public class FarmingRunCatalog extends CatalogStore<FarmingRunPatchDefinition>
 {
-    private final List<FarmingRunPatchDefinition> patches = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array(Text.get(218),
-                    FarmingRunPatchDefinition[].class)));
-    public List<FarmingRunPatchDefinition> all() { return patches; }
+    public FarmingRunCatalog() { super(Text.get(218), FarmingRunPatchDefinition[].class); }
     public List<FarmingRunPatchDefinition> forRegion(int regionId)
     {
-        List<FarmingRunPatchDefinition> result = new ArrayList<>();
-        for (FarmingRunPatchDefinition patch : patches)
-            if (patch.matchesRegion(regionId)) result.add(patch);
-        return result;
+        return filter(patch -> patch.matchesRegion(regionId));
     }
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class StrategistRewardNotification
 {
-    private final String id;
+    final String id;
     private final String header;
     private final String left;
     private final String right;
@@ -22,7 +22,7 @@ public final class StrategistRewardNotification
         if (completion == null) return null;
         return new StrategistRewardNotification(
                 completion.getActivityId(),
-                "COMPASS MILESTONE",
+                Text.get(1707),
                 completion.getSkill().getName(),
                 completion.getStartedAtLevel() + " → " + completion.getTargetLevel(),
                 "Goal complete",

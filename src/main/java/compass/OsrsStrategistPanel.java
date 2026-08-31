@@ -184,7 +184,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildHeader(JPanel content)
     {
-        var title = label("GIELINOR COMPASS");
+        var title = label(get(1903));
         title.setForeground(StrategistTheme.GOLD);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 17f));
         content.add(title);
@@ -448,10 +448,10 @@ public class OsrsStrategistPanel extends PluginPanel
         var best = recommendations.get(0);
         String previousId = currentRecommendation == null
                 ? null
-                : currentRecommendation.getId();
+                : currentRecommendation.id;
 
         boolean recommendationChanged = previousId == null
-                || !previousId.equals(best.getId());
+                || !previousId.equals(best.id);
         if (recommendationChanged)
         {
             clearDetailsOverlay();
@@ -586,9 +586,9 @@ public class OsrsStrategistPanel extends PluginPanel
         if (currentRecommendation == null || !detailsOverlayEnabled) return;
         acknowledgeFirstUse();
         if (requiresRiskAcknowledgement(currentRecommendation)
-                && !currentRecommendation.getId().equals(
+                && !currentRecommendation.id.equals(
                         riskAcknowledgedRecommendationId))
-            riskAcknowledgedRecommendationId = currentRecommendation.getId();
+            riskAcknowledgedRecommendationId = currentRecommendation.id;
         detailsVisible = !detailsVisible;
         updateDetailsButtonLabel();
         detailsHandler.accept(detailsVisible ? currentRecommendation : null);
@@ -639,7 +639,7 @@ public class OsrsStrategistPanel extends PluginPanel
         if (currentRecommendation == null || feedbackHandler == null) return;
 
         var title = currentRecommendation.getTitle();
-        var id = currentRecommendation.getId();
+        var id = currentRecommendation.id;
         setWrappedText(feedbackStatus, feedbackStatusText(action, title), TEXT_WIDTH);
         acknowledgeFirstUse();
         feedbackHandler.accept(id, action);
@@ -888,9 +888,9 @@ public class OsrsStrategistPanel extends PluginPanel
         switch (action)
         {
             case LATER:
-                return activity + "\nLater for 1 hour";
+                return activity + get(1904);
             case NOT_TODAY:
-                return activity + "\nHidden for today";
+                return activity + get(1905);
             case DISLIKE:
                 return activity + get(1249);
             default:

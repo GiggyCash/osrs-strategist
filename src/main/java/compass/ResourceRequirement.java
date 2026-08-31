@@ -11,7 +11,7 @@ import lombok.Getter;
 public final class ResourceRequirement
 {
     @Getter
-    private final String id;
+    final String id;
     @Getter
     private final String label;
     @Getter

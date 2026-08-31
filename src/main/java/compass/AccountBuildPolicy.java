@@ -199,7 +199,7 @@ public final class AccountBuildPolicy
         if (!allowsSkill(account, method.getSkill())) return false;
 
         var build = effectiveBuild(account);
-        var id = method.getId() == null ? "" : method.getId().toLowerCase();
+        var id = method.id == null ? "" : method.id.toLowerCase();
 
         if (build == RestrictedBuildType.TEN_HITPOINTS)
         {
@@ -238,7 +238,7 @@ public final class AccountBuildPolicy
     {
         if (account == null || entry == null) return true;
         var build = effectiveBuild(account);
-        var id = entry.getId() == null ? "" : entry.getId().toLowerCase();
+        var id = entry.id == null ? "" : entry.id.toLowerCase();
 
         switch (build)
         {

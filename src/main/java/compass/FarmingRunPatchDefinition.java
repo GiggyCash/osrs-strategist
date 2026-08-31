@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public final class FarmingRunPatchDefinition
 {
-    private final String id;
+    final String id;
     private final String displayName;
     private final FarmingPatchKind kind;
     private final int minimumLevel;

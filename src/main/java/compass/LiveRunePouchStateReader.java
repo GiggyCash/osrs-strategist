@@ -117,7 +117,7 @@ public class LiveRunePouchStateReader
             // future note/token/placeholder containing "rune pouch" as an
             // actually usable pouch and leak stale varbit runes into planning.
             if (name.equals("rune pouch")
-                    || name.equals("divine rune pouch"))
+                    || name.equals(Text.get(1703)))
             {
                 return true;
             }

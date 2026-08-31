@@ -9,7 +9,7 @@ import net.runelite.api.Skill;
 public final class TrainingMethod
 {
     @Getter
-    private final String id;
+    final String id;
     @Getter
     private final Skill skill;
     @Getter

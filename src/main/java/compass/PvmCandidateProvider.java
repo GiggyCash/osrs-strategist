@@ -63,7 +63,7 @@ public class PvmCandidateProvider implements CandidateProvider
             // A generic hiscore identity is not a reason to boss. Preparation
             // competes globally only when a goal/task makes the encounter
             // relevant and a curated readiness floor can name concrete work.
-            if (!ready && (!catalog.hasCuratedReadinessProfile(definition.getId())
+            if (!ready && (!catalog.hasCuratedReadinessProfile(definition.id)
                     || !relevant)) continue;
 
             double score = (ready ? 48.0 : 32.0)
@@ -107,7 +107,7 @@ public class PvmCandidateProvider implements CandidateProvider
     private static Guidance readyGuidance(
             PvmActivityDefinition definition, String title)
     {
-        if (definition != null && "pvm:tztok_jad".equals(definition.getId()))
+        if (definition != null && "pvm:tztok_jad".equals(definition.id))
         {
             return new Guidance(
                     get(436),
@@ -115,17 +115,17 @@ public class PvmCandidateProvider implements CandidateProvider
                     get(438),
                     get(439));
         }
-        if (definition != null && "pvm:obor".equals(definition.getId()))
+        if (definition != null && "pvm:obor".equals(definition.id))
             return simpleReadyGuidance(title,
                     get(418),
                     get(419),
                     get(420));
-        if (definition != null && "pvm:bryophyta".equals(definition.getId()))
+        if (definition != null && "pvm:bryophyta".equals(definition.id))
             return simpleReadyGuidance(title,
                     get(421),
                     get(422),
                     get(423));
-        if (definition != null && "pvm:scurrius".equals(definition.getId()))
+        if (definition != null && "pvm:scurrius".equals(definition.id))
             return simpleReadyGuidance(title,
                     get(424),
                     get(1338),
@@ -149,7 +149,7 @@ public class PvmCandidateProvider implements CandidateProvider
             StrategyContext context)
     {
         if (definition == null || context == null) return false;
-        var id = definition.getId();
+        var id = definition.id;
         var goal = context.goal();
         if (goal == GoalType.BOWFA)
             return id.contains("gauntlet");
@@ -170,15 +170,15 @@ public class PvmCandidateProvider implements CandidateProvider
         return boss.contains(task) || task.contains(boss)
                 || (id.endsWith("kraken") && task.contains("kraken"))
                 || (id.endsWith("cerberus") && task.contains("hellhound"))
-                || (id.endsWith("alchemical_hydra") && task.contains("hydra"))
+                || (id.endsWith(get(1809)) && task.contains("hydra"))
                 || (id.endsWith("araxxor") && task.contains("araxyte"));
     }
 
     private static boolean catalogChallengeEncounter(String id)
     {
         return id != null && (id.contains("gauntlet") || id.contains("raid")
-                || id.contains("tombs_of_amascut") || id.contains("chambers_of_xeric")
-                || id.contains("theatre_of_blood") || id.endsWith("tzkal_zuk")
+                || id.contains(get(1810)) || id.contains(get(1811))
+                || id.contains(get(1812)) || id.endsWith("tzkal_zuk")
                 || id.endsWith("sol_heredit") || id.endsWith("nex"));
     }
 

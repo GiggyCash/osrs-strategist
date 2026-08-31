@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public final class GuidanceStep
 {
-    private final String id;
+    final String id;
     private final String label;
     private final String detail;
     private final GuidanceStepState state;

@@ -31,19 +31,19 @@ public final class ContentAccessRules
     private static final Set<String> MEMBERS_ONLY_METHOD_IDS = Set.of(
             "runecraft_gotr",
             "mining_mlm",
-            "smithing_foundry",
-            "smithing_giants_foundry",
-            "fishing_tempoross",
-            "firemaking_wintertodt",
-            "construction_homes",
-            "construction_mahogany_homes",
-            "herblore_mixology",
+            Text.get(1671),
+            Text.get(1672),
+            Text.get(1673),
+            Text.get(1674),
+            Text.get(1675),
+            Text.get(1676),
+            Text.get(1677),
             "farming_tithe",
             "hunter_rumours",
-            "hunter_herbiboar",
-            "woodcutting_forestry",
-            "thieving_pyramid",
-            "thieving_varlamore"
+            Text.get(1678),
+            Text.get(1679),
+            Text.get(1680),
+            Text.get(1681)
     );
 
     private ContentAccessRules()
@@ -76,7 +76,7 @@ public final class ContentAccessRules
         // read may temporarily narrow a member to safe F2P routes, but can never
         // expose a members-only route to an F2P account.
         return !method.isMembersOnly()
-                && !MEMBERS_ONLY_METHOD_IDS.contains(method.getId());
+                && !MEMBERS_ONLY_METHOD_IDS.contains(method.id);
     }
 
     public static boolean isFreeToPlaySkill(Skill skill)

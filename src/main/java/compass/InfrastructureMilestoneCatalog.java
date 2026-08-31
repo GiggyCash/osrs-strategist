@@ -26,8 +26,8 @@ public final class InfrastructureMilestoneCatalog
         for (InfrastructureMilestone value : BundledCatalogLoader.array(
                 Text.get(318),
                 InfrastructureMilestone[].class))
-            if (values.put(value.getId(), value) != null)
-                throw new IllegalStateException(Text.get(1258) + value.getId());
+            if (values.put(value.id, value) != null)
+                throw new IllegalStateException(Text.get(1258) + value.id);
         milestones = Collections.unmodifiableMap(values);
     }
 

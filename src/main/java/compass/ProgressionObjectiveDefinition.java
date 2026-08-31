@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class ProgressionObjectiveDefinition
 {
-    private final String id;
+    final String id;
     private final String title;
     private final String methodId;
     private final ProgressionObjectiveType type;

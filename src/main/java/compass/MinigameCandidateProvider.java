@@ -29,7 +29,7 @@ public class MinigameCandidateProvider implements CandidateProvider
     }
 
     @Override
-    public String getId() { return "minigame-candidates"; }
+    public String getId() { return get(1813); }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -45,7 +45,7 @@ public class MinigameCandidateProvider implements CandidateProvider
 
         for (MinigameDefinition definition : catalog.all())
         {
-            if (!snapshot.isUnlocked(definition.getId())) continue;
+            if (!snapshot.isUnlocked(definition.id)) continue;
             if (!definition.supports(mode)) continue;
             if (!ContentAccessRules.isContentAvailable(
                     account.membership(), definition.isFreeToPlay())) continue;
@@ -56,7 +56,7 @@ public class MinigameCandidateProvider implements CandidateProvider
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                     && definition.getRiskLevel() == RiskLevel.HIGH) continue;
 
-            var id = "minigame:" + definition.getId();
+            var id = "minigame:" + definition.id;
             if (context.preferenceProfile().isOnCooldown(id)) continue;
             var score = 28.0;
             if (definition.getRiskLevel() == RiskLevel.NONE) score += 4.0;
@@ -68,14 +68,14 @@ public class MinigameCandidateProvider implements CandidateProvider
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
             MinigameSetupProfile setup = setupCatalog.forActivity(
-                    definition.getId());
+                    definition.id);
             ItemRequirementResult itemResult = setup == null ? null
                     : itemEvaluator.evaluate(setup.getItems(), context.data(),
                             context.usesGroupStorage());
             var verified = setup != null && itemResult.isSatisfied();
             Guidance guidance = setup == null
                     ? verificationGuidance(definition)
-                    : "forestry".equals(definition.getId())
+                    : "forestry".equals(definition.id)
                             ? forestryGuidance(account, verified, itemResult)
                             : new Guidance(
                             verified ? setup.getInstructions()
@@ -107,7 +107,7 @@ public class MinigameCandidateProvider implements CandidateProvider
         var activity = definition.getName();
         return new Guidance(
                 get(350) + activity
-                        + " setup equipped.",
+                        + get(1814),
                 get(351),
                 get(1492) + activity + ".",
                 definition.getRewardFocus() + ".");

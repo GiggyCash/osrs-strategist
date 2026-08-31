@@ -170,7 +170,7 @@ public class StrategyEngine
             if (opportunity == null
                     || opportunity.getConfidence() == Confidence.BLOCKED
                     || context.preferenceProfile().isOnCooldown(
-                    opportunity.getId())
+                    opportunity.id)
                     || !candidateSafetyPolicy.isAllowed(
                     opportunitySafety(opportunity), context)) continue;
             opportunities.add(opportunity);
@@ -199,7 +199,7 @@ public class StrategyEngine
                 var superseded = provider.supersededCandidateIds();
                 if (superseded != null && !superseded.isEmpty())
                     pool.removeIf(value -> value != null
-                            && superseded.contains(value.getId()));
+                            && superseded.contains(value.id));
                 for (Recommendation candidate : candidates)
                 {
                     if (candidate == null
@@ -240,9 +240,9 @@ public class StrategyEngine
         {
             java.util.Set<String> promotedIds = new java.util.HashSet<>();
             for (Recommendation recommendation : recommendations)
-                if (recommendation.getId().startsWith("opportunity:"))
-                    promotedIds.add(recommendation.getId());
-            opportunities.removeIf(value -> promotedIds.contains(value.getId()));
+                if (recommendation.id.startsWith("opportunity:"))
+                    promotedIds.add(recommendation.id);
+            opportunities.removeIf(value -> promotedIds.contains(value.id));
         }
         StrategicPlan plan = strategicPlanService.build(
                 recommendations, context, System.currentTimeMillis());
@@ -258,7 +258,7 @@ public class StrategyEngine
         {
             return null;
         }
-        var id = opportunity.getId();
+        var id = opportunity.id;
         var preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return null;
 
@@ -342,7 +342,7 @@ public class StrategyEngine
         for (FarmingAccessDefinition definition : FARMING_ACCESS_CATALOG.all())
         {
             if (definition.isHerbPatch()
-                    && farming.isPatchReachable(definition.getId()))
+                    && farming.isPatchReachable(definition.id))
             {
                 names.add(definition.getDisplayName());
             }
@@ -402,7 +402,7 @@ public class StrategyEngine
                     recommendation, context);
             var semanticKey = deduplicator.semanticKey(recommendation);
             if (context != null && (context.preferenceProfile()
-                    .isOnCooldown(recommendation.getId())
+                    .isOnCooldown(recommendation.id)
                     || context.preferenceProfile()
                     .isSemanticOnCooldown(semanticKey))) continue;
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
@@ -459,8 +459,8 @@ public class StrategyEngine
         if (plan != null && plan.method() != null
                 && plan.method().getSkill() != null)
             return "skill:" + plan.method().getSkill().name();
-        String id = recommendation.getId() == null ? ""
-                : recommendation.getId().toLowerCase(Locale.ROOT);
+        String id = recommendation.id == null ? ""
+                : recommendation.id.toLowerCase(Locale.ROOT);
         var colon = id.indexOf(':');
         return colon < 0 ? id : id.substring(0, colon);
     }

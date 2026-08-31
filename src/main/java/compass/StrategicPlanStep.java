@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public final class StrategicPlanStep
 {
-    private final String id;
+    final String id;
     private final GoalNodeKind kind;
     private final String objective;
     private final String reason;

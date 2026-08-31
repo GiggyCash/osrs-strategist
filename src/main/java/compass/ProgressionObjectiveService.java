@@ -20,14 +20,14 @@ public class ProgressionObjectiveService
         }
 
         ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.method().getId());
+                catalog.forMethod(plan.method().id);
         if (objective == null)
         {
             return null;
         }
 
         if (collectionLog != null
-                && collectionLog.isObjectiveComplete(objective.getId()))
+                && collectionLog.isObjectiveComplete(objective.id))
         {
             return null;
         }
@@ -47,11 +47,11 @@ public class ProgressionObjectiveService
         // Explicit catalog objectives take precedence. The method flag remains
         // a conservative fallback while collection-log readers are incomplete.
         ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.method().getId());
+                catalog.forMethod(plan.method().id);
         if (objective != null)
         {
             return collectionLog == null
-                    || !collectionLog.isObjectiveComplete(objective.getId());
+                    || !collectionLog.isObjectiveComplete(objective.id);
         }
 
         return plan.method().isProgressionProtected();

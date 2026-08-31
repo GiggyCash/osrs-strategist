@@ -10,14 +10,14 @@ import net.runelite.client.config.ConfigManager;
 @Singleton
 public class AccountProfileStore
 {
-    static final String GROUP = "osrs-strategist-profile";
+    static final String GROUP = Text.get(1609);
     private static final String PREFERENCES = "preferences";
     private static final String COOLDOWNS = "cooldowns";
-    private static final String ADJUSTMENTS = "timedAdjustments";
-    private static final String STRATEGY = "strategy-settings";
+    private static final String ADJUSTMENTS = Text.get(1612);
+    private static final String STRATEGY = Text.get(1613);
     private static final String MILESTONE = "activeMilestone";
-    private static final String RECOMMENDATIONS = "recommendation-history";
-    private static final String PROGRESS = "progress-history";
+    private static final String RECOMMENDATIONS = Text.get(1614);
+    private static final String PROGRESS = Text.get(1615);
 
     interface ProfileConfiguration
     {

@@ -35,7 +35,7 @@ public class FarmingRunObservationService
             var state = decoder.decode(patch.getKind(), raw);
             if (state != FarmingPatchCycleState.UNKNOWN)
             {
-                changed |= store.remember(patch.getId(), state);
+                changed |= store.remember(patch.id, state);
             }
         }
         return changed;

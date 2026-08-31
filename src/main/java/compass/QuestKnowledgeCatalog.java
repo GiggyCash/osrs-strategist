@@ -19,7 +19,7 @@ public class QuestKnowledgeCatalog
 {
     private static final String RESOURCE = Text.get(558);
     private static final Pattern REWARD_XP = Pattern.compile(
-            "\\{\\{SCP\\|([^|}]+)\\|([0-9,]+)", Pattern.CASE_INSENSITIVE);
+            Text.get(1919), Pattern.CASE_INSENSITIVE);
     private final Map<String, QuestDefinition> definitions = new LinkedHashMap<>();
 
     public QuestKnowledgeCatalog()
@@ -49,7 +49,7 @@ public class QuestKnowledgeCatalog
             {
                 addEvidenceCheck(checks, "Required items", details.getItems());
                 addEvidenceCheck(checks, Text.get(1166), details.getRequirements());
-                addEvidenceCheck(checks, "Combat encounters", details.getEnemies());
+                addEvidenceCheck(checks, Text.get(1920), details.getEnemies());
                 if (!details.hasItemEvidence()) uncertainties.add("items");
                 if (!details.hasRequirementEvidence() || !details.hasCombatEvidence())
                     uncertainties.add("access/combat");
@@ -106,7 +106,7 @@ public class QuestKnowledgeCatalog
         for (Skill skill : Arrays.asList(Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE,
                 Skill.HITPOINTS, Skill.PRAYER, Skill.RANGED, Skill.MAGIC))
             if (text.matches("(?s).*\\b" + skill.getName().toLowerCase(Locale.ROOT)
-                    + "\\b.*\\bexperience\\b.*") && !parsed.containsKey(skill))
+                    + Text.get(1921)) && !parsed.containsKey(skill))
                 return true;
         return false;
     }
@@ -115,8 +115,8 @@ public class QuestKnowledgeCatalog
     {
         if (wiki == null) return "";
         return wiki.replaceAll("(?s)<!--.*?-->", " ")
-                .replaceAll("\\[\\[(?:[^]|]+\\|)?([^]]+)]]", "$1")
-                .replaceAll("\\{\\{SCP\\|([^|}]+)\\|?([^}]*)}}", "$2 $1")
+                .replaceAll(Text.get(1922), "$1")
+                .replaceAll(Text.get(1923), "$2 $1")
                 .replaceAll("\\{\\{[^}]+}}", " ").replaceAll("'{2,}", "")
                 .replaceAll("[\\r\\n*#]+", " ").replaceAll("<[^>]+>", " ")
                 .replaceAll("\\s+", " ").trim();

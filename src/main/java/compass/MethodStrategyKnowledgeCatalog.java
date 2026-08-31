@@ -15,24 +15,24 @@ public final class MethodStrategyKnowledgeCatalog
             EnumSet.allOf(AccountMode.class);
     private static final Set<String> CONVENTIONAL_BANK_LOOPS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-                    "prayer_f2p_bones",
-                    "cooking_f2p_fish", "cooking_f2p_fish_baseline",
-                    "cooking_hosidius", "cooking_wines",
-                    "fishing_karambwan", "mining_mlm",
-                    "firemaking_f2p_logs",
-                    "woodcutting_draynor_oaks",
-                    "smithing_f2p_bronze", "smithing_f2p_iron",
-                    "smithing_f2p_steel", "smithing_f2p_platebodies",
-                    "smithing_f2p_platebody_baseline",
-                    "crafting_f2p_gold_amulets", "crafting_f2p_tiaras",
+                    Text.get(1863),
+                    Text.get(1735), Text.get(1864),
+                    Text.get(1577), "cooking_wines",
+                    Text.get(1771), "mining_mlm",
+                    Text.get(1636),
+                    Text.get(1865),
+                    Text.get(1866), Text.get(1867),
+                    Text.get(1868), Text.get(1631),
+                    Text.get(1869),
+                    Text.get(1870), Text.get(1871),
                     "crafting_gems", "crafting_dhide", "fletching_bows",
-                    "woodcutting_f2p_oaks", "woodcutting_f2p_willows",
-                    "woodcutting_f2p_willows_baseline",
-                    "herblore_low_potions", "runecraft_f2p_air",
-                    "runecraft_f2p_mind", "runecraft_f2p_water",
-                    "runecraft_f2p_earth", "runecraft_f2p_fire",
-                    "runecraft_f2p_body", "thieving_lumbridge_people",
-                    "thieving_ardy_knights", "thieving_vyres")));
+                    Text.get(1872), Text.get(1873),
+                    Text.get(1874),
+                    Text.get(1579), Text.get(1875),
+                    Text.get(1876), Text.get(1877),
+                    Text.get(1878), Text.get(1879),
+                    Text.get(1880), Text.get(1633),
+                    Text.get(1634), "thieving_vyres")));
 
     private final Map<String, java.util.List<MethodStrategyProfile>> exact =
             new HashMap<>();
@@ -58,7 +58,7 @@ public final class MethodStrategyKnowledgeCatalog
     {
         if (method == null || metadata == null || mode == null) return null;
         java.util.List<MethodStrategyProfile> specific = exact.get(
-                method.getId());
+                method.id);
         if (specific != null)
         {
             MethodStrategyProfile selected = null;
@@ -70,7 +70,7 @@ public final class MethodStrategyKnowledgeCatalog
             return selected;
         }
 
-        var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.getId());
+        var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.id);
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && (bankLoop || !metadata.isUimFriendly())) return null;
@@ -80,10 +80,10 @@ public final class MethodStrategyKnowledgeCatalog
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
-        var key = mode.name() + ':' + method.getId();
+        var key = mode.name() + ':' + method.id;
         return generated.computeIfAbsent(key, ignored -> genericProfile(
                 method, metadata, mode, bankLoop, modes,
-                executionProfiles.forMethod(method.getId())));
+                executionProfiles.forMethod(method.id)));
     }
 
     private static MethodStrategyProfile genericProfile(TrainingMethod method,
@@ -96,7 +96,7 @@ public final class MethodStrategyKnowledgeCatalog
         String reason = metadata.isSelfSourceFriendly() && mode.isIronLike()
                 ? Text.get(386)
                 : Text.get(387);
-        return new MethodStrategyProfile(method.getId(),
+        return new MethodStrategyProfile(method.id,
                 StrategyKnowledgeTier.VERIFIED_SHARED, modes,
                 bankLoop ? MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
                         : MethodBankingBehavior.NONE,

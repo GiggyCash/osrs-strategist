@@ -106,7 +106,7 @@ public class QuestRequirementResolver
         }
 
         if (definition.getQuestPointsRequired() > 0)
-            missing.add(new Preparation("Verify at least "
+            missing.add(new Preparation(get(1924)
                     + definition.getQuestPointsRequired() + " quest points",
                     SafetyEvidence.harmless(definition.isFreeToPlay())));
         for (String check : definition.getAccessChecks())

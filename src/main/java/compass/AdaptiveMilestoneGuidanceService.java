@@ -84,7 +84,7 @@ public class AdaptiveMilestoneGuidanceService
         }
 
         MethodProfile profile = profileCatalog.forMethod(
-                plan.method().getId());
+                plan.method().id);
         if (profile == null) return null;
 
         var currentXp = data.account().xp(skill);
@@ -144,7 +144,7 @@ public class AdaptiveMilestoneGuidanceService
                 ? null
                 : resources == null ? null : resources.getGuidance();
         String routeSetup = routeSetup(
-                data, plan.method().getId(), action, currentLevel,
+                data, plan.method().id, action, currentLevel,
                 useGroupStorage);
         if (routeSetup != null)
         {
@@ -152,7 +152,7 @@ public class AdaptiveMilestoneGuidanceService
                     ? routeSetup : routeSetup + " " + supplies;
         }
 
-        String location = routeLocation(data, plan.method().getId(),
+        String location = routeLocation(data, plan.method().id,
                 action, plan.method().getInstructions());
         String actionText = executionAction(plan.method(), profile, action,
                 routeOutputs);
@@ -227,7 +227,7 @@ public class AdaptiveMilestoneGuidanceService
         if (methodId.startsWith("mining_"))
         {
             String pickaxe = firstObserved(items,
-                    "Crystal pickaxe", "Infernal pickaxe", "Dragon pickaxe",
+                    "Crystal pickaxe", get(1622), "Dragon pickaxe",
                     "Rune pickaxe", "Adamant pickaxe", "Mithril pickaxe",
                     "Black pickaxe", "Steel pickaxe", "Iron pickaxe",
                     "Bronze pickaxe");
@@ -251,38 +251,38 @@ public class AdaptiveMilestoneGuidanceService
                     : get(38);
         if (isNetFishingMethod(methodId))
             return get(6);
-        if ("hunter_bird_traps".equals(methodId))
+        if (get(1623).equals(methodId))
             return items.has("Bird snare")
                     ? get(1283)
                     : get(7);
         if ("hunter_falconry".equals(methodId))
             return get(8);
-        if ("hunter_salamanders".equals(methodId))
+        if (get(1624).equals(methodId))
         {
             var traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
             return "Bring " + traps + get(1284) + traps
                     + get(9);
         }
-        if ("magic_f2p_combat".equals(methodId))
+        if (get(1625).equals(methodId))
             return get(10);
-        if ("magic_f2p_fire_bolt".equals(methodId))
+        if (get(1626).equals(methodId))
             return get(11);
-        if ("magic_f2p_fire_blast".equals(methodId))
+        if (get(1627).equals(methodId))
             return get(12);
         if ("magic_f2p_curse".equals(methodId))
             return get(13);
-        if ("magic_f2p_fire_strike_splash".equals(methodId))
+        if (get(1628).equals(methodId))
             return get(14);
-        if ("construction_crude_chairs".equals(methodId)
-                || "construction_oak_larders".equals(methodId))
+        if (get(1629).equals(methodId)
+                || get(1630).equals(methodId))
             return get(1268);
-        if ("smithing_f2p_platebodies".equals(methodId))
+        if (get(1631).equals(methodId))
             return get(15);
-        if ("smithing_f2p_uim_bronze".equals(methodId))
+        if (get(1632).equals(methodId))
             return get(17);
-        if ("thieving_lumbridge_people".equals(methodId))
+        if (get(1633).equals(methodId))
             return get(18);
-        if ("thieving_ardy_knights".equals(methodId))
+        if (get(1634).equals(methodId))
             return get(19);
         if (methodId.startsWith("runecraft_f2p_"))
         {
@@ -299,11 +299,11 @@ public class AdaptiveMilestoneGuidanceService
     {
         String actionName = action == null || action.getName() == null
                 ? "" : action.getName().toLowerCase(Locale.ROOT);
-        if ("hunter_salamanders".equals(methodId))
+        if (get(1624).equals(methodId))
         {
             if (actionName.contains("red salamander"))
                 return get(20);
-            if (actionName.contains("orange salamander"))
+            if (actionName.contains(get(1635)))
                 return get(21);
             return get(22);
         }
@@ -312,15 +312,15 @@ public class AdaptiveMilestoneGuidanceService
         if (isNetFishingMethod(methodId))
             return get(24);
         if ("magic_f2p_curse".equals(methodId)
-                || "magic_f2p_fire_strike_splash".equals(methodId))
+                || get(1628).equals(methodId))
         {
             return get(25);
         }
-        if ("smithing_f2p_platebodies".equals(methodId))
+        if (get(1631).equals(methodId))
         {
             return get(26);
         }
-        if ("smithing_f2p_uim_bronze".equals(methodId))
+        if (get(1632).equals(methodId))
         {
             return get(28);
         }
@@ -333,11 +333,11 @@ public class AdaptiveMilestoneGuidanceService
         {
             if ("crafting_gems".equals(methodId)
                     || "fletching_bows".equals(methodId)
-                    || "herblore_low_potions".equals(methodId))
+                    || get(1579).equals(methodId))
             {
                 return get(29);
             }
-            if ("firemaking_f2p_logs".equals(methodId))
+            if (get(1636).equals(methodId))
             {
                 return get(30);
             }
@@ -362,7 +362,7 @@ public class AdaptiveMilestoneGuidanceService
                     + format(maximumActions) + " "
                     + profile.unit(maximumActions) + " across "
                     + outputNames(outputs) + " to level " + targetLevel + ".";
-        return format(xpNeeded) + " XP remaining — "
+        return format(xpNeeded) + get(1637)
                 + format(maximumActions) + " "
                 + profile.unit(maximumActions) + " with "
                 + selected.getName() + " to level " + targetLevel + ".";
@@ -398,7 +398,7 @@ public class AdaptiveMilestoneGuidanceService
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;
-        String haystack = Names.actionKey(action.getId()) + " "
+        String haystack = Names.actionKey(action.id) + " "
                 + Names.actionKey(action.getName()) + " "
                 + Names.actionKey(action.getCategory());
         for (String term : terms)
@@ -464,10 +464,10 @@ public class AdaptiveMilestoneGuidanceService
                         .VARIABLE_OUTPUT_RANGE)
         {
             var names = outputNames(outputs).toLowerCase(Locale.ROOT);
-            if (isFlyFishingMethod(method.getId()))
+            if (isFlyFishingMethod(method.id))
                 return "Fly-fish " + names
                         + get(31);
-            if (isNetFishingMethod(method.getId()))
+            if (isNetFishingMethod(method.id))
                 return get(1288) + names
                         + get(32);
         }
@@ -491,13 +491,13 @@ public class AdaptiveMilestoneGuidanceService
     private static boolean isFlyFishingMethod(String methodId)
     {
         return "fishing_f2p_fly".equals(methodId)
-                || "fishing_f2p_fly_baseline".equals(methodId);
+                || get(1638).equals(methodId);
     }
 
     private static boolean isNetFishingMethod(String methodId)
     {
-        return "fishing_lumbridge_shrimps".equals(methodId)
-                || "fishing_f2p_shrimps".equals(methodId);
+        return get(1639).equals(methodId)
+                || get(1640).equals(methodId);
     }
 
     private static String firstObserved(

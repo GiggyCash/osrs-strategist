@@ -94,8 +94,8 @@ final class FallbackRecommendationFactory
 
     static boolean isFallback(Recommendation recommendation)
     {
-        return recommendation != null && recommendation.getId() != null
-                && recommendation.getId().startsWith(PREFIX);
+        return recommendation != null && recommendation.id != null
+                && recommendation.id.startsWith(PREFIX);
     }
 
     private static Skill firstTrainableMeleeSkill(AccountSnapshot account)

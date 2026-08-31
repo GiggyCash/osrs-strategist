@@ -15,7 +15,7 @@ public class SlayerTaskProfileCatalog
         profiles = Collections.unmodifiableList(Arrays.asList(
                 BundledCatalogLoader.array(RESOURCE, SlayerTaskProfile[].class)));
         for (SlayerTaskProfile profile : profiles)
-            if (profile.getId() == null || profile.getAliases() == null
+            if (profile.id == null || profile.getAliases() == null
                     || profile.getAliases().isEmpty())
                 throw new IllegalStateException(Text.get(1184) + RESOURCE);
     }

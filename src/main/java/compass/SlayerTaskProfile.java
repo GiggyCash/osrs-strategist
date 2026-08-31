@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public final class SlayerTaskProfile
 {
-    private final String id;
+    final String id;
     private final List<String> aliases;
     private final List<String> requiredProtection;
     private final String preferredLocation;
