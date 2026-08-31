@@ -1,0 +1,95 @@
+package compass;
+
+import java.util.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import net.runelite.api.Skill;
+
+/** Converts any selected method into the same reusable checklist model. */
+@Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+public class MethodGuidanceService
+{
+    private final FarmingRunPlanner farmingRunPlanner;
+
+    public GuidanceChecklist build(
+            Recommendation recommendation,
+            GameData data)
+    {
+        if (recommendation == null) return null;
+        var plan = recommendation.plan();
+        if (plan == null || plan.method() == null) return null;
+
+        var method = plan.method();
+        var guidance = recommendation.getGuidance();
+        if (method.getSkill() == Skill.FARMING && guidance == null)
+        {
+            return farmingRunPlanner.build(data, recommendation.getId());
+        }
+
+        List<GuidanceStep> steps = new ArrayList<>();
+        for (RequirementCheck check : plan.getRequirementChecks())
+        {
+            steps.add(new GuidanceStep(
+                    check.getId(), check.getLabel(), check.getEvidence(),
+                    convert(check.getState())));
+        }
+
+        if (steps.isEmpty())
+        {
+            steps.add(new GuidanceStep(
+                    "method:ready", "Method ready",
+                    Text.get(372),
+                    GuidanceStepState.COMPLETE));
+        }
+
+        String bring = guidance == null ? null
+                : Presentation.compactSentence(
+                        guidance.getSupplies(), 120);
+        String where = guidance == null ? null
+                : Presentation.compactSentence(
+                        guidance.getLocation(), 110);
+        String action = guidance == null
+                ? method.getInstructions()
+                : guidance.getAction();
+        action = Presentation.compactSentence(action, 135);
+        String progress = guidance != null
+                && guidance.getProgress() != null
+                && !guidance.getProgress().trim().isEmpty()
+                ? guidance.getProgress()
+                : recommendation.getCurrentLevel() > 0
+                && recommendation.getCurrentExecutionTargetLevel()
+                        > recommendation.getCurrentLevel()
+                ? "Level " + recommendation.getCurrentLevel() + " → "
+                        + recommendation.getCurrentExecutionTargetLevel() : null;
+        String important = guidance == null ? null
+                : guidance.getRiskDisclosure() != null
+                ? guidance.getRiskDisclosure().getHeading() + ": "
+                        + guidance.getRiskDisclosure().getMessage()
+                : criticalNote(guidance.getNote());
+
+        return new GuidanceChecklist(
+                recommendation.getId(), method.getName(),
+                plan.getWhyThisMethod(), steps, bring, where, action,
+                progress, important);
+    }
+
+    private static String criticalNote(String note)
+    {
+        if (note == null || note.trim().isEmpty()) return null;
+        var lower = note.toLowerCase(java.util.Locale.ROOT);
+        if (!(lower.contains("wilderness") || lower.contains("hardcore")
+                || lower.contains("uim") || lower.contains("iron")
+                || lower.contains("restricted") || lower.contains("mandatory")
+                || lower.contains(Text.get(1238))
+                || lower.contains("irreversible"))) return null;
+        return Presentation.compactSentence(note, 135);
+    }
+
+    private GuidanceStepState convert(RequirementState state)
+    {
+        if (state == RequirementState.VERIFIED) return GuidanceStepState.COMPLETE;
+        if (state == RequirementState.BLOCKED) return GuidanceStepState.BLOCKED;
+        return GuidanceStepState.CHECK_NEEDED;
+    }
+}

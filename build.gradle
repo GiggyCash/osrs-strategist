@@ -12,7 +12,7 @@ repositories {
 }
 
 def runeLiteVersion = 'latest.release'
-def pluginMainClass = 'com.udderlywet.osrsstrategist.OsrsStrategistPluginTest'
+def pluginMainClass = 'compass.OsrsStrategistPluginTest'
 
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
@@ -43,12 +43,12 @@ tasks.register('run', JavaExec) {
 tasks.register('contentCensus', JavaExec) {
     dependsOn testClasses
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.udderlywet.osrsstrategist.ContentCensusReporter'
+    mainClass = 'compass.ContentCensusReporter'
 }
 
 tasks.register('contentCensusSummary', JavaExec) {
     dependsOn testClasses
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.udderlywet.osrsstrategist.ContentCensusReporter'
+    mainClass = 'compass.ContentCensusReporter'
     args '--summary'
 }

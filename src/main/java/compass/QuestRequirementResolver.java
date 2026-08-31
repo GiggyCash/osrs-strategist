@@ -1,0 +1,284 @@
+package compass;
+import static compass.Text.get;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import net.runelite.api.Skill;
+
+/** Resolves only evidence represented by the current local snapshots. */
+@Singleton
+public class QuestRequirementResolver
+{
+    private static final String IMPORTED_ITEM_PREFIX = "Required items:";
+    private final ImportedQuestItemRequirementCatalog importedItems;
+    private final ResourceSourceCatalog resourceSources;
+    private final ResourceAcquisitionPlanner resourcePlanner;
+
+    @Inject
+    public QuestRequirementResolver(ResourceSourceCatalog resourceSources,
+            ResourceAcquisitionPlanner resourcePlanner)
+    {
+        this.importedItems = new ImportedQuestItemRequirementCatalog();
+        this.resourceSources = resourceSources == null
+                ? new ResourceSourceCatalog() : resourceSources;
+        this.resourcePlanner = resourcePlanner == null
+                ? new ResourceAcquisitionPlanner(this.resourceSources)
+                : resourcePlanner;
+    }
+
+    public QuestRequirementResolver(ResourceSourceCatalog resourceSources)
+    {
+        this(resourceSources, new ResourceAcquisitionPlanner(resourceSources));
+    }
+
+    /** Compatibility constructor for focused tests and local tooling. */
+    public QuestRequirementResolver()
+    {
+        this(new ResourceSourceCatalog());
+    }
+
+    public QuestResolution resolve(QuestDefinition definition, StrategyContext context)
+    {
+        if (definition == null || context == null || context.data() == null
+                || context.data().account() == null) return null;
+
+        var data = context.data();
+        var account = data.account();
+        var quests = data.quests();
+        List<Preparation> missing = new ArrayList<>();
+
+        for (String prerequisite : definition.getPrerequisites())
+        {
+            QuestStatus status = quests == null ? QuestStatus.UNKNOWN
+                    : quests.statusOf(prerequisite);
+            if (status != QuestStatus.COMPLETE)
+                missing.add(new Preparation(status == QuestStatus.UNKNOWN
+                        ? get(560) + prerequisite
+                        : get(1349) + prerequisite,
+                        RestrictedQuestPolicy.isSafe(account, prerequisite)
+                                ? SafetyEvidence.verifiedSafe(
+                                definition.isFreeToPlay())
+                                : SafetyEvidence.potentiallyIrreversible(
+                                definition.isFreeToPlay())));
+        }
+
+        for (Map.Entry<Skill, Integer> requirement
+                : definition.getSkillRequirements().entrySet())
+        {
+            var current = account.level(requirement.getKey());
+            if (current < requirement.getValue())
+                missing.add(new Preparation("Train "
+                        + requirement.getKey().getName() + " from " + current
+                        + " to " + requirement.getValue(),
+                        SafetyEvidence.skill(definition.isFreeToPlay(),
+                                requirement.getKey())));
+        }
+
+        ItemIndex items = new ItemIndex(data,
+                context.usesGroupStorage());
+        // An inventory observation does not prove that an unobserved bank is empty.
+        var ownershipObserved = items.usableOwnershipObserved();
+        for (QuestDefinition.QuestItemRequirement requirement
+                : definition.getItemRequirements())
+        {
+            var owned = items.quantity(requirement.getName());
+            if (owned < requirement.getQuantity())
+                missing.add(new Preparation((ownershipObserved ? "Obtain " : get(1350))
+                        + Math.max(0, requirement.getQuantity() - owned) + " × "
+                        + requirement.getName(), SafetyEvidence.harmless(
+                        definition.isFreeToPlay())));
+        }
+
+        ImportedQuestItemRequirementCatalog.Result imported = hasImportedItemEvidence(definition)
+                ? importedItems.resultFor(definition.getName()) : null;
+        var expression = definition.getItemRequirementExpression();
+        if (expression == null && imported != null)
+            expression = imported.getExpression();
+        ItemRequirementResult expressionResult = new ItemRequirementEvaluator()
+                .evaluate(expression, data, context.usesGroupStorage());
+        if (!expressionResult.isSatisfied()
+                && !expressionResult.getAction().isEmpty())
+        {
+            missing.add(itemPreparation(expressionResult, definition, context));
+        }
+
+        if (definition.getQuestPointsRequired() > 0)
+            missing.add(new Preparation("Verify at least "
+                    + definition.getQuestPointsRequired() + " quest points",
+                    SafetyEvidence.harmless(definition.isFreeToPlay())));
+        for (String check : definition.getAccessChecks())
+        {
+            if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
+            {
+                if (imported == null)
+                {
+                    missing.add(new Preparation(check,
+                            SafetyEvidence.harmless(
+                                    definition.isFreeToPlay())));
+                }
+                else
+                {
+                    for (String unresolved : imported.getUnresolved())
+                        missing.add(new Preparation(
+                                get(1351) + unresolved,
+                                SafetyEvidence.harmless(
+                                        definition.isFreeToPlay())));
+                }
+                continue;
+            }
+            missing.add(new Preparation(check,
+                    SafetyEvidence.harmless(definition.isFreeToPlay())));
+        }
+
+        String unlocks = definition.getUnlocks().isEmpty() ? ""
+                : String.join(", ", definition.getUnlocks());
+        if (missing.isEmpty())
+        {
+            return new QuestResolution(Confidence.VERIFIED,
+                    new Guidance(
+                            "Start " + definition.getName() + ".",
+                            get(561),
+                            definition.getStartLocation(),
+                            unlocks.isEmpty() ? get(562)
+                                    : get(1352) + unlocks + "."),
+                    get(1353),
+                    SafetyEvidence.verifiedSafe(
+                            definition.isFreeToPlay()));
+        }
+
+        List<String> missingText = new ArrayList<>();
+        for (Preparation preparation : missing) missingText.add(preparation.detail);
+        return new QuestResolution(Confidence.CHECK_NEEDED,
+                new Guidance(missing.get(0).text + ".",
+                        String.join("; ", missingText), definition.getStartLocation(),
+                        unlocks.isEmpty()
+                                ? get(563)
+                                : get(1354) + unlocks + "."),
+                get(1355) + missing.get(0).text,
+                missing.get(0).safetyEvidence);
+    }
+
+    private Preparation itemPreparation(ItemRequirementResult result,
+            QuestDefinition definition, StrategyContext context)
+    {
+        SafetyEvidence safety = SafetyEvidence.harmless(
+                definition.isFreeToPlay());
+        if (result.getMissingInputs().isEmpty())
+            return new Preparation(result.getAction(), safety);
+
+        var first = result.getMissingInputs().get(0);
+        var dependency = dependencyResolution(context, first);
+        var next = dependency == null ? null : dependency.nextAction();
+        if (next != null
+                && next.getConfidence() != Confidence.VERIFIED
+                && next.getAction() != null
+                && !next.getAction().trim().isEmpty())
+        {
+            var action = withoutTerminalPeriod(next.getAction().trim());
+            var detail = new StringBuilder(result.getAction());
+            detail.append(get(1356))
+                    .append(formatInputs(result.getMissingInputs())).append(".");
+            detail.append(get(1357))
+                    .append(quantity(first)).append(": ")
+                    .append(next.getAction().trim());
+            if (result.getMissingInputs().size() > 1)
+                detail.append(get(564));
+            return new Preparation(action, detail.toString(), safety);
+        }
+
+        var mode = context.accountMode();
+        String action;
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+            action = "Acquire " + quantity(first) + " just in time";
+        else if (mode.isIronLike())
+            action = "Self-source " + quantity(first);
+        else if (mode == AccountMode.UNKNOWN)
+            action = "Source " + quantity(first) + get(1358);
+        else
+            action = "Acquire " + quantity(first);
+
+        var routes = sourceRoutes(context, first.getName());
+        if (!routes.isEmpty()) action += ": " + routes.get(0);
+
+        var detail = new StringBuilder(result.getAction());
+        detail.append(get(1356))
+                .append(formatInputs(result.getMissingInputs())).append(".");
+        if (!routes.isEmpty())
+            detail.append(get(1359)).append(routes.get(0));
+        if (result.getMissingInputs().size() > 1)
+            detail.append(get(565));
+        return new Preparation(action, detail.toString(), safety);
+    }
+
+    private DependencyResolution dependencyResolution(
+            StrategyContext context, MethodInput input)
+    {
+        if (context == null || input == null || context.data() == null
+                || context.data().account() == null)
+            return null;
+        return resourcePlanner.resolveKnownShortfall(
+                context, input.getName(), input.getQuantity());
+    }
+
+    private List<String> sourceRoutes(StrategyContext context, String itemName)
+    {
+        if (context == null || context.data() == null
+                || context.data().account() == null)
+            return java.util.Collections.emptyList();
+        return resourceSources.suggestions(itemName, context.accountMode(),
+                context.data().account().membership(),
+                context.allowsWilderness());
+    }
+
+    private static String quantity(MethodInput input)
+    {
+        return Math.max(1, input.getQuantity()) + " × " + input.getName();
+    }
+
+    private static String formatInputs(List<MethodInput> inputs)
+    {
+        List<String> values = new ArrayList<>();
+        for (MethodInput input : inputs) values.add(quantity(input));
+        return String.join(", ", values);
+    }
+
+    private static String withoutTerminalPeriod(String value)
+    {
+        if (value == null) return "";
+        var result = value.trim();
+        while (result.endsWith("."))
+            result = result.substring(0, result.length() - 1).trim();
+        return result;
+    }
+
+    private static boolean hasImportedItemEvidence(QuestDefinition definition)
+    {
+        for (String check : definition.getAccessChecks())
+            if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX)) return true;
+        return false;
+    }
+
+    private static final class Preparation
+    {
+        private final String text;
+        private final String detail;
+        private final SafetyEvidence safetyEvidence;
+
+        private Preparation(String text,
+                SafetyEvidence safetyEvidence)
+        {
+            this(text, text, safetyEvidence);
+        }
+
+        private Preparation(String text, String detail,
+                SafetyEvidence safetyEvidence)
+        {
+            this.text = text;
+            this.detail = detail == null ? text : detail;
+            this.safetyEvidence = safetyEvidence;
+        }
+    }
+}

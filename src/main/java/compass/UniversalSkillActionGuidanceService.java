@@ -1,0 +1,519 @@
+package compass;
+import static compass.Text.get;
+
+import java.util.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import net.runelite.api.Experience;
+import net.runelite.api.Skill;
+
+/**
+ * Safe fallback over RuneLite's maintained skill-calculator action data.
+ *
+ * <p>Curated method profiles remain preferred. This service lets any other
+ * deterministic RuneLite action become exact milestone guidance when its route
+ * match, membership, and material recipe can all be proven.</p>
+ */
+@Singleton
+public class UniversalSkillActionGuidanceService
+{
+    private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList(
+            "train", "training", "best", "sensible", "practical", "use",
+            "f2p", "p2p", "expanded", "method", "route", "for", "with",
+            "and", "the", "from", "into", "while", "when", "your", "account",
+            "high", "low", "level", "fast", "active", "relaxed", "efficient"));
+
+    private static final Set<String> GENERIC_ROUTE_IDS = new HashSet<>(Arrays.asList(
+            "cooking_hosidius",
+            "firemaking_campfires",
+            "herblore_low_potions"));
+
+    private static final String F2P_ANVIL_ROUTE =
+            get(1007);
+
+    private final RuneLiteSkillActionCatalog actionCatalog;
+    private final UniversalActionRecipeResolver recipeResolver;
+    private final SkillingXpModifierService xpModifierService;
+    private final AccountResourcePlanner resourcePlanner;
+
+    @Inject
+    public UniversalSkillActionGuidanceService(
+            RuneLiteSkillActionCatalog actionCatalog,
+            UniversalActionRecipeResolver recipeResolver,
+            SkillingXpModifierService xpModifierService,
+            AccountResourcePlanner resourcePlanner)
+    {
+        this.actionCatalog = actionCatalog;
+        this.recipeResolver = recipeResolver;
+        this.xpModifierService = xpModifierService;
+        this.resourcePlanner = resourcePlanner;
+    }
+
+    public UniversalSkillActionGuidanceService()
+    {
+        this(new RuneLiteSkillActionCatalog(),
+                new UniversalActionRecipeResolver(),
+                new SkillingXpModifierService(),
+                new AccountResourcePlanner());
+    }
+
+    public Guidance build(
+            GameData data,
+            Skill skill,
+            int currentLevel,
+            int targetLevel,
+            TrainingPlan plan,
+            boolean useGroupStorage)
+    {
+        if (data == null || data.account() == null || skill == null
+                || plan == null || plan.method() == null
+                || !supportsUniversalAction(skill))
+        {
+            return null;
+        }
+
+        var currentXp = data.account().xp(skill);
+        if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
+        if (xpNeeded <= 0) return null;
+
+        SkillingXpModifier modifier = xpModifierService == null
+                ? SkillingXpModifier.none()
+                : xpModifierService.modifier(data, skill, useGroupStorage);
+        var multiplier = Math.max(1.0, modifier.getMultiplier());
+
+        Choice choice = choose(
+                data,
+                actionCatalog.actionsFor(skill),
+                plan.method(),
+                currentLevel,
+                xpNeeded,
+                multiplier,
+                useGroupStorage);
+        if (choice == null) return null;
+
+        var action = choice.action;
+        var xpEach = action.getXp() * multiplier;
+        var actions = divideRoundUp(xpNeeded, xpEach);
+        UniversalActionRecipe recipe = recipeResolver.resolve(
+                action, actions, data.account().membership());
+        if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
+
+        String progressText;
+        if (skill == Skill.RUNECRAFT)
+        {
+            progressText = format(xpNeeded) + get(1272)
+                    + pluralRunes(action.getName()) + " with about "
+                    + format(actions) + get(1273)
+                    + targetLevel + ".";
+        }
+        else
+        {
+            progressText = format(xpNeeded) + get(1274)
+                    + format(actions) + " "
+                    + playerAction(skill, action.getName(), actions)
+                    + " to level " + targetLevel + ".";
+        }
+
+        SupplyPlan resources = resourcePlanner == null
+                ? null
+                : resourcePlanner.plan(data, recipe.getInputs(), useGroupStorage);
+        String supplies;
+        if (recipe.getInputs().isEmpty())
+        {
+            supplies = recipe.hasExactInputs()
+                    ? get(1013)
+                    : get(1014);
+        }
+        else
+        {
+            supplies = resources == null ? null : resources.getGuidance();
+        }
+
+        if (skill == Skill.RUNECRAFT)
+        {
+            var altarEntry = runecraftEntryInstruction(action.getName());
+            if (altarEntry != null)
+            {
+                supplies = supplies == null || supplies.trim().isEmpty()
+                        ? altarEntry
+                        : altarEntry + " " + supplies;
+            }
+        }
+
+        String location = locationBeforeColon(
+                plan.method().getInstructions());
+        String actionText = executionAction(skill, action,
+                plan.method().getInstructions());
+        if (isAnvilSmithingMethod(plan.method()))
+        {
+            location = F2P_ANVIL_ROUTE;
+        }
+
+        var note = new StringBuilder();
+        note.append(get(1015))
+                .append(get(1016));
+        if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
+        {
+            note.append(get(1275))
+                    .append(modifier.getLabel()).append(" is worn.");
+        }
+        if (recipe.getSetup() != null && !recipe.getSetup().trim().isEmpty())
+        {
+            note.append(" ").append(recipe.getSetup());
+        }
+        if (skill == Skill.COOKING)
+        {
+            note.append(get(1017));
+        }
+        if (resources != null
+                && resources.accountMode() == AccountMode.ULTIMATE_IRONMAN
+                && resources.getTotalMissingUnits() > 0)
+        {
+            note.append(get(1018));
+        }
+
+        return new Guidance(
+                actionText, supplies, location, note.toString())
+                .withProgress(progressText);
+    }
+
+    private static String executionAction(Skill skill,
+            ActionDef action, String instructions)
+    {
+        if (skill == Skill.RUNECRAFT)
+            return "Craft " + pluralRunes(action.getName())
+                    + get(1019);
+        var loop = actionAfterColon(instructions);
+        if (loop == null) loop = instructions;
+        if (loop == null || loop.trim().isEmpty())
+            return "Repeat " + action.getName() + ".";
+        if (Names.actionText(loop).contains(Names.actionText(action.getName()))) return loop;
+        return action.getName() + ": " + loop;
+    }
+
+    private static String locationBeforeColon(String instructions)
+    {
+        if (instructions == null) return null;
+        var colon = instructions.indexOf(':');
+        if (colon < 3) return instructions;
+        return instructions.substring(0, colon).trim() + ".";
+    }
+
+    private static String actionAfterColon(String instructions)
+    {
+        if (instructions == null) return null;
+        var colon = instructions.indexOf(':');
+        if (colon < 0 || colon + 1 >= instructions.length()) return null;
+        var value = instructions.substring(colon + 1).trim();
+        return value.isEmpty() ? null
+                : Character.toUpperCase(value.charAt(0)) + value.substring(1);
+    }
+
+    private Choice choose(
+            GameData data,
+            List<ActionDef> actions,
+            TrainingMethod method,
+            int currentLevel,
+            int xpNeeded,
+            double multiplier,
+            boolean useGroupStorage)
+    {
+        if (actions == null || actions.isEmpty()) return null;
+        var membership = data.account().membership();
+        var routeTokens = routeTokens(method);
+        var observed = new ItemIndex(data, useGroupStorage);
+        var genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
+        var anvilSmithing = isAnvilSmithingMethod(method);
+        Choice best = null;
+
+        for (ActionDef action : actions)
+        {
+            if (action == null || action.getXp() <= 0
+                    || action.getLevel() > currentLevel
+                    || !membershipAllowed(action, membership)
+                    || isOneTimeOrRewardAction(action)
+                    || (action.getSkill() == Skill.RUNECRAFT
+                            && !Names.actionText(action.getName()).endsWith(" rune"))
+                    || (anvilSmithing && isBarSmeltingAction(action)))
+            {
+                continue;
+            }
+
+            int actionsNeeded = divideRoundUp(
+                    xpNeeded, action.getXp() * multiplier);
+            UniversalActionRecipe recipe = recipeResolver.resolve(
+                    action, actionsNeeded, membership);
+            if (requiresExactRecipe(action.getSkill()) && !recipe.hasExactInputs())
+            {
+                continue;
+            }
+
+            var matches = routeMatchCount(routeTokens, action);
+            if (matches == 0 && !genericRoute) continue;
+
+            var score = matches * 1000.0;
+            score += Math.min(300.0, action.getLevel() * 3.0);
+            score += Math.min(250.0, Math.log1p(action.getXp()) * 35.0);
+            score += resourceCoverageScore(data, observed, recipe);
+
+            if (best == null || score > best.score)
+            {
+                best = new Choice(action, score);
+            }
+        }
+        return best;
+    }
+
+    private static double resourceCoverageScore(
+            GameData data,
+            ItemIndex observed,
+            UniversalActionRecipe recipe)
+    {
+        if (recipe == null || recipe.getInputs().isEmpty()) return 0.0;
+        var required = 0;
+        var owned = 0;
+        for (MethodInput input : recipe.getInputs())
+        {
+            required += input.getQuantity();
+            owned += Math.min(input.getQuantity(), observed.quantity(input.getName()));
+        }
+        if (required <= 0) return 0.0;
+
+        var coverage = Math.min(1.0, owned / (double) required);
+        AccountMode mode = AccountMode.fromTypeCode(
+                data.account().modeCode());
+        if (mode == AccountMode.ULTIMATE_IRONMAN)
+        {
+            return coverage * 650.0 + (coverage <= 0.0 ? -280.0 : 0.0);
+        }
+        if (mode.isIronLike())
+        {
+            return coverage * 500.0 + (coverage <= 0.0 ? -220.0 : 0.0);
+        }
+        return coverage * 120.0;
+    }
+
+    private static boolean supportsUniversalAction(Skill skill)
+    {
+        return skill != Skill.ATTACK
+                && skill != Skill.STRENGTH
+                && skill != Skill.DEFENCE
+                && skill != Skill.RANGED
+                && skill != Skill.HITPOINTS
+                && skill != Skill.SLAYER
+                && skill != Skill.SAILING;
+    }
+
+    private static boolean requiresExactRecipe(Skill skill)
+    {
+        return skill == Skill.COOKING
+                || skill == Skill.CRAFTING
+                || skill == Skill.FLETCHING
+                || skill == Skill.FIREMAKING
+                || skill == Skill.HERBLORE
+                || skill == Skill.SMITHING
+                || skill == Skill.CONSTRUCTION
+                || skill == Skill.MAGIC
+                || skill == Skill.PRAYER
+                || skill == Skill.RUNECRAFT;
+    }
+
+    private static boolean isAnvilSmithingMethod(TrainingMethod method)
+    {
+        if (method == null || method.getSkill() != Skill.SMITHING) return false;
+        var name = Names.actionText(method.getName());
+        var instructions = Names.actionText(method.getInstructions());
+        return name.startsWith("smith ")
+                || name.startsWith("smithing ")
+                || instructions.contains("anvil");
+    }
+
+    private static boolean isBarSmeltingAction(ActionDef action)
+    {
+        return action != null
+                && action.getSkill() == Skill.SMITHING
+                && Names.actionText(action.getName()).endsWith(" bar");
+    }
+
+    private static boolean membershipAllowed(
+            ActionDef action,
+            MembershipStatus account)
+    {
+        if (account == MembershipStatus.F2P)
+        {
+            return action.getMembership() == MembershipStatus.F2P;
+        }
+        if (account == MembershipStatus.P2P)
+        {
+            return action.getMembership() == MembershipStatus.F2P
+                    || action.getMembership() == MembershipStatus.P2P;
+        }
+        return false;
+    }
+
+    private static boolean isOneTimeOrRewardAction(ActionDef action)
+    {
+        String text = Names.actionText(action.getName() + " "
+                + action.getCategory() + " " + action.getId());
+        return containsAny(text,
+                "quest reward", "experience lamp", "xp lamp", "diary reward",
+                get(1276), "book of knowledge", "genie lamp",
+                "museum quiz", "one time", "one-time", "tears of guthix");
+    }
+
+    private static Set<String> routeTokens(TrainingMethod method)
+    {
+        Set<String> result = new HashSet<>();
+        if (method == null) return result;
+        var skillToken = stem(Names.actionText(method.getSkill().getName()));
+        String text = Names.actionText(method.getId() + " "
+                + method.getName() + " " + method.getInstructions());
+        for (String token : text.split("[^a-z0-9]+"))
+        {
+            if (token.length() < 3 || STOP_WORDS.contains(token)
+                    || stem(token).equals(skillToken)) continue;
+            result.add(stem(token));
+        }
+        return result;
+    }
+
+    private static int routeMatchCount(
+            Set<String> routeTokens,
+            ActionDef action)
+    {
+        String text = Names.actionText(action.getName() + " "
+                + action.getCategory() + " " + action.getId());
+        Set<String> actionTokens = new HashSet<>();
+        for (String token : text.split("[^a-z0-9]+"))
+        {
+            if (token.length() >= 3) actionTokens.add(stem(token));
+        }
+        var matches = 0;
+        for (String token : routeTokens)
+        {
+            if (actionTokens.contains(token)) matches++;
+        }
+        return matches;
+    }
+
+    private static String stem(String token)
+    {
+        var value = token == null ? "" : token.toLowerCase(Locale.ROOT);
+        if (value.endsWith("ies") && value.length() > 4)
+            return value.substring(0, value.length() - 3) + "y";
+        if (value.endsWith("ing") && value.length() > 5)
+            return value.substring(0, value.length() - 3);
+        if (value.endsWith("es") && value.length() > 4)
+            return value.substring(0, value.length() - 2);
+        if (value.endsWith("s") && value.length() > 3)
+            return value.substring(0, value.length() - 1);
+        return value;
+    }
+
+    private static String pluralRunes(String actionName)
+    {
+        var name = actionName == null ? "runes" : actionName.trim();
+        if (name.isEmpty()) return "runes";
+        var lower = name.toLowerCase(Locale.ROOT);
+        if (lower.endsWith(" runes")) return name;
+        if (lower.endsWith(" rune")) return name + "s";
+        return name;
+    }
+
+    private static String runecraftEntryInstruction(String actionName)
+    {
+        var lower = Names.actionText(actionName);
+        if (lower.contains("air rune"))
+            return get(1020);
+        if (lower.contains("mind rune"))
+            return get(1008);
+        if (lower.contains("water rune"))
+            return get(1009);
+        if (lower.contains("earth rune"))
+            return get(1010);
+        if (lower.contains("fire rune"))
+            return get(1011);
+        if (lower.contains("body rune"))
+            return get(1012);
+        return null;
+    }
+
+    private static String playerAction(Skill skill, String actionName, int count)
+    {
+        var name = actionName == null ? "" : actionName.trim();
+        if (skill == Skill.WOODCUTTING)
+        {
+            var tree = name.replaceAll("(?i)\\s+logs?$", "").trim();
+            if (tree.isEmpty()) tree = "tree";
+            return tree.toLowerCase(Locale.ROOT) + " chop" + (count == 1 ? "" : "s");
+        }
+        if (skill == Skill.FISHING)
+            return name + " catch" + (count == 1 ? "" : "es");
+        if (skill == Skill.MINING)
+            return name + " mining action" + (count == 1 ? "" : "s");
+        if (skill == Skill.COOKING)
+            return name + " cook" + (count == 1 ? "" : "s");
+        if (skill == Skill.SMITHING)
+        {
+            if (Names.actionText(name).endsWith(" bar"))
+                return name + " smelt" + (count == 1 ? "" : "s");
+            return name + " smithing action" + (count == 1 ? "" : "s");
+        }
+
+        String singular;
+        switch (skill)
+        {
+            case AGILITY: singular = get(1277); break;
+            case THIEVING: singular = get(1278); break;
+            case HUNTER: singular = "catch"; break;
+            case FIREMAKING: singular = "burn"; break;
+            case PRAYER: singular = "Prayer action"; break;
+            case RUNECRAFT: singular = "craft"; break;
+            case CRAFTING: singular = "craft"; break;
+            case FLETCHING: singular = "fletch"; break;
+            case HERBLORE: singular = "potion action"; break;
+            case CONSTRUCTION: singular = "build"; break;
+            case FARMING: singular = "Farming action"; break;
+            case MAGIC: singular = "cast"; break;
+            default: singular = "action"; break;
+        }
+        return name + " " + (count == 1 ? singular : singular + "s");
+    }
+
+    private static int divideRoundUp(int numerator, double denominator)
+    {
+        if (numerator <= 0 || denominator <= 0) return 0;
+        return (int) Math.ceil(numerator / denominator);
+    }
+
+    private static boolean containsAny(String text, String... values)
+    {
+        for (String value : values)
+        {
+            if (value != null && text.contains(value)) return true;
+        }
+        return false;
+    }
+
+
+    private static String format(double value)
+    {
+        if (Math.abs(value - Math.rint(value)) < 0.001)
+            return String.format(Locale.ROOT, "%,d", (long) Math.rint(value));
+        return String.format(Locale.ROOT, "%,.1f", value);
+    }
+
+    private static final class Choice
+    {
+        private final ActionDef action;
+        private final double score;
+
+        private Choice(ActionDef action, double score)
+        {
+            this.action = action;
+            this.score = score;
+        }
+    }
+}
