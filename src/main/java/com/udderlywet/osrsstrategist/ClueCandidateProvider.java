@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -55,19 +56,19 @@ public class ClueCandidateProvider implements CandidateProvider
                 : tier.name().toLowerCase() + " clue";
         ClueStepSnapshot step = clue.getCurrentStep();
         StringBuilder reason = new StringBuilder();
-        reason.append(Text.get(1361)).append(type)
-                .append(Text.get(132));
+        reason.append(get(1361)).append(type)
+                .append(get(132));
         if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
-            reason.append(Text.get(134));
+            reason.append(get(134));
         }
         if (step == null)
         {
-            reason.append(Text.get(135));
+            reason.append(get(135));
         }
         else
-            reason.append(Text.get(1362))
-                    .append(step.getKind()).append(Text.get(1363));
+            reason.append(get(1362))
+                    .append(step.getKind()).append(get(1363));
 
         boolean hardcore = context.accountMode() == AccountMode.HARDCORE_IRONMAN
                 || context.accountMode() == AccountMode.HARDCORE_GROUP_IRONMAN;
@@ -77,8 +78,8 @@ public class ClueCandidateProvider implements CandidateProvider
         {
             score -= hardcore ? 30.0 : 18.0;
             reason.append(hardcore
-                    ? Text.get(136)
-                    : Text.get(137));
+                    ? get(136)
+                    : get(137));
         }
 
         String title;
@@ -90,20 +91,20 @@ public class ClueCandidateProvider implements CandidateProvider
             title = "Inspect " + type;
             candidateId = "verify:clue-current-step";
             guidance = new Guidance(
-                    Text.get(138),
-                    null, "Inventory", Text.get(139));
+                    get(138),
+                    null, "Inventory", get(139));
             confidence = Confidence.CHECK_NEEDED;
         }
         else if (wildernessHold)
         {
-            title = "Hold " + type + Text.get(1364);
+            title = "Hold " + type + get(1364);
             candidateId = "prepare:clue-wilderness-hold";
             guidance = new Guidance(
                     context.accountMode() == AccountMode.ULTIMATE_IRONMAN
-                            ? Text.get(140)
-                            : Text.get(141),
+                            ? get(140)
+                            : get(141),
                     supplies(step), step.getLocation(),
-                    Text.get(133));
+                    get(133));
             confidence = Confidence.CHECK_NEEDED;
         }
         else
@@ -156,7 +157,7 @@ public class ClueCandidateProvider implements CandidateProvider
         List<String> values = new ArrayList<>(step.getItemRequirements());
         if (step.isRequiresSpade()) values.add("Spade");
         if (step.isRequiresLight()) values.add("Light source");
-        if (step.hasEnemy()) values.add(Text.get(1365) + step.getEnemy());
+        if (step.hasEnemy()) values.add(get(1365) + step.getEnemy());
         if (values.isEmpty()) return null;
         return String.join(", ", values);
     }
@@ -167,7 +168,7 @@ public class ClueCandidateProvider implements CandidateProvider
         List<String> values = new ArrayList<>();
         if (step.hasStashUnit())
             values.add("STASH: " + display(step.getStashUnit())
-                    + Text.get(1366));
+                    + get(1366));
         if (step.isWilderness()) values.add("Wilderness step");
         return values.isEmpty() ? null : String.join(". ", values) + ".";
     }

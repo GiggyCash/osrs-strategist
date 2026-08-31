@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ public class UniversalSkillActionGuidanceService
             "herblore_low_potions"));
 
     private static final String F2P_ANVIL_ROUTE =
-            Text.get(1007);
+            get(1007);
 
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final UniversalActionRecipeResolver recipeResolver;
@@ -102,14 +103,14 @@ public class UniversalSkillActionGuidanceService
         String progressText;
         if (skill == Skill.RUNECRAFT)
         {
-            progressText = format(xpNeeded) + Text.get(1272)
+            progressText = format(xpNeeded) + get(1272)
                     + pluralRunes(action.getName()) + " with about "
-                    + format(actions) + Text.get(1273)
+                    + format(actions) + get(1273)
                     + targetLevel + ".";
         }
         else
         {
-            progressText = format(xpNeeded) + Text.get(1274)
+            progressText = format(xpNeeded) + get(1274)
                     + format(actions) + " "
                     + playerAction(skill, action.getName(), actions)
                     + " to level " + targetLevel + ".";
@@ -122,8 +123,8 @@ public class UniversalSkillActionGuidanceService
         if (recipe.getInputs().isEmpty())
         {
             supplies = recipe.hasExactInputs()
-                    ? Text.get(1013)
-                    : Text.get(1014);
+                    ? get(1013)
+                    : get(1014);
         }
         else
         {
@@ -151,11 +152,11 @@ public class UniversalSkillActionGuidanceService
         }
 
         StringBuilder note = new StringBuilder();
-        note.append(Text.get(1015))
-                .append(Text.get(1016));
+        note.append(get(1015))
+                .append(get(1016));
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
-            note.append(Text.get(1275))
+            note.append(get(1275))
                     .append(modifier.getLabel()).append(" is worn.");
         }
         if (recipe.getSetup() != null && !recipe.getSetup().trim().isEmpty())
@@ -164,13 +165,13 @@ public class UniversalSkillActionGuidanceService
         }
         if (skill == Skill.COOKING)
         {
-            note.append(Text.get(1017));
+            note.append(get(1017));
         }
         if (resources != null
                 && resources.accountMode() == AccountMode.ULTIMATE_IRONMAN
                 && resources.getTotalMissingUnits() > 0)
         {
-            note.append(Text.get(1018));
+            note.append(get(1018));
         }
 
         return new Guidance(
@@ -183,7 +184,7 @@ public class UniversalSkillActionGuidanceService
     {
         if (skill == Skill.RUNECRAFT)
             return "Craft " + pluralRunes(action.getName())
-                    + Text.get(1019);
+                    + get(1019);
         String loop = actionAfterColon(instructions);
         if (loop == null) loop = instructions;
         if (loop == null || loop.trim().isEmpty())
@@ -358,7 +359,7 @@ public class UniversalSkillActionGuidanceService
                 + action.getCategory() + " " + action.getId());
         return containsAny(text,
                 "quest reward", "experience lamp", "xp lamp", "diary reward",
-                Text.get(1276), "book of knowledge", "genie lamp",
+                get(1276), "book of knowledge", "genie lamp",
                 "museum quiz", "one time", "one-time", "tears of guthix");
     }
 
@@ -425,17 +426,17 @@ public class UniversalSkillActionGuidanceService
     {
         String lower = normalize(actionName);
         if (lower.contains("air rune"))
-            return Text.get(1020);
+            return get(1020);
         if (lower.contains("mind rune"))
-            return Text.get(1008);
+            return get(1008);
         if (lower.contains("water rune"))
-            return Text.get(1009);
+            return get(1009);
         if (lower.contains("earth rune"))
-            return Text.get(1010);
+            return get(1010);
         if (lower.contains("fire rune"))
-            return Text.get(1011);
+            return get(1011);
         if (lower.contains("body rune"))
-            return Text.get(1012);
+            return get(1012);
         return null;
     }
 
@@ -464,8 +465,8 @@ public class UniversalSkillActionGuidanceService
         String singular;
         switch (skill)
         {
-            case AGILITY: singular = Text.get(1277); break;
-            case THIEVING: singular = Text.get(1278); break;
+            case AGILITY: singular = get(1277); break;
+            case THIEVING: singular = get(1278); break;
             case HUNTER: singular = "catch"; break;
             case FIREMAKING: singular = "burn"; break;
             case PRAYER: singular = "Prayer action"; break;

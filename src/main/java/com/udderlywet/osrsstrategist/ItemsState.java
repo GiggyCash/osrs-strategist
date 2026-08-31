@@ -1,6 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.util.*;
+import java.util.function.Predicate;
 import lombok.Getter;
 
 /**
@@ -82,6 +83,35 @@ public final class ItemsState
         for (ItemState item : items)
             if (item != null && item.getItemId() == itemId)
                 total += item.getQuantity();
+        return total;
+    }
+
+    public int quantityOf(int... itemIds)
+    {
+        int total = 0;
+        if (itemIds == null) return total;
+        for (ItemState item : items)
+            if (item != null) for (int id : itemIds)
+                if (item.getItemId() == id) total += item.getQuantity();
+        return total;
+    }
+
+    public int quantityNamed(String... names)
+    {
+        var expected = new HashSet<>();
+        if (names != null) for (String name : names)
+            if (name != null) expected.add(name.toLowerCase(Locale.ROOT));
+        return quantityWhere(expected::contains);
+    }
+
+    public int quantityWhere(Predicate<String> nameTest)
+    {
+        int total = 0;
+        if (nameTest == null) return total;
+        for (ItemState item : items)
+            if (item != null && item.getName() != null
+                    && nameTest.test(item.getName().toLowerCase(Locale.ROOT)))
+                total += Math.max(0, item.getQuantity());
         return total;
     }
 

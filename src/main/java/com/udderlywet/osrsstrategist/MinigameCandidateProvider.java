@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -86,7 +87,7 @@ public class MinigameCandidateProvider implements CandidateProvider
                     id,
                     definition.getName(),
                     definition.getRewardFocus()
-                            + Text.get(344),
+                            + get(344),
                     score,
                     verified ? Confidence.VERIFIED
                             : Confidence.CHECK_NEEDED,
@@ -105,10 +106,10 @@ public class MinigameCandidateProvider implements CandidateProvider
     {
         String activity = definition.getName();
         return new Guidance(
-                Text.get(350) + activity
+                get(350) + activity
                         + " setup equipped.",
-                Text.get(351),
-                Text.get(1492) + activity + ".",
+                get(351),
+                get(1492) + activity + ".",
                 definition.getRewardFocus() + ".");
     }
 
@@ -123,39 +124,39 @@ public class MinigameCandidateProvider implements CandidateProvider
         if (level < 30)
         {
             tree = "oak trees";
-            location = Text.get(352);
+            location = get(352);
         }
         else if (f2p || level < 45)
         {
             tree = "willow trees";
-            location = Text.get(353);
+            location = get(353);
         }
         else if (level < 60)
         {
             tree = "maple trees";
-            location = Text.get(354);
+            location = get(354);
         }
         else
         {
             tree = "yew trees";
-            location = Text.get(355);
+            location = get(355);
         }
         boolean uim = AccountMode.fromTypeCode(account.getAccountTypeCode())
                 == AccountMode.ULTIMATE_IRONMAN;
         String loop = uim
-                ? Text.get(356) + tree
-                        + Text.get(357)
-                : Text.get(345) + tree
-                        + Text.get(346);
+                ? get(356) + tree
+                        + get(357)
+                : get(345) + tree
+                        + get(346);
         return new Guidance(
                 verified
                         ? loop
-                        : itemResult.getAction() + Text.get(1493),
-                verified ? Text.get(347)
+                        : itemResult.getAction() + get(1493),
+                verified ? get(347)
                         : itemResult.getAction(),
                 location + ".",
-                Text.get(348)
-                        + (uim ? Text.get(349) : ""));
+                get(348)
+                        + (uim ? get(349) : ""));
     }
 
     private static SafetyEvidence safetyFor(MinigameDefinition definition)

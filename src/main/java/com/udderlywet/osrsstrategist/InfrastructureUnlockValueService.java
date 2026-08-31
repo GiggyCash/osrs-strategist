@@ -59,7 +59,7 @@ public final class InfrastructureUnlockValueService
                     contribution.getEffectivePriority());
         }
 
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         if (definition.isMembersOnly())
         {
             MembershipStatus membership = account == null
@@ -106,7 +106,7 @@ public final class InfrastructureUnlockValueService
             InfrastructureMilestone definition,
             GameData data)
     {
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         if (account == null) return RequirementState.CHECK_NEEDED;
         for (Map.Entry<net.runelite.api.Skill, Integer> skill
                 : definition.getRequiredSkills().entrySet())

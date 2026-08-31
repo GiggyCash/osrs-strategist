@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -100,7 +101,7 @@ public class AccountResourcePlanner
     {
         if (entries.isEmpty())
         {
-            return Text.get(69);
+            return get(69);
         }
 
         List<String> required = new ArrayList<>();
@@ -148,13 +149,13 @@ public class AccountResourcePlanner
         if (!primaryObserved)
         {
             if (mode == AccountMode.ULTIMATE_IRONMAN)
-                text.append(Text.get(80));
+                text.append(get(80));
             else
-                text.append(Text.get(1376))
-                        .append(Text.get(81));
+                text.append(get(1376))
+                        .append(get(81));
             if (groupIncluded && !groupObserved)
             {
-                text.append(Text.get(82));
+                text.append(get(82));
             }
             return text.toString();
         }
@@ -167,10 +168,10 @@ public class AccountResourcePlanner
 
         if (missing.isEmpty())
         {
-            text.append(Text.get(83));
+            text.append(get(83));
             if (groupIncluded && groupObserved)
             {
-                text.append(Text.get(84));
+                text.append(get(84));
             }
             appendRestrictedUimNote(text, restricted);
             return text.toString();
@@ -188,23 +189,23 @@ public class AccountResourcePlanner
                     data == null || data.account() == null
                             ? MembershipStatus.UNKNOWN
                             : data.account().getMembershipStatus(), true);
-            text.append(Text.get(1377)).append(shortfall)
-                    .append(Text.get(85));
+            text.append(get(1377)).append(shortfall)
+                    .append(get(85));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
-            text.append(Text.get(86));
+            text.append(get(86));
         }
         else if (mode.isGroupIronman())
         {
             text.append("Self-source ").append(shortfall)
-                    .append(Text.get(1378));
+                    .append(get(1378));
             if (groupIncluded && groupObserved)
             {
-                text.append(Text.get(87));
+                text.append(get(87));
             }
             else if (groupIncluded)
             {
-                text.append(Text.get(70));
+                text.append(get(70));
             }
         }
         else if (mode.isIronLike())
@@ -214,14 +215,14 @@ public class AccountResourcePlanner
                             ? MembershipStatus.UNKNOWN
                             : data.account().getMembershipStatus(), false);
             text.append("Self-source ").append(shortfall)
-                    .append(Text.get(1378));
+                    .append(get(1378));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
         }
         else
         {
             text.append("Source ").append(shortfall)
-                    .append(Text.get(71));
+                    .append(get(71));
         }
 
         appendRestrictedUimNote(text, restricted);
@@ -247,12 +248,12 @@ public class AccountResourcePlanner
         if (decision != null && decision.getChoice() == MainPurchaseChoice.BUY)
         {
             text.append("Buy ").append(shortfall)
-                    .append(Text.get(1379))
-                    .append(Text.get(1380))
+                    .append(get(1379))
+                    .append(get(1380))
                     .append(format(decision.getTotalCost()))
-                    .append(Text.get(72))
+                    .append(get(72))
                     .append(format(decision.getObservedCoins()))
-                    .append(Text.get(1381));
+                    .append(get(1381));
             return;
         }
 
@@ -260,11 +261,11 @@ public class AccountResourcePlanner
                 && decision.getChoice() == MainPurchaseChoice.SELF_SOURCE)
         {
             text.append("Self-source ").append(shortfall).append(". ")
-                    .append(Text.get(1382))
+                    .append(get(1382))
                     .append(format(decision.getTotalCost()))
                     .append(" of ")
                     .append(format(decision.getObservedCoins()))
-                    .append(Text.get(73))
+                    .append(get(73))
                     .append(routes.get(0));
             return;
         }
@@ -272,21 +273,21 @@ public class AccountResourcePlanner
         if (decision != null && decision.getChoice()
                 == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
         {
-            text.append(Text.get(74))
+            text.append(get(74))
                     .append(format(decision.getTotalCost()))
                     .append(" coins, but only ")
                     .append(format(decision.getObservedCoins()))
-                    .append(Text.get(1383));
+                    .append(get(1383));
             if (!routes.isEmpty())
-                text.append(Text.get(75))
+                text.append(get(75))
                         .append(routes.get(0));
             return;
         }
 
-        text.append(Text.get(76))
-                .append(Text.get(77));
+        text.append(get(76))
+                .append(get(77));
         if (!routes.isEmpty())
-            text.append(Text.get(1384)).append(routes.get(0));
+            text.append(get(1384)).append(routes.get(0));
     }
 
     private List<String> mainRoutes(List<MethodInput> missingInputs,
@@ -325,9 +326,9 @@ public class AccountResourcePlanner
             List<String> restricted)
     {
         if (restricted == null || restricted.isEmpty()) return;
-        text.append(Text.get(78))
+        text.append(get(78))
                 .append(join(restricted))
-                .append(Text.get(79));
+                .append(get(79));
     }
 
     /**
@@ -346,22 +347,22 @@ public class AccountResourcePlanner
             return firstEquipped(observed,
                     "Staff of fire", "Fire battlestaff", "Mystic fire staff",
                     "Lava battlestaff", "Mystic lava staff",
-                    "Steam battlestaff", Text.get(1385),
-                    "Smoke battlestaff", Text.get(1386),
+                    "Steam battlestaff", get(1385),
+                    "Smoke battlestaff", get(1386),
                     "Tome of fire");
         }
         if ("water rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of water", "Water battlestaff", Text.get(1387),
+                    "Staff of water", "Water battlestaff", get(1387),
                     "Mud battlestaff", "Mystic mud staff",
-                    "Steam battlestaff", Text.get(1385),
+                    "Steam battlestaff", get(1385),
                     "Mist battlestaff", "Mystic mist staff");
         }
         if ("earth rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of earth", "Earth battlestaff", Text.get(1388),
+                    "Staff of earth", "Earth battlestaff", get(1388),
                     "Lava battlestaff", "Mystic lava staff",
                     "Mud battlestaff", "Mystic mud staff",
                     "Dust battlestaff", "Mystic dust staff");
@@ -370,7 +371,7 @@ public class AccountResourcePlanner
         {
             return firstEquipped(observed,
                     "Staff of air", "Air battlestaff", "Mystic air staff",
-                    "Smoke battlestaff", Text.get(1386),
+                    "Smoke battlestaff", get(1386),
                     "Mist battlestaff", "Mystic mist staff",
                     "Dust battlestaff", "Mystic dust staff");
         }

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -28,27 +29,27 @@ public class SkillingXpModifierService
         {
             case FISHING:
                 if (hasAngler(items))
-                    return full(Text.get(1208));
+                    return full(get(1208));
                 break;
             case MINING:
                 if (hasProspector(items))
-                    return full(Text.get(1209));
+                    return full(get(1209));
                 break;
             case WOODCUTTING:
                 if (hasLumberjack(items))
-                    return full(Text.get(1210));
+                    return full(get(1210));
                 break;
             case FARMING:
                 if (hasFarmer(items))
-                    return full(Text.get(1211));
+                    return full(get(1211));
                 break;
             case FIREMAKING:
                 if (hasPyromancer(items))
-                    return full(Text.get(1212));
+                    return full(get(1212));
                 break;
             case CONSTRUCTION:
                 if (hasCarpenter(items))
-                    return full(Text.get(1213));
+                    return full(get(1213));
                 break;
             default:
                 break;
@@ -63,18 +64,18 @@ public class SkillingXpModifierService
 
     private static boolean hasAngler(ItemIndex items)
     {
-        return items.has("Angler hat", Text.get(1214))
+        return items.has("Angler hat", get(1214))
                 && items.has("Angler top", "Spirit angler top")
-                && items.has("Angler waders", Text.get(1215))
-                && items.has("Angler boots", Text.get(1216));
+                && items.has("Angler waders", get(1215))
+                && items.has("Angler boots", get(1216));
     }
 
     private static boolean hasProspector(ItemIndex items)
     {
-        return items.has("Prospector helmet", Text.get(1217))
-                && items.has("Prospector jacket", Text.get(1218), "Varrock armour 4")
-                && items.has("Prospector legs", Text.get(1219))
-                && items.has("Prospector boots", Text.get(1220));
+        return items.has("Prospector helmet", get(1217))
+                && items.has("Prospector jacket", get(1218), "Varrock armour 4")
+                && items.has("Prospector legs", get(1219))
+                && items.has("Prospector boots", get(1220));
     }
 
     private static boolean hasLumberjack(ItemIndex items)
@@ -89,7 +90,7 @@ public class SkillingXpModifierService
     {
         return items.has("Farmer's strawhat")
                 && items.has("Farmer's jacket", "Farmer's shirt")
-                && items.has(Text.get(1221))
+                && items.has(get(1221))
                 && items.has("Farmer's boots");
     }
 
@@ -103,9 +104,9 @@ public class SkillingXpModifierService
 
     private static boolean hasCarpenter(ItemIndex items)
     {
-        return items.has(Text.get(1222))
+        return items.has(get(1222))
                 && items.has("Carpenter's shirt")
-                && items.has(Text.get(1223))
+                && items.has(get(1223))
                 && items.has("Carpenter's boots");
     }
 }

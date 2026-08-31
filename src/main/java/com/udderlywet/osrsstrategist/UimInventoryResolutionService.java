@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -36,11 +37,11 @@ public final class UimInventoryResolutionService
                 ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
                         data.account().getAccountTypeCode());
         if (mode != AccountMode.ULTIMATE_IRONMAN)
-            return unresolved(Text.get(997));
+            return unresolved(get(997));
 
         ItemsState inventory = data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
-            return unresolved(Text.get(999));
+            return unresolved(get(999));
         MethodInventoryFootprint needed = footprint == null
                 ? MethodInventoryFootprint.lowPressure() : footprint;
         int free = Math.max(0, 28
@@ -48,15 +49,15 @@ public final class UimInventoryResolutionService
         if (free >= needed.getMinimumPracticalFreeSlots())
             return result(UimInventoryResolutionKind.USE_AS_IS,
                     Confidence.VERIFIED, null, null,
-                    Text.get(1000));
+                    get(1000));
         if (goodLowFootprintAlternativeKnown)
             return result(UimInventoryResolutionKind.USE_LOW_FOOTPRINT_ALTERNATIVE,
                     Confidence.VERIFIED, null, null,
-                    Text.get(1001));
+                    get(1001));
         if (productiveConsumptionKnown)
             return result(UimInventoryResolutionKind.PRODUCTIVELY_CONSUME_RESOURCES,
                     Confidence.CHECK_NEEDED, null, null,
-                    Text.get(1002));
+                    get(1002));
 
         List<UimStorageOption> options = proposedStorage == null
                 ? Collections.emptyList() : new ArrayList<>(proposedStorage);
@@ -73,7 +74,7 @@ public final class UimInventoryResolutionService
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_VERIFIED_SAFE_STORAGE,
                         Confidence.VERIFIED, decision, null,
-                        Text.get(1003));
+                        get(1003));
         }
 
         for (UimStorageOption option : options)
@@ -85,7 +86,7 @@ public final class UimInventoryResolutionService
                             < StrategicPriority.HIGH.ordinal()) continue;
             return result(UimInventoryResolutionKind.BUILD_HIGH_VALUE_SAFE_STORAGE,
                     Confidence.CHECK_NEEDED, null, null,
-                    Text.get(1004));
+                    get(1004));
         }
 
         for (UimStorageOption option : options)
@@ -96,7 +97,7 @@ public final class UimInventoryResolutionService
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_RESTRICTED_RETRIEVAL,
                         Confidence.CHECK_NEEDED, decision, null,
-                        Text.get(1005));
+                        get(1005));
         }
 
         for (UimStorageOption option : options)
@@ -109,9 +110,9 @@ public final class UimInventoryResolutionService
                 return result(UimInventoryResolutionKind.USE_DANGEROUS_DEATH_STORAGE,
                         Confidence.CHECK_NEEDED, decision,
                         RecommendationRiskDisclosure.deathStorage(),
-                        Text.get(1006));
+                        get(1006));
         }
-        return unresolved(Text.get(998));
+        return unresolved(get(998));
     }
 
     private UimStorageDecision evaluate(GameData data,

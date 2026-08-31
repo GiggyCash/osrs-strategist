@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -46,16 +47,16 @@ public class AgilityAccessEvaluator
         {
             return new RequirementCheck(
                     "agility:course",
-                    Text.get(1390),
+                    get(1390),
                     RequirementState.CHECK_NEEDED,
-                    Text.get(0)
+                    get(0)
             );
         }
 
         AccountSnapshot account = data == null ? null : data.account();
         if (account == null)
         {
-            return unknown(course, Text.get(1391));
+            return unknown(course, get(1391));
         }
 
         int level = account.getSkillLevel(Skill.AGILITY);
@@ -66,7 +67,7 @@ public class AgilityAccessEvaluator
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
                     "Requires " + course.getRequiredLevel()
-                            + Text.get(1392) + level + "."
+                            + get(1392) + level + "."
             );
         }
 
@@ -76,7 +77,7 @@ public class AgilityAccessEvaluator
                     "agility:" + course.getId(),
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
-                    Text.get(1)
+                    get(1)
             );
         }
 
@@ -85,7 +86,7 @@ public class AgilityAccessEvaluator
         {
             return verified(
                     course,
-                    Text.get(2)
+                    get(2)
             );
         }
 
@@ -101,7 +102,7 @@ public class AgilityAccessEvaluator
             {
                 return verified(
                         course,
-                        quest + Text.get(3)
+                        quest + get(3)
                 );
             }
             if (status == QuestStatus.NOT_STARTED
@@ -116,13 +117,13 @@ public class AgilityAccessEvaluator
             }
             return unknown(
                     course,
-                    "Quest state for " + quest + Text.get(1393)
+                    "Quest state for " + quest + get(1393)
             );
         }
 
         return verified(
                 course,
-                Text.get(4)
+                get(4)
         );
     }
 

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -82,16 +83,16 @@ public class PvmCandidateProvider implements CandidateProvider
             Guidance guidance = ready
                     ? readyGuidance(definition, title)
                     : new Guidance(
-                            Text.get(417) + title + ": " + missing + ".",
+                            get(417) + title + ": " + missing + ".",
                             missing,
-                            Text.get(428),
-                            Text.get(433));
+                            get(428),
+                            get(433));
             result.add(new Recommendation(
                     id,
                     "Do " + title,
                     ready
-                            ? Text.get(434)
-                            : Text.get(435),
+                            ? get(434)
+                            : get(435),
                     score,
                     ready ? Confidence.VERIFIED
                             : Confidence.CHECK_NEEDED,
@@ -109,39 +110,39 @@ public class PvmCandidateProvider implements CandidateProvider
         if (definition != null && "pvm:tztok_jad".equals(definition.getId()))
         {
             return new Guidance(
-                    Text.get(436),
-                    Text.get(437),
-                    Text.get(438),
-                    Text.get(439));
+                    get(436),
+                    get(437),
+                    get(438),
+                    get(439));
         }
         if (definition != null && "pvm:obor".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    Text.get(418),
-                    Text.get(419),
-                    Text.get(420));
+                    get(418),
+                    get(419),
+                    get(420));
         if (definition != null && "pvm:bryophyta".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    Text.get(421),
-                    Text.get(422),
-                    Text.get(423));
+                    get(421),
+                    get(422),
+                    get(423));
         if (definition != null && "pvm:scurrius".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    Text.get(424),
-                    Text.get(1338),
-                    Text.get(425));
+                    get(424),
+                    get(1338),
+                    get(425));
         return new Guidance(
-                "Attempt " + title + Text.get(426),
-                Text.get(427),
-                Text.get(429),
-                Text.get(430));
+                "Attempt " + title + get(426),
+                get(427),
+                get(429),
+                get(430));
     }
 
     private static Guidance simpleReadyGuidance(String title,
             String action, String location, String supplies)
     {
         return new Guidance(action, supplies, location,
-                Text.get(431)
-                        + title + Text.get(432));
+                get(431)
+                        + title + get(432));
     }
 
     private static boolean progressionRelevant(PvmActivityDefinition definition,

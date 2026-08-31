@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -268,8 +269,8 @@ public class StrategyEngine
                 opportunity.getTitle());
         if (location == null || action == null) return null;
         String supplies = setupVerified
-                ? Text.get(720)
-                : Text.get(1490) + String.join(", ", opportunity.getPreparation()) + ".";
+                ? get(720)
+                : get(1490) + String.join(", ", opportunity.getPreparation()) + ".";
         double score = 46.0 + preferences.weightFor(id) * 10.0
                 + preferences.timedScoreAdjustmentFor(id);
         if (opportunity.getType() == OpportunityType.HERB_RUN
@@ -281,16 +282,16 @@ public class StrategyEngine
         Guidance guidance = new Guidance(
                 setupVerified
                         ? action
-                        : Text.get(722) + opportunity.getTitle()
-                                + Text.get(1491),
+                        : get(722) + opportunity.getTitle()
+                                + get(1491),
                 supplies,
                 location,
                 setupVerified
-                        ? Text.get(723)
-                        : Text.get(724));
+                        ? get(723)
+                        : get(724));
         return new Recommendation(
                 id, opportunity.getTitle(),
-                Text.get(725),
+                get(725),
                 score, null, setupVerified
                         ? Confidence.VERIFIED
                         : Confidence.CHECK_NEEDED,
@@ -305,11 +306,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return Text.get(726);
+                return get(726);
             case HERB_RUN:
-                return Text.get(727);
+                return get(727);
             case BATTLESTAVES:
-                return Text.get(728);
+                return get(728);
             default:
                 return null;
         }
@@ -322,11 +323,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return Text.get(729);
+                return get(729);
             case HERB_RUN:
                 return verifiedHerbPatchRoute(context);
             case BATTLESTAVES:
-                return Text.get(721);
+                return get(721);
             default:
                 return null;
         }

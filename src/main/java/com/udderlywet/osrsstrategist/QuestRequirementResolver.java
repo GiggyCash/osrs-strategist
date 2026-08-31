@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,8 @@ public class QuestRequirementResolver
                     : quests.statusOf(prerequisite);
             if (status != QuestStatus.COMPLETE)
                 missing.add(new Preparation(status == QuestStatus.UNKNOWN
-                        ? Text.get(560) + prerequisite
-                        : Text.get(1349) + prerequisite,
+                        ? get(560) + prerequisite
+                        : get(1349) + prerequisite,
                         RestrictedQuestPolicy.isSafe(account, prerequisite)
                                 ? SafetyEvidence.verifiedSafe(
                                 definition.isFreeToPlay())
@@ -85,7 +86,7 @@ public class QuestRequirementResolver
         {
             int owned = items.quantity(requirement.getName());
             if (owned < requirement.getQuantity())
-                missing.add(new Preparation((ownershipObserved ? "Obtain " : Text.get(1350))
+                missing.add(new Preparation((ownershipObserved ? "Obtain " : get(1350))
                         + Math.max(0, requirement.getQuantity() - owned) + " × "
                         + requirement.getName(), SafetyEvidence.harmless(
                         definition.isFreeToPlay())));
@@ -122,7 +123,7 @@ public class QuestRequirementResolver
                 {
                     for (String unresolved : imported.getUnresolved())
                         missing.add(new Preparation(
-                                Text.get(1351) + unresolved,
+                                get(1351) + unresolved,
                                 SafetyEvidence.harmless(
                                         definition.isFreeToPlay())));
                 }
@@ -139,11 +140,11 @@ public class QuestRequirementResolver
             return new QuestResolution(Confidence.VERIFIED,
                     new Guidance(
                             "Start " + definition.getName() + ".",
-                            Text.get(561),
+                            get(561),
                             definition.getStartLocation(),
-                            unlocks.isEmpty() ? Text.get(562)
-                                    : Text.get(1352) + unlocks + "."),
-                    Text.get(1353),
+                            unlocks.isEmpty() ? get(562)
+                                    : get(1352) + unlocks + "."),
+                    get(1353),
                     SafetyEvidence.verifiedSafe(
                             definition.isFreeToPlay()));
         }
@@ -154,9 +155,9 @@ public class QuestRequirementResolver
                 new Guidance(missing.get(0).text + ".",
                         String.join("; ", missingText), definition.getStartLocation(),
                         unlocks.isEmpty()
-                                ? Text.get(563)
-                                : Text.get(1354) + unlocks + "."),
-                Text.get(1355) + missing.get(0).text,
+                                ? get(563)
+                                : get(1354) + unlocks + "."),
+                get(1355) + missing.get(0).text,
                 missing.get(0).safetyEvidence);
     }
 
@@ -178,13 +179,13 @@ public class QuestRequirementResolver
         {
             String action = withoutTerminalPeriod(next.getAction().trim());
             StringBuilder detail = new StringBuilder(result.getAction());
-            detail.append(Text.get(1356))
+            detail.append(get(1356))
                     .append(formatInputs(result.getMissingInputs())).append(".");
-            detail.append(Text.get(1357))
+            detail.append(get(1357))
                     .append(quantity(first)).append(": ")
                     .append(next.getAction().trim());
             if (result.getMissingInputs().size() > 1)
-                detail.append(Text.get(564));
+                detail.append(get(564));
             return new Preparation(action, detail.toString(), safety);
         }
 
@@ -195,7 +196,7 @@ public class QuestRequirementResolver
         else if (mode.isIronLike())
             action = "Self-source " + quantity(first);
         else if (mode == AccountMode.UNKNOWN)
-            action = "Source " + quantity(first) + Text.get(1358);
+            action = "Source " + quantity(first) + get(1358);
         else
             action = "Acquire " + quantity(first);
 
@@ -203,12 +204,12 @@ public class QuestRequirementResolver
         if (!routes.isEmpty()) action += ": " + routes.get(0);
 
         StringBuilder detail = new StringBuilder(result.getAction());
-        detail.append(Text.get(1356))
+        detail.append(get(1356))
                 .append(formatInputs(result.getMissingInputs())).append(".");
         if (!routes.isEmpty())
-            detail.append(Text.get(1359)).append(routes.get(0));
+            detail.append(get(1359)).append(routes.get(0));
         if (result.getMissingInputs().size() > 1)
-            detail.append(Text.get(565));
+            detail.append(get(565));
         return new Preparation(action, detail.toString(), safety);
     }
 

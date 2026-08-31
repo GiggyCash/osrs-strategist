@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import net.runelite.api.Skill;
 
@@ -16,7 +17,90 @@ public final class AccountBuildPolicy
 
     public static RestrictedBuildSuggestion detect(AccountSnapshot account)
     {
-        return new RestrictedBuildDetector().suggest(account);
+        if (account == null)
+            return build(RestrictedBuildType.STANDARD,
+                    Confidence.CHECK_NEEDED, get(1206));
+
+        int attack = account.getSkillLevel(Skill.ATTACK);
+        int strength = account.getSkillLevel(Skill.STRENGTH);
+        int defence = account.getSkillLevel(Skill.DEFENCE);
+        int ranged = account.getSkillLevel(Skill.RANGED);
+        int prayer = account.getSkillLevel(Skill.PRAYER);
+        int magic = account.getSkillLevel(Skill.MAGIC);
+        int hp = account.getSkillLevel(Skill.HITPOINTS);
+        int highNonCombat = nonCombatExtreme(account, true);
+        int lowNonCombat = nonCombatExtreme(account, false);
+        int offence = Math.max(Math.max(attack, strength),
+                Math.max(ranged, magic));
+        int combat = Math.max(Math.max(offence, defence), prayer);
+        boolean baselineOffence = attack <= 1 && strength <= 1
+                && ranged <= 1 && magic <= 1;
+
+        if (baselineOffence && defence <= 1 && prayer <= 1 && hp <= 10
+                && highNonCombat >= 20)
+            return verified(account.getMembershipStatus() != MembershipStatus.P2P
+                    ? RestrictedBuildType.F2P_SKILLER
+                    : RestrictedBuildType.SKILLER, get(583));
+        if (baselineOffence && defence <= 1 && hp <= 10 && prayer >= 15
+                && highNonCombat >= 20)
+            return verified(RestrictedBuildType.PRAYER_SKILLER, get(590));
+        if (lowNonCombat <= 1 && highNonCombat <= 1 && combat >= 40)
+            return verified(RestrictedBuildType.COMBAT_ONLY, get(591));
+        if (baselineOffence && defence >= 20)
+            return verified(RestrictedBuildType.DEFENCE_PURE, get(592));
+        if (hp <= 10 && (ranged >= 20 || magic >= 20 || prayer >= 20
+                || highNonCombat >= 50))
+            return verified(RestrictedBuildType.TEN_HITPOINTS, get(593));
+        if (attack <= 1 && defence <= 1 && strength >= 50)
+            return verified(RestrictedBuildType.OBSIDIAN_MAULER, get(594));
+        if (defence <= 1 && offence >= 40)
+            return verified(RestrictedBuildType.ONE_DEFENCE_PURE, get(595));
+
+        if (offence >= 50)
+        {
+            if (defence >= 2 && defence <= 13)
+                return verified(RestrictedBuildType.LOW_DEFENCE_PURE,
+                        get(596));
+            if (defence <= 20)
+                return verified(RestrictedBuildType.INITIATE_PURE, get(597));
+            if (defence >= 39 && defence <= 40)
+                return verified(RestrictedBuildType.RUNE_PURE, get(584));
+            if (defence <= 42 && defence >= 41)
+                return verified(RestrictedBuildType.VOID_PURE, get(585));
+            if (defence >= 43 && defence <= 45 && attack >= 50 && strength >= 50)
+                return verified(RestrictedBuildType.ZERKER, get(586));
+        }
+        if (defence >= 70 && ranged >= 80 && magic >= 70
+                && attack <= 60 && strength <= 70)
+            return build(RestrictedBuildType.RANGE_TANK,
+                    Confidence.CHECK_NEEDED, get(587));
+        if (lowNonCombat <= 1 && highNonCombat <= 5 && combat >= 30)
+            return build(RestrictedBuildType.COMBAT_ONLY,
+                    Confidence.CHECK_NEEDED, get(588));
+        return verified(RestrictedBuildType.STANDARD, get(589));
+    }
+
+    private static RestrictedBuildSuggestion verified(
+            RestrictedBuildType type, String evidence)
+    {
+        return build(type, Confidence.VERIFIED, evidence);
+    }
+
+    private static RestrictedBuildSuggestion build(RestrictedBuildType type,
+            Confidence confidence, String evidence)
+    {
+        return new RestrictedBuildSuggestion(type, confidence, evidence);
+    }
+
+    private static int nonCombatExtreme(AccountSnapshot account,
+            boolean highest)
+    {
+        int value = highest ? 1 : Integer.MAX_VALUE;
+        for (Skill skill : Skill.values())
+            if (!isCombatProgressionSkill(skill))
+                value = highest ? Math.max(value, account.getSkillLevel(skill))
+                        : Math.min(value, account.getSkillLevel(skill));
+        return value == Integer.MAX_VALUE ? 1 : value;
     }
 
     /**

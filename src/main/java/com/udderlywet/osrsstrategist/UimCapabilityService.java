@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import javax.inject.Singleton;
 
@@ -24,7 +25,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     riskFor(capability),
-                    Text.get(1421));
+                    get(1421));
         }
 
         AccountMode mode = AccountMode.fromTypeCode(
@@ -35,7 +36,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     RiskLevel.NONE,
-                    Text.get(940));
+                    get(940));
         }
 
         if (UimStorageMechanics.isTooGenericToRecommend(capability))
@@ -43,7 +44,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     RiskLevel.HIGH,
-                    Text.get(942));
+                    get(942));
         }
 
         if (UimStorageMechanics.isRestrictedRetrieval(capability))
@@ -55,7 +56,7 @@ public class UimCapabilityService
                 return decision(capability, false,
                         Confidence.CHECK_NEEDED,
                         riskFor(capability),
-                        Text.get(943));
+                        get(943));
         }
 
         StorageSnapshot storage = data.storage();
@@ -68,14 +69,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.BLOCKED,
                     riskFor(capability),
-                    Text.get(944));
+                    get(944));
         }
         if (capabilityState != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     riskFor(capability),
-                    Text.get(945));
+                    get(945));
         }
 
         if (itemCompatibility == CapabilityState.BLOCKED)
@@ -83,14 +84,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.BLOCKED,
                     riskFor(capability),
-                    Text.get(946));
+                    get(946));
         }
         if (itemCompatibility != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     riskFor(capability),
-                    Text.get(947));
+                    get(947));
         }
 
         if (capacityOrPreconditions == CapabilityState.BLOCKED)
@@ -98,20 +99,20 @@ public class UimCapabilityService
             return decision(capability, false,
                     Confidence.BLOCKED,
                     riskFor(capability),
-                    Text.get(948));
+                    get(948));
         }
         if (capacityOrPreconditions != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     Confidence.CHECK_NEEDED,
                     riskFor(capability),
-                    Text.get(949));
+                    get(949));
         }
 
         return decision(capability, true,
                 Confidence.VERIFIED,
                 riskFor(capability),
-                Text.get(941));
+                get(941));
     }
 
     public boolean shouldRequireExplicitWarning(StorageCapability capability)

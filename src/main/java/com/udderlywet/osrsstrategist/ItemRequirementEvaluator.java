@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 
@@ -46,7 +47,7 @@ public final class ItemRequirementEvaluator
                     ? Collections.emptyList() : bestAlternativeInputs(results);
             return new ItemRequirementResult(state,
                     (needsVerification
-                            ? Text.get(1320) : "Get one of: ")
+                            ? get(1320) : "Get one of: ")
                             + expression.label(), inputs);
         }
 
@@ -109,7 +110,7 @@ public final class ItemRequirementEvaluator
         int shortfall = Math.max(0, expression.getQuantity() - owned);
         String target = String.join(" or ", expression.getItemNames());
         if (expression.getItemNames().size() > 1) target = "(" + target + ")";
-        String action = (observed ? "Get " : Text.get(1321))
+        String action = (observed ? "Get " : get(1321))
                 + shortfall + " × " + target;
 
         List<MethodInput> inputs = Collections.emptyList();
@@ -130,7 +131,7 @@ public final class ItemRequirementEvaluator
         ItemRequirementClass itemClass = expression.getItemClass();
         if (itemClass == null)
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
-                    Text.get(1322));
+                    get(1322));
         if (itemClass == ItemRequirementClass.EMPTY_INVENTORY_SPACE)
             return freeInventorySlots(expression, data);
         if (!itemClass.isNameObservable())
@@ -185,7 +186,7 @@ public final class ItemRequirementEvaluator
                     expression.getExcludedItemNames()) + ")";
         return new ItemRequirementResult(observed
                 ? RequirementState.BLOCKED : RequirementState.CHECK_NEEDED,
-                (observed ? "Get " : Text.get(1321)) + shortfall
+                (observed ? "Get " : get(1321)) + shortfall
                         + " × " + target);
     }
 
@@ -195,16 +196,16 @@ public final class ItemRequirementEvaluator
         ItemsState inventory = data == null ? null : data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
-                    Text.get(332));
+                    get(332));
         int required = Math.max(1, expression.getQuantity());
         int free = Math.max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
         if (free >= required)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
         return new ItemRequirementResult(RequirementState.BLOCKED,
-                Text.get(1323) + required
-                        + Text.get(1324) + free
-                        + Text.get(333));
+                get(1323) + required
+                        + get(1324) + free
+                        + get(333));
     }
 
     private static List<MethodInput> bestAlternativeInputs(

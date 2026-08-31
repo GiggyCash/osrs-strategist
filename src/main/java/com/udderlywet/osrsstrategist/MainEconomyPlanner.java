@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import javax.inject.Singleton;
 
@@ -16,7 +17,7 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L, 0L,
                     Confidence.CHECK_NEEDED,
-                    Text.get(1389));
+                    get(1389));
         }
 
         if (context.accountMode() != AccountMode.MAIN)
@@ -24,7 +25,7 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.NOT_APPLICABLE,
                     candidate.totalCost(), 0L,
                     Confidence.VERIFIED,
-                    Text.get(358));
+                    get(358));
         }
 
         GameData data = context.data();
@@ -35,7 +36,7 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     candidate.totalCost(), economy == null ? 0L : economy.getCoins(),
                     Confidence.CHECK_NEEDED,
-                    Text.get(363));
+                    get(363));
         }
 
         long cost = candidate.totalCost();
@@ -44,14 +45,14 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
                     Confidence.CHECK_NEEDED,
-                    Text.get(364));
+                    get(364));
         }
 
         if (coins < cost)
         {
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, Confidence.CHECK_NEEDED,
-                    Text.get(365));
+                    get(365));
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() > 0
@@ -60,19 +61,19 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.SELF_SOURCE,
                     cost, coins, Confidence.VERIFIED,
-                    Text.get(366));
+                    get(366));
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() <= 0)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     cost, coins, Confidence.CHECK_NEEDED,
-                    Text.get(367));
+                    get(367));
         }
 
         return decision(MainPurchaseChoice.BUY,
                 cost, coins, Confidence.VERIFIED,
-                Text.get(368));
+                get(368));
     }
 
     /**
@@ -90,21 +91,21 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
                     economy == null ? 0L : economy.getCoins(),
                     Confidence.CHECK_NEEDED,
-                    Text.get(369));
+                    get(369));
         if (economy == null
                 || economy.getConfidence() != Confidence.VERIFIED)
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     estimate.getTotalCost(),
                     economy == null ? 0L : economy.getCoins(),
                     Confidence.CHECK_NEEDED,
-                    Text.get(370));
+                    get(370));
 
         long cost = estimate.getTotalCost();
         long coins = Math.max(0L, economy.getCoins());
         if (coins < cost)
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, Confidence.CHECK_NEEDED,
-                    Text.get(359));
+                    get(359));
 
         long remaining = coins - cost;
         boolean trivialSpend = cost <= 1_000L && coins >= 5_000L;
@@ -113,16 +114,16 @@ public class MainEconomyPlanner
         if (trivialSpend || lowBurden)
             return decision(MainPurchaseChoice.BUY, cost, coins,
                     Confidence.VERIFIED,
-                    Text.get(360));
+                    get(360));
 
         if (reviewedSelfSourceRoute)
             return decision(MainPurchaseChoice.SELF_SOURCE, cost, coins,
                     Confidence.VERIFIED,
-                    Text.get(361));
+                    get(361));
 
         return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
                 Confidence.CHECK_NEEDED,
-                Text.get(362));
+                get(362));
     }
 
     public boolean maySuggestSale(

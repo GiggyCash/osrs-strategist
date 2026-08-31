@@ -156,40 +156,16 @@ public final class MethodStrategyKnowledgeCatalog
         if (skill == null || mode == null || !mode.isIronLike())
             return f2p ? StrategySourceId.F2P_SKILL_TRAINING
                     : StrategySourceId.GENERAL_SKILL_TRAINING;
-        boolean uim = mode == AccountMode.ULTIMATE_IRONMAN;
-        switch (skill)
+        var prefix = mode == AccountMode.ULTIMATE_IRONMAN
+                ? "UIM_" : "IRONMAN_";
+        try
         {
-            case SMITHING: return uim ? StrategySourceId.UIM_SMITHING
-                    : StrategySourceId.IRONMAN_SMITHING;
-            case CRAFTING: return uim ? StrategySourceId.UIM_CRAFTING
-                    : StrategySourceId.IRONMAN_CRAFTING;
-            case HERBLORE: return uim ? StrategySourceId.UIM_HERBLORE
-                    : StrategySourceId.IRONMAN_HERBLORE;
-            case CONSTRUCTION: return uim ? StrategySourceId.UIM_CONSTRUCTION
-                    : StrategySourceId.IRONMAN_CONSTRUCTION;
-            case RUNECRAFT: return uim ? StrategySourceId.UIM_RUNECRAFT
-                    : StrategySourceId.IRONMAN_RUNECRAFT;
-            case PRAYER: return uim ? StrategySourceId.UIM_PRAYER
-                    : StrategySourceId.IRONMAN_PRAYER;
-            case FARMING: return uim ? StrategySourceId.UIM_FARMING
-                    : StrategySourceId.IRONMAN_FARMING;
-            case COOKING: return uim ? StrategySourceId.UIM_COOKING
-                    : StrategySourceId.IRONMAN_COOKING;
-            case FLETCHING: return uim ? StrategySourceId.UIM_FLETCHING
-                    : StrategySourceId.IRONMAN_FLETCHING;
-            case FISHING: return uim ? StrategySourceId.UIM_FISHING
-                    : StrategySourceId.IRONMAN_FISHING;
-            case MINING: return uim ? StrategySourceId.UIM_MINING
-                    : StrategySourceId.IRONMAN_MINING;
-            case WOODCUTTING: return uim ? StrategySourceId.UIM_WOODCUTTING
-                    : StrategySourceId.IRONMAN_WOODCUTTING;
-            case HUNTER: return uim ? StrategySourceId.UIM_HUNTER
-                    : StrategySourceId.IRONMAN_HUNTER;
-            case FIREMAKING: return uim ? StrategySourceId.UIM_FIREMAKING
-                    : StrategySourceId.IRONMAN_FIREMAKING;
-            case THIEVING: return uim ? StrategySourceId.UIM_THIEVING
-                    : StrategySourceId.IRONMAN_THIEVING;
-            default: return uim ? StrategySourceId.UIM_SKILL_GUIDES
+            return StrategySourceId.valueOf(prefix + skill.name());
+        }
+        catch (IllegalArgumentException absentSpecializedGuide)
+        {
+            return mode == AccountMode.ULTIMATE_IRONMAN
+                    ? StrategySourceId.UIM_SKILL_GUIDES
                     : StrategySourceId.IRONMAN_SKILL_GUIDES;
         }
     }

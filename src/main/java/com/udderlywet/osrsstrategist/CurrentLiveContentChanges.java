@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -42,38 +43,38 @@ public final class CurrentLiveContentChanges
         public String getSource() { return source; }
     }
 
-    private static final String OFFICIAL = Text.get(189);
+    private static final String OFFICIAL = get(189);
     private static final List<Entry> ENTRIES = Collections.unmodifiableList(Arrays.asList(
             new Entry("2026-08-12-sepulchre-floor-4", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    Text.get(192), OFFICIAL),
+                    get(192), OFFICIAL),
             new Entry("2026-08-12-sepulchre-floor-5", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    Text.get(193), OFFICIAL),
+                    get(193), OFFICIAL),
             new Entry("2026-08-12-colossal-wyrm-courses", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    Text.get(194), OFFICIAL),
+                    get(194), OFFICIAL),
             new Entry("2026-08-12-agility-shortcuts", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    Text.get(195), OFFICIAL),
+                    get(195), OFFICIAL),
             new Entry("2026-08-12-bonfire-tending", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    Text.get(196), OFFICIAL),
+                    get(196), OFFICIAL),
             new Entry("2026-08-19-birdhouse-nests", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    Text.get(197), OFFICIAL),
+                    get(197), OFFICIAL),
             new Entry("2026-08-19-birdhouse-xp", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    Text.get(198), OFFICIAL),
+                    get(198), OFFICIAL),
             new Entry("2026-08-19-hunter-methods", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    Text.get(199), OFFICIAL),
+                    get(199), OFFICIAL),
             new Entry("2026-08-19-skilling-reward-shops", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    Text.get(190), OFFICIAL),
+                    get(190), OFFICIAL),
             new Entry("2026-09-02-sweep-up-follow-up", LocalDate.of(2026, 9, 2),
                     Status.ANNOUNCED_NOT_LIVE,
-                    Text.get(191), OFFICIAL)
+                    get(191), OFFICIAL)
     ));
 
     private CurrentLiveContentChanges() { }

@@ -9,14 +9,12 @@ import static org.junit.Assert.assertEquals;
 
 public class RestrictedBuildDetectorTest
 {
-    private final RestrictedBuildDetector detector = new RestrictedBuildDetector();
-
     @Test
     public void identifiesStrongOneDefencePureAsProtectedBuild()
     {
         AccountSnapshot account = account(MembershipStatus.P2P,
                 60, 70, 1, 80, 52, 82, 70, 50);
-        RestrictedBuildSuggestion result = detector.suggest(account);
+        RestrictedBuildSuggestion result = AccountBuildPolicy.detect(account);
         assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE, result.getType());
         assertEquals(Confidence.VERIFIED, result.getConfidence());
     }
@@ -27,7 +25,7 @@ public class RestrictedBuildDetectorTest
         AccountSnapshot account = account(MembershipStatus.P2P,
                 1, 1, 75, 1, 1, 1, 60, 40);
         assertEquals(RestrictedBuildType.DEFENCE_PURE,
-                detector.suggest(account).getType());
+                AccountBuildPolicy.detect(account).getType());
     }
 
     @Test
@@ -36,7 +34,7 @@ public class RestrictedBuildDetectorTest
         AccountSnapshot account = account(MembershipStatus.P2P,
                 1, 1, 1, 1, 1, 1, 10, 80);
         assertEquals(RestrictedBuildType.SKILLER,
-                detector.suggest(account).getType());
+                AccountBuildPolicy.detect(account).getType());
     }
 
     private static AccountSnapshot account(MembershipStatus membership,

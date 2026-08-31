@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -80,7 +81,7 @@ public class PvmReadinessAnalyzer
             {
                 result.put(activity.getId(), new PvmReadiness(activity.getId(), false,
                         Confidence.CHECK_NEEDED,
-                        Collections.singletonList(Text.get(1565))));
+                        Collections.singletonList(get(1565))));
                 continue;
             }
             // Exact profiles are recomputed from current carried state so a
@@ -106,39 +107,39 @@ public class PvmReadinessAnalyzer
             String requiredStyle = exact == null ? preparation.getPreferredStyle()
                     : exact.getWeaponStyle();
             if (!hasCombatWeapon(equipment, requiredStyle))
-                addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + Text.get(1566));
+                addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + get(1566));
             else if (exact == null)
-                addMissing(missing, Text.get(443));
+                addMissing(missing, get(443));
 
             int requiredFood = exact == null ? (preparation.isRequiresSupplies() ? 5 : 0)
                     : exact.getMinimumFood();
             if (carriedFoodQuantity(inventory) < requiredFood)
-                addMissing(missing, Text.get(445));
+                addMissing(missing, get(445));
             int requiredRestore = exact == null ? (preparation.getPrayer() >= 43 ? 1 : 0)
                     : exact.getMinimumRestoration();
             if (carriedRestorationQuantity(inventory) < requiredRestore)
-                addMissing(missing, Text.get(446));
+                addMissing(missing, get(446));
             if (usesRanged(preparation.getPreferredStyle()))
                 addMissing(missing, carriedAmmoQuantity(inventory, equipment) > 0
-                        ? Text.get(447)
-                        : Text.get(448));
+                        ? get(447)
+                        : get(448));
             if (usesMagic(preparation.getPreferredStyle()))
                 addMissing(missing, runeEvidence(inventory, storage)
-                        ? Text.get(449)
-                        : Text.get(450));
+                        ? get(449)
+                        : get(450));
 
             if (exact == null)
-                addMissing(missing, Text.get(451));
+                addMissing(missing, get(451));
             else
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
-                        addMissing(missing, "Carry " + accessItem + Text.get(1567));
+                        addMissing(missing, "Carry " + accessItem + get(1567));
 
             if (exact == null && preparation != null)
                 for (String check : preparation.getChecks()) addMissing(missing, check);
 
             if (mode == AccountMode.ULTIMATE_IRONMAN && preparation.isRequiresSupplies())
-                addMissing(missing, Text.get(452));
+                addMissing(missing, get(452));
 
             boolean fullyVerified = exact != null && missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
@@ -209,7 +210,7 @@ public class PvmReadinessAnalyzer
     private static int carriedFoodQuantity(ItemsState inventory)
     {
         return carriedQuantity(inventory, "shark", "karambwan", "anglerfish",
-                "manta ray", Text.get(1568), "lobster", "swordfish", "pizza");
+                "manta ray", get(1568), "lobster", "swordfish", "pizza");
     }
 
     private static int carriedRestorationQuantity(ItemsState inventory)

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import lombok.Getter;
 
@@ -29,7 +30,7 @@ public final class GoalRecommendationContext
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
-                    Text.get(296), null);
+                    get(296), null);
 
         String name = displayName(safeGoal);
         if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
@@ -38,19 +39,19 @@ public final class GoalRecommendationContext
                             ? GoalRecommendationRelationship.CHECK_NEEDED
                             : GoalRecommendationRelationship.FALLBACK,
                     membership == MembershipStatus.UNKNOWN
-                            ? Text.get(1229) + name + "."
-                            : name + Text.get(297),
+                            ? get(1229) + name + "."
+                            : name + get(297),
                     null);
 
         if (recommendation == null)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.CHECK_NEEDED,
-                    Text.get(298) + name + ".",
+                    get(298) + name + ".",
                     null);
         if (recommendation.getConfidence() == Confidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.BLOCKED,
-                    Text.get(1230) + name + " yet.",
+                    get(1230) + name + " yet.",
                     null);
 
         GoalProvenance provenance = recommendation.getGoalProvenance();
@@ -61,14 +62,14 @@ public final class GoalRecommendationContext
                     == Confidence.CHECK_NEEDED)
                 return new GoalRecommendationContext(safeGoal,
                         GoalRecommendationRelationship.CHECK_NEEDED,
-                        Text.get(1231) + name + ".",
+                        get(1231) + name + ".",
                         provenance);
             boolean direct = provenance.getRelationship()
                     == GoalRecommendationRelationship.DIRECT;
             return new GoalRecommendationContext(safeGoal,
                     provenance.getRelationship(),
-                    direct ? Text.get(1232) + name + "."
-                            : Text.get(1233) + name + ".",
+                    direct ? get(1232) + name + "."
+                            : get(1233) + name + ".",
                     provenance);
         }
         return new GoalRecommendationContext(safeGoal,

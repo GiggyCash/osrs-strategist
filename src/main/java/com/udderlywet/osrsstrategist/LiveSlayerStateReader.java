@@ -23,6 +23,24 @@ public class LiveSlayerStateReader
     // Krystilia streak. No other numeric master mapping is inferred here.
     private static final int KRYSTILIA_MASTER_ID = 7;
     private static final int MORTIMER_MASTER_ID = 10;
+    private static final String[] MASTER_NAMES = {null, "Turael/Aya",
+            "Mazchna/Achtryn", "Vannaka", "Chaeldar", "Duradel/Kuradal",
+            "Nieve/Steve", "Krystilia", "Konar quo Maten", "Spria",
+            "Mortimer"};
+    /** Block-list varbits indexed by the live Slayer master id. */
+    private static final int[][] BLOCKS = {
+            null,
+            {VarbitID.SLAYER_BLOCKED_TURAEL_1, VarbitID.SLAYER_BLOCKED_TURAEL_2, VarbitID.SLAYER_BLOCKED_TURAEL_3, VarbitID.SLAYER_BLOCKED_TURAEL_4, VarbitID.SLAYER_BLOCKED_TURAEL_5, VarbitID.SLAYER_BLOCKED_TURAEL_6, VarbitID.SLAYER_BLOCKED_TURAEL_DIARY},
+            {VarbitID.SLAYER_BLOCKED_MAZCHNA_1, VarbitID.SLAYER_BLOCKED_MAZCHNA_2, VarbitID.SLAYER_BLOCKED_MAZCHNA_3, VarbitID.SLAYER_BLOCKED_MAZCHNA_4, VarbitID.SLAYER_BLOCKED_MAZCHNA_5, VarbitID.SLAYER_BLOCKED_MAZCHNA_6, VarbitID.SLAYER_BLOCKED_MAZCHNA_DIARY},
+            {VarbitID.SLAYER_BLOCKED_VANNAKA_1, VarbitID.SLAYER_BLOCKED_VANNAKA_2, VarbitID.SLAYER_BLOCKED_VANNAKA_3, VarbitID.SLAYER_BLOCKED_VANNAKA_4, VarbitID.SLAYER_BLOCKED_VANNAKA_5, VarbitID.SLAYER_BLOCKED_VANNAKA_6, VarbitID.SLAYER_BLOCKED_VANNAKA_DIARY},
+            {VarbitID.SLAYER_BLOCKED_CHAELDAR_1, VarbitID.SLAYER_BLOCKED_CHAELDAR_2, VarbitID.SLAYER_BLOCKED_CHAELDAR_3, VarbitID.SLAYER_BLOCKED_CHAELDAR_4, VarbitID.SLAYER_BLOCKED_CHAELDAR_5, VarbitID.SLAYER_BLOCKED_CHAELDAR_6, VarbitID.SLAYER_BLOCKED_CHAELDAR_DIARY},
+            {VarbitID.SLAYER_BLOCKED_DURADEL_1, VarbitID.SLAYER_BLOCKED_DURADEL_2, VarbitID.SLAYER_BLOCKED_DURADEL_3, VarbitID.SLAYER_BLOCKED_DURADEL_4, VarbitID.SLAYER_BLOCKED_DURADEL_5, VarbitID.SLAYER_BLOCKED_DURADEL_6, VarbitID.SLAYER_BLOCKED_DURADEL_DIARY},
+            {VarbitID.SLAYER_BLOCKED_NIEVE_1, VarbitID.SLAYER_BLOCKED_NIEVE_2, VarbitID.SLAYER_BLOCKED_NIEVE_3, VarbitID.SLAYER_BLOCKED_NIEVE_4, VarbitID.SLAYER_BLOCKED_NIEVE_5, VarbitID.SLAYER_BLOCKED_NIEVE_6, VarbitID.SLAYER_BLOCKED_NIEVE_DIARY},
+            {VarbitID.SLAYER_BLOCKED_KRYSTILIA_1, VarbitID.SLAYER_BLOCKED_KRYSTILIA_2, VarbitID.SLAYER_BLOCKED_KRYSTILIA_3, VarbitID.SLAYER_BLOCKED_KRYSTILIA_4, VarbitID.SLAYER_BLOCKED_KRYSTILIA_5, VarbitID.SLAYER_BLOCKED_KRYSTILIA_6, VarbitID.SLAYER_BLOCKED_KRYSTILIA_DIARY},
+            {VarbitID.SLAYER_BLOCKED_KONAR_1, VarbitID.SLAYER_BLOCKED_KONAR_2, VarbitID.SLAYER_BLOCKED_KONAR_3, VarbitID.SLAYER_BLOCKED_KONAR_4, VarbitID.SLAYER_BLOCKED_KONAR_5, VarbitID.SLAYER_BLOCKED_KONAR_6, VarbitID.SLAYER_BLOCKED_KONAR_DIARY},
+            {VarbitID.SLAYER_BLOCKED_TURAEL_1, VarbitID.SLAYER_BLOCKED_TURAEL_2, VarbitID.SLAYER_BLOCKED_TURAEL_3, VarbitID.SLAYER_BLOCKED_TURAEL_4, VarbitID.SLAYER_BLOCKED_TURAEL_5, VarbitID.SLAYER_BLOCKED_TURAEL_6, VarbitID.SLAYER_BLOCKED_TURAEL_DIARY},
+            {VarbitID.SLAYER_BLOCKED_MORTIMER_1, VarbitID.SLAYER_BLOCKED_MORTIMER_2}
+    };
 
     private final Client client;
     private int cachedTick = -1;
@@ -264,20 +282,8 @@ public class LiveSlayerStateReader
 
     static String masterName(int masterId)
     {
-        switch (masterId)
-        {
-            case 1: return "Turael/Aya";
-            case 2: return "Mazchna/Achtryn";
-            case 3: return "Vannaka";
-            case 4: return "Chaeldar";
-            case 5: return "Duradel/Kuradal";
-            case 6: return "Nieve/Steve";
-            case 7: return "Krystilia";
-            case 8: return "Konar quo Maten";
-            case 9: return "Spria";
-            case 10: return "Mortimer";
-            default: return null;
-        }
+        return masterId > 0 && masterId < MASTER_NAMES.length
+                ? MASTER_NAMES[masterId] : null;
     }
 
     private Integer occupiedBlockSlots(int masterId, int capacity)
@@ -293,78 +299,7 @@ public class LiveSlayerStateReader
 
     private static int[] blockVarbits(int masterId)
     {
-        switch (masterId)
-        {
-            case 1:
-            case 9:
-                return new int[]{VarbitID.SLAYER_BLOCKED_TURAEL_1,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_2,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_3,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_4,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_5,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_6,
-                        VarbitID.SLAYER_BLOCKED_TURAEL_DIARY};
-            case 2:
-                return new int[]{VarbitID.SLAYER_BLOCKED_MAZCHNA_1,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_2,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_3,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_4,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_5,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_6,
-                        VarbitID.SLAYER_BLOCKED_MAZCHNA_DIARY};
-            case 3:
-                return new int[]{VarbitID.SLAYER_BLOCKED_VANNAKA_1,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_2,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_3,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_4,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_5,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_6,
-                        VarbitID.SLAYER_BLOCKED_VANNAKA_DIARY};
-            case 4:
-                return new int[]{VarbitID.SLAYER_BLOCKED_CHAELDAR_1,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_2,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_3,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_4,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_5,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_6,
-                        VarbitID.SLAYER_BLOCKED_CHAELDAR_DIARY};
-            case 5:
-                return new int[]{VarbitID.SLAYER_BLOCKED_DURADEL_1,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_2,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_3,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_4,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_5,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_6,
-                        VarbitID.SLAYER_BLOCKED_DURADEL_DIARY};
-            case 6:
-                return new int[]{VarbitID.SLAYER_BLOCKED_NIEVE_1,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_2,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_3,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_4,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_5,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_6,
-                        VarbitID.SLAYER_BLOCKED_NIEVE_DIARY};
-            case 7:
-                return new int[]{VarbitID.SLAYER_BLOCKED_KRYSTILIA_1,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_2,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_3,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_4,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_5,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_6,
-                        VarbitID.SLAYER_BLOCKED_KRYSTILIA_DIARY};
-            case 8:
-                return new int[]{VarbitID.SLAYER_BLOCKED_KONAR_1,
-                        VarbitID.SLAYER_BLOCKED_KONAR_2,
-                        VarbitID.SLAYER_BLOCKED_KONAR_3,
-                        VarbitID.SLAYER_BLOCKED_KONAR_4,
-                        VarbitID.SLAYER_BLOCKED_KONAR_5,
-                        VarbitID.SLAYER_BLOCKED_KONAR_6,
-                        VarbitID.SLAYER_BLOCKED_KONAR_DIARY};
-            case 10:
-                return new int[]{VarbitID.SLAYER_BLOCKED_MORTIMER_1,
-                        VarbitID.SLAYER_BLOCKED_MORTIMER_2};
-            default:
-                return null;
-        }
+        return masterId > 0 && masterId < BLOCKS.length
+                ? BLOCKS[masterId] : null;
     }
 }

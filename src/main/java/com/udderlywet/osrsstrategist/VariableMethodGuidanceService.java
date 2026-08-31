@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -10,7 +11,7 @@ import net.runelite.api.Skill;
 public class VariableMethodGuidanceService
 {
     private static final Profile[] PROFILES = BundledCatalogLoader.array(
-            Text.get(1057), Profile[].class);
+            get(1057), Profile[].class);
     private static final FarmingAccessEvaluator FARMING =
             new FarmingAccessEvaluator(new FarmingAccessCatalog());
 
@@ -54,8 +55,8 @@ public class VariableMethodGuidanceService
             case "tempoross":
                 String harpoon = first(items, "Dragon harpoon", "Crystal harpoon",
                         "Infernal harpoon", "Harpoon");
-                v.put("temporossSupplies", harpoon == null ? Text.get(1079)
-                        : "Bring " + harpoon + Text.get(1090));
+                v.put("temporossSupplies", harpoon == null ? get(1079)
+                        : "Bring " + harpoon + get(1090));
                 break;
             case "gotr":
                 String pouches = observed(items, "Small pouch", "Medium pouch",
@@ -65,8 +66,8 @@ public class VariableMethodGuidanceService
             case "stars":
                 boolean members = data.account().getMembershipStatus()
                         == MembershipStatus.P2P;
-                v.put("starScout", Text.get(members ? 1058 : 1059));
-                v.put("starLocation", Text.get(members ? 1062 : 1063));
+                v.put("starScout", get(members ? 1058 : 1059));
+                v.put("starLocation", get(members ? 1062 : 1063));
                 break;
             case "foundry":
                 String alloy = alloy(items);
@@ -92,7 +93,7 @@ public class VariableMethodGuidanceService
                 v.put("seedLower", seed.toLowerCase(Locale.ROOT));
                 v.put("patch", patch);
                 v.put("observed", observed(items, seed, "Seed dibber", "Spade",
-                        "Rake", Text.get(1478), "Gricoller's can"));
+                        "Rake", get(1478), "Gricoller's can"));
                 break;
             case "herbs":
                 String herb = tier(items, farming, 1, HERBS);
@@ -101,7 +102,7 @@ public class VariableMethodGuidanceService
                 v.put("herbSeed", "one " + herb.toLowerCase(Locale.ROOT));
                 v.put("patch", patch);
                 v.put("observed", observed(items, "Seed dibber", "Spade",
-                        Text.get(1478), "Magic secateurs", "Seed box"));
+                        get(1478), "Magic secateurs", "Seed box"));
                 break;
             case "contracts":
                 v.put("contract", farming >= 85 ? "hard"
@@ -116,13 +117,13 @@ public class VariableMethodGuidanceService
                         : hunter >= 57 ? "Adept" : "Novice");
                 v.put("hunter", master ? "Guild Hunter Wolf" : hunter >= 72
                         ? "Guild Hunter Teco" : hunter >= 57
-                        ? Text.get(1482) : "Huntmaster Gilman");
+                        ? get(1482) : "Huntmaster Gilman");
                 break;
             case "forestry":
                 int level = data.account().getSkillLevel(Skill.WOODCUTTING);
                 v.put("tree", level >= 60 ? "yew trees" : level >= 45
                         ? "maple trees" : level >= 30 ? "willow trees" : "oak trees");
-                v.put("treeLocation", Text.get(level >= 60 ? 1094
+                v.put("treeLocation", get(level >= 60 ? 1094
                         : level >= 45 ? 1095 : level >= 30 ? 1096 : 1097));
                 v.put("axe", tool(items, false));
                 break;
@@ -186,7 +187,7 @@ public class VariableMethodGuidanceService
         for (String metal : new String[]{"Crystal", "Infernal", "Dragon", "Rune",
                 "Adamant", "Mithril", "Black", "Steel", "Iron", "Bronze"})
             if (items.has(metal + " " + suffix)) return metal + " " + suffix;
-        return Text.get(pickaxe ? 1100 : 1102);
+        return get(pickaxe ? 1100 : 1102);
     }
 
     private static String first(ItemIndex items, String... names)

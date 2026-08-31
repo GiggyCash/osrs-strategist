@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -131,11 +132,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new Guidance(
-                Text.get(662)
+                get(662)
                         + targetLevel + ".",
-                Text.get(673),
-                Text.get(684),
-                Text.get(686),
+                get(673),
+                get(684),
+                get(686),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -153,11 +154,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new Guidance(
-                Text.get(687)
+                get(687)
                         + targetLevel + ".",
-                Text.get(688),
-                Text.get(689),
-                Text.get(690),
+                get(688),
+                get(689),
+                get(690),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -178,21 +179,21 @@ public class RecommendationGuidanceService
         String rune = level >= 20 ? "body" : level >= 14 ? "fire"
                 : level >= 9 ? "earth" : level >= 5 ? "water"
                 : level >= 2 ? "mind" : "air";
-        String altar = level >= 20 ? Text.get(691)
-                : level >= 14 ? Text.get(1440)
-                : level >= 9 ? Text.get(1441)
-                : level >= 5 ? Text.get(1442)
-                : level >= 2 ? Text.get(1443)
-                : Text.get(1444);
+        String altar = level >= 20 ? get(691)
+                : level >= 14 ? get(1440)
+                : level >= 9 ? get(1441)
+                : level >= 5 ? get(1442)
+                : level >= 2 ? get(1443)
+                : get(1444);
         return new Guidance(
-                Text.get(663)
+                get(663)
                         + altar + ", craft " + rune
-                        + Text.get(664)
+                        + get(664)
                         + targetLevel + ".",
-                "Bring the " + rune + Text.get(1285) + rune
-                        + Text.get(665),
-                Text.get(666) + altar + ".",
-                Text.get(667),
+                "Bring the " + rune + get(1285) + rune
+                        + get(665),
+                get(666) + altar + ".",
+                get(667),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -210,19 +211,19 @@ public class RecommendationGuidanceService
         String id = plan.getMethod().getId();
         if ("thieving_uim_lumbridge_people".equals(id))
             return new Guidance(
-                    Text.get(668)
+                    get(668)
                             + targetLevel + ".",
-                    Text.get(669),
-                    Text.get(670),
-                    Text.get(671),
+                    get(669),
+                    get(670),
+                    get(671),
                     MethodBankingBehavior.NONE);
         if ("thieving_uim_fruit_stalls".equals(id))
             return new Guidance(
-                    Text.get(672)
+                    get(672)
                             + targetLevel + ".",
-                    Text.get(674),
-                    Text.get(675),
-                    Text.get(676),
+                    get(674),
+                    get(675),
+                    get(676),
                     MethodBankingBehavior.NONE);
         return null;
     }
@@ -258,7 +259,7 @@ public class RecommendationGuidanceService
         String supplies = supplyGuidance(
                 data, data.account(), stages, useGroupStorage);
         String location = locationGuidance(data.quests());
-        String note = Text.get(677);
+        String note = get(677);
 
         return new Guidance(
                 action, supplies, location, note);
@@ -358,17 +359,17 @@ public class RecommendationGuidanceService
 
             StringBuilder text = new StringBuilder();
             text.append("Plan for ").append(requiredSummary(stages))
-                    .append(Text.get(1445))
+                    .append(get(1445))
                     .append(joinNatural(ownedParts)).append(".");
             if (missingParts.isEmpty())
             {
-                text.append(Text.get(678));
+                text.append(get(678));
             }
             else
             {
                 text.append(" Acquire ")
                         .append(joinNatural(missingParts))
-                        .append(Text.get(679));
+                        .append(get(679));
             }
             return text.toString();
         }
@@ -376,7 +377,7 @@ public class RecommendationGuidanceService
         if (data.bank() == null)
         {
             return "Plan for " + requiredSummary(stages)
-                    + Text.get(680);
+                    + get(680);
         }
 
         List<String> ownedParts = new ArrayList<>();
@@ -419,27 +420,27 @@ public class RecommendationGuidanceService
 
         if (missingParts.isEmpty())
         {
-            text.append(Text.get(681));
+            text.append(get(681));
             return text.toString();
         }
 
         if (mode.usesGrandExchange())
         {
             text.append(" Buy ").append(joinNatural(missingParts))
-                    .append(Text.get(1446));
+                    .append(get(1446));
         }
         else if (mode.isGroupIronman())
         {
             text.append(" Source ").append(joinNatural(missingParts))
                     .append(useGroupStorage
-                            ? Text.get(1447)
+                            ? get(1447)
                             : ".");
         }
         else
         {
             text.append(" Source ")
                     .append(joinNatural(missingParts))
-                    .append(Text.get(682));
+                    .append(get(682));
         }
         return text.toString();
     }
@@ -460,10 +461,10 @@ public class RecommendationGuidanceService
         if (quests != null
                 && quests.statusOf("Cook's Assistant") == QuestStatus.COMPLETE)
         {
-            return Text.get(683);
+            return get(683);
         }
 
-        return Text.get(685);
+        return get(685);
     }
 
     private static int quantityByName(

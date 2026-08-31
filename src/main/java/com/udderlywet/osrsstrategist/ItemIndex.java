@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 
@@ -30,26 +31,26 @@ public final class ItemIndex
         int observed = quantity(need.getItemIds());
         if (observed >= need.getRequiredQuantity())
             return new RequirementCheck(need.getId(), need.getLabel(),
-                    RequirementState.VERIFIED, Text.get(1435) + observed
+                    RequirementState.VERIFIED, get(1435) + observed
                     + (accountMode() == AccountMode.ULTIMATE_IRONMAN
-                            ? Text.get(703) : Text.get(704)
-                            + (usesGroupStorage() ? Text.get(1436) : ".")));
+                            ? get(703) : get(704)
+                            + (usesGroupStorage() ? get(1436) : ".")));
         if (accountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
             int restricted = restrictedQuantity(need.getItemIds());
             if (observed + restricted >= need.getRequiredQuantity())
-                return checkNeeded(need, Text.get(705));
+                return checkNeeded(need, get(705));
             boolean knownStorage = data != null && data.storage() != null
                     && !data.storage().getObservedContents().isEmpty();
             return checkNeeded(need, knownStorage
-                    ? "Only " + observed + Text.get(706)
+                    ? "Only " + observed + get(706)
                             + need.getRequiredQuantity() + "."
-                    : Text.get(1437) + observed + Text.get(707));
+                    : get(1437) + observed + get(707));
         }
         if (data == null || data.bank() == null)
-            return checkNeeded(need, Text.get(1437) + observed
-                    + Text.get(1438));
-        return checkNeeded(need, "Only " + observed + Text.get(1439)
+            return checkNeeded(need, get(1437) + observed
+                    + get(1438));
+        return checkNeeded(need, "Only " + observed + get(1439)
                 + need.getRequiredQuantity() + ".");
     }
 

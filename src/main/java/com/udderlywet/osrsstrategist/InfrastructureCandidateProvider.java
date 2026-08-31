@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -76,15 +77,15 @@ public class InfrastructureCandidateProvider implements CandidateProvider
                         context.accountMode()) ? 0.55 : 0.25;
         return new Recommendation(
                 "verify:poh-build-mode",
-                Text.get(1424),
-                Text.get(301),
+                get(1424),
+                get(301),
                 34.0 + modeValue * 12.0,
                 Confidence.CHECK_NEEDED,
                 new Guidance(
-                        Text.get(309),
-                        Text.get(310),
-                        Text.get(1425),
-                        Text.get(311)),
+                        get(309),
+                        get(310),
+                        get(1425),
+                        get(311)),
                 SafetyEvidence.harmless(false),
                 StrategicValue.builder()
                         .infrastructureValue(modeValue)
@@ -118,25 +119,25 @@ public class InfrastructureCandidateProvider implements CandidateProvider
         if (recurringRelief) score += 12.0;
 
         String modeReason = context.accountMode() == AccountMode.ULTIMATE_IRONMAN
-                ? Text.get(312)
+                ? get(312)
                 : AccountModePolicy.requiresSelfSourcing(context.accountMode())
-                ? Text.get(313)
-                : Text.get(314);
+                ? get(313)
+                : get(314);
         if (recurringRelief)
-            modeReason += Text.get(315)
+            modeReason += get(315)
                     + String.join(" and ", pressure.getBlockedFamilies())
-                    + Text.get(316);
+                    + get(316);
         return new Recommendation(
                 "prepare:infrastructure:" + definition.getId(),
                 "Build " + definition.getName(),
-                Text.get(302)
+                get(302)
                         + modeReason,
                 score,
                 Confidence.CHECK_NEEDED,
                 new Guidance(
                         definition.getAction(), materials(definition.getId()),
-                        Text.get(1426),
-                        Text.get(303)),
+                        get(1426),
+                        get(303)),
                 SafetyEvidence.skill(false, Skill.CONSTRUCTION),
                 StrategicValue.builder()
                         .infrastructureValue(utility)
@@ -165,20 +166,20 @@ public class InfrastructureCandidateProvider implements CandidateProvider
         switch (id)
         {
             case "poh-costume-room": return "50,000 coins";
-            case "poh-armour-case": return Text.get(1427);
+            case "poh-armour-case": return get(1427);
             case "poh-portal-chamber":
-                return Text.get(304);
+                return get(304);
             case "poh-superior-garden": return "75,000 coins";
             case "poh-restoration-pool":
-                return Text.get(305);
+                return get(305);
             case "poh-portal-nexus":
-                return Text.get(306);
+                return get(306);
             case "poh-spirit-tree":
-                return Text.get(1428);
+                return get(1428);
             case "poh-basic-jewellery-box":
-                return Text.get(307);
+                return get(307);
             case "poh-fairy-ring":
-                return Text.get(308);
+                return get(308);
             default: return null;
         }
     }

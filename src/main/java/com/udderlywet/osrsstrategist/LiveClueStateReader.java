@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -148,7 +149,7 @@ public class LiveClueStateReader
         try { location = locationOf(clue); }
         catch (RuntimeException ex) { location = null; }
         if (action == null || action.trim().isEmpty())
-            action = Text.get(1562) + kind + " solution.";
+            action = get(1562) + kind + " solution.";
         WorldPoint point = worldPointOf(clue);
         List<String> requirements = itemRequirements(clue);
         String enemy = clue.getEnemy() == null
@@ -175,32 +176,32 @@ public class LiveClueStateReader
         if (clue instanceof CipherClue)
             return talkTo(((CipherClue) clue).getNpcs(cluePlugin));
         if (clue instanceof CoordinateClue)
-            return Text.get(339);
+            return get(339);
         if (clue instanceof MapClue)
             return ((MapClue) clue).getDescription();
         if (clue instanceof MusicClue)
         {
             String npc = firstNpc((MusicClue) clue);
             return "Play " + ((MusicClue) clue).getSong()
-                    + (npc == null ? Text.get(1563)
+                    + (npc == null ? get(1563)
                             : " for " + npc + ".");
         }
         if (clue instanceof FaloTheBardClue)
-            return Text.get(340);
+            return get(340);
         if (clue instanceof SkillChallengeClue)
             return ((SkillChallengeClue) clue).getChallenge();
         if (clue instanceof HotColdClue)
         {
             String solution = ((HotColdClue) clue).getSolution();
             return solution == null || solution.trim().isEmpty()
-                    ? Text.get(341)
+                    ? get(341)
                     : solution;
         }
         if (clue instanceof FairyRingClue)
             return ((FairyRingClue) clue).getText();
         if (clue instanceof ThreeStepCrypticClue)
             return currentThreeStepAction((ThreeStepCrypticClue) clue);
-        return Text.get(1562) + clueKind(clue)
+        return get(1562) + clueKind(clue)
                 + " solution.";
     }
 
@@ -218,7 +219,7 @@ public class LiveClueStateReader
             if (npc != null) return npc;
         }
         return clue instanceof LocationClueScroll
-                ? Text.get(1564) : null;
+                ? get(1564) : null;
     }
 
     private WorldPoint worldPointOf(ClueScroll clue)
@@ -270,7 +271,7 @@ public class LiveClueStateReader
                 if (solution != null && !solution.trim().isEmpty())
                     return solution;
             }
-        return Text.get(342);
+        return get(342);
     }
 
     private static String clueKind(ClueScroll clue)
@@ -293,7 +294,7 @@ public class LiveClueStateReader
     private String talkTo(String[] npcs)
     {
         return npcs == null || npcs.length == 0
-                ? Text.get(343)
+                ? get(343)
                 : "Talk to " + npcs[0] + ".";
     }
 

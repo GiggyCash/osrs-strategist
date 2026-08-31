@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import javax.inject.Singleton;
 import net.runelite.api.Experience;
@@ -54,11 +55,11 @@ public class SailingGuidanceService
         if ("sailing_deep_sea_trawling".equals(id))
         {
             return new Guidance(
-                    Text.get(1370) + format(xpNeeded)
-                            + Text.get(1371) + targetLevel + ".",
-                    Text.get(732),
-                    Text.get(743),
-                    Text.get(754)
+                    get(1370) + format(xpNeeded)
+                            + get(1371) + targetLevel + ".",
+                    get(732),
+                    get(743),
+                    get(754)
             );
         }
 
@@ -77,37 +78,37 @@ public class SailingGuidanceService
             trial = new Trial(
                     "The Gwenith Glide",
                     16050,
-                    Text.get(765),
-                    Text.get(776));
+                    get(765),
+                    get(776));
         }
         else if (methodId.contains("jubbly"))
         {
             trial = new Trial(
                     "The Jubbly Jive",
                     6200,
-                    Text.get(787),
-                    Text.get(788));
+                    get(787),
+                    get(788));
         }
         else
         {
             trial = new Trial(
-                    Text.get(1372),
+                    get(1372),
                     1250,
-                    Text.get(789),
-                    Text.get(790));
+                    get(789),
+                    get(790));
         }
 
         int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
-        String action = Text.get(733)
-                + trial.name + Text.get(734)
-                + marlinCompletions + Text.get(1373)
+        var action = get(733)
+                + trial.name + get(734)
+                + marlinCompletions + get(1373)
                 + (marlinCompletions == 1 ? "" : "s")
                 + " at " + format(trial.marlinXp)
-                + Text.get(1374) + format(xpNeeded)
+                + get(1374) + format(xpNeeded)
                 + " XP to level " + targetLevel + ".";
 
         String supplies = trial.requirements;
-        String note = Text.get(735);
+        String note = get(735);
         return new Guidance(
                 action, supplies, trial.location, note);
     }
@@ -118,11 +119,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = Text.get(736)
+        var action = get(736)
                 + format(xpNeeded) + " XP toward level " + targetLevel + ".";
-        String supplies = Text.get(737);
-        String where = Text.get(738);
-        String note = Text.get(739);
+        var supplies = get(737);
+        String where = get(738);
+        String note = get(739);
         return new Guidance(action, supplies, where, note);
     }
 
@@ -132,11 +133,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = Text.get(740)
-                + format(xpNeeded) + Text.get(1375) + targetLevel + ".";
-        String supplies = Text.get(741);
-        String where = Text.get(742);
-        String note = Text.get(744);
+        var action = get(740)
+                + format(xpNeeded) + get(1375) + targetLevel + ".";
+        var supplies = get(741);
+        String where = get(742);
+        String note = get(744);
         return new Guidance(action, supplies, where, note);
     }
 
@@ -150,26 +151,26 @@ public class SailingGuidanceService
         if (!complete(quests, "Pandemonium"))
         {
             return new Guidance(
-                    Text.get(745),
-                    Text.get(746),
-                    Text.get(747),
-                    Text.get(748)
+                    get(745),
+                    get(746),
+                    get(747),
+                    get(748)
             );
         }
 
         StringBuilder action = new StringBuilder();
-        action.append(Text.get(749))
-                .append(format(xpNeeded)).append(Text.get(1375))
+        action.append(get(749))
+                .append(format(xpNeeded)).append(get(1375))
                 .append(targetLevel).append(".");
 
-        StringBuilder supplies = new StringBuilder(Text.get(750));
+        var supplies = new StringBuilder(get(750));
         if (currentLevel >= 12 && !complete(quests, "Prying Times"))
         {
-            supplies.append(Text.get(751));
+            supplies.append(get(751));
         }
         if (currentLevel >= 22 && !complete(quests, "Current Affairs"))
         {
-            supplies.append(Text.get(752));
+            supplies.append(get(752));
         }
         if (currentLevel >= 15)
         {
@@ -179,23 +180,23 @@ public class SailingGuidanceService
             {
                 if (economy.getCoins() >= 15000)
                 {
-                    supplies.append(Text.get(753));
+                    supplies.append(get(753));
                 }
                 else
                 {
                     supplies.append(" You are ")
                             .append(format(15000 - economy.getCoins()))
-                            .append(Text.get(755));
+                            .append(get(755));
                 }
             }
             else
             {
-                supplies.append(Text.get(756));
+                supplies.append(get(756));
             }
         }
 
-        String where = Text.get(757);
-        String note = Text.get(758);
+        String where = get(757);
+        String note = get(758);
         return new Guidance(
                 action.toString(), supplies.toString(), where, note);
     }

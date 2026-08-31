@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,10 +12,10 @@ import javax.swing.*;
 public final class ProgressViewPanel extends JPanel
 {
     private final JLabel sessionXp = new JLabel("0 XP");
-    private final JLabel sessionMeta = new JLabel(Text.get(1158));
-    private final JTextArea target = textArea(Text.get(1159));
+    private final JLabel sessionMeta = new JLabel(get(1158));
+    private final JTextArea target = textArea(get(1159));
     private final JTextArea leadingSkill = textArea("");
-    private final JTextArea planPath = textArea(Text.get(1160));
+    private final JTextArea planPath = textArea(get(1160));
     private final JTextArea milestones = textArea("");
     private final JPanel milestoneCard = card();
     private final JTextArea lastSession = textArea("");
@@ -102,8 +103,8 @@ public final class ProgressViewPanel extends JPanel
         if (snapshot == null)
         {
             sessionXp.setText("0 XP");
-            sessionMeta.setText(Text.get(1158));
-            target.setText(Text.get(1159));
+            sessionMeta.setText(get(1158));
+            target.setText(get(1159));
             leadingSkill.setText("");
             chart.setBuckets(null);
             milestones.setText("");
@@ -121,7 +122,7 @@ public final class ProgressViewPanel extends JPanel
                 .ifPresentOrElse(value -> leadingSkill.setText(
                         value.getSkill().getName() + " +"
                                 + format(value.getXpGained())),
-                        () -> leadingSkill.setText(Text.get(1161)));
+                        () -> leadingSkill.setText(get(1161)));
         updateMilestones(snapshot.getMilestones());
     }
 
@@ -129,7 +130,7 @@ public final class ProgressViewPanel extends JPanel
     {
         if (plan == null)
         {
-            planPath.setText(Text.get(1160));
+            planPath.setText(get(1160));
             return;
         }
         StringBuilder text = new StringBuilder();
@@ -170,7 +171,7 @@ public final class ProgressViewPanel extends JPanel
         if (!summary.getMilestones().isEmpty())
         {
             int first = Math.max(0, summary.getMilestones().size() - 2);
-            text.append(Text.get(1162));
+            text.append(get(1162));
             for (int index = first; index < summary.getMilestones().size(); index++)
             {
                 if (index > first) text.append("; ");
@@ -216,7 +217,7 @@ public final class ProgressViewPanel extends JPanel
         if (projection == null
                 || projection.getState() == ProgressTargetProjection.State.NO_TARGET)
         {
-            target.setText(Text.get(1159));
+            target.setText(get(1159));
             return;
         }
         ProgressTarget value = projection.getTarget();
@@ -233,7 +234,7 @@ public final class ProgressViewPanel extends JPanel
                 target.setText(prefix + " • " + duration(projection.getEtaMillis()));
                 break;
             default:
-                target.setText(prefix + Text.get(1163));
+                target.setText(prefix + get(1163));
                 break;
         }
     }

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -62,14 +63,14 @@ public class DiaryCandidateProvider implements CandidateProvider
                 result.add(new Recommendation(
                         verifyId,
                         "Check " + pretty(next.name()) + " " + region + " Diary",
-                        Text.get(205),
+                        get(205),
                         score,
                         Confidence.CHECK_NEEDED,
                         new Guidance(
-                                "Open the " + region + Text.get(206),
-                                Text.get(207),
-                                Text.get(1360) + region + ".",
-                                Text.get(208)),
+                                "Open the " + region + get(206),
+                                get(207),
+                                get(1360) + region + ".",
+                                get(208)),
                         SafetyEvidence.harmless(false)
                 ));
                 continue;
@@ -81,14 +82,14 @@ public class DiaryCandidateProvider implements CandidateProvider
             result.add(new Recommendation(
                     ready.getId(),
                     "Complete a " + pretty(next.name()) + " " + region + " task",
-                    Text.get(209),
+                    get(209),
                     score,
                     Confidence.VERIFIED,
                     new Guidance(
                             ready.getTask(),
                             requirementSummary(ready),
-                            region + Text.get(210),
-                            Text.get(211)),
+                            region + get(210),
+                            get(211)),
                     SafetyEvidence.potentiallyIrreversible(false)
             ));
         }
@@ -151,7 +152,7 @@ public class DiaryCandidateProvider implements CandidateProvider
                         + (requirement.isStartedOnly() ? " started" : " complete"));
         }
         return values.isEmpty()
-                ? Text.get(212)
+                ? get(212)
                 : "Verified: " + String.join(", ", values) + ".";
     }
 

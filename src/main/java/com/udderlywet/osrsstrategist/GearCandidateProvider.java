@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -78,7 +79,7 @@ public class GearCandidateProvider implements CandidateProvider
             RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
             String buildNote = build == RestrictedBuildType.STANDARD
                     ? ""
-                    : Text.get(1289) + AccountBuildPolicy.label(account) + ".";
+                    : get(1289) + AccountBuildPolicy.label(account) + ".";
             Guidance guidance = acquisitionGuidance(entry, mode,
                     items, context);
             ContextualGearAssessment assessment = decisionService.assess(entry,
@@ -93,8 +94,8 @@ public class GearCandidateProvider implements CandidateProvider
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
                             + buildNote
-                            + Text.get(1290)
-                            + practical.getValue() + Text.get(1291)
+                            + get(1290)
+                            + practical.getValue() + get(1291)
                             + targetBest.getValue(),
                     score,
                     Confidence.CHECK_NEEDED,
@@ -115,10 +116,10 @@ public class GearCandidateProvider implements CandidateProvider
         if (!items.primaryOwnershipObserved())
         {
             return new Guidance(
-                    Text.get(251),
-                    Text.get(255),
-                    Text.get(256),
-                    Text.get(257));
+                    get(251),
+                    get(255),
+                    get(256),
+                    get(257));
         }
 
         List<String> owned = new ArrayList<>();
@@ -138,24 +139,24 @@ public class GearCandidateProvider implements CandidateProvider
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
             action = route.getSteps().get(0).getAction();
         else if (mode.usesGrandExchange())
-            action = Text.get(258) + next
-                    + Text.get(259);
+            action = get(258) + next
+                    + get(259);
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
-            action = Text.get(260)
-                    + next + Text.get(261);
+            action = get(260)
+                    + next + get(261);
         else
-            action = Text.get(262) + next
-                    + Text.get(252);
+            action = get(262) + next
+                    + get(252);
 
-        String supplies = Text.get(1292)
+        String supplies = get(1292)
                 + (owned.isEmpty() ? "none" : String.join(", ", owned))
-                + Text.get(1293)
-                + (unresolved.isEmpty() ? Text.get(1294)
+                + get(1293)
+                + (unresolved.isEmpty() ? get(1294)
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
-                ? Text.get(253)
-                : Text.get(1295) + route.getSteps().get(0).getTarget()
-                        + Text.get(254);
+                ? get(253)
+                : get(1295) + route.getSteps().get(0).getTarget()
+                        + get(254);
         return new Guidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }

@@ -84,13 +84,13 @@ public final class DiarySnapshot
 
     public boolean isTierComplete(String region, DiaryTier tier)
     {
-        Map<DiaryTier, Boolean> tiers = completedTiersByRegion.get(region);
+        var tiers = completedTiersByRegion.get(region);
         return tiers != null && Boolean.TRUE.equals(tiers.get(tier));
     }
 
     public Map<DiaryTier, Boolean> tiersFor(String region)
     {
-        Map<DiaryTier, Boolean> tiers = completedTiersByRegion.get(region);
+        var tiers = completedTiersByRegion.get(region);
         return tiers == null ? Collections.emptyMap() : tiers;
     }
 

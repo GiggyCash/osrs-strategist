@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -158,34 +159,34 @@ public class AdaptiveMilestoneGuidanceService
         String note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
-            note = Text.get(5);
+            note = get(5);
         }
         else
         {
-            note += Text.get(16);
+            note += get(16);
         }
 
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
-            note += Text.get(1280) + modifier.getLabel() + ".";
+            note += get(1280) + modifier.getLabel() + ".";
         }
         else
         {
-            note += Text.get(27);
+            note += get(27);
         }
 
         AccountMode mode = AccountMode.fromTypeCode(
                 data.account().getAccountTypeCode());
         if (mode.isIronLike() && !inputs.isEmpty())
         {
-            note += Text.get(33)
-                    + Text.get(34)
-                    + Text.get(1281);
+            note += get(33)
+                    + get(34)
+                    + get(1281);
         }
         if (mode == AccountMode.ULTIMATE_IRONMAN && resources != null
                 && resources.getTotalMissingUnits() > 0)
         {
-            note += Text.get(35);
+            note += get(35);
         }
 
         Guidance result = new Guidance(
@@ -231,7 +232,7 @@ public class AdaptiveMilestoneGuidanceService
                     "Black pickaxe", "Steel pickaxe", "Iron pickaxe",
                     "Bronze pickaxe");
             return pickaxe == null
-                    ? Text.get(36)
+                    ? get(36)
                     : "Bring your " + pickaxe + ".";
         }
         if (methodId.startsWith("woodcutting_"))
@@ -241,52 +242,52 @@ public class AdaptiveMilestoneGuidanceService
                     "Adamant axe", "Mithril axe", "Black axe", "Steel axe",
                     "Iron axe", "Bronze axe");
             return axe == null
-                    ? Text.get(37)
+                    ? get(37)
                     : "Bring your " + axe + ".";
         }
         if (isFlyFishingMethod(methodId))
             return items.has("Fly fishing rod")
-                    ? Text.get(1282)
-                    : Text.get(38);
+                    ? get(1282)
+                    : get(38);
         if (isNetFishingMethod(methodId))
-            return Text.get(6);
+            return get(6);
         if ("hunter_bird_traps".equals(methodId))
             return items.has("Bird snare")
-                    ? Text.get(1283)
-                    : Text.get(7);
+                    ? get(1283)
+                    : get(7);
         if ("hunter_falconry".equals(methodId))
-            return Text.get(8);
+            return get(8);
         if ("hunter_salamanders".equals(methodId))
         {
             int traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
-            return "Bring " + traps + Text.get(1284) + traps
-                    + Text.get(9);
+            return "Bring " + traps + get(1284) + traps
+                    + get(9);
         }
         if ("magic_f2p_combat".equals(methodId))
-            return Text.get(10);
+            return get(10);
         if ("magic_f2p_fire_bolt".equals(methodId))
-            return Text.get(11);
+            return get(11);
         if ("magic_f2p_fire_blast".equals(methodId))
-            return Text.get(12);
+            return get(12);
         if ("magic_f2p_curse".equals(methodId))
-            return Text.get(13);
+            return get(13);
         if ("magic_f2p_fire_strike_splash".equals(methodId))
-            return Text.get(14);
+            return get(14);
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
-            return Text.get(1268);
+            return get(1268);
         if ("smithing_f2p_platebodies".equals(methodId))
-            return Text.get(15);
+            return get(15);
         if ("smithing_f2p_uim_bronze".equals(methodId))
-            return Text.get(17);
+            return get(17);
         if ("thieving_lumbridge_people".equals(methodId))
-            return Text.get(18);
+            return get(18);
         if ("thieving_ardy_knights".equals(methodId))
-            return Text.get(19);
+            return get(19);
         if (methodId.startsWith("runecraft_f2p_"))
         {
             String rune = methodId.substring("runecraft_f2p_".length());
-            return "Bring the " + rune + Text.get(1285) + rune
+            return "Bring the " + rune + get(1285) + rune
                     + " tiara.";
         }
         return null;
@@ -301,27 +302,27 @@ public class AdaptiveMilestoneGuidanceService
         if ("hunter_salamanders".equals(methodId))
         {
             if (actionName.contains("red salamander"))
-                return Text.get(20);
+                return get(20);
             if (actionName.contains("orange salamander"))
-                return Text.get(21);
-            return Text.get(22);
+                return get(21);
+            return get(22);
         }
         if (isFlyFishingMethod(methodId))
-            return Text.get(23);
+            return get(23);
         if (isNetFishingMethod(methodId))
-            return Text.get(24);
+            return get(24);
         if ("magic_f2p_curse".equals(methodId)
                 || "magic_f2p_fire_strike_splash".equals(methodId))
         {
-            return Text.get(25);
+            return get(25);
         }
         if ("smithing_f2p_platebodies".equals(methodId))
         {
-            return Text.get(26);
+            return get(26);
         }
         if ("smithing_f2p_uim_bronze".equals(methodId))
         {
-            return Text.get(28);
+            return get(28);
         }
 
         AccountMode mode = data == null || data.account() == null
@@ -334,11 +335,11 @@ public class AdaptiveMilestoneGuidanceService
                     || "fletching_bows".equals(methodId)
                     || "herblore_low_potions".equals(methodId))
             {
-                return Text.get(29);
+                return get(29);
             }
             if ("firemaking_f2p_logs".equals(methodId))
             {
-                return Text.get(30);
+                return get(30);
             }
         }
         String explicit = locationBeforeColon(fallback);
@@ -353,10 +354,10 @@ public class AdaptiveMilestoneGuidanceService
     {
         if (profile.getProgressEstimateMode()
                 == MethodProfile.ProgressEstimateMode.XP_ONLY)
-            return format(xpNeeded) + Text.get(1286)
+            return format(xpNeeded) + get(1286)
                     + targetLevel + ".";
         if (variableOutput)
-            return format(xpNeeded) + Text.get(1287)
+            return format(xpNeeded) + get(1287)
                     + format(minimumActions) + "–"
                     + format(maximumActions) + " "
                     + profile.unit(maximumActions) + " across "
@@ -465,10 +466,10 @@ public class AdaptiveMilestoneGuidanceService
             String names = outputNames(outputs).toLowerCase(Locale.ROOT);
             if (isFlyFishingMethod(method.getId()))
                 return "Fly-fish " + names
-                        + Text.get(31);
+                        + get(31);
             if (isNetFishingMethod(method.getId()))
-                return Text.get(1288) + names
-                        + Text.get(32);
+                return get(1288) + names
+                        + get(32);
         }
         String instruction = routeAction(method.getInstructions(),
                 method.getName());

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 
@@ -57,21 +58,21 @@ public final class UimStorageMechanics
         switch (capability)
         {
             case HESPORI_ITEM_RETRIEVAL:
-                return Text.get(1189);
+                return get(1189);
             case ZULRAH_ITEM_RETRIEVAL:
-                return Text.get(1190);
+                return get(1190);
             case VOLCANIC_MINE_ITEM_RETRIEVAL:
-                return Text.get(1021);
+                return get(1021);
             case DEATHPILE:
-                return Text.get(1191);
+                return get(1191);
             case LOOTING_BAG:
                 return "the looting bag";
             case POH_COSTUME_ROOM:
-                return Text.get(1192);
+                return get(1192);
             case POH_STORAGE:
-                return Text.get(1193);
+                return get(1193);
             case STASH:
-                return Text.get(1194);
+                return get(1194);
             default:
                 return capability.name().toLowerCase().replace('_', ' ');
         }
@@ -82,59 +83,59 @@ public final class UimStorageMechanics
         EnumMap<StorageCapability, UimStorageMechanicProfile> values =
                 new EnumMap<>(StorageCapability.class);
         add(values, StorageCapability.LOOTING_BAG,
-                Text.get(1195),
-                Text.get(1032),
-                Text.get(1043),
-                Text.get(1051),
-                Text.get(1052),
-                Text.get(1053),
-                Text.get(1054),
-                Text.get(1055),
+                get(1195),
+                get(1032),
+                get(1043),
+                get(1051),
+                get(1052),
+                get(1053),
+                get(1054),
+                get(1055),
                 RiskLevel.MEDIUM, StrategySourceId.UIM_ITEM_MANAGEMENT, true);
         add(values, StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                Text.get(1056),
-                Text.get(1022),
-                Text.get(1023),
-                Text.get(1024),
-                Text.get(1025),
+                get(1056),
+                get(1022),
+                get(1023),
+                get(1024),
+                get(1025),
                 "25,000 coins.",
-                Text.get(1026),
-                Text.get(1027),
+                get(1026),
+                get(1027),
                 RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
         add(values, StorageCapability.ZULRAH_ITEM_RETRIEVAL,
-                Text.get(1196),
-                Text.get(1028),
-                Text.get(1029),
-                Text.get(1030),
-                Text.get(1031),
-                Text.get(1033),
-                Text.get(1034),
-                Text.get(1035),
+                get(1196),
+                get(1028),
+                get(1029),
+                get(1030),
+                get(1031),
+                get(1033),
+                get(1034),
+                get(1035),
                 RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
         add(values, StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
-                Text.get(1036),
-                Text.get(1037),
-                Text.get(1038),
-                Text.get(1039),
-                Text.get(1040),
+                get(1036),
+                get(1037),
+                get(1038),
+                get(1039),
+                get(1040),
                 "150 numulite.",
-                Text.get(1041),
-                Text.get(1042),
+                get(1041),
+                get(1042),
                 RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
         add(values, StorageCapability.DEATHPILE,
-                Text.get(1044),
-                Text.get(1045),
-                Text.get(1046),
-                Text.get(1047),
-                Text.get(1048),
+                get(1044),
+                get(1045),
+                get(1046),
+                get(1047),
+                get(1048),
                 "No service fee.",
-                Text.get(1049),
-                Text.get(1050),
+                get(1049),
+                get(1050),
                 RiskLevel.IRREVERSIBLE, StrategySourceId.UIM_ITEM_MANAGEMENT,
                 true);
         values.put(StorageCapability.DEATH_STORAGE,
                 new UimStorageMechanicProfile(StorageCapability.DEATH_STORAGE,
-                        "Unknown", Text.get(1197), "Unknown",
+                        "Unknown", get(1197), "Unknown",
                         "Unknown", "Unknown", "Unknown", "Unknown",
                         "Unknown", RiskLevel.HIGH,
                         StrategySourceId.ITEM_RETRIEVAL_SERVICES, false));

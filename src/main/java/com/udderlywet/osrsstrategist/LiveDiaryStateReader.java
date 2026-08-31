@@ -14,6 +14,26 @@ import net.runelite.client.util.Text;
 @Singleton
 public class LiveDiaryStateReader
 {
+    private static final String[] REGIONS = {
+            "Ardougne", "Desert", "Falador", "Fremennik", "Kandarin",
+            "Karamja", "Kourend & Kebos", "Lumbridge & Draynor",
+            "Morytania", "Varrock", "Western Provinces", "Wilderness"
+    };
+    /** Tier-completion varbits followed by the four completed-task counts. */
+    private static final int[][] VARBITS = {
+            {VarbitID.ARDOUGNE_DIARY_EASY_COMPLETE, VarbitID.ARDOUGNE_DIARY_MEDIUM_COMPLETE, VarbitID.ARDOUGNE_DIARY_HARD_COMPLETE, VarbitID.ARDOUGNE_DIARY_ELITE_COMPLETE, VarbitID.ARDOUGNE_EASY_COUNT, VarbitID.ARDOUGNE_MED_COUNT, VarbitID.ARDOUGNE_HARD_COUNT, VarbitID.ARDOUGNE_ELITE_COUNT},
+            {VarbitID.DESERT_DIARY_EASY_COMPLETE, VarbitID.DESERT_DIARY_MEDIUM_COMPLETE, VarbitID.DESERT_DIARY_HARD_COMPLETE, VarbitID.DESERT_DIARY_ELITE_COMPLETE, VarbitID.DESERT_EASY_COUNT, VarbitID.DESERT_MED_COUNT, VarbitID.DESERT_HARD_COUNT, VarbitID.DESERT_ELITE_COUNT},
+            {VarbitID.FALADOR_DIARY_EASY_COMPLETE, VarbitID.FALADOR_DIARY_MEDIUM_COMPLETE, VarbitID.FALADOR_DIARY_HARD_COMPLETE, VarbitID.FALADOR_DIARY_ELITE_COMPLETE, VarbitID.FALADOR_EASY_COUNT, VarbitID.FALADOR_MED_COUNT, VarbitID.FALADOR_HARD_COUNT, VarbitID.FALADOR_ELITE_COUNT},
+            {VarbitID.FREMENNIK_DIARY_EASY_COMPLETE, VarbitID.FREMENNIK_DIARY_MEDIUM_COMPLETE, VarbitID.FREMENNIK_DIARY_HARD_COMPLETE, VarbitID.FREMENNIK_DIARY_ELITE_COMPLETE, VarbitID.FREMENNIK_EASY_COUNT, VarbitID.FREMENNIK_MED_COUNT, VarbitID.FREMENNIK_HARD_COUNT, VarbitID.FREMENNIK_ELITE_COUNT},
+            {VarbitID.KANDARIN_DIARY_EASY_COMPLETE, VarbitID.KANDARIN_DIARY_MEDIUM_COMPLETE, VarbitID.KANDARIN_DIARY_HARD_COMPLETE, VarbitID.KANDARIN_DIARY_ELITE_COMPLETE, VarbitID.KANDARIN_EASY_COUNT, VarbitID.KANDARIN_MED_COUNT, VarbitID.KANDARIN_HARD_COUNT, VarbitID.KANDARIN_ELITE_COUNT},
+            {VarbitID.ATJUN_EASY_DONE, VarbitID.ATJUN_MED_DONE, VarbitID.ATJUN_HARD_DONE, VarbitID.KARAMJA_DIARY_ELITE_COMPLETE, VarbitID.KARAMJA_EASY_COUNT, VarbitID.KARAMJA_MED_COUNT, VarbitID.KARAMJA_HARD_COUNT, VarbitID.KARAMJA_ELITE_COUNT},
+            {VarbitID.KOUREND_DIARY_EASY_COMPLETE, VarbitID.KOUREND_DIARY_MEDIUM_COMPLETE, VarbitID.KOUREND_DIARY_HARD_COMPLETE, VarbitID.KOUREND_DIARY_ELITE_COMPLETE, VarbitID.KOUREND_EASY_COUNT, VarbitID.KOUREND_MED_COUNT, VarbitID.KOUREND_HARD_COUNT, VarbitID.KOUREND_ELITE_COUNT},
+            {VarbitID.LUMBRIDGE_DIARY_EASY_COMPLETE, VarbitID.LUMBRIDGE_DIARY_MEDIUM_COMPLETE, VarbitID.LUMBRIDGE_DIARY_HARD_COMPLETE, VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE, VarbitID.LUMBRIDGE_EASY_COUNT, VarbitID.LUMBRIDGE_MED_COUNT, VarbitID.LUMBRIDGE_HARD_COUNT, VarbitID.LUMBRIDGE_ELITE_COUNT},
+            {VarbitID.MORYTANIA_DIARY_EASY_COMPLETE, VarbitID.MORYTANIA_DIARY_MEDIUM_COMPLETE, VarbitID.MORYTANIA_DIARY_HARD_COMPLETE, VarbitID.MORYTANIA_DIARY_ELITE_COMPLETE, VarbitID.MORYTANIA_EASY_COUNT, VarbitID.MORYTANIA_MED_COUNT, VarbitID.MORYTANIA_HARD_COUNT, VarbitID.MORYTANIA_ELITE_COUNT},
+            {VarbitID.VARROCK_DIARY_EASY_COMPLETE, VarbitID.VARROCK_DIARY_MEDIUM_COMPLETE, VarbitID.VARROCK_DIARY_HARD_COMPLETE, VarbitID.VARROCK_DIARY_ELITE_COMPLETE, VarbitID.VARROCK_EASY_COUNT, VarbitID.VARROCK_MED_COUNT, VarbitID.VARROCK_HARD_COUNT, VarbitID.VARROCK_ELITE_COUNT},
+            {VarbitID.WESTERN_DIARY_EASY_COMPLETE, VarbitID.WESTERN_DIARY_MEDIUM_COMPLETE, VarbitID.WESTERN_DIARY_HARD_COMPLETE, VarbitID.WESTERN_DIARY_ELITE_COMPLETE, VarbitID.WESTERN_EASY_COUNT, VarbitID.WESTERN_MED_COUNT, VarbitID.WESTERN_HARD_COUNT, VarbitID.WESTERN_ELITE_COUNT},
+            {VarbitID.WILDERNESS_DIARY_EASY_COMPLETE, VarbitID.WILDERNESS_DIARY_MEDIUM_COMPLETE, VarbitID.WILDERNESS_DIARY_HARD_COMPLETE, VarbitID.WILDERNESS_DIARY_ELITE_COMPLETE, VarbitID.WILDERNESS_EASY_COUNT, VarbitID.WILDERNESS_MED_COUNT, VarbitID.WILDERNESS_HARD_COUNT, VarbitID.WILDERNESS_ELITE_COUNT}
+    };
     private final Client client;
     private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
     private final Map<String, Boolean> observedTaskCompletion = new HashMap<>();
@@ -32,66 +52,8 @@ public class LiveDiaryStateReader
         Map<String, Integer> totals = new HashMap<>();
         Map<String, Map<DiaryTier, Boolean>> tiers = new HashMap<>();
 
-        add(completed, totals, tiers, "Ardougne",
-                VarbitID.ARDOUGNE_DIARY_EASY_COMPLETE, VarbitID.ARDOUGNE_DIARY_MEDIUM_COMPLETE,
-                VarbitID.ARDOUGNE_DIARY_HARD_COMPLETE, VarbitID.ARDOUGNE_DIARY_ELITE_COMPLETE,
-                VarbitID.ARDOUGNE_EASY_COUNT, VarbitID.ARDOUGNE_MED_COUNT,
-                VarbitID.ARDOUGNE_HARD_COUNT, VarbitID.ARDOUGNE_ELITE_COUNT);
-        add(completed, totals, tiers, "Desert",
-                VarbitID.DESERT_DIARY_EASY_COMPLETE, VarbitID.DESERT_DIARY_MEDIUM_COMPLETE,
-                VarbitID.DESERT_DIARY_HARD_COMPLETE, VarbitID.DESERT_DIARY_ELITE_COMPLETE,
-                VarbitID.DESERT_EASY_COUNT, VarbitID.DESERT_MED_COUNT,
-                VarbitID.DESERT_HARD_COUNT, VarbitID.DESERT_ELITE_COUNT);
-        add(completed, totals, tiers, "Falador",
-                VarbitID.FALADOR_DIARY_EASY_COMPLETE, VarbitID.FALADOR_DIARY_MEDIUM_COMPLETE,
-                VarbitID.FALADOR_DIARY_HARD_COMPLETE, VarbitID.FALADOR_DIARY_ELITE_COMPLETE,
-                VarbitID.FALADOR_EASY_COUNT, VarbitID.FALADOR_MED_COUNT,
-                VarbitID.FALADOR_HARD_COUNT, VarbitID.FALADOR_ELITE_COUNT);
-        add(completed, totals, tiers, "Fremennik",
-                VarbitID.FREMENNIK_DIARY_EASY_COMPLETE, VarbitID.FREMENNIK_DIARY_MEDIUM_COMPLETE,
-                VarbitID.FREMENNIK_DIARY_HARD_COMPLETE, VarbitID.FREMENNIK_DIARY_ELITE_COMPLETE,
-                VarbitID.FREMENNIK_EASY_COUNT, VarbitID.FREMENNIK_MED_COUNT,
-                VarbitID.FREMENNIK_HARD_COUNT, VarbitID.FREMENNIK_ELITE_COUNT);
-        add(completed, totals, tiers, "Kandarin",
-                VarbitID.KANDARIN_DIARY_EASY_COMPLETE, VarbitID.KANDARIN_DIARY_MEDIUM_COMPLETE,
-                VarbitID.KANDARIN_DIARY_HARD_COMPLETE, VarbitID.KANDARIN_DIARY_ELITE_COMPLETE,
-                VarbitID.KANDARIN_EASY_COUNT, VarbitID.KANDARIN_MED_COUNT,
-                VarbitID.KANDARIN_HARD_COUNT, VarbitID.KANDARIN_ELITE_COUNT);
-        add(completed, totals, tiers, "Karamja",
-                VarbitID.ATJUN_EASY_DONE, VarbitID.ATJUN_MED_DONE,
-                VarbitID.ATJUN_HARD_DONE, VarbitID.KARAMJA_DIARY_ELITE_COMPLETE,
-                VarbitID.KARAMJA_EASY_COUNT, VarbitID.KARAMJA_MED_COUNT,
-                VarbitID.KARAMJA_HARD_COUNT, VarbitID.KARAMJA_ELITE_COUNT);
-        add(completed, totals, tiers, "Kourend & Kebos",
-                VarbitID.KOUREND_DIARY_EASY_COMPLETE, VarbitID.KOUREND_DIARY_MEDIUM_COMPLETE,
-                VarbitID.KOUREND_DIARY_HARD_COMPLETE, VarbitID.KOUREND_DIARY_ELITE_COMPLETE,
-                VarbitID.KOUREND_EASY_COUNT, VarbitID.KOUREND_MED_COUNT,
-                VarbitID.KOUREND_HARD_COUNT, VarbitID.KOUREND_ELITE_COUNT);
-        add(completed, totals, tiers, "Lumbridge & Draynor",
-                VarbitID.LUMBRIDGE_DIARY_EASY_COMPLETE, VarbitID.LUMBRIDGE_DIARY_MEDIUM_COMPLETE,
-                VarbitID.LUMBRIDGE_DIARY_HARD_COMPLETE, VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE,
-                VarbitID.LUMBRIDGE_EASY_COUNT, VarbitID.LUMBRIDGE_MED_COUNT,
-                VarbitID.LUMBRIDGE_HARD_COUNT, VarbitID.LUMBRIDGE_ELITE_COUNT);
-        add(completed, totals, tiers, "Morytania",
-                VarbitID.MORYTANIA_DIARY_EASY_COMPLETE, VarbitID.MORYTANIA_DIARY_MEDIUM_COMPLETE,
-                VarbitID.MORYTANIA_DIARY_HARD_COMPLETE, VarbitID.MORYTANIA_DIARY_ELITE_COMPLETE,
-                VarbitID.MORYTANIA_EASY_COUNT, VarbitID.MORYTANIA_MED_COUNT,
-                VarbitID.MORYTANIA_HARD_COUNT, VarbitID.MORYTANIA_ELITE_COUNT);
-        add(completed, totals, tiers, "Varrock",
-                VarbitID.VARROCK_DIARY_EASY_COMPLETE, VarbitID.VARROCK_DIARY_MEDIUM_COMPLETE,
-                VarbitID.VARROCK_DIARY_HARD_COMPLETE, VarbitID.VARROCK_DIARY_ELITE_COMPLETE,
-                VarbitID.VARROCK_EASY_COUNT, VarbitID.VARROCK_MED_COUNT,
-                VarbitID.VARROCK_HARD_COUNT, VarbitID.VARROCK_ELITE_COUNT);
-        add(completed, totals, tiers, "Western Provinces",
-                VarbitID.WESTERN_DIARY_EASY_COMPLETE, VarbitID.WESTERN_DIARY_MEDIUM_COMPLETE,
-                VarbitID.WESTERN_DIARY_HARD_COMPLETE, VarbitID.WESTERN_DIARY_ELITE_COMPLETE,
-                VarbitID.WESTERN_EASY_COUNT, VarbitID.WESTERN_MED_COUNT,
-                VarbitID.WESTERN_HARD_COUNT, VarbitID.WESTERN_ELITE_COUNT);
-        add(completed, totals, tiers, "Wilderness",
-                VarbitID.WILDERNESS_DIARY_EASY_COMPLETE, VarbitID.WILDERNESS_DIARY_MEDIUM_COMPLETE,
-                VarbitID.WILDERNESS_DIARY_HARD_COMPLETE, VarbitID.WILDERNESS_DIARY_ELITE_COMPLETE,
-                VarbitID.WILDERNESS_EASY_COUNT, VarbitID.WILDERNESS_MED_COUNT,
-                VarbitID.WILDERNESS_HARD_COUNT, VarbitID.WILDERNESS_ELITE_COUNT);
+        for (int i = 0; i < REGIONS.length; i++)
+            add(completed, totals, tiers, REGIONS[i], VARBITS[i]);
 
         return new DiarySnapshot(completed, totals, tiers,
                 observedTaskCompletion);
@@ -211,18 +173,9 @@ public class LiveDiaryStateReader
     {
         String title = Text.removeTags(rawTitle == null ? "" : rawTitle)
                 .toLowerCase(Locale.ROOT);
-        if (title.contains("ardougne")) return "Ardougne";
-        if (title.contains("desert")) return "Desert";
-        if (title.contains("falador")) return "Falador";
-        if (title.contains("fremennik")) return "Fremennik";
-        if (title.contains("kandarin")) return "Kandarin";
-        if (title.contains("karamja")) return "Karamja";
-        if (title.contains("kourend")) return "Kourend & Kebos";
-        if (title.contains("lumbridge")) return "Lumbridge & Draynor";
-        if (title.contains("morytania")) return "Morytania";
-        if (title.contains("varrock")) return "Varrock";
-        if (title.contains("western")) return "Western Provinces";
-        if (title.contains("wilderness")) return "Wilderness";
+        for (String region : REGIONS)
+            if (title.contains(region.split(" ")[0].toLowerCase(Locale.ROOT)))
+                return region;
         return null;
     }
 
@@ -240,21 +193,17 @@ public class LiveDiaryStateReader
     private void add(Map<String, Integer> completed,
             Map<String, Integer> totals,
             Map<String, Map<DiaryTier, Boolean>> tiers,
-            String region,
-            int easyTier, int mediumTier, int hardTier, int eliteTier,
-            int easyCount, int mediumCount, int hardCount, int eliteCount)
+            String region, int[] ids)
     {
         EnumMap<DiaryTier, Boolean> tierMap = new EnumMap<>(DiaryTier.class);
-        tierMap.put(DiaryTier.EASY, client.getVarbitValue(easyTier) >= 1);
-        tierMap.put(DiaryTier.MEDIUM, client.getVarbitValue(mediumTier) >= 1);
-        tierMap.put(DiaryTier.HARD, client.getVarbitValue(hardTier) >= 1);
-        tierMap.put(DiaryTier.ELITE, client.getVarbitValue(eliteTier) >= 1);
+        var values = DiaryTier.values();
+        for (int i = 0; i < values.length; i++)
+            tierMap.put(values[i], client.getVarbitValue(ids[i]) >= 1);
         tiers.put(region, tierMap);
 
-        int done = Math.max(0, client.getVarbitValue(easyCount))
-                + Math.max(0, client.getVarbitValue(mediumCount))
-                + Math.max(0, client.getVarbitValue(hardCount))
-                + Math.max(0, client.getVarbitValue(eliteCount));
+        int done = 0;
+        for (int i = 4; i < ids.length; i++)
+            done += Math.max(0, client.getVarbitValue(ids[i]));
         completed.put(region, done);
         // Per-tier totals are maintained outside RuneLite's public count varbits.
         // Leave this unknown rather than freezing a copied third-party table.

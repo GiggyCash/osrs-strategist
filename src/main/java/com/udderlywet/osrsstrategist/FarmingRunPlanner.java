@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class FarmingRunPlanner
         if (data == null || data.account() == null)
         {
             return new GuidanceChecklist(activityId, "Farming run",
-                    Text.get(1463), steps);
+                    get(1463), steps);
         }
 
         AccountSnapshot account = data.account();
@@ -44,7 +45,7 @@ public class FarmingRunPlanner
         if (account.getMembershipStatus() != MembershipStatus.P2P)
         {
             return new GuidanceChecklist(activityId, "Farming run",
-                    Text.get(1464), steps);
+                    get(1464), steps);
         }
 
         appendPrep(steps, data, farmingLevel);
@@ -60,7 +61,7 @@ public class FarmingRunPlanner
 
         return new GuidanceChecklist(
                 activityId, "Farming run",
-                Text.get(244), steps);
+                get(244), steps);
     }
 
     private void appendPrep(
@@ -71,13 +72,13 @@ public class FarmingRunPlanner
         FarmingSnapshot farming = data.farming();
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
-                Text.get(245)));
+                get(245)));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.dibber(), toolState(farming, "dibber"),
-                Text.get(246)));
+                get(246)));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.spade(), toolState(farming, "spade"),
-                Text.get(247)));
+                get(247)));
 
         if (farmingLevel >= 9)
         {
@@ -137,7 +138,7 @@ public class FarmingRunPlanner
         if (observed == null)
         {
             return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                    Text.get(248),
+                    get(248),
                     GuidanceStepState.CHECK_NEEDED);
         }
         switch (observed.getState())
@@ -148,7 +149,7 @@ public class FarmingRunPlanner
             case READY:
                 return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
                         patch.getKind() == FarmingPatchKind.TREE
-                                ? Text.get(1465) : Text.get(1466),
+                                ? get(1465) : get(1466),
                         GuidanceStepState.ACTION);
             case EMPTY:
                 return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),

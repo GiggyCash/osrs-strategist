@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 
@@ -169,7 +170,7 @@ public final class Presentation
         if (recommendation.getConfidence() == Confidence.BLOCKED)
         {
             text.append("<b>ACTIVITY</b><br>Blocked")
-                    .append(Text.get(692));
+                    .append(get(692));
             return;
         }
         text.append("<b>ACTIVITY</b><br>")
@@ -182,7 +183,7 @@ public final class Presentation
             {
                 appendBreak(text, 2);
                 text.append("<b>DO</b><br>");
-                text.append(Text.get(693));
+                text.append(get(693));
             }
             return;
         }
@@ -194,7 +195,7 @@ public final class Presentation
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append(Text.get(694));
+            text.append(get(694));
         }
     }
 
@@ -207,7 +208,7 @@ public final class Presentation
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
         if (disclosure.isAcknowledgementRequired())
-            text.append(Text.get(695));
+            text.append(get(695));
         appendBreak(text, 2);
     }
 
@@ -244,9 +245,9 @@ public final class Presentation
         if (!hasText(supplies)) return false;
         String normalized = supplies.trim().toLowerCase();
         return !normalized.equals("none")
-                && !normalized.startsWith(Text.get(1234))
-                && !normalized.startsWith(Text.get(1235))
-                && !normalized.startsWith(Text.get(1236));
+                && !normalized.startsWith(get(1234))
+                && !normalized.startsWith(get(1235))
+                && !normalized.startsWith(get(1236));
     }
 
     /**
@@ -301,9 +302,9 @@ public final class Presentation
                 && guidance != null && hasText(guidance.getSupplies()))
             return guidance.getSupplies();
         if (recommendation.getConfidence() == Confidence.CHECK_NEEDED)
-            return Text.get(696);
+            return get(696);
         if (recommendation.getConfidence() == Confidence.BLOCKED)
-            return Text.get(697);
+            return get(697);
         return "";
     }
 

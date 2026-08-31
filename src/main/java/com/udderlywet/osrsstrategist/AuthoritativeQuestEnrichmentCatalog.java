@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import lombok.Getter;
@@ -6,7 +7,7 @@ import lombok.Getter;
 /** Pinned Wiki quest-detail evidence. Runtime access is strictly local. */
 public final class AuthoritativeQuestEnrichmentCatalog
 {
-    public static final String PROVENANCE = Text.get(39);
+    public static final String PROVENANCE = get(39);
     private static final String RESOURCE = "/content/quest-enrichment.json";
     private final Map<String, Record> records;
 
@@ -17,7 +18,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         {
             record.validate();
             if (values.put(normalize(record.name), record) != null)
-                throw new IllegalStateException(Text.get(1111) + record.name);
+                throw new IllegalStateException(get(1111) + record.name);
         }
         records = Collections.unmodifiableMap(values);
     }
@@ -44,17 +45,17 @@ public final class AuthoritativeQuestEnrichmentCatalog
     {
         Map<String, String> result = new HashMap<>();
         String[][] values = {
-                {Text.get(51), Text.get(52)},
-                {Text.get(1112), Text.get(53)},
-                {Text.get(54), Text.get(40)},
-                {Text.get(1113), Text.get(41)},
-                {Text.get(1114), Text.get(42)},
-                {Text.get(1115), Text.get(1116)},
-                {Text.get(1117), Text.get(43)},
-                {Text.get(1118), Text.get(44)},
-                {Text.get(1119), Text.get(45)},
-                {Text.get(1120), Text.get(46)},
-                {"Vale Totems", Text.get(1121)}
+                {get(51), get(52)},
+                {get(1112), get(53)},
+                {get(54), get(40)},
+                {get(1113), get(41)},
+                {get(1114), get(42)},
+                {get(1115), get(1116)},
+                {get(1117), get(43)},
+                {get(1118), get(44)},
+                {get(1119), get(45)},
+                {get(1120), get(46)},
+                {"Vale Totems", get(1121)}
         };
         for (String[] alias : values) result.put(normalize(alias[0]), alias[1]);
         return result;
@@ -113,7 +114,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         private void validate()
         {
             if (name == null || name.trim().isEmpty())
-                throw new IllegalStateException(Text.get(1122));
+                throw new IllegalStateException(get(1122));
             validate(start, startState, "start");
             validate(requirements, requirementsState, "requirements");
             validate(items, itemsState, "items");
@@ -129,7 +130,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
                     || ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE
                     || state == EvidenceState.SOURCE_MISSING || state == EvidenceState.PARSE_FAILURE
                     || state == EvidenceState.UNSUPPORTED_STRUCTURE) && !blank))
-                throw new IllegalStateException(Text.get(1123) + field);
+                throw new IllegalStateException(get(1123) + field);
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -29,9 +30,9 @@ public final class ContextualGearDecisionService
                 unresolvedRoutes.add(target);
         }
         String ownedValue = !ownershipObserved
-                ? Text.get(142)
+                ? get(142)
                 : owned.isEmpty()
-                ? Text.get(143)
+                ? get(143)
                 : owned.get(0);
         put(result, GearDecisionKind.BEST_OWNED, ownedValue,
                 ownershipObserved && !owned.isEmpty()
@@ -39,8 +40,8 @@ public final class ContextualGearDecisionService
                         : Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_USABLE,
                 owned.isEmpty()
-                        ? Text.get(144)
-                        : owned.get(0) + Text.get(145),
+                        ? get(144)
+                        : owned.get(0) + get(145),
                 Confidence.CHECK_NEEDED);
 
         String routed = unresolvedRoutes.isEmpty() ? null
@@ -48,18 +49,18 @@ public final class ContextualGearDecisionService
         AccountMode mode = context == null ? AccountMode.UNKNOWN
                 : context.accountMode();
         String available = routed == null
-                ? Text.get(146)
+                ? get(146)
                 : mode.usesGrandExchange()
-                ? Text.get(147) + routed
-                : Text.get(148) + routed;
+                ? get(147) + routed
+                : get(148) + routed;
         put(result, GearDecisionKind.BEST_AVAILABLE_NOW, available,
                 Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_VALUE_UPGRADE,
-                Text.get(149),
+                get(149),
                 Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_PRACTICAL_UPGRADE,
                 routed == null ? entry.getWeaponGuidance()
-                        : routed + Text.get(150),
+                        : routed + get(150),
                 Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.LONG_TERM_TARGET,
                 entry.getWeaponGuidance(), Confidence.CHECK_NEEDED);

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.Locale;
 
@@ -16,27 +17,27 @@ import lombok.Getter;
 public enum ItemRequirementClass
 {
     AXE("any usable axe", true),
-    PICKAXE(Text.get(1139), true),
+    PICKAXE(get(1139), true),
     BOW("any suitable bow", true),
-    CROSSBOW(Text.get(1140), true),
+    CROSSBOW(get(1140), true),
     CAT_OR_KITTEN("a cat or kitten", true),
     FEATHER("a usable feather", true),
-    NAILS(Text.get(1141), true),
-    MACHETE(Text.get(1142), true),
-    LIGHT_SOURCE(Text.get(1143), false),
-    SLASH_WEAPON(Text.get(1144), false),
-    WEB_CUTTING_TOOL(Text.get(1145), false),
-    MAGIC_COMBAT_LOADOUT(Text.get(327), false),
-    MAGIC_OR_RANGED_LOADOUT(Text.get(328), false),
-    TELEKINETIC_GRAB_RUNES(Text.get(329), false),
-    SPELL_RUNE_LOADOUT(Text.get(330), false),
-    POISON_CURE(Text.get(1146), false),
-    WATER_CONTAINER(Text.get(1147), false),
-    EMPTY_INVENTORY_SPACE(Text.get(1148), false),
-    COMBAT_EQUIPMENT(Text.get(1149), false),
-    HEALING_FOOD(Text.get(1150), false),
-    MULTI_STYLE_OR_POISON(Text.get(331), false),
-    FULL_HAM_ROBE_SET(Text.get(1151), false);
+    NAILS(get(1141), true),
+    MACHETE(get(1142), true),
+    LIGHT_SOURCE(get(1143), false),
+    SLASH_WEAPON(get(1144), false),
+    WEB_CUTTING_TOOL(get(1145), false),
+    MAGIC_COMBAT_LOADOUT(get(327), false),
+    MAGIC_OR_RANGED_LOADOUT(get(328), false),
+    TELEKINETIC_GRAB_RUNES(get(329), false),
+    SPELL_RUNE_LOADOUT(get(330), false),
+    POISON_CURE(get(1146), false),
+    WATER_CONTAINER(get(1147), false),
+    EMPTY_INVENTORY_SPACE(get(1148), false),
+    COMBAT_EQUIPMENT(get(1149), false),
+    HEALING_FOOD(get(1150), false),
+    MULTI_STYLE_OR_POISON(get(331), false),
+    FULL_HAM_ROBE_SET(get(1151), false);
 
     private final String label;
     private final boolean nameObservable;

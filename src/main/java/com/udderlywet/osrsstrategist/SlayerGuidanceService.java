@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.List;
 import javax.inject.Inject;
@@ -61,11 +62,11 @@ public class SlayerGuidanceService
         }
 
         SlayerMasterChoice master = bestMaster(account, data.quests());
-        String action = Text.get(1452) + master.name
+        var action = get(1452) + master.name
                 + ". You need " + format(xpNeeded)
-                + Text.get(1453) + targetLevel + ".";
-        String supplies = Text.get(759);
-        String note = master.reason + Text.get(760);
+                + get(1453) + targetLevel + ".";
+        String supplies = get(759);
+        var note = master.reason + get(760);
         return new Guidance(action, supplies, master.location, note);
     }
 
@@ -76,13 +77,13 @@ public class SlayerGuidanceService
             int targetLevel)
     {
         StringBuilder action = new StringBuilder();
-        action.append(Text.get(1454))
+        action.append(get(1454))
                 .append(slayer.getTaskName())
                 .append(" assignment: ")
                 .append(slayer.getRemaining())
-                .append(Text.get(1455))
+                .append(get(1455))
                 .append(format(xpNeeded))
-                .append(Text.get(1453))
+                .append(get(1453))
                 .append(targetLevel).append(".");
         if (profile != null && hasText(profile.getStyleGuidance()))
         {
@@ -98,15 +99,15 @@ public class SlayerGuidanceService
     {
         if (profile == null || profile.getRequiredProtection().isEmpty())
         {
-            return Text.get(761);
+            return get(761);
         }
 
         List<String> required = profile.getRequiredProtection();
         String owned = firstOwned(items, required);
         if (owned != null)
         {
-            return Text.get(1456) + owned
-                    + Text.get(762);
+            return get(1456) + owned
+                    + get(762);
         }
 
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -116,29 +117,29 @@ public class SlayerGuidanceService
             int restricted = restrictedOwned(items, required);
             if (restricted > 0)
             {
-                return Text.get(763)
+                return get(763)
                         + choices
-                        + Text.get(764);
+                        + get(764);
             }
-            return Text.get(766)
+            return get(766)
                     + choices
-                    + Text.get(767);
+                    + get(767);
         }
 
         if (!items.primaryOwnershipObserved())
         {
-            return Text.get(768)
+            return get(768)
                     + choices + ".";
         }
 
         if (mode.isIronLike())
         {
-            return Text.get(769)
+            return get(769)
                     + choices + ".";
         }
-        return Text.get(770)
+        return get(770)
                 + choices
-                + Text.get(771);
+                + get(771);
     }
 
     private static String taskLocation(
@@ -147,9 +148,9 @@ public class SlayerGuidanceService
     {
         if (hasText(slayer.getTaskLocation()))
         {
-            return Text.get(1457)
+            return get(1457)
                     + slayer.getTaskLocation()
-                    + Text.get(772);
+                    + get(772);
         }
         if (profile != null && hasText(profile.getPreferredLocation()))
         {
@@ -157,17 +158,17 @@ public class SlayerGuidanceService
         }
         if (hasText(slayer.getMasterName()))
         {
-            return Text.get(1458)
+            return get(1458)
                     + slayer.getMasterName()
-                    + Text.get(773);
+                    + get(773);
         }
-        return Text.get(774);
+        return get(774);
     }
 
     private static String taskNote(AccountSnapshot account,
             SlayerTaskProfile profile)
     {
-        String base = Text.get(775);
+        String base = get(775);
         if (profile == null) return base;
         StringBuilder note = new StringBuilder();
         if (hasText(profile.getMechanicsNote()))
@@ -175,11 +176,11 @@ public class SlayerGuidanceService
             note.append(profile.getMechanicsNote()).append(" ");
         }
         if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
-            note.append(Text.get(777));
+            note.append(get(777));
         if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
-            note.append(Text.get(778));
+            note.append(get(778));
         if (profile.isWildernessVariantKnown())
-            note.append(Text.get(779));
+            note.append(get(779));
         if (AccountMode.fromTypeCode(account.getAccountTypeCode()).isIronLike()
                 && !profile.getIronObjectives().isEmpty())
             note.append("Iron objective: ").append(String.join(", ",
@@ -232,24 +233,24 @@ public class SlayerGuidanceService
 
         if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
-                    Text.get(780));
+                    get(780));
         if (combat >= 85)
-            return new SlayerMasterChoice("Nieve/Steve", Text.get(1459),
-                    Text.get(781));
+            return new SlayerMasterChoice("Nieve/Steve", get(1459),
+                    get(781));
         if (combat >= 75)
             return new SlayerMasterChoice("Konar quo Maten", "Mount Karuulm",
-                    Text.get(782));
+                    get(782));
         if (combat >= 70 && complete(quests, "Lost City"))
             return new SlayerMasterChoice("Chaeldar", "Zanaris",
-                    Text.get(783));
+                    get(783));
         if (combat >= 40)
             return new SlayerMasterChoice("Vannaka", "Edgeville Dungeon",
-                    Text.get(784));
+                    get(784));
         if (combat >= 20 && complete(quests, "Priest in Peril"))
             return new SlayerMasterChoice("Mazchna/Achtryn", "Canifis",
-                    Text.get(785));
+                    get(785));
         return new SlayerMasterChoice("Turael/Aya", "Burthorpe",
-                Text.get(786));
+                get(786));
     }
 
     /** Mirrors the standard OSRS combat-level formula closely enough for gates. */

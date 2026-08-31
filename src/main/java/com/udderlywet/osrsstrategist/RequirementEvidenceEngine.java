@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -116,12 +117,12 @@ public class RequirementEvidenceEngine
         CombatEvidenceSnapshot combat = data == null ? null : data.combatEvidence();
         boolean observed = combat != null;
         List<RequirementCheck> result = list(new RequirementCheck(
-                "spellbook:standard", Text.get(1534), observed
+                "spellbook:standard", get(1534), observed
                         ? combat.getSpellbookSelector() == 0
                         ? RequirementState.VERIFIED : RequirementState.BLOCKED
                         : RequirementState.CHECK_NEEDED,
-                !observed ? Text.get(613) : combat.getSpellbookSelector() == 0
-                        ? Text.get(1535) : Text.get(624)));
+                !observed ? get(613) : combat.getSpellbookSelector() == 0
+                        ? get(1535) : get(624)));
         if (id.equals("magic_f2p_curse"))
         {
             result.add(item(items, "resource:curse_body", "Body rune", 1,
@@ -136,7 +137,7 @@ public class RequirementEvidenceEngine
         boolean splash = id.equals("magic_f2p_fire_strike_splash");
         int air = id.equals("magic_f2p_fire_blast") ? 4
                 : id.equals("magic_f2p_fire_bolt") ? 3 : splash ? 2 : 1;
-        result.add(item(items, "resource:combat_magic_air", Text.get(1536),
+        result.add(item(items, "resource:combat_magic_air", get(1536),
                 air, ItemID.AIRRUNE));
         if (splash)
         {
@@ -150,10 +151,10 @@ public class RequirementEvidenceEngine
                 || id.equals("magic_f2p_fire_blast"))
         {
             boolean blast = id.endsWith("blast");
-            result.add(item(items, "resource:combat_magic_fire", Text.get(1537),
+            result.add(item(items, "resource:combat_magic_fire", get(1537),
                     blast ? 5 : 4, ItemID.FIRERUNE));
             result.add(item(items, "resource:combat_magic_catalytic",
-                    Text.get(1538), 1, blast ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE));
+                    get(1538), 1, blast ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE));
         }
         else result.add(item(items, "resource:wind_strike_mind", "Mind rune",
                 1, ItemID.MINDRUNE));
@@ -176,12 +177,12 @@ public class RequirementEvidenceEngine
             shield |= metal(name, "kiteshield");
             boots |= name.equals("fancy boots") || name.equals("fighting boots")
                     || name.equals("decorative boots");
-            staff |= name.equals(Text.get(1542));
+            staff |= name.equals(get(1542));
         }
         boolean ready = helm && body && legs && shield && boots && staff;
-        return new RequirementCheck("equipment:f2p_splashing", Text.get(661),
+        return new RequirementCheck("equipment:f2p_splashing", get(661),
                 ready ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
-                Text.get(ready ? 614 : 615));
+                get(ready ? 614 : 615));
     }
 
     private static boolean metal(String name, String piece)
@@ -205,26 +206,26 @@ public class RequirementEvidenceEngine
                     && sailing.hasPort(SailingSnapshot.PORT_SARIM)
                     && sailing.hasPort(SailingSnapshot.PORT_PANDEMONIUM)
                     && sailing.hasActivity(SailingSnapshot.ACTIVITY_COURIER);
-            result.add(state("sailing:courier-route", Text.get(1539), route,
-                    Text.get(635), Text.get(646)));
+            result.add(state("sailing:courier-route", get(1539), route,
+                    get(635), get(646)));
             result.add(item(items, "resource:captains-log", "Captain's log", 1,
                     ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG));
         }
         else if (id.equals("sailing_charting")) result.add(new RequirementCheck(
-                "sailing:uncompleted-chart", Text.get(1540),
-                RequirementState.CHECK_NEEDED, Text.get(657)));
+                "sailing:uncompleted-chart", get(1540),
+                RequirementState.CHECK_NEEDED, get(657)));
         else if (id.startsWith("sailing_barracuda_"))
         {
-            if (id.contains("jubbly")) result.addAll(quest(data, Text.get(1541),
+            if (id.contains("jubbly")) result.addAll(quest(data, get(1541),
                     "quest:zogre-flesh-eaters"));
             if (id.contains("gwenith")) result.addAll(quest(data, "Regicide",
                     "quest:regicide"));
             result.add(new RequirementCheck("preparation:sailing-trial-boat",
                     "Trial-ready boat", RequirementState.CHECK_NEEDED,
-                    Text.get(658)));
+                    get(658)));
         }
-        else result.add(new RequirementCheck("sailing:live-route", Text.get(659),
-                    RequirementState.CHECK_NEEDED, Text.get(660)));
+        else result.add(new RequirementCheck("sailing:live-route", get(659),
+                    RequirementState.CHECK_NEEDED, get(660)));
         return result;
     }
 
@@ -239,7 +240,7 @@ public class RequirementEvidenceEngine
         int[] levels = {1, 1, 5, 15, 20, 25, 30, 40, 45};
         int count = 0;
         for (int required : levels) if (level >= required) count++;
-        return list(item(items, "resource:raw_fish", Text.get(1543), 1,
+        return list(item(items, "resource:raw_fish", get(1543), 1,
                 Arrays.copyOf(ids, count)));
     }
 
@@ -254,8 +255,8 @@ public class RequirementEvidenceEngine
         DiarySnapshot diaries = data == null ? null : data.diaries();
         boolean ready = diaries != null
                 && diaries.isTierComplete("Kourend & Kebos", DiaryTier.EASY);
-        result.add(state("access:hosidius_kitchen", Text.get(1544), ready,
-                Text.get(616), Text.get(617)));
+        result.add(state("access:hosidius_kitchen", get(1544), ready,
+                get(616), get(617)));
         return result;
     }
 
@@ -271,26 +272,26 @@ public class RequirementEvidenceEngine
                         ItemID.FEATHER));
         if (!id.equals("fishing_karambwan")) return null;
         QuestSnapshot quests = data == null ? null : data.quests();
-        boolean trio = complete(quests, Text.get(1545));
+        boolean trio = complete(quests, get(1545));
         TransportSnapshot transport = data == null ? null : data.transport();
         boolean observedRoute = transport != null
                 && transport.hasVerifiedRoute("fairy-rings");
-        boolean fairy = observedRoute || complete(quests, Text.get(1547));
+        boolean fairy = observedRoute || complete(quests, get(1547));
         DiarySnapshot diaries = data == null ? null : data.diaries();
         boolean staffless = diaries != null && diaries.isTierComplete(
-                Text.get(1152), DiaryTier.ELITE);
+                get(1152), DiaryTier.ELITE);
         boolean staff = observedRoute || staffless || items.quantity(
                 ItemID.DRAMEN_STAFF, ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF) > 0;
-        return list(state("quest:tai_bwo_wannai_trio", Text.get(1546), trio,
-                        Text.get(618), Text.get(619)),
-                state("transport:fairy-rings", Text.get(1548), fairy,
-                        Text.get(620), Text.get(621)),
-                state("resource:fairy_ring_staff", Text.get(622), staff,
-                        Text.get(623), Text.get(625)),
+        return list(state("quest:tai_bwo_wannai_trio", get(1546), trio,
+                        get(618), get(619)),
+                state("transport:fairy-rings", get(1548), fairy,
+                        get(620), get(621)),
+                state("resource:fairy_ring_staff", get(622), staff,
+                        get(623), get(625)),
                 item(items, "resource:karambwan_vessel", "Karambwan vessel", 1,
                         ItemID.TBWT_KARAMBWAN_VESSEL,
                         ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
-                item(items, "resource:karambwanji", Text.get(1549), 1,
+                item(items, "resource:karambwanji", get(1549), 1,
                         ItemID.TBWT_RAW_KARAMBWANJI,
                         ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI));
     }
@@ -299,7 +300,7 @@ public class RequirementEvidenceEngine
             ItemIndex items)
     {
         if (id.equals("hunter_falconry")) return list(item(items,
-                "resource:falcon_rental", Text.get(1550), 500, ItemID.COINS));
+                "resource:falcon_rental", get(1550), 500, ItemID.COINS));
         if (id.equals("hunter_bird_traps")) return list(item(items,
                 "resource:bird_snare", "Bird snare", 1, ItemID.HUNTING_SNARE));
         if (!id.equals("hunter_herbiboar")) return null;
@@ -308,9 +309,9 @@ public class RequirementEvidenceEngine
         boolean voyage = complete(data == null ? null : data.quests(), "Bone Voyage");
         return list(new RequirementCheck("skill:herbiboar_herblore",
                         "31 Herblore", herblore >= 31 ? RequirementState.VERIFIED
-                        : RequirementState.BLOCKED, Text.get(1551) + herblore + "."),
-                state("quest:bone_voyage", Text.get(1552), voyage,
-                        Text.get(626), Text.get(627)));
+                        : RequirementState.BLOCKED, get(1551) + herblore + "."),
+                state("quest:bone_voyage", get(1552), voyage,
+                        get(626), get(627)));
     }
 
     private static List<RequirementCheck> construction(GameData data,
@@ -322,11 +323,11 @@ public class RequirementEvidenceEngine
         CapabilityState room = poh == null ? CapabilityState.UNKNOWN
                 : poh.furnitureState(oak ? "room:kitchen" : "room:parlour");
         List<RequirementCheck> result = list(
-                capability("construction:poh", Text.get(1554), house,
-                        Text.get(oak ? 631 : 629)),
+                capability("construction:poh", get(1554), house,
+                        get(oak ? 631 : 629)),
                 capability(oak ? "construction:kitchen" : "construction:parlour",
                         oak ? "POH Kitchen" : "POH Parlour", room,
-                        Text.get(oak ? 632 : 630)),
+                        get(oak ? 632 : 630)),
                 item(items, oak ? "resource:construction_oak_planks"
                         : "resource:construction_planks",
                         oak ? "Oak planks" : "Planks", oak ? 8 : 2,
@@ -355,8 +356,8 @@ public class RequirementEvidenceEngine
     {
         if (id.equals("agility_wilderness")) return list(
                 agilityAccess.wildernessCourseCheck(data), new RequirementCheck(
-                        "agility:wilderness_risk", Text.get(1556),
-                        RequirementState.VERIFIED, Text.get(636)));
+                        "agility:wilderness_risk", get(1556),
+                        RequirementState.VERIFIED, get(636)));
         return list(agilityAccess.courseCheck(data,
                 agilityAccess.bestStandardCourse(data)));
     }
@@ -372,11 +373,11 @@ public class RequirementEvidenceEngine
         {
             String patch = farmingAccess.firstReachablePatchName(farming);
             return list(new RequirementCheck("farming:reachable_patch",
-                    Text.get(1557), patch == null ? RequirementState.CHECK_NEEDED
-                    : RequirementState.VERIFIED, patch == null ? Text.get(637)
-                    : patch + Text.get(638)), new RequirementCheck(
-                    "farming:supplies", Text.get(1558),
-                    RequirementState.CHECK_NEEDED, Text.get(639)));
+                    get(1557), patch == null ? RequirementState.CHECK_NEEDED
+                    : RequirementState.VERIFIED, patch == null ? get(637)
+                    : patch + get(638)), new RequirementCheck(
+                    "farming:supplies", get(1558),
+                    RequirementState.CHECK_NEEDED, get(639)));
         }
         if (id.equals("farming_falador_potatoes")
                 || id.equals("farming_falador_watermelons"))
@@ -387,17 +388,17 @@ public class RequirementEvidenceEngine
                     ? farmingSupplies.watermelonSeeds()
                     : farmingSupplies.potatoSeeds());
             List<RequirementCheck> result = list(state("farming:falador_patch",
-                    Text.get(1559), reachable, Text.get(640), Text.get(641)), seeds);
+                    get(1559), reachable, get(640), get(641)), seeds);
             if (watermelon && seeds.getState() != RequirementState.VERIFIED
                     && (account == null || account.getSkillLevel(Skill.THIEVING) < 38))
                 result.add(new RequirementCheck("farming:watermelon_seed_source",
-                        Text.get(642), RequirementState.BLOCKED, Text.get(643)));
+                        get(642), RequirementState.BLOCKED, get(643)));
             result.add(farmingTool(items, farming, farmingSupplies.rake(),
-                    "rake", Text.get(644)));
+                    "rake", get(644)));
             result.add(farmingTool(items, farming, farmingSupplies.dibber(),
-                    "dibber", Text.get(645)));
+                    "dibber", get(645)));
             result.add(farmingTool(items, farming, farmingSupplies.spade(),
-                    "spade", Text.get(647)));
+                    "spade", get(647)));
             return result;
         }
         if (id.equals("farming_tithe"))
@@ -409,26 +410,26 @@ public class RequirementEvidenceEngine
             boolean water = cans >= 8 || items.quantity(ItemID.ZEAH_WATERINGCAN) > 0;
             return list(items.check(farmingSupplies.spade()),
                     items.check(farmingSupplies.dibber()),
-                    state("resource:tithe_watering", Text.get(648), water,
-                            Text.get(649), Text.get(650)));
+                    state("resource:tithe_watering", get(648), water,
+                            get(649), get(650)));
         }
         if (id.equals("farming_herbs") || id.equals("farming_herbs_expanded"))
         {
             String patch = farmingAccess.firstReachableHerbPatchName(farming);
             return list(new RequirementCheck("farming:level_9", "9 Farming",
                             level >= 9 ? RequirementState.VERIFIED
-                            : RequirementState.BLOCKED, Text.get(1560) + level + "."),
-                    new RequirementCheck("farming:herb_patch", Text.get(1561),
+                            : RequirementState.BLOCKED, get(1560) + level + "."),
+                    new RequirementCheck("farming:herb_patch", get(1561),
                             patch == null ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED, patch == null
-                            ? Text.get(651) : patch + Text.get(652)),
+                            ? get(651) : patch + get(652)),
                     items.check(farmingSupplies.herbSeedsForLevel(level)),
                     farmingTool(items, farming, farmingSupplies.rake(), "rake",
-                            Text.get(653)),
+                            get(653)),
                     farmingTool(items, farming, farmingSupplies.dibber(), "dibber",
-                            Text.get(654)),
+                            get(654)),
                     farmingTool(items, farming, farmingSupplies.spade(), "spade",
-                            Text.get(655)));
+                            get(655)));
         }
         List<RequirementCheck> result = new ArrayList<>();
         addGeneric(result, method);
@@ -443,7 +444,7 @@ public class RequirementEvidenceEngine
                 && farming.leprechaunToolState(tool) == CapabilityState.VERIFIED)
             return new RequirementCheck(need.getId(), need.getLabel(),
                     RequirementState.VERIFIED, evidence == null
-                    ? Text.get(1569) : evidence);
+                    ? get(1569) : evidence);
         return items.check(need);
     }
 
@@ -458,8 +459,8 @@ public class RequirementEvidenceEngine
     {
         boolean ready = items.quantityMatching(type, Collections.emptyList()) > 0;
         return new RequirementCheck(id, label, ready ? RequirementState.VERIFIED
-                : RequirementState.CHECK_NEEDED, ready ? label + Text.get(633)
-                : "No " + label.toLowerCase() + Text.get(634));
+                : RequirementState.CHECK_NEEDED, ready ? label + get(633)
+                : "No " + label.toLowerCase() + get(634));
     }
 
     private static RequirementCheck state(String id, String label,
@@ -473,7 +474,7 @@ public class RequirementEvidenceEngine
             CapabilityState value, String unknown)
     {
         boolean ready = value == CapabilityState.VERIFIED;
-        return state(id, label, ready, label + Text.get(1555), unknown);
+        return state(id, label, ready, label + get(1555), unknown);
     }
 
     private static List<RequirementCheck> quest(GameData data, String name,
@@ -481,7 +482,7 @@ public class RequirementEvidenceEngine
     {
         boolean ready = complete(data == null ? null : data.quests(), name);
         return list(state(id, name + " completed", ready,
-                name + Text.get(628), name + Text.get(1553)));
+                name + get(628), name + get(1553)));
     }
 
     private static boolean complete(QuestSnapshot quests, String name)
@@ -500,6 +501,6 @@ public class RequirementEvidenceEngine
     {
         for (String value : method.getRequirements()) result.add(
                 new RequirementCheck("generic:" + value, value,
-                        RequirementState.CHECK_NEEDED, Text.get(656)));
+                        RequirementState.CHECK_NEEDED, get(656)));
     }
 }

@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -81,15 +82,15 @@ public class ResourceDetourCandidateProvider
                 score += context.preferenceProfile().weightFor(id) * 10.0;
 
                 Guidance guidance = new Guidance(
-                        Text.get(599),
-                        "Only " + planks + Text.get(602),
-                        Text.get(603),
-                        Text.get(604)
+                        get(599),
+                        "Only " + planks + get(602),
+                        get(603),
+                        get(604)
                 );
                 result.add(new Recommendation(
                         id,
-                        Text.get(1296),
-                        "Only " + planks + Text.get(605),
+                        get(1296),
+                        "Only " + planks + get(605),
                         score,
                         Confidence.VERIFIED,
                         guidance,
@@ -116,15 +117,15 @@ public class ResourceDetourCandidateProvider
                 score += context.preferenceProfile().weightFor(id) * 10.0;
 
                 Guidance guidance = new Guidance(
-                        Text.get(606),
-                        "Only " + logs + " useful logs and " + planks + Text.get(607),
-                        Text.get(608),
-                        Text.get(609)
+                        get(606),
+                        "Only " + logs + " useful logs and " + planks + get(607),
+                        get(608),
+                        get(609)
                 );
                 result.add(new Recommendation(
                         id,
-                        Text.get(600),
-                        Text.get(601),
+                        get(600),
+                        get(601),
                         score,
                         Confidence.VERIFIED,
                         guidance,

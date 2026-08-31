@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Singleton;
@@ -49,29 +50,29 @@ public final class AccountStrategicPriorityService
                 occupied < 0 ? Confidence.CHECK_NEEDED
                         : Confidence.VERIFIED,
                 uim ? occupied < 0
-                        ? Text.get(89)
-                        : Text.get(1434) + occupied
-                                + Text.get(100)
-                        : Text.get(111));
+                        ? get(89)
+                        : get(1434) + occupied
+                                + get(100)
+                        : get(111));
         put(result, AccountStrategicDimension.BANK_AVAILABILITY,
                 uim ? StrategicPriority.CRITICAL : StrategicPriority.LOW,
                 uim ? CapabilityState.BLOCKED : CapabilityState.VERIFIED,
                 Confidence.VERIFIED,
-                uim ? Text.get(122)
-                        : Text.get(124));
+                uim ? get(122)
+                        : get(124));
         put(result, AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY,
                 ge || selfSource ? StrategicPriority.HIGH : StrategicPriority.LOW,
                 ge ? CapabilityState.VERIFIED : CapabilityState.BLOCKED,
                 Confidence.VERIFIED,
-                ge ? Text.get(125)
-                        : Text.get(126));
+                ge ? get(125)
+                        : get(126));
         put(result, AccountStrategicDimension.SELF_SOURCING_BURDEN,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 Confidence.VERIFIED,
-                selfSource ? Text.get(127)
-                        : Text.get(128));
+                selfSource ? get(127)
+                        : get(128));
 
         ItemsState groupStorage = data == null
                 ? null : data.groupStorage();
@@ -88,86 +89,86 @@ public final class AccountStrategicPriorityService
                         : CapabilityState.BLOCKED,
                 group ? groupConfidence : Confidence.VERIFIED,
                 freshGroupStorage
-                        ? Text.get(90)
-                        : group ? Text.get(91)
-                        : Text.get(92));
+                        ? get(90)
+                        : group ? get(91)
+                        : get(92));
         put(result, AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE,
                 StrategicPriority.NONE,
                 group ? CapabilityState.UNKNOWN : CapabilityState.BLOCKED,
                 group ? Confidence.CHECK_NEEDED
                         : Confidence.VERIFIED,
-                group ? Text.get(93)
-                        : Text.get(94));
+                group ? get(93)
+                        : get(94));
         put(result, AccountStrategicDimension.STORAGE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 Confidence.VERIFIED,
-                uim ? Text.get(95)
-                        : selfSource ? Text.get(96)
-                        : Text.get(97));
+                uim ? get(95)
+                        : selfSource ? get(96)
+                        : get(97));
         put(result, AccountStrategicDimension.POH_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 Confidence.VERIFIED,
-                uim ? Text.get(98)
-                        : selfSource ? Text.get(99)
-                        : Text.get(101));
+                uim ? get(98)
+                        : selfSource ? get(99)
+                        : get(101));
         put(result, AccountStrategicDimension.TELEPORT_INFRASTRUCTURE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 Confidence.VERIFIED,
-                uim ? Text.get(102)
-                        : selfSource ? Text.get(103)
-                        : Text.get(104));
+                uim ? get(102)
+                        : selfSource ? get(103)
+                        : get(104));
         put(result, AccountStrategicDimension.SETUP_COST_SENSITIVITY,
                 uim ? StrategicPriority.CRITICAL
                         : hardcore ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 Confidence.VERIFIED,
-                uim ? Text.get(105)
-                        : hardcore ? Text.get(106)
-                        : Text.get(107));
+                uim ? get(105)
+                        : hardcore ? get(106)
+                        : get(107));
         put(result, AccountStrategicDimension.DEATH_RISK_SENSITIVITY,
                 hardcore ? StrategicPriority.CRITICAL
                         : uim ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 Confidence.VERIFIED,
-                hardcore ? Text.get(108)
-                        : uim ? Text.get(109)
-                        : Text.get(110));
+                hardcore ? get(108)
+                        : uim ? get(109)
+                        : get(110));
         put(result, AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 Confidence.VERIFIED,
-                selfSource ? Text.get(112)
-                        : Text.get(113));
+                selfSource ? get(112)
+                        : get(113));
         put(result, AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 Confidence.VERIFIED,
-                uim ? Text.get(114)
-                        : Text.get(115));
+                uim ? get(114)
+                        : get(115));
         put(result, AccountStrategicDimension.DUPLICATE_GRIND_PENALTY,
                 freshGroupStorage ? StrategicPriority.HIGH
                         : StrategicPriority.NONE,
                 group ? groupConfidence : Confidence.VERIFIED,
                 freshGroupStorage
-                        ? Text.get(116)
-                        : group ? Text.get(117)
-                        : Text.get(118));
+                        ? get(116)
+                        : group ? get(117)
+                        : get(118));
         put(result, AccountStrategicDimension.GP_LIQUIDITY_STORAGE_VALUE,
                 uim ? StrategicPriority.HIGH
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 Confidence.VERIFIED,
-                uim ? Text.get(119)
-                        : selfSource ? Text.get(120)
-                        : Text.get(121));
+                uim ? get(119)
+                        : selfSource ? get(120)
+                        : get(121));
 
         return new AccountStrategicPriorityProfile(mode, result);
     }
@@ -188,7 +189,7 @@ public final class AccountStrategicPriorityService
             put(values, dimension, priority,
                     CapabilityState.UNKNOWN,
                     Confidence.CHECK_NEEDED,
-                    Text.get(123));
+                    get(123));
         }
     }
 

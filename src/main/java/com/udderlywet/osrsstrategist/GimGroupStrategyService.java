@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.Set;
 import javax.inject.Singleton;
@@ -14,41 +15,41 @@ public final class GimGroupStrategyService
             StrategyContext context, GroupResourceNeed need)
     {
         if (need == null)
-            throw new IllegalArgumentException(Text.get(1429));
+            throw new IllegalArgumentException(get(1429));
         AccountMode mode = context == null
                 ? AccountMode.UNKNOWN : context.accountMode();
         if (!mode.isGroupIronman())
             return result(GroupResourceState.NOT_A_GROUP_ACCOUNT,
                     Confidence.VERIFIED, 0, need, 0.0,
-                    Text.get(287));
+                    get(287));
         if (!context.isUseGroupStorage())
             return result(GroupResourceState.GROUP_STORAGE_DISABLED,
                     Confidence.VERIFIED, 0, need, 0.0,
-                    Text.get(288));
+                    get(288));
         GameData data = context.data();
         ItemsState storage = data == null
                 ? null : data.groupStorage();
         if (storage == null || !storage.isObserved())
             return result(GroupResourceState.GROUP_STORAGE_UNKNOWN,
                     Confidence.CHECK_NEEDED, 0, need, 0.0,
-                    Text.get(289));
+                    get(289));
 
         int quantity = quantity(storage, need.getAcceptableItemIds());
         if (quantity <= 0)
             return result(GroupResourceState.SHARED_STOCK_NONE,
                     Confidence.VERIFIED, 0, need, 0.0,
-                    Text.get(290));
+                    get(290));
         double fraction = Math.min(1.0, quantity
                 / (double) need.getQuantity());
         if (quantity < need.getQuantity())
             return result(GroupResourceState.SHARED_STOCK_PARTIAL,
                     Confidence.VERIFIED, quantity, need,
                     fraction * 0.45,
-                    Text.get(291));
+                    get(291));
         double avoidance = need.isReusable() ? 1.0 : 0.75;
         return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
                 Confidence.VERIFIED, quantity, need, avoidance,
-                Text.get(292));
+                get(292));
     }
 
     public SharedInfrastructureAssessment assessTeammateInfrastructure(
@@ -57,10 +58,10 @@ public final class GimGroupStrategyService
         if (context == null || !context.accountMode().isGroupIronman())
             return new SharedInfrastructureAssessment(CapabilityState.BLOCKED,
                     Confidence.VERIFIED,
-                    Text.get(293));
+                    get(293));
         return new SharedInfrastructureAssessment(CapabilityState.UNKNOWN,
                 Confidence.CHECK_NEEDED,
-                Text.get(294));
+                get(294));
     }
 
     private static GroupResourceAssessment result(GroupResourceState state,

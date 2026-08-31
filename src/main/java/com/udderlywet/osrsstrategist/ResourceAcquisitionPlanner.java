@@ -1,4 +1,5 @@
 package com.udderlywet.osrsstrategist;
+import static com.udderlywet.osrsstrategist.Text.get;
 
 import java.util.*;
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class ResourceAcquisitionPlanner
     {
         if (context == null || need == null || context.data() == null)
         {
-            return checkNeeded(need, Text.get(1430));
+            return checkNeeded(need, get(1430));
         }
 
         GameData data = context.data();
@@ -49,7 +50,7 @@ public class ResourceAcquisitionPlanner
             return new AcquisitionPlan(
                     need, AcquisitionSource.INVENTORY, inventoryQuantity,
                     Confidence.VERIFIED,
-                    Text.get(566)
+                    get(566)
             );
         }
 
@@ -70,10 +71,10 @@ public class ResourceAcquisitionPlanner
                                 ? Confidence.CHECK_NEEDED
                                 : Confidence.VERIFIED,
                         needsAccessCheck
-                                ? Text.get(575)
+                                ? get(575)
                                         + pretty(stored.capabilities)
-                                        + Text.get(576)
-                                : Text.get(577)
+                                        + get(576)
+                                : get(577)
                                         + pretty(stored.capabilities) + "."
                 );
             }
@@ -88,7 +89,7 @@ public class ResourceAcquisitionPlanner
                 return new AcquisitionPlan(
                         need, AcquisitionSource.BANK, ordinaryQuantity,
                         Confidence.VERIFIED,
-                        Text.get(578)
+                        get(578)
                 );
             }
 
@@ -108,7 +109,7 @@ public class ResourceAcquisitionPlanner
                                 need, AcquisitionSource.GROUP_STORAGE,
                                 confirmedQuantity,
                                 Confidence.VERIFIED,
-                                Text.get(579)
+                                get(579)
                         );
                     }
                 }
@@ -122,23 +123,23 @@ public class ResourceAcquisitionPlanner
         // require the bank, and opted-in GIM requires fresh Group Storage.
         if (data.inventory() == null)
             return checkNeeded(need,
-                    Text.get(580));
+                    get(580));
         if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() == null)
             return checkNeeded(need,
-                    Text.get(581));
+                    get(581));
         if (AccountModePolicy.mayUseGroupStorage(mode,
                 context.isUseGroupStorage())
                 && (data.groupStorage() == null
                 || !data.groupStorage().isObserved()))
             return checkNeeded(need,
-                    Text.get(582));
+                    get(582));
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
             return new AcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
                     Confidence.CHECK_NEEDED,
-                    Text.get(567)
+                    get(567)
                             + sourceNote
             );
         }
@@ -149,14 +150,14 @@ public class ResourceAcquisitionPlanner
                     need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
                     Confidence.CHECK_NEEDED,
                     (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? Text.get(568)
-                            : Text.get(569))
+                            ? get(568)
+                            : get(569))
                             + sourceNote
             );
         }
 
         return checkNeeded(need,
-                Text.get(570) + sourceNote);
+                get(570) + sourceNote);
     }
 
     /**
@@ -170,12 +171,12 @@ public class ResourceAcquisitionPlanner
     {
         if (context == null || shortfall == null || context.data() == null)
         {
-            return checkNeeded(shortfall, Text.get(1430));
+            return checkNeeded(shortfall, get(1430));
         }
 
         AccountMode mode = context.accountMode();
         String sourceNote = sourceSuggestions(shortfall, context);
-        String prefix = Text.get(1431) + shortfall.getQuantity()
+        String prefix = get(1431) + shortfall.getQuantity()
                 + " × " + shortfall.getItemName() + ". ";
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
@@ -183,7 +184,7 @@ public class ResourceAcquisitionPlanner
             return new AcquisitionPlan(
                     shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
                     Confidence.CHECK_NEEDED,
-                    prefix + Text.get(571)
+                    prefix + get(571)
                             + sourceNote);
         }
 
@@ -193,13 +194,13 @@ public class ResourceAcquisitionPlanner
                     shortfall, AcquisitionSource.SELF_SOURCE, 0,
                     Confidence.CHECK_NEEDED,
                     prefix + (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? Text.get(572)
-                            : Text.get(1432))
+                            ? get(572)
+                            : get(1432))
                             + sourceNote);
         }
 
         return checkNeeded(shortfall,
-                prefix + Text.get(573)
+                prefix + get(573)
                         + sourceNote);
     }
 
@@ -272,7 +273,7 @@ public class ResourceAcquisitionPlanner
                 context != null && context.isAllowWildernessMethods());
         if (suggestions.isEmpty())
         {
-            return Text.get(574);
+            return get(574);
         }
 
         StringBuilder note = new StringBuilder(" Useful route");
