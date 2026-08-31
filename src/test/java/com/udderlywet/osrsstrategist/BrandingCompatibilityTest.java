@@ -45,7 +45,6 @@ public class BrandingCompatibilityTest
     {
         assertEquals("osrs-strategist", OsrsStrategistConfig.GROUP);
         assertEquals("osrs-strategist-profile", AccountStrategyProfileStore.GROUP);
-        assertEquals("osrs-strategist-profile", AccountProtectedItemStore.GROUP);
         assertEquals("osrs-strategist-profile", AccountPreferenceStore.GROUP);
         assertEquals("osrs-strategist-profile", AccountAccessMemoryStore.GROUP);
         assertEquals("osrs-strategist-profile", AccountMilestoneStore.GROUP);

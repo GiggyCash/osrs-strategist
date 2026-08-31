@@ -10,7 +10,6 @@ public class StrategyEngine
 {
     private final RecommendationEngine recommendationEngine;
     private final OpportunityEngine opportunityEngine;
-    private final StrategyModuleRegistry moduleRegistry;
     private final StrategyCandidateRegistry candidateRegistry;
     private final RecommendationActionabilityPolicy actionabilityPolicy;
     private final RecommendationIntelligenceService intelligenceService;
@@ -35,7 +34,6 @@ public class StrategyEngine
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
             StrategyCandidateRegistry candidateRegistry,
             RecommendationActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
@@ -46,7 +44,6 @@ public class StrategyEngine
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
-        this.moduleRegistry = moduleRegistry;
         this.candidateRegistry = candidateRegistry;
         this.actionabilityPolicy = actionabilityPolicy == null
                 ? new RecommendationActionabilityPolicy()
@@ -68,14 +65,14 @@ public class StrategyEngine
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
+            Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
             RecommendationActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService)
     {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
+        this(recommendationEngine, opportunityEngine,
                 candidateRegistry, actionabilityPolicy, intelligenceService,
                 candidateSafetyPolicy, goalProvenanceService,
                 new MethodRecommendationValueService(),
@@ -86,28 +83,32 @@ public class StrategyEngine
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
+            Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
             RecommendationActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService)
     {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
+        this(recommendationEngine, opportunityEngine,
                 candidateRegistry, actionabilityPolicy, intelligenceService,
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService(),
+                new MethodRecommendationValueService(),
+                new FinalExecutionPlanValidator());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
+            Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
             RecommendationActionabilityPolicy actionabilityPolicy)
     {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
+        this(recommendationEngine, opportunityEngine,
                 candidateRegistry, actionabilityPolicy,
                 new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
+                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService(),
+                new MethodRecommendationValueService(),
+                new FinalExecutionPlanValidator());
     }
 
     public StrategyResult evaluate(
@@ -152,7 +153,6 @@ public class StrategyEngine
             return new StrategyResult(
                     Collections.singletonList(
                             FallbackRecommendationFactory.forState(data)),
-                    Collections.emptyList(),
                     Collections.emptyList());
         }
 
@@ -243,20 +243,9 @@ public class StrategyEngine
                     promotedIds.add(recommendation.getId());
             opportunities.removeIf(value -> promotedIds.contains(value.getId()));
         }
-        List<StrategySignal> signals = new ArrayList<>();
-        for (StrategyModule module : moduleRegistry == null
-                ? Collections.<StrategyModule>emptyList() : moduleRegistry.getModules())
-        {
-            List<StrategySignal> moduleSignals = module.analyze(context);
-            if (moduleSignals != null) signals.addAll(moduleSignals);
-        }
-        signals.sort(Comparator.comparingDouble(
-                StrategySignal::getScoreDelta).reversed());
-
         StrategicPlan plan = strategicPlanService.build(
                 recommendations, context, System.currentTimeMillis());
-        return new StrategyResult(recommendations, opportunities, signals,
-                plan);
+        return new StrategyResult(recommendations, opportunities, plan);
     }
 
     Recommendation opportunityRecommendation(

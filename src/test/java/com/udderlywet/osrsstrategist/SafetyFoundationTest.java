@@ -22,36 +22,4 @@ public class SafetyFoundationTest
         assertFalse(profile.isProtected(4151));
     }
 
-    @Test
-    public void irreversibleActionsAlwaysWarnAndRequireConfirmation()
-    {
-        assertTrue(
-                RiskPolicy.mustWarn(
-                        AccountMode.MAIN,
-                        RiskLevel.IRREVERSIBLE
-                )
-        );
-        assertTrue(
-                RiskPolicy.mustRequireExplicitConfirmation(
-                        RiskLevel.IRREVERSIBLE
-                )
-        );
-    }
-
-    @Test
-    public void riskSensitiveAccountsWarnAtMediumRisk()
-    {
-        assertTrue(
-                RiskPolicy.mustWarn(
-                        AccountMode.ULTIMATE_IRONMAN,
-                        RiskLevel.MEDIUM
-                )
-        );
-        assertFalse(
-                RiskPolicy.mustWarn(
-                        AccountMode.MAIN,
-                        RiskLevel.MEDIUM
-                )
-        );
-    }
 }

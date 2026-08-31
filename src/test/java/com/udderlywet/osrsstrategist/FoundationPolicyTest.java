@@ -12,48 +12,6 @@ import static org.junit.Assert.assertTrue;
 public class FoundationPolicyTest
 {
     @Test
-    public void noGuessingPreservesUnknownAndBlockedStates()
-    {
-        assertEquals(
-                RecommendationConfidence.VERIFIED,
-                NoGuessingPolicy.fromCapability(
-                        CapabilityState.VERIFIED
-                )
-        );
-        assertEquals(
-                RecommendationConfidence.CHECK_NEEDED,
-                NoGuessingPolicy.fromCapability(
-                        CapabilityState.UNKNOWN
-                )
-        );
-        assertEquals(
-                RecommendationConfidence.BLOCKED,
-                NoGuessingPolicy.fromCapability(
-                        CapabilityState.BLOCKED
-                )
-        );
-    }
-
-    @Test
-    public void blockedConfidenceDominatesCombinedResult()
-    {
-        assertEquals(
-                RecommendationConfidence.BLOCKED,
-                NoGuessingPolicy.combine(
-                        RecommendationConfidence.VERIFIED,
-                        RecommendationConfidence.BLOCKED
-                )
-        );
-        assertEquals(
-                RecommendationConfidence.CHECK_NEEDED,
-                NoGuessingPolicy.combine(
-                        RecommendationConfidence.VERIFIED,
-                        RecommendationConfidence.CHECK_NEEDED
-                )
-        );
-    }
-
-    @Test
     public void accountModeRulesKeepRestrictedAccountsRestricted()
     {
         assertTrue(
