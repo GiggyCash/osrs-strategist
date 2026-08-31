@@ -57,19 +57,9 @@ public final class ItemIndex
     public int quantity(int... itemIds)
     {
         if (data == null || itemIds == null) return 0;
-        int total = quantityIn(data.inventory(), itemIds)
-                + quantityIn(data.equipment(), itemIds);
-        if (accountMode() != AccountMode.ULTIMATE_IRONMAN)
-            total = safeAdd(total, quantityIn(data.bank(), itemIds));
-        if (usesGroupStorage())
-            total = safeAdd(total, quantityIn(data.groupStorage(), itemIds));
-        if (data.storage() != null)
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
-                    : data.storage().getObservedContents().entrySet())
-                if (data.storage().verified(entry.getKey())
-                        && (accountMode() != AccountMode.ULTIMATE_IRONMAN
-                        || !isRestrictedUimStorage(entry.getKey())))
-                    total = safeAdd(total, quantityIn(entry.getValue(), itemIds));
+        var total = 0;
+        for (Iterable<ItemState> items : usableItems())
+            total = safeAdd(total, quantityIn(items, itemIds));
         return total;
     }
 
@@ -79,11 +69,8 @@ public final class ItemIndex
                 || accountMode() != AccountMode.ULTIMATE_IRONMAN
                 || data.storage() == null) return 0;
         var total = 0;
-        for (Map.Entry<StorageCapability, List<ItemState>> entry
-                : data.storage().getObservedContents().entrySet())
-            if (data.storage().verified(entry.getKey())
-                    && isRestrictedUimStorage(entry.getKey()))
-                total = safeAdd(total, quantityIn(entry.getValue(), itemIds));
+        for (Iterable<ItemState> items : restrictedItems())
+            total = safeAdd(total, quantityIn(items, itemIds));
         return total;
     }
 
@@ -109,41 +96,8 @@ public final class ItemIndex
     {
         if (data == null || names == null || names.length == 0) return 0;
         var total = 0;
-        total = safeAdd(total, quantityIn(data.inventory() == null
-                ? null : data.inventory().getItems(), names));
-        total = safeAdd(total, quantityIn(data.equipment() == null
-                ? null : data.equipment().getEquippedItems(), names));
-
-        var mode = accountMode();
-        if (mode != AccountMode.ULTIMATE_IRONMAN)
-        {
-            total = safeAdd(total, quantityIn(data.bank() == null
-                    ? null : data.bank().getItems(), names));
-        }
-
-        if (useGroupStorage && mode.isGroupIronman()
-                && data.groupStorage() != null
-                && data.groupStorage().isObserved())
-        {
-            total = safeAdd(total,
-                    quantityIn(data.groupStorage().getItems(), names));
-        }
-
-        if (data.storage() != null)
-        {
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
-                    : data.storage().getObservedContents().entrySet())
-            {
-                var capability = entry.getKey();
-                if (!data.storage().verified(capability)) continue;
-                if (mode == AccountMode.ULTIMATE_IRONMAN
-                        && isRestrictedUimStorage(capability))
-                {
-                    continue;
-                }
-                total = safeAdd(total, quantityIn(entry.getValue(), names));
-            }
-        }
+        for (Iterable<ItemState> items : usableItems())
+            total = safeAdd(total, quantityIn(items, names));
         return total;
     }
 
@@ -161,17 +115,8 @@ public final class ItemIndex
         }
 
         var total = 0;
-        for (Map.Entry<StorageCapability, List<ItemState>> entry
-                : data.storage().getObservedContents().entrySet())
-        {
-            var capability = entry.getKey();
-            if (!isRestrictedUimStorage(capability)
-                    || !data.storage().verified(capability))
-            {
-                continue;
-            }
-            total = safeAdd(total, quantityIn(entry.getValue(), names));
-        }
+        for (Iterable<ItemState> items : restrictedItems())
+            total = safeAdd(total, quantityIn(items, names));
         return total;
     }
 
@@ -180,31 +125,8 @@ public final class ItemIndex
     {
         if (data == null || itemClass == null) return 0;
         var total = 0;
-        total = safeAdd(total, quantityMatching(data.inventory() == null
-                ? null : data.inventory().getItems(), itemClass, excludedNames));
-        total = safeAdd(total, quantityMatching(data.equipment() == null
-                ? null : data.equipment().getEquippedItems(), itemClass, excludedNames));
-        var mode = accountMode();
-        if (mode != AccountMode.ULTIMATE_IRONMAN)
-            total = safeAdd(total, quantityMatching(data.bank() == null
-                    ? null : data.bank().getItems(), itemClass, excludedNames));
-        if (useGroupStorage && mode.isGroupIronman()
-                && data.groupStorage() != null
-                && data.groupStorage().isObserved())
-            total = safeAdd(total, quantityMatching(data.groupStorage().getItems(),
-                    itemClass, excludedNames));
-        if (data.storage() != null)
-        {
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
-                    : data.storage().getObservedContents().entrySet())
-            {
-                if (!data.storage().verified(entry.getKey())) continue;
-                if (mode == AccountMode.ULTIMATE_IRONMAN
-                        && isRestrictedUimStorage(entry.getKey())) continue;
-                total = safeAdd(total, quantityMatching(entry.getValue(),
-                        itemClass, excludedNames));
-            }
-        }
+        for (Iterable<ItemState> items : usableItems())
+            total = safeAdd(total, quantityMatching(items, itemClass, excludedNames));
         return total;
     }
 
@@ -215,15 +137,36 @@ public final class ItemIndex
                 || accountMode() != AccountMode.ULTIMATE_IRONMAN
                 || data.storage() == null) return 0;
         var total = 0;
-        for (Map.Entry<StorageCapability, List<ItemState>> entry
-                : data.storage().getObservedContents().entrySet())
-        {
-            if (!isRestrictedUimStorage(entry.getKey())
-                    || !data.storage().verified(entry.getKey())) continue;
-            total = safeAdd(total, quantityMatching(entry.getValue(),
-                    itemClass, excludedNames));
-        }
+        for (Iterable<ItemState> items : restrictedItems())
+            total = safeAdd(total, quantityMatching(items, itemClass, excludedNames));
         return total;
+    }
+
+    /** Highest-ranked observed usable item name, or null when none match. */
+    public String bestName(java.util.function.ToIntFunction<String> rank)
+    {
+        return bestName(rank, usableItems());
+    }
+
+    public String bestInventoryName(java.util.function.ToIntFunction<String> rank)
+    {
+        return data == null || data.inventory() == null ? null
+                : bestName(rank, Collections.singletonList(data.inventory().getItems()));
+    }
+
+    private static String bestName(java.util.function.ToIntFunction<String> rank,
+            List<Iterable<ItemState>> sources)
+    {
+        String best = null;
+        int bestRank = 0;
+        for (Iterable<ItemState> items : sources)
+            if (items != null) for (ItemState item : items)
+            {
+                if (item == null || item.getQuantity() <= 0) continue;
+                int value = rank.applyAsInt(Names.lower(item.getName()));
+                if (value > bestRank) { bestRank = value; best = item.getName(); }
+            }
+        return best;
     }
 
     public int equippedQuantityMatching(ItemRequirementClass itemClass,
@@ -245,6 +188,19 @@ public final class ItemIndex
     {
         return data == null || data.equipment() == null ? 0
                 : quantityIn(data.equipment().getEquippedItems(), names);
+    }
+
+    public int inventoryQuantity(String... names)
+    {
+        return data == null || data.inventory() == null ? 0
+                : quantityIn(data.inventory().getItems(), names);
+    }
+
+    public int inventoryQuantityMatching(ItemRequirementClass itemClass,
+            Iterable<String> excludedNames)
+    {
+        return data == null || data.inventory() == null ? 0
+                : quantityMatching(data.inventory().getItems(), itemClass, excludedNames);
     }
 
     public boolean bankObserved()
@@ -307,6 +263,39 @@ public final class ItemIndex
                 : AccountMode.fromTypeCode(data.account().modeCode());
     }
 
+    private List<Iterable<ItemState>> usableItems()
+    {
+        List<Iterable<ItemState>> result = new ArrayList<>();
+        if (data == null) return result;
+        if (data.inventory() != null) result.add(data.inventory().getItems());
+        if (data.equipment() != null) result.add(data.equipment().getEquippedItems());
+        var mode = accountMode();
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() != null)
+            result.add(data.bank().getItems());
+        if (usesGroupStorage()) result.add(data.groupStorage().getItems());
+        if (data.storage() != null)
+            for (Map.Entry<StorageCapability, List<ItemState>> entry
+                    : data.storage().getObservedContents().entrySet())
+                if (data.storage().verified(entry.getKey())
+                        && (mode != AccountMode.ULTIMATE_IRONMAN
+                        || !isRestrictedUimStorage(entry.getKey())))
+                    result.add(entry.getValue());
+        return result;
+    }
+
+    private List<Iterable<ItemState>> restrictedItems()
+    {
+        List<Iterable<ItemState>> result = new ArrayList<>();
+        if (data != null && accountMode() == AccountMode.ULTIMATE_IRONMAN
+                && data.storage() != null)
+            for (Map.Entry<StorageCapability, List<ItemState>> entry
+                    : data.storage().getObservedContents().entrySet())
+                if (data.storage().verified(entry.getKey())
+                        && isRestrictedUimStorage(entry.getKey()))
+                    result.add(entry.getValue());
+        return result;
+    }
+
     private static boolean isRestrictedUimStorage(StorageCapability capability)
     {
         return UimStorageMechanics.isRestrictedRetrieval(capability);
@@ -332,11 +321,6 @@ public final class ItemIndex
             }
         }
         return total;
-    }
-
-    private static int quantityIn(ItemsState state, int... ids)
-    {
-        return state == null ? 0 : quantityIn(state.getItems(), ids);
     }
 
     private static int quantityIn(Iterable<ItemState> items, int... ids)

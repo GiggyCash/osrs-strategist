@@ -297,7 +297,7 @@ public class SlayerStrategist
                             + get(1496));
 
         if (requiresCarriedHealing(taskStrategy)
-                && carriedHealingName(data.inventory()) == null)
+                && items.bestInventoryName(SlayerStrategist::healingRank) == null)
             return supplyPreparation(context, slayer, master, taskStrategy,
                     base);
 
@@ -498,7 +498,8 @@ public class SlayerStrategist
             Guidance base)
     {
         var data = context.data();
-        var storedFood = storedHealingName(data, context.usesGroupStorage());
+        var storedFood = new ItemIndex(data, context.usesGroupStorage())
+                .bestName(SlayerStrategist::healingRank);
         String action;
         String supplies;
         var mode = context.accountMode();
@@ -661,7 +662,7 @@ public class SlayerStrategist
                     .append(strategy.getRequiredItemUse()
                             == SlayerRequiredItemUse.EQUIPPED
                             ? " equipped" : get(1511));
-        var healing = carriedHealingName(inventory);
+        var healing = items.bestInventoryName(SlayerStrategist::healingRank);
         supplies.append(". ");
         if (healing != null)
             supplies.append(get(1512)).append(healing)
@@ -707,69 +708,9 @@ public class SlayerStrategist
                 || task.getSetupBurden() >= 3;
     }
 
-    private static String carriedHealingName(ItemsState inventory)
-    {
-        return inventory == null ? null : healingName(inventory.getItems());
-    }
-
-    private static String storedHealingName(GameData data,
-            boolean useGroupStorage)
-    {
-        if (data == null || data.account() == null) return null;
-        AccountMode mode = AccountMode.fromTypeCode(
-                data.account().modeCode());
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() != null)
-        {
-            var found = healingName(data.bank().getItems());
-            if (found != null) return found;
-        }
-        if (useGroupStorage && mode.isGroupIronman()
-                && data.groupStorage() != null
-                && data.groupStorage().isObserved())
-        {
-            var found = healingName(data.groupStorage().getItems());
-            if (found != null) return found;
-        }
-        if (data.storage() != null)
-        {
-            for (java.util.Map.Entry<StorageCapability, List<ItemState>>
-                    entry : data.storage().getObservedContents().entrySet())
-            {
-                if (!data.storage().verified(entry.getKey())) continue;
-                if (mode == AccountMode.ULTIMATE_IRONMAN
-                        && UimStorageMechanics.isRestrictedRetrieval(
-                                entry.getKey()))
-                    continue;
-                var found = healingName(entry.getValue());
-                if (found != null) return found;
-            }
-        }
-        return null;
-    }
-
-    /** Conservative edible-name evidence; raw and burnt items never count. */
-    private static String healingName(Iterable<ItemState> observed)
-    {
-        if (observed == null) return null;
-        String best = null;
-        var bestRank = 0;
-        for (ItemState item : observed)
-        {
-            if (item == null || item.getQuantity() <= 0) continue;
-            var name = Names.lower(item.getName());
-            if (name.startsWith("raw ") || name.startsWith("burnt ")) continue;
-            var rank = healingRank(name);
-            if (rank > bestRank)
-            {
-                bestRank = rank;
-                best = item.getName();
-            }
-        }
-        return best;
-    }
-
     private static int healingRank(String name)
     {
+        if (name.startsWith("raw ") || name.startsWith("burnt ")) return 0;
         if (name.equals(get(1520))
                 || name.equals("dark crab") || name.equals("anglerfish")
                 || name.equals("manta ray")) return 5;
