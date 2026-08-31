@@ -17,10 +17,10 @@ public final class ImportedQuestItemRequirementCatalog
         for (Entry entry : BundledCatalogLoader.array(RESOURCE, Entry[].class))
         {
             if (entry.quest == null || entry.result == null)
-                throw new IllegalStateException("Incomplete quest item evidence in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1137) + RESOURCE);
             entry.result.freeze();
             if (result.put(normalize(entry.quest), entry.result) != null)
-                throw new IllegalStateException("Duplicate quest item evidence: " + entry.quest);
+                throw new IllegalStateException(Text.get(1138) + entry.quest);
         }
         requirements = Collections.unmodifiableMap(result);
     }

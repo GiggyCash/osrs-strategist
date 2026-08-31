@@ -40,13 +40,13 @@ public final class CurrentExecutionStageResolver
             boundary = method.getMaxLevel() + 1;
         }
 
-        MethodExecutionProfile profile = profiles.forMethod(method.getId());
+        MethodProfile profile = profiles.forMethod(method.getId());
         if (profile == null || actions == null || method.getSkill() == null)
             return boundary;
 
-        List<RuneLiteSkillActionDefinition> skillActions =
+        List<ActionDef> skillActions =
                 actions.actionsFor(method.getSkill());
-        for (RuneLiteSkillActionDefinition action : skillActions)
+        for (ActionDef action : skillActions)
         {
             if (action == null || action.getLevel() <= currentLevel
                     || action.getLevel() >= boundary
@@ -60,7 +60,7 @@ public final class CurrentExecutionStageResolver
         return Math.max(currentLevel + 1, Math.min(objective, boundary));
     }
 
-    private static boolean matches(RuneLiteSkillActionDefinition action,
+    private static boolean matches(ActionDef action,
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;

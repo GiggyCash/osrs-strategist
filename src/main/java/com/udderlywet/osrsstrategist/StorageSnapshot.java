@@ -15,7 +15,7 @@ public final class StorageSnapshot
 {
     @Getter
     private final Map<StorageCapability, CapabilityState> states;
-    private final Map<StorageCapability, List<ItemStackSnapshot>> contents;
+    private final Map<StorageCapability, List<ItemState>> contents;
 
     public StorageSnapshot(Map<StorageCapability, CapabilityState> states)
     {
@@ -24,18 +24,18 @@ public final class StorageSnapshot
 
     public StorageSnapshot(
             Map<StorageCapability, CapabilityState> states,
-            Map<StorageCapability, List<ItemStackSnapshot>> contents)
+            Map<StorageCapability, List<ItemState>> contents)
     {
         EnumMap<StorageCapability, CapabilityState> stateCopy =
                 new EnumMap<>(StorageCapability.class);
         if (states != null) stateCopy.putAll(states);
         this.states = Collections.unmodifiableMap(stateCopy);
 
-        EnumMap<StorageCapability, List<ItemStackSnapshot>> contentCopy =
+        EnumMap<StorageCapability, List<ItemState>> contentCopy =
                 new EnumMap<>(StorageCapability.class);
         if (contents != null)
         {
-            for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+            for (Map.Entry<StorageCapability, List<ItemState>> entry
                     : contents.entrySet())
             {
                 contentCopy.put(entry.getKey(), Collections.unmodifiableList(
@@ -68,7 +68,7 @@ public final class StorageSnapshot
         return capability != null && contents.containsKey(capability);
     }
 
-    public List<ItemStackSnapshot> contentsOf(StorageCapability capability)
+    public List<ItemState> contentsOf(StorageCapability capability)
     {
         return contents.getOrDefault(capability, Collections.emptyList());
     }
@@ -79,9 +79,9 @@ public final class StorageSnapshot
      * the capability is unavailable; callers should use {@link #verified} or
      * {@link #hasObservedContents} when that distinction matters.
      */
-    public List<ItemStackSnapshot> getDeathStorageItems()
+    public List<ItemState> getDeathStorageItems()
     {
-        List<ItemStackSnapshot> observed = new ArrayList<>();
+        List<ItemState> observed = new ArrayList<>();
         observed.addAll(contentsOf(StorageCapability.DEATH_STORAGE));
         observed.addAll(contentsOf(StorageCapability.HESPORI_ITEM_RETRIEVAL));
         observed.addAll(contentsOf(StorageCapability.ZULRAH_ITEM_RETRIEVAL));
@@ -94,7 +94,7 @@ public final class StorageSnapshot
     {
         if (!verified(capability) || !hasObservedContents(capability)) return 0;
         int total = 0;
-        for (ItemStackSnapshot item : contentsOf(capability))
+        for (ItemState item : contentsOf(capability))
         {
             if (item.getItemId() == itemId) total += item.getQuantity();
         }
@@ -102,7 +102,7 @@ public final class StorageSnapshot
     }
 
 
-    public Map<StorageCapability, List<ItemStackSnapshot>> getObservedContents()
+    public Map<StorageCapability, List<ItemState>> getObservedContents()
     {
         return contents;
     }

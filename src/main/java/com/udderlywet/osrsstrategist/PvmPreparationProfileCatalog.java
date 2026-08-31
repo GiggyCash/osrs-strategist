@@ -19,9 +19,9 @@ public class PvmPreparationProfileCatalog
                 : BundledCatalogLoader.array(RESOURCE, PvmPreparationProfile[].class))
         {
             if (profile.getActivityId() == null || profile.getChecks() == null)
-                throw new IllegalStateException("Incomplete PvM profile in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1164) + RESOURCE);
             if (values.put(profile.getActivityId(), profile) != null)
-                throw new IllegalStateException("Duplicate PvM profile: "
+                throw new IllegalStateException(Text.get(1165)
                         + profile.getActivityId());
         }
         profiles = Collections.unmodifiableMap(values);

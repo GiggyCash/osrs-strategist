@@ -73,16 +73,16 @@ public class UimRecurringPressureServiceTest
         AccountSnapshot account = new AccountSnapshot("Pressure", 404L, 2,
                 "Ultimate Ironman", MembershipStatus.P2P, 1, 1, 0L,
                 levels, xp);
-        List<ItemStackSnapshot> inventory = new ArrayList<>();
+        List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 24; slot++)
-            inventory.add(new ItemStackSnapshot(firstItemId + slot,
+            inventory.add(new ItemState(firstItemId + slot,
                     "Setup " + slot, 1, slot));
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put("pvm:tztok_jad", new PvmReadiness("pvm:tztok_jad",
-                false, RecommendationConfidence.CHECK_NEEDED,
+                false, Confidence.CHECK_NEEDED,
                 Collections.singletonList("Observed loadout incomplete")));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
                 .pvm(new PvmSnapshot(readiness))
                 .minigames(new MinigameSnapshot(new HashSet<>(
                         Collections.singletonList("tithe-farm")),
@@ -105,14 +105,14 @@ public class UimRecurringPressureServiceTest
         AccountSnapshot account = new AccountSnapshot("Pressure", 505L, 2,
                 "Ultimate Ironman", MembershipStatus.P2P, 1, 1, 0L,
                 levels, xp);
-        List<ItemStackSnapshot> inventory = new ArrayList<>();
+        List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 28; slot++)
-            inventory.add(new ItemStackSnapshot(firstItemId + slot,
+            inventory.add(new ItemState(firstItemId + slot,
                     "Setup " + slot, 1, slot));
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Waterfall Quest", QuestStatus.NOT_STARTED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
                 .quests(new QuestSnapshot(quests))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,

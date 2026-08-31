@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 
 /** Exposes the single current Slayer state-machine action to the shared queue. */
 @Singleton
-public class SlayerCandidateProvider implements StrategyCandidateProvider
+public class SlayerCandidateProvider implements CandidateProvider
 {
     private final SlayerStrategist strategist;
 
@@ -41,7 +41,7 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
         if (result == null || result.getGuidance() == null)
             return Collections.emptyList();
 
-        SlayerSnapshot slayer = context.getData().getSlayer();
+        SlayerSnapshot slayer = context.data().slayer();
         String id;
         String title;
         if (result.getRecommendedReward() != null)
@@ -52,13 +52,13 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
         else if (result.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
         {
             id = "verify:slayer-assignment";
-            title = "Check your Slayer assignment";
+            title = Text.get(1460);
         }
         else if (result.getAssignmentState() == SlayerAssignmentState.CHOICE_PENDING)
         {
             id = "slayer:choose-task";
             title = result.getRecommendedOffer() == null
-                    ? "Review Mortimer's task choices"
+                    ? Text.get(1461)
                     : "Choose " + result.getRecommendedOffer().getTaskName()
                             + " from Mortimer";
         }
@@ -89,7 +89,7 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
                     id = "slayer:alternative";
                     title = result.getSelectedAlternativeName() != null
                             ? "Use " + result.getSelectedAlternativeName()
-                            : "Replace the risky Slayer task";
+                            : Text.get(1462);
                     break;
                 case DO:
                 default:
@@ -99,25 +99,25 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
             }
         }
 
-        CandidateSafetyEvidence safety = result.getDecision()
+        SafetyEvidence safety = result.getDecision()
                 == SlayerTaskDecision.DO
-                ? CandidateSafetyEvidence.skill(false, Skill.SLAYER)
+                ? SafetyEvidence.skill(false, Skill.SLAYER)
                 : result.getDecision() == SlayerTaskDecision.ALTERNATIVE
                     && result.getSelectedAlternativeName() != null
-                    ? CandidateSafetyEvidence.potentiallyIrreversible(false)
-                    : CandidateSafetyEvidence.verifiedSafe(false);
-        RecommendationStrategicValue strategicValue = strategicValue(result,
+                    ? SafetyEvidence.potentiallyIrreversible(false)
+                    : SafetyEvidence.verifiedSafe(false);
+        StrategicValue strategicValue = strategicValue(result,
                 context);
         return Collections.singletonList(new Recommendation(id, title,
                 result.getReason(), result.getScore(), result.getConfidence(),
                 result.getGuidance(), safety, strategicValue));
     }
 
-    private static RecommendationStrategicValue strategicValue(
+    private static StrategicValue strategicValue(
             SlayerDecisionResult result, StrategyContext context)
     {
-        RecommendationStrategicValue.Builder builder =
-                RecommendationStrategicValue.builder()
+        StrategicValue.Builder builder =
+                StrategicValue.builder()
                         .evidence("slayer:typed-decision");
         SlayerTaskStrategicProfile task = result.getTaskProfile();
         if (task != null)

@@ -35,9 +35,9 @@ public class PvmReadyGuidanceTest
     {
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put(readyId, new PvmReadiness(readyId, true,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList()));
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
+        GameData data = GameData.builder(account())
                 .pvm(new PvmSnapshot(readiness)).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR, QuestTolerance.NORMAL,

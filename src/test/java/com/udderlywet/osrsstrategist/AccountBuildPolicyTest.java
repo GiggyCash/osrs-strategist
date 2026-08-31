@@ -67,7 +67,7 @@ public class AccountBuildPolicyTest
                 id, skill, 1, 99, id, id,
                 10, 10, 10, AttentionLevel.MODERATE, 10, 1,
                 java.util.Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
     }
 
     private static AccountSnapshot account(

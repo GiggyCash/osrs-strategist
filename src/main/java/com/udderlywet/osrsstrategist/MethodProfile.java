@@ -14,7 +14,7 @@ import lombok.Getter;
  * not get a profile until a trustworthy model exists.</p>
  */
 @Getter
-public final class MethodExecutionProfile
+public final class MethodProfile
 {
     public enum ProgressEstimateMode
     {
@@ -50,7 +50,7 @@ public final class MethodExecutionProfile
     private final ProgressEstimateMode progressEstimateMode;
 
     /** Compatibility constructor for profiles with one material rule. */
-    public MethodExecutionProfile(
+    public MethodProfile(
             String methodId,
             String unitSingular,
             String unitPlural,
@@ -78,7 +78,7 @@ public final class MethodExecutionProfile
         );
     }
 
-    public MethodExecutionProfile(
+    public MethodProfile(
             String methodId,
             String unitSingular,
             String unitPlural,
@@ -91,7 +91,7 @@ public final class MethodExecutionProfile
                 ProgressEstimateMode.EXACT_ACTIONS, actionTerms);
     }
 
-    public MethodExecutionProfile(
+    public MethodProfile(
             String methodId,
             String unitSingular,
             String unitPlural,

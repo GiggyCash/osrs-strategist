@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public final class UimInventoryResolution
 {
     private final UimInventoryResolutionKind kind;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final UimStorageDecision storageDecision;
     private final RecommendationRiskDisclosure riskDisclosure;
     private final String reason;

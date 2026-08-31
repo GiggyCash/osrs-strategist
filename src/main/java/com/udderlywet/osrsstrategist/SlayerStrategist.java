@@ -48,14 +48,14 @@ public class SlayerStrategist
 
     public SlayerDecisionResult assess(StrategyContext context)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null) return null;
-        AccountSnapshot account = context.getData().getAccount();
+        if (context == null || context.data() == null
+                || context.data().account() == null) return null;
+        AccountSnapshot account = context.data().account();
         if (account.getMembershipStatus() != MembershipStatus.P2P
                 || !AccountBuildPolicy.allowsSkill(account, Skill.SLAYER))
             return null;
 
-        SlayerSnapshot slayer = context.getData().getSlayer();
+        SlayerSnapshot slayer = context.data().slayer();
         if (slayer == null
                 || slayer.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
             return unknownAssignment();
@@ -86,7 +86,7 @@ public class SlayerStrategist
         String modifier = describeModifier(choice);
         String reason = Text.get(815)
                 + Text.get(826);
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Select " + choice.getTaskName() + " with " + modifier
                         + Text.get(837),
                 Text.get(848),
@@ -94,7 +94,7 @@ public class SlayerStrategist
                 reason);
         return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
                 null, master, profile, 62.0 + value,
-                RecommendationConfidence.VERIFIED, reason, guidance, null,
+                Confidence.VERIFIED, reason, guidance, null,
                 null, choice);
     }
 
@@ -104,8 +104,8 @@ public class SlayerStrategist
         String reason = Text.get(870);
         return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
                 SlayerTaskDecision.PREP_FIRST, master, null, 34.0,
-                RecommendationConfidence.CHECK_NEEDED, reason,
-                new RecommendationGuidance(
+                Confidence.CHECK_NEEDED, reason,
+                new Guidance(
                         Text.get(881),
                         Text.get(889),
                         Text.get(890),
@@ -131,13 +131,13 @@ public class SlayerStrategist
         }
         else if (modifier.contains("superior"))
             value += direction * magnitude
-                    * (context.getAccountMode().isIronLike() ? 3.2 : 2.3);
+                    * (context.accountMode().isIronLike() ? 3.2 : 2.3);
         else if (modifier.contains("point"))
             value += direction * magnitude
                     * (slayerPoints(context) < 150 ? 3.0 : 1.6);
         else if (modifier.contains("clue"))
             value += direction * magnitude
-                    * (context.getAccountMode().isIronLike() ? 2.4 : 1.2);
+                    * (context.accountMode().isIronLike() ? 2.4 : 1.2);
         else if (modifier.contains("quant"))
         {
             double taskFit = profile.getXpQuality() + profile.getResourceValue()
@@ -152,7 +152,7 @@ public class SlayerStrategist
 
     private static int slayerPoints(StrategyContext context)
     {
-        SlayerSnapshot slayer = context.getData().getSlayer();
+        SlayerSnapshot slayer = context.data().slayer();
         return slayer == null ? 0 : slayer.getPoints();
     }
 
@@ -185,8 +185,8 @@ public class SlayerStrategist
                 : "";
         String reason = Text.get(817)
                 + Text.get(818) + milestone;
-        RecommendationGuidance guidance = new RecommendationGuidance(
-                "Get your next Slayer assignment from " + choice.getDisplayName()
+        Guidance guidance = new Guidance(
+                Text.get(1494) + choice.getDisplayName()
                         + Text.get(819),
                 Text.get(820),
                 choice.getLocation() + ".",
@@ -194,7 +194,7 @@ public class SlayerStrategist
                         ? Text.get(821)
                         : ""));
         return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
-                choice, null, score, RecommendationConfidence.VERIFIED,
+                choice, null, score, Confidence.VERIFIED,
                 reason, guidance);
     }
 
@@ -206,7 +206,7 @@ public class SlayerStrategist
         String reason = advice.getReason()
                 + Text.get(822)
                 + remaining + Text.get(823);
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Buy " + reward.getDisplayName() + " for "
                         + reward.getPointCost() + Text.get(824),
                 Text.get(825)
@@ -214,14 +214,14 @@ public class SlayerStrategist
                 Text.get(828),
                 reason);
         return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
-                null, null, advice.getScore(), RecommendationConfidence.VERIFIED,
+                null, null, advice.getScore(), Confidence.VERIFIED,
                 reason, guidance, null, reward);
     }
 
     private SlayerDecisionResult evaluateTask(StrategyContext context,
             SlayerSnapshot slayer)
     {
-        StrategyDataBundle data = context.getData();
+        GameData data = context.data();
         SlayerTaskProfile taskMechanics = mechanics.profileFor(slayer.getTaskName());
         SlayerTaskStrategicProfile taskStrategy = strategy.profileFor(
                 slayer.getTaskName());
@@ -231,9 +231,9 @@ public class SlayerStrategist
                 strategy.isWildernessBound(slayer.getTaskName())))
             return wildernessAlternative(slayer, taskStrategy, master);
 
-        RecommendationGuidance base = guidanceService.build(data,
-                data.getAccount().getSkillLevel(Skill.SLAYER),
-                Math.min(99, data.getAccount().getSkillLevel(Skill.SLAYER) + 1),
+        Guidance base = guidanceService.build(data,
+                data.account().getSkillLevel(Skill.SLAYER),
+                Math.min(99, data.account().getSkillLevel(Skill.SLAYER) + 1),
                 context.isUseGroupStorage());
         if (taskMechanics == null || taskStrategy == null || base == null)
             return unreviewedTask(slayer, master, taskStrategy, base);
@@ -273,7 +273,7 @@ public class SlayerStrategist
                                 : master.getCancelCost()))
             return skip(slayer, master, taskStrategy, value);
 
-        ObservedItemIndex items = new ObservedItemIndex(data,
+        ItemIndex items = new ItemIndex(data,
                 context.isUseGroupStorage());
         if (!taskMechanics.getRequiredProtection().isEmpty()
                 && firstReadyItem(items, taskMechanics.getRequiredProtection(),
@@ -283,7 +283,7 @@ public class SlayerStrategist
                             ? Text.get(829)
                             : Text.get(830));
 
-        String weapon = observedCombatWeapon(data.getEquipment());
+        String weapon = observedCombatWeapon(data.equipment());
         if (weapon == null)
             return preparation(slayer, master, taskStrategy, base,
                     Text.get(831));
@@ -291,24 +291,24 @@ public class SlayerStrategist
         if (taskStrategy.getRequiredCombatStyle() != null
                 && observedStyle != taskStrategy.getRequiredCombatStyle())
             return preparation(slayer, master, taskStrategy, base,
-                    "The equipped " + weapon + " does not satisfy the task's "
+                    "The equipped " + weapon + Text.get(1495)
                             + styleName(taskStrategy.getRequiredCombatStyle())
-                            + "-only damage requirement.");
+                            + Text.get(1496));
 
         if (requiresCarriedHealing(taskStrategy)
-                && carriedHealingName(data.getInventory()) == null)
+                && carriedHealingName(data.inventory()) == null)
             return supplyPreparation(context, slayer, master, taskStrategy,
                     base);
 
         base = concreteTaskGuidance(base, taskMechanics, taskStrategy,
-                items, weapon, observedStyle, slayer, data.getInventory());
+                items, weapon, observedStyle, slayer, data.inventory());
 
         String reason = milestone
                 ? Text.get(832)
                 : Text.get(833);
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.DO, master, taskStrategy, 58.0 + value,
-                RecommendationConfidence.VERIFIED, reason, base);
+                Confidence.VERIFIED, reason, base);
     }
 
     private double masterScore(SlayerMasterProfile master,
@@ -332,12 +332,12 @@ public class SlayerStrategist
         else if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
             score += master.getExperiencePotential() * 6.0;
 
-        if (context.getAccountMode().isIronLike())
+        if (context.accountMode().isIronLike())
             score += master.getSupplyValue() * 10.0;
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
             score -= master.getSetupBurden() * 8.0;
         if (master.isWilderness()
-                && AccountModePolicy.isRiskSensitive(context.getAccountMode()))
+                && AccountModePolicy.isRiskSensitive(context.accountMode()))
             score -= 100.0;
 
         if (context.getActiveGoal() == GoalType.SLAYER_85)
@@ -352,7 +352,7 @@ public class SlayerStrategist
                 score += master.pointsForCompletion(next)
                         - master.getNormalPoints();
         }
-        score += context.getPreferenceProfile().weightFor(
+        score += context.preferenceProfile().weightFor(
                 "slayer:master:" + master.getId()) * 10.0;
         score += reviewedPoolValue(master, context) * 1.25;
         return score;
@@ -382,7 +382,7 @@ public class SlayerStrategist
     private static double taskValue(SlayerTaskStrategicProfile task,
             StrategyContext context)
     {
-        double resourceMultiplier = context.getAccountMode().isIronLike()
+        double resourceMultiplier = context.accountMode().isIronLike()
                 ? 1.7 : 1.2;
         double value = task.getXpQuality() * 2.3
                 + task.getResourceValue() * resourceMultiplier
@@ -405,7 +405,7 @@ public class SlayerStrategist
                     : task.getAttention() == AttentionLevel.LOW ? 4.0 : -3.0;
         if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
             value += task.getXpQuality() * .4;
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
             value -= task.getSetupBurden() * .6;
         if (context.getActiveGoal() == GoalType.SLAYER_85)
             value += task.getXpQuality() * .8;
@@ -424,7 +424,7 @@ public class SlayerStrategist
         String area = normalize(slayer.getTaskLocation());
         wilderness |= area.contains("wilderness") || area.contains("revenant caves");
         return wilderness && (!context.isAllowWildernessMethods()
-                || AccountModePolicy.isRiskSensitive(context.getAccountMode()));
+                || AccountModePolicy.isRiskSensitive(context.accountMode()));
     }
 
     private static SlayerDecisionResult wildernessAlternative(
@@ -433,77 +433,77 @@ public class SlayerStrategist
     {
         if (slayer.getPoints() < SlayerPointEconomy.SKIP_COST)
         {
-            RecommendationGuidance guidance = new RecommendationGuidance(
+            Guidance guidance = new Guidance(
                     Text.get(834),
                     Text.get(835),
-                    "Turael/Aya in Burthorpe.",
+                    Text.get(1497),
                     "Only " + slayer.getPoints() + Text.get(836));
             return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                     SlayerTaskDecision.PREP_FIRST, master, task, 48.0,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(838),
                     guidance);
         }
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 Text.get(839),
-                "The live snapshot shows " + slayer.getPoints()
+                Text.get(1498) + slayer.getPoints()
                         + Text.get(840),
                 Text.get(841),
                 Text.get(842));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.ALTERNATIVE, master, task, 60.0,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Text.get(843),
                 guidance);
     }
 
     private static SlayerDecisionResult unreviewedTask(SlayerSnapshot slayer,
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
-            RecommendationGuidance base)
+            Guidance base)
     {
-        RecommendationGuidance guidance = base == null
-                ? new RecommendationGuidance(
+        Guidance guidance = base == null
+                ? new Guidance(
                         Text.get(844),
                         Text.get(845),
                         Text.get(846),
                         Text.get(847))
-                : new RecommendationGuidance(
+                : new Guidance(
                         Text.get(849),
                         base.getSupplies(), base.getLocation(),
                         Text.get(850) + base.getNote());
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 40.0,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(851),
                 guidance);
     }
 
     private static SlayerDecisionResult preparation(SlayerSnapshot slayer,
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
-            RecommendationGuidance base, String reason)
+            Guidance base, String reason)
     {
-        RecommendationGuidance guidance = new RecommendationGuidance(
-                "Prepare the mandatory item for " + slayer.getTaskName()
+        Guidance guidance = new Guidance(
+                Text.get(1499) + slayer.getTaskName()
                         + Text.get(852),
                 base.getSupplies(), base.getLocation(), base.getNote());
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 48.0,
-                RecommendationConfidence.CHECK_NEEDED, reason, guidance);
+                Confidence.CHECK_NEEDED, reason, guidance);
     }
 
     private static SlayerDecisionResult supplyPreparation(
             StrategyContext context, SlayerSnapshot slayer,
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
-            RecommendationGuidance base)
+            Guidance base)
     {
-        StrategyDataBundle data = context.getData();
+        GameData data = context.data();
         String storedFood = storedHealingName(data, context.isUseGroupStorage());
         String action;
         String supplies;
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         if (storedFood != null)
         {
-            action = "Bank before travelling and withdraw " + storedFood
+            action = Text.get(1500) + storedFood
                     + " for one " + slayer.getTaskName()
                     + Text.get(853);
             supplies = "Keep " + storedFood
@@ -517,32 +517,32 @@ public class SlayerStrategist
         }
         else
         {
-            String route = selfSourcedFoodRoute(data.getAccount());
+            String route = selfSourcedFoodRoute(data.account());
             action = route + Text.get(857)
                     + slayer.getTaskName() + ".";
             supplies = Text.get(858);
         }
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 50.0,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(860),
-                new RecommendationGuidance(action, supplies,
+                new Guidance(action, supplies,
                         base.getLocation(), base.getNote()));
     }
 
     private static SlayerDecisionResult bossAlternative(SlayerSnapshot slayer,
             SlayerMasterProfile master, SlayerTaskStrategicProfile task)
     {
-        RecommendationGuidance guidance = new RecommendationGuidance(
-                "Use the observed-ready " + task.getAlternativeName()
-                        + " alternative for this " + slayer.getTaskName()
+        Guidance guidance = new Guidance(
+                Text.get(1501) + task.getAlternativeName()
+                        + Text.get(1502) + slayer.getTaskName()
                         + Text.get(861),
                 Text.get(862),
                 task.getAlternativeLocation() + ".",
                 Text.get(863));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.ALTERNATIVE, master, task, 64.0,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Text.get(864),
                 guidance, task.getAlternativeName());
     }
@@ -554,7 +554,7 @@ public class SlayerStrategist
         String missing = readiness == null || readiness.getMissingRequirements().isEmpty()
                 ? Text.get(865)
                 : "Resolve: " + String.join(", ", readiness.getMissingRequirements()) + ".";
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Prepare for " + task.getAlternativeName()
                         + Text.get(866) + missing,
                 Text.get(867),
@@ -562,7 +562,7 @@ public class SlayerStrategist
                 Text.get(868));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 49.0,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(869),
                 guidance);
     }
@@ -571,16 +571,16 @@ public class SlayerStrategist
             SlayerMasterProfile master, SlayerTaskStrategicProfile task,
             double value, int weight)
     {
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Block " + slayer.getTaskName() + " in "
                         + master.getDisplayName() + Text.get(871),
                 "This costs " + master.getBlockCost() + Text.get(872),
-                "Use the Slayer rewards interface for " + master.getDisplayName()
-                        + "; blocks are master-specific.",
-                "Assignment weight " + weight + Text.get(873));
+                Text.get(1503) + master.getDisplayName()
+                        + Text.get(1504),
+                Text.get(1505) + weight + Text.get(873));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.BLOCK, master, task, 59.0 - value,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Text.get(874),
                 guidance);
     }
@@ -593,17 +593,17 @@ public class SlayerStrategist
                 : master.getDisplayName();
         int cost = master == null ? SlayerPointEconomy.SKIP_COST
                 : master.getCancelCost();
-        RecommendationGuidance guidance = new RecommendationGuidance(
-                "Spend " + cost + " Slayer points to cancel " + slayer.getTaskName()
-                        + ", then get a replacement assignment.",
-                "The live snapshot shows " + slayer.getPoints()
-                        + " points, enough for the verified " + cost
-                        + "-point cancellation cost.",
-                "Open Slayer rewards with " + who + ".",
+        Guidance guidance = new Guidance(
+                "Spend " + cost + Text.get(1506) + slayer.getTaskName()
+                        + Text.get(1507),
+                Text.get(1498) + slayer.getPoints()
+                        + Text.get(1508) + cost
+                        + Text.get(1509),
+                Text.get(1510) + who + ".",
                 Text.get(875));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.SKIP, master, task, 56.0 - value,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Text.get(876),
                 guidance);
     }
@@ -612,24 +612,24 @@ public class SlayerStrategist
     {
         return new SlayerDecisionResult(SlayerAssignmentState.UNKNOWN,
                 SlayerTaskDecision.PREP_FIRST, null, null, 32.0,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(877),
-                new RecommendationGuidance(
+                new Guidance(
                         Text.get(878),
                         Text.get(879),
                         Text.get(880),
                         Text.get(882)));
     }
 
-    private static PvmReadiness alternativeReadiness(StrategyDataBundle data,
+    private static PvmReadiness alternativeReadiness(GameData data,
             SlayerTaskStrategicProfile task)
     {
-        if (data == null || data.getPvm() == null || task == null
+        if (data == null || data.pvm() == null || task == null
                 || task.getAlternativeActivityId() == null) return null;
-        PvmReadiness readiness = data.getPvm().readinessFor(
+        PvmReadiness readiness = data.pvm().readinessFor(
                 task.getAlternativeActivityId());
         if (readiness == null && task.getAlternativeActivityId().startsWith("pvm:"))
-            readiness = data.getPvm().readinessFor(
+            readiness = data.pvm().readinessFor(
                     task.getAlternativeActivityId().substring(4));
         return readiness;
     }
@@ -637,20 +637,20 @@ public class SlayerStrategist
     private static boolean alternativeWorthUsing(StrategyContext context,
             SlayerTaskStrategicProfile task)
     {
-        if (AccountModePolicy.isRiskSensitive(context.getAccountMode()))
+        if (AccountModePolicy.isRiskSensitive(context.accountMode()))
             return false;
         return context.getActiveGoal() == GoalType.ELITE_COMBAT_ACHIEVEMENTS
                 || context.getActiveGoal() == GoalType.GEAR_TARGET
                 || context.getActiveGoal() == GoalType.RAID_READY
-                || (context.getAccountMode().isIronLike()
+                || (context.accountMode().isIronLike()
                     && task.getResourceValue() <= 2);
     }
 
-    private static RecommendationGuidance concreteTaskGuidance(
-            RecommendationGuidance base, SlayerTaskProfile mechanics,
-            SlayerTaskStrategicProfile strategy, ObservedItemIndex items,
+    private static Guidance concreteTaskGuidance(
+            Guidance base, SlayerTaskProfile mechanics,
+            SlayerTaskStrategicProfile strategy, ItemIndex items,
             String weapon, CombatStyle observedStyle, SlayerSnapshot slayer,
-            InventorySnapshot inventory)
+            ItemsState inventory)
     {
         String required = firstReadyItem(items,
                 mechanics.getRequiredProtection(), strategy.getRequiredItemUse());
@@ -659,20 +659,20 @@ public class SlayerStrategist
             supplies.append(" and keep ").append(required)
                     .append(strategy.getRequiredItemUse()
                             == SlayerRequiredItemUse.EQUIPPED
-                            ? " equipped" : " carried or equipped as required");
+                            ? " equipped" : Text.get(1511));
         String healing = carriedHealingName(inventory);
         supplies.append(". ");
         if (healing != null)
-            supplies.append("Carry the observed ").append(healing)
+            supplies.append(Text.get(1512)).append(healing)
                     .append(Text.get(883));
         else
             supplies.append(Text.get(884));
-        String action = "Kill the remaining " + slayer.getRemaining() + " "
+        String action = Text.get(1513) + slayer.getRemaining() + " "
                 + slayer.getTaskName() + " using " + weapon + " ("
                 + styleName(observedStyle) + ").";
         String technique = concreteTechnique(mechanics.getStyleGuidance());
         if (!technique.isEmpty()) action += " " + technique;
-        return new RecommendationGuidance(action, supplies.toString(),
+        return new Guidance(action, supplies.toString(),
                 base.getLocation(), base.getNote());
     }
 
@@ -688,12 +688,12 @@ public class SlayerStrategist
         if (normalized.isEmpty()
                 || normalized.startsWith("use any ")
                 || normalized.startsWith("choose ")
-                || normalized.startsWith("use a sustainable ")
-                || normalized.startsWith("use a build-legal ")
-                || normalized.startsWith("melee is a practical default")
-                || normalized.startsWith("crush is generally appropriate")
-                || normalized.contains("sustainable build-legal setup")
-                || normalized.contains("owned gear should decide"))
+                || normalized.startsWith(Text.get(1514))
+                || normalized.startsWith(Text.get(1515))
+                || normalized.startsWith(Text.get(1516))
+                || normalized.startsWith(Text.get(1517))
+                || normalized.contains(Text.get(1518))
+                || normalized.contains(Text.get(1519)))
             return "";
         return guidance.trim();
     }
@@ -706,35 +706,35 @@ public class SlayerStrategist
                 || task.getSetupBurden() >= 3;
     }
 
-    private static String carriedHealingName(InventorySnapshot inventory)
+    private static String carriedHealingName(ItemsState inventory)
     {
         return inventory == null ? null : healingName(inventory.getItems());
     }
 
-    private static String storedHealingName(StrategyDataBundle data,
+    private static String storedHealingName(GameData data,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null) return null;
+        if (data == null || data.account() == null) return null;
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() != null)
+                data.account().getAccountTypeCode());
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() != null)
         {
-            String found = healingName(data.getBank().getItems());
+            String found = healingName(data.bank().getItems());
             if (found != null) return found;
         }
         if (useGroupStorage && mode.isGroupIronman()
-                && data.getGroupStorage() != null
-                && data.getGroupStorage().isObserved())
+                && data.groupStorage() != null
+                && data.groupStorage().isObserved())
         {
-            String found = healingName(data.getGroupStorage().getItems());
+            String found = healingName(data.groupStorage().getItems());
             if (found != null) return found;
         }
-        if (data.getStorage() != null)
+        if (data.storage() != null)
         {
-            for (java.util.Map.Entry<StorageCapability, List<ItemStackSnapshot>>
-                    entry : data.getStorage().getObservedContents().entrySet())
+            for (java.util.Map.Entry<StorageCapability, List<ItemState>>
+                    entry : data.storage().getObservedContents().entrySet())
             {
-                if (!data.getStorage().verified(entry.getKey())) continue;
+                if (!data.storage().verified(entry.getKey())) continue;
                 if (mode == AccountMode.ULTIMATE_IRONMAN
                         && UimStorageMechanics.isRestrictedRetrieval(
                                 entry.getKey()))
@@ -747,12 +747,12 @@ public class SlayerStrategist
     }
 
     /** Conservative edible-name evidence; raw and burnt items never count. */
-    private static String healingName(Iterable<ItemStackSnapshot> observed)
+    private static String healingName(Iterable<ItemState> observed)
     {
         if (observed == null) return null;
         String best = null;
         int bestRank = 0;
-        for (ItemStackSnapshot item : observed)
+        for (ItemState item : observed)
         {
             if (item == null || item.getQuantity() <= 0) continue;
             String name = normalize(item.getName());
@@ -769,11 +769,11 @@ public class SlayerStrategist
 
     private static int healingRank(String name)
     {
-        if (name.equals("cooked moonlight antelope")
+        if (name.equals(Text.get(1520))
                 || name.equals("dark crab") || name.equals("anglerfish")
                 || name.equals("manta ray")) return 5;
         if (name.equals("shark") || name.equals("sea turtle")
-                || name.equals("cooked sunlight antelope")
+                || name.equals(Text.get(1521))
                 || name.startsWith("saradomin brew(")) return 4;
         if (name.equals("karambwan") || name.equals("tuna potato")
                 || name.equals("swordfish") || name.equals("monkfish")) return 3;
@@ -799,7 +799,7 @@ public class SlayerStrategist
         return Text.get(888);
     }
 
-    private static String firstReadyItem(ObservedItemIndex items,
+    private static String firstReadyItem(ItemIndex items,
             List<String> candidates, SlayerRequiredItemUse use)
     {
         for (String candidate : candidates)
@@ -811,10 +811,10 @@ public class SlayerStrategist
         return null;
     }
 
-    private static String observedCombatWeapon(EquipmentSnapshot equipment)
+    private static String observedCombatWeapon(ItemsState equipment)
     {
         if (equipment == null) return null;
-        for (ItemStackSnapshot item : equipment.getEquippedItems())
+        for (ItemState item : equipment.getEquippedItems())
         {
             if (item == null || item.getSlotIndex()
                     != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;

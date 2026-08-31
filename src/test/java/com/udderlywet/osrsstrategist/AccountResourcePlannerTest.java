@@ -19,12 +19,12 @@ public class AccountResourcePlannerTest
     @Test
     public void unopenedMainBankNeverBecomesFakeShortfall()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.singletonList(
                         item("Yew logs", 100))))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Yew logs", 500)),
                 false);
@@ -38,15 +38,15 @@ public class AccountResourcePlannerTest
     @Test
     public void mainDoesNotAssumeAnUnpricedShortfallShouldBeBought()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.singletonList(
                         item("Yew logs", 25))))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Yew logs", 275)), 1L))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Yew logs", 500)),
                 false);
@@ -61,14 +61,14 @@ public class AccountResourcePlannerTest
     @Test
     public void ironSelfSourcesInsteadOfUsingGrandExchange()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(1))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Ranarr weed", 40)), 1L))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Ranarr weed", 100)),
                 false);
@@ -81,19 +81,19 @@ public class AccountResourcePlannerTest
     @Test
     public void groupStorageOnlyChangesShortfallWhenEnabledAndObserved()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(4))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(4))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Oak plank", 100)), 1L))
-                .groupStorage(new GroupStorageSnapshot(true,
+                .groupStorage(new ItemsState(true,
                         Collections.singletonList(item("Oak plank", 300))))
                 .build();
 
-        List<ResolvedMethodInput> needs = Collections.singletonList(
+        List<MethodInput> needs = Collections.singletonList(
                 need("Oak plank", 500));
-        AccountResourcePlan disabled = planner.plan(data, needs, false);
-        AccountResourcePlan enabled = planner.plan(data, needs, true);
+        SupplyPlan disabled = planner.plan(data, needs, false);
+        SupplyPlan enabled = planner.plan(data, needs, true);
 
         assertEquals(400, disabled.getTotalMissingUnits());
         assertEquals(100, enabled.getTotalMissingUnits());
@@ -103,15 +103,15 @@ public class AccountResourcePlannerTest
     @Test
     public void enabledButUnobservedGroupStorageIsNeverAssumedEmpty()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(4))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(4))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Oak plank", 100)), 1L))
-                .groupStorage(GroupStorageSnapshot.unknown())
+                .groupStorage(ItemsState.unknown())
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Oak plank", 500)),
                 true);
@@ -127,21 +127,21 @@ public class AccountResourcePlannerTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.LOOTING_BAG,
                 Collections.singletonList(item("Mahogany plank", 250)));
 
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
-                .inventory(new InventorySnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(2))
+                .inventory(new ItemsState(Collections.singletonList(
                         item("Mahogany plank", 20))))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Mahogany plank", 5000)), 1L))
                 .storage(new StorageSnapshot(states, contents))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Mahogany plank", 100)),
                 false);
@@ -158,11 +158,11 @@ public class AccountResourcePlannerTest
     @Test
     public void partialUimSnapshotNeverBecomesAProvenShortfall()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account(2))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(data,
+        SupplyPlan plan = planner.plan(data,
                 Collections.singletonList(need("Oak plank", 100)), false);
 
         assertFalse(plan.isPrimaryStorageObserved());
@@ -173,14 +173,14 @@ public class AccountResourcePlannerTest
     @Test
     public void equippedElementalStaffWaivesMatchingRuneConsumption()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.singletonList(
                         item("Staff of fire", 1))))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Arrays.asList(
                         need("Nature rune", 100),
@@ -199,15 +199,15 @@ public class AccountResourcePlannerTest
         AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
                 new PurchaseCostAdvisor(new FixedPriceService(20)),
                 new MainEconomyPlanner(), new ResourceSourceCatalog());
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .economy(new AccountEconomySnapshot(100_000L, 100_000L,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
-        AccountResourcePlan plan = pricedPlanner.plan(data,
+        SupplyPlan plan = pricedPlanner.plan(data,
                 Collections.singletonList(need("Yew logs", 100)), false);
 
         assertTrue(plan.getGuidance().contains("Buy 100 Yew logs"));
@@ -221,15 +221,15 @@ public class AccountResourcePlannerTest
         AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
                 new PurchaseCostAdvisor(new FixedPriceService(500)),
                 new MainEconomyPlanner(), new ResourceSourceCatalog());
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .economy(new AccountEconomySnapshot(100_000L, 100_000L,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
-        AccountResourcePlan plan = pricedPlanner.plan(data,
+        SupplyPlan plan = pricedPlanner.plan(data,
                 Collections.singletonList(need("Yew logs", 100)), false);
 
         assertTrue(plan.getGuidance().contains("Self-source 100 Yew logs"));
@@ -240,13 +240,13 @@ public class AccountResourcePlannerTest
     @Test
     public void emptyTomeOfFireDoesNotWaiveFireRunes()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(0))
+                .equipment(new ItemsState(Collections.singletonList(
                         item("Tome of fire (empty)", 1))))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Collections.singletonList(need("Fire rune", 500)),
                 false);
@@ -257,12 +257,12 @@ public class AccountResourcePlannerTest
     @Test
     public void duplicateRecipeRowsAreMergedBeforeShortfallMath()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(1))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Feather", 15)), 1L))
                 .build();
 
-        AccountResourcePlan plan = planner.plan(
+        SupplyPlan plan = planner.plan(
                 data,
                 Arrays.asList(need("Feather", 10), need("feather", 20)),
                 false);
@@ -272,14 +272,14 @@ public class AccountResourcePlannerTest
         assertEquals(15, plan.getEntries().get(0).getMissing());
     }
 
-    private static ResolvedMethodInput need(String name, int quantity)
+    private static MethodInput need(String name, int quantity)
     {
-        return new ResolvedMethodInput(name, -1, quantity);
+        return new MethodInput(name, -1, quantity);
     }
 
-    private static ItemStackSnapshot item(String name, int quantity)
+    private static ItemState item(String name, int quantity)
     {
-        return new ItemStackSnapshot(-1, name, quantity);
+        return new ItemState(-1, name, quantity);
     }
 
     private static AccountSnapshot account(int typeCode)

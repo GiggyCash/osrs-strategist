@@ -68,25 +68,25 @@ public class AdaptiveMilestoneGuidanceService
                 new SkillingXpModifierService());
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
             TrainingPlan plan,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null || skill == null
+        if (data == null || data.account() == null || skill == null
                 || plan == null || plan.getMethod() == null)
         {
             return null;
         }
 
-        MethodExecutionProfile profile = profileCatalog.forMethod(
+        MethodProfile profile = profileCatalog.forMethod(
                 plan.getMethod().getId());
         if (profile == null) return null;
 
-        int currentXp = data.getAccount().getSkillExperience(skill);
+        int currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0)
         {
             currentXp = Experience.getXpForLevel(currentLevel);
@@ -100,12 +100,12 @@ public class AdaptiveMilestoneGuidanceService
         double combinedMultiplier = profile.getXpMultiplier()
                 * modifier.getMultiplier();
 
-        RuneLiteSkillActionDefinition action = actionSelector.select(
+        ActionDef action = actionSelector.select(
                 data,
                 profile,
                 actionCatalog.actionsFor(skill),
                 currentLevel,
-                data.getAccount().getMembershipStatus(),
+                data.account().getMembershipStatus(),
                 currentXp,
                 targetXp,
                 combinedMultiplier,
@@ -114,11 +114,11 @@ public class AdaptiveMilestoneGuidanceService
 
         double xpPerAction = action.getXp() * combinedMultiplier;
         if (xpPerAction <= 0) return null;
-        List<RuneLiteSkillActionDefinition> routeOutputs =
+        List<ActionDef> routeOutputs =
                 unlockedRouteOutputs(actionCatalog.actionsFor(skill), profile,
-                        currentLevel, data.getAccount().getMembershipStatus());
+                        currentLevel, data.account().getMembershipStatus());
         boolean variableOutput = profile.getProgressEstimateMode()
-                    == MethodExecutionProfile.ProgressEstimateMode
+                    == MethodProfile.ProgressEstimateMode
                             .VARIABLE_OUTPUT_RANGE
                 && hasDifferentXp(routeOutputs);
         int minimumActions = variableOutput
@@ -134,9 +134,9 @@ public class AdaptiveMilestoneGuidanceService
                 xpNeeded, minimumActions, maximumActions, targetLevel,
                 variableOutput);
 
-        List<ResolvedMethodInput> inputs = inputResolver.resolve(
+        List<MethodInput> inputs = inputResolver.resolve(
                 profile, action, maximumActions);
-        AccountResourcePlan resources = resourcePlanner == null
+        SupplyPlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, inputs, useGroupStorage);
         String supplies = inputs.isEmpty()
@@ -167,7 +167,7 @@ public class AdaptiveMilestoneGuidanceService
 
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
-            note += " Count assumes you wear the " + modifier.getLabel() + ".";
+            note += Text.get(1280) + modifier.getLabel() + ".";
         }
         else
         {
@@ -175,12 +175,12 @@ public class AdaptiveMilestoneGuidanceService
         }
 
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
+                data.account().getAccountTypeCode());
         if (mode.isIronLike() && !inputs.isEmpty())
         {
             note += Text.get(33)
                     + Text.get(34)
-                    + "unsupplied higher-tier route.";
+                    + Text.get(1281);
         }
         if (mode == AccountMode.ULTIMATE_IRONMAN && resources != null
                 && resources.getTotalMissingUnits() > 0)
@@ -188,7 +188,7 @@ public class AdaptiveMilestoneGuidanceService
             note += Text.get(35);
         }
 
-        RecommendationGuidance result = new RecommendationGuidance(
+        Guidance result = new Guidance(
                 actionText,
                 supplies,
                 location,
@@ -200,9 +200,9 @@ public class AdaptiveMilestoneGuidanceService
      * Compatibility hook used by focused selector tests. Resource-aware builds
      * use AdaptiveActionSelector.select from build(...).
      */
-    RuneLiteSkillActionDefinition selectAction(
-            List<RuneLiteSkillActionDefinition> actions,
-            MethodExecutionProfile profile,
+    ActionDef selectAction(
+            List<ActionDef> actions,
+            MethodProfile profile,
             int currentLevel,
             MembershipStatus membership)
     {
@@ -217,12 +217,12 @@ public class AdaptiveMilestoneGuidanceService
     }
 
     /** Reusable tools are not consumed recipes, but still belong in BRING. */
-    private static String routeSetup(StrategyDataBundle data, String methodId,
-            RuneLiteSkillActionDefinition action, int currentLevel,
+    private static String routeSetup(GameData data, String methodId,
+            ActionDef action, int currentLevel,
             boolean useGroupStorage)
     {
         if (methodId == null) return null;
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
         if (methodId.startsWith("mining_"))
         {
             String pickaxe = firstObserved(items,
@@ -246,20 +246,20 @@ public class AdaptiveMilestoneGuidanceService
         }
         if (isFlyFishingMethod(methodId))
             return items.has("Fly fishing rod")
-                    ? "Bring your fly fishing rod."
+                    ? Text.get(1282)
                     : Text.get(38);
         if (isNetFishingMethod(methodId))
             return Text.get(6);
         if ("hunter_bird_traps".equals(methodId))
             return items.has("Bird snare")
-                    ? "Bring one bird snare."
+                    ? Text.get(1283)
                     : Text.get(7);
         if ("hunter_falconry".equals(methodId))
             return Text.get(8);
         if ("hunter_salamanders".equals(methodId))
         {
             int traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
-            return "Bring " + traps + " small fishing nets and " + traps
+            return "Bring " + traps + Text.get(1284) + traps
                     + Text.get(9);
         }
         if ("magic_f2p_combat".equals(methodId))
@@ -274,7 +274,7 @@ public class AdaptiveMilestoneGuidanceService
             return Text.get(14);
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
-            return "Bring a hammer and saw.";
+            return Text.get(1268);
         if ("smithing_f2p_platebodies".equals(methodId))
             return Text.get(15);
         if ("smithing_f2p_uim_bronze".equals(methodId))
@@ -286,14 +286,14 @@ public class AdaptiveMilestoneGuidanceService
         if (methodId.startsWith("runecraft_f2p_"))
         {
             String rune = methodId.substring("runecraft_f2p_".length());
-            return "Bring the " + rune + " talisman or wear the " + rune
+            return "Bring the " + rune + Text.get(1285) + rune
                     + " tiara.";
         }
         return null;
     }
 
-    private static String routeLocation(StrategyDataBundle data,
-            String methodId, RuneLiteSkillActionDefinition action,
+    private static String routeLocation(GameData data,
+            String methodId, ActionDef action,
             String fallback)
     {
         String actionName = action == null || action.getName() == null
@@ -324,10 +324,10 @@ public class AdaptiveMilestoneGuidanceService
             return Text.get(28);
         }
 
-        AccountMode mode = data == null || data.getAccount() == null
+        AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode());
+                        data.account().getAccountTypeCode());
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             if ("crafting_gems".equals(methodId)
@@ -345,18 +345,18 @@ public class AdaptiveMilestoneGuidanceService
         return explicit == null ? fallback : explicit;
     }
 
-    private static String progressText(MethodExecutionProfile profile,
-            RuneLiteSkillActionDefinition selected,
-            List<RuneLiteSkillActionDefinition> outputs,
+    private static String progressText(MethodProfile profile,
+            ActionDef selected,
+            List<ActionDef> outputs,
             int xpNeeded, int minimumActions, int maximumActions,
             int targetLevel, boolean variableOutput)
     {
         if (profile.getProgressEstimateMode()
-                == MethodExecutionProfile.ProgressEstimateMode.XP_ONLY)
-            return format(xpNeeded) + " XP remaining to level "
+                == MethodProfile.ProgressEstimateMode.XP_ONLY)
+            return format(xpNeeded) + Text.get(1286)
                     + targetLevel + ".";
         if (variableOutput)
-            return format(xpNeeded) + " XP remaining — approximately "
+            return format(xpNeeded) + Text.get(1287)
                     + format(minimumActions) + "–"
                     + format(maximumActions) + " "
                     + profile.unit(maximumActions) + " across "
@@ -367,14 +367,14 @@ public class AdaptiveMilestoneGuidanceService
                 + selected.getName() + " to level " + targetLevel + ".";
     }
 
-    private static List<RuneLiteSkillActionDefinition> unlockedRouteOutputs(
-            List<RuneLiteSkillActionDefinition> actions,
-            MethodExecutionProfile profile, int currentLevel,
+    private static List<ActionDef> unlockedRouteOutputs(
+            List<ActionDef> actions,
+            MethodProfile profile, int currentLevel,
             MembershipStatus membership)
     {
-        List<RuneLiteSkillActionDefinition> result = new ArrayList<>();
+        List<ActionDef> result = new ArrayList<>();
         if (actions == null || profile == null) return result;
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
         {
             if (action == null || action.getXp() <= 0
                     || action.getLevel() > currentLevel
@@ -393,7 +393,7 @@ public class AdaptiveMilestoneGuidanceService
                 && account == MembershipStatus.P2P;
     }
 
-    private static boolean matches(RuneLiteSkillActionDefinition action,
+    private static boolean matches(ActionDef action,
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;
@@ -406,35 +406,35 @@ public class AdaptiveMilestoneGuidanceService
     }
 
     private static boolean hasDifferentXp(
-            List<RuneLiteSkillActionDefinition> actions)
+            List<ActionDef> actions)
     {
         if (actions == null || actions.size() < 2) return false;
         float first = actions.get(0).getXp();
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
             if (Math.abs(action.getXp() - first) > 0.001f) return true;
         return false;
     }
 
-    private static double minimumXp(List<RuneLiteSkillActionDefinition> actions)
+    private static double minimumXp(List<ActionDef> actions)
     {
         double value = Double.POSITIVE_INFINITY;
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
             value = Math.min(value, action.getXp());
         return value;
     }
 
-    private static double maximumXp(List<RuneLiteSkillActionDefinition> actions)
+    private static double maximumXp(List<ActionDef> actions)
     {
         double value = 0.0;
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
             value = Math.max(value, action.getXp());
         return value;
     }
 
-    private static String outputNames(List<RuneLiteSkillActionDefinition> actions)
+    private static String outputNames(List<ActionDef> actions)
     {
         List<String> names = new ArrayList<>();
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
             if (action.getName() != null && !names.contains(action.getName()))
                 names.add(action.getName());
         if (names.size() == 2) return names.get(0) + " and " + names.get(1);
@@ -454,12 +454,12 @@ public class AdaptiveMilestoneGuidanceService
     }
 
     private static String executionAction(TrainingMethod method,
-            MethodExecutionProfile profile,
-            RuneLiteSkillActionDefinition selected,
-            List<RuneLiteSkillActionDefinition> outputs)
+            MethodProfile profile,
+            ActionDef selected,
+            List<ActionDef> outputs)
     {
         if (profile != null && profile.getProgressEstimateMode()
-                == MethodExecutionProfile.ProgressEstimateMode
+                == MethodProfile.ProgressEstimateMode
                         .VARIABLE_OUTPUT_RANGE)
         {
             String names = outputNames(outputs).toLowerCase(Locale.ROOT);
@@ -467,7 +467,7 @@ public class AdaptiveMilestoneGuidanceService
                 return "Fly-fish " + names
                         + Text.get(31);
             if (isNetFishingMethod(method.getId()))
-                return "Use the small net to catch " + names
+                return Text.get(1288) + names
                         + Text.get(32);
         }
         String instruction = routeAction(method.getInstructions(),
@@ -500,7 +500,7 @@ public class AdaptiveMilestoneGuidanceService
     }
 
     private static String firstObserved(
-            ObservedItemIndex items, String... names)
+            ItemIndex items, String... names)
     {
         for (String name : names) if (items.has(name)) return name;
         return null;

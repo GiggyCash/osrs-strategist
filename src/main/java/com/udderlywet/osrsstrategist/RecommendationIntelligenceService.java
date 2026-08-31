@@ -35,15 +35,15 @@ public class RecommendationIntelligenceService
     public double rankScore(Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null) return Double.NEGATIVE_INFINITY;
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().account() == null)
         {
             return recommendation.getScore();
         }
 
         double score = recommendation.getScore();
         score += recommendation.getStrategicValue().scoreDelta();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
 
         score += readinessValue(recommendation, guidance);
         score += goalValue(recommendation, context.getActiveGoal());
@@ -59,11 +59,11 @@ public class RecommendationIntelligenceService
         return score;
     }
 
-    private static double readinessValue(Recommendation recommendation, RecommendationGuidance guidance)
+    private static double readinessValue(Recommendation recommendation, Guidance guidance)
     {
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        if (recommendation.getConfidence() == Confidence.BLOCKED)
             return -10_000.0;
-        if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
+        if (recommendation.getConfidence() == Confidence.CHECK_NEEDED)
             return -9.0;
         // Presentability/actionability is a gate, not strategic value. A more
         // verbose or easily verified candidate must not beat a better action
@@ -74,7 +74,7 @@ public class RecommendationIntelligenceService
     static double goalValue(Recommendation recommendation, GoalType selectedGoal)
     {
         if (recommendation == null || selectedGoal == null) return 0.0;
-        GoalDependencyProvenance provenance = recommendation.getGoalProvenance();
+        GoalProvenance provenance = recommendation.getGoalProvenance();
         if (provenance == null
                 || !provenance.proves(selectedGoal, recommendation.getId()))
             return 0.0;
@@ -112,10 +112,10 @@ public class RecommendationIntelligenceService
         GoalQuestRewardForecast forecast = goalProvenanceService
                 .guaranteedRewardsBeforeManualTraining(context, skill);
         if (!forecast.hasGuaranteedExperience()) return 0.0;
-        int currentXp = context.getData().getAccount().getSkillExperience(skill);
+        int currentXp = context.data().account().getSkillExperience(skill);
         if (currentXp <= 0)
             currentXp = Experience.getXpForLevel(
-                    context.getData().getAccount().getSkillLevel(skill));
+                    context.data().account().getSkillLevel(skill));
         int remaining = Math.max(0,
                 Experience.getXpForLevel(recommendation.getTargetLevel())
                         - currentXp);
@@ -164,7 +164,7 @@ public class RecommendationIntelligenceService
         StrategyMode mode = context.getStrategyMode();
         TrainingPlan plan = recommendation.getTrainingPlan();
         TrainingMethod method = plan == null ? null : plan.getMethod();
-        RecommendationStrategicValue value = recommendation.getStrategicValue();
+        StrategicValue value = recommendation.getStrategicValue();
         switch (mode)
         {
             case EFFICIENT:

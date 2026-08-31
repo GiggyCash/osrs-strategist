@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 /** Surfaces the next claimable Combat Achievement reward tier. */
 @Singleton
-public class CombatAchievementCandidateProvider implements StrategyCandidateProvider
+public class CombatAchievementCandidateProvider implements CandidateProvider
 {
     @Override
     public String getId()
@@ -17,9 +17,9 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getCombatAchievements() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().combatAchievements() == null
+                || context.data().account() == null)
         {
             return result;
         }
@@ -28,17 +28,17 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         // tier rewards. Until Compass models those individual F2P tasks, a
         // reward-tier candidate would be misleading and is intentionally absent.
         if (!ContentAccessRules.hasVerifiedMembership(
-                context.getData().getAccount().getMembershipStatus()))
+                context.data().account().getMembershipStatus()))
         {
             return result;
         }
 
-        CombatAchievementSnapshot snapshot = context.getData().getCombatAchievements();
+        CombatAchievementSnapshot snapshot = context.data().combatAchievements();
         CombatAchievementTier next = snapshot.nextRewardTier();
         if (next == null) return result;
 
         String id = "combat-achievements:" + next.name().toLowerCase();
-        if (context.getPreferenceProfile().isOnCooldown(id)) return result;
+        if (context.preferenceProfile().isOnCooldown(id)) return result;
 
         int gap = Math.max(0, next.getRewardPoints() - snapshot.getEarnedPoints());
         double score = 26.0;
@@ -49,18 +49,18 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         {
             score += next.ordinal() <= CombatAchievementTier.ELITE.ordinal() ? 25.0 : 8.0;
         }
-        score += context.getPreferenceProfile().weightFor(id) * 10.0;
+        score += context.preferenceProfile().weightFor(id) * 10.0;
 
         result.add(new Recommendation(
                 id,
-                "Combat Achievements: " + pretty(next.name()),
-                "The next reward tier is " + gap + " point"
+                Text.get(1367) + pretty(next.name()),
+                Text.get(1368) + gap + " point"
                         + (gap == 1 ? "" : "s")
                         + Text.get(131),
                 score,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 null,
-                CandidateSafetyEvidence.potentiallyIrreversible(false)
+                SafetyEvidence.potentiallyIrreversible(false)
         ));
         return result;
     }

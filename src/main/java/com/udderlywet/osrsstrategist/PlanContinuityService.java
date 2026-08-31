@@ -17,7 +17,7 @@ public final class PlanContinuityService
             return rebuilt;
 
         StrategicPlan advanced = previous.advanceCompleted(
-                context == null ? null : context.getData());
+                context == null ? null : context.data());
         StrategicPlanStep current = advanced.getCurrentStep();
         Set<String> recommendationIds = recommendationIds(
                 currentRecommendations);

@@ -106,10 +106,10 @@ public class AccountReader
                 return "Group Ironman";
 
             case 5:
-                return "Hardcore Group Ironman";
+                return Text.get(1108);
 
             case 6:
-                return "Unranked Group Ironman";
+                return Text.get(1109);
 
             default:
                 return "Unknown";

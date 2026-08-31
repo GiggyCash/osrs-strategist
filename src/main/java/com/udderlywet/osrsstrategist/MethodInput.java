@@ -4,13 +4,13 @@ import lombok.Getter;
 
 /** Exact material quantity resolved for one planned training segment. */
 @Getter
-public final class ResolvedMethodInput
+public final class MethodInput
 {
     private final String name;
     private final int itemId;
     private final int quantity;
 
-    public ResolvedMethodInput(String name, int itemId, int quantity)
+    public MethodInput(String name, int itemId, int quantity)
     {
         this.name = name;
         this.itemId = itemId;

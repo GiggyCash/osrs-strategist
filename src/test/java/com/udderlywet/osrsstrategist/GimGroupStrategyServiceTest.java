@@ -21,13 +21,13 @@ public class GimGroupStrategyServiceTest
     public void freshEnabledExactStockCanPreventDuplicateAcquisition()
     {
         GroupResourceAssessment result = service.assess(context(4, true,
-                new GroupStorageSnapshot(true, Collections.singletonList(
-                        new ItemStackSnapshot(SHARED_ITEM, "Shared tool", 1)))),
+                new ItemsState(true, Collections.singletonList(
+                        new ItemState(SHARED_ITEM, "Shared tool", 1)))),
                 need(1, true));
 
         assertEquals(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
                 result.getState());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 result.getConfidence());
         assertTrue(result.satisfiesNeed());
         assertEquals(1.0, result.getDuplicateGrindAvoidance(), 0.0);
@@ -38,8 +38,8 @@ public class GimGroupStrategyServiceTest
     public void partialConsumableStockHasPartialRatherThanWinnerValue()
     {
         GroupResourceAssessment result = service.assess(context(6, true,
-                new GroupStorageSnapshot(true, Collections.singletonList(
-                        new ItemStackSnapshot(SHARED_ITEM, "Shared supply", 4)))),
+                new ItemsState(true, Collections.singletonList(
+                        new ItemState(SHARED_ITEM, "Shared supply", 4)))),
                 need(10, false));
 
         assertEquals(GroupResourceState.SHARED_STOCK_PARTIAL,
@@ -52,28 +52,28 @@ public class GimGroupStrategyServiceTest
     @Test
     public void staleDisabledAndNonGroupEvidenceNeverClaimsSharedReadiness()
     {
-        GroupStorageSnapshot stale = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState stale = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         SHARED_ITEM, "Shared tool", 1)),
                 System.currentTimeMillis()
-                        - GroupStorageSnapshot.FRESH_FOR_MILLIS - 1L);
+                        - ItemsState.FRESH_FOR_MILLIS - 1L);
 
         GroupResourceAssessment staleResult = service.assess(
                 context(4, true, stale), need(1, true));
         GroupResourceAssessment disabled = service.assess(
-                context(4, false, new GroupStorageSnapshot(true,
-                        Collections.singletonList(new ItemStackSnapshot(
+                context(4, false, new ItemsState(true,
+                        Collections.singletonList(new ItemState(
                                 SHARED_ITEM, "Shared tool", 1)))),
                 need(1, true));
         GroupResourceAssessment main = service.assess(
-                context(0, true, new GroupStorageSnapshot(true,
-                        Collections.singletonList(new ItemStackSnapshot(
+                context(0, true, new ItemsState(true,
+                        Collections.singletonList(new ItemState(
                                 SHARED_ITEM, "Shared tool", 1)))),
                 need(1, true));
 
         assertEquals(GroupResourceState.GROUP_STORAGE_UNKNOWN,
                 staleResult.getState());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 staleResult.getConfidence());
         assertEquals(GroupResourceState.GROUP_STORAGE_DISABLED,
                 disabled.getState());
@@ -86,14 +86,14 @@ public class GimGroupStrategyServiceTest
     public void freshItemsDoNotInventTeammateInfrastructure()
     {
         StrategyContext context = context(5, true,
-                new GroupStorageSnapshot(true, Collections.singletonList(
-                        new ItemStackSnapshot(SHARED_ITEM, "Shared tool", 1))));
+                new ItemsState(true, Collections.singletonList(
+                        new ItemState(SHARED_ITEM, "Shared tool", 1))));
 
         SharedInfrastructureAssessment result = service
                 .assessTeammateInfrastructure(context);
 
         assertEquals(CapabilityState.UNKNOWN, result.getState());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
     }
 
@@ -105,7 +105,7 @@ public class GimGroupStrategyServiceTest
     }
 
     private static StrategyContext context(int typeCode, boolean enabled,
-            GroupStorageSnapshot groupStorage)
+            ItemsState groupStorage)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -118,7 +118,7 @@ public class GimGroupStrategyServiceTest
                 typeCode, AccountMode.fromTypeCode(typeCode).name(),
                 MembershipStatus.P2P, 1, levels.size() * 50, 0L,
                 levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .groupStorage(groupStorage).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,

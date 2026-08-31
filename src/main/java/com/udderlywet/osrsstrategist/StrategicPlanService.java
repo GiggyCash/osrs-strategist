@@ -28,18 +28,18 @@ public final class StrategicPlanService
             long nowMillis)
     {
         if (recommendations == null || context == null
-                || context.getData() == null
-                || context.getData().getAccount() == null
+                || context.data() == null
+                || context.data().account() == null
                 || context.getActiveGoal() == null
                 || context.getActiveGoal() == GoalType.AUTOMATIC
                 || context.getActiveGoal() == GoalType.CUSTOM)
             return null;
 
         Recommendation anchor = null;
-        GoalDependencyProvenance provenance = null;
+        GoalProvenance provenance = null;
         for (Recommendation candidate : recommendations)
         {
-            GoalDependencyProvenance value = candidate == null
+            GoalProvenance value = candidate == null
                     ? null : candidate.getGoalProvenance();
             if (value != null && value.proves(
                     context.getActiveGoal(), candidate.getId()))
@@ -66,12 +66,12 @@ public final class StrategicPlanService
             if (ids.add(step.getId())) steps.add(step);
         }
         return new StrategicPlan(context.getActiveGoal(),
-                context.getData().getAccount(), steps, 0, nowMillis);
+                context.data().account(), steps, 0, nowMillis);
     }
 
     private StrategicPlanStep currentStep(
             Recommendation recommendation,
-            GoalDependencyProvenance provenance)
+            GoalProvenance provenance)
     {
         TrainingPlan training = recommendation.getTrainingPlan();
         if (training != null && training.getMethod() != null
@@ -113,7 +113,7 @@ public final class StrategicPlanService
         if (definition != null)
             return new StrategicPlanStep(
                     "quest:" + slug(definition.getName()), GoalNodeKind.QUEST,
-                    definition.getName(), "Next proven dependency for " + goal,
+                    definition.getName(), Text.get(1298) + goal,
                     PlanCompletionCondition.questComplete(definition.getName()),
                     "quest:" + slug(definition.getName()));
 
@@ -122,7 +122,7 @@ public final class StrategicPlanService
                 (target ? "goal:" : "dependency:") + slug(label),
                 target ? GoalNodeKind.META : GoalNodeKind.ACCESS,
                 label,
-                target ? "Selected target" : "Proven dependency for " + goal,
+                target ? "Selected target" : Text.get(1299) + goal,
                 PlanCompletionCondition.none(), null);
     }
 
@@ -132,7 +132,7 @@ public final class StrategicPlanService
                 || !recommendation.getId().startsWith("quest:")) return null;
         String title = recommendation.getTitle() == null ? ""
                 : recommendation.getTitle();
-        title = title.replaceFirst("^(Quest: |Continue |Prepare for )", "");
+        title = title.replaceFirst(Text.get(1300), "");
         int separator = title.indexOf(": ");
         if (separator > 0) title = title.substring(0, separator);
         QuestDefinition definition = quests.definitionFor(title);

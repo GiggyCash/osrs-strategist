@@ -18,19 +18,19 @@ public class UimSetupCostService
     public double score(Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null || context == null
-                || context.getAccountMode() != AccountMode.ULTIMATE_IRONMAN)
+                || context.accountMode() != AccountMode.ULTIMATE_IRONMAN)
         {
             return 0.0;
         }
 
-        StrategyDataBundle data = context.getData();
+        GameData data = context.data();
         if (data == null) return 0.0;
 
         double value = 0.0;
         TrainingPlan plan = recommendation.getTrainingPlan();
         TrainingMethod method = plan == null ? null : plan.getMethod();
         int setupMinutes = method == null ? 0 : Math.max(0, method.getSetupMinutes());
-        int occupied = occupiedInventorySlots(data.getInventory());
+        int occupied = occupiedInventorySlots(data.inventory());
 
         // Unknown/non-skill setup does not receive a fake "low setup" bonus.
         if (method != null)
@@ -43,7 +43,7 @@ public class UimSetupCostService
         if (occupied >= 24 && setupMinutes >= 7) value -= 8.0;
         else if (occupied >= 20 && setupMinutes >= 7) value -= 4.0;
 
-        StorageSnapshot storage = data.getStorage();
+        StorageSnapshot storage = data.storage();
         boolean deathStorageObserved = hasObservedItems(
                 storage, StorageCapability.DEATH_STORAGE)
                 || hasObservedItems(storage,
@@ -57,7 +57,7 @@ public class UimSetupCostService
         boolean lootingBagObserved = hasObservedItems(
                 storage, StorageCapability.LOOTING_BAG);
 
-        RecommendationStrategicValue strategic =
+        StrategicValue strategic =
                 recommendation.getStrategicValue();
         boolean dangerous = method != null && method.isWilderness()
                 || strategic.getRiskBurden() >= 0.5;
@@ -79,11 +79,11 @@ public class UimSetupCostService
         return value;
     }
 
-    static int occupiedInventorySlots(InventorySnapshot inventory)
+    static int occupiedInventorySlots(ItemsState inventory)
     {
         if (inventory == null || inventory.getItems() == null) return 0;
         int slots = 0;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             if (item != null && item.getQuantity() > 0) slots++;
         }
@@ -99,9 +99,9 @@ public class UimSetupCostService
         {
             return false;
         }
-        List<ItemStackSnapshot> items = storage.contentsOf(capability);
+        List<ItemState> items = storage.contentsOf(capability);
         if (items == null) return false;
-        for (ItemStackSnapshot item : items)
+        for (ItemState item : items)
         {
             if (item != null && item.getQuantity() > 0) return true;
         }

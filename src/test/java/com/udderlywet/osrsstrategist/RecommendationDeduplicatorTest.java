@@ -37,8 +37,8 @@ public class RecommendationDeduplicatorTest
                 "Verified route.", 30);
         Recommendation check = new Recommendation("diary:agility",
                 "Train Agility to 70", "Access unknown.", 100, null,
-                RecommendationConfidence.CHECK_NEEDED, 60, 70,
-                guidance(), CandidateSafetyEvidence.harmless(false));
+                Confidence.CHECK_NEEDED, 60, 70,
+                guidance(), SafetyEvidence.harmless(false));
         assertEquals(2, new RecommendationDeduplicator()
                 .deduplicate(Arrays.asList(verified, check)).size());
     }
@@ -51,7 +51,7 @@ public class RecommendationDeduplicatorTest
         Recommendation beta = skill("skill:beta", "Train Fishing to 70",
                 "Another route.", 40);
         StrategyEngine engine = new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         List<Recommendation> first = engine.buildPlayerQueue(
                 Arrays.asList(beta, alpha));
@@ -68,9 +68,9 @@ public class RecommendationDeduplicatorTest
                 "skill-breakpoint");
         Recommendation minigame = new Recommendation("minigame:wintertodt",
                 "Wintertodt", "Pyromancer progression.", 42, null,
-                RecommendationConfidence.VERIFIED, 0, 0, guidance(),
-                CandidateSafetyEvidence.skill(false, Skill.FIREMAKING))
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                Confidence.VERIFIED, 0, 0, guidance(),
+                SafetyEvidence.skill(false, Skill.FIREMAKING))
+                .withStrategicValue(StrategicValue.builder()
                         .resourceFit(0.6).evidence("wintertodt-rewards").build());
 
         List<Recommendation> result = new RecommendationDeduplicator()
@@ -92,12 +92,12 @@ public class RecommendationDeduplicatorTest
         TrainingMethod method = new TrainingMethod(id + ":method", skill,
                 1, 99, title, "Do the method.", 1, 1, 1,
                 AttentionLevel.LOW, 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation(id, title, reason, score,
                 new TrainingPlan(method, reason,
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 60, 70, guidance(),
-                CandidateSafetyEvidence.skill(false, skill));
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 60, 70, guidance(),
+                SafetyEvidence.skill(false, skill));
     }
 
     private static Recommendation skillMethod(String id, String title,
@@ -106,19 +106,19 @@ public class RecommendationDeduplicatorTest
         TrainingMethod method = new TrainingMethod(methodId, Skill.FIREMAKING,
                 1, 99, title, "Do the method.", 1, 1, 1,
                 AttentionLevel.LOW, 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation(id, title, "Firemaking breakpoint.", score,
                 new TrainingPlan(method, "route",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 60, 70, guidance(),
-                CandidateSafetyEvidence.skill(false, Skill.FIREMAKING))
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 60, 70, guidance(),
+                SafetyEvidence.skill(false, Skill.FIREMAKING))
+                .withStrategicValue(StrategicValue.builder()
                         .unlockValue(0.5).evidence(evidence).build());
     }
 
-    private static RecommendationGuidance guidance()
+    private static Guidance guidance()
     {
-        return new RecommendationGuidance("Do the action.",
+        return new Guidance("Do the action.",
                 "Verified: setup available.", "Safe location.", "Useful.");
     }
 }

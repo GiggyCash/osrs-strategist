@@ -18,8 +18,8 @@ public class LiveEconomyReader
 
     public AccountEconomySnapshot read(
             AccountSnapshot account,
-            InventorySnapshot inventory,
-            BankSnapshot bank)
+            ItemsState inventory,
+            ItemsState bank)
     {
         if (account == null) return null;
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -34,7 +34,7 @@ public class LiveEconomyReader
         long bankValue = 0L;
         if (bank != null && mode != AccountMode.ULTIMATE_IRONMAN)
         {
-            for (ItemStackSnapshot item : bank.getItems())
+            for (ItemState item : bank.getItems())
             {
                 if (item == null || item.getQuantity() <= 0) continue;
                 int unitPrice = marketPriceService == null
@@ -47,18 +47,18 @@ public class LiveEconomyReader
             }
         }
 
-        RecommendationConfidence confidence;
+        Confidence confidence;
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             // Inventory coins are real, but coins held in specialized storage
             // are not universally exposed here yet.
-            confidence = RecommendationConfidence.CHECK_NEEDED;
+            confidence = Confidence.CHECK_NEEDED;
         }
         else
         {
             confidence = bank == null
-                    ? RecommendationConfidence.CHECK_NEEDED
-                    : RecommendationConfidence.VERIFIED;
+                    ? Confidence.CHECK_NEEDED
+                    : Confidence.VERIFIED;
         }
 
         return new AccountEconomySnapshot(
@@ -67,11 +67,11 @@ public class LiveEconomyReader
                 confidence);
     }
 
-    private static long spendableCurrency(List<ItemStackSnapshot> items)
+    private static long spendableCurrency(List<ItemState> items)
     {
         if (items == null) return 0L;
         long total = 0L;
-        for (ItemStackSnapshot item : items)
+        for (ItemState item : items)
         {
             if (item == null || item.getName() == null) continue;
             if ("Coins".equalsIgnoreCase(item.getName()))

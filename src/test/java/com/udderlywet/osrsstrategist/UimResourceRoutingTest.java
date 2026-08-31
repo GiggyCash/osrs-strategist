@@ -13,10 +13,10 @@ public class UimResourceRoutingTest
     @Test
     public void uimReadinessIgnoresNormalBankAndUsesVerifiedSafeStorageContents()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(100, "Thing", 99)), 1L))
+        GameData data = GameData.builder(uim())
+                .inventory(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(100, "Thing", 99)), 1L))
                 .storage(storage(StorageCapability.STASH, 2))
                 .build();
 
@@ -33,8 +33,8 @@ public class UimResourceRoutingTest
                 StorageCapability.DEATH_STORAGE,
                 StorageCapability.DEATHPILE})
         {
-            StrategyDataBundle data = StrategyDataBundle.builder(uim())
-                    .inventory(new InventorySnapshot(Collections.emptyList()))
+            GameData data = GameData.builder(uim())
+                    .inventory(new ItemsState(Collections.emptyList()))
                     .storage(storage(capability, 2))
                     .build();
             RequirementCheck check = new ResourceReadinessService().evaluate(
@@ -47,12 +47,12 @@ public class UimResourceRoutingTest
     @Test
     public void uimAcquisitionCanUseObservedSafeStorageButNotAssumedStorage()
     {
-        ResourceAcquisitionPlan plan = new ResourceAcquisitionPlanner().plan(
+        AcquisitionPlan plan = new ResourceAcquisitionPlanner().plan(
                 context(storage(StorageCapability.STASH, 2)),
                 new ResourceNeed(100, "Thing", 2));
 
         assertEquals(AcquisitionSource.VERIFIED_STORAGE, plan.getSource());
-        assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
+        assertEquals(Confidence.VERIFIED, plan.getConfidence());
     }
 
     @Test
@@ -63,13 +63,13 @@ public class UimResourceRoutingTest
                 StorageCapability.DEATH_STORAGE,
                 StorageCapability.DEATHPILE})
         {
-            ResourceAcquisitionPlan plan = new ResourceAcquisitionPlanner().plan(
+            AcquisitionPlan plan = new ResourceAcquisitionPlanner().plan(
                     context(storage(capability, 2)),
                     new ResourceNeed(100, "Thing", 2));
             assertEquals(capability.name(), AcquisitionSource.VERIFIED_STORAGE,
                     plan.getSource());
             assertEquals(capability.name(),
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     plan.getConfidence());
         }
     }
@@ -81,17 +81,17 @@ public class UimResourceRoutingTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(capability, CapabilityState.VERIFIED);
-        Map<StorageCapability, java.util.List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, java.util.List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(capability, Collections.singletonList(
-                new ItemStackSnapshot(100, "Thing", quantity)));
+                new ItemState(100, "Thing", quantity)));
         return new StorageSnapshot(states, contents);
     }
 
     private static StrategyContext context(StorageSnapshot storage)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(uim())
+                .inventory(new ItemsState(Collections.emptyList()))
                 .storage(storage)
                 .build();
         return new StrategyContext(

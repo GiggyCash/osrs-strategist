@@ -30,26 +30,26 @@ public class FarmingRunPlanner
         this(catalog, new FarmingSupplyCatalog(), new ResourceReadinessService());
     }
 
-    public GuidanceChecklist build(StrategyDataBundle data, String activityId)
+    public GuidanceChecklist build(GameData data, String activityId)
     {
         List<GuidanceStep> steps = new ArrayList<>();
-        if (data == null || data.getAccount() == null)
+        if (data == null || data.account() == null)
         {
             return new GuidanceChecklist(activityId, "Farming run",
-                    "Waiting for account evidence", steps);
+                    Text.get(1463), steps);
         }
 
-        AccountSnapshot account = data.getAccount();
+        AccountSnapshot account = data.account();
         int farmingLevel = account.getSkillLevel(Skill.FARMING);
         if (account.getMembershipStatus() != MembershipStatus.P2P)
         {
             return new GuidanceChecklist(activityId, "Farming run",
-                    "Member Farming access required", steps);
+                    Text.get(1464), steps);
         }
 
         appendPrep(steps, data, farmingLevel);
-        FarmingRunSnapshot snapshot = data.getFarmingRuns() == null
-                ? FarmingRunSnapshot.empty() : data.getFarmingRuns();
+        FarmingRunSnapshot snapshot = data.farmingRuns() == null
+                ? FarmingRunSnapshot.empty() : data.farmingRuns();
 
         for (FarmingRunPatchDefinition patch : catalog.all())
         {
@@ -65,10 +65,10 @@ public class FarmingRunPlanner
 
     private void appendPrep(
             List<GuidanceStep> steps,
-            StrategyDataBundle data,
+            GameData data,
             int farmingLevel)
     {
-        FarmingSnapshot farming = data.getFarming();
+        FarmingSnapshot farming = data.farming();
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
                 Text.get(245)));
@@ -111,10 +111,10 @@ public class FarmingRunPlanner
     }
 
     private boolean isConfirmedReachable(
-            StrategyDataBundle data,
+            GameData data,
             FarmingRunPatchDefinition patch)
     {
-        AccessMemorySnapshot memory = data.getAccessMemory();
+        AccessMemorySnapshot memory = data.accessMemory();
         if (memory != null)
         {
             for (Integer region : patch.getRegionIds())
@@ -124,7 +124,7 @@ public class FarmingRunPlanner
         }
         String quest = patch.getRequiredQuest();
         if (quest == null) return true;
-        QuestSnapshot quests = data.getQuests();
+        QuestSnapshot quests = data.quests();
         return quests != null && quests.statusOf(quest) == QuestStatus.COMPLETE;
     }
 
@@ -148,7 +148,7 @@ public class FarmingRunPlanner
             case READY:
                 return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
                         patch.getKind() == FarmingPatchKind.TREE
-                                ? "Check/clear and replant" : "Harvest and replant",
+                                ? Text.get(1465) : Text.get(1466),
                         GuidanceStepState.ACTION);
             case EMPTY:
                 return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),

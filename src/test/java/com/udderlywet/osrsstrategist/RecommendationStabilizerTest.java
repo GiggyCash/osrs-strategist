@@ -165,10 +165,10 @@ public class RecommendationStabilizerTest
     private static Recommendation ready(String id, String title, double score)
     {
         return new Recommendation(id, title, "Reason.", score, null,
-                RecommendationConfidence.VERIFIED, 49, 50,
-                new RecommendationGuidance("Follow the named route.",
+                Confidence.VERIFIED, 49, 50,
+                new Guidance("Follow the named route.",
                         "Required setup.", "Named location.", null),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
     }
 
     private static Recommendation skillPlan(String id, String title,
@@ -179,13 +179,13 @@ public class RecommendationStabilizerTest
                 "Concrete mining route", "Varrock East mine.",
                 10, 10, 10, AttentionLevel.MODERATE,
                 20, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(method, "Concrete route.",
-                RecommendationConfidence.VERIFIED, Collections.emptyList());
+                Confidence.VERIFIED, Collections.emptyList());
         return new Recommendation(id, title, "Reason.", score, plan,
-                RecommendationConfidence.VERIFIED, 49, 50,
-                new RecommendationGuidance(action, "Bronze pickaxe.",
+                Confidence.VERIFIED, 49, 50,
+                new Guidance(action, "Bronze pickaxe.",
                         "Varrock East mine, southeast of Varrock.", null),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
     }
 }

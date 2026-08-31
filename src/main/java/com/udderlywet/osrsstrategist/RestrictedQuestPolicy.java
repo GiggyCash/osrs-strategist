@@ -1,113 +1,16 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.*;
+import java.util.Set;
 
-/**
- * Quest safety gate for player-imposed account builds.
- *
- * <p>For a normal account, every quest remains eligible. For a protected build,
- * unknown reward profiles are treated as unsafe until curated. This is
- * intentionally fail-closed: missing a recommendation is recoverable; granting
- * irreversible Defence/Hitpoints/offensive experience to a pure is not.</p>
- */
+/** Fail-closed quest safety for irreversible restricted-build XP. */
 public final class RestrictedQuestPolicy
 {
-    private static final Set<String> ONE_DEFENCE_SAFE = set(
-            "Animal Magnetism",
-            "Another Slice of H.A.M.",
-            "Cook's Assistant",
-            "The Corsair Curse",
-            "Creature of Fenkenstrain",
-            "Current Affairs",
-            "Death on the Isle",
-            "Death Plateau",
-            "Desert Treasure I",
-            "Dwarf Cannon",
-            "Ghosts Ahoy",
-            "The Giant Dwarf",
-            "Goblin Diplomacy",
-            "The Golem",
-            "The Grand Tree",
-            "The Great Brain Robbery",
-            "Horror from the Deep",
-            "Land of the Goblins",
-            "Learning the Ropes",
-            "Lost City",
-            "Making History",
-            "Misthalin Mystery",
-            "Monk's Friend",
-            "Monkey Madness I",
-            "Monkey Madness II",
-            "Mountain Daughter",
-            "One Small Favour",
-            "Pandemonium",
-            "The Path of Glouphrie",
-            "Perilous Moons",
-            "Priest in Peril",
-            "Rag and Bone Man I",
-            "Rag and Bone Man II",
-            "The Restless Ghost",
-            Text.get(700),
-            "Roving Elves",
-            "Rum Deal",
-            "Rune Mysteries",
-            "Scorpion Catcher",
-            "Shadows of Custodia",
-            "Sheep Herder",
-            "Sheep Shearer",
-            "Shield of Arrav",
-            "Spirits of the Elid",
-            "Swan Song",
-            "The Final Dawn",
-            "The Ides of Milk",
-            "The Red Reef",
-            "The Tourist Trap",
-            "Tower of Life",
-            "Tree Gnome Village",
-            "Tribal Totem",
-            "Troll Romance",
-            "Waterfall Quest",
-            "Witch's Potion"
-    );
-
-    /** No forced combat-skill or Prayer reward in these baseline quests. */
-    private static final Set<String> LEVEL_THREE_SAFE = set(
-            "Cook's Assistant",
-            "The Corsair Curse",
-            "Current Affairs",
-            "Death on the Isle",
-            "The Giant Dwarf",
-            "Goblin Diplomacy",
-            "The Golem",
-            "Land of the Goblins",
-            "Learning the Ropes",
-            "Misthalin Mystery",
-            "Monk's Friend",
-            "One Small Favour",
-            "Pandemonium",
-            Text.get(701),
-            "Rune Mysteries",
-            "Shadows of Custodia",
-            "Sheep Herder",
-            "Sheep Shearer",
-            "Shield of Arrav",
-            "The Tourist Trap",
-            "Tower of Life",
-            "Tribal Totem"
-    );
-
-    /** Adds quests whose forced combat reward is Prayer only. */
-    private static final Set<String> PRAYER_SKILLER_EXTRA = set(
-            "The Restless Ghost",
-            "Making History",
-            "Ghosts Ahoy",
-            "Mountain Daughter",
-            "Priest in Peril",
-            "Rag and Bone Man I",
-            "Rag and Bone Man II",
-            "Rum Deal",
-            "Spirits of the Elid"
-    );
+    private static final Set<String> ONE_DEFENCE = PolicyLists.normalizedSet(
+            PolicyLists.DATA.one_defence_safe);
+    private static final Set<String> LEVEL_THREE = PolicyLists.normalizedSet(
+            PolicyLists.DATA.level_three_safe);
+    private static final Set<String> PRAYER_EXTRA = PolicyLists.normalizedSet(
+            PolicyLists.DATA.prayer_skiller_extra);
 
     private RestrictedQuestPolicy() {}
 
@@ -115,25 +18,20 @@ public final class RestrictedQuestPolicy
     {
         if (account == null || questName == null) return false;
         RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
-        if (build == RestrictedBuildType.STANDARD
-                || build == RestrictedBuildType.RANGE_TANK
-                || build == RestrictedBuildType.MED_BUILD
-                || build == RestrictedBuildType.COMBAT_ONLY)
-        {
-            return true;
-        }
-
-        String quest = normalize(questName);
         switch (build)
         {
+            case STANDARD:
+            case RANGE_TANK:
+            case MED_BUILD:
+            case COMBAT_ONLY:
+                return true;
             case SKILLER:
             case F2P_SKILLER:
-                return contains(LEVEL_THREE_SAFE, quest);
-
+                return LEVEL_THREE.contains(PolicyLists.normalize(questName));
             case PRAYER_SKILLER:
-                return contains(LEVEL_THREE_SAFE, quest)
-                        || contains(PRAYER_SKILLER_EXTRA, quest);
-
+            case DEFENCE_PURE:
+            case TEN_HITPOINTS:
+                return safeForPrayerOnly(questName);
             case ONE_DEFENCE_PURE:
             case LOW_DEFENCE_PURE:
             case INITIATE_PURE:
@@ -141,44 +39,15 @@ public final class RestrictedQuestPolicy
             case VOID_PURE:
             case ZERKER:
             case OBSIDIAN_MAULER:
-                return contains(ONE_DEFENCE_SAFE, quest);
-
-            case DEFENCE_PURE:
-                // A Defence pure must not accidentally gain Attack, Strength,
-                // Ranged, Magic, Hitpoints, or Slayer from quest rewards.
-                return contains(LEVEL_THREE_SAFE, quest)
-                        || contains(PRAYER_SKILLER_EXTRA, quest);
-
-            case TEN_HITPOINTS:
-                // This conservative baseline omits quests with known forced HP
-                // rewards. More 10-HP-safe quest routes can be curated without
-                // weakening the irreversible safety boundary.
-                return contains(LEVEL_THREE_SAFE, quest)
-                        || contains(PRAYER_SKILLER_EXTRA, quest);
-
+                return ONE_DEFENCE.contains(PolicyLists.normalize(questName));
             default:
                 return false;
         }
     }
 
-    private static Set<String> set(String... values)
+    private static boolean safeForPrayerOnly(String quest)
     {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(values)));
-    }
-
-    private static boolean contains(Set<String> values, String normalized)
-    {
-        for (String value : values)
-        {
-            if (normalize(value).equals(normalized)) return true;
-        }
-        return false;
-    }
-
-    private static String normalize(String value)
-    {
-        return value.trim().toLowerCase(Locale.ROOT)
-                .replace('’', '\'')
-                .replaceAll("\\s+", " ");
+        String key = PolicyLists.normalize(quest);
+        return LEVEL_THREE.contains(key) || PRAYER_EXTRA.contains(key);
     }
 }

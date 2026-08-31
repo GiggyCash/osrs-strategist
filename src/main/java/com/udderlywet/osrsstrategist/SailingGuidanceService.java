@@ -15,18 +15,18 @@ import net.runelite.api.Skill;
 @Singleton
 public class SailingGuidanceService
 {
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             int currentLevel,
             int targetLevel,
             TrainingPlan plan)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.account() == null
                 || plan == null || plan.getMethod() == null)
         {
             return null;
         }
-        AccountSnapshot account = data.getAccount();
+        AccountSnapshot account = data.account();
         if (account.getMembershipStatus() != MembershipStatus.P2P)
         {
             return null;
@@ -53,9 +53,9 @@ public class SailingGuidanceService
         }
         if ("sailing_deep_sea_trawling".equals(id))
         {
-            return new RecommendationGuidance(
-                    "Use Deep Sea Trawling until you gain " + format(xpNeeded)
-                            + " Sailing XP toward level " + targetLevel + ".",
+            return new Guidance(
+                    Text.get(1370) + format(xpNeeded)
+                            + Text.get(1371) + targetLevel + ".",
                     Text.get(732),
                     Text.get(743),
                     Text.get(754)
@@ -65,8 +65,8 @@ public class SailingGuidanceService
         return chartingGuidance(data, currentLevel, targetLevel, xpNeeded);
     }
 
-    private static RecommendationGuidance barracudaGuidance(
-            StrategyDataBundle data,
+    private static Guidance barracudaGuidance(
+            GameData data,
             String methodId,
             int targetLevel,
             int xpNeeded)
@@ -91,7 +91,7 @@ public class SailingGuidanceService
         else
         {
             trial = new Trial(
-                    "The Tempor Tantrum",
+                    Text.get(1372),
                     1250,
                     Text.get(789),
                     Text.get(790));
@@ -100,20 +100,20 @@ public class SailingGuidanceService
         int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
         String action = Text.get(733)
                 + trial.name + Text.get(734)
-                + marlinCompletions + " Marlin completion"
+                + marlinCompletions + Text.get(1373)
                 + (marlinCompletions == 1 ? "" : "s")
                 + " at " + format(trial.marlinXp)
-                + " XP each covers the remaining " + format(xpNeeded)
+                + Text.get(1374) + format(xpNeeded)
                 + " XP to level " + targetLevel + ".";
 
         String supplies = trial.requirements;
         String note = Text.get(735);
-        return new RecommendationGuidance(
+        return new Guidance(
                 action, supplies, trial.location, note);
     }
 
-    private static RecommendationGuidance salvageGuidance(
-            StrategyDataBundle data,
+    private static Guidance salvageGuidance(
+            GameData data,
             int currentLevel,
             int targetLevel,
             int xpNeeded)
@@ -123,33 +123,33 @@ public class SailingGuidanceService
         String supplies = Text.get(737);
         String where = Text.get(738);
         String note = Text.get(739);
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new Guidance(action, supplies, where, note);
     }
 
-    private static RecommendationGuidance courierGuidance(
-            StrategyDataBundle data,
+    private static Guidance courierGuidance(
+            GameData data,
             int currentLevel,
             int targetLevel,
             int xpNeeded)
     {
         String action = Text.get(740)
-                + format(xpNeeded) + " Sailing XP to level " + targetLevel + ".";
+                + format(xpNeeded) + Text.get(1375) + targetLevel + ".";
         String supplies = Text.get(741);
         String where = Text.get(742);
         String note = Text.get(744);
-        return new RecommendationGuidance(action, supplies, where, note);
+        return new Guidance(action, supplies, where, note);
     }
 
-    private static RecommendationGuidance chartingGuidance(
-            StrategyDataBundle data,
+    private static Guidance chartingGuidance(
+            GameData data,
             int currentLevel,
             int targetLevel,
             int xpNeeded)
     {
-        QuestSnapshot quests = data.getQuests();
+        QuestSnapshot quests = data.quests();
         if (!complete(quests, "Pandemonium"))
         {
-            return new RecommendationGuidance(
+            return new Guidance(
                     Text.get(745),
                     Text.get(746),
                     Text.get(747),
@@ -159,7 +159,7 @@ public class SailingGuidanceService
 
         StringBuilder action = new StringBuilder();
         action.append(Text.get(749))
-                .append(format(xpNeeded)).append(" Sailing XP to level ")
+                .append(format(xpNeeded)).append(Text.get(1375))
                 .append(targetLevel).append(".");
 
         StringBuilder supplies = new StringBuilder(Text.get(750));
@@ -173,9 +173,9 @@ public class SailingGuidanceService
         }
         if (currentLevel >= 15)
         {
-            AccountEconomySnapshot economy = data.getEconomy();
+            AccountEconomySnapshot economy = data.economy();
             if (economy != null
-                    && economy.getConfidence() == RecommendationConfidence.VERIFIED)
+                    && economy.getConfidence() == Confidence.VERIFIED)
             {
                 if (economy.getCoins() >= 15000)
                 {
@@ -196,7 +196,7 @@ public class SailingGuidanceService
 
         String where = Text.get(757);
         String note = Text.get(758);
-        return new RecommendationGuidance(
+        return new Guidance(
                 action.toString(), supplies.toString(), where, note);
     }
 

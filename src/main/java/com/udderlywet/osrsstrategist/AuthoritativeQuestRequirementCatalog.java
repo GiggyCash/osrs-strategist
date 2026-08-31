@@ -19,7 +19,7 @@ public final class AuthoritativeQuestRequirementCatalog
             record.freeze();
             String key = normalize(record.name);
             if (key.isEmpty() || values.put(key, record) != null)
-                throw new IllegalStateException("Invalid or duplicate quest requirement: " + record.name);
+                throw new IllegalStateException(Text.get(1124) + record.name);
         }
         records = Collections.unmodifiableMap(values);
     }

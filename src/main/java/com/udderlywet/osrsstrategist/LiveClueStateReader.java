@@ -55,11 +55,11 @@ public class LiveClueStateReader
 
     public ClueSnapshot read(
             AccountMode mode,
-            InventorySnapshot inventory,
-            BankSnapshot bank,
+            ItemsState inventory,
+            ItemsState bank,
             ClueSnapshot previous)
     {
-        List<ItemStackSnapshot> visible = new ArrayList<>();
+        List<ItemState> visible = new ArrayList<>();
         if (inventory != null) visible.addAll(inventory.getItems());
         if (mode != AccountMode.ULTIMATE_IRONMAN && bank != null)
         {
@@ -68,7 +68,7 @@ public class LiveClueStateReader
 
         ClueTier bestTier = ClueTier.UNKNOWN;
         boolean clueIntermediateObserved = false;
-        for (ItemStackSnapshot item : visible)
+        for (ItemState item : visible)
         {
             String name = normalize(item.getName());
             if (name.isEmpty()) continue;
@@ -100,7 +100,7 @@ public class LiveClueStateReader
                     true,
                     bestTier.name().toLowerCase(Locale.ROOT),
                     firstSeen,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     readCurrentStep()
             );
         }
@@ -148,7 +148,7 @@ public class LiveClueStateReader
         try { location = locationOf(clue); }
         catch (RuntimeException ex) { location = null; }
         if (action == null || action.trim().isEmpty())
-            action = "Follow RuneLite's highlighted " + kind + " solution.";
+            action = Text.get(1562) + kind + " solution.";
         WorldPoint point = worldPointOf(clue);
         List<String> requirements = itemRequirements(clue);
         String enemy = clue.getEnemy() == null
@@ -182,7 +182,7 @@ public class LiveClueStateReader
         {
             String npc = firstNpc((MusicClue) clue);
             return "Play " + ((MusicClue) clue).getSong()
-                    + (npc == null ? " for the highlighted clue NPC."
+                    + (npc == null ? Text.get(1563)
                             : " for " + npc + ".");
         }
         if (clue instanceof FaloTheBardClue)
@@ -200,7 +200,7 @@ public class LiveClueStateReader
             return ((FairyRingClue) clue).getText();
         if (clue instanceof ThreeStepCrypticClue)
             return currentThreeStepAction((ThreeStepCrypticClue) clue);
-        return "Follow RuneLite's highlighted " + clueKind(clue)
+        return Text.get(1562) + clueKind(clue)
                 + " solution.";
     }
 
@@ -218,7 +218,7 @@ public class LiveClueStateReader
             if (npc != null) return npc;
         }
         return clue instanceof LocationClueScroll
-                ? "RuneLite's marked tile" : null;
+                ? Text.get(1564) : null;
     }
 
     private WorldPoint worldPointOf(ClueScroll clue)

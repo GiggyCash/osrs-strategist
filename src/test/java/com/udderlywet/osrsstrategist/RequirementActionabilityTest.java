@@ -16,7 +16,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Collections.singletonList(new RequirementCheck(
                         "generic:Steel bar supply",
                         "Steel bar supply",
@@ -28,23 +28,23 @@ public class RequirementActionabilityTest
                 "test",
                 10.0,
                 plan,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 40,
                 50,
-                new RecommendationGuidance(
+                new Guidance(
                         "Smith steel platebodies until the milestone.",
                         "Need 500 steel bars. Buy or self-source the missing amount.",
                         "Varrock West anvils, directly south of the bank.",
                         "The route is known; only supplies remain."));
 
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         assertTrue(RequirementActionability.isActionablePreparation(
                 plan, recommendation.getGuidance()));
         assertTrue(policy.canLeadQueue(recommendation));
-        assertTrue(RecommendationPresentation.compactText(recommendation)
+        assertTrue(Presentation.compactText(recommendation)
                 .contains("Need 500 steel bars"));
-        assertTrue(RecommendationPresentation.compactText(recommendation)
+        assertTrue(Presentation.compactText(recommendation)
                 .contains("BRING"));
     }
 
@@ -55,7 +55,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Collections.singletonList(new RequirementCheck(
                         "generic:Volcanic Mine access",
                         "Volcanic Mine access",
@@ -67,10 +67,10 @@ public class RequirementActionabilityTest
                 "test",
                 1000.0,
                 plan,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 70,
                 80,
-                new RecommendationGuidance(
+                new Guidance(
                         "Run Volcanic Mine.",
                         "Bring your best pickaxe.",
                         "Volcanic Mine.",
@@ -79,11 +79,11 @@ public class RequirementActionabilityTest
         assertFalse(RequirementActionability.isActionablePreparation(
                 plan, recommendation.getGuidance()));
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(recommendation));
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .mayAppearAsAlternative(recommendation));
-        assertTrue(RecommendationPresentation.compactText(recommendation)
+        assertTrue(Presentation.compactText(recommendation)
                 .contains("NEEDED"));
     }
 
@@ -93,7 +93,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method("runecraft_zmi", Skill.RUNECRAFT),
                 "test",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Collections.singletonList(new RequirementCheck(
                         "generic:Ourania Altar route and essence supply",
                         "Ourania Altar route and essence supply",
@@ -102,7 +102,7 @@ public class RequirementActionabilityTest
 
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
         assertFalse(RequirementActionability.isActionablePreparation(plan,
-                new RecommendationGuidance(
+                new Guidance(
                         "Run essence to the altar.",
                         "Bring pure essence.",
                         "Ourania Altar.",
@@ -114,7 +114,7 @@ public class RequirementActionabilityTest
     {
         TrainingPlan plan = new TrainingPlan(
                 method("runecraft_f2p_earth", Skill.RUNECRAFT),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 java.util.Arrays.asList(
                         new RequirementCheck("resource:runecraft_essence",
                                 "Rune or pure essence",
@@ -124,7 +124,7 @@ public class RequirementActionabilityTest
                                 "Earth talisman or earth tiara",
                                 RequirementState.CHECK_NEEDED,
                                 "No entry item is currently observed.")));
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Bank at Varrock East, craft earth runes, and repeat.",
                 "Acquire essence and an earth talisman before starting.",
                 "Earth Altar northeast of Varrock.", null);
@@ -143,12 +143,12 @@ public class RequirementActionabilityTest
                 "Fit an iron helm, oak mast, and linen sails.");
         TrainingPlan plan = new TrainingPlan(
                 method("sailing_barracuda_tantrum", Skill.SAILING),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 Collections.singletonList(check));
 
         assertFalse(RequirementActionability.hasHardUnresolvedRequirement(plan));
         assertTrue(RequirementActionability.isActionablePreparation(plan,
-                new RecommendationGuidance("Run Tempor Tantrum.",
+                new Guidance("Run Tempor Tantrum.",
                         "Fit an iron helm, oak mast, and linen sails.",
                         "Rum-dashed Ralph north-west of The Storm Tempor.", null)));
     }
@@ -163,7 +163,7 @@ public class RequirementActionabilityTest
                 "No location is proven.");
         TrainingPlan plan = new TrainingPlan(
                 method("woodcutting_forestry", Skill.WOODCUTTING),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 Collections.singletonList(check));
 
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
@@ -174,7 +174,7 @@ public class RequirementActionabilityTest
     {
         TrainingPlan plan = new TrainingPlan(
                 method("fishing_barbarian", Skill.FISHING),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 Collections.singletonList(new RequirementCheck(
                         "generic:Barbarian Fishing training",
                         "Barbarian Fishing training",
@@ -183,7 +183,7 @@ public class RequirementActionabilityTest
 
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
         assertFalse(RequirementActionability.isActionablePreparation(plan,
-                new RecommendationGuidance("Catch leaping fish.",
+                new Guidance("Catch leaping fish.",
                         "Bring feathers.", "Otto's Grotto.", null)));
     }
 
@@ -192,7 +192,7 @@ public class RequirementActionabilityTest
     {
         TrainingPlan plan = new TrainingPlan(
                 method("farming_allotments_expanded", Skill.FARMING),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 Collections.singletonList(new RequirementCheck(
                         "generic:Reachable allotment patches and supplies",
                         "Reachable allotment patches and supplies",
@@ -211,7 +211,7 @@ public class RequirementActionabilityTest
                 "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource.");
         TrainingPlan plan = new TrainingPlan(
                 method("runecraft_f2p_earth", Skill.RUNECRAFT),
-                "test", RecommendationConfidence.CHECK_NEEDED,
+                "test", Confidence.CHECK_NEEDED,
                 Collections.singletonList(check));
 
         assertTrue(RequirementActionability.hasHardUnresolvedRequirement(plan));
@@ -224,7 +224,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.BLOCKED,
+                Confidence.BLOCKED,
                 Collections.singletonList(new RequirementCheck(
                         "build:restriction",
                         "Build restriction",
@@ -236,16 +236,16 @@ public class RequirementActionabilityTest
                 "test",
                 1000.0,
                 plan,
-                RecommendationConfidence.BLOCKED,
+                Confidence.BLOCKED,
                 1,
                 43,
-                new RecommendationGuidance(
+                new Guidance(
                         "Do the blocked action.",
                         "None.",
                         "Nowhere.",
                         "Blocked."));
 
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(recommendation));
     }
 
@@ -265,6 +265,6 @@ public class RequirementActionabilityTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
     }
 }

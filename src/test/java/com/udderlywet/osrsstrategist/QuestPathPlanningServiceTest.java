@@ -144,7 +144,7 @@ public class QuestPathPlanningServiceTest
                 0, "MAIN", membership,
                 membership == MembershipStatus.P2P ? 1 : 0,
                 levels.size() * 99, 0L, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(statuses)).build();
         return new StrategyContext(data, StrategyMode.EFFICIENT,
                 SessionIntent.PICK_FOR_ME, tolerance, GoalType.QUEST_CAPE,

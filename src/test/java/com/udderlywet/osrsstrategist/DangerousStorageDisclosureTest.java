@@ -22,7 +22,7 @@ public class DangerousStorageDisclosureTest
     {
         StrategyContext context = context();
         UimStorageDecision decision = capabilityService.evaluateStorage(
-                context.getData(), StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                context.data(), StorageCapability.HESPORI_ITEM_RETRIEVAL,
                 CapabilityState.VERIFIED, CapabilityState.VERIFIED);
         Recommendation withoutWarning = recommendation(
                 guidance(decision, null));
@@ -35,9 +35,9 @@ public class DangerousStorageDisclosureTest
         Recommendation warned = validator.validate(recommendation(
                 guidance(decision, disclosure)), context);
         assertTrue(safety.isAllowed(warned, context));
-        assertTrue(RecommendationPresentation.compactText(warned)
+        assertTrue(Presentation.compactText(warned)
                 .contains("HIGH RISK"));
-        assertTrue(RecommendationPresentation.compactText(warned)
+        assertTrue(Presentation.compactText(warned)
                 .contains("acknowledge"));
     }
 
@@ -47,7 +47,7 @@ public class DangerousStorageDisclosureTest
         StrategyContext context = context();
         UimStorageDecision generic = new UimStorageDecision(
                 StorageCapability.DEATH_STORAGE, true,
-                RecommendationConfidence.VERIFIED, RiskLevel.HIGH,
+                Confidence.VERIFIED, RiskLevel.HIGH,
                 "Synthetic generic evidence");
         Recommendation result = validator.validate(recommendation(
                 guidance(generic,
@@ -55,22 +55,22 @@ public class DangerousStorageDisclosureTest
         assertFalse(safety.isAllowed(result, context));
     }
 
-    private static RecommendationGuidance guidance(UimStorageDecision decision,
+    private static Guidance guidance(UimStorageDecision decision,
             RecommendationRiskDisclosure disclosure)
     {
-        return new RecommendationGuidance("View the verified steps.",
+        return new Guidance("View the verified steps.",
                 "Exact observed setup", "Hespori cave",
                 "Do not begin until every retrieval rule is understood.")
                 .withStorageDecision(decision, disclosure);
     }
 
     private static Recommendation recommendation(
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         return new Recommendation("uim:dangerous-storage", "Storage transition",
                 "A major progression transition is otherwise blocked.", 10.0,
-                null, RecommendationConfidence.VERIFIED, 0, 0, guidance,
-                CandidateSafetyEvidence.harmless(false));
+                null, Confidence.VERIFIED, 0, 0, guidance,
+                SafetyEvidence.harmless(false));
     }
 
     private static StrategyContext context()
@@ -79,8 +79,8 @@ public class DangerousStorageDisclosureTest
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.HESPORI_ITEM_RETRIEVAL,
                 CapabilityState.VERIFIED);
-        StrategyDataBundle data = StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(uim())
+                .inventory(new ItemsState(Collections.emptyList()))
                 .storage(new StorageSnapshot(states))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,

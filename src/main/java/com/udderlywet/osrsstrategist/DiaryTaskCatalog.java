@@ -35,7 +35,7 @@ public final class DiaryTaskCatalog
         tasks = Collections.unmodifiableList(load());
         if (tasks.size() != EXPECTED_TASKS)
             throw new IllegalStateException("Expected " + EXPECTED_TASKS
-                    + " diary tasks, found " + tasks.size());
+                    + Text.get(1128) + tasks.size());
     }
 
     public List<DiaryTaskDefinition> all() { return tasks; }
@@ -66,7 +66,7 @@ public final class DiaryTaskCatalog
         InputStream stream = DiaryTaskCatalog.class.getResourceAsStream(
                 "/content/diary-tasks.tsv");
         if (stream == null)
-            throw new IllegalStateException("Missing diary task evidence resource");
+            throw new IllegalStateException(Text.get(1129));
         List<DiaryTaskDefinition> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 stream, StandardCharsets.UTF_8)))
@@ -79,7 +79,7 @@ public final class DiaryTaskCatalog
                 if (line.trim().isEmpty() || line.startsWith("#")) continue;
                 String[] fields = line.split("\\t", 4);
                 if (fields.length != 4)
-                    throw new IllegalStateException("Invalid diary evidence line "
+                    throw new IllegalStateException(Text.get(1130)
                             + number);
                 DiaryTier tier = DiaryTier.valueOf(
                         fields[1].toUpperCase(Locale.ROOT));
@@ -89,7 +89,7 @@ public final class DiaryTaskCatalog
         }
         catch (IOException | IllegalArgumentException ex)
         {
-            throw new IllegalStateException("Unable to read diary task evidence", ex);
+            throw new IllegalStateException(Text.get(1131), ex);
         }
         return result;
     }

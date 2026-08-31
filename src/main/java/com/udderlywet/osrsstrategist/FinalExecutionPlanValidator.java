@@ -17,8 +17,8 @@ public final class FinalExecutionPlanValidator
         MethodStrategyProfile profile = plan == null
                 ? null : plan.getStrategyProfile();
 
-        CandidateSafetyEvidence evidence = recommendation.getSafetyEvidence();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        SafetyEvidence evidence = recommendation.getSafetyEvidence();
+        Guidance guidance = recommendation.getGuidance();
         if (plan != null)
         {
             TrainingMethod method = plan.getMethod();
@@ -31,10 +31,10 @@ public final class FinalExecutionPlanValidator
                     || stageTarget <= current
                     || recommendation.getTargetLevel() > 0
                         && stageTarget > recommendation.getTargetLevel()
-                    || context != null && context.getData() != null
-                        && context.getData().getAccount() != null
+                    || context != null && context.data() != null
+                        && context.data().account() != null
                         && !ContentAccessRules.isMethodAvailable(method,
-                                context.getData().getAccount()
+                                context.data().account()
                                         .getMembershipStatus())
                     || guidance == null
                     || blank(guidance.getAction())
@@ -55,7 +55,7 @@ public final class FinalExecutionPlanValidator
             boolean storageUnverified = decision == null
                     || !decision.isAllowed()
                     || decision.getConfidence()
-                            != RecommendationConfidence.VERIFIED;
+                            != Confidence.VERIFIED;
             boolean incompleteDangerDisclosure =
                     UimStorageMechanics.isDangerous(capability)
                     && (guidance.getRiskDisclosure() == null

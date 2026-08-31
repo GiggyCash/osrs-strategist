@@ -19,7 +19,7 @@ public final class MethodLocationCatalog
         for (MethodLocationProfile profile : BundledCatalogLoader.array(
                 Text.get(377), MethodLocationProfile[].class))
             if (values.put(profile.getMethodId(), profile) != null)
-                throw new IllegalStateException("Duplicate method location profile "
+                throw new IllegalStateException(Text.get(1153)
                         + profile.getMethodId());
         profiles = Collections.unmodifiableMap(values);
     }

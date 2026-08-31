@@ -14,11 +14,11 @@ public class ResourceReadinessServiceTest
     @Test
     public void combinesInventoryAndKnownBankAcrossAlternativeIds()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(null)
-                .inventory(new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(100, "A", 1))))
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(101, "B", 2)), 1L))
+        GameData data = GameData.builder(null)
+                .inventory(new ItemsState(Collections.singletonList(
+                        new ItemState(100, "A", 1))))
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(101, "B", 2)), 1L))
                 .build();
         ResourceRequirement requirement = new ResourceRequirement(
                 "test", "Alternatives", 3, 100, 101);
@@ -30,8 +30,8 @@ public class ResourceReadinessServiceTest
     @Test
     public void missingBankStaysUnknownInsteadOfPretendingResourceIsAbsent()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(null)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(null)
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
         RequirementCheck check = service.evaluate(
                 data, new ResourceRequirement("test", "Thing", 1, 100));
@@ -42,8 +42,8 @@ public class ResourceReadinessServiceTest
     @Test
     public void verifiedAlternateStorageCountsWithoutInventoryItem()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(null)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(null)
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
         RequirementCheck check = service.evaluate(
                 data,

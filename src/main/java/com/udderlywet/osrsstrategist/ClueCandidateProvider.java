@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 /** Lets an observed clue become actual DO NEXT work without making it spammy. */
 @Singleton
-public class ClueCandidateProvider implements StrategyCandidateProvider
+public class ClueCandidateProvider implements CandidateProvider
 {
     @Override
     public String getId()
@@ -17,12 +17,12 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null) return result;
-        ClueSnapshot clue = context.getData().getClue();
+        if (context == null || context.data() == null) return result;
+        ClueSnapshot clue = context.data().clue();
         if (clue == null || !clue.isCluePresent()) return result;
 
         ClueTier tier = ClueTier.fromText(clue.getClueType());
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         MembershipStatus membership = account == null
                 ? MembershipStatus.UNKNOWN
                 : account.getMembershipStatus();
@@ -31,7 +31,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         // Keep one stable activity id across clue tiers so learned preference,
         // snoozes, and older profiles continue to work after this richer model.
         String id = "clue:pending";
-        PreferenceProfile preferences = context.getPreferenceProfile();
+        PreferenceProfile preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return result;
 
         long age = Math.max(0L,
@@ -43,7 +43,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                 + preferences.weightFor(id) * 10.0;
 
         if (context.isCollectionistMode()) score += 6.0;
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN) score -= 6.0;
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN) score -= 6.0;
         if (context.getSessionIntent() == SessionIntent.QUICK_20_MIN) score += 4.0;
         if (context.getSessionIntent() == SessionIntent.AFK) score -= 8.0;
         if (context.getStrategyMode() == StrategyMode.EFFICIENT
@@ -55,9 +55,9 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                 : tier.name().toLowerCase() + " clue";
         ClueStepSnapshot step = clue.getCurrentStep();
         StringBuilder reason = new StringBuilder();
-        reason.append("Clears the pending ").append(type)
+        reason.append(Text.get(1361)).append(type)
                 .append(Text.get(132));
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
             reason.append(Text.get(134));
         }
@@ -66,11 +66,11 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
             reason.append(Text.get(135));
         }
         else
-            reason.append(" RuneLite identified the current ")
-                    .append(step.getKind()).append(" and its concrete setup.");
+            reason.append(Text.get(1362))
+                    .append(step.getKind()).append(Text.get(1363));
 
-        boolean hardcore = context.getAccountMode() == AccountMode.HARDCORE_IRONMAN
-                || context.getAccountMode() == AccountMode.HARDCORE_GROUP_IRONMAN;
+        boolean hardcore = context.accountMode() == AccountMode.HARDCORE_IRONMAN
+                || context.accountMode() == AccountMode.HARDCORE_GROUP_IRONMAN;
         boolean wildernessHold = step != null && step.isWilderness()
                 && (!context.isAllowWildernessMethods() || hardcore);
         if (wildernessHold)
@@ -83,28 +83,28 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
 
         String title;
         String candidateId;
-        RecommendationGuidance guidance;
-        RecommendationConfidence confidence;
+        Guidance guidance;
+        Confidence confidence;
         if (step == null)
         {
             title = "Inspect " + type;
             candidateId = "verify:clue-current-step";
-            guidance = new RecommendationGuidance(
+            guidance = new Guidance(
                     Text.get(138),
                     null, "Inventory", Text.get(139));
-            confidence = RecommendationConfidence.CHECK_NEEDED;
+            confidence = Confidence.CHECK_NEEDED;
         }
         else if (wildernessHold)
         {
-            title = "Hold " + type + " — Wilderness step";
+            title = "Hold " + type + Text.get(1364);
             candidateId = "prepare:clue-wilderness-hold";
-            guidance = new RecommendationGuidance(
-                    context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+            guidance = new Guidance(
+                    context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                             ? Text.get(140)
                             : Text.get(141),
                     supplies(step), step.getLocation(),
                     Text.get(133));
-            confidence = RecommendationConfidence.CHECK_NEEDED;
+            confidence = Confidence.CHECK_NEEDED;
         }
         else
         {
@@ -112,15 +112,15 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                     + type + ": " + step.getKind();
             candidateId = step.requiresPreparation()
                     ? "prepare:clue-current-step" : id;
-            guidance = new RecommendationGuidance(step.getAction(),
+            guidance = new Guidance(step.getAction(),
                     supplies(step), step.getLocation(), note(step));
             // RuneLite proves the step, not every quest/access requirement.
             // Beginner steps are the only F2P-safe tier and can lead when no
             // additional setup, combat, light or Wilderness evidence remains.
             confidence = tier == ClueTier.BEGINNER
                     && !step.requiresPreparation()
-                    ? RecommendationConfidence.VERIFIED
-                    : RecommendationConfidence.CHECK_NEEDED;
+                    ? Confidence.VERIFIED
+                    : Confidence.CHECK_NEEDED;
         }
 
         result.add(new Recommendation(
@@ -131,12 +131,12 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                 confidence,
                 guidance,
                 step != null && step.hasEnemy()
-                        ? CandidateSafetyEvidence.potentiallyIrreversible(
+                        ? SafetyEvidence.potentiallyIrreversible(
                                 tier == ClueTier.BEGINNER)
-                        : CandidateSafetyEvidence.harmless(
+                        : SafetyEvidence.harmless(
                                 tier == ClueTier.BEGINNER),
-                RecommendationStrategicValue.builder()
-                        .accountModeFit(context.getAccountMode()
+                StrategicValue.builder()
+                        .accountModeFit(context.accountMode()
                                 == AccountMode.ULTIMATE_IRONMAN ? -0.35 : 0.0)
                         .riskBurden(step != null && (step.isWilderness()
                                 || step.hasEnemy()) ? 0.8 : 0.0)
@@ -156,7 +156,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         List<String> values = new ArrayList<>(step.getItemRequirements());
         if (step.isRequiresSpade()) values.add("Spade");
         if (step.isRequiresLight()) values.add("Light source");
-        if (step.hasEnemy()) values.add("Food and a legal setup for " + step.getEnemy());
+        if (step.hasEnemy()) values.add(Text.get(1365) + step.getEnemy());
         if (values.isEmpty()) return null;
         return String.join(", ", values);
     }
@@ -167,7 +167,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         List<String> values = new ArrayList<>();
         if (step.hasStashUnit())
             values.add("STASH: " + display(step.getStashUnit())
-                    + "; contents count only when observed");
+                    + Text.get(1366));
         if (step.isWilderness()) values.add("Wilderness step");
         return values.isEmpty() ? null : String.join(". ", values) + ".";
     }

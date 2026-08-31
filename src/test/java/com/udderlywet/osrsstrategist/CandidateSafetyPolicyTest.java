@@ -27,9 +27,9 @@ public class CandidateSafetyPolicyTest
     {
         StrategyContext skiller = context(account(1, 1, 1, 1, 1, 1, 10, 50));
         assertTrue(policy.isAllowed(recommendation("money:f2p-iron",
-                CandidateSafetyEvidence.skill(true, Skill.MINING)), skiller));
+                SafetyEvidence.skill(true, Skill.MINING)), skiller));
         assertTrue(policy.isAllowed(recommendation("detour:tempoross-planks",
-                CandidateSafetyEvidence.skill(false, Skill.FISHING)), skiller));
+                SafetyEvidence.skill(false, Skill.FISHING)), skiller));
 
         StrategyContext main = context(account(70, 70, 70, 70, 70, 70, 70, 70));
         assertTrue(policy.isAllowed(recommendation("pvm:test"), main));
@@ -47,26 +47,26 @@ public class CandidateSafetyPolicyTest
         assertFalse(policy.isAllowed(recommendation("minigame:pest-control"), context));
         assertFalse(policy.isAllowed(recommendation("opportunity:tears-of-guthix"), context));
         assertTrue(policy.isAllowed(recommendation("opportunity:herb-run",
-                CandidateSafetyEvidence.skill(false, Skill.FARMING)), context));
+                SafetyEvidence.skill(false, Skill.FARMING)), context));
     }
 
     private static Recommendation recommendation(String id)
     {
-        return recommendation(id, CandidateSafetyEvidence.unknown());
+        return recommendation(id, SafetyEvidence.unknown());
     }
 
     private static Recommendation recommendation(String id,
-            CandidateSafetyEvidence evidence)
+            SafetyEvidence evidence)
     {
         return new Recommendation(id, id, "test", 10, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Do it.", "Prepare.", "Safe area.", "Test."),
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Do it.", "Prepare.", "Safe area.", "Test."),
                 evidence);
     }
 
     private static StrategyContext context(AccountSnapshot account)
     {
-        return new StrategyContext(StrategyDataBundle.builder(account).build(),
+        return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.MAX, false, false, false,
                 new PreferenceProfile());

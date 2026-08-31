@@ -37,7 +37,7 @@ public class BetaAccountSimulationTest
     @Test
     public void f2pMainNeverReceivesMembersSkillOrMethod()
     {
-        StrategyDataBundle data = data(account(
+        GameData data = data(account(
                 MembershipStatus.F2P, 0, standardLevels(45)));
 
         List<Recommendation> recommendations = engine.recommendAll(
@@ -66,7 +66,7 @@ public class BetaAccountSimulationTest
     @Test
     public void unknownMembershipFailsClosedLikeF2p()
     {
-        StrategyDataBundle data = data(account(
+        GameData data = data(account(
                 MembershipStatus.UNKNOWN, 0, standardLevels(45)));
         List<Recommendation> recommendations = engine.recommendAll(
                 data,
@@ -92,9 +92,9 @@ public class BetaAccountSimulationTest
     public void p2pTransitionRestoresMembersSkillSelection()
     {
         Map<Skill, Integer> levels = standardLevels(60);
-        StrategyDataBundle f2p = data(account(
+        GameData f2p = data(account(
                 MembershipStatus.F2P, 0, levels));
-        StrategyDataBundle p2p = data(account(
+        GameData p2p = data(account(
                 MembershipStatus.P2P, 0, levels));
 
         assertNullPlan(selector.select(
@@ -127,7 +127,7 @@ public class BetaAccountSimulationTest
         AccountSnapshot account = account(MembershipStatus.F2P, 0, levels);
         assertEquals(RestrictedBuildType.DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
-        StrategyDataBundle data = data(account);
+        GameData data = data(account);
 
         assertNotNull(selector.select(data, Skill.DEFENCE, 75,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME, false));
@@ -171,7 +171,7 @@ public class BetaAccountSimulationTest
         AccountSnapshot account = account(MembershipStatus.P2P, 0, levels);
         assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
-        StrategyDataBundle data = data(account);
+        GameData data = data(account);
 
         assertNullPlan(selector.select(data, Skill.DEFENCE, 1,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION, false));
@@ -202,7 +202,7 @@ public class BetaAccountSimulationTest
         AccountSnapshot account = account(MembershipStatus.P2P, 0, levels);
         assertEquals(RestrictedBuildType.SKILLER,
                 AccountBuildPolicy.effectiveBuild(account));
-        StrategyDataBundle data = data(account);
+        GameData data = data(account);
 
         for (Skill skill : new Skill[]{
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE, Skill.RANGED,
@@ -219,7 +219,7 @@ public class BetaAccountSimulationTest
     @Test
     public void hardcoreCannotSelectWildernessEvenWhenGlobalToggleIsOn()
     {
-        StrategyDataBundle data = data(account(
+        GameData data = data(account(
                 MembershipStatus.P2P, 3, standardLevels(70)));
 
         TrainingPlan plan = selector.select(
@@ -240,7 +240,7 @@ public class BetaAccountSimulationTest
         int[] accountTypes = {1, 2, 3, 4, 5, 6};
         for (int accountType : accountTypes)
         {
-            StrategyDataBundle data = data(account(
+            GameData data = data(account(
                     MembershipStatus.P2P,
                     accountType,
                     standardLevels(60)));
@@ -256,7 +256,7 @@ public class BetaAccountSimulationTest
                     recommendations.isEmpty());
             for (Recommendation recommendation : recommendations)
             {
-                RecommendationGuidance guidance = recommendation.getGuidance();
+                Guidance guidance = recommendation.getGuidance();
                 if (guidance == null) continue;
                 String text = safe(guidance.getAction()) + " "
                         + safe(guidance.getSupplies()) + " "
@@ -271,7 +271,7 @@ public class BetaAccountSimulationTest
     @Test
     public void recommendationEngineKeepsFullPoolForFinalActionabilityPass()
     {
-        StrategyDataBundle data = data(account(
+        GameData data = data(account(
                 MembershipStatus.P2P, 0, standardLevels(60)));
 
         List<Recommendation> full = engine.recommendAll(
@@ -313,7 +313,7 @@ public class BetaAccountSimulationTest
                     MembershipStatus.P2P,
                     accountType,
                     standardLevels(70));
-            StrategyDataBundle data = data(account);
+            GameData data = data(account);
             for (StrategyMode mode : modes)
             {
                 for (SessionIntent session : sessions)
@@ -349,7 +349,7 @@ public class BetaAccountSimulationTest
     public void strategyEngineRunsMajorAccountStageMatrixEndToEnd()
     {
         StrategyEngine strategyEngine = new StrategyEngine(engine, null, null,
-                null, new RecommendationActionabilityPolicy(),
+                null, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         MembershipStatus[] memberships = {
                 MembershipStatus.F2P, MembershipStatus.UNKNOWN,
@@ -361,7 +361,7 @@ public class BetaAccountSimulationTest
             {
                 for (int stage : stages)
                 {
-                    StrategyDataBundle data = data(account(membership,
+                    GameData data = data(account(membership,
                             accountType, standardLevels(stage)));
                     for (StrategyMode mode : StrategyMode.values())
                     {
@@ -379,14 +379,14 @@ public class BetaAccountSimulationTest
                                     : result.getRecommendations())
                             {
                                 assertFalse(recommendation.getConfidence()
-                                        == RecommendationConfidence.BLOCKED);
+                                        == Confidence.BLOCKED);
                                 if (FallbackRecommendationFactory.isFallback(
                                         recommendation)) continue;
                                 TrainingMethod method = requireMethod(recommendation);
                                 assertTrue(ContentAccessRules.isMethodAvailable(
                                         method, membership));
                                 assertTrue(AccountBuildPolicy.allowsMethod(
-                                        data.getAccount(), method));
+                                        data.account(), method));
                             }
                         }
                     }
@@ -395,12 +395,12 @@ public class BetaAccountSimulationTest
         }
     }
 
-    private static StrategyDataBundle data(AccountSnapshot account)
+    private static GameData data(AccountSnapshot account)
     {
-        return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        return GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 

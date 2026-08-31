@@ -29,7 +29,7 @@ public final class SkillBreakpoint
     {
         if (skill == null || level < 2 || label == null
                 || label.trim().isEmpty() || kind == null)
-            throw new IllegalArgumentException("A verified breakpoint is required");
+            throw new IllegalArgumentException(Text.get(1179));
         this.skill = skill;
         this.level = level;
         this.label = label.trim();

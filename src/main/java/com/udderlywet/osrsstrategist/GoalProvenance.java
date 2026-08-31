@@ -6,14 +6,14 @@ import lombok.Getter;
 
 /** A validated dependency path connecting one recommendation to one selected goal. */
 @Getter
-public final class GoalDependencyProvenance
+public final class GoalProvenance
 {
     private final GoalType goal;
     private final GoalRecommendationRelationship relationship;
     private final String recommendationId;
     private final List<String> path;
 
-    private GoalDependencyProvenance(GoalType goal,
+    private GoalProvenance(GoalType goal,
             GoalRecommendationRelationship relationship,
             String recommendationId, List<String> path)
     {
@@ -32,18 +32,18 @@ public final class GoalDependencyProvenance
         this.path = Collections.unmodifiableList(new ArrayList<>(path));
     }
 
-    public static GoalDependencyProvenance direct(GoalType goal,
+    public static GoalProvenance direct(GoalType goal,
             String recommendationId, List<String> path)
     {
-        return new GoalDependencyProvenance(goal,
+        return new GoalProvenance(goal,
                 GoalRecommendationRelationship.DIRECT,
                 recommendationId, path);
     }
 
-    public static GoalDependencyProvenance prerequisite(GoalType goal,
+    public static GoalProvenance prerequisite(GoalType goal,
             String recommendationId, List<String> path)
     {
-        return new GoalDependencyProvenance(goal,
+        return new GoalProvenance(goal,
                 GoalRecommendationRelationship.PREREQUISITE,
                 recommendationId, path);
     }
@@ -66,13 +66,13 @@ public final class GoalDependencyProvenance
         String goalName = path.isEmpty() ? goal.toString() : path.get(0);
         String action = path.get(path.size() - 1);
         if (relationship == GoalRecommendationRelationship.DIRECT)
-            return action + " directly advances your " + goalName + " goal.";
+            return action + Text.get(1226) + goalName + " goal.";
         if (path.size() >= 3)
         {
             String parent = path.get(path.size() - 2);
             return action + " is required for " + parent
-                    + ", which is on your " + goalName + " path.";
+                    + Text.get(1227) + goalName + " path.";
         }
-        return action + " is required for your " + goalName + " goal.";
+        return action + Text.get(1228) + goalName + " goal.";
     }
 }

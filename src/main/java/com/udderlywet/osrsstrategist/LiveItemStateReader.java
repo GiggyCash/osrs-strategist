@@ -23,8 +23,8 @@ public class LiveItemStateReader
 {
     private final Client client;
     private final ItemManager itemManager;
-    private BankSnapshot lastBankSnapshot;
-    private GroupStorageSnapshot lastGroupStorageSnapshot;
+    private ItemsState lastBankSnapshot;
+    private ItemsState lastGroupStorageSnapshot;
 
     @Inject
     public LiveItemStateReader(
@@ -35,34 +35,34 @@ public class LiveItemStateReader
         this.itemManager = itemManager;
     }
 
-    public InventorySnapshot readInventory()
+    public ItemsState readInventory()
     {
-        List<ItemStackSnapshot> items =
+        List<ItemState> items =
                 readContainer(InventoryID.INV);
 
         return items == null
                 ? null
-                : new InventorySnapshot(items, true);
+                : new ItemsState(items, true);
     }
 
-    public EquipmentSnapshot readEquipment()
+    public ItemsState readEquipment()
     {
-        List<ItemStackSnapshot> items =
+        List<ItemState> items =
                 readContainer(InventoryID.WORN);
 
         return items == null
                 ? null
-                : new EquipmentSnapshot(items);
+                : new ItemsState(items);
     }
 
-    public BankSnapshot readBank()
+    public ItemsState readBank()
     {
-        List<ItemStackSnapshot> items =
+        List<ItemState> items =
                 readContainer(InventoryID.BANK);
 
         if (items != null)
         {
-            lastBankSnapshot = new BankSnapshot(
+            lastBankSnapshot = new ItemsState(
                     items,
                     System.currentTimeMillis()
             );
@@ -72,16 +72,16 @@ public class LiveItemStateReader
     }
 
     /** Shared storage is usable only after this character actually opens it. */
-    public GroupStorageSnapshot readGroupStorage()
+    public ItemsState readGroupStorage()
     {
         return lastGroupStorageSnapshot;
     }
 
     public void observeGroupStorage(ItemContainer container)
     {
-        List<ItemStackSnapshot> items = snapshot(container);
+        List<ItemState> items = snapshot(container);
         if (items != null)
-            lastGroupStorageSnapshot = new GroupStorageSnapshot(
+            lastGroupStorageSnapshot = new ItemsState(
                     true, items, System.currentTimeMillis());
     }
 
@@ -91,7 +91,7 @@ public class LiveItemStateReader
         lastGroupStorageSnapshot = null;
     }
 
-    private List<ItemStackSnapshot> readContainer(
+    private List<ItemState> readContainer(
             int inventoryId)
     {
         ItemContainer container =
@@ -105,10 +105,10 @@ public class LiveItemStateReader
         return snapshot(container);
     }
 
-    private List<ItemStackSnapshot> snapshot(ItemContainer container)
+    private List<ItemState> snapshot(ItemContainer container)
     {
         if (container == null) return null;
-        List<ItemStackSnapshot> result = new ArrayList<>();
+        List<ItemState> result = new ArrayList<>();
         Item[] containerItems = container.getItems();
         for (int slotIndex = 0; slotIndex < containerItems.length; slotIndex++)
         {
@@ -125,7 +125,7 @@ public class LiveItemStateReader
                     .getName();
 
             result.add(
-                    new ItemStackSnapshot(
+                    new ItemState(
                             item.getId(),
                             name,
                             item.getQuantity(),

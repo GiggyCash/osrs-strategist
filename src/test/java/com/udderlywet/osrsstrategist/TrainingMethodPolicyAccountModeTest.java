@@ -66,7 +66,7 @@ public class TrainingMethodPolicyAccountModeTest
     @Test
     public void balancedUimPrefersSustainableRelaxedMethodOverSweatySwitching()
     {
-        StrategyDataBundle uim = data(AccountMode.ULTIMATE_IRONMAN,
+        GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P);
         TrainingMethodMetadata relaxed = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.RELAXED);
@@ -84,7 +84,7 @@ public class TrainingMethodPolicyAccountModeTest
     @Test
     public void efficientUimDoesNotApplyExtraSustainabilityPenalty()
     {
-        StrategyDataBundle uim = data(AccountMode.ULTIMATE_IRONMAN,
+        GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P);
         TrainingMethodMetadata sweaty = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.SWEATY);
@@ -100,7 +100,7 @@ public class TrainingMethodPolicyAccountModeTest
     {
         return new TrainingMethod("test", Skill.MINING, 1, 99, "Test", "Test",
                 1, 1, 1, AttentionLevel.LOW, 10, 1,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED,
+                Collections.emptyList(), Confidence.VERIFIED,
                 false, wilderness, false);
     }
 
@@ -112,14 +112,14 @@ public class TrainingMethodPolicyAccountModeTest
                 Collections.emptyList());
     }
 
-    private static StrategyDataBundle data(AccountMode mode, MembershipStatus membership)
+    private static GameData data(AccountMode mode, MembershipStatus membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 1); xp.put(skill, 0); }
         AccountSnapshot account = new AccountSnapshot("Test", code(mode), mode.name(),
                 membership, 0, 1, 0L, levels, xp);
-        return StrategyDataBundle.builder(account).build();
+        return GameData.builder(account).build();
     }
 
     private static int code(AccountMode mode)

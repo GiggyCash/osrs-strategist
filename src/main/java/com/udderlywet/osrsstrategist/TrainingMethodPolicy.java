@@ -7,13 +7,13 @@ import javax.inject.Singleton;
 public class TrainingMethodPolicy
 {
     public boolean isAllowed(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method,
             TrainingMethodMetadata metadata,
             boolean allowWildernessMethods)
     {
         if (method == null || metadata == null) return false;
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -62,13 +62,13 @@ public class TrainingMethodPolicy
     }
 
     public double scoreAdjustment(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethodMetadata metadata,
             StrategyMode strategyMode,
             SessionIntent sessionIntent)
     {
         if (metadata == null) return 0.0;
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());

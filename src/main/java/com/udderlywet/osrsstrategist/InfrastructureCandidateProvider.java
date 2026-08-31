@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 
 /** Turns verified POH absence into one concrete build or verification action. */
 @Singleton
-public class InfrastructureCandidateProvider implements StrategyCandidateProvider
+public class InfrastructureCandidateProvider implements CandidateProvider
 {
     private final InfrastructureMilestoneCatalog catalog;
     private final InfrastructureUnlockValueService values;
@@ -42,12 +42,12 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null) return result;
-        AccountSnapshot account = context.getData().getAccount();
+        if (context == null || context.data() == null
+                || context.data().account() == null) return result;
+        AccountSnapshot account = context.data().account();
         if (account.getMembershipStatus() != MembershipStatus.P2P) return result;
 
-        if (context.getData().getPoh() == null)
+        if (context.data().poh() == null)
         {
             result.add(verificationCandidate(context));
             return result;
@@ -56,7 +56,7 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         UimRecurringPressureAssessment pressure =
                 recurringPressure.observe(context);
 
-        for (InfrastructureMilestoneDefinition definition : catalog.all())
+        for (InfrastructureMilestone definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
                     definition.getId(), context);
@@ -70,23 +70,23 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
     private static Recommendation verificationCandidate(
             StrategyContext context)
     {
-        double modeValue = context.getAccountMode()
+        double modeValue = context.accountMode()
                 == AccountMode.ULTIMATE_IRONMAN ? 0.9
                 : AccountModePolicy.requiresSelfSourcing(
-                        context.getAccountMode()) ? 0.55 : 0.25;
+                        context.accountMode()) ? 0.55 : 0.25;
         return new Recommendation(
                 "verify:poh-build-mode",
-                "Verify your own POH",
+                Text.get(1424),
                 Text.get(301),
                 34.0 + modeValue * 12.0,
-                RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(
+                Confidence.CHECK_NEEDED,
+                new Guidance(
                         Text.get(309),
                         Text.get(310),
-                        "Varrock Estate agent, then your POH",
+                        Text.get(1425),
                         Text.get(311)),
-                CandidateSafetyEvidence.harmless(false),
-                RecommendationStrategicValue.builder()
+                SafetyEvidence.harmless(false),
+                StrategicValue.builder()
                         .infrastructureValue(modeValue)
                         .accountModeFit(modeValue)
                         .evidence("runelite:poh-building-mode")
@@ -94,7 +94,7 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
     }
 
     private static Recommendation buildCandidate(
-            InfrastructureMilestoneDefinition definition,
+            InfrastructureMilestone definition,
             InfrastructureValueAssessment assessment,
             StrategyContext context,
             UimRecurringPressureAssessment pressure)
@@ -102,9 +102,9 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         double utility = assessment.getStrategicValue().ordinal()
                 / (double) StrategicPriority.CRITICAL.ordinal();
         double score = 31.0 + utility * 26.0;
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
             score += 8.0;
-        else if (AccountModePolicy.requiresSelfSourcing(context.getAccountMode()))
+        else if (AccountModePolicy.requiresSelfSourcing(context.accountMode()))
             score += 3.0;
         if (context.getSessionIntent() == SessionIntent.QUICK_20_MIN)
             score -= expensiveSetup(definition.getId()) ? 12.0 : 3.0;
@@ -117,9 +117,9 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
                         InfrastructureBenefit.STORAGE));
         if (recurringRelief) score += 12.0;
 
-        String modeReason = context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+        String modeReason = context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                 ? Text.get(312)
-                : AccountModePolicy.requiresSelfSourcing(context.getAccountMode())
+                : AccountModePolicy.requiresSelfSourcing(context.accountMode())
                 ? Text.get(313)
                 : Text.get(314);
         if (recurringRelief)
@@ -132,15 +132,15 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
                 Text.get(302)
                         + modeReason,
                 score,
-                RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(
+                Confidence.CHECK_NEEDED,
+                new Guidance(
                         definition.getAction(), materials(definition.getId()),
-                        "Your own POH in Build mode",
+                        Text.get(1426),
                         Text.get(303)),
-                CandidateSafetyEvidence.skill(false, Skill.CONSTRUCTION),
-                RecommendationStrategicValue.builder()
+                SafetyEvidence.skill(false, Skill.CONSTRUCTION),
+                StrategicValue.builder()
                         .infrastructureValue(utility)
-                        .accountModeFit(context.getAccountMode()
+                        .accountModeFit(context.accountMode()
                                 == AccountMode.ULTIMATE_IRONMAN
                                 ? utility : utility * 0.55)
                         .setupReuse(utility * 0.7)
@@ -165,7 +165,7 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         switch (id)
         {
             case "poh-costume-room": return "50,000 coins";
-            case "poh-armour-case": return "Hammer, saw, 3 oak planks";
+            case "poh-armour-case": return Text.get(1427);
             case "poh-portal-chamber":
                 return Text.get(304);
             case "poh-superior-garden": return "75,000 coins";
@@ -174,7 +174,7 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
             case "poh-portal-nexus":
                 return Text.get(306);
             case "poh-spirit-tree":
-                return "Filled watering can, spirit sapling";
+                return Text.get(1428);
             case "poh-basic-jewellery-box":
                 return Text.get(307);
             case "poh-fairy-ring":

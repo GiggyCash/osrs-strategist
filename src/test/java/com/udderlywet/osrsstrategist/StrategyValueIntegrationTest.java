@@ -27,7 +27,7 @@ public class StrategyValueIntegrationTest
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("The Grand Tree", QuestStatus.COMPLETE);
         StrategyContext context = context(account("MAIN"),
-                StrategyDataBundle.builder(account("MAIN"))
+                GameData.builder(account("MAIN"))
                         .quests(new QuestSnapshot(quests)).build());
 
         Recommendation valued = new MethodRecommendationValueService()
@@ -44,14 +44,14 @@ public class StrategyValueIntegrationTest
     public void finalQueueUsesTypedValueWithoutInspectingIdentityOrProse()
     {
         Recommendation ordinary = ready("candidate:ordinary", 50.0,
-                RecommendationStrategicValue.neutral());
+                StrategicValue.neutral());
         Recommendation valuable = ready("candidate:opaque", 43.0,
-                RecommendationStrategicValue.builder()
+                StrategicValue.builder()
                         .unlockValue(1.0)
                         .evidence("unlock:verified")
                         .build());
         StrategyContext context = context(account("MAIN"),
-                StrategyDataBundle.builder(account("MAIN")).build());
+                GameData.builder(account("MAIN")).build());
 
         List<Recommendation> queue = engine(null, null).buildPlayerQueue(
                 Arrays.asList(ordinary, valuable), context);
@@ -64,10 +64,10 @@ public class StrategyValueIntegrationTest
     {
         AccountSnapshot account = account(4, "GROUP_IRONMAN",
                 Skill.FIREMAKING, 1);
-        GroupStorageSnapshot group = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState group = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         ItemID.LOGS, "Logs", 20)));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .groupStorage(group).build();
         StrategyContext context = new StrategyContext(data,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -80,11 +80,11 @@ public class StrategyValueIntegrationTest
                 new RuneLiteSkillActionCatalog()
                 {
                     @Override
-                    public List<RuneLiteSkillActionDefinition> actionsFor(
+                    public List<ActionDef> actionsFor(
                             Skill skill)
                     {
                         return Collections.singletonList(
-                                new RuneLiteSkillActionDefinition(
+                                new ActionDef(
                                         Skill.FIREMAKING,
                                         "runelite:firemaking:logs", "Logs",
                                         1, 40.0f, null,
@@ -104,17 +104,17 @@ public class StrategyValueIntegrationTest
     public void providerSupersedesGenericCandidateOnlyWhenItEmitsReplacement()
     {
         Recommendation generic = ready("skill:slayer", 70.0,
-                RecommendationStrategicValue.neutral());
+                StrategicValue.neutral());
         RecommendationEngine recommendations = recommendationEngine(generic);
-        StrategyCandidateProvider emptyOwner = provider(
+        CandidateProvider emptyOwner = provider(
                 Collections.emptyList(), Collections.singleton("skill:slayer"));
-        StrategyCandidateProvider replacementOwner = provider(
+        CandidateProvider replacementOwner = provider(
                 Collections.singletonList(new Recommendation(
                         "slayer:get-task", "Get a task", "Observed no-task state.",
-                        60.0, RecommendationConfidence.VERIFIED, guidance(),
-                        CandidateSafetyEvidence.verifiedSafe(false))),
+                        60.0, Confidence.VERIFIED, guidance(),
+                        SafetyEvidence.verifiedSafe(false))),
                 Collections.singleton("skill:slayer"));
-        StrategyDataBundle data = StrategyDataBundle.builder(account("MAIN"))
+        GameData data = GameData.builder(account("MAIN"))
                 .build();
 
         List<Recommendation> fallback = engine(recommendations, emptyOwner)
@@ -135,20 +135,20 @@ public class StrategyValueIntegrationTest
     }
 
     private static StrategyEngine engine(RecommendationEngine recommendations,
-            StrategyCandidateProvider provider)
+            CandidateProvider provider)
     {
         StrategyCandidateRegistry registry = provider == null ? null
                 : new StrategyCandidateRegistry(
                         Collections.singletonList(provider));
         return new StrategyEngine(recommendations, null, null, registry,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
-    private static StrategyCandidateProvider provider(
+    private static CandidateProvider provider(
             List<Recommendation> candidates, Set<String> superseded)
     {
-        return new StrategyCandidateProvider()
+        return new CandidateProvider()
         {
             @Override public String getId() { return "test-owner"; }
             @Override public List<Recommendation> candidates(
@@ -165,7 +165,7 @@ public class StrategyValueIntegrationTest
         {
             @Override
             public List<Recommendation> recommendAll(
-                    StrategyDataBundle data, StrategyMode strategyMode,
+                    GameData data, StrategyMode strategyMode,
                     SessionIntent sessionIntent, boolean useGroupStorage,
                     boolean allowWildernessMethods,
                     PreferenceProfile preferences)
@@ -179,26 +179,26 @@ public class StrategyValueIntegrationTest
             TrainingMethod method, int current, int target)
     {
         TrainingPlan plan = new TrainingPlan(method, "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
         return new Recommendation(id, "Train Farming", "Test.", 40.0,
-                plan, RecommendationConfidence.VERIFIED, current, target,
-                guidance(), CandidateSafetyEvidence.skill(false,
+                plan, Confidence.VERIFIED, current, target,
+                guidance(), SafetyEvidence.skill(false,
                         method.getSkill()));
     }
 
     private static Recommendation ready(String id, double score,
-            RecommendationStrategicValue value)
+            StrategicValue value)
     {
         return new Recommendation(id, id, "Neutral test wording.", score,
-                null, RecommendationConfidence.VERIFIED, 0, 0, guidance(),
-                CandidateSafetyEvidence.verifiedSafe(false))
+                null, Confidence.VERIFIED, 0, 0, guidance(),
+                SafetyEvidence.verifiedSafe(false))
                 .withStrategicValue(value);
     }
 
-    private static RecommendationGuidance guidance()
+    private static Guidance guidance()
     {
-        return new RecommendationGuidance("Plant the fruit-tree sapling and repeat the checked route.",
+        return new Guidance("Plant the fruit-tree sapling and repeat the checked route.",
                 "Required setup is observed.", "Falador Park.",
                 "Typed test evidence.");
     }
@@ -207,12 +207,12 @@ public class StrategyValueIntegrationTest
     {
         return new TrainingMethod(id, skill, 1, 99, id, "Do it.",
                 10, 10, 10, AttentionLevel.MODERATE, 20, 2,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED,
+                Collections.emptyList(), Confidence.VERIFIED,
                 true);
     }
 
     private static StrategyContext context(AccountSnapshot account,
-            StrategyDataBundle data)
+            GameData data)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,

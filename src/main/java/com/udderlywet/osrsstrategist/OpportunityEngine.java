@@ -23,16 +23,16 @@ public class OpportunityEngine
     public List<Opportunity> evaluate(AccountSnapshot snapshot)
     {
         if (snapshot == null) return Collections.emptyList();
-        return evaluate(StrategyDataBundle.builder(snapshot).build());
+        return evaluate(GameData.builder(snapshot).build());
     }
 
-    public List<Opportunity> evaluate(StrategyDataBundle data)
+    public List<Opportunity> evaluate(GameData data)
     {
         List<Opportunity> opportunities = new ArrayList<>();
-        if (data == null || data.getAccount() == null) return opportunities;
+        if (data == null || data.account() == null) return opportunities;
 
-        MembershipStatus membership = data.getAccount().getMembershipStatus();
-        RecurringOpportunitySnapshot recurring = data.getRecurringOpportunities();
+        MembershipStatus membership = data.account().getMembershipStatus();
+        RecurringOpportunitySnapshot recurring = data.recurringOpportunities();
         long now = System.currentTimeMillis();
 
         // Every currently-modelled recurring activity below is members content.
@@ -62,16 +62,16 @@ public class OpportunityEngine
                     "Kingdom approval", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:battlestaves", OpportunityType.BATTLESTAVES,
-                    "Daily battlestaves", Collections.emptyList());
+                    Text.get(1522), Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:dynamite", OpportunityType.DYNAMITE,
                     "Daily dynamite", Collections.emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     "opportunity:diary-daily", OpportunityType.DAILY_DIARY_REWARD,
-                    "Daily diary reward", Collections.emptyList());
+                    Text.get(1523), Collections.emptyList());
         }
 
-        ClueSnapshot clue = data.getClue();
+        ClueSnapshot clue = data.clue();
         if (clue != null && clue.isCluePresent())
         {
             ClueTier tier = ClueTier.fromText(clue.getClueType());
@@ -87,12 +87,12 @@ public class OpportunityEngine
                     if (step.isRequiresSpade()) preparation.add("Spade");
                     if (step.isRequiresLight()) preparation.add("Light source");
                     if (step.hasEnemy()) preparation.add(
-                            "Legal combat setup for " + step.getEnemy());
+                            Text.get(1524) + step.getEnemy());
                     if (step.isWilderness()) preparation.add(
-                            "Explicit Wilderness risk approval");
+                            Text.get(1525));
                     if (step.hasStashUnit()) preparation.add(
                             "Observe the " + step.getStashUnit()
-                                    + " STASH contents before counting them");
+                                    + Text.get(1526));
                 }
                 boolean ready = step != null
                         && tier == ClueTier.BEGINNER
@@ -104,14 +104,14 @@ public class OpportunityEngine
                                 : clue.getClueType() + " clue"
                                 + (step == null ? "" : ": " + step.getKind()),
                         ready,
-                        ready ? RecommendationConfidence.VERIFIED
-                                : RecommendationConfidence.CHECK_NEEDED,
+                        ready ? Confidence.VERIFIED
+                                : Confidence.CHECK_NEEDED,
                         preparation,
                         false,
                         step != null && step.hasEnemy()
-                                ? CandidateSafetyEvidence.potentiallyIrreversible(
+                                ? SafetyEvidence.potentiallyIrreversible(
                                         tier == ClueTier.BEGINNER)
-                                : CandidateSafetyEvidence.harmless(
+                                : SafetyEvidence.harmless(
                                         tier == ClueTier.BEGINNER)
                 ));
             }
@@ -133,11 +133,11 @@ public class OpportunityEngine
         boolean ready = recurring.isReadyNow(id, now);
         result.add(new Opportunity(
                 id, type, title, ready,
-                RecommendationConfidence.VERIFIED, preparation));
+                Confidence.VERIFIED, preparation));
     }
 
     private static void addHerbRunOpportunity(List<Opportunity> result,
-            StrategyDataBundle data, RecurringOpportunitySnapshot recurring,
+            GameData data, RecurringOpportunitySnapshot recurring,
             long now, FarmingAccessCatalog accessCatalog,
             FarmingSupplyCatalog supplyCatalog)
     {
@@ -145,95 +145,95 @@ public class OpportunityEngine
         if (recurring == null || recurring.readyAt(id) == null) return;
 
         List<String> missing = new ArrayList<>();
-        InventorySnapshot inventory = data.getInventory();
+        ItemsState inventory = data.inventory();
         if (!inventoryHas(inventory, "spade")) missing.add("Carry a spade");
-        if (!inventoryHas(inventory, "seed dibber")) missing.add("Carry a seed dibber");
-        int farmingLevel = data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        if (!inventoryHas(inventory, "seed dibber")) missing.add(Text.get(1527));
+        int farmingLevel = data.account().getSkillLevel(net.runelite.api.Skill.FARMING);
         ResourceRequirement herbSeeds = supplyCatalog.herbSeedsForLevel(
                 farmingLevel);
         if (!inventoryHasAnyId(inventory, herbSeeds.getItemIds()))
-            missing.add("Carry one guam seed");
+            missing.add(Text.get(1528));
         if (farmingLevel < 9)
             missing.add(Text.get(393));
-        FarmingSnapshot farming = data.getFarming();
+        FarmingSnapshot farming = data.farming();
         if (!hasReachableHerbPatch(farming, accessCatalog))
             missing.add(Text.get(394));
 
         boolean ready = recurring.isReadyNow(id, now);
         boolean setupVerified = ready && missing.isEmpty();
         result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
-                ready, RecommendationConfidence.VERIFIED, missing,
-                setupVerified, CandidateSafetyEvidence.skill(false,
+                ready, Confidence.VERIFIED, missing,
+                setupVerified, SafetyEvidence.skill(false,
                 net.runelite.api.Skill.FARMING)));
     }
 
     private static void addBirdhouseOpportunity(List<Opportunity> result,
-            StrategyDataBundle data, RecurringOpportunitySnapshot recurring,
+            GameData data, RecurringOpportunitySnapshot recurring,
             long now)
     {
         String id = "opportunity:birdhouse";
         if (recurring == null || recurring.readyAt(id) == null) return;
         List<String> missing = new ArrayList<>();
-        QuestSnapshot quests = data.getQuests();
+        QuestSnapshot quests = data.quests();
         if (quests == null || quests.statusOf("Bone Voyage") != QuestStatus.COMPLETE)
             missing.add(Text.get(395));
-        InventorySnapshot inventory = data.getInventory();
+        ItemsState inventory = data.inventory();
         if (!inventoryHas(inventory, "hammer")) missing.add("Carry a hammer");
         if (!inventoryHas(inventory, "chisel")) missing.add("Carry a chisel");
         if (inventoryQuantity(inventory, "clockwork") < 4)
-            missing.add("Carry 4 clockworks");
+            missing.add(Text.get(1529));
         if (matchingQuantity(inventory, " log", "logs") < 4)
-            missing.add("Carry 4 regular logs");
+            missing.add(Text.get(1530));
         if (birdhouseSeedQuantity(inventory) < 40)
-            missing.add("Carry 40 barley seeds");
-        if (data.getAccount().getSkillLevel(net.runelite.api.Skill.HUNTER) < 5)
-            missing.add("Reach Hunter level 5");
-        if (data.getAccount().getSkillLevel(net.runelite.api.Skill.CRAFTING) < 5)
-            missing.add("Reach Crafting level 5");
+            missing.add(Text.get(1531));
+        if (data.account().getSkillLevel(net.runelite.api.Skill.HUNTER) < 5)
+            missing.add(Text.get(1532));
+        if (data.account().getSkillLevel(net.runelite.api.Skill.CRAFTING) < 5)
+            missing.add(Text.get(1533));
         boolean ready = recurring.isReadyNow(id, now);
         boolean setupVerified = ready && missing.isEmpty();
         result.add(new Opportunity(id, OpportunityType.BIRDHOUSE_RUN,
-                "Birdhouse run", ready, RecommendationConfidence.VERIFIED,
+                "Birdhouse run", ready, Confidence.VERIFIED,
                 missing, setupVerified,
-                CandidateSafetyEvidence.skill(false,
+                SafetyEvidence.skill(false,
                         net.runelite.api.Skill.HUNTER)));
     }
 
-    private static boolean inventoryHas(InventorySnapshot inventory, String expected)
+    private static boolean inventoryHas(ItemsState inventory, String expected)
     {
         if (inventory == null) return false;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
             if (item != null && item.getQuantity() > 0 && item.getName() != null
                     && item.getName().equalsIgnoreCase(expected)) return true;
         return false;
     }
 
-    private static boolean inventoryHasAnyId(InventorySnapshot inventory, int[] itemIds)
+    private static boolean inventoryHasAnyId(ItemsState inventory, int[] itemIds)
     {
         if (inventory == null || itemIds == null) return false;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
             if (item != null && item.getQuantity() > 0)
                 for (int itemId : itemIds)
                     if (item.getItemId() == itemId) return true;
         return false;
     }
 
-    private static int inventoryQuantity(InventorySnapshot inventory, String name)
+    private static int inventoryQuantity(ItemsState inventory, String name)
     {
         if (inventory == null || name == null) return 0;
         int quantity = 0;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
             if (item != null && item.getName() != null
                     && item.getName().equalsIgnoreCase(name)) quantity += item.getQuantity();
         return quantity;
     }
 
-    private static int matchingQuantity(InventorySnapshot inventory,
+    private static int matchingQuantity(ItemsState inventory,
             String suffix, String exact)
     {
         if (inventory == null) return 0;
         int quantity = 0;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             if (item == null || item.getName() == null) continue;
             String name = item.getName().toLowerCase(java.util.Locale.ROOT);
@@ -243,11 +243,11 @@ public class OpportunityEngine
         return quantity;
     }
 
-    private static int birdhouseSeedQuantity(InventorySnapshot inventory)
+    private static int birdhouseSeedQuantity(ItemsState inventory)
     {
         if (inventory == null) return 0;
         int quantity = 0;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             if (item == null || item.getName() == null) continue;
             String name = item.getName().toLowerCase(java.util.Locale.ROOT);

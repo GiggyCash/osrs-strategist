@@ -13,7 +13,7 @@ public class RecommendationPresentationCompactTest
     public void sidebarUsesRequestedMethodAndNeededHierarchy()
     {
         Recommendation recommendation = recommendationWithMethodAndMissingRequirement();
-        String text = RecommendationPresentation.compactText(recommendation);
+        String text = Presentation.compactText(recommendation);
         assertTrue(text.contains("METHOD"));
         assertTrue(text.contains("NEEDED"));
         assertFalse(text.contains("NEXT UNLOCK"));
@@ -27,13 +27,13 @@ public class RecommendationPresentationCompactTest
         Recommendation recommendation = new Recommendation(
                 "stash:master:very-long", "Build the current Master STASH unit",
                 "Avoid repeated clue inventory setup after the unit is observed built.",
-                40, null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
-                new RecommendationGuidance(
+                40, null, Confidence.CHECK_NEEDED, 0, 0,
+                new Guidance(
                         "Open the Construction interface at the exact STASH location and verify built state.",
                         "Bring the verified flatpack materials only after the live built-state check.",
                         "The active clue location.",
                         "Built state remains unknown."));
-        String compact = RecommendationPresentation.compactText(recommendation);
+        String compact = Presentation.compactText(recommendation);
         assertTrue(compact.contains("ACTIVITY"));
         assertTrue(compact.contains("BRING"));
         assertTrue(compact.contains("WHERE"));
@@ -51,8 +51,8 @@ public class RecommendationPresentationCompactTest
                 + "Buy the remaining fish and keep several other detailed accounting notes in the full overlay.";
         Recommendation recommendation = recommendation(longAction, longSupplies);
 
-        String compact = RecommendationPresentation.compactText(recommendation);
-        String details = RecommendationPresentation.detailedText(recommendation);
+        String compact = Presentation.compactText(recommendation);
+        String details = Presentation.detailedText(recommendation);
 
         assertTrue(compact.contains("Verified: you own 900 raw sharks"));
         assertFalse(compact.contains("intentionally detailed execution notes"));
@@ -69,7 +69,7 @@ public class RecommendationPresentationCompactTest
         Recommendation verified = recommendation(
                 "Cook the carried fish and bank the output.",
                 "Carry the observed raw salmon.");
-        String details = RecommendationPresentation.detailedText(verified);
+        String details = Presentation.detailedText(verified);
 
         assertTrue(details.contains("WHERE"));
         assertFalse(details.contains("NEEDED"));
@@ -80,7 +80,7 @@ public class RecommendationPresentationCompactTest
     public void compactSentenceNeverCutsIntoHugeWordWallBeyondBudget()
     {
         String value = "This is useful compact text followed by a very long explanation that should be shortened without destroying the full details presentation.";
-        String compact = RecommendationPresentation.compactSentence(value, 60);
+        String compact = Presentation.compactSentence(value, 60);
         assertTrue(compact.length() <= 61);
         assertTrue(compact.endsWith("…") || compact.endsWith("."));
     }
@@ -93,7 +93,7 @@ public class RecommendationPresentationCompactTest
                 longName + ". Bring the required quest items and follow the marked route.",
                 "A very long required item name, food, teleport, and quest prerequisite list that must wrap inside the RuneLite sidebar.");
 
-        String compact = RecommendationPresentation.compactText(recommendation);
+        String compact = Presentation.compactText(recommendation);
         assertTrue(compact.contains("METHOD"));
         assertTrue(compact.contains("BRING"));
         assertTrue(compact.contains("WHERE"));
@@ -109,15 +109,15 @@ public class RecommendationPresentationCompactTest
                 "Cook banked food", "Cook the selected food.",
                 10, 10, 10, AttentionLevel.MODERATE,
                 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
-                method, "test", RecommendationConfidence.VERIFIED,
+                method, "test", Confidence.VERIFIED,
                 Collections.emptyList());
         return new Recommendation(
                 "skill:cooking", "Train Cooking to 80", "Useful progression.",
-                50.0, plan, RecommendationConfidence.VERIFIED,
+                50.0, plan, Confidence.VERIFIED,
                 70, 80,
-                new RecommendationGuidance(
+                new Guidance(
                         action, supplies,
                         "Use the best verified range.",
                         "Detailed note that belongs in Details."));
@@ -130,16 +130,16 @@ public class RecommendationPresentationCompactTest
                 "Cook banked food", "Cook the selected food.",
                 10, 10, 10, AttentionLevel.MODERATE,
                 20, 2, Collections.emptyList(),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         RequirementCheck check = new RequirementCheck(
                 "access:range", "Verify range access",
                 RequirementState.CHECK_NEEDED, "No range access observation yet.");
         TrainingPlan plan = new TrainingPlan(method, "test",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Collections.singletonList(check));
         return new Recommendation(
                 "skill:cooking", "Train Cooking", "Useful progression.",
-                50.0, plan, RecommendationConfidence.CHECK_NEEDED,
+                50.0, plan, Confidence.CHECK_NEEDED,
                 70, 80, null);
     }
 }

@@ -20,9 +20,9 @@ public class FireCapeGoalPlanningTest
     @Test
     public void selectedGoalPromotesOnlyReadinessBackedFightCavePlan()
     {
-        StrategyDataBundle data = data(0, MembershipStatus.P2P,
+        GameData data = data(0, MembershipStatus.P2P,
                 new PvmReadiness("pvm:tztok_jad", true,
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         Collections.emptyList()));
 
         Recommendation automatic = find(provider.candidates(
@@ -35,16 +35,16 @@ public class FireCapeGoalPlanningTest
         assertTrue(goal.getScore() > automatic.getScore());
         assertTrue(goal.getGuidance().getAction().contains("63 waves"));
         assertTrue(goal.getGuidance().getLocation().contains("Fight Cave"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(goal));
     }
 
     @Test
     public void statsWithoutObservedReadinessCannotBecomeAFightCaveAttempt()
     {
-        StrategyDataBundle data = data(0, MembershipStatus.P2P,
+        GameData data = data(0, MembershipStatus.P2P,
                 new PvmReadiness("pvm:tztok_jad", false,
-                        RecommendationConfidence.CHECK_NEEDED,
+                        Confidence.CHECK_NEEDED,
                         Collections.singletonList(
                                 "Observe a carried Ranged weapon and wave supplies")));
 
@@ -52,9 +52,9 @@ public class FireCapeGoalPlanningTest
                 context(data, GoalType.FIRE_CAPE)), "pvm:tztok_jad");
 
         assertNotNull(candidate);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 candidate.getConfidence());
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(candidate));
     }
 
@@ -62,7 +62,7 @@ public class FireCapeGoalPlanningTest
     public void f2pAndHardcoreAccountsDoNotReceiveFightCaveDoNext()
     {
         PvmReadiness ready = new PvmReadiness("pvm:tztok_jad", true,
-                RecommendationConfidence.VERIFIED, Collections.emptyList());
+                Confidence.VERIFIED, Collections.emptyList());
         assertTrue(provider.candidates(context(
                 data(0, MembershipStatus.F2P, ready), GoalType.FIRE_CAPE))
                 .isEmpty());
@@ -72,14 +72,14 @@ public class FireCapeGoalPlanningTest
     }
 
     private static StrategyContext context(
-            StrategyDataBundle data, GoalType goal)
+            GameData data, GoalType goal)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.LONG_SESSION, QuestTolerance.NORMAL, goal,
                 false, false, new PreferenceProfile());
     }
 
-    private static StrategyDataBundle data(int type,
+    private static GameData data(int type,
             MembershipStatus membership, PvmReadiness readiness)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -95,7 +95,7 @@ public class FireCapeGoalPlanningTest
                 70 * Skill.values().length, 0L, levels, xp);
         Map<String, PvmReadiness> values = new HashMap<>();
         values.put("pvm:tztok_jad", readiness);
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .pvm(new PvmSnapshot(values)).build();
     }
 

@@ -14,12 +14,12 @@ import lombok.Getter;
 public final class StrategistEntitlementSnapshot
 {
     private final Set<StrategistFeature> hostedFeatures;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String source;
 
     public StrategistEntitlementSnapshot(
             Set<StrategistFeature> hostedFeatures,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String source)
     {
         EnumSet<StrategistFeature> copy = EnumSet.noneOf(StrategistFeature.class);
@@ -32,7 +32,7 @@ public final class StrategistEntitlementSnapshot
         }
         this.hostedFeatures = Collections.unmodifiableSet(copy);
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED : confidence;
+                ? Confidence.CHECK_NEEDED : confidence;
         this.source = source == null ? "unknown" : source;
     }
 
@@ -40,7 +40,7 @@ public final class StrategistEntitlementSnapshot
     {
         return new StrategistEntitlementSnapshot(
                 Collections.emptySet(),
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 "not-connected");
     }
 
@@ -52,14 +52,14 @@ public final class StrategistEntitlementSnapshot
             if (feature.isHostedPremium()) all.add(feature);
         }
         return new StrategistEntitlementSnapshot(
-                all, RecommendationConfidence.VERIFIED, "test/all-hosted");
+                all, Confidence.VERIFIED, "test/all-hosted");
     }
 
     public boolean hasHostedFeature(StrategistFeature feature)
     {
         return feature != null
                 && feature.isHostedPremium()
-                && confidence == RecommendationConfidence.VERIFIED
+                && confidence == Confidence.VERIFIED
                 && hostedFeatures.contains(feature);
     }
 

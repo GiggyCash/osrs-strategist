@@ -35,7 +35,7 @@ public class LiveRunePouchStateReaderTest
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
         states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.RUNE_POUCH,
                 Collections.singletonList(item(554, "Fire rune", 10)));
@@ -63,7 +63,7 @@ public class LiveRunePouchStateReaderTest
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
         states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.RUNE_POUCH,
                 Collections.singletonList(item(561, "Nature rune", 5000)));
@@ -87,27 +87,27 @@ public class LiveRunePouchStateReaderTest
                 Arrays.asList(
                         item(561, "Nature rune", 1000),
                         item(554, "Fire rune", 5000)));
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+        GameData data = GameData.builder(account(2))
                 .inventory(inventory("Rune pouch", 1))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .storage(storage)
                 .build();
 
-        ObservedItemIndex items = new ObservedItemIndex(data, true);
+        ItemIndex items = new ItemIndex(data, true);
         assertEquals(1000, items.quantity("Nature rune"));
         assertEquals(5000, items.quantity("Fire rune"));
         assertEquals(0, items.restrictedQuantity("Nature rune"));
     }
 
-    private static InventorySnapshot inventory(String name, int quantity)
+    private static ItemsState inventory(String name, int quantity)
     {
-        return new InventorySnapshot(Collections.singletonList(
+        return new ItemsState(Collections.singletonList(
                 item(12791, name, quantity)));
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 
     private static AccountSnapshot account(int typeCode)

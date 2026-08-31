@@ -1,17 +1,19 @@
 package com.udderlywet.osrsstrategist;
 
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /** Immutable intent/context passed to strategy modules. */
 @Getter
+@Accessors(fluent = true)
 public final class StrategyContext extends PlayerStrategyProfile
 {
-    private final StrategyDataBundle data;
+    private final GameData data;
     private final PreferenceProfile preferenceProfile;
     private final AccountMode accountMode;
 
     public StrategyContext(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             QuestTolerance questTolerance,
@@ -25,7 +27,7 @@ public final class StrategyContext extends PlayerStrategyProfile
     }
 
     public StrategyContext(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             QuestTolerance questTolerance,
@@ -39,9 +41,9 @@ public final class StrategyContext extends PlayerStrategyProfile
                 useGroupStorage, collectionistMode, allowWildernessMethods);
         this.data = data;
         this.preferenceProfile = preferenceProfile == null ? new PreferenceProfile() : preferenceProfile;
-        this.accountMode = data == null || data.getAccount() == null
+        this.accountMode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
-                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
+                : AccountMode.fromTypeCode(data.account().getAccountTypeCode());
     }
 
 }

@@ -17,7 +17,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         {
             record.validate();
             if (values.put(normalize(record.name), record) != null)
-                throw new IllegalStateException("Duplicate quest enrichment: " + record.name);
+                throw new IllegalStateException(Text.get(1111) + record.name);
         }
         records = Collections.unmodifiableMap(values);
     }
@@ -45,16 +45,16 @@ public final class AuthoritativeQuestEnrichmentCatalog
         Map<String, String> result = new HashMap<>();
         String[][] values = {
                 {Text.get(51), Text.get(52)},
-                {"Recipe for Disaster - Mountain Dwarf", Text.get(53)},
+                {Text.get(1112), Text.get(53)},
                 {Text.get(54), Text.get(40)},
-                {"Recipe for Disaster - Pirate Pete", Text.get(41)},
-                {"Recipe for Disaster - Lumbridge Guide", Text.get(42)},
-                {"Recipe for Disaster - Evil Dave", "Recipe for Disaster/Freeing Evil Dave"},
-                {"Recipe for Disaster - Skrach Uglogwee", Text.get(43)},
-                {"Recipe for Disaster - Sir Amik Varze", Text.get(44)},
-                {"Recipe for Disaster - King Awowogei", Text.get(45)},
-                {"Recipe for Disaster - Culinaromancer", Text.get(46)},
-                {"Vale Totems", "Vale Totems (miniquest)"}
+                {Text.get(1113), Text.get(41)},
+                {Text.get(1114), Text.get(42)},
+                {Text.get(1115), Text.get(1116)},
+                {Text.get(1117), Text.get(43)},
+                {Text.get(1118), Text.get(44)},
+                {Text.get(1119), Text.get(45)},
+                {Text.get(1120), Text.get(46)},
+                {"Vale Totems", Text.get(1121)}
         };
         for (String[] alias : values) result.put(normalize(alias[0]), alias[1]);
         return result;
@@ -113,7 +113,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         private void validate()
         {
             if (name == null || name.trim().isEmpty())
-                throw new IllegalStateException("Blank quest enrichment identity");
+                throw new IllegalStateException(Text.get(1122));
             validate(start, startState, "start");
             validate(requirements, requirementsState, "requirements");
             validate(items, itemsState, "items");
@@ -129,7 +129,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
                     || ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE
                     || state == EvidenceState.SOURCE_MISSING || state == EvidenceState.PARSE_FAILURE
                     || state == EvidenceState.UNSUPPORTED_STRUCTURE) && !blank))
-                throw new IllegalStateException("Value/state mismatch for " + field);
+                throw new IllegalStateException(Text.get(1123) + field);
         }
     }
 }

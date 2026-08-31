@@ -55,7 +55,7 @@ public final class ProgressChartPanel extends JPanel
 
             if (buckets.isEmpty() || totalXp(buckets) <= 0L)
             {
-                String message = "Waiting for XP drops";
+                String message = Text.get(1155);
                 FontMetrics metrics = g.getFontMetrics();
                 int x = Math.max(5, (width - metrics.stringWidth(message)) / 2);
                 g.setColor(StrategistTheme.MUTED_TEXT);

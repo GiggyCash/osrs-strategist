@@ -64,7 +64,7 @@ public class MilestoneTrackerTest
                 "Useful progression.",
                 50.0,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 1,
                 10
         );

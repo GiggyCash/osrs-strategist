@@ -30,25 +30,25 @@ public class ResourceAcquisitionPlanner
         this(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
     }
 
-    public ResourceAcquisitionPlan plan(
+    public AcquisitionPlan plan(
             StrategyContext context,
             ResourceNeed need)
     {
-        if (context == null || need == null || context.getData() == null)
+        if (context == null || need == null || context.data() == null)
         {
-            return checkNeeded(need, "Account state is not available.");
+            return checkNeeded(need, Text.get(1430));
         }
 
-        StrategyDataBundle data = context.getData();
-        AccountMode mode = context.getAccountMode();
-        int inventoryQuantity = quantityIn(data.getInventory(), need.getItemId());
+        GameData data = context.data();
+        AccountMode mode = context.accountMode();
+        int inventoryQuantity = quantityIn(data.inventory(), need.getItemId());
         int confirmedQuantity = inventoryQuantity;
 
         if (inventoryQuantity >= need.getQuantity())
         {
-            return new ResourceAcquisitionPlan(
+            return new AcquisitionPlan(
                     need, AcquisitionSource.INVENTORY, inventoryQuantity,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     Text.get(566)
             );
         }
@@ -57,18 +57,18 @@ public class ResourceAcquisitionPlanner
         {
             int remaining = Math.max(0, need.getQuantity() - inventoryQuantity);
             StoredResource stored = findVerifiedStoredResource(
-                    data.getStorage(), need.getItemId(), remaining);
+                    data.storage(), need.getItemId(), remaining);
             if (stored != null)
             {
                 boolean needsAccessCheck = stored.requiresAccessCheck();
                 confirmedQuantity = safeAdd(inventoryQuantity, stored.quantity);
-                return new ResourceAcquisitionPlan(
+                return new AcquisitionPlan(
                         need,
                         AcquisitionSource.VERIFIED_STORAGE,
                         confirmedQuantity,
                         needsAccessCheck
-                                ? RecommendationConfidence.CHECK_NEEDED
-                                : RecommendationConfidence.VERIFIED,
+                                ? Confidence.CHECK_NEEDED
+                                : Confidence.VERIFIED,
                         needsAccessCheck
                                 ? Text.get(575)
                                         + pretty(stored.capabilities)
@@ -80,14 +80,14 @@ public class ResourceAcquisitionPlanner
         }
         else
         {
-            int bankQuantity = quantityIn(data.getBank(), need.getItemId());
+            int bankQuantity = quantityIn(data.bank(), need.getItemId());
             int ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
             confirmedQuantity = ordinaryQuantity;
             if (ordinaryQuantity >= need.getQuantity())
             {
-                return new ResourceAcquisitionPlan(
+                return new AcquisitionPlan(
                         need, AcquisitionSource.BANK, ordinaryQuantity,
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         Text.get(578)
                 );
             }
@@ -95,17 +95,19 @@ public class ResourceAcquisitionPlanner
             if (AccountModePolicy.mayUseGroupStorage(
                     mode, context.isUseGroupStorage()))
             {
-                GroupStorageSnapshot groupStorage = data.getGroupStorage();
-                int groupQuantity = quantityIn(groupStorage, need.getItemId());
+                ItemsState groupStorage = data.groupStorage();
+                int groupQuantity = groupStorage != null
+                        && groupStorage.isObserved()
+                        ? quantityIn(groupStorage, need.getItemId()) : 0;
                 if (groupStorage != null && groupStorage.isObserved())
                 {
                     confirmedQuantity = safeAdd(ordinaryQuantity, groupQuantity);
                     if (confirmedQuantity >= need.getQuantity())
                     {
-                        return new ResourceAcquisitionPlan(
+                        return new AcquisitionPlan(
                                 need, AcquisitionSource.GROUP_STORAGE,
                                 confirmedQuantity,
-                                RecommendationConfidence.VERIFIED,
+                                Confidence.VERIFIED,
                                 Text.get(579)
                         );
                     }
@@ -118,24 +120,24 @@ public class ResourceAcquisitionPlanner
         // Do not turn an unobserved container into a proven shortfall. An
         // inventory read is required for every mode; ordinary accounts also
         // require the bank, and opted-in GIM requires fresh Group Storage.
-        if (data.getInventory() == null)
+        if (data.inventory() == null)
             return checkNeeded(need,
                     Text.get(580));
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() == null)
             return checkNeeded(need,
                     Text.get(581));
         if (AccountModePolicy.mayUseGroupStorage(mode,
                 context.isUseGroupStorage())
-                && (data.getGroupStorage() == null
-                || !data.getGroupStorage().isObserved()))
+                && (data.groupStorage() == null
+                || !data.groupStorage().isObserved()))
             return checkNeeded(need,
                     Text.get(582));
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
-            return new ResourceAcquisitionPlan(
+            return new AcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(567)
                             + sourceNote
             );
@@ -143,9 +145,9 @@ public class ResourceAcquisitionPlanner
 
         if (AccountModePolicy.requiresSelfSourcing(mode))
         {
-            return new ResourceAcquisitionPlan(
+            return new AcquisitionPlan(
                     need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     (mode == AccountMode.ULTIMATE_IRONMAN
                             ? Text.get(568)
                             : Text.get(569))
@@ -162,37 +164,37 @@ public class ResourceAcquisitionPlanner
      * The root quantity is the missing quantity, so owned state must not be
      * subtracted a second time here.
      */
-    public ResourceAcquisitionPlan planKnownShortfall(
+    public AcquisitionPlan planKnownShortfall(
             StrategyContext context,
             ResourceNeed shortfall)
     {
-        if (context == null || shortfall == null || context.getData() == null)
+        if (context == null || shortfall == null || context.data() == null)
         {
-            return checkNeeded(shortfall, "Account state is not available.");
+            return checkNeeded(shortfall, Text.get(1430));
         }
 
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         String sourceNote = sourceSuggestions(shortfall, context);
-        String prefix = "Confirmed shortfall: " + shortfall.getQuantity()
+        String prefix = Text.get(1431) + shortfall.getQuantity()
                 + " × " + shortfall.getItemName() + ". ";
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
-            return new ResourceAcquisitionPlan(
+            return new AcquisitionPlan(
                     shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     prefix + Text.get(571)
                             + sourceNote);
         }
 
         if (AccountModePolicy.requiresSelfSourcing(mode))
         {
-            return new ResourceAcquisitionPlan(
+            return new AcquisitionPlan(
                     shortfall, AcquisitionSource.SELF_SOURCE, 0,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     prefix + (mode == AccountMode.ULTIMATE_IRONMAN
                             ? Text.get(572)
-                            : "Self-source the missing quantity.")
+                            : Text.get(1432))
                             + sourceNote);
         }
 
@@ -205,7 +207,7 @@ public class ResourceAcquisitionPlanner
     public ResourceAcquisitionChain planChain(StrategyContext context,
             ResourceNeed need)
     {
-        ResourceAcquisitionPlan ownership = plan(context, need);
+        AcquisitionPlan ownership = plan(context, need);
         List<ResourceAcquisitionStep> steps = new ArrayList<>();
         int shortfall = ownership == null || need == null ? 0
                 : Math.max(0, need.getQuantity() - ownership.getConfirmedQuantity());
@@ -224,20 +226,20 @@ public class ResourceAcquisitionPlanner
         if (sourceCatalog != null && context != null)
         {
             List<String> routes = sourceCatalog.suggestions(need.getItemName(),
-                    context.getAccountMode(), membership(context),
+                    context.accountMode(), membership(context),
                     context.isAllowWildernessMethods());
             for (String route : routes)
                 steps.add(new ResourceAcquisitionStep(
-                        context.getAccountMode().usesGrandExchange()
+                        context.accountMode().usesGrandExchange()
                                 ? AcquisitionSource.GRAND_EXCHANGE
                                 : AcquisitionSource.SELF_SOURCE,
-                        route, RecommendationConfidence.CHECK_NEEDED));
+                        route, Confidence.CHECK_NEEDED));
         }
         return new ResourceAcquisitionChain(need, shortfall, steps);
     }
 
     /** Resolves acquisition prerequisites recursively with bounded, cycle-safe traversal. */
-    public ResourceDependencyResolution resolveDependencies(
+    public DependencyResolution resolveDependencies(
             StrategyContext context, ResourceNeed need)
     {
         return new ResourceDependencyResolver(this, dependencyCatalog)
@@ -248,7 +250,7 @@ public class ResourceAcquisitionPlanner
      * Resolves a proven shortfall by canonical dependency output name. Unknown
      * names deliberately remain with the caller's conservative source guidance.
      */
-    public ResourceDependencyResolution resolveKnownShortfall(
+    public DependencyResolution resolveKnownShortfall(
             StrategyContext context, String itemName, int quantity)
     {
         if (dependencyCatalog == null) return null;
@@ -266,7 +268,7 @@ public class ResourceAcquisitionPlanner
         if (sourceCatalog == null || need == null) return "";
         List<String> suggestions = sourceCatalog.suggestions(
                 need.getItemName(), context == null ? AccountMode.UNKNOWN
-                        : context.getAccountMode(), membership(context),
+                        : context.accountMode(), membership(context),
                 context != null && context.isAllowWildernessMethods());
         if (suggestions.isEmpty())
         {
@@ -286,10 +288,10 @@ public class ResourceAcquisitionPlanner
 
     private static MembershipStatus membership(StrategyContext context)
     {
-        return context == null || context.getData() == null
-                || context.getData().getAccount() == null
+        return context == null || context.data() == null
+                || context.data().account() == null
                 ? MembershipStatus.UNKNOWN
-                : context.getData().getAccount().getMembershipStatus();
+                : context.data().account().getMembershipStatus();
     }
 
     private static StoredResource findVerifiedStoredResource(
@@ -302,13 +304,13 @@ public class ResourceAcquisitionPlanner
         List<StorageCapability> restrictedCapabilities = new ArrayList<>();
         int safeQuantity = 0;
         int restrictedQuantity = 0;
-        for (Map.Entry<StorageCapability, java.util.List<ItemStackSnapshot>> entry
+        for (Map.Entry<StorageCapability, java.util.List<ItemState>> entry
                 : storage.getObservedContents().entrySet())
         {
             StorageCapability capability = entry.getKey();
             if (!storage.verified(capability)) continue;
             int quantity = 0;
-            for (ItemStackSnapshot item : entry.getValue())
+            for (ItemState item : entry.getValue())
             {
                 if (item.getItemId() == itemId) quantity += item.getQuantity();
             }
@@ -341,36 +343,25 @@ public class ResourceAcquisitionPlanner
         return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
 
-    private static ResourceAcquisitionPlan checkNeeded(
+    private static AcquisitionPlan checkNeeded(
             ResourceNeed need,
             String note)
     {
-        return new ResourceAcquisitionPlan(
+        return new AcquisitionPlan(
                 need, AcquisitionSource.CHECK_NEEDED, 0,
-                RecommendationConfidence.CHECK_NEEDED, note
+                Confidence.CHECK_NEEDED, note
         );
     }
 
-    private static int quantityIn(InventorySnapshot inventory, int itemId)
+    private static int quantityIn(ItemsState items, int itemId)
     {
-        return inventory == null ? 0 : quantityInItems(inventory.getItems(), itemId);
+        return items == null ? 0 : quantityInItems(items.getItems(), itemId);
     }
 
-    private static int quantityIn(BankSnapshot bank, int itemId)
-    {
-        return bank == null ? 0 : quantityInItems(bank.getItems(), itemId);
-    }
-
-    private static int quantityIn(GroupStorageSnapshot storage, int itemId)
-    {
-        if (storage == null || !storage.isObserved()) return 0;
-        return quantityInItems(storage.getItems(), itemId);
-    }
-
-    private static int quantityInItems(Iterable<ItemStackSnapshot> items, int itemId)
+    private static int quantityInItems(Iterable<ItemState> items, int itemId)
     {
         int total = 0;
-        for (ItemStackSnapshot item : items)
+        for (ItemState item : items)
         {
             if (item.getItemId() == itemId) total = safeAdd(total, item.getQuantity());
         }

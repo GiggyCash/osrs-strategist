@@ -6,7 +6,7 @@ import lombok.Getter;
 
 /** Finite traversal result with explicit termination diagnostics. */
 @Getter
-public final class ResourceDependencyResolution
+public final class DependencyResolution
 {
     private final List<ResolvedDependencyNode> nodes;
     private final boolean cycleDetected;
@@ -14,14 +14,14 @@ public final class ResourceDependencyResolution
     private final boolean opportunityCostRejected;
     private final boolean nodeLimited;
 
-    public ResourceDependencyResolution(List<ResolvedDependencyNode> nodes,
+    public DependencyResolution(List<ResolvedDependencyNode> nodes,
             boolean cycleDetected, boolean depthLimited,
             boolean opportunityCostRejected)
     {
         this(nodes, cycleDetected, depthLimited, opportunityCostRejected, false);
     }
 
-    public ResourceDependencyResolution(List<ResolvedDependencyNode> nodes,
+    public DependencyResolution(List<ResolvedDependencyNode> nodes,
             boolean cycleDetected, boolean depthLimited,
             boolean opportunityCostRejected, boolean nodeLimited)
     {
@@ -35,7 +35,7 @@ public final class ResourceDependencyResolution
     public ResolvedDependencyNode nextAction()
     {
         for (ResolvedDependencyNode node : nodes)
-            if (node.getConfidence() != RecommendationConfidence.VERIFIED) return node;
+            if (node.getConfidence() != Confidence.VERIFIED) return node;
         return nodes.isEmpty() ? null : nodes.get(nodes.size() - 1);
     }
 }

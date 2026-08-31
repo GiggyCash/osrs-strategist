@@ -17,7 +17,7 @@ public class SlayerTaskProfileCatalog
         for (SlayerTaskProfile profile : profiles)
             if (profile.getId() == null || profile.getAliases() == null
                     || profile.getAliases().isEmpty())
-                throw new IllegalStateException("Incomplete Slayer profile in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1184) + RESOURCE);
     }
 
     public SlayerTaskProfile profileFor(String taskName)

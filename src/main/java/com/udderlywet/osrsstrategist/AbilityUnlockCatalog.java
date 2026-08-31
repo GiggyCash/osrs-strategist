@@ -16,7 +16,7 @@ public final class AbilityUnlockCatalog
         for (AbilityUnlockDefinition value : BundledCatalogLoader.array(
                 Text.get(130), AbilityUnlockDefinition[].class))
             if (definitions.put(normalize(value.getId()), value) != null)
-                throw new IllegalStateException("Duplicate ability unlock " + value.getId());
+                throw new IllegalStateException(Text.get(1107) + value.getId());
     }
     public AbilityUnlockDefinition get(String id)
     {

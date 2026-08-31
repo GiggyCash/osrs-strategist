@@ -72,13 +72,13 @@ public class TrainingMethodSelector
         return select(null, skill, currentLevel, strategyMode, sessionIntent, false);
     }
 
-    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+    public TrainingPlan select(GameData data, Skill skill, int currentLevel,
             StrategyMode strategyMode, SessionIntent sessionIntent)
     {
         return select(data, skill, currentLevel, strategyMode, sessionIntent, false);
     }
 
-    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+    public TrainingPlan select(GameData data, Skill skill, int currentLevel,
             StrategyMode strategyMode, SessionIntent sessionIntent,
             boolean allowWildernessMethods)
     {
@@ -86,7 +86,7 @@ public class TrainingMethodSelector
                 allowWildernessMethods, false);
     }
 
-    public TrainingPlan select(StrategyDataBundle data, Skill skill, int currentLevel,
+    public TrainingPlan select(GameData data, Skill skill, int currentLevel,
             StrategyMode strategyMode, SessionIntent sessionIntent,
             boolean allowWildernessMethods, boolean useGroupStorage)
     {
@@ -97,7 +97,7 @@ public class TrainingMethodSelector
     }
 
     /** Ranked legal methods, exposed package-wide for decision-tournament tests. */
-    List<TrainingPlan> rankedCandidates(StrategyDataBundle data, Skill skill,
+    List<TrainingPlan> rankedCandidates(GameData data, Skill skill,
             int currentLevel, StrategyMode strategyMode,
             SessionIntent sessionIntent, boolean allowWildernessMethods,
             boolean useGroupStorage)
@@ -105,9 +105,9 @@ public class TrainingMethodSelector
         List<CuratedTrainingMethod> methods = candidates(data, skill);
         MembershipStatus membershipStatus = membershipStatus(data);
         List<ScoredPlan> ranked = new ArrayList<>();
-        AccountMode mode = data == null || data.getAccount() == null
+        AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode());
+                        data.account().getAccountTypeCode());
 
         for (CuratedTrainingMethod candidate : methods)
         {
@@ -119,7 +119,7 @@ public class TrainingMethodSelector
                     data, strategyProfile);
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
-                    || method.getConfidence() == RecommendationConfidence.BLOCKED
+                    || method.getConfidence() == Confidence.BLOCKED
                     || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods)
                     || !strategyAssessment.isViable())
             {
@@ -132,8 +132,8 @@ public class TrainingMethodSelector
                             ? requirementEvidenceEngine.evaluate(
                                     data, method, true)
                             : requirementEvidenceEngine.evaluate(data, method);
-            RecommendationConfidence confidence = assessConfidence(method, checks);
-            if (confidence == RecommendationConfidence.BLOCKED) continue;
+            Confidence confidence = assessConfidence(method, checks);
+            if (confidence == Confidence.BLOCKED) continue;
 
             // A skill gets one selected method. Never let a higher-scoring
             // method with unknown access consume that slot and hide a simpler
@@ -165,13 +165,13 @@ public class TrainingMethodSelector
         return Collections.unmodifiableList(plans);
     }
 
-    private static double readinessAdjustment(StrategyDataBundle data,
+    private static double readinessAdjustment(GameData data,
             List<RequirementCheck> checks, SessionIntent sessionIntent)
     {
         if (checks == null || checks.isEmpty()) return 0.0;
-        AccountMode mode = data == null || data.getAccount() == null
+        AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
-                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
+                : AccountMode.fromTypeCode(data.account().getAccountTypeCode());
         boolean fullyReady = true;
         double missingResourcePenalty = 0.0;
         for (RequirementCheck check : checks)
@@ -214,7 +214,7 @@ public class TrainingMethodSelector
         private double getScore() { return score; }
     }
 
-    private List<CuratedTrainingMethod> candidates(StrategyDataBundle data, Skill skill)
+    private List<CuratedTrainingMethod> candidates(GameData data, Skill skill)
     {
         List<CuratedTrainingMethod> candidates = new ArrayList<>();
         MembershipStatus membership = membershipStatus(data);
@@ -266,38 +266,38 @@ public class TrainingMethodSelector
         return new ArrayList<>(unique.values());
     }
 
-    private static MembershipStatus membershipStatus(StrategyDataBundle data)
+    private static MembershipStatus membershipStatus(GameData data)
     {
-        if (data == null || data.getAccount() == null) return MembershipStatus.UNKNOWN;
-        return data.getAccount().getMembershipStatus();
+        if (data == null || data.account() == null) return MembershipStatus.UNKNOWN;
+        return data.account().getMembershipStatus();
     }
 
-    private RecommendationConfidence assessConfidence(
+    private Confidence assessConfidence(
             TrainingMethod method, List<RequirementCheck> checks)
     {
-        if (method.getConfidence() == RecommendationConfidence.BLOCKED)
-            return RecommendationConfidence.BLOCKED;
+        if (method.getConfidence() == Confidence.BLOCKED)
+            return Confidence.BLOCKED;
         if (checks != null && !checks.isEmpty())
         {
             boolean hasUnknown = false;
             for (RequirementCheck check : checks)
             {
                 if (check.getState() == RequirementState.BLOCKED)
-                    return RecommendationConfidence.BLOCKED;
+                    return Confidence.BLOCKED;
                 if (check.getState() == RequirementState.CHECK_NEEDED) hasUnknown = true;
             }
-            return hasUnknown ? RecommendationConfidence.CHECK_NEEDED
-                    : RecommendationConfidence.VERIFIED;
+            return hasUnknown ? Confidence.CHECK_NEEDED
+                    : Confidence.VERIFIED;
         }
         if (method.getRequirements().isEmpty()
-                && method.getConfidence() == RecommendationConfidence.VERIFIED)
-            return RecommendationConfidence.VERIFIED;
-        return RecommendationConfidence.CHECK_NEEDED;
+                && method.getConfidence() == Confidence.VERIFIED)
+            return Confidence.VERIFIED;
+        return Confidence.CHECK_NEEDED;
     }
 
     private String buildExplanation(TrainingMethod method,
             TrainingMethodMetadata metadata, StrategyMode strategyMode,
-            SessionIntent sessionIntent, StrategyDataBundle data,
+            SessionIntent sessionIntent, GameData data,
             MethodStrategyAssessment strategyAssessment)
     {
         StringBuilder reason = new StringBuilder();
@@ -309,7 +309,7 @@ public class TrainingMethodSelector
         }
         else
         {
-            reason.append("This method suits ")
+            reason.append(Text.get(1279))
                     .append(pretty(strategyMode.name())).append(" play.");
         }
         if (sessionIntent != SessionIntent.PICK_FOR_ME)

@@ -28,10 +28,10 @@ public class AdaptiveActionSelector
         this(new MethodInputResolver());
     }
 
-    public RuneLiteSkillActionDefinition select(
-            StrategyDataBundle data,
-            MethodExecutionProfile profile,
-            List<RuneLiteSkillActionDefinition> actions,
+    public ActionDef select(
+            GameData data,
+            MethodProfile profile,
+            List<ActionDef> actions,
             int currentLevel,
             MembershipStatus membership,
             int currentXp,
@@ -40,15 +40,15 @@ public class AdaptiveActionSelector
             boolean useGroupStorage)
     {
         if (profile == null || actions == null || actions.isEmpty()) return null;
-        AccountMode mode = data == null || data.getAccount() == null
+        AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
-                : AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode());
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+                : AccountMode.fromTypeCode(data.account().getAccountTypeCode());
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
         boolean storageKnown = items.resourceContainersObserved();
 
-        RuneLiteSkillActionDefinition best = null;
+        ActionDef best = null;
         double bestScore = Double.NEGATIVE_INFINITY;
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
         {
             if (action == null || action.getXp() <= 0
                     || action.getLevel() > currentLevel
@@ -61,7 +61,7 @@ public class AdaptiveActionSelector
             double xpPerAction = action.getXp() * Math.max(1.0, xpMultiplier);
             int actionsNeeded = divideRoundUp(
                     Math.max(0, targetXp - currentXp), xpPerAction);
-            List<ResolvedMethodInput> needs = inputResolver.resolve(
+            List<MethodInput> needs = inputResolver.resolve(
                     profile, action, actionsNeeded);
 
             // Base ranking remains tied to the actual action inside the already
@@ -101,14 +101,14 @@ public class AdaptiveActionSelector
     }
 
     /** Compatibility/simple selector used when no account-resource state exists. */
-    public RuneLiteSkillActionDefinition selectSimple(
-            List<RuneLiteSkillActionDefinition> actions,
-            MethodExecutionProfile profile,
+    public ActionDef selectSimple(
+            List<ActionDef> actions,
+            MethodProfile profile,
             int currentLevel,
             MembershipStatus membership)
     {
-        RuneLiteSkillActionDefinition best = null;
-        for (RuneLiteSkillActionDefinition action : actions)
+        ActionDef best = null;
+        for (ActionDef action : actions)
         {
             if (action == null || action.getLevel() > currentLevel
                     || !membershipAllowed(action.getMembership(), membership))
@@ -148,13 +148,13 @@ public class AdaptiveActionSelector
     }
 
     private static double materialCoverage(
-            ObservedItemIndex items,
-            List<ResolvedMethodInput> needs)
+            ItemIndex items,
+            List<MethodInput> needs)
     {
         if (needs == null || needs.isEmpty()) return 1.0;
         double total = 0.0;
         int counted = 0;
-        for (ResolvedMethodInput need : needs)
+        for (MethodInput need : needs)
         {
             if (need == null || need.getQuantity() <= 0) continue;
             int owned = items.quantity(need.getName());
@@ -165,7 +165,7 @@ public class AdaptiveActionSelector
     }
 
     private static boolean matches(
-            RuneLiteSkillActionDefinition action,
+            ActionDef action,
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;

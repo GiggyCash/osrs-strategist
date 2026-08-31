@@ -46,8 +46,8 @@ public class OsrsStrategistPanel extends PluginPanel
     private final String supportUrl;
     private final Consumer<String> supportBrowser;
 
-    private final JLabel accountName = label("Waiting for login...");
-    private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
+    private final JLabel accountName = label(Text.get(1239));
+    private final JLabel accountMeta = mutedLabel(Text.get(1240));
     private final JLabel activeGoal = label("Goal: Automatic");
     private final JLabel strategySummary = mutedLabel(
             Text.get(408)
@@ -57,7 +57,7 @@ public class OsrsStrategistPanel extends PluginPanel
             MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
     private final JPanel milestoneBanner = cardPanel(true);
-    private final JLabel milestoneTitle = label("Milestone complete!");
+    private final JLabel milestoneTitle = label(Text.get(1241));
     private final JTextArea milestoneBody = wrappingArea(
             "", MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
     private Timer milestoneHideTimer;
@@ -66,7 +66,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel recommendationIcon = new JLabel();
     private final JLabel recommendationEyebrow = inlineMutedLabel("NEXT MOVE");
     private final JTextArea recommendationTitle = wrappingArea(
-            "Finding your next move...", EMPHASIS_FONT_SIZE, StrategistTheme.TEXT, true);
+            Text.get(1242), EMPHASIS_FONT_SIZE, StrategistTheme.TEXT, true);
     private final JLabel progressText = mutedLabel("");
     private final JProgressBar progressBar = new JProgressBar(0, 100);
     private final JTextArea recommendationBody = wrappingArea(
@@ -189,7 +189,7 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(title);
         content.add(Box.createVerticalStrut(4));
 
-        JLabel subtitle = mutedLabel("Your account. Your next move.");
+        JLabel subtitle = mutedLabel(Text.get(1243));
         subtitle.setFont(subtitle.getFont().deriveFont(MUTED_FONT_SIZE));
         content.add(subtitle);
         content.add(Box.createVerticalStrut(11));
@@ -254,7 +254,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
         recommendationCard.add(identityRow);
         recommendationCard.add(Box.createVerticalStrut(6));
-        setWrappedText(recommendationTitle, "Analyzing account...", TEXT_WIDTH);
+        setWrappedText(recommendationTitle, Text.get(1244), TEXT_WIDTH);
         recommendationCard.add(recommendationTitle);
         recommendationCard.add(Box.createVerticalStrut(9));
 
@@ -314,7 +314,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildSecondaryCards(JPanel content)
     {
-        alternativesCard.add(eyebrow("OTHER GOOD OPTIONS"));
+        alternativesCard.add(eyebrow(Text.get(1245)));
         alternativesCard.add(Box.createVerticalStrut(8));
         setWrappedText(alternativeOne, "", TEXT_WIDTH);
         alternativesCard.add(alternativeOne);
@@ -433,7 +433,7 @@ public class OsrsStrategistPanel extends PluginPanel
         strategySummary.setText(html(
                 "Mode: " + prettyName(mode.name())
                         + "<br>Session: " + intent
-                        + "<br>Optional quests: " + prettyName(tolerance.name())));
+                        + Text.get(1246) + prettyName(tolerance.name())));
     }
 
     public void updateRecommendations(List<Recommendation> recommendations)
@@ -504,14 +504,14 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (completion == null) return;
 
-        milestoneTitle.setText(html("✓ Milestone complete"));
+        milestoneTitle.setText(html(Text.get(1247)));
         setWrappedText(milestoneBody,
                 completion.getSkill().getName()
                         + " "
                         + completion.getStartedAtLevel()
                         + " → "
                         + completion.getTargetLevel()
-                        + ". Picking your next move...",
+                        + Text.get(1248),
                 TEXT_WIDTH);
         milestoneBanner.setVisible(true);
 
@@ -628,7 +628,7 @@ public class OsrsStrategistPanel extends PluginPanel
         }
         setWrappedText(
                 recommendationBody,
-                RecommendationPresentation.compactText(currentRecommendation,
+                Presentation.compactText(currentRecommendation,
                         currentGoalContext()),
                 TEXT_WIDTH);
     }
@@ -742,11 +742,11 @@ public class OsrsStrategistPanel extends PluginPanel
                             > recommendation.getCurrentLevel())
                 value.append(' ').append(recommendation.getCurrentLevel())
                         .append(" → ").append(recommendation.getTargetLevel());
-            value.append('\n').append(RecommendationPresentation.compactSentence(
+            value.append('\n').append(Presentation.compactSentence(
                     plan.getMethod().getName(), 58));
             return value.toString();
         }
-        return RecommendationPresentation.compactSentence(
+        return Presentation.compactSentence(
                 safe(recommendation.getTitle()), 82);
     }
 
@@ -891,7 +891,7 @@ public class OsrsStrategistPanel extends PluginPanel
             case NOT_TODAY:
                 return activity + "\nHidden for today";
             case DISLIKE:
-                return activity + "\nShowing less often";
+                return activity + Text.get(1249);
             default:
                 return "Feedback saved";
         }
@@ -922,7 +922,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static String html(String text)
     {
-        return "<html><div style='width:" + INNER_WIDTH + "px;'>"
+        return Text.get(1250) + INNER_WIDTH + "px;'>"
                 + (text == null ? "" : text)
                 + "</div></html>";
     }

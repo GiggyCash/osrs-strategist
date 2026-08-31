@@ -13,7 +13,7 @@ public final class MinigameSetupCatalog
         for (MinigameSetupProfile profile : BundledCatalogLoader.array(
                 Text.get(383), MinigameSetupProfile[].class))
             if (values.put(profile.getActivityId(), profile) != null)
-                throw new IllegalStateException("Duplicate minigame setup " + profile.getActivityId());
+                throw new IllegalStateException(Text.get(1154) + profile.getActivityId());
         profiles = Collections.unmodifiableMap(values);
     }
 

@@ -15,14 +15,14 @@ public class ProgressionProtectedMilestoneTest
                 "agility_rooftop", Skill.AGILITY, 1, 99,
                 "Rooftops", "Keep earning marks.",
                 10, 10, 10, AttentionLevel.ACTIVE, 20, 2,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED,
+                Collections.emptyList(), Confidence.VERIFIED,
                 false, false, true);
         TrainingPlan plan = new TrainingPlan(
-                method, "Graceful progression", RecommendationConfidence.VERIFIED,
+                method, "Graceful progression", Confidence.VERIFIED,
                 Collections.emptyList());
         Recommendation recommendation = new Recommendation(
                 "skill:agility", "Train Agility to 60", "Graceful",
-                50.0, plan, RecommendationConfidence.VERIFIED, 59, 60);
+                50.0, plan, Confidence.VERIFIED, 59, 60);
 
         TrackedMilestone tracked = new MilestoneTracker().fromRecommendations(
                 Collections.singletonList(recommendation));

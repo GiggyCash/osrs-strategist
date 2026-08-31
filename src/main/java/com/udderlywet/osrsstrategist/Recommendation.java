@@ -17,13 +17,13 @@ public final class Recommendation
     private final String reason;
     private final double score;
     private final TrainingPlan trainingPlan;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final int currentLevel;
     private final int targetLevel;
-    private final RecommendationGuidance guidance;
-    private final CandidateSafetyEvidence safetyEvidence;
-    private final GoalDependencyProvenance goalProvenance;
-    private final RecommendationStrategicValue strategicValue;
+    private final Guidance guidance;
+    private final SafetyEvidence safetyEvidence;
+    private final GoalProvenance goalProvenance;
+    private final StrategicValue strategicValue;
 
     public Recommendation(
             String id,
@@ -37,43 +37,43 @@ public final class Recommendation
                 reason,
                 score,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 0,
                 0,
                 null,
-                CandidateSafetyEvidence.unknown()
+                SafetyEvidence.unknown()
         );
     }
 
     /** Non-skill candidate form used by activity providers. */
     public Recommendation(String id, String title, String reason, double score,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(id, title, reason, score, confidence, null,
-                CandidateSafetyEvidence.unknown(),
-                RecommendationStrategicValue.neutral());
+                SafetyEvidence.unknown(),
+                StrategicValue.neutral());
     }
 
     public Recommendation(String id, String title, String reason, double score,
-            RecommendationConfidence confidence, RecommendationGuidance guidance)
+            Confidence confidence, Guidance guidance)
     {
         this(id, title, reason, score, confidence, guidance,
-                CandidateSafetyEvidence.unknown(),
-                RecommendationStrategicValue.neutral());
+                SafetyEvidence.unknown(),
+                StrategicValue.neutral());
     }
 
     public Recommendation(String id, String title, String reason, double score,
-            RecommendationConfidence confidence, RecommendationGuidance guidance,
-            CandidateSafetyEvidence safetyEvidence)
+            Confidence confidence, Guidance guidance,
+            SafetyEvidence safetyEvidence)
     {
         this(id, title, reason, score, confidence, guidance, safetyEvidence,
-                RecommendationStrategicValue.neutral());
+                StrategicValue.neutral());
     }
 
     public Recommendation(String id, String title, String reason, double score,
-            RecommendationConfidence confidence, RecommendationGuidance guidance,
-            CandidateSafetyEvidence safetyEvidence,
-            RecommendationStrategicValue strategicValue)
+            Confidence confidence, Guidance guidance,
+            SafetyEvidence safetyEvidence,
+            StrategicValue strategicValue)
     {
         this(id, title, reason, score, null, confidence, 0, 0, guidance,
                 safetyEvidence, null, strategicValue);
@@ -85,7 +85,7 @@ public final class Recommendation
             String reason,
             double score,
             TrainingPlan trainingPlan,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(
                 id,
@@ -97,7 +97,7 @@ public final class Recommendation
                 0,
                 0,
                 null,
-                CandidateSafetyEvidence.unknown()
+                SafetyEvidence.unknown()
         );
     }
 
@@ -107,7 +107,7 @@ public final class Recommendation
             String reason,
             double score,
             TrainingPlan trainingPlan,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             int currentLevel,
             int targetLevel)
     {
@@ -121,7 +121,7 @@ public final class Recommendation
                 currentLevel,
                 targetLevel,
                 null,
-                CandidateSafetyEvidence.unknown()
+                SafetyEvidence.unknown()
         );
     }
 
@@ -131,33 +131,33 @@ public final class Recommendation
             String reason,
             double score,
             TrainingPlan trainingPlan,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             int currentLevel,
             int targetLevel,
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
-                targetLevel, guidance, CandidateSafetyEvidence.unknown());
+                targetLevel, guidance, SafetyEvidence.unknown());
     }
 
     public Recommendation(
             String id, String title, String reason, double score,
-            TrainingPlan trainingPlan, RecommendationConfidence confidence,
-            int currentLevel, int targetLevel, RecommendationGuidance guidance,
-            CandidateSafetyEvidence safetyEvidence)
+            TrainingPlan trainingPlan, Confidence confidence,
+            int currentLevel, int targetLevel, Guidance guidance,
+            SafetyEvidence safetyEvidence)
     {
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
                 targetLevel, guidance, safetyEvidence, null,
-                RecommendationStrategicValue.neutral());
+                StrategicValue.neutral());
     }
 
     private Recommendation(
             String id, String title, String reason, double score,
-            TrainingPlan trainingPlan, RecommendationConfidence confidence,
-            int currentLevel, int targetLevel, RecommendationGuidance guidance,
-            CandidateSafetyEvidence safetyEvidence,
-            GoalDependencyProvenance goalProvenance,
-            RecommendationStrategicValue strategicValue)
+            TrainingPlan trainingPlan, Confidence confidence,
+            int currentLevel, int targetLevel, Guidance guidance,
+            SafetyEvidence safetyEvidence,
+            GoalProvenance goalProvenance,
+            StrategicValue strategicValue)
     {
         this.id = id;
         this.title = title;
@@ -165,16 +165,16 @@ public final class Recommendation
         this.score = score;
         this.trainingPlan = trainingPlan;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED
+                ? Confidence.CHECK_NEEDED
                 : confidence;
         this.currentLevel = Math.max(0, currentLevel);
         this.targetLevel = Math.max(0, targetLevel);
         this.guidance = guidance;
         this.safetyEvidence = safetyEvidence == null
-                ? CandidateSafetyEvidence.unknown() : safetyEvidence;
+                ? SafetyEvidence.unknown() : safetyEvidence;
         this.goalProvenance = goalProvenance;
         this.strategicValue = strategicValue == null
-                ? RecommendationStrategicValue.neutral() : strategicValue;
+                ? StrategicValue.neutral() : strategicValue;
     }
 
 
@@ -186,7 +186,7 @@ public final class Recommendation
         return stage > 0 ? stage : targetLevel;
     }
 
-    public Recommendation withGoalProvenance(GoalDependencyProvenance provenance)
+    public Recommendation withGoalProvenance(GoalProvenance provenance)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, guidance, safetyEvidence,
@@ -194,21 +194,21 @@ public final class Recommendation
     }
 
     public Recommendation withStrategicValue(
-            RecommendationStrategicValue value)
+            StrategicValue value)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, guidance, safetyEvidence,
                 goalProvenance, value);
     }
 
-    public Recommendation withGuidance(RecommendationGuidance value)
+    public Recommendation withGuidance(Guidance value)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, value, safetyEvidence,
                 goalProvenance, strategicValue);
     }
 
-    public Recommendation withSafetyEvidence(CandidateSafetyEvidence value)
+    public Recommendation withSafetyEvidence(SafetyEvidence value)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, guidance, value,

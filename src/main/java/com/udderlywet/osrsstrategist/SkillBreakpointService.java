@@ -51,16 +51,16 @@ public final class SkillBreakpointService
                 skill, context);
         if (goalLevel > currentLevel)
             return new SkillBreakpoint(skill, goalLevel,
-                    "Required on the selected goal path",
+                    Text.get(1301),
                     SkillBreakpoint.Kind.GOAL_REQUIREMENT,
                     "goal:" + context.getActiveGoal().name().toLowerCase());
 
-        InfrastructureMilestoneDefinition infrastructureTarget = context == null
+        InfrastructureMilestone infrastructureTarget = context == null
                 ? null : infrastructure.all().stream()
                 .filter(value -> value.getRequiredSkills()
                         .getOrDefault(skill, 0) > currentLevel)
                 .filter(value -> isNextMissingSkill(value, skill,
-                        context.getData().getAccount()))
+                        context.data().account()))
                 .filter(value -> {
                     InfrastructureMilestoneState state = infrastructureValue
                             .assess(value.getId(), context).getState();
@@ -90,15 +90,15 @@ public final class SkillBreakpointService
                     "ability:" + ability.getId());
 
         MembershipStatus membership = context == null
-                || context.getData() == null
-                || context.getData().getAccount() == null
+                || context.data() == null
+                || context.data().account() == null
                 ? MembershipStatus.UNKNOWN
-                : context.getData().getAccount().getMembershipStatus();
-        RuneLiteSkillActionDefinition action = actions.actionsFor(skill).stream()
+                : context.data().account().getMembershipStatus();
+        ActionDef action = actions.actionsFor(skill).stream()
                 .filter(value -> value.getLevel() > currentLevel)
                 .filter(value -> isAvailable(value.getMembership(), membership))
                 .min(Comparator.comparingInt(
-                        RuneLiteSkillActionDefinition::getLevel))
+                        ActionDef::getLevel))
                 .orElse(null);
         if (action != null)
             return new SkillBreakpoint(skill, action.getLevel(),
@@ -107,10 +107,10 @@ public final class SkillBreakpointService
                     action.getId());
 
         if (context != null && context.getActiveGoal() == GoalType.MAX)
-            return new SkillBreakpoint(skill, 99, "Advance the Max target",
+            return new SkillBreakpoint(skill, 99, Text.get(1302),
                     SkillBreakpoint.Kind.MAX_TARGET, "goal:max");
         return new SkillBreakpoint(skill, Math.min(99, currentLevel + 1),
-                "Next observable level checkpoint",
+                Text.get(1303),
                 SkillBreakpoint.Kind.NEXT_LEVEL_FALLBACK, "level:next");
     }
 
@@ -124,7 +124,7 @@ public final class SkillBreakpointService
     }
 
     private static boolean isNextMissingSkill(
-            InfrastructureMilestoneDefinition definition, Skill requested,
+            InfrastructureMilestone definition, Skill requested,
             AccountSnapshot account)
     {
         Skill next = null;

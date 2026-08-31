@@ -11,9 +11,9 @@ public final class SlayerDecisionResult
     private final SlayerMasterProfile master;
     private final SlayerTaskStrategicProfile taskProfile;
     private final double score;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String reason;
-    private final RecommendationGuidance guidance;
+    private final Guidance guidance;
     private final String selectedAlternativeName;
     private final SlayerReward recommendedReward;
     private final SlayerTaskOffer recommendedOffer;
@@ -21,8 +21,8 @@ public final class SlayerDecisionResult
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
             SlayerTaskDecision decision, SlayerMasterProfile master,
             SlayerTaskStrategicProfile taskProfile, double score,
-            RecommendationConfidence confidence, String reason,
-            RecommendationGuidance guidance)
+            Confidence confidence, String reason,
+            Guidance guidance)
     {
         this(assignmentState, decision, master, taskProfile, score,
                 confidence, reason, guidance, null, null, null);
@@ -31,8 +31,8 @@ public final class SlayerDecisionResult
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
             SlayerTaskDecision decision, SlayerMasterProfile master,
             SlayerTaskStrategicProfile taskProfile, double score,
-            RecommendationConfidence confidence, String reason,
-            RecommendationGuidance guidance, String selectedAlternativeName)
+            Confidence confidence, String reason,
+            Guidance guidance, String selectedAlternativeName)
     {
         this(assignmentState, decision, master, taskProfile, score, confidence,
                 reason, guidance, selectedAlternativeName, null, null);
@@ -41,8 +41,8 @@ public final class SlayerDecisionResult
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
             SlayerTaskDecision decision, SlayerMasterProfile master,
             SlayerTaskStrategicProfile taskProfile, double score,
-            RecommendationConfidence confidence, String reason,
-            RecommendationGuidance guidance, String selectedAlternativeName,
+            Confidence confidence, String reason,
+            Guidance guidance, String selectedAlternativeName,
             SlayerReward recommendedReward)
     {
         this(assignmentState, decision, master, taskProfile, score, confidence,
@@ -53,8 +53,8 @@ public final class SlayerDecisionResult
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,
             SlayerTaskDecision decision, SlayerMasterProfile master,
             SlayerTaskStrategicProfile taskProfile, double score,
-            RecommendationConfidence confidence, String reason,
-            RecommendationGuidance guidance, String selectedAlternativeName,
+            Confidence confidence, String reason,
+            Guidance guidance, String selectedAlternativeName,
             SlayerReward recommendedReward, SlayerTaskOffer recommendedOffer)
     {
         this.assignmentState = assignmentState == null
@@ -64,7 +64,7 @@ public final class SlayerDecisionResult
         this.taskProfile = taskProfile;
         this.score = score;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED : confidence;
+                ? Confidence.CHECK_NEEDED : confidence;
         this.reason = reason;
         this.guidance = guidance;
         this.selectedAlternativeName = selectedAlternativeName;

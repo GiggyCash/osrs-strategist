@@ -20,14 +20,14 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void mainAccountGetsExactGrandExchangeShortfall()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(0, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemStackSnapshot(335, "Raw trout", 20)))
-                .inventory(inventory(new ItemStackSnapshot(335, "Raw trout", 5)))
+                .bank(bank(new ItemState(335, "Raw trout", 20)))
+                .inventory(inventory(new ItemState(335, "Raw trout", 5)))
                 .quests(completedCooksAssistant())
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 17,
@@ -46,13 +46,13 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void enoughVerifiedTroutDoesNotTellPlayerToBuyMore()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(0, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemStackSnapshot(335, "Raw trout", 60)))
+                .bank(bank(new ItemState(335, "Raw trout", 60)))
                 .inventory(inventory())
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 17,
@@ -67,12 +67,12 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void unopenedBankIsUnknownNotEmpty()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(0, 17, Experience.getXpForLevel(17)))
-                .inventory(inventory(new ItemStackSnapshot(335, "Raw trout", 4)))
+                .inventory(inventory(new ItemState(335, "Raw trout", 4)))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 17,
@@ -87,13 +87,13 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void ironAccountSourcesMissingFishInsteadOfUsingGrandExchange()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(1, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemStackSnapshot(335, "Raw trout", 20)))
+                .bank(bank(new ItemState(335, "Raw trout", 20)))
                 .inventory(inventory())
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 17,
@@ -110,13 +110,13 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void partialLevelProgressUsesExactCurrentExperience()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(0, 19, 4000))
                 .bank(bank())
                 .inventory(inventory())
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 19,
@@ -132,16 +132,16 @@ public class RecommendationGuidanceServiceTest
     @Test
     public void levelTwentyPlanStagesPikeThenSalmonToThirty()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(0, 20, Experience.getXpForLevel(20)))
                 .bank(bank(
-                        new ItemStackSnapshot(349, "Raw pike", 8),
-                        new ItemStackSnapshot(331, "Raw salmon", 5)
+                        new ItemState(349, "Raw pike", 8),
+                        new ItemState(331, "Raw salmon", 5)
                 ))
                 .inventory(inventory())
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.COOKING,
                 20,
@@ -174,12 +174,12 @@ public class RecommendationGuidanceServiceTest
                 20,
                 2,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED
+                Confidence.VERIFIED
         );
         return new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList()
         );
     }
@@ -212,9 +212,9 @@ public class RecommendationGuidanceServiceTest
         );
     }
 
-    private static BankSnapshot bank(ItemStackSnapshot... items)
+    private static ItemsState bank(ItemState... items)
     {
-        return new BankSnapshot(
+        return new ItemsState(
                 items == null || items.length == 0
                         ? Collections.emptyList()
                         : Arrays.asList(items),
@@ -222,9 +222,9 @@ public class RecommendationGuidanceServiceTest
         );
     }
 
-    private static InventorySnapshot inventory(ItemStackSnapshot... items)
+    private static ItemsState inventory(ItemState... items)
     {
-        return new InventorySnapshot(
+        return new ItemsState(
                 items == null || items.length == 0
                         ? Collections.emptyList()
                         : Arrays.asList(items)

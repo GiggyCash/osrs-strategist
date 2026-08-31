@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 /** Ranks the next unfinished tier across all 12 Achievement Diary regions. */
 @Singleton
-public class DiaryCandidateProvider implements StrategyCandidateProvider
+public class DiaryCandidateProvider implements CandidateProvider
 {
     private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
     @Override
@@ -18,16 +18,16 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getDiaries() == null
-                || context.getData().getAccount() == null
+        if (context == null || context.data() == null
+                || context.data().diaries() == null
+                || context.data().account() == null
                 || !ContentAccessRules.hasVerifiedMembership(
-                        context.getData().getAccount().getMembershipStatus()))
+                        context.data().account().getMembershipStatus()))
         {
             return result;
         }
 
-        DiarySnapshot diaries = context.getData().getDiaries();
+        DiarySnapshot diaries = context.data().diaries();
         for (String region : diaries.getRegions())
         {
             DiaryTier next = nextIncomplete(diaries, region);
@@ -45,7 +45,7 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
             if (context.getActiveGoal() == GoalType.DIARY_CAPE) score += 20.0;
             int observedTasks = diaries.completedIn(region);
             score += Math.min(8.0, observedTasks * 0.15);
-            score += context.getPreferenceProfile().weightFor(id) * 10.0;
+            score += context.preferenceProfile().weightFor(id) * 10.0;
 
             List<DiaryTaskDefinition> tierTasks = taskCatalog.forTier(region, next);
             DiaryTaskDefinition ready = firstReadyIncomplete(
@@ -57,25 +57,25 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
             if (!tierObserved)
             {
                 String verifyId = "verify:" + id;
-                if (context.getPreferenceProfile().isOnCooldown(verifyId))
+                if (context.preferenceProfile().isOnCooldown(verifyId))
                     continue;
                 result.add(new Recommendation(
                         verifyId,
                         "Check " + pretty(next.name()) + " " + region + " Diary",
                         Text.get(205),
                         score,
-                        RecommendationConfidence.CHECK_NEEDED,
-                        new RecommendationGuidance(
+                        Confidence.CHECK_NEEDED,
+                        new Guidance(
                                 "Open the " + region + Text.get(206),
                                 Text.get(207),
-                                "Quest tab → Achievement Diaries → " + region + ".",
+                                Text.get(1360) + region + ".",
                                 Text.get(208)),
-                        CandidateSafetyEvidence.harmless(false)
+                        SafetyEvidence.harmless(false)
                 ));
                 continue;
             }
 
-            if (context.getPreferenceProfile().isOnCooldown(ready.getId()))
+            if (context.preferenceProfile().isOnCooldown(ready.getId()))
                 continue;
 
             result.add(new Recommendation(
@@ -83,13 +83,13 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                     "Complete a " + pretty(next.name()) + " " + region + " task",
                     Text.get(209),
                     score,
-                    RecommendationConfidence.VERIFIED,
-                    new RecommendationGuidance(
+                    Confidence.VERIFIED,
+                    new Guidance(
                             ready.getTask(),
                             requirementSummary(ready),
                             region + Text.get(210),
                             Text.get(211)),
-                    CandidateSafetyEvidence.potentiallyIrreversible(false)
+                    SafetyEvidence.potentiallyIrreversible(false)
             ));
         }
 
@@ -111,8 +111,8 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
     private static boolean requirementsMet(DiaryTaskDefinition task,
             StrategyContext context)
     {
-        AccountSnapshot account = context.getData().getAccount();
-        QuestSnapshot quests = context.getData().getQuests();
+        AccountSnapshot account = context.data().account();
+        QuestSnapshot quests = context.data().quests();
         for (DiaryTaskRequirement requirement : task.getRequirements())
         {
             switch (requirement.getKind())

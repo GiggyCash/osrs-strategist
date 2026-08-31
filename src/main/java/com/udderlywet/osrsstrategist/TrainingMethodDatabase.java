@@ -17,7 +17,7 @@ public class TrainingMethodDatabase
                 BundledCatalogLoader.array(RESOURCE, TrainingMethod[].class)));
         for (TrainingMethod method : methods)
             if (method.getId() == null || method.getSkill() == null)
-                throw new IllegalStateException("Incomplete training method in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1132) + RESOURCE);
     }
 
     public List<TrainingMethod> methodsFor(Skill skill)

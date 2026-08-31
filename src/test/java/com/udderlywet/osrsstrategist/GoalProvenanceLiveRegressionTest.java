@@ -74,7 +74,7 @@ public class GoalProvenanceLiveRegressionTest
         Recommendation unrelatedQuest = new Recommendation(
                 "quest:x-marks-the-spot", "Quest: X Marks the Spot",
                 "Optional quest.", 20, null,
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         assertNull(provenance.attach(unrelatedQuest,
                 context(GoalType.MAX, QuestTolerance.NORMAL,
                         Collections.singletonMap("X Marks the Spot",
@@ -142,19 +142,19 @@ public class GoalProvenanceLiveRegressionTest
                 Skill.FARMING, 1, 10, 50.0, "farming_falador_potatoes");
         GoalRecommendationContext goal = GoalRecommendationContext.assess(
                 GoalType.BARROWS_GLOVES, farming, MembershipStatus.P2P);
-        assertFalse(RecommendationPresentation.compactText(farming, goal)
+        assertFalse(Presentation.compactText(farming, goal)
                 .contains("GOAL"));
-        assertFalse(RecommendationPresentation.detailedText(farming, goal)
+        assertFalse(Presentation.detailedText(farming, goal)
                 .contains("GOAL"));
     }
 
     @Test
     public void farmingHeadsUpUsesConcretePatchAndRepeatLoop()
     {
-        StrategyDataBundle data = data(rfdEarlyStatuses(false));
+        GameData data = data(rfdEarlyStatuses(false));
         Recommendation base = skillRecommendation(
                 Skill.FARMING, 1, 10, 50.0, "farming_falador_potatoes");
-        RecommendationGuidance guidance = new VariableMethodGuidanceService()
+        Guidance guidance = new VariableMethodGuidanceService()
                 .build(data, Skill.FARMING, 1, 10,
                         base.getTrainingPlan(), true);
         Recommendation farming = new Recommendation(base.getId(),
@@ -182,11 +182,11 @@ public class GoalProvenanceLiveRegressionTest
                 new TrainingMethodDatabase(), evidence,
                 new ExpandedTrainingMethodCatalog(),
                 new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
-        StrategyDataBundle data = readyFarmingData();
+        GameData data = readyFarmingData();
         TrainingPlan plan = selector.select(data, Skill.FARMING, 1,
                 StrategyMode.EFFICIENT, SessionIntent.PICK_FOR_ME,
                 false, true);
-        RecommendationGuidance guidance = new RecommendationGuidanceService()
+        Guidance guidance = new RecommendationGuidanceService()
                 .build(data, Skill.FARMING, 1, 10, plan, true);
 
         assertEquals("farming_falador_potatoes", plan.getMethod().getId());
@@ -224,14 +224,14 @@ public class GoalProvenanceLiveRegressionTest
                         ? "Falador potato allotments" : skill.getName() + " method",
                 "Use the concrete method.", 10, 10, 10,
                 AttentionLevel.LOW, 10, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED, true, false, false);
+                Confidence.VERIFIED, true, false, false);
         TrainingPlan plan = new TrainingPlan(method, "Test plan",
-                RecommendationConfidence.VERIFIED, Collections.emptyList());
+                Confidence.VERIFIED, Collections.emptyList());
         return new Recommendation("skill:" + skill.name().toLowerCase(),
                 "Train " + skill.getName() + " to " + target,
                 "General progression.", score, plan,
-                RecommendationConfidence.VERIFIED, current, target,
-                new RecommendationGuidance("Repeat the method to the target.",
+                Confidence.VERIFIED, current, target,
+                new Guidance("Repeat the method to the target.",
                         "Bring the method supplies.", "Verified location.", null));
     }
 
@@ -243,7 +243,7 @@ public class GoalProvenanceLiveRegressionTest
                 false, false, new PreferenceProfile());
     }
 
-    private static StrategyDataBundle data(Map<String, QuestStatus> statuses)
+    private static GameData data(Map<String, QuestStatus> statuses)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -256,31 +256,31 @@ public class GoalProvenanceLiveRegressionTest
         AccountSnapshot account = new AccountSnapshot("Live GIM", 4,
                 "GROUP_IRONMAN", MembershipStatus.P2P, 1, levels.size(),
                 0, levels, xp);
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .quests(new QuestSnapshot(statuses))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 
-    private static StrategyDataBundle readyFarmingData()
+    private static GameData readyFarmingData()
     {
-        StrategyDataBundle base = data(rfdEarlyStatuses(false));
+        GameData base = data(rfdEarlyStatuses(false));
         Map<String, CapabilityState> tools = new java.util.HashMap<>();
         tools.put("rake", CapabilityState.VERIFIED);
         tools.put("dibber", CapabilityState.VERIFIED);
         tools.put("spade", CapabilityState.VERIFIED);
-        return StrategyDataBundle.builder(base.getAccount())
-                .quests(base.getQuests())
+        return GameData.builder(base.account())
+                .quests(base.quests())
                 .farming(new FarmingSnapshot(
                         Collections.singleton("falador"), tools,
                         Collections.emptyMap()))
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.POTATO_SEED,
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.POTATO_SEED,
                                 "Potato seed", 3)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 

@@ -17,13 +17,13 @@ public class AgilityAccessEvaluatorTest
     @Test
     public void questStateChangesBestCourseInsteadOfLeavingGenericCheck()
     {
-        StrategyDataBundle withoutQuest = data(45, Collections.emptyMap(), Collections.emptyMap());
+        GameData withoutQuest = data(45, Collections.emptyMap(), Collections.emptyMap());
         assertEquals("Varrock rooftop",
                 evaluator.bestStandardCourse(withoutQuest).getDisplayName());
 
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Priest in Peril", QuestStatus.COMPLETE);
-        StrategyDataBundle withQuest = data(45, quests, Collections.emptyMap());
+        GameData withQuest = data(45, quests, Collections.emptyMap());
         assertEquals("Canifis rooftop",
                 evaluator.bestStandardCourse(withQuest).getDisplayName());
     }
@@ -33,12 +33,12 @@ public class AgilityAccessEvaluatorTest
     {
         Map<String, Long> memory = new HashMap<>();
         memory.put("region.13878", 1L);
-        StrategyDataBundle data = data(45, Collections.emptyMap(), memory);
+        GameData data = data(45, Collections.emptyMap(), memory);
         assertEquals("Canifis rooftop",
                 evaluator.bestStandardCourse(data).getDisplayName());
     }
 
-    private static StrategyDataBundle data(
+    private static GameData data(
             int agility,
             Map<String, QuestStatus> quests,
             Map<String, Long> memory)
@@ -54,7 +54,7 @@ public class AgilityAccessEvaluatorTest
         AccountSnapshot account = new AccountSnapshot(
                 "Tester", 0, "Main", MembershipStatus.P2P, 1,
                 agility, 0L, levels, xp);
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .accessMemory(new AccessMemorySnapshot(memory))
                 .build();

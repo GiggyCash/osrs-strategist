@@ -38,17 +38,17 @@ public class ResourceAcquisitionChainTest
     {
         ResourceNeed need = new ResourceNeed(385, "Shark", 10);
         ResourceAcquisitionChain chain = planner.planChain(context(account(2),
-                Collections.singletonList(new ItemStackSnapshot(385, "Shark", 20))), need);
+                Collections.singletonList(new ItemState(385, "Shark", 20))), need);
         assertEquals(0, chain.getShortfall());
         assertTrue(chain.nextStep().getAction().contains("inventory"));
     }
 
     private static StrategyContext context(AccountSnapshot account,
-            java.util.List<ItemStackSnapshot> inventory)
+            java.util.List<ItemState> inventory)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(inventory))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL, GoalType.MAX,
                 false, false, false, new PreferenceProfile());

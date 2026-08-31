@@ -72,7 +72,7 @@ public class LiveSlayerStateReader
                     null, 0, masterName, null, points, streak, questPoints,
                     blockCapacity, occupiedBlockSlots, rewards, offers,
                     mortimerIntroduced,
-                    RecommendationConfidence.VERIFIED);
+                    Confidence.VERIFIED);
             cachedTick = tick;
             return cached;
         }
@@ -117,7 +117,7 @@ public class LiveSlayerStateReader
                     rewards,
                     java.util.Collections.emptyList(),
                     mortimerIntroduced,
-                    RecommendationConfidence.VERIFIED);
+                    Confidence.VERIFIED);
             cachedTick = tick;
             return cached;
         }
@@ -151,7 +151,7 @@ public class LiveSlayerStateReader
                 rewards,
                 java.util.Collections.emptyList(),
                 mortimerIntroduced,
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         cachedTick = tick;
         return cached;
     }

@@ -26,7 +26,7 @@ public class ObservedStateStore
     private StorageSnapshot storage;
     private TransportSnapshot transport;
     private PohSnapshot poh;
-    private GroupStorageSnapshot groupStorage;
+    private ItemsState groupStorage;
     private SlayerSnapshot slayer;
     private FarmingSnapshot farming;
     private SailingSnapshot sailing;
@@ -56,37 +56,37 @@ public class ObservedStateStore
         capabilities = new AccountCapabilities();
     }
 
-    public synchronized QuestSnapshot getQuests() { return quests; }
+    public synchronized QuestSnapshot quests() { return quests; }
     public synchronized void setQuests(QuestSnapshot value) { quests = value; }
-    public synchronized DiarySnapshot getDiaries() { return diaries; }
+    public synchronized DiarySnapshot diaries() { return diaries; }
     public synchronized void setDiaries(DiarySnapshot value) { diaries = value; }
-    public synchronized ClueSnapshot getClue() { return clue; }
+    public synchronized ClueSnapshot clue() { return clue; }
     public synchronized void setClue(ClueSnapshot value) { clue = value; }
-    public synchronized CombatAchievementSnapshot getCombatAchievements() { return combatAchievements; }
+    public synchronized CombatAchievementSnapshot combatAchievements() { return combatAchievements; }
     public synchronized void setCombatAchievements(CombatAchievementSnapshot value) { combatAchievements = value; }
-    public synchronized CollectionLogSnapshot getCollectionLog() { return collectionLog; }
+    public synchronized CollectionLogSnapshot collectionLog() { return collectionLog; }
     public synchronized void setCollectionLog(CollectionLogSnapshot value) { collectionLog = value; }
-    public synchronized AccountEconomySnapshot getEconomy() { return economy; }
+    public synchronized AccountEconomySnapshot economy() { return economy; }
     public synchronized void setEconomy(AccountEconomySnapshot value) { economy = value; }
-    public synchronized StorageSnapshot getStorage() { return storage; }
+    public synchronized StorageSnapshot storage() { return storage; }
     public synchronized void setStorage(StorageSnapshot value) { storage = value; }
-    public synchronized TransportSnapshot getTransport() { return transport; }
+    public synchronized TransportSnapshot transport() { return transport; }
     public synchronized void setTransport(TransportSnapshot value) { transport = value; }
-    public synchronized PohSnapshot getPoh() { return poh; }
+    public synchronized PohSnapshot poh() { return poh; }
     public synchronized void setPoh(PohSnapshot value) { poh = value; }
-    public synchronized GroupStorageSnapshot getGroupStorage() { return groupStorage; }
-    public synchronized void setGroupStorage(GroupStorageSnapshot value) { groupStorage = value; }
-    public synchronized SlayerSnapshot getSlayer() { return slayer; }
+    public synchronized ItemsState groupStorage() { return groupStorage; }
+    public synchronized void setGroupStorage(ItemsState value) { groupStorage = value; }
+    public synchronized SlayerSnapshot slayer() { return slayer; }
     public synchronized void setSlayer(SlayerSnapshot value) { slayer = value; }
-    public synchronized FarmingSnapshot getFarming() { return farming; }
+    public synchronized FarmingSnapshot farming() { return farming; }
     public synchronized void setFarming(FarmingSnapshot value) { farming = value; }
-    public synchronized SailingSnapshot getSailing() { return sailing; }
+    public synchronized SailingSnapshot sailing() { return sailing; }
     public synchronized void setSailing(SailingSnapshot value) { sailing = value; }
-    public synchronized MinigameSnapshot getMinigames() { return minigames; }
+    public synchronized MinigameSnapshot minigames() { return minigames; }
     public synchronized void setMinigames(MinigameSnapshot value) { minigames = value; }
-    public synchronized PvmSnapshot getPvm() { return pvm; }
+    public synchronized PvmSnapshot pvm() { return pvm; }
     public synchronized void setPvm(PvmSnapshot value) { pvm = value; }
-    public synchronized RecurringOpportunitySnapshot getRecurringOpportunities() { return recurringOpportunities; }
+    public synchronized RecurringOpportunitySnapshot recurringOpportunities() { return recurringOpportunities; }
     public synchronized void setRecurringOpportunities(RecurringOpportunitySnapshot value) { recurringOpportunities = value; }
-    public synchronized AccountCapabilities getCapabilities() { return capabilities; }
+    public synchronized AccountCapabilities capabilities() { return capabilities; }
 }

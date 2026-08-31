@@ -47,8 +47,8 @@ public class RecommendationCoverageCensusTest
     @Test
     public void representativeStatesAlwaysHaveASafeExecutableRecovery()
     {
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         for (Scenario account : ACCOUNTS)
         {
             StrategyEngine engine = strategyEngine(account.membership);
@@ -75,8 +75,8 @@ public class RecommendationCoverageCensusTest
     @Test
     public void censusReportsExecutableSkillCoverage()
     {
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         Map<Skill, Integer> eligible = new EnumMap<>(Skill.class);
         Map<Skill, Integer> executable = new EnumMap<>(Skill.class);
         Map<String, Integer> stateEligible = new LinkedHashMap<>();
@@ -88,7 +88,7 @@ public class RecommendationCoverageCensusTest
                     account.membership);
             for (int level : LEVELS)
             {
-                StrategyDataBundle data = data(account, level);
+                GameData data = data(account, level);
                 String state = account.name + " " + progressionBand(level);
                 for (StrategyMode mode : MODES)
                 {
@@ -167,8 +167,8 @@ public class RecommendationCoverageCensusTest
     @Test
     public void preparedAccountCensusSeparatesCatalogGapsFromToolShortfalls()
     {
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         Map<Skill, Integer> eligible = new EnumMap<>(Skill.class);
         Map<Skill, Integer> executable = new EnumMap<>(Skill.class);
         for (Scenario account : ACCOUNTS)
@@ -177,7 +177,7 @@ public class RecommendationCoverageCensusTest
                     account.membership);
             for (int level : LEVELS)
             {
-                StrategyDataBundle data = data(account, level, true);
+                GameData data = data(account, level, true);
                 for (StrategyMode mode : MODES)
                 {
                     for (SessionIntent session : SESSIONS)
@@ -259,12 +259,12 @@ public class RecommendationCoverageCensusTest
     {
         assertEquals(CoverageClass.BLOCKED,
                 classify(Skill.COOKING, null, null,
-                        new RecommendationActionabilityPolicy()));
+                        new ActionabilityPolicy()));
         Recommendation recovery = FallbackRecommendationFactory.forState(
                 data(ACCOUNTS[0], 5));
         assertEquals(CoverageClass.RECOVERY,
                 classify(Skill.COOKING, null, recovery,
-                        new RecommendationActionabilityPolicy()));
+                        new ActionabilityPolicy()));
     }
 
     @Test
@@ -285,7 +285,7 @@ public class RecommendationCoverageCensusTest
                     {
                         for (SessionIntent session : SESSIONS)
                         {
-                            StrategyDataBundle data = data(
+                            GameData data = data(
                                     account, level, prepared);
                             List<Recommendation> candidates = engine.recommendAll(
                                     data, mode, session, true, false,
@@ -303,7 +303,7 @@ public class RecommendationCoverageCensusTest
                                 CoverageClass result = classify(skill,
                                         candidateFor(candidates, skill),
                                         recovery,
-                                        new RecommendationActionabilityPolicy());
+                                        new ActionabilityPolicy());
                                 counts.merge(result, 1, Integer::sum);
                             }
                         }
@@ -333,8 +333,8 @@ public class RecommendationCoverageCensusTest
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
                 Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         for (Scenario account : ACCOUNTS)
         {
             RecommendationEngine engine = recommendationEngine(account.membership);
@@ -377,8 +377,8 @@ public class RecommendationCoverageCensusTest
     public void repeatedRequestedSkillRecoveryIsReportedAsCoverageDebt()
     {
         Map<String, Integer> debt = new java.util.TreeMap<>();
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         for (boolean prepared : new boolean[]{false, true})
         {
             for (Scenario account : ACCOUNTS)
@@ -390,7 +390,7 @@ public class RecommendationCoverageCensusTest
                         new RecommendationIntelligenceService());
                 for (int level : LEVELS)
                 {
-                    StrategyDataBundle data = data(account, level, prepared);
+                    GameData data = data(account, level, prepared);
                     for (StrategyMode mode : MODES)
                     {
                         for (SessionIntent session : SESSIONS)
@@ -478,8 +478,8 @@ public class RecommendationCoverageCensusTest
     {
         Map<Skill, EnumMap<CoverageClass, Integer>> counts =
                 new EnumMap<>(Skill.class);
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         for (Scenario account : ACCOUNTS)
         {
             RecommendationEngine recommendationEngine = recommendationEngine(
@@ -489,7 +489,7 @@ public class RecommendationCoverageCensusTest
                     new RecommendationIntelligenceService());
             for (int level : LEVELS)
             {
-                StrategyDataBundle data = data(account, level, prepared);
+                GameData data = data(account, level, prepared);
                 for (StrategyMode mode : MODES)
                 {
                     for (SessionIntent session : SESSIONS)
@@ -544,12 +544,12 @@ public class RecommendationCoverageCensusTest
             Skill requestedSkill,
             Recommendation candidate,
             Recommendation recovery,
-            RecommendationActionabilityPolicy policy)
+            ActionabilityPolicy policy)
     {
         if (candidate != null && policy.canLeadQueue(candidate))
         {
             TrainingPlan plan = candidate.getTrainingPlan();
-            if (candidate.getConfidence() == RecommendationConfidence.CHECK_NEEDED
+            if (candidate.getConfidence() == Confidence.CHECK_NEEDED
                     || hasOutstandingPreparation(plan)
                     || isAcquisitionGuidance(candidate))
             {
@@ -584,7 +584,7 @@ public class RecommendationCoverageCensusTest
 
     private static boolean isAcquisitionGuidance(Recommendation recommendation)
     {
-        RecommendationGuidance guidance = recommendation == null
+        Guidance guidance = recommendation == null
                 ? null : recommendation.getGuidance();
         String action = guidance == null || guidance.getAction() == null
                 ? "" : guidance.getAction().toLowerCase(
@@ -678,7 +678,7 @@ public class RecommendationCoverageCensusTest
     private static StrategyEngine strategyEngine(MembershipStatus membership)
     {
         return new StrategyEngine(recommendationEngine(membership), null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
@@ -700,12 +700,12 @@ public class RecommendationCoverageCensusTest
         }
 
         @Override
-        public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+        public List<ActionDef> actionsFor(Skill skill)
         {
-            List<RuneLiteSkillActionDefinition> result = new ArrayList<>();
-            for (RuneLiteSkillActionDefinition action : super.actionsFor(skill))
+            List<ActionDef> result = new ArrayList<>();
+            for (ActionDef action : super.actionsFor(skill))
             {
-                result.add(new RuneLiteSkillActionDefinition(
+                result.add(new ActionDef(
                         action.getSkill(), action.getId(), action.getName(),
                         action.getLevel(), action.getXp(), action.getCategory(),
                         membership, action.getItemId()));
@@ -714,12 +714,12 @@ public class RecommendationCoverageCensusTest
         }
     }
 
-    private static StrategyDataBundle data(Scenario scenario, int level)
+    private static GameData data(Scenario scenario, int level)
     {
         return data(scenario, level, false);
     }
 
-    private static StrategyDataBundle data(Scenario scenario, int level,
+    private static GameData data(Scenario scenario, int level,
             boolean prepared)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -741,17 +741,17 @@ public class RecommendationCoverageCensusTest
                 scenario.membership,
                 scenario.membership == MembershipStatus.P2P ? 1 : 0,
                 totalLevel, totalXp, levels, xp);
-        List<ItemStackSnapshot> items = prepared
+        List<ItemState> items = prepared
                 ? AccountMode.fromTypeCode(scenario.type)
                         == AccountMode.ULTIMATE_IRONMAN
                         ? uimPreparedItems() : preparedItems()
                 : Collections.emptyList();
-        StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
+        GameData.Builder builder = GameData.builder(account)
                 // Census scenarios model a complete live container, including
                 // the observed-empty case. UIM generation must not confuse it
                 // with a persisted list whose slot completeness is unknown.
-                .inventory(new InventorySnapshot(items, true))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()));
+                .inventory(new ItemsState(items, true))
+                .equipment(new ItemsState(Collections.emptyList()));
         if (prepared)
         {
             builder.combatEvidence(new CombatEvidenceSnapshot(0,
@@ -782,7 +782,7 @@ public class RecommendationCoverageCensusTest
                                 SailingSnapshot.ACTIVITY_COURIER,
                                 SailingSnapshot.ACTIVITY_SEA_CHARTING,
                                 SailingSnapshot.ACTIVITY_BOAT_OWNED)),
-                        RecommendationConfidence.VERIFIED));
+                        Confidence.VERIFIED));
                 Map<String, CapabilityState> poh = new HashMap<>();
                 poh.put("room:parlour", CapabilityState.VERIFIED);
                 poh.put("room:kitchen", CapabilityState.VERIFIED);
@@ -791,14 +791,14 @@ public class RecommendationCoverageCensusTest
         }
         if (scenario.type != 2)
         {
-            builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(Collections.emptyList(), 1L));
         }
         return builder.build();
     }
 
-    private static List<ItemStackSnapshot> preparedItems()
+    private static List<ItemState> preparedItems()
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
         items.add(item(ItemID.BRONZE_SCIMITAR, "Bronze scimitar", 1));
@@ -849,9 +849,9 @@ public class RecommendationCoverageCensusTest
      * leaves seven slots free; the ordinary-account omnibus fixture has more
      * than 28 distinct stacks and must never masquerade as a UIM inventory.
      */
-    private static List<ItemStackSnapshot> uimPreparedItems()
+    private static List<ItemState> uimPreparedItems()
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
         items.add(item(ItemID.SHORTBOW, "Shortbow", 1));
@@ -875,16 +875,16 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.SPADE, "Spade", 1));
         for (int slot = 0; slot < items.size(); slot++)
         {
-            ItemStackSnapshot item = items.get(slot);
-            items.set(slot, new ItemStackSnapshot(item.getItemId(),
+            ItemState item = items.get(slot);
+            items.set(slot, new ItemState(item.getItemId(),
                     item.getName(), item.getQuantity(), slot));
         }
         return items;
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 
     private static String label(Scenario scenario, int level,

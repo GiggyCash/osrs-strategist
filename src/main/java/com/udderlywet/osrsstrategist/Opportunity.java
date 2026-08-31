@@ -11,36 +11,36 @@ public final class Opportunity
     private final OpportunityType type;
     private final String title;
     private final boolean ready;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final List<String> preparation;
     private final boolean setupVerified;
-    private final CandidateSafetyEvidence safetyEvidence;
+    private final SafetyEvidence safetyEvidence;
 
     public Opportunity(
             String id,
             OpportunityType type,
             String title,
             boolean ready,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             List<String> preparation)
     {
         this(id, type, title, ready, confidence, preparation, false,
-                CandidateSafetyEvidence.unknown());
+                SafetyEvidence.unknown());
     }
 
     public Opportunity(
             String id, OpportunityType type, String title, boolean ready,
-            RecommendationConfidence confidence, List<String> preparation,
+            Confidence confidence, List<String> preparation,
             boolean setupVerified)
     {
         this(id, type, title, ready, confidence, preparation, setupVerified,
-                CandidateSafetyEvidence.unknown());
+                SafetyEvidence.unknown());
     }
 
     public Opportunity(
             String id, OpportunityType type, String title, boolean ready,
-            RecommendationConfidence confidence, List<String> preparation,
-            boolean setupVerified, CandidateSafetyEvidence safetyEvidence)
+            Confidence confidence, List<String> preparation,
+            boolean setupVerified, SafetyEvidence safetyEvidence)
     {
         this.id = id;
         this.type = type;
@@ -52,7 +52,7 @@ public final class Opportunity
         );
         this.setupVerified = setupVerified;
         this.safetyEvidence = safetyEvidence == null
-                ? CandidateSafetyEvidence.unknown() : safetyEvidence;
+                ? SafetyEvidence.unknown() : safetyEvidence;
     }
 
 

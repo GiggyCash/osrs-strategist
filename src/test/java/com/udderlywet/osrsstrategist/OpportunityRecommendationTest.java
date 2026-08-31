@@ -23,12 +23,12 @@ public class OpportunityRecommendationTest
         StrategyEngine engine = engine();
         Opportunity opportunity = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                RecommendationConfidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true);
         Recommendation promoted = engine.opportunityRecommendation(opportunity, context);
         Recommendation lowXp = new Recommendation("skill:mining", "Mine", "test", 1,
-                null, RecommendationConfidence.VERIFIED, 1, 10,
-                new RecommendationGuidance("Mine.", "Pickaxe.", "Mine.", "test"),
-                CandidateSafetyEvidence.skill(true, Skill.MINING));
+                null, Confidence.VERIFIED, 1, 10,
+                new Guidance("Mine.", "Pickaxe.", "Mine.", "test"),
+                SafetyEvidence.skill(true, Skill.MINING));
 
         List<Recommendation> queue = engine.buildPlayerQueue(Arrays.asList(lowXp, promoted), context);
         assertEquals("opportunity:battlestaves", queue.get(0).getId());
@@ -42,7 +42,7 @@ public class OpportunityRecommendationTest
     {
         Opportunity unresolved = new Opportunity("opportunity:herb-run",
                 OpportunityType.HERB_RUN, "Herb run", false,
-                RecommendationConfidence.CHECK_NEEDED, Collections.emptyList());
+                Confidence.CHECK_NEEDED, Collections.emptyList());
         assertNull(engine().opportunityRecommendation(unresolved,
                 context(account(MembershipStatus.P2P), new PreferenceProfile())));
     }
@@ -53,7 +53,7 @@ public class OpportunityRecommendationTest
         StrategyEngine engine = engine();
         Recommendation preparation = engine.opportunityRecommendation(
                 new Opportunity("opportunity:herb-run", OpportunityType.HERB_RUN,
-                        "Herb run", true, RecommendationConfidence.VERIFIED,
+                        "Herb run", true, Confidence.VERIFIED,
                         Collections.singletonList("Seeds")),
                 context(account(MembershipStatus.P2P), new PreferenceProfile()));
         assertNull(preparation);
@@ -62,7 +62,7 @@ public class OpportunityRecommendationTest
     @Test
     public void readyHerbRunNamesTheVerifiedPatchRoute()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(MembershipStatus.P2P))
                 .farming(new FarmingSnapshot(
                         Collections.singleton("falador"),
@@ -75,13 +75,13 @@ public class OpportunityRecommendationTest
         Recommendation recommendation = engine().opportunityRecommendation(
                 new Opportunity("opportunity:herb-run",
                         OpportunityType.HERB_RUN, "Herb run", true,
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         Collections.emptyList(), true), context);
 
         assertNotNull(recommendation);
         assertEquals("Falador patches.",
                 recommendation.getGuidance().getLocation());
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(recommendation));
     }
 
@@ -90,18 +90,18 @@ public class OpportunityRecommendationTest
     {
         Opportunity verified = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                RecommendationConfidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true);
         OpportunityEngine opportunities = new OpportunityEngine()
         {
             @Override
-            public List<Opportunity> evaluate(StrategyDataBundle data)
+            public List<Opportunity> evaluate(GameData data)
             {
                 return Collections.singletonList(verified);
             }
         };
         StrategyEngine engine = new StrategyEngine(null, opportunities, null, null,
-                new RecommendationActionabilityPolicy());
-        StrategyDataBundle data = StrategyDataBundle.builder(
+                new ActionabilityPolicy());
+        GameData data = GameData.builder(
                 account(MembershipStatus.P2P)).build();
 
         PreferenceProfile preferences = new PreferenceProfile();
@@ -130,17 +130,17 @@ public class OpportunityRecommendationTest
     {
         Opportunity verified = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                RecommendationConfidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true);
         OpportunityEngine opportunityEngine = new OpportunityEngine()
         {
-            @Override public List<Opportunity> evaluate(StrategyDataBundle data)
+            @Override public List<Opportunity> evaluate(GameData data)
             { return Collections.singletonList(verified); }
         };
         RecommendationEngine recommendationEngine = new RecommendationEngine(
                 (TrainingMethodSelector) null)
         {
             @Override
-            public List<Recommendation> recommendAll(StrategyDataBundle data,
+            public List<Recommendation> recommendAll(GameData data,
                     StrategyMode mode, SessionIntent intent, boolean groupStorage,
                     boolean wilderness, PreferenceProfile preferences)
             {
@@ -150,8 +150,8 @@ public class OpportunityRecommendationTest
         };
         StrategyEngine engine = new StrategyEngine(recommendationEngine,
                 opportunityEngine, null, null,
-                new RecommendationActionabilityPolicy());
-        StrategyResult result = engine.evaluate(StrategyDataBundle.builder(
+                new ActionabilityPolicy());
+        StrategyResult result = engine.evaluate(GameData.builder(
                         account(MembershipStatus.P2P)).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 new PreferenceProfile());
@@ -165,11 +165,11 @@ public class OpportunityRecommendationTest
     {
         Map<String, Long> timers = new java.util.HashMap<>();
         timers.put("opportunity:battlestaves", 0L);
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(MembershipStatus.P2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
         StrategyResult result = new StrategyEngine(null, new OpportunityEngine(),
-                null, null, new RecommendationActionabilityPolicy())
+                null, null, new ActionabilityPolicy())
                 .evaluate(data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                         new PreferenceProfile());
         assertTrue(FallbackRecommendationFactory.isFallback(
@@ -181,21 +181,21 @@ public class OpportunityRecommendationTest
     private static Recommendation ready(String id, double score)
     {
         return new Recommendation(id, id, "test", score, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Do it.", "Ready.", "Here.", "Test."),
-                CandidateSafetyEvidence.skill(true, id.contains("mining")
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Do it.", "Ready.", "Here.", "Test."),
+                SafetyEvidence.skill(true, id.contains("mining")
                         ? Skill.MINING : Skill.FISHING));
     }
 
     private static StrategyEngine engine()
     {
         return new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
     }
 
     private static StrategyContext context(AccountSnapshot account, PreferenceProfile preferences)
     {
-        return new StrategyContext(StrategyDataBundle.builder(account).build(),
+        return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.MAX, false, false, false, preferences);
     }

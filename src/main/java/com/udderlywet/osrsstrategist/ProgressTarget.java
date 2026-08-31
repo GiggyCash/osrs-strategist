@@ -23,7 +23,7 @@ public final class ProgressTarget
     {
         if (skill == null || targetLevel < 2 || targetLevel > 126)
         {
-            throw new IllegalArgumentException("Invalid skill target");
+            throw new IllegalArgumentException(Text.get(1157));
         }
         this.activityId = activityId;
         this.methodId = methodId;

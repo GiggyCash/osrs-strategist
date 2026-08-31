@@ -14,67 +14,67 @@ public final class GimGroupStrategyService
             StrategyContext context, GroupResourceNeed need)
     {
         if (need == null)
-            throw new IllegalArgumentException("Group resource need is required");
+            throw new IllegalArgumentException(Text.get(1429));
         AccountMode mode = context == null
-                ? AccountMode.UNKNOWN : context.getAccountMode();
+                ? AccountMode.UNKNOWN : context.accountMode();
         if (!mode.isGroupIronman())
             return result(GroupResourceState.NOT_A_GROUP_ACCOUNT,
-                    RecommendationConfidence.VERIFIED, 0, need, 0.0,
+                    Confidence.VERIFIED, 0, need, 0.0,
                     Text.get(287));
         if (!context.isUseGroupStorage())
             return result(GroupResourceState.GROUP_STORAGE_DISABLED,
-                    RecommendationConfidence.VERIFIED, 0, need, 0.0,
+                    Confidence.VERIFIED, 0, need, 0.0,
                     Text.get(288));
-        StrategyDataBundle data = context.getData();
-        GroupStorageSnapshot storage = data == null
-                ? null : data.getGroupStorage();
+        GameData data = context.data();
+        ItemsState storage = data == null
+                ? null : data.groupStorage();
         if (storage == null || !storage.isObserved())
             return result(GroupResourceState.GROUP_STORAGE_UNKNOWN,
-                    RecommendationConfidence.CHECK_NEEDED, 0, need, 0.0,
+                    Confidence.CHECK_NEEDED, 0, need, 0.0,
                     Text.get(289));
 
         int quantity = quantity(storage, need.getAcceptableItemIds());
         if (quantity <= 0)
             return result(GroupResourceState.SHARED_STOCK_NONE,
-                    RecommendationConfidence.VERIFIED, 0, need, 0.0,
+                    Confidence.VERIFIED, 0, need, 0.0,
                     Text.get(290));
         double fraction = Math.min(1.0, quantity
                 / (double) need.getQuantity());
         if (quantity < need.getQuantity())
             return result(GroupResourceState.SHARED_STOCK_PARTIAL,
-                    RecommendationConfidence.VERIFIED, quantity, need,
+                    Confidence.VERIFIED, quantity, need,
                     fraction * 0.45,
                     Text.get(291));
         double avoidance = need.isReusable() ? 1.0 : 0.75;
         return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
-                RecommendationConfidence.VERIFIED, quantity, need, avoidance,
+                Confidence.VERIFIED, quantity, need, avoidance,
                 Text.get(292));
     }
 
     public SharedInfrastructureAssessment assessTeammateInfrastructure(
             StrategyContext context)
     {
-        if (context == null || !context.getAccountMode().isGroupIronman())
+        if (context == null || !context.accountMode().isGroupIronman())
             return new SharedInfrastructureAssessment(CapabilityState.BLOCKED,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     Text.get(293));
         return new SharedInfrastructureAssessment(CapabilityState.UNKNOWN,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(294));
     }
 
     private static GroupResourceAssessment result(GroupResourceState state,
-            RecommendationConfidence confidence, int quantity,
+            Confidence confidence, int quantity,
             GroupResourceNeed need, double avoidance, String reason)
     {
         return new GroupResourceAssessment(state, confidence, quantity,
                 need.getQuantity(), avoidance, reason);
     }
 
-    private static int quantity(GroupStorageSnapshot storage, Set<Integer> ids)
+    private static int quantity(ItemsState storage, Set<Integer> ids)
     {
         int total = 0;
-        for (ItemStackSnapshot item : storage.getItems())
+        for (ItemState item : storage.getItems())
         {
             if (item == null || !ids.contains(item.getItemId())) continue;
             int amount = Math.max(0, item.getQuantity());

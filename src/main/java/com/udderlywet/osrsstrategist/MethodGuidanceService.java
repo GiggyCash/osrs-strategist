@@ -19,14 +19,14 @@ public class MethodGuidanceService
 
     public GuidanceChecklist build(
             Recommendation recommendation,
-            StrategyDataBundle data)
+            GameData data)
     {
         if (recommendation == null) return null;
         TrainingPlan plan = recommendation.getTrainingPlan();
         if (plan == null || plan.getMethod() == null) return null;
 
         TrainingMethod method = plan.getMethod();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         if (method.getSkill() == Skill.FARMING && guidance == null)
         {
             return farmingRunPlanner.build(data, recommendation.getId());
@@ -49,15 +49,15 @@ public class MethodGuidanceService
         }
 
         String bring = guidance == null ? null
-                : RecommendationPresentation.compactSentence(
+                : Presentation.compactSentence(
                         guidance.getSupplies(), 120);
         String where = guidance == null ? null
-                : RecommendationPresentation.compactSentence(
+                : Presentation.compactSentence(
                         guidance.getLocation(), 110);
         String action = guidance == null
                 ? method.getInstructions()
                 : guidance.getAction();
-        action = RecommendationPresentation.compactSentence(action, 135);
+        action = Presentation.compactSentence(action, 135);
         String progress = guidance != null
                 && guidance.getProgress() != null
                 && !guidance.getProgress().trim().isEmpty()
@@ -86,9 +86,9 @@ public class MethodGuidanceService
         if (!(lower.contains("wilderness") || lower.contains("hardcore")
                 || lower.contains("uim") || lower.contains("iron")
                 || lower.contains("restricted") || lower.contains("mandatory")
-                || lower.contains("required protection")
+                || lower.contains(Text.get(1238))
                 || lower.contains("irreversible"))) return null;
-        return RecommendationPresentation.compactSentence(note, 135);
+        return Presentation.compactSentence(note, 135);
     }
 
     private GuidanceStepState convert(RequirementState state)

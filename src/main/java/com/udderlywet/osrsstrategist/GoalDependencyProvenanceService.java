@@ -29,16 +29,16 @@ public class GoalDependencyProvenanceService
             Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null) return null;
-        GoalDependencyProvenance existing = recommendation.getGoalProvenance();
+        GoalProvenance existing = recommendation.getGoalProvenance();
         if (context != null && existing != null
                 && existing.proves(context.getActiveGoal(),
                         recommendation.getId()))
             return recommendation;
-        GoalDependencyProvenance provenance = resolve(recommendation, context);
+        GoalProvenance provenance = resolve(recommendation, context);
         return recommendation.withGoalProvenance(provenance);
     }
 
-    public GoalDependencyProvenance resolve(
+    public GoalProvenance resolve(
             Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null || context == null) return null;
@@ -52,9 +52,9 @@ public class GoalDependencyProvenanceService
             List<String> path = skillPath(goal, skill, context);
             if (path == null) return null;
             return isDirectSkillGoal(goal, skill)
-                    ? GoalDependencyProvenance.direct(goal,
+                    ? GoalProvenance.direct(goal,
                             recommendation.getId(), path)
-                    : GoalDependencyProvenance.prerequisite(goal,
+                    : GoalProvenance.prerequisite(goal,
                             recommendation.getId(), path);
         }
 
@@ -66,14 +66,14 @@ public class GoalDependencyProvenanceService
             boolean direct = goal == GoalType.QUEST_CAPE
                     || path.size() == 2;
             return direct
-                    ? GoalDependencyProvenance.direct(goal,
+                    ? GoalProvenance.direct(goal,
                             recommendation.getId(), path)
-                    : GoalDependencyProvenance.prerequisite(goal,
+                    : GoalProvenance.prerequisite(goal,
                             recommendation.getId(), path);
         }
 
         List<String> direct = directActivityPath(goal, recommendation);
-        return direct == null ? null : GoalDependencyProvenance.direct(
+        return direct == null ? null : GoalProvenance.direct(
                 goal, recommendation.getId(), direct);
     }
 
@@ -88,9 +88,9 @@ public class GoalDependencyProvenanceService
             GoalType goal, Skill skill, StrategyContext context)
     {
         if (goal == null || skill == null || context == null
-                || context.getData() == null
-                || context.getData().getAccount() == null) return 0;
-        int current = context.getData().getAccount().getSkillLevel(skill);
+                || context.data() == null
+                || context.data().account() == null) return 0;
+        int current = context.data().account().getSkillLevel(skill);
         if (isDirectSkillGoal(goal, skill))
         {
             int target = goal == GoalType.BASE_70S ? 70
@@ -112,13 +112,13 @@ public class GoalDependencyProvenanceService
     public GoalQuestRewardForecast guaranteedRewardsBeforeManualTraining(
             StrategyContext context, Skill skill)
     {
-        if (context == null || skill == null || context.getData() == null
-                || context.getData().getAccount() == null
-                || context.getData().getQuests() == null)
+        if (context == null || skill == null || context.data() == null
+                || context.data().account() == null
+                || context.data().quests() == null)
             return new GoalQuestRewardForecast(skill, 0,
                     Collections.emptyList());
 
-        int currentLevel = context.getData().getAccount().getSkillLevel(skill);
+        int currentLevel = context.data().account().getSkillLevel(skill);
         Set<String> goalQuests = requiredQuestNames(context.getActiveGoal(), context);
         int experience = 0;
         List<String> sources = new ArrayList<>();
@@ -151,7 +151,7 @@ public class GoalDependencyProvenanceService
         for (Map.Entry<Skill, Integer> requirement
                 : definition.getSkillRequirements().entrySet())
         {
-            int current = context.getData().getAccount()
+            int current = context.data().account()
                     .getSkillLevel(requirement.getKey());
             int gap = requirement.getValue() - current;
             // The forecast may look through one short prerequisite grind, but
@@ -249,7 +249,7 @@ public class GoalDependencyProvenanceService
         if (goal == GoalType.QUEST_CAPE)
         {
             for (Map.Entry<String, QuestStatus> entry
-                    : context.getData().getQuests().getQuests().entrySet())
+                    : context.data().quests().quests().entrySet())
             {
                 if (entry.getValue() == QuestStatus.COMPLETE
                         || entry.getValue() == QuestStatus.UNKNOWN) continue;
@@ -300,7 +300,7 @@ public class GoalDependencyProvenanceService
             return null;
         }
         int required = definition.getSkillRequirements().getOrDefault(skill, 0);
-        int current = context.getData().getAccount().getSkillLevel(skill);
+        int current = context.data().account().getSkillLevel(skill);
         List<String> best = null;
         if (required > current)
             best = list(quest, required + " " + display(skill));
@@ -345,7 +345,7 @@ public class GoalDependencyProvenanceService
         if (goal == GoalType.QUEST_CAPE)
         {
             for (Map.Entry<String, QuestStatus> entry
-                    : context.getData().getQuests().getQuests().entrySet())
+                    : context.data().quests().quests().entrySet())
                 if (entry.getValue() != QuestStatus.COMPLETE
                         && entry.getValue() != QuestStatus.UNKNOWN)
                     collectQuestTree(entry.getKey(), result);
@@ -389,15 +389,15 @@ public class GoalDependencyProvenanceService
             case FIRE_CAPE:
                 return contains(identity, "fire cape", "tztok jad",
                         "tzhaar fight cave")
-                        ? list(goal.toString(), "Complete the TzHaar Fight Cave")
+                        ? list(goal.toString(), Text.get(1325))
                         : null;
             case BOWFA:
-                return contains(identity, "bowfa", "enhanced crystal weapon seed")
+                return contains(identity, "bowfa", Text.get(1326))
                         ? list(goal.toString(), Text.get(264))
                         : null;
             case INFERNAL_CAPE:
                 return contains(identity, "inferno", "infernal cape", "tzkal zuk")
-                        ? list(goal.toString(), "Complete the Inferno") : null;
+                        ? list(goal.toString(), Text.get(1327)) : null;
             default:
                 return null;
         }
@@ -414,10 +414,10 @@ public class GoalDependencyProvenanceService
             Recommendation recommendation, StrategyContext context)
     {
         String id = recommendation.getId();
-        if (id == null || !id.startsWith("quest:") || context.getData() == null
-                || context.getData().getQuests() == null) return null;
+        if (id == null || !id.startsWith("quest:") || context.data() == null
+                || context.data().quests() == null) return null;
         String slug = id.substring("quest:".length());
-        for (String quest : context.getData().getQuests().getQuests().keySet())
+        for (String quest : context.data().quests().quests().keySet())
             if (slug(quest).equals(slug)) return quest;
         return null;
     }
@@ -425,11 +425,11 @@ public class GoalDependencyProvenanceService
     private static QuestStatus statusOf(
             StrategyContext context, String quest)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getQuests() == null)
+        if (context == null || context.data() == null
+                || context.data().quests() == null)
             return QuestStatus.UNKNOWN;
         for (Map.Entry<String, QuestStatus> entry
-                : context.getData().getQuests().getQuests().entrySet())
+                : context.data().quests().quests().entrySet())
             if (normalize(entry.getKey()).equals(normalize(quest)))
                 return entry.getValue();
         return QuestStatus.UNKNOWN;

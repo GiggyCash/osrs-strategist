@@ -8,13 +8,13 @@ public class CandidateSafetyPolicy
 {
     public boolean isAllowed(Recommendation recommendation, StrategyContext context)
     {
-        if (recommendation == null || context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (recommendation == null || context == null || context.data() == null
+                || context.data().account() == null)
         {
             return recommendation != null;
         }
 
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         if (AccountMode.fromTypeCode(account.getAccountTypeCode())
                     == AccountMode.ULTIMATE_IRONMAN
                 && (recommendation.getSafetyEvidence()
@@ -30,15 +30,15 @@ public class CandidateSafetyPolicy
         return isAllowed(recommendation.getSafetyEvidence(), account);
     }
 
-    public boolean isAllowed(CandidateSafetyEvidence evidence,
+    public boolean isAllowed(SafetyEvidence evidence,
             StrategyContext context)
     {
-        if (evidence == null || context == null || context.getData() == null
-                || context.getData().getAccount() == null) return false;
-        return isAllowed(evidence, context.getData().getAccount());
+        if (evidence == null || context == null || context.data() == null
+                || context.data().account() == null) return false;
+        return isAllowed(evidence, context.data().account());
     }
 
-    private static boolean isAllowed(CandidateSafetyEvidence evidence,
+    private static boolean isAllowed(SafetyEvidence evidence,
             AccountSnapshot account)
     {
 
@@ -47,7 +47,7 @@ public class CandidateSafetyPolicy
         // Unannotated content is never assumed F2P-safe. This is the final
         // protection against a new provider forgetting its early access filter.
         if (account.getMembershipStatus() != MembershipStatus.P2P
-                && evidence.getAccess() != CandidateSafetyEvidence.Access.F2P_SAFE)
+                && evidence.getAccess() != SafetyEvidence.Access.F2P_SAFE)
         {
             return false;
         }
@@ -56,9 +56,9 @@ public class CandidateSafetyPolicy
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && (evidence.getBuildEffect()
-                == CandidateSafetyEvidence.BuildEffect.POTENTIALLY_IRREVERSIBLE
+                == SafetyEvidence.BuildEffect.POTENTIALLY_IRREVERSIBLE
                 || evidence.getBuildEffect()
-                == CandidateSafetyEvidence.BuildEffect.UNKNOWN))
+                == SafetyEvidence.BuildEffect.UNKNOWN))
         {
             // When the candidate cannot prove its risk/build effects, preserving
             // a Hardcore life takes precedence over provider score.
@@ -66,7 +66,7 @@ public class CandidateSafetyPolicy
         }
 
         RestrictedBuildSuggestion suggestion = AccountBuildPolicy.detect(account);
-        if (suggestion.getConfidence() == RecommendationConfidence.VERIFIED
+        if (suggestion.getConfidence() == Confidence.VERIFIED
                 && suggestion.getType() == RestrictedBuildType.STANDARD)
         {
             return true;

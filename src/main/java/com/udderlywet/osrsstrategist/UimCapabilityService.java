@@ -14,26 +14,26 @@ import javax.inject.Singleton;
 public class UimCapabilityService
 {
     public UimStorageDecision evaluateStorage(
-            StrategyDataBundle data,
+            GameData data,
             StorageCapability capability,
             CapabilityState itemCompatibility,
             CapabilityState capacityOrPreconditions)
     {
-        if (data == null || data.getAccount() == null)
+        if (data == null || data.account() == null)
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     riskFor(capability),
-                    "Account state has not been observed.");
+                    Text.get(1421));
         }
 
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode()
+                data.account().getAccountTypeCode()
         );
         if (mode != AccountMode.ULTIMATE_IRONMAN)
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     RiskLevel.NONE,
                     Text.get(940));
         }
@@ -41,7 +41,7 @@ public class UimCapabilityService
         if (UimStorageMechanics.isTooGenericToRecommend(capability))
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     RiskLevel.HIGH,
                     Text.get(942));
         }
@@ -53,12 +53,12 @@ public class UimCapabilityService
             if (mechanic == null
                     || !mechanic.hasCompleteRecommendationRules())
                 return decision(capability, false,
-                        RecommendationConfidence.CHECK_NEEDED,
+                        Confidence.CHECK_NEEDED,
                         riskFor(capability),
                         Text.get(943));
         }
 
-        StorageSnapshot storage = data.getStorage();
+        StorageSnapshot storage = data.storage();
         CapabilityState capabilityState = storage == null
                 ? CapabilityState.UNKNOWN
                 : storage.stateOf(capability);
@@ -66,14 +66,14 @@ public class UimCapabilityService
         if (capabilityState == CapabilityState.BLOCKED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.BLOCKED,
+                    Confidence.BLOCKED,
                     riskFor(capability),
                     Text.get(944));
         }
         if (capabilityState != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     riskFor(capability),
                     Text.get(945));
         }
@@ -81,14 +81,14 @@ public class UimCapabilityService
         if (itemCompatibility == CapabilityState.BLOCKED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.BLOCKED,
+                    Confidence.BLOCKED,
                     riskFor(capability),
                     Text.get(946));
         }
         if (itemCompatibility != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     riskFor(capability),
                     Text.get(947));
         }
@@ -96,20 +96,20 @@ public class UimCapabilityService
         if (capacityOrPreconditions == CapabilityState.BLOCKED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.BLOCKED,
+                    Confidence.BLOCKED,
                     riskFor(capability),
                     Text.get(948));
         }
         if (capacityOrPreconditions != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     riskFor(capability),
                     Text.get(949));
         }
 
         return decision(capability, true,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 riskFor(capability),
                 Text.get(941));
     }
@@ -144,7 +144,7 @@ public class UimCapabilityService
     private static UimStorageDecision decision(
             StorageCapability capability,
             boolean allowed,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             RiskLevel risk,
             String explanation)
     {

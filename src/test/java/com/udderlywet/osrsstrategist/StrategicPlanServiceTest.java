@@ -83,7 +83,7 @@ public class StrategicPlanServiceTest
                 Collections.singletonList(fishing), before, 10L);
         StrategyContext after = context(53, MembershipStatus.P2P,
                 GoalType.BARROWS_GLOVES);
-        StrategicPlan advanced = previous.advanceCompleted(after.getData());
+        StrategicPlan advanced = previous.advanceCompleted(after.data());
 
         assertFalse(advanced.getCurrentStep().getId()
                 .equals("skill:fishing:53"));
@@ -129,15 +129,15 @@ public class StrategicPlanServiceTest
         TrainingMethod method = new TrainingMethod("test-method", skill,
                 1, 99, "Test method", "Repeat the method.", 10, 10, 10,
                 AttentionLevel.MODERATE, 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED, true, false, false);
+                Confidence.VERIFIED, true, false, false);
         TrainingPlan plan = new TrainingPlan(method, "Test plan",
-                RecommendationConfidence.VERIFIED, Collections.emptyList());
+                Confidence.VERIFIED, Collections.emptyList());
         return new Recommendation(id, "Train " + skill.getName() + " to "
                 + target, "Proven work.", 50, plan,
-                RecommendationConfidence.VERIFIED, current, target,
-                new RecommendationGuidance("Repeat to the target.",
+                Confidence.VERIFIED, current, target,
+                new Guidance("Repeat to the target.",
                         "Bring supplies.", "Named location.", null),
-                CandidateSafetyEvidence.skill(true, skill));
+                SafetyEvidence.skill(true, skill));
     }
 
     private static StrategyContext context(int fishing,
@@ -157,7 +157,7 @@ public class StrategicPlanServiceTest
         Map<String, QuestStatus> quests = new LinkedHashMap<>();
         for (Quest quest : Quest.values())
             quests.put(quest.getName(), QuestStatus.NOT_STARTED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .build();
         return new StrategyContext(data, StrategyMode.EFFICIENT,

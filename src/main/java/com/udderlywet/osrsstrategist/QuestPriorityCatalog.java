@@ -14,7 +14,7 @@ public class QuestPriorityCatalog
         for (QuestPriority priority : BundledCatalogLoader.array(
                 Text.get(559), QuestPriority[].class))
             if (priorities.put(normalize(priority.getName()), priority) != null)
-                throw new IllegalStateException("Duplicate quest priority " + priority.getName());
+                throw new IllegalStateException(Text.get(1169) + priority.getName());
     }
 
     public QuestPriority priorityFor(String questName) { return priorities.get(normalize(questName)); }

@@ -12,7 +12,7 @@ import javax.inject.Singleton;
  * therefore cannot occupy the primary DO NEXT slot.</p>
  */
 @Singleton
-public class QuestCandidateProvider implements StrategyCandidateProvider
+public class QuestCandidateProvider implements CandidateProvider
 {
     private final QuestPriorityCatalog priorityCatalog;
     private final QuestKnowledgeCatalog knowledgeCatalog;
@@ -58,20 +58,20 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getQuests() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().quests() == null
+                || context.data().account() == null)
         {
             return result;
         }
 
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         MembershipStatus membership = account.getMembershipStatus();
-        PreferenceProfile preferences = context.getPreferenceProfile();
+        PreferenceProfile preferences = context.preferenceProfile();
         Set<String> neededPrerequisites = neededPrerequisites(
-                context.getData().getQuests());
+                context.data().quests());
         for (Map.Entry<String, QuestStatus> entry
-                : context.getData().getQuests().getQuests().entrySet())
+                : context.data().quests().quests().entrySet())
         {
             QuestStatus status = entry.getValue();
             if (status == null || status == QuestStatus.COMPLETE
@@ -143,17 +143,17 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);
 
-            RecommendationConfidence confidence = resolution == null
-                    ? RecommendationConfidence.CHECK_NEEDED
+            Confidence confidence = resolution == null
+                    ? Confidence.CHECK_NEEDED
                     : resolution.getConfidence();
-            RecommendationGuidance guidance = resolution == null ? null
+            Guidance guidance = resolution == null ? null
                     : resolution.getGuidance();
             if (resolution != null) reason += " " + resolution.getReason() + ".";
 
             String title = (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ")
                     + questName;
             if (resolution != null
-                    && resolution.getConfidence() == RecommendationConfidence.CHECK_NEEDED
+                    && resolution.getConfidence() == Confidence.CHECK_NEEDED
                     && guidance != null && guidance.getAction() != null
                     && !guidance.getAction().trim().isEmpty())
                 title = "Prepare for " + questName + ": "
@@ -166,7 +166,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                     confidence,
                     guidance,
                     resolution == null
-                            ? CandidateSafetyEvidence.unknown()
+                            ? SafetyEvidence.unknown()
                             : resolution.getSafetyEvidence()
             ));
         }
@@ -201,7 +201,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
     private Set<String> neededPrerequisites(QuestSnapshot quests)
     {
         Set<String> result = new HashSet<>();
-        for (Map.Entry<String, QuestStatus> entry : quests.getQuests().entrySet())
+        for (Map.Entry<String, QuestStatus> entry : quests.quests().entrySet())
         {
             if (entry.getValue() == QuestStatus.COMPLETE) continue;
             QuestDefinition definition = knowledgeCatalog.definitionFor(entry.getKey());

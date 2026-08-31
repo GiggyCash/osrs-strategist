@@ -21,14 +21,14 @@ public class CombatGuidanceServiceTest
     public void defencePureUsesObservedNoAttackWeaponAndDefensiveStyle()
     {
         AccountSnapshot account = defencePure();
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(24219, "Swift blade", 1)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(24219, "Swift blade", 1)), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.DEFENCE,
                 75,
@@ -40,7 +40,7 @@ public class CombatGuidanceServiceTest
         assertNotNull(guidance);
         assertTrue(guidance.getAction().contains("Defensive / Defence XP"));
         assertTrue(guidance.getAction().contains("Swift blade"));
-        assertTrue(RecommendationPresentation.compactSentence(
+        assertTrue(Presentation.compactSentence(
                 guidance.getAction(), 150).contains("Fight sand crabs"));
         assertTrue(guidance.getAction().contains("successful damage dealt"));
         assertTrue(guidance.getLocation().toLowerCase().contains("sand crab"));
@@ -52,14 +52,14 @@ public class CombatGuidanceServiceTest
     public void strengthPlannerDoesNotRecommendWhipForDedicatedStrengthXp()
     {
         AccountSnapshot account = standard(70);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(4151, "Abyssal whip", 1)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(4151, "Abyssal whip", 1)), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.STRENGTH,
                 70,
@@ -78,13 +78,13 @@ public class CombatGuidanceServiceTest
         AccountSnapshot account = standard(70);
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Children of the Sun", QuestStatus.COMPLETE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(4151, "Abyssal whip", 1)), 1L))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(4151, "Abyssal whip", 1)), 1L))
                 .quests(new QuestSnapshot(quests))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.ATTACK,
                 70,
@@ -108,8 +108,8 @@ public class CombatGuidanceServiceTest
                 MembershipStatus.UNKNOWN, 0, p2p.getTotalLevel(),
                 p2p.getTotalExperience(), p2p.getSkillLevels(),
                 p2p.getSkillExperience());
-        RecommendationGuidance guidance = service.build(
-                StrategyDataBundle.builder(unknown).build(), Skill.ATTACK,
+        Guidance guidance = service.build(
+                GameData.builder(unknown).build(), Skill.ATTACK,
                 70, 80, plan("attack_crabs", Skill.ATTACK),
                 SessionIntent.AFK, true);
         assertTrue(guidance == null);
@@ -119,15 +119,15 @@ public class CombatGuidanceServiceTest
     public void scurriusNamesObservedFoodInsteadOfDelegatingSupplies()
     {
         AccountSnapshot account = standard(70);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(java.util.Arrays.asList(
-                        new ItemStackSnapshot(4151, "Abyssal whip", 1),
-                        new ItemStackSnapshot(385, "Shark", 20)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(java.util.Arrays.asList(
+                        new ItemState(4151, "Abyssal whip", 1),
+                        new ItemState(385, "Shark", 20)), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(data, Skill.ATTACK,
+        Guidance guidance = service.build(data, Skill.ATTACK,
                 70, 71, plan("attack_scurrius", Skill.ATTACK),
                 SessionIntent.ONE_HOUR, true);
 
@@ -140,11 +140,11 @@ public class CombatGuidanceServiceTest
     public void scurriusWithoutObservedHealingStaysHidden()
     {
         AccountSnapshot account = standard(70);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(4151, "Abyssal whip", 1)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(4151, "Abyssal whip", 1)), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
         assertNull(service.build(data, Skill.ATTACK, 70, 71,
@@ -158,9 +158,9 @@ public class CombatGuidanceServiceTest
                 id, skill, 1, 99, id, "test",
                 10, 10, 10, AttentionLevel.LOW,
                 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(method, "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 

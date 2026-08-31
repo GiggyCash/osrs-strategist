@@ -8,16 +8,16 @@ import lombok.Getter;
 @Getter
 public final class InfrastructureValueAssessment
 {
-    private final InfrastructureMilestoneDefinition milestone;
+    private final InfrastructureMilestone milestone;
     private final InfrastructureMilestoneState state;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final StrategicPriority strategicValue;
     private final List<InfrastructureValueContribution> contributions;
     private final String reason;
 
-    InfrastructureValueAssessment(InfrastructureMilestoneDefinition milestone,
+    InfrastructureValueAssessment(InfrastructureMilestone milestone,
             InfrastructureMilestoneState state,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             StrategicPriority strategicValue,
             List<InfrastructureValueContribution> contributions,
             String reason)
@@ -34,6 +34,6 @@ public final class InfrastructureValueAssessment
     public boolean canRecommendAcquisition()
     {
         return state == InfrastructureMilestoneState.ACTIONABLE
-                && confidence == RecommendationConfidence.VERIFIED;
+                && confidence == Confidence.VERIFIED;
     }
 }

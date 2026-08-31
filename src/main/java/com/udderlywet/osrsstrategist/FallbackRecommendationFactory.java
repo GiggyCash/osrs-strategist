@@ -9,50 +9,50 @@ final class FallbackRecommendationFactory
 
     private FallbackRecommendationFactory() {}
 
-    static Recommendation forState(StrategyDataBundle data)
+    static Recommendation forState(GameData data)
     {
-        if (data == null || data.getAccount() == null)
-            return fallback("login", "Log in to continue",
+        if (data == null || data.account() == null)
+            return fallback("login", Text.get(1305),
                     Text.get(219),
-                    "No supplies required.",
-                    "RuneScape login screen.",
+                    Text.get(1306),
+                    Text.get(1307),
                     Text.get(230));
 
-        if (data.getInventory() == null)
-            return fallback("inventory", "Open your inventory",
+        if (data.inventory() == null)
+            return fallback("inventory", Text.get(1308),
                     Text.get(237),
-                    "No supplies required.",
+                    Text.get(1306),
                     Text.get(238),
                     Text.get(239));
 
-        if (data.getEquipment() == null)
-            return fallback("equipment", "Open your equipment tab",
+        if (data.equipment() == null)
+            return fallback("equipment", Text.get(1309),
                     Text.get(240),
-                    "No supplies required.",
+                    Text.get(1306),
                     Text.get(241),
                     Text.get(242));
 
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
+                data.account().getAccountTypeCode());
+        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() == null)
             return fallback("bank", "Open your bank",
                     Text.get(243),
-                    "No supplies required.",
+                    Text.get(1306),
                     Text.get(220),
                     Text.get(221));
 
-        AccountSnapshot account = data.getAccount();
+        AccountSnapshot account = data.account();
         if (AccountBuildPolicy.allowsSkill(account, Skill.MINING))
         {
-            ObservedItemIndex items = new ObservedItemIndex(data, false);
+            ItemIndex items = new ItemIndex(data, false);
             boolean hasPickaxe = items.quantityMatching(
                     ItemRequirementClass.PICKAXE,
                     java.util.Collections.emptyList()) > 0;
             if (!hasPickaxe)
             {
-                return fallback("starter-pickaxe", "Get a bronze pickaxe",
+                return fallback("starter-pickaxe", Text.get(1310),
                         Text.get(222),
-                        "No supplies required.",
+                        Text.get(1306),
                         Text.get(223),
                         Text.get(224));
             }
@@ -60,10 +60,10 @@ final class FallbackRecommendationFactory
             int target = Math.min(99, current + 1);
             boolean maxed = current >= 99;
             return fallback("starter-mining",
-                    maxed ? "Mine one inventory of copper"
-                            : "Mine copper to level " + target,
+                    maxed ? Text.get(1311)
+                            : Text.get(1312) + target,
                     Text.get(225)
-                            + (maxed ? "after one inventory." : "at level " + target + "."),
+                            + (maxed ? Text.get(1313) : "at level " + target + "."),
                     Text.get(226),
                     Text.get(227),
                     Text.get(228));
@@ -76,17 +76,17 @@ final class FallbackRecommendationFactory
             int target = Math.min(99, current + 1);
             return fallback("safe-combat-" + combatSkill.name().toLowerCase(),
                     "Train " + combatSkill.getName() + " to " + target,
-                    "Set the combat style to " + attackStyle(combatSkill)
+                    Text.get(1314) + attackStyle(combatSkill)
                             + Text.get(229)
-                            + target + ". Ask a monk to heal you when needed.",
-                    "No weapon or food required.",
+                            + target + Text.get(1315),
+                    Text.get(1316),
                     Text.get(231),
                     Text.get(232));
         }
 
         return fallback("safe-combat", "Fight 10 monks",
                 Text.get(233),
-                "No weapon or food required.",
+                Text.get(1316),
                 Text.get(234),
                 Text.get(235));
     }
@@ -108,9 +108,9 @@ final class FallbackRecommendationFactory
 
     private static String attackStyle(Skill skill)
     {
-        if (skill == Skill.ATTACK) return "Accurate / Attack XP";
-        if (skill == Skill.STRENGTH) return "Aggressive / Strength XP";
-        return "Defensive / Defence XP";
+        if (skill == Skill.ATTACK) return Text.get(1317);
+        if (skill == Skill.STRENGTH) return Text.get(1318);
+        return Text.get(1319);
     }
 
     private static Recommendation fallback(String id, String title,
@@ -118,9 +118,9 @@ final class FallbackRecommendationFactory
     {
         return new Recommendation(PREFIX + id, title, reason,
                 Double.NEGATIVE_INFINITY, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance(action, supplies, location,
+                Confidence.VERIFIED, 0, 0,
+                new Guidance(action, supplies, location,
                         Text.get(236)),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
     }
 }

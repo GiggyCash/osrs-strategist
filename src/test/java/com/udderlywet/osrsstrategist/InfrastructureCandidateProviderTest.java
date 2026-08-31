@@ -31,7 +31,7 @@ public class InfrastructureCandidateProviderTest
 
         assertEquals("verify:poh-build-mode", candidate.getId());
         assertTrue(candidate.getGuidance().getAction().contains("Build mode"));
-        assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(
+        assertTrue(new ActionabilityPolicy().canLeadQueue(
                 candidate));
     }
 
@@ -50,9 +50,9 @@ public class InfrastructureCandidateProviderTest
 
         assertEquals("Build Oak armour case", armour.getTitle());
         assertTrue(armour.getGuidance().getSupplies().contains("3 oak planks"));
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 armour.getConfidence());
-        assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(
+        assertTrue(new ActionabilityPolicy().canLeadQueue(
                 armour));
     }
 
@@ -123,7 +123,7 @@ public class InfrastructureCandidateProviderTest
         levels.put(Skill.MAGIC, magic);
         AccountSnapshot account = new AccountSnapshot("Infrastructure", 88L,
                 type(mode), mode.name(), membership, 1, 1, 0L, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .poh(poh).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,
@@ -143,16 +143,16 @@ public class InfrastructureCandidateProviderTest
         AccountSnapshot account = new AccountSnapshot("Infrastructure", 88L,
                 type(AccountMode.ULTIMATE_IRONMAN), "ULTIMATE_IRONMAN",
                 MembershipStatus.P2P, 1, 1, 0L, levels, xp);
-        List<ItemStackSnapshot> inventory = new ArrayList<>();
+        List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 24; slot++)
-            inventory.add(new ItemStackSnapshot(firstItemId + slot,
+            inventory.add(new ItemState(firstItemId + slot,
                     "Setup " + slot, 1, slot));
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put("pvm:tztok_jad", new PvmReadiness("pvm:tztok_jad",
-                false, RecommendationConfidence.CHECK_NEEDED,
+                false, Confidence.CHECK_NEEDED,
                 Collections.singletonList("Observed loadout incomplete")));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
                 .poh(poh)
                 .pvm(new PvmSnapshot(readiness))
                 .minigames(new MinigameSnapshot(new HashSet<>(

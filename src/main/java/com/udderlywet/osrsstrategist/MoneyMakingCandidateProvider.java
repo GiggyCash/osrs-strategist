@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 /** Surfaces money/resource work only when cash pressure or a gear goal makes it relevant. */
 @Singleton
-public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
+public class MoneyMakingCandidateProvider implements CandidateProvider
 {
     private final MoneyMakingCatalog catalog;
 
@@ -23,19 +23,19 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null) return result;
+        if (context == null || context.data() == null
+                || context.data().account() == null) return result;
 
-        AccountSnapshot account = context.getData().getAccount();
-        AccountEconomySnapshot economy = context.getData().getEconomy();
+        AccountSnapshot account = context.data().account();
+        AccountEconomySnapshot economy = context.data().economy();
         boolean explicitGearNeed = context.getActiveGoal() == GoalType.GEAR_TARGET
                 || context.getActiveGoal() == GoalType.RAID_READY;
         boolean observedCashPressure = economy != null
-                && economy.getConfidence() == RecommendationConfidence.VERIFIED
+                && economy.getConfidence() == Confidence.VERIFIED
                 && economy.getCoins() < 1_000_000L;
         if (!explicitGearNeed && !observedCashPressure) return result;
 
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         for (MoneyMakingDefinition method : catalog.forAccount(mode))
         {
             if (!ContentAccessRules.isContentAvailable(
@@ -50,8 +50,8 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)) continue;
 
             String id = method.getId();
-            if (context.getPreferenceProfile().isOnCooldown(id)) continue;
-            RecommendationGuidance guidance = guidanceFor(method, context);
+            if (context.preferenceProfile().isOnCooldown(id)) continue;
+            Guidance guidance = guidanceFor(method, context);
             // A catalog identity is not a recommendation. Price-sensitive,
             // encounter-dependent, or access-dependent methods stay hidden
             // until Compass can publish one coherent executable loop.
@@ -64,7 +64,7 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     && context.getSessionIntent() == SessionIntent.AFK) score += 8.0;
             if (method.getAttention() == AttentionLevel.LOW
                     && context.getStrategyMode() == StrategyMode.RELAXED) score += 5.0;
-            score += context.getPreferenceProfile().weightFor(id) * 10.0;
+            score += context.preferenceProfile().weightFor(id) * 10.0;
 
             String priceNote = method.isRequiresLivePrices()
                     ? Text.get(378)
@@ -74,7 +74,7 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     "Make money: " + method.getName(),
                     method.getDescription() + priceNote,
                     score,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     guidance,
                     safetyFor(method),
                     strategicValue(method, mode)
@@ -86,34 +86,34 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
-    private static RecommendationGuidance guidanceFor(
+    private static Guidance guidanceFor(
             MoneyMakingDefinition method, StrategyContext context)
     {
         if (method == null || context == null) return null;
         if (!"money:agility-pyramid".equals(method.getId())) return null;
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         if (!mode.isIronLike()
                 || mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN
-                || context.getData().getAccount().getSkillLevel(
+                || context.data().account().getSkillLevel(
                         net.runelite.api.Skill.AGILITY) < 60)
         {
             return null;
         }
-        return new RecommendationGuidance(
+        return new Guidance(
                 Text.get(379),
                 Text.get(380),
                 Text.get(381),
                 Text.get(382));
     }
 
-    private static RecommendationStrategicValue strategicValue(
+    private static StrategicValue strategicValue(
             MoneyMakingDefinition method, AccountMode mode)
     {
         if (method != null && "money:agility-pyramid".equals(method.getId())
                 && mode != null && mode.isIronLike())
         {
-            return RecommendationStrategicValue.builder()
+            return StrategicValue.builder()
                     .accountModeFit(0.8)
                     .resourceFit(0.75)
                     .riskBurden(0.3)
@@ -121,18 +121,18 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
                     .evidence("wiki:ironman-agility-pyramid-cash")
                     .build();
         }
-        return RecommendationStrategicValue.neutral();
+        return StrategicValue.neutral();
     }
 
-    private static CandidateSafetyEvidence safetyFor(MoneyMakingDefinition method)
+    private static SafetyEvidence safetyFor(MoneyMakingDefinition method)
     {
         if (method.getRiskLevel() == RiskLevel.HIGH
                 || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)
-            return CandidateSafetyEvidence.potentiallyIrreversible(
+            return SafetyEvidence.potentiallyIrreversible(
                     method.isFreeToPlay());
         if (method.getPrimarySkill() != null)
-            return CandidateSafetyEvidence.skill(method.isFreeToPlay(),
+            return SafetyEvidence.skill(method.isFreeToPlay(),
                     method.getPrimarySkill());
-        return CandidateSafetyEvidence.harmless(method.isFreeToPlay());
+        return SafetyEvidence.harmless(method.isFreeToPlay());
     }
 }

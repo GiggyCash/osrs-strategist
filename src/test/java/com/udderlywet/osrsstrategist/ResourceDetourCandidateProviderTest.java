@@ -23,11 +23,11 @@ public class ResourceDetourCandidateProviderTest
         Recommendation candidate = find(provider.candidates(context(account(1), GoalType.MAX)),
                 "detour:tempoross-planks");
         assertNotNull(candidate);
-        assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
+        assertEquals(Confidence.VERIFIED, candidate.getConfidence());
         assertNotNull(candidate.getGuidance());
         assertTrue(candidate.getGuidance().getAction().contains("Tempoross"));
         assertTrue(candidate.getGuidance().getNote().contains("cross-skill"));
-        assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(candidate));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
     }
 
     @Test
@@ -45,10 +45,10 @@ public class ResourceDetourCandidateProviderTest
 
     private static StrategyContext context(AccountSnapshot account, GoalType goal)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.LONG_SESSION, QuestTolerance.NORMAL, goal,

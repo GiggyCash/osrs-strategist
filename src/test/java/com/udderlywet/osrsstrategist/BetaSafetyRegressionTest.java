@@ -34,10 +34,10 @@ public class BetaSafetyRegressionTest
 
         TrainingMethod f2p = method(
                 "mining_f2p_iron", Skill.MINING, false,
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingMethod members = method(
                 "mining_mlm", Skill.MINING, true,
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
 
         assertTrue(ContentAccessRules.isMethodAvailable(
                 f2p, MembershipStatus.UNKNOWN));
@@ -50,7 +50,7 @@ public class BetaSafetyRegressionTest
     {
         AccountSnapshot account = account(
                 MembershipStatus.F2P, 0, 60, 1, 1, 1, 1);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .combatAchievements(new CombatAchievementSnapshot(18, 27))
                 .build();
         StrategyContext context = new StrategyContext(
@@ -77,10 +77,10 @@ public class BetaSafetyRegressionTest
                 "Protected Defence-pure progression.",
                 40.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 75,
                 80,
-                new RecommendationGuidance(
+                new Guidance(
                         "Train Defence with the best legal defensive style.",
                         "Use verified food and gear.",
                         "Use a safe F2P combat target.",
@@ -91,13 +91,13 @@ public class BetaSafetyRegressionTest
                 "Unresolved quest candidate.",
                 999.0,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 0,
                 0,
                 null);
 
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         assertTrue(policy.canLeadQueue(ready));
         assertFalse(policy.canLeadQueue(unresolvedQuest));
 
@@ -118,7 +118,7 @@ public class BetaSafetyRegressionTest
                 500.0);
         List<Recommendation> queue = queue(
                 Collections.singletonList(unresolved),
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
         assertTrue(queue.isEmpty());
     }
 
@@ -144,17 +144,17 @@ public class BetaSafetyRegressionTest
     {
         AccountSnapshot uim = account(
                 MembershipStatus.P2P, 2, 70, 1, 1, 1, 43);
-        BankSnapshot bank = new BankSnapshot(
+        ItemsState bank = new ItemsState(
                 Collections.singletonList(
-                        new ItemStackSnapshot(383, "Raw shark", 1000)),
+                        new ItemState(383, "Raw shark", 1000)),
                 1L);
-        StrategyDataBundle data = StrategyDataBundle.builder(uim)
+        GameData data = GameData.builder(uim)
                 .bank(bank)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        ObservedItemIndex items = new ObservedItemIndex(data, false);
+        ItemIndex items = new ItemIndex(data, false);
         assertEquals(0, items.quantity("Raw shark"));
         assertFalse(items.bankObserved());
         assertTrue(items.primaryOwnershipObserved());
@@ -163,10 +163,10 @@ public class BetaSafetyRegressionTest
     @Test
     public void uimModeAloneNeverProvesAnUnobservedInventoryEmpty()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(
+        GameData data = GameData.builder(account(
                 MembershipStatus.P2P, 2, 70, 1, 1, 1, 43)).build();
 
-        ObservedItemIndex items = new ObservedItemIndex(data, false);
+        ItemIndex items = new ItemIndex(data, false);
         assertFalse(items.bankObserved());
         assertFalse(items.primaryOwnershipObserved());
         assertFalse(items.usableOwnershipObserved());
@@ -177,17 +177,17 @@ public class BetaSafetyRegressionTest
     {
         AccountSnapshot main = account(
                 MembershipStatus.P2P, 0, 70, 70, 70, 70, 70);
-        BankSnapshot bank = new BankSnapshot(
+        ItemsState bank = new ItemsState(
                 Collections.singletonList(
-                        new ItemStackSnapshot(383, "Raw shark", 1000)),
+                        new ItemState(383, "Raw shark", 1000)),
                 1L);
-        StrategyDataBundle data = StrategyDataBundle.builder(main)
+        GameData data = GameData.builder(main)
                 .bank(bank)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
         assertEquals(1000,
-                new ObservedItemIndex(data, false).quantity("Raw shark"));
+                new ItemIndex(data, false).quantity("Raw shark"));
     }
 
     @Test
@@ -195,24 +195,24 @@ public class BetaSafetyRegressionTest
     {
         AccountSnapshot gim = account(
                 MembershipStatus.P2P, 4, 70, 70, 70, 70, 70);
-        GroupStorageSnapshot group = new GroupStorageSnapshot(
+        ItemsState group = new ItemsState(
                 true,
                 Collections.singletonList(
-                        new ItemStackSnapshot(1515, "Yew logs", 500)));
-        StrategyDataBundle data = StrategyDataBundle.builder(gim)
+                        new ItemState(1515, "Yew logs", 500)));
+        GameData data = GameData.builder(gim)
                 .groupStorage(group)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
         assertEquals(0,
-                new ObservedItemIndex(data, false).quantity("Yew logs"));
+                new ItemIndex(data, false).quantity("Yew logs"));
         assertEquals(500,
-                new ObservedItemIndex(data, true).quantity("Yew logs"));
+                new ItemIndex(data, true).quantity("Yew logs"));
     }
 
     private static List<Recommendation> queue(
             List<Recommendation> pool,
-            RecommendationActionabilityPolicy policy)
+            ActionabilityPolicy policy)
     {
         StrategyEngine engine = new StrategyEngine(
                 null, null, null, null, policy);
@@ -223,7 +223,7 @@ public class BetaSafetyRegressionTest
             String id,
             Skill skill,
             boolean membersOnly,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         return new TrainingMethod(
                 id,

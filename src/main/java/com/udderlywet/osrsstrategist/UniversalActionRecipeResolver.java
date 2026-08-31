@@ -34,11 +34,11 @@ public class UniversalActionRecipeResolver
             {"saradomin brew", "Toadflax", "Crushed nest"}
     });
 
-    public UniversalActionRecipe resolve(RuneLiteSkillActionDefinition action,
+    public UniversalActionRecipe resolve(ActionDef action,
             int actions, MembershipStatus membership)
     {
         if (action == null || action.getSkill() == null || actions <= 0)
-            return unknown("Action recipe unavailable.");
+            return unknown(Text.get(1259));
         String name = clean(action.getName());
         String lower = name.toLowerCase(Locale.ROOT);
         switch (action.getSkill())
@@ -86,21 +86,21 @@ public class UniversalActionRecipeResolver
     {
         switch (lower)
         {
-            case "ball of wool": return recipe("Use a spinning wheel.", n, "Wool", 1);
-            case "bow string": return recipe("Use a spinning wheel.", n, "Flax", 1);
+            case "ball of wool": return recipe(Text.get(1260), n, "Wool", 1);
+            case "bow string": return recipe(Text.get(1260), n, "Flax", 1);
             case "unfired pot": case "unfired pie dish": case "unfired bowl":
             case "unfired plant pot": case "unfired pot lid":
-                return recipe("Use the clay on a pottery wheel.", n, "Soft clay", 1);
-            case "pot": return recipe("Use a pottery oven.", n, "Unfired pot", 1);
-            case "pie dish": return recipe("Use a pottery oven.", n, "Unfired pie dish", 1);
-            case "bowl": return recipe("Use a pottery oven.", n, "Unfired bowl", 1);
-            case "empty plant pot": return recipe("Use a pottery oven.", n, "Unfired plant pot", 1);
-            case "pot lid": return recipe("Use a pottery oven.", n, "Unfired pot lid", 1);
+                return recipe(Text.get(1261), n, "Soft clay", 1);
+            case "pot": return recipe(Text.get(1262), n, "Unfired pot", 1);
+            case "pie dish": return recipe(Text.get(1262), n, "Unfired pie dish", 1);
+            case "bowl": return recipe(Text.get(1262), n, "Unfired bowl", 1);
+            case "empty plant pot": return recipe(Text.get(1262), n, "Unfired plant pot", 1);
+            case "pot lid": return recipe(Text.get(1262), n, "Unfired pot lid", 1);
             case "molten glass": return recipe(Text.get(907), n,
                     "Bucket of sand", 1, "Soda ash", 1);
             case "tiara": return recipe(Text.get(908), n,
                     "Silver bar", 1);
-            case "gold tiara": return recipe("Bring a tiara mould to a furnace.", n, "Gold bar", 1);
+            case "gold tiara": return recipe(Text.get(1263), n, "Gold bar", 1);
             default: break;
         }
         if (isGem(lower) && !isJewellery(lower) && !lower.contains("bolt"))
@@ -114,21 +114,21 @@ public class UniversalActionRecipeResolver
         {
             int hides = lower.contains("body") ? 3 : lower.contains("chaps") ? 2
                     : lower.contains("vambrace") ? 1 : 0;
-            if (hides > 0) return recipe("Bring a needle and thread.", n,
+            if (hides > 0) return recipe(Text.get(1264), n,
                     color(lower) + " dragon leather", hides);
         }
         if (contains(lower, "leather gloves", "leather boots", "cowl",
                 "leather vambraces", "leather body", "leather chaps", "coif"))
-            return recipe("Bring a needle and thread.", n, "Leather", 1);
+            return recipe(Text.get(1264), n, "Leather", 1);
         if (contains(lower, "hardleather body", "hard leather body"))
-            return recipe("Bring a needle and thread.", n, "Hard leather", 1);
+            return recipe(Text.get(1264), n, "Hard leather", 1);
         if (isJewellery(lower))
         {
             String gem = gem(lower);
             String bar = gem != null && contains(gem.toLowerCase(Locale.ROOT), "opal", "jade", "red topaz")
                     ? "Silver bar" : "Gold bar";
-            return gem == null ? recipe("Bring the matching mould.", n, bar, 1)
-                    : recipe("Bring the matching mould.", n, bar, 1, gem, 1);
+            return gem == null ? recipe(Text.get(1265), n, bar, 1)
+                    : recipe(Text.get(1265), n, bar, 1, gem, 1);
         }
         if (contains(lower, "battlestaff", "battlestave"))
         {
@@ -148,7 +148,7 @@ public class UniversalActionRecipeResolver
                     "Arrow shaft", 1, "Feather", 1);
         if (lower.endsWith("bow (u)")) return recipe("Bring a knife.", n, woodItem(name, "Logs"), 1);
         if (contains(lower, "shortbow", "longbow") && !lower.contains("(u)"))
-            return recipe("String the unstrung bow.", n, name + " (u)", 1, "Bow string", 1);
+            return recipe(Text.get(1266), n, name + " (u)", 1, "Bow string", 1);
         if (lower.endsWith(" shield")) return recipe("Bring a knife.", n, woodItem(name, null), 2);
         if (lower.endsWith(" stock")) return recipe("Bring a knife.", n, woodItem(name, null), 1);
         String metal = firstWord(name);
@@ -180,7 +180,7 @@ public class UniversalActionRecipeResolver
         bars.put("mithril bar", new Object[]{"Mithril ore", 1, "Coal", 4});
         bars.put("adamantite bar", new Object[]{"Adamantite ore", 1, "Coal", 6});
         bars.put("runite bar", new Object[]{"Runite ore", 1, "Coal", 8});
-        if (bars.containsKey(lower)) return recipe("Standard furnace recipe.", n, bars.get(lower));
+        if (bars.containsKey(lower)) return recipe(Text.get(1267), n, bars.get(lower));
         int count = smithingBarsFor(lower);
         String metal = firstMatch(lower, "bronze", "iron", "steel", "mithril", "adamant", "rune");
         if (count > 0 && metal != null)
@@ -214,12 +214,12 @@ public class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe construction(String lower, int n)
     {
-        if (lower.contains("oak larder")) return recipe("Bring a hammer and saw.", n, "Oak plank", 8);
-        if (contains(lower, "oak dungeon door", "oak door")) return recipe("Bring a hammer and saw.", n, "Oak plank", 10);
-        if (lower.contains("mahogany table")) return recipe("Bring a hammer and saw.", n, "Mahogany plank", 6);
-        if (lower.contains("crude wooden chair")) return recipe("Bring a hammer and saw.", n,
+        if (lower.contains("oak larder")) return recipe(Text.get(1268), n, "Oak plank", 8);
+        if (contains(lower, "oak dungeon door", "oak door")) return recipe(Text.get(1268), n, "Oak plank", 10);
+        if (lower.contains("mahogany table")) return recipe(Text.get(1268), n, "Mahogany plank", 6);
+        if (lower.contains(Text.get(1269))) return recipe(Text.get(1268), n,
                 "Plank", 2, "Steel nails", 2);
-        if (lower.contains("teak garden bench")) return recipe("Bring a hammer and saw.", n, "Teak plank", 6);
+        if (lower.contains("teak garden bench")) return recipe(Text.get(1268), n, "Teak plank", 6);
         if (lower.contains("mythical cape")) return recipe(Text.get(927), n, "Teak plank", 3);
         return unknown(Text.get(928));
     }
@@ -233,12 +233,12 @@ public class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe magic(String lower, int n)
     {
-        if (lower.equals("wind strike")) return recipe("Full base rune cost.", n, "Air rune", 1, "Mind rune", 1);
-        if (lower.equals("fire bolt")) return recipe("Full base rune cost.", n,
+        if (lower.equals("wind strike")) return recipe(Text.get(1270), n, "Air rune", 1, "Mind rune", 1);
+        if (lower.equals("fire bolt")) return recipe(Text.get(1270), n,
                 "Air rune", 3, "Fire rune", 4, "Chaos rune", 1);
-        if (lower.equals("fire blast")) return recipe("Full base rune cost.", n,
+        if (lower.equals("fire blast")) return recipe(Text.get(1270), n,
                 "Air rune", 4, "Fire rune", 5, "Death rune", 1);
-        if (contains(lower, "high level alchemy", "high alchemy"))
+        if (contains(lower, Text.get(1271), "high alchemy"))
             return recipe(Text.get(931), n,
                     "Nature rune", 1, "Fire rune", 5);
         if (lower.equals("curse") || lower.endsWith(" curse"))
@@ -249,13 +249,13 @@ public class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe recipe(String setup, int actions, Object... itemAndUnits)
     {
-        List<ResolvedMethodInput> inputs = new ArrayList<>();
+        List<MethodInput> inputs = new ArrayList<>();
         for (int i = 0; i + 1 < itemAndUnits.length; i += 2)
         {
             String item = (String) itemAndUnits[i];
             int units = (Integer) itemAndUnits[i + 1];
             if (item != null && units > 0)
-                inputs.add(new ResolvedMethodInput(item, -1, multiply(actions, units)));
+                inputs.add(new MethodInput(item, -1, multiply(actions, units)));
         }
         return new UniversalActionRecipe(inputs, setup, true);
     }

@@ -24,9 +24,9 @@ public class SlayerTaskStrategicCatalog
                 : BundledCatalogLoader.array(RESOURCE, SlayerTaskStrategicProfile[].class))
         {
             if (profile.getTaskProfileId() == null)
-                throw new IllegalStateException("Incomplete Slayer strategy in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1185) + RESOURCE);
             if (values.put(profile.getTaskProfileId(), profile) != null)
-                throw new IllegalStateException("Duplicate Slayer strategy: "
+                throw new IllegalStateException(Text.get(1186)
                         + profile.getTaskProfileId());
         }
         byProfileId = Collections.unmodifiableMap(values);

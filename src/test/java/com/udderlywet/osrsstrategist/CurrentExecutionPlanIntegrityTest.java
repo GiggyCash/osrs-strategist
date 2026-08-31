@@ -21,7 +21,7 @@ public class CurrentExecutionPlanIntegrityTest
             new RuneLiteSkillActionCatalog()
             {
                 @Override
-                public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+                public List<ActionDef> actionsFor(Skill skill)
                 {
                     if (skill != Skill.FISHING) return Collections.emptyList();
                     return Arrays.asList(
@@ -53,7 +53,7 @@ public class CurrentExecutionPlanIntegrityTest
     @Test
     public void levelEighteenShowsNetFishingAndNoFutureFlyStage()
     {
-        StrategyDataBundle data = data(18, 2,
+        GameData data = data(18, 2,
                 Arrays.asList(
                         item(ItemID.FLY_FISHING_ROD, "Fly fishing rod", 1),
                         item(ItemID.FEATHER, "Feather", 250)));
@@ -62,7 +62,7 @@ public class CurrentExecutionPlanIntegrityTest
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService());
 
-        RecommendationGuidance guidance = service.build(data, Skill.FISHING,
+        Guidance guidance = service.build(data, Skill.FISHING,
                 18, 20, plan(method("fishing_lumbridge_shrimps", 1, 19,
                         "Lumbridge shrimp")), true);
 
@@ -92,7 +92,7 @@ public class CurrentExecutionPlanIntegrityTest
         assertEquals("Fly fishing", fallback.getName());
         assertEquals(30, resolver.resolve(fallbackPlan, 20, 53));
 
-        RecommendationGuidance guidance =
+        Guidance guidance =
                 new AdaptiveMilestoneGuidanceService(fishingActions,
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService())
@@ -111,7 +111,7 @@ public class CurrentExecutionPlanIntegrityTest
     @Test
     public void finiteUimFeathersAreCurrentStockNotWholePlanReadiness()
     {
-        StrategyDataBundle data = data(30, 2,
+        GameData data = data(30, 2,
                 Arrays.asList(
                         item(ItemID.FLY_FISHING_ROD, "Fly fishing rod", 1),
                         item(ItemID.FEATHER, "Feather", 250)));
@@ -120,7 +120,7 @@ public class CurrentExecutionPlanIntegrityTest
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService());
 
-        RecommendationGuidance guidance = service.build(data, Skill.FISHING,
+        Guidance guidance = service.build(data, Skill.FISHING,
                 30, 53, plan(method("fishing_f2p_fly", 20, 99,
                         "Fly fishing")), true);
 
@@ -140,11 +140,11 @@ public class CurrentExecutionPlanIntegrityTest
                 "Fly fishing")).withCurrentStageTargetLevel(30);
         Recommendation recommendation = new Recommendation(
                 "skill:fishing", "Train Fishing to 53", "Goal path", 50,
-                future, RecommendationConfidence.VERIFIED, 18, 53,
-                new RecommendationGuidance("Fly-fish trout.",
+                future, Confidence.VERIFIED, 18, 53,
+                new Guidance("Fly-fish trout.",
                         "Bring a fly fishing rod and feathers.",
                         "Barbarian Village fishing spots.", ""),
-                CandidateSafetyEvidence.skill(true, Skill.FISHING));
+                SafetyEvidence.skill(true, Skill.FISHING));
 
         Recommendation validated = new FinalExecutionPlanValidator().validate(
                 recommendation, context(data(18, 2, Collections.emptyList())));
@@ -160,15 +160,15 @@ public class CurrentExecutionPlanIntegrityTest
                 "Lumbridge shrimp")).withCurrentStageTargetLevel(20);
         Recommendation recommendation = new Recommendation(
                 "skill:fishing", "Train Fishing to 53", "Goal path", 50,
-                current, RecommendationConfidence.VERIFIED, 18, 53,
-                new RecommendationGuidance("Net shrimp and anchovies.",
+                current, Confidence.VERIFIED, 18, 53,
+                new Guidance("Net shrimp and anchovies.",
                         "Bring a small fishing net.",
                         "Lumbridge Swamp fishing spots.", null),
-                CandidateSafetyEvidence.skill(true, Skill.FISHING));
+                SafetyEvidence.skill(true, Skill.FISHING));
         StrategyContext strategyContext = context(
                 data(18, 2, Collections.emptyList()));
         recommendation = recommendation.withGoalProvenance(
-                GoalDependencyProvenance.prerequisite(
+                GoalProvenance.prerequisite(
                         GoalType.BARROWS_GLOVES, recommendation.getId(),
                         Arrays.asList("Barrows gloves", "Heroes' Quest",
                                 "Fishing 53")));
@@ -192,10 +192,10 @@ public class CurrentExecutionPlanIntegrityTest
                 "skill:fishing", "Train Fishing to 53", "Goal path", 50,
                 plan(method("fishing_lumbridge_shrimps", 1, 19,
                         "Lumbridge shrimp")).withCurrentStageTargetLevel(18),
-                RecommendationConfidence.VERIFIED, 18, 53,
-                new RecommendationGuidance("Net fish.", "Bring a net.",
+                Confidence.VERIFIED, 18, 53,
+                new Guidance("Net fish.", "Bring a net.",
                         "Lumbridge Swamp fishing spots.", null),
-                CandidateSafetyEvidence.skill(true, Skill.FISHING));
+                SafetyEvidence.skill(true, Skill.FISHING));
 
         assertEquals(18, recommendation.getCurrentExecutionTargetLevel());
         Recommendation validated = new FinalExecutionPlanValidator().validate(
@@ -231,10 +231,10 @@ public class CurrentExecutionPlanIntegrityTest
         assertEquals(EnumSet.allOf(Skill.class), covered);
     }
 
-    private static RuneLiteSkillActionDefinition action(String id, String name,
+    private static ActionDef action(String id, String name,
             int level, float xp)
     {
-        return new RuneLiteSkillActionDefinition(Skill.FISHING,
+        return new ActionDef(Skill.FISHING,
                 "runelite:fishing:" + id, name, level, xp, null,
                 MembershipStatus.F2P, -1);
     }
@@ -242,7 +242,7 @@ public class CurrentExecutionPlanIntegrityTest
     private static TrainingPlan plan(TrainingMethod method)
     {
         return new TrainingPlan(method, "Current route",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 
@@ -255,11 +255,11 @@ public class CurrentExecutionPlanIntegrityTest
         return new TrainingMethod(id, Skill.FISHING, min, max, name,
                 instructions, 10, 10, 10, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
     }
 
-    private static StrategyDataBundle data(int fishing, int accountType,
-            List<ItemStackSnapshot> inventory)
+    private static GameData data(int fishing, int accountType,
+            List<ItemState> inventory)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -273,13 +273,13 @@ public class CurrentExecutionPlanIntegrityTest
         AccountSnapshot account = new AccountSnapshot("Stage test", accountType,
                 AccountMode.fromTypeCode(accountType).name(),
                 MembershipStatus.F2P, 0, 50, 0L, levels, xp);
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        return GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(data, StrategyMode.EFFICIENT,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,
@@ -287,8 +287,8 @@ public class CurrentExecutionPlanIntegrityTest
                 new PreferenceProfile());
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 }

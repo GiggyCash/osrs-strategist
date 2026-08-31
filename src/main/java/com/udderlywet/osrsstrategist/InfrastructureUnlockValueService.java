@@ -26,20 +26,20 @@ public final class InfrastructureUnlockValueService
     public InfrastructureValueAssessment assess(String milestoneId,
             StrategyContext context)
     {
-        InfrastructureMilestoneDefinition definition = catalog.get(milestoneId);
+        InfrastructureMilestone definition = catalog.get(milestoneId);
         if (definition == null)
             throw new IllegalArgumentException(
-                    "Unknown infrastructure milestone " + milestoneId);
+                    Text.get(1422) + milestoneId);
         AccountStrategicPriorityProfile priorities =
                 priorityService.assess(context);
-        StrategyDataBundle data = context == null ? null : context.getData();
+        GameData data = context == null ? null : context.data();
         return assess(definition, priorities, data);
     }
 
     public InfrastructureValueAssessment assess(
-            InfrastructureMilestoneDefinition definition,
+            InfrastructureMilestone definition,
             AccountStrategicPriorityProfile priorities,
-            StrategyDataBundle data)
+            GameData data)
     {
         if (definition == null) throw new IllegalArgumentException("definition");
         if (priorities == null) throw new IllegalArgumentException("priorities");
@@ -59,7 +59,7 @@ public final class InfrastructureUnlockValueService
                     contribution.getEffectivePriority());
         }
 
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         if (definition.isMembersOnly())
         {
             MembershipStatus membership = account == null
@@ -67,12 +67,12 @@ public final class InfrastructureUnlockValueService
             if (membership == MembershipStatus.F2P)
                 return result(definition,
                         InfrastructureMilestoneState.NOT_APPLICABLE,
-                        RecommendationConfidence.BLOCKED, overall,
-                        contributions, "This infrastructure is members-only.");
+                        Confidence.BLOCKED, overall,
+                        contributions, Text.get(1423));
             if (membership == MembershipStatus.UNKNOWN)
                 return result(definition,
                         InfrastructureMilestoneState.CHECK_NEEDED,
-                        RecommendationConfidence.CHECK_NEEDED, overall,
+                        Confidence.CHECK_NEEDED, overall,
                         contributions,
                         Text.get(334));
         }
@@ -80,33 +80,33 @@ public final class InfrastructureUnlockValueService
         CapabilityState completion = completionState(definition, data);
         if (completion == CapabilityState.VERIFIED)
             return result(definition, InfrastructureMilestoneState.COMPLETE,
-                    RecommendationConfidence.VERIFIED, overall, contributions,
+                    Confidence.VERIFIED, overall, contributions,
                     Text.get(335));
 
         RequirementState requirements = requirements(definition, data);
         if (requirements == RequirementState.BLOCKED)
             return result(definition,
                     InfrastructureMilestoneState.REQUIREMENTS_MISSING,
-                    RecommendationConfidence.BLOCKED, overall, contributions,
+                    Confidence.BLOCKED, overall, contributions,
                     Text.get(336));
         if (requirements == RequirementState.CHECK_NEEDED
                 || completion == CapabilityState.UNKNOWN)
             return result(definition,
                     InfrastructureMilestoneState.CHECK_NEEDED,
-                    RecommendationConfidence.CHECK_NEEDED, overall,
+                    Confidence.CHECK_NEEDED, overall,
                     contributions,
                     Text.get(337));
 
         return result(definition, InfrastructureMilestoneState.ACTIONABLE,
-                RecommendationConfidence.VERIFIED, overall, contributions,
+                Confidence.VERIFIED, overall, contributions,
                 Text.get(338));
     }
 
     private RequirementState requirements(
-            InfrastructureMilestoneDefinition definition,
-            StrategyDataBundle data)
+            InfrastructureMilestone definition,
+            GameData data)
     {
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         if (account == null) return RequirementState.CHECK_NEEDED;
         for (Map.Entry<net.runelite.api.Skill, Integer> skill
                 : definition.getRequiredSkills().entrySet())
@@ -116,7 +116,7 @@ public final class InfrastructureUnlockValueService
         for (Map.Entry<String, Boolean> quest
                 : definition.getRequiredQuests().entrySet())
         {
-            QuestSnapshot quests = data.getQuests();
+            QuestSnapshot quests = data.quests();
             if (quests == null) return RequirementState.CHECK_NEEDED;
             QuestStatus status = quests.statusOf(quest.getKey());
             boolean satisfied = status == QuestStatus.COMPLETE
@@ -130,7 +130,7 @@ public final class InfrastructureUnlockValueService
 
         if (definition.getPrerequisiteMilestoneId() != null)
         {
-            InfrastructureMilestoneDefinition prerequisite = catalog.get(
+            InfrastructureMilestone prerequisite = catalog.get(
                     definition.getPrerequisiteMilestoneId());
             CapabilityState state = completionState(prerequisite, data);
             if (state == CapabilityState.UNKNOWN)
@@ -142,26 +142,26 @@ public final class InfrastructureUnlockValueService
     }
 
     private CapabilityState completionState(
-            InfrastructureMilestoneDefinition definition,
-            StrategyDataBundle data)
+            InfrastructureMilestone definition,
+            GameData data)
     {
         if (definition == null || data == null) return CapabilityState.UNKNOWN;
         switch (definition.getEvidenceKind())
         {
             case POH_ACCESS:
-                return data.getPoh() == null ? CapabilityState.UNKNOWN
-                        : data.getPoh().getHouseAccess();
+                return data.poh() == null ? CapabilityState.UNKNOWN
+                        : data.poh().getHouseAccess();
             case POH_FURNITURE:
-                return data.getPoh() == null ? CapabilityState.UNKNOWN
-                        : data.getPoh().furnitureState(
+                return data.poh() == null ? CapabilityState.UNKNOWN
+                        : data.poh().furnitureState(
                                 definition.getEvidenceKey());
             case STORAGE_CAPABILITY:
-                return data.getStorage() == null ? CapabilityState.UNKNOWN
-                        : data.getStorage().stateOf(
+                return data.storage() == null ? CapabilityState.UNKNOWN
+                        : data.storage().stateOf(
                                 definition.getStorageCapability());
             case TRANSPORT_ROUTE:
-                return data.getTransport() != null
-                        && data.getTransport().hasVerifiedRoute(
+                return data.transport() != null
+                        && data.transport().hasVerifiedRoute(
                                 definition.getEvidenceKey())
                         ? CapabilityState.VERIFIED : CapabilityState.UNKNOWN;
             default:
@@ -170,9 +170,9 @@ public final class InfrastructureUnlockValueService
     }
 
     private static InfrastructureValueAssessment result(
-            InfrastructureMilestoneDefinition definition,
+            InfrastructureMilestone definition,
             InfrastructureMilestoneState state,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             StrategicPriority value,
             List<InfrastructureValueContribution> contributions,
             String reason)

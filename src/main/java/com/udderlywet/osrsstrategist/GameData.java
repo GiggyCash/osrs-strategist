@@ -4,17 +4,19 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /** Immutable bundle containing everything Compass currently knows. */
 @Getter
+@Accessors(fluent = true)
 @Builder(builderClassName = "Builder", builderMethodName = "newBuilder")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class StrategyDataBundle
+public final class GameData
 {
     private final AccountSnapshot account;
-    private final InventorySnapshot inventory;
-    private final BankSnapshot bank;
-    private final EquipmentSnapshot equipment;
+    private final ItemsState inventory;
+    private final ItemsState bank;
+    private final ItemsState equipment;
     private final QuestSnapshot quests;
     private final DiarySnapshot diaries;
     private final ClueSnapshot clue;
@@ -27,7 +29,7 @@ public final class StrategyDataBundle
     private final StorageSnapshot storage;
     private final TransportSnapshot transport;
     private final PohSnapshot poh;
-    private final GroupStorageSnapshot groupStorage;
+    private final ItemsState groupStorage;
     private final SlayerSnapshot slayer;
     private final FarmingSnapshot farming;
     private final SailingSnapshot sailing;
@@ -36,11 +38,11 @@ public final class StrategyDataBundle
     private final RecurringOpportunitySnapshot recurringOpportunities;
     private final CombatEvidenceSnapshot combatEvidence;
 
-    public StrategyDataBundle(
+    public GameData(
             AccountSnapshot account,
-            InventorySnapshot inventory,
-            BankSnapshot bank,
-            EquipmentSnapshot equipment,
+            ItemsState inventory,
+            ItemsState bank,
+            ItemsState equipment,
             QuestSnapshot quests,
             DiarySnapshot diaries,
             ClueSnapshot clue,

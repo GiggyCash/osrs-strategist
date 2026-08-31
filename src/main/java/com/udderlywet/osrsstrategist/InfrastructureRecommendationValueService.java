@@ -29,10 +29,10 @@ public final class InfrastructureRecommendationValueService
             Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null || context == null
-                || context.getData() == null
-                || context.getData().getAccount() == null) return recommendation;
-        RecommendationStrategicValue merged = recommendation.getStrategicValue();
-        for (InfrastructureMilestoneDefinition definition : catalog.all())
+                || context.data() == null
+                || context.data().account() == null) return recommendation;
+        StrategicValue merged = recommendation.getStrategicValue();
+        for (InfrastructureMilestone definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
                     definition.getId(), context);
@@ -43,7 +43,7 @@ public final class InfrastructureRecommendationValueService
             if (!matches(recommendation, definition, context)) continue;
             double utility = assessment.getStrategicValue().ordinal()
                     / (double) StrategicPriority.CRITICAL.ordinal();
-            merged = merged.merge(RecommendationStrategicValue.builder()
+            merged = merged.merge(StrategicValue.builder()
                     .infrastructureValue(utility)
                     .accountModeFit(utility * 0.6)
                     .unlockValue(utility * 0.5)
@@ -54,13 +54,13 @@ public final class InfrastructureRecommendationValueService
     }
 
     private static boolean matches(Recommendation recommendation,
-            InfrastructureMilestoneDefinition definition,
+            InfrastructureMilestone definition,
             StrategyContext context)
     {
         TrainingPlan training = recommendation.getTrainingPlan();
         Skill skill = training == null || training.getMethod() == null
                 ? null : training.getMethod().getSkill();
-        int current = skill == null ? 0 : context.getData().getAccount()
+        int current = skill == null ? 0 : context.data().account()
                 .getSkillLevel(skill);
         int required = definition.getRequiredSkills().getOrDefault(skill, 0);
         if (skill != null && required > 0

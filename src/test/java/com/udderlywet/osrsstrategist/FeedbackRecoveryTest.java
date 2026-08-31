@@ -79,11 +79,11 @@ public class FeedbackRecoveryTest
     {
         return new Recommendation("skill:mining", "Mine copper to level 2",
                 "Safe start.", 1.0, null,
-                RecommendationConfidence.VERIFIED, 1, 2,
-                new RecommendationGuidance("Mine copper and drop it when full.",
+                Confidence.VERIFIED, 1, 2,
+                new Guidance("Mine copper and drop it when full.",
                         "Bronze pickaxe.",
                         "East Lumbridge Swamp mine.", null),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
     }
 
     private static Object get(Object target, String name) throws Exception

@@ -16,7 +16,7 @@ public class WildernessMethodTest
     @Test
     public void wildernessMethodsAreHardFilteredUnlessEnabled()
     {
-        StrategyDataBundle data = p2pData();
+        GameData data = p2pData();
         TrainingPlan disabled = selector.select(
                 data, Skill.AGILITY, 52, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, false);
@@ -28,7 +28,7 @@ public class WildernessMethodTest
         assertEquals("agility_wilderness", enabled.getMethod().getId());
     }
 
-    private static StrategyDataBundle p2pData()
+    private static GameData p2pData()
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -37,7 +37,7 @@ public class WildernessMethodTest
             levels.put(skill, 60);
             xp.put(skill, Experience.getXpForLevel(60));
         }
-        return StrategyDataBundle.builder(new AccountSnapshot(
+        return GameData.builder(new AccountSnapshot(
                 "Wild Test",
                 0,
                 "Main",

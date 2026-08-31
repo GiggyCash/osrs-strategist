@@ -24,7 +24,7 @@ public class DoNextInvariantTest
         Recommendation first = ready("skill:mining", 100);
         Recommendation second = ready("skill:fishing", 90);
         StrategyEngine engine = engine(first, second);
-        StrategyDataBundle data = observedData();
+        GameData data = observedData();
 
         assertEquals(first.getId(), evaluate(engine, data,
                 new PreferenceProfile()).getId());
@@ -49,7 +49,7 @@ public class DoNextInvariantTest
         Recommendation result = evaluate(engine(first, second), observedData(),
                 preferences);
         assertTrue(FallbackRecommendationFactory.isFallback(result));
-        assertFalse(RecommendationPresentation.compactText(result).trim().isEmpty());
+        assertFalse(Presentation.compactText(result).trim().isEmpty());
     }
 
     @Test
@@ -57,13 +57,13 @@ public class DoNextInvariantTest
     {
         Recommendation preparation = new Recommendation(
                 "prepare:bank", "Verify banked supplies", "Bank state is missing.",
-                50, null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
-                new RecommendationGuidance(
+                50, null, Confidence.CHECK_NEEDED, 0, 0,
+                new Guidance(
                         "Open your bank and leave it open for one game tick.",
                         "No supplies required.",
                         "Grand Exchange bank booths, northwest of Varrock.",
                         "This records an observed snapshot."),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
 
         assertEquals(preparation.getId(), evaluate(engine(preparation),
                 observedData(), new PreferenceProfile()).getId());
@@ -88,15 +88,15 @@ public class DoNextInvariantTest
     {
         Recommendation vague = new Recommendation(
                 "skill:mining", "Train Mining", "Candidate was filtered.",
-                999, null, RecommendationConfidence.CHECK_NEEDED, 1, 10,
-                new RecommendationGuidance("Choose the best available method.",
+                999, null, Confidence.CHECK_NEEDED, 1, 10,
+                new Guidance("Choose the best available method.",
                         "Get supplies.", "A nearby mine.",
                         "Quality gate diagnostic."),
-                CandidateSafetyEvidence.harmless(true));
+                SafetyEvidence.harmless(true));
 
         Recommendation result = evaluate(engine(vague), observedData(),
                 new PreferenceProfile());
-        String playerText = (RecommendationPresentation.compactText(result)
+        String playerText = (Presentation.compactText(result)
                 + " " + result.getReason() + " "
                 + result.getGuidance().getNote()).toLowerCase();
         assertEquals("fallback:starter-pickaxe", result.getId());
@@ -141,7 +141,7 @@ public class DoNextInvariantTest
             assertFalse(FallbackRecommendationFactory.isFallback(before));
             preferences.apply(before.getId(), actions[i % actions.length]);
             Recommendation after = evaluate(engine, observedData(), preferences);
-            assertFalse(RecommendationPresentation.compactText(after).trim().isEmpty());
+            assertFalse(Presentation.compactText(after).trim().isEmpty());
             assertFalse(before.getId().equals(after.getId()));
         }
         assertTrue(FallbackRecommendationFactory.isFallback(
@@ -151,32 +151,32 @@ public class DoNextInvariantTest
     @Test
     public void missingStateFallbacksAreSpecificAndUimNeverRequestsBank()
     {
-        StrategyDataBundle accountOnly = StrategyDataBundle.builder(
+        GameData accountOnly = GameData.builder(
                 account(0, MembershipStatus.P2P)).build();
         assertEquals("fallback:inventory", evaluate(engine(), accountOnly,
                 new PreferenceProfile()).getId());
 
-        StrategyDataBundle inventoryOnly = StrategyDataBundle.builder(
+        GameData inventoryOnly = GameData.builder(
                         account(0, MembershipStatus.P2P))
-                .inventory(new InventorySnapshot(Collections.emptyList())).build();
+                .inventory(new ItemsState(Collections.emptyList())).build();
         assertEquals("fallback:equipment", evaluate(engine(), inventoryOnly,
                 new PreferenceProfile()).getId());
 
-        StrategyDataBundle noBank = StrategyDataBundle.builder(
+        GameData noBank = GameData.builder(
                         account(0, MembershipStatus.P2P))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList())).build();
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList())).build();
         assertEquals("fallback:bank", evaluate(engine(), noBank,
                 new PreferenceProfile()).getId());
 
-        StrategyDataBundle uim = StrategyDataBundle.builder(
+        GameData uim = GameData.builder(
                         account(2, MembershipStatus.P2P))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList())).build();
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList())).build();
         Recommendation uimFallback = evaluate(engine(), uim,
                 new PreferenceProfile());
         assertEquals("fallback:starter-pickaxe", uimFallback.getId());
-        assertFalse(RecommendationPresentation.compactText(uimFallback)
+        assertFalse(Presentation.compactText(uimFallback)
                 .toLowerCase().contains("open your bank"));
     }
 
@@ -184,11 +184,11 @@ public class DoNextInvariantTest
     public void unsafePoolFallsBackForUnknownRestrictedAndHardcoreStates()
     {
         Recommendation membersOnly = new Recommendation("pvm:unsafe", "Unsafe",
-                "Unsafe test", 500, null, RecommendationConfidence.VERIFIED,
-                0, 0, new RecommendationGuidance("Enter the encounter.",
+                "Unsafe test", 500, null, Confidence.VERIFIED,
+                0, 0, new Guidance("Enter the encounter.",
                 "Bring gear.", "Members area.", "Unsafe."),
-                CandidateSafetyEvidence.potentiallyIrreversible(false));
-        for (StrategyDataBundle data : Arrays.asList(
+                SafetyEvidence.potentiallyIrreversible(false));
+        for (GameData data : Arrays.asList(
                 data(account(0, MembershipStatus.UNKNOWN)),
                 data(oneDefenceAccount()),
                 data(account(3, MembershipStatus.P2P))))
@@ -196,7 +196,7 @@ public class DoNextInvariantTest
             Recommendation result = evaluate(engine(membersOnly), data,
                     new PreferenceProfile());
             assertTrue(FallbackRecommendationFactory.isFallback(result));
-            assertFalse(RecommendationPresentation.compactText(result).trim().isEmpty());
+            assertFalse(Presentation.compactText(result).trim().isEmpty());
         }
     }
 
@@ -206,7 +206,7 @@ public class DoNextInvariantTest
                 (TrainingMethodSelector) null)
         {
             @Override
-            public List<Recommendation> recommendAll(StrategyDataBundle data,
+            public List<Recommendation> recommendAll(GameData data,
                     StrategyMode mode, SessionIntent intent, boolean groupStorage,
                     boolean wilderness, PreferenceProfile preferences)
             {
@@ -217,12 +217,12 @@ public class DoNextInvariantTest
             }
         };
         return new StrategyEngine(recommendations, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
     private static Recommendation evaluate(StrategyEngine engine,
-            StrategyDataBundle data, PreferenceProfile preferences)
+            GameData data, PreferenceProfile preferences)
     {
         List<Recommendation> recommendations = engine.evaluate(data,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -241,8 +241,8 @@ public class DoNextInvariantTest
                 ? "Southeast Varrock mine"
                 : "Lumbridge Swamp fishing spots";
         return new Recommendation(id, title, "Safe training.",
-                score, null, RecommendationConfidence.VERIFIED, 1, 2,
-                new RecommendationGuidance(
+                score, null, Confidence.VERIFIED, 1, 2,
+                new Guidance(
                         skill == Skill.MINING
                                 ? "Mine copper rocks, drop the ore, and repeat."
                                 : "Catch shrimp, drop them, and repeat.",
@@ -250,28 +250,28 @@ public class DoNextInvariantTest
                                 ? "Bronze pickaxe."
                                 : "Small fishing net.",
                         location, "This is a legal training action."),
-                CandidateSafetyEvidence.skill(true, skill));
+                SafetyEvidence.skill(true, skill));
     }
 
-    private static StrategyDataBundle observedData()
+    private static GameData observedData()
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 20); xp.put(skill, 0); }
         AccountSnapshot account = new AccountSnapshot("Fallback", 0, "Main",
                 MembershipStatus.F2P, 0, 460, 0, levels, xp);
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        return GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
     }
 
-    private static StrategyDataBundle data(AccountSnapshot account)
+    private static GameData data(AccountSnapshot account)
     {
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        return GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
     }
 
     private static AccountSnapshot account(int type, MembershipStatus membership)

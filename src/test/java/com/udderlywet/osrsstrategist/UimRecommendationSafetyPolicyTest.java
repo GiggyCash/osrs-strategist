@@ -19,7 +19,7 @@ public class UimRecommendationSafetyPolicyTest
         Recommendation banked = recommendation(
                 "Mine pay-dirt, bank the ores, and repeat.",
                 "Bank near Motherlode Mine.")
-                .withSafetyEvidence(CandidateSafetyEvidence
+                .withSafetyEvidence(SafetyEvidence
                         .skill(true, Skill.MINING)
                         .requiringConventionalBank());
         Recommendation carried = recommendation(
@@ -35,12 +35,12 @@ public class UimRecommendationSafetyPolicyTest
     public void everyTypedConventionalBankDependencyIsRejectedForUim()
     {
         CandidateSafetyPolicy policy = new CandidateSafetyPolicy();
-        CandidateSafetyEvidence[] evidence = {
-                CandidateSafetyEvidence.harmless(true),
-                CandidateSafetyEvidence.skill(true, Skill.MINING),
-                CandidateSafetyEvidence.verifiedSafe(true)
+        SafetyEvidence[] evidence = {
+                SafetyEvidence.harmless(true),
+                SafetyEvidence.skill(true, Skill.MINING),
+                SafetyEvidence.verifiedSafe(true)
         };
-        for (CandidateSafetyEvidence value : evidence)
+        for (SafetyEvidence value : evidence)
             assertFalse(policy.isAllowed(recommendation(
                     "Follow the named mining loop.", "East Lumbridge Swamp.")
                     .withSafetyEvidence(
@@ -50,10 +50,10 @@ public class UimRecommendationSafetyPolicyTest
     private static Recommendation recommendation(String action, String location)
     {
         return new Recommendation("skill:mining", "Train Mining to 50",
-                "Reason", 10, null, RecommendationConfidence.VERIFIED,
-                45, 50, new RecommendationGuidance(action,
+                "Reason", 10, null, Confidence.VERIFIED,
+                45, 50, new Guidance(action,
                         "Bronze pickaxe.", location, null),
-                CandidateSafetyEvidence.skill(true, Skill.MINING));
+                SafetyEvidence.skill(true, Skill.MINING));
     }
 
     private static StrategyContext context(int type)
@@ -69,7 +69,7 @@ public class UimRecommendationSafetyPolicyTest
                 type, AccountMode.fromTypeCode(type).name(),
                 MembershipStatus.P2P, 1, 45 * Skill.values().length,
                 0L, levels, xp);
-        return new StrategyContext(StrategyDataBundle.builder(account).build(),
+        return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.AUTOMATIC, false, false,
                 new PreferenceProfile());

@@ -42,7 +42,7 @@ public class TrainingMethodSelectorTest
                 plan.getMethod().getName().contains("confirmed")
         );
         assertEquals(
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 plan.getConfidence()
         );
     }
@@ -65,7 +65,7 @@ public class TrainingMethodSelectorTest
         );
     }
 
-    private static StrategyDataBundle p2pData()
+    private static GameData p2pData()
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -74,7 +74,7 @@ public class TrainingMethodSelectorTest
             levels.put(skill, 60);
             xp.put(skill, Experience.getXpForLevel(60));
         }
-        return StrategyDataBundle.builder(new AccountSnapshot(
+        return GameData.builder(new AccountSnapshot(
                 "Selector Test",
                 0,
                 "Main",

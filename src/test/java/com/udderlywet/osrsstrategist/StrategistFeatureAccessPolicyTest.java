@@ -48,7 +48,7 @@ public class StrategistFeatureAccessPolicyTest
                         EnumSet.of(
                                 StrategistFeature.CLOUD_PROFILE_SYNC,
                                 StrategistFeature.CROSS_DEVICE_HISTORY),
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         "test");
 
         assertTrue(policy.canUse(
@@ -68,7 +68,7 @@ public class StrategistFeatureAccessPolicyTest
                 new StrategistEntitlementSnapshot(
                         Collections.singleton(
                                 StrategistFeature.ONLINE_REASONING),
-                        RecommendationConfidence.CHECK_NEEDED,
+                        Confidence.CHECK_NEEDED,
                         "stale-cache");
         assertFalse(policy.canUse(
                 StrategistFeature.ONLINE_REASONING, snapshot));

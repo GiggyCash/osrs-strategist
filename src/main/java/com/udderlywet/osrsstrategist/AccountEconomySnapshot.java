@@ -9,7 +9,7 @@ public final class AccountEconomySnapshot
 {
     private final long coins;
     private final long estimatedBankValue;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
 
 
 

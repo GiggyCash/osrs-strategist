@@ -16,7 +16,7 @@ public class UimCapabilityServiceTest
     @Test
     public void refusesUnknownUimStorageCapability()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+        GameData data = GameData.builder(account(2))
                 .storage(StorageSnapshot.unknown())
                 .build();
 
@@ -29,7 +29,7 @@ public class UimCapabilityServiceTest
 
         assertFalse(decision.isAllowed());
         assertTrue(decision.getConfidence()
-                == RecommendationConfidence.CHECK_NEEDED);
+                == Confidence.CHECK_NEEDED);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class UimCapabilityServiceTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+        GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 
@@ -71,7 +71,7 @@ public class UimCapabilityServiceTest
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.DEATH_STORAGE,
                 CapabilityState.VERIFIED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+        GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 
@@ -89,7 +89,7 @@ public class UimCapabilityServiceTest
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.HESPORI_ITEM_RETRIEVAL,
                 CapabilityState.VERIFIED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(2))
+        GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 

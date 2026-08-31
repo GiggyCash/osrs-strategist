@@ -7,7 +7,7 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Verified local facts and reusable utility for one infrastructure unlock. */
-public final class InfrastructureMilestoneDefinition
+public final class InfrastructureMilestone
 {
     @Getter
     private final String id;
@@ -41,7 +41,7 @@ public final class InfrastructureMilestoneDefinition
     @Getter
     private final String sourceUrl;
 
-    InfrastructureMilestoneDefinition(String id, String name,
+    InfrastructureMilestone(String id, String name,
             boolean membersOnly, Skill requiredSkill, int requiredLevel,
             String requiredQuest, boolean questStartSuffices,
             String prerequisiteMilestoneId,
@@ -57,7 +57,7 @@ public final class InfrastructureMilestoneDefinition
                 storageCapability, benefits, action, sourceUrl);
     }
 
-    InfrastructureMilestoneDefinition(String id, String name,
+    InfrastructureMilestone(String id, String name,
             boolean membersOnly, Map<Skill, Integer> requiredSkills,
             Map<String, Boolean> requiredQuests,
             String prerequisiteMilestoneId,
@@ -69,22 +69,22 @@ public final class InfrastructureMilestoneDefinition
         if (id == null || id.trim().isEmpty())
             throw new IllegalArgumentException("infrastructure id");
         if (name == null || name.trim().isEmpty())
-            throw new IllegalArgumentException("infrastructure name");
+            throw new IllegalArgumentException(Text.get(1251));
         if (evidenceKind == null)
-            throw new IllegalArgumentException("infrastructure evidence");
+            throw new IllegalArgumentException(Text.get(1252));
         if ((evidenceKind == InfrastructureEvidenceKind.POH_FURNITURE
                 || evidenceKind == InfrastructureEvidenceKind.TRANSPORT_ROUTE)
                 && (evidenceKey == null || evidenceKey.trim().isEmpty()))
-            throw new IllegalArgumentException("infrastructure evidence key");
+            throw new IllegalArgumentException(Text.get(1253));
         if (evidenceKind == InfrastructureEvidenceKind.STORAGE_CAPABILITY
                 && storageCapability == null)
-            throw new IllegalArgumentException("storage capability");
+            throw new IllegalArgumentException(Text.get(1254));
         if (benefits == null || benefits.isEmpty())
-            throw new IllegalArgumentException("infrastructure benefits");
+            throw new IllegalArgumentException(Text.get(1255));
         if (action == null || action.trim().isEmpty())
-            throw new IllegalArgumentException("infrastructure action");
+            throw new IllegalArgumentException(Text.get(1256));
         if (sourceUrl == null || !sourceUrl.startsWith("https://"))
-            throw new IllegalArgumentException("infrastructure source");
+            throw new IllegalArgumentException(Text.get(1257));
         this.id = id;
         this.name = name;
         this.membersOnly = membersOnly;

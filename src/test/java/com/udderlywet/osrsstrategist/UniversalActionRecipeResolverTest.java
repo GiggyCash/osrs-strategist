@@ -212,10 +212,10 @@ public class UniversalActionRecipeResolverTest
         assertInput(recipe, "Runite bar", Integer.MAX_VALUE);
     }
 
-    private static RuneLiteSkillActionDefinition action(
+    private static ActionDef action(
             Skill skill, String name, float xp)
     {
-        return new RuneLiteSkillActionDefinition(
+        return new ActionDef(
                 skill,
                 "test:" + name.toLowerCase().replace(' ', '_'),
                 name,
@@ -230,7 +230,7 @@ public class UniversalActionRecipeResolverTest
             String name,
             int quantity)
     {
-        for (ResolvedMethodInput input : recipe.getInputs())
+        for (MethodInput input : recipe.getInputs())
         {
             if (name.equals(input.getName()))
             {
@@ -245,7 +245,7 @@ public class UniversalActionRecipeResolverTest
             UniversalActionRecipe recipe,
             String name)
     {
-        for (ResolvedMethodInput input : recipe.getInputs())
+        for (MethodInput input : recipe.getInputs())
         {
             if (name.equals(input.getName()))
             {

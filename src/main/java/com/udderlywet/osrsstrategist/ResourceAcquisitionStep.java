@@ -8,15 +8,15 @@ public final class ResourceAcquisitionStep
 {
     private final AcquisitionSource source;
     private final String action;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
 
     public ResourceAcquisitionStep(AcquisitionSource source, String action,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this.source = source;
         this.action = action;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED : confidence;
+                ? Confidence.CHECK_NEEDED : confidence;
     }
 
 }

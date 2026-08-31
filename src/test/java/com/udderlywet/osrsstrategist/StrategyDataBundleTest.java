@@ -20,34 +20,34 @@ public class StrategyDataBundleTest
     {
         AccountSnapshot account = account();
 
-        StrategyDataBundle bundle =
-                StrategyDataBundle.builder(account).build();
+        GameData bundle =
+                GameData.builder(account).build();
 
-        assertSame(account, bundle.getAccount());
-        assertNull(bundle.getBank());
-        assertNull(bundle.getInventory());
-        assertNull(bundle.getGroupStorage());
-        assertNull(bundle.getPvm());
+        assertSame(account, bundle.account());
+        assertNull(bundle.bank());
+        assertNull(bundle.inventory());
+        assertNull(bundle.groupStorage());
+        assertNull(bundle.pvm());
     }
 
     @Test
     public void builderPreservesObservedSources()
     {
-        BankSnapshot bank = new BankSnapshot(
+        ItemsState bank = new ItemsState(
                 Collections.emptyList(),
                 123L
         );
         StorageSnapshot storage = StorageSnapshot.unknown();
 
-        StrategyDataBundle bundle =
-                StrategyDataBundle.builder(account())
+        GameData bundle =
+                GameData.builder(account())
                         .bank(bank)
                         .storage(storage)
                         .build();
 
-        assertSame(bank, bundle.getBank());
-        assertSame(storage, bundle.getStorage());
-        assertEquals(123L, bundle.getBank().getCapturedAtMillis());
+        assertSame(bank, bundle.bank());
+        assertSame(storage, bundle.storage());
+        assertEquals(123L, bundle.bank().getCapturedAtMillis());
     }
 
     private static AccountSnapshot account()

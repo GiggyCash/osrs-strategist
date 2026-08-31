@@ -32,7 +32,7 @@ public class PvmActivityCatalog
         for (PvmActivityDefinition value : BundledCatalogLoader.array(
                 "/content/catalogs/pvm-activities.json", PvmActivityDefinition[].class))
             if (value.getId() == null || values.put(value.getId(), value) != null)
-                throw new IllegalStateException("Invalid or duplicate PvM identity");
+                throw new IllegalStateException(Text.get(1199));
         int bosses = 0;
         for (HiscoreSkill skill : HiscoreSkill.values())
             if (skill.getType() == HiscoreSkillType.BOSS)
@@ -40,10 +40,10 @@ public class PvmActivityCatalog
                 bosses++;
                 String id = "pvm:" + skill.name().toLowerCase(Locale.ROOT);
                 if (!values.containsKey(id))
-                    throw new IllegalStateException("Missing current RuneLite PvM identity: " + id);
+                    throw new IllegalStateException(Text.get(1200) + id);
             }
         if (values.size() != bosses)
-            throw new IllegalStateException("Stale PvM identity catalog");
+            throw new IllegalStateException(Text.get(1201));
         byId = Collections.unmodifiableMap(values);
         activities = Collections.unmodifiableList(new ArrayList<>(values.values()));
     }

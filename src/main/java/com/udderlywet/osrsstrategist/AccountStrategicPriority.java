@@ -9,14 +9,14 @@ public final class AccountStrategicPriority
     private final AccountStrategicDimension dimension;
     private final StrategicPriority priority;
     private final CapabilityState capabilityState;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String reason;
 
     public AccountStrategicPriority(
             AccountStrategicDimension dimension,
             StrategicPriority priority,
             CapabilityState capabilityState,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String reason)
     {
         if (dimension == null) throw new IllegalArgumentException("dimension");
@@ -25,7 +25,7 @@ public final class AccountStrategicPriority
         this.capabilityState = capabilityState == null
                 ? CapabilityState.UNKNOWN : capabilityState;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED : confidence;
+                ? Confidence.CHECK_NEEDED : confidence;
         this.reason = reason == null ? "" : reason;
     }
 

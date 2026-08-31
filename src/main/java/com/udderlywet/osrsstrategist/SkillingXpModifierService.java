@@ -17,38 +17,38 @@ public class SkillingXpModifierService
     private static final double FULL_SET_MULTIPLIER = 1.025;
 
     public SkillingXpModifier modifier(
-            StrategyDataBundle data,
+            GameData data,
             Skill skill,
             boolean useGroupStorage)
     {
         if (data == null || skill == null) return SkillingXpModifier.none();
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
 
         switch (skill)
         {
             case FISHING:
                 if (hasAngler(items))
-                    return full("full Angler/Spirit Angler outfit");
+                    return full(Text.get(1208));
                 break;
             case MINING:
                 if (hasProspector(items))
-                    return full("full Prospector outfit");
+                    return full(Text.get(1209));
                 break;
             case WOODCUTTING:
                 if (hasLumberjack(items))
-                    return full("full Lumberjack/Forestry outfit");
+                    return full(Text.get(1210));
                 break;
             case FARMING:
                 if (hasFarmer(items))
-                    return full("full Farmer's outfit");
+                    return full(Text.get(1211));
                 break;
             case FIREMAKING:
                 if (hasPyromancer(items))
-                    return full("full Pyromancer outfit");
+                    return full(Text.get(1212));
                 break;
             case CONSTRUCTION:
                 if (hasCarpenter(items))
-                    return full("full Carpenter's outfit");
+                    return full(Text.get(1213));
                 break;
             default:
                 break;
@@ -61,23 +61,23 @@ public class SkillingXpModifierService
         return new SkillingXpModifier(FULL_SET_MULTIPLIER, label);
     }
 
-    private static boolean hasAngler(ObservedItemIndex items)
+    private static boolean hasAngler(ItemIndex items)
     {
-        return items.has("Angler hat", "Spirit angler headband")
+        return items.has("Angler hat", Text.get(1214))
                 && items.has("Angler top", "Spirit angler top")
-                && items.has("Angler waders", "Spirit angler waders")
-                && items.has("Angler boots", "Spirit angler boots");
+                && items.has("Angler waders", Text.get(1215))
+                && items.has("Angler boots", Text.get(1216));
     }
 
-    private static boolean hasProspector(ObservedItemIndex items)
+    private static boolean hasProspector(ItemIndex items)
     {
-        return items.has("Prospector helmet", "Golden prospector helmet")
-                && items.has("Prospector jacket", "Golden prospector jacket", "Varrock armour 4")
-                && items.has("Prospector legs", "Golden prospector legs")
-                && items.has("Prospector boots", "Golden prospector boots");
+        return items.has("Prospector helmet", Text.get(1217))
+                && items.has("Prospector jacket", Text.get(1218), "Varrock armour 4")
+                && items.has("Prospector legs", Text.get(1219))
+                && items.has("Prospector boots", Text.get(1220));
     }
 
-    private static boolean hasLumberjack(ObservedItemIndex items)
+    private static boolean hasLumberjack(ItemIndex items)
     {
         return items.has("Lumberjack hat", "Forestry hat")
                 && items.has("Lumberjack top", "Forestry top")
@@ -85,15 +85,15 @@ public class SkillingXpModifierService
                 && items.has("Lumberjack boots", "Forestry boots");
     }
 
-    private static boolean hasFarmer(ObservedItemIndex items)
+    private static boolean hasFarmer(ItemIndex items)
     {
         return items.has("Farmer's strawhat")
                 && items.has("Farmer's jacket", "Farmer's shirt")
-                && items.has("Farmer's boro trousers")
+                && items.has(Text.get(1221))
                 && items.has("Farmer's boots");
     }
 
-    private static boolean hasPyromancer(ObservedItemIndex items)
+    private static boolean hasPyromancer(ItemIndex items)
     {
         return items.has("Pyromancer hood")
                 && items.has("Pyromancer garb")
@@ -101,11 +101,11 @@ public class SkillingXpModifierService
                 && items.has("Pyromancer boots");
     }
 
-    private static boolean hasCarpenter(ObservedItemIndex items)
+    private static boolean hasCarpenter(ItemIndex items)
     {
-        return items.has("Carpenter's helmet")
+        return items.has(Text.get(1222))
                 && items.has("Carpenter's shirt")
-                && items.has("Carpenter's trousers")
+                && items.has(Text.get(1223))
                 && items.has("Carpenter's boots");
     }
 }

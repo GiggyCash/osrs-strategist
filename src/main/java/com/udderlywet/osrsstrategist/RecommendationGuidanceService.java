@@ -59,8 +59,8 @@ public class RecommendationGuidanceService
                 new UniversalSkillActionGuidanceService());
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
@@ -70,40 +70,40 @@ public class RecommendationGuidanceService
                 trainingPlan, true);
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
             TrainingPlan trainingPlan,
             boolean useGroupStorage)
     {
-        RecommendationGuidance uimBronze = uimF2pBronzeGuidance(
+        Guidance uimBronze = uimF2pBronzeGuidance(
                 data, skill, targetLevel, trainingPlan);
         if (uimBronze != null) return uimBronze;
-        RecommendationGuidance uimCooking = uimF2pCookingGuidance(
+        Guidance uimCooking = uimF2pCookingGuidance(
                 data, skill, targetLevel, trainingPlan);
         if (uimCooking != null) return uimCooking;
-        RecommendationGuidance uimRunecraft = uimF2pRunecraftGuidance(
+        Guidance uimRunecraft = uimF2pRunecraftGuidance(
                 data, skill, targetLevel, trainingPlan);
         if (uimRunecraft != null) return uimRunecraft;
-        RecommendationGuidance uimThieving = uimThievingGuidance(
+        Guidance uimThieving = uimThievingGuidance(
                 data, skill, targetLevel, trainingPlan);
         if (uimThieving != null) return uimThieving;
 
-        RecommendationGuidance cooking = earlyCookingGuidance(
+        Guidance cooking = earlyCookingGuidance(
                 data, skill, currentLevel, targetLevel,
                 trainingPlan, useGroupStorage);
         if (cooking != null) return cooking;
 
-        RecommendationGuidance exact = adaptiveGuidance == null
+        Guidance exact = adaptiveGuidance == null
                 ? null
                 : adaptiveGuidance.build(
                         data, skill, currentLevel, targetLevel,
                         trainingPlan, useGroupStorage);
         if (exact != null) return exact;
 
-        RecommendationGuidance variable = variableGuidance == null
+        Guidance variable = variableGuidance == null
                 ? null
                 : variableGuidance.build(
                         data, skill, currentLevel, targetLevel,
@@ -117,20 +117,20 @@ public class RecommendationGuidanceService
                         trainingPlan, useGroupStorage);
     }
 
-    private static RecommendationGuidance uimF2pBronzeGuidance(
-            StrategyDataBundle data, Skill skill, int targetLevel,
+    private static Guidance uimF2pBronzeGuidance(
+            GameData data, Skill skill, int targetLevel,
             TrainingPlan plan)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.account() == null
                 || skill != Skill.SMITHING || plan == null
                 || plan.getMethod() == null
                 || !"smithing_f2p_uim_bronze".equals(
                         plan.getMethod().getId())
                 || AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode())
+                        data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        return new RecommendationGuidance(
+        return new Guidance(
                 Text.get(662)
                         + targetLevel + ".",
                 Text.get(673),
@@ -139,20 +139,20 @@ public class RecommendationGuidanceService
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
-    private static RecommendationGuidance uimF2pCookingGuidance(
-            StrategyDataBundle data, Skill skill, int targetLevel,
+    private static Guidance uimF2pCookingGuidance(
+            GameData data, Skill skill, int targetLevel,
             TrainingPlan plan)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.account() == null
                 || skill != Skill.COOKING || plan == null
                 || plan.getMethod() == null
                 || !"cooking_f2p_uim_carried_fish".equals(
                         plan.getMethod().getId())
                 || AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode())
+                        data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        return new RecommendationGuidance(
+        return new Guidance(
                 Text.get(687)
                         + targetLevel + ".",
                 Text.get(688),
@@ -161,55 +161,55 @@ public class RecommendationGuidanceService
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
-    private static RecommendationGuidance uimF2pRunecraftGuidance(
-            StrategyDataBundle data, Skill skill, int targetLevel,
+    private static Guidance uimF2pRunecraftGuidance(
+            GameData data, Skill skill, int targetLevel,
             TrainingPlan plan)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.account() == null
                 || skill != Skill.RUNECRAFT || plan == null
                 || plan.getMethod() == null
                 || !"runecraft_f2p_uim_local".equals(
                         plan.getMethod().getId())
                 || AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode())
+                        data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        int level = data.getAccount().getSkillLevel(Skill.RUNECRAFT);
+        int level = data.account().getSkillLevel(Skill.RUNECRAFT);
         String rune = level >= 20 ? "body" : level >= 14 ? "fire"
                 : level >= 9 ? "earth" : level >= 5 ? "water"
                 : level >= 2 ? "mind" : "air";
         String altar = level >= 20 ? Text.get(691)
-                : level >= 14 ? "Fire Altar north of Al Kharid"
-                : level >= 9 ? "Earth Altar northeast of Varrock"
-                : level >= 5 ? "Water Altar in Lumbridge Swamp"
-                : level >= 2 ? "Mind Altar north of Falador"
-                : "Air Altar southwest of Falador";
-        return new RecommendationGuidance(
+                : level >= 14 ? Text.get(1440)
+                : level >= 9 ? Text.get(1441)
+                : level >= 5 ? Text.get(1442)
+                : level >= 2 ? Text.get(1443)
+                : Text.get(1444);
+        return new Guidance(
                 Text.get(663)
                         + altar + ", craft " + rune
                         + Text.get(664)
                         + targetLevel + ".",
-                "Bring the " + rune + " talisman or wear the " + rune
+                "Bring the " + rune + Text.get(1285) + rune
                         + Text.get(665),
                 Text.get(666) + altar + ".",
                 Text.get(667),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
-    private static RecommendationGuidance uimThievingGuidance(
-            StrategyDataBundle data, Skill skill, int targetLevel,
+    private static Guidance uimThievingGuidance(
+            GameData data, Skill skill, int targetLevel,
             TrainingPlan plan)
     {
-        if (data == null || data.getAccount() == null
+        if (data == null || data.account() == null
                 || skill != Skill.THIEVING || plan == null
                 || plan.getMethod() == null
                 || AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode())
+                        data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         String id = plan.getMethod().getId();
         if ("thieving_uim_lumbridge_people".equals(id))
-            return new RecommendationGuidance(
+            return new Guidance(
                     Text.get(668)
                             + targetLevel + ".",
                     Text.get(669),
@@ -217,7 +217,7 @@ public class RecommendationGuidanceService
                     Text.get(671),
                     MethodBankingBehavior.NONE);
         if ("thieving_uim_fruit_stalls".equals(id))
-            return new RecommendationGuidance(
+            return new Guidance(
                     Text.get(672)
                             + targetLevel + ".",
                     Text.get(674),
@@ -227,8 +227,8 @@ public class RecommendationGuidanceService
         return null;
     }
 
-    private RecommendationGuidance earlyCookingGuidance(
-            StrategyDataBundle data,
+    private Guidance earlyCookingGuidance(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
@@ -236,7 +236,7 @@ public class RecommendationGuidanceService
             boolean useGroupStorage)
     {
         if (data == null
-                || data.getAccount() == null
+                || data.account() == null
                 || skill != Skill.COOKING
                 || trainingPlan == null
                 || trainingPlan.getMethod() == null
@@ -251,16 +251,16 @@ public class RecommendationGuidanceService
         }
 
         List<StagePlan> stages = buildStages(
-                data.getAccount(), currentLevel, targetLevel);
+                data.account(), currentLevel, targetLevel);
         if (stages.isEmpty()) return null;
 
         String action = actionGuidance(stages);
         String supplies = supplyGuidance(
-                data, data.getAccount(), stages, useGroupStorage);
-        String location = locationGuidance(data.getQuests());
+                data, data.account(), stages, useGroupStorage);
+        String location = locationGuidance(data.quests());
         String note = Text.get(677);
 
-        return new RecommendationGuidance(
+        return new Guidance(
                 action, supplies, location, note);
     }
 
@@ -326,7 +326,7 @@ public class RecommendationGuidanceService
     }
 
     private static String supplyGuidance(
-            StrategyDataBundle data,
+            GameData data,
             AccountSnapshot account,
             List<StagePlan> stages,
             boolean useGroupStorage)
@@ -340,11 +340,11 @@ public class RecommendationGuidanceService
             for (StagePlan stage : stages)
             {
                 int inventory = quantityByName(
-                        data.getInventory() == null
-                                ? null : data.getInventory().getItems(),
+                        data.inventory() == null
+                                ? null : data.inventory().getItems(),
                         stage.stage.rawItemName);
                 int storage = quantityByNameSafeUimStorage(
-                        data.getStorage(), stage.stage.rawItemName);
+                        data.storage(), stage.stage.rawItemName);
                 int verified = inventory + storage;
                 int missing = Math.max(0, stage.rawNeeded - verified);
                 ownedParts.add(verified + " "
@@ -358,7 +358,7 @@ public class RecommendationGuidanceService
 
             StringBuilder text = new StringBuilder();
             text.append("Plan for ").append(requiredSummary(stages))
-                    .append(". Directly usable UIM supply: ")
+                    .append(Text.get(1445))
                     .append(joinNatural(ownedParts)).append(".");
             if (missingParts.isEmpty())
             {
@@ -373,7 +373,7 @@ public class RecommendationGuidanceService
             return text.toString();
         }
 
-        if (data.getBank() == null)
+        if (data.bank() == null)
         {
             return "Plan for " + requiredSummary(stages)
                     + Text.get(680);
@@ -384,18 +384,18 @@ public class RecommendationGuidanceService
         for (StagePlan stage : stages)
         {
             int inventoryQuantity = quantityByName(
-                    data.getInventory() == null
-                            ? null : data.getInventory().getItems(),
+                    data.inventory() == null
+                            ? null : data.inventory().getItems(),
                     stage.stage.rawItemName);
             int bankQuantity = quantityByName(
-                    data.getBank().getItems(), stage.stage.rawItemName);
+                    data.bank().getItems(), stage.stage.rawItemName);
             int groupQuantity = 0;
             if (useGroupStorage && mode.isGroupIronman()
-                    && data.getGroupStorage() != null
-                    && data.getGroupStorage().isObserved())
+                    && data.groupStorage() != null
+                    && data.groupStorage().isObserved())
             {
                 groupQuantity = quantityByName(
-                        data.getGroupStorage().getItems(),
+                        data.groupStorage().getItems(),
                         stage.stage.rawItemName);
             }
             int verified = bankQuantity + inventoryQuantity + groupQuantity;
@@ -426,13 +426,13 @@ public class RecommendationGuidanceService
         if (mode.usesGrandExchange())
         {
             text.append(" Buy ").append(joinNatural(missingParts))
-                    .append(" at the Grand Exchange.");
+                    .append(Text.get(1446));
         }
         else if (mode.isGroupIronman())
         {
             text.append(" Source ").append(joinNatural(missingParts))
                     .append(useGroupStorage
-                            ? " after checking usable Group Storage."
+                            ? Text.get(1447)
                             : ".");
         }
         else
@@ -467,12 +467,12 @@ public class RecommendationGuidanceService
     }
 
     private static int quantityByName(
-            List<ItemStackSnapshot> items,
+            List<ItemState> items,
             String expectedName)
     {
         if (items == null || expectedName == null) return 0;
         int total = 0;
-        for (ItemStackSnapshot item : items)
+        for (ItemState item : items)
         {
             if (item != null && item.getName() != null
                     && expectedName.equalsIgnoreCase(item.getName()))
@@ -489,7 +489,7 @@ public class RecommendationGuidanceService
     {
         if (storage == null || expectedName == null) return 0;
         int total = 0;
-        for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+        for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : storage.getObservedContents().entrySet())
         {
             StorageCapability capability = entry.getKey();

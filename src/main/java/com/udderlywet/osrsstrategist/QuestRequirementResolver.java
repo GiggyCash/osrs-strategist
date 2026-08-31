@@ -41,12 +41,12 @@ public class QuestRequirementResolver
 
     public QuestResolution resolve(QuestDefinition definition, StrategyContext context)
     {
-        if (definition == null || context == null || context.getData() == null
-                || context.getData().getAccount() == null) return null;
+        if (definition == null || context == null || context.data() == null
+                || context.data().account() == null) return null;
 
-        StrategyDataBundle data = context.getData();
-        AccountSnapshot account = data.getAccount();
-        QuestSnapshot quests = data.getQuests();
+        GameData data = context.data();
+        AccountSnapshot account = data.account();
+        QuestSnapshot quests = data.quests();
         List<Preparation> missing = new ArrayList<>();
 
         for (String prerequisite : definition.getPrerequisites())
@@ -56,11 +56,11 @@ public class QuestRequirementResolver
             if (status != QuestStatus.COMPLETE)
                 missing.add(new Preparation(status == QuestStatus.UNKNOWN
                         ? Text.get(560) + prerequisite
-                        : "Complete prerequisite quest: " + prerequisite,
+                        : Text.get(1349) + prerequisite,
                         RestrictedQuestPolicy.isSafe(account, prerequisite)
-                                ? CandidateSafetyEvidence.verifiedSafe(
+                                ? SafetyEvidence.verifiedSafe(
                                 definition.isFreeToPlay())
-                                : CandidateSafetyEvidence.potentiallyIrreversible(
+                                : SafetyEvidence.potentiallyIrreversible(
                                 definition.isFreeToPlay())));
         }
 
@@ -72,11 +72,11 @@ public class QuestRequirementResolver
                 missing.add(new Preparation("Train "
                         + requirement.getKey().getName() + " from " + current
                         + " to " + requirement.getValue(),
-                        CandidateSafetyEvidence.skill(definition.isFreeToPlay(),
+                        SafetyEvidence.skill(definition.isFreeToPlay(),
                                 requirement.getKey())));
         }
 
-        ObservedItemIndex items = new ObservedItemIndex(data,
+        ItemIndex items = new ItemIndex(data,
                 context.isUseGroupStorage());
         // An inventory observation does not prove that an unobserved bank is empty.
         boolean ownershipObserved = items.usableOwnershipObserved();
@@ -85,9 +85,9 @@ public class QuestRequirementResolver
         {
             int owned = items.quantity(requirement.getName());
             if (owned < requirement.getQuantity())
-                missing.add(new Preparation((ownershipObserved ? "Obtain " : "Verify ownership of ")
+                missing.add(new Preparation((ownershipObserved ? "Obtain " : Text.get(1350))
                         + Math.max(0, requirement.getQuantity() - owned) + " × "
-                        + requirement.getName(), CandidateSafetyEvidence.harmless(
+                        + requirement.getName(), SafetyEvidence.harmless(
                         definition.isFreeToPlay())));
         }
 
@@ -107,7 +107,7 @@ public class QuestRequirementResolver
         if (definition.getQuestPointsRequired() > 0)
             missing.add(new Preparation("Verify at least "
                     + definition.getQuestPointsRequired() + " quest points",
-                    CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
+                    SafetyEvidence.harmless(definition.isFreeToPlay())));
         for (String check : definition.getAccessChecks())
         {
             if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
@@ -115,72 +115,72 @@ public class QuestRequirementResolver
                 if (imported == null)
                 {
                     missing.add(new Preparation(check,
-                            CandidateSafetyEvidence.harmless(
+                            SafetyEvidence.harmless(
                                     definition.isFreeToPlay())));
                 }
                 else
                 {
                     for (String unresolved : imported.getUnresolved())
                         missing.add(new Preparation(
-                                "Verify quest item requirement: " + unresolved,
-                                CandidateSafetyEvidence.harmless(
+                                Text.get(1351) + unresolved,
+                                SafetyEvidence.harmless(
                                         definition.isFreeToPlay())));
                 }
                 continue;
             }
             missing.add(new Preparation(check,
-                    CandidateSafetyEvidence.harmless(definition.isFreeToPlay())));
+                    SafetyEvidence.harmless(definition.isFreeToPlay())));
         }
 
         String unlocks = definition.getUnlocks().isEmpty() ? ""
                 : String.join(", ", definition.getUnlocks());
         if (missing.isEmpty())
         {
-            return new QuestResolution(RecommendationConfidence.VERIFIED,
-                    new RecommendationGuidance(
+            return new QuestResolution(Confidence.VERIFIED,
+                    new Guidance(
                             "Start " + definition.getName() + ".",
                             Text.get(561),
                             definition.getStartLocation(),
                             unlocks.isEmpty() ? Text.get(562)
-                                    : "Progression unlocked: " + unlocks + "."),
-                    "Requirements satisfied",
-                    CandidateSafetyEvidence.verifiedSafe(
+                                    : Text.get(1352) + unlocks + "."),
+                    Text.get(1353),
+                    SafetyEvidence.verifiedSafe(
                             definition.isFreeToPlay()));
         }
 
         List<String> missingText = new ArrayList<>();
         for (Preparation preparation : missing) missingText.add(preparation.detail);
-        return new QuestResolution(RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(missing.get(0).text + ".",
+        return new QuestResolution(Confidence.CHECK_NEEDED,
+                new Guidance(missing.get(0).text + ".",
                         String.join("; ", missingText), definition.getStartLocation(),
                         unlocks.isEmpty()
                                 ? Text.get(563)
-                                : "Resolving this path unlocks: " + unlocks + "."),
-                "Preparation required: " + missing.get(0).text,
+                                : Text.get(1354) + unlocks + "."),
+                Text.get(1355) + missing.get(0).text,
                 missing.get(0).safetyEvidence);
     }
 
     private Preparation itemPreparation(ItemRequirementResult result,
             QuestDefinition definition, StrategyContext context)
     {
-        CandidateSafetyEvidence safety = CandidateSafetyEvidence.harmless(
+        SafetyEvidence safety = SafetyEvidence.harmless(
                 definition.isFreeToPlay());
         if (result.getMissingInputs().isEmpty())
             return new Preparation(result.getAction(), safety);
 
-        ResolvedMethodInput first = result.getMissingInputs().get(0);
-        ResourceDependencyResolution dependency = dependencyResolution(context, first);
+        MethodInput first = result.getMissingInputs().get(0);
+        DependencyResolution dependency = dependencyResolution(context, first);
         ResolvedDependencyNode next = dependency == null ? null : dependency.nextAction();
         if (next != null
-                && next.getConfidence() != RecommendationConfidence.VERIFIED
+                && next.getConfidence() != Confidence.VERIFIED
                 && next.getAction() != null
                 && !next.getAction().trim().isEmpty())
         {
             String action = withoutTerminalPeriod(next.getAction().trim());
             StringBuilder detail = new StringBuilder(result.getAction());
-            detail.append(". Confirmed shortfall: ")
+            detail.append(Text.get(1356))
                     .append(formatInputs(result.getMissingInputs())).append(".");
-            detail.append(" Dependency first step for ")
+            detail.append(Text.get(1357))
                     .append(quantity(first)).append(": ")
                     .append(next.getAction().trim());
             if (result.getMissingInputs().size() > 1)
@@ -188,14 +188,14 @@ public class QuestRequirementResolver
             return new Preparation(action, detail.toString(), safety);
         }
 
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         String action;
         if (mode == AccountMode.ULTIMATE_IRONMAN)
             action = "Acquire " + quantity(first) + " just in time";
         else if (mode.isIronLike())
             action = "Self-source " + quantity(first);
         else if (mode == AccountMode.UNKNOWN)
-            action = "Source " + quantity(first) + " after verifying account mode";
+            action = "Source " + quantity(first) + Text.get(1358);
         else
             action = "Acquire " + quantity(first);
 
@@ -203,20 +203,20 @@ public class QuestRequirementResolver
         if (!routes.isEmpty()) action += ": " + routes.get(0);
 
         StringBuilder detail = new StringBuilder(result.getAction());
-        detail.append(". Confirmed shortfall: ")
+        detail.append(Text.get(1356))
                 .append(formatInputs(result.getMissingInputs())).append(".");
         if (!routes.isEmpty())
-            detail.append(" Suggested route: ").append(routes.get(0));
+            detail.append(Text.get(1359)).append(routes.get(0));
         if (result.getMissingInputs().size() > 1)
             detail.append(Text.get(565));
         return new Preparation(action, detail.toString(), safety);
     }
 
-    private ResourceDependencyResolution dependencyResolution(
-            StrategyContext context, ResolvedMethodInput input)
+    private DependencyResolution dependencyResolution(
+            StrategyContext context, MethodInput input)
     {
-        if (context == null || input == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (context == null || input == null || context.data() == null
+                || context.data().account() == null)
             return null;
         return resourcePlanner.resolveKnownShortfall(
                 context, input.getName(), input.getQuantity());
@@ -224,23 +224,23 @@ public class QuestRequirementResolver
 
     private List<String> sourceRoutes(StrategyContext context, String itemName)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().account() == null)
             return java.util.Collections.emptyList();
-        return resourceSources.suggestions(itemName, context.getAccountMode(),
-                context.getData().getAccount().getMembershipStatus(),
+        return resourceSources.suggestions(itemName, context.accountMode(),
+                context.data().account().getMembershipStatus(),
                 context.isAllowWildernessMethods());
     }
 
-    private static String quantity(ResolvedMethodInput input)
+    private static String quantity(MethodInput input)
     {
         return Math.max(1, input.getQuantity()) + " × " + input.getName();
     }
 
-    private static String formatInputs(List<ResolvedMethodInput> inputs)
+    private static String formatInputs(List<MethodInput> inputs)
     {
         List<String> values = new ArrayList<>();
-        for (ResolvedMethodInput input : inputs) values.add(quantity(input));
+        for (MethodInput input : inputs) values.add(quantity(input));
         return String.join(", ", values);
     }
 
@@ -264,16 +264,16 @@ public class QuestRequirementResolver
     {
         private final String text;
         private final String detail;
-        private final CandidateSafetyEvidence safetyEvidence;
+        private final SafetyEvidence safetyEvidence;
 
         private Preparation(String text,
-                CandidateSafetyEvidence safetyEvidence)
+                SafetyEvidence safetyEvidence)
         {
             this(text, text, safetyEvidence);
         }
 
         private Preparation(String text, String detail,
-                CandidateSafetyEvidence safetyEvidence)
+                SafetyEvidence safetyEvidence)
         {
             this.text = text;
             this.detail = detail == null ? text : detail;

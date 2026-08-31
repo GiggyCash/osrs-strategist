@@ -36,7 +36,7 @@ public class StrategyQualityTournamentTest
     @Test
     public void cookingStyleAndOwnedSuppliesChangeThePracticalWinner()
     {
-        StrategyDataBundle ready = data(0, MembershipStatus.P2P,
+        GameData ready = data(0, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200),
                         item(ItemID.GRAPES, "Grapes", 200),
                         item(ItemID.JUG_WATER, "Jug of water", 200)),
@@ -49,7 +49,7 @@ public class StrategyQualityTournamentTest
         assertLowAttentionCookingWinner(ready, StrategyMode.EFFICIENT,
                 SessionIntent.AFK);
 
-        StrategyDataBundle noWineSupplies = data(0, MembershipStatus.P2P,
+        GameData noWineSupplies = data(0, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
         assertLowAttentionCookingWinner(noWineSupplies,
@@ -57,7 +57,7 @@ public class StrategyQualityTournamentTest
         assertWinner("cooking_wines", noWineSupplies, Skill.COOKING, 70,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
 
-        StrategyDataBundle iron = data(1, MembershipStatus.P2P,
+        GameData iron = data(1, MembershipStatus.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
         assertLowAttentionCookingWinner(iron, StrategyMode.EFFICIENT,
@@ -69,7 +69,7 @@ public class StrategyQualityTournamentTest
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Temple of the Eye", QuestStatus.COMPLETE);
-        StrategyDataBundle ready = data(0, MembershipStatus.P2P,
+        GameData ready = data(0, MembershipStatus.P2P,
                 items(item(ItemID.BLANKRUNE_HIGH, "Pure essence", 2_000),
                         item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1),
                         item(ItemID.CHISEL, "Chisel", 1)),
@@ -79,7 +79,7 @@ public class StrategyQualityTournamentTest
         assertWinner("runecraft_zmi", ready, Skill.RUNECRAFT, 70,
                 StrategyMode.RELAXED, SessionIntent.ONE_HOUR);
 
-        StrategyDataBundle runeEssenceOnly = data(0, MembershipStatus.P2P,
+        GameData runeEssenceOnly = data(0, MembershipStatus.P2P,
                 items(item(ItemID.BLANKRUNE, "Rune essence", 2_000),
                         item(ItemID.BODY_TALISMAN, "Body talisman", 1)),
                 quests(), minigames(), false);
@@ -96,7 +96,7 @@ public class StrategyQualityTournamentTest
         Map<String, QuestStatus> completed = quests();
         completed.put("Tai Bwo Wannai Trio", QuestStatus.COMPLETE);
         completed.put("Fairytale II - Cure a Queen", QuestStatus.COMPLETE);
-        StrategyDataBundle ready = data(1, MembershipStatus.P2P,
+        GameData ready = data(1, MembershipStatus.P2P,
                 items(item(ItemID.TBWT_KARAMBWAN_VESSEL,
                                 "Karambwan vessel", 1),
                         item(ItemID.TBWT_RAW_KARAMBWANJI,
@@ -114,7 +114,7 @@ public class StrategyQualityTournamentTest
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Bone Voyage", QuestStatus.COMPLETE);
-        StrategyDataBundle ready = data(1, MembershipStatus.P2P,
+        GameData ready = data(1, MembershipStatus.P2P,
                 items(item(ItemID.COINS, "Coins", 500)), completed,
                 minigames(), false);
 
@@ -127,7 +127,7 @@ public class StrategyQualityTournamentTest
     @Test
     public void farmingStyleChangesContinuousTitheVersusRecurringHerbs()
     {
-        StrategyDataBundle ready = tournamentData();
+        GameData ready = tournamentData();
         assertWinner("farming_tithe", ready, Skill.FARMING, 80,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
         assertWinner("farming_herbs_expanded", ready, Skill.FARMING, 80,
@@ -137,7 +137,7 @@ public class StrategyQualityTournamentTest
     @Test
     public void f2pCannotWinHosidiusCookingRoute()
     {
-        StrategyDataBundle f2p = data(0, MembershipStatus.F2P,
+        GameData f2p = data(0, MembershipStatus.F2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200),
                         item(ItemID.GRAPES, "Grapes", 200),
                         item(ItemID.JUG_WATER, "Jug of water", 200)),
@@ -196,12 +196,12 @@ public class StrategyQualityTournamentTest
     @Test
     public void afkMagicWinnerIsExecutableAndUsesObservedSplashingSetup()
     {
-        StrategyDataBundle ready = magicSplashingData(true);
+        GameData ready = magicSplashingData(true);
         Recommendation magic = onlyMagicRecommendation(ready);
 
         assertEquals("magic_f2p_fire_strike_splash",
                 magic.getTrainingPlan().getMethod().getId());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 magic.getConfidence());
         assertTrue("guidance=" + magic.getGuidance().getAction() + " | "
                         + magic.getGuidance().getSupplies() + " | "
@@ -210,15 +210,15 @@ public class StrategyQualityTournamentTest
         assertFalse("hard unresolved requirement",
                 RequirementActionability.hasHardUnresolvedRequirement(
                         magic.getTrainingPlan()));
-        assertTrue(RecommendationPresentation.compactText(magic),
-                new RecommendationActionabilityPolicy()
+        assertTrue(Presentation.compactText(magic),
+                new ActionabilityPolicy()
                 .canLeadQueue(magic));
         assertTrue(magic.getGuidance().getSupplies().contains("autocast"));
 
         Recommendation withoutSetup = onlyMagicRecommendation(
                 magicSplashingData(false));
         assertFalse("The final queue must reject an unobserved -64 setup",
-                new RecommendationActionabilityPolicy()
+                new ActionabilityPolicy()
                         .canLeadQueue(withoutSetup));
     }
 
@@ -228,7 +228,7 @@ public class StrategyQualityTournamentTest
         int[] accountTypes = {0, 1, 4, 2, 3};
         for (int i = 0; i < accountTypes.length; i++)
         {
-            StrategyDataBundle account = data(accountTypes[i],
+            GameData account = data(accountTypes[i],
                     MembershipStatus.P2P,
                     items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                     quests(), minigames(), true);
@@ -266,7 +266,7 @@ public class StrategyQualityTournamentTest
         {
             for (SessionIntent session : SessionIntent.values())
             {
-                StrategyDataBundle prepared = tournamentData();
+                GameData prepared = tournamentData();
                 for (Skill skill : EnumSet.of(
                         Skill.COOKING, Skill.FISHING, Skill.RUNECRAFT,
                         Skill.FARMING, Skill.HUNTER, Skill.MAGIC,
@@ -305,7 +305,7 @@ public class StrategyQualityTournamentTest
                 magic.contains("magic_f2p_baseline"));
     }
 
-    private StrategyDataBundle tournamentData()
+    private GameData tournamentData()
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Bone Voyage", QuestStatus.COMPLETE);
@@ -345,16 +345,16 @@ public class StrategyQualityTournamentTest
                         EnumSet.noneOf(Prayer.class), false, false, false));
     }
 
-    private Recommendation onlyMagicRecommendation(StrategyDataBundle data)
+    private Recommendation onlyMagicRecommendation(GameData data)
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog()
         {
             @Override
-            public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+            public List<ActionDef> actionsFor(Skill skill)
             {
                 if (skill != Skill.MAGIC) return Collections.emptyList();
                 return Collections.singletonList(
-                        new RuneLiteSkillActionDefinition(Skill.MAGIC,
+                        new ActionDef(Skill.MAGIC,
                                 "runelite:magic:fire_strike", "Fire Strike",
                                 13, 11.5f, null, MembershipStatus.F2P));
             }
@@ -374,7 +374,7 @@ public class StrategyQualityTournamentTest
         return recommendations.get(0);
     }
 
-    private static StrategyDataBundle magicSplashingData(boolean equipped)
+    private static GameData magicSplashingData(boolean equipped)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -392,7 +392,7 @@ public class StrategyQualityTournamentTest
         AccountSnapshot account = new AccountSnapshot("Magic tournament",
                 90_099L, 0, AccountMode.MAIN.name(), MembershipStatus.P2P,
                 1, total, totalXp, levels, xp);
-        List<ItemStackSnapshot> equipment = equipped
+        List<ItemState> equipment = equipped
                 ? items(item(1, "Iron full helm", 1),
                         item(2, "Iron platebody", 1),
                         item(3, "Iron platelegs", 1),
@@ -400,26 +400,26 @@ public class StrategyQualityTournamentTest
                         item(5, "Fancy boots", 1),
                         item(6, "Cursed goblin staff", 1))
                 : Collections.emptyList();
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(items(
+        return GameData.builder(account)
+                .inventory(new ItemsState(items(
                         item(ItemID.AIRRUNE, "Air rune", 10_000),
                         item(ItemID.FIRERUNE, "Fire rune", 10_000),
                         item(ItemID.MINDRUNE, "Mind rune", 10_000))))
-                .equipment(new EquipmentSnapshot(equipment))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .equipment(new ItemsState(equipment))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .combatEvidence(new CombatEvidenceSnapshot(0,
                         EnumSet.noneOf(Prayer.class), false, false, false))
                 .build();
     }
 
-    private void assertWinner(String expected, StrategyDataBundle data,
+    private void assertWinner(String expected, GameData data,
             Skill skill, int level, StrategyMode mode, SessionIntent session)
     {
         assertEquals(expected,
                 winner(data, skill, level, mode, session).getMethod().getId());
     }
 
-    private void assertLowAttentionCookingWinner(StrategyDataBundle data,
+    private void assertLowAttentionCookingWinner(GameData data,
             StrategyMode mode, SessionIntent session)
     {
         TrainingPlan plan = winner(data, Skill.COOKING, 70, mode, session);
@@ -429,7 +429,7 @@ public class StrategyQualityTournamentTest
                 "cooking_wines".equals(plan.getMethod().getId()));
     }
 
-    private TrainingPlan winner(StrategyDataBundle data, Skill skill, int level,
+    private TrainingPlan winner(GameData data, Skill skill, int level,
             StrategyMode mode, SessionIntent session)
     {
         TrainingPlan plan = selector.select(data, skill, level, mode, session,
@@ -438,8 +438,8 @@ public class StrategyQualityTournamentTest
         return plan;
     }
 
-    private static StrategyDataBundle data(int accountType,
-            MembershipStatus membership, List<ItemStackSnapshot> inventory,
+    private static GameData data(int accountType,
+            MembershipStatus membership, List<ItemState> inventory,
             Map<String, QuestStatus> quests, MinigameSnapshot minigames,
             boolean easyKourendDiary)
     {
@@ -447,10 +447,10 @@ public class StrategyQualityTournamentTest
                 easyKourendDiary, Collections.emptyList(), null);
     }
 
-    private static StrategyDataBundle data(int accountType,
-            MembershipStatus membership, List<ItemStackSnapshot> inventory,
+    private static GameData data(int accountType,
+            MembershipStatus membership, List<ItemState> inventory,
             Map<String, QuestStatus> quests, MinigameSnapshot minigames,
-            boolean easyKourendDiary, List<ItemStackSnapshot> equipment,
+            boolean easyKourendDiary, List<ItemState> equipment,
             CombatEvidenceSnapshot combatEvidence)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -481,10 +481,10 @@ public class StrategyQualityTournamentTest
         tools.put("rake", CapabilityState.VERIFIED);
         tools.put("dibber", CapabilityState.VERIFIED);
         tools.put("spade", CapabilityState.VERIFIED);
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory))
-                .equipment(new EquipmentSnapshot(equipment))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        return GameData.builder(account)
+                .inventory(new ItemsState(inventory))
+                .equipment(new ItemsState(equipment))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .quests(new QuestSnapshot(quests))
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
                         Collections.emptyMap(), tiers))
@@ -510,15 +510,15 @@ public class StrategyQualityTournamentTest
         return new MinigameSnapshot(unlocked, Collections.emptyMap());
     }
 
-    private static List<ItemStackSnapshot> items(ItemStackSnapshot... values)
+    private static List<ItemState> items(ItemState... values)
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         Collections.addAll(items, values);
         return items;
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 }

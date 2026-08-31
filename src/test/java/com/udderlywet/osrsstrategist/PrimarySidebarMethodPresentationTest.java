@@ -91,13 +91,13 @@ public class PrimarySidebarMethodPresentationTest
                 10,
                 0,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "Use the observed raw fish without creating a bank loop.",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList()).withCurrentStageTargetLevel(20);
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Cook the carried raw fish",
                 "Bring the carried raw fish",
                 "Barbarian Village river / permanent fire",
@@ -109,10 +109,10 @@ public class PrimarySidebarMethodPresentationTest
                 "Finish the current Cooking checkpoint.",
                 50,
                 plan,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 19,
                 20,
                 guidance,
-                CandidateSafetyEvidence.skill(true, Skill.COOKING));
+                SafetyEvidence.skill(true, Skill.COOKING));
     }
 }

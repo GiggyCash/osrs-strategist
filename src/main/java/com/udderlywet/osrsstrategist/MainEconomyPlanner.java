@@ -15,26 +15,26 @@ public class MainEconomyPlanner
         if (context == null || candidate == null)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L, 0L,
-                    RecommendationConfidence.CHECK_NEEDED,
-                    "Purchase inputs are incomplete.");
+                    Confidence.CHECK_NEEDED,
+                    Text.get(1389));
         }
 
-        if (context.getAccountMode() != AccountMode.MAIN)
+        if (context.accountMode() != AccountMode.MAIN)
         {
             return decision(MainPurchaseChoice.NOT_APPLICABLE,
                     candidate.totalCost(), 0L,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     Text.get(358));
         }
 
-        StrategyDataBundle data = context.getData();
-        AccountEconomySnapshot economy = data == null ? null : data.getEconomy();
+        GameData data = context.data();
+        AccountEconomySnapshot economy = data == null ? null : data.economy();
         if (economy == null
-                || economy.getConfidence() != RecommendationConfidence.VERIFIED)
+                || economy.getConfidence() != Confidence.VERIFIED)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     candidate.totalCost(), economy == null ? 0L : economy.getCoins(),
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(363));
         }
 
@@ -43,14 +43,14 @@ public class MainEconomyPlanner
         if (cost == Long.MAX_VALUE)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(364));
         }
 
         if (coins < cost)
         {
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
-                    cost, coins, RecommendationConfidence.CHECK_NEEDED,
+                    cost, coins, Confidence.CHECK_NEEDED,
                     Text.get(365));
         }
 
@@ -59,19 +59,19 @@ public class MainEconomyPlanner
                 >= candidate.getEstimatedSelfSourceMinutes())
         {
             return decision(MainPurchaseChoice.SELF_SOURCE,
-                    cost, coins, RecommendationConfidence.VERIFIED,
+                    cost, coins, Confidence.VERIFIED,
                     Text.get(366));
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() <= 0)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED,
-                    cost, coins, RecommendationConfidence.CHECK_NEEDED,
+                    cost, coins, Confidence.CHECK_NEEDED,
                     Text.get(367));
         }
 
         return decision(MainPurchaseChoice.BUY,
-                cost, coins, RecommendationConfidence.VERIFIED,
+                cost, coins, Confidence.VERIFIED,
                 Text.get(368));
     }
 
@@ -89,21 +89,21 @@ public class MainEconomyPlanner
                 || estimate.getTotalCost() <= 0)
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
                     economy == null ? 0L : economy.getCoins(),
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(369));
         if (economy == null
-                || economy.getConfidence() != RecommendationConfidence.VERIFIED)
+                || economy.getConfidence() != Confidence.VERIFIED)
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     estimate.getTotalCost(),
                     economy == null ? 0L : economy.getCoins(),
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(370));
 
         long cost = estimate.getTotalCost();
         long coins = Math.max(0L, economy.getCoins());
         if (coins < cost)
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
-                    cost, coins, RecommendationConfidence.CHECK_NEEDED,
+                    cost, coins, Confidence.CHECK_NEEDED,
                     Text.get(359));
 
         long remaining = coins - cost;
@@ -112,16 +112,16 @@ public class MainEconomyPlanner
                 && remaining >= MINIMUM_LIQUID_BUFFER;
         if (trivialSpend || lowBurden)
             return decision(MainPurchaseChoice.BUY, cost, coins,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     Text.get(360));
 
         if (reviewedSelfSourceRoute)
             return decision(MainPurchaseChoice.SELF_SOURCE, cost, coins,
-                    RecommendationConfidence.VERIFIED,
+                    Confidence.VERIFIED,
                     Text.get(361));
 
         return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Text.get(362));
     }
 
@@ -139,7 +139,7 @@ public class MainEconomyPlanner
             MainPurchaseChoice choice,
             long totalCost,
             long coins,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String explanation)
     {
         return new MainPurchaseDecision(

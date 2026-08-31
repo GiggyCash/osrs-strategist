@@ -26,7 +26,7 @@ public class ResourceDependencyCatalog
             {
                 if (value == null) continue;
                 if (byId.put(value.getItemId(), value) != null)
-                    throw new IllegalStateException("Duplicate resource dependency " + value.getItemId());
+                    throw new IllegalStateException(Text.get(1170) + value.getItemId());
                 String name = normalize(value.getItemName());
                 if (!name.isEmpty()) byName.put(name, value);
             }

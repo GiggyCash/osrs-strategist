@@ -42,8 +42,8 @@ public class ActivityStrategyKnowledgeServiceTest
     @Test
     public void unknownSlotsFailClosedWithoutPretendingInventoryIsFull()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(uim())
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
         assertNull(service.attach(candidate("quest:waterfall-quest"),
                 context(data)));
@@ -63,24 +63,24 @@ public class ActivityStrategyKnowledgeServiceTest
     private static Recommendation candidate(String id)
     {
         return new Recommendation(id, "Candidate", "Reason", 10.0, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Do it.", "Observed setup",
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Do it.", "Observed setup",
                         "Verified location", "Note"),
-                CandidateSafetyEvidence.harmless(false));
+                SafetyEvidence.harmless(false));
     }
 
-    private static StrategyDataBundle fullInventory()
+    private static GameData fullInventory()
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         for (int slot = 0; slot < 28; slot++)
-            items.add(new ItemStackSnapshot(1000 + slot,
+            items.add(new ItemState(1000 + slot,
                     "Item " + slot, 1, slot));
-        return StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(items, true))
+        return GameData.builder(uim())
+                .inventory(new ItemsState(items, true))
                 .build();
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,

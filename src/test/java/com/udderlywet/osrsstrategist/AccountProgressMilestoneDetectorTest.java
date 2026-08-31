@@ -72,7 +72,7 @@ public class AccountProgressMilestoneDetectorTest
         assertTrue(duplicate.isEmpty());
     }
 
-    private static StrategyDataBundle data(long hash, QuestStatus quest,
+    private static GameData data(long hash, QuestStatus quest,
             boolean unlocked)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -91,7 +91,7 @@ public class AccountProgressMilestoneDetectorTest
                 new EnumMap<>(StorageCapability.class);
         storage.put(StorageCapability.POH_COSTUME_ROOM, unlocked
                 ? CapabilityState.VERIFIED : CapabilityState.UNKNOWN);
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .transport(new TransportSnapshot(unlocked
                         ? Collections.singleton("spirit-trees")
@@ -100,9 +100,9 @@ public class AccountProgressMilestoneDetectorTest
                 .build();
     }
 
-    private static StrategyDataBundle progressData(boolean complete)
+    private static GameData progressData(boolean complete)
     {
-        StrategyDataBundle base = data(9L, QuestStatus.NOT_STARTED, false);
+        GameData base = data(9L, QuestStatus.NOT_STARTED, false);
         Map<DiaryTier, Boolean> tiers = new EnumMap<>(DiaryTier.class);
         tiers.put(DiaryTier.MEDIUM, complete);
         Map<String, Map<DiaryTier, Boolean>> regions = new HashMap<>();
@@ -111,13 +111,13 @@ public class AccountProgressMilestoneDetectorTest
                 new EnumMap<>(SlayerReward.class);
         rewards.put(SlayerReward.BIGGER_AND_BADDER, complete
                 ? CapabilityState.VERIFIED : CapabilityState.BLOCKED);
-        return StrategyDataBundle.builder(base.getAccount())
+        return GameData.builder(base.account())
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
                         Collections.emptyMap(), regions))
                 .slayer(new SlayerSnapshot(null, 0, "Nieve", null, 0,
                         10, 100, 2, 0,
                         new SlayerRewardSnapshot(rewards),
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
     }
 }

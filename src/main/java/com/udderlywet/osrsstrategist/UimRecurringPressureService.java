@@ -29,11 +29,11 @@ public final class UimRecurringPressureService
         if (blocked.size() < 2)
             return new UimRecurringPressureAssessment(0, blocked);
 
-        StrategyDataBundle data = context.getData();
-        String account = accountKey(data.getAccount());
+        GameData data = context.data();
+        String account = accountKey(data.account());
         LinkedHashSet<Integer> observed = layouts.computeIfAbsent(account,
                 ignored -> new LinkedHashSet<>());
-        observed.add(fingerprint(data.getInventory()));
+        observed.add(fingerprint(data.inventory()));
         while (observed.size() > MAX_LAYOUTS_PER_ACCOUNT)
             observed.remove(observed.iterator().next());
         return new UimRecurringPressureAssessment(observed.size(), blocked);
@@ -43,32 +43,32 @@ public final class UimRecurringPressureService
     {
         List<String> result = new ArrayList<>();
         if (context == null
-                || context.getAccountMode() != AccountMode.ULTIMATE_IRONMAN
-                || context.getData() == null) return result;
-        InventorySnapshot inventory = context.getData().getInventory();
+                || context.accountMode() != AccountMode.ULTIMATE_IRONMAN
+                || context.data() == null) return result;
+        ItemsState inventory = context.data().inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return result;
         int free = Math.max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
 
-        if (blockedSkilling(context.getData().getAccount(), free))
+        if (blockedSkilling(context.data().account(), free))
             result.add("skilling");
 
-        QuestSnapshot quests = context.getData().getQuests();
-        if (quests != null && quests.getQuests().values().stream().anyMatch(
+        QuestSnapshot quests = context.data().quests();
+        if (quests != null && quests.quests().values().stream().anyMatch(
                 status -> status == QuestStatus.NOT_STARTED
                         || status == QuestStatus.IN_PROGRESS)
                 && blocked("quest:observed", free)) result.add("questing");
 
-        ClueSnapshot clue = context.getData().getClue();
+        ClueSnapshot clue = context.data().clue();
         if (clue != null && clue.isCluePresent()
                 && blocked("clue:observed", free)) result.add("clues");
 
-        PvmSnapshot pvm = context.getData().getPvm();
+        PvmSnapshot pvm = context.data().pvm();
         if (pvm != null && !pvm.getReadinessByActivity().isEmpty()
                 && blocked("pvm:observed", free)) result.add("pvm");
 
-        MinigameSnapshot minigames = context.getData().getMinigames();
+        MinigameSnapshot minigames = context.data().minigames();
         if (minigames != null)
             for (String id : minigames.getUnlocked())
                 if (blocked("minigame:" + id, free))
@@ -91,7 +91,7 @@ public final class UimRecurringPressureService
                     || !method.supportsLevel(account.getSkillLevel(
                             method.getSkill()))
                     || method.getConfidence()
-                            != RecommendationConfidence.VERIFIED
+                            != Confidence.VERIFIED
                     || !method.getRequirements().isEmpty()
                     || !AccountBuildPolicy.allowsMethod(account, method)
                     || !ContentAccessRules.isMethodAvailable(method,
@@ -123,10 +123,10 @@ public final class UimRecurringPressureService
         return account.getPlayerName() + ":" + account.getAccountTypeCode();
     }
 
-    private static int fingerprint(InventorySnapshot inventory)
+    private static int fingerprint(ItemsState inventory)
     {
         int value = 1;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             value = 31 * value + (item == null ? 0 : item.getItemId());
             value = 31 * value + (item == null ? -1 : item.getSlotIndex());

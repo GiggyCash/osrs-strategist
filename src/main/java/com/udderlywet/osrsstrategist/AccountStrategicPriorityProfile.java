@@ -25,7 +25,7 @@ public final class AccountStrategicPriorityProfile
         {
             if (!copy.containsKey(dimension))
                 throw new IllegalArgumentException(
-                        "Missing account priority " + dimension);
+                        Text.get(1110) + dimension);
         }
         this.priorities = Collections.unmodifiableMap(copy);
     }

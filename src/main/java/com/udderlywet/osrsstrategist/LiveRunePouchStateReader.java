@@ -44,11 +44,11 @@ public class LiveRunePouchStateReader
 
     public StorageSnapshot merge(
             StorageSnapshot base,
-            InventorySnapshot inventory)
+            ItemsState inventory)
     {
         boolean usable = hasUsableRunePouch(inventory)
                 && client.getGameState() == GameState.LOGGED_IN;
-        List<ItemStackSnapshot> liveContents = usable
+        List<ItemState> liveContents = usable
                 ? readContents() : null;
         return mergeObserved(base, usable, liveContents);
     }
@@ -57,16 +57,16 @@ public class LiveRunePouchStateReader
     static StorageSnapshot mergeObserved(
             StorageSnapshot base,
             boolean usablePouchObserved,
-            List<ItemStackSnapshot> liveContents)
+            List<ItemState> liveContents)
     {
         StorageSnapshot source = base == null
                 ? StorageSnapshot.unknown() : base;
         EnumMap<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.putAll(source.getStates());
-        EnumMap<StorageCapability, List<ItemStackSnapshot>> contents =
+        EnumMap<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
-        for (Map.Entry<StorageCapability, List<ItemStackSnapshot>> entry
+        for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : source.getObservedContents().entrySet())
         {
             contents.put(entry.getKey(), new ArrayList<>(entry.getValue()));
@@ -87,9 +87,9 @@ public class LiveRunePouchStateReader
         return new StorageSnapshot(states, contents);
     }
 
-    List<ItemStackSnapshot> readContents()
+    List<ItemState> readContents()
     {
-        List<ItemStackSnapshot> result = new ArrayList<>(AMOUNT_VARBITS.length);
+        List<ItemState> result = new ArrayList<>(AMOUNT_VARBITS.length);
         EnumComposition runeEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
         if (runeEnum == null) return result;
 
@@ -105,15 +105,15 @@ public class LiveRunePouchStateReader
             if (itemId <= 0) continue;
             String name = itemManager.getItemComposition(itemId).getName();
             if (name == null || name.trim().isEmpty()) continue;
-            result.add(new ItemStackSnapshot(itemId, name, amount));
+            result.add(new ItemState(itemId, name, amount));
         }
         return result;
     }
 
-    static boolean hasUsableRunePouch(InventorySnapshot inventory)
+    static boolean hasUsableRunePouch(ItemsState inventory)
     {
         if (inventory == null || inventory.getItems() == null) return false;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             if (item == null || item.getQuantity() <= 0 || item.getName() == null)
                 continue;

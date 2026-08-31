@@ -32,7 +32,7 @@ public final class TravelRouteEvidenceCatalog
     private void add(TravelRouteEvidenceDefinition definition)
     {
         if (definitions.put(definition.getRouteId(), definition) != null)
-            throw new IllegalStateException("Duplicate exact travel route "
+            throw new IllegalStateException(Text.get(1188)
                     + definition.getRouteId());
     }
 }

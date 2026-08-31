@@ -42,9 +42,9 @@ public class PvmReadinessAnalyzer
     public PvmSnapshot analyze(
             AccountSnapshot account,
             QuestSnapshot quests,
-            EquipmentSnapshot equipment,
-            InventorySnapshot inventory,
-            BankSnapshot bank,
+            ItemsState equipment,
+            ItemsState inventory,
+            ItemsState bank,
             PvmSnapshot observed)
     {
         return analyze(account, quests, equipment, inventory, null, bank, observed);
@@ -53,10 +53,10 @@ public class PvmReadinessAnalyzer
     public PvmSnapshot analyze(
             AccountSnapshot account,
             QuestSnapshot quests,
-            EquipmentSnapshot equipment,
-            InventorySnapshot inventory,
+            ItemsState equipment,
+            ItemsState inventory,
             StorageSnapshot storage,
-            BankSnapshot bank,
+            ItemsState bank,
             PvmSnapshot observed)
     {
         if (account == null) return observed;
@@ -66,7 +66,7 @@ public class PvmReadinessAnalyzer
         {
             PvmReadiness prior = priorFor(observed, activity.getId());
             if (prior != null
-                    && prior.getConfidence() == RecommendationConfidence.BLOCKED)
+                    && prior.getConfidence() == Confidence.BLOCKED)
             {
                 result.put(activity.getId(), prior);
                 continue;
@@ -79,8 +79,8 @@ public class PvmReadinessAnalyzer
             if (preparation == null)
             {
                 result.put(activity.getId(), new PvmReadiness(activity.getId(), false,
-                        RecommendationConfidence.CHECK_NEEDED,
-                        Collections.singletonList("Verify current encounter requirements")));
+                        Confidence.CHECK_NEEDED,
+                        Collections.singletonList(Text.get(1565))));
                 continue;
             }
             // Exact profiles are recomputed from current carried state so a
@@ -106,7 +106,7 @@ public class PvmReadinessAnalyzer
             String requiredStyle = exact == null ? preparation.getPreferredStyle()
                     : exact.getWeaponStyle();
             if (!hasCombatWeapon(equipment, requiredStyle))
-                addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + " combat weapon/loadout");
+                addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + Text.get(1566));
             else if (exact == null)
                 addMissing(missing, Text.get(443));
 
@@ -132,7 +132,7 @@ public class PvmReadinessAnalyzer
             else
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
-                        addMissing(missing, "Carry " + accessItem + " for encounter access");
+                        addMissing(missing, "Carry " + accessItem + Text.get(1567));
 
             if (exact == null && preparation != null)
                 for (String check : preparation.getChecks()) addMissing(missing, check);
@@ -144,8 +144,8 @@ public class PvmReadinessAnalyzer
             result.put(activity.getId(), new PvmReadiness(
                     activity.getId(),
                     fullyVerified,
-                    fullyVerified ? RecommendationConfidence.VERIFIED
-                            : RecommendationConfidence.CHECK_NEEDED,
+                    fullyVerified ? Confidence.VERIFIED
+                            : Confidence.CHECK_NEEDED,
                     missing
             ));
         }
@@ -174,7 +174,7 @@ public class PvmReadinessAnalyzer
             boolean inProgressAllowed)
     {
         if (quests == null || quest == null) return false;
-        for (Map.Entry<String, QuestStatus> entry : quests.getQuests().entrySet())
+        for (Map.Entry<String, QuestStatus> entry : quests.quests().entrySet())
         {
             if (!entry.getKey().equalsIgnoreCase(quest)) continue;
             if (entry.getValue() == QuestStatus.COMPLETE) return true;
@@ -183,12 +183,12 @@ public class PvmReadinessAnalyzer
         return false;
     }
 
-    private static boolean hasCombatWeapon(EquipmentSnapshot equipment, String style)
+    private static boolean hasCombatWeapon(ItemsState equipment, String style)
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         if (equipment != null) items.addAll(equipment.getEquippedItems());
         boolean melee = false, ranged = false, magic = false;
-        for (ItemStackSnapshot item : items)
+        for (ItemState item : items)
         {
             // Persisted snapshots without slot provenance cannot prove a readied weapon.
             if (item.getSlotIndex() != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;
@@ -206,24 +206,24 @@ public class PvmReadinessAnalyzer
         return melee || ranged || magic;
     }
 
-    private static int carriedFoodQuantity(InventorySnapshot inventory)
+    private static int carriedFoodQuantity(ItemsState inventory)
     {
         return carriedQuantity(inventory, "shark", "karambwan", "anglerfish",
-                "manta ray", "moonlight antelope", "lobster", "swordfish", "pizza");
+                "manta ray", Text.get(1568), "lobster", "swordfish", "pizza");
     }
 
-    private static int carriedRestorationQuantity(InventorySnapshot inventory)
+    private static int carriedRestorationQuantity(ItemsState inventory)
     {
         return carriedQuantity(inventory, "prayer potion", "super restore");
     }
 
-    private static int carriedAmmoQuantity(InventorySnapshot inventory,
-            EquipmentSnapshot equipment)
+    private static int carriedAmmoQuantity(ItemsState inventory,
+            ItemsState equipment)
     {
         int quantity = carriedQuantity(inventory, "arrow", "bolt", "dart",
                 "javelin", "chinchompa");
         if (equipment != null)
-            for (ItemStackSnapshot item : equipment.getEquippedItems())
+            for (ItemState item : equipment.getEquippedItems())
                 if (item.getSlotIndex() == EquipmentInventorySlot.AMMO.getSlotIdx()
                         && containsAny(item.getName() == null ? ""
                         : item.getName().toLowerCase(Locale.ROOT),
@@ -232,12 +232,12 @@ public class PvmReadinessAnalyzer
         return quantity;
     }
 
-    private static int carriedRuneQuantity(InventorySnapshot inventory)
+    private static int carriedRuneQuantity(ItemsState inventory)
     {
         return carriedQuantity(inventory, " rune");
     }
 
-    private static boolean runeEvidence(InventorySnapshot inventory,
+    private static boolean runeEvidence(ItemsState inventory,
             StorageSnapshot storage)
     {
         if (carriedRuneQuantity(inventory) > 0) return true;
@@ -253,11 +253,11 @@ public class PvmReadinessAnalyzer
                 && !missing.contains(requirement)) missing.add(requirement);
     }
 
-    private static int carriedQuantity(InventorySnapshot inventory, String... terms)
+    private static int carriedQuantity(ItemsState inventory, String... terms)
     {
         if (inventory == null) return 0;
         int total = 0;
-        for (ItemStackSnapshot item : inventory.getItems())
+        for (ItemState item : inventory.getItems())
         {
             String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             if (containsAny(name, terms)) total += Math.max(0, item.getQuantity());

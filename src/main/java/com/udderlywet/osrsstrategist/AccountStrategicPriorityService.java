@@ -14,12 +14,12 @@ public final class AccountStrategicPriorityService
     {
         if (context == null)
             return assess(AccountMode.UNKNOWN, null, false);
-        return assess(context.getAccountMode(), context.getData(),
+        return assess(context.accountMode(), context.data(),
                 context.isUseGroupStorage());
     }
 
     public AccountStrategicPriorityProfile assess(AccountMode requestedMode,
-            StrategyDataBundle data, boolean useGroupStorage)
+            GameData data, boolean useGroupStorage)
     {
         AccountMode mode = requestedMode == null
                 ? AccountMode.UNKNOWN : requestedMode;
@@ -39,54 +39,54 @@ public final class AccountStrategicPriorityService
         boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN;
 
-        InventorySnapshot inventory = data == null ? null : data.getInventory();
+        ItemsState inventory = data == null ? null : data.inventory();
         int occupied = inventory == null
                 || !inventory.hasCompleteSlotObservation() ? -1
                 : UimSetupCostService.occupiedInventorySlots(inventory);
         put(result, AccountStrategicDimension.INVENTORY_PRESSURE,
                 uim ? occupied >= 24 ? StrategicPriority.CRITICAL
                         : StrategicPriority.HIGH : StrategicPriority.LOW,
-                occupied < 0 ? RecommendationConfidence.CHECK_NEEDED
-                        : RecommendationConfidence.VERIFIED,
+                occupied < 0 ? Confidence.CHECK_NEEDED
+                        : Confidence.VERIFIED,
                 uim ? occupied < 0
                         ? Text.get(89)
-                        : "UIM cannot bank conventionally; " + occupied
+                        : Text.get(1434) + occupied
                                 + Text.get(100)
                         : Text.get(111));
         put(result, AccountStrategicDimension.BANK_AVAILABILITY,
                 uim ? StrategicPriority.CRITICAL : StrategicPriority.LOW,
                 uim ? CapabilityState.BLOCKED : CapabilityState.VERIFIED,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(122)
                         : Text.get(124));
         put(result, AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY,
                 ge || selfSource ? StrategicPriority.HIGH : StrategicPriority.LOW,
                 ge ? CapabilityState.VERIFIED : CapabilityState.BLOCKED,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 ge ? Text.get(125)
                         : Text.get(126));
         put(result, AccountStrategicDimension.SELF_SOURCING_BURDEN,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 selfSource ? Text.get(127)
                         : Text.get(128));
 
-        GroupStorageSnapshot groupStorage = data == null
-                ? null : data.getGroupStorage();
+        ItemsState groupStorage = data == null
+                ? null : data.groupStorage();
         boolean freshGroupStorage = group && useGroupStorage
                 && groupStorage != null && groupStorage.isObserved();
-        RecommendationConfidence groupConfidence = freshGroupStorage
-                ? RecommendationConfidence.VERIFIED
-                : RecommendationConfidence.CHECK_NEEDED;
+        Confidence groupConfidence = freshGroupStorage
+                ? Confidence.VERIFIED
+                : Confidence.CHECK_NEEDED;
         put(result, AccountStrategicDimension.SHARED_RESOURCE_VALUE,
                 freshGroupStorage ? StrategicPriority.HIGH
                         : StrategicPriority.NONE,
                 freshGroupStorage ? CapabilityState.VERIFIED
                         : group ? CapabilityState.UNKNOWN
                         : CapabilityState.BLOCKED,
-                group ? groupConfidence : RecommendationConfidence.VERIFIED,
+                group ? groupConfidence : Confidence.VERIFIED,
                 freshGroupStorage
                         ? Text.get(90)
                         : group ? Text.get(91)
@@ -94,15 +94,15 @@ public final class AccountStrategicPriorityService
         put(result, AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE,
                 StrategicPriority.NONE,
                 group ? CapabilityState.UNKNOWN : CapabilityState.BLOCKED,
-                group ? RecommendationConfidence.CHECK_NEEDED
-                        : RecommendationConfidence.VERIFIED,
+                group ? Confidence.CHECK_NEEDED
+                        : Confidence.VERIFIED,
                 group ? Text.get(93)
                         : Text.get(94));
         put(result, AccountStrategicDimension.STORAGE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(95)
                         : selfSource ? Text.get(96)
                         : Text.get(97));
@@ -110,7 +110,7 @@ public final class AccountStrategicPriorityService
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(98)
                         : selfSource ? Text.get(99)
                         : Text.get(101));
@@ -118,7 +118,7 @@ public final class AccountStrategicPriorityService
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(102)
                         : selfSource ? Text.get(103)
                         : Text.get(104));
@@ -126,7 +126,7 @@ public final class AccountStrategicPriorityService
                 uim ? StrategicPriority.CRITICAL
                         : hardcore ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(105)
                         : hardcore ? Text.get(106)
                         : Text.get(107));
@@ -134,7 +134,7 @@ public final class AccountStrategicPriorityService
                 hardcore ? StrategicPriority.CRITICAL
                         : uim ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 hardcore ? Text.get(108)
                         : uim ? Text.get(109)
                         : Text.get(110));
@@ -142,20 +142,20 @@ public final class AccountStrategicPriorityService
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 selfSource ? Text.get(112)
                         : Text.get(113));
         put(result, AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(114)
                         : Text.get(115));
         put(result, AccountStrategicDimension.DUPLICATE_GRIND_PENALTY,
                 freshGroupStorage ? StrategicPriority.HIGH
                         : StrategicPriority.NONE,
-                group ? groupConfidence : RecommendationConfidence.VERIFIED,
+                group ? groupConfidence : Confidence.VERIFIED,
                 freshGroupStorage
                         ? Text.get(116)
                         : group ? Text.get(117)
@@ -164,7 +164,7 @@ public final class AccountStrategicPriorityService
                 uim ? StrategicPriority.HIGH
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 uim ? Text.get(119)
                         : selfSource ? Text.get(120)
                         : Text.get(121));
@@ -187,7 +187,7 @@ public final class AccountStrategicPriorityService
                     ? StrategicPriority.CRITICAL : StrategicPriority.NONE;
             put(values, dimension, priority,
                     CapabilityState.UNKNOWN,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     Text.get(123));
         }
     }
@@ -196,7 +196,7 @@ public final class AccountStrategicPriorityService
             Map<AccountStrategicDimension, AccountStrategicPriority> values,
             AccountStrategicDimension dimension,
             StrategicPriority priority,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String reason)
     {
         put(values, dimension, priority, CapabilityState.VERIFIED, confidence,
@@ -208,7 +208,7 @@ public final class AccountStrategicPriorityService
             AccountStrategicDimension dimension,
             StrategicPriority priority,
             CapabilityState capabilityState,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String reason)
     {
         values.put(dimension, new AccountStrategicPriority(dimension,

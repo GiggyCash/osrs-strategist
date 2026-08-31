@@ -16,7 +16,7 @@ public final class TransportCatalog
         for (TransportDefinition value : BundledCatalogLoader.array(
                 "/content/catalogs/transports.json", TransportDefinition[].class))
             if (routes.put(value.getId(), value) != null)
-                throw new IllegalStateException("Duplicate transport " + value.getId());
+                throw new IllegalStateException(Text.get(1187) + value.getId());
     }
 
     public List<TransportDefinition> all()

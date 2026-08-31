@@ -23,15 +23,15 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Arrays.asList(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Arrays.asList(
                         item(561, "Nature rune", 10),
                         item(554, "Fire rune", 50)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 55, 60,
                 plan("magic_high_alch", Skill.MAGIC), true);
 
@@ -50,12 +50,12 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "curse", "Curse", 19, 29));
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.MAGIC, 19, Experience.getXpForLevel(19));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 19, 20,
                 plan("magic_f2p_curse", Skill.MAGIC), true);
 
@@ -74,12 +74,12 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "fire_strike", "Fire Strike", 13, 11.5f));
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.MAGIC, 13, Experience.getXpForLevel(13));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 13, 14,
                 plan("magic_f2p_fire_strike_splash", Skill.MAGIC), true);
 
@@ -99,15 +99,15 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.singletonList(
                         item(561, "Nature rune", 5000)), 1L))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
+                .equipment(new ItemsState(Collections.singletonList(
                         item(1387, "Staff of fire", 1))))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 55, 60,
                 plan("magic_high_alch", Skill.MAGIC), true);
 
@@ -124,15 +124,15 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Arrays.asList(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Arrays.asList(
                         item(561, "Nature rune", 5000),
                         item(1387, "Staff of fire", 1)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 55, 60,
                 plan("magic_high_alch", Skill.MAGIC), true);
 
@@ -149,15 +149,15 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
         AccountSnapshot account = account(2, MembershipStatus.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Arrays.asList(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Arrays.asList(
                         item(561, "Nature rune", 100000),
                         item(554, "Fire rune", 100000)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 55, 60,
                 plan("magic_high_alch", Skill.MAGIC), true);
 
@@ -178,19 +178,19 @@ public class AdaptiveMilestoneGuidanceServiceTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.RUNE_POUCH, Arrays.asList(
                 item(561, "Nature rune", 2000),
                 item(554, "Fire rune", 10000)));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.singletonList(
                         item(12791, "Rune pouch", 1))))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .storage(new StorageSnapshot(states, contents))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.MAGIC, 55, 60,
                 plan("magic_high_alch", Skill.MAGIC), true);
 
@@ -210,17 +210,17 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.HERBLORE, "prayer_potion", "Prayer potion", 38, 87.5f));
         AccountSnapshot account = account(4, MembershipStatus.P2P,
                 Skill.HERBLORE, 38, Experience.getXpForLevel(38));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .groupStorage(new GroupStorageSnapshot(true, Arrays.asList(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .groupStorage(new ItemsState(true, Arrays.asList(
                         item(257, "Ranarr weed", 100),
                         item(231, "Snape grass", 100),
                         item(227, "Vial of water", 100))))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.HERBLORE, 38, 40,
                 plan("herblore_prayer_potions", Skill.HERBLORE), true);
 
@@ -246,16 +246,16 @@ public class AdaptiveMilestoneGuidanceServiceTest
 
         AccountSnapshot account = account(0, MembershipStatus.P2P,
                 Skill.FISHING, 70, currentXp);
-        EquipmentSnapshot equipment = new EquipmentSnapshot(Arrays.asList(
+        ItemsState equipment = new ItemsState(Arrays.asList(
                 item(1, "Angler hat", 1),
                 item(2, "Angler top", 1),
                 item(3, "Angler waders", 1),
                 item(4, "Angler boots", 1)));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .equipment(equipment)
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data, Skill.FISHING, 70, 80,
                 plan("fishing_f2p_fly", Skill.FISHING), true);
 
@@ -273,15 +273,15 @@ public class AdaptiveMilestoneGuidanceServiceTest
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.HUNTER, "red_salamander",
                         "Red salamander", 59, 272));
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                 account(1, MembershipStatus.P2P, Skill.HUNTER, 60,
                         Experience.getXpForLevel(60)))
-                .inventory(new InventorySnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
                         item(954, "Rope", 4),
                         item(303, "Small fishing net", 4))))
                 .build();
 
-        RecommendationGuidance guidance = service.build(data, Skill.HUNTER,
+        Guidance guidance = service.build(data, Skill.HUNTER,
                 60, 61, plan("hunter_salamanders", Skill.HUNTER), true);
 
         assertNotNull(guidance);
@@ -296,14 +296,14 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.CRAFTING, "sapphire", "Sapphire", 20, 50));
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                 account(2, MembershipStatus.P2P, Skill.CRAFTING, 20,
                         Experience.getXpForLevel(20)))
-                .inventory(new InventorySnapshot(Collections.singletonList(
+                .inventory(new ItemsState(Collections.singletonList(
                         item(1623, "Uncut sapphire", 20))))
                 .build();
 
-        RecommendationGuidance guidance = service.build(data, Skill.CRAFTING,
+        Guidance guidance = service.build(data, Skill.CRAFTING,
                 20, 21, plan("crafting_gems", Skill.CRAFTING), true);
 
         assertNotNull(guidance);
@@ -313,17 +313,17 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     private static AdaptiveMilestoneGuidanceService serviceWith(
-            RuneLiteSkillActionDefinition... definitions)
+            ActionDef... definitions)
     {
-        final List<RuneLiteSkillActionDefinition> actions = Arrays.asList(definitions);
+        final List<ActionDef> actions = Arrays.asList(definitions);
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog()
         {
             @Override
-            public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+            public List<ActionDef> actionsFor(Skill skill)
             {
-                java.util.ArrayList<RuneLiteSkillActionDefinition> result =
+                java.util.ArrayList<ActionDef> result =
                         new java.util.ArrayList<>();
-                for (RuneLiteSkillActionDefinition action : actions)
+                for (ActionDef action : actions)
                 {
                     if (action.getSkill() == skill) result.add(action);
                 }
@@ -336,10 +336,10 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 new SkillingXpModifierService());
     }
 
-    private static RuneLiteSkillActionDefinition action(
+    private static ActionDef action(
             Skill skill, String id, String name, int level, float xp)
     {
-        return new RuneLiteSkillActionDefinition(
+        return new ActionDef(
                 skill,
                 "runelite:" + skill.name().toLowerCase() + ":" + id,
                 name,
@@ -357,9 +357,9 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 "Use the modeled method.",
                 10, 10, 10, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(method, "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 
@@ -391,8 +391,8 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 xp);
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 }

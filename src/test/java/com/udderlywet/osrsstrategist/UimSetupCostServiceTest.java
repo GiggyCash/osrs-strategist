@@ -36,15 +36,15 @@ public class UimSetupCostServiceTest
                 "Run the Corrupted Gauntlet.",
                 100.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 0,
                 0,
-                new RecommendationGuidance(
+                new Guidance(
                         "Run the Corrupted Gauntlet.",
                         "The activity supplies its own temporary equipment.",
                         "Prifddinas.",
                         "A dangerous death can threaten current UIM death storage."))
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                .withStrategicValue(StrategicValue.builder()
                         .riskBurden(1.0)
                         .evidence("risk:dangerous-death")
                         .build());
@@ -64,15 +64,15 @@ public class UimSetupCostServiceTest
                 "UIM route",
                 40.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 70,
                 80,
-                new RecommendationGuidance(
+                new Guidance(
                         "Process the herbs.",
                         "Acquire materials just in time and preserve the current inventory setup for UIM.",
                         "Nearest practical loop.",
                         "UIM-aware route."))
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                .withStrategicValue(StrategicValue.builder()
                         .setupReuse(1.0)
                         .evidence("setup:preserved")
                         .build());
@@ -87,18 +87,18 @@ public class UimSetupCostServiceTest
                 "Test method", "Do it.",
                 10, 10, 10, AttentionLevel.LOW,
                 20, setup, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
-                method, "test", RecommendationConfidence.VERIFIED,
+                method, "test", Confidence.VERIFIED,
                 Collections.emptyList());
         return new Recommendation(
                 id, "Test", "Test", 40.0, plan,
-                RecommendationConfidence.VERIFIED, 70, 80,
-                new RecommendationGuidance(
+                Confidence.VERIFIED, 70, 80,
+                new Guidance(
                         "Do the route.", supplies, "Safe location.", "Safe."));
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -106,29 +106,29 @@ public class UimSetupCostServiceTest
                 true, false, false, new PreferenceProfile());
     }
 
-    private static StrategyDataBundle fullInventoryData(boolean deathStorage)
+    private static GameData fullInventoryData(boolean deathStorage)
     {
-        List<ItemStackSnapshot> inventory = new ArrayList<>();
+        List<ItemState> inventory = new ArrayList<>();
         for (int i = 0; i < 26; i++)
         {
-            inventory.add(new ItemStackSnapshot(1000 + i, "Item " + i, 1));
+            inventory.add(new ItemState(1000 + i, "Item " + i, 1));
         }
 
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         if (deathStorage)
         {
             states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
             contents.put(StorageCapability.DEATH_STORAGE,
                     Collections.singletonList(
-                            new ItemStackSnapshot(2000, "Stored valuable", 1)));
+                            new ItemState(2000, "Stored valuable", 1)));
         }
 
-        return StrategyDataBundle.builder(account())
-                .inventory(new InventorySnapshot(inventory))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        return GameData.builder(account())
+                .inventory(new ItemsState(inventory))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .storage(new StorageSnapshot(states, contents))
                 .build();
     }

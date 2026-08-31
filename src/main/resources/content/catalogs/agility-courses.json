@@ -1,0 +1,14 @@
+[
+  {"id":"gnome","displayName":"Gnome Stronghold course","requiredLevel":1,"regionId":9781},
+  {"id":"draynor","displayName":"Draynor Village rooftop","requiredLevel":10,"regionId":12338},
+  {"id":"al_kharid","displayName":"Al Kharid rooftop","requiredLevel":20,"regionId":13105},
+  {"id":"varrock","displayName":"Varrock rooftop","requiredLevel":30,"regionId":12853},
+  {"id":"canifis","displayName":"Canifis rooftop","requiredLevel":40,"regionId":13878,"requiredQuest":"Priest in Peril"},
+  {"id":"falador","displayName":"Falador rooftop","requiredLevel":50,"regionId":12084},
+  {"id":"wilderness","displayName":"Wilderness Agility Course","requiredLevel":52,"regionId":11837,"wilderness":true},
+  {"id":"seers","displayName":"Seers' Village rooftop","requiredLevel":60,"regionId":10806},
+  {"id":"pollnivneach","displayName":"Pollnivneach rooftop","requiredLevel":70,"regionId":13358},
+  {"id":"prifddinas","displayName":"Prifddinas Agility Course","requiredLevel":75,"regionId":12895,"requiredQuest":"Song of the Elves"},
+  {"id":"rellekka","displayName":"Rellekka rooftop","requiredLevel":80,"regionId":10553},
+  {"id":"ardougne","displayName":"Ardougne rooftop","requiredLevel":90,"regionId":10547}
+]

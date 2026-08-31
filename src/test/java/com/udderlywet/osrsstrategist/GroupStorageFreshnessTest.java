@@ -12,25 +12,25 @@ public class GroupStorageFreshnessTest
     public void recentObservationCountsAndStaleObservationFailsClosed()
     {
         long now = System.currentTimeMillis();
-        GroupStorageSnapshot recent = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState recent = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         1, "Shared item", 1)), now);
-        GroupStorageSnapshot stale = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState stale = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         1, "Shared item", 1)),
-                now - GroupStorageSnapshot.FRESH_FOR_MILLIS - 1L);
+                now - ItemsState.FRESH_FOR_MILLIS - 1L);
 
         assertTrue(recent.isObserved());
         assertTrue(recent.containsItem(1));
         assertFalse(stale.isObserved());
         assertFalse(stale.containsItem(1));
-        assertFalse(GroupStorageSnapshot.unknown().isObserved());
+        assertFalse(ItemsState.unknown().isObserved());
     }
 
     @Test
     public void futureDatedObservationFailsClosed()
     {
-        GroupStorageSnapshot future = new GroupStorageSnapshot(true,
+        ItemsState future = new ItemsState(true,
                 Collections.emptyList(),
                 System.currentTimeMillis() + 60_000L);
         assertFalse(future.isObserved());

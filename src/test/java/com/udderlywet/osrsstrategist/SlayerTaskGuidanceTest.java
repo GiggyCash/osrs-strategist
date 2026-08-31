@@ -92,13 +92,13 @@ public class SlayerTaskGuidanceTest
     @Test
     public void dustDevilsUseVerifiedProtectionAndSafeDefaultLocation()
     {
-        StrategyDataBundle data = data(
+        GameData data = data(
                 account(0),
                 new SlayerSnapshot("Dust devils", 143, "Duradel", 500,
-                        RecommendationConfidence.VERIFIED),
-                Arrays.asList(new ItemStackSnapshot(4164, "Facemask", 1)));
+                        Confidence.VERIFIED),
+                Arrays.asList(new ItemState(4164, "Facemask", 1)));
 
-        RecommendationGuidance guidance = service.build(data, 80, 90, true);
+        Guidance guidance = service.build(data, 80, 90, true);
 
         assertNotNull(guidance);
         assertTrue(guidance.getSupplies().contains("Verified"));
@@ -114,14 +114,14 @@ public class SlayerTaskGuidanceTest
     @Test
     public void liveKonarLocationOverridesCatalogDefault()
     {
-        StrategyDataBundle data = data(
+        GameData data = data(
                 account(0),
                 new SlayerSnapshot("Dust devils", 90, "Konar quo Maten",
                         "Smoke Dungeon", 200,
-                        RecommendationConfidence.VERIFIED),
-                Arrays.asList(new ItemStackSnapshot(4164, "Facemask", 1)));
+                        Confidence.VERIFIED),
+                Arrays.asList(new ItemState(4164, "Facemask", 1)));
 
-        RecommendationGuidance guidance = service.build(data, 75, 80, true);
+        Guidance guidance = service.build(data, 75, 80, true);
         assertTrue(guidance.getLocation().contains("Smoke Dungeon"));
         assertFalse(guidance.getLocation().contains("Catacombs of Kourend"));
     }
@@ -129,13 +129,13 @@ public class SlayerTaskGuidanceTest
     @Test
     public void ironKuraskWithoutLegalWeaponGetsSelfSourceInstruction()
     {
-        StrategyDataBundle data = data(
+        GameData data = data(
                 account(1),
                 new SlayerSnapshot("Kurasks", 120, "Nieve", 200,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Collections.emptyList());
 
-        RecommendationGuidance guidance = service.build(data, 75, 80, true);
+        Guidance guidance = service.build(data, 75, 80, true);
         assertTrue(guidance.getSupplies().contains("Self-source"));
         assertTrue(guidance.getSupplies().contains("Leaf-bladed"));
         assertTrue(guidance.getAction().contains("Ordinary weapons cannot damage"));
@@ -144,13 +144,13 @@ public class SlayerTaskGuidanceTest
     @Test
     public void uimDoesNotCountNormalBankedTaskProtection()
     {
-        StrategyDataBundle data = data(
+        GameData data = data(
                 account(2),
                 new SlayerSnapshot("Aberrant spectres", 80, "Nieve", 200,
-                        RecommendationConfidence.VERIFIED),
-                Arrays.asList(new ItemStackSnapshot(4168, "Nose peg", 1)));
+                        Confidence.VERIFIED),
+                Arrays.asList(new ItemState(4168, "Nose peg", 1)));
 
-        RecommendationGuidance guidance = service.build(data, 70, 80, true);
+        Guidance guidance = service.build(data, 70, 80, true);
         assertTrue(guidance.getSupplies().contains("Normal bank state is ignored for UIM"));
         assertFalse(guidance.getSupplies().startsWith("Verified:"));
     }
@@ -158,13 +158,13 @@ public class SlayerTaskGuidanceTest
     @Test
     public void unknownTaskKeepsConservativeFallback()
     {
-        StrategyDataBundle data = data(
+        GameData data = data(
                 account(0),
                 new SlayerSnapshot("Future monster", 50, "Nieve", 0,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Collections.emptyList());
 
-        RecommendationGuidance guidance = service.build(data, 75, 80, true);
+        Guidance guidance = service.build(data, 75, 80, true);
         assertTrue(guidance.getSupplies().contains("No catalogued mandatory Slayer item"));
         assertTrue(guidance.getNote().contains("no fixed kills-to-level"));
     }
@@ -180,30 +180,30 @@ public class SlayerTaskGuidanceTest
                 p2p.getSkillExperience());
         assertTrue(service.build(data(unknown,
                 new SlayerSnapshot("Future monster", 10, "Unknown", 0,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Collections.emptyList()), 80, 81, true) == null);
     }
 
     @Test
     public void currentTaskCannotLeadUntilItsLoadoutIsConcrete()
     {
-        StrategyDataBundle assigned = data(
+        GameData assigned = data(
                 account(0),
                 new SlayerSnapshot("Dust devils", 143, "Duradel", 500,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Collections.singletonList(
-                        new ItemStackSnapshot(4164, "Facemask", 1)));
+                        new ItemState(4164, "Facemask", 1)));
         Recommendation assignedRecommendation = recommendation(
                 service.build(assigned, 80, 81, true));
 
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(assignedRecommendation));
 
-        StrategyDataBundle unassigned = data(account(0), null,
+        GameData unassigned = data(account(0), null,
                 Collections.emptyList());
         Recommendation getTask = recommendation(
                 service.build(unassigned, 80, 81, true));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(getTask));
     }
 
@@ -272,33 +272,33 @@ public class SlayerTaskGuidanceTest
         }
     }
 
-    private static StrategyDataBundle data(
+    private static GameData data(
             AccountSnapshot account,
             SlayerSnapshot slayer,
-            java.util.List<ItemStackSnapshot> bankItems)
+            java.util.List<ItemState> bankItems)
     {
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .slayer(slayer)
-                .bank(new BankSnapshot(bankItems, 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .bank(new ItemsState(bankItems, 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 
     private static Recommendation recommendation(
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         TrainingMethod method = new TrainingMethod(
                 "slayer_task", Skill.SLAYER, 1, 99,
                 "Complete a Slayer assignment", "Use live task state.",
                 10, 10, 10, AttentionLevel.MODERATE, 20, 2,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED);
+                Collections.emptyList(), Confidence.VERIFIED);
         return new Recommendation("skill:slayer", "Train Slayer to 81",
                 "Advance Slayer.", 10,
                 new TrainingPlan(method, "Live task",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 80, 81, guidance,
-                CandidateSafetyEvidence.skill(false, Skill.SLAYER));
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 80, 81, guidance,
+                SafetyEvidence.skill(false, Skill.SLAYER));
     }
 
     private static AccountSnapshot account(int typeCode)

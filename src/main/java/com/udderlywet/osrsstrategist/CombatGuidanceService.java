@@ -16,8 +16,10 @@ import net.runelite.api.Skill;
 @Singleton
 public class CombatGuidanceService
 {
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    private static final Loadouts LOADOUTS = BundledCatalogLoader.array(
+            "/content/catalogs/combat-loadouts.json", Loadouts[].class)[0];
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
@@ -25,14 +27,14 @@ public class CombatGuidanceService
             SessionIntent sessionIntent,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null || skill == null
+        if (data == null || data.account() == null || skill == null
                 || plan == null || plan.getMethod() == null
                 || !isDirectCombatSkill(skill))
         {
             return null;
         }
 
-        AccountSnapshot account = data.getAccount();
+        AccountSnapshot account = data.account();
         if (account.getMembershipStatus() == MembershipStatus.UNKNOWN) return null;
         RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
         if (!AccountBuildPolicy.allowsSkill(account, skill)) return null;
@@ -44,15 +46,15 @@ public class CombatGuidanceService
                 methodId, sessionIntent);
         if (route == null) return null;
 
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
         String weapon = chooseWeapon(account, skill, build, items);
         if (weapon == null && skill != Skill.RANGED
                 && build == RestrictedBuildType.STANDARD
                 && currentLevel < 20)
         {
-            return new RecommendationGuidance(
+            return new Guidance(
                     Text.get(151),
-                    "No coins or other supplies required.",
+                    Text.get(1333),
                     Text.get(162),
                     Text.get(173));
         }
@@ -72,7 +74,7 @@ public class CombatGuidanceService
         else if (unarmed) action.append(" while unarmed");
         action.append(" on ").append(style).append(". ");
         action.append(format(xpNeeded)).append(" ")
-                .append(skill.getName()).append(" XP remains to level ")
+                .append(skill.getName()).append(Text.get(1334))
                 .append(targetLevel).append(".");
 
         if (route.xpPerDamage > 0)
@@ -93,11 +95,11 @@ public class CombatGuidanceService
         String note = route.note;
         if (build != RestrictedBuildType.STANDARD)
         {
-            note += " Protected build: " + AccountBuildPolicy.label(account)
+            note += Text.get(1335) + AccountBuildPolicy.label(account)
                     + Text.get(185);
         }
 
-        return new RecommendationGuidance(
+        return new Guidance(
                 action.toString(),
                 supplies,
                 location,
@@ -105,7 +107,7 @@ public class CombatGuidanceService
     }
 
     private static CombatRoute chooseRoute(
-            StrategyDataBundle data,
+            GameData data,
             AccountSnapshot account,
             Skill skill,
             int level,
@@ -128,7 +130,7 @@ public class CombatGuidanceService
                             Text.get(188));
                 }
                 return new CombatRoute(
-                        "Port Sarim docks and shoreline.",
+                        Text.get(1336),
                         Text.get(152),
                         4.0,
                         Text.get(153));
@@ -137,7 +139,7 @@ public class CombatGuidanceService
             CombatRoute crab = bestCrab(data, intent);
             if (crab != null)
             {
-                crab.note = "Defence-pure route. " + crab.note;
+                crab.note = Text.get(1337) + crab.note;
                 return crab;
             }
         }
@@ -145,7 +147,7 @@ public class CombatGuidanceService
         if (methodId.contains("scurrius"))
         {
             return new CombatRoute(
-                    "Scurrius arena in Varrock Sewers.",
+                    Text.get(1338),
                     Text.get(154),
                     0.0,
                     Text.get(155));
@@ -161,7 +163,7 @@ public class CombatGuidanceService
         if (methodId.contains("nmz"))
         {
             return new CombatRoute(
-                    "Nightmare Zone in Yanille.",
+                    Text.get(1339),
                     Text.get(156),
                     0.0,
                     Text.get(157));
@@ -175,7 +177,7 @@ public class CombatGuidanceService
         if (methodId.contains("f2p_giants"))
         {
             return new CombatRoute(
-                    "Hill giants in Edgeville Dungeon.",
+                    Text.get(1340),
                     Text.get(158),
                     4.0,
                     Text.get(159));
@@ -210,18 +212,18 @@ public class CombatGuidanceService
         if (crab != null) return crab;
 
         return new CombatRoute(
-                "Sand crab beach south of Hosidius.",
+                Text.get(1341),
                 Text.get(170),
                 4.0,
                 Text.get(171));
     }
 
     private static CombatRoute bestCrab(
-            StrategyDataBundle data,
+            GameData data,
             SessionIntent intent)
     {
-        QuestSnapshot quests = data == null ? null : data.getQuests();
-        boolean childrenOfSun = completed(quests, "Children of the Sun");
+        QuestSnapshot quests = data == null ? null : data.quests();
+        boolean childrenOfSun = completed(quests, Text.get(1342));
         boolean boneVoyage = completed(quests, "Bone Voyage");
 
         if (childrenOfSun && intent == SessionIntent.AFK)
@@ -235,13 +237,13 @@ public class CombatGuidanceService
         if (boneVoyage)
         {
             return new CombatRoute(
-                    "Ammonite Crab coast on Fossil Island.",
+                    Text.get(1343),
                     Text.get(176),
                     4.0,
                     Text.get(177));
         }
         return new CombatRoute(
-                "Sand crab beach south of Hosidius.",
+                Text.get(1341),
                 Text.get(178),
                 4.0,
                 Text.get(179));
@@ -251,52 +253,31 @@ public class CombatGuidanceService
             AccountSnapshot account,
             Skill skill,
             RestrictedBuildType build,
-            ObservedItemIndex items)
+            ItemIndex items)
     {
         if (skill == Skill.RANGED)
         {
-            return firstObserved(items,
-                    "Twisted bow", "Bow of faerdhinen (c)", "Bow of faerdhinen",
-                    "Toxic blowpipe", "Venator bow", "Dragon hunter crossbow",
-                    "Dragon crossbow", "Rune crossbow", "Magic shortbow (i)",
-                    "Magic shortbow", "Bone shortbow", "Dorgeshuun crossbow",
-                    "Willow shortbow", "Oak shortbow", "Shortbow");
+            return firstObserved(items, LOADOUTS.rangedWeapons);
         }
 
         if (build == RestrictedBuildType.DEFENCE_PURE)
         {
-            return firstObserved(items,
-                    "Swift blade", "Ham joint", "Goblin paint cannon",
-                    "Maple blackjack", "Silverlight", "Event rpg");
+            return firstObserved(items, LOADOUTS.defenceWeapons);
         }
 
         if (build == RestrictedBuildType.OBSIDIAN_MAULER)
         {
-            return firstObserved(items,
-                    "Slayer's staff", "Swift blade", "Ham joint",
-                    "Goblin paint cannon", "Tzhaar-ket-om");
+            return firstObserved(items, LOADOUTS.obsidianWeapons);
         }
 
         if (skill == Skill.STRENGTH)
         {
             // Whips do not offer a dedicated Strength style, so they are not
             // placed in the Strength list even when one is owned.
-            return firstObserved(items,
-                    "Soulreaper axe", "Dual macuahuitl", "Ghrazi rapier",
-                    "Blade of saeldor (c)", "Blade of saeldor",
-                    "Abyssal dagger", "Zombie axe", "Saradomin sword",
-                    "Dragon scimitar", "Dragon longsword", "Rune scimitar",
-                    "Adamant scimitar", "Mithril scimitar", "Steel scimitar",
-                    "Iron scimitar", "Bronze scimitar");
+            return firstObserved(items, LOADOUTS.strengthWeapons);
         }
 
-        return firstObserved(items,
-                "Scythe of vitur", "Soulreaper axe", "Osmumten's fang",
-                "Ghrazi rapier", "Blade of saeldor (c)", "Blade of saeldor",
-                "Abyssal whip", "Abyssal whip (or)", "Zombie axe",
-                "Dragon scimitar", "Dragon longsword", "Rune scimitar",
-                "Adamant scimitar", "Mithril scimitar", "Steel scimitar",
-                "Iron scimitar", "Bronze scimitar");
+        return firstObserved(items, LOADOUTS.meleeWeapons);
     }
 
     private static String supplyGuidance(
@@ -305,7 +286,7 @@ public class CombatGuidanceService
             RestrictedBuildType build,
             CombatRoute route,
             String weapon,
-            ObservedItemIndex items)
+            ItemIndex items)
     {
         if (skill == Skill.RANGED)
         {
@@ -313,21 +294,12 @@ public class CombatGuidanceService
         }
         if (route.location.contains("Scurrius"))
         {
-            String food = firstObserved(items, "Manta ray", "Shark",
-                    "Sea turtle", "Monkfish", "Swordfish", "Lobster",
-                    "Tuna", "Cake", "Jug of wine");
+            String food = firstObserved(items, LOADOUTS.food);
             if (food == null) return null;
-            String prayer = firstObserved(items, "Prayer potion(4)",
-                    "Prayer potion(3)", "Prayer potion(2)",
-                    "Prayer potion(1)", "Super restore(4)",
-                    "Super restore(3)", "Super restore(2)",
-                    "Super restore(1)");
-            String boost = firstObserved(items, "Super combat potion(4)",
-                    "Super combat potion(3)", "Super combat potion(2)",
-                    "Super combat potion(1)", "Super attack(4)",
-                    "Super strength(4)", "Ranging potion(4)");
+            String prayer = firstObserved(items, LOADOUTS.prayer);
+            String boost = firstObserved(items, LOADOUTS.boost);
             StringBuilder result = new StringBuilder("Bring ")
-                    .append(weapon).append(" and the observed ")
+                    .append(weapon).append(Text.get(1344))
                     .append(food).append(" food stack");
             if (prayer != null) result.append(", plus ").append(prayer);
             if (boost != null) result.append(" and ").append(boost);
@@ -338,14 +310,14 @@ public class CombatGuidanceService
                 + Text.get(181);
     }
 
-    private static String rangedSupplies(String weapon, ObservedItemIndex items)
+    private static String rangedSupplies(String weapon, ItemIndex items)
     {
         if (weapon == null) return null;
-        if ("Bow of faerdhinen (c)".equals(weapon))
+        if (Text.get(1345).equals(weapon))
             return Text.get(182);
         if ("Bow of faerdhinen".equals(weapon)
                 || "Venator bow".equals(weapon)) return null;
-        if (weapon.contains("Dorgeshuun crossbow")
+        if (weapon.contains(Text.get(1346))
                 || weapon.contains("Bone crossbow"))
         {
             String bolts = firstObserved(items, "Bone bolts");
@@ -353,19 +325,13 @@ public class CombatGuidanceService
         }
         if (weapon.toLowerCase().contains("crossbow"))
         {
-            String bolts = firstObserved(items,
-                    "Dragon bolts", "Runite bolts", "Adamant bolts",
-                    "Mithril bolts", "Steel bolts", "Iron bolts",
-                    "Bronze bolts");
+            String bolts = firstObserved(items, LOADOUTS.bolts);
             return bolts == null ? null : "Bring " + weapon + " and " + bolts + ".";
         }
         if (weapon.toLowerCase().contains("bow")
                 && !weapon.toLowerCase().contains("blowpipe"))
         {
-            String arrows = firstObserved(items,
-                    "Dragon arrow", "Amethyst arrow", "Rune arrow",
-                    "Adamant arrow", "Mithril arrow", "Steel arrow",
-                    "Iron arrow", "Bronze arrow", "Training arrows");
+            String arrows = firstObserved(items, LOADOUTS.arrows);
             return arrows == null ? null : "Bring " + weapon + " and " + arrows + ".";
         }
         // Blowpipe, Venator, and other charged/ammo-bearing weapons need live
@@ -377,15 +343,15 @@ public class CombatGuidanceService
     {
         switch (skill)
         {
-            case ATTACK: return "Accurate / Attack XP";
-            case STRENGTH: return "Aggressive / Strength XP";
-            case DEFENCE: return "Defensive / Defence XP";
+            case ATTACK: return Text.get(1317);
+            case STRENGTH: return Text.get(1318);
+            case DEFENCE: return Text.get(1319);
             case RANGED: return "Rapid / Ranged XP";
-            default: return "the style that awards " + skill.getName() + " XP";
+            default: return Text.get(1347) + skill.getName() + " XP";
         }
     }
 
-    private static String firstObserved(ObservedItemIndex items, String... names)
+    private static String firstObserved(ItemIndex items, String... names)
     {
         for (String name : names)
         {
@@ -421,7 +387,7 @@ public class CombatGuidanceService
 
     private static String withoutPeriod(String value)
     {
-        if (value == null) return "Fight the selected target";
+        if (value == null) return Text.get(1348);
         String trimmed = value.trim();
         return trimmed.endsWith(".")
                 ? trimmed.substring(0, trimmed.length() - 1) : trimmed;
@@ -442,5 +408,12 @@ public class CombatGuidanceService
             this.xpPerDamage = xpPerDamage;
             this.note = note;
         }
+    }
+
+    private static final class Loadouts
+    {
+        private String[] rangedWeapons, defenceWeapons, obsidianWeapons,
+                strengthWeapons, meleeWeapons, food, prayer, boost, bolts,
+                arrows;
     }
 }

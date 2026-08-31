@@ -43,11 +43,11 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:fighter-torso");
 
         assertNotNull(torso);
-        assertEquals(RecommendationConfidence.VERIFIED, torso.getConfidence());
+        assertEquals(Confidence.VERIFIED, torso.getConfidence());
         assertNotNull(torso.getGuidance());
         assertTrue(torso.getGuidance().getAction().contains("375 honour points"));
         assertTrue(torso.getGuidance().getAction().contains("Penance Queen"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(torso));
     }
 
@@ -60,12 +60,12 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:abyssal-whip");
 
         assertNotNull(whip);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 whip.getConfidence());
         assertNotNull(whip.getGuidance());
         assertTrue(whip.getGuidance().getAction().contains("Slayer Tower"));
         assertFalse(whip.getGuidance().getAction().contains("Grand Exchange"));
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(whip));
     }
 
@@ -78,9 +78,9 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:abyssal-whip");
 
         assertNotNull(whip);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, whip.getConfidence());
+        assertEquals(Confidence.CHECK_NEEDED, whip.getConfidence());
         assertTrue(whip.getGuidance().getSupplies().contains("Live price"));
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(whip));
     }
 
@@ -95,7 +95,7 @@ public class ProgressionUpgradeCandidateProviderTest
         assertNotNull(angler);
         assertTrue(angler.getTitle().contains("0/4"));
         assertTrue(angler.getGuidance().getNote().contains("minnow access"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(angler));
     }
 
@@ -103,11 +103,11 @@ public class ProgressionUpgradeCandidateProviderTest
     public void completedRfdAndVerifiedCashMakesBarrowsGlovesReady()
     {
         AccountSnapshot account = account(0, 75, 75, 70, 75, 70, 75, 80, 70, 70);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("Recipe for Disaster"))
                 .economy(new AccountEconomySnapshot(
                         200_000L, 10_000_000L,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
         Recommendation gloves = find(provider.candidates(
@@ -115,9 +115,9 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:barrows-gloves");
 
         assertNotNull(gloves);
-        assertEquals(RecommendationConfidence.VERIFIED, gloves.getConfidence());
+        assertEquals(Confidence.VERIFIED, gloves.getConfidence());
         assertTrue(gloves.getGuidance().getSupplies().contains("130,000"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(gloves));
     }
 
@@ -125,15 +125,15 @@ public class ProgressionUpgradeCandidateProviderTest
     public void completedMonkeyMadnessCreatesExactDragonScimitarShopRoute()
     {
         AccountSnapshot account = account(1, 60, 70, 45, 60, 43, 60, 70, 50, 60);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("Monkey Madness I"))
                 .economy(new AccountEconomySnapshot(100_000L, 100_000L,
-                        RecommendationConfidence.VERIFIED)).build();
+                        Confidence.VERIFIED)).build();
         Recommendation candidate = find(provider.candidates(
                 context(data, GoalType.GEAR_TARGET, false)),
                 "upgrade:dragon-scimitar");
         assertNotNull(candidate);
-        assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
+        assertEquals(Confidence.VERIFIED, candidate.getConfidence());
         assertTrue(candidate.getGuidance().getAction().contains("100,000 coins"));
         assertFalse(candidate.getGuidance().getAction().contains("Grand Exchange"));
     }
@@ -142,15 +142,15 @@ public class ProgressionUpgradeCandidateProviderTest
     public void ownedAvaDeviceSuppressesDuplicateAcquisition()
     {
         AccountSnapshot account = account(0, 60, 70, 45, 60, 43, 60, 70, 50, 60);
-        StrategyDataBundle missing = builder(account)
+        GameData missing = builder(account)
                 .quests(questsComplete("Animal Magnetism")).build();
         assertNotNull(find(provider.candidates(
                 context(missing, GoalType.GEAR_TARGET, false)), "upgrade:ava-device"));
 
-        StrategyDataBundle owned = builder(account)
+        GameData owned = builder(account)
                 .quests(questsComplete("Animal Magnetism"))
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(1, "Ava's accumulator", 1)), 1L)).build();
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(1, "Ava's accumulator", 1)), 1L)).build();
         assertNull(find(provider.candidates(
                 context(owned, GoalType.GEAR_TARGET, false)), "upgrade:ava-device"));
     }
@@ -163,20 +163,20 @@ public class ProgressionUpgradeCandidateProviderTest
         tiers.put(DiaryTier.ELITE, true);
         Map<String, Map<DiaryTier, Boolean>> completed = new HashMap<>();
         completed.put("Lumbridge & Draynor", tiers);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("Recipe for Disaster"))
                 .diaries(new DiarySnapshot(
                         Collections.emptyMap(), Collections.emptyMap(), completed))
                 .economy(new AccountEconomySnapshot(
                         110_000L, 10_000_000L,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
         Recommendation gloves = find(provider.candidates(
                 context(data, GoalType.BARROWS_GLOVES, false)),
                 "upgrade:barrows-gloves");
         assertNotNull(gloves);
-        assertEquals(RecommendationConfidence.VERIFIED, gloves.getConfidence());
+        assertEquals(Confidence.VERIFIED, gloves.getConfidence());
         assertTrue(gloves.getGuidance().getSupplies().contains("104,000"));
     }
 
@@ -186,11 +186,11 @@ public class ProgressionUpgradeCandidateProviderTest
         AccountSnapshot account = accountWithSkillOverrides(
                 1, 80, 85, 80, 85, 70, 85, 90, 85, 80,
                 Skill.SMITHING, 82, Skill.CRAFTING, 82);
-        List<ItemStackSnapshot> bank = new ArrayList<>();
-        bank.add(new ItemStackSnapshot(1, "Enhanced crystal weapon seed", 1));
-        bank.add(new ItemStackSnapshot(2, "Crystal shard", 100));
-        StrategyDataBundle data = builder(account)
-                .bank(new BankSnapshot(bank, 1L))
+        List<ItemState> bank = new ArrayList<>();
+        bank.add(new ItemState(1, "Enhanced crystal weapon seed", 1));
+        bank.add(new ItemState(2, "Crystal shard", 100));
+        GameData data = builder(account)
+                .bank(new ItemsState(bank, 1L))
                 .quests(questsComplete("Song of the Elves"))
                 .build();
 
@@ -199,9 +199,9 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:bowfa");
 
         assertNotNull(bowfa);
-        assertEquals(RecommendationConfidence.VERIFIED, bowfa.getConfidence());
+        assertEquals(Confidence.VERIFIED, bowfa.getConfidence());
         assertTrue(bowfa.getGuidance().getAction().contains("100 Crystal shards"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(bowfa));
     }
 
@@ -209,7 +209,7 @@ public class ProgressionUpgradeCandidateProviderTest
     public void hardcoreIronBowfaSeedHuntIsDeliberateRiskOnly()
     {
         AccountSnapshot account = account(3, 80, 85, 80, 85, 70, 85, 90, 85, 80);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("Song of the Elves"))
                 .build();
 
@@ -218,7 +218,7 @@ public class ProgressionUpgradeCandidateProviderTest
                 "upgrade:bowfa");
 
         assertNotNull(bowfa);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, bowfa.getConfidence());
+        assertEquals(Confidence.CHECK_NEEDED, bowfa.getConfidence());
         assertTrue(bowfa.getGuidance().getNote().contains("Hardcore"));
     }
 
@@ -229,13 +229,13 @@ public class ProgressionUpgradeCandidateProviderTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.DEATH_STORAGE,
                 Collections.singletonList(
-                        new ItemStackSnapshot(10551, "Fighter torso", 1)));
+                        new ItemState(10551, "Fighter torso", 1)));
         StorageSnapshot storage = new StorageSnapshot(states, contents);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .storage(storage)
                 .build();
 
@@ -248,22 +248,22 @@ public class ProgressionUpgradeCandidateProviderTest
     public void hauntedMineCreatesExactSalveReacquisitionAndOwnershipSuppressesIt()
     {
         AccountSnapshot account = account(1, 70, 70, 70, 70, 60, 70, 80, 70, 70);
-        StrategyDataBundle missing = builder(account)
+        GameData missing = builder(account)
                 .quests(questsComplete("Haunted Mine"))
-                .inventory(new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(1, "Chisel", 1))))
+                .inventory(new ItemsState(Collections.singletonList(
+                        new ItemState(1, "Chisel", 1))))
                 .build();
         Recommendation salve = find(provider.candidates(
                 context(missing, GoalType.GEAR_TARGET, false)),
                 "upgrade:salve-amulet");
         assertNotNull(salve);
-        assertEquals(RecommendationConfidence.VERIFIED, salve.getConfidence());
+        assertEquals(Confidence.VERIFIED, salve.getConfidence());
         assertTrue(salve.getGuidance().getAction().contains("crystal outcrop"));
 
-        StrategyDataBundle owned = builder(account)
+        GameData owned = builder(account)
                 .quests(questsComplete("Haunted Mine"))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(2, "Salve amulet", 1))))
+                .equipment(new ItemsState(Collections.singletonList(
+                        new ItemState(2, "Salve amulet", 1))))
                 .build();
         assertNull(find(provider.candidates(
                 context(owned, GoalType.GEAR_TARGET, false)),
@@ -274,7 +274,7 @@ public class ProgressionUpgradeCandidateProviderTest
     public void questRewardReplacementRoutesRemainPreparationUntilCostObserved()
     {
         AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("The Fremennik Isles", "Underground Pass"))
                 .build();
         List<Recommendation> candidates = provider.candidates(
@@ -283,8 +283,8 @@ public class ProgressionUpgradeCandidateProviderTest
         Recommendation staff = find(candidates, "upgrade:ibans-staff");
         assertNotNull(helm);
         assertNotNull(staff);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, helm.getConfidence());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED, staff.getConfidence());
+        assertEquals(Confidence.CHECK_NEEDED, helm.getConfidence());
+        assertEquals(Confidence.CHECK_NEEDED, staff.getConfidence());
         assertTrue(helm.getGuidance().getSupplies().contains("inventory space"));
         assertFalse(helm.getGuidance().getAction().contains("Grand Exchange"));
     }
@@ -296,12 +296,12 @@ public class ProgressionUpgradeCandidateProviderTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.DEATH_STORAGE,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         1, "Salve amulet", 1)));
-        StrategyDataBundle data = builder(account)
+        GameData data = builder(account)
                 .quests(questsComplete("Haunted Mine"))
                 .storage(new StorageSnapshot(states, contents)).build();
 
@@ -309,23 +309,23 @@ public class ProgressionUpgradeCandidateProviderTest
                 context(data, GoalType.GEAR_TARGET, false)),
                 "upgrade:salve-amulet");
         assertNotNull(salve);
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 salve.getConfidence());
         assertTrue(salve.getTitle().startsWith("Retrieve"));
         assertTrue(salve.getGuidance().getAction().contains("retrieve"));
     }
 
-    private static StrategyDataBundle data(AccountSnapshot account)
+    private static GameData data(AccountSnapshot account)
     {
         return builder(account).build();
     }
 
-    private static StrategyDataBundle.Builder builder(AccountSnapshot account)
+    private static GameData.Builder builder(AccountSnapshot account)
     {
-        return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()));
+        return GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()));
     }
 
     private static QuestSnapshot questsComplete(String... names)
@@ -336,7 +336,7 @@ public class ProgressionUpgradeCandidateProviderTest
     }
 
     private static StrategyContext context(
-            StrategyDataBundle data,
+            GameData data,
             GoalType goal,
             boolean collectionist)
     {

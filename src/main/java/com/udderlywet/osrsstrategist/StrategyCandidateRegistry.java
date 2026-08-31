@@ -12,7 +12,7 @@ import lombok.Getter;
 public class StrategyCandidateRegistry
 {
     @Getter
-    private final List<StrategyCandidateProvider> providers;
+    private final List<CandidateProvider> providers;
 
     @Inject
     public StrategyCandidateRegistry(
@@ -58,7 +58,7 @@ public class StrategyCandidateRegistry
         );
     }
 
-    StrategyCandidateRegistry(List<StrategyCandidateProvider> providers)
+    StrategyCandidateRegistry(List<CandidateProvider> providers)
     {
         this.providers = Collections.unmodifiableList(new ArrayList<>(
                 providers == null ? Collections.emptyList() : providers));

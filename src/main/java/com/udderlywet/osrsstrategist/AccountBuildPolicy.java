@@ -27,7 +27,7 @@ public final class AccountBuildPolicy
     public static RestrictedBuildType effectiveBuild(AccountSnapshot account)
     {
         RestrictedBuildSuggestion suggestion = detect(account);
-        if (suggestion.getConfidence() != RecommendationConfidence.VERIFIED)
+        if (suggestion.getConfidence() != Confidence.VERIFIED)
         {
             return RestrictedBuildType.STANDARD;
         }

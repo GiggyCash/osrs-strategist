@@ -53,8 +53,8 @@ public class PublicationUiStressTest
 
         for (Recommendation recommendation : cases)
         {
-            String compact = RecommendationPresentation.compactText(recommendation);
-            String details = RecommendationPresentation.detailedText(recommendation);
+            String compact = Presentation.compactText(recommendation);
+            String details = Presentation.detailedText(recommendation);
             assertFalse(recommendation.getId(), recommendation.getTitle().trim().isEmpty());
             assertFalse(recommendation.getId(), compact.trim().isEmpty());
             assertTrue(recommendation.getId() + " compact=" + compact.length(),
@@ -78,8 +78,8 @@ public class PublicationUiStressTest
         GoalRecommendationContext context = GoalRecommendationContext.assess(
                 GoalType.BOWFA, fallback, MembershipStatus.F2P);
 
-        String compact = RecommendationPresentation.compactText(fallback, context);
-        String details = RecommendationPresentation.detailedText(fallback, context);
+        String compact = Presentation.compactText(fallback, context);
+        String details = Presentation.detailedText(fallback, context);
         assertFalse(compact.contains("GOAL"));
         assertFalse(details.contains("GOAL"));
         assertTrue(details.contains("WHY\nUnlocks willow trees"));
@@ -90,8 +90,8 @@ public class PublicationUiStressTest
             String reason, String supplies, String action)
     {
         return new Recommendation(id, title, reason, 20.0, null,
-                RecommendationConfidence.CHECK_NEEDED, 0, 0,
-                new RecommendationGuidance(action, supplies,
+                Confidence.CHECK_NEEDED, 0, 0,
+                new Guidance(action, supplies,
                         "The nearest verified suitable location.", null));
     }
 }

@@ -15,8 +15,8 @@ public final class ContextualGearDecisionService
     {
         Map<GearDecisionKind, ContextualGearDecision> result =
                 new EnumMap<>(GearDecisionKind.class);
-        ObservedItemIndex items = new ObservedItemIndex(
-                context == null ? null : context.getData(),
+        ItemIndex items = new ItemIndex(
+                context == null ? null : context.data(),
                 context != null && context.isUseGroupStorage());
         boolean ownershipObserved = items.usableOwnershipObserved();
         List<String> owned = new ArrayList<>();
@@ -35,36 +35,36 @@ public final class ContextualGearDecisionService
                 : owned.get(0);
         put(result, GearDecisionKind.BEST_OWNED, ownedValue,
                 ownershipObserved && !owned.isEmpty()
-                        ? RecommendationConfidence.VERIFIED
-                        : RecommendationConfidence.CHECK_NEEDED);
+                        ? Confidence.VERIFIED
+                        : Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_USABLE,
                 owned.isEmpty()
                         ? Text.get(144)
                         : owned.get(0) + Text.get(145),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
 
         String routed = unresolvedRoutes.isEmpty() ? null
                 : unresolvedRoutes.get(0);
         AccountMode mode = context == null ? AccountMode.UNKNOWN
-                : context.getAccountMode();
+                : context.accountMode();
         String available = routed == null
                 ? Text.get(146)
                 : mode.usesGrandExchange()
                 ? Text.get(147) + routed
                 : Text.get(148) + routed;
         put(result, GearDecisionKind.BEST_AVAILABLE_NOW, available,
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_VALUE_UPGRADE,
                 Text.get(149),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_PRACTICAL_UPGRADE,
                 routed == null ? entry.getWeaponGuidance()
                         : routed + Text.get(150),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.LONG_TERM_TARGET,
-                entry.getWeaponGuidance(), RecommendationConfidence.CHECK_NEEDED);
+                entry.getWeaponGuidance(), Confidence.CHECK_NEEDED);
         put(result, GearDecisionKind.TARGET_SPECIFIC_BEST,
-                entry.getNote(), RecommendationConfidence.CHECK_NEEDED);
+                entry.getNote(), Confidence.CHECK_NEEDED);
         return new ContextualGearAssessment(result);
     }
 
@@ -83,7 +83,7 @@ public final class ContextualGearDecisionService
     private static void put(
             Map<GearDecisionKind, ContextualGearDecision> decisions,
             GearDecisionKind kind, String value,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         decisions.put(kind, new ContextualGearDecision(kind, value, confidence));
     }

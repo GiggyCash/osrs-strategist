@@ -25,8 +25,8 @@ public class GlobalDecisionSimulationTest
                 "Train Defence to 80", 40.0, 75, 80, 2);
         Recommendation unresolved = new Recommendation(
                 "upgrade:expensive-item", "Buy upgrade", "Needs live price.",
-                50_000.0, null, RecommendationConfidence.CHECK_NEEDED,
-                0, 0, new RecommendationGuidance(
+                50_000.0, null, Confidence.CHECK_NEEDED,
+                0, 0, new Guidance(
                         "Buy the item after verification.",
                         "Live price needs validation.",
                         "Grand Exchange.", "Not ready."));
@@ -46,7 +46,7 @@ public class GlobalDecisionSimulationTest
         Recommendation upgrade = readyUpgrade(
                 "upgrade:dragon-defender", "Get Dragon defender", 38.0,
                 "Permanent melee off-hand upgrade.")
-                .withGoalProvenance(GoalDependencyProvenance.direct(
+                .withGoalProvenance(GoalProvenance.direct(
                         GoalType.GEAR_TARGET, "upgrade:dragon-defender",
                         Arrays.asList("Gear target", "Dragon defender")));
 
@@ -85,10 +85,10 @@ public class GlobalDecisionSimulationTest
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemStackSnapshot>> contents =
+        Map<StorageCapability, List<ItemState>> contents =
                 new EnumMap<>(StorageCapability.class);
         contents.put(StorageCapability.DEATH_STORAGE,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         100, "Stored gear", 1)));
         StorageSnapshot storage = new StorageSnapshot(states, contents);
         StrategyContext context = context(account(2), GoalType.GEAR_TARGET,
@@ -99,7 +99,7 @@ public class GlobalDecisionSimulationTest
         Recommendation dangerous = readyUpgrade(
                 "upgrade:bowfa", "Hunt Bowfa seed", 48.0,
                 "Run the Corrupted Gauntlet; a dangerous death can threaten UIM death storage.")
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                .withStrategicValue(StrategicValue.builder()
                         .riskBurden(1.0)
                         .evidence("risk:uim-death-storage")
                         .build());
@@ -116,10 +116,10 @@ public class GlobalDecisionSimulationTest
                 new PreferenceProfile(), StorageSnapshot.unknown());
         Recommendation blocked = new Recommendation(
                 "quest:blocked", "Blocked quest", "Blocked.", 999.0,
-                null, RecommendationConfidence.BLOCKED, 0, 0, null);
+                null, Confidence.BLOCKED, 0, 0, null);
         Recommendation unknown = new Recommendation(
                 "quest:unknown", "Unknown quest", "Needs info.", 998.0,
-                null, RecommendationConfidence.CHECK_NEEDED, 0, 0, null);
+                null, Confidence.CHECK_NEEDED, 0, 0, null);
 
         assertTrue(engine().buildPlayerQueue(
                 Arrays.asList(blocked, unknown), context).isEmpty());
@@ -129,10 +129,10 @@ public class GlobalDecisionSimulationTest
     public void f2pSimulationContainsNoMembersUpgradeCandidate()
     {
         AccountSnapshot f2p = account(0, MembershipStatus.F2P);
-        StrategyDataBundle data = StrategyDataBundle.builder(f2p)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(f2p)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
         StrategyContext context = new StrategyContext(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -155,7 +155,7 @@ public class GlobalDecisionSimulationTest
     {
         return new StrategyEngine(
                 null, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
@@ -168,15 +168,15 @@ public class GlobalDecisionSimulationTest
                 title, "Train safely.",
                 10, 10, 10, AttentionLevel.LOW,
                 20, setup, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
-                method, "simulation", RecommendationConfidence.VERIFIED,
+                method, "simulation", Confidence.VERIFIED,
                 Collections.emptyList());
         return new Recommendation(
                 id, title, "Useful account progress.", score,
-                plan, RecommendationConfidence.VERIFIED,
+                plan, Confidence.VERIFIED,
                 current, target,
-                new RecommendationGuidance(
+                new Guidance(
                         "Do the verified training route.",
                         "Verified: setup is available.",
                         "Safe location.", "Safe route."));
@@ -187,8 +187,8 @@ public class GlobalDecisionSimulationTest
     {
         return new Recommendation(
                 id, title, note, score, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance(
+                Confidence.VERIFIED, 0, 0,
+                new Guidance(
                         "Complete the verified acquisition step.",
                         "Verified: required setup is available.",
                         "Safe verified location.", note));
@@ -200,9 +200,9 @@ public class GlobalDecisionSimulationTest
             PreferenceProfile preferences,
             StorageSnapshot storage)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .storage(storage)
                 .build();
         return new StrategyContext(

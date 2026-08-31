@@ -17,10 +17,10 @@ public class StrategyEngineActionabilityTest
                 "Protected build progression",
                 40.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 75,
                 80,
-                new RecommendationGuidance(
+                new Guidance(
                         "Train Defence using a legal defensive style.",
                         "Use your current best legal gear.",
                         "Safe combat target",
@@ -31,7 +31,7 @@ public class StrategyEngineActionabilityTest
                 "Unknown requirements",
                 500.0,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 0,
                 0,
                 null);
@@ -41,7 +41,7 @@ public class StrategyEngineActionabilityTest
                 null,
                 null,
                 null,
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
         List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(unresolved, ready));
 
@@ -54,13 +54,13 @@ public class StrategyEngineActionabilityTest
     {
         Recommendation ready = new Recommendation(
                 "skill:defence", "Train Defence to 80", "Ready", 40.0,
-                null, RecommendationConfidence.VERIFIED, 75, 80,
-                new RecommendationGuidance(
+                null, Confidence.VERIFIED, 75, 80,
+                new Guidance(
                         "Train Defence.", "Use legal gear.", "Safe target.", "Safe."));
         Recommendation unresolved = new Recommendation(
                 "upgrade:whip", "Get an Abyssal whip", "Needs live price", 500.0,
-                null, RecommendationConfidence.CHECK_NEEDED, 0, 0,
-                new RecommendationGuidance(
+                null, Confidence.CHECK_NEEDED, 0, 0,
+                new Guidance(
                         "Buy the whip after live price and affordability are verified.",
                         "Live price/cash check is still required.",
                         "Grand Exchange.",
@@ -68,7 +68,7 @@ public class StrategyEngineActionabilityTest
 
         StrategyEngine engine = new StrategyEngine(
                 null, null, null, null,
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
         List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(unresolved, ready));
 
@@ -85,7 +85,7 @@ public class StrategyEngineActionabilityTest
                 "Unknown requirements",
                 500.0,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 0,
                 0,
                 null);
@@ -94,7 +94,7 @@ public class StrategyEngineActionabilityTest
                 null,
                 null,
                 null,
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
 
         assertEquals(0, engine.buildPlayerQueue(
                 java.util.Collections.singletonList(unresolved)).size());

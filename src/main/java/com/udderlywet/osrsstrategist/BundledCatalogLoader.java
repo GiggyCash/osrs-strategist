@@ -19,12 +19,12 @@ final class BundledCatalogLoader
     {
         InputStream stream = BundledCatalogLoader.class.getResourceAsStream(resource);
         if (stream == null)
-            throw new IllegalStateException("Missing required bundled catalog: " + resource);
+            throw new IllegalStateException(Text.get(1125) + resource);
         try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8))
         {
             T[] values = GSON.fromJson(reader, type);
             if (values == null)
-                throw new IllegalStateException("Empty required bundled catalog: " + resource);
+                throw new IllegalStateException(Text.get(1126) + resource);
             for (int index = 0; index < values.length; index++)
                 if (values[index] == null)
                     throw new IllegalStateException("Null record " + index + " in " + resource);
@@ -32,7 +32,7 @@ final class BundledCatalogLoader
         }
         catch (IOException | JsonParseException ex)
         {
-            throw new IllegalStateException("Malformed required bundled catalog: " + resource, ex);
+            throw new IllegalStateException(Text.get(1127) + resource, ex);
         }
     }
 }

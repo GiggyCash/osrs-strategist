@@ -11,7 +11,7 @@ public class StrategyEngine
     private final RecommendationEngine recommendationEngine;
     private final OpportunityEngine opportunityEngine;
     private final StrategyCandidateRegistry candidateRegistry;
-    private final RecommendationActionabilityPolicy actionabilityPolicy;
+    private final ActionabilityPolicy actionabilityPolicy;
     private final RecommendationIntelligenceService intelligenceService;
     private final CandidateSafetyPolicy candidateSafetyPolicy;
     private final GoalDependencyProvenanceService goalProvenanceService;
@@ -35,7 +35,7 @@ public class StrategyEngine
             RecommendationEngine recommendationEngine,
             OpportunityEngine opportunityEngine,
             StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy,
+            ActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService,
@@ -46,7 +46,7 @@ public class StrategyEngine
         this.opportunityEngine = opportunityEngine;
         this.candidateRegistry = candidateRegistry;
         this.actionabilityPolicy = actionabilityPolicy == null
-                ? new RecommendationActionabilityPolicy()
+                ? new ActionabilityPolicy()
                 : actionabilityPolicy;
         this.intelligenceService = intelligenceService == null
                 ? new RecommendationIntelligenceService()
@@ -67,7 +67,7 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy,
+            ActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService)
@@ -85,7 +85,7 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy,
+            ActionabilityPolicy actionabilityPolicy,
             RecommendationIntelligenceService intelligenceService)
     {
         this(recommendationEngine, opportunityEngine,
@@ -101,7 +101,7 @@ public class StrategyEngine
             OpportunityEngine opportunityEngine,
             Object unusedModules,
             StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy)
+            ActionabilityPolicy actionabilityPolicy)
     {
         this(recommendationEngine, opportunityEngine,
                 candidateRegistry, actionabilityPolicy,
@@ -112,7 +112,7 @@ public class StrategyEngine
     }
 
     public StrategyResult evaluate(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
@@ -123,7 +123,7 @@ public class StrategyEngine
     }
 
     public StrategyResult evaluate(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             QuestTolerance questTolerance,
@@ -138,7 +138,7 @@ public class StrategyEngine
     }
 
     public StrategyResult evaluate(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             QuestTolerance questTolerance,
@@ -148,7 +148,7 @@ public class StrategyEngine
             boolean allowWildernessMethods,
             PreferenceProfile preferenceProfile)
     {
-        if (data == null || data.getAccount() == null)
+        if (data == null || data.account() == null)
         {
             return new StrategyResult(
                     Collections.singletonList(
@@ -167,8 +167,8 @@ public class StrategyEngine
         for (Opportunity opportunity : evaluatedOpportunities)
         {
             if (opportunity == null
-                    || opportunity.getConfidence() == RecommendationConfidence.BLOCKED
-                    || context.getPreferenceProfile().isOnCooldown(
+                    || opportunity.getConfidence() == Confidence.BLOCKED
+                    || context.preferenceProfile().isOnCooldown(
                     opportunity.getId())
                     || !candidateSafetyPolicy.isAllowed(
                     opportunitySafety(opportunity), context)) continue;
@@ -187,11 +187,11 @@ public class StrategyEngine
                         context.isUseGroupStorage(),
                         context.isAllowWildernessMethods(),
                         context.getActiveGoal(),
-                        context.getPreferenceProfile()));
+                        context.preferenceProfile()));
 
         if (candidateRegistry != null)
         {
-            for (StrategyCandidateProvider provider : candidateRegistry.getProviders())
+            for (CandidateProvider provider : candidateRegistry.getProviders())
             {
                 List<Recommendation> candidates = provider.candidates(context);
                 if (candidates == null || candidates.isEmpty()) continue;
@@ -202,7 +202,7 @@ public class StrategyEngine
                 for (Recommendation candidate : candidates)
                 {
                     if (candidate == null
-                            || candidate.getConfidence() == RecommendationConfidence.BLOCKED)
+                            || candidate.getConfidence() == Confidence.BLOCKED)
                     {
                         continue;
                     }
@@ -253,12 +253,12 @@ public class StrategyEngine
             StrategyContext context)
     {
         if (opportunity == null || !opportunity.isReady()
-                || opportunity.getConfidence() != RecommendationConfidence.VERIFIED)
+                || opportunity.getConfidence() != Confidence.VERIFIED)
         {
             return null;
         }
         String id = opportunity.getId();
-        PreferenceProfile preferences = context.getPreferenceProfile();
+        PreferenceProfile preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return null;
 
         boolean setupVerified = opportunity.isSetupVerified();
@@ -269,7 +269,7 @@ public class StrategyEngine
         if (location == null || action == null) return null;
         String supplies = setupVerified
                 ? Text.get(720)
-                : "Before leaving, verify: " + String.join(", ", opportunity.getPreparation()) + ".";
+                : Text.get(1490) + String.join(", ", opportunity.getPreparation()) + ".";
         double score = 46.0 + preferences.weightFor(id) * 10.0
                 + preferences.timedScoreAdjustmentFor(id);
         if (opportunity.getType() == OpportunityType.HERB_RUN
@@ -278,11 +278,11 @@ public class StrategyEngine
         {
             score += 8.0;
         }
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 setupVerified
                         ? action
                         : Text.get(722) + opportunity.getTitle()
-                                + " before starting it.",
+                                + Text.get(1491),
                 supplies,
                 location,
                 setupVerified
@@ -292,8 +292,8 @@ public class StrategyEngine
                 id, opportunity.getTitle(),
                 Text.get(725),
                 score, null, setupVerified
-                        ? RecommendationConfidence.VERIFIED
-                        : RecommendationConfidence.CHECK_NEEDED,
+                        ? Confidence.VERIFIED
+                        : Confidence.CHECK_NEEDED,
                 0, 0, guidance,
                 opportunitySafety(opportunity));
     }
@@ -334,8 +334,8 @@ public class StrategyEngine
 
     private static String verifiedHerbPatchRoute(StrategyContext context)
     {
-        FarmingSnapshot farming = context == null || context.getData() == null
-                ? null : context.getData().getFarming();
+        FarmingSnapshot farming = context == null || context.data() == null
+                ? null : context.data().farming();
         if (farming == null) return null;
         List<String> names = new ArrayList<>();
         for (FarmingAccessDefinition definition : FARMING_ACCESS_CATALOG.all())
@@ -350,28 +350,28 @@ public class StrategyEngine
         return String.join(" -> ", names) + ".";
     }
 
-    private static CandidateSafetyEvidence opportunitySafety(Opportunity opportunity)
+    private static SafetyEvidence opportunitySafety(Opportunity opportunity)
     {
         switch (opportunity.getType())
         {
             case BIRDHOUSE_RUN:
-                return CandidateSafetyEvidence.skill(false, net.runelite.api.Skill.HUNTER);
+                return SafetyEvidence.skill(false, net.runelite.api.Skill.HUNTER);
             case HERB_RUN:
             case TREE_RUN:
             case FARMING_CONTRACT:
-                return CandidateSafetyEvidence.skill(false, net.runelite.api.Skill.FARMING);
+                return SafetyEvidence.skill(false, net.runelite.api.Skill.FARMING);
             case KINGDOM:
             case KINGDOM_APPROVAL:
             case BATTLESTAVES:
             case DYNAMITE:
-                return CandidateSafetyEvidence.harmless(false);
+                return SafetyEvidence.harmless(false);
             case TEARS_OF_GUTHIX:
             case DAILY_DIARY_REWARD:
-                return CandidateSafetyEvidence.potentiallyIrreversible(false);
+                return SafetyEvidence.potentiallyIrreversible(false);
             case CLUE:
                 return opportunity.getSafetyEvidence();
             default:
-                return CandidateSafetyEvidence.potentiallyIrreversible(false);
+                return SafetyEvidence.potentiallyIrreversible(false);
         }
     }
 
@@ -400,9 +400,9 @@ public class StrategyEngine
             recommendation = goalProvenanceService.attach(
                     recommendation, context);
             String semanticKey = deduplicator.semanticKey(recommendation);
-            if (context != null && (context.getPreferenceProfile()
+            if (context != null && (context.preferenceProfile()
                     .isOnCooldown(recommendation.getId())
-                    || context.getPreferenceProfile()
+                    || context.preferenceProfile()
                     .isSemanticOnCooldown(semanticKey))) continue;
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
             if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
@@ -469,8 +469,8 @@ public class StrategyEngine
     {
         if (recommendation == null || context == null) return 0.0;
         String key = deduplicator.semanticKey(recommendation);
-        return context.getPreferenceProfile().semanticWeightFor(key) * 10.0
-                + context.getPreferenceProfile()
+        return context.preferenceProfile().semanticWeightFor(key) * 10.0
+                + context.preferenceProfile()
                 .semanticTimedScoreAdjustmentFor(key);
     }
 }

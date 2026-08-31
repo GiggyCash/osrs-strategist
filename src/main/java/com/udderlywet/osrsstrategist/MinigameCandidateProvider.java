@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 /** Converts verified minigame unlocks into useful progression candidates. */
 @Singleton
-public class MinigameCandidateProvider implements StrategyCandidateProvider
+public class MinigameCandidateProvider implements CandidateProvider
 {
     private final MinigameCatalog catalog;
     private final MinigameSetupCatalog setupCatalog;
@@ -34,13 +34,13 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null
-                || context.getData().getMinigames() == null) return result;
+        if (context == null || context.data() == null
+                || context.data().account() == null
+                || context.data().minigames() == null) return result;
 
-        AccountSnapshot account = context.getData().getAccount();
-        AccountMode mode = context.getAccountMode();
-        MinigameSnapshot snapshot = context.getData().getMinigames();
+        AccountSnapshot account = context.data().account();
+        AccountMode mode = context.accountMode();
+        MinigameSnapshot snapshot = context.data().minigames();
 
         for (MinigameDefinition definition : catalog.all())
         {
@@ -56,7 +56,7 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     && definition.getRiskLevel() == RiskLevel.HIGH) continue;
 
             String id = "minigame:" + definition.getId();
-            if (context.getPreferenceProfile().isOnCooldown(id)) continue;
+            if (context.preferenceProfile().isOnCooldown(id)) continue;
             double score = 28.0;
             if (definition.getRiskLevel() == RiskLevel.NONE) score += 4.0;
             if (context.getStrategyMode() == StrategyMode.RELAXED
@@ -64,19 +64,19 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     || definition.getAttention() == AttentionLevel.AFK)) score += 6.0;
             if (context.getSessionIntent() == SessionIntent.LONG_SESSION) score += 2.0;
             if (context.isCollectionistMode()) score += 4.0;
-            score += context.getPreferenceProfile().weightFor(id) * 10.0;
+            score += context.preferenceProfile().weightFor(id) * 10.0;
 
             MinigameSetupProfile setup = setupCatalog.forActivity(
                     definition.getId());
             ItemRequirementResult itemResult = setup == null ? null
-                    : itemEvaluator.evaluate(setup.getItems(), context.getData(),
+                    : itemEvaluator.evaluate(setup.getItems(), context.data(),
                             context.isUseGroupStorage());
             boolean verified = setup != null && itemResult.isSatisfied();
-            RecommendationGuidance guidance = setup == null
+            Guidance guidance = setup == null
                     ? verificationGuidance(definition)
                     : "forestry".equals(definition.getId())
                             ? forestryGuidance(account, verified, itemResult)
-                            : new RecommendationGuidance(
+                            : new Guidance(
                             verified ? setup.getInstructions()
                                     : itemResult.getAction() + " before " + definition.getName() + ".",
                             verified ? setup.getSupplies() : itemResult.getAction(),
@@ -88,8 +88,8 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     definition.getRewardFocus()
                             + Text.get(344),
                     score,
-                    verified ? RecommendationConfidence.VERIFIED
-                            : RecommendationConfidence.CHECK_NEEDED,
+                    verified ? Confidence.VERIFIED
+                            : Confidence.CHECK_NEEDED,
                     guidance,
                     safetyFor(definition)
             ));
@@ -100,19 +100,19 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
-    private static RecommendationGuidance verificationGuidance(
+    private static Guidance verificationGuidance(
             MinigameDefinition definition)
     {
         String activity = definition.getName();
-        return new RecommendationGuidance(
+        return new Guidance(
                 Text.get(350) + activity
                         + " setup equipped.",
                 Text.get(351),
-                "Use the verified in-game unlock for " + activity + ".",
+                Text.get(1492) + activity + ".",
                 definition.getRewardFocus() + ".");
     }
 
-    private static RecommendationGuidance forestryGuidance(
+    private static Guidance forestryGuidance(
             AccountSnapshot account, boolean verified,
             ItemRequirementResult itemResult)
     {
@@ -147,10 +147,10 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                         + Text.get(357)
                 : Text.get(345) + tree
                         + Text.get(346);
-        return new RecommendationGuidance(
+        return new Guidance(
                 verified
                         ? loop
-                        : itemResult.getAction() + " before starting Forestry.",
+                        : itemResult.getAction() + Text.get(1493),
                 verified ? Text.get(347)
                         : itemResult.getAction(),
                 location + ".",
@@ -158,18 +158,18 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                         + (uim ? Text.get(349) : ""));
     }
 
-    private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)
+    private static SafetyEvidence safetyFor(MinigameDefinition definition)
     {
         if (definition.getRiskLevel() == RiskLevel.HIGH
                 || definition.getRiskLevel() == RiskLevel.IRREVERSIBLE)
-            return CandidateSafetyEvidence.potentiallyIrreversible(
+            return SafetyEvidence.potentiallyIrreversible(
                     definition.isFreeToPlay());
         if (definition.isCombatActivity())
-            return CandidateSafetyEvidence.potentiallyIrreversible(
+            return SafetyEvidence.potentiallyIrreversible(
                     definition.isFreeToPlay());
         if (definition.getPrimarySkill() != null)
-            return CandidateSafetyEvidence.skill(definition.isFreeToPlay(),
+            return SafetyEvidence.skill(definition.isFreeToPlay(),
                     definition.getPrimarySkill());
-        return CandidateSafetyEvidence.harmless(definition.isFreeToPlay());
+        return SafetyEvidence.harmless(definition.isFreeToPlay());
     }
 }

@@ -42,21 +42,21 @@ public class PvmAccountValueTest
         Map<String, PvmReadiness> readiness = Collections.singletonMap(
                 "pvm:kraken", preparation("pvm:kraken"));
         SlayerSnapshot task = new SlayerSnapshot("Cave krakens", 100,
-                "Duradel", 0, RecommendationConfidence.VERIFIED);
+                "Duradel", 0, Confidence.VERIFIED);
         assertTrue(contains(new PvmCandidateProvider().candidates(
                 context(readiness, GoalType.SLAYER_85, task)), "Kraken"));
     }
 
     private static PvmReadiness preparation(String id)
     {
-        return new PvmReadiness(id, false, RecommendationConfidence.CHECK_NEEDED,
+        return new PvmReadiness(id, false, Confidence.CHECK_NEEDED,
                 Collections.singletonList("Equip the required combat setup"));
     }
 
     private static StrategyContext context(Map<String, PvmReadiness> readiness,
             GoalType goal, SlayerSnapshot slayer)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
+        GameData data = GameData.builder(account())
                 .pvm(new PvmSnapshot(readiness)).slayer(slayer).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL, goal,

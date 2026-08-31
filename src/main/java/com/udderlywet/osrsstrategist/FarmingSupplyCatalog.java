@@ -58,21 +58,21 @@ public class FarmingSupplyCatalog
     public ResourceRequirement potatoSeeds()
     {
         return new ResourceRequirement(
-                "resource:potato_seeds", "Three potato seeds", 3,
+                "resource:potato_seeds", Text.get(1133), 3,
                 ItemID.POTATO_SEED);
     }
 
     public ResourceRequirement watermelonSeeds()
     {
         return new ResourceRequirement(
-                "resource:watermelon_seeds", "Three watermelon seeds", 3,
+                "resource:watermelon_seeds", Text.get(1134), 3,
                 ItemID.WATERMELON_SEED);
     }
 
     public ResourceRequirement treeSaplingsForLevel(int level)
     {
         return new ResourceRequirement(
-                "resource:tree_saplings", "Usable tree sapling", 1,
+                "resource:tree_saplings", Text.get(1135), 1,
                 unlockedItemIds(TREE_SAPLINGS, level));
     }
 

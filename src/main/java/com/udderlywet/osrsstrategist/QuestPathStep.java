@@ -14,7 +14,7 @@ public final class QuestPathStep
     private final QuestStatus status;
     private final Map<GoalType, List<String>> provenancePaths;
     private final List<String> unfinishedDependents;
-    private final RecommendationConfidence readiness;
+    private final Confidence readiness;
     private final boolean eligibleNow;
     private final int depth;
     private final Map<Skill, Integer> guaranteedRewardXp;
@@ -23,7 +23,7 @@ public final class QuestPathStep
     QuestPathStep(String questName, QuestStatus status,
             Map<GoalType, List<String>> provenancePaths,
             List<String> unfinishedDependents,
-            RecommendationConfidence readiness,
+            Confidence readiness,
             boolean eligibleNow, int depth,
             Map<Skill, Integer> guaranteedRewardXp,
             double goalPathRewardValue)
@@ -43,7 +43,7 @@ public final class QuestPathStep
                 new ArrayList<>(unfinishedDependents == null
                         ? Collections.emptyList() : unfinishedDependents));
         this.readiness = readiness == null
-                ? RecommendationConfidence.CHECK_NEEDED : readiness;
+                ? Confidence.CHECK_NEEDED : readiness;
         this.eligibleNow = eligibleNow;
         this.depth = Math.max(0, depth);
         EnumMap<Skill, Integer> rewards = new EnumMap<>(Skill.class);
@@ -64,12 +64,12 @@ public final class QuestPathStep
         return Math.min(1.0, goals + dependents);
     }
 
-    public RecommendationStrategicValue strategicValue()
+    public StrategicValue strategicValue()
     {
         double shared = sharedDependencyValue();
         if (shared <= 0.0 && goalPathRewardValue <= 0.0)
-            return RecommendationStrategicValue.neutral();
-        return RecommendationStrategicValue.builder()
+            return StrategicValue.neutral();
+        return StrategicValue.builder()
                 .sharedDependencyValue(shared)
                 .unlockValue(goalPathRewardValue)
                 .evidence("quest-path:" + questName)

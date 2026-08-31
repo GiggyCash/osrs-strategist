@@ -23,9 +23,9 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void wintertodtGivesConcreteSetupWithoutFakeKillCount()
     {
-        StrategyDataBundle data = data(Skill.FIREMAKING, 60,
-                new ItemStackSnapshot(20704, "Bruma torch", 1));
-        RecommendationGuidance guidance = service.build(
+        GameData data = data(Skill.FIREMAKING, 60,
+                new ItemState(20704, "Bruma torch", 1));
+        Guidance guidance = service.build(
                 data,
                 Skill.FIREMAKING,
                 60,
@@ -48,9 +48,9 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void temporossUsesObservedHarpoonAndNoFakeGameCount()
     {
-        StrategyDataBundle data = data(Skill.FISHING, 70,
-                new ItemStackSnapshot(11920, "Dragon harpoon", 1));
-        RecommendationGuidance guidance = service.build(
+        GameData data = data(Skill.FISHING, 70,
+                new ItemState(11920, "Dragon harpoon", 1));
+        Guidance guidance = service.build(
                 data,
                 Skill.FISHING,
                 70,
@@ -68,10 +68,10 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void foundryExplainsTwentyEightBarCommissionWithoutFakeSwordCount()
     {
-        StrategyDataBundle data = data(Skill.SMITHING, 70,
-                new ItemStackSnapshot(2359, "Mithril bar", 500),
-                new ItemStackSnapshot(2353, "Steel bar", 500));
-        RecommendationGuidance guidance = service.build(
+        GameData data = data(Skill.SMITHING, 70,
+                new ItemState(2359, "Mithril bar", 500),
+                new ItemState(2353, "Steel bar", 500));
+        Guidance guidance = service.build(
                 data,
                 Skill.SMITHING,
                 70,
@@ -93,9 +93,9 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void herbRunDoesNotDelegateSeedValueWhenNoneIsObserved()
     {
-        StrategyDataBundle data = data(Skill.FARMING, 90,
-                new ItemStackSnapshot(952, "Spade", 1));
-        RecommendationGuidance guidance = service.build(
+        GameData data = data(Skill.FARMING, 90,
+                new ItemState(952, "Spade", 1));
+        Guidance guidance = service.build(
                 data, Skill.FARMING, 90, 91,
                 plan("farming_herbs_expanded", Skill.FARMING), true);
 
@@ -105,8 +105,8 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void foundryDoesNotSurfaceWithoutOneCompleteCommissionOfMetal()
     {
-        StrategyDataBundle data = data(Skill.SMITHING, 70,
-                new ItemStackSnapshot(2359, "Mithril bar", 27));
+        GameData data = data(Skill.SMITHING, 70,
+                new ItemState(2359, "Mithril bar", 27));
         assertNull(service.build(data, Skill.SMITHING, 70, 80,
                 plan("smithing_foundry", Skill.SMITHING), true));
     }
@@ -114,9 +114,9 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void farmingContractTierIsResolvedFromLevel()
     {
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.FARMING, 72,
-                        new ItemStackSnapshot(952, "Spade", 1)),
+                        new ItemState(952, "Spade", 1)),
                 Skill.FARMING, 72, 73,
                 plan("farming_contracts", Skill.FARMING), true);
 
@@ -129,12 +129,12 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void rumourMasterIsResolvedAndQuestGated()
     {
-        RecommendationGuidance expert = service.build(
+        Guidance expert = service.build(
                 data(Skill.HUNTER, 95,
-                        new ItemStackSnapshot(1, "Basic quetzal whistle", 1)),
+                        new ItemState(1, "Basic quetzal whistle", 1)),
                 Skill.HUNTER, 95, 96,
                 plan("hunter_rumours", Skill.HUNTER), true);
-        RecommendationGuidance master = service.build(
+        Guidance master = service.build(
                 dataWithQuest(Skill.HUNTER, 95, "At First Light"),
                 Skill.HUNTER, 95, 96,
                 plan("hunter_rumours", Skill.HUNTER), true);
@@ -148,9 +148,9 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void forestryResolvesOneTreeAndOneLocation()
     {
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.WOODCUTTING, 62,
-                        new ItemStackSnapshot(1359, "Rune axe", 1)),
+                        new ItemState(1359, "Rune axe", 1)),
                 Skill.WOODCUTTING, 62, 65,
                 plan("woodcutting_forestry", Skill.WOODCUTTING), true);
 
@@ -165,10 +165,10 @@ public class VariableMethodGuidanceServiceTest
     @Test
     public void mahoganyHomesUsesObservedSustainableTier()
     {
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.CONSTRUCTION, 75,
-                        new ItemStackSnapshot(8780, "Teak plank", 100),
-                        new ItemStackSnapshot(2353, "Steel bar", 10)),
+                        new ItemState(8780, "Teak plank", 100),
+                        new ItemState(2353, "Steel bar", 10)),
                 Skill.CONSTRUCTION, 75, 76,
                 plan("construction_mahogany_homes", Skill.CONSTRUCTION), true);
 
@@ -198,9 +198,9 @@ public class VariableMethodGuidanceServiceTest
         };
         for (int i = 0; i < ids.length; i++)
         {
-            RecommendationGuidance guidance = service.build(
+            Guidance guidance = service.build(
                     data(skills[i], 60,
-                            new ItemStackSnapshot(1275, "Rune pickaxe", 1)),
+                            new ItemState(1275, "Rune pickaxe", 1)),
                     skills[i], 60, 61, plan(ids[i], skills[i]), true);
             assertNotNull(ids[i], guidance);
             assertFalse(ids[i], guidance.getAction().contains("{xp}"));
@@ -210,10 +210,10 @@ public class VariableMethodGuidanceServiceTest
         }
     }
 
-    private static StrategyDataBundle data(
+    private static GameData data(
             Skill skill,
             int level,
-            ItemStackSnapshot... observed)
+            ItemState... observed)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -234,21 +234,21 @@ public class VariableMethodGuidanceServiceTest
                 0L,
                 levels,
                 xp);
-        return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Arrays.asList(observed), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        return GameData.builder(account)
+                .bank(new ItemsState(Arrays.asList(observed), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
     }
 
-    private static StrategyDataBundle dataWithQuest(
+    private static GameData dataWithQuest(
             Skill skill, int level, String quest)
     {
-        StrategyDataBundle base = data(skill, level);
+        GameData base = data(skill, level);
         Map<String, QuestStatus> statuses = new HashMap<>();
         statuses.put(quest, QuestStatus.COMPLETE);
-        return StrategyDataBundle.builder(base.getAccount())
-                .bank(base.getBank())
-                .inventory(base.getInventory())
+        return GameData.builder(base.account())
+                .bank(base.bank())
+                .inventory(base.inventory())
                 .quests(new QuestSnapshot(statuses))
                 .build();
     }
@@ -269,11 +269,11 @@ public class VariableMethodGuidanceServiceTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 }

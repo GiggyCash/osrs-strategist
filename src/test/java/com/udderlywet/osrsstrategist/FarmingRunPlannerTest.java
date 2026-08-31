@@ -24,7 +24,7 @@ public class FarmingRunPlannerTest
         states.put("herb_catherby", new ObservedFarmingPatchState(
                 FarmingPatchCycleState.READY, 1L));
 
-        StrategyDataBundle data = data(20, states);
+        GameData data = data(20, states);
         GuidanceChecklist checklist = planner.build(data, "skill:farming");
 
         GuidanceStep falador = find(checklist, "herb_falador");
@@ -45,7 +45,7 @@ public class FarmingRunPlannerTest
         return null;
     }
 
-    private static StrategyDataBundle data(
+    private static GameData data(
             int farming,
             Map<String, ObservedFarmingPatchState> states)
     {
@@ -60,7 +60,7 @@ public class FarmingRunPlannerTest
         AccountSnapshot account = new AccountSnapshot(
                 "Tester", 0, "Main", MembershipStatus.P2P, 1,
                 farming, 0L, levels, xp);
-        return StrategyDataBundle.builder(account)
+        return GameData.builder(account)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .accessMemory(AccessMemorySnapshot.empty())
                 .farmingRuns(new FarmingRunSnapshot(states))

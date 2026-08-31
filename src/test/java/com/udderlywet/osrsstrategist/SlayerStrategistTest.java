@@ -29,7 +29,7 @@ public class SlayerStrategistTest
 
         assertEquals(SlayerAssignmentState.UNKNOWN, result.getAssignmentState());
         assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertTrue(result.getGuidance().getNote().contains("kept unknown"));
     }
@@ -41,7 +41,7 @@ public class SlayerStrategistTest
                 250, null, 300, 2, 0, null, Arrays.asList(
                         new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
                         new SlayerTaskOffer("Hellhounds", "Quantity", 10, false)),
-                true, RecommendationConfidence.VERIFIED);
+                true, Confidence.VERIFIED);
         StrategyContext context = context(0, choice, StrategyMode.EFFICIENT,
                 SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
                 Collections.emptyList(), null);
@@ -65,13 +65,13 @@ public class SlayerStrategistTest
                 250, null, 300, 2, 0, null, Arrays.asList(
                         new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
                         new SlayerTaskOffer(null, null, 0, false)),
-                true, RecommendationConfidence.VERIFIED);
+                true, Confidence.VERIFIED);
 
         SlayerDecisionResult result = strategist.assess(context(0, choice,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false, Collections.emptyList(), null));
 
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertNull(result.getRecommendedOffer());
         assertTrue(result.getGuidance().getAction().contains("Keep Mortimer"));
@@ -157,7 +157,7 @@ public class SlayerStrategistTest
         SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
                 100, 20, 300, 6, null,
                 new SlayerRewardSnapshot(rewardStates),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
 
         StrategyContext context = context(1, noTask, StrategyMode.EFFICIENT,
                 SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
@@ -199,7 +199,7 @@ public class SlayerStrategistTest
         SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
                 200, 20, 300, 6, null,
                 new SlayerRewardSnapshot(rewardStates),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
 
         SlayerDecisionResult longSession = strategist.assess(context(1,
                 noTask, StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
@@ -245,7 +245,7 @@ public class SlayerStrategistTest
                 GoalType.SLAYER_85, false, Collections.emptyList(), null));
 
         assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertTrue(result.getReason().contains("mandatory"));
     }
@@ -258,12 +258,12 @@ public class SlayerStrategistTest
         SlayerDecisionResult result = strategist.assess(context(0, task,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())), null));
 
         assertEquals(SlayerTaskDecision.DO, result.getDecision());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 result.getConfidence());
         assertTrue(result.getGuidance().getAction().contains("remaining 140"));
         assertTrue(result.getGuidance().getAction().contains("Abyssal whip"));
@@ -280,10 +280,10 @@ public class SlayerStrategistTest
                 null, 500, 21, 300, 6, 2);
         StrategyContext context = context(0, task, StrategyMode.EFFICIENT,
                 SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())),
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         952, "Spade", 1)), null);
 
         SlayerDecisionResult result = strategist.assess(context);
@@ -299,18 +299,18 @@ public class SlayerStrategistTest
     {
         SlayerSnapshot task = snapshot("Dust devils", 140, "Duradel",
                 null, 500, 21, 300, 6, 2);
-        java.util.List<ItemStackSnapshot> bank = Arrays.asList(
-                new ItemStackSnapshot(1887, "Cake tin", 1),
-                new ItemStackSnapshot(331, "Raw salmon", 20),
-                new ItemStackSnapshot(333, "Trout", 10),
-                new ItemStackSnapshot(385, "Shark", 5));
+        java.util.List<ItemState> bank = Arrays.asList(
+                new ItemState(1887, "Cake tin", 1),
+                new ItemState(331, "Raw salmon", 20),
+                new ItemState(333, "Trout", 10),
+                new ItemState(385, "Shark", 5));
         StrategyContext context = contextWithBank(0, task,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())),
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         952, "Spade", 1)), bank, null);
 
         SlayerDecisionResult result = strategist.assess(context);
@@ -395,7 +395,7 @@ public class SlayerStrategistTest
                 null, 500, 21, 300, 6, 5);
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put("pvm:cerberus", new PvmReadiness("pvm:cerberus",
-                true, RecommendationConfidence.VERIFIED,
+                true, Confidence.VERIFIED,
                 Collections.emptyList()));
         SlayerDecisionResult result = strategist.assess(context(1, task,
                 StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
@@ -407,7 +407,7 @@ public class SlayerStrategistTest
         assertTrue(result.getGuidance().getAction().contains("Cerberus"));
 
         readiness.put("pvm:cerberus", new PvmReadiness("pvm:cerberus",
-                false, RecommendationConfidence.CHECK_NEEDED,
+                false, Confidence.CHECK_NEEDED,
                 Arrays.asList("Prayer", "gear")));
         result = strategist.assess(context(1, task,
                 StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
@@ -468,14 +468,14 @@ public class SlayerStrategistTest
                 null, 500, 21, 300, 6, 2);
         StrategyContext context = context(0, task, StrategyMode.EFFICIENT,
                 SessionIntent.LONG_SESSION, GoalType.SLAYER_85, false,
-                Collections.singletonList(new ItemStackSnapshot(
+                Collections.singletonList(new ItemState(
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())), null);
         Recommendation candidate = new SlayerCandidateProvider()
                 .candidates(context).get(0);
 
         assertEquals("slayer:do-task", candidate.getId());
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(candidate));
     }
 
@@ -488,7 +488,7 @@ public class SlayerStrategistTest
                 MembershipStatus.F2P, 0, member.getTotalLevel(),
                 member.getTotalExperience(), member.getSkillLevels(),
                 member.getSkillExperience());
-        StrategyDataBundle data = StrategyDataBundle.builder(f2p)
+        GameData data = GameData.builder(f2p)
                 .slayer(SlayerSnapshot.unknown()).build();
         StrategyContext context = new StrategyContext(data,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -515,20 +515,20 @@ public class SlayerStrategistTest
 
     private static StrategyContext context(int typeCode, SlayerSnapshot slayer,
             StrategyMode mode, SessionIntent intent, GoalType goal,
-            boolean wilderness, java.util.List<ItemStackSnapshot> items,
+            boolean wilderness, java.util.List<ItemState> items,
             PvmSnapshot pvm)
     {
         return context(typeCode, slayer, mode, intent, goal, wilderness,
                 items, Arrays.asList(
-                        new ItemStackSnapshot(385, "Shark", 1),
-                        new ItemStackSnapshot(385, "Shark", 1),
-                        new ItemStackSnapshot(385, "Shark", 1)), pvm);
+                        new ItemState(385, "Shark", 1),
+                        new ItemState(385, "Shark", 1),
+                        new ItemState(385, "Shark", 1)), pvm);
     }
 
     private static StrategyContext context(int typeCode, SlayerSnapshot slayer,
             StrategyMode mode, SessionIntent intent, GoalType goal,
-            boolean wilderness, java.util.List<ItemStackSnapshot> items,
-            java.util.List<ItemStackSnapshot> inventoryItems,
+            boolean wilderness, java.util.List<ItemState> items,
+            java.util.List<ItemState> inventoryItems,
             PvmSnapshot pvm)
     {
         return contextWithBank(typeCode, slayer, mode, intent, goal,
@@ -538,9 +538,9 @@ public class SlayerStrategistTest
     private static StrategyContext contextWithBank(int typeCode,
             SlayerSnapshot slayer, StrategyMode mode, SessionIntent intent,
             GoalType goal, boolean wilderness,
-            java.util.List<ItemStackSnapshot> items,
-            java.util.List<ItemStackSnapshot> inventoryItems,
-            java.util.List<ItemStackSnapshot> bankItems,
+            java.util.List<ItemState> items,
+            java.util.List<ItemState> inventoryItems,
+            java.util.List<ItemState> bankItems,
             PvmSnapshot pvm)
     {
         Map<String, QuestStatus> quests = new HashMap<>();
@@ -548,16 +548,16 @@ public class SlayerStrategistTest
         quests.put("Lost City", QuestStatus.COMPLETE);
         quests.put("Priest in Peril", QuestStatus.COMPLETE);
         quests.put("Fallen From Grace", QuestStatus.IN_PROGRESS);
-        java.util.List<ItemStackSnapshot> equipment = new java.util.ArrayList<>();
-        equipment.add(new ItemStackSnapshot(4151, "Abyssal whip", 1,
+        java.util.List<ItemState> equipment = new java.util.ArrayList<>();
+        equipment.add(new ItemState(4151, "Abyssal whip", 1,
                 net.runelite.api.EquipmentInventorySlot.WEAPON.getSlotIdx()));
         equipment.addAll(items);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(typeCode))
+        GameData data = GameData.builder(account(typeCode))
                 .slayer(slayer)
                 .quests(new QuestSnapshot(quests))
-                .bank(new BankSnapshot(bankItems, 1L))
-                .inventory(new InventorySnapshot(inventoryItems))
-                .equipment(new EquipmentSnapshot(equipment))
+                .bank(new ItemsState(bankItems, 1L))
+                .inventory(new ItemsState(inventoryItems))
+                .equipment(new ItemsState(equipment))
                 .pvm(pvm)
                 .build();
         return new StrategyContext(data, mode, intent, QuestTolerance.NORMAL,
@@ -570,7 +570,7 @@ public class SlayerStrategistTest
     {
         return new SlayerSnapshot(task, remaining, master, location, points,
                 streak, questPoints, capacity, occupied,
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
     }
 
     private static AccountSnapshot account(int typeCode)

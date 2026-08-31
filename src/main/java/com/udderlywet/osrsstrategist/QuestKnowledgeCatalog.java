@@ -48,7 +48,7 @@ public class QuestKnowledgeCatalog
             else
             {
                 addEvidenceCheck(checks, "Required items", details.getItems());
-                addEvidenceCheck(checks, "Access requirements", details.getRequirements());
+                addEvidenceCheck(checks, Text.get(1166), details.getRequirements());
                 addEvidenceCheck(checks, "Combat encounters", details.getEnemies());
                 if (!details.hasItemEvidence()) uncertainties.add("items");
                 if (!details.hasRequirementEvidence() || !details.hasCombatEvidence())
@@ -133,10 +133,10 @@ public class QuestKnowledgeCatalog
     private void add(QuestDefinition definition)
     {
         if (definition == null || definition.getName() == null)
-            throw new IllegalStateException("Incomplete quest definition in " + RESOURCE);
+            throw new IllegalStateException(Text.get(1167) + RESOURCE);
         String id = normalize(definition.getName());
         if (definitions.put(id, definition) != null)
-            throw new IllegalStateException("Duplicate quest identity: " + definition.getName());
+            throw new IllegalStateException(Text.get(1168) + definition.getName());
     }
 
     private static String normalize(String value)

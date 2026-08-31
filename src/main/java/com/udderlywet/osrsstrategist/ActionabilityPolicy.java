@@ -11,7 +11,7 @@ import javax.inject.Singleton;
  * unknown access, quest, build, or unlock requirements can never lead.</p>
  */
 @Singleton
-public class RecommendationActionabilityPolicy
+public class ActionabilityPolicy
 {
     private final RecommendationQualityPolicy qualityPolicy =
             new RecommendationQualityPolicy();
@@ -19,13 +19,13 @@ public class RecommendationActionabilityPolicy
     public boolean canLeadQueue(Recommendation recommendation)
     {
         if (recommendation == null
-                || recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+                || recommendation.getConfidence() == Confidence.BLOCKED)
         {
             return false;
         }
 
         TrainingPlan plan = recommendation.getTrainingPlan();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
         if (plan == null)
@@ -35,9 +35,9 @@ public class RecommendationActionabilityPolicy
             // is an explicitly typed preparation/verification action whose
             // remaining work is fully described by the quality contract.
             return (recommendation.getConfidence()
-                        == RecommendationConfidence.VERIFIED
+                        == Confidence.VERIFIED
                     || (recommendation.getConfidence()
-                        == RecommendationConfidence.CHECK_NEEDED
+                        == Confidence.CHECK_NEEDED
                         && isExplicitPreparation(recommendation)))
                     && guidance != null && hasText(guidance.getAction());
         }
@@ -48,7 +48,7 @@ public class RecommendationActionabilityPolicy
             return false;
         }
 
-        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED)
+        if (recommendation.getConfidence() == Confidence.VERIFIED)
         {
             return !RequirementActionability.hasHardUnresolvedRequirement(plan);
         }
@@ -61,7 +61,7 @@ public class RecommendationActionabilityPolicy
     public boolean mayAppearAsAlternative(Recommendation recommendation)
     {
         if (recommendation == null
-                || recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+                || recommendation.getConfidence() == Confidence.BLOCKED)
         {
             return false;
         }
@@ -69,7 +69,7 @@ public class RecommendationActionabilityPolicy
 
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         TrainingPlan plan = recommendation.getTrainingPlan();
 
         // A secondary card still needs to tell the player something useful.
@@ -79,7 +79,7 @@ public class RecommendationActionabilityPolicy
         {
             return guidance != null && hasText(guidance.getAction())
                     && (recommendation.getConfidence()
-                            == RecommendationConfidence.VERIFIED
+                            == Confidence.VERIFIED
                         || isExplicitPreparation(recommendation));
         }
 

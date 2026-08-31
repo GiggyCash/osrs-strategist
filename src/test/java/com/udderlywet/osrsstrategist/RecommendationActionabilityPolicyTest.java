@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 public class RecommendationActionabilityPolicyTest
 {
-    private final RecommendationActionabilityPolicy policy =
-            new RecommendationActionabilityPolicy();
+    private final ActionabilityPolicy policy =
+            new ActionabilityPolicy();
 
     @Test
     public void checkNeededCandidateCannotLeadQueue()
@@ -19,7 +19,7 @@ public class RecommendationActionabilityPolicyTest
                 "Requirements still unknown",
                 999.0,
                 null,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 0,
                 0,
                 null);
@@ -37,10 +37,10 @@ public class RecommendationActionabilityPolicyTest
                 "Useful upgrade",
                 20.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 0,
                 0,
-                new RecommendationGuidance(
+                new Guidance(
                         "Go get the item.",
                         "Bring food.",
                         "Test area",
@@ -54,8 +54,8 @@ public class RecommendationActionabilityPolicyTest
     {
         Recommendation candidate = new Recommendation(
                 "pvm:blocked", "Blocked", "Known blocker", 999.0,
-                null, RecommendationConfidence.BLOCKED, 0, 0,
-                new RecommendationGuidance("Attempt it.", "Gear.", "Area.", "Blocked."));
+                null, Confidence.BLOCKED, 0, 0,
+                new Guidance("Attempt it.", "Gear.", "Area.", "Blocked."));
 
         assertFalse(policy.canLeadQueue(candidate));
         assertFalse(policy.mayAppearAsAlternative(candidate));
@@ -78,11 +78,11 @@ public class RecommendationActionabilityPolicyTest
                 10,
                 1,
                 java.util.Collections.singletonList("bank"),
-                RecommendationConfidence.CHECK_NEEDED);
+                Confidence.CHECK_NEEDED);
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 java.util.Collections.singletonList(new RequirementCheck(
                         "bank",
                         "Open bank",
@@ -94,7 +94,7 @@ public class RecommendationActionabilityPolicyTest
                 "test",
                 50,
                 plan,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 1,
                 10,
                 null);

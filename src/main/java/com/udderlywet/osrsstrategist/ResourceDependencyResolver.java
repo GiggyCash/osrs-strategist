@@ -37,7 +37,7 @@ public class ResourceDependencyResolver
         this.maxNodes = Math.max(1, maxNodes);
     }
 
-    public ResourceDependencyResolution resolve(StrategyContext context,
+    public DependencyResolution resolve(StrategyContext context,
             ResourceNeed root)
     {
         State state = new State(maxNodes);
@@ -49,7 +49,7 @@ public class ResourceDependencyResolver
      * Resolves a root quantity already proven missing by another evaluator.
      * Child dependencies still use normal ownership checks.
      */
-    public ResourceDependencyResolution resolveKnownShortfall(
+    public DependencyResolution resolveKnownShortfall(
             StrategyContext context, ResourceNeed root)
     {
         State state = new State(maxNodes);
@@ -57,9 +57,9 @@ public class ResourceDependencyResolver
         return result(state);
     }
 
-    private static ResourceDependencyResolution result(State state)
+    private static DependencyResolution result(State state)
     {
-        return new ResourceDependencyResolution(new ArrayList<>(state.nodes.values()),
+        return new DependencyResolution(new ArrayList<>(state.nodes.values()),
                 state.cycle, state.depth, state.cost, state.nodeLimit);
     }
 
@@ -77,7 +77,7 @@ public class ResourceDependencyResolver
         {
             state.cycle = true;
             addResource(state, id + ":cycle", Text.get(610),
-                    RecommendationConfidence.CHECK_NEEDED, depth, need.getQuantity());
+                    Confidence.CHECK_NEEDED, depth, need.getQuantity());
             return;
         }
         int previousRequested = state.requested.getOrDefault(need.getItemId(), 0);
@@ -92,11 +92,11 @@ public class ResourceDependencyResolver
         {
             state.depth = true;
             addResource(state, id + ":depth", Text.get(611),
-                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
+                    Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
-        ResourceAcquisitionPlan ownership = knownShortfall
+        AcquisitionPlan ownership = knownShortfall
                 ? ownershipPlanner.planKnownShortfall(context, totalNeed)
                 : ownershipPlanner.plan(context, totalNeed);
         if (ownership != null && ownership.hasEnoughConfirmed())
@@ -107,11 +107,11 @@ public class ResourceDependencyResolver
                     depth, totalRequested);
             return;
         }
-        AccountMode mode = context == null ? AccountMode.UNKNOWN : context.getAccountMode();
+        AccountMode mode = context == null ? AccountMode.UNKNOWN : context.accountMode();
         if (mode.usesGrandExchange())
         {
-            addResource(state, id, ownership == null ? "Verify a purchase route." : ownership.getNote(),
-                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
+            addResource(state, id, ownership == null ? Text.get(1330) : ownership.getNote(),
+                    Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
@@ -125,15 +125,15 @@ public class ResourceDependencyResolver
         ResourceDependencyDefinition definition = catalog.forItem(need.getItemId());
         if (definition == null)
         {
-            addResource(state, id, ownership == null ? "Verify a self-source route." : ownership.getNote(),
-                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
+            addResource(state, id, ownership == null ? Text.get(1331) : ownership.getNote(),
+                    Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
         if (rejectForOpportunityCost(context, definition.getOpportunityCost()))
         {
             state.cost = true;
             addResource(state, id, Text.get(612),
-                    RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
+                    Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
@@ -161,7 +161,7 @@ public class ResourceDependencyResolver
             visit(context, child, depth + 1, active, state, false);
         active.remove(id);
         addResource(state, id, definition.getAction(),
-                RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
+                Confidence.CHECK_NEEDED, depth, totalRequested);
     }
 
     private void visitRequirement(StrategyContext context,
@@ -180,21 +180,21 @@ public class ResourceDependencyResolver
             return;
         }
         boolean verified = false;
-        StrategyDataBundle data = context == null ? null : context.getData();
-        if (data != null && data.getAccount() != null)
+        GameData data = context == null ? null : context.data();
+        if (data != null && data.account() != null)
         {
             switch (requirement.getKind())
             {
                 case QUEST:
-                    verified = data.getQuests() != null
-                            && data.getQuests().statusOf(requirement.getLabel()) == QuestStatus.COMPLETE;
+                    verified = data.quests() != null
+                            && data.quests().statusOf(requirement.getLabel()) == QuestStatus.COMPLETE;
                     break;
                 case SKILL:
-                    verified = data.getAccount().getSkillLevel(requirement.getSkill())
+                    verified = data.account().getSkillLevel(requirement.getSkill())
                             >= requirement.getLevel();
                     break;
                 case GEAR:
-                    verified = new ObservedItemIndex(data,
+                    verified = new ItemIndex(data,
                             context.isUseGroupStorage()).has(requirement.getLabel());
                     break;
                 default:
@@ -206,11 +206,11 @@ public class ResourceDependencyResolver
         else if (requirement.getKind() == DependencyRequirement.Kind.QUEST)
             action = "Complete " + requirement.getLabel() + ".";
         else if (requirement.getKind() == DependencyRequirement.Kind.SKILL)
-            action = "Train " + requirement.getLabel() + " using the current legal method.";
+            action = "Train " + requirement.getLabel() + Text.get(1332);
         else action = "Equip or obtain " + requirement.getLabel() + ".";
         add(state, requirement.getId(), action, verified
-                ? RecommendationConfidence.VERIFIED
-                : RecommendationConfidence.CHECK_NEEDED, depth);
+                ? Confidence.VERIFIED
+                : Confidence.CHECK_NEEDED, depth);
     }
 
     private static boolean rejectForOpportunityCost(StrategyContext context, int cost)
@@ -222,7 +222,7 @@ public class ResourceDependencyResolver
     }
 
     private static void add(State state, String id, String action,
-            RecommendationConfidence confidence, int depth)
+            Confidence confidence, int depth)
     {
         if (!state.nodes.containsKey(id) && state.nodes.size() >= state.maxNodes)
         {
@@ -234,7 +234,7 @@ public class ResourceDependencyResolver
     }
 
     private static void addResource(State state, String id, String action,
-            RecommendationConfidence confidence, int depth, int quantity)
+            Confidence confidence, int depth, int quantity)
     {
         if (!state.nodes.containsKey(id) && state.nodes.size() >= state.maxNodes)
         {

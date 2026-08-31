@@ -24,7 +24,7 @@ public class MinigamePlanningDepthTest
                 Collections.emptyList(), StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR), "shooting-stars");
 
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 candidate.getConfidence());
         assertTrue(candidate.getGuidance().getAction()
                 .contains("Shooting Stars setup"));
@@ -40,7 +40,7 @@ public class MinigamePlanningDepthTest
         Recommendation missing = find(candidates(0, 60,
                 Collections.singleton("tempoross"), Collections.emptyList(),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 missing.getConfidence());
         assertTrue(missing.getGuidance().getAction().contains("Harpoon"));
 
@@ -48,7 +48,7 @@ public class MinigamePlanningDepthTest
                 Collections.singleton("tempoross"),
                 Collections.singletonList(item("Dragon harpoon")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
-        assertEquals(RecommendationConfidence.VERIFIED, ready.getConfidence());
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
         assertTrue(ready.getGuidance().getAction()
                 .contains("Fish harpoonfish"));
         assertTrue(ready.getGuidance().getSupplies()
@@ -63,7 +63,7 @@ public class MinigamePlanningDepthTest
                 Collections.singletonList(item("Steel bar", 28)),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
                 "giants-foundry");
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 foundry.getConfidence());
         assertTrue(foundry.getGuidance().getAction()
                 .contains("exactly 28 bars' worth"));
@@ -73,7 +73,7 @@ public class MinigamePlanningDepthTest
                         item("Spade"), item("Seed dibber"),
                         item("Gricoller's can")), StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR), "tithe-farm");
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 tithe.getConfidence());
         assertTrue(tithe.getGuidance().getAction()
                 .contains("seed for the observed Farming level"));
@@ -87,7 +87,7 @@ public class MinigamePlanningDepthTest
                         item("Rune axe"), item("Tinderbox")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
                 "wintertodt");
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 wintertodt.getConfidence());
         assertTrue(wintertodt.getGuidance().getAction()
                 .contains("four verified warm-clothing pieces"));
@@ -97,7 +97,7 @@ public class MinigamePlanningDepthTest
                         item("Hammer"), item("Saw")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
                 "mahogany-homes");
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 homes.getConfidence());
         assertTrue(homes.getGuidance().getAction()
                 .contains("live Mahogany Homes contract"));
@@ -110,7 +110,7 @@ public class MinigamePlanningDepthTest
                 Collections.singleton("tempoross"),
                 Collections.singletonList(item("Dragon harpoon")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 candidate.getConfidence());
     }
 
@@ -129,7 +129,7 @@ public class MinigamePlanningDepthTest
     @Test
     public void relaxedModePrefersLowAttentionVerifiedActivity()
     {
-        List<ItemStackSnapshot> items = Arrays.asList(item("Rune pickaxe"),
+        List<ItemState> items = Arrays.asList(item("Rune pickaxe"),
                 item("Chisel"));
         StrategyContext context = context(0, 60,
                 new HashSet<>(Arrays.asList("motherlode-mine",
@@ -137,7 +137,7 @@ public class MinigamePlanningDepthTest
                 StrategyMode.RELAXED, SessionIntent.AFK);
         List<Recommendation> candidates = provider.candidates(context);
         assertEquals("minigame:motherlode-mine", candidates.get(0).getId());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 candidates.get(0).getConfidence());
     }
 
@@ -159,14 +159,14 @@ public class MinigamePlanningDepthTest
     }
 
     private List<Recommendation> candidates(int type, int level,
-            java.util.Set<String> unlocked, List<ItemStackSnapshot> bank,
+            java.util.Set<String> unlocked, List<ItemState> bank,
             StrategyMode mode, SessionIntent intent)
     {
         return provider.candidates(context(type, level, unlocked, bank, mode, intent));
     }
 
     private StrategyContext context(int type, int level,
-            java.util.Set<String> unlocked, List<ItemStackSnapshot> bank,
+            java.util.Set<String> unlocked, List<ItemState> bank,
             StrategyMode mode, SessionIntent intent)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -185,10 +185,10 @@ public class MinigamePlanningDepthTest
         AccountSnapshot account = new AccountSnapshot("Player", type,
                 AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
                 1, level * Skill.values().length, 0, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(bank, 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(bank, 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .minigames(new MinigameSnapshot(unlocked, Collections.emptyMap()))
                 .build();
         return new StrategyContext(data, mode, intent, QuestTolerance.NORMAL,
@@ -204,13 +204,13 @@ public class MinigamePlanningDepthTest
         return result;
     }
 
-    private static ItemStackSnapshot item(String name)
+    private static ItemState item(String name)
     {
         return item(name, 1);
     }
 
-    private static ItemStackSnapshot item(String name, int quantity)
+    private static ItemState item(String name, int quantity)
     {
-        return new ItemStackSnapshot(name.hashCode(), name, quantity);
+        return new ItemState(name.hashCode(), name, quantity);
     }
 }

@@ -24,7 +24,7 @@ public final class ProgressMilestone
         if (id == null || id.trim().isEmpty() || type == null
                 || title == null || title.trim().isEmpty())
         {
-            throw new IllegalArgumentException("Milestone needs identity and type");
+            throw new IllegalArgumentException(Text.get(1156));
         }
         this.id = id;
         this.type = type;

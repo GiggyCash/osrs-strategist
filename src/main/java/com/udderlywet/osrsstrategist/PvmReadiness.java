@@ -9,13 +9,13 @@ public final class PvmReadiness
 {
     private final String activityId;
     private final boolean realisticallyReady;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final List<String> missingRequirements;
 
     public PvmReadiness(
             String activityId,
             boolean realisticallyReady,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             List<String> missingRequirements)
     {
         this.activityId = activityId;
@@ -31,7 +31,7 @@ public final class PvmReadiness
     /** Conservative beta contract: observed carried setup is ready to attempt. */
     public boolean isReadyForRecommendation()
     {
-        return realisticallyReady && confidence == RecommendationConfidence.VERIFIED;
+        return realisticallyReady && confidence == Confidence.VERIFIED;
     }
 
 

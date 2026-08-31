@@ -28,7 +28,7 @@ public final class SustainableResourceValueService
     public ResourcePipelineAssessment assess(StrategyContext context,
             ResourcePipelineRequest request)
     {
-        if (context == null || context.getData() == null || request == null
+        if (context == null || context.data() == null || request == null
                 || request.getNeed() == null)
         {
             return unknown(Text.get(805));
@@ -38,14 +38,14 @@ public final class SustainableResourceValueService
         if (name == null || name.trim().isEmpty())
             return unknown(Text.get(807));
 
-        ObservedItemIndex items = new ObservedItemIndex(context.getData(),
+        ItemIndex items = new ItemIndex(context.data(),
                 context.isUseGroupStorage());
         int observed = items.quantity(name);
         int required = Math.max(1, need.getQuantity());
-        AccountMode mode = context.getAccountMode();
-        MembershipStatus membership = context.getData().getAccount() == null
+        AccountMode mode = context.accountMode();
+        MembershipStatus membership = context.data().account() == null
                 ? MembershipStatus.UNKNOWN
-                : context.getData().getAccount().getMembershipStatus();
+                : context.data().account().getMembershipStatus();
         List<String> routes = sources.suggestions(name, mode, membership,
                 context.isAllowWildernessMethods());
         boolean knownFamily = !sources.match(name).isEmpty();
@@ -97,7 +97,7 @@ public final class SustainableResourceValueService
                 ? ResourcePipelineState.SUSTAINABLE_REPLACEMENT
                 : ResourcePipelineState.ACQUISITION_NEEDED;
         return result(state, adjustment, observed, required, routes,
-                "Observed shortfall: " + Math.max(0, required - observed)
+                Text.get(1433) + Math.max(0, required - observed)
                         + ". " + replacementEvidence(request, mode, routes));
     }
 
@@ -131,8 +131,8 @@ public final class SustainableResourceValueService
         if (mode.usesGrandExchange() && request.isTradeable()) return 1;
         int burden = mode.isIronLike() ? 5 : 4;
         if (mode.isGroupIronman() && context.isUseGroupStorage()
-                && context.getData().getGroupStorage() != null
-                && context.getData().getGroupStorage().isObserved())
+                && context.data().groupStorage() != null
+                && context.data().groupStorage().isObserved())
             burden--;
         if (mode == AccountMode.ULTIMATE_IRONMAN) burden += 2;
         return burden;

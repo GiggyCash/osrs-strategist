@@ -32,12 +32,12 @@ public class RecommendationIntelligenceServiceTest
                 "Permanent melee upgrade.",
                 40.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 0,
                 0,
                 guidance("Enter the Warriors' Guild and obtain the defender."));
 
-        gear = gear.withGoalProvenance(GoalDependencyProvenance.direct(
+        gear = gear.withGoalProvenance(GoalProvenance.direct(
                 GoalType.GEAR_TARGET, gear.getId(), java.util.Arrays.asList(
                         "Gear target", "Dragon defender")));
         assertTrue(service.rankScore(gear, context)
@@ -116,7 +116,7 @@ public class RecommendationIntelligenceServiceTest
                 "Fast Wilderness money and drops.",
                 999.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 0,
                 0,
                 guidance("Enter the Wilderness revenant caves."));
@@ -126,7 +126,7 @@ public class RecommendationIntelligenceServiceTest
                 "Safe account upgrade.",
                 999.0,
                 null,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 0,
                 0,
                 guidance("Play Barbarian Assault."));
@@ -135,7 +135,7 @@ public class RecommendationIntelligenceServiceTest
                 service.rankScore(wildernessWording, context), 0.001);
 
         Recommendation typedRisk = wildernessWording.withStrategicValue(
-                RecommendationStrategicValue.builder()
+                StrategicValue.builder()
                         .riskBurden(1.0)
                         .evidence("risk:wilderness")
                         .build());
@@ -154,7 +154,7 @@ public class RecommendationIntelligenceServiceTest
         Recommendation lowAttention = recommendation(
                 "opaque:a", "Intense-sounding route", 40.0,
                 Skill.FISHING, 85, 90, 3, 30, AttentionLevel.LOW)
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                .withStrategicValue(StrategicValue.builder()
                         .setupReuse(0.75)
                         .evidence("test:setup-reuse")
                         .build());
@@ -177,7 +177,7 @@ public class RecommendationIntelligenceServiceTest
         Recommendation useful = recommendation(
                 "opaque:a", "Ordinary route", 40.0,
                 Skill.AGILITY, 70, 72, 4, 30, AttentionLevel.MODERATE)
-                .withStrategicValue(RecommendationStrategicValue.builder()
+                .withStrategicValue(StrategicValue.builder()
                         .unlockValue(0.8)
                         .sharedDependencyValue(0.7)
                         .evidence("test:typed-account-value")
@@ -215,7 +215,7 @@ public class RecommendationIntelligenceServiceTest
                 minimumMinutes,
                 setupMinutes,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 true,
                 false,
                 false);
@@ -225,17 +225,17 @@ public class RecommendationIntelligenceServiceTest
                 "Account progression.",
                 score,
                 new TrainingPlan(method, "test",
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         Collections.emptyList()),
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 current,
                 target,
                 guidance("Do the selected training method."));
     }
 
-    private static RecommendationGuidance guidance(String action)
+    private static Guidance guidance(String action)
     {
-        return new RecommendationGuidance(
+        return new Guidance(
                 action,
                 "Verified: required setup is available.",
                 "Safe reachable location.",
@@ -256,10 +256,10 @@ public class RecommendationIntelligenceServiceTest
             SessionIntent intent,
             StrategyMode mode)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
         return new StrategyContext(
                 data,

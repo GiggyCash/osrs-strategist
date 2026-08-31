@@ -69,8 +69,8 @@ public class RecommendationDetailsOverlay extends OverlayPanel
                 .build());
 
         FontMetrics metrics = graphics.getFontMetrics();
-        for (RecommendationPresentation.Section section
-                : RecommendationPresentation.detailsSections(
+        for (Presentation.Section section
+                : Presentation.detailsSections(
                         recommendation, goalContext))
         {
             addLine(section.getHeading(), StrategistTheme.GOLD_SOFT);

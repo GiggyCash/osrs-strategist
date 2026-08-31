@@ -19,7 +19,7 @@ public class F2pCandidateIsolationTest
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Pandemonium", QuestStatus.NOT_STARTED);
         quests.put("The Ides of Milk", QuestStatus.NOT_STARTED);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(MembershipStatus.F2P))
                 .quests(new QuestSnapshot(quests))
                 .build();
         StrategyContext context = context(data);
@@ -34,7 +34,7 @@ public class F2pCandidateIsolationTest
     @Test
     public void combatAchievementRewardTierDoesNotAppearForF2p()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(MembershipStatus.F2P))
                 .combatAchievements(new CombatAchievementSnapshot(10, 20))
                 .build();
 
@@ -45,7 +45,7 @@ public class F2pCandidateIsolationTest
     @Test
     public void combatAchievementTierCanRemainP2pAlternative()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.P2P))
+        GameData data = GameData.builder(account(MembershipStatus.P2P))
                 .combatAchievements(new CombatAchievementSnapshot(10, 20))
                 .build();
 
@@ -62,7 +62,7 @@ public class F2pCandidateIsolationTest
         return false;
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(
                 data,

@@ -17,12 +17,12 @@ public class GroupStoragePlanningTest
     @Test
     public void recentSharedPickaxeChangesSetupGuidanceOnlyWhenEnabled()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .groupStorage(new GroupStorageSnapshot(true,
-                        Collections.singletonList(new ItemStackSnapshot(
+        GameData data = GameData.builder(account())
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .groupStorage(new ItemsState(true,
+                        Collections.singletonList(new ItemState(
                                 ItemID.BRONZE_PICKAXE,
                                 "Bronze pickaxe", 1))))
                 .build();
@@ -34,8 +34,8 @@ public class GroupStoragePlanningTest
                 StrategyMode.RELAXED, SessionIntent.AFK, true, false,
                 new PreferenceProfile()), "skill:mining");
 
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         assertTrue(policy.canLeadQueue(disabled));
         assertTrue(policy.canLeadQueue(enabled));
         assertTrue(enabled.getGuidance().getSupplies()
@@ -47,22 +47,22 @@ public class GroupStoragePlanningTest
     @Test
     public void staleSharedPickaxeUsesConcreteAcquisitionInsteadOfOwnership()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .groupStorage(new GroupStorageSnapshot(true,
-                        Collections.singletonList(new ItemStackSnapshot(
+        GameData data = GameData.builder(account())
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .groupStorage(new ItemsState(true,
+                        Collections.singletonList(new ItemState(
                                 ItemID.BRONZE_PICKAXE,
                                 "Bronze pickaxe", 1)),
                         System.currentTimeMillis()
-                                - GroupStorageSnapshot.FRESH_FOR_MILLIS - 1L))
+                                - ItemsState.FRESH_FOR_MILLIS - 1L))
                 .build();
         Recommendation mining = find(new RecommendationEngine(selector())
                 .recommendAll(data, StrategyMode.RELAXED, SessionIntent.AFK,
                         true, false, new PreferenceProfile()), "skill:mining");
 
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(mining));
         assertTrue(mining.getGuidance().getSupplies()
                 .contains("Mining tutor"));

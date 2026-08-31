@@ -9,8 +9,8 @@ import static org.junit.Assert.assertTrue;
 
 public class PrimaryRecommendationContractTest
 {
-    private final RecommendationActionabilityPolicy policy =
-            new RecommendationActionabilityPolicy();
+    private final ActionabilityPolicy policy =
+            new ActionabilityPolicy();
 
     @Test
     public void verifiedButVagueTrainingMethodStillCannotLead()
@@ -29,11 +29,11 @@ public class PrimaryRecommendationContractTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
         Recommendation recommendation = new Recommendation(
                 "skill:mining",
@@ -41,7 +41,7 @@ public class PrimaryRecommendationContractTest
                 "test",
                 100,
                 plan,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 70,
                 80,
                 null);
@@ -66,11 +66,11 @@ public class PrimaryRecommendationContractTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
         Recommendation recommendation = new Recommendation(
                 "skill:mining",
@@ -78,10 +78,10 @@ public class PrimaryRecommendationContractTest
                 "test",
                 100,
                 plan,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 70,
                 80,
-                new RecommendationGuidance(
+                new Guidance(
                         "Mine 1,000 iron ore.",
                         "Bring a rune pickaxe.",
                         "Mining Guild",

@@ -16,7 +16,7 @@ public class ResourceSourceCatalog
                 BundledCatalogLoader.array(RESOURCE, ResourceSourceDefinition[].class)));
         for (ResourceSourceDefinition source : sources)
             if (source.getId() == null || source.getNameTokens() == null)
-                throw new IllegalStateException("Incomplete resource source in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1171) + RESOURCE);
     }
 
     public List<ResourceSourceDefinition> all() { return sources; }

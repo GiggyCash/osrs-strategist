@@ -39,7 +39,7 @@ public class AccountModePairRedTeamTest
         for (AccountMode mode : Arrays.asList(AccountMode.MAIN,
                 AccountMode.IRONMAN, AccountMode.ULTIMATE_IRONMAN))
         {
-            StrategyDataBundle data = data(mode, MembershipStatus.P2P,
+            GameData data = data(mode, MembershipStatus.P2P,
                     carriedSetup(), null);
             for (Skill skill : HIGH_IMPACT_SKILLS)
             {
@@ -60,9 +60,9 @@ public class AccountModePairRedTeamTest
     @Test
     public void mainVersusUimChangesSmithingAndRunecraftGeneration()
     {
-        StrategyDataBundle main = data(AccountMode.MAIN,
+        GameData main = data(AccountMode.MAIN,
                 MembershipStatus.F2P, carriedSetup(), null);
-        StrategyDataBundle uim = data(AccountMode.ULTIMATE_IRONMAN,
+        GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.F2P, carriedSetup(), null);
 
         TrainingPlan mainSmithing = winner(main, Skill.SMITHING, 1);
@@ -153,8 +153,8 @@ public class AccountModePairRedTeamTest
                         MembershipStatus.P2P, carriedSetup(), null), false),
                         need).getSource());
 
-        GroupStorageSnapshot group = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState group = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         5000, "Steel bar", 10)));
         for (AccountMode groupMode : Arrays.asList(AccountMode.GROUP_IRONMAN,
                 AccountMode.UNRANKED_GROUP_IRONMAN))
@@ -163,16 +163,16 @@ public class AccountModePairRedTeamTest
                             MembershipStatus.P2P, carriedSetup(), group), true),
                             need).getSource());
 
-        StrategyDataBundle uimBase = data(
+        GameData uimBase = data(
                 AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
                 carriedSetup(), null);
-        StrategyDataBundle uimWithIllegalBank = StrategyDataBundle.builder(
-                uimBase.getAccount())
-                .inventory(uimBase.getInventory())
-                .equipment(uimBase.getEquipment())
-                .quests(uimBase.getQuests())
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(5000, "Steel bar", 10)), 1L))
+        GameData uimWithIllegalBank = GameData.builder(
+                uimBase.account())
+                .inventory(uimBase.inventory())
+                .equipment(uimBase.equipment())
+                .quests(uimBase.quests())
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(5000, "Steel bar", 10)), 1L))
                 .build();
         assertEquals(AcquisitionSource.SELF_SOURCE,
                 planner.plan(context(uimWithIllegalBank, false), need)
@@ -185,7 +185,7 @@ public class AccountModePairRedTeamTest
         TrainingMethod wilderness = new TrainingMethod("risky", Skill.PRAYER,
                 1, 99, "Risky bones", "Use a Wilderness route.",
                 1, 1, 1, AttentionLevel.MODERATE, 10, 2,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED,
+                Collections.emptyList(), Confidence.VERIFIED,
                 false, true, false);
         TrainingMethodMetadata metadata = new TrainingMethodMetadata(
                 TrainingIntensity.EFFICIENT, MethodCostTier.FREE,
@@ -229,9 +229,9 @@ public class AccountModePairRedTeamTest
     @Test
     public void fullInventoryRejectsEverySkillingFootprintThatDoesNotFit()
     {
-        StrategyDataBundle normal = data(AccountMode.ULTIMATE_IRONMAN,
+        GameData normal = data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P, carriedSetup(), null);
-        StrategyDataBundle full = data(AccountMode.ULTIMATE_IRONMAN,
+        GameData full = data(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P, fullInventory(), null);
         for (Skill skill : Arrays.asList(Skill.SMITHING, Skill.CRAFTING,
                 Skill.HERBLORE, Skill.CONSTRUCTION, Skill.RUNECRAFT,
@@ -254,7 +254,7 @@ public class AccountModePairRedTeamTest
         }
     }
 
-    private TrainingPlan winner(StrategyDataBundle data, Skill skill, int level)
+    private TrainingPlan winner(GameData data, Skill skill, int level)
     {
         TrainingPlan plan = selector.select(data, skill, level,
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR, false, false);
@@ -265,13 +265,13 @@ public class AccountModePairRedTeamTest
     private static Recommendation candidate(String id)
     {
         return new Recommendation(id, "Candidate", "Reason", 10.0, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Do it.", "Observed setup",
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Do it.", "Observed setup",
                         "Verified location", "Note"),
-                CandidateSafetyEvidence.harmless(false));
+                SafetyEvidence.harmless(false));
     }
 
-    private static StrategyContext context(StrategyDataBundle data,
+    private static StrategyContext context(GameData data,
             boolean groupStorage)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
@@ -280,9 +280,9 @@ public class AccountModePairRedTeamTest
                 new PreferenceProfile());
     }
 
-    private static StrategyDataBundle data(AccountMode mode,
-            MembershipStatus membership, List<ItemStackSnapshot> inventory,
-            GroupStorageSnapshot groupStorage)
+    private static GameData data(AccountMode mode,
+            MembershipStatus membership, List<ItemState> inventory,
+            ItemsState groupStorage)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -304,17 +304,17 @@ public class AccountModePairRedTeamTest
                 1000L + typeCode(mode), typeCode(mode), mode.name(),
                 membership, membership == MembershipStatus.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
-        StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData.Builder builder = GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .quests(new QuestSnapshot(quests));
         if (mode != AccountMode.ULTIMATE_IRONMAN)
-            builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(Collections.emptyList(), 1L));
         if (groupStorage != null) builder.groupStorage(groupStorage);
         return builder.build();
     }
 
-    private static List<ItemStackSnapshot> carriedSetup()
+    private static List<ItemState> carriedSetup()
     {
         return Arrays.asList(
                 item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1, 0),
@@ -325,19 +325,19 @@ public class AccountModePairRedTeamTest
                 item(ItemID.COINS, "Coins", 100_000, 5));
     }
 
-    private static List<ItemStackSnapshot> fullInventory()
+    private static List<ItemState> fullInventory()
     {
-        List<ItemStackSnapshot> values = new ArrayList<>();
+        List<ItemState> values = new ArrayList<>();
         for (int slot = 0; slot < 28; slot++)
             values.add(item(20_000 + slot, "Persistent item " + slot,
                     1, slot));
         return values;
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity,
+    private static ItemState item(int id, String name, int quantity,
             int slot)
     {
-        return new ItemStackSnapshot(id, name, quantity, slot);
+        return new ItemState(id, name, quantity, slot);
     }
 
     private static int typeCode(AccountMode mode)

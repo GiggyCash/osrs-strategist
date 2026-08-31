@@ -51,12 +51,12 @@ public class MethodGuidanceReleaseTest
                 Skill.FLETCHING, 55, 99, "Maple longbows",
                 "Fletch maple longbows.", 10, 10, 10,
                 AttentionLevel.LOW, 10, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         TrainingPlan plan = new TrainingPlan(method, "Suitable for the session.",
-                RecommendationConfidence.VERIFIED, Collections.emptyList());
+                Confidence.VERIFIED, Collections.emptyList());
         return new Recommendation("skill:fletching", "Train Fletching to 60",
                 "Unlocks the next method.", 20, plan,
-                RecommendationConfidence.VERIFIED, 55, 60,
-                new RecommendationGuidance(action, supplies, location, note));
+                Confidence.VERIFIED, 55, 60,
+                new Guidance(action, supplies, location, note));
     }
 }

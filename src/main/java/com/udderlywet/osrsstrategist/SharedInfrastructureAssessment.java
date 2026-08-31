@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 public final class SharedInfrastructureAssessment
 {
     private final CapabilityState state;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String reason;
 
 

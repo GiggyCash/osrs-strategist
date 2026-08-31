@@ -44,9 +44,9 @@ public final class QuestPathPlanningService
     public QuestPathPlan plan(StrategyContext context,
             Collection<GoalType> selectedGoals)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null
-                || context.getData().getQuests() == null
+        if (context == null || context.data() == null
+                || context.data().account() == null
+                || context.data().quests() == null
                 || selectedGoals == null)
             return new QuestPathPlan(Collections.emptyList());
 
@@ -72,7 +72,7 @@ public final class QuestPathPlanningService
             if (status == QuestStatus.COMPLETE
                     || status == QuestStatus.UNKNOWN) continue;
             QuestDefinition definition = quests.definitionFor(node.questName);
-            AccountSnapshot account = context.getData().getAccount();
+            AccountSnapshot account = context.data().account();
             if (definition == null
                     || !QuestMembershipPolicy.isAvailable(
                             definition.getName(),
@@ -82,8 +82,8 @@ public final class QuestPathPlanningService
                 continue;
             QuestResolution resolution = definition == null ? null
                     : resolver.resolve(definition, context);
-            RecommendationConfidence readiness = resolution == null
-                    ? RecommendationConfidence.CHECK_NEEDED
+            Confidence readiness = resolution == null
+                    ? Confidence.CHECK_NEEDED
                     : resolution.getConfidence();
             boolean prerequisitesComplete = definition != null;
             if (definition != null)
@@ -92,20 +92,20 @@ public final class QuestPathPlanningService
                             != QuestStatus.COMPLETE)
                         prerequisitesComplete = false;
             boolean eligible = prerequisitesComplete
-                    && readiness != RecommendationConfidence.BLOCKED;
+                    && readiness != Confidence.BLOCKED;
             Map<Skill, Integer> rewards = guaranteedRewards(definition);
             result.add(new QuestPathStep(node.questName, status,
                     node.paths, node.unfinishedDependents,
                     readiness, eligible, node.depth, rewards,
                     rewardValue(rewards, unmetSkillTargets,
-                            context.getData().getAccount())));
+                            context.data().account())));
         }
         result.sort(Comparator
                 .comparing(QuestPathStep::isEligibleNow).reversed()
                 .thenComparing(step -> step.getStatus()
                         == QuestStatus.IN_PROGRESS, Comparator.reverseOrder())
                 .thenComparing(step -> step.getReadiness()
-                        == RecommendationConfidence.VERIFIED,
+                        == Confidence.VERIFIED,
                         Comparator.reverseOrder())
                 .thenComparing(Comparator.comparingInt(
                         QuestPathStep::getGoalCount).reversed())
@@ -124,7 +124,7 @@ public final class QuestPathPlanningService
             Map<String, MutableNode> nodes)
     {
         for (Map.Entry<String, QuestStatus> entry
-                : context.getData().getQuests().getQuests().entrySet())
+                : context.data().quests().quests().entrySet())
             if (entry.getValue() == QuestStatus.NOT_STARTED
                     || entry.getValue() == QuestStatus.IN_PROGRESS)
                 traverse(goal, entry.getKey(), context, nodes,
@@ -143,7 +143,7 @@ public final class QuestPathPlanningService
             active.remove(key);
             return;
         }
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         if (!QuestMembershipPolicy.isAvailable(definition.getName(),
                 account.getMembershipStatus())
                 || !RestrictedQuestPolicy.isSafe(account,
@@ -193,7 +193,7 @@ public final class QuestPathPlanningService
             Map<String, MutableNode> nodes, StrategyContext context)
     {
         EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         for (MutableNode node : nodes.values())
         {
             QuestDefinition definition = quests.definitionFor(node.questName);
@@ -244,7 +244,7 @@ public final class QuestPathPlanningService
             StrategyContext context, String questName)
     {
         for (Map.Entry<String, QuestStatus> entry
-                : context.getData().getQuests().getQuests().entrySet())
+                : context.data().quests().quests().entrySet())
             if (normalize(entry.getKey()).equals(normalize(questName)))
                 return entry.getValue();
         return QuestStatus.UNKNOWN;

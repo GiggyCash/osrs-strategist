@@ -28,16 +28,16 @@ public class QuestResourceDependencyIntegrationTest
     @Test
     public void observedInventoryAndBankCombineBeforeDeclaringShortfall()
     {
-        InventorySnapshot inventory = new InventorySnapshot(Collections.singletonList(
-                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 2)));
-        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
-                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 2)), 1L);
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(ItemID.STEEL_BAR, "Steel bar", 2)));
+        ItemsState bank = new ItemsState(Collections.singletonList(
+                new ItemState(ItemID.STEEL_BAR, "Steel bar", 2)), 1L);
 
-        ResourceAcquisitionPlan result = new ResourceAcquisitionPlanner().plan(
+        AcquisitionPlan result = new ResourceAcquisitionPlanner().plan(
                 context(bank, inventory),
                 new ResourceNeed(ItemID.STEEL_BAR, "Steel bar", 3));
 
-        assertEquals(RecommendationConfidence.VERIFIED, result.getConfidence());
+        assertEquals(Confidence.VERIFIED, result.getConfidence());
         assertEquals(4, result.getConfirmedQuantity());
         assertEquals(AcquisitionSource.BANK, result.getSource());
     }
@@ -45,11 +45,11 @@ public class QuestResourceDependencyIntegrationTest
     @Test
     public void provenShortfallDoesNotSubtractOwnedQuantityTwice()
     {
-        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
-                new ItemStackSnapshot(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
+        ItemsState bank = new ItemsState(Collections.singletonList(
+                new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
         StrategyContext context = context(bank);
 
-        ResourceDependencyResolution result = new ResourceAcquisitionPlanner()
+        DependencyResolution result = new ResourceAcquisitionPlanner()
                 .resolveKnownShortfall(context, "Molten glass", 3);
 
         assertNotNull(result);
@@ -65,10 +65,10 @@ public class QuestResourceDependencyIntegrationTest
     @Test
     public void partialOwnedDependencyOnlyExpandsMissingRecipeBatches()
     {
-        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
-                new ItemStackSnapshot(ItemID.STEEL_BAR, "Steel bar", 24)), 1L);
+        ItemsState bank = new ItemsState(Collections.singletonList(
+                new ItemState(ItemID.STEEL_BAR, "Steel bar", 24)), 1L);
 
-        ResourceDependencyResolution result = new ResourceAcquisitionPlanner()
+        DependencyResolution result = new ResourceAcquisitionPlanner()
                 .resolveDependencies(context(bank),
                         new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 100));
 
@@ -92,8 +92,8 @@ public class QuestResourceDependencyIntegrationTest
                 Collections.emptyList(), requirement, 0, Collections.emptyList(),
                 "Test location", Collections.singletonList("Test unlock"),
                 Collections.<Skill, Integer>emptyMap());
-        BankSnapshot bank = new BankSnapshot(Collections.singletonList(
-                new ItemStackSnapshot(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
+        ItemsState bank = new ItemsState(Collections.singletonList(
+                new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
 
         QuestResolution result = new QuestRequirementResolver().resolve(
                 quest, context(bank));
@@ -106,13 +106,13 @@ public class QuestResourceDependencyIntegrationTest
                 "Dependency first step for 3 × Molten glass"));
     }
 
-    private static StrategyContext context(BankSnapshot bank)
+    private static StrategyContext context(ItemsState bank)
     {
-        return context(bank, new InventorySnapshot(Collections.emptyList()));
+        return context(bank, new ItemsState(Collections.emptyList()));
     }
 
-    private static StrategyContext context(BankSnapshot bank,
-            InventorySnapshot inventory)
+    private static StrategyContext context(ItemsState bank,
+            ItemsState inventory)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -124,9 +124,9 @@ public class QuestResourceDependencyIntegrationTest
         AccountSnapshot account = new AccountSnapshot("Dependency", 1,
                 AccountMode.IRONMAN.name(), MembershipStatus.P2P,
                 1, 1500, 0L, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .inventory(inventory)
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .bank(bank)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .build();

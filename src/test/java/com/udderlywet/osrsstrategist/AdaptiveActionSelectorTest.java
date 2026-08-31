@@ -14,22 +14,22 @@ import static org.junit.Assert.assertEquals;
 public class AdaptiveActionSelectorTest
 {
     private final AdaptiveActionSelector selector = new AdaptiveActionSelector();
-    private final MethodExecutionProfile profile =
+    private final MethodProfile profile =
             new MethodExecutionProfileCatalog().forMethod("fletching_bows");
 
     @Test
     public void ironPrefersSuppliedWillowsOverUnsuppliedYews()
     {
         AccountSnapshot account = account(1);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(
                         Collections.singletonList(
-                                new ItemStackSnapshot(1519, "Willow logs", 10000)),
+                                new ItemState(1519, "Willow logs", 10000)),
                         1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RuneLiteSkillActionDefinition selected = selector.select(
+        ActionDef selected = selector.select(
                 data,
                 profile,
                 actions(),
@@ -47,15 +47,15 @@ public class AdaptiveActionSelectorTest
     public void mainStillPrefersHigherXpYewRouteWhenItCanBuyInputs()
     {
         AccountSnapshot account = account(0);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(
+        GameData data = GameData.builder(account)
+                .bank(new ItemsState(
                         Collections.singletonList(
-                                new ItemStackSnapshot(1519, "Willow logs", 10000)),
+                                new ItemState(1519, "Willow logs", 10000)),
                         1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
 
-        RuneLiteSkillActionDefinition selected = selector.select(
+        ActionDef selected = selector.select(
                 data,
                 profile,
                 actions(),
@@ -72,14 +72,14 @@ public class AdaptiveActionSelectorTest
     @Test
     public void enabledUnobservedGroupStorageCannotBiasAnIronAction()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(4))
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(1519, "Willow logs", 10000)), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .groupStorage(GroupStorageSnapshot.unknown())
+        GameData data = GameData.builder(account(4))
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(1519, "Willow logs", 10000)), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .groupStorage(ItemsState.unknown())
                 .build();
 
-        RuneLiteSkillActionDefinition selected = selector.select(
+        ActionDef selected = selector.select(
                 data, profile, actions(), 70, MembershipStatus.P2P,
                 Experience.getXpForLevel(70),
                 Experience.getXpForLevel(80), 1.0, true);
@@ -87,10 +87,10 @@ public class AdaptiveActionSelectorTest
         assertEquals("Yew longbow (u)", selected.getName());
     }
 
-    private static List<RuneLiteSkillActionDefinition> actions()
+    private static List<ActionDef> actions()
     {
         return Arrays.asList(
-                new RuneLiteSkillActionDefinition(
+                new ActionDef(
                         Skill.FLETCHING,
                         "runelite:fletching:willow_longbow_u",
                         "Willow longbow (u)",
@@ -99,7 +99,7 @@ public class AdaptiveActionSelectorTest
                         null,
                         MembershipStatus.P2P,
                         -1),
-                new RuneLiteSkillActionDefinition(
+                new ActionDef(
                         Skill.FLETCHING,
                         "runelite:fletching:yew_longbow_u",
                         "Yew longbow (u)",

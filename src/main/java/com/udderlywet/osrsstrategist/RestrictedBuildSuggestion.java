@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public final class RestrictedBuildSuggestion
 {
     private final RestrictedBuildType type;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String evidence;
 
 

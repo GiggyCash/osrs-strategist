@@ -6,8 +6,8 @@ import java.util.*;
 final class RecommendationStabilizer
 {
     private static final double MAX_SCORE_DEFICIT = 5.0;
-    private final RecommendationActionabilityPolicy actionabilityPolicy =
-            new RecommendationActionabilityPolicy();
+    private final ActionabilityPolicy actionabilityPolicy =
+            new ActionabilityPolicy();
 
     StrategyResult stabilize(List<Recommendation> previous, StrategyResult fresh)
     {

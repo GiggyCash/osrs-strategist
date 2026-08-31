@@ -44,14 +44,14 @@ public final class MethodResourceValueService
                 ? null : recommendation.getTrainingPlan();
         TrainingMethod method = plan == null ? null : plan.getMethod();
         if (method == null || method.getSkill() == null || context == null
-                || context.getData() == null
-                || context.getData().getAccount() == null
+                || context.data() == null
+                || context.data().account() == null
                 || recommendation.getTargetLevel() <= 0)
             return recommendation;
-        MethodExecutionProfile profile = profiles.forMethod(method.getId());
+        MethodProfile profile = profiles.forMethod(method.getId());
         if (profile == null) return recommendation;
 
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         Skill skill = method.getSkill();
         int currentXp = account.getSkillExperience(skill);
         if (currentXp <= 0)
@@ -60,10 +60,10 @@ public final class MethodResourceValueService
         int targetXp = Experience.getXpForLevel(
                 recommendation.getTargetLevel());
         double multiplier = profile.getXpMultiplier()
-                * modifiers.modifier(context.getData(), skill,
+                * modifiers.modifier(context.data(), skill,
                         context.isUseGroupStorage()).getMultiplier();
-        RuneLiteSkillActionDefinition action = selector.select(
-                context.getData(), profile, actions.actionsFor(skill),
+        ActionDef action = selector.select(
+                context.data(), profile, actions.actionsFor(skill),
                 account.getSkillLevel(skill), account.getMembershipStatus(),
                 currentXp, targetXp, multiplier,
                 context.isUseGroupStorage());
@@ -71,9 +71,9 @@ public final class MethodResourceValueService
         int count = (int) Math.ceil(Math.max(0, targetXp - currentXp)
                 / (action.getXp() * multiplier));
         List<ResourcePipelineRequest> requests = new ArrayList<>();
-        RecommendationStrategicValue sharedValue =
-                RecommendationStrategicValue.neutral();
-        for (ResolvedMethodInput input : inputs.resolve(profile, action, count))
+        StrategicValue sharedValue =
+                StrategicValue.neutral();
+        for (MethodInput input : inputs.resolve(profile, action, count))
         {
             ResourcePipelinePolicy policy = policies.forInput(input.getName());
             if (policy == null) continue;
@@ -98,8 +98,8 @@ public final class MethodResourceValueService
         if (requests.isEmpty()) return recommendation;
         ResourcePortfolioAssessment assessment = resources.assessAll(
                 context, requests);
-        RecommendationStrategicValue resourceValue =
-                RecommendationStrategicValue.builder()
+        StrategicValue resourceValue =
+                StrategicValue.builder()
                         .resourceFit(assessment.getScoreAdjustment() / 12.0)
                         .evidence("resource-pipeline:" + method.getId())
                         .build()
@@ -111,16 +111,16 @@ public final class MethodResourceValueService
     private static Set<Integer> observedGroupItemIds(StrategyContext context,
             String itemName)
     {
-        if (context == null || !context.getAccountMode().isGroupIronman()
+        if (context == null || !context.accountMode().isGroupIronman()
                 || !context.isUseGroupStorage()
-                || context.getData() == null
-                || context.getData().getGroupStorage() == null
-                || !context.getData().getGroupStorage().isObserved())
+                || context.data() == null
+                || context.data().groupStorage() == null
+                || !context.data().groupStorage().isObserved())
             return Collections.emptySet();
         String target = normalize(itemName);
         Set<Integer> ids = new LinkedHashSet<>();
-        for (ItemStackSnapshot item
-                : context.getData().getGroupStorage().getItems())
+        for (ItemState item
+                : context.data().groupStorage().getItems())
             if (item != null && item.getQuantity() > 0
                     && item.getItemId() > 0
                     && target.equals(normalize(item.getName())))

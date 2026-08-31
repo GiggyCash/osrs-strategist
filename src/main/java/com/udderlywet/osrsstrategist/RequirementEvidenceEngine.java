@@ -55,14 +55,14 @@ public class RequirementEvidenceEngine
     }
 
     public List<RequirementCheck> evaluate(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method)
     {
         return evaluate(data, method, false);
     }
 
     public List<RequirementCheck> evaluate(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method,
             boolean useGroupStorage)
     {
@@ -172,24 +172,24 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateF2pCombatMagic(
-            StrategyDataBundle data, String methodId,
+            GameData data, String methodId,
             boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
         CombatEvidenceSnapshot combat = data == null ? null
-                : data.getCombatEvidence();
+                : data.combatEvidence();
         boolean spellbookObserved = combat != null;
         boolean standard = spellbookObserved
                 && combat.getSpellbookSelector() == 0;
         checks.add(new RequirementCheck(
-                "spellbook:standard", "Standard spellbook active",
+                "spellbook:standard", Text.get(1534),
                 !spellbookObserved ? RequirementState.CHECK_NEEDED
                         : standard ? RequirementState.VERIFIED
                                 : RequirementState.BLOCKED,
                 !spellbookObserved
                         ? Text.get(613)
                         : standard
-                                ? "The Standard spellbook is active."
+                                ? Text.get(1535)
                                 : Text.get(624)));
         if ("magic_f2p_curse".equals(methodId))
         {
@@ -210,7 +210,7 @@ public class RequirementEvidenceEngine
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement(
                         "resource:combat_magic_air",
-                        "Air runes for one cast", airPerCast,
+                        Text.get(1536), airPerCast,
                         ItemID.AIRRUNE),
                 useGroupStorage));
         if (fireStrikeSplash)
@@ -229,12 +229,12 @@ public class RequirementEvidenceEngine
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement(
                             "resource:combat_magic_fire",
-                            "Fire runes for one cast", firePerCast,
+                            Text.get(1537), firePerCast,
                             ItemID.FIRERUNE), useGroupStorage));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement(
                             "resource:combat_magic_catalytic",
-                            "Catalytic rune for one cast", 1,
+                            Text.get(1538), 1,
                             "magic_f2p_fire_blast".equals(methodId)
                                     ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE),
                     useGroupStorage));
@@ -249,7 +249,7 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateSailing(
-            StrategyDataBundle data, TrainingMethod method,
+            GameData data, TrainingMethod method,
             boolean useGroupStorage)
     {
         List<RequirementCheck> checks = evaluateQuestCompletion(
@@ -257,14 +257,14 @@ public class RequirementEvidenceEngine
         String id = method.getId();
         if ("sailing_courier".equals(id))
         {
-            SailingSnapshot sailing = data == null ? null : data.getSailing();
+            SailingSnapshot sailing = data == null ? null : data.sailing();
             boolean route = sailing != null
                     && sailing.hasPort(SailingSnapshot.PORT_SARIM)
                     && sailing.hasPort(SailingSnapshot.PORT_PANDEMONIUM)
                     && sailing.hasActivity(SailingSnapshot.ACTIVITY_COURIER);
             checks.add(new RequirementCheck(
                     "sailing:courier-route",
-                    "Port Sarim-Pandemonium courier route",
+                    Text.get(1539),
                     route ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     route
@@ -280,7 +280,7 @@ public class RequirementEvidenceEngine
         if ("sailing_charting".equals(id))
         {
             checks.add(new RequirementCheck(
-                    "sailing:uncompleted-chart", "Exact uncompleted sea-chart",
+                    "sailing:uncompleted-chart", Text.get(1540),
                     RequirementState.CHECK_NEEDED,
                     Text.get(657)));
             return checks;
@@ -289,7 +289,7 @@ public class RequirementEvidenceEngine
         {
             if (id.contains("jubbly"))
                 checks.addAll(evaluateQuestCompletion(data,
-                        "Zogre Flesh Eaters", "quest:zogre-flesh-eaters"));
+                        Text.get(1541), "quest:zogre-flesh-eaters"));
             if (id.contains("gwenith"))
                 checks.addAll(evaluateQuestCompletion(data,
                         "Regicide", "quest:regicide"));
@@ -306,7 +306,7 @@ public class RequirementEvidenceEngine
         return checks;
     }
 
-    private RequirementCheck resource(StrategyDataBundle data,
+    private RequirementCheck resource(GameData data,
             boolean useGroupStorage, String id, String label, int quantity,
             int itemId)
     {
@@ -316,9 +316,9 @@ public class RequirementEvidenceEngine
     }
 
     private static RequirementCheck splashingEquipmentCheck(
-            StrategyDataBundle data)
+            GameData data)
     {
-        EquipmentSnapshot equipment = data == null ? null : data.getEquipment();
+        ItemsState equipment = data == null ? null : data.equipment();
         boolean verified = equipment != null && hasSplashingSet(equipment);
         return new RequirementCheck("equipment:f2p_splashing",
                 Text.get(661),
@@ -329,7 +329,7 @@ public class RequirementEvidenceEngine
                         : Text.get(615));
     }
 
-    private static boolean hasSplashingSet(EquipmentSnapshot equipment)
+    private static boolean hasSplashingSet(ItemsState equipment)
     {
         boolean helm = false;
         boolean body = false;
@@ -337,7 +337,7 @@ public class RequirementEvidenceEngine
         boolean shield = false;
         boolean boots = false;
         boolean staff = false;
-        for (ItemStackSnapshot item : equipment.getEquippedItems())
+        for (ItemState item : equipment.getEquippedItems())
         {
             if (item == null || item.getName() == null
                     || item.getQuantity() <= 0) continue;
@@ -348,7 +348,7 @@ public class RequirementEvidenceEngine
             shield |= isMetal(name, "kiteshield");
             boots |= name.equals("fancy boots") || name.equals("fighting boots")
                     || name.equals("decorative boots");
-            staff |= name.equals("cursed goblin staff");
+            staff |= name.equals(Text.get(1542));
         }
         return helm && body && legs && shield && boots && staff;
     }
@@ -363,11 +363,11 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateCookedFish(
-            StrategyDataBundle data, boolean useGroupStorage)
+            GameData data, boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        int level = data == null || data.getAccount() == null ? 1
-                : data.getAccount().getSkillLevel(Skill.COOKING);
+        int level = data == null || data.account() == null ? 1
+                : data.account().getSkillLevel(Skill.COOKING);
         List<Integer> legal = new ArrayList<>();
         legal.add(ItemID.RAW_SHRIMP);
         legal.add(ItemID.RAW_SARDINE);
@@ -382,14 +382,14 @@ public class RequirementEvidenceEngine
         for (int i = 0; i < legal.size(); i++) legalIds[i] = legal.get(i);
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement(
-                        "resource:raw_fish", "Raw fish legal at the current level", 1,
+                        "resource:raw_fish", Text.get(1543), 1,
                         legalIds),
                 useGroupStorage));
         return checks;
     }
 
     private List<RequirementCheck> evaluateMembersCooking(
-            StrategyDataBundle data, String methodId,
+            GameData data, String methodId,
             boolean useGroupStorage)
     {
         if ("cooking_wines".equals(methodId))
@@ -405,11 +405,11 @@ public class RequirementEvidenceEngine
         }
 
         List<RequirementCheck> checks = evaluateCookedFish(data, useGroupStorage);
-        DiarySnapshot diaries = data == null ? null : data.getDiaries();
+        DiarySnapshot diaries = data == null ? null : data.diaries();
         boolean kitchen = diaries != null
                 && diaries.isTierComplete("Kourend & Kebos", DiaryTier.EASY);
         checks.add(new RequirementCheck(
-                "access:hosidius_kitchen", "Kourend & Kebos Easy Diary",
+                "access:hosidius_kitchen", Text.get(1544),
                 kitchen ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
                 kitchen
                         ? Text.get(616)
@@ -418,7 +418,7 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateFishing(
-            StrategyDataBundle data, TrainingMethod method,
+            GameData data, TrainingMethod method,
             boolean useGroupStorage)
     {
         if ("fishing_lumbridge_shrimps".equals(method.getId()))
@@ -436,36 +436,36 @@ public class RequirementEvidenceEngine
         if ("fishing_karambwan".equals(method.getId()))
         {
             List<RequirementCheck> checks = new ArrayList<>();
-            QuestSnapshot quests = data == null ? null : data.getQuests();
+            QuestSnapshot quests = data == null ? null : data.quests();
             boolean questComplete = quests != null
-                    && quests.statusOf("Tai Bwo Wannai Trio")
+                    && quests.statusOf(Text.get(1545))
                             == QuestStatus.COMPLETE;
             checks.add(new RequirementCheck(
                     "quest:tai_bwo_wannai_trio",
-                    "Tai Bwo Wannai Trio completed",
+                    Text.get(1546),
                     questComplete ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     questComplete
                             ? Text.get(618)
                             : Text.get(619)));
             TransportSnapshot transport = data == null ? null
-                    : data.getTransport();
+                    : data.transport();
             boolean observedFairyRoute = transport != null
                     && transport.hasVerifiedRoute("fairy-rings");
             boolean fairyQuestComplete = quests != null
-                    && quests.statusOf("Fairytale II - Cure a Queen")
+                    && quests.statusOf(Text.get(1547))
                             == QuestStatus.COMPLETE;
             boolean fairyRings = observedFairyRoute || fairyQuestComplete;
             checks.add(new RequirementCheck(
-                    "transport:fairy-rings", "Fairy ring banking loop",
+                    "transport:fairy-rings", Text.get(1548),
                     fairyRings ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     fairyRings
                             ? Text.get(620)
                             : Text.get(621)));
-            DiarySnapshot diaries = data == null ? null : data.getDiaries();
+            DiarySnapshot diaries = data == null ? null : data.diaries();
             boolean staffless = diaries != null
-                    && diaries.isTierComplete("Lumbridge & Draynor",
+                    && diaries.isTierComplete(Text.get(1152),
                             DiaryTier.ELITE);
             int staff = resourceReadinessService.observedQuantity(data,
                     useGroupStorage, ItemID.DRAMEN_STAFF,
@@ -487,7 +487,7 @@ public class RequirementEvidenceEngine
                     useGroupStorage));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:karambwanji",
-                            "Raw karambwanji or a loaded vessel", 1,
+                            Text.get(1549), 1,
                             ItemID.TBWT_RAW_KARAMBWANJI,
                             ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
                     useGroupStorage));
@@ -507,7 +507,7 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateHunter(
-            StrategyDataBundle data, TrainingMethod method,
+            GameData data, TrainingMethod method,
             boolean useGroupStorage)
     {
         if ("hunter_falconry".equals(method.getId()))
@@ -515,7 +515,7 @@ public class RequirementEvidenceEngine
             List<RequirementCheck> checks = new ArrayList<>();
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement(
-                            "resource:falcon_rental", "500 coins for falcon rental",
+                            "resource:falcon_rental", Text.get(1550),
                             500, ItemID.COINS), useGroupStorage));
             return checks;
         }
@@ -531,19 +531,19 @@ public class RequirementEvidenceEngine
         if ("hunter_herbiboar".equals(method.getId()))
         {
             List<RequirementCheck> checks = new ArrayList<>();
-            AccountSnapshot account = data == null ? null : data.getAccount();
+            AccountSnapshot account = data == null ? null : data.account();
             int herblore = account == null ? 1
                     : account.getSkillLevel(Skill.HERBLORE);
             checks.add(new RequirementCheck(
                     "skill:herbiboar_herblore", "31 Herblore",
                     herblore >= 31 ? RequirementState.VERIFIED
                             : RequirementState.BLOCKED,
-                    "Current Herblore level is " + herblore + "."));
-            QuestSnapshot quests = data == null ? null : data.getQuests();
+                    Text.get(1551) + herblore + "."));
+            QuestSnapshot quests = data == null ? null : data.quests();
             boolean boneVoyage = quests != null
                     && quests.statusOf("Bone Voyage") == QuestStatus.COMPLETE;
             checks.add(new RequirementCheck(
-                    "quest:bone_voyage", "Bone Voyage completed",
+                    "quest:bone_voyage", Text.get(1552),
                     boneVoyage ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     boneVoyage
@@ -555,10 +555,10 @@ public class RequirementEvidenceEngine
     }
 
     private static List<RequirementCheck> evaluateQuestCompletion(
-            StrategyDataBundle data, String questName, String id)
+            GameData data, String questName, String id)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        QuestSnapshot quests = data == null ? null : data.getQuests();
+        QuestSnapshot quests = data == null ? null : data.quests();
         boolean complete = quests != null
                 && quests.statusOf(questName) == QuestStatus.COMPLETE;
         checks.add(new RequirementCheck(
@@ -567,20 +567,20 @@ public class RequirementEvidenceEngine
                         : RequirementState.CHECK_NEEDED,
                 complete
                         ? questName + Text.get(628)
-                        : questName + " completion has not been observed."));
+                        : questName + Text.get(1553)));
         return checks;
     }
 
     private List<RequirementCheck> evaluateCrudeChairs(
-            StrategyDataBundle data, boolean useGroupStorage)
+            GameData data, boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        PohSnapshot poh = data == null ? null : data.getPoh();
+        PohSnapshot poh = data == null ? null : data.poh();
         CapabilityState house = poh == null
                 ? CapabilityState.UNKNOWN : poh.getHouseAccess();
         CapabilityState parlour = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:parlour");
-        checks.add(capabilityCheck("construction:poh", "Player-owned house",
+        checks.add(capabilityCheck("construction:poh", Text.get(1554),
                 house, Text.get(629)));
         checks.add(capabilityCheck("construction:parlour", "POH Parlour",
                 parlour, Text.get(630)));
@@ -605,15 +605,15 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateOakLarders(
-            StrategyDataBundle data, boolean useGroupStorage)
+            GameData data, boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        PohSnapshot poh = data == null ? null : data.getPoh();
+        PohSnapshot poh = data == null ? null : data.poh();
         CapabilityState house = poh == null
                 ? CapabilityState.UNKNOWN : poh.getHouseAccess();
         CapabilityState kitchen = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:kitchen");
-        checks.add(capabilityCheck("construction:poh", "Player-owned house",
+        checks.add(capabilityCheck("construction:poh", Text.get(1554),
                 house, Text.get(631)));
         checks.add(capabilityCheck("construction:kitchen", "POH Kitchen",
                 kitchen, Text.get(632)));
@@ -640,12 +640,12 @@ public class RequirementEvidenceEngine
                         ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 state == CapabilityState.VERIFIED
-                        ? label + " is observed for this character."
+                        ? label + Text.get(1555)
                         : unknownEvidence);
     }
 
     private List<RequirementCheck> evaluateTool(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method,
             ItemRequirementClass itemClass,
             boolean useGroupStorage,
@@ -663,13 +663,13 @@ public class RequirementEvidenceEngine
     }
 
     private static RequirementCheck usableToolCheck(
-            StrategyDataBundle data,
+            GameData data,
             ItemRequirementClass itemClass,
             boolean useGroupStorage,
             String requirementId,
             String label)
     {
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
         int usable = items.quantityMatching(itemClass,
                 java.util.Collections.emptyList());
         return new RequirementCheck(
@@ -690,7 +690,7 @@ public class RequirementEvidenceEngine
      * account-specific storage.
      */
     private List<RequirementCheck> evaluateRunecraft(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method,
             boolean useGroupStorage)
     {
@@ -709,7 +709,7 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateAgility(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method)
     {
         List<RequirementCheck> checks = new ArrayList<>();
@@ -718,7 +718,7 @@ public class RequirementEvidenceEngine
             checks.add(agilityAccessEvaluator.wildernessCourseCheck(data));
             checks.add(new RequirementCheck(
                     "agility:wilderness_risk",
-                    "Wilderness risk accepted",
+                    Text.get(1556),
                     RequirementState.VERIFIED,
                     Text.get(636)
             ));
@@ -732,13 +732,13 @@ public class RequirementEvidenceEngine
     }
 
     private List<RequirementCheck> evaluateFarming(
-            StrategyDataBundle data,
+            GameData data,
             TrainingMethod method,
             boolean useGroupStorage)
     {
         List<RequirementCheck> checks = new ArrayList<>();
-        AccountSnapshot account = data == null ? null : data.getAccount();
-        FarmingSnapshot farming = data == null ? null : data.getFarming();
+        AccountSnapshot account = data == null ? null : data.account();
+        FarmingSnapshot farming = data == null ? null : data.farming();
         int level = account == null ? 1 : account.getSkillLevel(Skill.FARMING);
 
         if ("farming_early".equals(method.getId()))
@@ -746,7 +746,7 @@ public class RequirementEvidenceEngine
             String patch = farmingAccessEvaluator.firstReachablePatchName(farming);
             checks.add(new RequirementCheck(
                     "farming:reachable_patch",
-                    "Reachable Farming patch",
+                    Text.get(1557),
                     patch == null
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
@@ -756,7 +756,7 @@ public class RequirementEvidenceEngine
             ));
             checks.add(new RequirementCheck(
                     "farming:supplies",
-                    "Seeds and farming tools",
+                    Text.get(1558),
                     RequirementState.CHECK_NEEDED,
                     Text.get(639)
             ));
@@ -769,7 +769,7 @@ public class RequirementEvidenceEngine
             boolean reachable = farming != null
                     && farming.isPatchReachable("falador");
             checks.add(new RequirementCheck(
-                    "farming:falador_patch", "South Falador allotments",
+                    "farming:falador_patch", Text.get(1559),
                     reachable ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     reachable
@@ -841,13 +841,13 @@ public class RequirementEvidenceEngine
                     level >= 9
                             ? RequirementState.VERIFIED
                             : RequirementState.BLOCKED,
-                    "Current Farming level is " + level + "."
+                    Text.get(1560) + level + "."
             ));
 
             String patch = farmingAccessEvaluator.firstReachableHerbPatchName(farming);
             checks.add(new RequirementCheck(
                     "farming:herb_patch",
-                    "Reachable herb patch",
+                    Text.get(1561),
                     patch == null
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
@@ -896,7 +896,7 @@ public class RequirementEvidenceEngine
     }
 
     private RequirementCheck toolCheck(
-            StrategyDataBundle data,
+            GameData data,
             FarmingSnapshot farming,
             ResourceRequirement requirement,
             String toolId,

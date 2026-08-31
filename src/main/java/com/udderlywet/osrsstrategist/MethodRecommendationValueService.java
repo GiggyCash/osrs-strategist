@@ -45,18 +45,18 @@ public final class MethodRecommendationValueService
         if (assessment == null || assessment.getLocation() == null)
             return recommendation;
 
-        RecommendationStrategicValue value =
+        StrategicValue value =
                 recommendation.getStrategicValue().merge(
-                        RecommendationStrategicValue.builder()
+                        StrategicValue.builder()
                                 .travelFit(assessment.getScoreAdjustment()
                                         / 6.0)
                                 .evidence("travel:"
                                         + assessment.getLocation().getId())
                                 .build());
         Recommendation result = recommendation.withStrategicValue(value);
-        RecommendationGuidance guidance = result.getGuidance();
+        Guidance guidance = result.getGuidance();
         if (guidance == null) return result;
-        return result.withGuidance(new RecommendationGuidance(
+        return result.withGuidance(new Guidance(
                 guidance.getAction(), guidance.getSupplies(),
                 assessment.getLocation().getName() + ".",
                 append(guidance.getNote(), assessment.getEvidence()),

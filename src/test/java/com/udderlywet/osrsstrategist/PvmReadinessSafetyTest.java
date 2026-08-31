@@ -19,17 +19,17 @@ public class PvmReadinessSafetyTest
     @Test
     public void bankedWeaponAndOneFoodDoNotProveReadyCarriedSetup()
     {
-        BankSnapshot bank = new BankSnapshot(Arrays.asList(
+        ItemsState bank = new ItemsState(Arrays.asList(
                 item("Rune scimitar", 1), item("Shark", 100)), 1L);
         PvmReadiness bankOnly = analyze(null,
-                new InventorySnapshot(Collections.singletonList(item("Shark", 1))), bank);
+                new ItemsState(Collections.singletonList(item("Shark", 1))), bank);
         assertFalse(bankOnly.isReadyForRecommendation());
         assertTrue(bankOnly.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("Equip")));
 
         PvmReadiness oneFood = analyze(
-                new EquipmentSnapshot(Collections.singletonList(weapon("Rune scimitar", 1))),
-                new InventorySnapshot(Collections.singletonList(item("Shark", 1))), bank);
+                new ItemsState(Collections.singletonList(weapon("Rune scimitar", 1))),
+                new ItemsState(Collections.singletonList(item("Shark", 1))), bank);
         assertFalse(oneFood.isReadyForRecommendation());
         assertTrue(oneFood.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("token food")));
@@ -40,9 +40,9 @@ public class PvmReadinessSafetyTest
     {
         PvmReadiness readiness = analyzer.analyze(account(),
                 new QuestSnapshot(Collections.emptyMap()),
-                new EquipmentSnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         weapon("Rune scimitar", 1))),
-                new InventorySnapshot(Arrays.asList(
+                new ItemsState(Arrays.asList(
                         item("Shark", 5), item("Prayer potion(4)", 1))),
                 null, null).readinessFor("pvm:callisto");
         assertFalse(readiness.isReadyForRecommendation());
@@ -54,8 +54,8 @@ public class PvmReadinessSafetyTest
     public void equipmentWithoutWeaponSlotProvenanceDoesNotProveAReadiedWeapon()
     {
         PvmReadiness readiness = analyze(
-                new EquipmentSnapshot(Collections.singletonList(item("Rune scimitar", 1))),
-                new InventorySnapshot(Collections.emptyList()), null);
+                new ItemsState(Collections.singletonList(item("Rune scimitar", 1))),
+                new ItemsState(Collections.emptyList()), null);
         assertTrue(readiness.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("Equip a usable")));
     }
@@ -65,37 +65,37 @@ public class PvmReadinessSafetyTest
     {
         Map<String, PvmReadiness> observedMap = new java.util.HashMap<>();
         observedMap.put("pvm:obor", new PvmReadiness("pvm:obor", true,
-                RecommendationConfidence.VERIFIED, Collections.emptyList()));
+                Confidence.VERIFIED, Collections.emptyList()));
         PvmReadiness rechecked = analyzer.analyze(account(),
                 new QuestSnapshot(Collections.emptyMap()), null,
-                new InventorySnapshot(Collections.emptyList()), null,
+                new ItemsState(Collections.emptyList()), null,
                 new PvmSnapshot(observedMap)).readinessFor("pvm:obor");
         assertFalse(rechecked.isReadyForRecommendation());
-        assertTrue(rechecked.getConfidence() == RecommendationConfidence.CHECK_NEEDED);
+        assertTrue(rechecked.getConfidence() == Confidence.CHECK_NEEDED);
 
         observedMap.put("pvm:obor", new PvmReadiness("pvm:obor", false,
-                RecommendationConfidence.BLOCKED,
+                Confidence.BLOCKED,
                 Collections.singletonList("Known unsafe state")));
         PvmReadiness blocked = analyzer.analyze(account(),
                 new QuestSnapshot(Collections.emptyMap()), null,
-                new InventorySnapshot(Collections.emptyList()), null,
+                new ItemsState(Collections.emptyList()), null,
                 new PvmSnapshot(observedMap)).readinessFor("pvm:obor");
-        assertTrue(blocked.getConfidence() == RecommendationConfidence.BLOCKED);
+        assertTrue(blocked.getConfidence() == Confidence.BLOCKED);
     }
 
     @Test
     public void oborTransitionsFromPreparationToFullyVerifiedCarriedEvidence()
     {
-        EquipmentSnapshot equipment = new EquipmentSnapshot(
+        ItemsState equipment = new ItemsState(
                 Collections.singletonList(weapon("Rune scimitar", 1)));
         PvmReadiness preparation = analyze(equipment,
-                new InventorySnapshot(Arrays.asList(item("Shark", 5))), null);
+                new ItemsState(Arrays.asList(item("Shark", 5))), null);
         assertFalse(preparation.isReadyForRecommendation());
         assertTrue(preparation.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("Giant key")));
 
         PvmReadiness ready = analyze(equipment,
-                new InventorySnapshot(Arrays.asList(
+                new ItemsState(Arrays.asList(
                         item("Shark", 5), item("Giant key", 1))), null);
         assertTrue(ready.isReadyForRecommendation());
         assertTrue(ready.getMissingRequirements().isEmpty());
@@ -106,13 +106,13 @@ public class PvmReadinessSafetyTest
     {
         Map<String, PvmReadiness> observed = new java.util.HashMap<>();
         observed.put("pvm:obor", new PvmReadiness("pvm:obor", false,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Collections.singletonList("Old missing setup")));
         PvmReadiness ready = analyzer.analyze(account(),
                 new QuestSnapshot(Collections.emptyMap()),
-                new EquipmentSnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         weapon("Rune scimitar", 1))),
-                new InventorySnapshot(Arrays.asList(
+                new ItemsState(Arrays.asList(
                         item("Shark", 5), item("Giant key", 1))),
                 null, new PvmSnapshot(observed)).readinessFor("pvm:obor");
         assertTrue(ready.isReadyForRecommendation());
@@ -126,9 +126,9 @@ public class PvmReadinessSafetyTest
                 "The Ides of Milk", QuestStatus.NOT_STARTED);
         PvmReadiness blocked = analyzer.analyze(account(),
                 new QuestSnapshot(quests),
-                new EquipmentSnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         weapon("Rune scimitar", 1))),
-                new InventorySnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         item("Lobster", 5))), null, null)
                 .readinessFor("pvm:brutus");
         assertFalse(blocked.isReadyForRecommendation());
@@ -138,30 +138,30 @@ public class PvmReadinessSafetyTest
         PvmReadiness ready = analyzer.analyze(account(),
                 new QuestSnapshot(Collections.singletonMap(
                         "The Ides of Milk", QuestStatus.COMPLETE)),
-                new EquipmentSnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         weapon("Rune scimitar", 1))),
-                new InventorySnapshot(Collections.singletonList(
+                new ItemsState(Collections.singletonList(
                         item("Lobster", 5))), null, null)
                 .readinessFor("pvm:brutus");
         assertTrue(ready.isReadyForRecommendation());
     }
 
-    private PvmReadiness analyze(EquipmentSnapshot equipment,
-            InventorySnapshot inventory, BankSnapshot bank)
+    private PvmReadiness analyze(ItemsState equipment,
+            ItemsState inventory, ItemsState bank)
     {
         return analyzer.analyze(account(), new QuestSnapshot(Collections.emptyMap()),
                 equipment, inventory, bank, null).readinessFor("pvm:obor");
     }
 
-    private static ItemStackSnapshot item(String name, int quantity)
+    private static ItemState item(String name, int quantity)
     {
-        return new ItemStackSnapshot(1, name, quantity);
+        return new ItemState(1, name, quantity);
     }
 
 
-    private static ItemStackSnapshot weapon(String name, int quantity)
+    private static ItemState weapon(String name, int quantity)
     {
-        return new ItemStackSnapshot(1, name, quantity,
+        return new ItemState(1, name, quantity,
                 EquipmentInventorySlot.WEAPON.getSlotIdx());
     }
 

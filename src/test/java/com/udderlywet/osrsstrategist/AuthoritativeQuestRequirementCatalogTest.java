@@ -58,9 +58,9 @@ public class AuthoritativeQuestRequirementCatalogTest
         states.put("Prying Times", QuestStatus.NOT_STARTED);
         states.put("Pandemonium", QuestStatus.COMPLETE);
         states.put("The Knight's Sword", QuestStatus.COMPLETE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+        GameData data = GameData.builder(account(1))
                 .quests(new QuestSnapshot(states))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
         StrategyContext context = new StrategyContext(data,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.QUEST_CAPE, false, false,

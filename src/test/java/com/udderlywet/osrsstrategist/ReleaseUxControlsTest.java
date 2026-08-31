@@ -78,19 +78,19 @@ public class ReleaseUxControlsTest
         OsrsStrategistPanel panel = new OsrsStrategistPanel(
                 (id, feedback) -> { }, null, shown::set,
                 () -> { }, () -> { }, "", value -> { });
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 "Follow only the verified retrieval sequence.",
                 "Exact observed setup", "Hespori cave", "Second deaths can delete stored items.")
                 .withStorageDecision(new UimStorageDecision(
                         StorageCapability.HESPORI_ITEM_RETRIEVAL, true,
-                        RecommendationConfidence.VERIFIED, RiskLevel.HIGH,
+                        Confidence.VERIFIED, RiskLevel.HIGH,
                         "Verified exact service"),
                         RecommendationRiskDisclosure.deathStorage());
         Recommendation dangerous = new Recommendation(
                 "uim:hespori-transition", "Death-storage transition",
                 "A major transition is otherwise blocked.", 1.0, null,
-                RecommendationConfidence.CHECK_NEEDED, 0, 0, guidance,
-                CandidateSafetyEvidence.harmless(false));
+                Confidence.CHECK_NEEDED, 0, 0, guidance,
+                SafetyEvidence.harmless(false));
 
         panel.updateRecommendations(Collections.singletonList(dangerous));
         assertEquals("View Risk Steps", panel.detailsLabelForTest());
@@ -141,9 +141,9 @@ public class ReleaseUxControlsTest
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
         Opportunity herb = new Opportunity("opportunity:herb-run",
                 OpportunityType.HERB_RUN, "Herb run", true,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.singletonList("Carry a spade"), false,
-                CandidateSafetyEvidence.skill(false,
+                SafetyEvidence.skill(false,
                         net.runelite.api.Skill.FARMING));
 
         panel.updateOpportunities(Collections.singletonList(herb));
@@ -166,8 +166,8 @@ public class ReleaseUxControlsTest
     {
         return new Recommendation("quest:test", "Complete a useful quest",
                 "Unlocks useful progression.", 1.0, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Start the quest.", null,
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Start the quest.", null,
                         "Quest start", null));
     }
 
@@ -178,12 +178,12 @@ public class ReleaseUxControlsTest
         TrainingMethod method = new TrainingMethod(id + ":method", skill,
                 1, 99, "Concrete method", "Named location", 1, 1, 1,
                 AttentionLevel.MODERATE, 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation(id, title, "Reason", 1,
                 new TrainingPlan(method, "Reason",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 30, 40,
-                new RecommendationGuidance("Repeat the exact loop.",
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 30, 40,
+                new Guidance("Repeat the exact loop.",
                         "Required tool.", "Named location.", null));
     }
 }

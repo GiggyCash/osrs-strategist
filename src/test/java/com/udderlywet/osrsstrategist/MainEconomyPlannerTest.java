@@ -20,7 +20,7 @@ public class MainEconomyPlannerTest
                 new MainPurchaseCandidate(1, "Material", 100,
                         500L, 2, 30));
         assertEquals(MainPurchaseChoice.BUY, decision.getChoice());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 decision.getConfidence());
     }
 
@@ -33,7 +33,7 @@ public class MainEconomyPlannerTest
                         500L, 2, 30));
         assertEquals(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                 decision.getChoice());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 decision.getConfidence());
     }
 
@@ -50,7 +50,7 @@ public class MainEconomyPlannerTest
     public void unmeasuredPurchaseUsesBroadWealthBands()
     {
         AccountEconomySnapshot economy = new AccountEconomySnapshot(
-                100_000L, 100_000L, RecommendationConfidence.VERIFIED);
+                100_000L, 100_000L, Confidence.VERIFIED);
         assertEquals(MainPurchaseChoice.BUY,
                 planner.evaluateUnmeasuredPurchase(economy,
                         new PurchaseCostEstimate(true, 5_000L), true)
@@ -66,9 +66,9 @@ public class MainEconomyPlannerTest
 
     private static StrategyContext context(long coins)
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(main())
+        GameData data = GameData.builder(main())
                 .economy(new AccountEconomySnapshot(
-                        coins, coins, RecommendationConfidence.VERIFIED))
+                        coins, coins, Confidence.VERIFIED))
                 .build();
         return new StrategyContext(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,

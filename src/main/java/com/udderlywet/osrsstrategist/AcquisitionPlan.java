@@ -10,26 +10,26 @@ import lombok.Getter;
  * which sourcing family should be evaluated next.</p>
  */
 @Getter
-public final class ResourceAcquisitionPlan
+public final class AcquisitionPlan
 {
     private final ResourceNeed need;
     private final AcquisitionSource source;
     private final int confirmedQuantity;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final String note;
 
-    public ResourceAcquisitionPlan(
+    public AcquisitionPlan(
             ResourceNeed need,
             AcquisitionSource source,
             int confirmedQuantity,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             String note)
     {
         this.need = need;
         this.source = source;
         this.confirmedQuantity = Math.max(0, confirmedQuantity);
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED
+                ? Confidence.CHECK_NEEDED
                 : confidence;
         this.note = note;
     }

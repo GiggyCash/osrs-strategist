@@ -9,11 +9,11 @@ public final class GoalRecommendationContext
     private final GoalType goal;
     private final GoalRecommendationRelationship relationship;
     private final String status;
-    private final GoalDependencyProvenance provenance;
+    private final GoalProvenance provenance;
 
     private GoalRecommendationContext(GoalType goal,
             GoalRecommendationRelationship relationship, String status,
-            GoalDependencyProvenance provenance)
+            GoalProvenance provenance)
     {
         this.goal = goal == null ? GoalType.AUTOMATIC : goal;
         this.relationship = relationship == null
@@ -38,7 +38,7 @@ public final class GoalRecommendationContext
                             ? GoalRecommendationRelationship.CHECK_NEEDED
                             : GoalRecommendationRelationship.FALLBACK,
                     membership == MembershipStatus.UNKNOWN
-                            ? "Confirm membership before advancing " + name + "."
+                            ? Text.get(1229) + name + "."
                             : name + Text.get(297),
                     null);
 
@@ -47,28 +47,28 @@ public final class GoalRecommendationContext
                     GoalRecommendationRelationship.CHECK_NEEDED,
                     Text.get(298) + name + ".",
                     null);
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        if (recommendation.getConfidence() == Confidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.BLOCKED,
-                    "This account cannot safely advance " + name + " yet.",
+                    Text.get(1230) + name + " yet.",
                     null);
 
-        GoalDependencyProvenance provenance = recommendation.getGoalProvenance();
+        GoalProvenance provenance = recommendation.getGoalProvenance();
         if (provenance != null
                 && provenance.proves(safeGoal, recommendation.getId()))
         {
             if (recommendation.getConfidence()
-                    == RecommendationConfidence.CHECK_NEEDED)
+                    == Confidence.CHECK_NEEDED)
                 return new GoalRecommendationContext(safeGoal,
                         GoalRecommendationRelationship.CHECK_NEEDED,
-                        "Prepare the next step toward " + name + ".",
+                        Text.get(1231) + name + ".",
                         provenance);
             boolean direct = provenance.getRelationship()
                     == GoalRecommendationRelationship.DIRECT;
             return new GoalRecommendationContext(safeGoal,
                     provenance.getRelationship(),
-                    direct ? "Directly advances " + name + "."
-                            : "Advances the proven path to " + name + ".",
+                    direct ? Text.get(1232) + name + "."
+                            : Text.get(1233) + name + ".",
                     provenance);
         }
         return new GoalRecommendationContext(safeGoal,

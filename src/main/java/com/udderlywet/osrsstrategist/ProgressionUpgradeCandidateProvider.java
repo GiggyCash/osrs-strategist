@@ -10,13 +10,13 @@ import net.runelite.api.Skill;
  * verified, build-safe, and valuable enough for the current account.
  *
  * <p>Every VERIFIED non-skill candidate in this provider includes concrete
- * guidance. This is important because RecommendationActionabilityPolicy will
+ * guidance. This is important because ActionabilityPolicy will
  * not allow an attractive-sounding upgrade with no executable action to steal
  * the primary DO NEXT slot.</p>
  */
 @Singleton
 public class ProgressionUpgradeCandidateProvider
-        implements StrategyCandidateProvider
+        implements CandidateProvider
 {
     @Override
     public String getId()
@@ -28,15 +28,15 @@ public class ProgressionUpgradeCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().account() == null)
         {
             return result;
         }
 
-        StrategyDataBundle data = context.getData();
-        AccountSnapshot account = data.getAccount();
-        ObservedItemIndex items = new ObservedItemIndex(
+        GameData data = context.data();
+        AccountSnapshot account = data.account();
+        ItemIndex items = new ItemIndex(
                 data, context.isUseGroupStorage());
 
         fighterTorso(context, account, items, result);
@@ -55,12 +55,12 @@ public class ProgressionUpgradeCandidateProvider
     }
 
     private static void questRewardGear(StrategyContext context,
-            AccountSnapshot account, ObservedItemIndex items,
+            AccountSnapshot account, ItemIndex items,
             List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
                 || !ownershipCanBeJudged(account, items)
-                || context.getData().getQuests() == null) return;
+                || context.data().quests() == null) return;
 
         addQuestRewardGear(context, items, result,
                 "salve-amulet", "Salve amulet", "Haunted Mine",
@@ -69,7 +69,7 @@ public class ProgressionUpgradeCandidateProvider
                 Text.get(475),
                 items.has("Chisel"));
         addQuestRewardGear(context, items, result,
-                "helm-of-neitiznot", "Helm of neitiznot", "The Fremennik Isles",
+                "helm-of-neitiznot", "Helm of neitiznot", Text.get(1394),
                 Text.get(486),
                 Text.get(497),
                 Text.get(508), false);
@@ -81,15 +81,15 @@ public class ProgressionUpgradeCandidateProvider
     }
 
     private static void addQuestRewardGear(StrategyContext context,
-            ObservedItemIndex items, List<Recommendation> result,
+            ItemIndex items, List<Recommendation> result,
             String suffix, String item, String quest, String action,
             String supplies, String note, boolean ready)
     {
-        if (context.getData().getQuests().statusOf(quest) != QuestStatus.COMPLETE
+        if (context.data().quests().statusOf(quest) != QuestStatus.COMPLETE
                 || items.has(item)) return;
         String id = "upgrade:" + suffix;
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
-        AccountMode mode = context.getAccountMode();
+        if (context.preferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.accountMode();
         boolean retrievalOnly = mode == AccountMode.ULTIMATE_IRONMAN
                 && items.restrictedQuantity(item) > 0;
         String uim = mode == AccountMode.ULTIMATE_IRONMAN
@@ -103,15 +103,15 @@ public class ProgressionUpgradeCandidateProvider
                 (retrievalOnly ? "Retrieve " : "Recover ") + item,
                 quest + Text.get(457),
                 34.0 + preference(context, id), ready && !retrievalOnly
-                        ? RecommendationConfidence.VERIFIED
-                        : RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(nextAction, supplies + uim,
+                        ? Confidence.VERIFIED
+                        : Confidence.CHECK_NEEDED,
+                new Guidance(nextAction, supplies + uim,
                         Text.get(458), note),
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void dragonScimitar(StrategyContext context,
-            AccountSnapshot account, ObservedItemIndex items,
+            AccountSnapshot account, ItemIndex items,
             List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
@@ -119,35 +119,35 @@ public class ProgressionUpgradeCandidateProvider
                 || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
                 || !ownershipCanBeJudged(account, items)
                 || ownsObserved(account, items, "Dragon scimitar",
-                        "Abyssal whip", "Blade of saeldor", "Blade of saeldor (c)")) return;
-        QuestSnapshot quests = context.getData().getQuests();
+                        "Abyssal whip", "Blade of saeldor", Text.get(1395))) return;
+        QuestSnapshot quests = context.data().quests();
         if (quests == null || quests.statusOf("Monkey Madness I")
                 != QuestStatus.COMPLETE) return;
         String id = "upgrade:dragon-scimitar";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
-        AccountMode mode = context.getAccountMode();
+        if (context.preferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.accountMode();
         String setup = mode == AccountMode.ULTIMATE_IRONMAN
                 ? Text.get(459)
                 : Text.get(460);
-        boolean cashReady = verifiedCoins(context.getData(), 100_000L);
-        result.add(new Recommendation(id, "Buy a Dragon scimitar",
+        boolean cashReady = verifiedCoins(context.data(), 100_000L);
+        result.add(new Recommendation(id, Text.get(1396),
                 Text.get(461),
                 42.0 + preference(context, id), cashReady
-                        ? RecommendationConfidence.VERIFIED
-                        : RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(
+                        ? Confidence.VERIFIED
+                        : Confidence.CHECK_NEEDED,
+                new Guidance(
                         cashReady
                                 ? Text.get(462)
                                 : Text.get(463),
-                        setup + (cashReady ? " Coin affordability is observed." : Text.get(465))
+                        setup + (cashReady ? Text.get(1397) : Text.get(465))
                                 + Text.get(466),
                         Text.get(467),
                         Text.get(468)),
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void avaDevice(StrategyContext context,
-            AccountSnapshot account, ObservedItemIndex items,
+            AccountSnapshot account, ItemIndex items,
             List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
@@ -156,11 +156,11 @@ public class ProgressionUpgradeCandidateProvider
                 || !ownershipCanBeJudged(account, items)
                 || ownsObserved(account, items, "Ava's attractor", "Ava's accumulator",
                         "Ava's assembler", "Masori assembler", "Dizana's quiver")) return;
-        QuestSnapshot quests = context.getData().getQuests();
+        QuestSnapshot quests = context.data().quests();
         if (quests == null || quests.statusOf("Animal Magnetism")
                 != QuestStatus.COMPLETE) return;
         String id = "upgrade:ava-device";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        if (context.preferenceProfile().isOnCooldown(id)) return;
         String device = account.getSkillLevel(Skill.RANGED) >= 50
                 ? "Ava's accumulator" : "Ava's attractor";
         String replacement = account.getSkillLevel(Skill.RANGED) >= 50
@@ -168,14 +168,14 @@ public class ProgressionUpgradeCandidateProvider
                 : Text.get(470);
         boolean arrowsReady = account.getSkillLevel(Skill.RANGED) < 50
                 || items.quantity("Steel arrow") >= 75;
-        boolean replacementReady = verifiedCoins(context.getData(), 999L)
+        boolean replacementReady = verifiedCoins(context.data(), 999L)
                 && arrowsReady;
         result.add(new Recommendation(id, "Get " + device,
                 Text.get(471),
                 40.0 + preference(context, id), replacementReady
-                        ? RecommendationConfidence.VERIFIED
-                        : RecommendationConfidence.CHECK_NEEDED,
-                new RecommendationGuidance(
+                        ? Confidence.VERIFIED
+                        : Confidence.CHECK_NEEDED,
+                new Guidance(
                         replacementReady
                                 ? Text.get(472) + device + Text.get(473)
                                 : Text.get(474) + device + ".",
@@ -184,13 +184,13 @@ public class ProgressionUpgradeCandidateProvider
                                 : Text.get(477)),
                         Text.get(478),
                         Text.get(479)),
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void fighterTorso(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
@@ -215,16 +215,16 @@ public class ProgressionUpgradeCandidateProvider
         if (!ownershipCanBeJudged(account, items)) return;
         if (ownsObserved(account, items,
                 "Fighter torso", "Fighter torso (l)",
-                "Bandos chestplate", "Blood moon chestplate",
-                "Torva platebody", "Torva platebody (damaged)"))
+                "Bandos chestplate", Text.get(1398),
+                "Torva platebody", Text.get(1399)))
         {
             return;
         }
 
         String id = "upgrade:fighter-torso";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        if (context.preferenceProfile().isOnCooldown(id)) return;
 
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         double score = mode.isIronLike() ? 48.0 : 37.0;
         if (defencePure) score += 8.0;
         if (context.getActiveGoal() == GoalType.GEAR_TARGET
@@ -237,7 +237,7 @@ public class ProgressionUpgradeCandidateProvider
         String buildNote = defencePure
                 ? Text.get(480)
                 : Text.get(481);
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 Text.get(482),
                 Text.get(483) + buildNote,
                 Text.get(484),
@@ -246,18 +246,18 @@ public class ProgressionUpgradeCandidateProvider
 
         result.add(new Recommendation(
                 id,
-                "Get a Fighter torso",
+                Text.get(1400),
                 Text.get(487),
                 score,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 guidance,
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void abyssalWhip(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
@@ -267,7 +267,7 @@ public class ProgressionUpgradeCandidateProvider
 
         if (ownsObserved(account, items,
                 "Abyssal whip", "Abyssal whip (or)", "Abyssal tentacle",
-                "Blade of saeldor", "Blade of saeldor (c)",
+                "Blade of saeldor", Text.get(1395),
                 "Ghrazi rapier", "Osmumten's fang",
                 "Soulreaper axe", "Scythe of vitur"))
         {
@@ -275,22 +275,22 @@ public class ProgressionUpgradeCandidateProvider
         }
 
         String id = "upgrade:abyssal-whip";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
-        AccountMode mode = context.getAccountMode();
+        if (context.preferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.accountMode();
         int slayer = account.getSkillLevel(Skill.SLAYER);
         double score;
         String title;
         String reason;
-        RecommendationConfidence confidence;
-        RecommendationGuidance guidance;
+        Confidence confidence;
+        Guidance guidance;
 
         if (mode.usesGrandExchange())
         {
             score = 41.0;
-            title = "Get an Abyssal whip";
+            title = Text.get(1401);
             reason = Text.get(488);
-            confidence = RecommendationConfidence.CHECK_NEEDED;
-            guidance = new RecommendationGuidance(
+            confidence = Confidence.CHECK_NEEDED;
+            guidance = new Guidance(
                     Text.get(489),
                     Text.get(490),
                     "Grand Exchange.",
@@ -300,10 +300,10 @@ public class ProgressionUpgradeCandidateProvider
         else if (slayer >= 85)
         {
             score = 49.0;
-            title = "Get an Abyssal whip";
+            title = Text.get(1401);
             reason = Text.get(492);
-            confidence = RecommendationConfidence.CHECK_NEEDED;
-            guidance = new RecommendationGuidance(
+            confidence = Confidence.CHECK_NEEDED;
+            guidance = new Guidance(
                     Text.get(493),
                     Text.get(494),
                     Text.get(495),
@@ -321,11 +321,11 @@ public class ProgressionUpgradeCandidateProvider
             }
             int remaining = 85 - slayer;
             score = Math.max(24.0, 42.0 - remaining * 0.8);
-            title = "Work toward 85 Slayer for a whip";
+            title = Text.get(1402);
             reason = Text.get(498);
-            confidence = RecommendationConfidence.VERIFIED;
-            guidance = new RecommendationGuidance(
-                    "Train Slayer from " + slayer + Text.get(499),
+            confidence = Confidence.VERIFIED;
+            guidance = new Guidance(
+                    Text.get(1403) + slayer + Text.get(499),
                     Text.get(500),
                     Text.get(501),
                     Text.get(502)
@@ -335,13 +335,13 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
         result.add(new Recommendation(
                 id, title, reason, score, confidence, guidance,
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void dragonDefender(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
@@ -360,14 +360,14 @@ public class ProgressionUpgradeCandidateProvider
         if (attack < 99 && strength < 99 && attack + strength < 130) return;
 
         if (ownsObserved(account, items,
-                "Dragon defender", "Dragon defender (t)",
-                "Avernic defender", "Avernic defender (l)"))
+                "Dragon defender", Text.get(1404),
+                "Avernic defender", Text.get(1405)))
         {
             return;
         }
 
         String id = "upgrade:dragon-defender";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        if (context.preferenceProfile().isOnCooldown(id)) return;
         double score = 45.0;
         if (context.getActiveGoal() == GoalType.GEAR_TARGET
                 || context.getActiveGoal() == GoalType.RAID_READY)
@@ -376,7 +376,7 @@ public class ProgressionUpgradeCandidateProvider
         }
         score += preference(context, id);
 
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 Text.get(503),
                 Text.get(504),
                 Text.get(505),
@@ -384,24 +384,24 @@ public class ProgressionUpgradeCandidateProvider
         );
         result.add(new Recommendation(
                 id,
-                "Get a Dragon defender",
+                Text.get(1406),
                 Text.get(507),
                 score,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 guidance,
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void barrowsGloves(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P) return;
-        QuestSnapshot quests = context.getData().getQuests();
+        QuestSnapshot quests = context.data().quests();
         if (quests == null
-                || quests.statusOf("Recipe for Disaster") != QuestStatus.COMPLETE)
+                || quests.statusOf(Text.get(1198)) != QuestStatus.COMPLETE)
         {
             return;
         }
@@ -413,15 +413,15 @@ public class ProgressionUpgradeCandidateProvider
         }
 
         String id = "upgrade:barrows-gloves";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        if (context.preferenceProfile().isOnCooldown(id)) return;
 
-        DiarySnapshot diaries = context.getData().getDiaries();
+        DiarySnapshot diaries = context.data().diaries();
         boolean eliteLumbridge = diaries != null
-                && diaries.isTierComplete("Lumbridge & Draynor", DiaryTier.ELITE);
+                && diaries.isTierComplete(Text.get(1152), DiaryTier.ELITE);
         long price = eliteLumbridge ? 104_000L : 130_000L;
-        AccountEconomySnapshot economy = context.getData().getEconomy();
+        AccountEconomySnapshot economy = context.data().economy();
         boolean cashVerified = economy != null
-                && economy.getConfidence() == RecommendationConfidence.VERIFIED;
+                && economy.getConfidence() == Confidence.VERIFIED;
         boolean affordable = cashVerified && economy.getCoins() >= price;
 
         double score = 48.0;
@@ -430,9 +430,9 @@ public class ProgressionUpgradeCandidateProvider
                 || context.getActiveGoal() == GoalType.RAID_READY) score += 10.0;
         score += preference(context, id);
 
-        RecommendationConfidence confidence = affordable
-                ? RecommendationConfidence.VERIFIED
-                : RecommendationConfidence.CHECK_NEEDED;
+        Confidence confidence = affordable
+                ? Confidence.VERIFIED
+                : Confidence.CHECK_NEEDED;
         String supplies;
         if (!cashVerified)
         {
@@ -441,17 +441,17 @@ public class ProgressionUpgradeCandidateProvider
         else if (!affordable)
         {
             supplies = "You have " + format(economy.getCoins())
-                    + " verified coins and need " + format(price)
+                    + Text.get(1407) + format(price)
                     + ". You are " + format(price - economy.getCoins())
                     + " coins short.";
         }
         else
         {
-            supplies = "Verified cash covers the " + format(price)
+            supplies = Text.get(1408) + format(price)
                     + " coin shop price.";
         }
 
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 Text.get(510),
                 supplies,
                 Text.get(511),
@@ -461,18 +461,18 @@ public class ProgressionUpgradeCandidateProvider
         );
         result.add(new Recommendation(
                 id,
-                "Buy Barrows gloves",
+                Text.get(1409),
                 Text.get(514),
                 score,
                 confidence,
                 guidance,
-                CandidateSafetyEvidence.verifiedSafe(false)));
+                SafetyEvidence.verifiedSafe(false)));
     }
 
     private static void bowfaRoute(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P) return;
@@ -482,7 +482,7 @@ public class ProgressionUpgradeCandidateProvider
         {
             return;
         }
-        QuestSnapshot quests = context.getData().getQuests();
+        QuestSnapshot quests = context.data().quests();
         if (quests == null
                 || quests.statusOf("Song of the Elves") != QuestStatus.COMPLETE)
         {
@@ -490,22 +490,22 @@ public class ProgressionUpgradeCandidateProvider
         }
         if (!ownershipCanBeJudged(account, items)) return;
         if (ownsObserved(account, items,
-                "Bow of faerdhinen", "Bow of faerdhinen (c)"))
+                "Bow of faerdhinen", Text.get(1345)))
         {
             return;
         }
 
         String id = "upgrade:bowfa";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
-        AccountMode mode = context.getAccountMode();
+        if (context.preferenceProfile().isOnCooldown(id)) return;
+        AccountMode mode = context.accountMode();
         boolean seedOwned = ownsObserved(account, items,
-                "Enhanced crystal weapon seed");
+                Text.get(1410));
         int shards = items.quantity("Crystal shard");
         int smithing = account.getSkillLevel(Skill.SMITHING);
         int crafting = account.getSkillLevel(Skill.CRAFTING);
         double score = context.getActiveGoal() == GoalType.BOWFA ? 78.0 : 54.0;
-        RecommendationConfidence confidence;
-        RecommendationGuidance guidance;
+        Confidence confidence;
+        Guidance guidance;
         String title;
         String reason;
 
@@ -515,9 +515,9 @@ public class ProgressionUpgradeCandidateProvider
             int neededShards = canSelfSing ? 100 : 150;
             int shortfall = Math.max(0, neededShards - shards);
             confidence = shortfall == 0
-                    ? RecommendationConfidence.VERIFIED
-                    : RecommendationConfidence.CHECK_NEEDED;
-            title = "Create your Bow of faerdhinen";
+                    ? Confidence.VERIFIED
+                    : Confidence.CHECK_NEEDED;
+            title = Text.get(1411);
             reason = Text.get(515);
             String action = canSelfSing
                     ? Text.get(516) + neededShards
@@ -526,11 +526,11 @@ public class ProgressionUpgradeCandidateProvider
                             + neededShards + Text.get(520);
             String supplies = shortfall == 0
                     ? Text.get(521)
-                            + neededShards + " Crystal shards are observed."
-                    : "The seed is observed, but you need " + shortfall
-                            + " more Crystal shard" + (shortfall == 1 ? "" : "s")
-                            + " before this creation route is ready.";
-            guidance = new RecommendationGuidance(
+                            + neededShards + Text.get(1412)
+                    : Text.get(1413) + shortfall
+                            + Text.get(1414) + (shortfall == 1 ? "" : "s")
+                            + Text.get(1415);
+            guidance = new Guidance(
                     action,
                     supplies,
                     Text.get(522),
@@ -539,10 +539,10 @@ public class ProgressionUpgradeCandidateProvider
         }
         else if (mode.usesGrandExchange())
         {
-            confidence = RecommendationConfidence.CHECK_NEEDED;
-            title = "Get a Bow of faerdhinen";
+            confidence = Confidence.CHECK_NEEDED;
+            title = Text.get(1416);
             reason = Text.get(524);
-            guidance = new RecommendationGuidance(
+            guidance = new Guidance(
                     Text.get(525),
                     Text.get(526),
                     Text.get(527),
@@ -551,20 +551,20 @@ public class ProgressionUpgradeCandidateProvider
         }
         else
         {
-            AccountMode accountMode = context.getAccountMode();
+            AccountMode accountMode = context.accountMode();
             boolean hardcore = accountMode == AccountMode.HARDCORE_IRONMAN
                     || accountMode == AccountMode.HARDCORE_GROUP_IRONMAN;
             boolean uimDeathStorage = accountMode == AccountMode.ULTIMATE_IRONMAN
-                    && hasDeathStorage(context.getData().getStorage());
+                    && hasDeathStorage(context.data().storage());
             confidence = hardcore || uimDeathStorage
-                    ? RecommendationConfidence.CHECK_NEEDED
-                    : RecommendationConfidence.VERIFIED;
-            title = "Hunt the Enhanced crystal weapon seed";
+                    ? Confidence.CHECK_NEEDED
+                    : Confidence.VERIFIED;
+            title = Text.get(1417);
             reason = Text.get(529);
-            guidance = new RecommendationGuidance(
+            guidance = new Guidance(
                     Text.get(531),
                     Text.get(532),
-                    "The Corrupted Gauntlet in Prifddinas.",
+                    Text.get(1418),
                     hardcore
                             ? Text.get(533)
                             : uimDeathStorage
@@ -576,13 +576,13 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
         result.add(new Recommendation(
                 id, title, reason, score, confidence, guidance,
-                CandidateSafetyEvidence.potentiallyIrreversible(false)));
+                SafetyEvidence.potentiallyIrreversible(false)));
     }
 
     private static void anglerOutfit(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
@@ -594,7 +594,7 @@ public class ProgressionUpgradeCandidateProvider
         if (pieces >= 4) return;
 
         String id = "upgrade:angler-outfit";
-        if (context.getPreferenceProfile().isOnCooldown(id)) return;
+        if (context.preferenceProfile().isOnCooldown(id)) return;
 
         int currentXp = account.getSkillExperience(Skill.FISHING);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(fishing);
@@ -611,37 +611,37 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
 
         if (score < 25.0) return;
-        RecommendationGuidance guidance = new RecommendationGuidance(
+        Guidance guidance = new Guidance(
                 Text.get(536),
                 Text.get(537),
                 Text.get(538),
-                "You currently have " + pieces + Text.get(539)
+                Text.get(1419) + pieces + Text.get(539)
         );
         result.add(new Recommendation(
                 id,
-                "Finish the Angler outfit (" + pieces + "/4)",
+                Text.get(1420) + pieces + "/4)",
                 Text.get(540),
                 score,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 guidance,
-                CandidateSafetyEvidence.skill(false, Skill.FISHING)));
+                SafetyEvidence.skill(false, Skill.FISHING)));
     }
 
     private static int anglerPieces(
             AccountSnapshot account,
-            ObservedItemIndex items)
+            ItemIndex items)
     {
         int pieces = 0;
-        if (ownsObserved(account, items, "Angler hat", "Spirit angler headband")) pieces++;
+        if (ownsObserved(account, items, "Angler hat", Text.get(1214))) pieces++;
         if (ownsObserved(account, items, "Angler top", "Spirit angler top")) pieces++;
-        if (ownsObserved(account, items, "Angler waders", "Spirit angler waders")) pieces++;
-        if (ownsObserved(account, items, "Angler boots", "Spirit angler boots")) pieces++;
+        if (ownsObserved(account, items, "Angler waders", Text.get(1215))) pieces++;
+        if (ownsObserved(account, items, "Angler boots", Text.get(1216))) pieces++;
         return pieces;
     }
 
     private static boolean ownershipCanBeJudged(
             AccountSnapshot account,
-            ObservedItemIndex items)
+            ItemIndex items)
     {
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
         return items.usableOwnershipObserved();
@@ -650,7 +650,7 @@ public class ProgressionUpgradeCandidateProvider
     /** UIM retrieval-only storage still proves ownership even when not usable now. */
     private static boolean ownsObserved(
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             String... names)
     {
         if (items.has(names)) return true;
@@ -675,14 +675,14 @@ public class ProgressionUpgradeCandidateProvider
 
     private static double preference(StrategyContext context, String id)
     {
-        return context.getPreferenceProfile().weightFor(id) * 10.0;
+        return context.preferenceProfile().weightFor(id) * 10.0;
     }
 
-    private static boolean verifiedCoins(StrategyDataBundle data, long needed)
+    private static boolean verifiedCoins(GameData data, long needed)
     {
-        AccountEconomySnapshot economy = data == null ? null : data.getEconomy();
+        AccountEconomySnapshot economy = data == null ? null : data.economy();
         return economy != null
-                && economy.getConfidence() == RecommendationConfidence.VERIFIED
+                && economy.getConfidence() == Confidence.VERIFIED
                 && economy.getCoins() >= needed;
     }
 

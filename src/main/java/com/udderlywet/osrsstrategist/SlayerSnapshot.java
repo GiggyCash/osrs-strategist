@@ -31,7 +31,7 @@ public final class SlayerSnapshot
     private final List<SlayerTaskOffer> taskOffers;
     private final Boolean mortimerIntroduced;
     @Getter
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
 
     /** Compatibility constructor retained for older callers. */
     public SlayerSnapshot(
@@ -39,7 +39,7 @@ public final class SlayerSnapshot
             int remaining,
             String masterName,
             int points,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(taskName, remaining, masterName, null, points,
                 null, null, null, null, null, null, null, confidence);
@@ -51,7 +51,7 @@ public final class SlayerSnapshot
             String masterName,
             String taskLocation,
             int points,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(taskName, remaining, masterName, taskLocation, points,
                 null, null, null, null, null, null, null, confidence);
@@ -67,7 +67,7 @@ public final class SlayerSnapshot
             Integer questPoints,
             Integer blockSlotCapacity,
             Integer occupiedBlockSlots,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(taskName, remaining, masterName, taskLocation, points, taskStreak,
                 questPoints, blockSlotCapacity, occupiedBlockSlots, null,
@@ -86,7 +86,7 @@ public final class SlayerSnapshot
             Integer blockSlotCapacity,
             Integer occupiedBlockSlots,
             SlayerRewardSnapshot rewards,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(taskName, remaining, masterName, taskLocation, points, taskStreak,
                 questPoints, blockSlotCapacity, occupiedBlockSlots, rewards,
@@ -106,7 +106,7 @@ public final class SlayerSnapshot
             SlayerRewardSnapshot rewards,
             List<SlayerTaskOffer> taskOffers,
             Boolean mortimerIntroduced,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this.taskName = taskName;
         this.remaining = Math.max(0, remaining);
@@ -122,7 +122,7 @@ public final class SlayerSnapshot
                 ? new ArrayList<>() : new ArrayList<>(taskOffers));
         this.mortimerIntroduced = mortimerIntroduced;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED
+                ? Confidence.CHECK_NEEDED
                 : confidence;
     }
 
@@ -141,7 +141,7 @@ public final class SlayerSnapshot
                 null,
                 null,
                 null,
-                RecommendationConfidence.CHECK_NEEDED
+                Confidence.CHECK_NEEDED
         );
     }
 
@@ -156,7 +156,7 @@ public final class SlayerSnapshot
     {
         if (hasTask()) return SlayerAssignmentState.ASSIGNED;
         if (!taskOffers.isEmpty()) return SlayerAssignmentState.CHOICE_PENDING;
-        if (confidence == RecommendationConfidence.VERIFIED && remaining == 0)
+        if (confidence == Confidence.VERIFIED && remaining == 0)
             return SlayerAssignmentState.NO_TASK;
         return SlayerAssignmentState.UNKNOWN;
     }

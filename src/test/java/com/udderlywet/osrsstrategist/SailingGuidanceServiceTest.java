@@ -20,11 +20,11 @@ public class SailingGuidanceServiceTest
     {
         int currentXp = Experience.getXpForLevel(30);
         AccountSnapshot account = account(30, currentXp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(completed("Pandemonium"))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 30,
                 40,
@@ -41,8 +41,8 @@ public class SailingGuidanceServiceTest
     @Test
     public void courierGivesOneExactStarterLoopAndLogRecovery()
     {
-        RecommendationGuidance guidance = service.build(
-                StrategyDataBundle.builder(account(10,
+        Guidance guidance = service.build(
+                GameData.builder(account(10,
                                 Experience.getXpForLevel(10)))
                         .quests(completed("Pandemonium"))
                         .build(),
@@ -58,11 +58,11 @@ public class SailingGuidanceServiceTest
     public void lockedSailingTellsPlayerToCompletePandemonium()
     {
         AccountSnapshot account = account(1, Experience.getXpForLevel(1));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 1,
                 10,
@@ -76,15 +76,15 @@ public class SailingGuidanceServiceTest
     public void chartingUsesVerifiedCashForSkiffDecision()
     {
         AccountSnapshot account = account(15, Experience.getXpForLevel(15));
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(completed("Pandemonium"))
                 .economy(new AccountEconomySnapshot(
                         20000,
                         0,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 15,
                 20,
@@ -98,8 +98,8 @@ public class SailingGuidanceServiceTest
     @Test
     public void salvagingNamesOneExactSafeBaselineWithoutDroppingItems()
     {
-        RecommendationGuidance guidance = service.build(
-                StrategyDataBundle.builder(account(53,
+        Guidance guidance = service.build(
+                GameData.builder(account(53,
                                 Experience.getXpForLevel(53)))
                         .quests(completed("Pandemonium")).build(),
                 53, 54, plan("sailing_salvage_small"));
@@ -113,13 +113,13 @@ public class SailingGuidanceServiceTest
     }
 
     private static Recommendation recommendation(
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         return new Recommendation("skill:sailing", "Train Sailing to 54",
                 "Exact salvage baseline.", 10.0,
                 plan("sailing_salvage_small"),
-                RecommendationConfidence.VERIFIED, 53, 54, guidance,
-                CandidateSafetyEvidence.skill(false, Skill.SAILING));
+                Confidence.VERIFIED, 53, 54, guidance,
+                SafetyEvidence.skill(false, Skill.SAILING));
     }
 
     private static TrainingPlan plan(String id)
@@ -138,11 +138,11 @@ public class SailingGuidanceServiceTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 

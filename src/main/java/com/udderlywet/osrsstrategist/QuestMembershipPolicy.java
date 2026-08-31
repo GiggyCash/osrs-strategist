@@ -12,38 +12,8 @@ import java.util.*;
  */
 public final class QuestMembershipPolicy
 {
-    private static final Set<String> FREE_TO_PLAY_QUESTS;
-
-    static
-    {
-        Set<String> quests = new LinkedHashSet<>();
-        add(quests,
-                "Learning the Ropes",
-                "The Ides of Milk",
-                "Below Ice Mountain",
-                "Black Knights' Fortress",
-                "Cook's Assistant",
-                "The Corsair Curse",
-                "Demon Slayer",
-                "Doric's Quest",
-                "Dragon Slayer I",
-                "Ernest the Chicken",
-                "Goblin Diplomacy",
-                "Imp Catcher",
-                "Misthalin Mystery",
-                "Pirate's Treasure",
-                "Prince Ali Rescue",
-                "Romeo & Juliet",
-                "Rune Mysteries",
-                "Sheep Shearer",
-                "Shield of Arrav",
-                "The Knight's Sword",
-                "The Restless Ghost",
-                "Vampyre Slayer",
-                "Witch's Potion",
-                "X Marks the Spot");
-        FREE_TO_PLAY_QUESTS = Collections.unmodifiableSet(quests);
-    }
+    private static final Set<String> FREE_TO_PLAY_QUESTS =
+            PolicyLists.normalizedSet(PolicyLists.DATA.free_to_play_quests);
 
     private QuestMembershipPolicy()
     {
@@ -66,19 +36,8 @@ public final class QuestMembershipPolicy
         return FREE_TO_PLAY_QUESTS;
     }
 
-    private static void add(Set<String> target, String... names)
-    {
-        if (names == null) return;
-        for (String name : names)
-        {
-            if (name != null) target.add(normalize(name));
-        }
-    }
-
     private static String normalize(String value)
     {
-        return value.trim().toLowerCase(Locale.ROOT)
-                .replace('’', '\'')
-                .replaceAll("\\s+", " ");
+        return PolicyLists.normalize(value);
     }
 }

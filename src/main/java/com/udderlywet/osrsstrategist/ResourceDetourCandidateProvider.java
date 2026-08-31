@@ -16,7 +16,7 @@ import net.runelite.api.Skill;
  */
 @Singleton
 public class ResourceDetourCandidateProvider
-        implements StrategyCandidateProvider
+        implements CandidateProvider
 {
     @Override
     public String getId()
@@ -28,23 +28,23 @@ public class ResourceDetourCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (context == null || context.data() == null
+                || context.data().account() == null)
         {
             return result;
         }
 
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         if (!ContentAccessRules.hasVerifiedMembership(
                 account.getMembershipStatus())) return result;
-        AccountMode mode = context.getAccountMode();
+        AccountMode mode = context.accountMode();
         if (!mode.isIronLike() || mode == AccountMode.ULTIMATE_IRONMAN)
         {
             return result;
         }
 
-        ObservedItemIndex items = new ObservedItemIndex(
-                context.getData(), context.isUseGroupStorage());
+        ItemIndex items = new ItemIndex(
+                context.data(), context.isUseGroupStorage());
         if (!items.resourceContainersObserved()) return result;
 
         plankDetours(context, account, items, result);
@@ -56,7 +56,7 @@ public class ResourceDetourCandidateProvider
     private static void plankDetours(
             StrategyContext context,
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             List<Recommendation> result)
     {
         if (!constructionRelevant(context.getActiveGoal())) return;
@@ -71,16 +71,16 @@ public class ResourceDetourCandidateProvider
         if (fishing >= 35 && fishing < 80)
         {
             String id = "detour:tempoross-planks";
-            if (!context.getPreferenceProfile().isOnCooldown(id))
+            if (!context.preferenceProfile().isOnCooldown(id))
             {
                 double score = 27.0;
                 if (construction < 50) score += 5.0;
                 if (fishing < 70) score += 5.0;
                 if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
                     score += 3.0;
-                score += context.getPreferenceProfile().weightFor(id) * 10.0;
+                score += context.preferenceProfile().weightFor(id) * 10.0;
 
-                RecommendationGuidance guidance = new RecommendationGuidance(
+                Guidance guidance = new Guidance(
                         Text.get(599),
                         "Only " + planks + Text.get(602),
                         Text.get(603),
@@ -88,12 +88,12 @@ public class ResourceDetourCandidateProvider
                 );
                 result.add(new Recommendation(
                         id,
-                        "Tempoross for Fishing + early planks",
+                        Text.get(1296),
                         "Only " + planks + Text.get(605),
                         score,
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         guidance,
-                        CandidateSafetyEvidence.skill(false, Skill.FISHING)));
+                        SafetyEvidence.skill(false, Skill.FISHING)));
             }
         }
 
@@ -103,19 +103,19 @@ public class ResourceDetourCandidateProvider
                 "Yew logs", "Teak logs", "Mahogany logs");
         if (firemaking >= 50 && firemaking < 80 && logs < 100
                 && account.getMembershipStatus() == MembershipStatus.P2P
-                && context.getAccountMode() != AccountMode.HARDCORE_IRONMAN
-                && context.getAccountMode() != AccountMode.HARDCORE_GROUP_IRONMAN)
+                && context.accountMode() != AccountMode.HARDCORE_IRONMAN
+                && context.accountMode() != AccountMode.HARDCORE_GROUP_IRONMAN)
         {
             String id = "detour:wintertodt-logs";
-            if (!context.getPreferenceProfile().isOnCooldown(id))
+            if (!context.preferenceProfile().isOnCooldown(id))
             {
                 double score = 20.0;
                 if (account.getSkillLevel(Skill.WOODCUTTING) < 60) score += 2.0;
                 if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
                     score += 3.0;
-                score += context.getPreferenceProfile().weightFor(id) * 10.0;
+                score += context.preferenceProfile().weightFor(id) * 10.0;
 
-                RecommendationGuidance guidance = new RecommendationGuidance(
+                Guidance guidance = new Guidance(
                         Text.get(606),
                         "Only " + logs + " useful logs and " + planks + Text.get(607),
                         Text.get(608),
@@ -126,9 +126,9 @@ public class ResourceDetourCandidateProvider
                         Text.get(600),
                         Text.get(601),
                         score,
-                        RecommendationConfidence.VERIFIED,
+                        Confidence.VERIFIED,
                         guidance,
-                        CandidateSafetyEvidence.skill(false, Skill.FIREMAKING)));
+                        SafetyEvidence.skill(false, Skill.FIREMAKING)));
             }
         }
     }

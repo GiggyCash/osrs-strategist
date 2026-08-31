@@ -49,11 +49,11 @@ public class RuneLiteSkillActionCatalog
         seedClassMap();
     }
 
-    public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+    public List<ActionDef> actionsFor(Skill skill)
     {
         SkillAction[] constants = actionsBySkill.get(skill);
         if (constants == null) return Collections.emptyList();
-        List<RuneLiteSkillActionDefinition> actions = new ArrayList<>();
+        List<ActionDef> actions = new ArrayList<>();
         for (SkillAction action : constants)
         {
             Enum<?> enumValue = (Enum<?>) action;
@@ -65,7 +65,7 @@ public class RuneLiteSkillActionCatalog
                     ? MembershipStatus.UNKNOWN
                     : action.isMembers(itemManager)
                             ? MembershipStatus.P2P : MembershipStatus.F2P;
-            actions.add(new RuneLiteSkillActionDefinition(
+            actions.add(new ActionDef(
                     skill,
                     id,
                     name,

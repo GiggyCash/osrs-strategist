@@ -26,19 +26,19 @@ public final class UimInventoryResolutionService
         this(new UimCapabilityService());
     }
 
-    public UimInventoryResolution resolve(StrategyDataBundle data,
+    public UimInventoryResolution resolve(GameData data,
             MethodInventoryFootprint footprint,
             boolean goodLowFootprintAlternativeKnown,
             boolean productiveConsumptionKnown,
             List<UimStorageOption> proposedStorage)
     {
-        AccountMode mode = data == null || data.getAccount() == null
+        AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
-                        data.getAccount().getAccountTypeCode());
+                        data.account().getAccountTypeCode());
         if (mode != AccountMode.ULTIMATE_IRONMAN)
             return unresolved(Text.get(997));
 
-        InventorySnapshot inventory = data.getInventory();
+        ItemsState inventory = data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return unresolved(Text.get(999));
         MethodInventoryFootprint needed = footprint == null
@@ -47,15 +47,15 @@ public final class UimInventoryResolutionService
                 - UimSetupCostService.occupiedInventorySlots(inventory));
         if (free >= needed.getMinimumPracticalFreeSlots())
             return result(UimInventoryResolutionKind.USE_AS_IS,
-                    RecommendationConfidence.VERIFIED, null, null,
+                    Confidence.VERIFIED, null, null,
                     Text.get(1000));
         if (goodLowFootprintAlternativeKnown)
             return result(UimInventoryResolutionKind.USE_LOW_FOOTPRINT_ALTERNATIVE,
-                    RecommendationConfidence.VERIFIED, null, null,
+                    Confidence.VERIFIED, null, null,
                     Text.get(1001));
         if (productiveConsumptionKnown)
             return result(UimInventoryResolutionKind.PRODUCTIVELY_CONSUME_RESOURCES,
-                    RecommendationConfidence.CHECK_NEEDED, null, null,
+                    Confidence.CHECK_NEEDED, null, null,
                     Text.get(1002));
 
         List<UimStorageOption> options = proposedStorage == null
@@ -72,7 +72,7 @@ public final class UimInventoryResolutionService
             UimStorageDecision decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_VERIFIED_SAFE_STORAGE,
-                        RecommendationConfidence.VERIFIED, decision, null,
+                        Confidence.VERIFIED, decision, null,
                         Text.get(1003));
         }
 
@@ -84,7 +84,7 @@ public final class UimInventoryResolutionService
                     || option.getRecurringInfrastructureValue().ordinal()
                             < StrategicPriority.HIGH.ordinal()) continue;
             return result(UimInventoryResolutionKind.BUILD_HIGH_VALUE_SAFE_STORAGE,
-                    RecommendationConfidence.CHECK_NEEDED, null, null,
+                    Confidence.CHECK_NEEDED, null, null,
                     Text.get(1004));
         }
 
@@ -95,7 +95,7 @@ public final class UimInventoryResolutionService
             UimStorageDecision decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_RESTRICTED_RETRIEVAL,
-                        RecommendationConfidence.CHECK_NEEDED, decision, null,
+                        Confidence.CHECK_NEEDED, decision, null,
                         Text.get(1005));
         }
 
@@ -107,14 +107,14 @@ public final class UimInventoryResolutionService
             UimStorageDecision decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_DANGEROUS_DEATH_STORAGE,
-                        RecommendationConfidence.CHECK_NEEDED, decision,
+                        Confidence.CHECK_NEEDED, decision,
                         RecommendationRiskDisclosure.deathStorage(),
                         Text.get(1006));
         }
         return unresolved(Text.get(998));
     }
 
-    private UimStorageDecision evaluate(StrategyDataBundle data,
+    private UimStorageDecision evaluate(GameData data,
             UimStorageOption option)
     {
         return capabilityService.evaluateStorage(data, option.getCapability(),
@@ -138,12 +138,12 @@ public final class UimInventoryResolutionService
     private static UimInventoryResolution unresolved(String reason)
     {
         return result(UimInventoryResolutionKind.UNRESOLVED,
-                RecommendationConfidence.CHECK_NEEDED, null, null, reason);
+                Confidence.CHECK_NEEDED, null, null, reason);
     }
 
     private static UimInventoryResolution result(
             UimInventoryResolutionKind kind,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             UimStorageDecision decision,
             RecommendationRiskDisclosure disclosure, String reason)
     {

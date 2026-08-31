@@ -18,10 +18,10 @@ public class QuestItemAcquisitionGuidanceTest
     {
         ItemRequirementExpression requirement = ItemRequirementExpression.item(
                 "Death rune", 5, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.singletonList(
+        GameData data = GameData.builder(account(0))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.singletonList(
                         item("Death rune", 2)), 1L)).build();
 
         ItemRequirementResult result = evaluator.evaluate(requirement, data, false);
@@ -38,11 +38,11 @@ public class QuestItemAcquisitionGuidanceTest
     {
         ItemRequirementExpression requirement = ItemRequirementExpression.item(
                 "Rope", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(4))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
-                .groupStorage(GroupStorageSnapshot.unknown()).build();
+        GameData data = GameData.builder(account(4))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .groupStorage(ItemsState.unknown()).build();
 
         ItemRequirementResult result = evaluator.evaluate(requirement, data, true);
 
@@ -59,10 +59,10 @@ public class QuestItemAcquisitionGuidanceTest
                         ItemRequirementScope.OWNED_OR_RETRIEVABLE),
                 ItemRequirementExpression.item("Chaos rune", 10,
                         ItemRequirementScope.OWNED_OR_RETRIEVABLE));
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        GameData data = GameData.builder(account(1))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
         ItemRequirementResult result = evaluator.evaluate(requirement, data, false);
 
@@ -82,15 +82,15 @@ public class QuestItemAcquisitionGuidanceTest
                 Collections.emptyList(), requirement, 0, Collections.emptyList(),
                 "Test location", Collections.singletonList("Test unlock"),
                 Collections.<Skill, Integer>emptyMap());
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+        GameData data = GameData.builder(account(1))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
         QuestResolution result = new QuestRequirementResolver().resolve(
                 quest, context(data, false));
 
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertTrue(result.getGuidance().getAction().contains(
                 "Self-source 5 × Death rune"));
@@ -109,11 +109,11 @@ public class QuestItemAcquisitionGuidanceTest
                 Collections.emptyList(), requirement, 0, Collections.emptyList(),
                 "Lumbridge", Collections.emptyList(),
                 Collections.<Skill, Integer>emptyMap());
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(1, MembershipStatus.F2P))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
         QuestResolution result = new QuestRequirementResolver().resolve(
                 quest, context(data, false));
@@ -122,7 +122,7 @@ public class QuestItemAcquisitionGuidanceTest
         assertFalse(result.getGuidance().getAction().contains("members"));
     }
 
-    private static StrategyContext context(StrategyDataBundle data,
+    private static StrategyContext context(GameData data,
             boolean useGroupStorage)
     {
         return new StrategyContext(data, null, null, null, null,
@@ -148,8 +148,8 @@ public class QuestItemAcquisitionGuidanceTest
                 membership, 0, 1500, 0L, levels, xp);
     }
 
-    private static ItemStackSnapshot item(String name, int quantity)
+    private static ItemState item(String name, int quantity)
     {
-        return new ItemStackSnapshot(-1, name, quantity);
+        return new ItemState(-1, name, quantity);
     }
 }

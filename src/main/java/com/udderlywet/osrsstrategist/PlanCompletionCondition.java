@@ -34,7 +34,7 @@ public final class PlanCompletionCondition
     public static PlanCompletionCondition skillLevel(Skill skill, int level)
     {
         if (skill == null || level < 1)
-            throw new IllegalArgumentException("Skill target is required");
+            throw new IllegalArgumentException(Text.get(1328));
         return new PlanCompletionCondition(
                 Kind.SKILL_LEVEL, skill, level, null);
     }
@@ -42,7 +42,7 @@ public final class PlanCompletionCondition
     public static PlanCompletionCondition questComplete(String quest)
     {
         if (quest == null || quest.trim().isEmpty())
-            throw new IllegalArgumentException("Quest name is required");
+            throw new IllegalArgumentException(Text.get(1329));
         return new PlanCompletionCondition(
                 Kind.QUEST_COMPLETE, null, 0, quest.trim());
     }
@@ -52,15 +52,15 @@ public final class PlanCompletionCondition
         return new PlanCompletionCondition(Kind.NONE, null, 0, null);
     }
 
-    public boolean isComplete(StrategyDataBundle data)
+    public boolean isComplete(GameData data)
     {
         if (data == null) return false;
         if (kind == Kind.SKILL_LEVEL)
-            return data.getAccount() != null
-                    && data.getAccount().getSkillLevel(skill) >= level;
+            return data.account() != null
+                    && data.account().getSkillLevel(skill) >= level;
         if (kind == Kind.QUEST_COMPLETE)
-            return data.getQuests() != null
-                    && data.getQuests().statusOf(quest) == QuestStatus.COMPLETE;
+            return data.quests() != null
+                    && data.quests().statusOf(quest) == QuestStatus.COMPLETE;
         return false;
     }
 

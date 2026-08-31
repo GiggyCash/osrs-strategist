@@ -5,7 +5,7 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Structured access/build evidence consumed by the final recommendation gate. */
-public final class CandidateSafetyEvidence
+public final class SafetyEvidence
 {
     public enum Access
     {
@@ -34,14 +34,14 @@ public final class CandidateSafetyEvidence
     private final boolean unverifiedDangerousStorage;
     private final boolean invalidCurrentExecution;
 
-    private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
+    private SafetyEvidence(Access access, BuildEffect buildEffect,
             Skill affectedSkill, boolean conventionalBankRequired)
     {
         this(access, buildEffect, affectedSkill, conventionalBankRequired,
                 false, false);
     }
 
-    private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
+    private SafetyEvidence(Access access, BuildEffect buildEffect,
             Skill affectedSkill, boolean conventionalBankRequired,
             boolean unverifiedDangerousStorage)
     {
@@ -49,7 +49,7 @@ public final class CandidateSafetyEvidence
                 unverifiedDangerousStorage, false);
     }
 
-    private CandidateSafetyEvidence(Access access, BuildEffect buildEffect,
+    private SafetyEvidence(Access access, BuildEffect buildEffect,
             Skill affectedSkill, boolean conventionalBankRequired,
             boolean unverifiedDangerousStorage,
             boolean invalidCurrentExecution)
@@ -62,53 +62,53 @@ public final class CandidateSafetyEvidence
         this.invalidCurrentExecution = invalidCurrentExecution;
     }
 
-    public static CandidateSafetyEvidence unknown()
+    public static SafetyEvidence unknown()
     {
-        return new CandidateSafetyEvidence(Access.UNKNOWN, BuildEffect.UNKNOWN,
+        return new SafetyEvidence(Access.UNKNOWN, BuildEffect.UNKNOWN,
                 null, false);
     }
 
-    public static CandidateSafetyEvidence harmless(boolean freeToPlay)
+    public static SafetyEvidence harmless(boolean freeToPlay)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay),
+        return new SafetyEvidence(access(freeToPlay),
                 BuildEffect.HARMLESS, null, false);
     }
 
-    public static CandidateSafetyEvidence skill(boolean freeToPlay, Skill skill)
+    public static SafetyEvidence skill(boolean freeToPlay, Skill skill)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay),
+        return new SafetyEvidence(access(freeToPlay),
                 BuildEffect.SKILL_XP, skill, false);
     }
 
-    public static CandidateSafetyEvidence verifiedSafe(boolean freeToPlay)
+    public static SafetyEvidence verifiedSafe(boolean freeToPlay)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay),
+        return new SafetyEvidence(access(freeToPlay),
                 BuildEffect.VERIFIED_SAFE, null, false);
     }
 
-    public static CandidateSafetyEvidence potentiallyIrreversible(boolean freeToPlay)
+    public static SafetyEvidence potentiallyIrreversible(boolean freeToPlay)
     {
-        return new CandidateSafetyEvidence(access(freeToPlay),
+        return new SafetyEvidence(access(freeToPlay),
                 BuildEffect.POTENTIALLY_IRREVERSIBLE, null, false);
     }
 
-    public CandidateSafetyEvidence requiringConventionalBank()
+    public SafetyEvidence requiringConventionalBank()
     {
-        return new CandidateSafetyEvidence(access, buildEffect,
+        return new SafetyEvidence(access, buildEffect,
                 affectedSkill, true, unverifiedDangerousStorage,
                 invalidCurrentExecution);
     }
 
-    public CandidateSafetyEvidence withUnverifiedDangerousStorage()
+    public SafetyEvidence withUnverifiedDangerousStorage()
     {
-        return new CandidateSafetyEvidence(access, buildEffect,
+        return new SafetyEvidence(access, buildEffect,
                 affectedSkill, conventionalBankRequired, true,
                 invalidCurrentExecution);
     }
 
-    public CandidateSafetyEvidence withInvalidCurrentExecution()
+    public SafetyEvidence withInvalidCurrentExecution()
     {
-        return new CandidateSafetyEvidence(access, buildEffect, affectedSkill,
+        return new SafetyEvidence(access, buildEffect, affectedSkill,
                 conventionalBankRequired, unverifiedDangerousStorage, true);
     }
 

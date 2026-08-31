@@ -3,13 +3,13 @@ package com.udderlywet.osrsstrategist;
 import java.util.*;
 
 /** Converts a recommendation into concise sidebar copy and full detail copy. */
-public final class RecommendationPresentation
+public final class Presentation
 {
     private static final int COMPACT_ACTION_CHARS = 150;
     private static final int COMPACT_SUPPLIES_CHARS = 120;
     private static final int COMPACT_LOCATION_CHARS = 130;
 
-    private RecommendationPresentation() {}
+    private Presentation() {}
 
     public static String compactHtml(Recommendation recommendation)
     {
@@ -35,7 +35,7 @@ public final class RecommendationPresentation
         TrainingMethod method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
 
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         if (guidance != null)
         {
             appendCompactGuidance(text, guidance);
@@ -111,7 +111,7 @@ public final class RecommendationPresentation
     {
         if (recommendation == null) return Collections.emptyList();
         List<Section> sections = new ArrayList<>();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         if (guidance != null && guidance.getRiskDisclosure() != null)
             sections.add(new Section(
                     guidance.getRiskDisclosure().getHeading(),
@@ -128,7 +128,7 @@ public final class RecommendationPresentation
         String needed = firstNeeded(recommendation);
         if (hasText(needed))
             sections.add(new Section(
-                    recommendation.getConfidence() == RecommendationConfidence.BLOCKED
+                    recommendation.getConfidence() == Confidence.BLOCKED
                             ? "BLOCKED BY" : "NEEDED",
                     compactSentence(needed, 140)));
 
@@ -165,8 +165,8 @@ public final class RecommendationPresentation
             StringBuilder text,
             Recommendation recommendation)
     {
-        RecommendationGuidance guidance = recommendation.getGuidance();
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        Guidance guidance = recommendation.getGuidance();
+        if (recommendation.getConfidence() == Confidence.BLOCKED)
         {
             text.append("<b>ACTIVITY</b><br>Blocked")
                     .append(Text.get(692));
@@ -174,7 +174,7 @@ public final class RecommendationPresentation
         }
         text.append("<b>ACTIVITY</b><br>")
                 .append(escape(compactSentence(recommendation.getTitle(), 110)));
-        if (recommendation.getConfidence() != RecommendationConfidence.VERIFIED)
+        if (recommendation.getConfidence() != Confidence.VERIFIED)
         {
             if (guidance != null && hasText(guidance.getAction()))
                 appendCompactGuidance(text, guidance);
@@ -199,7 +199,7 @@ public final class RecommendationPresentation
     }
 
     private static void appendRiskDisclosure(StringBuilder text,
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         if (guidance == null || guidance.getRiskDisclosure() == null) return;
         RecommendationRiskDisclosure disclosure = guidance.getRiskDisclosure();
@@ -213,7 +213,7 @@ public final class RecommendationPresentation
 
     /** The primary card must contain the executable loop, not only its inputs. */
     private static void appendCompactGuidance(
-            StringBuilder text, RecommendationGuidance guidance)
+            StringBuilder text, Guidance guidance)
     {
         if (guidance == null) return;
         if (meaningfulSupplies(guidance.getSupplies()))
@@ -244,9 +244,9 @@ public final class RecommendationPresentation
         if (!hasText(supplies)) return false;
         String normalized = supplies.trim().toLowerCase();
         return !normalized.equals("none")
-                && !normalized.startsWith("no supplies required")
-                && !normalized.startsWith("no weapon or other supplies")
-                && !normalized.startsWith("no consumed supplies");
+                && !normalized.startsWith(Text.get(1234))
+                && !normalized.startsWith(Text.get(1235))
+                && !normalized.startsWith(Text.get(1236));
     }
 
     /**
@@ -295,14 +295,14 @@ public final class RecommendationPresentation
             for (RequirementCheck check : hardUnresolved(plan))
                 if (check != null && hasText(check.getLabel()))
                     return check.getLabel();
-        RecommendationGuidance guidance = recommendation.getGuidance();
+        Guidance guidance = recommendation.getGuidance();
         if (recommendation.getConfidence()
-                    == RecommendationConfidence.CHECK_NEEDED
+                    == Confidence.CHECK_NEEDED
                 && guidance != null && hasText(guidance.getSupplies()))
             return guidance.getSupplies();
-        if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
+        if (recommendation.getConfidence() == Confidence.CHECK_NEEDED)
             return Text.get(696);
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
+        if (recommendation.getConfidence() == Confidence.BLOCKED)
             return Text.get(697);
         return "";
     }
@@ -358,15 +358,15 @@ public final class RecommendationPresentation
             case LOW: return "Low attention";
             case ACTIVE: return "Active";
             case MODERATE:
-            default: return "Moderate attention";
+            default: return Text.get(1237);
         }
     }
 
     private static String confidenceLabel(Recommendation recommendation)
     {
         if (recommendation == null) return "Check Needed";
-        if (recommendation.getConfidence() == RecommendationConfidence.VERIFIED) return "Ready";
-        if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED) return "Blocked";
+        if (recommendation.getConfidence() == Confidence.VERIFIED) return "Ready";
+        if (recommendation.getConfidence() == Confidence.BLOCKED) return "Blocked";
         if (RequirementActionability.isActionablePreparation(
                 recommendation.getTrainingPlan(), recommendation.getGuidance()))
             return "Ready to prep";

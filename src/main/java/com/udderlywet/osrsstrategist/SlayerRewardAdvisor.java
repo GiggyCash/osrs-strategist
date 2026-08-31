@@ -16,7 +16,7 @@ public class SlayerRewardAdvisor
         if (context == null || slayer == null || slayer.getRewards() == null)
             return null;
         List<SlayerRewardAdvice> candidates = new ArrayList<>();
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         int slayerLevel = account.getSkillLevel(Skill.SLAYER);
         int crafting = account.getSkillLevel(Skill.CRAFTING);
         int fletching = account.getSkillLevel(Skill.FLETCHING);
@@ -25,21 +25,21 @@ public class SlayerRewardAdvisor
                 slayerLevel >= 5, 100.0,
                 Text.get(792));
         add(candidates, slayer, SlayerReward.MALEVOLENT_MASQUERADE,
-                crafting >= 55, context.getAccountMode().isIronLike() ? 82.0 : 74.0,
+                crafting >= 55, context.accountMode().isIronLike() ? 82.0 : 74.0,
                 Text.get(797));
         add(candidates, slayer, SlayerReward.BROADER_FLETCHING,
-                context.getAccountMode().isIronLike() && fletching >= 52,
+                context.accountMode().isIronLike() && fletching >= 52,
                 78.0,
                 Text.get(798));
         add(candidates, slayer, SlayerReward.RING_BLING,
-                crafting >= 75 && context.getAccountMode().isIronLike(),
-                context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                crafting >= 75 && context.accountMode().isIronLike(),
+                context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                         ? 76.0 : 68.0,
                 Text.get(799));
         add(candidates, slayer, SlayerReward.TASK_STORAGE,
-                context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                         || context.getSessionIntent() == SessionIntent.QUICK_20_MIN,
-                context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                         ? 72.0 : 62.0,
                 Text.get(800));
         add(candidates, slayer, SlayerReward.HOT_STUFF,
@@ -67,13 +67,13 @@ public class SlayerRewardAdvisor
                 longXpSession && slayerLevel >= 85, 61.0,
                 Text.get(793));
         add(candidates, slayer, SlayerReward.EXTEND_BLOODVELDS,
-                context.getAccountMode().isIronLike()
+                context.accountMode().isIronLike()
                         && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
                         && slayerLevel >= 50,
                 58.0,
                 Text.get(794));
         add(candidates, slayer, SlayerReward.EXTEND_GARGOYLES,
-                context.getAccountMode().isIronLike()
+                context.accountMode().isIronLike()
                         && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
                         && slayerLevel >= 75,
                 57.0,

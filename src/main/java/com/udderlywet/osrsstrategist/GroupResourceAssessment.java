@@ -7,14 +7,14 @@ import lombok.Getter;
 public final class GroupResourceAssessment
 {
     private final GroupResourceState state;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final int observedSharedQuantity;
     private final int requiredQuantity;
     private final double duplicateGrindAvoidance;
     private final String reason;
 
     GroupResourceAssessment(GroupResourceState state,
-            RecommendationConfidence confidence, int observedSharedQuantity,
+            Confidence confidence, int observedSharedQuantity,
             int requiredQuantity, double duplicateGrindAvoidance, String reason)
     {
         this.state = state;
@@ -31,12 +31,12 @@ public final class GroupResourceAssessment
         return state == GroupResourceState.SHARED_STOCK_SATISFIES_NEED;
     }
 
-    public RecommendationStrategicValue strategicValue(String evidenceId)
+    public StrategicValue strategicValue(String evidenceId)
     {
-        if (confidence != RecommendationConfidence.VERIFIED
+        if (confidence != Confidence.VERIFIED
                 || duplicateGrindAvoidance <= 0.0)
-            return RecommendationStrategicValue.neutral();
-        return RecommendationStrategicValue.builder()
+            return StrategicValue.neutral();
+        return StrategicValue.builder()
                 .accountModeFit(duplicateGrindAvoidance * 0.6)
                 .resourceFit(duplicateGrindAvoidance)
                 .evidence(evidenceId)

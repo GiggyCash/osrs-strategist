@@ -46,14 +46,14 @@ public class SlayerMasterCatalog
 
     public List<SlayerMasterProfile> eligible(StrategyContext context)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null) return Collections.emptyList();
-        AccountSnapshot account = context.getData().getAccount();
+        if (context == null || context.data() == null
+                || context.data().account() == null) return Collections.emptyList();
+        AccountSnapshot account = context.data().account();
         if (account.getMembershipStatus() != MembershipStatus.P2P)
             return Collections.emptyList();
         int combat = SlayerGuidanceService.combatLevel(account);
         int slayer = account.getSkillLevel(net.runelite.api.Skill.SLAYER);
-        QuestSnapshot quests = context.getData().getQuests();
+        QuestSnapshot quests = context.data().quests();
         List<SlayerMasterProfile> result = new ArrayList<>();
         for (SlayerMasterProfile profile : profiles)
         {
@@ -64,7 +64,7 @@ public class SlayerMasterCatalog
             if (profile.isWilderness() && !context.isAllowWildernessMethods()) continue;
             if ("mortimer".equals(profile.getId()))
             {
-                SlayerSnapshot live = context.getData().getSlayer();
+                SlayerSnapshot live = context.data().slayer();
                 boolean capeIntroduction = slayer >= 99 && live != null
                         && Boolean.TRUE.equals(live.isMortimerIntroduced());
                 if (!capeIntroduction && (combat < profile.getMinimumCombat()

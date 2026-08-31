@@ -57,21 +57,21 @@ public final class UimStorageMechanics
         switch (capability)
         {
             case HESPORI_ITEM_RETRIEVAL:
-                return "Arno's Hespori Item Retrieval Service";
+                return Text.get(1189);
             case ZULRAH_ITEM_RETRIEVAL:
-                return "the Zulrah Item Retrieval Service";
+                return Text.get(1190);
             case VOLCANIC_MINE_ITEM_RETRIEVAL:
                 return Text.get(1021);
             case DEATHPILE:
-                return "an on-ground UIM deathpile";
+                return Text.get(1191);
             case LOOTING_BAG:
                 return "the looting bag";
             case POH_COSTUME_ROOM:
-                return "the verified POH costume-room storage";
+                return Text.get(1192);
             case POH_STORAGE:
-                return "the verified POH storage";
+                return Text.get(1193);
             case STASH:
-                return "the verified STASH unit";
+                return Text.get(1194);
             default:
                 return capability.name().toLowerCase().replace('_', ' ');
         }
@@ -82,7 +82,7 @@ public final class UimStorageMechanics
         EnumMap<StorageCapability, UimStorageMechanicProfile> values =
                 new EnumMap<>(StorageCapability.class);
         add(values, StorageCapability.LOOTING_BAG,
-                "Ferox Enclave or the Wilderness",
+                Text.get(1195),
                 Text.get(1032),
                 Text.get(1043),
                 Text.get(1051),
@@ -102,7 +102,7 @@ public final class UimStorageMechanics
                 Text.get(1027),
                 RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
         add(values, StorageCapability.ZULRAH_ITEM_RETRIEVAL,
-                "Zul-Gwenwynig at the Zul-Andra dock",
+                Text.get(1196),
                 Text.get(1028),
                 Text.get(1029),
                 Text.get(1030),
@@ -134,7 +134,7 @@ public final class UimStorageMechanics
                 true);
         values.put(StorageCapability.DEATH_STORAGE,
                 new UimStorageMechanicProfile(StorageCapability.DEATH_STORAGE,
-                        "Unknown", "Unknown exact service", "Unknown",
+                        "Unknown", Text.get(1197), "Unknown",
                         "Unknown", "Unknown", "Unknown", "Unknown",
                         "Unknown", RiskLevel.HIGH,
                         StrategySourceId.ITEM_RETRIEVAL_SERVICES, false));

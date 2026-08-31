@@ -10,7 +10,7 @@ public final class ContextualGearDecision
 {
     private final GearDecisionKind kind;
     private final String value;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
 
 
 }

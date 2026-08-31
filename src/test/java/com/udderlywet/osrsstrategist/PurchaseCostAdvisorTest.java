@@ -28,10 +28,10 @@ public class PurchaseCostAdvisorTest
                 new AccountEconomySnapshot(
                         100000,
                         0,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Arrays.asList(
-                        new ResolvedMethodInput("Yew logs", -1, 100),
-                        new ResolvedMethodInput("Bow string", -1, 100)));
+                        new MethodInput("Yew logs", -1, 100),
+                        new MethodInput("Bow string", -1, 100)));
 
         assertTrue(advice.contains("50,000 coins total"));
         assertTrue(advice.contains("leaving about 50,000"));
@@ -45,10 +45,10 @@ public class PurchaseCostAdvisorTest
                 new AccountEconomySnapshot(
                         20000,
                         0,
-                        RecommendationConfidence.VERIFIED),
+                        Confidence.VERIFIED),
                 Arrays.asList(
-                        new ResolvedMethodInput("Yew logs", -1, 100),
-                        new ResolvedMethodInput("Bow string", -1, 100)));
+                        new MethodInput("Yew logs", -1, 100),
+                        new MethodInput("Bow string", -1, 100)));
 
         assertTrue(advice.contains("30,000 coins short"));
         assertTrue(advice.contains("Do not treat the purchase as ready"));

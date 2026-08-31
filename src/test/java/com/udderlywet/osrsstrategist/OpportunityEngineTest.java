@@ -21,8 +21,8 @@ public class OpportunityEngineTest
     @Test
     public void highSkillsDoNotCreateUnobservedReminders()
     {
-        StrategyDataBundle data =
-                StrategyDataBundle.builder(account(50, 50)).build();
+        GameData data =
+                GameData.builder(account(50, 50)).build();
 
         assertTrue(engine.evaluate(data).isEmpty());
     }
@@ -36,8 +36,8 @@ public class OpportunityEngineTest
                 System.currentTimeMillis() - 1L
         );
 
-        StrategyDataBundle data =
-                StrategyDataBundle.builder(account(50, 50))
+        GameData data =
+                GameData.builder(account(50, 50))
                         .recurringOpportunities(
                                 new RecurringOpportunitySnapshot(timers)
                         )

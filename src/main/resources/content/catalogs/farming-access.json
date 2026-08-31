@@ -1,0 +1,9 @@
+[
+  {"id":"falador","displayName":"Falador patches","regionIds":[12083],"herbPatch":true},
+  {"id":"catherby","displayName":"Catherby patches","regionIds":[11062],"herbPatch":true},
+  {"id":"ardougne","displayName":"Ardougne patches","regionIds":[10548],"herbPatch":true},
+  {"id":"hosidius","displayName":"Hosidius patches","regionIds":[6967,6711],"herbPatch":true},
+  {"id":"morytania","displayName":"Morytania patches","regionIds":[14391],"requiredQuest":"Priest in Peril","herbPatch":true},
+  {"id":"troll_stronghold","displayName":"Troll Stronghold herb patch","regionIds":[11321],"requiredQuest":"My Arm's Big Adventure","herbPatch":true},
+  {"id":"weiss","displayName":"Weiss herb patch","regionIds":[11325],"requiredQuest":"Making Friends with My Arm","herbPatch":true}
+]

@@ -64,7 +64,7 @@ public final class StrategicPlan
         this.createdAtMillis = Math.max(0L, createdAtMillis);
     }
 
-    public StrategicPlan advanceCompleted(StrategyDataBundle data)
+    public StrategicPlan advanceCompleted(GameData data)
     {
         int next = currentIndex;
         while (next < steps.size() - 1 && steps.get(next).isComplete(data))
@@ -81,16 +81,16 @@ public final class StrategicPlan
 
     public boolean matchesContext(StrategyContext context)
     {
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null
+        if (context == null || context.data() == null
+                || context.data().account() == null
                 || goal != context.getActiveGoal()) return false;
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         if (accountHash != 0L && account.getAccountHash() != 0L)
             return accountHash == account.getAccountHash()
-                    && accountMode == context.getAccountMode()
+                    && accountMode == context.accountMode()
                     && membership == account.getMembershipStatus();
         return playerName != null && playerName.equals(account.getPlayerName())
-                && accountMode == context.getAccountMode()
+                && accountMode == context.accountMode()
                 && membership == account.getMembershipStatus();
     }
 

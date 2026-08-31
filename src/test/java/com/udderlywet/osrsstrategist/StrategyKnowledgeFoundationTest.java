@@ -128,7 +128,7 @@ public class StrategyKnowledgeFoundationTest
     @Test
     public void uimGeneratesLocalBronzeRouteBeforeRankingBankedBaseline()
     {
-        StrategyDataBundle data = data(2, MembershipStatus.F2P,
+        GameData data = data(2, MembershipStatus.F2P,
                 Collections.emptyList());
         TrainingPlan plan = selector.select(data, Skill.SMITHING, 1,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME, false,
@@ -145,9 +145,9 @@ public class StrategyKnowledgeFoundationTest
     @Test
     public void planRelativeFootprintChangesFullInventorySelection()
     {
-        List<ItemStackSnapshot> full = new ArrayList<>();
+        List<ItemState> full = new ArrayList<>();
         for (int slot = 0; slot < 28; slot++)
-            full.add(new ItemStackSnapshot(10_000 + slot,
+            full.add(new ItemState(10_000 + slot,
                     "Observed item " + slot, 1, slot));
 
         TrainingPlan emptyInventory = selector.select(
@@ -175,15 +175,15 @@ public class StrategyKnowledgeFoundationTest
         MethodStrategyProfile profile = new MethodStrategyKnowledgeCatalog()
                 .profileFor(method, metadata, AccountMode.MAIN);
         TrainingPlan plan = new TrainingPlan(method, "Main bank loop",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList(), profile);
         Recommendation recommendation = new Recommendation("skill:smithing",
                 "Train Smithing to 2", "Cheap first level.", 10.0, plan,
-                RecommendationConfidence.VERIFIED, 1, 2,
-                new RecommendationGuidance("Smith bronze items.",
+                Confidence.VERIFIED, 1, 2,
+                new Guidance("Smith bronze items.",
                         "Hammer and bronze bars.", "Varrock West anvils.",
                         null, MethodBankingBehavior.CONVENTIONAL_BANK_LOOP),
-                CandidateSafetyEvidence.skill(true, Skill.SMITHING));
+                SafetyEvidence.skill(true, Skill.SMITHING));
 
         StrategyContext uim = context(data(2, MembershipStatus.F2P,
                 Collections.emptyList()));
@@ -197,7 +197,7 @@ public class StrategyKnowledgeFoundationTest
     @Test
     public void liveUimSmithingCardHasMethodAndCoherentNoBankGuidance()
     {
-        StrategyDataBundle data = data(2, MembershipStatus.F2P,
+        GameData data = data(2, MembershipStatus.F2P,
                 Collections.emptyList());
         Recommendation smithing = new RecommendationEngine(selector)
                 .recommendAll(data, StrategyMode.BALANCED,
@@ -218,7 +218,7 @@ public class StrategyKnowledgeFoundationTest
         assertTrue(smithing.getReason().contains("cheap first Smithing level"));
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,
@@ -231,11 +231,11 @@ public class StrategyKnowledgeFoundationTest
         return new TrainingMethod(id, skill, 1, 99, "Typed method",
                 "Use the typed route.", 1, 1, 1, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED, false, false, false);
+                Confidence.VERIFIED, false, false, false);
     }
 
-    private static StrategyDataBundle data(int type,
-            MembershipStatus membership, List<ItemStackSnapshot> inventory)
+    private static GameData data(int type,
+            MembershipStatus membership, List<ItemState> inventory)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -248,9 +248,9 @@ public class StrategyKnowledgeFoundationTest
         AccountSnapshot account = new AccountSnapshot("Strategy test",
                 8_000L + type, type, AccountMode.fromTypeCode(type).name(),
                 membership, 0, 805, 0L, levels, xp);
-        return StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(inventory, true))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        return GameData.builder(account)
+                .inventory(new ItemsState(inventory, true))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
     }
 }

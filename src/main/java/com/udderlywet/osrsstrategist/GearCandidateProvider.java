@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 
 /** Surfaces a practical next gear tier without pretending a universal BIS exists. */
 @Singleton
-public class GearCandidateProvider implements StrategyCandidateProvider
+public class GearCandidateProvider implements CandidateProvider
 {
     private final GearProgressionCatalog catalog;
     private final GearAcquisitionCatalog acquisitionCatalog;
@@ -34,12 +34,12 @@ public class GearCandidateProvider implements StrategyCandidateProvider
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
-        if (context == null || context.getData() == null
-                || context.getData().getAccount() == null) return result;
+        if (context == null || context.data() == null
+                || context.data().account() == null) return result;
 
-        AccountSnapshot account = context.getData().getAccount();
-        AccountMode mode = context.getAccountMode();
-        ObservedItemIndex items = new ObservedItemIndex(context.getData(),
+        AccountSnapshot account = context.data().account();
+        AccountMode mode = context.accountMode();
+        ItemIndex items = new ItemIndex(context.data(),
                 context.isUseGroupStorage());
         boolean f2pSafeOnly = account.getMembershipStatus() != MembershipStatus.P2P;
         CombatStyle primaryStyle = primaryStyle(account);
@@ -68,18 +68,18 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                     && !entry.isHardcoreSafe()) continue;
 
             String id = "gear:" + entry.getId();
-            if (context.getPreferenceProfile().isOnCooldown(id)) continue;
+            if (context.preferenceProfile().isOnCooldown(id)) continue;
             double score = 23.0;
             if (context.getActiveGoal() == GoalType.GEAR_TARGET) score += 25.0;
             if (context.getActiveGoal() == GoalType.RAID_READY
                     && entry.getStyle() == CombatStyle.HYBRID) score += 22.0;
-            score += context.getPreferenceProfile().weightFor(id) * 10.0;
+            score += context.preferenceProfile().weightFor(id) * 10.0;
 
             RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
             String buildNote = build == RestrictedBuildType.STANDARD
                     ? ""
-                    : " Build protected: " + AccountBuildPolicy.label(account) + ".";
-            RecommendationGuidance guidance = acquisitionGuidance(entry, mode,
+                    : Text.get(1289) + AccountBuildPolicy.label(account) + ".";
+            Guidance guidance = acquisitionGuidance(entry, mode,
                     items, context);
             ContextualGearAssessment assessment = decisionService.assess(entry,
                     context);
@@ -93,13 +93,13 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
                             + buildNote
-                            + " Practical next comparison: "
-                            + practical.getValue() + ". Target-specific rule: "
+                            + Text.get(1290)
+                            + practical.getValue() + Text.get(1291)
                             + targetBest.getValue(),
                     score,
-                    RecommendationConfidence.CHECK_NEEDED,
+                    Confidence.CHECK_NEEDED,
                     guidance,
-                    CandidateSafetyEvidence.verifiedSafe(entry.isFreeToPlay())
+                    SafetyEvidence.verifiedSafe(entry.isFreeToPlay())
             ));
         }
 
@@ -108,13 +108,13 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         return result;
     }
 
-    private RecommendationGuidance acquisitionGuidance(
-            GearProgressionEntry entry, AccountMode mode, ObservedItemIndex items,
+    private Guidance acquisitionGuidance(
+            GearProgressionEntry entry, AccountMode mode, ItemIndex items,
             StrategyContext context)
     {
         if (!items.primaryOwnershipObserved())
         {
-            return new RecommendationGuidance(
+            return new Guidance(
                     Text.get(251),
                     Text.get(255),
                     Text.get(256),
@@ -147,16 +147,16 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             action = Text.get(262) + next
                     + Text.get(252);
 
-        String supplies = "Observed matching targets: "
+        String supplies = Text.get(1292)
                 + (owned.isEmpty() ? "none" : String.join(", ", owned))
-                + ". Still to compare: "
-                + (unresolved.isEmpty() ? "weapon/context comparison only"
+                + Text.get(1293)
+                + (unresolved.isEmpty() ? Text.get(1294)
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
                 ? Text.get(253)
-                : "Route starts with " + route.getSteps().get(0).getTarget()
+                : Text.get(1295) + route.getSteps().get(0).getTarget()
                         + Text.get(254);
-        return new RecommendationGuidance(action, supplies, location,
+        return new Guidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }
 

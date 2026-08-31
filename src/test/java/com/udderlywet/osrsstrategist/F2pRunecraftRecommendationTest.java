@@ -18,7 +18,7 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void levelOneF2pRunecraftGetsConcreteAirRuneMethod()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
+        GameData data = GameData.builder(f2pAccount()).build();
         TrainingMethodSelector selector = selector();
 
         TrainingPlan plan = selector.select(
@@ -44,11 +44,11 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void observedEssenceAndEquippedTiaraMakeAirRunesReady()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount())
-                .inventory(new InventorySnapshot(Arrays.asList(
-                        new ItemStackSnapshot(ItemID.BLANKRUNE, "Rune essence", 28))))
-                .equipment(new EquipmentSnapshot(Arrays.asList(
-                        new ItemStackSnapshot(ItemID.TIARA_AIR, "Air tiara", 1))))
+        GameData data = GameData.builder(f2pAccount())
+                .inventory(new ItemsState(Arrays.asList(
+                        new ItemState(ItemID.BLANKRUNE, "Rune essence", 28))))
+                .equipment(new ItemsState(Arrays.asList(
+                        new ItemState(ItemID.TIARA_AIR, "Air tiara", 1))))
                 .build();
 
         TrainingPlan plan = selector().select(
@@ -62,7 +62,7 @@ public class F2pRunecraftRecommendationTest
 
         assertNotNull(plan);
         assertEquals("runecraft_f2p_air", plan.getMethod().getId());
-        assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
+        assertEquals(Confidence.VERIFIED, plan.getConfidence());
         assertEquals(2, plan.getRequirementChecks().size());
         assertTrue(plan.getRequirementChecks().stream()
                 .allMatch(check -> check.getState() == RequirementState.VERIFIED));
@@ -72,11 +72,11 @@ public class F2pRunecraftRecommendationTest
     public void p2pLevelNineUsesConcreteEarthRunesAndAcceptsPureEssence()
     {
         AccountSnapshot account = account(MembershipStatus.P2P, 9);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Arrays.asList(
-                        new ItemStackSnapshot(ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
-                .equipment(new EquipmentSnapshot(Arrays.asList(
-                        new ItemStackSnapshot(ItemID.TIARA_EARTH, "Earth tiara", 1))))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Arrays.asList(
+                        new ItemState(ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
+                .equipment(new ItemsState(Arrays.asList(
+                        new ItemState(ItemID.TIARA_EARTH, "Earth tiara", 1))))
                 .build();
 
         TrainingPlan plan = selector().select(
@@ -95,7 +95,7 @@ public class F2pRunecraftRecommendationTest
         assertTrue(plan.getMethod().getInstructions().contains("Earth Altar"));
         assertTrue(plan.getMethod().getInstructions().contains("Varrock East"));
         assertFalse(plan.getMethod().getName().toLowerCase().contains("most useful"));
-        assertEquals(RecommendationConfidence.VERIFIED, plan.getConfidence());
+        assertEquals(Confidence.VERIFIED, plan.getConfidence());
         assertTrue(plan.getRequirementChecks().stream()
                 .allMatch(check -> check.getState() == RequirementState.VERIFIED));
     }
@@ -103,14 +103,14 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void gimLevelNineCanUseRecentlyObservedSharedEssenceForEarthRunes()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                         account(MembershipStatus.P2P, 9, 4))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.TIARA_EARTH,
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.TIARA_EARTH,
                                 "Earth tiara", 1))))
-                .groupStorage(new GroupStorageSnapshot(true,
-                        Collections.singletonList(new ItemStackSnapshot(
+                .groupStorage(new ItemsState(true,
+                        Collections.singletonList(new ItemState(
                                 ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
                 .build();
 
@@ -120,7 +120,7 @@ public class F2pRunecraftRecommendationTest
 
         assertNotNull(plan);
         assertEquals("runecraft_f2p_earth", plan.getMethod().getId());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 plan.getConfidence());
         assertTrue(plan.getRequirementChecks().stream()
                 .allMatch(check -> check.getState()
@@ -130,7 +130,7 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void skillRecommendationsNeverLeakWithoutConcreteMethods()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
+        GameData data = GameData.builder(f2pAccount()).build();
         RecommendationEngine engine = new RecommendationEngine(selector());
 
         java.util.List<Recommendation> recommendations = engine.recommend(
@@ -146,7 +146,7 @@ public class F2pRunecraftRecommendationTest
         {
             assertNotNull(recommendation.getTrainingPlan());
             assertNotNull(recommendation.getTrainingPlan().getMethod());
-            assertFalse(RecommendationPresentation.compactHtml(recommendation)
+            assertFalse(Presentation.compactHtml(recommendation)
                     .contains("Check needed before choosing a method"));
         }
     }
@@ -154,7 +154,7 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void unresolvedResourcesRemainNamedOrdinaryPreparation()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(f2pAccount()).build();
+        GameData data = GameData.builder(f2pAccount()).build();
         TrainingPlan plan = selector().select(
                 data,
                 Skill.RUNECRAFT,
@@ -188,26 +188,26 @@ public class F2pRunecraftRecommendationTest
         RuneLiteSkillActionCatalog actions = new RuneLiteSkillActionCatalog()
         {
             @Override
-            public java.util.List<RuneLiteSkillActionDefinition> actionsFor(
+            public java.util.List<ActionDef> actionsFor(
                     Skill skill)
             {
                 if (skill != Skill.RUNECRAFT) return Collections.emptyList();
                 return Arrays.asList(
-                        new RuneLiteSkillActionDefinition(Skill.RUNECRAFT,
+                        new ActionDef(Skill.RUNECRAFT,
                                 "test:water_tiara", "Water tiara", 1, 50,
                                 null, MembershipStatus.F2P),
-                        new RuneLiteSkillActionDefinition(Skill.RUNECRAFT,
+                        new ActionDef(Skill.RUNECRAFT,
                                 "test:water_rune", "Water rune", 5, 5,
                                 null, MembershipStatus.F2P));
             }
         };
         AccountSnapshot account = account(MembershipStatus.F2P, 5);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.BLANKRUNE,
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.BLANKRUNE,
                                 "Rune essence", 100))))
-                .equipment(new EquipmentSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.TIARA_WATER,
+                .equipment(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.TIARA_WATER,
                                 "Water tiara", 1))))
                 .build();
         TrainingPlan plan = selector().select(data, Skill.RUNECRAFT, 5,
@@ -223,7 +223,7 @@ public class F2pRunecraftRecommendationTest
                                 new SkillingXpModifierService(),
                                 new AccountResourcePlanner()));
 
-        RecommendationGuidance guidance = guidanceService.build(
+        Guidance guidance = guidanceService.build(
                 data, Skill.RUNECRAFT, 5, 10, plan, false);
 
         assertNotNull(guidance);

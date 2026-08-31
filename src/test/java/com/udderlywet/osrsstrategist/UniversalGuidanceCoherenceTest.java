@@ -18,10 +18,10 @@ public class UniversalGuidanceCoherenceTest
         RuneLiteSkillActionCatalog actions = new RuneLiteSkillActionCatalog()
         {
             @Override
-            public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+            public List<ActionDef> actionsFor(Skill skill)
             {
                 return Collections.singletonList(
-                        new RuneLiteSkillActionDefinition(
+                        new ActionDef(
                                 Skill.MAGIC, "runelite:magic:high_alchemy",
                                 "High Level Alchemy", 55, 65, "Magic",
                                 MembershipStatus.P2P, -1));
@@ -38,7 +38,7 @@ public class UniversalGuidanceCoherenceTest
                         "Use Magic on the live Slayer assignment."), true));
     }
 
-    private static StrategyDataBundle data()
+    private static GameData data()
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -50,8 +50,8 @@ public class UniversalGuidanceCoherenceTest
         AccountSnapshot account = new AccountSnapshot(
                 "Coherence", 0, "Main", MembershipStatus.P2P,
                 1, 1920, 0L, levels, xp);
-        return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        return GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
     }
 
@@ -62,9 +62,9 @@ public class UniversalGuidanceCoherenceTest
                 id, Skill.MAGIC, 1, 99, name, instructions,
                 10, 10, 10, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(method, "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 }

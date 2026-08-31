@@ -50,8 +50,8 @@ public final class ResourcePlanEntry
         return reusableSource != null && !reusableSource.trim().isEmpty();
     }
 
-    public ResolvedMethodInput missingInput()
+    public MethodInput missingInput()
     {
-        return new ResolvedMethodInput(name, itemId, missing);
+        return new MethodInput(name, itemId, missing);
     }
 }

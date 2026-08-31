@@ -5,12 +5,12 @@ import java.util.*;
 /** Detects durable non-XP progress from successive live account snapshots. */
 public final class AccountProgressMilestoneDetector
 {
-    private StrategyDataBundle previous;
+    private GameData previous;
 
     public List<ProgressMilestone> observe(
-            StrategyDataBundle current, GoalType goal, long nowMillis)
+            GameData current, GoalType goal, long nowMillis)
     {
-        if (current == null || current.getAccount() == null)
+        if (current == null || current.account() == null)
         {
             previous = null;
             return Collections.emptyList();
@@ -21,16 +21,16 @@ public final class AccountProgressMilestoneDetector
             return Collections.emptyList();
         }
         List<ProgressMilestone> result = new ArrayList<>();
-        quests(previous.getQuests(), current.getQuests(), goal, nowMillis,
+        quests(previous.quests(), current.quests(), goal, nowMillis,
                 result);
-        transport(previous.getTransport(), current.getTransport(), goal,
+        transport(previous.transport(), current.transport(), goal,
                 nowMillis, result);
-        storage(previous.getStorage(), current.getStorage(), goal, nowMillis,
+        storage(previous.storage(), current.storage(), goal, nowMillis,
                 result);
-        poh(previous.getPoh(), current.getPoh(), goal, nowMillis, result);
-        diaries(previous.getDiaries(), current.getDiaries(), goal, nowMillis,
+        poh(previous.poh(), current.poh(), goal, nowMillis, result);
+        diaries(previous.diaries(), current.diaries(), goal, nowMillis,
                 result);
-        slayer(previous.getSlayer(), current.getSlayer(), goal, nowMillis,
+        slayer(previous.slayer(), current.slayer(), goal, nowMillis,
                 result);
         previous = current;
         return result;
@@ -46,7 +46,7 @@ public final class AccountProgressMilestoneDetector
     {
         if (before == null || after == null) return;
         for (Map.Entry<String, QuestStatus> entry
-                : after.getQuests().entrySet())
+                : after.quests().entrySet())
             if (entry.getValue() == QuestStatus.COMPLETE
                     && before.statusOf(entry.getKey()) != QuestStatus.COMPLETE)
                 result.add(milestone("quest:" + slug(entry.getKey()),
@@ -63,7 +63,7 @@ public final class AccountProgressMilestoneDetector
             if (!before.hasVerifiedRoute(route))
                 result.add(milestone("transport:" + route,
                         ProgressMilestoneType.TRANSPORT,
-                        "Transport unlocked: " + display(route), goal, now));
+                        Text.get(1448) + display(route), goal, now));
     }
 
     private static void storage(StorageSnapshot before, StorageSnapshot after,
@@ -77,7 +77,7 @@ public final class AccountProgressMilestoneDetector
                 result.add(milestone("storage:"
                                 + capability.name().toLowerCase(Locale.ROOT),
                         ProgressMilestoneType.INFRASTRUCTURE,
-                        "Storage unlocked: " + display(capability.name()),
+                        Text.get(1449) + display(capability.name()),
                         goal, now));
     }
 
@@ -89,7 +89,7 @@ public final class AccountProgressMilestoneDetector
                 && before.getHouseAccess() != CapabilityState.VERIFIED)
             result.add(milestone("infrastructure:poh-access",
                     ProgressMilestoneType.INFRASTRUCTURE,
-                    "Player-owned house access verified", goal, now));
+                    Text.get(1450), goal, now));
         for (Map.Entry<String, CapabilityState> entry
                 : after.getFurniture().entrySet())
             if (entry.getValue() == CapabilityState.VERIFIED
@@ -133,15 +133,15 @@ public final class AccountProgressMilestoneDetector
             ProgressMilestoneType type, String title, GoalType goal, long now)
     {
         return new ProgressMilestone(id, type, title,
-                "Observed from live account state.",
+                Text.get(1451),
                 goal == null ? null : goal.name(), now);
     }
 
     private static boolean differentAccount(
-            StrategyDataBundle first, StrategyDataBundle second)
+            GameData first, GameData second)
     {
-        AccountSnapshot left = first.getAccount();
-        AccountSnapshot right = second.getAccount();
+        AccountSnapshot left = first.account();
+        AccountSnapshot right = second.account();
         if (left.getAccountHash() != 0L && right.getAccountHash() != 0L)
             return left.getAccountHash() != right.getAccountHash();
         return !left.getPlayerName().equals(right.getPlayerName());

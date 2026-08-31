@@ -8,14 +8,14 @@ public final class UimStorageDecision
 {
     private final StorageCapability capability;
     private final boolean allowed;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final RiskLevel riskLevel;
     private final String explanation;
 
     public UimStorageDecision(
             StorageCapability capability,
             boolean allowed,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             RiskLevel riskLevel,
             String explanation)
     {

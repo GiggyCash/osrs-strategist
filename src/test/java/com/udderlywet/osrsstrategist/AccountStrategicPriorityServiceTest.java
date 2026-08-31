@@ -84,16 +84,16 @@ public class AccountStrategicPriorityServiceTest
     @Test
     public void unobservedUimSlotsRemainCheckNeeded()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(
+        GameData data = GameData.builder(account(
                         AccountMode.ULTIMATE_IRONMAN,
                         MembershipStatus.P2P, 70))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
         AccountStrategicPriority value = service.assess(
                 AccountMode.ULTIMATE_IRONMAN, data, false).get(
                 AccountStrategicDimension.INVENTORY_PRESSURE);
 
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 value.getConfidence());
         assertTrue(value.getReason().contains("not observed"));
     }
@@ -118,11 +118,11 @@ public class AccountStrategicPriorityServiceTest
     public void groupBenefitsRequireFreshEnabledObservedStorage()
     {
         long now = System.currentTimeMillis();
-        GroupStorageSnapshot fresh = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState fresh = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         995, "Coins", 10)), now);
-        GroupStorageSnapshot stale = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        ItemsState stale = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         995, "Coins", 10)), now - 10L * 60L * 1000L);
 
         AccountStrategicPriorityProfile usable = service.assess(
@@ -143,7 +143,7 @@ public class AccountStrategicPriorityServiceTest
                 AccountStrategicDimension.SHARED_RESOURCE_VALUE));
         assertEquals(StrategicPriority.NONE, expired.priorityOf(
                 AccountStrategicDimension.DUPLICATE_GRIND_PENALTY));
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 usable.get(AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE)
                         .getConfidence());
         assertEquals(CapabilityState.UNKNOWN, usable.get(
@@ -159,7 +159,7 @@ public class AccountStrategicPriorityServiceTest
 
         assertEquals(StrategicPriority.CRITICAL, unknown.priorityOf(
                 AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY));
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 unknown.get(AccountStrategicDimension.BANK_AVAILABILITY)
                         .getConfidence());
         assertEquals(StrategicPriority.NONE, unknown.priorityOf(
@@ -174,14 +174,14 @@ public class AccountStrategicPriorityServiceTest
                 AccountStrategicDimension.DEATH_RISK_SENSITIVITY.getRole());
     }
 
-    private static StrategyDataBundle data(AccountMode mode, int occupied,
-            GroupStorageSnapshot groupStorage)
+    private static GameData data(AccountMode mode, int occupied,
+            ItemsState groupStorage)
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         for (int i = 0; i < occupied; i++)
-            items.add(new ItemStackSnapshot(10_000 + i, "Item " + i, 1, i));
-        return StrategyDataBundle.builder(account(mode, MembershipStatus.P2P, 70))
-                .inventory(new InventorySnapshot(items))
+            items.add(new ItemState(10_000 + i, "Item " + i, 1, i));
+        return GameData.builder(account(mode, MembershipStatus.P2P, 70))
+                .inventory(new ItemsState(items))
                 .groupStorage(groupStorage)
                 .build();
     }

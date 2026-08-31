@@ -20,8 +20,8 @@ public class RestrictedBuildDetector
         {
             return new RestrictedBuildSuggestion(
                     RestrictedBuildType.STANDARD,
-                    RecommendationConfidence.CHECK_NEEDED,
-                    "No account snapshot is available."
+                    Confidence.CHECK_NEEDED,
+                    Text.get(1206)
             );
         }
 
@@ -144,7 +144,7 @@ public class RestrictedBuildDetector
 
         return new RestrictedBuildSuggestion(
                 RestrictedBuildType.STANDARD,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Text.get(589)
         );
     }
@@ -155,7 +155,7 @@ public class RestrictedBuildDetector
     {
         return new RestrictedBuildSuggestion(
                 type,
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 evidence
         );
     }
@@ -166,7 +166,7 @@ public class RestrictedBuildDetector
     {
         return new RestrictedBuildSuggestion(
                 type,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 evidence
         );
     }

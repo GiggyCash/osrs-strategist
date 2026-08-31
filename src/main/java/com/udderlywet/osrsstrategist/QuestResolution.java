@@ -6,20 +6,20 @@ import lombok.Getter;
 @Getter
 public final class QuestResolution
 {
-    private final RecommendationConfidence confidence;
-    private final RecommendationGuidance guidance;
+    private final Confidence confidence;
+    private final Guidance guidance;
     private final String reason;
-    private final CandidateSafetyEvidence safetyEvidence;
+    private final SafetyEvidence safetyEvidence;
 
-    public QuestResolution(RecommendationConfidence confidence,
-            RecommendationGuidance guidance, String reason)
+    public QuestResolution(Confidence confidence,
+            Guidance guidance, String reason)
     {
-        this(confidence, guidance, reason, CandidateSafetyEvidence.unknown());
+        this(confidence, guidance, reason, SafetyEvidence.unknown());
     }
 
-    public QuestResolution(RecommendationConfidence confidence,
-            RecommendationGuidance guidance, String reason,
-            CandidateSafetyEvidence safetyEvidence)
+    public QuestResolution(Confidence confidence,
+            Guidance guidance, String reason,
+            SafetyEvidence safetyEvidence)
     {
         this.confidence = confidence;
         this.guidance = guidance;

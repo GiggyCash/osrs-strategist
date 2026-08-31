@@ -28,7 +28,7 @@ public class RequirementEvidenceEngineTest
                 Collections.emptyMap()
         );
 
-        StrategyDataBundle data = StrategyDataBundle
+        GameData data = GameData
                 .builder(account(9))
                 .farming(farming)
                 .build();
@@ -62,11 +62,11 @@ public class RequirementEvidenceEngineTest
                 Collections.emptyMap()
         );
 
-        StrategyDataBundle data = StrategyDataBundle
+        GameData data = GameData
                 .builder(account(32))
                 .farming(farming)
-                .bank(new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.RANARR_SEED, "Ranarr seed", 2)
+                .bank(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.RANARR_SEED, "Ranarr seed", 2)
                 ), 1L))
                 .build();
 
@@ -93,20 +93,20 @@ public class RequirementEvidenceEngineTest
                         candidate.getMethod().getId()))
                 .findFirst().orElseThrow(AssertionError::new).getMethod();
 
-        StrategyDataBundle empty = StrategyDataBundle.builder(account(1))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        GameData empty = GameData.builder(account(1))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
         assertEquals(RequirementState.CHECK_NEEDED,
                 engine.evaluate(empty, mining).get(0).getState());
 
-        StrategyDataBundle ready = StrategyDataBundle.builder(account(1))
-                .inventory(new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+        GameData ready = GameData.builder(account(1))
+                .inventory(new ItemsState(Collections.singletonList(
+                        new ItemState(ItemID.BRONZE_PICKAXE,
                                 "Bronze pickaxe", 1))))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
         assertEquals(RequirementState.VERIFIED,
                 engine.evaluate(ready, mining).get(0).getState());
@@ -122,7 +122,7 @@ public class RequirementEvidenceEngineTest
                 .map(CuratedTrainingMethod::getMethod)
                 .filter(method -> "magic_f2p_fire_blast".equals(method.getId()))
                 .findFirst().orElseThrow(AssertionError::new);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(1))
+        GameData data = GameData.builder(account(1))
                 .combatEvidence(new CombatEvidenceSnapshot(1,
                         Collections.emptySet(), false, false, false))
                 .build();
@@ -140,7 +140,7 @@ public class RequirementEvidenceEngineTest
         TrainingMethod fireBlast = expanded("magic_f2p_fire_blast", Skill.MAGIC);
 
         java.util.List<RequirementCheck> checks = engine.evaluate(
-                StrategyDataBundle.builder(account(1)).build(), fireBlast);
+                GameData.builder(account(1)).build(), fireBlast);
 
         assertEquals("spellbook:standard", checks.get(0).getId());
         assertEquals(RequirementState.CHECK_NEEDED, checks.get(0).getState());
@@ -153,14 +153,14 @@ public class RequirementEvidenceEngineTest
                 new FarmingAccessEvaluator(new FarmingAccessCatalog()));
         TrainingMethod method = expanded(
                 "magic_f2p_fire_strike_splash", Skill.MAGIC);
-        StrategyDataBundle ready = StrategyDataBundle.builder(account(1))
+        GameData ready = GameData.builder(account(1))
                 .combatEvidence(new CombatEvidenceSnapshot(0,
                         Collections.emptySet(), false, false, false))
-                .inventory(new InventorySnapshot(Arrays.asList(
-                        new ItemStackSnapshot(ItemID.AIRRUNE, "Air rune", 2),
-                        new ItemStackSnapshot(ItemID.FIRERUNE, "Fire rune", 3),
-                        new ItemStackSnapshot(ItemID.MINDRUNE, "Mind rune", 1))))
-                .equipment(new EquipmentSnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
+                        new ItemState(ItemID.AIRRUNE, "Air rune", 2),
+                        new ItemState(ItemID.FIRERUNE, "Fire rune", 3),
+                        new ItemState(ItemID.MINDRUNE, "Mind rune", 1))))
+                .equipment(new ItemsState(Arrays.asList(
                         equipped("Iron full helm"), equipped("Iron platebody"),
                         equipped("Iron platelegs"), equipped("Iron kiteshield"),
                         equipped("Fancy boots"), equipped("Cursed goblin staff"))))
@@ -181,12 +181,12 @@ public class RequirementEvidenceEngineTest
                 new FarmingAccessEvaluator(new FarmingAccessCatalog()));
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Temple of the Eye", QuestStatus.COMPLETE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(80))
+        GameData data = GameData.builder(account(80))
                 .quests(new QuestSnapshot(quests))
-                .bank(new BankSnapshot(java.util.Arrays.asList(
-                        new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+                .bank(new ItemsState(java.util.Arrays.asList(
+                        new ItemState(ItemID.BRONZE_PICKAXE,
                                 "Bronze pickaxe", 1),
-                        new ItemStackSnapshot(ItemID.CHISEL, "Chisel", 1)), 1L))
+                        new ItemState(ItemID.CHISEL, "Chisel", 1)), 1L))
                 .build();
 
         java.util.List<RequirementCheck> gotr = engine.evaluate(data,
@@ -246,8 +246,8 @@ public class RequirementEvidenceEngineTest
         );
     }
 
-    private static ItemStackSnapshot equipped(String name)
+    private static ItemState equipped(String name)
     {
-        return new ItemStackSnapshot(name.hashCode(), name, 1);
+        return new ItemState(name.hashCode(), name, 1);
     }
 }

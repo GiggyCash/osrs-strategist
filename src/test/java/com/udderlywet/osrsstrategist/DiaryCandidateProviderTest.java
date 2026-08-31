@@ -36,7 +36,7 @@ public class DiaryCandidateProviderTest
 
         assertEquals(task.getId(), candidate.getId());
         assertEquals(task.getTask(), candidate.getGuidance().getAction());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 candidate.getConfidence());
     }
 
@@ -61,7 +61,7 @@ public class DiaryCandidateProviderTest
         }
         AccountSnapshot account = new AccountSnapshot("Diary", 1L, 0,
                 "NORMAL", MembershipStatus.P2P, 1, 2277, 0L, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .diaries(snapshot)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .build();

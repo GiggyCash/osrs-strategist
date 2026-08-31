@@ -21,14 +21,14 @@ public class UnknownMembershipCandidateIsolationTest
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Pandemonium", QuestStatus.NOT_STARTED);
         quests.put("The Ides of Milk", QuestStatus.NOT_STARTED);
-        StrategyDataBundle questData = StrategyDataBundle.builder(account)
+        GameData questData = GameData.builder(account)
                 .quests(new QuestSnapshot(quests)).build();
         assertFalse(contains(new QuestCandidateProvider(new QuestPriorityCatalog())
                 .candidates(context(questData)), "Pandemonium"));
         assertTrue(contains(new QuestCandidateProvider(new QuestPriorityCatalog())
                 .candidates(context(questData)), "The Ides of Milk"));
 
-        StrategyDataBundle minigameData = StrategyDataBundle.builder(account)
+        GameData minigameData = GameData.builder(account)
                 .minigames(new MinigameSnapshot(
                         new HashSet<>(java.util.Arrays.asList("castle-wars", "tempoross")),
                         Collections.emptyMap())).build();
@@ -41,15 +41,15 @@ public class UnknownMembershipCandidateIsolationTest
         readiness.put("pvm:obor", ready("pvm:obor"));
         readiness.put("pvm:zulrah", ready("pvm:zulrah"));
         java.util.List<Recommendation> pvm = new PvmCandidateProvider()
-                .candidates(context(StrategyDataBundle.builder(account)
+                .candidates(context(GameData.builder(account)
                         .pvm(new PvmSnapshot(readiness)).build()));
         assertTrue(contains(pvm, "Obor"));
         assertFalse(contains(pvm, "Zulrah"));
 
-        StrategyContext broad = context(StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        StrategyContext broad = context(GameData.builder(account)
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .economy(new AccountEconomySnapshot(0, 0,
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .diaries(new DiarySnapshot(Collections.singletonMap("Varrock", 0),
                         Collections.singletonMap("Varrock", 10)))
                 .combatAchievements(new CombatAchievementSnapshot(0, 0))
@@ -65,8 +65,8 @@ public class UnknownMembershipCandidateIsolationTest
                 new MoneyMakingCatalog()).candidates(broad))
             assertTrue(candidate.getId().startsWith("money:f2p-"));
 
-        StrategyContext ironUnknown = context(StrategyDataBundle.builder(account(1))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L)).build());
+        StrategyContext ironUnknown = context(GameData.builder(account(1))
+                .bank(new ItemsState(Collections.emptyList(), 1L)).build());
         assertTrue(new ResourceDetourCandidateProvider()
                 .candidates(ironUnknown).isEmpty());
     }
@@ -76,11 +76,11 @@ public class UnknownMembershipCandidateIsolationTest
     {
         Map<String, Long> timers = new HashMap<>();
         timers.put("opportunity:herb-run", 0L);
-        StrategyDataBundle data = StrategyDataBundle.builder(account(0))
+        GameData data = GameData.builder(account(0))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
         assertTrue(new OpportunityEngine().evaluate(data).isEmpty());
 
-        StrategyDataBundle f2p = StrategyDataBundle.builder(account(0, MembershipStatus.F2P))
+        GameData f2p = GameData.builder(account(0, MembershipStatus.F2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
         assertTrue(new OpportunityEngine().evaluate(f2p).isEmpty());
     }
@@ -89,22 +89,22 @@ public class UnknownMembershipCandidateIsolationTest
     public void unknownCluesUseF2pBoundaryInProviderAndOpportunityEngine()
     {
         ClueSnapshot medium = new ClueSnapshot(true, "medium", 0L,
-                RecommendationConfidence.VERIFIED);
-        StrategyDataBundle unknown = StrategyDataBundle.builder(account(0))
+                Confidence.VERIFIED);
+        GameData unknown = GameData.builder(account(0))
                 .clue(medium).build();
         assertTrue(new ClueCandidateProvider().candidates(context(unknown)).isEmpty());
         assertTrue(new OpportunityEngine().evaluate(unknown).isEmpty());
 
-        StrategyDataBundle p2p = StrategyDataBundle.builder(
+        GameData p2p = GameData.builder(
                         account(0, MembershipStatus.P2P))
                 .clue(medium).build();
         assertFalse(new ClueCandidateProvider().candidates(context(p2p)).isEmpty());
         assertTrue(new OpportunityEngine().evaluate(p2p).stream()
                 .anyMatch(value -> value.getType() == OpportunityType.CLUE));
 
-        StrategyDataBundle beginnerUnknown = StrategyDataBundle.builder(account(0))
+        GameData beginnerUnknown = GameData.builder(account(0))
                 .clue(new ClueSnapshot(true, "beginner", 0L,
-                        RecommendationConfidence.VERIFIED)).build();
+                        Confidence.VERIFIED)).build();
         assertFalse(new ClueCandidateProvider().candidates(
                 context(beginnerUnknown)).isEmpty());
         assertTrue(new OpportunityEngine().evaluate(beginnerUnknown).stream()
@@ -113,7 +113,7 @@ public class UnknownMembershipCandidateIsolationTest
 
     private static PvmReadiness ready(String id)
     {
-        return new PvmReadiness(id, true, RecommendationConfidence.VERIFIED,
+        return new PvmReadiness(id, true, Confidence.VERIFIED,
                 Collections.emptyList());
     }
 
@@ -122,7 +122,7 @@ public class UnknownMembershipCandidateIsolationTest
         return candidates.stream().anyMatch(value -> value.getTitle().contains(text));
     }
 
-    private static StrategyContext context(StrategyDataBundle data)
+    private static StrategyContext context(GameData data)
     {
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL, GoalType.GEAR_TARGET,

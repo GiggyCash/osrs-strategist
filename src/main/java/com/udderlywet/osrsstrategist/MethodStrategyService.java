@@ -22,18 +22,18 @@ public final class MethodStrategyService
         this(new UimInventoryResolutionService());
     }
 
-    public MethodStrategyAssessment assess(StrategyDataBundle data,
+    public MethodStrategyAssessment assess(GameData data,
             MethodStrategyProfile profile)
     {
-        if (data == null || data.getAccount() == null)
+        if (data == null || data.account() == null)
             return new MethodStrategyAssessment(profile != null, 0.0,
-                    profile == null ? "No verified strategy profile applies."
+                    profile == null ? Text.get(1304)
                             : profile.getPlayerReason());
         if (profile == null)
             return new MethodStrategyAssessment(false, 0.0,
                     Text.get(388));
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
+                data.account().getAccountTypeCode());
         if (!profile.supports(mode))
             return new MethodStrategyAssessment(false, 0.0,
                     Text.get(389));
@@ -44,7 +44,7 @@ public final class MethodStrategyService
                     Text.get(390));
 
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
-        InventorySnapshot inventory = data.getInventory();
+        ItemsState inventory = data.inventory();
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && footprint != null
                 && footprint.getMinimumPracticalFreeSlots() > 0

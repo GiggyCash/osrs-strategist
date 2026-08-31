@@ -36,16 +36,16 @@ public final class ActivityStrategyKnowledgeService
     {
         if (recommendation == null || context == null) return recommendation;
         ActivityStrategyProfile profile = catalog.profileFor(
-                recommendation.getId(), context.getAccountMode());
+                recommendation.getId(), context.accountMode());
         if (profile == null) return recommendation;
 
-        if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                && !fitsObservedInventory(context.getData(), profile,
+        if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN
+                && !fitsObservedInventory(context.data(), profile,
                         inventoryResolution))
             return null;
 
-        RecommendationStrategicValue.Builder sourced =
-                RecommendationStrategicValue.builder()
+        StrategicValue.Builder sourced =
+                StrategicValue.builder()
                         .setupReuse(profile.getSetupReuse());
         for (StrategySourceId source : profile.getSources())
             sourced.evidence("strategy-source:" + source.name());
@@ -53,11 +53,11 @@ public final class ActivityStrategyKnowledgeService
                 recommendation.getStrategicValue().merge(sourced.build()));
     }
 
-    private static boolean fitsObservedInventory(StrategyDataBundle data,
+    private static boolean fitsObservedInventory(GameData data,
             ActivityStrategyProfile profile,
             UimInventoryResolutionService inventoryResolution)
     {
-        InventorySnapshot inventory = data == null ? null : data.getInventory();
+        ItemsState inventory = data == null ? null : data.inventory();
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
         if (footprint == null) return true;
         if (inventory == null || !inventory.hasCompleteSlotObservation())

@@ -23,7 +23,7 @@ public class ExpandedTrainingMethodCatalog
             if (curated.getMethod() == null || curated.getMetadata() == null
                     || curated.getMethod().getSkill() == null
                     || curated.getMethod().getId() == null)
-                throw new IllegalStateException("Incomplete training method in " + RESOURCE);
+                throw new IllegalStateException(Text.get(1132) + RESOURCE);
             methods.get(curated.getMethod().getSkill()).add(curated);
         }
     }

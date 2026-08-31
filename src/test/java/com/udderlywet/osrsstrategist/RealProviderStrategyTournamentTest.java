@@ -42,8 +42,8 @@ public class RealProviderStrategyTournamentTest
     public void actualProvidersAlwaysReturnOneSafeSpecificLead()
     {
         StrategyEngine engine = engine();
-        RecommendationActionabilityPolicy actionability =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy actionability =
+                new ActionabilityPolicy();
         CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
         Set<String> winningDomains = new HashSet<>();
         int scenarios = 0;
@@ -51,7 +51,7 @@ public class RealProviderStrategyTournamentTest
         {
             for (int level : new int[]{5, 50, 85})
             {
-                StrategyDataBundle data = data(account, level);
+                GameData data = data(account, level);
                 // Goal breadth is the expensive dimension because each public
                 // dependency graph is resolved through every real provider.
                 // QUICK and AFK are opposing session properties; the focused
@@ -88,7 +88,7 @@ public class RealProviderStrategyTournamentTest
                             if (account.membership != MembershipStatus.P2P)
                                 assertTrue(label + " leaked members content",
                                         lead.getSafetyEvidence().getAccess()
-                                                == CandidateSafetyEvidence.Access.F2P_SAFE);
+                                                == SafetyEvidence.Access.F2P_SAFE);
                             scenarios++;
                         }
                     }
@@ -103,13 +103,13 @@ public class RealProviderStrategyTournamentTest
 
     private static void assertSpecific(String label, Recommendation lead)
     {
-        RecommendationGuidance guidance = lead.getGuidance();
+        Guidance guidance = lead.getGuidance();
         assertTrue(label + " missing guidance", guidance != null);
         assertFalse(label + " missing action",
                 guidance.getAction() == null || guidance.getAction().trim().isEmpty());
         assertFalse(label + " missing location",
                 guidance.getLocation() == null || guidance.getLocation().trim().isEmpty());
-        String visible = RecommendationPresentation.compactText(lead)
+        String visible = Presentation.compactText(lead)
                 .toLowerCase(Locale.ROOT);
         for (String slop : Arrays.asList(
                 "strategist will verify", "choose the best",
@@ -132,15 +132,15 @@ public class RealProviderStrategyTournamentTest
     public void allStrategyAndSessionPropertiesReachActualProviderQueue()
     {
         StrategyEngine engine = engine();
-        RecommendationActionabilityPolicy actionability =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy actionability =
+                new ActionabilityPolicy();
         CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
         int scenarios = 0;
         for (Scenario account : ACCOUNTS)
         {
             for (int level : new int[]{5, 50, 85})
             {
-                StrategyDataBundle data = data(account, level);
+                GameData data = data(account, level);
                 for (StrategyMode mode : StrategyMode.values())
                 {
                     for (SessionIntent session : SessionIntent.values())
@@ -195,13 +195,13 @@ public class RealProviderStrategyTournamentTest
                         new MinigameCandidateProvider(new MinigameCatalog()),
                         new CollectionLogCandidateProvider()));
         return new StrategyEngine(new RecommendationEngine(selector), null,
-                null, registry, new RecommendationActionabilityPolicy(),
+                null, registry, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService(),
                 new CandidateSafetyPolicy(),
                 new GoalDependencyProvenanceService());
     }
 
-    private static StrategyDataBundle data(Scenario scenario, int level)
+    private static GameData data(Scenario scenario, int level)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -233,20 +233,20 @@ public class RealProviderStrategyTournamentTest
             questStates.put("Monkey Madness I", QuestStatus.NOT_STARTED);
         }
 
-        StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(preparedItems()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData.Builder builder = GameData.builder(account)
+                .inventory(new ItemsState(preparedItems()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .quests(new QuestSnapshot(questStates));
         if (scenario.type != 2)
-            builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(Collections.emptyList(), 1L));
         if (scenario.membership == MembershipStatus.P2P)
         {
             builder.slayer(new SlayerSnapshot(null, 0, null, 0,
-                    RecommendationConfidence.VERIFIED));
+                    Confidence.VERIFIED));
             builder.poh(observedEmptyPoh());
         }
         if (AccountMode.fromTypeCode(scenario.type).isGroupIronman())
-            builder.groupStorage(new GroupStorageSnapshot(true,
+            builder.groupStorage(new ItemsState(true,
                     Collections.emptyList()));
         return builder.build();
     }
@@ -254,7 +254,7 @@ public class RealProviderStrategyTournamentTest
     private static PohSnapshot observedEmptyPoh()
     {
         Map<String, CapabilityState> furniture = new HashMap<>();
-        for (InfrastructureMilestoneDefinition definition
+        for (InfrastructureMilestone definition
                 : new InfrastructureMilestoneCatalog().all())
             if (definition.getEvidenceKind()
                     == InfrastructureEvidenceKind.POH_FURNITURE)
@@ -263,22 +263,22 @@ public class RealProviderStrategyTournamentTest
         return new PohSnapshot(CapabilityState.VERIFIED, furniture);
     }
 
-    private static List<ItemStackSnapshot> preparedItems()
+    private static List<ItemState> preparedItems()
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
-        items.add(new ItemStackSnapshot(ItemID.BRONZE_PICKAXE,
+        List<ItemState> items = new ArrayList<>();
+        items.add(new ItemState(ItemID.BRONZE_PICKAXE,
                 "Bronze pickaxe", 1));
-        items.add(new ItemStackSnapshot(ItemID.BRONZE_AXE,
+        items.add(new ItemState(ItemID.BRONZE_AXE,
                 "Bronze axe", 1));
-        items.add(new ItemStackSnapshot(ItemID.TINDERBOX,
+        items.add(new ItemState(ItemID.TINDERBOX,
                 "Tinderbox", 1));
-        items.add(new ItemStackSnapshot(ItemID.NET,
+        items.add(new ItemState(ItemID.NET,
                 "Small fishing net", 1));
-        items.add(new ItemStackSnapshot(ItemID.FLY_FISHING_ROD,
+        items.add(new ItemState(ItemID.FLY_FISHING_ROD,
                 "Fly fishing rod", 1));
-        items.add(new ItemStackSnapshot(ItemID.FEATHER, "Feather", 5_000));
-        items.add(new ItemStackSnapshot(ItemID.HAMMER, "Hammer", 1));
-        items.add(new ItemStackSnapshot(ItemID.KNIFE, "Knife", 1));
+        items.add(new ItemState(ItemID.FEATHER, "Feather", 5_000));
+        items.add(new ItemState(ItemID.HAMMER, "Hammer", 1));
+        items.add(new ItemState(ItemID.KNIFE, "Knife", 1));
         return items;
     }
 

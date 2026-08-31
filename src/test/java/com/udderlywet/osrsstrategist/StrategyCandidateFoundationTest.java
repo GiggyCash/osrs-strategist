@@ -16,10 +16,10 @@ public class StrategyCandidateFoundationTest
     @Test
     public void tierOnlyClueAsksForOneConcreteObservation()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
+        GameData data = GameData.builder(account())
                 .clue(new ClueSnapshot(
                         true, "Hard", System.currentTimeMillis(),
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
         StrategyContext context = new StrategyContext(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -34,7 +34,7 @@ public class StrategyCandidateFoundationTest
         assertTrue(recommendation.getGuidance().getAction()
                 .contains("Open the clue scroll once"));
         assertEquals(0, recommendation.getCurrentLevel());
-        String compact = RecommendationPresentation.compactHtml(recommendation);
+        String compact = Presentation.compactHtml(recommendation);
         assertTrue(compact.contains("ACTIVITY"));
         assertTrue(compact.contains("DO"));
     }
@@ -49,7 +49,7 @@ public class StrategyCandidateFoundationTest
                 false, false, null, false, "outside catherby bank");
         Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "medium", 1L,
-                        RecommendationConfidence.VERIFIED, step),
+                        Confidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
 
         assertEquals("prepare:clue-current-step", candidate.getId());
@@ -58,7 +58,7 @@ public class StrategyCandidateFoundationTest
         assertTrue(candidate.getGuidance().getSupplies()
                 .contains("Maple longbow"));
         assertTrue(candidate.getGuidance().getAction().contains("Cheer"));
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 candidate.getConfidence());
     }
 
@@ -71,13 +71,13 @@ public class StrategyCandidateFoundationTest
                 false, null, true, null);
         Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "hard", 1L,
-                        RecommendationConfidence.VERIFIED, step),
+                        Confidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
 
         assertTrue(candidate.getTitle().startsWith("Hold hard clue"));
         assertTrue(candidate.getGuidance().getAction().startsWith("Bank"));
         assertFalse(candidate.getConfidence()
-                == RecommendationConfidence.VERIFIED);
+                == Confidence.VERIFIED);
     }
 
     @Test
@@ -89,12 +89,12 @@ public class StrategyCandidateFoundationTest
                 null, false, null);
         Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "beginner", 1L,
-                        RecommendationConfidence.VERIFIED, step),
+                        Confidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
 
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 candidate.getConfidence());
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(candidate));
     }
 
@@ -106,7 +106,7 @@ public class StrategyCandidateFoundationTest
                 mode == AccountMode.ULTIMATE_IRONMAN ? 4 : 0, mode.name(),
                 MembershipStatus.P2P, 1, 1, 0L,
                 base.getSkillLevels(), base.getSkillExperience());
-        return new StrategyContext(StrategyDataBundle.builder(selected)
+        return new StrategyContext(GameData.builder(selected)
                 .clue(clue).build(), StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL, GoalType.MAX,
                 false, false, wilderness, new PreferenceProfile());

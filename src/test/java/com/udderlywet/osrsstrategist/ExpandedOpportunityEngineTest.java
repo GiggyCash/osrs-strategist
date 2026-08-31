@@ -20,7 +20,7 @@ public class ExpandedOpportunityEngineTest
         Map<String, Long> timers = new HashMap<>();
         timers.put("opportunity:battlestaves", 0L);
         timers.put("opportunity:dynamite", 0L);
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
+        GameData data = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .build();
 
@@ -35,7 +35,7 @@ public class ExpandedOpportunityEngineTest
     @Test
     public void unobservedDailyContentDoesNotInventReminder()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account())
+        GameData data = GameData.builder(account())
                 .recurringOpportunities(RecurringOpportunitySnapshot.unknown())
                 .build();
         assertTrue(new OpportunityEngine().evaluate(data).isEmpty());
@@ -46,30 +46,30 @@ public class ExpandedOpportunityEngineTest
     {
         Map<String, Long> timers = new HashMap<>();
         timers.put("opportunity:herb-run", 0L);
-        StrategyDataBundle unresolved = StrategyDataBundle.builder(account())
+        GameData unresolved = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .farming(FarmingSnapshot.unknown()).build();
         Opportunity missing = new OpportunityEngine().evaluate(unresolved).get(0);
         assertTrue(!missing.isSetupVerified());
         assertTrue(missing.getPreparation().contains("Carry a spade"));
 
-        StrategyDataBundle wrongSeed = StrategyDataBundle.builder(account())
+        GameData wrongSeed = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
-                .inventory(new InventorySnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
                         item("Spade"), item("Seed dibber"),
-                        new ItemStackSnapshot(ItemID.ACORN, "Acorn", 1))))
+                        new ItemState(ItemID.ACORN, "Acorn", 1))))
                 .farming(new FarmingSnapshot(
                         new HashSet<>(Collections.singletonList("falador")),
                         Collections.emptyMap(), Collections.emptyMap())).build();
         assertTrue(new OpportunityEngine().evaluate(wrongSeed).get(0)
                 .getPreparation().contains("Carry one guam seed"));
 
-        StrategyDataBundle ready = StrategyDataBundle.builder(account())
+        GameData ready = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
-                .inventory(new InventorySnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
                         item("Spade"), item("Seed dibber"),
-                        new ItemStackSnapshot(ItemID.GUAM_SEED, "Guam seed", 1))))
+                        new ItemState(ItemID.GUAM_SEED, "Guam seed", 1))))
                 .farming(new FarmingSnapshot(
                         new HashSet<>(Collections.singletonList("falador")),
                         Collections.emptyMap(), Collections.emptyMap())).build();
@@ -83,9 +83,9 @@ public class ExpandedOpportunityEngineTest
     {
         Map<String, Long> timers = Collections.singletonMap(
                 "opportunity:birdhouse", 0L);
-        StrategyDataBundle unresolved = StrategyDataBundle.builder(account())
+        GameData unresolved = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .quests(new QuestSnapshot(Collections.emptyMap())).build();
         Opportunity missing = new OpportunityEngine().evaluate(unresolved).get(0);
         assertTrue(!missing.isSetupVerified());
@@ -94,33 +94,33 @@ public class ExpandedOpportunityEngineTest
         assertTrue(missing.getPreparation().contains("Carry 4 regular logs"));
         assertTrue(missing.getPreparation().contains("Carry 40 barley seeds"));
 
-        StrategyDataBundle treeSeeds = StrategyDataBundle.builder(account())
+        GameData treeSeeds = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .quests(new QuestSnapshot(Collections.singletonMap(
                         "Bone Voyage", QuestStatus.COMPLETE)))
-                .inventory(new InventorySnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
                         item("Hammer"), item("Chisel"),
-                        new ItemStackSnapshot(1, "Clockwork", 4),
-                        new ItemStackSnapshot(2, "Logs", 4),
-                        new ItemStackSnapshot(ItemID.ACORN, "Acorn", 40)))).build();
+                        new ItemState(1, "Clockwork", 4),
+                        new ItemState(2, "Logs", 4),
+                        new ItemState(ItemID.ACORN, "Acorn", 40)))).build();
         assertTrue(!new OpportunityEngine().evaluate(treeSeeds).get(0)
                 .isSetupVerified());
 
-        StrategyDataBundle ready = StrategyDataBundle.builder(account())
+        GameData ready = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .quests(new QuestSnapshot(Collections.singletonMap(
                         "Bone Voyage", QuestStatus.COMPLETE)))
-                .inventory(new InventorySnapshot(Arrays.asList(
+                .inventory(new ItemsState(Arrays.asList(
                         item("Hammer"), item("Chisel"),
-                        new ItemStackSnapshot(1, "Clockwork", 4),
-                        new ItemStackSnapshot(2, "Logs", 4),
-                        new ItemStackSnapshot(3, "Guam seed", 40)))).build();
+                        new ItemState(1, "Clockwork", 4),
+                        new ItemState(2, "Logs", 4),
+                        new ItemState(3, "Guam seed", 40)))).build();
         assertTrue(new OpportunityEngine().evaluate(ready).get(0).isSetupVerified());
     }
 
-    private static ItemStackSnapshot item(String name)
+    private static ItemState item(String name)
     {
-        return new ItemStackSnapshot(1, name, 1);
+        return new ItemState(1, name, 1);
     }
 
     private static AccountSnapshot account()

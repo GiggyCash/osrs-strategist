@@ -10,7 +10,7 @@ import lombok.Getter;
  * the supplies Compass has actually observed.</p>
  */
 @Getter
-public final class RecommendationGuidance
+public final class Guidance
 {
     private final String action;
     private final String supplies;
@@ -21,7 +21,7 @@ public final class RecommendationGuidance
     private final UimStorageDecision storageDecision;
     private final RecommendationRiskDisclosure riskDisclosure;
 
-    public RecommendationGuidance(
+    public Guidance(
             String action,
             String supplies,
             String location,
@@ -31,7 +31,7 @@ public final class RecommendationGuidance
                 MethodBankingBehavior.UNKNOWN, null, null);
     }
 
-    public RecommendationGuidance(
+    public Guidance(
             String action,
             String supplies,
             String location,
@@ -41,7 +41,7 @@ public final class RecommendationGuidance
         this(action, supplies, location, null, note, bankingBehavior, null, null);
     }
 
-    public RecommendationGuidance(
+    public Guidance(
             String action,
             String supplies,
             String location,
@@ -54,7 +54,7 @@ public final class RecommendationGuidance
                 storageDecision, riskDisclosure);
     }
 
-    private RecommendationGuidance(
+    private Guidance(
             String action,
             String supplies,
             String location,
@@ -89,26 +89,26 @@ public final class RecommendationGuidance
 
 
 
-    public RecommendationGuidance withBankingBehavior(
+    public Guidance withBankingBehavior(
             MethodBankingBehavior value)
     {
-        return new RecommendationGuidance(action, supplies, location, progress,
+        return new Guidance(action, supplies, location, progress,
                 note,
                 value, storageDecision, riskDisclosure);
     }
 
-    public RecommendationGuidance withStorageDecision(
+    public Guidance withStorageDecision(
             UimStorageDecision decision,
             RecommendationRiskDisclosure disclosure)
     {
-        return new RecommendationGuidance(action, supplies, location, progress,
+        return new Guidance(action, supplies, location, progress,
                 note,
                 bankingBehavior, decision, disclosure);
     }
 
-    public RecommendationGuidance withProgress(String value)
+    public Guidance withProgress(String value)
     {
-        return new RecommendationGuidance(action, supplies, location, value,
+        return new Guidance(action, supplies, location, value,
                 note, bankingBehavior, storageDecision, riskDisclosure);
     }
 }

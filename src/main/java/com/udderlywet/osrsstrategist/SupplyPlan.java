@@ -9,7 +9,7 @@ import lombok.Getter;
  * account state Compass has actually observed.
  */
 @Getter
-public final class AccountResourcePlan
+public final class SupplyPlan
 {
     private final AccountMode accountMode;
     private final boolean primaryStorageObserved;
@@ -18,7 +18,7 @@ public final class AccountResourcePlan
     private final List<ResourcePlanEntry> entries;
     private final String guidance;
 
-    public AccountResourcePlan(
+    public SupplyPlan(
             AccountMode accountMode,
             boolean primaryStorageObserved,
             boolean groupStorageIncluded,
@@ -49,6 +49,8 @@ public final class AccountResourcePlan
         return true;
     }
 
+    public AccountMode accountMode() { return accountMode; }
+
     public int getTotalMissingUnits()
     {
         long total = 0L;
@@ -60,9 +62,9 @@ public final class AccountResourcePlan
         return (int) total;
     }
 
-    public List<ResolvedMethodInput> getMissingInputs()
+    public List<MethodInput> getMissingInputs()
     {
-        List<ResolvedMethodInput> result = new ArrayList<>();
+        List<MethodInput> result = new ArrayList<>();
         for (ResourcePlanEntry entry : entries)
         {
             if (entry.getMissing() > 0) result.add(entry.missingInput());

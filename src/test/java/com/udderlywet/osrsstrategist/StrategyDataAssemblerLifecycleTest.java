@@ -46,15 +46,15 @@ public class StrategyDataAssemblerLifecycleTest
         ObservedStateStore observed = populatedObservedState();
         StrategyDataAssembler assembler = assembler(accounts, items, observed);
 
-        StrategyDataBundle before = assembler.read();
+        GameData before = assembler.read();
         accounts.account = account("New name", 44L, 4, MembershipStatus.P2P);
-        StrategyDataBundle after = assembler.read();
+        GameData after = assembler.read();
 
-        assertSame(before.getBank(), after.getBank());
-        assertSame(before.getSlayer(), after.getSlayer());
-        assertSame(before.getRecurringOpportunities(), after.getRecurringOpportunities());
-        assertSame(before.getGroupStorage(), after.getGroupStorage());
-        assertSame(before.getStorage(), after.getStorage());
+        assertSame(before.bank(), after.bank());
+        assertSame(before.slayer(), after.slayer());
+        assertSame(before.recurringOpportunities(), after.recurringOpportunities());
+        assertSame(before.groupStorage(), after.groupStorage());
+        assertSame(before.storage(), after.storage());
         assertEquals(0, items.clears);
     }
 
@@ -67,18 +67,18 @@ public class StrategyDataAssemblerLifecycleTest
         ObservedStateStore observed = populatedObservedState();
         StrategyDataAssembler assembler = assembler(accounts, items, observed);
         assembler.read();
-        SlayerSnapshot priorSlayer = observed.getSlayer();
+        SlayerSnapshot priorSlayer = observed.slayer();
 
         accounts.account = account("Same name", 0L, 0, MembershipStatus.UNKNOWN);
         assertNull(assembler.read());
-        assertSame(priorSlayer, observed.getSlayer());
+        assertSame(priorSlayer, observed.slayer());
 
         accounts.account = account("Same name", 55L, 0, MembershipStatus.P2P);
-        StrategyDataBundle switched = assembler.read();
-        assertNull(switched.getSlayer());
-        assertNull(switched.getRecurringOpportunities());
-        assertNull(switched.getGroupStorage());
-        assertNull(switched.getStorage());
+        GameData switched = assembler.read();
+        assertNull(switched.slayer());
+        assertNull(switched.recurringOpportunities());
+        assertNull(switched.groupStorage());
+        assertNull(switched.storage());
         assertEquals(1, items.clears);
     }
 
@@ -93,10 +93,10 @@ public class StrategyDataAssemblerLifecycleTest
         assembler.read();
 
         accounts.account = account("Mode", 71L, 2, MembershipStatus.P2P);
-        StrategyDataBundle transitioned = assembler.read();
-        assertNull(transitioned.getGroupStorage());
-        assertNull(transitioned.getStorage());
-        assertNull(transitioned.getSlayer());
+        GameData transitioned = assembler.read();
+        assertNull(transitioned.groupStorage());
+        assertNull(transitioned.storage());
+        assertNull(transitioned.slayer());
         assertEquals(1, items.clears);
     }
 
@@ -106,19 +106,19 @@ public class StrategyDataAssemblerLifecycleTest
         MutableAccountReader accounts = new MutableAccountReader(
                 account("GIM A", 81L, 4, MembershipStatus.P2P));
         FakeItems items = new FakeItems();
-        items.group = new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(
+        items.group = new ItemsState(true,
+                Collections.singletonList(new ItemState(
                         55, "Shared plank", 12)));
         StrategyDataAssembler assembler = assembler(accounts, items,
                 new ObservedStateStore());
 
-        StrategyDataBundle first = assembler.read();
-        assertSame(items.group, first.getGroupStorage());
-        assertEquals(12, first.getGroupStorage().getItems().get(0).getQuantity());
+        GameData first = assembler.read();
+        assertSame(items.group, first.groupStorage());
+        assertEquals(12, first.groupStorage().getItems().get(0).getQuantity());
 
         accounts.account = account("Main B", 82L, 0, MembershipStatus.P2P);
-        StrategyDataBundle switched = assembler.read();
-        assertNull(switched.getGroupStorage());
+        GameData switched = assembler.read();
+        assertNull(switched.groupStorage());
     }
 
     private static StrategyDataAssembler assembler(MutableAccountReader accounts,
@@ -133,11 +133,11 @@ public class StrategyDataAssemblerLifecycleTest
     {
         ObservedStateStore observed = new ObservedStateStore();
         observed.setSlayer(new SlayerSnapshot("Goblins", 12, "Turael", 0,
-                RecommendationConfidence.VERIFIED));
+                Confidence.VERIFIED));
         Map<String, Long> ready = new HashMap<>();
         ready.put("herb-run", 1L);
         observed.setRecurringOpportunities(new RecurringOpportunitySnapshot(ready));
-        observed.setGroupStorage(new GroupStorageSnapshot(true, Collections.emptyList()));
+        observed.setGroupStorage(new ItemsState(true, Collections.emptyList()));
         observed.setStorage(StorageSnapshot.unknown());
         return observed;
     }
@@ -151,14 +151,14 @@ public class StrategyDataAssemblerLifecycleTest
 
     private static final class FakeItems extends LiveItemStateReader
     {
-        private final BankSnapshot bank = new BankSnapshot(Collections.emptyList(), 1L);
-        private GroupStorageSnapshot group;
+        private final ItemsState bank = new ItemsState(Collections.emptyList(), 1L);
+        private ItemsState group;
         private int clears;
         private FakeItems() { super(null, null); }
-        @Override public InventorySnapshot readInventory() { return new InventorySnapshot(Collections.emptyList()); }
-        @Override public BankSnapshot readBank() { return bank; }
-        @Override public EquipmentSnapshot readEquipment() { return new EquipmentSnapshot(Collections.emptyList()); }
-        @Override public GroupStorageSnapshot readGroupStorage() { return group; }
+        @Override public ItemsState readInventory() { return new ItemsState(Collections.emptyList()); }
+        @Override public ItemsState readBank() { return bank; }
+        @Override public ItemsState readEquipment() { return new ItemsState(Collections.emptyList()); }
+        @Override public ItemsState readGroupStorage() { return group; }
         @Override public void clearAccountCaches() { clears++; group = null; }
     }
 

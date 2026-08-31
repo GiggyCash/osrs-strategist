@@ -55,7 +55,7 @@ public class MembershipRecommendationTest
         );
 
         TrainingPlan plan = selector.select(
-                StrategyDataBundle.builder(account).build(),
+                GameData.builder(account).build(),
                 Skill.MINING,
                 30,
                 StrategyMode.RELAXED,
@@ -75,7 +75,7 @@ public class MembershipRecommendationTest
         );
 
         TrainingPlan plan = selector.select(
-                StrategyDataBundle.builder(account).build(),
+                GameData.builder(account).build(),
                 Skill.MINING,
                 30,
                 StrategyMode.RELAXED,

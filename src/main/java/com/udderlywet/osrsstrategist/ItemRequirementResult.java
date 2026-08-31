@@ -11,7 +11,7 @@ public final class ItemRequirementResult
     private final RequirementState state;
     @Getter
     private final String action;
-    private final List<ResolvedMethodInput> missingInputs;
+    private final List<MethodInput> missingInputs;
 
     public ItemRequirementResult(RequirementState state, String action)
     {
@@ -19,7 +19,7 @@ public final class ItemRequirementResult
     }
 
     public ItemRequirementResult(RequirementState state, String action,
-            List<ResolvedMethodInput> missingInputs)
+            List<MethodInput> missingInputs)
     {
         this.state = state;
         this.action = action == null ? "" : action;
@@ -28,6 +28,6 @@ public final class ItemRequirementResult
     }
 
     /** Exact, evidence-backed shortfalls only. Unknown storage never appears here. */
-    public List<ResolvedMethodInput> getMissingInputs() { return missingInputs; }
+    public List<MethodInput> getMissingInputs() { return missingInputs; }
     public boolean isSatisfied() { return state == RequirementState.VERIFIED; }
 }

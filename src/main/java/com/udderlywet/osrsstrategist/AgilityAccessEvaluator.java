@@ -20,7 +20,7 @@ public class AgilityAccessEvaluator
         this.catalog = catalog;
     }
 
-    public AgilityCourseDefinition bestStandardCourse(StrategyDataBundle data)
+    public AgilityCourseDefinition bestStandardCourse(GameData data)
     {
         AgilityCourseDefinition best = null;
         for (AgilityCourseDefinition course : catalog.all())
@@ -39,23 +39,23 @@ public class AgilityAccessEvaluator
     }
 
     public RequirementCheck courseCheck(
-            StrategyDataBundle data,
+            GameData data,
             AgilityCourseDefinition course)
     {
         if (course == null)
         {
             return new RequirementCheck(
                     "agility:course",
-                    "Usable Agility course",
+                    Text.get(1390),
                     RequirementState.CHECK_NEEDED,
                     Text.get(0)
             );
         }
 
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         if (account == null)
         {
-            return unknown(course, "Account state is unavailable.");
+            return unknown(course, Text.get(1391));
         }
 
         int level = account.getSkillLevel(Skill.AGILITY);
@@ -66,7 +66,7 @@ public class AgilityAccessEvaluator
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
                     "Requires " + course.getRequiredLevel()
-                            + " Agility; current level is " + level + "."
+                            + Text.get(1392) + level + "."
             );
         }
 
@@ -80,7 +80,7 @@ public class AgilityAccessEvaluator
             );
         }
 
-        AccessMemorySnapshot memory = data.getAccessMemory();
+        AccessMemorySnapshot memory = data.accessMemory();
         if (memory != null && memory.hasObserved(course.observationKey()))
         {
             return verified(
@@ -92,7 +92,7 @@ public class AgilityAccessEvaluator
         String quest = course.getRequiredQuest();
         if (quest != null)
         {
-            QuestSnapshot quests = data.getQuests();
+            QuestSnapshot quests = data.quests();
             QuestStatus status = quests == null
                     ? QuestStatus.UNKNOWN
                     : quests.statusOf(quest);
@@ -116,7 +116,7 @@ public class AgilityAccessEvaluator
             }
             return unknown(
                     course,
-                    "Quest state for " + quest + " has not been proven yet."
+                    "Quest state for " + quest + Text.get(1393)
             );
         }
 
@@ -126,13 +126,13 @@ public class AgilityAccessEvaluator
         );
     }
 
-    public RequirementCheck wildernessCourseCheck(StrategyDataBundle data)
+    public RequirementCheck wildernessCourseCheck(GameData data)
     {
         return courseCheck(data, catalog.wildernessCourse());
     }
 
     private boolean isVerifiedAvailable(
-            StrategyDataBundle data,
+            GameData data,
             AgilityCourseDefinition course)
     {
         return courseCheck(data, course).getState() == RequirementState.VERIFIED;

@@ -43,9 +43,9 @@ public class InfrastructureUnlockValueServiceTest
     @Test
     public void sameCostumeRoomPropertiesAreMoreValuableForUimThanMain()
     {
-        StrategyDataBundle mainData = costumeData(AccountMode.MAIN,
+        GameData mainData = costumeData(AccountMode.MAIN,
                 MembershipStatus.P2P, CapabilityState.BLOCKED);
-        StrategyDataBundle uimData = costumeData(AccountMode.ULTIMATE_IRONMAN,
+        GameData uimData = costumeData(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P, CapabilityState.BLOCKED);
 
         InfrastructureValueAssessment main = service.assess(
@@ -71,7 +71,7 @@ public class InfrastructureUnlockValueServiceTest
     @Test
     public void unknownCompletionCannotMasqueradeAsActionable()
     {
-        StrategyDataBundle data = costumeData(AccountMode.ULTIMATE_IRONMAN,
+        GameData data = costumeData(AccountMode.ULTIMATE_IRONMAN,
                 MembershipStatus.P2P, CapabilityState.UNKNOWN);
         InfrastructureValueAssessment assessment = service.assess(
                 catalog.get("poh-costume-room"), priorities.assess(
@@ -79,7 +79,7 @@ public class InfrastructureUnlockValueServiceTest
 
         assertEquals(InfrastructureMilestoneState.CHECK_NEEDED,
                 assessment.getState());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 assessment.getConfidence());
         assertFalse(assessment.canRecommendAcquisition());
     }
@@ -87,7 +87,7 @@ public class InfrastructureUnlockValueServiceTest
     @Test
     public void f2pCannotReceiveMembersInfrastructureAction()
     {
-        StrategyDataBundle data = costumeData(AccountMode.MAIN,
+        GameData data = costumeData(AccountMode.MAIN,
                 MembershipStatus.F2P, CapabilityState.BLOCKED);
         InfrastructureValueAssessment assessment = service.assess(
                 catalog.get("poh-costume-room"),
@@ -95,7 +95,7 @@ public class InfrastructureUnlockValueServiceTest
 
         assertEquals(InfrastructureMilestoneState.NOT_APPLICABLE,
                 assessment.getState());
-        assertEquals(RecommendationConfidence.BLOCKED,
+        assertEquals(Confidence.BLOCKED,
                 assessment.getConfidence());
         assertFalse(assessment.canRecommendAcquisition());
     }
@@ -103,7 +103,7 @@ public class InfrastructureUnlockValueServiceTest
     @Test
     public void questTransportRequiresProvenQuestAndRouteEvidence()
     {
-        StrategyDataBundle missing = transportData(QuestStatus.NOT_STARTED,
+        GameData missing = transportData(QuestStatus.NOT_STARTED,
                 Collections.emptySet());
         InfrastructureValueAssessment missingAssessment = service.assess(
                 catalog.get("fairy-ring-network"),
@@ -111,7 +111,7 @@ public class InfrastructureUnlockValueServiceTest
         assertEquals(InfrastructureMilestoneState.REQUIREMENTS_MISSING,
                 missingAssessment.getState());
 
-        StrategyDataBundle approaching = transportData(QuestStatus.IN_PROGRESS,
+        GameData approaching = transportData(QuestStatus.IN_PROGRESS,
                 Collections.emptySet());
         InfrastructureValueAssessment approachingAssessment = service.assess(
                 catalog.get("fairy-ring-network"), priorities.assess(
@@ -119,46 +119,46 @@ public class InfrastructureUnlockValueServiceTest
         assertEquals(InfrastructureMilestoneState.CHECK_NEEDED,
                 approachingAssessment.getState());
 
-        StrategyDataBundle observed = transportData(QuestStatus.IN_PROGRESS,
+        GameData observed = transportData(QuestStatus.IN_PROGRESS,
                 Collections.singleton("fairy-rings"));
         InfrastructureValueAssessment complete = service.assess(
                 catalog.get("fairy-ring-network"),
                 priorities.assess(AccountMode.IRONMAN, observed, false), observed);
         assertEquals(InfrastructureMilestoneState.COMPLETE,
                 complete.getState());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 complete.getConfidence());
     }
 
     @Test
     public void roomLevelDoesNotProveRoomExists()
     {
-        StrategyDataBundle data = portalData();
+        GameData data = portalData();
         InfrastructureValueAssessment assessment = service.assess(
                 catalog.get("poh-portal-chamber"),
                 priorities.assess(AccountMode.IRONMAN, data, false), data);
 
         assertEquals(70,
-                data.getAccount().getSkillLevel(Skill.CONSTRUCTION));
+                data.account().getSkillLevel(Skill.CONSTRUCTION));
         assertEquals(InfrastructureMilestoneState.CHECK_NEEDED,
                 assessment.getState());
         assertFalse(assessment.canRecommendAcquisition());
     }
 
-    private static StrategyDataBundle costumeData(AccountMode mode,
+    private static GameData costumeData(AccountMode mode,
             MembershipStatus membership, CapabilityState costume)
     {
         Map<String, CapabilityState> furniture = new HashMap<>();
         furniture.put(LivePohStateReader.COSTUME_ROOM, costume);
-        return StrategyDataBundle.builder(account(mode, membership, 70))
+        return GameData.builder(account(mode, membership, 70))
                 .poh(new PohSnapshot(CapabilityState.VERIFIED,
                         furniture))
                 .build();
     }
 
-    private static StrategyDataBundle portalData()
+    private static GameData portalData()
     {
-        return StrategyDataBundle.builder(account(AccountMode.IRONMAN,
+        return GameData.builder(account(AccountMode.IRONMAN,
                         MembershipStatus.P2P, 70))
                 .poh(new PohSnapshot(CapabilityState.VERIFIED,
                         Collections.emptyMap()))
@@ -166,12 +166,12 @@ public class InfrastructureUnlockValueServiceTest
                 .build();
     }
 
-    private static StrategyDataBundle transportData(QuestStatus quest,
+    private static GameData transportData(QuestStatus quest,
             java.util.Set<String> routes)
     {
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Fairytale II - Cure a Queen", quest);
-        return StrategyDataBundle.builder(account(AccountMode.IRONMAN,
+        return GameData.builder(account(AccountMode.IRONMAN,
                         MembershipStatus.P2P, 70))
                 .quests(new QuestSnapshot(quests))
                 .transport(new TransportSnapshot(new HashSet<>(routes)))

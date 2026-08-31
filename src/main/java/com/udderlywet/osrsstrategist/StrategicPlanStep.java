@@ -25,7 +25,7 @@ public final class StrategicPlanStep
     {
         if (id == null || id.trim().isEmpty()
                 || objective == null || objective.trim().isEmpty())
-            throw new IllegalArgumentException("Plan step identity is required");
+            throw new IllegalArgumentException(Text.get(1207));
         this.id = id;
         this.kind = kind == null ? GoalNodeKind.META : kind;
         this.objective = objective.trim();
@@ -35,7 +35,7 @@ public final class StrategicPlanStep
         this.recommendationId = recommendationId;
     }
 
-    public boolean isComplete(StrategyDataBundle data)
+    public boolean isComplete(GameData data)
     {
         return completion.isComplete(data);
     }

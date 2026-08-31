@@ -32,7 +32,7 @@ public final class TrainingMethod
     @Getter
     private final List<String> requirements;
     @Getter
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     @Getter
     private final boolean membersOnly;
     @Getter
@@ -55,7 +55,7 @@ public final class TrainingMethod
             int minimumSessionMinutes,
             int setupMinutes,
             List<String> requirements,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(id, skill, minLevel, maxLevel, name, instructions,
                 efficientScore, balancedScore, relaxedScore, attentionLevel,
@@ -77,7 +77,7 @@ public final class TrainingMethod
             int minimumSessionMinutes,
             int setupMinutes,
             List<String> requirements,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             boolean membersOnly)
     {
         this(id, skill, minLevel, maxLevel, name, instructions,
@@ -100,7 +100,7 @@ public final class TrainingMethod
             int minimumSessionMinutes,
             int setupMinutes,
             List<String> requirements,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             boolean membersOnly,
             boolean wilderness,
             boolean progressionProtected)
@@ -125,7 +125,7 @@ public final class TrainingMethod
             int minimumSessionMinutes,
             int setupMinutes,
             List<String> requirements,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             boolean membersOnly,
             boolean wilderness,
             boolean progressionProtected,
@@ -208,11 +208,11 @@ public final class TrainingMethod
                 break;
         }
 
-        if (confidence == RecommendationConfidence.CHECK_NEEDED)
+        if (confidence == Confidence.CHECK_NEEDED)
         {
             score -= 1.5;
         }
-        else if (confidence == RecommendationConfidence.BLOCKED)
+        else if (confidence == Confidence.BLOCKED)
         {
             score -= 1000.0;
         }

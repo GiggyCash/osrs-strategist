@@ -70,7 +70,7 @@ public class LiveSailingStateReader
                 SailingSnapshot.TRIAL_GWENITH_COMPLETE);
 
         cached = new SailingSnapshot(ports, activities,
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         cachedTick = tick;
         return cached;
     }

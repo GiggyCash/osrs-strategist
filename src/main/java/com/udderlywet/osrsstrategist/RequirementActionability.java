@@ -18,7 +18,7 @@ public final class RequirementActionability
 
     public static boolean isActionablePreparation(
             TrainingPlan plan,
-            RecommendationGuidance guidance)
+            Guidance guidance)
     {
         if (plan == null || plan.getMethod() == null
                 || guidance == null || !hasText(guidance.getAction()))
@@ -77,8 +77,8 @@ public final class RequirementActionability
         {
             String evidence = normalize(check.getEvidence());
             return !evidence.contains("unknown")
-                    && !evidence.contains("additional access/risk")
-                    && !evidence.contains("cannot be observed");
+                    && !evidence.contains(Text.get(1202))
+                    && !evidence.contains(Text.get(1203));
         }
 
         // ResourceReadinessService uses typed resource:* checks. A known tool
@@ -90,7 +90,7 @@ public final class RequirementActionability
             // Retrieval-only UIM storage is not ordinary shopping/banking
             // preparation. The route must first model its extra access or
             // death-risk setup explicitly.
-            return !evidence.contains("additional access/risk preconditions")
+            return !evidence.contains(Text.get(1204))
                     && !evidence.contains("verify that route");
         }
         if (!id.startsWith("generic:")) return false;
@@ -122,7 +122,7 @@ public final class RequirementActionability
                 "planks", "herb", "herbs", "secondary", "secondaries",
                 "seed", "seeds", "compost", "payment", "payments",
                 "potion", "potions", "grape", "grapes", "jug",
-                "dynamite", "tick-manipulation supplies", "warm clothing",
+                "dynamite", Text.get(1205), "warm clothing",
                 "knife", "hammer", "saw", "chisel", "rope", "bucket",
                 "pickaxe", "hatchet", "axe", "harpoon", "fishing rod",
                 "fly fishing rod", "net", "lobster pot", "cage", "snare",

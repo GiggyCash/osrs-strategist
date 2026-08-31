@@ -19,27 +19,27 @@ public class VariableMethodGuidanceService
     private static final FarmingAccessEvaluator FARMING_ACCESS =
             new FarmingAccessEvaluator(new FarmingAccessCatalog());
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
             TrainingPlan plan,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null || skill == null
+        if (data == null || data.account() == null || skill == null
                 || plan == null || plan.getMethod() == null)
         {
             return null;
         }
         String id = plan.getMethod().getId() == null
                 ? "" : plan.getMethod().getId();
-        int currentXp = data.getAccount().getSkillExperience(skill);
+        int currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         int targetXp = Experience.getXpForLevel(targetLevel);
         int xpNeeded = Math.max(0, targetXp - currentXp);
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
-        RecommendationGuidance bundled = bundledGuidance(
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
+        Guidance bundled = bundledGuidance(
                 id, targetLevel, xpNeeded, items);
         if (bundled != null) return bundled;
 
@@ -62,12 +62,12 @@ public class VariableMethodGuidanceService
         }
     }
 
-    private static RecommendationGuidance tempoross(int target, int xp, ObservedItemIndex items)
+    private static Guidance tempoross(int target, int xp, ItemIndex items)
     {
         String harpoon = firstObserved(items, "Dragon harpoon",
                 "Crystal harpoon", "Infernal harpoon", "Harpoon");
-        return new RecommendationGuidance(
-                Text.get(1068) + format(xp) + " Fishing XP for level " + target + ".",
+        return new Guidance(
+                Text.get(1068) + format(xp) + Text.get(1467) + target + ".",
                 harpoon == null
                         ? Text.get(1079)
                         : "Bring " + harpoon + Text.get(1090),
@@ -76,29 +76,29 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance gotr(int target, int xp, ObservedItemIndex items)
+    private static Guidance gotr(int target, int xp, ItemIndex items)
     {
         String pouches = observed(items, "Small pouch", "Medium pouch",
                 "Large pouch", "Giant pouch", "Colossal pouch");
-        return new RecommendationGuidance(
-                Text.get(1104) + format(xp) + " Runecraft XP for level " + target + ".",
-                "Bring a pickaxe and chisel."
+        return new Guidance(
+                Text.get(1104) + format(xp) + Text.get(1468) + target + ".",
+                Text.get(1469)
                         + (pouches.isEmpty() ? "" : " " + pouches),
                 Text.get(1105),
                 Text.get(1106)
         );
     }
 
-    private static RecommendationGuidance shootingStars(
-            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance shootingStars(
+            GameData data, int target, int xp, ItemIndex items)
     {
-        MembershipStatus membership = data.getAccount().getMembershipStatus();
+        MembershipStatus membership = data.account().getMembershipStatus();
         String scout = membership == MembershipStatus.P2P
                 ? Text.get(1058)
                 : Text.get(1059);
         String pickaxe = pickaxe(items);
-        return new RecommendationGuidance(
-                scout + Text.get(1060) + format(xp) + " Mining XP toward level " + target + ".",
+        return new Guidance(
+                scout + Text.get(1060) + format(xp) + Text.get(1470) + target + ".",
                 "Bring " + pickaxe + Text.get(1061) + observed(items, "Celestial ring", "Celestial signet"),
                 membership == MembershipStatus.P2P
                         ? Text.get(1062)
@@ -107,14 +107,14 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance giantsFoundry(int target, int xp, ObservedItemIndex items)
+    private static Guidance giantsFoundry(int target, int xp, ItemIndex items)
     {
         FoundryAlloy alloy = foundryAlloy(items);
         if (alloy == null) return null;
-        return new RecommendationGuidance(
-                "Ask Kovac for a commission. Load " + alloy.description
+        return new Guidance(
+                Text.get(1471) + alloy.description
                         + Text.get(1065)
-                        + format(xp) + " Smithing XP toward level " + target + ".",
+                        + format(xp) + Text.get(1472) + target + ".",
                 "Bring " + alloy.description + Text.get(1066)
                         + observed(items, "Iron bar", "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
                 Text.get(1067),
@@ -122,15 +122,15 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance mahoganyHomes(
-            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance mahoganyHomes(
+            GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data.getAccount().getSkillLevel(Skill.CONSTRUCTION);
+        int level = data.account().getSkillLevel(Skill.CONSTRUCTION);
         ContractTier tier = contractTier(level, items);
         if (tier == null) return null;
-        return new RecommendationGuidance(
-                "Ask Amy for a " + tier.name + Text.get(1070) + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
-                "Bring a hammer, saw, at least 15 " + tier.plank.toLowerCase(java.util.Locale.ROOT)
+        return new Guidance(
+                "Ask Amy for a " + tier.name + Text.get(1070) + tier.name + Text.get(1473) + format(xp) + Text.get(1474) + target + ".",
+                Text.get(1475) + tier.plank.toLowerCase(java.util.Locale.ROOT)
                         + Text.get(1071)
                         + observed(items, "Plank sack", tier.plank, "Steel bar"),
                 Text.get(1072),
@@ -138,60 +138,60 @@ public class VariableMethodGuidanceService
         );
     }
 
-    private static RecommendationGuidance titheFarm(StrategyDataBundle data,
-            int target, int xp, ObservedItemIndex items)
+    private static Guidance titheFarm(GameData data,
+            int target, int xp, ItemIndex items)
     {
-        int level = data == null || data.getAccount() == null ? 34
-                : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        int level = data == null || data.account() == null ? 34
+                : data.account().getSkillLevel(net.runelite.api.Skill.FARMING);
         String seed = level >= 74 ? "Logavano"
                 : level >= 54 ? "Bologano" : "Golovanova";
-        return new RecommendationGuidance(
-                "Take " + seed + Text.get(1074) + format(xp) + " Farming XP to level " + target + ".",
-                Text.get(1075) + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
-                "Tithe Farm in Hosidius.",
+        return new Guidance(
+                "Take " + seed + Text.get(1074) + format(xp) + Text.get(1476) + target + ".",
+                Text.get(1075) + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", Text.get(1221), "Farmer's boots"),
+                Text.get(1477),
                 Text.get(1076)
         );
     }
 
-    private static RecommendationGuidance farmingAllotments(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance farmingAllotments(GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data.getAccount().getSkillLevel(Skill.FARMING);
+        int level = data.account().getSkillLevel(Skill.FARMING);
         String seed = highestObservedAllotmentSeed(items, level);
         if (seed == null) return null;
         String patch = FARMING_ACCESS.firstReachablePatchName(
-                data.getFarming());
+                data.farming());
         if (patch == null) return null;
-        return new RecommendationGuidance(
+        return new Guidance(
                 "At " + patch + Text.get(1077)
                         + seed.toLowerCase(java.util.Locale.ROOT)
                         + Text.get(1078)
-                        + format(xp) + " Farming XP to level " + target + ".",
+                        + format(xp) + Text.get(1476) + target + ".",
                 "Bring six " + seed.toLowerCase(java.util.Locale.ROOT)
                         + Text.get(1080)
-                        + observed(items, seed, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
+                        + observed(items, seed, "Seed dibber", "Spade", "Rake", Text.get(1478), "Gricoller's can"),
                 patch + ".",
                 Text.get(1081)
         );
     }
 
-    private static RecommendationGuidance farmingHerbs(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance farmingHerbs(GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data == null || data.getAccount() == null ? 9
-                : data.getAccount().getSkillLevel(net.runelite.api.Skill.FARMING);
+        int level = data == null || data.account() == null ? 9
+                : data.account().getSkillLevel(net.runelite.api.Skill.FARMING);
         String seed = herbSeed(items, level);
         if (seed == null) return null;
         String patch = FARMING_ACCESS.firstReachableHerbPatchName(
-                data == null ? null : data.getFarming());
+                data == null ? null : data.farming());
         if (patch == null) return null;
-        return new RecommendationGuidance(
-                "At " + patch + ", harvest any ready herbs, plant " + seed + Text.get(1082) + format(xp) + " Farming XP to level " + target + ".",
-                "Bring " + seed + Text.get(1083) + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+        return new Guidance(
+                "At " + patch + Text.get(1479) + seed + Text.get(1082) + format(xp) + Text.get(1476) + target + ".",
+                "Bring " + seed + Text.get(1083) + observed(items, "Seed dibber", "Spade", Text.get(1478), "Magic secateurs", "Seed box"),
                 patch + ".",
                 Text.get(1084)
         );
     }
 
-    private static String herbSeed(ObservedItemIndex items, int level)
+    private static String herbSeed(ItemIndex items, int level)
     {
         String[][] tiers = {
                 {"Torstol seed", "85"}, {"Dwarf weed seed", "79"},
@@ -211,44 +211,44 @@ public class VariableMethodGuidanceService
         return null;
     }
 
-    private static RecommendationGuidance farmingContracts(StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance farmingContracts(GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data.getAccount().getSkillLevel(Skill.FARMING);
+        int level = data.account().getSkillLevel(Skill.FARMING);
         String tier = level >= 85 ? "hard" : level >= 65 ? "medium" : "easy";
-        return new RecommendationGuidance(
-                "Ask Guildmaster Jane for a " + tier + Text.get(1085) + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
-                Text.get(1086) + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
+        return new Guidance(
+                Text.get(1480) + tier + Text.get(1085) + tier + Text.get(1481) + format(xp) + " XP to level " + target + ".",
+                Text.get(1086) + observed(items, "Seed box", "Spade", "Seed dibber", Text.get(1478)),
                 Text.get(1087),
                 Text.get(1088)
         );
     }
 
-    private static RecommendationGuidance hunterRumours(
-            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance hunterRumours(
+            GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data.getAccount().getSkillLevel(Skill.HUNTER);
-        boolean master = level >= 91 && data.getQuests() != null
-                && data.getQuests().statusOf("At First Light") == QuestStatus.COMPLETE;
+        int level = data.account().getSkillLevel(Skill.HUNTER);
+        boolean master = level >= 91 && data.quests() != null
+                && data.quests().statusOf("At First Light") == QuestStatus.COMPLETE;
         String tier = master ? "Master" : level >= 72 ? "Expert"
                 : level >= 57 ? "Adept" : "Novice";
         String hunter = master ? "Guild Hunter Wolf"
                 : level >= 72 ? "Guild Hunter Teco"
-                : level >= 57 ? "Guild Hunter Ornus"
+                : level >= 57 ? Text.get(1482)
                 : "Huntmaster Gilman";
-        return new RecommendationGuidance(
+        return new Guidance(
                 "Get a " + tier + " rumour from " + hunter
                         + Text.get(1089)
-                        + format(xp) + " Hunter XP toward level " + target + ".",
-                Text.get(1091) + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
+                        + format(xp) + Text.get(1483) + target + ".",
+                Text.get(1091) + observed(items, Text.get(1484), Text.get(1485), Text.get(1486)),
                 hunter + Text.get(1092),
                 Text.get(1093)
         );
     }
 
-    private static RecommendationGuidance forestry(
-            StrategyDataBundle data, int target, int xp, ObservedItemIndex items)
+    private static Guidance forestry(
+            GameData data, int target, int xp, ItemIndex items)
     {
-        int level = data.getAccount().getSkillLevel(Skill.WOODCUTTING);
+        int level = data.account().getSkillLevel(Skill.WOODCUTTING);
         String tree = level >= 60 ? "yew trees" : level >= 45
                 ? "maple trees" : level >= 30 ? "willow trees" : "oak trees";
         String location = level >= 60
@@ -259,17 +259,17 @@ public class VariableMethodGuidanceService
                                 ? Text.get(1096)
                                 : Text.get(1097);
         String axe = axe(items);
-        return new RecommendationGuidance(
-                "On an official Forestry world, cut " + tree
+        return new Guidance(
+                Text.get(1487) + tree
                         + Text.get(1098)
-                        + format(xp) + " Woodcutting XP toward level " + target + ".",
-                "Bring " + axe + " and a Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
+                        + format(xp) + Text.get(1488) + target + ".",
+                "Bring " + axe + Text.get(1489) + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
                 location,
                 Text.get(1099)
         );
     }
 
-    private static FoundryAlloy foundryAlloy(ObservedItemIndex items)
+    private static FoundryAlloy foundryAlloy(ItemIndex items)
     {
         String[][] adjacent = {
                 {"Runite bar", "Adamantite bar"},
@@ -291,7 +291,7 @@ public class VariableMethodGuidanceService
         return null;
     }
 
-    private static ContractTier contractTier(int level, ObservedItemIndex items)
+    private static ContractTier contractTier(int level, ItemIndex items)
     {
         ContractTier[] tiers = {
                 new ContractTier("Expert", "Mahogany plank", 70),
@@ -306,7 +306,7 @@ public class VariableMethodGuidanceService
     }
 
     private static String highestObservedAllotmentSeed(
-            ObservedItemIndex items, int level)
+            ItemIndex items, int level)
     {
         String[][] tiers = {
                 {"Snape grass seed", "61"}, {"Watermelon seed", "47"},
@@ -345,8 +345,8 @@ public class VariableMethodGuidanceService
         }
     }
 
-    private static RecommendationGuidance bundledGuidance(
-            String methodId, int target, int xp, ObservedItemIndex items)
+    private static Guidance bundledGuidance(
+            String methodId, int target, int xp, ItemIndex items)
     {
         for (StaticGuidance profile : STATIC_GUIDANCE)
         {
@@ -355,7 +355,7 @@ public class VariableMethodGuidanceService
                     ? new String[0] : profile.observed);
             String pickaxe = "pickaxe".equals(profile.tool)
                     ? pickaxe(items) : "";
-            return new RecommendationGuidance(
+            return new Guidance(
                     profile.render(profile.action, target, xp, observed, pickaxe),
                     profile.render(profile.supplies, target, xp, observed, pickaxe),
                     profile.render(profile.location, target, xp, observed, pickaxe),
@@ -392,7 +392,7 @@ public class VariableMethodGuidanceService
         }
     }
 
-    private static String observed(ObservedItemIndex items, String... names)
+    private static String observed(ItemIndex items, String... names)
     {
         StringBuilder found = new StringBuilder();
         for (String name : names)
@@ -407,7 +407,7 @@ public class VariableMethodGuidanceService
                 : "Observed: " + found + ".";
     }
 
-    private static String pickaxe(ObservedItemIndex items)
+    private static String pickaxe(ItemIndex items)
     {
         String[] names = {"Crystal pickaxe", "Infernal pickaxe",
                 "3rd age pickaxe", "Dragon pickaxe", "Rune pickaxe",
@@ -417,7 +417,7 @@ public class VariableMethodGuidanceService
         return Text.get(1100);
     }
 
-    private static String axe(ObservedItemIndex items)
+    private static String axe(ItemIndex items)
     {
         String[] names = {"Crystal axe", "Infernal axe", "Dragon axe",
                 "Rune axe", "Adamant axe", "Mithril axe", "Black axe",
@@ -427,7 +427,7 @@ public class VariableMethodGuidanceService
     }
 
     private static String firstObserved(
-            ObservedItemIndex items, String... names)
+            ItemIndex items, String... names)
     {
         for (String name : names) if (items.has(name)) return name;
         return null;

@@ -26,12 +26,12 @@ public final class SailingSnapshot
 
     private final Set<String> verifiedPorts;
     private final Set<String> verifiedActivities;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
 
     public SailingSnapshot(
             Set<String> verifiedPorts,
             Set<String> verifiedActivities,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this.verifiedPorts = Collections.unmodifiableSet(
                 verifiedPorts == null
@@ -44,7 +44,7 @@ public final class SailingSnapshot
                         : new HashSet<>(verifiedActivities)
         );
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED
+                ? Confidence.CHECK_NEEDED
                 : confidence;
     }
 
@@ -53,7 +53,7 @@ public final class SailingSnapshot
         return new SailingSnapshot(
                 Collections.emptySet(),
                 Collections.emptySet(),
-                RecommendationConfidence.CHECK_NEEDED
+                Confidence.CHECK_NEEDED
         );
     }
 

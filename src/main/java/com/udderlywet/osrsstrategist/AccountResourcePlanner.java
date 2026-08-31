@@ -40,23 +40,23 @@ public class AccountResourcePlanner
         this(null, new MainEconomyPlanner(), new ResourceSourceCatalog());
     }
 
-    public AccountResourcePlan plan(
-            StrategyDataBundle data,
-            List<ResolvedMethodInput> rawNeeds,
+    public SupplyPlan plan(
+            GameData data,
+            List<MethodInput> rawNeeds,
             boolean useGroupStorage)
     {
-        AccountSnapshot account = data == null ? null : data.getAccount();
+        AccountSnapshot account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
-        ObservedItemIndex observed = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex observed = new ItemIndex(data, useGroupStorage);
         boolean primaryObserved = observed.usableOwnershipObserved();
         boolean groupIncluded = useGroupStorage && mode.isGroupIronman();
         boolean groupObserved = observed.groupStorageObserved();
 
-        List<ResolvedMethodInput> needs = merge(rawNeeds);
+        List<MethodInput> needs = merge(rawNeeds);
         List<ResourcePlanEntry> entries = new ArrayList<>();
-        for (ResolvedMethodInput need : needs)
+        for (MethodInput need : needs)
         {
             String reusable = reusableSourceFor(observed, need.getName());
             int owned = observed.quantity(need.getName());
@@ -81,7 +81,7 @@ public class AccountResourcePlanner
                 groupIncluded,
                 groupObserved,
                 entries);
-        return new AccountResourcePlan(
+        return new SupplyPlan(
                 mode,
                 primaryObserved,
                 groupIncluded,
@@ -91,7 +91,7 @@ public class AccountResourcePlanner
     }
 
     private String buildGuidance(
-            StrategyDataBundle data,
+            GameData data,
             AccountMode mode,
             boolean primaryObserved,
             boolean groupIncluded,
@@ -108,7 +108,7 @@ public class AccountResourcePlanner
         List<String> missing = new ArrayList<>();
         List<String> reusable = new ArrayList<>();
         List<String> restricted = new ArrayList<>();
-        List<ResolvedMethodInput> missingInputs = new ArrayList<>();
+        List<MethodInput> missingInputs = new ArrayList<>();
 
         for (ResourcePlanEntry entry : entries)
         {
@@ -150,7 +150,7 @@ public class AccountResourcePlanner
             if (mode == AccountMode.ULTIMATE_IRONMAN)
                 text.append(Text.get(80));
             else
-                text.append("Open your bank once to verify stored ")
+                text.append(Text.get(1376))
                         .append(Text.get(81));
             if (groupIncluded && !groupObserved)
             {
@@ -185,10 +185,10 @@ public class AccountResourcePlanner
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             List<String> routes = sourceRoutes(missingInputs, mode,
-                    data == null || data.getAccount() == null
+                    data == null || data.account() == null
                             ? MembershipStatus.UNKNOWN
-                            : data.getAccount().getMembershipStatus(), true);
-            text.append("Current-stage shortfall: ").append(shortfall)
+                            : data.account().getMembershipStatus(), true);
+            text.append(Text.get(1377)).append(shortfall)
                     .append(Text.get(85));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
@@ -197,7 +197,7 @@ public class AccountResourcePlanner
         else if (mode.isGroupIronman())
         {
             text.append("Self-source ").append(shortfall)
-                    .append(" in practical batches.");
+                    .append(Text.get(1378));
             if (groupIncluded && groupObserved)
             {
                 text.append(Text.get(87));
@@ -210,11 +210,11 @@ public class AccountResourcePlanner
         else if (mode.isIronLike())
         {
             List<String> routes = sourceRoutes(missingInputs, mode,
-                    data == null || data.getAccount() == null
+                    data == null || data.account() == null
                             ? MembershipStatus.UNKNOWN
-                            : data.getAccount().getMembershipStatus(), false);
+                            : data.account().getMembershipStatus(), false);
             text.append("Self-source ").append(shortfall)
-                    .append(" in practical batches.");
+                    .append(Text.get(1378));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
         }
@@ -229,30 +229,30 @@ public class AccountResourcePlanner
     }
 
     private void appendMainOpportunityGuidance(StringBuilder text,
-            StrategyDataBundle data, String shortfall,
-            List<ResolvedMethodInput> missingInputs)
+            GameData data, String shortfall,
+            List<MethodInput> missingInputs)
     {
         PurchaseCostEstimate estimate = purchaseCostAdvisor == null
                 ? PurchaseCostEstimate.unknown()
                 : purchaseCostAdvisor.estimate(missingInputs);
         List<String> routes = mainRoutes(missingInputs,
-                data == null || data.getAccount() == null
+                data == null || data.account() == null
                         ? MembershipStatus.UNKNOWN
-                        : data.getAccount().getMembershipStatus());
+                        : data.account().getMembershipStatus());
         MainPurchaseDecision decision = mainEconomyPlanner == null
                 ? null : mainEconomyPlanner.evaluateUnmeasuredPurchase(
-                        data == null ? null : data.getEconomy(), estimate,
+                        data == null ? null : data.economy(), estimate,
                         !routes.isEmpty());
 
         if (decision != null && decision.getChoice() == MainPurchaseChoice.BUY)
         {
             text.append("Buy ").append(shortfall)
-                    .append(" at the Grand Exchange. ")
-                    .append("The exact live total is about ")
+                    .append(Text.get(1379))
+                    .append(Text.get(1380))
                     .append(format(decision.getTotalCost()))
                     .append(Text.get(72))
                     .append(format(decision.getObservedCoins()))
-                    .append(" verified liquid coins.");
+                    .append(Text.get(1381));
             return;
         }
 
@@ -260,7 +260,7 @@ public class AccountResourcePlanner
                 && decision.getChoice() == MainPurchaseChoice.SELF_SOURCE)
         {
             text.append("Self-source ").append(shortfall).append(". ")
-                    .append("Buying would use about ")
+                    .append(Text.get(1382))
                     .append(format(decision.getTotalCost()))
                     .append(" of ")
                     .append(format(decision.getObservedCoins()))
@@ -276,7 +276,7 @@ public class AccountResourcePlanner
                     .append(format(decision.getTotalCost()))
                     .append(" coins, but only ")
                     .append(format(decision.getObservedCoins()))
-                    .append(" liquid coins are verified.");
+                    .append(Text.get(1383));
             if (!routes.isEmpty())
                 text.append(Text.get(75))
                         .append(routes.get(0));
@@ -286,16 +286,16 @@ public class AccountResourcePlanner
         text.append(Text.get(76))
                 .append(Text.get(77));
         if (!routes.isEmpty())
-            text.append(" Reviewed self-source route: ").append(routes.get(0));
+            text.append(Text.get(1384)).append(routes.get(0));
     }
 
-    private List<String> mainRoutes(List<ResolvedMethodInput> missingInputs,
+    private List<String> mainRoutes(List<MethodInput> missingInputs,
             MembershipStatus membership)
     {
         if (resourceSourceCatalog == null || missingInputs == null)
             return java.util.Collections.emptyList();
         List<String> routes = new ArrayList<>();
-        for (ResolvedMethodInput input : missingInputs)
+        for (MethodInput input : missingInputs)
         {
             for (String route : resourceSourceCatalog.suggestions(
                     input.getName(), AccountMode.MAIN, membership, false))
@@ -306,14 +306,14 @@ public class AccountResourcePlanner
         return routes;
     }
 
-    private List<String> sourceRoutes(List<ResolvedMethodInput> missingInputs,
+    private List<String> sourceRoutes(List<MethodInput> missingInputs,
             AccountMode mode, MembershipStatus membership,
             boolean justInTime)
     {
         if (resourceSourceCatalog == null || missingInputs == null)
             return java.util.Collections.emptyList();
         List<String> routes = new ArrayList<>();
-        for (ResolvedMethodInput input : missingInputs)
+        for (MethodInput input : missingInputs)
             for (String route : resourceSourceCatalog.suggestions(
                     input.getName(), mode, membership, justInTime))
                 if (!routes.contains(route)) routes.add(route);
@@ -336,7 +336,7 @@ public class AccountResourcePlanner
      * recommendation's intended equipment setup may make it unusable.
      */
     private static String reusableSourceFor(
-            ObservedItemIndex observed,
+            ItemIndex observed,
             String itemName)
     {
         if (observed == null || itemName == null) return null;
@@ -346,22 +346,22 @@ public class AccountResourcePlanner
             return firstEquipped(observed,
                     "Staff of fire", "Fire battlestaff", "Mystic fire staff",
                     "Lava battlestaff", "Mystic lava staff",
-                    "Steam battlestaff", "Mystic steam staff",
-                    "Smoke battlestaff", "Mystic smoke staff",
+                    "Steam battlestaff", Text.get(1385),
+                    "Smoke battlestaff", Text.get(1386),
                     "Tome of fire");
         }
         if ("water rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of water", "Water battlestaff", "Mystic water staff",
+                    "Staff of water", "Water battlestaff", Text.get(1387),
                     "Mud battlestaff", "Mystic mud staff",
-                    "Steam battlestaff", "Mystic steam staff",
+                    "Steam battlestaff", Text.get(1385),
                     "Mist battlestaff", "Mystic mist staff");
         }
         if ("earth rune".equals(rune))
         {
             return firstEquipped(observed,
-                    "Staff of earth", "Earth battlestaff", "Mystic earth staff",
+                    "Staff of earth", "Earth battlestaff", Text.get(1388),
                     "Lava battlestaff", "Mystic lava staff",
                     "Mud battlestaff", "Mystic mud staff",
                     "Dust battlestaff", "Mystic dust staff");
@@ -370,7 +370,7 @@ public class AccountResourcePlanner
         {
             return firstEquipped(observed,
                     "Staff of air", "Air battlestaff", "Mystic air staff",
-                    "Smoke battlestaff", "Mystic smoke staff",
+                    "Smoke battlestaff", Text.get(1386),
                     "Mist battlestaff", "Mystic mist staff",
                     "Dust battlestaff", "Mystic dust staff");
         }
@@ -378,7 +378,7 @@ public class AccountResourcePlanner
     }
 
     private static String firstEquipped(
-            ObservedItemIndex observed,
+            ItemIndex observed,
             String... candidates)
     {
         for (String candidate : candidates)
@@ -389,12 +389,12 @@ public class AccountResourcePlanner
     }
 
     /** Merge duplicate recipe rows before comparing them with storage. */
-    private static List<ResolvedMethodInput> merge(
-            List<ResolvedMethodInput> rawNeeds)
+    private static List<MethodInput> merge(
+            List<MethodInput> rawNeeds)
     {
         if (rawNeeds == null || rawNeeds.isEmpty()) return new ArrayList<>();
         Map<String, MutableNeed> merged = new LinkedHashMap<>();
-        for (ResolvedMethodInput input : rawNeeds)
+        for (MethodInput input : rawNeeds)
         {
             if (input == null || input.getName() == null
                     || input.getName().trim().isEmpty()
@@ -418,10 +418,10 @@ public class AccountResourcePlanner
             }
         }
 
-        List<ResolvedMethodInput> result = new ArrayList<>();
+        List<MethodInput> result = new ArrayList<>();
         for (MutableNeed need : merged.values())
         {
-            result.add(new ResolvedMethodInput(
+            result.add(new MethodInput(
                     need.name, need.itemId, need.quantity));
         }
         return result;

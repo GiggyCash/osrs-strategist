@@ -19,7 +19,7 @@ public class VariableGuidanceWiringTest
     public void expandedFoundryIdGetsVariableGuidance()
     {
         VariableMethodGuidanceService service = new VariableMethodGuidanceService();
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.SMITHING, 70,
                         item(ItemID.RUNITE_BAR, "Runite bar", 14),
                         item(ItemID.ADAMANTITE_BAR, "Adamantite bar", 14)),
@@ -38,7 +38,7 @@ public class VariableGuidanceWiringTest
     public void expandedMahoganyHomesIdGetsVariableGuidance()
     {
         VariableMethodGuidanceService service = new VariableMethodGuidanceService();
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.CONSTRUCTION, 70,
                         item(ItemID.PLANK_MAHOGANY, "Mahogany plank", 20)),
                 Skill.CONSTRUCTION,
@@ -60,7 +60,7 @@ public class VariableGuidanceWiringTest
                 null,
                 new VariableMethodGuidanceService(),
                 null);
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data(Skill.FIREMAKING, 60),
                 Skill.FIREMAKING,
                 60,
@@ -72,13 +72,13 @@ public class VariableGuidanceWiringTest
         assertTrue(guidance.getAction().contains("500 personal points"));
     }
 
-    private static StrategyDataBundle data(Skill skill, int level)
+    private static GameData data(Skill skill, int level)
     {
-        return data(skill, level, new ItemStackSnapshot[0]);
+        return data(skill, level, new ItemState[0]);
     }
 
-    private static StrategyDataBundle data(Skill skill, int level,
-            ItemStackSnapshot... items)
+    private static GameData data(Skill skill, int level,
+            ItemState... items)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -99,15 +99,15 @@ public class VariableGuidanceWiringTest
                 0L,
                 levels,
                 xp);
-        return StrategyDataBundle.builder(account)
-                .bank(new BankSnapshot(Arrays.asList(items), 1L))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
+        return GameData.builder(account)
+                .bank(new ItemsState(Arrays.asList(items), 1L))
+                .inventory(new ItemsState(Collections.emptyList()))
                 .build();
     }
 
-    private static ItemStackSnapshot item(int id, String name, int quantity)
+    private static ItemState item(int id, String name, int quantity)
     {
-        return new ItemStackSnapshot(id, name, quantity);
+        return new ItemState(id, name, quantity);
     }
 
     private static TrainingPlan plan(String id, Skill skill)
@@ -126,11 +126,11 @@ public class VariableGuidanceWiringTest
                 10,
                 1,
                 Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new TrainingPlan(
                 method,
                 "test",
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 Collections.emptyList());
     }
 }

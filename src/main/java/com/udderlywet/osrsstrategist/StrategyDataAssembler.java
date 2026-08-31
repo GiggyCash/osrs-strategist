@@ -3,7 +3,7 @@ package com.udderlywet.osrsstrategist;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/** Builds one immutable StrategyDataBundle from live and remembered evidence. */
+/** Builds one immutable GameData from live and remembered evidence. */
 @Singleton
 public class StrategyDataAssembler
 {
@@ -82,7 +82,7 @@ public class StrategyDataAssembler
                 farmingAccessEvaluator, observedStateStore);
     }
 
-    public synchronized StrategyDataBundle read()
+    public synchronized GameData read()
     {
         AccountSnapshot account = accountReader.read();
         if (account == null) return null;
@@ -113,10 +113,10 @@ public class StrategyDataAssembler
         lastAccountIdentity = identity;
         lastAccountTypeCode = account.getAccountTypeCode();
 
-        InventorySnapshot inventory = itemStateReader.readInventory();
-        BankSnapshot bank = itemStateReader.readBank();
-        EquipmentSnapshot equipment = itemStateReader.readEquipment();
-        StorageSnapshot rememberedStorage = observedStateStore.getStorage();
+        ItemsState inventory = itemStateReader.readInventory();
+        ItemsState bank = itemStateReader.readBank();
+        ItemsState equipment = itemStateReader.readEquipment();
+        StorageSnapshot rememberedStorage = observedStateStore.storage();
         StorageSnapshot storage = runePouchStateReader == null
                 ? rememberedStorage
                 : runePouchStateReader.merge(rememberedStorage, inventory);
@@ -124,28 +124,28 @@ public class StrategyDataAssembler
         AccountEconomySnapshot liveEconomy = economyReader == null
                 ? null : economyReader.read(account, inventory, bank);
         AccountEconomySnapshot economy = liveEconomy != null
-                ? liveEconomy : observedStateStore.getEconomy();
+                ? liveEconomy : observedStateStore.economy();
 
         QuestSnapshot liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
-                ? liveQuests : observedStateStore.getQuests();
+                ? liveQuests : observedStateStore.quests();
         DiarySnapshot liveDiaries = diaryStateReader == null
                 ? null : diaryStateReader.read();
         DiarySnapshot diaries = liveDiaries != null
-                ? liveDiaries : observedStateStore.getDiaries();
+                ? liveDiaries : observedStateStore.diaries();
         CombatAchievementSnapshot observedCombatAchievements =
-                observedStateStore.getCombatAchievements();
+                observedStateStore.combatAchievements();
         CombatAchievementSnapshot combatAchievements =
                 combatAchievementReader == null
                         ? observedCombatAchievements
                         : combatAchievementReader.read(observedCombatAchievements);
 
         AccountMode accountMode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        GroupStorageSnapshot liveGroupStorage = accountMode.isGroupIronman()
+        ItemsState liveGroupStorage = accountMode.isGroupIronman()
                 ? itemStateReader.readGroupStorage() : null;
-        GroupStorageSnapshot groupStorage = liveGroupStorage != null
-                ? liveGroupStorage : observedStateStore.getGroupStorage();
-        ClueSnapshot rememberedClue = observedStateStore.getClue();
+        ItemsState groupStorage = liveGroupStorage != null
+                ? liveGroupStorage : observedStateStore.groupStorage();
+        ClueSnapshot rememberedClue = observedStateStore.clue();
         ClueSnapshot clue = clueStateReader == null
                 ? rememberedClue
                 : clueStateReader.read(accountMode, inventory, bank, rememberedClue);
@@ -157,13 +157,13 @@ public class StrategyDataAssembler
         SlayerSnapshot liveSlayer = slayerStateReader == null
                 ? null : slayerStateReader.read();
         SlayerSnapshot slayer = liveSlayer != null
-                ? liveSlayer : observedStateStore.getSlayer();
+                ? liveSlayer : observedStateStore.slayer();
         SailingSnapshot liveSailing = sailingStateReader == null
                 ? null : sailingStateReader.read(quests);
         SailingSnapshot sailing = liveSailing != null
-                ? liveSailing : observedStateStore.getSailing();
+                ? liveSailing : observedStateStore.sailing();
 
-        PvmSnapshot observedPvm = observedStateStore.getPvm();
+        PvmSnapshot observedPvm = observedStateStore.pvm();
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
                 ? observedPvm
                 : pvmReadinessAnalyzer.analyze(
@@ -171,8 +171,8 @@ public class StrategyDataAssembler
                         observedPvm);
         AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
-                account, quests, accessMemory, observedStateStore.getFarming());
-        return StrategyDataBundle.builder(account)
+                account, quests, accessMemory, observedStateStore.farming());
+        return GameData.builder(account)
                 .inventory(inventory)
                 .bank(bank)
                 .equipment(equipment)
@@ -180,21 +180,21 @@ public class StrategyDataAssembler
                 .diaries(diaries)
                 .clue(clue)
                 .combatAchievements(combatAchievements)
-                .collectionLog(observedStateStore.getCollectionLog())
+                .collectionLog(observedStateStore.collectionLog())
                 .economy(economy)
-                .capabilities(observedStateStore.getCapabilities())
+                .capabilities(observedStateStore.capabilities())
                 .accessMemory(accessMemory)
                 .farmingRuns(farmingRunStateStore.snapshot())
                 .storage(storage)
-                .transport(observedStateStore.getTransport())
-                .poh(observedStateStore.getPoh())
+                .transport(observedStateStore.transport())
+                .poh(observedStateStore.poh())
                 .groupStorage(groupStorage)
                 .slayer(slayer)
                 .farming(farming)
                 .sailing(sailing)
-                .minigames(observedStateStore.getMinigames())
+                .minigames(observedStateStore.minigames())
                 .pvm(pvm)
-                .recurringOpportunities(observedStateStore.getRecurringOpportunities())
+                .recurringOpportunities(observedStateStore.recurringOpportunities())
                 .combatEvidence(combatEvidenceReader == null
                         ? null : combatEvidenceReader.read())
                 .build();
@@ -210,7 +210,7 @@ public class StrategyDataAssembler
                 || !lastAccountIdentity.equals(accountIdentity(account)))
             return false;
         PohSnapshot observed = pohStateReader.read();
-        if (observed == null || observed.equals(observedStateStore.getPoh()))
+        if (observed == null || observed.equals(observedStateStore.poh()))
             return false;
         observedStateStore.setPoh(observed);
         return true;

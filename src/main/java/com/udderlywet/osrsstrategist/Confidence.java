@@ -1,6 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-public enum RecommendationConfidence
+public enum Confidence
 {
     VERIFIED,
     CHECK_NEEDED,

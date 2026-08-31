@@ -87,9 +87,9 @@ public class SustainableResourceValueServiceTest
         SustainableResourceValueService service =
                 new SustainableResourceValueService();
         ResourcePortfolioAssessment value = service.assessAll(
-                context(0, new BankSnapshot(Arrays.asList(
-                        new ItemStackSnapshot(1, "Law rune", 50),
-                        new ItemStackSnapshot(2, "Prayer potion", 3)), 1L)),
+                context(0, new ItemsState(Arrays.asList(
+                        new ItemState(1, "Law rune", 50),
+                        new ItemState(2, "Prayer potion", 3)), 1L)),
                 Arrays.asList(
                         new ResourcePipelineRequest(
                                 new ResourceNeed(1, "Law rune", 20),
@@ -112,13 +112,13 @@ public class SustainableResourceValueServiceTest
                 use, scarcity, tradeable);
     }
 
-    private static BankSnapshot bank(String name, int quantity)
+    private static ItemsState bank(String name, int quantity)
     {
-        return new BankSnapshot(Arrays.asList(
-                new ItemStackSnapshot(1, name, quantity)), 1L);
+        return new ItemsState(Arrays.asList(
+                new ItemState(1, name, quantity)), 1L);
     }
 
-    private static StrategyContext context(int type, BankSnapshot bank)
+    private static StrategyContext context(int type, ItemsState bank)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -130,9 +130,9 @@ public class SustainableResourceValueServiceTest
         AccountSnapshot account = new AccountSnapshot("Resource", 88L, type,
                 AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P, 1,
                 70 * Skill.values().length, 0L, levels, xp);
-        StrategyDataBundle.Builder data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()));
+        GameData.Builder data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()));
         if (bank != null) data.bank(bank);
         return new StrategyContext(data.build(), StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR, QuestTolerance.NORMAL,

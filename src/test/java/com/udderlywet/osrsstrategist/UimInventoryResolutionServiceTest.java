@@ -41,7 +41,7 @@ public class UimInventoryResolutionServiceTest
                 service.resolve(data(28), needsFour, false, true,
                         Collections.emptyList()).getKind());
 
-        StrategyDataBundle data = data(28,
+        GameData data = data(28,
                 StorageCapability.POH_COSTUME_ROOM,
                 StorageCapability.HESPORI_ITEM_RETRIEVAL);
         UimInventoryResolution result = service.resolve(data, needsFour,
@@ -59,7 +59,7 @@ public class UimInventoryResolutionServiceTest
     @Test
     public void worthwhileSafeInfrastructureAndLootingBagPrecedeDeathStorage()
     {
-        StrategyDataBundle data = data(28, StorageCapability.LOOTING_BAG,
+        GameData data = data(28, StorageCapability.LOOTING_BAG,
                 StorageCapability.HESPORI_ITEM_RETRIEVAL);
         UimInventoryResolution build = service.resolve(data, needsFour,
                 false, false, Arrays.asList(
@@ -83,7 +83,7 @@ public class UimInventoryResolutionServiceTest
     @Test
     public void dangerousStorageRequiresExactVerifiedMajorTransition()
     {
-        StrategyDataBundle data = data(28,
+        GameData data = data(28,
                 StorageCapability.HESPORI_ITEM_RETRIEVAL,
                 StorageCapability.DEATH_STORAGE);
         UimInventoryResolution ordinary = service.resolve(data, needsFour,
@@ -100,7 +100,7 @@ public class UimInventoryResolutionServiceTest
                                 true, StrategicPriority.NONE)));
         assertEquals(UimInventoryResolutionKind.USE_DANGEROUS_DEATH_STORAGE,
                 major.getKind());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 major.getConfidence());
         assertNotNull(major.getRiskDisclosure());
         assertTrue(major.getRiskDisclosure().isAcknowledgementRequired());
@@ -121,19 +121,19 @@ public class UimInventoryResolutionServiceTest
                 CapabilityState.VERIFIED, build, value, major);
     }
 
-    private static StrategyDataBundle data(int occupied,
+    private static GameData data(int occupied,
             StorageCapability... verified)
     {
-        List<ItemStackSnapshot> items = new ArrayList<>();
+        List<ItemState> items = new ArrayList<>();
         for (int slot = 0; slot < occupied; slot++)
-            items.add(new ItemStackSnapshot(30_000 + slot,
+            items.add(new ItemState(30_000 + slot,
                     "Persistent item " + slot, 1, slot));
         Map<StorageCapability, CapabilityState> states =
                 new EnumMap<>(StorageCapability.class);
         for (StorageCapability capability : verified)
             states.put(capability, CapabilityState.VERIFIED);
-        return StrategyDataBundle.builder(uim())
-                .inventory(new InventorySnapshot(items, true))
+        return GameData.builder(uim())
+                .inventory(new ItemsState(items, true))
                 .storage(new StorageSnapshot(states))
                 .build();
     }

@@ -27,7 +27,7 @@ public class PurchaseCostAdvisor
      */
     public String advice(
             AccountEconomySnapshot economy,
-            List<ResolvedMethodInput> missing)
+            List<MethodInput> missing)
     {
         PurchaseCostEstimate estimate = estimate(missing);
         if (!estimate.isComplete() || estimate.getTotalCost() <= 0) return null;
@@ -39,7 +39,7 @@ public class PurchaseCostAdvisor
                 .append(" coins total.");
 
         if (economy != null
-                && economy.getConfidence() == RecommendationConfidence.VERIFIED)
+                && economy.getConfidence() == Confidence.VERIFIED)
         {
             long cash = economy.getCoins();
             if (cash >= total)
@@ -70,14 +70,14 @@ public class PurchaseCostAdvisor
      * Resolves every exact-name quote or fails the aggregate closed. A partial
      * price list must never make an entire method appear cheaper than it is.
      */
-    public PurchaseCostEstimate estimate(List<ResolvedMethodInput> missing)
+    public PurchaseCostEstimate estimate(List<MethodInput> missing)
     {
         if (marketPriceService == null || missing == null || missing.isEmpty())
             return PurchaseCostEstimate.unknown();
 
         long total = 0L;
         boolean sawInput = false;
-        for (ResolvedMethodInput input : missing)
+        for (MethodInput input : missing)
         {
             if (input == null || input.getQuantity() <= 0) continue;
             sawInput = true;

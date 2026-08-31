@@ -60,7 +60,7 @@ public class RecommendationEngine
             StrategyMode strategyMode,
             PreferenceProfile preferenceProfile)
     {
-        return recommend(StrategyDataBundle.builder(snapshot).build(),
+        return recommend(GameData.builder(snapshot).build(),
                 strategyMode, SessionIntent.PICK_FOR_ME, true, false,
                 preferenceProfile);
     }
@@ -71,12 +71,12 @@ public class RecommendationEngine
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
     {
-        return recommend(StrategyDataBundle.builder(snapshot).build(),
+        return recommend(GameData.builder(snapshot).build(),
                 strategyMode, sessionIntent, true, false, preferenceProfile);
     }
 
     public List<Recommendation> recommend(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             PreferenceProfile preferenceProfile)
@@ -86,7 +86,7 @@ public class RecommendationEngine
     }
 
     public List<Recommendation> recommend(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             boolean allowWildernessMethods,
@@ -97,7 +97,7 @@ public class RecommendationEngine
     }
 
     public List<Recommendation> recommend(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             boolean useGroupStorage,
@@ -111,7 +111,7 @@ public class RecommendationEngine
 
     /** Full skill candidate pool for the global strategy queue. Do not trim here. */
     public List<Recommendation> recommendAll(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             boolean useGroupStorage,
@@ -124,7 +124,7 @@ public class RecommendationEngine
     }
 
     public List<Recommendation> recommendAll(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             boolean useGroupStorage,
@@ -146,7 +146,7 @@ public class RecommendationEngine
     }
 
     private List<Recommendation> recommendAllInternal(
-            StrategyDataBundle data,
+            GameData data,
             StrategyMode strategyMode,
             SessionIntent sessionIntent,
             boolean useGroupStorage,
@@ -156,8 +156,8 @@ public class RecommendationEngine
     {
         List<Recommendation> recommendations = new ArrayList<>();
         if (trainingMethodSelector == null || data == null
-                || data.getAccount() == null) return recommendations;
-        AccountSnapshot snapshot = data.getAccount();
+                || data.account() == null) return recommendations;
+        AccountSnapshot snapshot = data.account();
         PreferenceProfile safePreferences = preferenceProfile == null
                 ? new PreferenceProfile() : preferenceProfile;
         StrategyContext context = new StrategyContext(data, strategyMode,
@@ -180,14 +180,14 @@ public class RecommendationEngine
                     skill, level, context);
             int target = breakpoint.getLevel();
             TrainingPlan trainingPlan = null;
-            RecommendationGuidance guidance = null;
+            Guidance guidance = null;
             TrainingPlan highestRankedPlan = null;
             for (TrainingPlan candidate : trainingMethodSelector.rankedCandidates(
                     data, skill, level, strategyMode, sessionIntent,
                     allowWildernessMethods, useGroupStorage))
             {
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
-                RecommendationGuidance candidateGuidance = buildGuidance(
+                Guidance candidateGuidance = buildGuidance(
                         data, skill, level,
                         executionStageResolver.resolve(candidate, level, target),
                         candidate, sessionIntent,
@@ -234,12 +234,12 @@ public class RecommendationEngine
                     level,
                     target,
                     guidance,
-                    CandidateSafetyEvidence.skill(
+                    SafetyEvidence.skill(
                             ContentAccessRules.isMethodAvailable(
                                     trainingPlan.getMethod(), MembershipStatus.F2P),
                             skill));
             recommendation = recommendation.withStrategicValue(
-                    RecommendationStrategicValue.builder()
+                    StrategicValue.builder()
                             .unlockValue(breakpoint.strategicValue())
                             .evidence(breakpoint.getEvidenceId())
                             .build());
@@ -251,8 +251,8 @@ public class RecommendationEngine
         return recommendations;
     }
 
-    private RecommendationGuidance buildGuidance(
-            StrategyDataBundle data,
+    private Guidance buildGuidance(
+            GameData data,
             Skill skill,
             int level,
             int target,
@@ -260,7 +260,7 @@ public class RecommendationEngine
             SessionIntent sessionIntent,
             boolean useGroupStorage)
     {
-        RecommendationGuidance guidance = combatGuidanceService == null
+        Guidance guidance = combatGuidanceService == null
                 ? null : combatGuidanceService.build(
                         data, skill, level, target, trainingPlan,
                         sessionIntent, useGroupStorage);

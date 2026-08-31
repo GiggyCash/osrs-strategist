@@ -47,7 +47,7 @@ public class SensibleWinnerScenarioMatrixTest
         expected.put(GoalType.MAX, "skill:mining");
 
         StrategyEngine engine = new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         for (Map.Entry<GoalType, String> entry : expected.entrySet())
         {
@@ -69,7 +69,7 @@ public class SensibleWinnerScenarioMatrixTest
         List<Scenario> cases = scenarios();
         assertTrue(cases.size() >= 50);
         StrategyEngine engine = new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         StringBuilder failures = new StringBuilder();
         for (Scenario scenario : cases)
@@ -317,16 +317,16 @@ public class SensibleWinnerScenarioMatrixTest
 
     private static StrategyContext ctx(StrategyContext source, SessionIntent session)
     {
-        return context(source.getData().getAccount().getAccountTypeCode(),
-                source.getData().getAccount().getMembershipStatus(),
+        return context(source.data().account().getAccountTypeCode(),
+                source.data().account().getMembershipStatus(),
                 source.getStrategyMode(), session, source.getActiveGoal(),
-                source.getData().getAccount().getSkillLevels(), false);
+                source.data().account().getSkillLevels(), false);
     }
 
     private static StrategyContext withPreferences(StrategyContext source,
             PreferenceProfile preferences)
     {
-        return new StrategyContext(source.getData(), source.getStrategyMode(),
+        return new StrategyContext(source.data(), source.getStrategyMode(),
                 source.getSessionIntent(), QuestTolerance.NORMAL,
                 source.getActiveGoal(), false, false, false, preferences);
     }
@@ -349,9 +349,9 @@ public class SensibleWinnerScenarioMatrixTest
                 type, AccountMode.fromTypeCode(type).name(), membership,
                 membership == MembershipStatus.P2P ? 1 : 0, total, totalXp,
                 levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .quests(new QuestSnapshot(questStatuses()))
                 .build();
         return new StrategyContext(data, strategy, session,
@@ -379,26 +379,26 @@ public class SensibleWinnerScenarioMatrixTest
         TrainingMethod method = new TrainingMethod(id + ":method", skill, 1,
                 99, "Train " + skill.getName(), "Use the verified method.",
                 1, 1, 1, attention, minimum, setup, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation(id, "Train " + skill.getName() + " to " + target,
                 "Useful account progress.", score,
                 new TrainingPlan(method, "Scenario method",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, current, target, guidance(),
-                CandidateSafetyEvidence.skill(freeToPlay, skill));
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, current, target, guidance(),
+                SafetyEvidence.skill(freeToPlay, skill));
     }
 
     private static Recommendation ready(String id, double score, String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
-                RecommendationConfidence.VERIFIED, 0, 0, guidance(),
-                CandidateSafetyEvidence.harmless(true));
+                Confidence.VERIFIED, 0, 0, guidance(),
+                SafetyEvidence.harmless(true));
     }
 
     private static Recommendation unlock(Recommendation recommendation)
     {
         return recommendation.withStrategicValue(
-                RecommendationStrategicValue.builder()
+                StrategicValue.builder()
                         .unlockValue(0.5)
                         .evidence("scenario:unlock")
                         .build());
@@ -408,7 +408,7 @@ public class SensibleWinnerScenarioMatrixTest
     {
         return recommendation.withStrategicValue(
                 recommendation.getStrategicValue().merge(
-                        RecommendationStrategicValue.builder()
+                        StrategicValue.builder()
                                 .unlockValue(0.5)
                                 .sharedDependencyValue(1.0)
                                 .evidence("scenario:shared-dependency")
@@ -419,7 +419,7 @@ public class SensibleWinnerScenarioMatrixTest
             double accountFit)
     {
         return recommendation.withStrategicValue(
-                RecommendationStrategicValue.builder()
+                StrategicValue.builder()
                         .accountModeFit(accountFit)
                         .resourceFit(1.0)
                         .setupReuse(1.0)
@@ -431,7 +431,7 @@ public class SensibleWinnerScenarioMatrixTest
             double fit)
     {
         return recommendation.withStrategicValue(
-                RecommendationStrategicValue.builder()
+                StrategicValue.builder()
                         .accountModeFit(fit)
                         .evidence("scenario:account-fit")
                         .build());
@@ -449,7 +449,7 @@ public class SensibleWinnerScenarioMatrixTest
             Recommendation recommendation, String... path)
     {
         return recommendation.withGoalProvenance(
-                GoalDependencyProvenance.direct(goal,
+                GoalProvenance.direct(goal,
                         recommendation.getId(), Arrays.asList(path)));
     }
 
@@ -466,23 +466,23 @@ public class SensibleWinnerScenarioMatrixTest
             String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
-                RecommendationConfidence.VERIFIED, 0, 0, guidance(),
-                CandidateSafetyEvidence.harmless(false));
+                Confidence.VERIFIED, 0, 0, guidance(),
+                SafetyEvidence.harmless(false));
     }
 
     private static Recommendation irreversible(String id, double score,
             String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
-                RecommendationConfidence.VERIFIED, 0, 0, guidance(),
-                CandidateSafetyEvidence.potentiallyIrreversible(false));
+                Confidence.VERIFIED, 0, 0, guidance(),
+                SafetyEvidence.potentiallyIrreversible(false));
     }
 
     private static Recommendation check(String id, double score, String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
-                RecommendationConfidence.CHECK_NEEDED, 0, 0, guidance(),
-                CandidateSafetyEvidence.harmless(true));
+                Confidence.CHECK_NEEDED, 0, 0, guidance(),
+                SafetyEvidence.harmless(true));
     }
 
     private static String title(String id)
@@ -490,9 +490,9 @@ public class SensibleWinnerScenarioMatrixTest
         return id.replace(':', ' ').replace('-', ' ');
     }
 
-    private static RecommendationGuidance guidance()
+    private static Guidance guidance()
     {
-        return new RecommendationGuidance(
+        return new Guidance(
                 "Follow the named route until the displayed target is complete.",
                 "Verified: setup is available.", "Named scenario location.",
                 "This advances the stated account goal.");

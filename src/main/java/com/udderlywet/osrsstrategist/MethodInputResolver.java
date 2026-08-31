@@ -7,12 +7,12 @@ import javax.inject.Singleton;
 @Singleton
 public class MethodInputResolver
 {
-    public List<ResolvedMethodInput> resolve(
-            MethodExecutionProfile profile,
-            RuneLiteSkillActionDefinition action,
+    public List<MethodInput> resolve(
+            MethodProfile profile,
+            ActionDef action,
             int actions)
     {
-        Map<String, ResolvedMethodInput> merged = new LinkedHashMap<>();
+        Map<String, MethodInput> merged = new LinkedHashMap<>();
         if (profile == null || action == null || actions <= 0)
         {
             return new ArrayList<>();
@@ -20,19 +20,19 @@ public class MethodInputResolver
 
         for (MethodInputRule rule : profile.getInputs())
         {
-            ResolvedMethodInput input = resolveOne(rule, action, actions);
+            MethodInput input = resolveOne(rule, action, actions);
             if (input == null || input.getQuantity() <= 0) continue;
             String key = input.getItemId() > 0
                     ? "id:" + input.getItemId()
                     : "name:" + input.getName().toLowerCase(Locale.ROOT);
-            ResolvedMethodInput previous = merged.get(key);
+            MethodInput previous = merged.get(key);
             if (previous == null)
             {
                 merged.put(key, input);
             }
             else
             {
-                merged.put(key, new ResolvedMethodInput(
+                merged.put(key, new MethodInput(
                         previous.getName(),
                         previous.getItemId(),
                         previous.getQuantity() + input.getQuantity()));
@@ -41,13 +41,13 @@ public class MethodInputResolver
         return new ArrayList<>(merged.values());
     }
 
-    private static ResolvedMethodInput resolveOne(
+    private static MethodInput resolveOne(
             MethodInputRule rule,
-            RuneLiteSkillActionDefinition action,
+            ActionDef action,
             int actions)
     {
         if (rule == null
-                || rule.getMode() == MethodExecutionProfile.InputMode.NONE)
+                || rule.getMode() == MethodProfile.InputMode.NONE)
         {
             return null;
         }
@@ -108,7 +108,7 @@ public class MethodInputResolver
                 return null;
         }
 
-        return new ResolvedMethodInput(
+        return new MethodInput(
                 name,
                 itemId,
                 (int) Math.ceil(actions * perAction));

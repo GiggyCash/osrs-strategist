@@ -18,7 +18,7 @@ public class RestrictedBuildDetectorTest
                 60, 70, 1, 80, 52, 82, 70, 50);
         RestrictedBuildSuggestion result = detector.suggest(account);
         assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE, result.getType());
-        assertEquals(RecommendationConfidence.VERIFIED, result.getConfidence());
+        assertEquals(Confidence.VERIFIED, result.getConfidence());
     }
 
     @Test

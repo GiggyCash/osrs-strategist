@@ -18,7 +18,7 @@ public class RecommendationPresentationTest
     {
         Recommendation recommendation = recommendation();
 
-        String compact = RecommendationPresentation.compactHtml(
+        String compact = Presentation.compactHtml(
                 recommendation
         );
 
@@ -35,7 +35,7 @@ public class RecommendationPresentationTest
     @Test
     public void detailedViewKeepsOnlyDecisionCriticalSections()
     {
-        String detailed = RecommendationPresentation.detailedHtml(
+        String detailed = Presentation.detailedHtml(
                 recommendation()
         );
 
@@ -68,13 +68,13 @@ public class RecommendationPresentationTest
                         "Planks/materials",
                         "Transport"
                 ),
-                RecommendationConfidence.CHECK_NEEDED
+                Confidence.CHECK_NEEDED
         );
 
         TrainingPlan plan = new TrainingPlan(
                 method,
                 "Selected for the current strategy style.",
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 Arrays.asList(
                         new RequirementCheck(
                                 "poh",
@@ -103,7 +103,7 @@ public class RecommendationPresentationTest
                 "Builds useful POH progression.",
                 50.0,
                 plan,
-                RecommendationConfidence.CHECK_NEEDED,
+                Confidence.CHECK_NEEDED,
                 1,
                 10
         );

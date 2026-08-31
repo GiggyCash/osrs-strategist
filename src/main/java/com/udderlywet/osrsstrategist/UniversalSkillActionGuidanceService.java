@@ -56,22 +56,22 @@ public class UniversalSkillActionGuidanceService
                 new AccountResourcePlanner());
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             Skill skill,
             int currentLevel,
             int targetLevel,
             TrainingPlan plan,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null || skill == null
+        if (data == null || data.account() == null || skill == null
                 || plan == null || plan.getMethod() == null
                 || !supportsUniversalAction(skill))
         {
             return null;
         }
 
-        int currentXp = data.getAccount().getSkillExperience(skill);
+        int currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         int targetXp = Experience.getXpForLevel(targetLevel);
         int xpNeeded = Math.max(0, targetXp - currentXp);
@@ -92,30 +92,30 @@ public class UniversalSkillActionGuidanceService
                 useGroupStorage);
         if (choice == null) return null;
 
-        RuneLiteSkillActionDefinition action = choice.action;
+        ActionDef action = choice.action;
         double xpEach = action.getXp() * multiplier;
         int actions = divideRoundUp(xpNeeded, xpEach);
         UniversalActionRecipe recipe = recipeResolver.resolve(
-                action, actions, data.getAccount().getMembershipStatus());
+                action, actions, data.account().getMembershipStatus());
         if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
 
         String progressText;
         if (skill == Skill.RUNECRAFT)
         {
-            progressText = format(xpNeeded) + " XP remaining. Craft "
+            progressText = format(xpNeeded) + Text.get(1272)
                     + pluralRunes(action.getName()) + " with about "
-                    + format(actions) + " essence to reach level "
+                    + format(actions) + Text.get(1273)
                     + targetLevel + ".";
         }
         else
         {
-            progressText = format(xpNeeded) + " XP remaining - about "
+            progressText = format(xpNeeded) + Text.get(1274)
                     + format(actions) + " "
                     + playerAction(skill, action.getName(), actions)
                     + " to level " + targetLevel + ".";
         }
 
-        AccountResourcePlan resources = resourcePlanner == null
+        SupplyPlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, recipe.getInputs(), useGroupStorage);
         String supplies;
@@ -155,7 +155,7 @@ public class UniversalSkillActionGuidanceService
                 .append(Text.get(1016));
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
-            note.append(" Count assumes the ")
+            note.append(Text.get(1275))
                     .append(modifier.getLabel()).append(" is worn.");
         }
         if (recipe.getSetup() != null && !recipe.getSetup().trim().isEmpty())
@@ -167,19 +167,19 @@ public class UniversalSkillActionGuidanceService
             note.append(Text.get(1017));
         }
         if (resources != null
-                && resources.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
+                && resources.accountMode() == AccountMode.ULTIMATE_IRONMAN
                 && resources.getTotalMissingUnits() > 0)
         {
             note.append(Text.get(1018));
         }
 
-        return new RecommendationGuidance(
+        return new Guidance(
                 actionText, supplies, location, note.toString())
                 .withProgress(progressText);
     }
 
     private static String executionAction(Skill skill,
-            RuneLiteSkillActionDefinition action, String instructions)
+            ActionDef action, String instructions)
     {
         if (skill == Skill.RUNECRAFT)
             return "Craft " + pluralRunes(action.getName())
@@ -211,8 +211,8 @@ public class UniversalSkillActionGuidanceService
     }
 
     private Choice choose(
-            StrategyDataBundle data,
-            List<RuneLiteSkillActionDefinition> actions,
+            GameData data,
+            List<ActionDef> actions,
             TrainingMethod method,
             int currentLevel,
             int xpNeeded,
@@ -220,14 +220,14 @@ public class UniversalSkillActionGuidanceService
             boolean useGroupStorage)
     {
         if (actions == null || actions.isEmpty()) return null;
-        MembershipStatus membership = data.getAccount().getMembershipStatus();
+        MembershipStatus membership = data.account().getMembershipStatus();
         Set<String> routeTokens = routeTokens(method);
-        ObservedItemIndex observed = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex observed = new ItemIndex(data, useGroupStorage);
         boolean genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
         boolean anvilSmithing = isAnvilSmithingMethod(method);
         Choice best = null;
 
-        for (RuneLiteSkillActionDefinition action : actions)
+        for (ActionDef action : actions)
         {
             if (action == null || action.getXp() <= 0
                     || action.getLevel() > currentLevel
@@ -266,14 +266,14 @@ public class UniversalSkillActionGuidanceService
     }
 
     private static double resourceCoverageScore(
-            StrategyDataBundle data,
-            ObservedItemIndex observed,
+            GameData data,
+            ItemIndex observed,
             UniversalActionRecipe recipe)
     {
         if (recipe == null || recipe.getInputs().isEmpty()) return 0.0;
         long required = 0;
         long owned = 0;
-        for (ResolvedMethodInput input : recipe.getInputs())
+        for (MethodInput input : recipe.getInputs())
         {
             required += input.getQuantity();
             owned += Math.min(input.getQuantity(), observed.quantity(input.getName()));
@@ -282,7 +282,7 @@ public class UniversalSkillActionGuidanceService
 
         double coverage = Math.min(1.0, owned / (double) required);
         AccountMode mode = AccountMode.fromTypeCode(
-                data.getAccount().getAccountTypeCode());
+                data.account().getAccountTypeCode());
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
             return coverage * 650.0 + (coverage <= 0.0 ? -280.0 : 0.0);
@@ -329,7 +329,7 @@ public class UniversalSkillActionGuidanceService
                 || instructions.contains("anvil");
     }
 
-    private static boolean isBarSmeltingAction(RuneLiteSkillActionDefinition action)
+    private static boolean isBarSmeltingAction(ActionDef action)
     {
         return action != null
                 && action.getSkill() == Skill.SMITHING
@@ -337,7 +337,7 @@ public class UniversalSkillActionGuidanceService
     }
 
     private static boolean membershipAllowed(
-            RuneLiteSkillActionDefinition action,
+            ActionDef action,
             MembershipStatus account)
     {
         if (account == MembershipStatus.F2P)
@@ -352,13 +352,13 @@ public class UniversalSkillActionGuidanceService
         return false;
     }
 
-    private static boolean isOneTimeOrRewardAction(RuneLiteSkillActionDefinition action)
+    private static boolean isOneTimeOrRewardAction(ActionDef action)
     {
         String text = normalize(action.getName() + " "
                 + action.getCategory() + " " + action.getId());
         return containsAny(text,
                 "quest reward", "experience lamp", "xp lamp", "diary reward",
-                "tome of experience", "book of knowledge", "genie lamp",
+                Text.get(1276), "book of knowledge", "genie lamp",
                 "museum quiz", "one time", "one-time", "tears of guthix");
     }
 
@@ -380,7 +380,7 @@ public class UniversalSkillActionGuidanceService
 
     private static int routeMatchCount(
             Set<String> routeTokens,
-            RuneLiteSkillActionDefinition action)
+            ActionDef action)
     {
         String text = normalize(action.getName() + " "
                 + action.getCategory() + " " + action.getId());
@@ -464,8 +464,8 @@ public class UniversalSkillActionGuidanceService
         String singular;
         switch (skill)
         {
-            case AGILITY: singular = "course or obstacle action"; break;
-            case THIEVING: singular = "steal or pickpocket"; break;
+            case AGILITY: singular = Text.get(1277); break;
+            case THIEVING: singular = Text.get(1278); break;
             case HUNTER: singular = "catch"; break;
             case FIREMAKING: singular = "burn"; break;
             case PRAYER: singular = "Prayer action"; break;
@@ -512,10 +512,10 @@ public class UniversalSkillActionGuidanceService
 
     private static final class Choice
     {
-        private final RuneLiteSkillActionDefinition action;
+        private final ActionDef action;
         private final double score;
 
-        private Choice(RuneLiteSkillActionDefinition action, double score)
+        private Choice(ActionDef action, double score)
         {
             this.action = action;
             this.score = score;

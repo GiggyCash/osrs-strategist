@@ -6,16 +6,16 @@ import java.util.*;
 public final class ItemRequirementEvaluator
 {
     public ItemRequirementResult evaluate(ItemRequirementExpression expression,
-            StrategyDataBundle data, boolean useGroupStorage)
+            GameData data, boolean useGroupStorage)
     {
         if (expression == null)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
-        ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+        ItemIndex items = new ItemIndex(data, useGroupStorage);
         return evaluate(expression, data, items, useGroupStorage);
     }
 
     private ItemRequirementResult evaluate(ItemRequirementExpression expression,
-            StrategyDataBundle data, ObservedItemIndex items,
+            GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
         if (expression.getKind() == ItemRequirementExpression.Kind.ITEM)
@@ -42,16 +42,16 @@ public final class ItemRequirementEvaluator
             // If an alternative may still exist in unobserved storage, there is
             // no proven shortfall to source. Once every branch is proven absent,
             // carry the smallest concrete branch into acquisition guidance.
-            List<ResolvedMethodInput> inputs = needsVerification
+            List<MethodInput> inputs = needsVerification
                     ? Collections.emptyList() : bestAlternativeInputs(results);
             return new ItemRequirementResult(state,
                     (needsVerification
-                            ? "Check whether you own one of: " : "Get one of: ")
+                            ? Text.get(1320) : "Get one of: ")
                             + expression.label(), inputs);
         }
 
         List<String> actions = new ArrayList<>();
-        List<ResolvedMethodInput> inputs = new ArrayList<>();
+        List<MethodInput> inputs = new ArrayList<>();
         RequirementState state = RequirementState.VERIFIED;
         for (ItemRequirementResult result : results)
         {
@@ -68,7 +68,7 @@ public final class ItemRequirementEvaluator
     }
 
     private ItemRequirementResult item(ItemRequirementExpression expression,
-            StrategyDataBundle data, ObservedItemIndex items,
+            GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
         String[] names = expression.getItemNames().toArray(new String[0]);
@@ -78,19 +78,19 @@ public final class ItemRequirementEvaluator
         {
             case EQUIPPED:
                 owned = items.equippedQuantity(names);
-                observed = data != null && data.getEquipment() != null;
+                observed = data != null && data.equipment() != null;
                 break;
             case CARRIED:
-                owned = quantityIn(data == null || data.getInventory() == null
-                        ? null : data.getInventory().getItems(), names);
-                observed = data != null && data.getInventory() != null;
+                owned = quantityIn(data == null || data.inventory() == null
+                        ? null : data.inventory().getItems(), names);
+                observed = data != null && data.inventory() != null;
                 break;
             case CARRIED_OR_EQUIPPED:
-                owned = quantityIn(data == null || data.getInventory() == null
-                        ? null : data.getInventory().getItems(), names)
+                owned = quantityIn(data == null || data.inventory() == null
+                        ? null : data.inventory().getItems(), names)
                         + items.equippedQuantity(names);
-                observed = data != null && data.getInventory() != null
-                        && data.getEquipment() != null;
+                observed = data != null && data.inventory() != null
+                        && data.equipment() != null;
                 break;
             case OWNED_OR_RETRIEVABLE:
                 owned = items.quantity(names) + items.restrictedQuantity(names);
@@ -109,13 +109,13 @@ public final class ItemRequirementEvaluator
         int shortfall = Math.max(0, expression.getQuantity() - owned);
         String target = String.join(" or ", expression.getItemNames());
         if (expression.getItemNames().size() > 1) target = "(" + target + ")";
-        String action = (observed ? "Get " : "Check whether you own ")
+        String action = (observed ? "Get " : Text.get(1321))
                 + shortfall + " × " + target;
 
-        List<ResolvedMethodInput> inputs = Collections.emptyList();
+        List<MethodInput> inputs = Collections.emptyList();
         if (observed && expression.getItemNames().size() == 1)
         {
-            inputs = Collections.singletonList(new ResolvedMethodInput(
+            inputs = Collections.singletonList(new MethodInput(
                     expression.getItemNames().get(0), -1, shortfall));
         }
         return new ItemRequirementResult(observed
@@ -124,13 +124,13 @@ public final class ItemRequirementEvaluator
     }
 
     private ItemRequirementResult itemClass(ItemRequirementExpression expression,
-            StrategyDataBundle data, ObservedItemIndex items,
+            GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
         ItemRequirementClass itemClass = expression.getItemClass();
         if (itemClass == null)
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
-                    "Verify the required item class");
+                    Text.get(1322));
         if (itemClass == ItemRequirementClass.EMPTY_INVENTORY_SPACE)
             return freeInventorySlots(expression, data);
         if (!itemClass.isNameObservable())
@@ -144,22 +144,22 @@ public final class ItemRequirementEvaluator
             case EQUIPPED:
                 owned = items.equippedQuantityMatching(itemClass,
                         expression.getExcludedItemNames());
-                observed = data != null && data.getEquipment() != null;
+                observed = data != null && data.equipment() != null;
                 break;
             case CARRIED:
-                owned = quantityMatching(data == null || data.getInventory() == null
-                        ? null : data.getInventory().getItems(), itemClass,
+                owned = quantityMatching(data == null || data.inventory() == null
+                        ? null : data.inventory().getItems(), itemClass,
                         expression.getExcludedItemNames());
-                observed = data != null && data.getInventory() != null;
+                observed = data != null && data.inventory() != null;
                 break;
             case CARRIED_OR_EQUIPPED:
-                owned = quantityMatching(data == null || data.getInventory() == null
-                        ? null : data.getInventory().getItems(), itemClass,
+                owned = quantityMatching(data == null || data.inventory() == null
+                        ? null : data.inventory().getItems(), itemClass,
                         expression.getExcludedItemNames())
                         + items.equippedQuantityMatching(itemClass,
                                 expression.getExcludedItemNames());
-                observed = data != null && data.getInventory() != null
-                        && data.getEquipment() != null;
+                observed = data != null && data.inventory() != null
+                        && data.equipment() != null;
                 break;
             case OWNED_OR_RETRIEVABLE:
                 owned = items.quantityMatching(itemClass,
@@ -185,14 +185,14 @@ public final class ItemRequirementEvaluator
                     expression.getExcludedItemNames()) + ")";
         return new ItemRequirementResult(observed
                 ? RequirementState.BLOCKED : RequirementState.CHECK_NEEDED,
-                (observed ? "Get " : "Check whether you own ") + shortfall
+                (observed ? "Get " : Text.get(1321)) + shortfall
                         + " × " + target);
     }
 
     private static ItemRequirementResult freeInventorySlots(
-            ItemRequirementExpression expression, StrategyDataBundle data)
+            ItemRequirementExpression expression, GameData data)
     {
-        InventorySnapshot inventory = data == null ? null : data.getInventory();
+        ItemsState inventory = data == null ? null : data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     Text.get(332));
@@ -202,21 +202,21 @@ public final class ItemRequirementEvaluator
         if (free >= required)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
         return new ItemRequirementResult(RequirementState.BLOCKED,
-                "The quest requires " + required
-                        + " free inventory slots; only " + free
+                Text.get(1323) + required
+                        + Text.get(1324) + free
                         + Text.get(333));
     }
 
-    private static List<ResolvedMethodInput> bestAlternativeInputs(
+    private static List<MethodInput> bestAlternativeInputs(
             List<ItemRequirementResult> results)
     {
-        List<ResolvedMethodInput> best = Collections.emptyList();
+        List<MethodInput> best = Collections.emptyList();
         long bestCost = Long.MAX_VALUE;
         for (ItemRequirementResult result : results)
         {
             if (result.getMissingInputs().isEmpty()) continue;
             long cost = 0L;
-            for (ResolvedMethodInput input : result.getMissingInputs())
+            for (MethodInput input : result.getMissingInputs())
                 cost += Math.max(1, input.getQuantity());
             if (cost < bestCost)
             {
@@ -227,25 +227,25 @@ public final class ItemRequirementEvaluator
         return best;
     }
 
-    private static boolean ownershipObserved(StrategyDataBundle data,
-            ObservedItemIndex items, boolean useGroupStorage)
+    private static boolean ownershipObserved(GameData data,
+            ItemIndex items, boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null) return false;
+        if (data == null || data.account() == null) return false;
         return items.usableOwnershipObserved();
     }
 
-    private static boolean isUim(StrategyDataBundle data)
+    private static boolean isUim(GameData data)
     {
-        return data != null && data.getAccount() != null
-                && AccountMode.fromTypeCode(data.getAccount().getAccountTypeCode())
+        return data != null && data.account() != null
+                && AccountMode.fromTypeCode(data.account().getAccountTypeCode())
                         == AccountMode.ULTIMATE_IRONMAN;
     }
 
-    private static int quantityIn(Iterable<ItemStackSnapshot> stacks, String[] names)
+    private static int quantityIn(Iterable<ItemState> stacks, String[] names)
     {
         if (stacks == null) return 0;
         int total = 0;
-        for (ItemStackSnapshot stack : stacks)
+        for (ItemState stack : stacks)
         {
             if (stack == null || stack.getName() == null) continue;
             for (String name : names)
@@ -258,12 +258,12 @@ public final class ItemRequirementEvaluator
         return total;
     }
 
-    private static int quantityMatching(Iterable<ItemStackSnapshot> stacks,
+    private static int quantityMatching(Iterable<ItemState> stacks,
             ItemRequirementClass itemClass, Iterable<String> excludedNames)
     {
         if (stacks == null || itemClass == null) return 0;
         int total = 0;
-        for (ItemStackSnapshot stack : stacks)
+        for (ItemState stack : stacks)
         {
             if (stack == null || stack.getName() == null
                     || !itemClass.matches(stack.getName())) continue;

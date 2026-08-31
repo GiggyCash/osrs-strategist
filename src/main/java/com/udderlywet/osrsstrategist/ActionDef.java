@@ -6,7 +6,7 @@ import net.runelite.api.Skill;
 
 /** One action exposed by RuneLite's maintained skill-calculator data. */
 @Getter
-public final class RuneLiteSkillActionDefinition
+public final class ActionDef
 {
     private final Skill skill;
     private final String id;
@@ -17,13 +17,13 @@ public final class RuneLiteSkillActionDefinition
     private final MembershipStatus membership;
     private final int itemId;
 
-    public RuneLiteSkillActionDefinition(Skill skill, String id, String name,
+    public ActionDef(Skill skill, String id, String name,
             int level, float xp, String category, MembershipStatus membership)
     {
         this(skill, id, name, level, xp, category, membership, -1);
     }
 
-    public RuneLiteSkillActionDefinition(Skill skill, String id, String name,
+    public ActionDef(Skill skill, String id, String name,
             int level, float xp, String category, MembershipStatus membership,
             int itemId)
     {

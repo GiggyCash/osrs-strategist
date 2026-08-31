@@ -18,7 +18,7 @@ public final class TrainingPlan
     @Getter
     private final String whyThisMethod;
     @Getter
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     @Getter
     private final List<RequirementCheck> requirementChecks;
     @Getter
@@ -33,7 +33,7 @@ public final class TrainingPlan
                 method,
                 whyThisMethod,
                 method == null
-                        ? RecommendationConfidence.CHECK_NEEDED
+                        ? Confidence.CHECK_NEEDED
                         : method.getConfidence(),
                 Collections.emptyList(),
                 null
@@ -43,7 +43,7 @@ public final class TrainingPlan
     public TrainingPlan(
             TrainingMethod method,
             String whyThisMethod,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(
                 method,
@@ -57,7 +57,7 @@ public final class TrainingPlan
     public TrainingPlan(
             TrainingMethod method,
             String whyThisMethod,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             List<RequirementCheck> requirementChecks)
     {
         this(method, whyThisMethod, confidence, requirementChecks, null);
@@ -66,7 +66,7 @@ public final class TrainingPlan
     public TrainingPlan(
             TrainingMethod method,
             String whyThisMethod,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             List<RequirementCheck> requirementChecks,
             MethodStrategyProfile strategyProfile)
     {
@@ -77,7 +77,7 @@ public final class TrainingPlan
     private TrainingPlan(
             TrainingMethod method,
             String whyThisMethod,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             List<RequirementCheck> requirementChecks,
             MethodStrategyProfile strategyProfile,
             int currentStageTargetLevel)
@@ -85,7 +85,7 @@ public final class TrainingPlan
         this.method = method;
         this.whyThisMethod = whyThisMethod;
         this.confidence = confidence == null
-                ? RecommendationConfidence.CHECK_NEEDED
+                ? Confidence.CHECK_NEEDED
                 : confidence;
         this.requirementChecks = Collections.unmodifiableList(
                 requirementChecks == null

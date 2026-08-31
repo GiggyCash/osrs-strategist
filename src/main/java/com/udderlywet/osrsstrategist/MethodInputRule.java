@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public final class MethodInputRule
 {
-    private final MethodExecutionProfile.InputMode mode;
+    private final MethodProfile.InputMode mode;
     private final String fixedName;
     private final double quantityPerAction;
 

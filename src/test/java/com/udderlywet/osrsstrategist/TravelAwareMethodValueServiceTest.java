@@ -110,7 +110,7 @@ public class TravelAwareMethodValueServiceTest
     {
         return new TrainingMethod(id, Skill.FARMING, 1, 99, id, "Do it",
                 10, 10, 10, AttentionLevel.MODERATE, 10, 1,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED,
+                Collections.emptyList(), Confidence.VERIFIED,
                 members);
     }
 
@@ -137,7 +137,7 @@ public class TravelAwareMethodValueServiceTest
         Map<String, QuestStatus> quests = new HashMap<>();
         if (completedQuest != null)
             quests.put(completedQuest, QuestStatus.COMPLETE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .transport(new TransportSnapshot(new HashSet<>(routes))).build();
         return new StrategyContext(data, StrategyMode.BALANCED,
@@ -161,10 +161,10 @@ public class TravelAwareMethodValueServiceTest
                 70 * Skill.values().length, 0, levels, xp);
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put(quest, QuestStatus.COMPLETE);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
-                .inventory(new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(1, item, 1))))
+                .inventory(new ItemsState(Collections.singletonList(
+                        new ItemState(1, item, 1))))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR, QuestTolerance.NORMAL,

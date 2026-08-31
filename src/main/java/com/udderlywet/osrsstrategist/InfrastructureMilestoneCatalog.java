@@ -18,25 +18,25 @@ public final class InfrastructureMilestoneCatalog
             Text.get(324),
             Text.get(325),
             Text.get(326)));
-    private final Map<String, InfrastructureMilestoneDefinition> milestones;
+    private final Map<String, InfrastructureMilestone> milestones;
 
     public InfrastructureMilestoneCatalog()
     {
-        Map<String, InfrastructureMilestoneDefinition> values = new LinkedHashMap<>();
-        for (InfrastructureMilestoneDefinition value : BundledCatalogLoader.array(
+        Map<String, InfrastructureMilestone> values = new LinkedHashMap<>();
+        for (InfrastructureMilestone value : BundledCatalogLoader.array(
                 Text.get(318),
-                InfrastructureMilestoneDefinition[].class))
+                InfrastructureMilestone[].class))
             if (values.put(value.getId(), value) != null)
-                throw new IllegalStateException("Duplicate infrastructure milestone " + value.getId());
+                throw new IllegalStateException(Text.get(1258) + value.getId());
         milestones = Collections.unmodifiableMap(values);
     }
 
-    public InfrastructureMilestoneDefinition get(String id)
+    public InfrastructureMilestone get(String id)
     {
         return id == null ? null : milestones.get(id);
     }
 
-    public List<InfrastructureMilestoneDefinition> all()
+    public List<InfrastructureMilestone> all()
     {
         return Collections.unmodifiableList(new ArrayList<>(milestones.values()));
     }

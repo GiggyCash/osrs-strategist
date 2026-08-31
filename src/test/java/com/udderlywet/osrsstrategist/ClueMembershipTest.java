@@ -18,9 +18,9 @@ public class ClueMembershipTest
     @Test
     public void f2pHidesHardClueOpportunity()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(MembershipStatus.F2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
         assertFalse(new OpportunityEngine().evaluate(data).stream()
@@ -30,9 +30,9 @@ public class ClueMembershipTest
     @Test
     public void f2pKeepsBeginnerClueOpportunity()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(MembershipStatus.F2P))
                 .clue(new ClueSnapshot(true, "beginner", System.currentTimeMillis(),
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
         assertTrue(new OpportunityEngine().evaluate(data).stream()
@@ -42,9 +42,9 @@ public class ClueMembershipTest
     @Test
     public void p2pKeepsHardClueOpportunity()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.P2P))
+        GameData data = GameData.builder(account(MembershipStatus.P2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
-                        RecommendationConfidence.VERIFIED))
+                        Confidence.VERIFIED))
                 .build();
 
         assertTrue(new OpportunityEngine().evaluate(data).stream()
@@ -54,17 +54,17 @@ public class ClueMembershipTest
     @Test
     public void tierObservationAloneIsNotReportedReady()
     {
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                 account(MembershipStatus.P2P))
                 .clue(new ClueSnapshot(true, "hard", 1L,
-                        RecommendationConfidence.VERIFIED)).build();
+                        Confidence.VERIFIED)).build();
 
         Opportunity clue = new OpportunityEngine().evaluate(data).stream()
                 .filter(value -> value.getType() == OpportunityType.CLUE)
                 .findFirst().get();
 
         assertFalse(clue.isReady());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 clue.getConfidence());
         assertTrue(clue.getPreparation().get(0)
                 .contains("Open the clue scroll"));
@@ -77,10 +77,10 @@ public class ClueMembershipTest
                 "Perform the emote.", "Catherby bank",
                 Collections.singletonList("Maple longbow"), false, false,
                 null, false, "outside catherby bank");
-        StrategyDataBundle data = StrategyDataBundle.builder(
+        GameData data = GameData.builder(
                 account(MembershipStatus.P2P))
                 .clue(new ClueSnapshot(true, "medium", 1L,
-                        RecommendationConfidence.VERIFIED, step)).build();
+                        Confidence.VERIFIED, step)).build();
 
         Opportunity clue = new OpportunityEngine().evaluate(data).stream()
                 .filter(value -> value.getType() == OpportunityType.CLUE)
@@ -101,7 +101,7 @@ public class ClueMembershipTest
         timers.put("opportunity:birdhouse", 0L);
         timers.put("opportunity:herb-run", 0L);
 
-        StrategyDataBundle data = StrategyDataBundle.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(MembershipStatus.F2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .build();
 

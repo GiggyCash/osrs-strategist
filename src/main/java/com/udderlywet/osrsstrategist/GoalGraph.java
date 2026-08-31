@@ -12,7 +12,7 @@ public final class GoalGraph
     {
         Map<GoalType, List<String>> roots = new EnumMap<>(GoalType.class);
         roots.put(GoalType.BARROWS_GLOVES,
-                Collections.singletonList("Recipe for Disaster"));
+                Collections.singletonList(Text.get(1198)));
         roots.put(GoalType.PRIFDDINAS,
                 Collections.singletonList("Song of the Elves"));
         roots.put(GoalType.BOWFA,

@@ -8,14 +8,14 @@ public final class ClueSnapshot
     private final boolean cluePresent;
     private final String clueType;
     private final long firstSeenAtMillis;
-    private final RecommendationConfidence confidence;
+    private final Confidence confidence;
     private final ClueStepSnapshot currentStep;
 
     public ClueSnapshot(
             boolean cluePresent,
             String clueType,
             long firstSeenAtMillis,
-            RecommendationConfidence confidence)
+            Confidence confidence)
     {
         this(cluePresent, clueType, firstSeenAtMillis, confidence, null);
     }
@@ -24,7 +24,7 @@ public final class ClueSnapshot
             boolean cluePresent,
             String clueType,
             long firstSeenAtMillis,
-            RecommendationConfidence confidence,
+            Confidence confidence,
             ClueStepSnapshot currentStep)
     {
         this.cluePresent = cluePresent;

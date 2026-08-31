@@ -15,7 +15,7 @@ public class GearAcquisitionCatalog
         for (GearAcquisitionRoute route : BundledCatalogLoader.array(
                 Text.get(250), GearAcquisitionRoute[].class))
             if (routes.put(normalize(route.getItemName()), route) != null)
-                throw new IllegalStateException("Duplicate gear route " + route.getItemName());
+                throw new IllegalStateException(Text.get(1136) + route.getItemName());
     }
 
     public List<GearAcquisitionRoute> all()

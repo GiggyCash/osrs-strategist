@@ -24,22 +24,22 @@ public class SlayerGuidanceService
         this(new SlayerTaskProfileCatalog());
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             int currentLevel,
             int targetLevel)
     {
         return build(data, currentLevel, targetLevel, true);
     }
 
-    public RecommendationGuidance build(
-            StrategyDataBundle data,
+    public Guidance build(
+            GameData data,
             int currentLevel,
             int targetLevel,
             boolean useGroupStorage)
     {
-        if (data == null || data.getAccount() == null) return null;
-        AccountSnapshot account = data.getAccount();
+        if (data == null || data.account() == null) return null;
+        AccountSnapshot account = data.account();
         if (!AccountBuildPolicy.allowsSkill(account, Skill.SLAYER)) return null;
         if (account.getMembershipStatus() != MembershipStatus.P2P) return null;
 
@@ -48,25 +48,25 @@ public class SlayerGuidanceService
         int targetXp = Experience.getXpForLevel(targetLevel);
         int xpNeeded = Math.max(0, targetXp - currentXp);
 
-        SlayerSnapshot slayer = data.getSlayer();
+        SlayerSnapshot slayer = data.slayer();
         if (slayer != null && slayer.hasTask())
         {
             SlayerTaskProfile profile = taskProfiles.profileFor(slayer.getTaskName());
-            ObservedItemIndex items = new ObservedItemIndex(data, useGroupStorage);
+            ItemIndex items = new ItemIndex(data, useGroupStorage);
             String action = taskAction(slayer, profile, xpNeeded, targetLevel);
             String supplies = taskSupplies(account, items, profile);
             String where = taskLocation(slayer, profile);
             String note = taskNote(account, profile);
-            return new RecommendationGuidance(action, supplies, where, note);
+            return new Guidance(action, supplies, where, note);
         }
 
-        SlayerMasterChoice master = bestMaster(account, data.getQuests());
-        String action = "Get a new Slayer assignment from " + master.name
+        SlayerMasterChoice master = bestMaster(account, data.quests());
+        String action = Text.get(1452) + master.name
                 + ". You need " + format(xpNeeded)
-                + " Slayer XP to level " + targetLevel + ".";
+                + Text.get(1453) + targetLevel + ".";
         String supplies = Text.get(759);
         String note = master.reason + Text.get(760);
-        return new RecommendationGuidance(action, supplies, master.location, note);
+        return new Guidance(action, supplies, master.location, note);
     }
 
     private static String taskAction(
@@ -76,13 +76,13 @@ public class SlayerGuidanceService
             int targetLevel)
     {
         StringBuilder action = new StringBuilder();
-        action.append("Finish your current ")
+        action.append(Text.get(1454))
                 .append(slayer.getTaskName())
                 .append(" assignment: ")
                 .append(slayer.getRemaining())
-                .append(" kills remain. You need ")
+                .append(Text.get(1455))
                 .append(format(xpNeeded))
-                .append(" Slayer XP to level ")
+                .append(Text.get(1453))
                 .append(targetLevel).append(".");
         if (profile != null && hasText(profile.getStyleGuidance()))
         {
@@ -93,7 +93,7 @@ public class SlayerGuidanceService
 
     private static String taskSupplies(
             AccountSnapshot account,
-            ObservedItemIndex items,
+            ItemIndex items,
             SlayerTaskProfile profile)
     {
         if (profile == null || profile.getRequiredProtection().isEmpty())
@@ -105,7 +105,7 @@ public class SlayerGuidanceService
         String owned = firstOwned(items, required);
         if (owned != null)
         {
-            return "Verified: you own " + owned
+            return Text.get(1456) + owned
                     + Text.get(762);
         }
 
@@ -147,7 +147,7 @@ public class SlayerGuidanceService
     {
         if (hasText(slayer.getTaskLocation()))
         {
-            return "Your live assignment specifies "
+            return Text.get(1457)
                     + slayer.getTaskLocation()
                     + Text.get(772);
         }
@@ -157,7 +157,7 @@ public class SlayerGuidanceService
         }
         if (hasText(slayer.getMasterName()))
         {
-            return "Continue the assignment from "
+            return Text.get(1458)
                     + slayer.getMasterName()
                     + Text.get(773);
         }
@@ -190,7 +190,7 @@ public class SlayerGuidanceService
     }
 
     private static String firstOwned(
-            ObservedItemIndex items,
+            ItemIndex items,
             List<String> candidates)
     {
         for (String candidate : candidates)
@@ -201,7 +201,7 @@ public class SlayerGuidanceService
     }
 
     private static int restrictedOwned(
-            ObservedItemIndex items,
+            ItemIndex items,
             List<String> candidates)
     {
         int total = 0;
@@ -234,7 +234,7 @@ public class SlayerGuidanceService
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
                     Text.get(780));
         if (combat >= 85)
-            return new SlayerMasterChoice("Nieve/Steve", "Tree Gnome Stronghold",
+            return new SlayerMasterChoice("Nieve/Steve", Text.get(1459),
                     Text.get(781));
         if (combat >= 75)
             return new SlayerMasterChoice("Konar quo Maten", "Mount Karuulm",

@@ -30,7 +30,7 @@ public class TrainingMethodSelectorEvidenceTest
         {
             @Override
             public List<RequirementCheck> evaluate(
-                    StrategyDataBundle data,
+                    GameData data,
                     TrainingMethod method)
             {
                 if ("fast".equals(method.getId()))
@@ -69,7 +69,7 @@ public class TrainingMethodSelectorEvidenceTest
 
         assertEquals("safe", plan.getMethod().getId());
         assertEquals(
-                RecommendationConfidence.VERIFIED,
+                Confidence.VERIFIED,
                 plan.getConfidence()
         );
     }
@@ -92,7 +92,7 @@ public class TrainingMethodSelectorEvidenceTest
         {
             @Override
             public List<RequirementCheck> evaluate(
-                    StrategyDataBundle data, TrainingMethod method)
+                    GameData data, TrainingMethod method)
             {
                 if ("unknown-fast".equals(method.getId()))
                 {
@@ -133,7 +133,7 @@ public class TrainingMethodSelectorEvidenceTest
         {
             @Override
             public List<RequirementCheck> evaluate(
-                    StrategyDataBundle data, TrainingMethod method)
+                    GameData data, TrainingMethod method)
             {
                 RequirementCheck ready = new RequirementCheck(
                         "access:ready", "Ready", RequirementState.VERIFIED,
@@ -167,7 +167,7 @@ public class TrainingMethodSelectorEvidenceTest
                 10,
                 1,
                 Collections.singletonList("Required unlock"),
-                RecommendationConfidence.CHECK_NEEDED
+                Confidence.CHECK_NEEDED
         );
     }
 }

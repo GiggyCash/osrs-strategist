@@ -42,8 +42,8 @@ public class PlayerFacingScenarioQualityTest
                 1, StrategyMode.RELAXED, SessionIntent.AFK));
 
         StrategyEngine engine = engine();
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         for (Scenario scenario : scenarios)
         {
             StrategyResult result = engine.evaluate(data(scenario),
@@ -51,11 +51,11 @@ public class PlayerFacingScenarioQualityTest
             assertFalse(scenario.name, result.getRecommendations().isEmpty());
             Recommendation top = result.getRecommendations().get(0);
             assertTrue(scenario.name + ": "
-                            + RecommendationPresentation.compactText(top),
+                            + Presentation.compactText(top),
                     policy.canLeadQueue(top));
             assertNotNull(scenario.name, top.getGuidance());
             assertFalse(scenario.name, top.getGuidance().getLocation().trim().isEmpty());
-            String compact = RecommendationPresentation.compactText(top);
+            String compact = Presentation.compactText(top);
             assertTrue(scenario.name, compact.contains("WHERE"));
             assertTrue(scenario.name, compact.contains("DO"));
         }
@@ -72,11 +72,11 @@ public class PlayerFacingScenarioQualityTest
                 new F2pBaselineMethodCatalog(),
                 new TrainingMethodPolicy());
         return new StrategyEngine(new RecommendationEngine(selector), null,
-                null, null, new RecommendationActionabilityPolicy(),
+                null, null, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
-    private static StrategyDataBundle data(Scenario scenario)
+    private static GameData data(Scenario scenario)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -98,11 +98,11 @@ public class PlayerFacingScenarioQualityTest
                 scenario.membership,
                 scenario.membership == MembershipStatus.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
-        StrategyDataBundle.Builder builder = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()));
+        GameData.Builder builder = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()));
         if (scenario.type != 2)
-            builder.bank(new BankSnapshot(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(Collections.emptyList(), 1L));
         return builder.build();
     }
 

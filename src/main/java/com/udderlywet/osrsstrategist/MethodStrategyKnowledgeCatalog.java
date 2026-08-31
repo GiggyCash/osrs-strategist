@@ -89,7 +89,7 @@ public final class MethodStrategyKnowledgeCatalog
     private static MethodStrategyProfile genericProfile(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode,
             boolean bankLoop, Set<AccountMode> modes,
-            MethodExecutionProfile executionProfile)
+            MethodProfile executionProfile)
     {
         StrategySourceId source = accountSkillSource(
                 method.getSkill(), mode, metadata.isFreeToPlayAllowed());
@@ -113,7 +113,7 @@ public final class MethodStrategyKnowledgeCatalog
      */
     private static MethodInventoryFootprint typedFootprint(
             TrainingMethod method, TrainingMethodMetadata metadata,
-            MethodExecutionProfile executionProfile)
+            MethodProfile executionProfile)
     {
         boolean tearsDown = method.getSetupMinutes() >= 8;
         switch (method.getSkill())

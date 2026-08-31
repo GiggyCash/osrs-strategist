@@ -15,10 +15,10 @@ public class ObservedStateStoreLifecycleTest
     {
         ObservedStateStore store = new ObservedStateStore();
         store.setQuests(new QuestSnapshot(Collections.emptyMap()));
-        store.setGroupStorage(new GroupStorageSnapshot(true,
-                Collections.singletonList(new ItemStackSnapshot(1, "item", 50))));
+        store.setGroupStorage(new ItemsState(true,
+                Collections.singletonList(new ItemState(1, "item", 50))));
         store.setSlayer(new SlayerSnapshot("Abyssal demons", 100,
-                "Duradel", 200, RecommendationConfidence.VERIFIED));
+                "Duradel", 200, Confidence.VERIFIED));
         store.setPvm(PvmSnapshot.unknown());
         store.setRecurringOpportunities(new RecurringOpportunitySnapshot(
                 Collections.singletonMap("herb-run", 1L)));
@@ -26,14 +26,14 @@ public class ObservedStateStoreLifecycleTest
 
         store.clearForAccountChange();
 
-        assertNull(store.getQuests());
-        assertNull(store.getGroupStorage());
-        assertNull(store.getSlayer());
-        assertNull(store.getPvm());
-        assertNull(store.getRecurringOpportunities());
-        assertNull(store.getStorage());
+        assertNull(store.quests());
+        assertNull(store.groupStorage());
+        assertNull(store.slayer());
+        assertNull(store.pvm());
+        assertNull(store.recurringOpportunities());
+        assertNull(store.storage());
         assertEquals(CapabilityState.UNKNOWN,
-                store.getCapabilities().get("bank-observed"));
+                store.capabilities().get("bank-observed"));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ObservedStateStoreLifecycleTest
         store.clearForAccountChange();
         store.setQuests(second);
 
-        assertSame(second, store.getQuests());
+        assertSame(second, store.quests());
     }
 
     @Test
@@ -57,17 +57,17 @@ public class ObservedStateStoreLifecycleTest
         ObservedStateStore store = new ObservedStateStore();
         for (int i = 0; i < 100; i++)
         {
-            store.setGroupStorage(new GroupStorageSnapshot(true,
-                    Collections.singletonList(new ItemStackSnapshot(
+            store.setGroupStorage(new ItemsState(true,
+                    Collections.singletonList(new ItemState(
                             i + 1, "Account item", 1))));
             store.setSlayer(new SlayerSnapshot("Task " + i, i + 1,
-                    "Master", 0, RecommendationConfidence.VERIFIED));
+                    "Master", 0, Confidence.VERIFIED));
             store.setRecurringOpportunities(new RecurringOpportunitySnapshot(
                     Collections.singletonMap("ready:" + i, (long) i)));
             store.clearForAccountChange();
-            assertNull(store.getGroupStorage());
-            assertNull(store.getSlayer());
-            assertNull(store.getRecurringOpportunities());
+            assertNull(store.groupStorage());
+            assertNull(store.slayer());
+            assertNull(store.recurringOpportunities());
         }
     }
 }

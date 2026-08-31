@@ -21,14 +21,14 @@ public class ContextualGearDecisionServiceTest
                 .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
                 .findFirst().orElseThrow(AssertionError::new);
         StrategyContext context = context(1,
-                new BankSnapshot(Arrays.asList(
-                        new ItemStackSnapshot(1, "Crystal body", 1)), 1L));
+                new ItemsState(Arrays.asList(
+                        new ItemState(1, "Crystal body", 1)), 1L));
 
         ContextualGearAssessment assessment =
                 new ContextualGearDecisionService().assess(entry, context);
 
         assertEquals(GearDecisionKind.values().length, assessment.all().size());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 assessment.get(GearDecisionKind.BEST_OWNED).getConfidence());
         assertEquals("Crystal body",
                 assessment.get(GearDecisionKind.BEST_OWNED).getValue());
@@ -51,7 +51,7 @@ public class ContextualGearDecisionServiceTest
 
         assertTrue(assessment.get(GearDecisionKind.BEST_OWNED).getValue()
                 .contains("Open the bank"));
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 assessment.get(GearDecisionKind.BEST_OWNED).getConfidence());
         assertFalse(ContextualGearDecisionService.isExactOwnershipTarget(
                 "Dragon/Avernic defender"));
@@ -66,7 +66,7 @@ public class ContextualGearDecisionServiceTest
                 .forStyle(CombatStyle.MELEE_SLASH).stream()
                 .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
                 .findFirst().orElseThrow(AssertionError::new);
-        BankSnapshot observed = new BankSnapshot(Collections.emptyList(), 1L);
+        ItemsState observed = new ItemsState(Collections.emptyList(), 1L);
         ContextualGearDecisionService service =
                 new ContextualGearDecisionService();
 
@@ -78,7 +78,7 @@ public class ContextualGearDecisionServiceTest
         assertTrue(main, main.contains("live price"));
     }
 
-    private static StrategyContext context(int type, BankSnapshot bank)
+    private static StrategyContext context(int type, ItemsState bank)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -90,9 +90,9 @@ public class ContextualGearDecisionServiceTest
         AccountSnapshot account = new AccountSnapshot("Gear", 301L, type,
                 AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
                 1, 80 * Skill.values().length, 0L, levels, xp);
-        StrategyDataBundle.Builder data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+        GameData.Builder data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .quests(new QuestSnapshot(Collections.emptyMap()));
         if (bank != null) data.bank(bank);
         return new StrategyContext(data.build(), StrategyMode.BALANCED,

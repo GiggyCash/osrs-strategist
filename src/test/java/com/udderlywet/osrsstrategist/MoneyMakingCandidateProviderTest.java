@@ -26,13 +26,13 @@ public class MoneyMakingCandidateProviderTest
         assertEquals(1, candidates.size());
         Recommendation candidate = candidates.get(0);
         assertEquals("money:agility-pyramid", candidate.getId());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 candidate.getConfidence());
         assertTrue(candidate.getGuidance().getAction().contains("10,000 coins"));
         assertTrue(candidate.getGuidance().getSupplies()
                 .contains("four waterskin(4)s"));
         assertTrue(candidate.getGuidance().getLocation().contains("Nardah"));
-        assertTrue(new RecommendationActionabilityPolicy()
+        assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(candidate));
     }
 
@@ -63,11 +63,11 @@ public class MoneyMakingCandidateProviderTest
         AccountSnapshot account = new AccountSnapshot("Money test", type,
                 AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
                 1, total, totalXp, levels, xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
+        GameData data = GameData.builder(account)
                 .economy(new AccountEconomySnapshot(10_000L, 10_000L,
-                        RecommendationConfidence.VERIFIED))
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
+                        Confidence.VERIFIED))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR, QuestTolerance.NORMAL,

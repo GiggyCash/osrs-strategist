@@ -58,8 +58,8 @@ public class ProductConstitutionGuardTest
     @Test
     public void placeholderLocationsAndActionsCannotReachDoNext()
     {
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         assertFalse(policy.canLeadQueue(nonSkill(
                 "Choose the best available method.", "Any bank.")));
         assertFalse(policy.canLeadQueue(nonSkill(
@@ -75,8 +75,8 @@ public class ProductConstitutionGuardTest
     @Test
     public void antiSlopFamiliesFailAsSemanticClasses()
     {
-        RecommendationActionabilityPolicy policy =
-                new RecommendationActionabilityPolicy();
+        ActionabilityPolicy policy =
+                new ActionabilityPolicy();
         String[][] vague = {
                 {"Craft whichever rune is useful.", "Earth Altar."},
                 {"Use a reachable tree and repeat.", "A training area."},
@@ -98,11 +98,11 @@ public class ProductConstitutionGuardTest
     {
         Recommendation vague = new Recommendation("upgrade:vague",
                 "Get better gear", "Reason", 10, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance("Inspect the current loadout.",
+                Confidence.VERIFIED, 0, 0,
+                new Guidance("Inspect the current loadout.",
                         "No supplies.", "Lumbridge Castle courtyard.", null),
-                CandidateSafetyEvidence.harmless(true));
-        assertFalse(new RecommendationActionabilityPolicy()
+                SafetyEvidence.harmless(true));
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(vague));
 
         for (Skill skill : Skill.values())
@@ -110,14 +110,14 @@ public class ProductConstitutionGuardTest
             Recommendation categoryOnly = new Recommendation(
                     "skill:" + skill.name().toLowerCase(),
                     "Train " + skill.getName(), "Reason", 10, null,
-                    RecommendationConfidence.VERIFIED, 1, 2,
-                    new RecommendationGuidance(
+                    Confidence.VERIFIED, 1, 2,
+                    new Guidance(
                             "Complete the named training loop.",
                             "Required setup.",
                             "Lumbridge Castle courtyard.", null),
-                    CandidateSafetyEvidence.skill(true, skill));
+                    SafetyEvidence.skill(true, skill));
             assertFalse(skill.getName(),
-                    new RecommendationActionabilityPolicy()
+                    new ActionabilityPolicy()
                             .canLeadQueue(categoryOnly));
         }
     }
@@ -129,16 +129,16 @@ public class ProductConstitutionGuardTest
                 "runecraft_f2p_earth", Skill.RUNECRAFT, 9, 13,
                 "Craft earth runes", "Earth Altar northeast of Varrock.",
                 1, 1, 1, AttentionLevel.MODERATE, 10, 2,
-                Collections.emptyList(), RecommendationConfidence.VERIFIED);
+                Collections.emptyList(), Confidence.VERIFIED);
         Recommendation recommendation = new Recommendation(
                 "skill:runecraft", "Train Runecraft to 10", "Progress.", 10,
                 new TrainingPlan(method, "Concrete route",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 9, 10,
-                new RecommendationGuidance(
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 9, 10,
+                new Guidance(
                         "Craft water runes until level 10.", "Pure essence.",
                         "Earth Altar northeast of Varrock.", null));
-        assertFalse(new RecommendationActionabilityPolicy()
+        assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(recommendation));
     }
 
@@ -146,7 +146,7 @@ public class ProductConstitutionGuardTest
     public void alternativesRepresentDifferentActivityDimensions()
     {
         StrategyEngine engine = new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy());
+                new ActionabilityPolicy());
         java.util.List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(
                         nonSkill("Defeat boss A.", "Boss arena A."),
@@ -163,9 +163,9 @@ public class ProductConstitutionGuardTest
                 : action.contains("B") ? "pvm:b" : "upgrade:test";
         return new Recommendation(id, "Concrete recommendation", "Reason.",
                 id.endsWith("a") ? 30 : 20, null,
-                RecommendationConfidence.VERIFIED, 0, 0,
-                new RecommendationGuidance(action, "Required setup.",
-                        location, null), CandidateSafetyEvidence.harmless(true));
+                Confidence.VERIFIED, 0, 0,
+                new Guidance(action, "Required setup.",
+                        location, null), SafetyEvidence.harmless(true));
     }
 
     private static Recommendation skill()
@@ -174,15 +174,15 @@ public class ProductConstitutionGuardTest
                 "mining_iron", Skill.MINING, 15, 99, "Mine iron",
                 "Mine iron in the south-east Varrock mine.", 1, 1, 1,
                 AttentionLevel.MODERATE, 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation("skill:mining", "Train Mining to 40",
                 "Progress.", 10,
                 new TrainingPlan(method, "Concrete route",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 39, 40,
-                new RecommendationGuidance(
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 39, 40,
+                new Guidance(
                         "Mine iron, drop it, and repeat until level 40.",
                         "A usable pickaxe.", "South-east Varrock mine.", null),
-                CandidateSafetyEvidence.skill(true, Skill.MINING));
+                SafetyEvidence.skill(true, Skill.MINING));
     }
 }

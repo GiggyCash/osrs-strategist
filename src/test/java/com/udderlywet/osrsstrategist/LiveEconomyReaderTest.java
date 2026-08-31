@@ -26,20 +26,20 @@ public class LiveEconomyReaderTest
     public void mainCountsCoinsTokensAndObservedBankValue()
     {
         LiveEconomyReader reader = new LiveEconomyReader(prices);
-        InventorySnapshot inventory = new InventorySnapshot(Arrays.asList(
-                new ItemStackSnapshot(995, "Coins", 5000),
-                new ItemStackSnapshot(13204, "Platinum token", 2)));
-        BankSnapshot bank = new BankSnapshot(Arrays.asList(
-                new ItemStackSnapshot(995, "Coins", 10000),
-                new ItemStackSnapshot(1515, "Yew logs", 10),
-                new ItemStackSnapshot(1517, "Maple logs", 20)), 1L);
+        ItemsState inventory = new ItemsState(Arrays.asList(
+                new ItemState(995, "Coins", 5000),
+                new ItemState(13204, "Platinum token", 2)));
+        ItemsState bank = new ItemsState(Arrays.asList(
+                new ItemState(995, "Coins", 10000),
+                new ItemState(1515, "Yew logs", 10),
+                new ItemState(1517, "Maple logs", 20)), 1L);
 
         AccountEconomySnapshot economy = reader.read(
                 account(0), inventory, bank);
 
         assertEquals(17000L, economy.getCoins());
         assertEquals(20000L, economy.getEstimatedBankValue());
-        assertEquals(RecommendationConfidence.VERIFIED,
+        assertEquals(Confidence.VERIFIED,
                 economy.getConfidence());
     }
 
@@ -49,12 +49,12 @@ public class LiveEconomyReaderTest
         LiveEconomyReader reader = new LiveEconomyReader(prices);
         AccountEconomySnapshot economy = reader.read(
                 account(0),
-                new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(995, "Coins", 5000))),
+                new ItemsState(Collections.singletonList(
+                        new ItemState(995, "Coins", 5000))),
                 null);
 
         assertEquals(5000L, economy.getCoins());
-        assertEquals(RecommendationConfidence.CHECK_NEEDED,
+        assertEquals(Confidence.CHECK_NEEDED,
                 economy.getConfidence());
     }
 
@@ -64,10 +64,10 @@ public class LiveEconomyReaderTest
         LiveEconomyReader reader = new LiveEconomyReader(prices);
         AccountEconomySnapshot economy = reader.read(
                 account(2),
-                new InventorySnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(995, "Coins", 1234))),
-                new BankSnapshot(Collections.singletonList(
-                        new ItemStackSnapshot(995, "Coins", 999999)), 1L));
+                new ItemsState(Collections.singletonList(
+                        new ItemState(995, "Coins", 1234))),
+                new ItemsState(Collections.singletonList(
+                        new ItemState(995, "Coins", 999999)), 1L));
 
         assertEquals(1234L, economy.getCoins());
         assertEquals(0L, economy.getEstimatedBankValue());

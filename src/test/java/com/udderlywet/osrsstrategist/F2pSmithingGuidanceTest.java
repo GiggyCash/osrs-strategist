@@ -21,11 +21,11 @@ public class F2pSmithingGuidanceTest
         RuneLiteSkillActionCatalog actions = new RuneLiteSkillActionCatalog()
         {
             @Override
-            public List<RuneLiteSkillActionDefinition> actionsFor(Skill skill)
+            public List<ActionDef> actionsFor(Skill skill)
             {
                 if (skill != Skill.SMITHING) return Collections.emptyList();
                 return Arrays.asList(
-                        new RuneLiteSkillActionDefinition(
+                        new ActionDef(
                                 Skill.SMITHING,
                                 "runelite:smithing:iron_bar",
                                 "Iron bar",
@@ -33,7 +33,7 @@ public class F2pSmithingGuidanceTest
                                 12.5f,
                                 null,
                                 MembershipStatus.F2P),
-                        new RuneLiteSkillActionDefinition(
+                        new ActionDef(
                                 Skill.SMITHING,
                                 "runelite:smithing:iron_2h_sword",
                                 "Iron 2h sword",
@@ -71,10 +71,10 @@ public class F2pSmithingGuidanceTest
                 0L,
                 levels,
                 xp);
-        StrategyDataBundle data = StrategyDataBundle.builder(account)
-                .inventory(new InventorySnapshot(Collections.emptyList()))
-                .equipment(new EquipmentSnapshot(Collections.emptyList()))
-                .bank(new BankSnapshot(Collections.emptyList(), 1L))
+        GameData data = GameData.builder(account)
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();
 
         TrainingMethod method = new F2pBaselineMethodCatalog()
@@ -85,7 +85,7 @@ public class F2pSmithingGuidanceTest
                 .findFirst()
                 .orElseThrow(AssertionError::new);
 
-        RecommendationGuidance guidance = service.build(
+        Guidance guidance = service.build(
                 data,
                 Skill.SMITHING,
                 29,

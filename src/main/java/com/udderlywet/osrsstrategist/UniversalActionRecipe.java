@@ -8,17 +8,17 @@ import lombok.Getter;
 public final class UniversalActionRecipe
 {
     @Getter
-    private final List<ResolvedMethodInput> inputs;
+    private final List<MethodInput> inputs;
     @Getter
     private final String setup;
     private final boolean exactInputs;
 
     public UniversalActionRecipe(
-            List<ResolvedMethodInput> inputs,
+            List<MethodInput> inputs,
             String setup,
             boolean exactInputs)
     {
-        List<ResolvedMethodInput> copy = new ArrayList<>();
+        List<MethodInput> copy = new ArrayList<>();
         if (inputs != null) copy.addAll(inputs);
         this.inputs = Collections.unmodifiableList(copy);
         this.setup = setup;

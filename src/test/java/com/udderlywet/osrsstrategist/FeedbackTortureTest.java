@@ -75,7 +75,7 @@ public class FeedbackTortureTest
     private static StrategyEngine engine()
     {
         return new StrategyEngine(null, null, null, null,
-                new RecommendationActionabilityPolicy(),
+                new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
 
@@ -91,7 +91,7 @@ public class FeedbackTortureTest
         AccountSnapshot account = new AccountSnapshot("Feedback", 700L, 0,
                 "MAIN", MembershipStatus.P2P, 1,
                 70 * Skill.values().length, 0L, levels, xp);
-        return new StrategyContext(StrategyDataBundle.builder(account).build(),
+        return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.MAX, false, false, profile);
     }
@@ -103,13 +103,13 @@ public class FeedbackTortureTest
         TrainingMethod method = new TrainingMethod(id + ":method", skill,
                 1, 99, title, "Use the method.", 1, 1, 1,
                 AttentionLevel.LOW, 20, 2, Collections.emptyList(),
-                RecommendationConfidence.VERIFIED);
+                Confidence.VERIFIED);
         return new Recommendation(id, title, "Useful account progress.", score,
                 new TrainingPlan(method, "Useful account progress.",
-                        RecommendationConfidence.VERIFIED),
-                RecommendationConfidence.VERIFIED, 70, 71,
-                new RecommendationGuidance("Do it now.",
+                        Confidence.VERIFIED),
+                Confidence.VERIFIED, 70, 71,
+                new Guidance("Do it now.",
                         "Setup verified.", "Safe location.", "Useful."),
-                CandidateSafetyEvidence.skill(false, skill));
+                SafetyEvidence.skill(false, skill));
     }
 }

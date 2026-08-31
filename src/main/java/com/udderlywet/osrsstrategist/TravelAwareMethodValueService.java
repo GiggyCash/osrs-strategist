@@ -35,12 +35,12 @@ public final class TravelAwareMethodValueService
     public TravelAwareMethodAssessment assess(MethodLocationProfile profile,
             StrategyContext context)
     {
-        if (profile == null || context == null || context.getData() == null
-                || context.getData().getAccount() == null)
+        if (profile == null || context == null || context.data() == null
+                || context.data().account() == null)
         {
             return null;
         }
-        AccountSnapshot account = context.getData().getAccount();
+        AccountSnapshot account = context.data().account();
         MethodLocationOption selected = profile.getLocations().stream()
                 .filter(option -> !option.isMembersOnly()
                         || account.getMembershipStatus() == MembershipStatus.P2P)
@@ -60,7 +60,7 @@ public final class TravelAwareMethodValueService
         int adjustment = Math.max(-6, Math.min(4, 3 - burden));
         String evidence = routed
                 ? "Verified route " + selected.getAdvantageousRouteId()
-                        + " lowers travel/setup burden for "
+                        + Text.get(1297)
                         + selected.getName() + "."
                 : Text.get(895)
                         + selected.getName() + ".";

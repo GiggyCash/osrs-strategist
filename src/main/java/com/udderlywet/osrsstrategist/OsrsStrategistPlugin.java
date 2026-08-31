@@ -72,7 +72,7 @@ public class OsrsStrategistPlugin extends Plugin
     private boolean savingProfileConfiguration;
     private PlayerStrategyProfile strategyProfile;
     private TrackedMilestone trackedMilestone;
-    private StrategyDataBundle latestData;
+    private GameData latestData;
     private List<Recommendation> latestRecommendations = Collections.emptyList();
     private StrategicPlan latestPlan;
     private ProgressHistory progressHistory = new ProgressHistory();
@@ -316,8 +316,8 @@ public class OsrsStrategistPlugin extends Plugin
                     fatigue.getDurationMillis());
         }
         if (fatigue.isPresent() || latestData == null
-                || latestData.getAccount() == null
-                || latestData.getAccount().getSkillLevel(event.getSkill())
+                || latestData.account() == null
+                || latestData.account().getSkillLevel(event.getSkill())
                         != event.getLevel())
         {
             accountRefreshPending = true;
@@ -528,7 +528,7 @@ public class OsrsStrategistPlugin extends Plugin
         else
         {
             AccountSnapshot account = latestData == null
-                    ? null : latestData.getAccount();
+                    ? null : latestData.account();
             recommendationDetailsOverlay.showRecommendation(recommendation,
                     GoalRecommendationContext.assess(
                             effectiveStrategyProfile().getActiveGoal(),
@@ -550,7 +550,7 @@ public class OsrsStrategistPlugin extends Plugin
                 result.getRecommendations());
         updateTrackedMilestone(
                 result.getRecommendations(),
-                latestData.getCollectionLog());
+                latestData.collectionLog());
         updateGuidance(result, latestData);
         updateProgressTarget(result);
 
@@ -568,7 +568,7 @@ public class OsrsStrategistPlugin extends Plugin
         else SwingUtilities.invokeLater(update);
     }
 
-    private StrategyResult evaluate(StrategyDataBundle data, PlayerStrategyProfile profile)
+    private StrategyResult evaluate(GameData data, PlayerStrategyProfile profile)
     {
         return strategyEngine.evaluate(
                 data,
@@ -583,7 +583,7 @@ public class OsrsStrategistPlugin extends Plugin
     }
 
     private StrategyResult evaluateAndStabilize(
-            StrategyDataBundle data, PlayerStrategyProfile profile)
+            GameData data, PlayerStrategyProfile profile)
     {
         StrategyResult fresh = recommendationStabilizer.stabilize(
                 latestRecommendations, evaluate(data, profile));
@@ -649,7 +649,7 @@ public class OsrsStrategistPlugin extends Plugin
         else SwingUtilities.invokeLater(update);
     }
 
-    private void updateGuidance(StrategyResult result, StrategyDataBundle data)
+    private void updateGuidance(StrategyResult result, GameData data)
     {
         if (!OverlayDisplayState.from(config).showsMethodGuidance(
                     recommendationDetailsOverlay.hasRecommendation())
@@ -795,8 +795,8 @@ public class OsrsStrategistPlugin extends Plugin
         if (panel == null) return;
         lastStrategyRefreshAtMillis = System.currentTimeMillis();
         final long generation = uiGeneration.next();
-        StrategyDataBundle data = strategyDataAssembler.read();
-        if (data == null || data.getAccount() == null)
+        GameData data = strategyDataAssembler.read();
+        if (data == null || data.account() == null)
         {
             latestData = null;
             latestRecommendations = Collections.emptyList();
@@ -822,7 +822,7 @@ public class OsrsStrategistPlugin extends Plugin
         syncStrategyProfile();
         syncMilestoneProfile();
         syncRecommendationHistory();
-        syncProgressHistory(data.getAccount());
+        syncProgressHistory(data.account());
         for (ProgressMilestone milestone : progressMilestoneDetector.observe(
                 data, effectiveStrategyProfile().getActiveGoal(),
                 System.currentTimeMillis()))
@@ -831,7 +831,7 @@ public class OsrsStrategistPlugin extends Plugin
 
         TrackedMilestone completedCheckpoint = trackedMilestone;
         MilestoneCompletion completion = milestoneTracker.detectCompletion(
-                completedCheckpoint, data.getAccount());
+                completedCheckpoint, data.account());
         if (completion != null)
         {
             if (completedCheckpoint == null
@@ -871,10 +871,10 @@ public class OsrsStrategistPlugin extends Plugin
                 result.getRecommendations());
         updateTrackedMilestone(
                 result.getRecommendations(),
-                data.getCollectionLog());
+                data.collectionLog());
         updateGuidance(result, data);
         updateProgressTarget(result);
-        AccountSnapshot account = data.getAccount();
+        AccountSnapshot account = data.account();
 
         SwingUtilities.invokeLater(() ->
         {

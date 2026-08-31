@@ -73,7 +73,7 @@ public class TrainingMethodCensusTest
 
     private static int level(RuneLiteSkillActionCatalog catalog, String id)
     {
-        for (RuneLiteSkillActionDefinition action
+        for (ActionDef action
                 : catalog.actionsFor(Skill.AGILITY))
             if (id.equals(action.getId())) return action.getLevel();
         throw new AssertionError("Missing action " + id);
@@ -82,7 +82,7 @@ public class TrainingMethodCensusTest
     private static float xp(RuneLiteSkillActionCatalog catalog, String id)
     {
         for (Skill skill : Skill.values())
-            for (RuneLiteSkillActionDefinition action
+            for (ActionDef action
                     : catalog.actionsFor(skill))
                 if (id.equals(action.getId())) return action.getXp();
         throw new AssertionError("Missing action " + id);
