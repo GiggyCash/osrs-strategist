@@ -1,0 +1,186 @@
+[
+  {
+    "ids": [
+      "firemaking_wintertodt"
+    ],
+    "action": "Chop bruma roots, feed and repair braziers, reach at least 500 personal points, then repeat until you gain {xp} Firemaking XP for level {target}. Fletch only when needed to secure the 500-point threshold.",
+    "supplies": "Equip four warm items and bring a knife, hammer, and cakes. Each cake bite heals at least 4 Hitpoints and restores 35% warmth under the current warmth system. {observed}",
+    "location": "Wintertodt camp in northern Great Kourend.",
+    "note": "Round length, interruptions, fletching, and player levels change XP per game. Exact XP remaining is shown without inventing a fixed kill count.",
+    "observed": [
+      "Cake",
+      "Bruma torch",
+      "Warm gloves",
+      "Pyromancer hood",
+      "Pyromancer garb",
+      "Pyromancer robe",
+      "Pyromancer boots"
+    ]
+  },
+  {
+    "ids": [
+      "fishing_karambwan"
+    ],
+    "action": "Load the vessel with raw karambwanji, fish the static spot until full, take fairy ring DKP to Zanaris, bank, return through the Zanaris ring to DKP, and repeat until you gain {xp} Fishing XP for level {target}.",
+    "supplies": "Bring a karambwan vessel, raw karambwanji, and a dramen or lunar staff unless staffless fairy-ring use is unlocked. {observed}",
+    "location": "Karambwan fishing spot north of fairy ring DKP on north-east Karamja.",
+    "note": "The static spot and stackable bait make this the low-attention option. Faster bank teleports can improve the loop later without being assumed here.",
+    "observed": [
+      "Karambwan vessel",
+      "Raw karambwanji",
+      "Fish barrel"
+    ]
+  },
+  {
+    "ids": [
+      "runecraft_zmi"
+    ],
+    "action": "Fill every usable essence pouch, follow the safe altar path, craft the mixed rune result, bank, and repeat until you gain {xp} Runecraft XP for level {target}.",
+    "supplies": "Bring pure essence and every usable essence pouch; leave inventory space for the mixed runes. {observed}",
+    "location": "Ourania Altar, southwest of Ardougne.",
+    "note": "Ourania produces a mix of runes, and XP per essence depends on the result distribution and account level. Treat the remaining essence count as variable.",
+    "observed": [
+      "Small pouch",
+      "Medium pouch",
+      "Large pouch",
+      "Giant pouch",
+      "Colossal pouch",
+      "Ourania teleport"
+    ]
+  },
+  {
+    "ids": [
+      "mining_mlm"
+    ],
+    "action": "Mine pay-dirt on the lower level, clean it through the hopper, empty the sack, bank the ores, and repeat until you gain {xp} Mining XP for level {target}. Keep golden nuggets for planned unlocks.",
+    "supplies": "Bring {pickaxe}. {observed}",
+    "location": "Motherlode Mine beneath Falador.",
+    "note": "Vein uptime and pay-dirt flow vary. Golden-nugget goals such as Prospector or upper-level access can remain protected beyond an arbitrary level milestone.",
+    "observed": [
+      "Prospector helmet",
+      "Prospector jacket",
+      "Prospector legs",
+      "Prospector boots"
+    ],
+    "tool": "pickaxe"
+  },
+  {
+    "ids": [
+      "mining_volcanic"
+    ],
+    "action": "Perform the already verified team role and complete Volcanic Mine rounds until you gain {xp} Mining XP for level {target}.",
+    "supplies": "Bring {pickaxe} plus the food and stamina supplies in the verified team-role setup.",
+    "location": "Volcanic Mine on Fossil Island.",
+    "note": "Vent state, role, boulder phase, and points change XP per game, so no fixed game count is shown.",
+    "observed": [],
+    "tool": "pickaxe"
+  },
+  {
+    "ids": [
+      "mining_blast_mine"
+    ],
+    "action": "Place dynamite, light it, move clear, excavate the blasted rock, collect the ore, and repeat until you gain {xp} Mining XP for level {target}.",
+    "supplies": "Bring dynamite and {pickaxe}. {observed}",
+    "location": "Blast Mine in Lovakengj.",
+    "note": "Ore tier and timing affect XP and dynamite use, so the plugin keeps the exact XP gap without claiming a universal dynamite count.",
+    "observed": [
+      "Dynamite"
+    ],
+    "tool": "pickaxe"
+  },
+  {
+    "ids": [
+      "herblore_mixology"
+    ],
+    "action": "Complete all three displayed potion orders together for the 40% resin bonus, then take the next three. Repeat until you gain {xp} Herblore XP toward level {target}.",
+    "supplies": "Bring herbs already committed to Mixology and convert them into the displayed Mox, Aga, and Lye paste shortfalls. {observed}",
+    "location": "Alchemical Society in Aldarin.",
+    "note": "Order combinations change continuously. Exact paste-to-level counts require live order state; XP per order is not assumed constant.",
+    "observed": [
+      "Mox paste",
+      "Aga paste",
+      "Lye paste",
+      "Digweed"
+    ]
+  },
+  {
+    "ids": [
+      "farming_falador_potatoes"
+    ],
+    "action": "Rake one allotment, plant three potato seeds, leave while they grow, then return with a spade to harvest and replant; repeat this loop until you gain {xp} Farming XP toward level {target}.",
+    "supplies": "Bring three potato seeds, a rake, seed dibber, and spade. Buy tools from Sarah at the farm and potato seeds from Olivia in Draynor Village when missing. {observed}",
+    "location": "South Falador Farm allotments, between Falador and Port Sarim.",
+    "note": "Harvest yield and disease are variable, so Compass does not invent a seed-to-level count. Compost is optional but reduces disease and improves yield.",
+    "observed": [
+      "Potato seed",
+      "Rake",
+      "Seed dibber",
+      "Spade"
+    ]
+  },
+  {
+    "ids": [
+      "farming_falador_watermelons"
+    ],
+    "action": "Rake one allotment, plant three watermelon seeds, leave while they grow, then return with a spade to harvest and replant. Repeat until you gain {xp} Farming XP toward level {target}.",
+    "supplies": "Bring three watermelon seeds, a rake, seed dibber, and spade. If seeds are missing, pickpocket Master Farmers in Draynor Village until you have three; the number of pickpockets is variable. {observed}",
+    "location": "South Falador Farm allotments, between Falador and Port Sarim.",
+    "note": "Harvest yield and disease are variable, so Compass does not invent a seed-to-level count. Compost is optional but reduces disease and improves yield.",
+    "observed": [
+      "Watermelon seed",
+      "Rake",
+      "Seed dibber",
+      "Spade"
+    ]
+  },
+  {
+    "ids": [
+      "hunter_herbiboar"
+    ],
+    "action": "Track and harvest herbiboars until you gain {xp} Hunter XP toward level {target}. Bank or process herbs according to the account's Herblore needs.",
+    "supplies": "Bring a herb sack when owned, plus stamina or graceful-style movement support if useful. {observed}",
+    "location": "Herbiboar hunting area on Fossil Island.",
+    "note": "Track length and herb rewards vary. Iron accounts may prefer this over higher raw Hunter XP when Herblore supplies are scarce.",
+    "observed": [
+      "Herb sack",
+      "Magic secateurs",
+      "Graceful hood",
+      "Graceful top",
+      "Graceful legs",
+      "Graceful boots"
+    ]
+  },
+  {
+    "ids": [
+      "thieving_pyramid"
+    ],
+    "action": "Run Pyramid Plunder and spend most of the timer in the highest rooms you can access until you gain {xp} Thieving XP toward level {target}.",
+    "supplies": "Bring food or healing, antipoison if your route needs it, and free inventory space for loot. {observed}",
+    "location": "Pyramid Plunder in Sophanem.",
+    "note": "Room access, failed traps, chest and sarcophagus choices, and sceptre hunting change XP per run, so no fixed run count is shown.",
+    "observed": [
+      "Pharaoh's sceptre",
+      "Dodgy necklace",
+      "Antipoison(4)",
+      "Superantipoison(4)"
+    ]
+  },
+  {
+    "ids": [
+      "thieving_varlamore"
+    ],
+    "action": "Pickpocket wealthy citizens when a street urchin distracts them until you obtain a house key. Unlock an empty house, search the wardrobes, chests, and jewellery cases, take each flashing-object bonus, escape through the window, and repeat until you gain {xp} Thieving XP toward level {target}.",
+    "supplies": "Bring a chisel for blessed bone statuettes and leave inventory space for valuables. {observed}",
+    "location": "Wealthy citizens in the Civitas illa Fortis bazaar, then Caius', Victor's, or Lavinia's empty house in the south-west city.",
+    "note": "House availability and loop timing vary, so exact XP remaining is shown without claiming a fixed number of robberies.",
+    "observed": [
+      "House key",
+      "Chisel",
+      "Dodgy necklace",
+      "Rogue top",
+      "Rogue trousers",
+      "Rogue gloves",
+      "Rogue boots"
+    ]
+  }
+]

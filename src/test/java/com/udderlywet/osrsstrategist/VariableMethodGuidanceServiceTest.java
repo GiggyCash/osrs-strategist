@@ -179,6 +179,37 @@ public class VariableMethodGuidanceServiceTest
                 guidance.getLocation());
     }
 
+    @Test
+    public void bundledStaticProfilesRenderWithoutLosingPlaceholders()
+    {
+        String[] ids = {
+                "firemaking_wintertodt", "fishing_karambwan",
+                "runecraft_zmi", "mining_mlm", "mining_volcanic",
+                "mining_blast_mine", "herblore_mixology",
+                "farming_falador_potatoes",
+                "farming_falador_watermelons", "hunter_herbiboar",
+                "thieving_pyramid", "thieving_varlamore"
+        };
+        Skill[] skills = {
+                Skill.FIREMAKING, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.MINING, Skill.MINING, Skill.MINING, Skill.HERBLORE,
+                Skill.FARMING, Skill.FARMING, Skill.HUNTER,
+                Skill.THIEVING, Skill.THIEVING
+        };
+        for (int i = 0; i < ids.length; i++)
+        {
+            RecommendationGuidance guidance = service.build(
+                    data(skills[i], 60,
+                            new ItemStackSnapshot(1275, "Rune pickaxe", 1)),
+                    skills[i], 60, 61, plan(ids[i], skills[i]), true);
+            assertNotNull(ids[i], guidance);
+            assertFalse(ids[i], guidance.getAction().contains("{xp}"));
+            assertFalse(ids[i], guidance.getAction().contains("{target}"));
+            assertFalse(ids[i], guidance.getSupplies().contains("{observed}"));
+            assertFalse(ids[i], guidance.getSupplies().contains("{pickaxe}"));
+        }
+    }
+
     private static StrategyDataBundle data(
             Skill skill,
             int level,
