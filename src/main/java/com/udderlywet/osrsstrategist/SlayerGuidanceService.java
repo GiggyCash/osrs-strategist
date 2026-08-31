@@ -64,8 +64,8 @@ public class SlayerGuidanceService
         String action = "Get a new Slayer assignment from " + master.name
                 + ". You need " + format(xpNeeded)
                 + " Slayer XP to level " + targetLevel + ".";
-        String supplies = "Do not pre-buy a task loadout before the assignment is known. Get the assignment first, then check its required protection, legal damage options, location, and supplies against the account's observed gear and storage.";
-        String note = master.reason + " Wilderness Slayer is intentionally excluded from automatic master selection because its risk must be explicitly enabled.";
+        String supplies = PlayerText.get("SGS34");
+        String note = master.reason + PlayerText.get("SGS35");
         return new RecommendationGuidance(action, supplies, master.location, note);
     }
 
@@ -98,7 +98,7 @@ public class SlayerGuidanceService
     {
         if (profile == null || profile.getRequiredProtection().isEmpty())
         {
-            return "No catalogued mandatory Slayer item is known for this task. Use the strongest build-legal sustainable setup you own; food, prayer, ammunition and rune quantities remain account/gear dependent rather than a fake fixed inventory.";
+            return PlayerText.get("SGS36");
         }
 
         List<String> required = profile.getRequiredProtection();
@@ -106,7 +106,7 @@ public class SlayerGuidanceService
         if (owned != null)
         {
             return "Verified: you own " + owned
-                    + ", which satisfies this task's catalogued protection/kill requirement. Keep it equipped or in inventory as the mechanic requires; then use the strongest build-legal sustainable gear around it.";
+                    + PlayerText.get("SGS37");
         }
 
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -116,29 +116,29 @@ public class SlayerGuidanceService
             int restricted = restrictedOwned(items, required);
             if (restricted > 0)
             {
-                return "You do not currently have a directly usable required task item. One is observed in retrieval-only UIM storage. Retrieve a legal option from: "
+                return PlayerText.get("SGS38")
                         + choices
-                        + ", but preserve the current inventory setup when the retrieval cost is worse than taking a different task route.";
+                        + PlayerText.get("SGS39");
             }
-            return "Acquire one legal task item just in time before continuing: "
+            return PlayerText.get("SGS40")
                     + choices
-                    + ". Normal bank state is ignored for UIM; inaccessible stored items require a retrieval step.";
+                    + PlayerText.get("SGS41");
         }
 
         if (!items.primaryOwnershipObserved())
         {
-            return "Open your bank once to verify the mandatory task item. Valid options include: "
+            return PlayerText.get("SGS42")
                     + choices + ".";
         }
 
         if (mode.isIronLike())
         {
-            return "No required task item is observed in usable storage. Self-source one legal option before continuing: "
+            return PlayerText.get("SGS43")
                     + choices + ".";
         }
-        return "No required task item is observed. Obtain one legal option before continuing: "
+        return PlayerText.get("SGS44")
                 + choices
-                + ". For a Main, compare live price and observed cash when the selected option is tradeable.";
+                + PlayerText.get("SGS45");
     }
 
     private static String taskLocation(
@@ -149,7 +149,7 @@ public class SlayerGuidanceService
         {
             return "Your live assignment specifies "
                     + slayer.getTaskLocation()
-                    + ". Use that area unless the task state changes.";
+                    + PlayerText.get("SGS46");
         }
         if (profile != null && hasText(profile.getPreferredLocation()))
         {
@@ -159,15 +159,15 @@ public class SlayerGuidanceService
         {
             return "Continue the assignment from "
                     + slayer.getMasterName()
-                    + ". If the task has multiple locations, prefer the safest reachable non-Wilderness option unless Wilderness methods are explicitly enabled.";
+                    + PlayerText.get("SGS47");
         }
-        return "Use the safest reachable non-Wilderness location for this task unless the assignment itself specifies an area or Wilderness methods are explicitly enabled.";
+        return PlayerText.get("SGS48");
     }
 
     private static String taskNote(AccountSnapshot account,
             SlayerTaskProfile profile)
     {
-        String base = "The remaining count comes from the live assignment. Slayer XP per kill varies with the assigned monster and variant, so no fixed kills-to-level estimate is shown.";
+        String base = PlayerText.get("SGS49");
         if (profile == null) return base;
         StringBuilder note = new StringBuilder();
         if (hasText(profile.getMechanicsNote()))
@@ -175,11 +175,11 @@ public class SlayerGuidanceService
             note.append(profile.getMechanicsNote()).append(" ");
         }
         if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
-            note.append("Multitarget Magic is supported for this task, but use it only when spellbook, runes, prayer, build, and the live location are ready. ");
+            note.append(PlayerText.get("SGS50"));
         if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
-            note.append("Cannon use is not confirmed for the live location; do not bring or place one yet. ");
+            note.append(PlayerText.get("SGS51"));
         if (profile.isWildernessVariantKnown())
-            note.append("A Wilderness variant exists, but the safe default remains non-Wilderness unless risk is explicitly enabled. ");
+            note.append(PlayerText.get("SGS52"));
         if (AccountMode.fromTypeCode(account.getAccountTypeCode()).isIronLike()
                 && !profile.getIronObjectives().isEmpty())
             note.append("Iron objective: ").append(String.join(", ",
@@ -232,24 +232,24 @@ public class SlayerGuidanceService
 
         if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
-                    "Highest standard master available at 100 combat and 50 Slayer after Shilo Village.");
+                    PlayerText.get("SGS53"));
         if (combat >= 85)
             return new SlayerMasterChoice("Nieve/Steve", "Tree Gnome Stronghold",
-                    "High-level master available from 85 combat.");
+                    PlayerText.get("SGS54"));
         if (combat >= 75)
             return new SlayerMasterChoice("Konar quo Maten", "Mount Karuulm",
-                    "Available from 75 combat; assignments require her specified location.");
+                    PlayerText.get("SGS55"));
         if (combat >= 70 && complete(quests, "Lost City"))
             return new SlayerMasterChoice("Chaeldar", "Zanaris",
-                    "Available from 70 combat after Lost City.");
+                    PlayerText.get("SGS56"));
         if (combat >= 40)
             return new SlayerMasterChoice("Vannaka", "Edgeville Dungeon",
-                    "Available from 40 combat without adding a Wilderness requirement.");
+                    PlayerText.get("SGS57"));
         if (combat >= 20 && complete(quests, "Priest in Peril"))
             return new SlayerMasterChoice("Mazchna/Achtryn", "Canifis",
-                    "Available from 20 combat after Priest in Peril.");
+                    PlayerText.get("SGS58"));
         return new SlayerMasterChoice("Turael/Aya", "Burthorpe",
-                "No combat-level requirement; this is the safe baseline when a higher master is not verified.");
+                PlayerText.get("SGS59"));
     }
 
     /** Mirrors the standard OSRS combat-level formula closely enough for gates. */

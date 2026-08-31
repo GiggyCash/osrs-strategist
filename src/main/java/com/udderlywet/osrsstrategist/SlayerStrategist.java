@@ -84,13 +84,13 @@ public class SlayerStrategist
                 choice.getTaskName());
         double value = offerValue(choice, context);
         String modifier = describeModifier(choice);
-        String reason = "The live Mortimer interface exposes every offered task and modifier. "
-                + "Compass compared task XP, resources, duration, attention, setup and the modifier's value for this account and session.";
+        String reason = PlayerText.get("SS1")
+                + PlayerText.get("SS2");
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Select " + choice.getTaskName() + " with " + modifier
-                        + " in Mortimer's task-choice interface, then reopen Compass after the assignment count appears.",
-                "Do not prepare a combat loadout until the choice becomes the live assignment; its exact protection and supplies are evaluated next.",
-                "Mortimer's task-choice interface in Wyrmscraig Cavern.",
+                        + PlayerText.get("SS3"),
+                PlayerText.get("SS4"),
+                PlayerText.get("SS5"),
                 reason);
         return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
                 null, master, profile, 62.0 + value,
@@ -101,14 +101,14 @@ public class SlayerStrategist
     private SlayerDecisionResult unresolvedMortimerChoice(
             SlayerMasterProfile master)
     {
-        String reason = "At least one live Mortimer option or its modifier is not covered by the pinned RuneLite game data and reviewed task catalog.";
+        String reason = PlayerText.get("SS6");
         return new SlayerDecisionResult(SlayerAssignmentState.CHOICE_PENDING,
                 SlayerTaskDecision.PREP_FIRST, master, null, 34.0,
                 RecommendationConfidence.CHECK_NEEDED, reason,
                 new RecommendationGuidance(
-                        "Keep Mortimer's task-choice interface open and reopen Compass after every task and modifier name is visible.",
-                        "Do not select a task while Compass can see only part of the choice set.",
-                        "Mortimer's task-choice interface in Wyrmscraig Cavern.",
+                        PlayerText.get("SS7"),
+                        PlayerText.get("SS8"),
+                        PlayerText.get("SS9"),
                         reason));
     }
 
@@ -181,17 +181,17 @@ public class SlayerStrategist
         int next = slayer.getTaskStreak() == null
                 ? -1 : slayer.getTaskStreak() + 1;
         String milestone = next > 0 && SlayerPointEconomy.isBonusCompletion(next)
-                ? " This is task " + next + ", so its verified milestone point value is part of the choice."
+                ? " This is task " + next + PlayerText.get("SS10")
                 : "";
-        String reason = "Chosen from eligible masters by the reviewed assignment-pool value, task XP potential, point value, "
-                + "supply value, setup burden and location constraints." + milestone;
+        String reason = PlayerText.get("SS11")
+                + PlayerText.get("SS12") + milestone;
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Get your next Slayer assignment from " + choice.getDisplayName()
-                        + ". Return to Compass after the assignment appears so the task can be evaluated.",
-                "Do not pre-buy a task loadout. Keep only the transport needed to reach the master; task protection and supplies are decided after assignment.",
+                        + PlayerText.get("SS13"),
+                PlayerText.get("SS14"),
                 choice.getLocation() + ".",
                 reason + (choice.isWilderness()
-                        ? " This master is eligible only because Wilderness methods are explicitly enabled."
+                        ? PlayerText.get("SS15")
                         : ""));
         return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
                 choice, null, score, RecommendationConfidence.VERIFIED,
@@ -204,14 +204,14 @@ public class SlayerStrategist
         SlayerReward reward = advice.getReward();
         int remaining = slayer.getPoints() - reward.getPointCost();
         String reason = advice.getReason()
-                + " Live varbit evidence shows the reward is locked, and the purchase leaves "
-                + remaining + " points, including a 30-point cancellation reserve.";
+                + PlayerText.get("SS16")
+                + remaining + PlayerText.get("SS17");
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Buy " + reward.getDisplayName() + " for "
-                        + reward.getPointCost() + " Slayer points, then return to Compass for the next master.",
-                "No task loadout is needed. The live snapshot shows "
-                        + slayer.getPoints() + " points and confirms this reward is not unlocked.",
-                "Open the Slayer Rewards interface with any Slayer master.",
+                        + reward.getPointCost() + PlayerText.get("SS18"),
+                PlayerText.get("SS19")
+                        + slayer.getPoints() + PlayerText.get("SS20"),
+                PlayerText.get("SS21"),
                 reason);
         return new SlayerDecisionResult(SlayerAssignmentState.NO_TASK, null,
                 null, null, advice.getScore(), RecommendationConfidence.VERIFIED,
@@ -280,13 +280,13 @@ public class SlayerStrategist
                         taskStrategy.getRequiredItemUse()) == null)
             return preparation(slayer, master, taskStrategy, base,
                     taskStrategy.getRequiredItemUse() == SlayerRequiredItemUse.EQUIPPED
-                            ? "A catalogued mandatory task item is not observed in an equipped slot."
-                            : "A catalogued mandatory task item is not observed as directly usable.");
+                            ? PlayerText.get("SS22")
+                            : PlayerText.get("SS23"));
 
         String weapon = observedCombatWeapon(data.getEquipment());
         if (weapon == null)
             return preparation(slayer, master, taskStrategy, base,
-                    "No recognised combat weapon is observed in the live weapon slot.");
+                    PlayerText.get("SS24"));
         CombatStyle observedStyle = weaponStyle(weapon);
         if (taskStrategy.getRequiredCombatStyle() != null
                 && observedStyle != taskStrategy.getRequiredCombatStyle())
@@ -304,8 +304,8 @@ public class SlayerStrategist
                 items, weapon, observedStyle, slayer, data.getInventory());
 
         String reason = milestone
-                ? "Complete this safe task: the next completion is a verified Slayer point milestone, so preserving the streak outweighs an ordinary skip."
-                : "Do this task because its XP, resources, effort, setup, attention and session-fit properties clear the keep threshold.";
+                ? PlayerText.get("SS25")
+                : PlayerText.get("SS26");
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.DO, master, taskStrategy, 58.0 + value,
                 RecommendationConfidence.VERIFIED, reason, base);
@@ -434,26 +434,26 @@ public class SlayerStrategist
         if (slayer.getPoints() < SlayerPointEconomy.SKIP_COST)
         {
             RecommendationGuidance guidance = new RecommendationGuidance(
-                    "Do not enter the Wilderness. Ask Turael/Aya whether this exact task is eligible for safe replacement; accept only if the dialogue explicitly offers it.",
-                    "No Wilderness loadout is needed for this verification. Do not risk carried valuables.",
+                    PlayerText.get("SS27"),
+                    PlayerText.get("SS28"),
                     "Turael/Aya in Burthorpe.",
-                    "Only " + slayer.getPoints() + " Slayer points are observed, so Compass cannot claim a 30-point cancellation is available. Turael cannot replace tasks from his own assignment list.");
+                    "Only " + slayer.getPoints() + PlayerText.get("SS29"));
             return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                     SlayerTaskDecision.PREP_FIRST, master, task, 48.0,
                     RecommendationConfidence.CHECK_NEEDED,
-                    "Risk policy blocks the assignment, but the safe replacement path needs one explicit eligibility check.",
+                    PlayerText.get("SS30"),
                     guidance);
         }
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Do not enter the Wilderness. Spend 30 Slayer points to cancel this assignment, then obtain a non-Wilderness task.",
+                PlayerText.get("SS31"),
                 "The live snapshot shows " + slayer.getPoints()
-                        + " points, enough for the verified cancellation cost. No dangerous loadout is required.",
-                "Open Slayer rewards with any Slayer master.",
-                "The live assignment or master is Wilderness-bound and account risk policy rejects it before loadout selection.");
+                        + PlayerText.get("SS32"),
+                PlayerText.get("SS33"),
+                PlayerText.get("SS34"));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.ALTERNATIVE, master, task, 60.0,
                 RecommendationConfidence.VERIFIED,
-                "Use a safe assignment replacement instead of post-hoc Wilderness warnings.",
+                PlayerText.get("SS35"),
                 guidance);
     }
 
@@ -463,18 +463,18 @@ public class SlayerStrategist
     {
         RecommendationGuidance guidance = base == null
                 ? new RecommendationGuidance(
-                        "Check the assignment with an enchanted gem, Slayer ring, Slayer helmet, or the assigning master, then reopen Compass.",
-                        "Do not assume protection, weapon or supply requirements for an unreviewed task.",
-                        "Use the live assignment interface before travelling.",
-                        "The count is observed, but Compass lacks reviewed strategic or mechanical metadata for a safe verdict.")
+                        PlayerText.get("SS36"),
+                        PlayerText.get("SS37"),
+                        PlayerText.get("SS38"),
+                        PlayerText.get("SS39"))
                 : new RecommendationGuidance(
-                        "Review the shown task mechanics and verify a legal weapon, protection and supplies before beginning the assignment.",
+                        PlayerText.get("SS40"),
                         base.getSupplies(), base.getLocation(),
-                        "Compass recognises the assignment but has not reviewed it deeply enough to invent a do, skip, or block verdict. " + base.getNote());
+                        PlayerText.get("SS41") + base.getNote());
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 40.0,
                 RecommendationConfidence.CHECK_NEEDED,
-                "Task identity alone is not sufficient evidence for a strategic verdict.",
+                PlayerText.get("SS42"),
                 guidance);
     }
 
@@ -484,7 +484,7 @@ public class SlayerStrategist
     {
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Prepare the mandatory item for " + slayer.getTaskName()
-                        + ", then return to the live task before killing anything.",
+                        + PlayerText.get("SS43"),
                 base.getSupplies(), base.getLocation(), base.getNote());
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 48.0,
@@ -505,27 +505,27 @@ public class SlayerStrategist
         {
             action = "Bank before travelling and withdraw " + storedFood
                     + " for one " + slayer.getTaskName()
-                    + " trip, then return to Compass with it carried.";
+                    + PlayerText.get("SS44");
             supplies = "Keep " + storedFood
-                    + " in the inventory with the observed combat weapon and mandatory task item. Compass will not guess doses or a fixed trip quantity.";
+                    + PlayerText.get("SS45");
         }
         else if (mode == AccountMode.MAIN)
         {
-            action = "Buy cooked swordfish at the Grand Exchange, bank them, and carry a trip's healing before travelling to "
+            action = PlayerText.get("SS46")
                     + slayer.getTaskName() + ".";
-            supplies = "Cooked swordfish are a concrete tradeable fallback because no recognised healing food is observed in the carried inventory or bank. Recheck Compass after withdrawing them.";
+            supplies = PlayerText.get("SS47");
         }
         else
         {
             String route = selfSourcedFoodRoute(data.getAccount());
-            action = route + " Carry the cooked food, then return to Compass before starting "
+            action = route + PlayerText.get("SS48")
                     + slayer.getTaskName() + ".";
-            supplies = "No recognised carried or immediately usable stored healing is observed. Self-source the named food instead of receiving a Grand Exchange instruction.";
+            supplies = PlayerText.get("SS49");
         }
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 50.0,
                 RecommendationConfidence.CHECK_NEEDED,
-                "This kept assignment has material duration, setup, or danger, but no recognised healing item is carried.",
+                PlayerText.get("SS50"),
                 new RecommendationGuidance(action, supplies,
                         base.getLocation(), base.getNote()));
     }
@@ -536,14 +536,14 @@ public class SlayerStrategist
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Use the observed-ready " + task.getAlternativeName()
                         + " alternative for this " + slayer.getTaskName()
-                        + " assignment. Recheck Compass when the carried setup changes.",
-                "Keep the equipment and carried supplies already verified by the encounter-readiness check; do not substitute an unverified loadout.",
+                        + PlayerText.get("SS51"),
+                PlayerText.get("SS52"),
                 task.getAlternativeLocation() + ".",
-                "The boss/alternative is selected only because live PvM readiness is VERIFIED; merely having the Slayer task is not readiness evidence.");
+                PlayerText.get("SS53"));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.ALTERNATIVE, master, task, 64.0,
                 RecommendationConfidence.VERIFIED,
-                "A verified-ready alternative contributes more goal/resource value than the ordinary route.",
+                PlayerText.get("SS54"),
                 guidance, task.getAlternativeName());
     }
 
@@ -552,18 +552,18 @@ public class SlayerStrategist
             SlayerTaskStrategicProfile task, PvmReadiness readiness)
     {
         String missing = readiness == null || readiness.getMissingRequirements().isEmpty()
-                ? "Open the encounter preparation so Compass can verify its requirements and carried setup."
+                ? PlayerText.get("SS55")
                 : "Resolve: " + String.join(", ", readiness.getMissingRequirements()) + ".";
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Prepare for " + task.getAlternativeName()
-                        + " before accepting this boss-task route. " + missing,
-                "Do not use a generic Slayer loadout; the encounter readiness check must verify equipment and carried supplies.",
+                        + PlayerText.get("SS56") + missing,
+                PlayerText.get("SS57"),
                 task.getAlternativeLocation() + ".",
-                "A direct boss assignment is live, but a task count is not proof that the encounter is ready or safe.");
+                PlayerText.get("SS58"));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.PREP_FIRST, master, task, 49.0,
                 RecommendationConfidence.CHECK_NEEDED,
-                "Encounter-specific readiness is required before a direct boss task can lead.",
+                PlayerText.get("SS59"),
                 guidance);
     }
 
@@ -573,15 +573,15 @@ public class SlayerStrategist
     {
         RecommendationGuidance guidance = new RecommendationGuidance(
                 "Block " + slayer.getTaskName() + " in "
-                        + master.getDisplayName() + "'s Slayer rewards list, then get a replacement assignment.",
-                "This costs " + master.getBlockCost() + " Slayer points. The live snapshot proves enough points and an unused block slot.",
+                        + master.getDisplayName() + PlayerText.get("SS60"),
+                "This costs " + master.getBlockCost() + PlayerText.get("SS61"),
                 "Use the Slayer rewards interface for " + master.getDisplayName()
                         + "; blocks are master-specific.",
-                "Assignment weight " + weight + " and poor property score make a reusable block more valuable than repeated 30-point skips.");
+                "Assignment weight " + weight + PlayerText.get("SS62"));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.BLOCK, master, task, 59.0 - value,
                 RecommendationConfidence.VERIFIED,
-                "This frequently assigned task is a weak fit for the account, and the observed points and free block slot make blocking it practical.",
+                PlayerText.get("SS63"),
                 guidance);
     }
 
@@ -600,11 +600,11 @@ public class SlayerStrategist
                         + " points, enough for the verified " + cost
                         + "-point cancellation cost.",
                 "Open Slayer rewards with " + who + ".",
-                "The task's XP, resources, length, setup and session fit fall below the keep threshold; no block is claimed without known weight and slot evidence.");
+                PlayerText.get("SS64"));
         return new SlayerDecisionResult(SlayerAssignmentState.ASSIGNED,
                 SlayerTaskDecision.SKIP, master, task, 56.0 - value,
                 RecommendationConfidence.VERIFIED,
-                "Low property value and sufficient points justify one cancellation.",
+                PlayerText.get("SS65"),
                 guidance);
     }
 
@@ -613,12 +613,12 @@ public class SlayerStrategist
         return new SlayerDecisionResult(SlayerAssignmentState.UNKNOWN,
                 SlayerTaskDecision.PREP_FIRST, null, null, 32.0,
                 RecommendationConfidence.CHECK_NEEDED,
-                "Live state does not prove whether the account has an assignment.",
+                PlayerText.get("SS66"),
                 new RecommendationGuidance(
-                        "Talk to Turael or Aya in Burthorpe and ask about your current assignment, then reopen Compass after the task name and count appear.",
-                        "Do not prepare a task-specific loadout until the assignment name and count are visible.",
-                        "Turael and Aya, in the house south-east of Burthorpe Castle.",
-                        "Unknown assignment state is kept unknown; Compass does not treat missing evidence as no task."));
+                        PlayerText.get("SS67"),
+                        PlayerText.get("SS68"),
+                        PlayerText.get("SS69"),
+                        PlayerText.get("SS70")));
     }
 
     private static PvmReadiness alternativeReadiness(StrategyDataBundle data,
@@ -664,9 +664,9 @@ public class SlayerStrategist
         supplies.append(". ");
         if (healing != null)
             supplies.append("Carry the observed ").append(healing)
-                    .append(" as healing; no fixed trip quantity is claimed because damage and trip length vary.");
+                    .append(PlayerText.get("SS71"));
         else
-            supplies.append("This low-burden route does not require Compass to claim a fixed food inventory; leave if the observed setup stops being safe.");
+            supplies.append(PlayerText.get("SS72"));
         String action = "Kill the remaining " + slayer.getRemaining() + " "
                 + slayer.getTaskName() + " using " + weapon + " ("
                 + styleName(observedStyle) + ").";
@@ -791,12 +791,12 @@ public class SlayerStrategist
         int fishing = account == null ? 1 : account.getSkillLevel(Skill.FISHING);
         int cooking = account == null ? 1 : account.getSkillLevel(Skill.COOKING);
         if (fishing >= 50 && cooking >= 45)
-            return "Take a harpoon to Catherby's south-east shore, catch tuna and swordfish, cook the catch on the range just east of the bank, and bank the cooked fish.";
+            return PlayerText.get("SS73");
         if (fishing >= 40 && cooking >= 40)
-            return "Take a lobster pot to Catherby's south-east shore, cage lobsters, cook them on the range just east of the bank, and bank the cooked lobsters.";
+            return PlayerText.get("SS74");
         if (fishing >= 20 && cooking >= 15)
-            return "Take a fly fishing rod and feathers to Barbarian Village, catch trout and salmon, cook them on the permanent fire by the fishing spots, and bank the cooked fish in Edgeville.";
-        return "Take a small fishing net, tinderbox, and several logs to the east Lumbridge Swamp shore; net shrimp, light a fire there, cook them, and bank the cooked supply in Lumbridge Castle.";
+            return PlayerText.get("SS75");
+        return PlayerText.get("SS76");
     }
 
     private static String firstReadyItem(ObservedItemIndex items,

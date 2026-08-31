@@ -11,9 +11,9 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
     public String getId() { return "collection-log-candidates"; }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getCollectionLog() == null) return result;
 
@@ -38,11 +38,11 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
             if (context.isCollectionistMode()) score += 9.0;
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     id,
                     "Collection Log: " + category,
                     complete + "/" + total + " entries are observed complete ("
-                            + missing + " remaining). Identify the missing items and their account-appropriate sources before treating this as a concrete grind.",
+                            + missing + PlayerText.get("CLCP1"),
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     null,
@@ -50,7 +50,7 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 3) return new ArrayList<>(result.subList(0, 3));
         return result;
     }

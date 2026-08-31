@@ -4,21 +4,16 @@ import lombok.Getter;
 
 import net.runelite.api.Skill;
 
+@Getter
 public final class DiaryTaskRequirement
 {
     public enum Kind { SKILL, QUEST, COMBAT_LEVEL, QUEST_POINTS, ALTERNATIVE_CHECK }
 
-    @Getter
     private final Kind kind;
-    @Getter
     private final Skill skill;
-    @Getter
     private final int level;
-    @Getter
     private final String quest;
-    @Getter
     private final boolean startedOnly;
-    @Getter
     private final String check;
 
     private DiaryTaskRequirement(Kind kind, Skill skill, int level,

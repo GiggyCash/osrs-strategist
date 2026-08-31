@@ -7,17 +7,13 @@ import lombok.Getter;
 import net.runelite.api.Prayer;
 
 /** Directly observed spellbook selector and prayer state. */
+@Getter
 public final class CombatEvidenceSnapshot
 {
-    @Getter
     private final int spellbookSelector;
-    @Getter
     private final Set<Prayer> activePrayers;
-    @Getter
     private final boolean rigourUnlocked;
-    @Getter
     private final boolean auguryUnlocked;
-    @Getter
     private final boolean preserveUnlocked;
 
     public CombatEvidenceSnapshot(int spellbookSelector,

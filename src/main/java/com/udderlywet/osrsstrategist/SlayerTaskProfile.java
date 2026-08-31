@@ -5,29 +5,19 @@ import java.util.*;
 import lombok.Getter;
 
 /** Conservative task-specific Slayer knowledge without fake DPS precision. */
+@Getter
 public final class SlayerTaskProfile
 {
-    @Getter
     private final String id;
-    @Getter
     private final List<String> aliases;
-    @Getter
     private final List<String> requiredProtection;
-    @Getter
     private final String preferredLocation;
-    @Getter
     private final String styleGuidance;
-    @Getter
     private final String mechanicsNote;
-    @Getter
     private final CapabilityState cannonEligibility;
-    @Getter
     private final CapabilityState multiTargetMagicEligibility;
-    @Getter
     private final boolean wildernessVariantKnown;
-    @Getter
     private final List<String> ironObjectives;
-    @Getter
     private final String taskDecisionGuidance;
 
     public SlayerTaskProfile(
@@ -64,7 +54,7 @@ public final class SlayerTaskProfile
         this.wildernessVariantKnown = wildernessVariantKnown;
         this.ironObjectives = immutable(ironObjectives);
         this.taskDecisionGuidance = taskDecisionGuidance == null
-                ? "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+                ? PlayerText.get("STP2")
                 : taskDecisionGuidance;
     }
 

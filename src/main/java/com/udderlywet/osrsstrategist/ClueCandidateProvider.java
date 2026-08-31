@@ -14,9 +14,9 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null) return result;
         ClueSnapshot clue = context.getData().getClue();
         if (clue == null || !clue.isCluePresent()) return result;
@@ -56,14 +56,14 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         ClueStepSnapshot step = clue.getCurrentStep();
         StringBuilder reason = new StringBuilder();
         reason.append("Clears the pending ").append(type)
-                .append(" slot and can advance Collection Log progress.");
+                .append(PlayerText.get("CCP1"));
         if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
-            reason.append(" UIM setup disruption and inventory pressure reduce its interruption value; no unobserved storage is counted.");
+            reason.append(PlayerText.get("CCP2"));
         }
         if (step == null)
         {
-            reason.append(" RuneLite has not identified the open clue step, so Compass will not invent its location or requirements.");
+            reason.append(PlayerText.get("CCP3"));
         }
         else
             reason.append(" RuneLite identified the current ")
@@ -77,8 +77,8 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         {
             score -= hardcore ? 30.0 : 18.0;
             reason.append(hardcore
-                    ? " This observed Wilderness step is not selected for a Hardcore account."
-                    : " Wilderness routing is disabled, so this clue should wait.");
+                    ? PlayerText.get("CCP4")
+                    : PlayerText.get("CCP5"));
         }
 
         String title;
@@ -90,8 +90,8 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
             title = "Inspect " + type;
             candidateId = "verify:clue-current-step";
             guidance = new RecommendationGuidance(
-                    "Open the clue scroll once so RuneLite can identify the current step.",
-                    null, "Inventory", "Compass will reassess the exact step immediately.");
+                    PlayerText.get("CCP6"),
+                    null, "Inventory", PlayerText.get("CCP7"));
             confidence = RecommendationConfidence.CHECK_NEEDED;
         }
         else if (wildernessHold)
@@ -100,10 +100,10 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
             candidateId = "prepare:clue-wilderness-hold";
             guidance = new RecommendationGuidance(
                     context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                            ? "Keep the clue in inventory and continue the current non-Wilderness plan."
-                            : "Bank the clue and continue the current non-Wilderness plan.",
+                            ? PlayerText.get("CCP8")
+                            : PlayerText.get("CCP9"),
                     supplies(step), step.getLocation(),
-                    "Do not route this step while the current risk policy forbids it.");
+                    PlayerText.get("CCP10"));
             confidence = RecommendationConfidence.CHECK_NEEDED;
         }
         else
@@ -123,7 +123,7 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
                     : RecommendationConfidence.CHECK_NEEDED;
         }
 
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 candidateId,
                 title,
                 reason.toString(),

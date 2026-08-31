@@ -68,9 +68,9 @@ public class ResourceReadinessService
                     RequirementState.VERIFIED,
                     uim
                             ? "Observed quantity: " + observed
-                                    + " across equipment, inventory, and directly usable verified UIM storage."
+                                    + PlayerText.get("RRS1")
                             : "Observed quantity: " + observed
-                                    + " across equipment, inventory, known bank state"
+                                    + PlayerText.get("RRS2")
                                     + (usesObservedGroupStorage(data, useGroupStorage)
                                             ? ", and recent Group Storage state." : "."));
         }
@@ -85,7 +85,7 @@ public class ResourceReadinessService
                 return new RequirementCheck(
                         requirement.getId(), requirement.getLabel(),
                         RequirementState.CHECK_NEEDED,
-                        "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource."
+                        PlayerText.get("RRS3")
                 );
             }
 
@@ -97,10 +97,10 @@ public class ResourceReadinessService
                     RequirementState.CHECK_NEEDED,
                     storageContentsKnown
                             ? "Only " + observed
-                                    + " directly usable quantity observed across equipment, inventory, and verified UIM storage; need at least "
+                                    + PlayerText.get("RRS4")
                                     + requirement.getRequiredQuantity() + "."
                             : "Equipment and inventory have " + observed
-                                    + "; relevant UIM storage contents have not been observed yet."
+                                    + PlayerText.get("RRS5")
             );
         }
 

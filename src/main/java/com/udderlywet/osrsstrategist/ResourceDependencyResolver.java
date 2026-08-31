@@ -76,7 +76,7 @@ public class ResourceDependencyResolver
         if (active.contains(id))
         {
             state.cycle = true;
-            addResource(state, id + ":cycle", "Stop: the resource route contains a cycle.",
+            addResource(state, id + ":cycle", PlayerText.get("RDR1"),
                     RecommendationConfidence.CHECK_NEEDED, depth, need.getQuantity());
             return;
         }
@@ -91,7 +91,7 @@ public class ResourceDependencyResolver
         if (depth > maxDepth)
         {
             state.depth = true;
-            addResource(state, id + ":depth", "Stop: the resource route exceeds the safe planning depth.",
+            addResource(state, id + ":depth", PlayerText.get("RDR2"),
                     RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
@@ -132,7 +132,7 @@ public class ResourceDependencyResolver
         if (rejectForOpportunityCost(context, definition.getOpportunityCost()))
         {
             state.cost = true;
-            addResource(state, id, "Use a shorter direct source; this detour costs too much for the current session.",
+            addResource(state, id, PlayerText.get("RDR3"),
                     RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }

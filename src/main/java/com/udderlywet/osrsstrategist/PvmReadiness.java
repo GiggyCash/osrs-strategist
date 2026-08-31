@@ -4,15 +4,12 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class PvmReadiness
 {
-    @Getter
     private final String activityId;
-    @Getter
     private final boolean realisticallyReady;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final List<String> missingRequirements;
 
     public PvmReadiness(

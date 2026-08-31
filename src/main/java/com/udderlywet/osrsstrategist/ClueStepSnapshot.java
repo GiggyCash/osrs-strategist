@@ -5,25 +5,17 @@ import java.util.*;
 import lombok.Getter;
 
 /** Exact current-step evidence supplied by RuneLite's Clue Scroll plugin. */
+@Getter
 public final class ClueStepSnapshot
 {
-    @Getter
     private final String kind;
-    @Getter
     private final String action;
-    @Getter
     private final String location;
-    @Getter
     private final List<String> itemRequirements;
-    @Getter
     private final boolean requiresSpade;
-    @Getter
     private final boolean requiresLight;
-    @Getter
     private final String enemy;
-    @Getter
     private final boolean wilderness;
-    @Getter
     private final String stashUnit;
 
     public ClueStepSnapshot(String kind, String action, String location,

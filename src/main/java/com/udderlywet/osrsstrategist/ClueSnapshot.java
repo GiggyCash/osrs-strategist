@@ -2,17 +2,13 @@ package com.udderlywet.osrsstrategist;
 
 import lombok.Getter;
 
+@Getter
 public final class ClueSnapshot
 {
-    @Getter
     private final boolean cluePresent;
-    @Getter
     private final String clueType;
-    @Getter
     private final long firstSeenAtMillis;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final ClueStepSnapshot currentStep;
 
     public ClueSnapshot(

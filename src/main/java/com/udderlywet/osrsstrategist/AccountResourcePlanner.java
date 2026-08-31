@@ -100,7 +100,7 @@ public class AccountResourcePlanner
     {
         if (entries.isEmpty())
         {
-            return "No consumed material is required for the modeled action.";
+            return PlayerText.get("ARP1");
         }
 
         List<String> required = new ArrayList<>();
@@ -148,13 +148,13 @@ public class AccountResourcePlanner
         if (!primaryObserved)
         {
             if (mode == AccountMode.ULTIMATE_IRONMAN)
-                text.append("Open the inventory and equipment tabs once; the directly usable UIM setup is not fully observed, so no shortfall is claimed yet.");
+                text.append(PlayerText.get("ARP2"));
             else
                 text.append("Open your bank once to verify stored ")
-                        .append("materials before calculating the real shortfall.");
+                        .append(PlayerText.get("ARP3"));
             if (groupIncluded && !groupObserved)
             {
-                text.append(" Group Storage is also enabled but has not been observed yet.");
+                text.append(PlayerText.get("ARP4"));
             }
             return text.toString();
         }
@@ -167,10 +167,10 @@ public class AccountResourcePlanner
 
         if (missing.isEmpty())
         {
-            text.append("You already have the modeled inputs for this milestone.");
+            text.append(PlayerText.get("ARP5"));
             if (groupIncluded && groupObserved)
             {
-                text.append(" Observed Group Storage was included in that total.");
+                text.append(PlayerText.get("ARP6"));
             }
             appendRestrictedUimNote(text, restricted);
             return text.toString();
@@ -189,10 +189,10 @@ public class AccountResourcePlanner
                             ? MembershipStatus.UNKNOWN
                             : data.getAccount().getMembershipStatus(), true);
             text.append("Current-stage shortfall: ").append(shortfall)
-                    .append(". Use the verified carried stock first and resupply only when that batch runs low; do not carry the whole distant plan by default.");
+                    .append(PlayerText.get("ARP7"));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
-            text.append(" Only inventory, equipment, and verified directly usable storage count; a normal bank never counts for UIM.");
+            text.append(PlayerText.get("ARP8"));
         }
         else if (mode.isGroupIronman())
         {
@@ -200,11 +200,11 @@ public class AccountResourcePlanner
                     .append(" in practical batches.");
             if (groupIncluded && groupObserved)
             {
-                text.append(" Observed Group Storage was already included before calculating this shortfall.");
+                text.append(PlayerText.get("ARP9"));
             }
             else if (groupIncluded)
             {
-                text.append(" Group Storage is enabled but unobserved, so this shortfall excludes it until it is opened and observed.");
+                text.append(PlayerText.get("ARP10"));
             }
         }
         else if (mode.isIronLike())
@@ -221,7 +221,7 @@ public class AccountResourcePlanner
         else
         {
             text.append("Source ").append(shortfall)
-                    .append(" after account mode is verified. Grand Exchange access is never assumed for an unknown account mode.");
+                    .append(PlayerText.get("ARP11"));
         }
 
         appendRestrictedUimNote(text, restricted);
@@ -250,7 +250,7 @@ public class AccountResourcePlanner
                     .append(" at the Grand Exchange. ")
                     .append("The exact live total is about ")
                     .append(format(decision.getTotalCost()))
-                    .append(" coins; this is a low-burden use of the ")
+                    .append(PlayerText.get("ARP12"))
                     .append(format(decision.getObservedCoins()))
                     .append(" verified liquid coins.");
             return;
@@ -264,7 +264,7 @@ public class AccountResourcePlanner
                     .append(format(decision.getTotalCost()))
                     .append(" of ")
                     .append(format(decision.getObservedCoins()))
-                    .append(" verified liquid coins. Reviewed route: ")
+                    .append(PlayerText.get("ARP13"))
                     .append(routes.get(0));
             return;
         }
@@ -272,19 +272,19 @@ public class AccountResourcePlanner
         if (decision != null && decision.getChoice()
                 == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
         {
-            text.append("Do not start the Grand Exchange purchase yet: it costs about ")
+            text.append(PlayerText.get("ARP14"))
                     .append(format(decision.getTotalCost()))
                     .append(" coins, but only ")
                     .append(format(decision.getObservedCoins()))
                     .append(" liquid coins are verified.");
             if (!routes.isEmpty())
-                text.append(" Use this reviewed self-source route instead: ")
+                text.append(PlayerText.get("ARP15"))
                         .append(routes.get(0));
             return;
         }
 
-        text.append("Do not assume the shortfall should be bought: exact ")
-                .append("tradeability, live price, liquid coins, or opportunity cost is incomplete.");
+        text.append(PlayerText.get("ARP16"))
+                .append(PlayerText.get("ARP17"));
         if (!routes.isEmpty())
             text.append(" Reviewed self-source route: ").append(routes.get(0));
     }
@@ -325,9 +325,9 @@ public class AccountResourcePlanner
             List<String> restricted)
     {
         if (restricted == null || restricted.isEmpty()) return;
-        text.append(" Observed in retrieval-only UIM storage: ")
+        text.append(PlayerText.get("ARP18"))
                 .append(join(restricted))
-                .append(". Those items are not counted until a retrieval plan is deliberately chosen.");
+                .append(PlayerText.get("ARP19"));
     }
 
     /**

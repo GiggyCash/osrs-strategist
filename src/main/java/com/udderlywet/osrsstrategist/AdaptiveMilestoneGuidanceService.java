@@ -158,11 +158,11 @@ public class AdaptiveMilestoneGuidanceService
         String note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
-            note = "Action count uses RuneLite's maintained base action XP.";
+            note = PlayerText.get("AMGS1");
         }
         else
         {
-            note += " Action count uses RuneLite's maintained action XP.";
+            note += PlayerText.get("AMGS2");
         }
 
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
@@ -171,21 +171,21 @@ public class AdaptiveMilestoneGuidanceService
         }
         else
         {
-            note += " Any unmodeled XP bonus can reduce the remaining count.";
+            note += PlayerText.get("AMGS3");
         }
 
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
         if (mode.isIronLike() && !inputs.isEmpty())
         {
-            note += " The concrete action was ranked against your observed "
-                    + "materials so a supplied lower-tier route can beat an "
+            note += PlayerText.get("AMGS4")
+                    + PlayerText.get("AMGS5")
                     + "unsupplied higher-tier route.";
         }
         if (mode == AccountMode.ULTIMATE_IRONMAN && resources != null
                 && resources.getTotalMissingUnits() > 0)
         {
-            note += " UIM shortfalls are intentionally based on immediately usable supplies, not retrieval-only storage.";
+            note += PlayerText.get("AMGS6");
         }
 
         RecommendationGuidance result = new RecommendationGuidance(
@@ -231,7 +231,7 @@ public class AdaptiveMilestoneGuidanceService
                     "Black pickaxe", "Steel pickaxe", "Iron pickaxe",
                     "Bronze pickaxe");
             return pickaxe == null
-                    ? "Get a free bronze pickaxe from the Mining tutor at the east Lumbridge Swamp mine."
+                    ? PlayerText.get("AMGS7")
                     : "Bring your " + pickaxe + ".";
         }
         if (methodId.startsWith("woodcutting_"))
@@ -241,48 +241,48 @@ public class AdaptiveMilestoneGuidanceService
                     "Adamant axe", "Mithril axe", "Black axe", "Steel axe",
                     "Iron axe", "Bronze axe");
             return axe == null
-                    ? "Buy a bronze axe from Bob's Brilliant Axes in Lumbridge before starting."
+                    ? PlayerText.get("AMGS8")
                     : "Bring your " + axe + ".";
         }
         if (isFlyFishingMethod(methodId))
             return items.has("Fly fishing rod")
                     ? "Bring your fly fishing rod."
-                    : "Buy a fly fishing rod from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village.";
+                    : PlayerText.get("AMGS9");
         if (isNetFishingMethod(methodId))
-            return "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed.";
+            return PlayerText.get("AMGS10");
         if ("hunter_bird_traps".equals(methodId))
             return items.has("Bird snare")
                     ? "Bring one bird snare."
-                    : "Buy one bird snare from Aleck's Hunter Emporium in Yanille before walking south to the Hunter area.";
+                    : PlayerText.get("AMGS11");
         if ("hunter_falconry".equals(methodId))
-            return "Bring 500 coins. Unequip weapon, shield, and gloves before renting the gyr falcon from Matthias.";
+            return PlayerText.get("AMGS12");
         if ("hunter_salamanders".equals(methodId))
         {
             int traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
             return "Bring " + traps + " small fishing nets and " + traps
-                    + " ropes; set every available net trap and drop each catch.";
+                    + PlayerText.get("AMGS13");
         }
         if ("magic_f2p_combat".equals(methodId))
-            return "Bring one mind rune and one air rune per Wind Strike; if short, buy both from Aubury's Rune Shop just south of Varrock East Bank.";
+            return PlayerText.get("AMGS14");
         if ("magic_f2p_fire_bolt".equals(methodId))
-            return "Bring three air runes, four fire runes, and one chaos rune per Fire Bolt; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
+            return PlayerText.get("AMGS15");
         if ("magic_f2p_fire_blast".equals(methodId))
-            return "Bring four air runes, five fire runes, and one death rune per Fire Blast; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank.";
+            return PlayerText.get("AMGS16");
         if ("magic_f2p_curse".equals(methodId))
-            return "Bring one body rune, three earth runes, and two water runes per Curse. Equip full metal armour plus vambraces or a cursed goblin staff until the equipment panel shows -64 Magic attack or lower.";
+            return PlayerText.get("AMGS17");
         if ("magic_f2p_fire_strike_splash".equals(methodId))
-            return "Bring two air runes, three fire runes, and one mind rune per Fire Strike. Keep the verified cursed-staff metal setup equipped and enable Fire Strike autocast.";
+            return PlayerText.get("AMGS18");
         if ("construction_crude_chairs".equals(methodId)
                 || "construction_oak_larders".equals(methodId))
             return "Bring a hammer and saw.";
         if ("smithing_f2p_platebodies".equals(methodId))
-            return "Bring a hammer and the matching bars named in BRING; each platebody consumes five bars.";
+            return PlayerText.get("AMGS19");
         if ("smithing_f2p_uim_bronze".equals(methodId))
-            return "Bring a hammer and pickaxe; buy the hammer from Lumbridge General Store if it is missing.";
+            return PlayerText.get("AMGS20");
         if ("thieving_lumbridge_people".equals(methodId))
-            return "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed.";
+            return PlayerText.get("AMGS21");
         if ("thieving_ardy_knights".equals(methodId))
-            return "Bring food for failed pickpockets; restock at Ardougne South Bank when needed.";
+            return PlayerText.get("AMGS22");
         if (methodId.startsWith("runecraft_f2p_"))
         {
             String rune = methodId.substring("runecraft_f2p_".length());
@@ -301,27 +301,27 @@ public class AdaptiveMilestoneGuidanceService
         if ("hunter_salamanders".equals(methodId))
         {
             if (actionName.contains("red salamander"))
-                return "Red salamander net-trap trees south of the Ourania Cave entrance.";
+                return PlayerText.get("AMGS23");
             if (actionName.contains("orange salamander"))
-                return "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge.";
-            return "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis.";
+                return PlayerText.get("AMGS24");
+            return PlayerText.get("AMGS25");
         }
         if (isFlyFishingMethod(methodId))
-            return "Barbarian Village fishing spots on the River Lum.";
+            return PlayerText.get("AMGS26");
         if (isNetFishingMethod(methodId))
-            return "Lumbridge Swamp net fishing spots beside the Fishing tutor.";
+            return PlayerText.get("AMGS27");
         if ("magic_f2p_curse".equals(methodId)
                 || "magic_f2p_fire_strike_splash".equals(methodId))
         {
-            return "The caged Monk of Zamorak under the Varrock Palace stairs.";
+            return PlayerText.get("AMGS28");
         }
         if ("smithing_f2p_platebodies".equals(methodId))
         {
-            return "Varrock West Bank: keep the hammer, withdraw five matching bars per platebody, smith at the anvils immediately south, bank, and repeat.";
+            return PlayerText.get("AMGS29");
         }
         if ("smithing_f2p_uim_bronze".equals(methodId))
         {
-            return "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle.";
+            return PlayerText.get("AMGS30");
         }
 
         AccountMode mode = data == null || data.getAccount() == null
@@ -334,11 +334,11 @@ public class AdaptiveMilestoneGuidanceService
                     || "fletching_bows".equals(methodId)
                     || "herblore_low_potions".equals(methodId))
             {
-                return "Your current safe non-Wilderness tile; process only the immediately usable carried materials named in DO.";
+                return PlayerText.get("AMGS31");
             }
             if ("firemaking_f2p_logs".equals(methodId))
             {
-                return "Grand Exchange south-east corner: burn the immediately usable carried logs named in DO in east-to-west rows.";
+                return PlayerText.get("AMGS32");
             }
         }
         String explicit = locationBeforeColon(fallback);
@@ -465,10 +465,10 @@ public class AdaptiveMilestoneGuidanceService
             String names = outputNames(outputs).toLowerCase(Locale.ROOT);
             if (isFlyFishingMethod(method.getId()))
                 return "Fly-fish " + names
-                        + ", drop the catch when your inventory fills, and repeat.";
+                        + PlayerText.get("AMGS33");
             if (isNetFishingMethod(method.getId()))
                 return "Use the small net to catch " + names
-                        + ", drop the catch when your inventory fills, and repeat.";
+                        + PlayerText.get("AMGS34");
         }
         String instruction = routeAction(method.getInstructions(),
                 method.getName());

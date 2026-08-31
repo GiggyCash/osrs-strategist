@@ -11,13 +11,11 @@ import lombok.Getter;
  * are kept separate because simply having access to a Leprechaun does not mean
  * every tool is stored there.</p>
  */
+@Getter
 public final class FarmingSnapshot
 {
-    @Getter
     private final Set<String> reachablePatchIds;
-    @Getter
     private final Map<String, CapabilityState> leprechaunTools;
-    @Getter
     private final Map<String, Long> patchReadyAtMillis;
 
     public FarmingSnapshot(

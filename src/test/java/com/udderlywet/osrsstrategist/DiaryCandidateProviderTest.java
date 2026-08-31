@@ -16,7 +16,7 @@ public class DiaryCandidateProviderTest
     @Test
     public void asksForOneObservablePageInsteadOfManualTaskGuessing()
     {
-        StrategyCandidate candidate = new DiaryCandidateProvider()
+        Recommendation candidate = new DiaryCandidateProvider()
                 .candidates(context(snapshot(Collections.emptyMap())))
                 .get(0);
 
@@ -30,7 +30,7 @@ public class DiaryCandidateProviderTest
     {
         DiaryTaskDefinition task = new DiaryTaskCatalog()
                 .forTier("Ardougne", DiaryTier.EASY).get(1);
-        StrategyCandidate candidate = new DiaryCandidateProvider()
+        Recommendation candidate = new DiaryCandidateProvider()
                 .candidates(context(snapshot(Collections.singletonMap(
                         task.getId(), false)))).get(0);
 

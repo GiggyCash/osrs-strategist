@@ -195,7 +195,7 @@ public final class ItemRequirementEvaluator
         InventorySnapshot inventory = data == null ? null : data.getInventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
-                    "Open the inventory tab so the required free slots can be verified");
+                    PlayerText.get("IRE1"));
         int required = Math.max(1, expression.getQuantity());
         int free = Math.max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
@@ -204,7 +204,7 @@ public final class ItemRequirementEvaluator
         return new ItemRequirementResult(RequirementState.BLOCKED,
                 "The quest requires " + required
                         + " free inventory slots; only " + free
-                        + " are observed, and the inventory-slot preparation is unresolved");
+                        + PlayerText.get("IRE2"));
     }
 
     private static List<ResolvedMethodInput> bestAlternativeInputs(

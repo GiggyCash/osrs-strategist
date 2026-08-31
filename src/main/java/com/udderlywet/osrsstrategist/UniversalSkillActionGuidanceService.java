@@ -28,7 +28,7 @@ public class UniversalSkillActionGuidanceService
             "herblore_low_potions"));
 
     private static final String F2P_ANVIL_ROUTE =
-            "Varrock West Bank: keep a hammer, withdraw bars, use the anvils just south of the bank, smith, bank, repeat.";
+            PlayerText.get("USAGS1");
 
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final UniversalActionRecipeResolver recipeResolver;
@@ -122,8 +122,8 @@ public class UniversalSkillActionGuidanceService
         if (recipe.getInputs().isEmpty())
         {
             supplies = recipe.hasExactInputs()
-                    ? "No consumed material is required for the modeled action."
-                    : "The action count is known, but an exact material list is not proven yet.";
+                    ? PlayerText.get("USAGS2")
+                    : PlayerText.get("USAGS3");
         }
         else
         {
@@ -151,8 +151,8 @@ public class UniversalSkillActionGuidanceService
         }
 
         StringBuilder note = new StringBuilder();
-        note.append("Action XP comes from RuneLite's maintained skill-calculator data. ")
-                .append("Compass shows this option only after its membership and recipe checks pass.");
+        note.append(PlayerText.get("USAGS4"))
+                .append(PlayerText.get("USAGS5"));
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
             note.append(" Count assumes the ")
@@ -164,13 +164,13 @@ public class UniversalSkillActionGuidanceService
         }
         if (skill == Skill.COOKING)
         {
-            note.append(" Successful-cook count is deterministic, but raw-food supply can require a burn buffer. Low-level F2P fish use the dedicated burn-aware planner.");
+            note.append(PlayerText.get("USAGS6"));
         }
         if (resources != null
                 && resources.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                 && resources.getTotalMissingUnits() > 0)
         {
-            note.append(" UIM material totals exclude retrieval-only storage unless a separate retrieval step is deliberately selected.");
+            note.append(PlayerText.get("USAGS7"));
         }
 
         return new RecommendationGuidance(
@@ -183,7 +183,7 @@ public class UniversalSkillActionGuidanceService
     {
         if (skill == Skill.RUNECRAFT)
             return "Craft " + pluralRunes(action.getName())
-                    + " at the named altar, return for another essence load, and repeat.";
+                    + PlayerText.get("USAGS8");
         String loop = actionAfterColon(instructions);
         if (loop == null) loop = instructions;
         if (loop == null || loop.trim().isEmpty())
@@ -425,17 +425,17 @@ public class UniversalSkillActionGuidanceService
     {
         String lower = normalize(actionName);
         if (lower.contains("air rune"))
-            return "Bring an air talisman or wear an air tiara.";
+            return PlayerText.get("USAGS9");
         if (lower.contains("mind rune"))
-            return "Bring a mind talisman or wear a mind tiara.";
+            return PlayerText.get("USAGS10");
         if (lower.contains("water rune"))
-            return "Bring a water talisman or wear a water tiara.";
+            return PlayerText.get("USAGS11");
         if (lower.contains("earth rune"))
-            return "Bring an earth talisman or wear an earth tiara.";
+            return PlayerText.get("USAGS12");
         if (lower.contains("fire rune"))
-            return "Bring a fire talisman or wear a fire tiara.";
+            return PlayerText.get("USAGS13");
         if (lower.contains("body rune"))
-            return "Bring a body talisman or wear a body tiara.";
+            return PlayerText.get("USAGS14");
         return null;
     }
 

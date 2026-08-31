@@ -44,7 +44,7 @@ public class MethodGuidanceService
         {
             steps.add(new GuidanceStep(
                     "method:ready", "Method ready",
-                    "All known prerequisites for this method are ready.",
+                    PlayerText.get("MGS1"),
                     GuidanceStepState.COMPLETE));
         }
 

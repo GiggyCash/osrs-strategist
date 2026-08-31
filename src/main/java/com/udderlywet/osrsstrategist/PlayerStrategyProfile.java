@@ -3,21 +3,15 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Per-character planning preferences that survive logout/restart. */
+@Getter
 public class PlayerStrategyProfile
 {
-    @Getter
     private final StrategyMode strategyMode;
-    @Getter
     private final SessionIntent sessionIntent;
-    @Getter
     private final QuestTolerance questTolerance;
-    @Getter
     private final GoalType activeGoal;
-    @Getter
     private final boolean useGroupStorage;
-    @Getter
     private final boolean collectionistMode;
-    @Getter
     private final boolean allowWildernessMethods;
 
     public PlayerStrategyProfile(

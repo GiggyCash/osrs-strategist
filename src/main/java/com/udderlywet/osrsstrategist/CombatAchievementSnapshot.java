@@ -4,13 +4,11 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class CombatAchievementSnapshot
 {
-    @Getter
     private final int completedTasks;
-    @Getter
     private final int earnedPoints;
-    @Getter
     private final Set<CombatAchievementTier> completedRewardTiers;
 
     public CombatAchievementSnapshot(

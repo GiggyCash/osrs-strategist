@@ -25,9 +25,9 @@ public class ProgressionUpgradeCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null)
         {
@@ -50,13 +50,13 @@ public class ProgressionUpgradeCandidateProvider
         questRewardGear(context, account, items, result);
 
         result.sort(Comparator.comparingDouble(
-                StrategyCandidate::getScore).reversed());
+                Recommendation::getScore).reversed());
         return result;
     }
 
     private static void questRewardGear(StrategyContext context,
             AccountSnapshot account, ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
                 || !ownershipCanBeJudged(account, items)
@@ -64,24 +64,24 @@ public class ProgressionUpgradeCandidateProvider
 
         addQuestRewardGear(context, items, result,
                 "salve-amulet", "Salve amulet", "Haunted Mine",
-                "Take a chisel to the crystal outcrop at the bottom of the Abandoned Mine and cut a salve shard, then use the chisel on the shard.",
-                "Bring a chisel and preserve enough inventory space for the shard and amulet.",
-                "The amulet is useful against applicable undead targets; upgrades and encounter mechanics still need their own checks.",
+                PlayerText.get("PUCP1"),
+                PlayerText.get("PUCP2"),
+                PlayerText.get("PUCP3"),
                 items.has("Chisel"));
         addQuestRewardGear(context, items, result,
                 "helm-of-neitiznot", "Helm of neitiznot", "The Fremennik Isles",
-                "Return to Mawnis Burowgar on Neitiznot and verify the current replacement requirement before paying or changing setup.",
-                "The quest is complete, but replacement cost and spendable cash must be observed before calling the acquisition ready.",
-                "This is a broadly useful melee helm, not a universal best choice.", false);
+                PlayerText.get("PUCP4"),
+                PlayerText.get("PUCP5"),
+                PlayerText.get("PUCP6"), false);
         addQuestRewardGear(context, items, result,
                 "ibans-staff", "Iban's staff", "Underground Pass",
-                "Talk to the Dark Mage in West Ardougne and verify the current replacement requirement before paying.",
-                "The quest is complete, but replacement cost, spellbook, runes and UIM setup must be checked separately.",
-                "Iban Blast can be useful progression Magic where the target and rune cost support it.", false);
+                PlayerText.get("PUCP7"),
+                PlayerText.get("PUCP8"),
+                PlayerText.get("PUCP9"), false);
     }
 
     private static void addQuestRewardGear(StrategyContext context,
-            ObservedItemIndex items, List<StrategyCandidate> result,
+            ObservedItemIndex items, List<Recommendation> result,
             String suffix, String item, String quest, String action,
             String supplies, String note, boolean ready)
     {
@@ -93,26 +93,26 @@ public class ProgressionUpgradeCandidateProvider
         boolean retrievalOnly = mode == AccountMode.ULTIMATE_IRONMAN
                 && items.restrictedQuantity(item) > 0;
         String uim = mode == AccountMode.ULTIMATE_IRONMAN
-                ? " Check inventory space and retrieval/storage consequences before travelling."
+                ? PlayerText.get("PUCP10")
                 : "";
         String nextAction = retrievalOnly
-                ? "Verify the current death or looting-bag state, then retrieve "
-                        + item + " without destroying the active UIM setup."
+                ? PlayerText.get("PUCP11")
+                        + item + PlayerText.get("PUCP12")
                 : action;
-        result.add(new StrategyCandidate(id,
+        result.add(new Recommendation(id,
                 (retrievalOnly ? "Retrieve " : "Recover ") + item,
-                quest + " is complete and the item is not present in observed usable ownership.",
+                quest + PlayerText.get("PUCP13"),
                 34.0 + preference(context, id), ready && !retrievalOnly
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(nextAction, supplies + uim,
-                        "Use the quest's established replacement or reacquisition location.", note),
+                        PlayerText.get("PUCP14"), note),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void dragonScimitar(StrategyContext context,
             AccountSnapshot account, ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
                 || account.getSkillLevel(Skill.ATTACK) < 60
@@ -127,28 +127,28 @@ public class ProgressionUpgradeCandidateProvider
         if (context.getPreferenceProfile().isOnCooldown(id)) return;
         AccountMode mode = context.getAccountMode();
         String setup = mode == AccountMode.ULTIMATE_IRONMAN
-                ? "Keep one inventory space free and preserve any retrieval-heavy setup before travelling."
-                : "Withdraw 100,000 coins only when ready to make the purchase.";
+                ? PlayerText.get("PUCP15")
+                : PlayerText.get("PUCP16");
         boolean cashReady = verifiedCoins(context.getData(), 100_000L);
-        result.add(new StrategyCandidate(id, "Buy a Dragon scimitar",
-                "Monkey Madness I and 60 Attack are observed, making this a concrete slash progression purchase rather than a generic gear tier.",
+        result.add(new Recommendation(id, "Buy a Dragon scimitar",
+                PlayerText.get("PUCP17"),
                 42.0 + preference(context, id), cashReady
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         cashReady
-                                ? "Travel to Ape Atoll and buy a Dragon scimitar from Daga's Scimitar Smithy for 100,000 coins."
-                                : "Verify or obtain 100,000 spendable coins, then travel to Daga's Scimitar Smithy on Ape Atoll.",
-                        setup + (cashReady ? " Coin affordability is observed." : " Coin affordability is not yet observed.")
-                                + " This is the same shop route for Main and Iron accounts; no Grand Exchange assumption is needed.",
-                        "Daga's Scimitar Smithy on Ape Atoll after Monkey Madness I.",
-                        "Use it where a one-handed slash weapon is appropriate; it is not a universal encounter weapon."),
+                                ? PlayerText.get("PUCP18")
+                                : PlayerText.get("PUCP19"),
+                        setup + (cashReady ? " Coin affordability is observed." : PlayerText.get("PUCP20"))
+                                + PlayerText.get("PUCP21"),
+                        PlayerText.get("PUCP22"),
+                        PlayerText.get("PUCP23")),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
     private static void avaDevice(StrategyContext context,
             AccountSnapshot account, ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P
                 || account.getSkillLevel(Skill.RANGED) < 30
@@ -164,26 +164,26 @@ public class ProgressionUpgradeCandidateProvider
         String device = account.getSkillLevel(Skill.RANGED) >= 50
                 ? "Ava's accumulator" : "Ava's attractor";
         String replacement = account.getSkillLevel(Skill.RANGED) >= 50
-                ? "Bring 999 coins and 75 steel arrows for a replacement accumulator."
-                : "Bring 999 coins for a replacement attractor.";
+                ? PlayerText.get("PUCP24")
+                : PlayerText.get("PUCP25");
         boolean arrowsReady = account.getSkillLevel(Skill.RANGED) < 50
                 || items.quantity("Steel arrow") >= 75;
         boolean replacementReady = verifiedCoins(context.getData(), 999L)
                 && arrowsReady;
-        result.add(new StrategyCandidate(id, "Get " + device,
-                "Animal Magnetism is complete and no Ava device is observed; this is a reusable Ranged cape-slot and ammunition-recovery upgrade.",
+        result.add(new Recommendation(id, "Get " + device,
+                PlayerText.get("PUCP26"),
                 40.0 + preference(context, id), replacementReady
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         replacementReady
-                                ? "Talk to Ava in Draynor Manor and obtain " + device + ". Equip it for compatible Ranged setups."
-                                : "Obtain the replacement materials, then talk to Ava in Draynor Manor for " + device + ".",
+                                ? PlayerText.get("PUCP27") + device + PlayerText.get("PUCP28")
+                                : PlayerText.get("PUCP29") + device + ".",
                         replacement + (replacementReady
-                                ? " The required coins and arrows are observed."
-                                : " The complete replacement cost is not yet observed."),
-                        "Ava's room in the west wing of Draynor Manor.",
-                        "Weapon and ammunition compatibility still matter; owning the device does not prove a complete encounter loadout."),
+                                ? PlayerText.get("PUCP30")
+                                : PlayerText.get("PUCP31")),
+                        PlayerText.get("PUCP32"),
+                        PlayerText.get("PUCP33")),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
@@ -191,7 +191,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (account.getSkillLevel(Skill.DEFENCE) < 40) return;
@@ -235,19 +235,19 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
 
         String buildNote = defencePure
-                ? "Defence-pure safety: use only a Defence-training legal attacker style and do not intentionally gain Attack, Strength, Ranged, or Magic XP."
-                : "Use a build-legal combat setup for the Attacker role.";
+                ? PlayerText.get("PUCP34")
+                : PlayerText.get("PUCP35");
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Play Barbarian Assault until you have 375 honour points in Attacker, Defender, Collector, and Healer, and have defeated the Penance Queen once. Then buy the Fighter torso from Commander Connad.",
-                "No GP purchase is required for the torso. Bring only gear that is legal for this account build. " + buildNote,
-                "Barbarian Assault beneath the Barbarian Outpost. Purchase the torso from Commander Connad after the point and Queen requirements are complete.",
-                "The torso requires 40 Defence to equip. The route is allowed to lead DO NEXT only because the account/build checks above are already satisfied."
+                PlayerText.get("PUCP36"),
+                PlayerText.get("PUCP37") + buildNote,
+                PlayerText.get("PUCP38"),
+                PlayerText.get("PUCP39")
         );
 
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id,
                 "Get a Fighter torso",
-                "A strong reusable melee-body upgrade that does not require a tradeable drop or GP purchase.",
+                PlayerText.get("PUCP40"),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,
@@ -258,7 +258,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (account.getSkillLevel(Skill.ATTACK) < 70) return;
@@ -288,26 +288,26 @@ public class ProgressionUpgradeCandidateProvider
         {
             score = 41.0;
             title = "Get an Abyssal whip";
-            reason = "You have 70 Attack and no observed whip-or-better general melee weapon.";
+            reason = PlayerText.get("PUCP41");
             confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    "Buy an Abyssal whip once its live price and the account's spendable cash are verified against the configured spending limit.",
-                    "Live price and cash affordability still need to be resolved before this purchase can lead DO NEXT.",
+                    PlayerText.get("PUCP42"),
+                    PlayerText.get("PUCP43"),
                     "Grand Exchange.",
-                    "Keep this as a secondary option until live price and affordability are observed."
+                    PlayerText.get("PUCP44")
             );
         }
         else if (slayer >= 85)
         {
             score = 49.0;
             title = "Get an Abyssal whip";
-            reason = "This Iron-style account has the Slayer level for the self-source route, but the location and combat setup are not yet proven.";
+            reason = PlayerText.get("PUCP45");
             confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    "Verify access to the Slayer Tower top floor and an observed build-legal abyssal-demon loadout before starting the whip grind.",
-                    "The 85 Slayer requirement is met; location access, weapon, armour, food, and any prayer supplies are not yet proven.",
-                    "Slayer Tower top floor in Morytania, only after its access is observed.",
-                    "Once setup is proven, kill abyssal demons until an Abyssal whip drops. The drop is RNG, so Compass will not invent a kill count."
+                    PlayerText.get("PUCP46"),
+                    PlayerText.get("PUCP47"),
+                    PlayerText.get("PUCP48"),
+                    PlayerText.get("PUCP49")
             );
         }
         else
@@ -322,18 +322,18 @@ public class ProgressionUpgradeCandidateProvider
             int remaining = 85 - slayer;
             score = Math.max(24.0, 42.0 - remaining * 0.8);
             title = "Work toward 85 Slayer for a whip";
-            reason = "This Iron-style account cannot buy the upgrade, so Slayer progression is the acquisition chain.";
+            reason = PlayerText.get("PUCP50");
             confidence = RecommendationConfidence.VERIFIED;
             guidance = new RecommendationGuidance(
-                    "Train Slayer from " + slayer + " to 85, then self-source an Abyssal whip from abyssal demons.",
-                    "Use banked/observed combat supplies and task gear where possible. A live actionable Slayer task takes priority over this long-term acquisition step.",
-                    "Use the highest safe standard Slayer master and the live task location selected by the Slayer planner.",
-                    "This is an acquisition-chain recommendation, not a claim that every Slayer level should be trained using the same task or setup."
+                    "Train Slayer from " + slayer + PlayerText.get("PUCP51"),
+                    PlayerText.get("PUCP52"),
+                    PlayerText.get("PUCP53"),
+                    PlayerText.get("PUCP54")
             );
         }
 
         score += preference(context, id);
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id, title, reason, score, confidence, guidance,
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
@@ -342,7 +342,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         if (!ownershipCanBeJudged(account, items)) return;
@@ -377,15 +377,15 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
 
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Enter the Warriors' Guild, obtain defenders in order from the upstairs Cyclopes through Rune, show the Rune defender for basement access, then kill the basement Cyclopes until a Dragon defender drops.",
-                "Bring armour, food, a build-legal melee weapon, and enough Warriors' Guild tokens for the Cyclops rooms. Token consumption and defender drops are variable, so no fake exact token/kill count is shown.",
-                "Warriors' Guild in Burthorpe. Bronze through Rune defenders are obtained upstairs; the Dragon defender comes from the stronger basement Cyclopes after basement access is unlocked.",
-                "The account has the guild-entry stats and the 60 Attack/Defence equip requirements. Defender drops are RNG."
+                PlayerText.get("PUCP55"),
+                PlayerText.get("PUCP56"),
+                PlayerText.get("PUCP57"),
+                PlayerText.get("PUCP58")
         );
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id,
                 "Get a Dragon defender",
-                "A major melee off-hand progression step is available and no Dragon/Avernic defender is observed.",
+                PlayerText.get("PUCP59"),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,
@@ -396,7 +396,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P) return;
         QuestSnapshot quests = context.getData().getQuests();
@@ -436,7 +436,7 @@ public class ProgressionUpgradeCandidateProvider
         String supplies;
         if (!cashVerified)
         {
-            supplies = "Verify current spendable cash before treating the shop purchase as immediately ready. Required shop price: " + format(price) + " coins.";
+            supplies = PlayerText.get("PUCP60") + format(price) + " coins.";
         }
         else if (!affordable)
         {
@@ -452,17 +452,17 @@ public class ProgressionUpgradeCandidateProvider
         }
 
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Purchase Barrows gloves from the fully unlocked Culinaromancer's Chest.",
+                PlayerText.get("PUCP61"),
                 supplies,
-                "Culinaromancer's Chest in the Lumbridge Castle cellar.",
+                PlayerText.get("PUCP62"),
                 eliteLumbridge
-                        ? "The Elite Lumbridge & Draynor Diary discount is observed, so the reduced shop price is used."
-                        : "The full Recipe for Disaster completion is observed. The standard shop price is used unless the Elite Lumbridge & Draynor discount is verified."
+                        ? PlayerText.get("PUCP63")
+                        : PlayerText.get("PUCP64")
         );
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id,
                 "Buy Barrows gloves",
-                "Recipe for Disaster is complete and this reusable glove upgrade is not observed.",
+                PlayerText.get("PUCP65"),
                 score,
                 confidence,
                 guidance,
@@ -473,7 +473,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (account.getMembershipStatus() != MembershipStatus.P2P) return;
         if (context.getActiveGoal() != GoalType.BOWFA
@@ -518,14 +518,14 @@ public class ProgressionUpgradeCandidateProvider
                     ? RecommendationConfidence.VERIFIED
                     : RecommendationConfidence.CHECK_NEEDED;
             title = "Create your Bow of faerdhinen";
-            reason = "An Enhanced crystal weapon seed is observed, so the RNG acquisition step is already complete.";
+            reason = PlayerText.get("PUCP66");
             String action = canSelfSing
-                    ? "Use the Enhanced crystal weapon seed with " + neededShards
-                            + " Crystal shards at a singing bowl to create the Bow of faerdhinen."
-                    : "Have Conwenna or Reese sing the Enhanced crystal weapon seed into a Bow of faerdhinen using "
-                            + neededShards + " Crystal shards because the account does not currently have both 82 Smithing and 82 Crafting.";
+                    ? PlayerText.get("PUCP67") + neededShards
+                            + PlayerText.get("PUCP68")
+                    : PlayerText.get("PUCP69")
+                            + neededShards + PlayerText.get("PUCP70");
             String supplies = shortfall == 0
-                    ? "Verified: the Enhanced crystal weapon seed and at least "
+                    ? PlayerText.get("PUCP71")
                             + neededShards + " Crystal shards are observed."
                     : "The seed is observed, but you need " + shortfall
                             + " more Crystal shard" + (shortfall == 1 ? "" : "s")
@@ -533,20 +533,20 @@ public class ProgressionUpgradeCandidateProvider
             guidance = new RecommendationGuidance(
                     action,
                     supplies,
-                    "Use a singing bowl in Prifddinas; the NPC-assisted route is also available there when skill requirements are not met.",
-                    "Corrupting the bow is a separate 2,000-shard decision and should not be silently bundled into the initial 100/150-shard creation cost."
+                    PlayerText.get("PUCP72"),
+                    PlayerText.get("PUCP73")
             );
         }
         else if (mode.usesGrandExchange())
         {
             confidence = RecommendationConfidence.CHECK_NEEDED;
             title = "Get a Bow of faerdhinen";
-            reason = "Song of the Elves is complete, but no Bowfa or Enhanced crystal weapon seed is observed.";
+            reason = PlayerText.get("PUCP74");
             guidance = new RecommendationGuidance(
-                    "Buy the Bow of faerdhinen or its seed route only after verifying a live price and confirming the purchase fits the account's current cash budget.",
-                    "Check the live purchase price before choosing this over a ready action.",
-                    "Grand Exchange for a Main; Prifddinas singing bowl if buying/using an Enhanced crystal weapon seed instead.",
-                    "The planner deliberately avoids hard-coding a market price."
+                    PlayerText.get("PUCP75"),
+                    PlayerText.get("PUCP76"),
+                    PlayerText.get("PUCP77"),
+                    PlayerText.get("PUCP78")
             );
         }
         else
@@ -560,21 +560,21 @@ public class ProgressionUpgradeCandidateProvider
                     ? RecommendationConfidence.CHECK_NEEDED
                     : RecommendationConfidence.VERIFIED;
             title = "Hunt the Enhanced crystal weapon seed";
-            reason = "This Iron-style account must self-source the Bowfa seed after Song of the Elves.";
+            reason = PlayerText.get("PUCP79");
             guidance = new RecommendationGuidance(
-                    "Run the Corrupted Gauntlet for an Enhanced crystal weapon seed. The seed is an RNG reward, so progress is tracked without a fixed completion count.",
-                    "The Gauntlet supplies its own temporary equipment inside the activity, so do not plan normal bank gear as a required input. After the seed drops, the Bowfa creation step needs Crystal shards.",
+                    PlayerText.get("PUCP80"),
+                    PlayerText.get("PUCP81"),
                     "The Corrupted Gauntlet in Prifddinas.",
                     hardcore
-                            ? "The Gauntlet is a dangerous activity for Hardcore status. Keep this as a deliberate risk decision rather than an automatic primary recommendation."
+                            ? PlayerText.get("PUCP82")
                             : uimDeathStorage
-                            ? "UIM safety: retrieval-service items are currently observed. A dangerous death can threaten that storage state, so this route stays secondary until the death-storage risk is cleared."
-                            : "The Enhanced crystal weapon seed is probabilistic. Corrupted Gauntlet has the substantially better seed chance than normal Gauntlet, but no number of completions is guaranteed."
+                            ? PlayerText.get("PUCP83")
+                            : PlayerText.get("PUCP84")
             );
         }
 
         score += preference(context, id);
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id, title, reason, score, confidence, guidance,
                 CandidateSafetyEvidence.potentiallyIrreversible(false)));
     }
@@ -583,7 +583,7 @@ public class ProgressionUpgradeCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (!ContentAccessRules.hasVerifiedMembership(account.getMembershipStatus())) return;
         int fishing = account.getSkillLevel(Skill.FISHING);
@@ -612,15 +612,15 @@ public class ProgressionUpgradeCandidateProvider
 
         if (score < 25.0) return;
         RecommendationGuidance guidance = new RecommendationGuidance(
-                "Play Fishing Trawler and keep contribution at or above the reward threshold each game until the missing Angler pieces are obtained.",
-                "Bring 300 swamp paste, one rope, and one bailing bucket. Patch ten leaks for 50 contribution, then help bail or repair until the voyage ends; the Khazard General Store sells every missing item. Outfit pieces are RNG rewards, so no fake exact game count is shown.",
-                "Fishing Trawler at Port Khazard. Inspect the trawler net after qualifying games for rewards.",
-                "You currently have " + pieces + "/4 observed Angler/Spirit Angler pieces. The full set gives the Fishing XP set bonus and also unlocks minnow access; detour only when that remaining account value justifies it."
+                PlayerText.get("PUCP85"),
+                PlayerText.get("PUCP86"),
+                PlayerText.get("PUCP87"),
+                "You currently have " + pieces + PlayerText.get("PUCP88")
         );
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id,
                 "Finish the Angler outfit (" + pieces + "/4)",
-                "The remaining Fishing grind or collection goal is large enough for this reusable skilling unlock to compete with direct XP.",
+                PlayerText.get("PUCP89"),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,

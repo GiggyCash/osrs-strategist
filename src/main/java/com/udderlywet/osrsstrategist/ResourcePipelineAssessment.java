@@ -5,19 +5,14 @@ import java.util.*;
 import lombok.Getter;
 
 /** Readiness plus replacement/opportunity value for one or more inputs. */
+@Getter
 public final class ResourcePipelineAssessment
 {
-    @Getter
     private final ResourcePipelineState state;
-    @Getter
     private final int scoreAdjustment;
-    @Getter
     private final int observedQuantity;
-    @Getter
     private final int requiredQuantity;
-    @Getter
     private final List<String> acquisitionRoutes;
-    @Getter
     private final String evidence;
 
     ResourcePipelineAssessment(ResourcePipelineState state,

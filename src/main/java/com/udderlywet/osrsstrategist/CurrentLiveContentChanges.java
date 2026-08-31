@@ -42,38 +42,38 @@ public final class CurrentLiveContentChanges
         public String getSource() { return source; }
     }
 
-    private static final String OFFICIAL = "Official Old School RuneScape game update";
+    private static final String OFFICIAL = PlayerText.get("CLCC1");
     private static final List<Entry> ENTRIES = Collections.unmodifiableList(Arrays.asList(
             new Entry("2026-08-12-sepulchre-floor-4", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    "Hallowed Sepulchre floor 4 requires 77 Agility and permits boosts.", OFFICIAL),
+                    PlayerText.get("CLCC2"), OFFICIAL),
             new Entry("2026-08-12-sepulchre-floor-5", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    "Hallowed Sepulchre floor 5 requires 87 Agility and permits boosts.", OFFICIAL),
+                    PlayerText.get("CLCC3"), OFFICIAL),
             new Entry("2026-08-12-colossal-wyrm-courses", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    "Colossal Wyrm courses take longer and award proportionally more XP, bone shards and termites, reducing input intensity without a claimed exact new action value.", OFFICIAL),
+                    PlayerText.get("CLCC4"), OFFICIAL),
             new Entry("2026-08-12-agility-shortcuts", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    "New shortcuts and barehanded replacements use their live Agility levels; diary tasks still require grapple use where specified.", OFFICIAL),
+                    PlayerText.get("CLCC5"), OFFICIAL),
             new Entry("2026-08-12-bonfire-tending", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    "Bonfires support continuous Tend-to interaction and conditional Make-X behavior.", OFFICIAL),
+                    PlayerText.get("CLCC6"), OFFICIAL),
             new Entry("2026-08-19-birdhouse-nests", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    "Birdhouses use five nest rolls with tripled success chance; do not retain old exact yield assumptions.", OFFICIAL),
+                    PlayerText.get("CLCC7"), OFFICIAL),
             new Entry("2026-08-19-birdhouse-xp", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    "Birdhouse XP is reduced by tier except Redwood, so pre-update RuneLite values must be overridden.", OFFICIAL),
+                    PlayerText.get("CLCC8"), OFFICIAL),
             new Entry("2026-08-19-hunter-methods", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    "Falconry, Aerial Fishing, deadfalls, trap limits and Hunter Rumours use the live Sweep-Up behavior.", OFFICIAL),
+                    PlayerText.get("CLCC9"), OFFICIAL),
             new Entry("2026-08-19-skilling-reward-shops", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    "GOTR and Tempoross offer newly deterministic currency purchases while currency acquisition remains variable.", OFFICIAL),
+                    PlayerText.get("CLCC10"), OFFICIAL),
             new Entry("2026-09-02-sweep-up-follow-up", LocalDate.of(2026, 9, 2),
                     Status.ANNOUNCED_NOT_LIVE,
-                    "The remaining announced Sweep-Up changes are excluded until verified live.", OFFICIAL)
+                    PlayerText.get("CLCC11"), OFFICIAL)
     ));
 
     private CurrentLiveContentChanges() { }

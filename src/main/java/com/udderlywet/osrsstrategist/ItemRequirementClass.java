@@ -12,6 +12,7 @@ import lombok.Getter;
  * item name alone cannot prove that gear is a slash weapon, a safe light
  * source, or a suitable encounter loadout.</p>
  */
+@Getter
 public enum ItemRequirementClass
 {
     AXE("any usable axe", true),
@@ -25,21 +26,19 @@ public enum ItemRequirementClass
     LIGHT_SOURCE("a suitable light source", false),
     SLASH_WEAPON("a suitable slash weapon", false),
     WEB_CUTTING_TOOL("a tool or weapon that can cut webs", false),
-    MAGIC_COMBAT_LOADOUT("runes or a powered staff for the required fight", false),
-    MAGIC_OR_RANGED_LOADOUT("Magic or Ranged equipment for the required fight", false),
-    TELEKINETIC_GRAB_RUNES("the runes and Magic access to cast Telekinetic Grab", false),
-    SPELL_RUNE_LOADOUT("the runes, spellbook, and level for the required spells", false),
+    MAGIC_COMBAT_LOADOUT(PlayerText.get("IRC1"), false),
+    MAGIC_OR_RANGED_LOADOUT(PlayerText.get("IRC2"), false),
+    TELEKINETIC_GRAB_RUNES(PlayerText.get("IRC3"), false),
+    SPELL_RUNE_LOADOUT(PlayerText.get("IRC4"), false),
     POISON_CURE("any mechanically valid poison cure", false),
     WATER_CONTAINER("a mechanically valid water container", false),
     EMPTY_INVENTORY_SPACE("the required empty inventory space", false),
     COMBAT_EQUIPMENT("suitable combat equipment", false),
     HEALING_FOOD("suitable healing food", false),
-    MULTI_STYLE_OR_POISON("two combat styles or a suitable poisoned weapon", false),
+    MULTI_STYLE_OR_POISON(PlayerText.get("IRC5"), false),
     FULL_HAM_ROBE_SET("a full seven-piece H.A.M. robe set", false);
 
-    @Getter
     private final String label;
-    @Getter
     private final boolean nameObservable;
 
     ItemRequirementClass(String label, boolean nameObservable)

@@ -22,7 +22,7 @@ public class QuestPlanningEngineTest
     @Test
     public void fullyModeledF2pQuestCanBecomeActionable()
     {
-        StrategyCandidate candidate = only(data(account(MembershipStatus.F2P,
+        Recommendation candidate = only(data(account(MembershipStatus.F2P,
                 40, 40, 40), "Rune Mysteries", QuestStatus.NOT_STARTED,
                 Collections.emptyList()));
         assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
@@ -37,11 +37,11 @@ public class QuestPlanningEngineTest
         List<ItemStackSnapshot> allMeat = Arrays.asList(
                 item("Raw bear meat"), item("Raw rat meat"),
                 item("Raw beef"), item("Raw chicken"));
-        StrategyCandidate ready = only(data(account(MembershipStatus.P2P,
+        Recommendation ready = only(data(account(MembershipStatus.P2P,
                 40, 40, 40), "Druidic Ritual", QuestStatus.NOT_STARTED, allMeat));
         assertEquals(RecommendationConfidence.VERIFIED, ready.getConfidence());
 
-        StrategyCandidate missing = only(data(account(MembershipStatus.P2P,
+        Recommendation missing = only(data(account(MembershipStatus.P2P,
                 40, 40, 40), "Druidic Ritual", QuestStatus.NOT_STARTED,
                 Collections.singletonList(item("Raw chicken"))));
         assertEquals(RecommendationConfidence.CHECK_NEEDED, missing.getConfidence());
@@ -61,7 +61,7 @@ public class QuestPlanningEngineTest
                 .bank(new BankSnapshot(Arrays.asList(
                         new ItemStackSnapshot(1, "Vodka", 2),
                         item("Marrentill potion (unf)")), 1L)).build();
-        StrategyCandidate boneVoyage = provider.candidates(context(data)).stream()
+        Recommendation boneVoyage = provider.candidates(context(data)).stream()
                 .filter(value -> value.getTitle().contains("Bone Voyage"))
                 .findFirst().orElseThrow(AssertionError::new);
         assertEquals(RecommendationConfidence.CHECK_NEEDED,
@@ -108,7 +108,7 @@ public class QuestPlanningEngineTest
                         "Druidic Ritual", QuestStatus.NOT_STARTED)))
                 .inventory(new InventorySnapshot(Collections.singletonList(
                         item("Raw chicken")))).build();
-        StrategyCandidate candidate = only(data);
+        Recommendation candidate = only(data);
         assertTrue(candidate.getGuidance().getAction()
                 .contains("Verify ownership"));
     }
@@ -174,10 +174,10 @@ public class QuestPlanningEngineTest
                 .quests(new QuestSnapshot(quests))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
 
-        StrategyCandidate prerequisite = provider.candidates(context(data)).stream()
+        Recommendation prerequisite = provider.candidates(context(data)).stream()
                 .filter(candidate -> candidate.getTitle().contains("The Grand Tree"))
                 .findFirst().orElseThrow(AssertionError::new);
-        StrategyCandidate target = provider.candidates(context(data)).stream()
+        Recommendation target = provider.candidates(context(data)).stream()
                 .filter(candidate -> candidate.getTitle().contains("Monkey Madness I"))
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(prerequisite.getScore() > target.getScore());
@@ -201,7 +201,7 @@ public class QuestPlanningEngineTest
                 .quests(new QuestSnapshot(quests))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
 
-        StrategyCandidate target = provider.candidates(context(data)).stream()
+        Recommendation target = provider.candidates(context(data)).stream()
                 .filter(candidate -> candidate.getTitle().contains("Desert Treasure II"))
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(target.getGuidance().getAction().contains("Temple of the Eye"));
@@ -234,11 +234,11 @@ public class QuestPlanningEngineTest
                         account(MembershipStatus.P2P, 70, 70, 70))
                 .quests(new QuestSnapshot(quests))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
-        List<StrategyCandidate> candidates = provider.candidates(context(data));
-        StrategyCandidate prerequisite = candidates.stream()
+        List<Recommendation> candidates = provider.candidates(context(data));
+        Recommendation prerequisite = candidates.stream()
                 .filter(value -> value.getTitle().contains("Underground Pass"))
                 .findFirst().orElseThrow(AssertionError::new);
-        StrategyCandidate target = candidates.stream()
+        Recommendation target = candidates.stream()
                 .filter(value -> value.getTitle().contains("Regicide"))
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(prerequisite.getScore() > target.getScore());
@@ -278,8 +278,8 @@ public class QuestPlanningEngineTest
                         account(MembershipStatus.P2P, 70, 70, 70))
                 .quests(new QuestSnapshot(quests))
                 .bank(new BankSnapshot(Collections.emptyList(), 1L)).build();
-        List<StrategyCandidate> candidates = provider.candidates(context(data));
-        StrategyCandidate target = candidates.stream()
+        List<Recommendation> candidates = provider.candidates(context(data));
+        Recommendation target = candidates.stream()
                 .filter(value -> value.getTitle().contains("King's Ransom"))
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(target.getGuidance().getAction().contains("Holy Grail"));
@@ -287,9 +287,9 @@ public class QuestPlanningEngineTest
                 value.getTitle().contains("Holy Grail")));
     }
 
-    private static StrategyCandidate only(StrategyDataBundle data)
+    private static Recommendation only(StrategyDataBundle data)
     {
-        List<StrategyCandidate> candidates = new QuestCandidateProvider(
+        List<Recommendation> candidates = new QuestCandidateProvider(
                 new QuestPriorityCatalog(), new QuestKnowledgeCatalog(),
                 new QuestRequirementResolver()).candidates(context(data));
         assertEquals(1, candidates.size());

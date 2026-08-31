@@ -15,9 +15,9 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getDiaries() == null
                 || context.getData().getAccount() == null
@@ -59,17 +59,17 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                 String verifyId = "verify:" + id;
                 if (context.getPreferenceProfile().isOnCooldown(verifyId))
                     continue;
-                result.add(new StrategyCandidate(
+                result.add(new Recommendation(
                         verifyId,
                         "Check " + pretty(next.name()) + " " + region + " Diary",
-                        "The tier is not complete, but individual rows are only public while its in-game page is open.",
+                        PlayerText.get("DCP1"),
                         score,
                         RecommendationConfidence.CHECK_NEEDED,
                         new RecommendationGuidance(
-                                "Open the " + region + " Achievement Diary page and leave it open until Compass refreshes.",
-                                "Do not gather supplies yet; Compass will read the struck and unstruck task rows directly.",
+                                "Open the " + region + PlayerText.get("DCP2"),
+                                PlayerText.get("DCP3"),
                                 "Quest tab → Achievement Diaries → " + region + ".",
-                                "This one-time observation replaces repeated manual task checks."),
+                                PlayerText.get("DCP4")),
                         CandidateSafetyEvidence.harmless(false)
                 ));
                 continue;
@@ -78,22 +78,22 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
             if (context.getPreferenceProfile().isOnCooldown(ready.getId()))
                 continue;
 
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     ready.getId(),
                     "Complete a " + pretty(next.name()) + " " + region + " task",
-                    "The live diary row proves this task is incomplete, and its RuneLite-defined skill and quest prerequisites are met.",
+                    PlayerText.get("DCP5"),
                     score,
                     RecommendationConfidence.VERIFIED,
                     new RecommendationGuidance(
                             ready.getTask(),
                             requirementSummary(ready),
-                            region + "; follow the exact destination named in the task instruction.",
-                            "Compass selected an observed incomplete task whose structured prerequisites are already satisfied."),
+                            region + PlayerText.get("DCP6"),
+                            PlayerText.get("DCP7")),
                     CandidateSafetyEvidence.potentiallyIrreversible(false)
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 5) return new ArrayList<>(result.subList(0, 5));
         return result;
     }
@@ -151,7 +151,7 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                         + (requirement.isStartedOnly() ? " started" : " complete"));
         }
         return values.isEmpty()
-                ? "No RuneLite-defined skill or quest prerequisite remains."
+                ? PlayerText.get("DCP8")
                 : "Verified: " + String.join(", ", values) + ".";
     }
 

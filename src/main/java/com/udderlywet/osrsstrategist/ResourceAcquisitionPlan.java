@@ -9,17 +9,13 @@ import lombok.Getter;
  * action. It only tells the strategy engine where a resource appears to be or
  * which sourcing family should be evaluated next.</p>
  */
+@Getter
 public final class ResourceAcquisitionPlan
 {
-    @Getter
     private final ResourceNeed need;
-    @Getter
     private final AcquisitionSource source;
-    @Getter
     private final int confirmedQuantity;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final String note;
 
     public ResourceAcquisitionPlan(

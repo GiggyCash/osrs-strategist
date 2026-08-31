@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 public class PvmPreparationProfileCatalog
 {
     public static final String PROVENANCE =
-            "Maintained PvM preparation review; readiness remains evidence-gated";
-    private static final String RESOURCE = "/content/catalogs/pvm-preparation-profiles.json";
+            PlayerText.get("PPPC1");
+    private static final String RESOURCE = PlayerText.get("PPPC2");
     private final Map<String, PvmPreparationProfile> profiles;
 
     public PvmPreparationProfileCatalog()

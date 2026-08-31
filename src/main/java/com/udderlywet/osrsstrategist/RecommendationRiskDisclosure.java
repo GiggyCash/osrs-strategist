@@ -16,7 +16,7 @@ public final class RecommendationRiskDisclosure
     public static RecommendationRiskDisclosure deathStorage()
     {
         return new RecommendationRiskDisclosure("HIGH RISK",
-                "This strategy uses death-based item storage. Incorrect execution or another unsafe death may permanently destroy stored items. Verify the exact retrieval rules before continuing. Use at your own risk; Gielinor Compass cannot recover or reimburse lost items.",
+                PlayerText.get("RRD1"),
                 true);
     }
 

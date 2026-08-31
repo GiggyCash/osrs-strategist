@@ -55,7 +55,7 @@ public class QuestRequirementResolver
                     : quests.statusOf(prerequisite);
             if (status != QuestStatus.COMPLETE)
                 missing.add(new Preparation(status == QuestStatus.UNKNOWN
-                        ? "Verify and complete prerequisite quest: " + prerequisite
+                        ? PlayerText.get("QRR1") + prerequisite
                         : "Complete prerequisite quest: " + prerequisite,
                         RestrictedQuestPolicy.isSafe(account, prerequisite)
                                 ? CandidateSafetyEvidence.verifiedSafe(
@@ -91,7 +91,7 @@ public class QuestRequirementResolver
                         definition.isFreeToPlay())));
         }
 
-        QuestItemEvidenceParser.Result imported = hasImportedItemEvidence(definition)
+        ImportedQuestItemRequirementCatalog.Result imported = hasImportedItemEvidence(definition)
                 ? importedItems.resultFor(definition.getName()) : null;
         ItemRequirementExpression expression = definition.getItemRequirementExpression();
         if (expression == null && imported != null)
@@ -139,9 +139,9 @@ public class QuestRequirementResolver
             return new QuestResolution(RecommendationConfidence.VERIFIED,
                     new RecommendationGuidance(
                             "Start " + definition.getName() + ".",
-                            "Requirements satisfied. Use Quest Helper for the walkthrough.",
+                            PlayerText.get("QRR2"),
                             definition.getStartLocation(),
-                            unlocks.isEmpty() ? "You have everything required by the available quest data."
+                            unlocks.isEmpty() ? PlayerText.get("QRR3")
                                     : "Progression unlocked: " + unlocks + "."),
                     "Requirements satisfied",
                     CandidateSafetyEvidence.verifiedSafe(
@@ -154,7 +154,7 @@ public class QuestRequirementResolver
                 new RecommendationGuidance(missing.get(0).text + ".",
                         String.join("; ", missingText), definition.getStartLocation(),
                         unlocks.isEmpty()
-                                ? "Resolve the listed requirement before starting."
+                                ? PlayerText.get("QRR4")
                                 : "Resolving this path unlocks: " + unlocks + "."),
                 "Preparation required: " + missing.get(0).text,
                 missing.get(0).safetyEvidence);
@@ -184,7 +184,7 @@ public class QuestRequirementResolver
                     .append(quantity(first)).append(": ")
                     .append(next.getAction().trim());
             if (result.getMissingInputs().size() > 1)
-                detail.append(" Resolve the remaining confirmed item shortfalls after this first step.");
+                detail.append(PlayerText.get("QRR5"));
             return new Preparation(action, detail.toString(), safety);
         }
 
@@ -208,7 +208,7 @@ public class QuestRequirementResolver
         if (!routes.isEmpty())
             detail.append(" Suggested route: ").append(routes.get(0));
         if (result.getMissingInputs().size() > 1)
-            detail.append(" Resolve the remaining confirmed item shortfalls after this first step.");
+            detail.append(PlayerText.get("QRR6"));
         return new Preparation(action, detail.toString(), safety);
     }
 

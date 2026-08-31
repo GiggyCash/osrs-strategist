@@ -5,19 +5,14 @@ import java.util.*;
 import lombok.Getter;
 
 /** Verified self-source recipe/access route for one resource family. */
+@Getter
 public final class ResourceDependencyDefinition
 {
-    @Getter
     private final int itemId;
-    @Getter
     private final String itemName;
-    @Getter
     private final String action;
-    @Getter
     private final int opportunityCost;
-    @Getter
     private final int outputQuantity;
-    @Getter
     private final List<DependencyRequirement> prerequisites;
 
     public ResourceDependencyDefinition(int itemId, String action,

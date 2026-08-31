@@ -3,6 +3,7 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Remaining work and ETA for the current skill target. */
+@Getter
 public final class ProgressTargetProjection
 {
     public enum State
@@ -13,13 +14,9 @@ public final class ProgressTargetProjection
         COMPLETE
     }
 
-    @Getter
     private final State state;
-    @Getter
     private final ProgressTarget target;
-    @Getter
     private final int xpRemaining;
-    @Getter
     private final long etaMillis;
 
     private ProgressTargetProjection(

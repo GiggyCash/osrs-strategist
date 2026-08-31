@@ -25,14 +25,14 @@ public class InfrastructureCandidateProviderTest
     @Test
     public void unknownPohGetsOneOwnershipSafeVerificationAction()
     {
-        StrategyCandidate candidate = provider.candidates(context(
+        Recommendation candidate = provider.candidates(context(
                 AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
                 46, 25, null)).get(0);
 
         assertEquals("verify:poh-build-mode", candidate.getId());
         assertTrue(candidate.getGuidance().getAction().contains("Build mode"));
         assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(
-                candidate.toRecommendation()));
+                candidate));
     }
 
     @Test
@@ -41,10 +41,10 @@ public class InfrastructureCandidateProviderTest
         PohSnapshot roomOnly = LivePohStateReader.snapshotForObjectIds(
                 java.util.Collections.singleton(
                         ObjectID.POH_COS_ROOM_ARMOUR_CASE_HOTSPOT));
-        List<StrategyCandidate> candidates = provider.candidates(context(
+        List<Recommendation> candidates = provider.candidates(context(
                 AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
                 46, 25, roomOnly));
-        StrategyCandidate armour = candidates.stream()
+        Recommendation armour = candidates.stream()
                 .filter(value -> value.getId().endsWith("poh-armour-case"))
                 .findFirst().orElseThrow(AssertionError::new);
 
@@ -53,7 +53,7 @@ public class InfrastructureCandidateProviderTest
         assertEquals(RecommendationConfidence.CHECK_NEEDED,
                 armour.getConfidence());
         assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(
-                armour.toRecommendation()));
+                armour));
     }
 
     @Test
@@ -61,10 +61,10 @@ public class InfrastructureCandidateProviderTest
     {
         PohSnapshot empty = LivePohStateReader.snapshotForObjectIds(
                 java.util.Collections.emptySet());
-        StrategyCandidate main = find(provider.candidates(context(
+        Recommendation main = find(provider.candidates(context(
                 AccountMode.MAIN, MembershipStatus.P2P, 50, 25, empty)),
                 "poh-costume-room");
-        StrategyCandidate uim = find(provider.candidates(context(
+        Recommendation uim = find(provider.candidates(context(
                 AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
                 50, 25, empty)), "poh-costume-room");
 
@@ -86,13 +86,13 @@ public class InfrastructureCandidateProviderTest
         PohSnapshot roomOnly = LivePohStateReader.snapshotForObjectIds(
                 Collections.singleton(
                         ObjectID.POH_COS_ROOM_ARMOUR_CASE_HOTSPOT));
-        StrategyCandidate firstArmour = find(provider.candidates(
+        Recommendation firstArmour = find(provider.candidates(
                 pressureContext(10_000, roomOnly)), "poh-armour-case");
-        StrategyCandidate firstPortal = find(provider.candidates(
+        Recommendation firstPortal = find(provider.candidates(
                 pressureContext(10_000, roomOnly)), "poh-portal-chamber");
-        StrategyCandidate secondArmour = find(provider.candidates(
+        Recommendation secondArmour = find(provider.candidates(
                 pressureContext(20_000, roomOnly)), "poh-armour-case");
-        StrategyCandidate secondPortal = find(provider.candidates(
+        Recommendation secondPortal = find(provider.candidates(
                 pressureContext(20_000, roomOnly)), "poh-portal-chamber");
 
         assertTrue(secondArmour.getScore() > firstArmour.getScore());
@@ -101,7 +101,7 @@ public class InfrastructureCandidateProviderTest
         assertEquals(firstPortal.getScore(), secondPortal.getScore(), 0.001);
     }
 
-    private static StrategyCandidate find(List<StrategyCandidate> values,
+    private static Recommendation find(List<Recommendation> values,
             String suffix)
     {
         return values.stream().filter(value -> value.getId().endsWith(suffix))

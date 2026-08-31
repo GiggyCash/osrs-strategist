@@ -19,7 +19,7 @@ public class MinigamePlanningDepthTest
     @Test
     public void activityWithoutExactSetupProducesSpecificVerificationAction()
     {
-        StrategyCandidate candidate = find(candidates(0, 60,
+        Recommendation candidate = find(candidates(0, 60,
                 Collections.singleton("shooting-stars"),
                 Collections.emptyList(), StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR), "shooting-stars");
@@ -37,14 +37,14 @@ public class MinigamePlanningDepthTest
     @Test
     public void observedTemporossSetupTransitionsFromPreparationToReady()
     {
-        StrategyCandidate missing = find(candidates(0, 60,
+        Recommendation missing = find(candidates(0, 60,
                 Collections.singleton("tempoross"), Collections.emptyList(),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
         assertEquals(RecommendationConfidence.CHECK_NEEDED,
                 missing.getConfidence());
         assertTrue(missing.getGuidance().getAction().contains("Harpoon"));
 
-        StrategyCandidate ready = find(candidates(0, 60,
+        Recommendation ready = find(candidates(0, 60,
                 Collections.singleton("tempoross"),
                 Collections.singletonList(item("Dragon harpoon")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
@@ -58,7 +58,7 @@ public class MinigamePlanningDepthTest
     @Test
     public void exactMajorMinigameSetupsUseObservedMaterials()
     {
-        StrategyCandidate foundry = find(candidates(0, 80,
+        Recommendation foundry = find(candidates(0, 80,
                 Collections.singleton("giants-foundry"),
                 Collections.singletonList(item("Steel bar", 28)),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
@@ -68,7 +68,7 @@ public class MinigamePlanningDepthTest
         assertTrue(foundry.getGuidance().getAction()
                 .contains("exactly 28 bars' worth"));
 
-        StrategyCandidate tithe = find(candidates(0, 80,
+        Recommendation tithe = find(candidates(0, 80,
                 Collections.singleton("tithe-farm"), Arrays.asList(
                         item("Spade"), item("Seed dibber"),
                         item("Gricoller's can")), StrategyMode.BALANCED,
@@ -82,7 +82,7 @@ public class MinigamePlanningDepthTest
     @Test
     public void variableSafetyAndContractEvidenceRemainPreparation()
     {
-        StrategyCandidate wintertodt = find(candidates(0, 80,
+        Recommendation wintertodt = find(candidates(0, 80,
                 Collections.singleton("wintertodt"), Arrays.asList(
                         item("Rune axe"), item("Tinderbox")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
@@ -92,7 +92,7 @@ public class MinigamePlanningDepthTest
         assertTrue(wintertodt.getGuidance().getAction()
                 .contains("four verified warm-clothing pieces"));
 
-        StrategyCandidate homes = find(candidates(0, 80,
+        Recommendation homes = find(candidates(0, 80,
                 Collections.singleton("mahogany-homes"), Arrays.asList(
                         item("Hammer"), item("Saw")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR),
@@ -106,7 +106,7 @@ public class MinigamePlanningDepthTest
     @Test
     public void uimConventionalBankCannotProveMinigameSetup()
     {
-        StrategyCandidate candidate = find(candidates(2, 60,
+        Recommendation candidate = find(candidates(2, 60,
                 Collections.singleton("tempoross"),
                 Collections.singletonList(item("Dragon harpoon")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "tempoross");
@@ -120,7 +120,7 @@ public class MinigamePlanningDepthTest
         StrategyContext context = context(0, 1,
                 Collections.singleton("pest-control"), Collections.emptyList(),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR);
-        StrategyCandidate candidate = find(provider.candidates(context),
+        Recommendation candidate = find(provider.candidates(context),
                 "pest-control");
         assertFalse(new CandidateSafetyPolicy().isAllowed(
                 candidate.getSafetyEvidence(), context));
@@ -135,7 +135,7 @@ public class MinigamePlanningDepthTest
                 new HashSet<>(Arrays.asList("motherlode-mine",
                         "guardians-of-the-rift")), items,
                 StrategyMode.RELAXED, SessionIntent.AFK);
-        List<StrategyCandidate> candidates = provider.candidates(context);
+        List<Recommendation> candidates = provider.candidates(context);
         assertEquals("minigame:motherlode-mine", candidates.get(0).getId());
         assertEquals(RecommendationConfidence.VERIFIED,
                 candidates.get(0).getConfidence());
@@ -144,13 +144,13 @@ public class MinigamePlanningDepthTest
     @Test
     public void forestryUsesLevelAppropriateNamedLocation()
     {
-        StrategyCandidate oak = find(candidates(0, 20,
+        Recommendation oak = find(candidates(0, 20,
                 Collections.singleton("forestry"),
                 Collections.singletonList(item("Rune axe")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "forestry");
         assertTrue(oak.getGuidance().getLocation().contains("east of Draynor"));
 
-        StrategyCandidate maple = find(candidates(0, 50,
+        Recommendation maple = find(candidates(0, 50,
                 Collections.singleton("forestry"),
                 Collections.singletonList(item("Rune axe")),
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR), "forestry");
@@ -158,7 +158,7 @@ public class MinigamePlanningDepthTest
         assertTrue(maple.getGuidance().getAction().contains("maple trees"));
     }
 
-    private List<StrategyCandidate> candidates(int type, int level,
+    private List<Recommendation> candidates(int type, int level,
             java.util.Set<String> unlocked, List<ItemStackSnapshot> bank,
             StrategyMode mode, SessionIntent intent)
     {
@@ -195,10 +195,10 @@ public class MinigamePlanningDepthTest
                 GoalType.MAX, false, false, false, new PreferenceProfile());
     }
 
-    private static StrategyCandidate find(List<StrategyCandidate> values,
+    private static Recommendation find(List<Recommendation> values,
             String id)
     {
-        StrategyCandidate result = values.stream()
+        Recommendation result = values.stream()
                 .filter(value -> value.getId().contains(id)).findFirst().orElse(null);
         assertNotNull(result);
         return result;

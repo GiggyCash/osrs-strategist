@@ -25,9 +25,9 @@ public class FireCapeGoalPlanningTest
                         RecommendationConfidence.VERIFIED,
                         Collections.emptyList()));
 
-        StrategyCandidate automatic = find(provider.candidates(
+        Recommendation automatic = find(provider.candidates(
                 context(data, GoalType.AUTOMATIC)), "pvm:tztok_jad");
-        StrategyCandidate goal = find(provider.candidates(
+        Recommendation goal = find(provider.candidates(
                 context(data, GoalType.FIRE_CAPE)), "pvm:tztok_jad");
 
         assertNotNull(automatic);
@@ -36,7 +36,7 @@ public class FireCapeGoalPlanningTest
         assertTrue(goal.getGuidance().getAction().contains("63 waves"));
         assertTrue(goal.getGuidance().getLocation().contains("Fight Cave"));
         assertTrue(new RecommendationActionabilityPolicy()
-                .canLeadQueue(goal.toRecommendation()));
+                .canLeadQueue(goal));
     }
 
     @Test
@@ -48,14 +48,14 @@ public class FireCapeGoalPlanningTest
                         Collections.singletonList(
                                 "Observe a carried Ranged weapon and wave supplies")));
 
-        StrategyCandidate candidate = find(provider.candidates(
+        Recommendation candidate = find(provider.candidates(
                 context(data, GoalType.FIRE_CAPE)), "pvm:tztok_jad");
 
         assertNotNull(candidate);
         assertEquals(RecommendationConfidence.CHECK_NEEDED,
                 candidate.getConfidence());
         assertFalse(new RecommendationActionabilityPolicy()
-                .canLeadQueue(candidate.toRecommendation()));
+                .canLeadQueue(candidate));
     }
 
     @Test
@@ -99,10 +99,10 @@ public class FireCapeGoalPlanningTest
                 .pvm(new PvmSnapshot(values)).build();
     }
 
-    private static StrategyCandidate find(
-            List<StrategyCandidate> candidates, String id)
+    private static Recommendation find(
+            List<Recommendation> candidates, String id)
     {
-        for (StrategyCandidate candidate : candidates)
+        for (Recommendation candidate : candidates)
             if (id.equals(candidate.getId())) return candidate;
         return null;
     }

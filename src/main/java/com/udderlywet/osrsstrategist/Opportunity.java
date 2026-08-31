@@ -4,23 +4,16 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class Opportunity
 {
-    @Getter
     private final String id;
-    @Getter
     private final OpportunityType type;
-    @Getter
     private final String title;
-    @Getter
     private final boolean ready;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final List<String> preparation;
-    @Getter
     private final boolean setupVerified;
-    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
 
     public Opportunity(

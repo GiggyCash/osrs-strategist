@@ -29,9 +29,9 @@ public final class ContextualGearDecisionService
                 unresolvedRoutes.add(target);
         }
         String ownedValue = !ownershipObserved
-                ? "Open the bank to establish owned alternatives"
+                ? PlayerText.get("CGDS1")
                 : owned.isEmpty()
-                ? "No exact matching target is proven; compare current equipped gear"
+                ? PlayerText.get("CGDS2")
                 : owned.get(0);
         put(result, GearDecisionKind.BEST_OWNED, ownedValue,
                 ownershipObserved && !owned.isEmpty()
@@ -39,8 +39,8 @@ public final class ContextualGearDecisionService
                         : RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_USABLE,
                 owned.isEmpty()
-                        ? "Verify requirements and encounter suitability for the best observed owned option"
-                        : owned.get(0) + " after stat, charge, ammo, and encounter checks",
+                        ? PlayerText.get("CGDS3")
+                        : owned.get(0) + PlayerText.get("CGDS4"),
                 RecommendationConfidence.CHECK_NEEDED);
 
         String routed = unresolvedRoutes.isEmpty() ? null
@@ -48,18 +48,18 @@ public final class ContextualGearDecisionService
         AccountMode mode = context == null ? AccountMode.UNKNOWN
                 : context.getAccountMode();
         String available = routed == null
-                ? "Resolve a concrete item and acquisition route before calling anything available now"
+                ? PlayerText.get("CGDS5")
                 : mode.usesGrandExchange()
-                ? "Check live price, cash, and marginal benefit for " + routed
-                : "Resolve the verified self-source path for " + routed;
+                ? PlayerText.get("CGDS6") + routed
+                : PlayerText.get("CGDS7") + routed;
         put(result, GearDecisionKind.BEST_AVAILABLE_NOW, available,
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_VALUE_UPGRADE,
-                "Compare the marginal encounter benefit with GP, supply, travel, and acquisition time",
+                PlayerText.get("CGDS8"),
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_PRACTICAL_UPGRADE,
                 routed == null ? entry.getWeaponGuidance()
-                        : routed + " if its first dependency is worth the detour",
+                        : routed + PlayerText.get("CGDS9"),
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.LONG_TERM_TARGET,
                 entry.getWeaponGuidance(), RecommendationConfidence.CHECK_NEEDED);

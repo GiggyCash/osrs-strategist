@@ -5,15 +5,12 @@ import java.util.*;
 import lombok.Getter;
 
 /** A validated dependency path connecting one recommendation to one selected goal. */
+@Getter
 public final class GoalDependencyProvenance
 {
-    @Getter
     private final GoalType goal;
-    @Getter
     private final GoalRecommendationRelationship relationship;
-    @Getter
     private final String recommendationId;
-    @Getter
     private final List<String> path;
 
     private GoalDependencyProvenance(GoalType goal,
@@ -27,7 +24,7 @@ public final class GoalDependencyProvenance
                 || path == null || path.size() < 2)
         {
             throw new IllegalArgumentException(
-                    "Goal provenance requires a goal, action, relationship, and dependency path");
+                    PlayerText.get("GDP2"));
         }
         this.goal = goal;
         this.relationship = relationship;

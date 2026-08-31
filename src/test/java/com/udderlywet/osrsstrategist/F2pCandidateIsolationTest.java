@@ -24,7 +24,7 @@ public class F2pCandidateIsolationTest
                 .build();
         StrategyContext context = context(data);
 
-        List<StrategyCandidate> candidates =
+        List<Recommendation> candidates =
                 new QuestCandidateProvider(new QuestPriorityCatalog()).candidates(context);
 
         assertFalse(containsTitle(candidates, "Pandemonium"));
@@ -53,9 +53,9 @@ public class F2pCandidateIsolationTest
                 .candidates(context(data)).isEmpty());
     }
 
-    private static boolean containsTitle(List<StrategyCandidate> candidates, String text)
+    private static boolean containsTitle(List<Recommendation> candidates, String text)
     {
-        for (StrategyCandidate candidate : candidates)
+        for (Recommendation candidate : candidates)
         {
             if (candidate.getTitle() != null && candidate.getTitle().contains(text)) return true;
         }

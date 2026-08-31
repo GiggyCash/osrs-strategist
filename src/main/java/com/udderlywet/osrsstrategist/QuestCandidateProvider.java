@@ -55,9 +55,9 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getQuests() == null
                 || context.getData().getAccount() == null)
@@ -110,18 +110,18 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (status == QuestStatus.IN_PROGRESS)
             {
                 score += 12.0;
-                reason = "This quest is already in progress. It remains an alternative until the remaining step and requirements are observed.";
+                reason = PlayerText.get("QCP1");
             }
             else
             {
                 score -= 7.0;
-                reason = "This quest is unfinished, but its requirements are not fully verified yet. It stays below ready actions until those checks are complete.";
+                reason = PlayerText.get("QCP2");
             }
 
             RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
             if (build != RestrictedBuildType.STANDARD)
             {
-                reason += " Its reward profile is on the safe list for this "
+                reason += PlayerText.get("QCP3")
                         + AccountBuildPolicy.label(account) + " build.";
             }
 
@@ -134,11 +134,11 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (neededPrerequisites.contains(normalize(questName)))
             {
                 score += 24.0;
-                reason += " It is a verified prerequisite for another unfinished quest.";
+                reason += PlayerText.get("QCP4");
             }
 
             if (requiredForGoal)
-                reason += " It is on the selected goal's proven quest path; optional-quest preference does not suppress it.";
+                reason += PlayerText.get("QCP5");
 
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);
@@ -158,7 +158,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
                     && !guidance.getAction().trim().isEmpty())
                 title = "Prepare for " + questName + ": "
                         + guidance.getAction().replaceFirst("\\.$", "");
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     id,
                     title,
                     reason,
@@ -171,7 +171,7 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 8)
         {
             return new ArrayList<>(result.subList(0, 8));

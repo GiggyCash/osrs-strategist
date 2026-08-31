@@ -26,9 +26,9 @@ public class StrategyCandidateFoundationTest
                 QuestTolerance.NORMAL, GoalType.MAX,
                 false, false, new PreferenceProfile());
 
-        StrategyCandidate candidate = new ClueCandidateProvider()
+        Recommendation candidate = new ClueCandidateProvider()
                 .candidates(context).get(0);
-        Recommendation recommendation = candidate.toRecommendation();
+        Recommendation recommendation = candidate;
 
         assertEquals("verify:clue-current-step", recommendation.getId());
         assertTrue(recommendation.getGuidance().getAction()
@@ -47,7 +47,7 @@ public class StrategyCandidateFoundationTest
                 "Catherby bank", Arrays.asList("Maple longbow",
                         "Green d'hide chaps", "Iron med helm"),
                 false, false, null, false, "outside catherby bank");
-        StrategyCandidate candidate = new ClueCandidateProvider().candidates(
+        Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "medium", 1L,
                         RecommendationConfidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
@@ -69,7 +69,7 @@ public class StrategyCandidateFoundationTest
                 "Dig on RuneLite's marked coordinate tile.",
                 "RuneLite's marked tile", Collections.emptyList(), true,
                 false, null, true, null);
-        StrategyCandidate candidate = new ClueCandidateProvider().candidates(
+        Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "hard", 1L,
                         RecommendationConfidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
@@ -87,7 +87,7 @@ public class StrategyCandidateFoundationTest
                 "Bow to Brugsen Bursen at the Grand Exchange.",
                 "Grand Exchange", Collections.emptyList(), false, false,
                 null, false, null);
-        StrategyCandidate candidate = new ClueCandidateProvider().candidates(
+        Recommendation candidate = new ClueCandidateProvider().candidates(
                 context(new ClueSnapshot(true, "beginner", 1L,
                         RecommendationConfidence.VERIFIED, step),
                         AccountMode.MAIN, false)).get(0);
@@ -95,7 +95,7 @@ public class StrategyCandidateFoundationTest
         assertEquals(RecommendationConfidence.VERIFIED,
                 candidate.getConfidence());
         assertTrue(new RecommendationActionabilityPolicy()
-                .canLeadQueue(candidate.toRecommendation()));
+                .canLeadQueue(candidate));
     }
 
     private static StrategyContext context(ClueSnapshot clue,

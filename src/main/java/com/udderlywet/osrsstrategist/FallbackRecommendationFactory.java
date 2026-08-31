@@ -13,33 +13,33 @@ final class FallbackRecommendationFactory
     {
         if (data == null || data.getAccount() == null)
             return fallback("login", "Log in to continue",
-                    "Log in to RuneScape to load your account state.",
+                    PlayerText.get("FRF1"),
                     "No supplies required.",
                     "RuneScape login screen.",
-                    "No character state is currently available.");
+                    PlayerText.get("FRF2"));
 
         if (data.getInventory() == null)
             return fallback("inventory", "Open your inventory",
-                    "Open your inventory tab to verify carried supplies.",
+                    PlayerText.get("FRF3"),
                     "No supplies required.",
-                    "Inventory tab in the RuneScape side panel.",
-                    "Your carried items have not been observed yet.");
+                    PlayerText.get("FRF4"),
+                    PlayerText.get("FRF5"));
 
         if (data.getEquipment() == null)
             return fallback("equipment", "Open your equipment tab",
-                    "Open your equipment tab to verify your current setup.",
+                    PlayerText.get("FRF6"),
                     "No supplies required.",
-                    "Worn Equipment tab in the RuneScape side panel.",
-                    "Your equipped items have not been observed yet.");
+                    PlayerText.get("FRF7"),
+                    PlayerText.get("FRF8"));
 
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
         if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
             return fallback("bank", "Open your bank",
-                    "Open your bank once to verify available supplies.",
+                    PlayerText.get("FRF9"),
                     "No supplies required.",
-                    "Lumbridge Castle bank, on the top floor.",
-                    "No bank snapshot has been observed for this account.");
+                    PlayerText.get("FRF10"),
+                    PlayerText.get("FRF11"));
 
         AccountSnapshot account = data.getAccount();
         if (AccountBuildPolicy.allowsSkill(account, Skill.MINING))
@@ -51,10 +51,10 @@ final class FallbackRecommendationFactory
             if (!hasPickaxe)
             {
                 return fallback("starter-pickaxe", "Get a bronze pickaxe",
-                        "Talk to the Mining tutor at the east Lumbridge Swamp mine and ask for a bronze pickaxe. Keep it in your inventory so Compass can advance the plan when it is observed.",
+                        PlayerText.get("FRF12"),
                         "No supplies required.",
-                        "East Lumbridge Swamp mine, beside the Mining tutor.",
-                        "A free reusable pickaxe unlocks a concrete no-cost Mining route immediately.");
+                        PlayerText.get("FRF13"),
+                        PlayerText.get("FRF14"));
             }
             int current = Math.max(1, account.getSkillLevel(Skill.MINING));
             int target = Math.min(99, current + 1);
@@ -62,11 +62,11 @@ final class FallbackRecommendationFactory
             return fallback("starter-mining",
                     maxed ? "Mine one inventory of copper"
                             : "Mine copper to level " + target,
-                    "Ask the Mining tutor for a bronze pickaxe if needed, mine copper at the east Lumbridge Swamp mine, drop the ore when full, and stop "
+                    PlayerText.get("FRF15")
                             + (maxed ? "after one inventory." : "at level " + target + "."),
-                    "Bronze pickaxe; the Mining tutor at the mine supplies one when needed.",
-                    "East Lumbridge Swamp mine, beside the Mining tutor.",
-                    "Copper mining is a safe no-cost route while other activities still need supplies or access information.");
+                    PlayerText.get("FRF16"),
+                    PlayerText.get("FRF17"),
+                    PlayerText.get("FRF18"));
         }
 
         Skill combatSkill = firstTrainableMeleeSkill(account);
@@ -77,18 +77,18 @@ final class FallbackRecommendationFactory
             return fallback("safe-combat-" + combatSkill.name().toLowerCase(),
                     "Train " + combatSkill.getName() + " to " + target,
                     "Set the combat style to " + attackStyle(combatSkill)
-                            + ", fight unarmed monks, and stop at level "
+                            + PlayerText.get("FRF19")
                             + target + ". Ask a monk to heal you when needed.",
                     "No weapon or food required.",
-                    "Edgeville Monastery, west of Edgeville.",
-                    "Monks provide a concrete no-cost route that respects the current combat build.");
+                    PlayerText.get("FRF20"),
+                    PlayerText.get("FRF21"));
         }
 
         return fallback("safe-combat", "Fight 10 monks",
-                "Fight 10 unarmed monks with the current build-legal combat style. Ask a monk to heal you when needed, then stop.",
+                PlayerText.get("FRF22"),
                 "No weapon or food required.",
-                "Edgeville Monastery, west of Edgeville.",
-                "Monks provide a concrete no-cost route that respects the current combat build.");
+                PlayerText.get("FRF23"),
+                PlayerText.get("FRF24"));
     }
 
     static boolean isFallback(Recommendation recommendation)
@@ -120,7 +120,7 @@ final class FallbackRecommendationFactory
                 Double.NEGATIVE_INFINITY, null,
                 RecommendationConfidence.VERIFIED, 0, 0,
                 new RecommendationGuidance(action, supplies, location,
-                        "Compass replaces this recovery step automatically when the account state changes."),
+                        PlayerText.get("FRF25")),
                 CandidateSafetyEvidence.harmless(true));
     }
 }

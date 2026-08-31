@@ -13,7 +13,7 @@ public class ResourceDependencyCatalog
     public ResourceDependencyCatalog()
     {
         this(java.util.Arrays.asList(BundledCatalogLoader.array(
-                "/content/catalogs/resource-dependencies.json",
+                PlayerText.get("RDC12"),
                 ResourceDependencyDefinition[].class)));
     }
 

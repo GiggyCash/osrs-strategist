@@ -1,10 +1,12 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
 import java.util.*;
 
 import lombok.Getter;
 
 /** Verified Slayer-master mechanics plus property-driven strategic qualities. */
+@RequiredArgsConstructor
 public final class SlayerMasterProfile
 {
     @Getter
@@ -37,29 +39,6 @@ public final class SlayerMasterProfile
     @Getter
     private final boolean wilderness;
 
-    public SlayerMasterProfile(String id, List<String> names, String location,
-            int minimumCombat, int minimumSlayer, String requiredQuest,
-            boolean questStartSuffices, int normalPoints, int cancelCost,
-            int blockCost, double experiencePotential,
-            double supplyValue, double setupBurden, double locationConstraint,
-            boolean wilderness)
-    {
-        this.id = id;
-        this.names = Collections.unmodifiableList(new ArrayList<>(names));
-        this.location = location;
-        this.minimumCombat = Math.max(0, minimumCombat);
-        this.minimumSlayer = Math.max(1, minimumSlayer);
-        this.requiredQuest = requiredQuest;
-        this.questStartSuffices = questStartSuffices;
-        this.normalPoints = Math.max(0, normalPoints);
-        this.cancelCost = Math.max(0, cancelCost);
-        this.blockCost = Math.max(0, blockCost);
-        this.experiencePotential = bounded(experiencePotential);
-        this.supplyValue = bounded(supplyValue);
-        this.setupBurden = bounded(setupBurden);
-        this.locationConstraint = bounded(locationConstraint);
-        this.wilderness = wilderness;
-    }
 
     public String getDisplayName() { return names.get(0); }
     public boolean isQuestStartSufficient() { return questStartSuffices; }

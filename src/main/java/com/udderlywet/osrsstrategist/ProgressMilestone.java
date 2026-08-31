@@ -3,19 +3,14 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One meaningful account progression event suitable for a session recap. */
+@Getter
 public final class ProgressMilestone
 {
-    @Getter
     private final String id;
-    @Getter
     private final ProgressMilestoneType type;
-    @Getter
     private final String title;
-    @Getter
     private final String detail;
-    @Getter
     private final String goalId;
-    @Getter
     private final long occurredAtMillis;
 
     public ProgressMilestone(

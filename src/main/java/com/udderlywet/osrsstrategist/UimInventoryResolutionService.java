@@ -36,11 +36,11 @@ public final class UimInventoryResolutionService
                 ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
                         data.getAccount().getAccountTypeCode());
         if (mode != AccountMode.ULTIMATE_IRONMAN)
-            return unresolved("Inventory-resolution policy applies only to a verified UIM account.");
+            return unresolved(PlayerText.get("UIRS1"));
 
         InventorySnapshot inventory = data.getInventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
-            return unresolved("Exact live inventory slots are not observed.");
+            return unresolved(PlayerText.get("UIRS2"));
         MethodInventoryFootprint needed = footprint == null
                 ? MethodInventoryFootprint.lowPressure() : footprint;
         int free = Math.max(0, 28
@@ -48,15 +48,15 @@ public final class UimInventoryResolutionService
         if (free >= needed.getMinimumPracticalFreeSlots())
             return result(UimInventoryResolutionKind.USE_AS_IS,
                     RecommendationConfidence.VERIFIED, null, null,
-                    "The proposed plan fits the currently observed inventory.");
+                    PlayerText.get("UIRS3"));
         if (goodLowFootprintAlternativeKnown)
             return result(UimInventoryResolutionKind.USE_LOW_FOOTPRINT_ALTERNATIVE,
                     RecommendationConfidence.VERIFIED, null, null,
-                    "A reviewed comparable method fits without dismantling the current inventory.");
+                    PlayerText.get("UIRS4"));
         if (productiveConsumptionKnown)
             return result(UimInventoryResolutionKind.PRODUCTIVELY_CONSUME_RESOURCES,
                     RecommendationConfidence.CHECK_NEEDED, null, null,
-                    "A useful current resource can be consumed for account progress before switching setup; no item is discarded merely to free a slot.");
+                    PlayerText.get("UIRS5"));
 
         List<UimStorageOption> options = proposedStorage == null
                 ? Collections.emptyList() : new ArrayList<>(proposedStorage);
@@ -73,7 +73,7 @@ public final class UimInventoryResolutionService
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_VERIFIED_SAFE_STORAGE,
                         RecommendationConfidence.VERIFIED, decision, null,
-                        "Verified item-specific safe storage can resolve the plan's slot shortfall.");
+                        PlayerText.get("UIRS6"));
         }
 
         for (UimStorageOption option : options)
@@ -85,7 +85,7 @@ public final class UimInventoryResolutionService
                             < StrategicPriority.HIGH.ordinal()) continue;
             return result(UimInventoryResolutionKind.BUILD_HIGH_VALUE_SAFE_STORAGE,
                     RecommendationConfidence.CHECK_NEEDED, null, null,
-                    "The safe storage build has repeated account value beyond this one slot; verify its exact construction materials before starting.");
+                    PlayerText.get("UIRS7"));
         }
 
         for (UimStorageOption option : options)
@@ -96,7 +96,7 @@ public final class UimInventoryResolutionService
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_RESTRICTED_RETRIEVAL,
                         RecommendationConfidence.CHECK_NEEDED, decision, null,
-                        "The looting bag is verified and compatible, but insertion, retrieval, and setup burden must be executed explicitly; it is not generic extra inventory.");
+                        PlayerText.get("UIRS8"));
         }
 
         for (UimStorageOption option : options)
@@ -109,9 +109,9 @@ public final class UimInventoryResolutionService
                 return result(UimInventoryResolutionKind.USE_DANGEROUS_DEATH_STORAGE,
                         RecommendationConfidence.CHECK_NEEDED, decision,
                         RecommendationRiskDisclosure.deathStorage(),
-                        "Every safer resolution is insufficient and the exact verified death-storage mechanic is reserved for a major progression transition.");
+                        PlayerText.get("UIRS9"));
         }
-        return unresolved("The plan does not fit and no verified safer resolution is available. Compass will not recommend banking, arbitrary dropping, or generic death storage.");
+        return unresolved(PlayerText.get("UIRS10"));
     }
 
     private UimStorageDecision evaluate(StrategyDataBundle data,

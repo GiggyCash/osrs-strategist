@@ -7,25 +7,17 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** One unfinished quest shared by one or more proven selected-goal paths. */
+@Getter
 public final class QuestPathStep
 {
-    @Getter
     private final String questName;
-    @Getter
     private final QuestStatus status;
-    @Getter
     private final Map<GoalType, List<String>> provenancePaths;
-    @Getter
     private final List<String> unfinishedDependents;
-    @Getter
     private final RecommendationConfidence readiness;
-    @Getter
     private final boolean eligibleNow;
-    @Getter
     private final int depth;
-    @Getter
     private final Map<Skill, Integer> guaranteedRewardXp;
-    @Getter
     private final double goalPathRewardValue;
 
     QuestPathStep(String questName, QuestStatus status,

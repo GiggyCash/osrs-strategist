@@ -13,6 +13,7 @@ import lombok.Getter;
  * items processed, etc. Methods with variable XP per completion deliberately do
  * not get a profile until a trustworthy model exists.</p>
  */
+@Getter
 public final class MethodExecutionProfile
 {
     public enum ProgressEstimateMode
@@ -39,21 +40,13 @@ public final class MethodExecutionProfile
         FIXED
     }
 
-    @Getter
     private final String methodId;
-    @Getter
     private final List<String> actionTerms;
-    @Getter
     private final String unitSingular;
-    @Getter
     private final String unitPlural;
-    @Getter
     private final double xpMultiplier;
-    @Getter
     private final List<MethodInputRule> inputs;
-    @Getter
     private final String note;
-    @Getter
     private final ProgressEstimateMode progressEstimateMode;
 
     /** Compatibility constructor for profiles with one material rule. */

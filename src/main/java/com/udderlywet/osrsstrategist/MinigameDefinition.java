@@ -6,27 +6,18 @@ import lombok.Getter;
 
 import net.runelite.api.Skill;
 
+@Getter
 public final class MinigameDefinition
 {
-    @Getter
     private final String id;
-    @Getter
     private final String name;
-    @Getter
     private final Skill primarySkill;
-    @Getter
     private final int minimumLevel;
-    @Getter
     private final boolean freeToPlay;
-    @Getter
     private final RiskLevel riskLevel;
-    @Getter
     private final AttentionLevel attention;
-    @Getter
     private final Set<AccountMode> supportedModes;
-    @Getter
     private final String rewardFocus;
-    @Getter
     private final boolean combatActivity;
 
     public MinigameDefinition(String id, String name, Skill primarySkill,

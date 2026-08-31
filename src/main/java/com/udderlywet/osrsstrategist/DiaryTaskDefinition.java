@@ -4,15 +4,12 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class DiaryTaskDefinition
 {
-    @Getter
     private final String region;
-    @Getter
     private final DiaryTier tier;
-    @Getter
     private final String task;
-    @Getter
     private final List<DiaryTaskRequirement> requirements;
 
     DiaryTaskDefinition(String region, DiaryTier tier, String task,

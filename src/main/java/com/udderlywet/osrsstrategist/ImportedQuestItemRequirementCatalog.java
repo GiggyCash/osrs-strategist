@@ -8,26 +8,24 @@ import java.util.*;
  */
 public final class ImportedQuestItemRequirementCatalog
 {
-    private final Map<String, QuestItemEvidenceParser.Result> requirements;
+    private static final String RESOURCE = "/content/quest-item-requirements.json";
+    private final Map<String, Result> requirements;
 
     public ImportedQuestItemRequirementCatalog()
     {
-        AuthoritativeQuestEnrichmentCatalog enrichment =
-                new AuthoritativeQuestEnrichmentCatalog();
-        QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
-        Map<String, QuestItemEvidenceParser.Result> result = new LinkedHashMap<>();
-        for (AuthoritativeQuestRequirementCatalog.Record quest
-                : new AuthoritativeQuestRequirementCatalog().all().values())
+        Map<String, Result> result = new LinkedHashMap<>();
+        for (Entry entry : BundledCatalogLoader.array(RESOURCE, Entry[].class))
         {
-            AuthoritativeQuestEnrichmentCatalog.Record details =
-                    enrichment.recordFor(quest.getName());
-            if (details == null || !details.hasItemEvidence()) continue;
-            result.put(normalize(quest.getName()), parser.parse(details.getItems()));
+            if (entry.quest == null || entry.result == null)
+                throw new IllegalStateException("Incomplete quest item evidence in " + RESOURCE);
+            entry.result.freeze();
+            if (result.put(normalize(entry.quest), entry.result) != null)
+                throw new IllegalStateException("Duplicate quest item evidence: " + entry.quest);
         }
         requirements = Collections.unmodifiableMap(result);
     }
 
-    public QuestItemEvidenceParser.Result resultFor(String questName)
+    public Result resultFor(String questName)
     {
         return requirements.get(normalize(questName));
     }
@@ -37,7 +35,7 @@ public final class ImportedQuestItemRequirementCatalog
     public long fullyExecutableCount()
     {
         return requirements.values().stream()
-                .filter(QuestItemEvidenceParser.Result::isFullyExecutable).count();
+                .filter(Result::isFullyExecutable).count();
     }
 
     public long partiallyExecutableCount()
@@ -58,5 +56,44 @@ public final class ImportedQuestItemRequirementCatalog
     {
         return value == null ? "" : value.toLowerCase(Locale.ROOT)
                 .replace('\u2019', '\'').replaceAll("[^a-z0-9]+", " ").trim();
+    }
+
+    private static final class Entry
+    {
+        private String quest;
+        private Result result;
+    }
+
+    /** Immutable executable evidence generated from the pinned source snapshot. */
+    public static final class Result
+    {
+        private ItemRequirementExpression expression;
+        private List<String> unresolved;
+        private int parsedLineCount;
+
+        private void freeze()
+        {
+            expression = expression == null ? null : expression.freeze();
+            unresolved = unresolved == null ? Collections.emptyList()
+                    : Collections.unmodifiableList(new ArrayList<>(unresolved));
+        }
+
+        public ItemRequirementExpression getExpression() { return expression; }
+        public List<String> getUnresolved() { return unresolved; }
+        public int getParsedLineCount() { return parsedLineCount; }
+        public boolean isFullyExecutable() { return unresolved.isEmpty(); }
+        public boolean isDeterministicallyExecutable()
+        {
+            return unresolved.isEmpty() && countChecks(expression) == 0;
+        }
+        public int getCheckNeededExpressionCount() { return countChecks(expression); }
+        private static int countChecks(ItemRequirementExpression value)
+        {
+            if (value == null) return 0;
+            int count = value.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED ? 1 : 0;
+            for (ItemRequirementExpression child : value.getChildren())
+                count += countChecks(child);
+            return count;
+        }
     }
 }

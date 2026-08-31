@@ -70,7 +70,7 @@ final class RecommendationQualityPolicy
             "verified task-valid location",
             "nearby reachable",
             "nearby low-risk",
-            "safest reachable non-wilderness location",
+            PlayerText.get("RQP1"),
             "best available location");
 
     private static final List<String> UNRESOLVED_SUPPLIES = Arrays.asList(
@@ -93,7 +93,7 @@ final class RecommendationQualityPolicy
             "selected weapon",
             "spare eligible herbs",
             "preserving herbs needed",
-            "inventory-slot preparation is unresolved",
+            PlayerText.get("RQP2"),
             "choose the",
             "whichever");
 

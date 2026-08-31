@@ -74,32 +74,32 @@ public final class InfrastructureUnlockValueService
                         InfrastructureMilestoneState.CHECK_NEEDED,
                         RecommendationConfidence.CHECK_NEEDED, overall,
                         contributions,
-                        "Membership must be verified before this infrastructure can be planned.");
+                        PlayerText.get("IUVS1"));
         }
 
         CapabilityState completion = completionState(definition, data);
         if (completion == CapabilityState.VERIFIED)
             return result(definition, InfrastructureMilestoneState.COMPLETE,
                     RecommendationConfidence.VERIFIED, overall, contributions,
-                    "Observed account state proves this milestone is complete.");
+                    PlayerText.get("IUVS2"));
 
         RequirementState requirements = requirements(definition, data);
         if (requirements == RequirementState.BLOCKED)
             return result(definition,
                     InfrastructureMilestoneState.REQUIREMENTS_MISSING,
                     RecommendationConfidence.BLOCKED, overall, contributions,
-                    "A verified skill, quest, or prerequisite requirement is not complete.");
+                    PlayerText.get("IUVS3"));
         if (requirements == RequirementState.CHECK_NEEDED
                 || completion == CapabilityState.UNKNOWN)
             return result(definition,
                     InfrastructureMilestoneState.CHECK_NEEDED,
                     RecommendationConfidence.CHECK_NEEDED, overall,
                     contributions,
-                    "Requirements or completion are not fully observed; inspect the live capability before recommending acquisition.");
+                    PlayerText.get("IUVS4"));
 
         return result(definition, InfrastructureMilestoneState.ACTIONABLE,
                 RecommendationConfidence.VERIFIED, overall, contributions,
-                "Requirements are verified and observed capability state proves the milestone is not yet complete.");
+                PlayerText.get("IUVS5"));
     }
 
     private RequirementState requirements(

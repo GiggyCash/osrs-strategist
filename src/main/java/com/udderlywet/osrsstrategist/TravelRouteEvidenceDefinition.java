@@ -1,26 +1,18 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
 import java.util.*;
 
 import lombok.Getter;
 
 /** Exact, deterministic evidence that proves a destination route is usable. */
+@RequiredArgsConstructor
+@Getter
 public final class TravelRouteEvidenceDefinition
 {
-    @Getter
     private final String routeId;
-    @Getter
     private final String requiredCompletedQuest;
-    @Getter
     private final List<String> requiredItems;
 
-    public TravelRouteEvidenceDefinition(String routeId,
-            String requiredCompletedQuest, List<String> requiredItems)
-    {
-        this.routeId = routeId;
-        this.requiredCompletedQuest = requiredCompletedQuest;
-        this.requiredItems = Collections.unmodifiableList(requiredItems == null
-                ? new ArrayList<>() : new ArrayList<>(requiredItems));
-    }
 
 }

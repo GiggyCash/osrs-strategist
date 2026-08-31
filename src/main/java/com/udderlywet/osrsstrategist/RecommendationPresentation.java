@@ -169,7 +169,7 @@ public final class RecommendationPresentation
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
         {
             text.append("<b>ACTIVITY</b><br>Blocked")
-                    .append("<br><br><b>NEEDED</b><br>This is not available for the current account state.");
+                    .append(PlayerText.get("RP1"));
             return;
         }
         text.append("<b>ACTIVITY</b><br>")
@@ -182,7 +182,7 @@ public final class RecommendationPresentation
             {
                 appendBreak(text, 2);
                 text.append("<b>DO</b><br>");
-                text.append("Open the relevant account panel so Compass can check the remaining requirement.");
+                text.append(PlayerText.get("RP2"));
             }
             return;
         }
@@ -194,7 +194,7 @@ public final class RecommendationPresentation
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append("<b>DO</b><br>Start the activity using the verified setup.");
+            text.append(PlayerText.get("RP3"));
         }
     }
 
@@ -207,7 +207,7 @@ public final class RecommendationPresentation
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
         if (disclosure.isAcknowledgementRequired())
-            text.append("<br>Select View Risk Steps to acknowledge this warning and reveal the execution steps.");
+            text.append(PlayerText.get("RP4"));
         appendBreak(text, 2);
     }
 
@@ -301,9 +301,9 @@ public final class RecommendationPresentation
                 && guidance != null && hasText(guidance.getSupplies()))
             return guidance.getSupplies();
         if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
-            return "Confirm the account state Compass cannot safely observe.";
+            return PlayerText.get("RP5");
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
-            return "Current account access or safety restrictions.";
+            return PlayerText.get("RP6");
         return "";
     }
 

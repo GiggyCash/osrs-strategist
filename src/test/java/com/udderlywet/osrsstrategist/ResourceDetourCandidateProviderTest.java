@@ -20,14 +20,14 @@ public class ResourceDetourCandidateProviderTest
     @Test
     public void ironTemporossDetourCanActuallyLeadDoNext()
     {
-        StrategyCandidate candidate = find(provider.candidates(context(account(1), GoalType.MAX)),
+        Recommendation candidate = find(provider.candidates(context(account(1), GoalType.MAX)),
                 "detour:tempoross-planks");
         assertNotNull(candidate);
         assertEquals(RecommendationConfidence.VERIFIED, candidate.getConfidence());
         assertNotNull(candidate.getGuidance());
         assertTrue(candidate.getGuidance().getAction().contains("Tempoross"));
         assertTrue(candidate.getGuidance().getNote().contains("cross-skill"));
-        assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(candidate.toRecommendation()));
+        assertTrue(new RecommendationActionabilityPolicy().canLeadQueue(candidate));
     }
 
     @Test
@@ -55,9 +55,9 @@ public class ResourceDetourCandidateProviderTest
                 true, false, false, new PreferenceProfile());
     }
 
-    private static StrategyCandidate find(List<StrategyCandidate> candidates, String id)
+    private static Recommendation find(List<Recommendation> candidates, String id)
     {
-        for (StrategyCandidate candidate : candidates)
+        for (Recommendation candidate : candidates)
             if (id.equals(candidate.getId())) return candidate;
         return null;
     }

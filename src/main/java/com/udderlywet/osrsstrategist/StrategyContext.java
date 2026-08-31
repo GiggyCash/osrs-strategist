@@ -3,13 +3,11 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Immutable intent/context passed to strategy modules. */
+@Getter
 public final class StrategyContext extends PlayerStrategyProfile
 {
-    @Getter
     private final StrategyDataBundle data;
-    @Getter
     private final PreferenceProfile preferenceProfile;
-    @Getter
     private final AccountMode accountMode;
 
     public StrategyContext(

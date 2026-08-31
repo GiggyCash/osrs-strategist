@@ -5,27 +5,19 @@ import java.util.*;
 import lombok.Getter;
 
 /** A composable, local-evidence item requirement shared by planning systems. */
+@Getter
 public final class ItemRequirementExpression
 {
     public enum Kind { ITEM, ITEM_CLASS, CHECK_NEEDED, ALL_OF, ANY_OF }
 
-    @Getter
     private final Kind kind;
-    @Getter
     private final List<String> itemNames;
-    @Getter
     private final int quantity;
-    @Getter
     private final ItemQuantityMode quantityMode;
-    @Getter
     private final ItemRequirementScope scope;
-    @Getter
     private final ItemRequirementClass itemClass;
-    @Getter
     private final List<String> excludedItemNames;
-    @Getter
     private final String checkAction;
-    @Getter
     private final List<ItemRequirementExpression> children;
 
     private ItemRequirementExpression(Kind kind, List<String> itemNames,
@@ -155,5 +147,15 @@ public final class ItemRequirementExpression
     {
         return (quantityMode == ItemQuantityMode.AT_LEAST ? "at least " : "")
                 + quantity + " × ";
+    }
+
+    /** Restores the immutable boundary after Gson hydrates bundled evidence. */
+    ItemRequirementExpression freeze()
+    {
+        List<ItemRequirementExpression> frozen = new ArrayList<>();
+        for (ItemRequirementExpression child : children) frozen.add(child.freeze());
+        return new ItemRequirementExpression(kind, itemNames, quantity,
+                quantityMode, scope, itemClass, excludedItemNames, checkAction,
+                frozen);
     }
 }

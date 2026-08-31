@@ -5,23 +5,16 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** One action exposed by RuneLite's maintained skill-calculator data. */
+@Getter
 public final class RuneLiteSkillActionDefinition
 {
-    @Getter
     private final Skill skill;
-    @Getter
     private final String id;
-    @Getter
     private final String name;
-    @Getter
     private final int level;
-    @Getter
     private final float xp;
-    @Getter
     private final String category;
-    @Getter
     private final MembershipStatus membership;
-    @Getter
     private final int itemId;
 
     public RuneLiteSkillActionDefinition(Skill skill, String id, String name,

@@ -102,27 +102,27 @@ public class PvmReadinessAnalyzer
             if (!hasCombatWeapon(equipment, requiredStyle))
                 addMissing(missing, "Equip a usable " + floor.preferredStyle + " combat weapon/loadout");
             else if (exact == null)
-                addMissing(missing, "Verify the observed weapon is in the weapon slot and is suitable for this encounter");
+                addMissing(missing, PlayerText.get("PRA1"));
 
             int requiredFood = exact == null ? (floor.requiresSupplies ? 5 : 0)
                     : exact.getMinimumFood();
             if (carriedFoodQuantity(inventory) < requiredFood)
-                addMissing(missing, "Carry more than a token food item and verify an encounter-appropriate healing supply");
+                addMissing(missing, PlayerText.get("PRA2"));
             int requiredRestore = exact == null ? (floor.prayer >= 43 ? 1 : 0)
                     : exact.getMinimumRestoration();
             if (carriedRestorationQuantity(inventory) < requiredRestore)
-                addMissing(missing, "Carry a recognised prayer-restoration item and verify its usable doses");
+                addMissing(missing, PlayerText.get("PRA3"));
             if (usesRanged(floor.preferredStyle))
                 addMissing(missing, carriedAmmoQuantity(inventory, equipment) > 0
-                        ? "Verify the carried ammunition or charges are compatible with the equipped ranged weapon"
-                        : "Carry and verify ammunition or charges compatible with the equipped ranged weapon");
+                        ? PlayerText.get("PRA4")
+                        : PlayerText.get("PRA5"));
             if (usesMagic(floor.preferredStyle))
                 addMissing(missing, runeEvidence(inventory, storage)
-                        ? "Verify the observed inventory/rune-pouch runes satisfy the selected spell and current spellbook"
-                        : "Carry the required rune combination and verify the selected spell and current spellbook");
+                        ? PlayerText.get("PRA6")
+                        : PlayerText.get("PRA7"));
 
             if (exact == null)
-                addMissing(missing, "Verify encounter-specific protection items, prayers, charges, and access requirements");
+                addMissing(missing, PlayerText.get("PRA8"));
             else
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
@@ -132,7 +132,7 @@ public class PvmReadinessAnalyzer
                 for (String check : preparation.getChecks()) addMissing(missing, check);
 
             if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
-                addMissing(missing, "Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter");
+                addMissing(missing, PlayerText.get("PRA9"));
 
             boolean fullyVerified = exact != null && missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
@@ -199,7 +199,7 @@ public class PvmReadinessAnalyzer
         if (name.contains("DUKE_SUCELLUS") || name.contains("LEVIATHAN")
                 || name.contains("VARDORVIS") || name.contains("WHISPERER"))
             return floor(80, 80, 75, 80, 80, 70, 1, "hybrid",
-                    "Desert Treasure II - The Fallen Empire", false, true);
+                    PlayerText.get("PRA10"), false, true);
         if (activity.isRaid() || activity.getRiskLevel() == RiskLevel.HIGH)
             return floor(80, 80, 75, 80, 80, 70, 1, "hybrid", null, false, true);
 

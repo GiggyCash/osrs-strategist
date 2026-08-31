@@ -50,10 +50,10 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
     private final JLabel activeGoal = label("Goal: Automatic");
     private final JLabel strategySummary = mutedLabel(
-            "Mode: Balanced<br>Session: Pick for me<br>Optional quests: Normal"
+            PlayerText.get("OSP1")
     );
     private final JTextArea firstUseHint = wrappingArea(
-            "Compass starts with sensible defaults. Change Goal or Session only when you want to steer the plan.",
+            PlayerText.get("OSP2"),
             MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
     private final JPanel milestoneBanner = cardPanel(true);

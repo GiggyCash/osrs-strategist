@@ -19,10 +19,10 @@ public class PvmReadyGuidanceTest
         for (String id : new String[]{"pvm:obor", "pvm:bryophyta",
                 "pvm:scurrius"})
         {
-            List<StrategyCandidate> candidates = new PvmCandidateProvider()
+            List<Recommendation> candidates = new PvmCandidateProvider()
                     .candidates(context(id));
             assertFalse(id, candidates.isEmpty());
-            Recommendation recommendation = candidates.get(0).toRecommendation();
+            Recommendation recommendation = candidates.get(0);
             assertTrue(id + " lacks presentable guidance",
                     new RecommendationQualityPolicy().isPresentable(
                             recommendation));

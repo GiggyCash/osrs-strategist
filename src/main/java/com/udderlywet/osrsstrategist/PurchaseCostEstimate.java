@@ -3,11 +3,10 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Exact aggregate market-price evidence for a deterministic material list. */
+@Getter
 public final class PurchaseCostEstimate
 {
-    @Getter
     private final boolean complete;
-    @Getter
     private final long totalCost;
 
     public PurchaseCostEstimate(boolean complete, long totalCost)

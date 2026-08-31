@@ -31,12 +31,12 @@ public final class SustainableResourceValueService
         if (context == null || context.getData() == null || request == null
                 || request.getNeed() == null)
         {
-            return unknown("No account/resource evidence was supplied.");
+            return unknown(PlayerText.get("SRVS1"));
         }
         ResourceNeed need = request.getNeed();
         String name = need.getItemName();
         if (name == null || name.trim().isEmpty())
-            return unknown("The resource has no verified item name.");
+            return unknown(PlayerText.get("SRVS2"));
 
         ObservedItemIndex items = new ObservedItemIndex(context.getData(),
                 context.isUseGroupStorage());
@@ -67,7 +67,7 @@ public final class SustainableResourceValueService
             }
             return result(ResourcePipelineState.READY_CURRENT_SUPPLY,
                     adjustment, observed, required, routes,
-                    "Observed usable quantity covers the modeled action; "
+                    PlayerText.get("SRVS3")
                             + replacementEvidence(request, mode, routes));
         }
 
@@ -75,14 +75,14 @@ public final class SustainableResourceValueService
         {
             return result(ResourcePipelineState.UNKNOWN_STORAGE, -2, observed,
                     required, routes,
-                    "The ordinary bank has not been observed, so the shortfall is not proven.");
+                    PlayerText.get("SRVS4"));
         }
 
         if (!knownFamily)
         {
             return result(ResourcePipelineState.UNKNOWN_SOURCE, -4, observed,
                     required, routes,
-                    "A shortfall is observed, but no audited acquisition family matches this item.");
+                    PlayerText.get("SRVS5"));
         }
 
         int burden = replacementBurden(request, mode, context);
@@ -156,14 +156,14 @@ public final class SustainableResourceValueService
     {
         String access;
         if (mode.usesGrandExchange() && request.isTradeable())
-            access = "a GE substitute exists, but live price/cash still require comparison";
+            access = PlayerText.get("SRVS6");
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
-            access = "replacement must be self-sourced with immediate inventory/retrieval consequences";
+            access = PlayerText.get("SRVS7");
         else if (mode.isIronLike())
-            access = "replacement must use a self-source route";
-        else access = "account-mode acquisition access is not verified";
+            access = PlayerText.get("SRVS8");
+        else access = PlayerText.get("SRVS9");
         return access + (routes.isEmpty() ? "."
-                : "; an audited route family is available.");
+                : PlayerText.get("SRVS10"));
     }
 
     private static ResourcePipelineAssessment unknown(String evidence)

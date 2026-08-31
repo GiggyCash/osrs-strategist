@@ -20,35 +20,35 @@ public final class GimGroupStrategyService
         if (!mode.isGroupIronman())
             return result(GroupResourceState.NOT_A_GROUP_ACCOUNT,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    "This account has no Group Storage capability.");
+                    PlayerText.get("GGSS1"));
         if (!context.isUseGroupStorage())
             return result(GroupResourceState.GROUP_STORAGE_DISABLED,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    "Use Group Storage is disabled, so shared stock is not counted.");
+                    PlayerText.get("GGSS2"));
         StrategyDataBundle data = context.getData();
         GroupStorageSnapshot storage = data == null
                 ? null : data.getGroupStorage();
         if (storage == null || !storage.isObserved())
             return result(GroupResourceState.GROUP_STORAGE_UNKNOWN,
                     RecommendationConfidence.CHECK_NEEDED, 0, need, 0.0,
-                    "No fresh Group Storage observation proves shared stock.");
+                    PlayerText.get("GGSS3"));
 
         int quantity = quantity(storage, need.getAcceptableItemIds());
         if (quantity <= 0)
             return result(GroupResourceState.SHARED_STOCK_NONE,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    "The latest Group Storage observation contains none of the required item.");
+                    PlayerText.get("GGSS4"));
         double fraction = Math.min(1.0, quantity
                 / (double) need.getQuantity());
         if (quantity < need.getQuantity())
             return result(GroupResourceState.SHARED_STOCK_PARTIAL,
                     RecommendationConfidence.VERIFIED, quantity, need,
                     fraction * 0.45,
-                    "Fresh shared stock covers part of the observed requirement.");
+                    PlayerText.get("GGSS5"));
         double avoidance = need.isReusable() ? 1.0 : 0.75;
         return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
                 RecommendationConfidence.VERIFIED, quantity, need, avoidance,
-                "Fresh shared stock satisfies this requirement, so acquiring another copy now would duplicate group work.");
+                PlayerText.get("GGSS6"));
     }
 
     public SharedInfrastructureAssessment assessTeammateInfrastructure(
@@ -57,10 +57,10 @@ public final class GimGroupStrategyService
         if (context == null || !context.getAccountMode().isGroupIronman())
             return new SharedInfrastructureAssessment(CapabilityState.BLOCKED,
                     RecommendationConfidence.VERIFIED,
-                    "This account has no group infrastructure capability.");
+                    PlayerText.get("GGSS7"));
         return new SharedInfrastructureAssessment(CapabilityState.UNKNOWN,
                 RecommendationConfidence.CHECK_NEEDED,
-                "RuneLite does not expose reliable teammate POH, unlock, or specialization state; Compass does not infer it from Group Storage.");
+                PlayerText.get("GGSS8"));
     }
 
     private static GroupResourceAssessment result(GroupResourceState state,

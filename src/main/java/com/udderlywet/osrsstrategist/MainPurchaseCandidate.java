@@ -3,19 +3,14 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Verified-price input for comparing a Main's buy-vs-gather options. */
+@Getter
 public final class MainPurchaseCandidate
 {
-    @Getter
     private final int itemId;
-    @Getter
     private final String itemName;
-    @Getter
     private final int quantity;
-    @Getter
     private final long verifiedUnitPrice;
-    @Getter
     private final int estimatedBuyMinutes;
-    @Getter
     private final int estimatedSelfSourceMinutes;
 
     public MainPurchaseCandidate(

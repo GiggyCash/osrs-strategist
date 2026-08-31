@@ -3,13 +3,11 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One live RuneLite market-price lookup result. */
+@Getter
 public final class MarketPriceQuote
 {
-    @Getter
     private final int itemId;
-    @Getter
     private final String itemName;
-    @Getter
     private final int unitPrice;
 
     public MarketPriceQuote(int itemId, String itemName, int unitPrice)

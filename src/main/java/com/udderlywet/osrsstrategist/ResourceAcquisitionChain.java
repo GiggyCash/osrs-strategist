@@ -5,13 +5,11 @@ import java.util.*;
 import lombok.Getter;
 
 /** Ordered resource route from current ownership to the requested quantity. */
+@Getter
 public final class ResourceAcquisitionChain
 {
-    @Getter
     private final ResourceNeed need;
-    @Getter
     private final int shortfall;
-    @Getter
     private final List<ResourceAcquisitionStep> steps;
 
     public ResourceAcquisitionChain(ResourceNeed need, int shortfall,

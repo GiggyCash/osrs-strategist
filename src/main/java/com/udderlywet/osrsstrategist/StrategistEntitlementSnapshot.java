@@ -10,13 +10,11 @@ import lombok.Getter;
  * <p>An unverified/empty snapshot never disables the local planner. Hosted
  * capabilities fail closed until their entitlement is verified.</p>
  */
+@Getter
 public final class StrategistEntitlementSnapshot
 {
-    @Getter
     private final Set<StrategistFeature> hostedFeatures;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final String source;
 
     public StrategistEntitlementSnapshot(

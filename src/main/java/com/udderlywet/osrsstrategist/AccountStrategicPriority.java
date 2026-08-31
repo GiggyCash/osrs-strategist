@@ -3,17 +3,13 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One explainable account-mode/state contribution. */
+@Getter
 public final class AccountStrategicPriority
 {
-    @Getter
     private final AccountStrategicDimension dimension;
-    @Getter
     private final StrategicPriority priority;
-    @Getter
     private final CapabilityState capabilityState;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final String reason;
 
     public AccountStrategicPriority(

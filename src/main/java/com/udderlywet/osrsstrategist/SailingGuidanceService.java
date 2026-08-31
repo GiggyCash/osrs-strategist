@@ -56,9 +56,9 @@ public class SailingGuidanceService
             return new RecommendationGuidance(
                     "Use Deep Sea Trawling until you gain " + format(xpNeeded)
                             + " Sailing XP toward level " + targetLevel + ".",
-                    "Bring a safe boat/trawling setup and enough repair supplies for the trip. Per-catch Sailing XP depends on the live trawling loop, so no exact catch count is shown.",
-                    "Use the highest safe Deep Sea Trawling route your verified boat and Sailing/Fishing levels support.",
-                    "Deep Sea Trawling is a Fishing/Sailing hybrid focused more on valuable fish than maximum Sailing XP. Use it when the hybrid rewards fit the account better than Barracuda Trials."
+                    PlayerText.get("SGS1"),
+                    PlayerText.get("SGS2"),
+                    PlayerText.get("SGS3")
             );
         }
 
@@ -77,29 +77,29 @@ public class SailingGuidanceService
             trial = new Trial(
                     "The Gwenith Glide",
                     16050,
-                    "Use a skiff with at least an adamant keel and complete Regicide before attempting the high-level trial.",
-                    "Start at the Gwenith Glide Barracuda Trial marker in the waters west of Prifddinas.");
+                    PlayerText.get("SGS4"),
+                    PlayerText.get("SGS5"));
         }
         else if (methodId.contains("jubbly"))
         {
             trial = new Trial(
                     "The Jubbly Jive",
                     6200,
-                    "Use a skiff with at least a mithril helm and an inoculation station.",
-                    "Start beside Gurtob at the Jubbly Jive marker in Backwater.");
+                    PlayerText.get("SGS6"),
+                    PlayerText.get("SGS7"));
         }
         else
         {
             trial = new Trial(
                     "The Tempor Tantrum",
                     1250,
-                    "Use a skiff with at least an iron helm, oak masts, and linen sails.",
-                    "Start with Rum-dashed Ralph at the trial marker north-west of The Storm Tempor.");
+                    PlayerText.get("SGS8"),
+                    PlayerText.get("SGS9"));
         }
 
         int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
-        String action = "Complete any unclaimed Swordfish, Shark, then Marlin rank for "
-                + trial.name + ". Once those one-time ranks are claimed, about "
+        String action = PlayerText.get("SGS10")
+                + trial.name + PlayerText.get("SGS11")
                 + marlinCompletions + " Marlin completion"
                 + (marlinCompletions == 1 ? "" : "s")
                 + " at " + format(trial.marlinXp)
@@ -107,7 +107,7 @@ public class SailingGuidanceService
                 + " XP to level " + targetLevel + ".";
 
         String supplies = trial.requirements;
-        String note = "The one-time rank bonuses for Swordfish, Shark, and Marlin add extra XP the first time they are claimed, so an account with unclaimed bonuses will finish sooner than this repeat-only count. Boat speed and player execution affect XP per hour, not the listed Marlin completion XP.";
+        String note = PlayerText.get("SGS12");
         return new RecommendationGuidance(
                 action, supplies, trial.location, note);
     }
@@ -118,11 +118,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = "Sail beside a visible Small shipwreck, deploy the fitted salvaging hook, move to the next marked wreck when it sinks, and return to sort the Small salvage before inventory and cargo capacity are exhausted. Gain "
+        String action = PlayerText.get("SGS13")
                 + format(xpNeeded) + " XP toward level " + targetLevel + ".";
-        String supplies = "Use a raft, skiff, or sloop whose live boat setup proves a salvaging hook is fitted. Keep enough cargo capacity for Small salvage; no item-dropping loop is assumed.";
-        String where = "The Small shipwreck markers in the Kharidian Sea, with the salvaging station at The Pandemonium as the return point.";
-        String note = "Small shipwrecks require 15 Sailing and give variable progress because hook success and wreck uptime vary. Higher wreck tiers stay separate until their water hazards and the live boat build are proven.";
+        String supplies = PlayerText.get("SGS14");
+        String where = PlayerText.get("SGS15");
+        String note = PlayerText.get("SGS16");
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -132,11 +132,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = "Take a courier task from the Port Sarim notice board, load its marked cargo at the loading bay, sail to The Pandemonium, and deliver it. Take the return task when offered. You need "
+        String action = PlayerText.get("SGS17")
                 + format(xpNeeded) + " Sailing XP to level " + targetLevel + ".";
-        String supplies = "Bring the Captain's log and use the raft awarded by Pandemonium. If the log is missing, reclaim it from Junior Jim in Port Sarim or from your boat's cargo hold.";
-        String where = "Use the notice board and loading bay on Port Sarim's Sailing dock, then the matching dock at The Pandemonium for the return leg.";
-        String note = "Port Task XP and destination vary with the live assignment, so Compass does not invent a task count. Accept compatible return work before sailing back empty.";
+        String supplies = PlayerText.get("SGS18");
+        String where = PlayerText.get("SGS19");
+        String note = PlayerText.get("SGS20");
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -150,26 +150,26 @@ public class SailingGuidanceService
         if (!complete(quests, "Pandemonium"))
         {
             return new RecommendationGuidance(
-                    "Complete Pandemonium to unlock Sailing training.",
-                    "Keep the starter boat/tools from the Sailing tutorial progression.",
-                    "Start Pandemonium from its normal quest start and finish the Sailing tutorial sequence.",
-                    "Sailing is members-only and normal training begins after Pandemonium. The route refreshes automatically when the quest state changes."
+                    PlayerText.get("SGS21"),
+                    PlayerText.get("SGS22"),
+                    PlayerText.get("SGS23"),
+                    PlayerText.get("SGS24")
             );
         }
 
         StringBuilder action = new StringBuilder();
-        action.append("Complete every reachable uncompleted sea-charting objective. You need ")
+        action.append(PlayerText.get("SGS25"))
                 .append(format(xpNeeded)).append(" Sailing XP to level ")
                 .append(targetLevel).append(".");
 
-        StringBuilder supplies = new StringBuilder("Use the Captain's log and charting tools you have unlocked.");
+        StringBuilder supplies = new StringBuilder(PlayerText.get("SGS26"));
         if (currentLevel >= 12 && !complete(quests, "Prying Times"))
         {
-            supplies.append(" Complete Prying Times for the crowbar so more charting steps become available.");
+            supplies.append(PlayerText.get("SGS27"));
         }
         if (currentLevel >= 22 && !complete(quests, "Current Affairs"))
         {
-            supplies.append(" Complete Current Affairs for the current duck to unlock more charting locations.");
+            supplies.append(PlayerText.get("SGS28"));
         }
         if (currentLevel >= 15)
         {
@@ -179,23 +179,23 @@ public class SailingGuidanceService
             {
                 if (economy.getCoins() >= 15000)
                 {
-                    supplies.append(" You have enough verified cash for the 15,000-coin skiff when salvaging becomes the better session fit.");
+                    supplies.append(PlayerText.get("SGS29"));
                 }
                 else
                 {
                     supplies.append(" You are ")
                             .append(format(15000 - economy.getCoins()))
-                            .append(" coins short of the 15,000-coin skiff; do not route into skiff-dependent salvaging yet.");
+                            .append(PlayerText.get("SGS30"));
                 }
             }
             else
             {
-                supplies.append(" A skiff costs 15,000 coins; verify spendable cash before treating that purchase as ready.");
+                supplies.append(PlayerText.get("SGS31"));
             }
         }
 
-        String where = "Work through charting tasks in reachable sea regions and claim each region's completion XP before sailing long distances solely for repeatable training.";
-        String note = "Sea charting is one-time account progress. Individual Captain's-log checkboxes are not all observed, so no number of charts remaining is invented. At 30 Sailing, Barracuda Trials become the fast repeatable route and can be converted into exact completion counts.";
+        String where = PlayerText.get("SGS32");
+        String note = PlayerText.get("SGS33");
         return new RecommendationGuidance(
                 action.toString(), supplies.toString(), where, note);
     }

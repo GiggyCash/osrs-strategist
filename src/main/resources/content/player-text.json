@@ -1,0 +1,4430 @@
+[
+  {
+    "id": "ARP1",
+    "text": "No consumed material is required for the modeled action."
+  },
+  {
+    "id": "ARP2",
+    "text": "Open the inventory and equipment tabs once; the directly usable UIM setup is not fully observed, so no shortfall is claimed yet."
+  },
+  {
+    "id": "ARP3",
+    "text": "materials before calculating the real shortfall."
+  },
+  {
+    "id": "ARP4",
+    "text": " Group Storage is also enabled but has not been observed yet."
+  },
+  {
+    "id": "ARP5",
+    "text": "You already have the modeled inputs for this milestone."
+  },
+  {
+    "id": "ARP6",
+    "text": " Observed Group Storage was included in that total."
+  },
+  {
+    "id": "ARP7",
+    "text": ". Use the verified carried stock first and resupply only when that batch runs low; do not carry the whole distant plan by default."
+  },
+  {
+    "id": "ARP8",
+    "text": " Only inventory, equipment, and verified directly usable storage count; a normal bank never counts for UIM."
+  },
+  {
+    "id": "ARP9",
+    "text": " Observed Group Storage was already included before calculating this shortfall."
+  },
+  {
+    "id": "ARP10",
+    "text": " Group Storage is enabled but unobserved, so this shortfall excludes it until it is opened and observed."
+  },
+  {
+    "id": "ARP11",
+    "text": " after account mode is verified. Grand Exchange access is never assumed for an unknown account mode."
+  },
+  {
+    "id": "ARP12",
+    "text": " coins; this is a low-burden use of the "
+  },
+  {
+    "id": "ARP13",
+    "text": " verified liquid coins. Reviewed route: "
+  },
+  {
+    "id": "ARP14",
+    "text": "Do not start the Grand Exchange purchase yet: it costs about "
+  },
+  {
+    "id": "ARP15",
+    "text": " Use this reviewed self-source route instead: "
+  },
+  {
+    "id": "ARP16",
+    "text": "Do not assume the shortfall should be bought: exact "
+  },
+  {
+    "id": "ARP17",
+    "text": "tradeability, live price, liquid coins, or opportunity cost is incomplete."
+  },
+  {
+    "id": "ARP18",
+    "text": " Observed in retrieval-only UIM storage: "
+  },
+  {
+    "id": "ARP19",
+    "text": ". Those items are not counted until a retrieval plan is deliberately chosen."
+  },
+  {
+    "id": "ASPS1",
+    "text": "UIM cannot bank conventionally; current inventory pressure is not observed."
+  },
+  {
+    "id": "ASPS2",
+    "text": " occupied inventory stacks are observed."
+  },
+  {
+    "id": "ASPS3",
+    "text": "A conventional bank is legal, so inventory pressure is normally temporary."
+  },
+  {
+    "id": "ASPS4",
+    "text": "Conventional bank-dependent routes are illegal for UIM."
+  },
+  {
+    "id": "ASPS5",
+    "text": "This mode may use its conventional personal bank."
+  },
+  {
+    "id": "ASPS6",
+    "text": "Tradeable purchases are a legal substitute when price and affordability are verified."
+  },
+  {
+    "id": "ASPS7",
+    "text": "Grand Exchange acquisition is unavailable; executable routes must not depend on it."
+  },
+  {
+    "id": "ASPS8",
+    "text": "This mode must source its own tradeable resources."
+  },
+  {
+    "id": "ASPS9",
+    "text": "Tradeable shortfalls may be bought when doing so is worthwhile."
+  },
+  {
+    "id": "ASPS10",
+    "text": "Fresh, enabled Group Storage evidence can satisfy shared resource shortfalls."
+  },
+  {
+    "id": "ASPS11",
+    "text": "Shared resources cannot be counted without fresh, enabled Group Storage evidence."
+  },
+  {
+    "id": "ASPS12",
+    "text": "This account mode has no Group Storage."
+  },
+  {
+    "id": "ASPS13",
+    "text": "No reliable teammate infrastructure snapshot is available, so shared POH or unlock value is not counted."
+  },
+  {
+    "id": "ASPS14",
+    "text": "This account mode has no group infrastructure to count."
+  },
+  {
+    "id": "ASPS15",
+    "text": "Verified legal storage changes inventory capacity and future setup cost for UIM."
+  },
+  {
+    "id": "ASPS16",
+    "text": "Long-lived self-sourced items make useful storage moderately valuable."
+  },
+  {
+    "id": "ASPS17",
+    "text": "Bank access makes specialised storage useful but usually substitutable."
+  },
+  {
+    "id": "ASPS18",
+    "text": "Personal POH storage, transport, and setup reuse can change the whole UIM route."
+  },
+  {
+    "id": "ASPS19",
+    "text": "Personal POH utility is a durable self-sufficient unlock."
+  },
+  {
+    "id": "ASPS20",
+    "text": "A personal POH is useful, while public-house access is only a possible substitute, never assumed live."
+  },
+  {
+    "id": "ASPS21",
+    "text": "Reusable transport reduces repeated travel and inventory setup on UIM."
+  },
+  {
+    "id": "ASPS22",
+    "text": "Reusable transport reduces self-sourced consumables and repeated travel."
+  },
+  {
+    "id": "ASPS23",
+    "text": "Transport saves time, but tradeable teleports may sometimes substitute."
+  },
+  {
+    "id": "ASPS24",
+    "text": "Dismantling and rebuilding a UIM setup can require retrieval and inventory churn."
+  },
+  {
+    "id": "ASPS25",
+    "text": "Risk-safe preparation and recovery make setup cost important."
+  },
+  {
+    "id": "ASPS26",
+    "text": "Setup time should be weighed against session and activity value."
+  },
+  {
+    "id": "ASPS27",
+    "text": "A dangerous route can permanently end Hardcore status."
+  },
+  {
+    "id": "ASPS28",
+    "text": "Death can disrupt or endanger retrieval-based UIM storage and setup."
+  },
+  {
+    "id": "ASPS29",
+    "text": "Death and recovery cost still matter, but do not carry Hardcore status loss."
+  },
+  {
+    "id": "ASPS30",
+    "text": "Consumed supplies must be replaced through self-sourcing or verified shared stock."
+  },
+  {
+    "id": "ASPS31",
+    "text": "Tradeable supplies can often be replaced if price and liquidity support it."
+  },
+  {
+    "id": "ASPS32",
+    "text": "A useful item that can be stored and safely retrieved may save permanent inventory pressure."
+  },
+  {
+    "id": "ASPS33",
+    "text": "Conventional bank access limits the extra value of specialised equipment storage."
+  },
+  {
+    "id": "ASPS34",
+    "text": "Observed shared stock can prove that repeating the same acquisition would duplicate group work."
+  },
+  {
+    "id": "ASPS35",
+    "text": "No fresh shared evidence proves that a grind would be duplicated."
+  },
+  {
+    "id": "ASPS36",
+    "text": "There is no group-shared progression to duplicate."
+  },
+  {
+    "id": "ASPS37",
+    "text": "Coins are compact, but any proposed long-term storage or conversion must be mechanically verified."
+  },
+  {
+    "id": "ASPS38",
+    "text": "Self-sourced GP has meaningful replacement and opportunity value."
+  },
+  {
+    "id": "ASPS39",
+    "text": "GE purchasing makes spendable liquidity useful, while normal banking handles storage."
+  },
+  {
+    "id": "ASPS40",
+    "text": "Account mode is unknown; restricted capabilities must fail closed until verified."
+  },
+  {
+    "id": "AMGS1",
+    "text": "Action count uses RuneLite's maintained base action XP."
+  },
+  {
+    "id": "AMGS2",
+    "text": " Action count uses RuneLite's maintained action XP."
+  },
+  {
+    "id": "AMGS3",
+    "text": " Any unmodeled XP bonus can reduce the remaining count."
+  },
+  {
+    "id": "AMGS4",
+    "text": " The concrete action was ranked against your observed "
+  },
+  {
+    "id": "AMGS5",
+    "text": "materials so a supplied lower-tier route can beat an "
+  },
+  {
+    "id": "AMGS6",
+    "text": " UIM shortfalls are intentionally based on immediately usable supplies, not retrieval-only storage."
+  },
+  {
+    "id": "AMGS7",
+    "text": "Get a free bronze pickaxe from the Mining tutor at the east Lumbridge Swamp mine."
+  },
+  {
+    "id": "AMGS8",
+    "text": "Buy a bronze axe from Bob's Brilliant Axes in Lumbridge before starting."
+  },
+  {
+    "id": "AMGS9",
+    "text": "Buy a fly fishing rod from Gerrant's Fishy Business in Port Sarim before walking to Barbarian Village."
+  },
+  {
+    "id": "AMGS10",
+    "text": "Bring a small fishing net; the Fishing tutor beside the spots supplies one when needed."
+  },
+  {
+    "id": "AMGS11",
+    "text": "Buy one bird snare from Aleck's Hunter Emporium in Yanille before walking south to the Hunter area."
+  },
+  {
+    "id": "AMGS12",
+    "text": "Bring 500 coins. Unequip weapon, shield, and gloves before renting the gyr falcon from Matthias."
+  },
+  {
+    "id": "AMGS13",
+    "text": " ropes; set every available net trap and drop each catch."
+  },
+  {
+    "id": "AMGS14",
+    "text": "Bring one mind rune and one air rune per Wind Strike; if short, buy both from Aubury's Rune Shop just south of Varrock East Bank."
+  },
+  {
+    "id": "AMGS15",
+    "text": "Bring three air runes, four fire runes, and one chaos rune per Fire Bolt; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank."
+  },
+  {
+    "id": "AMGS16",
+    "text": "Bring four air runes, five fire runes, and one death rune per Fire Blast; buy shortfalls from Aubury's Rune Shop just south of Varrock East Bank."
+  },
+  {
+    "id": "AMGS17",
+    "text": "Bring one body rune, three earth runes, and two water runes per Curse. Equip full metal armour plus vambraces or a cursed goblin staff until the equipment panel shows -64 Magic attack or lower."
+  },
+  {
+    "id": "AMGS18",
+    "text": "Bring two air runes, three fire runes, and one mind rune per Fire Strike. Keep the verified cursed-staff metal setup equipped and enable Fire Strike autocast."
+  },
+  {
+    "id": "AMGS19",
+    "text": "Bring a hammer and the matching bars named in BRING; each platebody consumes five bars."
+  },
+  {
+    "id": "AMGS20",
+    "text": "Bring a hammer and pickaxe; buy the hammer from Lumbridge General Store if it is missing."
+  },
+  {
+    "id": "AMGS21",
+    "text": "Bring five cooked shrimp for failed pickpockets; fish and cook them in Lumbridge first if needed."
+  },
+  {
+    "id": "AMGS22",
+    "text": "Bring food for failed pickpockets; restock at Ardougne South Bank when needed."
+  },
+  {
+    "id": "AMGS23",
+    "text": "Red salamander net-trap trees south of the Ourania Cave entrance."
+  },
+  {
+    "id": "AMGS24",
+    "text": "The southern three net-trap trees in the Uzer Hunter area, east of the desert bridge."
+  },
+  {
+    "id": "AMGS25",
+    "text": "The western swamp-lizard net-trap trees in the Canifis Hunter area, east of Canifis."
+  },
+  {
+    "id": "AMGS26",
+    "text": "Barbarian Village fishing spots on the River Lum."
+  },
+  {
+    "id": "AMGS27",
+    "text": "Lumbridge Swamp net fishing spots beside the Fishing tutor."
+  },
+  {
+    "id": "AMGS28",
+    "text": "The caged Monk of Zamorak under the Varrock Palace stairs."
+  },
+  {
+    "id": "AMGS29",
+    "text": "Varrock West Bank: keep the hammer, withdraw five matching bars per platebody, smith at the anvils immediately south, bank, and repeat."
+  },
+  {
+    "id": "AMGS30",
+    "text": "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle."
+  },
+  {
+    "id": "AMGS31",
+    "text": "Your current safe non-Wilderness tile; process only the immediately usable carried materials named in DO."
+  },
+  {
+    "id": "AMGS32",
+    "text": "Grand Exchange south-east corner: burn the immediately usable carried logs named in DO in east-to-west rows."
+  },
+  {
+    "id": "AMGS33",
+    "text": ", drop the catch when your inventory fills, and repeat."
+  },
+  {
+    "id": "AMGS34",
+    "text": ", drop the catch when your inventory fills, and repeat."
+  },
+  {
+    "id": "AAE1",
+    "text": "No course has been proven available yet."
+  },
+  {
+    "id": "AAE2",
+    "text": "This Agility method requires member access."
+  },
+  {
+    "id": "AAE3",
+    "text": "This character was previously observed in the course region."
+  },
+  {
+    "id": "AAE4",
+    "text": " is complete and the Agility level requirement is met."
+  },
+  {
+    "id": "AAE5",
+    "text": "Current Agility level and member access satisfy this open course."
+  },
+  {
+    "id": "CCP1",
+    "text": " slot and can advance Collection Log progress."
+  },
+  {
+    "id": "CCP2",
+    "text": " UIM setup disruption and inventory pressure reduce its interruption value; no unobserved storage is counted."
+  },
+  {
+    "id": "CCP3",
+    "text": " RuneLite has not identified the open clue step, so Compass will not invent its location or requirements."
+  },
+  {
+    "id": "CCP4",
+    "text": " This observed Wilderness step is not selected for a Hardcore account."
+  },
+  {
+    "id": "CCP5",
+    "text": " Wilderness routing is disabled, so this clue should wait."
+  },
+  {
+    "id": "CCP6",
+    "text": "Open the clue scroll once so RuneLite can identify the current step."
+  },
+  {
+    "id": "CCP7",
+    "text": "Compass will reassess the exact step immediately."
+  },
+  {
+    "id": "CCP8",
+    "text": "Keep the clue in inventory and continue the current non-Wilderness plan."
+  },
+  {
+    "id": "CCP9",
+    "text": "Bank the clue and continue the current non-Wilderness plan."
+  },
+  {
+    "id": "CCP10",
+    "text": "Do not route this step while the current risk policy forbids it."
+  },
+  {
+    "id": "CLCP1",
+    "text": " remaining). Identify the missing items and their account-appropriate sources before treating this as a concrete grind."
+  },
+  {
+    "id": "CACP1",
+    "text": " away. Keep this as an alternative until a specific realistic task is proven ready."
+  },
+  {
+    "id": "CGS1",
+    "text": "Talk to Harlan, claim a training sword, and equip it. DO NEXT refreshes when the weapon is observed."
+  },
+  {
+    "id": "CGS2",
+    "text": "Melee combat tutor Harlan, north of Lumbridge Castle."
+  },
+  {
+    "id": "CGS3",
+    "text": "A verified weapon is required before Compass can give a sensible melee loop."
+  },
+  {
+    "id": "CGS4",
+    "text": " successful damage dealt on this style at "
+  },
+  {
+    "id": "CGS5",
+    "text": "No supplies required for the first trip."
+  },
+  {
+    "id": "CGS6",
+    "text": ". A blocked combat stat will not be trained intentionally."
+  },
+  {
+    "id": "CGS7",
+    "text": "Edgeville Monastery, west of Edgeville."
+  },
+  {
+    "id": "CGS8",
+    "text": "Fight monks and ask a monk to heal you when needed."
+  },
+  {
+    "id": "CGS9",
+    "text": "Monks are a low-risk Defence-pure target. Their healing can extend a training interaction, so do not turn the damage target into a fixed kill count."
+  },
+  {
+    "id": "CGS10",
+    "text": "Fight seagulls and stay on Defensive style."
+  },
+  {
+    "id": "CGS11",
+    "text": "Use Defensive style only. Seagulls suit a low-damage Defence pure because accuracy matters more than loot."
+  },
+  {
+    "id": "CGS12",
+    "text": "Fight Scurrius and use the matching rat-bone weapon once it is observed and legal for the build."
+  },
+  {
+    "id": "CGS13",
+    "text": "Scurrius has a combat-XP bonus and rat-bone weapons change the effective XP model, so no fixed kill count is shown."
+  },
+  {
+    "id": "CGS14",
+    "text": "Enter with the verified setup and select only bosses already unlocked for this account."
+  },
+  {
+    "id": "CGS15",
+    "text": "Nightmare Zone boss choices and modifiers change effective XP per damage, so the remaining XP is exact but a universal kill count is not."
+  },
+  {
+    "id": "CGS16",
+    "text": "Fight hill giants, collect only the drops worth keeping, and repeat."
+  },
+  {
+    "id": "CGS17",
+    "text": "Hill giants provide a concrete F2P combat-and-Prayer-supply loop without requiring a members area."
+  },
+  {
+    "id": "CGS18",
+    "text": "Edgeville Monastery, west of Edgeville."
+  },
+  {
+    "id": "CGS19",
+    "text": "Fight monks and ask a monk to heal you when needed."
+  },
+  {
+    "id": "CGS20",
+    "text": "Monks can heal you and themselves, reducing food use while early accuracy and max hit are low."
+  },
+  {
+    "id": "CGS21",
+    "text": "Giant frogs in Lumbridge Swamp, south of Lumbridge Castle."
+  },
+  {
+    "id": "CGS22",
+    "text": "Fight giant frogs, bury or keep the big bones, and repeat."
+  },
+  {
+    "id": "CGS23",
+    "text": "Giant frogs have high Hitpoints for their level, low Defence, and always drop big bones that can support Prayer progression."
+  },
+  {
+    "id": "CGS24",
+    "text": "Flesh Crawlers in the Stronghold of Security's Catacomb of Famine."
+  },
+  {
+    "id": "CGS25",
+    "text": "Fight Flesh Crawlers, reset aggression when they stop attacking, and repeat."
+  },
+  {
+    "id": "CGS26",
+    "text": "Flesh Crawlers stay aggressive for low-attention combat; this route does not ask the player to choose between two targets."
+  },
+  {
+    "id": "CGS27",
+    "text": "Fight sand crabs and reset aggression after roughly 10 minutes."
+  },
+  {
+    "id": "CGS28",
+    "text": "Sand crabs have 60 Hitpoints, very low combat stats, and no quest requirement for the basic beach route."
+  },
+  {
+    "id": "CGS29",
+    "text": "Gemstone Crab cave in the Tlati Rainforest."
+  },
+  {
+    "id": "CGS30",
+    "text": "Attack the Gemstone Crab and follow it through the cave when it relocates."
+  },
+  {
+    "id": "CGS31",
+    "text": "Gemstone Crab has effectively infinite Hitpoints and gives 87.5% of ordinary combat XP per damage. It is excellent for long idle sessions but not always the best low-level raw XP choice."
+  },
+  {
+    "id": "CGS32",
+    "text": "Fight Ammonite Crabs and reset aggression after roughly 10 minutes."
+  },
+  {
+    "id": "CGS33",
+    "text": "Ammonite Crabs have 100 Hitpoints and very low combat stats, reducing downtime and food use."
+  },
+  {
+    "id": "CGS34",
+    "text": "Fight sand crabs and reset aggression after roughly 10 minutes."
+  },
+  {
+    "id": "CGS35",
+    "text": "Sand crabs have 60 Hitpoints, very low combat stats, and the basic beach route has no quest requirement."
+  },
+  {
+    "id": "CGS36",
+    "text": ". Leave and restock before the final reliable healing item is consumed; rat-bone weapons replace the ordinary weapon only after one is observed."
+  },
+  {
+    "id": "CGS37",
+    "text": "; no other supplies are required for the first trip. Leave if the target damages you faster than you recover."
+  },
+  {
+    "id": "CGS38",
+    "text": "Bring your charged Bow of faerdhinen (c); it supplies its own ammunition."
+  },
+  {
+    "id": "CGDS1",
+    "text": "Open the bank to establish owned alternatives"
+  },
+  {
+    "id": "CGDS2",
+    "text": "No exact matching target is proven; compare current equipped gear"
+  },
+  {
+    "id": "CGDS3",
+    "text": "Verify requirements and encounter suitability for the best observed owned option"
+  },
+  {
+    "id": "CGDS4",
+    "text": " after stat, charge, ammo, and encounter checks"
+  },
+  {
+    "id": "CGDS5",
+    "text": "Resolve a concrete item and acquisition route before calling anything available now"
+  },
+  {
+    "id": "CGDS6",
+    "text": "Check live price, cash, and marginal benefit for "
+  },
+  {
+    "id": "CGDS7",
+    "text": "Resolve the verified self-source path for "
+  },
+  {
+    "id": "CGDS8",
+    "text": "Compare the marginal encounter benefit with GP, supply, travel, and acquisition time"
+  },
+  {
+    "id": "CGDS9",
+    "text": " if its first dependency is worth the detour"
+  },
+  {
+    "id": "CLSAO1",
+    "text": "runelite:agility:hallowed_sepulchre_floor_4"
+  },
+  {
+    "id": "CLSAO2",
+    "text": "runelite:agility:hallowed_sepulchre_floor_5"
+  },
+  {
+    "id": "CLSAO3",
+    "text": "runelite:agility:colossal_wyrm_basic_course"
+  },
+  {
+    "id": "CLSAO4",
+    "text": "runelite:agility:colossal_wyrm_advanced_course"
+  },
+  {
+    "id": "DCP1",
+    "text": "The tier is not complete, but individual rows are only public while its in-game page is open."
+  },
+  {
+    "id": "DCP2",
+    "text": " Achievement Diary page and leave it open until Compass refreshes."
+  },
+  {
+    "id": "DCP3",
+    "text": "Do not gather supplies yet; Compass will read the struck and unstruck task rows directly."
+  },
+  {
+    "id": "DCP4",
+    "text": "This one-time observation replaces repeated manual task checks."
+  },
+  {
+    "id": "DCP5",
+    "text": "The live diary row proves this task is incomplete, and its RuneLite-defined skill and quest prerequisites are met."
+  },
+  {
+    "id": "DCP6",
+    "text": "; follow the exact destination named in the task instruction."
+  },
+  {
+    "id": "DCP7",
+    "text": "Compass selected an observed incomplete task whose structured prerequisites are already satisfied."
+  },
+  {
+    "id": "DCP8",
+    "text": "No RuneLite-defined skill or quest prerequisite remains."
+  },
+  {
+    "id": "DTC1",
+    "text": "Generated from RuneLite 1.12.35 Achievement Diary definitions"
+  },
+  {
+    "id": "DTC2",
+    "text": "Verify one of the RuneLite-defined alternatives: "
+  },
+  {
+    "id": "FRF1",
+    "text": "Log in to RuneScape to load your account state."
+  },
+  {
+    "id": "FRF2",
+    "text": "No character state is currently available."
+  },
+  {
+    "id": "FRF3",
+    "text": "Open your inventory tab to verify carried supplies."
+  },
+  {
+    "id": "FRF4",
+    "text": "Inventory tab in the RuneScape side panel."
+  },
+  {
+    "id": "FRF5",
+    "text": "Your carried items have not been observed yet."
+  },
+  {
+    "id": "FRF6",
+    "text": "Open your equipment tab to verify your current setup."
+  },
+  {
+    "id": "FRF7",
+    "text": "Worn Equipment tab in the RuneScape side panel."
+  },
+  {
+    "id": "FRF8",
+    "text": "Your equipped items have not been observed yet."
+  },
+  {
+    "id": "FRF9",
+    "text": "Open your bank once to verify available supplies."
+  },
+  {
+    "id": "FRF10",
+    "text": "Lumbridge Castle bank, on the top floor."
+  },
+  {
+    "id": "FRF11",
+    "text": "No bank snapshot has been observed for this account."
+  },
+  {
+    "id": "FRF12",
+    "text": "Talk to the Mining tutor at the east Lumbridge Swamp mine and ask for a bronze pickaxe. Keep it in your inventory so Compass can advance the plan when it is observed."
+  },
+  {
+    "id": "FRF13",
+    "text": "East Lumbridge Swamp mine, beside the Mining tutor."
+  },
+  {
+    "id": "FRF14",
+    "text": "A free reusable pickaxe unlocks a concrete no-cost Mining route immediately."
+  },
+  {
+    "id": "FRF15",
+    "text": "Ask the Mining tutor for a bronze pickaxe if needed, mine copper at the east Lumbridge Swamp mine, drop the ore when full, and stop "
+  },
+  {
+    "id": "FRF16",
+    "text": "Bronze pickaxe; the Mining tutor at the mine supplies one when needed."
+  },
+  {
+    "id": "FRF17",
+    "text": "East Lumbridge Swamp mine, beside the Mining tutor."
+  },
+  {
+    "id": "FRF18",
+    "text": "Copper mining is a safe no-cost route while other activities still need supplies or access information."
+  },
+  {
+    "id": "FRF19",
+    "text": ", fight unarmed monks, and stop at level "
+  },
+  {
+    "id": "FRF20",
+    "text": "Edgeville Monastery, west of Edgeville."
+  },
+  {
+    "id": "FRF21",
+    "text": "Monks provide a concrete no-cost route that respects the current combat build."
+  },
+  {
+    "id": "FRF22",
+    "text": "Fight 10 unarmed monks with the current build-legal combat style. Ask a monk to heal you when needed, then stop."
+  },
+  {
+    "id": "FRF23",
+    "text": "Edgeville Monastery, west of Edgeville."
+  },
+  {
+    "id": "FRF24",
+    "text": "Monks provide a concrete no-cost route that respects the current combat build."
+  },
+  {
+    "id": "FRF25",
+    "text": "Compass replaces this recovery step automatically when the account state changes."
+  },
+  {
+    "id": "FRP1",
+    "text": "Resources + best confirmed herb/tree patches"
+  },
+  {
+    "id": "FRP2",
+    "text": "Rake was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "FRP3",
+    "text": "Seed dibber was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "FRP4",
+    "text": "Spade was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "FRP5",
+    "text": "Visit the patch once to record its current state."
+  },
+  {
+    "id": "GCP1",
+    "text": "Open the bank once to compare this gear path with verified ownership."
+  },
+  {
+    "id": "GCP2",
+    "text": "Bank ownership is currently unknown; no item is being called missing yet."
+  },
+  {
+    "id": "GCP3",
+    "text": "Lumbridge Castle bank, on the top floor."
+  },
+  {
+    "id": "GCP4",
+    "text": "This remains a verification alternative, not a purchase instruction."
+  },
+  {
+    "id": "GCP5",
+    "text": "Compare the live price and marginal benefit of "
+  },
+  {
+    "id": "GCP6",
+    "text": " before buying; keep the current item when the upgrade is not worth the detour."
+  },
+  {
+    "id": "GCP7",
+    "text": "Verify a self-source route and inventory/storage consequence for "
+  },
+  {
+    "id": "GCP8",
+    "text": " before changing the current UIM setup."
+  },
+  {
+    "id": "GCP9",
+    "text": "Resolve the verified self-source acquisition path for "
+  },
+  {
+    "id": "GCP10",
+    "text": "; do not substitute a Grand Exchange purchase."
+  },
+  {
+    "id": "GCP11",
+    "text": "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location."
+  },
+  {
+    "id": "GCP12",
+    "text": "; follow the deepest known unmet dependency first."
+  },
+  {
+    "id": "GGSS1",
+    "text": "This account has no Group Storage capability."
+  },
+  {
+    "id": "GGSS2",
+    "text": "Use Group Storage is disabled, so shared stock is not counted."
+  },
+  {
+    "id": "GGSS3",
+    "text": "No fresh Group Storage observation proves shared stock."
+  },
+  {
+    "id": "GGSS4",
+    "text": "The latest Group Storage observation contains none of the required item."
+  },
+  {
+    "id": "GGSS5",
+    "text": "Fresh shared stock covers part of the observed requirement."
+  },
+  {
+    "id": "GGSS6",
+    "text": "Fresh shared stock satisfies this requirement, so acquiring another copy now would duplicate group work."
+  },
+  {
+    "id": "GGSS7",
+    "text": "This account has no group infrastructure capability."
+  },
+  {
+    "id": "GGSS8",
+    "text": "RuneLite does not expose reliable teammate POH, unlock, or specialization state; Compass does not infer it from Group Storage."
+  },
+  {
+    "id": "GDPS1",
+    "text": "Obtain an enhanced crystal weapon seed"
+  },
+  {
+    "id": "GG9",
+    "text": "Quest and access unlocks needed by efficient methods"
+  },
+  {
+    "id": "GG10",
+    "text": "Account-appropriate resources for remaining training"
+  },
+  {
+    "id": "GG11",
+    "text": "Obtain required quest items and access"
+  },
+  {
+    "id": "GG12",
+    "text": "Recipe for Disaster start requirements"
+  },
+  {
+    "id": "GG13",
+    "text": "All mandatory Recipe for Disaster subquests"
+  },
+  {
+    "id": "GG14",
+    "text": "175 quest points for the final chapter"
+  },
+  {
+    "id": "GG15",
+    "text": "Actual skill requirements in the quest chain"
+  },
+  {
+    "id": "GG16",
+    "text": "Culinaromancer fights and quest combat readiness"
+  },
+  {
+    "id": "GG17",
+    "text": "Conservative Fight Cave combat readiness"
+  },
+  {
+    "id": "GG18",
+    "text": "Complete the TzHaar Fight Cave and defeat TzTok-Jad"
+  },
+  {
+    "id": "GG19",
+    "text": "Gauntlet progression and practical PvM readiness"
+  },
+  {
+    "id": "GG20",
+    "text": "Inferno access and prerequisite combat progression"
+  },
+  {
+    "id": "GG21",
+    "text": "Combat, Prayer, spellbook, and mechanical readiness"
+  },
+  {
+    "id": "GG22",
+    "text": "Meet diary quest and access requirements"
+  },
+  {
+    "id": "GG23",
+    "text": "Reach the Elite Combat Achievement reward tier"
+  },
+  {
+    "id": "GG24",
+    "text": "Build practical encounter-specific gear"
+  },
+  {
+    "id": "GG25",
+    "text": "Required spellbook and utility unlocks"
+  },
+  {
+    "id": "GG26",
+    "text": "Sustainable food, potions, ammunition, and runes"
+  },
+  {
+    "id": "GG27",
+    "text": "Reach 2000 total using high-value available skill gains"
+  },
+  {
+    "id": "GG28",
+    "text": "Build supporting combat, Prayer, and gear"
+  },
+  {
+    "id": "GG29",
+    "text": "Raise every trainable skill to at least 70"
+  },
+  {
+    "id": "GG30",
+    "text": "Access, resources, and encounter prerequisites"
+  },
+  {
+    "id": "ICP1",
+    "text": "A single ownership-proven scan lets Compass remember personal storage, restoration, and transport without counting a public or teammate house."
+  },
+  {
+    "id": "ICP2",
+    "text": "At a house portal, choose Build mode. If the game says you do not own a house, buy one from the Varrock Estate agent for 1,000 coins, then enter in Build mode."
+  },
+  {
+    "id": "ICP3",
+    "text": "1,000 coins only if you do not own a house"
+  },
+  {
+    "id": "ICP4",
+    "text": "Compass records the complete personal-house scan automatically."
+  },
+  {
+    "id": "ICP5",
+    "text": " It reduces UIM inventory pressure, travel, or future setup churn without counting conventional bank storage."
+  },
+  {
+    "id": "ICP6",
+    "text": " Its reusable utility reduces future self-sourced travel or setup costs."
+  },
+  {
+    "id": "ICP7",
+    "text": " Its repeat utility is weighed against tradeable and public-house substitutes; neither substitute is assumed available."
+  },
+  {
+    "id": "ICP8",
+    "text": " Distinct observed inventory layouts have blocked "
+  },
+  {
+    "id": "ICP9",
+    "text": ", so this is recurring pressure rather than a one-off full inventory."
+  },
+  {
+    "id": "ICP10",
+    "text": "Your own-house scan proves this milestone is absent and its skill, quest, and POH prerequisites are complete."
+  },
+  {
+    "id": "ICP11",
+    "text": "Compass will detect the completed furniture automatically."
+  },
+  {
+    "id": "ICP12",
+    "text": "100,000 coins, hammer, saw, 2 limestone bricks, 3 teak planks, 300 air runes, 100 fire runes, 100 law runes"
+  },
+  {
+    "id": "ICP13",
+    "text": "Hammer, saw, 5 limestone bricks, 5 buckets of water, 1,000 soul runes, 1,000 body runes"
+  },
+  {
+    "id": "ICP14",
+    "text": "200,000 coins, hammer, saw, 4 marble blocks"
+  },
+  {
+    "id": "ICP15",
+    "text": "Hammer, saw, bolt of cloth, steel bar, 3 games necklaces(8), 3 rings of dueling(8)"
+  },
+  {
+    "id": "ICP16",
+    "text": "Filled watering can, 10 unnoted mushrooms, fairy enchantment"
+  },
+  {
+    "id": "IUVS1",
+    "text": "Membership must be verified before this infrastructure can be planned."
+  },
+  {
+    "id": "IUVS2",
+    "text": "Observed account state proves this milestone is complete."
+  },
+  {
+    "id": "IUVS3",
+    "text": "A verified skill, quest, or prerequisite requirement is not complete."
+  },
+  {
+    "id": "IUVS4",
+    "text": "Requirements or completion are not fully observed; inspect the live capability before recommending acquisition."
+  },
+  {
+    "id": "IUVS5",
+    "text": "Requirements are verified and observed capability state proves the milestone is not yet complete."
+  },
+  {
+    "id": "IRE1",
+    "text": "Open the inventory tab so the required free slots can be verified"
+  },
+  {
+    "id": "IRE2",
+    "text": " are observed, and the inventory-slot preparation is unresolved"
+  },
+  {
+    "id": "LCSR1",
+    "text": "Dig on RuneLite's marked coordinate tile."
+  },
+  {
+    "id": "LCSR2",
+    "text": "Bring the requested item to Falo the Bard."
+  },
+  {
+    "id": "LCSR3",
+    "text": "Use the strange device and follow RuneLite's narrowing hot/cold area."
+  },
+  {
+    "id": "LCSR4",
+    "text": "Complete the remaining RuneLite-highlighted cryptic step."
+  },
+  {
+    "id": "LCSR5",
+    "text": "Talk to RuneLite's highlighted clue NPC."
+  },
+  {
+    "id": "MEP1",
+    "text": "Grand Exchange purchase planning only applies to Main accounts."
+  },
+  {
+    "id": "MEP2",
+    "text": "Verified cash state is required before recommending a purchase."
+  },
+  {
+    "id": "MEP3",
+    "text": "Purchase cost overflowed safe calculation limits."
+  },
+  {
+    "id": "MEP4",
+    "text": "Current verified coins do not cover the purchase. Compare money makers, banked materials, and only safe protected-item-aware sale options before spending."
+  },
+  {
+    "id": "MEP5",
+    "text": "Buying is affordable, but the verified time estimate does not beat self-sourcing."
+  },
+  {
+    "id": "MEP6",
+    "text": "The purchase is affordable, but a verified self-source/time comparison is still needed."
+  },
+  {
+    "id": "MEP7",
+    "text": "The purchase is affordable and the verified estimate saves time versus self-sourcing. No sale or purchase is performed automatically."
+  },
+  {
+    "id": "MEP8",
+    "text": "An exact live price is unavailable, so Compass will not assume the material is tradeable or cheap."
+  },
+  {
+    "id": "MEP9",
+    "text": "The price is known, but verified liquid coins are not."
+  },
+  {
+    "id": "MEP10",
+    "text": "Verified liquid coins do not cover the purchase."
+  },
+  {
+    "id": "MEP11",
+    "text": "The exact purchase is a low-burden use of verified liquid wealth."
+  },
+  {
+    "id": "MEP12",
+    "text": "The purchase would consume a material share of verified liquid wealth, so the reviewed self-source family is preferred without pretending to know an exact GP/hour value."
+  },
+  {
+    "id": "MEP13",
+    "text": "The purchase is affordable but materially burdens liquid wealth, and no reviewed self-source family is attached."
+  },
+  {
+    "id": "MGS1",
+    "text": "All known prerequisites for this method are ready."
+  },
+  {
+    "id": "MSKC1",
+    "text": "/content/catalogs/method-strategy-profiles.json"
+  },
+  {
+    "id": "MSKC2",
+    "text": "Incomplete bundled method strategy profile"
+  },
+  {
+    "id": "MSKC3",
+    "text": "This route lets your account source its own supplies and is usable at your current level."
+  },
+  {
+    "id": "MSKC4",
+    "text": "This method is usable at your current level and suits this session and play style."
+  },
+  {
+    "id": "MSS1",
+    "text": "No verified strategy profile applies to this account."
+  },
+  {
+    "id": "MSS2",
+    "text": "The sourced strategy does not apply to this account mode."
+  },
+  {
+    "id": "MSS3",
+    "text": "The route requires conventional banking."
+  },
+  {
+    "id": "MSS4",
+    "text": "Exact live inventory slots are required before this UIM method can be generated."
+  },
+  {
+    "id": "MCP1",
+    "text": ". Unlock is verified, but loadout, consumables, currency and account-mode constraints must also pass before the activity is Ready."
+  },
+  {
+    "id": "MCP2",
+    "text": "Open your inventory and equipment tab with your "
+  },
+  {
+    "id": "MCP3",
+    "text": "Carry the supplies you intend to use. Compass will keep this as preparation until the required setup can be proven."
+  },
+  {
+    "id": "MCP4",
+    "text": "the oak trees immediately east of Draynor Village bank"
+  },
+  {
+    "id": "MCP5",
+    "text": "the willow trees south of Draynor Village bank"
+  },
+  {
+    "id": "MCP6",
+    "text": "the maple trees north of Seers' Village bank"
+  },
+  {
+    "id": "MCP7",
+    "text": "the yew trees at Seers' Village church"
+  },
+  {
+    "id": "MCP8",
+    "text": "Switch to an official Forestry world, cut "
+  },
+  {
+    "id": "MCP9",
+    "text": ", drop only the freshly cut logs when the inventory fills, and complete every event that spawns. Never drop carried setup items."
+  },
+  {
+    "id": "MCP10",
+    "text": "Switch to an official Forestry world, cut "
+  },
+  {
+    "id": "MCP11",
+    "text": ", bank each inventory, and complete every event that spawns."
+  },
+  {
+    "id": "MCP12",
+    "text": "Bring the observed axe and a Forestry kit when owned."
+  },
+  {
+    "id": "MCP13",
+    "text": "The tree and location match the current Woodcutting level; event frequency varies, so no event count is invented."
+  },
+  {
+    "id": "MCP14",
+    "text": " Only renewable logs produced by this method are discarded."
+  },
+  {
+    "id": "MMCP1",
+    "text": " Comparing Main-account profit requires current prices before showing GP/hour."
+  },
+  {
+    "id": "MMCP2",
+    "text": "Climb the Agility Pyramid, take the pyramid top, sell it to Simon Templeton for 10,000 coins, and repeat."
+  },
+  {
+    "id": "MMCP3",
+    "text": "Buy four waterskin(4)s from the Pollnivneach general store and ten jugs of wine from Ali the Barman before each batch; restock before the final waterskin empties."
+  },
+  {
+    "id": "MMCP4",
+    "text": "Pollnivneach shops -> Agility Pyramid west of Nardah -> Simon Templeton beside the pyramid."
+  },
+  {
+    "id": "MMCP5",
+    "text": "Level 60 is the conservative cash breakpoint. Obstacle failures and damage vary, so Compass does not promise a lap rate or exact hourly coins."
+  },
+  {
+    "id": "OE1",
+    "text": "Open the clue scroll so RuneLite can identify the current step"
+  },
+  {
+    "id": "OE2",
+    "text": "Reach Farming level 9 for the modeled herb patches"
+  },
+  {
+    "id": "OE3",
+    "text": "Verify at least one reachable herb patch"
+  },
+  {
+    "id": "OE4",
+    "text": "Complete Bone Voyage for Fossil Island access"
+  },
+  {
+    "id": "OSC1",
+    "text": "How Compass weighs speed versus comfort"
+  },
+  {
+    "id": "OSC2",
+    "text": "What kind of session you want Compass to plan for"
+  },
+  {
+    "id": "OSC3",
+    "text": "The long-term goal used to prioritize recommendations; Automatic applies no specific-goal bias"
+  },
+  {
+    "id": "OSC4",
+    "text": "How often elective quest detours should appear; quests required for the selected goal remain eligible"
+  },
+  {
+    "id": "OSC5",
+    "text": "Allow Compass to recommend methods that require entering the Wilderness"
+  },
+  {
+    "id": "OSC6",
+    "text": "Allow the compact Why and current-step overlay"
+  },
+  {
+    "id": "OSC7",
+    "text": "Show the current method as a movable heads-up reference"
+  },
+  {
+    "id": "OSC8",
+    "text": "Scale Compass text without changing the rest of RuneLite"
+  },
+  {
+    "id": "OSC9",
+    "text": "For GIM accounts, count useful items actually observed in Group Storage"
+  },
+  {
+    "id": "OSC10",
+    "text": "Give a little more weight to useful or near-complete collection-log opportunities"
+  },
+  {
+    "id": "OSC11",
+    "text": "Clear Later, Not Today, and Dislike learning for the current character only; goals, settings, bank observations, and recommendation history are kept"
+  },
+  {
+    "id": "OSC12",
+    "text": "Reset learned recommendation feedback for the current character? This clears Later, Not Today, and Dislike learning."
+  },
+  {
+    "id": "OSP1",
+    "text": "Mode: Balanced<br>Session: Pick for me<br>Optional quests: Normal"
+  },
+  {
+    "id": "OSP2",
+    "text": "Compass starts with sensible defaults. Change Goal or Session only when you want to steer the plan."
+  },
+  {
+    "id": "OSP3",
+    "text": "Completed a proven step on the active goal path."
+  },
+  {
+    "id": "OSP4",
+    "text": "Completed the active Compass checkpoint."
+  },
+  {
+    "id": "PUCP1",
+    "text": "Take a chisel to the crystal outcrop at the bottom of the Abandoned Mine and cut a salve shard, then use the chisel on the shard."
+  },
+  {
+    "id": "PUCP2",
+    "text": "Bring a chisel and preserve enough inventory space for the shard and amulet."
+  },
+  {
+    "id": "PUCP3",
+    "text": "The amulet is useful against applicable undead targets; upgrades and encounter mechanics still need their own checks."
+  },
+  {
+    "id": "PUCP4",
+    "text": "Return to Mawnis Burowgar on Neitiznot and verify the current replacement requirement before paying or changing setup."
+  },
+  {
+    "id": "PUCP5",
+    "text": "The quest is complete, but replacement cost and spendable cash must be observed before calling the acquisition ready."
+  },
+  {
+    "id": "PUCP6",
+    "text": "This is a broadly useful melee helm, not a universal best choice."
+  },
+  {
+    "id": "PUCP7",
+    "text": "Talk to the Dark Mage in West Ardougne and verify the current replacement requirement before paying."
+  },
+  {
+    "id": "PUCP8",
+    "text": "The quest is complete, but replacement cost, spellbook, runes and UIM setup must be checked separately."
+  },
+  {
+    "id": "PUCP9",
+    "text": "Iban Blast can be useful progression Magic where the target and rune cost support it."
+  },
+  {
+    "id": "PUCP10",
+    "text": " Check inventory space and retrieval/storage consequences before travelling."
+  },
+  {
+    "id": "PUCP11",
+    "text": "Verify the current death or looting-bag state, then retrieve "
+  },
+  {
+    "id": "PUCP12",
+    "text": " without destroying the active UIM setup."
+  },
+  {
+    "id": "PUCP13",
+    "text": " is complete and the item is not present in observed usable ownership."
+  },
+  {
+    "id": "PUCP14",
+    "text": "Use the quest's established replacement or reacquisition location."
+  },
+  {
+    "id": "PUCP15",
+    "text": "Keep one inventory space free and preserve any retrieval-heavy setup before travelling."
+  },
+  {
+    "id": "PUCP16",
+    "text": "Withdraw 100,000 coins only when ready to make the purchase."
+  },
+  {
+    "id": "PUCP17",
+    "text": "Monkey Madness I and 60 Attack are observed, making this a concrete slash progression purchase rather than a generic gear tier."
+  },
+  {
+    "id": "PUCP18",
+    "text": "Travel to Ape Atoll and buy a Dragon scimitar from Daga's Scimitar Smithy for 100,000 coins."
+  },
+  {
+    "id": "PUCP19",
+    "text": "Verify or obtain 100,000 spendable coins, then travel to Daga's Scimitar Smithy on Ape Atoll."
+  },
+  {
+    "id": "PUCP20",
+    "text": " Coin affordability is not yet observed."
+  },
+  {
+    "id": "PUCP21",
+    "text": " This is the same shop route for Main and Iron accounts; no Grand Exchange assumption is needed."
+  },
+  {
+    "id": "PUCP22",
+    "text": "Daga's Scimitar Smithy on Ape Atoll after Monkey Madness I."
+  },
+  {
+    "id": "PUCP23",
+    "text": "Use it where a one-handed slash weapon is appropriate; it is not a universal encounter weapon."
+  },
+  {
+    "id": "PUCP24",
+    "text": "Bring 999 coins and 75 steel arrows for a replacement accumulator."
+  },
+  {
+    "id": "PUCP25",
+    "text": "Bring 999 coins for a replacement attractor."
+  },
+  {
+    "id": "PUCP26",
+    "text": "Animal Magnetism is complete and no Ava device is observed; this is a reusable Ranged cape-slot and ammunition-recovery upgrade."
+  },
+  {
+    "id": "PUCP27",
+    "text": "Talk to Ava in Draynor Manor and obtain "
+  },
+  {
+    "id": "PUCP28",
+    "text": ". Equip it for compatible Ranged setups."
+  },
+  {
+    "id": "PUCP29",
+    "text": "Obtain the replacement materials, then talk to Ava in Draynor Manor for "
+  },
+  {
+    "id": "PUCP30",
+    "text": " The required coins and arrows are observed."
+  },
+  {
+    "id": "PUCP31",
+    "text": " The complete replacement cost is not yet observed."
+  },
+  {
+    "id": "PUCP32",
+    "text": "Ava's room in the west wing of Draynor Manor."
+  },
+  {
+    "id": "PUCP33",
+    "text": "Weapon and ammunition compatibility still matter; owning the device does not prove a complete encounter loadout."
+  },
+  {
+    "id": "PUCP34",
+    "text": "Defence-pure safety: use only a Defence-training legal attacker style and do not intentionally gain Attack, Strength, Ranged, or Magic XP."
+  },
+  {
+    "id": "PUCP35",
+    "text": "Use a build-legal combat setup for the Attacker role."
+  },
+  {
+    "id": "PUCP36",
+    "text": "Play Barbarian Assault until you have 375 honour points in Attacker, Defender, Collector, and Healer, and have defeated the Penance Queen once. Then buy the Fighter torso from Commander Connad."
+  },
+  {
+    "id": "PUCP37",
+    "text": "No GP purchase is required for the torso. Bring only gear that is legal for this account build. "
+  },
+  {
+    "id": "PUCP38",
+    "text": "Barbarian Assault beneath the Barbarian Outpost. Purchase the torso from Commander Connad after the point and Queen requirements are complete."
+  },
+  {
+    "id": "PUCP39",
+    "text": "The torso requires 40 Defence to equip. The route is allowed to lead DO NEXT only because the account/build checks above are already satisfied."
+  },
+  {
+    "id": "PUCP40",
+    "text": "A strong reusable melee-body upgrade that does not require a tradeable drop or GP purchase."
+  },
+  {
+    "id": "PUCP41",
+    "text": "You have 70 Attack and no observed whip-or-better general melee weapon."
+  },
+  {
+    "id": "PUCP42",
+    "text": "Buy an Abyssal whip once its live price and the account's spendable cash are verified against the configured spending limit."
+  },
+  {
+    "id": "PUCP43",
+    "text": "Live price and cash affordability still need to be resolved before this purchase can lead DO NEXT."
+  },
+  {
+    "id": "PUCP44",
+    "text": "Keep this as a secondary option until live price and affordability are observed."
+  },
+  {
+    "id": "PUCP45",
+    "text": "This Iron-style account has the Slayer level for the self-source route, but the location and combat setup are not yet proven."
+  },
+  {
+    "id": "PUCP46",
+    "text": "Verify access to the Slayer Tower top floor and an observed build-legal abyssal-demon loadout before starting the whip grind."
+  },
+  {
+    "id": "PUCP47",
+    "text": "The 85 Slayer requirement is met; location access, weapon, armour, food, and any prayer supplies are not yet proven."
+  },
+  {
+    "id": "PUCP48",
+    "text": "Slayer Tower top floor in Morytania, only after its access is observed."
+  },
+  {
+    "id": "PUCP49",
+    "text": "Once setup is proven, kill abyssal demons until an Abyssal whip drops. The drop is RNG, so Compass will not invent a kill count."
+  },
+  {
+    "id": "PUCP50",
+    "text": "This Iron-style account cannot buy the upgrade, so Slayer progression is the acquisition chain."
+  },
+  {
+    "id": "PUCP51",
+    "text": " to 85, then self-source an Abyssal whip from abyssal demons."
+  },
+  {
+    "id": "PUCP52",
+    "text": "Use banked/observed combat supplies and task gear where possible. A live actionable Slayer task takes priority over this long-term acquisition step."
+  },
+  {
+    "id": "PUCP53",
+    "text": "Use the highest safe standard Slayer master and the live task location selected by the Slayer planner."
+  },
+  {
+    "id": "PUCP54",
+    "text": "This is an acquisition-chain recommendation, not a claim that every Slayer level should be trained using the same task or setup."
+  },
+  {
+    "id": "PUCP55",
+    "text": "Enter the Warriors' Guild, obtain defenders in order from the upstairs Cyclopes through Rune, show the Rune defender for basement access, then kill the basement Cyclopes until a Dragon defender drops."
+  },
+  {
+    "id": "PUCP56",
+    "text": "Bring armour, food, a build-legal melee weapon, and enough Warriors' Guild tokens for the Cyclops rooms. Token consumption and defender drops are variable, so no fake exact token/kill count is shown."
+  },
+  {
+    "id": "PUCP57",
+    "text": "Warriors' Guild in Burthorpe. Bronze through Rune defenders are obtained upstairs; the Dragon defender comes from the stronger basement Cyclopes after basement access is unlocked."
+  },
+  {
+    "id": "PUCP58",
+    "text": "The account has the guild-entry stats and the 60 Attack/Defence equip requirements. Defender drops are RNG."
+  },
+  {
+    "id": "PUCP59",
+    "text": "A major melee off-hand progression step is available and no Dragon/Avernic defender is observed."
+  },
+  {
+    "id": "PUCP60",
+    "text": "Verify current spendable cash before treating the shop purchase as immediately ready. Required shop price: "
+  },
+  {
+    "id": "PUCP61",
+    "text": "Purchase Barrows gloves from the fully unlocked Culinaromancer's Chest."
+  },
+  {
+    "id": "PUCP62",
+    "text": "Culinaromancer's Chest in the Lumbridge Castle cellar."
+  },
+  {
+    "id": "PUCP63",
+    "text": "The Elite Lumbridge & Draynor Diary discount is observed, so the reduced shop price is used."
+  },
+  {
+    "id": "PUCP64",
+    "text": "The full Recipe for Disaster completion is observed. The standard shop price is used unless the Elite Lumbridge & Draynor discount is verified."
+  },
+  {
+    "id": "PUCP65",
+    "text": "Recipe for Disaster is complete and this reusable glove upgrade is not observed."
+  },
+  {
+    "id": "PUCP66",
+    "text": "An Enhanced crystal weapon seed is observed, so the RNG acquisition step is already complete."
+  },
+  {
+    "id": "PUCP67",
+    "text": "Use the Enhanced crystal weapon seed with "
+  },
+  {
+    "id": "PUCP68",
+    "text": " Crystal shards at a singing bowl to create the Bow of faerdhinen."
+  },
+  {
+    "id": "PUCP69",
+    "text": "Have Conwenna or Reese sing the Enhanced crystal weapon seed into a Bow of faerdhinen using "
+  },
+  {
+    "id": "PUCP70",
+    "text": " Crystal shards because the account does not currently have both 82 Smithing and 82 Crafting."
+  },
+  {
+    "id": "PUCP71",
+    "text": "Verified: the Enhanced crystal weapon seed and at least "
+  },
+  {
+    "id": "PUCP72",
+    "text": "Use a singing bowl in Prifddinas; the NPC-assisted route is also available there when skill requirements are not met."
+  },
+  {
+    "id": "PUCP73",
+    "text": "Corrupting the bow is a separate 2,000-shard decision and should not be silently bundled into the initial 100/150-shard creation cost."
+  },
+  {
+    "id": "PUCP74",
+    "text": "Song of the Elves is complete, but no Bowfa or Enhanced crystal weapon seed is observed."
+  },
+  {
+    "id": "PUCP75",
+    "text": "Buy the Bow of faerdhinen or its seed route only after verifying a live price and confirming the purchase fits the account's current cash budget."
+  },
+  {
+    "id": "PUCP76",
+    "text": "Check the live purchase price before choosing this over a ready action."
+  },
+  {
+    "id": "PUCP77",
+    "text": "Grand Exchange for a Main; Prifddinas singing bowl if buying/using an Enhanced crystal weapon seed instead."
+  },
+  {
+    "id": "PUCP78",
+    "text": "The planner deliberately avoids hard-coding a market price."
+  },
+  {
+    "id": "PUCP79",
+    "text": "This Iron-style account must self-source the Bowfa seed after Song of the Elves."
+  },
+  {
+    "id": "PUCP80",
+    "text": "Run the Corrupted Gauntlet for an Enhanced crystal weapon seed. The seed is an RNG reward, so progress is tracked without a fixed completion count."
+  },
+  {
+    "id": "PUCP81",
+    "text": "The Gauntlet supplies its own temporary equipment inside the activity, so do not plan normal bank gear as a required input. After the seed drops, the Bowfa creation step needs Crystal shards."
+  },
+  {
+    "id": "PUCP82",
+    "text": "The Gauntlet is a dangerous activity for Hardcore status. Keep this as a deliberate risk decision rather than an automatic primary recommendation."
+  },
+  {
+    "id": "PUCP83",
+    "text": "UIM safety: retrieval-service items are currently observed. A dangerous death can threaten that storage state, so this route stays secondary until the death-storage risk is cleared."
+  },
+  {
+    "id": "PUCP84",
+    "text": "The Enhanced crystal weapon seed is probabilistic. Corrupted Gauntlet has the substantially better seed chance than normal Gauntlet, but no number of completions is guaranteed."
+  },
+  {
+    "id": "PUCP85",
+    "text": "Play Fishing Trawler and keep contribution at or above the reward threshold each game until the missing Angler pieces are obtained."
+  },
+  {
+    "id": "PUCP86",
+    "text": "Bring 300 swamp paste, one rope, and one bailing bucket. Patch ten leaks for 50 contribution, then help bail or repair until the voyage ends; the Khazard General Store sells every missing item. Outfit pieces are RNG rewards, so no fake exact game count is shown."
+  },
+  {
+    "id": "PUCP87",
+    "text": "Fishing Trawler at Port Khazard. Inspect the trawler net after qualifying games for rewards."
+  },
+  {
+    "id": "PUCP88",
+    "text": "/4 observed Angler/Spirit Angler pieces. The full set gives the Fishing XP set bonus and also unlocks minnow access; detour only when that remaining account value justifies it."
+  },
+  {
+    "id": "PUCP89",
+    "text": "The remaining Fishing grind or collection goal is large enough for this reusable skilling unlock to compete with direct XP."
+  },
+  {
+    "id": "PCA1",
+    "text": "At current RuneLite market prices, that purchase is about "
+  },
+  {
+    "id": "PCA2",
+    "text": " verified spendable coins, leaving about "
+  },
+  {
+    "id": "PCA3",
+    "text": " verified spendable coins, so you are about "
+  },
+  {
+    "id": "PCA4",
+    "text": " coins short. Do not treat the purchase as ready until that cash gap closes or the live prices move."
+  },
+  {
+    "id": "PCA5",
+    "text": " Cash is not fully verified yet, so affordability is still Check Needed."
+  },
+  {
+    "id": "PCP1",
+    "text": "Prepare the missing PvM evidence before attempting "
+  },
+  {
+    "id": "PCP2",
+    "text": "Verify the encounter access route and prepare outside the encounter."
+  },
+  {
+    "id": "PCP3",
+    "text": "Finish this preparation before attempting the encounter."
+  },
+  {
+    "id": "PCP4",
+    "text": "Observed equipped gear, carried supplies, access and conservative activity checks are ready."
+  },
+  {
+    "id": "PCP5",
+    "text": "The encounter is not ready; complete the listed preparation before attempting it."
+  },
+  {
+    "id": "PCP6",
+    "text": "Enter the Fight Cave, complete all 63 waves, tag Jad's healers, and finish TzTok-Jad without missing a prayer switch."
+  },
+  {
+    "id": "PCP7",
+    "text": "Keep the Ranged weapon, ammunition or charges, prayer restoration, and healing that the live readiness check verified equipped or carried."
+  },
+  {
+    "id": "PCP8",
+    "text": "TzHaar Fight Cave beneath Karamja volcano."
+  },
+  {
+    "id": "PCP9",
+    "text": "Readiness reflects observed carried setup and conservative access checks; it does not claim a universal best loadout."
+  },
+  {
+    "id": "PCP10",
+    "text": "Enter Obor's lair through the locked gate in the Edgeville Dungeon hill-giant area, then complete the fight with the observed melee setup."
+  },
+  {
+    "id": "PCP11",
+    "text": "Obor's lair gate in Edgeville Dungeon."
+  },
+  {
+    "id": "PCP12",
+    "text": "Keep the observed melee weapon, giant key, carried food, and prayer restoration in the live readiness snapshot."
+  },
+  {
+    "id": "PCP13",
+    "text": "Enter Bryophyta's lair through the locked gate in the Varrock Sewers moss-giant area, then complete the fight with the observed melee setup."
+  },
+  {
+    "id": "PCP14",
+    "text": "Bryophyta's lair gate in Varrock Sewers."
+  },
+  {
+    "id": "PCP15",
+    "text": "Keep the observed melee weapon, mossy key, carried food, and prayer restoration in the live readiness snapshot."
+  },
+  {
+    "id": "PCP16",
+    "text": "Enter the public Scurrius arena and complete one fight with the observed melee setup; use a rat-bone weapon only when it is actually equipped."
+  },
+  {
+    "id": "PCP17",
+    "text": "Keep the observed melee weapon, carried food, and prayer restoration in the live readiness snapshot."
+  },
+  {
+    "id": "PCP18",
+    "text": " using the currently equipped and carried setup."
+  },
+  {
+    "id": "PCP19",
+    "text": "Keep the weapon, loadout, and minimum supplies that the live readiness check verified."
+  },
+  {
+    "id": "PCP20",
+    "text": "Use the exact non-Wilderness route recorded by the encounter readiness check."
+  },
+  {
+    "id": "PCP21",
+    "text": "This is conservative readiness, not a universal best-in-slot claim. Stop and reassess if the live setup changes."
+  },
+  {
+    "id": "PCP22",
+    "text": "Readiness is limited to the observed carried setup for "
+  },
+  {
+    "id": "PCP23",
+    "text": "; it does not claim mechanical execution or a universal best loadout."
+  },
+  {
+    "id": "PRA1",
+    "text": "Verify the observed weapon is in the weapon slot and is suitable for this encounter"
+  },
+  {
+    "id": "PRA2",
+    "text": "Carry more than a token food item and verify an encounter-appropriate healing supply"
+  },
+  {
+    "id": "PRA3",
+    "text": "Carry a recognised prayer-restoration item and verify its usable doses"
+  },
+  {
+    "id": "PRA4",
+    "text": "Verify the carried ammunition or charges are compatible with the equipped ranged weapon"
+  },
+  {
+    "id": "PRA5",
+    "text": "Carry and verify ammunition or charges compatible with the equipped ranged weapon"
+  },
+  {
+    "id": "PRA6",
+    "text": "Verify the observed inventory/rune-pouch runes satisfy the selected spell and current spellbook"
+  },
+  {
+    "id": "PRA7",
+    "text": "Carry the required rune combination and verify the selected spell and current spellbook"
+  },
+  {
+    "id": "PRA8",
+    "text": "Verify encounter-specific protection items, prayers, charges, and access requirements"
+  },
+  {
+    "id": "PRA9",
+    "text": "Verify UIM inventory layout, retrieval route, and safe death/storage state for this encounter"
+  },
+  {
+    "id": "PRA10",
+    "text": "Desert Treasure II - The Fallen Empire"
+  },
+  {
+    "id": "QCP1",
+    "text": "This quest is already in progress. It remains an alternative until the remaining step and requirements are observed."
+  },
+  {
+    "id": "QCP2",
+    "text": "This quest is unfinished, but its requirements are not fully verified yet. It stays below ready actions until those checks are complete."
+  },
+  {
+    "id": "QCP3",
+    "text": " Its reward profile is on the safe list for this "
+  },
+  {
+    "id": "QCP4",
+    "text": " It is a verified prerequisite for another unfinished quest."
+  },
+  {
+    "id": "QCP5",
+    "text": " It is on the selected goal's proven quest path; optional-quest preference does not suppress it."
+  },
+  {
+    "id": "QCM1",
+    "text": "RuneLite Quest enum 1.12.35; audited 2026-08-18"
+  },
+  {
+    "id": "QCM2",
+    "text": "Known direct quest and skill requirements are structured; explicitly listed fields remain fail-closed."
+  },
+  {
+    "id": "QCM3",
+    "text": "Structured requirements and progression effects are locally curated."
+  },
+  {
+    "id": "QCM4",
+    "text": " is observed by RuneLite, but its full requirements and irreversible rewards have not passed local verification; it cannot lead DO NEXT."
+  },
+  {
+    "id": "RGS1",
+    "text": "Mine one copper ore and one tin ore, smelt them into a bronze bar, smith the highest bronze item that fits the carried bars, and repeat until Smithing level "
+  },
+  {
+    "id": "RGS2",
+    "text": "Bring a pickaxe and hammer; buy a hammer from Lumbridge General Store if it is missing."
+  },
+  {
+    "id": "RGS3",
+    "text": "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle."
+  },
+  {
+    "id": "RGS4",
+    "text": "The loop sources and consumes each pair of ores locally, so no conventional bank or stored bar supply is assumed."
+  },
+  {
+    "id": "RGS5",
+    "text": "Cook the carried raw fish on the permanent fire. If the carried supply runs out first, fly-fish trout and salmon at the adjacent river and cook each inventory until Cooking level "
+  },
+  {
+    "id": "RGS6",
+    "text": "Bring the carried raw fish. For the resupply loop, bring a fly fishing rod and feathers."
+  },
+  {
+    "id": "RGS7",
+    "text": "Barbarian Village river and the permanent fire immediately east of the fishing spots."
+  },
+  {
+    "id": "RGS8",
+    "text": "Inputs become useful food in place, so the loop is viable without conventional banking or an empty inventory."
+  },
+  {
+    "id": "RGS9",
+    "text": "Body Altar south of Edgeville Monastery"
+  },
+  {
+    "id": "RGS10",
+    "text": "Mine one carried inventory of rune essence through Sedridor, walk it to the "
+  },
+  {
+    "id": "RGS11",
+    "text": " runes, and repeat until Runecraft level "
+  },
+  {
+    "id": "RGS12",
+    "text": " tiara; leave the remaining slots for rune essence."
+  },
+  {
+    "id": "RGS13",
+    "text": "Wizards' Tower rune-essence mine, then the "
+  },
+  {
+    "id": "RGS14",
+    "text": "Essence is mined and consumed one trip at a time; no conventional bank or banked essence is assumed."
+  },
+  {
+    "id": "RGS15",
+    "text": "Pickpocket men and women around Lumbridge Castle, stop before another failed pickpocket could be unsafe, ask a monk at Edgeville Monastery to heal you, and repeat until Thieving level "
+  },
+  {
+    "id": "RGS16",
+    "text": "No carried supplies are required; preserve the current inventory and do not bank between healing trips."
+  },
+  {
+    "id": "RGS17",
+    "text": "Men and women around Lumbridge Castle, with healing from the monks at Edgeville Monastery."
+  },
+  {
+    "id": "RGS18",
+    "text": "This is a slow bank-free recovery route for early UIM Thieving; stronger routes can replace it when their access and setup are proven."
+  },
+  {
+    "id": "RGS19",
+    "text": "Steal from both fruit stalls, drop only the freshly stolen fruit while moving between them, and repeat until Thieving level "
+  },
+  {
+    "id": "RGS20",
+    "text": "No carried supplies are required; preserve every pre-existing setup item."
+  },
+  {
+    "id": "RGS21",
+    "text": "The two fruit stalls in the easternmost house near the Hosidius beach."
+  },
+  {
+    "id": "RGS22",
+    "text": "This lower-rate fallback stays executable when a stronger UIM Thieving route or healing setup is not proven."
+  },
+  {
+    "id": "RGS23",
+    "text": "Raw-fish totals include a conservative low-level burn buffer. Burns are random, so you may finish a stage with some raw fish left over."
+  },
+  {
+    "id": "RGS24",
+    "text": " You already have enough in inventory/verified safe storage."
+  },
+  {
+    "id": "RGS25",
+    "text": " just in time: buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village. Normal bank state is ignored for UIM."
+  },
+  {
+    "id": "RGS26",
+    "text": ". Open your bank once to verify stored fish before calculating the remaining shortfall."
+  },
+  {
+    "id": "RGS27",
+    "text": " You already have enough for this milestone."
+  },
+  {
+    "id": "RGS28",
+    "text": ": buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village."
+  },
+  {
+    "id": "RGS29",
+    "text": "Use the Lumbridge Castle range to reduce burns, banking upstairs between inventories."
+  },
+  {
+    "id": "RGS30",
+    "text": "Use the range immediately north of Al Kharid bank: withdraw raw fish, cook one inventory, bank, and repeat."
+  },
+  {
+    "id": "RQP1",
+    "text": "safest reachable non-wilderness location"
+  },
+  {
+    "id": "RQP2",
+    "text": "inventory-slot preparation is unresolved"
+  },
+  {
+    "id": "REE1",
+    "text": "The active spellbook has not been observed."
+  },
+  {
+    "id": "REE2",
+    "text": "The observed spellbook cannot cast this Standard spell."
+  },
+  {
+    "id": "REE3",
+    "text": "Pandemonium completion verifies both starter ports and courier access."
+  },
+  {
+    "id": "REE4",
+    "text": "The starter courier route has not been verified from live quest state."
+  },
+  {
+    "id": "REE5",
+    "text": "RuneLite exposes aggregate chart completion state, but Compass does not yet map every Captain's-log checkbox to an exact next location."
+  },
+  {
+    "id": "REE6",
+    "text": "The required hull and facilities are known ordinary boat preparation; current fitted components are not exposed as a stable ready-state here."
+  },
+  {
+    "id": "REE7",
+    "text": "Exact safe Sailing route and boat state"
+  },
+  {
+    "id": "REE8",
+    "text": "The selected activity needs live boat facilities and route access that have not been verified."
+  },
+  {
+    "id": "REE9",
+    "text": "Equip a metal full helm, platebody, platelegs or plateskirt, kiteshield, Stronghold-style boots, and a cursed goblin staff"
+  },
+  {
+    "id": "REE10",
+    "text": "The observed cursed-staff metal setup is the verified -68 Magic attack route."
+  },
+  {
+    "id": "REE11",
+    "text": "Claim a cursed goblin staff from Diango in Draynor, equip the named metal pieces and Stronghold boots, then confirm -64 or lower in Equipment Stats."
+  },
+  {
+    "id": "REE12",
+    "text": "The Easy Diary proves access to the Hosidius kitchen range and bank chest."
+  },
+  {
+    "id": "REE13",
+    "text": "Kourend & Kebos Easy Diary completion has not been observed."
+  },
+  {
+    "id": "REE14",
+    "text": "Quest completion proves karambwan fishing access."
+  },
+  {
+    "id": "REE15",
+    "text": "Tai Bwo Wannai Trio completion has not been observed."
+  },
+  {
+    "id": "REE16",
+    "text": "Fairy ring access is supported by live transport or completed-quest evidence."
+  },
+  {
+    "id": "REE17",
+    "text": "Verify fairy ring access before using the DKP-to-Zanaris banking loop."
+  },
+  {
+    "id": "REE18",
+    "text": "Dramen/Lunar staff or staffless fairy rings"
+  },
+  {
+    "id": "REE19",
+    "text": "The observed route can use fairy rings without another staff check."
+  },
+  {
+    "id": "REE20",
+    "text": "Bring a dramen or lunar staff, or verify the staffless diary unlock."
+  },
+  {
+    "id": "REE21",
+    "text": "Bone Voyage completion proves Fossil Island access."
+  },
+  {
+    "id": "REE22",
+    "text": "Bone Voyage completion has not been observed."
+  },
+  {
+    "id": "REE23",
+    "text": " completion is observed for this character."
+  },
+  {
+    "id": "REE24",
+    "text": "POH access has not been observed for this character."
+  },
+  {
+    "id": "REE25",
+    "text": "A Parlour chair hotspot has not been observed."
+  },
+  {
+    "id": "REE26",
+    "text": "POH access has not been observed for this character."
+  },
+  {
+    "id": "REE27",
+    "text": "An oak-larder hotspot has not been observed."
+  },
+  {
+    "id": "REE28",
+    "text": " is observed in immediately usable ownership."
+  },
+  {
+    "id": "REE29",
+    "text": " is observed in immediately usable ownership."
+  },
+  {
+    "id": "REE30",
+    "text": "This method only reaches the evaluator when Wilderness methods are enabled."
+  },
+  {
+    "id": "REE31",
+    "text": "Quest/access checks and observed-area memory have not proven a patch yet."
+  },
+  {
+    "id": "REE32",
+    "text": " is available from quest/access evidence."
+  },
+  {
+    "id": "REE33",
+    "text": "The early-Farming seed source is not verified yet; choose and verify a usable seed before starting."
+  },
+  {
+    "id": "REE34",
+    "text": "Falador patches are reachable from account access evidence."
+  },
+  {
+    "id": "REE35",
+    "text": "South Falador patch access has not been proven for this character."
+  },
+  {
+    "id": "REE36",
+    "text": "38 Thieving for the safe seed-acquisition loop"
+  },
+  {
+    "id": "REE37",
+    "text": "Watermelon seeds are not observed and Master Farmers cannot be pickpocketed below 38 Thieving."
+  },
+  {
+    "id": "REE38",
+    "text": "Rake is verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE39",
+    "text": "Seed dibber is verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE40",
+    "text": "Spade is verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE41",
+    "text": "Eight filled watering cans or Gricoller's can"
+  },
+  {
+    "id": "REE42",
+    "text": "The continuous watering setup is observed."
+  },
+  {
+    "id": "REE43",
+    "text": "Bring eight filled watering cans, or Gricoller's can, for a reliable continuous cycle."
+  },
+  {
+    "id": "REE44",
+    "text": "No herb patch has been proven by quest/access checks or prior observation yet."
+  },
+  {
+    "id": "REE45",
+    "text": " is available from quest/access evidence."
+  },
+  {
+    "id": "REE46",
+    "text": "Rake was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE47",
+    "text": "Seed dibber was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE48",
+    "text": "Spade was previously verified in Tool Leprechaun storage."
+  },
+  {
+    "id": "REE49",
+    "text": "More account state must be observed before this can be proven."
+  },
+  {
+    "id": "RAP1",
+    "text": "Required quantity is confirmed in inventory."
+  },
+  {
+    "id": "RAP2",
+    "text": "Required quantity is observed across inventory and "
+  },
+  {
+    "id": "RAP3",
+    "text": ", but retrieval needs an explicit UIM access/risk/precondition check."
+  },
+  {
+    "id": "RAP4",
+    "text": "Required quantity is confirmed across inventory and observed "
+  },
+  {
+    "id": "RAP5",
+    "text": "Required quantity is confirmed across observed inventory and bank state."
+  },
+  {
+    "id": "RAP6",
+    "text": "Required quantity is confirmed across observed inventory, bank, and Group Storage state."
+  },
+  {
+    "id": "RAP7",
+    "text": "Open the inventory tab so carried resources can be observed before choosing an acquisition route."
+  },
+  {
+    "id": "RAP8",
+    "text": "Open the bank once so stored resources can be observed before choosing an acquisition route."
+  },
+  {
+    "id": "RAP9",
+    "text": "Group Storage is enabled but unobserved; inspect it before treating the resource as missing."
+  },
+  {
+    "id": "RAP10",
+    "text": "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
+  },
+  {
+    "id": "RAP11",
+    "text": "No sufficient directly usable UIM inventory/storage source is known."
+  },
+  {
+    "id": "RAP12",
+    "text": "No sufficient owned source is confirmed yet."
+  },
+  {
+    "id": "RAP13",
+    "text": "A verified acquisition route is not available yet."
+  },
+  {
+    "id": "RAP14",
+    "text": "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
+  },
+  {
+    "id": "RAP15",
+    "text": "Acquire the missing quantity with a UIM-safe route."
+  },
+  {
+    "id": "RAP16",
+    "text": "Verify account mode before choosing an acquisition route."
+  },
+  {
+    "id": "RAP17",
+    "text": " No verified item-specific gathering, shop, crafting, minigame, or drop source is currently available for this resource."
+  },
+  {
+    "id": "RDR1",
+    "text": "Stop: the resource route contains a cycle."
+  },
+  {
+    "id": "RDR2",
+    "text": "Stop: the resource route exceeds the safe planning depth."
+  },
+  {
+    "id": "RDR3",
+    "text": "Use a shorter direct source; this detour costs too much for the current session."
+  },
+  {
+    "id": "RDCP1",
+    "text": "Play Tempoross for a Fishing session and claim the earned reward-pool permits. Keep useful plank/log rewards instead of treating the activity as disposable Fishing XP."
+  },
+  {
+    "id": "RDCP2",
+    "text": " usable planks are currently observed. Bring the normal Tempoross tools/supplies for the chosen strategy; reward permits and plank drops are variable, so there is no exact number of games for this shortage."
+  },
+  {
+    "id": "RDCP3",
+    "text": "Tempoross at the Ruins of Unkah. Claim rewards from the reward pool after the games when you are ready to bank the resources."
+  },
+  {
+    "id": "RDCP4",
+    "text": "This is a cross-skill supply detour, not a bulk Construction plank method. It should win only while the Fishing XP is useful too; direct log/sawmill sourcing becomes better when the account needs large deterministic plank volumes."
+  },
+  {
+    "id": "RDCP5",
+    "text": " planks are currently observed. Tempoross can advance Fishing while its reward pool supplies some normal and oak planks. Treat this as a cross-skill supply detour, not a bulk Construction plank method; switch to direct log/sawmill routes when larger plank volumes are needed."
+  },
+  {
+    "id": "RDCP6",
+    "text": "Do a Wintertodt Firemaking session and keep useful log rewards from the supply crates. Stop using it as a Construction detour once direct plank sourcing clearly becomes the better account-time tradeoff."
+  },
+  {
+    "id": "RDCP7",
+    "text": " planks are currently observed. Equip four warm items and bring a knife, hammer, and cakes; each cake bite restores 35% warmth. Crate contents are random, so no exact crate count is promised."
+  },
+  {
+    "id": "RDCP8",
+    "text": "Wintertodt Camp in northern Great Kourend."
+  },
+  {
+    "id": "RDCP9",
+    "text": "This route earns Firemaking progress while creating a chance at useful logs. It is intentionally excluded from automatic Hardcore routing here because a resource detour is not worth adding avoidable survival risk."
+  },
+  {
+    "id": "RDCP10",
+    "text": "Wintertodt for Firemaking + log supply"
+  },
+  {
+    "id": "RDCP11",
+    "text": "Your observed log/plank stock is low. Wintertodt can progress Firemaking and provide logs from supply crates, which can later be converted into planks. This is secondary to direct plank sourcing and should only win when the Firemaking progress is useful too."
+  },
+  {
+    "id": "RRS1",
+    "text": " across equipment, inventory, and directly usable verified UIM storage."
+  },
+  {
+    "id": "RRS2",
+    "text": " across equipment, inventory, known bank state"
+  },
+  {
+    "id": "RRS3",
+    "text": "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource."
+  },
+  {
+    "id": "RRS4",
+    "text": " directly usable quantity observed across equipment, inventory, and verified UIM storage; need at least "
+  },
+  {
+    "id": "RRS5",
+    "text": "; relevant UIM storage contents have not been observed yet."
+  },
+  {
+    "id": "RBD1",
+    "text": "Combat stats remain at level-3 baselines while non-combat progression is established."
+  },
+  {
+    "id": "RBD2",
+    "text": "Offensive combat and Defence remain at level-3 baselines while Prayer and non-combat skills are established."
+  },
+  {
+    "id": "RBD3",
+    "text": "Combat progression is established while every tracked non-combat skill remains at baseline."
+  },
+  {
+    "id": "RBD4",
+    "text": "Defence is established while Attack, Strength, Ranged, and Magic remain at baseline."
+  },
+  {
+    "id": "RBD5",
+    "text": "Hitpoints remain at 10 despite substantial account progress."
+  },
+  {
+    "id": "RBD6",
+    "text": "Attack and Defence remain at 1 while Strength is heavily trained, matching an obby-mauler style restriction."
+  },
+  {
+    "id": "RBD7",
+    "text": "Defence is 1 while an offensive combat skill is 40+."
+  },
+  {
+    "id": "RBD8",
+    "text": "Offensive stats are established while Defence is held in the low-defence pure bracket at or below 13."
+  },
+  {
+    "id": "RBD9",
+    "text": "Offensive stats are established while Defence is held at or below the 20-Defence bracket."
+  },
+  {
+    "id": "RBD10",
+    "text": "Offensive stats are established while Defence is held around the 40-Defence rune-pure breakpoint."
+  },
+  {
+    "id": "RBD11",
+    "text": "Offensive stats are established while Defence is held around the 42-Defence Void breakpoint."
+  },
+  {
+    "id": "RBD12",
+    "text": "Defence is held at or below 45 with established melee stats, matching a berserker-style cap."
+  },
+  {
+    "id": "RBD13",
+    "text": "High Defence/Ranged/Magic with deliberately lower melee stats resembles a range tank. Protecting exact melee caps still needs confirmation."
+  },
+  {
+    "id": "RBD14",
+    "text": "Combat is progressing while non-combat skills remain very low; confirm which stats should be protected."
+  },
+  {
+    "id": "RBD15",
+    "text": "No strong restricted-build signature was detected."
+  },
+  {
+    "id": "RQP3",
+    "text": "The Ribbiting Tale of a Lily Pad Labour Dispute"
+  },
+  {
+    "id": "RQP4",
+    "text": "The Ribbiting Tale of a Lily Pad Labour Dispute"
+  },
+  {
+    "id": "SGS1",
+    "text": "Bring a safe boat/trawling setup and enough repair supplies for the trip. Per-catch Sailing XP depends on the live trawling loop, so no exact catch count is shown."
+  },
+  {
+    "id": "SGS2",
+    "text": "Use the highest safe Deep Sea Trawling route your verified boat and Sailing/Fishing levels support."
+  },
+  {
+    "id": "SGS3",
+    "text": "Deep Sea Trawling is a Fishing/Sailing hybrid focused more on valuable fish than maximum Sailing XP. Use it when the hybrid rewards fit the account better than Barracuda Trials."
+  },
+  {
+    "id": "SGS4",
+    "text": "Use a skiff with at least an adamant keel and complete Regicide before attempting the high-level trial."
+  },
+  {
+    "id": "SGS5",
+    "text": "Start at the Gwenith Glide Barracuda Trial marker in the waters west of Prifddinas."
+  },
+  {
+    "id": "SGS6",
+    "text": "Use a skiff with at least a mithril helm and an inoculation station."
+  },
+  {
+    "id": "SGS7",
+    "text": "Start beside Gurtob at the Jubbly Jive marker in Backwater."
+  },
+  {
+    "id": "SGS8",
+    "text": "Use a skiff with at least an iron helm, oak masts, and linen sails."
+  },
+  {
+    "id": "SGS9",
+    "text": "Start with Rum-dashed Ralph at the trial marker north-west of The Storm Tempor."
+  },
+  {
+    "id": "SGS10",
+    "text": "Complete any unclaimed Swordfish, Shark, then Marlin rank for "
+  },
+  {
+    "id": "SGS11",
+    "text": ". Once those one-time ranks are claimed, about "
+  },
+  {
+    "id": "SGS12",
+    "text": "The one-time rank bonuses for Swordfish, Shark, and Marlin add extra XP the first time they are claimed, so an account with unclaimed bonuses will finish sooner than this repeat-only count. Boat speed and player execution affect XP per hour, not the listed Marlin completion XP."
+  },
+  {
+    "id": "SGS13",
+    "text": "Sail beside a visible Small shipwreck, deploy the fitted salvaging hook, move to the next marked wreck when it sinks, and return to sort the Small salvage before inventory and cargo capacity are exhausted. Gain "
+  },
+  {
+    "id": "SGS14",
+    "text": "Use a raft, skiff, or sloop whose live boat setup proves a salvaging hook is fitted. Keep enough cargo capacity for Small salvage; no item-dropping loop is assumed."
+  },
+  {
+    "id": "SGS15",
+    "text": "The Small shipwreck markers in the Kharidian Sea, with the salvaging station at The Pandemonium as the return point."
+  },
+  {
+    "id": "SGS16",
+    "text": "Small shipwrecks require 15 Sailing and give variable progress because hook success and wreck uptime vary. Higher wreck tiers stay separate until their water hazards and the live boat build are proven."
+  },
+  {
+    "id": "SGS17",
+    "text": "Take a courier task from the Port Sarim notice board, load its marked cargo at the loading bay, sail to The Pandemonium, and deliver it. Take the return task when offered. You need "
+  },
+  {
+    "id": "SGS18",
+    "text": "Bring the Captain's log and use the raft awarded by Pandemonium. If the log is missing, reclaim it from Junior Jim in Port Sarim or from your boat's cargo hold."
+  },
+  {
+    "id": "SGS19",
+    "text": "Use the notice board and loading bay on Port Sarim's Sailing dock, then the matching dock at The Pandemonium for the return leg."
+  },
+  {
+    "id": "SGS20",
+    "text": "Port Task XP and destination vary with the live assignment, so Compass does not invent a task count. Accept compatible return work before sailing back empty."
+  },
+  {
+    "id": "SGS21",
+    "text": "Complete Pandemonium to unlock Sailing training."
+  },
+  {
+    "id": "SGS22",
+    "text": "Keep the starter boat/tools from the Sailing tutorial progression."
+  },
+  {
+    "id": "SGS23",
+    "text": "Start Pandemonium from its normal quest start and finish the Sailing tutorial sequence."
+  },
+  {
+    "id": "SGS24",
+    "text": "Sailing is members-only and normal training begins after Pandemonium. The route refreshes automatically when the quest state changes."
+  },
+  {
+    "id": "SGS25",
+    "text": "Complete every reachable uncompleted sea-charting objective. You need "
+  },
+  {
+    "id": "SGS26",
+    "text": "Use the Captain's log and charting tools you have unlocked."
+  },
+  {
+    "id": "SGS27",
+    "text": " Complete Prying Times for the crowbar so more charting steps become available."
+  },
+  {
+    "id": "SGS28",
+    "text": " Complete Current Affairs for the current duck to unlock more charting locations."
+  },
+  {
+    "id": "SGS29",
+    "text": " You have enough verified cash for the 15,000-coin skiff when salvaging becomes the better session fit."
+  },
+  {
+    "id": "SGS30",
+    "text": " coins short of the 15,000-coin skiff; do not route into skiff-dependent salvaging yet."
+  },
+  {
+    "id": "SGS31",
+    "text": " A skiff costs 15,000 coins; verify spendable cash before treating that purchase as ready."
+  },
+  {
+    "id": "SGS32",
+    "text": "Work through charting tasks in reachable sea regions and claim each region's completion XP before sailing long distances solely for repeatable training."
+  },
+  {
+    "id": "SGS33",
+    "text": "Sea charting is one-time account progress. Individual Captain's-log checkboxes are not all observed, so no number of charts remaining is invented. At 30 Sailing, Barracuda Trials become the fast repeatable route and can be converted into exact completion counts."
+  },
+  {
+    "id": "SGS34",
+    "text": "Do not pre-buy a task loadout before the assignment is known. Get the assignment first, then check its required protection, legal damage options, location, and supplies against the account's observed gear and storage."
+  },
+  {
+    "id": "SGS35",
+    "text": " Wilderness Slayer is intentionally excluded from automatic master selection because its risk must be explicitly enabled."
+  },
+  {
+    "id": "SGS36",
+    "text": "No catalogued mandatory Slayer item is known for this task. Use the strongest build-legal sustainable setup you own; food, prayer, ammunition and rune quantities remain account/gear dependent rather than a fake fixed inventory."
+  },
+  {
+    "id": "SGS37",
+    "text": ", which satisfies this task's catalogued protection/kill requirement. Keep it equipped or in inventory as the mechanic requires; then use the strongest build-legal sustainable gear around it."
+  },
+  {
+    "id": "SGS38",
+    "text": "You do not currently have a directly usable required task item. One is observed in retrieval-only UIM storage. Retrieve a legal option from: "
+  },
+  {
+    "id": "SGS39",
+    "text": ", but preserve the current inventory setup when the retrieval cost is worse than taking a different task route."
+  },
+  {
+    "id": "SGS40",
+    "text": "Acquire one legal task item just in time before continuing: "
+  },
+  {
+    "id": "SGS41",
+    "text": ". Normal bank state is ignored for UIM; inaccessible stored items require a retrieval step."
+  },
+  {
+    "id": "SGS42",
+    "text": "Open your bank once to verify the mandatory task item. Valid options include: "
+  },
+  {
+    "id": "SGS43",
+    "text": "No required task item is observed in usable storage. Self-source one legal option before continuing: "
+  },
+  {
+    "id": "SGS44",
+    "text": "No required task item is observed. Obtain one legal option before continuing: "
+  },
+  {
+    "id": "SGS45",
+    "text": ". For a Main, compare live price and observed cash when the selected option is tradeable."
+  },
+  {
+    "id": "SGS46",
+    "text": ". Use that area unless the task state changes."
+  },
+  {
+    "id": "SGS47",
+    "text": ". If the task has multiple locations, prefer the safest reachable non-Wilderness option unless Wilderness methods are explicitly enabled."
+  },
+  {
+    "id": "SGS48",
+    "text": "Use the safest reachable non-Wilderness location for this task unless the assignment itself specifies an area or Wilderness methods are explicitly enabled."
+  },
+  {
+    "id": "SGS49",
+    "text": "The remaining count comes from the live assignment. Slayer XP per kill varies with the assigned monster and variant, so no fixed kills-to-level estimate is shown."
+  },
+  {
+    "id": "SGS50",
+    "text": "Multitarget Magic is supported for this task, but use it only when spellbook, runes, prayer, build, and the live location are ready. "
+  },
+  {
+    "id": "SGS51",
+    "text": "Cannon use is not confirmed for the live location; do not bring or place one yet. "
+  },
+  {
+    "id": "SGS52",
+    "text": "A Wilderness variant exists, but the safe default remains non-Wilderness unless risk is explicitly enabled. "
+  },
+  {
+    "id": "SGS53",
+    "text": "Highest standard master available at 100 combat and 50 Slayer after Shilo Village."
+  },
+  {
+    "id": "SGS54",
+    "text": "High-level master available from 85 combat."
+  },
+  {
+    "id": "SGS55",
+    "text": "Available from 75 combat; assignments require her specified location."
+  },
+  {
+    "id": "SGS56",
+    "text": "Available from 70 combat after Lost City."
+  },
+  {
+    "id": "SGS57",
+    "text": "Available from 40 combat without adding a Wilderness requirement."
+  },
+  {
+    "id": "SGS58",
+    "text": "Available from 20 combat after Priest in Peril."
+  },
+  {
+    "id": "SGS59",
+    "text": "No combat-level requirement; this is the safe baseline when a higher master is not verified."
+  },
+  {
+    "id": "SRA1",
+    "text": "Superior creatures add durable Slayer XP and unique-drop value across future eligible tasks."
+  },
+  {
+    "id": "SRA2",
+    "text": "The Slayer helmet combines observed task protections with the black-mask task bonus once the components are obtained."
+  },
+  {
+    "id": "SRA3",
+    "text": "Self-made broad ammunition is a permanent ranged-supply route for an Iron account."
+  },
+  {
+    "id": "SRA4",
+    "text": "Crafted Slayer rings provide reusable task travel without relying on the Grand Exchange."
+  },
+  {
+    "id": "SRA5",
+    "text": "Task Storage can preserve a valuable assignment when the current inventory or session cannot support it."
+  },
+  {
+    "id": "SRA6",
+    "text": "On-task Fight Caves or Inferno attempts align the selected cape goal with Slayer experience and helmet value."
+  },
+  {
+    "id": "SRA7",
+    "text": "Boss assignments can align future tasks with the selected PvM objective; access requirements remain independently checked."
+  },
+  {
+    "id": "SRA8",
+    "text": "Longer dust-devil assignments preserve a high-value multitarget Magic setup during a long Slayer or Max session."
+  },
+  {
+    "id": "SRA9",
+    "text": "Longer nechryael assignments preserve a high-value multitarget Magic setup during a long Slayer or Max session."
+  },
+  {
+    "id": "SRA10",
+    "text": "Longer abyssal-demon assignments fit the selected long Slayer progression goal without changing task legality."
+  },
+  {
+    "id": "SRA11",
+    "text": "Longer bloodveld assignments can retain an Iron account's useful drop and combat-training setup when session time supports it."
+  },
+  {
+    "id": "SRA12",
+    "text": "Longer gargoyle assignments can retain a profitable low-attention setup for an Iron account, but do not outrank core permanent unlocks."
+  },
+  {
+    "id": "SRA13",
+    "text": "Longer cave-kraken assignments suit a verified gear objective or low-attention strategy after higher-value permanent unlocks."
+  },
+  {
+    "id": "SS1",
+    "text": "The live Mortimer interface exposes every offered task and modifier. "
+  },
+  {
+    "id": "SS2",
+    "text": "Compass compared task XP, resources, duration, attention, setup and the modifier's value for this account and session."
+  },
+  {
+    "id": "SS3",
+    "text": " in Mortimer's task-choice interface, then reopen Compass after the assignment count appears."
+  },
+  {
+    "id": "SS4",
+    "text": "Do not prepare a combat loadout until the choice becomes the live assignment; its exact protection and supplies are evaluated next."
+  },
+  {
+    "id": "SS5",
+    "text": "Mortimer's task-choice interface in Wyrmscraig Cavern."
+  },
+  {
+    "id": "SS6",
+    "text": "At least one live Mortimer option or its modifier is not covered by the pinned RuneLite game data and reviewed task catalog."
+  },
+  {
+    "id": "SS7",
+    "text": "Keep Mortimer's task-choice interface open and reopen Compass after every task and modifier name is visible."
+  },
+  {
+    "id": "SS8",
+    "text": "Do not select a task while Compass can see only part of the choice set."
+  },
+  {
+    "id": "SS9",
+    "text": "Mortimer's task-choice interface in Wyrmscraig Cavern."
+  },
+  {
+    "id": "SS10",
+    "text": ", so its verified milestone point value is part of the choice."
+  },
+  {
+    "id": "SS11",
+    "text": "Chosen from eligible masters by the reviewed assignment-pool value, task XP potential, point value, "
+  },
+  {
+    "id": "SS12",
+    "text": "supply value, setup burden and location constraints."
+  },
+  {
+    "id": "SS13",
+    "text": ". Return to Compass after the assignment appears so the task can be evaluated."
+  },
+  {
+    "id": "SS14",
+    "text": "Do not pre-buy a task loadout. Keep only the transport needed to reach the master; task protection and supplies are decided after assignment."
+  },
+  {
+    "id": "SS15",
+    "text": " This master is eligible only because Wilderness methods are explicitly enabled."
+  },
+  {
+    "id": "SS16",
+    "text": " Live varbit evidence shows the reward is locked, and the purchase leaves "
+  },
+  {
+    "id": "SS17",
+    "text": " points, including a 30-point cancellation reserve."
+  },
+  {
+    "id": "SS18",
+    "text": " Slayer points, then return to Compass for the next master."
+  },
+  {
+    "id": "SS19",
+    "text": "No task loadout is needed. The live snapshot shows "
+  },
+  {
+    "id": "SS20",
+    "text": " points and confirms this reward is not unlocked."
+  },
+  {
+    "id": "SS21",
+    "text": "Open the Slayer Rewards interface with any Slayer master."
+  },
+  {
+    "id": "SS22",
+    "text": "A catalogued mandatory task item is not observed in an equipped slot."
+  },
+  {
+    "id": "SS23",
+    "text": "A catalogued mandatory task item is not observed as directly usable."
+  },
+  {
+    "id": "SS24",
+    "text": "No recognised combat weapon is observed in the live weapon slot."
+  },
+  {
+    "id": "SS25",
+    "text": "Complete this safe task: the next completion is a verified Slayer point milestone, so preserving the streak outweighs an ordinary skip."
+  },
+  {
+    "id": "SS26",
+    "text": "Do this task because its XP, resources, effort, setup, attention and session-fit properties clear the keep threshold."
+  },
+  {
+    "id": "SS27",
+    "text": "Do not enter the Wilderness. Ask Turael/Aya whether this exact task is eligible for safe replacement; accept only if the dialogue explicitly offers it."
+  },
+  {
+    "id": "SS28",
+    "text": "No Wilderness loadout is needed for this verification. Do not risk carried valuables."
+  },
+  {
+    "id": "SS29",
+    "text": " Slayer points are observed, so Compass cannot claim a 30-point cancellation is available. Turael cannot replace tasks from his own assignment list."
+  },
+  {
+    "id": "SS30",
+    "text": "Risk policy blocks the assignment, but the safe replacement path needs one explicit eligibility check."
+  },
+  {
+    "id": "SS31",
+    "text": "Do not enter the Wilderness. Spend 30 Slayer points to cancel this assignment, then obtain a non-Wilderness task."
+  },
+  {
+    "id": "SS32",
+    "text": " points, enough for the verified cancellation cost. No dangerous loadout is required."
+  },
+  {
+    "id": "SS33",
+    "text": "Open Slayer rewards with any Slayer master."
+  },
+  {
+    "id": "SS34",
+    "text": "The live assignment or master is Wilderness-bound and account risk policy rejects it before loadout selection."
+  },
+  {
+    "id": "SS35",
+    "text": "Use a safe assignment replacement instead of post-hoc Wilderness warnings."
+  },
+  {
+    "id": "SS36",
+    "text": "Check the assignment with an enchanted gem, Slayer ring, Slayer helmet, or the assigning master, then reopen Compass."
+  },
+  {
+    "id": "SS37",
+    "text": "Do not assume protection, weapon or supply requirements for an unreviewed task."
+  },
+  {
+    "id": "SS38",
+    "text": "Use the live assignment interface before travelling."
+  },
+  {
+    "id": "SS39",
+    "text": "The count is observed, but Compass lacks reviewed strategic or mechanical metadata for a safe verdict."
+  },
+  {
+    "id": "SS40",
+    "text": "Review the shown task mechanics and verify a legal weapon, protection and supplies before beginning the assignment."
+  },
+  {
+    "id": "SS41",
+    "text": "Compass recognises the assignment but has not reviewed it deeply enough to invent a do, skip, or block verdict. "
+  },
+  {
+    "id": "SS42",
+    "text": "Task identity alone is not sufficient evidence for a strategic verdict."
+  },
+  {
+    "id": "SS43",
+    "text": ", then return to the live task before killing anything."
+  },
+  {
+    "id": "SS44",
+    "text": " trip, then return to Compass with it carried."
+  },
+  {
+    "id": "SS45",
+    "text": " in the inventory with the observed combat weapon and mandatory task item. Compass will not guess doses or a fixed trip quantity."
+  },
+  {
+    "id": "SS46",
+    "text": "Buy cooked swordfish at the Grand Exchange, bank them, and carry a trip's healing before travelling to "
+  },
+  {
+    "id": "SS47",
+    "text": "Cooked swordfish are a concrete tradeable fallback because no recognised healing food is observed in the carried inventory or bank. Recheck Compass after withdrawing them."
+  },
+  {
+    "id": "SS48",
+    "text": " Carry the cooked food, then return to Compass before starting "
+  },
+  {
+    "id": "SS49",
+    "text": "No recognised carried or immediately usable stored healing is observed. Self-source the named food instead of receiving a Grand Exchange instruction."
+  },
+  {
+    "id": "SS50",
+    "text": "This kept assignment has material duration, setup, or danger, but no recognised healing item is carried."
+  },
+  {
+    "id": "SS51",
+    "text": " assignment. Recheck Compass when the carried setup changes."
+  },
+  {
+    "id": "SS52",
+    "text": "Keep the equipment and carried supplies already verified by the encounter-readiness check; do not substitute an unverified loadout."
+  },
+  {
+    "id": "SS53",
+    "text": "The boss/alternative is selected only because live PvM readiness is VERIFIED; merely having the Slayer task is not readiness evidence."
+  },
+  {
+    "id": "SS54",
+    "text": "A verified-ready alternative contributes more goal/resource value than the ordinary route."
+  },
+  {
+    "id": "SS55",
+    "text": "Open the encounter preparation so Compass can verify its requirements and carried setup."
+  },
+  {
+    "id": "SS56",
+    "text": " before accepting this boss-task route. "
+  },
+  {
+    "id": "SS57",
+    "text": "Do not use a generic Slayer loadout; the encounter readiness check must verify equipment and carried supplies."
+  },
+  {
+    "id": "SS58",
+    "text": "A direct boss assignment is live, but a task count is not proof that the encounter is ready or safe."
+  },
+  {
+    "id": "SS59",
+    "text": "Encounter-specific readiness is required before a direct boss task can lead."
+  },
+  {
+    "id": "SS60",
+    "text": "'s Slayer rewards list, then get a replacement assignment."
+  },
+  {
+    "id": "SS61",
+    "text": " Slayer points. The live snapshot proves enough points and an unused block slot."
+  },
+  {
+    "id": "SS62",
+    "text": " and poor property score make a reusable block more valuable than repeated 30-point skips."
+  },
+  {
+    "id": "SS63",
+    "text": "This frequently assigned task is a weak fit for the account, and the observed points and free block slot make blocking it practical."
+  },
+  {
+    "id": "SS64",
+    "text": "The task's XP, resources, length, setup and session fit fall below the keep threshold; no block is claimed without known weight and slot evidence."
+  },
+  {
+    "id": "SS65",
+    "text": "Low property value and sufficient points justify one cancellation."
+  },
+  {
+    "id": "SS66",
+    "text": "Live state does not prove whether the account has an assignment."
+  },
+  {
+    "id": "SS67",
+    "text": "Talk to Turael or Aya in Burthorpe and ask about your current assignment, then reopen Compass after the task name and count appear."
+  },
+  {
+    "id": "SS68",
+    "text": "Do not prepare a task-specific loadout until the assignment name and count are visible."
+  },
+  {
+    "id": "SS69",
+    "text": "Turael and Aya, in the house south-east of Burthorpe Castle."
+  },
+  {
+    "id": "SS70",
+    "text": "Unknown assignment state is kept unknown; Compass does not treat missing evidence as no task."
+  },
+  {
+    "id": "SS71",
+    "text": " as healing; no fixed trip quantity is claimed because damage and trip length vary."
+  },
+  {
+    "id": "SS72",
+    "text": "This low-burden route does not require Compass to claim a fixed food inventory; leave if the observed setup stops being safe."
+  },
+  {
+    "id": "SS73",
+    "text": "Take a harpoon to Catherby's south-east shore, catch tuna and swordfish, cook the catch on the range just east of the bank, and bank the cooked fish."
+  },
+  {
+    "id": "SS74",
+    "text": "Take a lobster pot to Catherby's south-east shore, cage lobsters, cook them on the range just east of the bank, and bank the cooked lobsters."
+  },
+  {
+    "id": "SS75",
+    "text": "Take a fly fishing rod and feathers to Barbarian Village, catch trout and salmon, cook them on the permanent fire by the fishing spots, and bank the cooked fish in Edgeville."
+  },
+  {
+    "id": "SS76",
+    "text": "Take a small fishing net, tinderbox, and several logs to the east Lumbridge Swamp shore; net shrimp, light a fire there, cook them, and bank the cooked supply in Lumbridge Castle."
+  },
+  {
+    "id": "SDP1",
+    "text": "Check Watson's noticeboard or an observed POH STASH chart to confirm whether this exact unit is built and filled."
+  },
+  {
+    "id": "SDP2",
+    "text": "Inspect this STASH and confirm its complete item set before relying on it."
+  },
+  {
+    "id": "SDP3",
+    "text": "Use the verified filled STASH for this emote step, then follow RuneLite Clue Helper."
+  },
+  {
+    "id": "SDP4",
+    "text": "Verify active membership; Construction STASH units are members-only."
+  },
+  {
+    "id": "SDP5",
+    "text": "Self-source verified shortfalls on Iron accounts; mains may compare a GE purchase only after price and GP are observed."
+  },
+  {
+    "id": "SDP6",
+    "text": "Do not route this Wilderness STASH until Wilderness risk is explicitly enabled and accepted."
+  },
+  {
+    "id": "SDP7",
+    "text": "Verify the quest/access route and travel to "
+  },
+  {
+    "id": "SDP8",
+    "text": " with a hammer, saw, and unnoted materials."
+  },
+  {
+    "id": "SDP9",
+    "text": "In a verified POH Parlour, build and remove crude wooden chairs with two planks and two steel nails each until "
+  },
+  {
+    "id": "SDP10",
+    "text": "In a verified POH Parlour, build and remove crude wooden chairs to 33 Construction; then use a verified POH Kitchen to build and remove oak larders with eight oak planks each until "
+  },
+  {
+    "id": "SDP11",
+    "text": "In a verified POH Kitchen, build and remove oak larders with eight oak planks each until "
+  },
+  {
+    "id": "SUC1",
+    "text": "Generated from RuneLite 1.12.35 STASHUnit and EmoteClue sources"
+  },
+  {
+    "id": "SE1",
+    "text": "No additional preparation is recorded for this observed ready opportunity."
+  },
+  {
+    "id": "SE2",
+    "text": "Verify the listed setup for the ready "
+  },
+  {
+    "id": "SE3",
+    "text": "The ready state was observed and no remaining setup checks are known."
+  },
+  {
+    "id": "SE4",
+    "text": "The timer is ready, but this remains a preparation alternative until the listed setup is verified."
+  },
+  {
+    "id": "SE5",
+    "text": "This observed ready opportunity is time-sensitive and can compete with ordinary progression."
+  },
+  {
+    "id": "SE6",
+    "text": "Empty all four birdhouses, rebuild them with the carried logs and clockworks, seed them, then leave the Fossil Island route."
+  },
+  {
+    "id": "SE7",
+    "text": "Harvest each verified reachable herb patch, compost it, and replant with the carried herb seeds."
+  },
+  {
+    "id": "SE8",
+    "text": "Buy the available daily battlestaves from Zaff."
+  },
+  {
+    "id": "SE9",
+    "text": "The four birdhouse spaces on Fossil Island."
+  },
+  {
+    "id": "SE10",
+    "text": "Zaff's Superior Staves in central Varrock."
+  },
+  {
+    "id": "SRVS1",
+    "text": "No account/resource evidence was supplied."
+  },
+  {
+    "id": "SRVS2",
+    "text": "The resource has no verified item name."
+  },
+  {
+    "id": "SRVS3",
+    "text": "Observed usable quantity covers the modeled action; "
+  },
+  {
+    "id": "SRVS4",
+    "text": "The ordinary bank has not been observed, so the shortfall is not proven."
+  },
+  {
+    "id": "SRVS5",
+    "text": "A shortfall is observed, but no audited acquisition family matches this item."
+  },
+  {
+    "id": "SRVS6",
+    "text": "a GE substitute exists, but live price/cash still require comparison"
+  },
+  {
+    "id": "SRVS7",
+    "text": "replacement must be self-sourced with immediate inventory/retrieval consequences"
+  },
+  {
+    "id": "SRVS8",
+    "text": "replacement must use a self-source route"
+  },
+  {
+    "id": "SRVS9",
+    "text": "account-mode acquisition access is not verified"
+  },
+  {
+    "id": "SRVS10",
+    "text": "; an audited route family is available."
+  },
+  {
+    "id": "TMS1",
+    "text": " Wilderness risk is enabled for this character."
+  },
+  {
+    "id": "TAMVS1",
+    "text": "No exact advantageous route is verified; use ordinary access to "
+  },
+  {
+    "id": "UCS1",
+    "text": "UIM capability routing only applies to Ultimate Ironman accounts."
+  },
+  {
+    "id": "UCS2",
+    "text": "Generic death-storage evidence does not identify the retrieval service, access, withdrawal order, or second-death rules. Verify an exact service first."
+  },
+  {
+    "id": "UCS3",
+    "text": "The exact location, access, item, retrieval, cost, expiry, and second-death rules are not completely modeled."
+  },
+  {
+    "id": "UCS4",
+    "text": "This storage capability has been observed as unavailable."
+  },
+  {
+    "id": "UCS5",
+    "text": "This character's access to the storage system has not been verified."
+  },
+  {
+    "id": "UCS6",
+    "text": "The intended item has been verified as incompatible with this storage route."
+  },
+  {
+    "id": "UCS7",
+    "text": "Item compatibility with this storage route has not been verified."
+  },
+  {
+    "id": "UCS8",
+    "text": "Required capacity or preconditions are not currently satisfied."
+  },
+  {
+    "id": "UCS9",
+    "text": "Required capacity or preconditions have not been verified."
+  },
+  {
+    "id": "UCS10",
+    "text": "Capability, item compatibility, and current preconditions are verified."
+  },
+  {
+    "id": "UIRS1",
+    "text": "Inventory-resolution policy applies only to a verified UIM account."
+  },
+  {
+    "id": "UIRS2",
+    "text": "Exact live inventory slots are not observed."
+  },
+  {
+    "id": "UIRS3",
+    "text": "The proposed plan fits the currently observed inventory."
+  },
+  {
+    "id": "UIRS4",
+    "text": "A reviewed comparable method fits without dismantling the current inventory."
+  },
+  {
+    "id": "UIRS5",
+    "text": "A useful current resource can be consumed for account progress before switching setup; no item is discarded merely to free a slot."
+  },
+  {
+    "id": "UIRS6",
+    "text": "Verified item-specific safe storage can resolve the plan's slot shortfall."
+  },
+  {
+    "id": "UIRS7",
+    "text": "The safe storage build has repeated account value beyond this one slot; verify its exact construction materials before starting."
+  },
+  {
+    "id": "UIRS8",
+    "text": "The looting bag is verified and compatible, but insertion, retrieval, and setup burden must be executed explicitly; it is not generic extra inventory."
+  },
+  {
+    "id": "UIRS9",
+    "text": "Every safer resolution is insufficient and the exact verified death-storage mechanic is reserved for a major progression transition."
+  },
+  {
+    "id": "UIRS10",
+    "text": "The plan does not fit and no verified safer resolution is available. Compass will not recommend banking, arbitrary dropping, or generic death storage."
+  },
+  {
+    "id": "USM1",
+    "text": "Petrified Pete's Volcanic Mine Item Retrieval Service"
+  },
+  {
+    "id": "USM2",
+    "text": "A looting bag must be owned; insertion access and the intended retrieval route must be observed."
+  },
+  {
+    "id": "USM3",
+    "text": "Up to 28 tradeable item stacks; untradeable items are excluded."
+  },
+  {
+    "id": "USM4",
+    "text": "Items may be inserted in the Wilderness or Ferox Enclave. Ferox is safe for insertion but is not Wilderness for destruction."
+  },
+  {
+    "id": "USM5",
+    "text": "Contents normally require death retrieval, or destruction and immediate pickup in the Wilderness. Destroying the bag outside the Wilderness, including Ferox Enclave, permanently loses the contents."
+  },
+  {
+    "id": "USM6",
+    "text": "No retrieval fee, but rebuilding the bag and route setup have real cost."
+  },
+  {
+    "id": "USM7",
+    "text": "The bag itself has no storage timer; any resulting ground pile uses its own death/drop timer."
+  },
+  {
+    "id": "USM8",
+    "text": "Death-based retrieval inherits the exact destination service or deathpile rules; another unsafe death can destroy service-held items."
+  },
+  {
+    "id": "USM9",
+    "text": "Arno outside the Hespori cave in the Farming Guild"
+  },
+  {
+    "id": "USM10",
+    "text": "65 Farming is boostable and a fully grown Hespori must be available; Farming Guild and cave access must be verified."
+  },
+  {
+    "id": "USM11",
+    "text": "Only items accepted by the Hespori death service for the exact death are eligible."
+  },
+  {
+    "id": "USM12",
+    "text": "Items enter Arno's service only through the verified Hespori death mechanic; it is not a normal deposit container."
+  },
+  {
+    "id": "USM13",
+    "text": "Retrieve the service contents from Arno. The 25,000-coin fee may be taken from the stored contents."
+  },
+  {
+    "id": "USM14",
+    "text": "No ordinary expiry is modeled; the second-death rule remains active until everything is reclaimed."
+  },
+  {
+    "id": "USM15",
+    "text": "Any unsafe death before full retrieval permanently destroys every item still held by the service."
+  },
+  {
+    "id": "USM16",
+    "text": "Zul-Andra and Zulrah access must be verified before the death mechanic can be used."
+  },
+  {
+    "id": "USM17",
+    "text": "Only items accepted by the Zulrah death service for the exact death are eligible."
+  },
+  {
+    "id": "USM18",
+    "text": "Items enter the priestess's service only through a death at Zulrah; it is not a normal deposit container."
+  },
+  {
+    "id": "USM19",
+    "text": "Ultimate Ironmen reclaim directly from Zul-Gwenwynig rather than the ordinary chest interface."
+  },
+  {
+    "id": "USM20",
+    "text": "Free for Ultimate Ironmen regardless of Zulrah kill count."
+  },
+  {
+    "id": "USM21",
+    "text": "No ordinary expiry is modeled; the second-death rule remains active until everything is reclaimed."
+  },
+  {
+    "id": "USM22",
+    "text": "Any unsafe death before full retrieval permanently destroys every item still held by the service."
+  },
+  {
+    "id": "USM23",
+    "text": "Petrified Pete at the Volcanic Mine entrance on Fossil Island"
+  },
+  {
+    "id": "USM24",
+    "text": "Volcanic Mine access and enough numulite for entry/retrieval must be verified."
+  },
+  {
+    "id": "USM25",
+    "text": "Only items accepted after a death in Volcanic Mine are eligible."
+  },
+  {
+    "id": "USM26",
+    "text": "Items enter Pete's service only through the Volcanic Mine death mechanic; it is not a normal deposit container."
+  },
+  {
+    "id": "USM27",
+    "text": "Retrieve the held items from Petrified Pete; stored numulite may pay the retrieval fee."
+  },
+  {
+    "id": "USM28",
+    "text": "No ordinary expiry is modeled; the second-death rule remains active until everything is reclaimed."
+  },
+  {
+    "id": "USM29",
+    "text": "Any unsafe death before full retrieval permanently destroys every item still held by the service."
+  },
+  {
+    "id": "USM30",
+    "text": "The exact tile of a verified ordinary non-instanced UIM death"
+  },
+  {
+    "id": "USM31",
+    "text": "The death tile, return route, login-time window, item count, PvP interaction state, and all item-specific death behavior must be verified."
+  },
+  {
+    "id": "USM32",
+    "text": "Only items proven to drop under the exact death context are eligible; Wilderness food/potions and special items need separate rules."
+  },
+  {
+    "id": "USM33",
+    "text": "Items are placed by an ordinary UIM death, never by a generic storage command."
+  },
+  {
+    "id": "USM34",
+    "text": "Return to the exact tile and recover every retained item before its timer expires."
+  },
+  {
+    "id": "USM35",
+    "text": "60 minutes of logged-in time; logging out pauses the timer."
+  },
+  {
+    "id": "USM36",
+    "text": "A later ordinary death does not refresh the earlier pile. PvP kill-credit interactions can change Wilderness safety, so unknown state fails closed."
+  },
+  {
+    "id": "UDP1",
+    "text": "Rank all currently safe, actionable account progression"
+  },
+  {
+    "id": "UDP2",
+    "text": "Select the first incomplete, safe quest prerequisite from the current catalogue"
+  },
+  {
+    "id": "UDP3",
+    "text": "Select the first incomplete task prerequisite from all current diary tiers"
+  },
+  {
+    "id": "UDP4",
+    "text": "Select the encounter and practical gear target before resolving acquisition"
+  },
+  {
+    "id": "UDP5",
+    "text": "Select the first observed actionable prerequisite for this goal"
+  },
+  {
+    "id": "UDP6",
+    "text": "Verify active membership before planning Achievement Diary tasks"
+  },
+  {
+    "id": "UDP7",
+    "text": "Enable and accept Wilderness risk before routing this diary"
+  },
+  {
+    "id": "UDP8",
+    "text": "Check the diary interface; no current task evidence is available"
+  },
+  {
+    "id": "UDP9",
+    "text": "Open the diary interface and check whether this task is incomplete: "
+  },
+  {
+    "id": "UDP10",
+    "text": "Verify the transport unlock and route for: "
+  },
+  {
+    "id": "UDP11",
+    "text": "Verify active membership before planning "
+  },
+  {
+    "id": "UDP12",
+    "text": "This level would violate the verified "
+  },
+  {
+    "id": "UDP13",
+    "text": " restriction; do not recommend irreversible XP"
+  },
+  {
+    "id": "UDP14",
+    "text": "Verify one immediately usable item alternative: "
+  },
+  {
+    "id": "UDP15",
+    "text": "Open the bank once before calculating the "
+  },
+  {
+    "id": "UDP16",
+    "text": "Open the bank once; unobserved storage is unknown, not empty"
+  },
+  {
+    "id": "UDP17",
+    "text": "Compare a Grand Exchange purchase with the time value of self-sourcing after price and GP are observed"
+  },
+  {
+    "id": "UDP18",
+    "text": "Self-source the shortfall just in time without relying on a conventional bank"
+  },
+  {
+    "id": "UDP19",
+    "text": "Verify an account-safe self-source for the shortfall"
+  },
+  {
+    "id": "UDP20",
+    "text": " without claiming mechanical readiness"
+  },
+  {
+    "id": "UDP21",
+    "text": "Verify this ability and its current-live unlock requirements before planning it"
+  },
+  {
+    "id": "UDP22",
+    "text": "Verify active membership before planning "
+  },
+  {
+    "id": "UDP23",
+    "text": "Verify this minigame's current identity and access before planning it"
+  },
+  {
+    "id": "UDP24",
+    "text": "Verify active membership before planning "
+  },
+  {
+    "id": "UDP25",
+    "text": "This activity is not verified safe for the observed account mode"
+  },
+  {
+    "id": "UDP26",
+    "text": "Do not route this high-risk activity for a Hardcore account without a separate explicit risk decision"
+  },
+  {
+    "id": "UDP27",
+    "text": "Verify the current quest, location and activity unlock before travelling to "
+  },
+  {
+    "id": "UDP28",
+    "text": "Open the activity guide and verify the exact setup for the selected role before travelling"
+  },
+  {
+    "id": "UDP29",
+    "text": " balance before calculating its shortfall"
+  },
+  {
+    "id": "UDP30",
+    "text": "Verify active membership before planning a Slayer assignment"
+  },
+  {
+    "id": "UDP31",
+    "text": "Verify the canonical task identity and exact assignment location before choosing a setup"
+  },
+  {
+    "id": "UDP32",
+    "text": "Do not route this Wilderness assignment for a Hardcore account without a separate explicit risk decision"
+  },
+  {
+    "id": "UDP33",
+    "text": "Enable and accept Wilderness risk before routing this assignment location"
+  },
+  {
+    "id": "UDP34",
+    "text": "Equip or carry one verified legal protection option: "
+  },
+  {
+    "id": "UDP35",
+    "text": " is not ready until its observed cooldown expires"
+  },
+  {
+    "id": "UDP36",
+    "text": "Verify the ordinary supplies and route, then complete "
+  },
+  {
+    "id": "UDP37",
+    "text": "Observe Combat Achievement progress and select the next reward tier"
+  },
+  {
+    "id": "UDP38",
+    "text": "Verify active membership before planning Combat Achievement reward tiers"
+  },
+  {
+    "id": "UDP39",
+    "text": "preparation:combat-achievement-observation"
+  },
+  {
+    "id": "UDP40",
+    "text": "Open the Combat Achievements interface once so the current tier and points are known"
+  },
+  {
+    "id": "UDP41",
+    "text": "preparation:combat-achievement-task-selection"
+  },
+  {
+    "id": "UDP42",
+    "text": "Open the task list and select the first incomplete task whose encounter access, gear and mechanics are already verified"
+  },
+  {
+    "id": "UDP43",
+    "text": "Verify this transport route in live account state before relying on it"
+  },
+  {
+    "id": "UDP44",
+    "text": "Verify active membership before planning "
+  },
+  {
+    "id": "UDP45",
+    "text": "Do not route this Wilderness transport for a Hardcore account without a separate explicit risk decision"
+  },
+  {
+    "id": "UDP46",
+    "text": "Enable and accept Wilderness risk before routing this transport"
+  },
+  {
+    "id": "UDP47",
+    "text": "Check the live POH and build the required "
+  },
+  {
+    "id": "USAGS1",
+    "text": "Varrock West Bank: keep a hammer, withdraw bars, use the anvils just south of the bank, smith, bank, repeat."
+  },
+  {
+    "id": "USAGS2",
+    "text": "No consumed material is required for the modeled action."
+  },
+  {
+    "id": "USAGS3",
+    "text": "The action count is known, but an exact material list is not proven yet."
+  },
+  {
+    "id": "USAGS4",
+    "text": "Action XP comes from RuneLite's maintained skill-calculator data. "
+  },
+  {
+    "id": "USAGS5",
+    "text": "Compass shows this option only after its membership and recipe checks pass."
+  },
+  {
+    "id": "USAGS6",
+    "text": " Successful-cook count is deterministic, but raw-food supply can require a burn buffer. Low-level F2P fish use the dedicated burn-aware planner."
+  },
+  {
+    "id": "USAGS7",
+    "text": " UIM material totals exclude retrieval-only storage unless a separate retrieval step is deliberately selected."
+  },
+  {
+    "id": "USAGS8",
+    "text": " at the named altar, return for another essence load, and repeat."
+  },
+  {
+    "id": "USAGS9",
+    "text": "Bring an air talisman or wear an air tiara."
+  },
+  {
+    "id": "USAGS10",
+    "text": "Bring a mind talisman or wear a mind tiara."
+  },
+  {
+    "id": "USAGS11",
+    "text": "Bring a water talisman or wear a water tiara."
+  },
+  {
+    "id": "USAGS12",
+    "text": "Bring an earth talisman or wear an earth tiara."
+  },
+  {
+    "id": "USAGS13",
+    "text": "Bring a fire talisman or wear a fire tiara."
+  },
+  {
+    "id": "USAGS14",
+    "text": "Bring a body talisman or wear a body tiara."
+  },
+  {
+    "id": "ETMC1",
+    "text": "RuneLite 1.12.35 skill calculators plus maintained current-live strategy audit"
+  },
+  {
+    "id": "ETMC2",
+    "text": "/content/catalogs/expanded-training-methods.json"
+  },
+  {
+    "id": "STPC1",
+    "text": "/content/catalogs/slayer-task-profiles.json"
+  },
+  {
+    "id": "MEPC1",
+    "text": "/content/catalogs/method-execution-profiles.json"
+  },
+  {
+    "id": "PPPC1",
+    "text": "Maintained PvM preparation review; readiness remains evidence-gated"
+  },
+  {
+    "id": "PPPC2",
+    "text": "/content/catalogs/pvm-preparation-profiles.json"
+  },
+  {
+    "id": "TMD1",
+    "text": "/content/catalogs/training-methods.json"
+  },
+  {
+    "id": "RSC1",
+    "text": "/content/catalogs/resource-sources.json"
+  },
+  {
+    "id": "STSC1",
+    "text": "/content/catalogs/slayer-task-strategies.json"
+  },
+  {
+    "id": "IMC1",
+    "text": "https://oldschool.runescape.wiki/w/Construction"
+  },
+  {
+    "id": "IMC2",
+    "text": "https://oldschool.runescape.wiki/w/Costume_room"
+  },
+  {
+    "id": "IMC3",
+    "text": "https://oldschool.runescape.wiki/w/Portal_chamber"
+  },
+  {
+    "id": "IMC4",
+    "text": "https://oldschool.runescape.wiki/w/Portal_nexus"
+  },
+  {
+    "id": "IMC5",
+    "text": "https://oldschool.runescape.wiki/w/Pool_space"
+  },
+  {
+    "id": "IMC6",
+    "text": "https://oldschool.runescape.wiki/w/Achievement_gallery"
+  },
+  {
+    "id": "IMC7",
+    "text": "https://oldschool.runescape.wiki/w/Fairy_rings"
+  },
+  {
+    "id": "IMC8",
+    "text": "https://oldschool.runescape.wiki/w/Spirit_tree"
+  },
+  {
+    "id": "IMC9",
+    "text": "https://oldschool.runescape.wiki/w/Ultimate_Ironman_Guide/Item_Management"
+  },
+  {
+    "id": "IMC10",
+    "text": "/content/catalogs/infrastructure-milestones.json"
+  },
+  {
+    "id": "RDC12",
+    "text": "/content/catalogs/resource-dependencies.json"
+  },
+  {
+    "id": "FBMC1",
+    "text": "/content/catalogs/f2p-baseline-methods.json"
+  },
+  {
+    "id": "TC1",
+    "text": "Maintained current-live transport and RuneLite shortcut audit"
+  },
+  {
+    "id": "GAC1",
+    "text": "Maintained current-live gear acquisition audit"
+  },
+  {
+    "id": "GAC2",
+    "text": "/content/catalogs/gear-acquisition.json"
+  },
+  {
+    "id": "GPC1",
+    "text": "/content/catalogs/gear-progression.json"
+  },
+  {
+    "id": "ASKC1",
+    "text": "/content/catalogs/activity-strategies.json"
+  },
+  {
+    "id": "MSC1",
+    "text": "/content/catalogs/minigame-setups.json"
+  },
+  {
+    "id": "POC1",
+    "text": "/content/catalogs/progression-objectives.json"
+  },
+  {
+    "id": "QPC1",
+    "text": "/content/catalogs/quest-priorities.json"
+  },
+  {
+    "id": "AUC1",
+    "text": "Maintained current-live quest and ability evidence; audited 2026-08-25"
+  },
+  {
+    "id": "AUC2",
+    "text": "/content/catalogs/ability-unlocks.json"
+  },
+  {
+    "id": "FRC1",
+    "text": "/content/catalogs/farming-run-patches.json"
+  },
+  {
+    "id": "MLC1",
+    "text": "https://oldschool.runescape.wiki/w/Ectofuntus"
+  },
+  {
+    "id": "MLC2",
+    "text": "https://oldschool.runescape.wiki/w/Fruit_tree_patch/Patches"
+  },
+  {
+    "id": "MLC3",
+    "text": "https://oldschool.runescape.wiki/w/Tree_patch"
+  },
+  {
+    "id": "MLC4",
+    "text": "https://oldschool.runescape.wiki/w/Free-to-play_Fishing_training"
+  },
+  {
+    "id": "MLC5",
+    "text": "/content/catalogs/method-locations.json"
+  },
+  {
+    "id": "SFAP1",
+    "text": "requireHosted may only guard hosted features"
+  },
+  {
+    "id": "SFAP2",
+    "text": "Hosted Compass feature is not entitled: "
+  },
+  {
+    "id": "SP1",
+    "text": "A selected goal and at least one plan step are required"
+  },
+  {
+    "id": "STP2",
+    "text": "Compare the live location, supplies, unlock value, drops, and session fit before keeping, extending, skipping, or blocking this task."
+  },
+  {
+    "id": "RP1",
+    "text": "<br><br><b>NEEDED</b><br>This is not available for the current account state."
+  },
+  {
+    "id": "RP2",
+    "text": "Open the relevant account panel so Compass can check the remaining requirement."
+  },
+  {
+    "id": "RP3",
+    "text": "<b>DO</b><br>Start the activity using the verified setup."
+  },
+  {
+    "id": "RP4",
+    "text": "<br>Select View Risk Steps to acknowledge this warning and reveal the execution steps."
+  },
+  {
+    "id": "RP5",
+    "text": "Confirm the account state Compass cannot safely observe."
+  },
+  {
+    "id": "RP6",
+    "text": "Current account access or safety restrictions."
+  },
+  {
+    "id": "QIEP1",
+    "text": "Verify which quest requirement alternative applies, then prepare: "
+  },
+  {
+    "id": "QIEP2",
+    "text": "Verify the required quantity for your route, then prepare: "
+  },
+  {
+    "id": "QIEP3",
+    "text": "Plan this quest-phase acquisition before starting: "
+  },
+  {
+    "id": "QIEP4",
+    "text": "Verify a mechanically valid quest setup for: "
+  },
+  {
+    "id": "QIEP5",
+    "text": "Before starting, confirm and prepare this quest requirement: "
+  },
+  {
+    "id": "QIEP6",
+    "text": "items for two different combat classes"
+  },
+  {
+    "id": "QIEP7",
+    "text": "Check the quest's exact free-inventory-slot requirement"
+  },
+  {
+    "id": "IRC1",
+    "text": "runes or a powered staff for the required fight"
+  },
+  {
+    "id": "IRC2",
+    "text": "Magic or Ranged equipment for the required fight"
+  },
+  {
+    "id": "IRC3",
+    "text": "the runes and Magic access to cast Telekinetic Grab"
+  },
+  {
+    "id": "IRC4",
+    "text": "the runes, spellbook, and level for the required spells"
+  },
+  {
+    "id": "IRC5",
+    "text": "two combat styles or a suitable poisoned weapon"
+  },
+  {
+    "id": "GRN1",
+    "text": "A group resource need requires verified item IDs"
+  },
+  {
+    "id": "GRN2",
+    "text": "A group resource need requires positive item IDs"
+  },
+  {
+    "id": "GRC1",
+    "text": "Compass is choosing the best overall move."
+  },
+  {
+    "id": "GRC2",
+    "text": " requires members content, so Compass is recommending useful F2P progression for now."
+  },
+  {
+    "id": "GRC3",
+    "text": "Compass needs more account evidence before advancing "
+  },
+  {
+    "id": "GDP2",
+    "text": "Goal provenance requires a goal, action, relationship, and dependency path"
+  },
+  {
+    "id": "CLCC1",
+    "text": "Official Old School RuneScape game update"
+  },
+  {
+    "id": "CLCC2",
+    "text": "Hallowed Sepulchre floor 4 requires 77 Agility and permits boosts."
+  },
+  {
+    "id": "CLCC3",
+    "text": "Hallowed Sepulchre floor 5 requires 87 Agility and permits boosts."
+  },
+  {
+    "id": "CLCC4",
+    "text": "Colossal Wyrm courses take longer and award proportionally more XP, bone shards and termites, reducing input intensity without a claimed exact new action value."
+  },
+  {
+    "id": "CLCC5",
+    "text": "New shortcuts and barehanded replacements use their live Agility levels; diary tasks still require grapple use where specified."
+  },
+  {
+    "id": "CLCC6",
+    "text": "Bonfires support continuous Tend-to interaction and conditional Make-X behavior."
+  },
+  {
+    "id": "CLCC7",
+    "text": "Birdhouses use five nest rolls with tripled success chance; do not retain old exact yield assumptions."
+  },
+  {
+    "id": "CLCC8",
+    "text": "Birdhouse XP is reduced by tier except Redwood, so pre-update RuneLite values must be overridden."
+  },
+  {
+    "id": "CLCC9",
+    "text": "Falconry, Aerial Fishing, deadfalls, trap limits and Hunter Rumours use the live Sweep-Up behavior."
+  },
+  {
+    "id": "CLCC10",
+    "text": "GOTR and Tempoross offer newly deterministic currency purchases while currency acquisition remains variable."
+  },
+  {
+    "id": "CLCC11",
+    "text": "The remaining announced Sweep-Up changes are excluded until verified live."
+  },
+  {
+    "id": "AQRC1",
+    "text": "OSRS Wiki Module:Questreq/data retrieved 2026-08-18; RuneLite Quest 1.12.35 identity filter"
+  },
+  {
+    "id": "AQRC2",
+    "text": "Missing local quest requirement snapshot: "
+  },
+  {
+    "id": "AQRC3",
+    "text": "Duplicate imported quest requirement: "
+  },
+  {
+    "id": "AQRC4",
+    "text": "Recipe for Disaster/Another Cook's Quest"
+  },
+  {
+    "id": "AQRC5",
+    "text": "Recipe for Disaster - Another Cook's Quest"
+  },
+  {
+    "id": "AQRC6",
+    "text": "Recipe for Disaster/Freeing the Mountain Dwarf"
+  },
+  {
+    "id": "AQRC7",
+    "text": "Recipe for Disaster/Freeing the Goblin generals"
+  },
+  {
+    "id": "AQRC8",
+    "text": "Recipe for Disaster - Wartface & Bentnoze"
+  },
+  {
+    "id": "AQRC9",
+    "text": "Recipe for Disaster/Freeing Pirate Pete"
+  },
+  {
+    "id": "AQRC10",
+    "text": "Recipe for Disaster/Freeing the Lumbridge Guide"
+  },
+  {
+    "id": "AQRC11",
+    "text": "Recipe for Disaster/Freeing Skrach Uglogwee"
+  },
+  {
+    "id": "AQRC12",
+    "text": "Recipe for Disaster/Freeing Sir Amik Varze"
+  },
+  {
+    "id": "AQRC13",
+    "text": "Recipe for Disaster/Freeing King Awowogei"
+  },
+  {
+    "id": "AQRC14",
+    "text": "Recipe for Disaster/Defeating the Culinaromancer"
+  },
+  {
+    "id": "AQEC1",
+    "text": "OSRS Wiki quest bucket and quest reward sections retrieved 2026-08-29"
+  },
+  {
+    "id": "AQEC2",
+    "text": "Missing local quest enrichment snapshot: "
+  },
+  {
+    "id": "AQEC3",
+    "text": "Malformed quest enrichment row at line "
+  },
+  {
+    "id": "AQEC4",
+    "text": "Quest enrichment row has blank name at line "
+  },
+  {
+    "id": "AQEC5",
+    "text": "LEGACY_NONE is reserved for six-column snapshots"
+  },
+  {
+    "id": "AQEC6",
+    "text": "Recipe for Disaster - Another Cook's Quest"
+  },
+  {
+    "id": "AQEC7",
+    "text": "Recipe for Disaster/Another Cook's Quest"
+  },
+  {
+    "id": "AQEC8",
+    "text": "Recipe for Disaster/Freeing the Mountain Dwarf"
+  },
+  {
+    "id": "AQEC9",
+    "text": "Recipe for Disaster - Wartface & Bentnoze"
+  },
+  {
+    "id": "AQEC10",
+    "text": "Recipe for Disaster/Freeing the Goblin generals"
+  },
+  {
+    "id": "AQEC11",
+    "text": "Recipe for Disaster/Freeing Pirate Pete"
+  },
+  {
+    "id": "AQEC12",
+    "text": "Recipe for Disaster/Freeing the Lumbridge Guide"
+  },
+  {
+    "id": "AQEC13",
+    "text": "Recipe for Disaster/Freeing Skrach Uglogwee"
+  },
+  {
+    "id": "AQEC14",
+    "text": "Recipe for Disaster/Freeing Sir Amik Varze"
+  },
+  {
+    "id": "AQEC15",
+    "text": "Recipe for Disaster/Freeing King Awowogei"
+  },
+  {
+    "id": "AQEC16",
+    "text": "Recipe for Disaster/Defeating the Culinaromancer"
+  },
+  {
+    "id": "VMGS1",
+    "text": "/content/catalogs/variable-method-guidance.json"
+  },
+  {
+    "id": "VMGS2",
+    "text": "Fish harpoonfish, cook the catch, load both cannons, tether during waves, and repeat until you gain "
+  },
+  {
+    "id": "VMGS3",
+    "text": "No supplies required; use the harpoon, rope, hammer, and buckets on the island."
+  },
+  {
+    "id": "VMGS4",
+    "text": "; rope, hammer, and buckets are available on the island."
+  },
+  {
+    "id": "VMGS5",
+    "text": "Tempoross island, entered from the Ruins of Unkah ferry."
+  },
+  {
+    "id": "VMGS6",
+    "text": "Cooking choice, team size, storm timing, and reward strategy change Fishing XP per game, so no fake game count is shown."
+  },
+  {
+    "id": "VMGS7",
+    "text": "Mine fragments, craft guardian essence, enter the open altars, charge guardians, and place cells until you gain "
+  },
+  {
+    "id": "VMGS8",
+    "text": "Guardians of the Rift arena in the Temple of the Eye."
+  },
+  {
+    "id": "VMGS9",
+    "text": "Portal timing, altar choices, pouch capacity, and match outcome change XP per game. The planner therefore reports the exact XP gap, not a fabricated match count."
+  },
+  {
+    "id": "VMGS10",
+    "text": "Use an unobstructed POH telescope to obtain the landing region and time, then check each named landing site in that region."
+  },
+  {
+    "id": "VMGS11",
+    "text": "Check the 21 free-to-play landing sites after a star wave; begin with the safe Falador mine and Varrock mine sites and stop only when a crashed star is visible."
+  },
+  {
+    "id": "VMGS12",
+    "text": " Mine the located star until it depletes or you gain "
+  },
+  {
+    "id": "VMGS13",
+    "text": ". Keep stardust when Celestial ring or charge rewards still matter. "
+  },
+  {
+    "id": "VMGS14",
+    "text": "The exact non-Wilderness crash site found from the telescope's named region."
+  },
+  {
+    "id": "VMGS15",
+    "text": "A visible crashed star at a free-to-play Falador or Varrock mine landing site."
+  },
+  {
+    "id": "VMGS16",
+    "text": "Stars land at random from fixed sites, so Compass cannot truthfully name an active crash site without observing one. Star tier changes while mining and affects XP; exact swing counts would be false precision."
+  },
+  {
+    "id": "VMGS17",
+    "text": " into the crucible. For each blade section, select the owned mould with the highest green score shown for that commission, pour the sword, then work every temperature station inside its target band. Repeat for "
+  },
+  {
+    "id": "VMGS18",
+    "text": "; each commissioned sword consumes 28 bars' worth of metal. "
+  },
+  {
+    "id": "VMGS19",
+    "text": "Giants' Foundry beneath Kovac's workshop, east of Al Kharid."
+  },
+  {
+    "id": "VMGS20",
+    "text": "The 14/14 adjacent-metal alloy is a verified default when both metals are observed. Mould score, commission, and mistakes change XP per sword, so no fixed sword count is shown."
+  },
+  {
+    "id": "VMGS21",
+    "text": " contract, travel to the named client, repair every marked hotspot, speak to the client, and take another "
+  },
+  {
+    "id": "VMGS22",
+    "text": ", one steel bar, and teleports for Falador, Varrock, East Ardougne, and Hosidius. Use a plank sack when owned. "
+  },
+  {
+    "id": "VMGS23",
+    "text": "Amy at Mahogany Homes, immediately south of Falador Park."
+  },
+  {
+    "id": "VMGS24",
+    "text": "Furniture mix varies by client, so exact planks and XP per contract require the live contract state. No universal contract count is fabricated."
+  },
+  {
+    "id": "VMGS25",
+    "text": " seeds from the table. Plant and immediately water a 20-plot cycle, revisit each plant for every watering stage, harvest, deposit the fruit, and repeat for "
+  },
+  {
+    "id": "VMGS26",
+    "text": "Bring a spade, seed dibber, and eight filled watering cans; Gricoller's can replaces the eight cans. "
+  },
+  {
+    "id": "VMGS27",
+    "text": "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint."
+  },
+  {
+    "id": "VMGS28",
+    "text": ", harvest each ready allotment, plant three "
+  },
+  {
+    "id": "VMGS29",
+    "text": " in each cleared allotment, compost, and return after the crop is ready. Repeat for "
+  },
+  {
+    "id": "VMGS30",
+    "text": ", a rake, seed dibber, spade, and compost. "
+  },
+  {
+    "id": "VMGS31",
+    "text": "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
+  },
+  {
+    "id": "VMGS32",
+    "text": ", apply compost when carried, and return after the patch is ready. Repeat for "
+  },
+  {
+    "id": "VMGS33",
+    "text": ", a seed dibber, and a spade. Compost is optional but protects yield. "
+  },
+  {
+    "id": "VMGS34",
+    "text": "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
+  },
+  {
+    "id": "VMGS35",
+    "text": " contract. Grow the named crop inside the Farming Guild, check its health or finish harvesting it, claim the seed pack, and request another "
+  },
+  {
+    "id": "VMGS36",
+    "text": "Keep common contract seeds and planting tools available when storage allows. "
+  },
+  {
+    "id": "VMGS37",
+    "text": "Guildmaster Jane in the central Farming Guild greenhouse, Kebos Lowlands."
+  },
+  {
+    "id": "VMGS38",
+    "text": "Contracts are primarily a seed-supply progression loop, not constant XP per contract. They should be surfaced as a detour when the seed value outweighs continuous training."
+  },
+  {
+    "id": "VMGS39",
+    "text": ". Hunt the named creature until it drops the rare part, return the part for the loot sack, and take another rumour. Repeat for "
+  },
+  {
+    "id": "VMGS40",
+    "text": "Bring the trap or tool required by the assigned creature and your hunter's whistle when available. "
+  },
+  {
+    "id": "VMGS41",
+    "text": " in the Burrow beneath the Hunter Guild, Varlamore."
+  },
+  {
+    "id": "VMGS42",
+    "text": "Assignment and rare-part RNG change XP per rumour. Creature-specific loadouts should replace this generic setup once the current rumour can be observed directly."
+  },
+  {
+    "id": "VMGS43",
+    "text": "Yew trees beside Seers' Village church."
+  },
+  {
+    "id": "VMGS44",
+    "text": "Maple trees immediately north of Seers' Village bank."
+  },
+  {
+    "id": "VMGS45",
+    "text": "Willow trees south of Draynor Village bank."
+  },
+  {
+    "id": "VMGS46",
+    "text": "Oak trees east of Draynor Village bank."
+  },
+  {
+    "id": "VMGS47",
+    "text": " and complete each event that spawns until you gain "
+  },
+  {
+    "id": "VMGS48",
+    "text": "Event frequency and event type vary, so exact event counts are not meaningful. The planner treats Forestry as varied Woodcutting plus reward progression."
+  },
+  {
+    "id": "VMGS49",
+    "text": "a bronze pickaxe; get one free from the Mining tutor at the east Lumbridge Swamp mine before leaving"
+  },
+  {
+    "id": "VMGS50",
+    "text": "a bronze axe; buy one from Bob's Brilliant Axes in Lumbridge before leaving"
+  },
+  {
+    "id": "RRD1",
+    "text": "This strategy uses death-based item storage. Incorrect execution or another unsafe death may permanently destroy stored items. Verify the exact retrieval rules before continuing. Use at your own risk; Gielinor Compass cannot recover or reimburse lost items."
+  },
+  {
+    "id": "QKC1",
+    "text": "/content/catalogs/quest-knowledge.json"
+  },
+  {
+    "id": "QRR1",
+    "text": "Verify and complete prerequisite quest: "
+  },
+  {
+    "id": "QRR2",
+    "text": "Requirements satisfied. Use Quest Helper for the walkthrough."
+  },
+  {
+    "id": "QRR3",
+    "text": "You have everything required by the available quest data."
+  },
+  {
+    "id": "QRR4",
+    "text": "Resolve the listed requirement before starting."
+  },
+  {
+    "id": "QRR5",
+    "text": " Resolve the remaining confirmed item shortfalls after this first step."
+  },
+  {
+    "id": "QRR6",
+    "text": " Resolve the remaining confirmed item shortfalls after this first step."
+  },
+  {
+    "id": "UARR1",
+    "text": "No consumed material is required for the modeled Agility action."
+  },
+  {
+    "id": "UARR2",
+    "text": "Bring the best legal pickaxe. The modeled Mining action consumes no material."
+  },
+  {
+    "id": "UARR3",
+    "text": "Bring the tool and bait required by the selected spot. Bait is counted only by a dedicated exact route."
+  },
+  {
+    "id": "UARR4",
+    "text": "Bring the best legal axe. The modeled Woodcutting action consumes no material."
+  },
+  {
+    "id": "UARR5",
+    "text": "No material is consumed by a successful action. Bring healing when failure damage is possible."
+  },
+  {
+    "id": "UARR6",
+    "text": "Bring the selected creature's reusable traps or tools."
+  },
+  {
+    "id": "UARR7",
+    "text": "Bring a tinderbox or another verified ignition source."
+  },
+  {
+    "id": "UARR8",
+    "text": "This is not a conventional one-log burn and needs route-specific setup."
+  },
+  {
+    "id": "UARR9",
+    "text": "One Prayer item is consumed per calculator action; route multipliers are separate."
+  },
+  {
+    "id": "UARR10",
+    "text": "The consumed Prayer offering cannot be inferred safely."
+  },
+  {
+    "id": "UARR11",
+    "text": "Rune multipliers affect output, not base XP per essence."
+  },
+  {
+    "id": "UARR12",
+    "text": "No safe generic material recipe is available for this skill."
+  },
+  {
+    "id": "UARR13",
+    "text": "One grapes and one jug of water are consumed per wine."
+  },
+  {
+    "id": "UARR14",
+    "text": "Composite Cooking recipes require a route-specific ingredient model."
+  },
+  {
+    "id": "UARR15",
+    "text": "Raw food could not be inferred safely."
+  },
+  {
+    "id": "UARR16",
+    "text": "Successful-cook input count; add a route-specific burn buffer where needed."
+  },
+  {
+    "id": "UARR17",
+    "text": "Conventional furnace glassmaking; Superglass Make has different yield math."
+  },
+  {
+    "id": "UARR18",
+    "text": "Bring a tiara mould to the Edgeville furnace, smelt each silver bar, bank, and repeat."
+  },
+  {
+    "id": "UARR19",
+    "text": "Bring a glassblowing pipe for blown-glass products."
+  },
+  {
+    "id": "UARR20",
+    "text": "Clockworks are reusable, so only the log is counted."
+  },
+  {
+    "id": "UARR21",
+    "text": "Attach the charged orb to the battlestaff."
+  },
+  {
+    "id": "UARR22",
+    "text": "No proven consumed-material recipe exists for this Crafting action."
+  },
+  {
+    "id": "UARR23",
+    "text": "The basic recipe produces 15 shafts per log."
+  },
+  {
+    "id": "UARR24",
+    "text": "RuneLite XP is per arrow although the interface batches them."
+  },
+  {
+    "id": "UARR25",
+    "text": "One tip and feather are consumed per dart."
+  },
+  {
+    "id": "UARR26",
+    "text": "One headless arrow and broad arrowhead are consumed."
+  },
+  {
+    "id": "UARR27",
+    "text": "One headless arrow and matching arrowhead are consumed."
+  },
+  {
+    "id": "UARR28",
+    "text": "One shaft and matching head are consumed."
+  },
+  {
+    "id": "UARR29",
+    "text": "One unfinished bolt and feather are consumed."
+  },
+  {
+    "id": "UARR30",
+    "text": "This Fletching action's components cannot be inferred safely."
+  },
+  {
+    "id": "UARR31",
+    "text": "Bring a hammer; this is the standard anvil recipe."
+  },
+  {
+    "id": "UARR32",
+    "text": "This Smithing action needs a dedicated furnace or anvil recipe."
+  },
+  {
+    "id": "UARR33",
+    "text": "This potion is not in the verified fallback table."
+  },
+  {
+    "id": "UARR34",
+    "text": "Make the complete potion from herb, secondary, and vial."
+  },
+  {
+    "id": "UARR35",
+    "text": "The cape is returned; only planks are counted."
+  },
+  {
+    "id": "UARR36",
+    "text": "Furniture recipes vary; this hotspot is not mapped."
+  },
+  {
+    "id": "UARR37",
+    "text": "Live Farming run logic must model this action family."
+  },
+  {
+    "id": "UARR38",
+    "text": "One tree-cycle action per sapling; protection and patch access remain route decisions."
+  },
+  {
+    "id": "UARR39",
+    "text": "An equipped fire source can replace fire runes; use only a verified safe alch list."
+  },
+  {
+    "id": "UARR40",
+    "text": "Elemental staves can replace corresponding runes."
+  },
+  {
+    "id": "UARR41",
+    "text": "The spell and equipped staff do not prove a rune loadout."
+  }
+]

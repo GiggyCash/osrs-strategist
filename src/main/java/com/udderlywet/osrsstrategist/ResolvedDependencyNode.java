@@ -3,17 +3,13 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One deduplicated result node in traversal order. */
+@Getter
 public final class ResolvedDependencyNode
 {
-    @Getter
     private final String id;
-    @Getter
     private final String action;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final int depth;
-    @Getter
     private final int requiredQuantity;
 
     public ResolvedDependencyNode(String id, String action,

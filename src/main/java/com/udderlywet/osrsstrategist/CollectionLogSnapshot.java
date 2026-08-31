@@ -11,15 +11,12 @@ import lombok.Getter;
  * unknown, not zero-complete. The named objective set is intentionally separate
  * from raw item IDs because some progression goals are multi-item/currency based.</p>
  */
+@Getter
 public final class CollectionLogSnapshot
 {
-    @Getter
     private final Set<Integer> obtainedItemIds;
-    @Getter
     private final Set<String> completedObjectiveIds;
-    @Getter
     private final Map<String, Integer> categoryCompleted;
-    @Getter
     private final Map<String, Integer> categoryTotals;
 
     public CollectionLogSnapshot(Set<Integer> obtainedItemIds)

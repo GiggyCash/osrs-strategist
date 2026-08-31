@@ -3,29 +3,19 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Immutable explanation and execution payload from the Slayer strategist. */
+@Getter
 public final class SlayerDecisionResult
 {
-    @Getter
     private final SlayerAssignmentState assignmentState;
-    @Getter
     private final SlayerTaskDecision decision;
-    @Getter
     private final SlayerMasterProfile master;
-    @Getter
     private final SlayerTaskStrategicProfile taskProfile;
-    @Getter
     private final double score;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final String reason;
-    @Getter
     private final RecommendationGuidance guidance;
-    @Getter
     private final String selectedAlternativeName;
-    @Getter
     private final SlayerReward recommendedReward;
-    @Getter
     private final SlayerTaskOffer recommendedOffer;
 
     public SlayerDecisionResult(SlayerAssignmentState assignmentState,

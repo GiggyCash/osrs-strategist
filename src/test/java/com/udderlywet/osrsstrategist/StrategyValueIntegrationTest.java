@@ -109,7 +109,7 @@ public class StrategyValueIntegrationTest
         StrategyCandidateProvider emptyOwner = provider(
                 Collections.emptyList(), Collections.singleton("skill:slayer"));
         StrategyCandidateProvider replacementOwner = provider(
-                Collections.singletonList(new StrategyCandidate(
+                Collections.singletonList(new Recommendation(
                         "slayer:get-task", "Get a task", "Observed no-task state.",
                         60.0, RecommendationConfidence.VERIFIED, guidance(),
                         CandidateSafetyEvidence.verifiedSafe(false))),
@@ -146,12 +146,12 @@ public class StrategyValueIntegrationTest
     }
 
     private static StrategyCandidateProvider provider(
-            List<StrategyCandidate> candidates, Set<String> superseded)
+            List<Recommendation> candidates, Set<String> superseded)
     {
         return new StrategyCandidateProvider()
         {
             @Override public String getId() { return "test-owner"; }
-            @Override public List<StrategyCandidate> candidates(
+            @Override public List<Recommendation> candidates(
                     StrategyContext context) { return candidates; }
             @Override public Set<String> supersededCandidateIds()
             { return superseded; }

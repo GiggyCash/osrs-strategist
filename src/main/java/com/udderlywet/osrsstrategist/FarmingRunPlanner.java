@@ -60,7 +60,7 @@ public class FarmingRunPlanner
 
         return new GuidanceChecklist(
                 activityId, "Farming run",
-                "Resources + best confirmed herb/tree patches", steps);
+                PlayerText.get("FRP1"), steps);
     }
 
     private void appendPrep(
@@ -71,13 +71,13 @@ public class FarmingRunPlanner
         FarmingSnapshot farming = data.getFarming();
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
-                "Rake was previously verified in Tool Leprechaun storage."));
+                PlayerText.get("FRP2")));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.dibber(), toolState(farming, "dibber"),
-                "Seed dibber was previously verified in Tool Leprechaun storage."));
+                PlayerText.get("FRP3")));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.spade(), toolState(farming, "spade"),
-                "Spade was previously verified in Tool Leprechaun storage."));
+                PlayerText.get("FRP4")));
 
         if (farmingLevel >= 9)
         {
@@ -137,7 +137,7 @@ public class FarmingRunPlanner
         if (observed == null)
         {
             return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                    "Visit the patch once to record its current state.",
+                    PlayerText.get("FRP5"),
                     GuidanceStepState.CHECK_NEEDED);
         }
         switch (observed.getState())

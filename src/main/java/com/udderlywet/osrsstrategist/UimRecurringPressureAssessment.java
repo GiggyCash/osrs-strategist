@@ -5,11 +5,10 @@ import java.util.*;
 import lombok.Getter;
 
 /** Session-local evidence that distinct UIM setups hit the same constraints. */
+@Getter
 public final class UimRecurringPressureAssessment
 {
-    @Getter
     private final int distinctObservedLayouts;
-    @Getter
     private final List<String> blockedFamilies;
 
     UimRecurringPressureAssessment(int distinctObservedLayouts,

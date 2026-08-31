@@ -5,15 +5,12 @@ import java.util.*;
 import lombok.Getter;
 
 /** An exact item-ID requirement that fresh Group Storage may satisfy. */
+@Getter
 public final class GroupResourceNeed
 {
-    @Getter
     private final String label;
-    @Getter
     private final Set<Integer> acceptableItemIds;
-    @Getter
     private final int quantity;
-    @Getter
     private final boolean reusable;
 
     public GroupResourceNeed(String label, Set<Integer> acceptableItemIds,
@@ -21,14 +18,14 @@ public final class GroupResourceNeed
     {
         if (acceptableItemIds == null || acceptableItemIds.isEmpty())
             throw new IllegalArgumentException(
-                    "A group resource need requires verified item IDs");
+                    PlayerText.get("GRN1"));
         this.label = label == null ? "Required item" : label;
         LinkedHashSet<Integer> ids = new LinkedHashSet<>();
         for (Integer itemId : acceptableItemIds)
             if (itemId != null && itemId > 0) ids.add(itemId);
         if (ids.isEmpty())
             throw new IllegalArgumentException(
-                    "A group resource need requires positive item IDs");
+                    PlayerText.get("GRN2"));
         this.acceptableItemIds = Collections.unmodifiableSet(ids);
         this.quantity = Math.max(1, quantity);
         this.reusable = reusable;

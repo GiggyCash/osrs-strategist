@@ -25,9 +25,9 @@ public class ResourceDetourCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null)
         {
@@ -49,7 +49,7 @@ public class ResourceDetourCandidateProvider
 
         plankDetours(context, account, items, result);
         result.sort(Comparator.comparingDouble(
-                StrategyCandidate::getScore).reversed());
+                Recommendation::getScore).reversed());
         return result;
     }
 
@@ -57,7 +57,7 @@ public class ResourceDetourCandidateProvider
             StrategyContext context,
             AccountSnapshot account,
             ObservedItemIndex items,
-            List<StrategyCandidate> result)
+            List<Recommendation> result)
     {
         if (!constructionRelevant(context.getActiveGoal())) return;
         int construction = account.getSkillLevel(Skill.CONSTRUCTION);
@@ -81,15 +81,15 @@ public class ResourceDetourCandidateProvider
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
-                        "Play Tempoross for a Fishing session and claim the earned reward-pool permits. Keep useful plank/log rewards instead of treating the activity as disposable Fishing XP.",
-                        "Only " + planks + " usable planks are currently observed. Bring the normal Tempoross tools/supplies for the chosen strategy; reward permits and plank drops are variable, so there is no exact number of games for this shortage.",
-                        "Tempoross at the Ruins of Unkah. Claim rewards from the reward pool after the games when you are ready to bank the resources.",
-                        "This is a cross-skill supply detour, not a bulk Construction plank method. It should win only while the Fishing XP is useful too; direct log/sawmill sourcing becomes better when the account needs large deterministic plank volumes."
+                        PlayerText.get("RDCP1"),
+                        "Only " + planks + PlayerText.get("RDCP2"),
+                        PlayerText.get("RDCP3"),
+                        PlayerText.get("RDCP4")
                 );
-                result.add(new StrategyCandidate(
+                result.add(new Recommendation(
                         id,
                         "Tempoross for Fishing + early planks",
-                        "Only " + planks + " planks are currently observed. Tempoross can advance Fishing while its reward pool supplies some normal and oak planks. Treat this as a cross-skill supply detour, not a bulk Construction plank method; switch to direct log/sawmill routes when larger plank volumes are needed.",
+                        "Only " + planks + PlayerText.get("RDCP5"),
                         score,
                         RecommendationConfidence.VERIFIED,
                         guidance,
@@ -116,15 +116,15 @@ public class ResourceDetourCandidateProvider
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
-                        "Do a Wintertodt Firemaking session and keep useful log rewards from the supply crates. Stop using it as a Construction detour once direct plank sourcing clearly becomes the better account-time tradeoff.",
-                        "Only " + logs + " useful logs and " + planks + " planks are currently observed. Equip four warm items and bring a knife, hammer, and cakes; each cake bite restores 35% warmth. Crate contents are random, so no exact crate count is promised.",
-                        "Wintertodt Camp in northern Great Kourend.",
-                        "This route earns Firemaking progress while creating a chance at useful logs. It is intentionally excluded from automatic Hardcore routing here because a resource detour is not worth adding avoidable survival risk."
+                        PlayerText.get("RDCP6"),
+                        "Only " + logs + " useful logs and " + planks + PlayerText.get("RDCP7"),
+                        PlayerText.get("RDCP8"),
+                        PlayerText.get("RDCP9")
                 );
-                result.add(new StrategyCandidate(
+                result.add(new Recommendation(
                         id,
-                        "Wintertodt for Firemaking + log supply",
-                        "Your observed log/plank stock is low. Wintertodt can progress Firemaking and provide logs from supply crates, which can later be converted into planks. This is secondary to direct plank sourcing and should only win when the Firemaking progress is useful too.",
+                        PlayerText.get("RDCP10"),
+                        PlayerText.get("RDCP11"),
                         score,
                         RecommendationConfidence.VERIFIED,
                         guidance,

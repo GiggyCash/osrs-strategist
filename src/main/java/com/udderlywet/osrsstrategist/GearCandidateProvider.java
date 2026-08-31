@@ -31,9 +31,9 @@ public class GearCandidateProvider implements StrategyCandidateProvider
     public String getId() { return "gear-candidates"; }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null) return result;
 
@@ -88,7 +88,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             ContextualGearDecision targetBest = assessment.get(
                     GearDecisionKind.TARGET_SPECIFIC_BEST);
 
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     id,
                     "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
                     entry.getWeaponGuidance() + ". " + entry.getNote()
@@ -103,7 +103,7 @@ public class GearCandidateProvider implements StrategyCandidateProvider
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 2) return new ArrayList<>(result.subList(0, 2));
         return result;
     }
@@ -115,10 +115,10 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         if (!items.primaryOwnershipObserved())
         {
             return new RecommendationGuidance(
-                    "Open the bank once to compare this gear path with verified ownership.",
-                    "Bank ownership is currently unknown; no item is being called missing yet.",
-                    "Lumbridge Castle bank, on the top floor.",
-                    "This remains a verification alternative, not a purchase instruction.");
+                    PlayerText.get("GCP1"),
+                    PlayerText.get("GCP2"),
+                    PlayerText.get("GCP3"),
+                    PlayerText.get("GCP4"));
         }
 
         List<String> owned = new ArrayList<>();
@@ -133,25 +133,19 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         String next = unresolved.isEmpty()
                 ? entry.getWeaponGuidance() : unresolved.get(0);
         GearAcquisitionRoute route = acquisitionCatalog.forItem(next);
-        UniversalDependencyResolution dependency = route == null ? null
-                : new UniversalDependencyPlanner().resolveGear(next, context);
-        UniversalDependencyNode nextDependency = dependency == null ? null
-                : dependency.nextAction();
         String action;
         if (route != null && !route.getSteps().isEmpty()
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
-            action = nextDependency == null
-                    ? route.getSteps().get(0).getAction()
-                    : nextDependency.getAction();
+            action = route.getSteps().get(0).getAction();
         else if (mode.usesGrandExchange())
-            action = "Compare the live price and marginal benefit of " + next
-                    + " before buying; keep the current item when the upgrade is not worth the detour.";
+            action = PlayerText.get("GCP5") + next
+                    + PlayerText.get("GCP6");
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
-            action = "Verify a self-source route and inventory/storage consequence for "
-                    + next + " before changing the current UIM setup.";
+            action = PlayerText.get("GCP7")
+                    + next + PlayerText.get("GCP8");
         else
-            action = "Resolve the verified self-source acquisition path for " + next
-                    + "; do not substitute a Grand Exchange purchase.";
+            action = PlayerText.get("GCP9") + next
+                    + PlayerText.get("GCP10");
 
         String supplies = "Observed matching targets: "
                 + (owned.isEmpty() ? "none" : String.join(", ", owned))
@@ -159,9 +153,9 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 + (unresolved.isEmpty() ? "weapon/context comparison only"
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
-                ? "Use the acquisition source attached to the selected concrete item; this tier alone does not prove a location."
+                ? PlayerText.get("GCP11")
                 : "Route starts with " + route.getSteps().get(0).getTarget()
-                        + "; follow the deepest known unmet dependency first.";
+                        + PlayerText.get("GCP12");
         return new RecommendationGuidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }

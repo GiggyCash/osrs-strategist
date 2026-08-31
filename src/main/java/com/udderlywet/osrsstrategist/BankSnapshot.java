@@ -4,11 +4,10 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class BankSnapshot
 {
-    @Getter
     private final List<ItemStackSnapshot> items;
-    @Getter
     private final long capturedAtMillis;
 
     public BankSnapshot(

@@ -8,15 +8,12 @@ import lombok.Getter;
  * <p>The evidence text explains why Compass reached the state. This makes
  * "Check Needed" actionable instead of a vague warning.</p>
  */
+@Getter
 public final class RequirementCheck
 {
-    @Getter
     private final String id;
-    @Getter
     private final String label;
-    @Getter
     private final RequirementState state;
-    @Getter
     private final String evidence;
 
     public RequirementCheck(

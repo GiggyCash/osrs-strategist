@@ -5,19 +5,14 @@ import java.util.Objects;
 import lombok.Getter;
 
 /** One ordered, evidence-backed transition in the active goal plan. */
+@Getter
 public final class StrategicPlanStep
 {
-    @Getter
     private final String id;
-    @Getter
     private final GoalNodeKind kind;
-    @Getter
     private final String objective;
-    @Getter
     private final String reason;
-    @Getter
     private final PlanCompletionCondition completion;
-    @Getter
     private final String recommendationId;
 
     public StrategicPlanStep(

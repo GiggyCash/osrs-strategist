@@ -18,7 +18,7 @@ public final class DiaryTaskCatalog
 {
     public static final int EXPECTED_TASKS = 378;
     public static final String PROVENANCE =
-            "Generated from RuneLite 1.12.35 Achievement Diary definitions";
+            PlayerText.get("DTC1");
     private static final Pattern SKILL = Pattern.compile(
             "new SkillRequirement\\(Skill\\.([A-Z_]+),\\s*(\\d+)\\)");
     private static final Pattern QUEST = Pattern.compile(
@@ -100,7 +100,7 @@ public final class DiaryTaskCatalog
         if (raw.contains("new OrRequirement"))
         {
             result.add(DiaryTaskRequirement.alternative(
-                    "Verify one of the RuneLite-defined alternatives: " + raw));
+                    PlayerText.get("DTC2") + raw));
             return result;
         }
         Matcher skill = SKILL.matcher(raw);

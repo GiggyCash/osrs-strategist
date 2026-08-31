@@ -100,10 +100,10 @@ public class GoalProvenanceLiveRegressionTest
         statuses.put("Below Ice Mountain", QuestStatus.NOT_STARTED);
         StrategyContext low = context(GoalType.BARROWS_GLOVES,
                 QuestTolerance.LOW, statuses);
-        List<StrategyCandidate> candidates = new QuestCandidateProvider(
+        List<Recommendation> candidates = new QuestCandidateProvider(
                 new QuestPriorityCatalog()).candidates(low);
-        StrategyCandidate required = named(candidates, "Wartface & Bentnoze");
-        StrategyCandidate optional = named(candidates, "Below Ice Mountain");
+        Recommendation required = named(candidates, "Wartface & Bentnoze");
+        Recommendation optional = named(candidates, "Below Ice Mountain");
 
         assertTrue(required.getReason().contains("proven quest path"));
         assertTrue(required.getScore() > optional.getScore());
@@ -114,11 +114,11 @@ public class GoalProvenanceLiveRegressionTest
     {
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Below Ice Mountain", QuestStatus.NOT_STARTED);
-        StrategyCandidate low = named(new QuestCandidateProvider(
+        Recommendation low = named(new QuestCandidateProvider(
                         new QuestPriorityCatalog()).candidates(context(
                                 GoalType.BARROWS_GLOVES, QuestTolerance.LOW,
                                 statuses)), "Below Ice Mountain");
-        StrategyCandidate high = named(new QuestCandidateProvider(
+        Recommendation high = named(new QuestCandidateProvider(
                         new QuestPriorityCatalog()).candidates(context(
                                 GoalType.BARROWS_GLOVES, QuestTolerance.HIGH,
                                 statuses)), "Below Ice Mountain");
@@ -221,8 +221,8 @@ public class GoalProvenanceLiveRegressionTest
         assertFalse(text.contains(" — "));
     }
 
-    private static StrategyCandidate named(
-            List<StrategyCandidate> candidates, String text)
+    private static Recommendation named(
+            List<Recommendation> candidates, String text)
     {
         return candidates.stream().filter(value -> value.getTitle().contains(text))
                 .findFirst().orElseThrow(AssertionError::new);

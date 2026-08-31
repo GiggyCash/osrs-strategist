@@ -187,10 +187,10 @@ public class RequirementEvidenceEngine
                         : standard ? RequirementState.VERIFIED
                                 : RequirementState.BLOCKED,
                 !spellbookObserved
-                        ? "The active spellbook has not been observed."
+                        ? PlayerText.get("REE1")
                         : standard
                                 ? "The Standard spellbook is active."
-                                : "The observed spellbook cannot cast this Standard spell."));
+                                : PlayerText.get("REE2")));
         if ("magic_f2p_curse".equals(methodId))
         {
             checks.add(resource(data, useGroupStorage, "curse_body",
@@ -268,8 +268,8 @@ public class RequirementEvidenceEngine
                     route ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     route
-                            ? "Pandemonium completion verifies both starter ports and courier access."
-                            : "The starter courier route has not been verified from live quest state."));
+                            ? PlayerText.get("REE3")
+                            : PlayerText.get("REE4")));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:captains-log",
                             "Captain's log", 1,
@@ -282,7 +282,7 @@ public class RequirementEvidenceEngine
             checks.add(new RequirementCheck(
                     "sailing:uncompleted-chart", "Exact uncompleted sea-chart",
                     RequirementState.CHECK_NEEDED,
-                    "RuneLite exposes aggregate chart completion state, but Compass does not yet map every Captain's-log checkbox to an exact next location."));
+                    PlayerText.get("REE5")));
             return checks;
         }
         if (id != null && id.startsWith("sailing_barracuda_"))
@@ -296,13 +296,13 @@ public class RequirementEvidenceEngine
             checks.add(new RequirementCheck(
                     "preparation:sailing-trial-boat", "Trial-ready boat",
                     RequirementState.CHECK_NEEDED,
-                    "The required hull and facilities are known ordinary boat preparation; current fitted components are not exposed as a stable ready-state here."));
+                    PlayerText.get("REE6")));
             return checks;
         }
         checks.add(new RequirementCheck(
-                "sailing:live-route", "Exact safe Sailing route and boat state",
+                "sailing:live-route", PlayerText.get("REE7"),
                 RequirementState.CHECK_NEEDED,
-                "The selected activity needs live boat facilities and route access that have not been verified."));
+                PlayerText.get("REE8")));
         return checks;
     }
 
@@ -321,12 +321,12 @@ public class RequirementEvidenceEngine
         EquipmentSnapshot equipment = data == null ? null : data.getEquipment();
         boolean verified = equipment != null && hasSplashingSet(equipment);
         return new RequirementCheck("equipment:f2p_splashing",
-                "Equip a metal full helm, platebody, platelegs or plateskirt, kiteshield, Stronghold-style boots, and a cursed goblin staff",
+                PlayerText.get("REE9"),
                 verified ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 verified
-                        ? "The observed cursed-staff metal setup is the verified -68 Magic attack route."
-                        : "Claim a cursed goblin staff from Diango in Draynor, equip the named metal pieces and Stronghold boots, then confirm -64 or lower in Equipment Stats.");
+                        ? PlayerText.get("REE10")
+                        : PlayerText.get("REE11"));
     }
 
     private static boolean hasSplashingSet(EquipmentSnapshot equipment)
@@ -412,8 +412,8 @@ public class RequirementEvidenceEngine
                 "access:hosidius_kitchen", "Kourend & Kebos Easy Diary",
                 kitchen ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
                 kitchen
-                        ? "The Easy Diary proves access to the Hosidius kitchen range and bank chest."
-                        : "Kourend & Kebos Easy Diary completion has not been observed."));
+                        ? PlayerText.get("REE12")
+                        : PlayerText.get("REE13")));
         return checks;
     }
 
@@ -446,8 +446,8 @@ public class RequirementEvidenceEngine
                     questComplete ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     questComplete
-                            ? "Quest completion proves karambwan fishing access."
-                            : "Tai Bwo Wannai Trio completion has not been observed."));
+                            ? PlayerText.get("REE14")
+                            : PlayerText.get("REE15")));
             TransportSnapshot transport = data == null ? null
                     : data.getTransport();
             boolean observedFairyRoute = transport != null
@@ -461,8 +461,8 @@ public class RequirementEvidenceEngine
                     fairyRings ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     fairyRings
-                            ? "Fairy ring access is supported by live transport or completed-quest evidence."
-                            : "Verify fairy ring access before using the DKP-to-Zanaris banking loop."));
+                            ? PlayerText.get("REE16")
+                            : PlayerText.get("REE17")));
             DiarySnapshot diaries = data == null ? null : data.getDiaries();
             boolean staffless = diaries != null
                     && diaries.isTierComplete("Lumbridge & Draynor",
@@ -473,12 +473,12 @@ public class RequirementEvidenceEngine
             boolean staffReady = observedFairyRoute || staffless || staff > 0;
             checks.add(new RequirementCheck(
                     "resource:fairy_ring_staff",
-                    "Dramen/Lunar staff or staffless fairy rings",
+                    PlayerText.get("REE18"),
                     staffReady ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     staffReady
-                            ? "The observed route can use fairy rings without another staff check."
-                            : "Bring a dramen or lunar staff, or verify the staffless diary unlock."));
+                            ? PlayerText.get("REE19")
+                            : PlayerText.get("REE20")));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:karambwan_vessel",
                             "Karambwan vessel", 1,
@@ -547,8 +547,8 @@ public class RequirementEvidenceEngine
                     boneVoyage ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     boneVoyage
-                            ? "Bone Voyage completion proves Fossil Island access."
-                            : "Bone Voyage completion has not been observed."));
+                            ? PlayerText.get("REE21")
+                            : PlayerText.get("REE22")));
             return checks;
         }
         return null;
@@ -566,7 +566,7 @@ public class RequirementEvidenceEngine
                 complete ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 complete
-                        ? questName + " completion is observed for this character."
+                        ? questName + PlayerText.get("REE23")
                         : questName + " completion has not been observed."));
         return checks;
     }
@@ -581,9 +581,9 @@ public class RequirementEvidenceEngine
         CapabilityState parlour = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:parlour");
         checks.add(capabilityCheck("construction:poh", "Player-owned house",
-                house, "POH access has not been observed for this character."));
+                house, PlayerText.get("REE24")));
         checks.add(capabilityCheck("construction:parlour", "POH Parlour",
-                parlour, "A Parlour chair hotspot has not been observed."));
+                parlour, PlayerText.get("REE25")));
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement("resource:construction_planks",
                         "Planks", 2, ItemID.WOODPLANK), useGroupStorage));
@@ -614,9 +614,9 @@ public class RequirementEvidenceEngine
         CapabilityState kitchen = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:kitchen");
         checks.add(capabilityCheck("construction:poh", "Player-owned house",
-                house, "POH access has not been observed for this character."));
+                house, PlayerText.get("REE26")));
         checks.add(capabilityCheck("construction:kitchen", "POH Kitchen",
-                kitchen, "An oak-larder hotspot has not been observed."));
+                kitchen, PlayerText.get("REE27")));
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement("resource:construction_oak_planks",
                         "Oak planks", 8, ItemID.PLANK_OAK), useGroupStorage));
@@ -678,9 +678,9 @@ public class RequirementEvidenceEngine
                 usable > 0 ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 usable > 0
-                        ? label + " is observed in immediately usable ownership."
+                        ? label + PlayerText.get("REE28")
                         : "No " + label.toLowerCase()
-                                + " is observed in immediately usable ownership.");
+                                + PlayerText.get("REE29"));
     }
 
     /**
@@ -720,7 +720,7 @@ public class RequirementEvidenceEngine
                     "agility:wilderness_risk",
                     "Wilderness risk accepted",
                     RequirementState.VERIFIED,
-                    "This method only reaches the evaluator when Wilderness methods are enabled."
+                    PlayerText.get("REE30")
             ));
             return checks;
         }
@@ -751,14 +751,14 @@ public class RequirementEvidenceEngine
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
                     patch == null
-                            ? "Quest/access checks and observed-area memory have not proven a patch yet."
-                            : patch + " is available from quest/access evidence."
+                            ? PlayerText.get("REE31")
+                            : patch + PlayerText.get("REE32")
             ));
             checks.add(new RequirementCheck(
                     "farming:supplies",
                     "Seeds and farming tools",
                     RequirementState.CHECK_NEEDED,
-                    "The early-Farming seed source is not verified yet; choose and verify a usable seed before starting."
+                    PlayerText.get("REE33")
             ));
             return checks;
         }
@@ -773,8 +773,8 @@ public class RequirementEvidenceEngine
                     reachable ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     reachable
-                            ? "Falador patches are reachable from account access evidence."
-                            : "South Falador patch access has not been proven for this character."));
+                            ? PlayerText.get("REE34")
+                            : PlayerText.get("REE35")));
             RequirementCheck seeds = resourceReadinessService.evaluate(data,
                     "farming_falador_watermelons".equals(method.getId())
                             ? farmingSupplyCatalog.watermelonSeeds()
@@ -788,18 +788,18 @@ public class RequirementEvidenceEngine
             {
                 checks.add(new RequirementCheck(
                         "farming:watermelon_seed_source",
-                        "38 Thieving for the safe seed-acquisition loop",
+                        PlayerText.get("REE36"),
                         RequirementState.BLOCKED,
-                        "Watermelon seeds are not observed and Master Farmers cannot be pickpocketed below 38 Thieving."));
+                        PlayerText.get("REE37")));
             }
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.rake(),
-                    "rake", "Rake is verified in Tool Leprechaun storage.",
+                    "rake", PlayerText.get("REE38"),
                     useGroupStorage));
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.dibber(),
-                    "dibber", "Seed dibber is verified in Tool Leprechaun storage.",
+                    "dibber", PlayerText.get("REE39"),
                     useGroupStorage));
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.spade(),
-                    "spade", "Spade is verified in Tool Leprechaun storage.",
+                    "spade", PlayerText.get("REE40"),
                     useGroupStorage));
             return checks;
         }
@@ -823,12 +823,12 @@ public class RequirementEvidenceEngine
                     useGroupStorage, ItemID.ZEAH_WATERINGCAN);
             boolean waterReady = cans >= 8 || gricoller > 0;
             tithe.add(new RequirementCheck(
-                    "resource:tithe_watering", "Eight filled watering cans or Gricoller's can",
+                    "resource:tithe_watering", PlayerText.get("REE41"),
                     waterReady ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     waterReady
-                            ? "The continuous watering setup is observed."
-                            : "Bring eight filled watering cans, or Gricoller's can, for a reliable continuous cycle."));
+                            ? PlayerText.get("REE42")
+                            : PlayerText.get("REE43")));
             return tithe;
         }
 
@@ -852,8 +852,8 @@ public class RequirementEvidenceEngine
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
                     patch == null
-                            ? "No herb patch has been proven by quest/access checks or prior observation yet."
-                            : patch + " is available from quest/access evidence."
+                            ? PlayerText.get("REE44")
+                            : patch + PlayerText.get("REE45")
             ));
 
             checks.add(resourceReadinessService.evaluate(
@@ -866,7 +866,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.rake(),
                     "rake",
-                    "Rake was previously verified in Tool Leprechaun storage.",
+                    PlayerText.get("REE46"),
                     useGroupStorage
             ));
             checks.add(toolCheck(
@@ -874,7 +874,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.dibber(),
                     "dibber",
-                    "Seed dibber was previously verified in Tool Leprechaun storage.",
+                    PlayerText.get("REE47"),
                     useGroupStorage
             ));
             checks.add(toolCheck(
@@ -882,7 +882,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.spade(),
                     "spade",
-                    "Spade was previously verified in Tool Leprechaun storage.",
+                    PlayerText.get("REE48"),
                     useGroupStorage
             ));
             return checks;
@@ -919,7 +919,7 @@ public class RequirementEvidenceEngine
                 "generic:" + requirement,
                 requirement,
                 RequirementState.CHECK_NEEDED,
-                "More account state must be observed before this can be proven."
+                PlayerText.get("REE49")
         );
     }
 }

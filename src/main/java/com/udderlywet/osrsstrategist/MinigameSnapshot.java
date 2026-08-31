@@ -12,11 +12,10 @@ import lombok.Getter;
  * and future minigames without teaching the strategy engine each minigame's
  * internal storage format.</p>
  */
+@Getter
 public final class MinigameSnapshot
 {
-    @Getter
     private final Set<String> unlocked;
-    @Getter
     private final Map<String, Integer> currencies;
 
     public MinigameSnapshot(

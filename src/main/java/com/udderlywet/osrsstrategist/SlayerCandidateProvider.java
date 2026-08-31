@@ -35,7 +35,7 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
         SlayerDecisionResult result = strategist.assess(context);
         if (result == null || result.getGuidance() == null)
@@ -108,7 +108,7 @@ public class SlayerCandidateProvider implements StrategyCandidateProvider
                     : CandidateSafetyEvidence.verifiedSafe(false);
         RecommendationStrategicValue strategicValue = strategicValue(result,
                 context);
-        return Collections.singletonList(new StrategyCandidate(id, title,
+        return Collections.singletonList(new Recommendation(id, title,
                 result.getReason(), result.getScore(), result.getConfidence(),
                 result.getGuidance(), safety, strategicValue));
     }

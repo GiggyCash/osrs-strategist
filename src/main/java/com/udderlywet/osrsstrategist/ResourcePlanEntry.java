@@ -10,21 +10,15 @@ import lombok.Getter;
  * quantity. For example, an equipped elemental staff can satisfy an elemental
  * rune requirement without pretending the account owns millions of runes.</p>
  */
+@Getter
 public final class ResourcePlanEntry
 {
-    @Getter
     private final String name;
-    @Getter
     private final int itemId;
-    @Getter
     private final int required;
-    @Getter
     private final int usableOwned;
-    @Getter
     private final int missing;
-    @Getter
     private final int restrictedOwned;
-    @Getter
     private final String reusableSource;
 
     public ResourcePlanEntry(

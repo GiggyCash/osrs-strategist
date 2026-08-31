@@ -46,7 +46,8 @@ public final class QuestRequirementCensus
     {
         AuthoritativeQuestEnrichmentCatalog catalog =
                 new AuthoritativeQuestEnrichmentCatalog();
-        QuestItemEvidenceParser parser = new QuestItemEvidenceParser();
+        ImportedQuestItemRequirementCatalog imported =
+                new ImportedQuestItemRequirementCatalog();
         totalQuests = Quest.values().length;
         for (Quest quest : Quest.values())
         {
@@ -80,17 +81,13 @@ public final class QuestRequirementCensus
             if (itemState != AuthoritativeQuestEnrichmentCatalog.EvidenceState.VALUE)
                 continue;
             questsWithItemRequirements++;
-            QuestItemEvidenceParser.Result result;
-            try
+            ImportedQuestItemRequirementCatalog.Result result =
+                    imported.resultFor(quest.getName());
+            if (result == null)
             {
-                result = parser.parse(record.getItems());
-            }
-            catch (RuntimeException ex)
-            {
-                parseFailures++;
+                unsupportedExpressions++;
                 unresolved.add(new Unresolved(quest.getName(), "items",
-                        record.getItems(), "Parser exception: "
-                                + ex.getClass().getSimpleName()));
+                        record.getItems(), "No executable expression is bundled for this enrichment-only identity."));
                 continue;
             }
             // A VALUE field may contain only explicitly optional preparation.

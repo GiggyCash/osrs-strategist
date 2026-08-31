@@ -1,30 +1,22 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.cluescrolls.clues.emote.STASHUnit;
 
 /** One authoritative STASH identity and its exact RuneLite clue equipment evidence. */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter
 public final class StashUnitDefinition
 {
-    @Getter
     private final STASHUnit runeLiteUnit;
-    @Getter
     private final StashTierDefinition tier;
-    @Getter
     private final String clueText;
-    @Getter
     private final String location;
 
-    StashUnitDefinition(STASHUnit runeLiteUnit, StashTierDefinition tier,
-            String clueText, String location)
-    {
-        this.runeLiteUnit = runeLiteUnit;
-        this.tier = tier;
-        this.clueText = clueText == null ? "" : clueText;
-        this.location = location == null ? readable(runeLiteUnit.name()) : location;
-    }
 
     public String getId() { return "stash:" + runeLiteUnit.name().toLowerCase(); }
     public int getObjectId() { return runeLiteUnit.getObjectId(); }

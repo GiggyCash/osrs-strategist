@@ -17,7 +17,7 @@ import net.runelite.api.Skill;
 @Singleton
 public class QuestKnowledgeCatalog
 {
-    private static final String RESOURCE = "/content/catalogs/quest-knowledge.json";
+    private static final String RESOURCE = PlayerText.get("QKC1");
     private static final Pattern REWARD_XP = Pattern.compile(
             "\\{\\{SCP\\|([^|}]+)\\|([0-9,]+)", Pattern.CASE_INSENSITIVE);
     private final Map<String, QuestDefinition> definitions = new LinkedHashMap<>();

@@ -11,7 +11,7 @@ public final class MinigameSetupCatalog
     {
         Map<String, MinigameSetupProfile> values = new LinkedHashMap<>();
         for (MinigameSetupProfile profile : BundledCatalogLoader.array(
-                "/content/catalogs/minigame-setups.json", MinigameSetupProfile[].class))
+                PlayerText.get("MSC1"), MinigameSetupProfile[].class))
             if (values.put(profile.getActivityId(), profile) != null)
                 throw new IllegalStateException("Duplicate minigame setup " + profile.getActivityId());
         profiles = Collections.unmodifiableMap(values);

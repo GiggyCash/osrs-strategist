@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SlayerTaskStrategicCatalog
 {
-    private static final String RESOURCE = "/content/catalogs/slayer-task-strategies.json";
+    private static final String RESOURCE = PlayerText.get("STSC1");
     private static final Set<String> INTRINSIC_WILDERNESS = ids(
             "black-knights", "dark-warriors", "earth-warriors", "ents", "green-dragons",
             "lava-dragons", "magic-axes", "mammoths", "revenants", "rogues");

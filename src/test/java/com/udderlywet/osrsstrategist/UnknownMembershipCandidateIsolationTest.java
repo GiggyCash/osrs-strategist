@@ -32,7 +32,7 @@ public class UnknownMembershipCandidateIsolationTest
                 .minigames(new MinigameSnapshot(
                         new HashSet<>(java.util.Arrays.asList("castle-wars", "tempoross")),
                         Collections.emptyMap())).build();
-        java.util.List<StrategyCandidate> minigames = new MinigameCandidateProvider(
+        java.util.List<Recommendation> minigames = new MinigameCandidateProvider(
                 new MinigameCatalog()).candidates(context(minigameData));
         assertTrue(contains(minigames, "Castle Wars"));
         assertFalse(contains(minigames, "Tempoross"));
@@ -40,7 +40,7 @@ public class UnknownMembershipCandidateIsolationTest
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put("pvm:obor", ready("pvm:obor"));
         readiness.put("pvm:zulrah", ready("pvm:zulrah"));
-        java.util.List<StrategyCandidate> pvm = new PvmCandidateProvider()
+        java.util.List<Recommendation> pvm = new PvmCandidateProvider()
                 .candidates(context(StrategyDataBundle.builder(account)
                         .pvm(new PvmSnapshot(readiness)).build()));
         assertTrue(contains(pvm, "Obor"));
@@ -58,10 +58,10 @@ public class UnknownMembershipCandidateIsolationTest
         assertTrue(new CombatAchievementCandidateProvider().candidates(broad).isEmpty());
         assertTrue(new ProgressionUpgradeCandidateProvider().candidates(broad).isEmpty());
 
-        for (StrategyCandidate candidate : new GearCandidateProvider(
+        for (Recommendation candidate : new GearCandidateProvider(
                 new GearProgressionCatalog()).candidates(broad))
             assertTrue(candidate.getId().startsWith("gear:f2p-"));
-        for (StrategyCandidate candidate : new MoneyMakingCandidateProvider(
+        for (Recommendation candidate : new MoneyMakingCandidateProvider(
                 new MoneyMakingCatalog()).candidates(broad))
             assertTrue(candidate.getId().startsWith("money:f2p-"));
 
@@ -117,7 +117,7 @@ public class UnknownMembershipCandidateIsolationTest
                 Collections.emptyList());
     }
 
-    private static boolean contains(java.util.List<StrategyCandidate> candidates, String text)
+    private static boolean contains(java.util.List<Recommendation> candidates, String text)
     {
         return candidates.stream().anyMatch(value -> value.getTitle().contains(text));
     }

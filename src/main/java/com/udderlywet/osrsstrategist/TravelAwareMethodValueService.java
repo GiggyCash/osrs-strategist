@@ -62,7 +62,7 @@ public final class TravelAwareMethodValueService
                 ? "Verified route " + selected.getAdvantageousRouteId()
                         + " lowers travel/setup burden for "
                         + selected.getName() + "."
-                : "No exact advantageous route is verified; use ordinary access to "
+                : PlayerText.get("TAMVS1")
                         + selected.getName() + ".";
         return new TravelAwareMethodAssessment(selected, burden, adjustment,
                 routed, evidence);

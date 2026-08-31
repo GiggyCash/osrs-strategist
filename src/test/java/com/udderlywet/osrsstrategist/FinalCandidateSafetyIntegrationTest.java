@@ -16,7 +16,7 @@ public class FinalCandidateSafetyIntegrationTest
     @Test
     public void futureProviderCannotLeakMembersContentToUnknownOrF2p()
     {
-        StrategyCandidate members = candidate("future:members",
+        Recommendation members = candidate("future:members",
                 CandidateSafetyEvidence.harmless(false));
         assertOnlyFallback(evaluate(account(MembershipStatus.UNKNOWN, 70, 70, 70, 70,
                 70, 70, 70, 70), members));
@@ -95,7 +95,7 @@ public class FinalCandidateSafetyIntegrationTest
     @Test
     public void blockedPvmNeverAppearsInFinalQueue()
     {
-        StrategyCandidate blocked = new StrategyCandidate("pvm:obor", "Do Obor",
+        Recommendation blocked = new Recommendation("pvm:obor", "Do Obor",
                 "blocked", 1000, RecommendationConfidence.BLOCKED,
                 guidance(), CandidateSafetyEvidence.potentiallyIrreversible(true));
         assertOnlyFallback(evaluate(account(MembershipStatus.P2P, 70, 70, 70, 70,
@@ -103,12 +103,12 @@ public class FinalCandidateSafetyIntegrationTest
     }
 
     private static List<Recommendation> evaluate(AccountSnapshot account,
-            StrategyCandidate candidate)
+            Recommendation candidate)
     {
         StrategyCandidateProvider provider = new StrategyCandidateProvider()
         {
             @Override public String getId() { return "test-provider"; }
-            @Override public List<StrategyCandidate> candidates(StrategyContext context)
+            @Override public List<Recommendation> candidates(StrategyContext context)
             { return Collections.singletonList(candidate); }
         };
         StrategyEngine engine = new StrategyEngine(null, null, null,
@@ -125,10 +125,10 @@ public class FinalCandidateSafetyIntegrationTest
         assertTrue(FallbackRecommendationFactory.isFallback(queue.get(0)));
     }
 
-    private static StrategyCandidate candidate(String id,
+    private static Recommendation candidate(String id,
             CandidateSafetyEvidence evidence)
     {
-        return new StrategyCandidate(id, id, "test", 50,
+        return new Recommendation(id, id, "test", 50,
                 RecommendationConfidence.VERIFIED, guidance(), evidence);
     }
 

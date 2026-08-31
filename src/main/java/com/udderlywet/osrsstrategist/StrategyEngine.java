@@ -193,13 +193,13 @@ public class StrategyEngine
         {
             for (StrategyCandidateProvider provider : candidateRegistry.getProviders())
             {
-                List<StrategyCandidate> candidates = provider.candidates(context);
+                List<Recommendation> candidates = provider.candidates(context);
                 if (candidates == null || candidates.isEmpty()) continue;
                 Set<String> superseded = provider.supersededCandidateIds();
                 if (superseded != null && !superseded.isEmpty())
                     pool.removeIf(value -> value != null
                             && superseded.contains(value.getId()));
-                for (StrategyCandidate candidate : candidates)
+                for (Recommendation candidate : candidates)
                 {
                     if (candidate == null
                             || candidate.getConfidence() == RecommendationConfidence.BLOCKED)
@@ -207,7 +207,7 @@ public class StrategyEngine
                         continue;
                     }
                     Recommendation sourced = activityStrategyKnowledge.attach(
-                            candidate.toRecommendation(), context);
+                            candidate, context);
                     if (sourced != null) pool.add(sourced);
                 }
             }
@@ -268,7 +268,7 @@ public class StrategyEngine
                 opportunity.getTitle());
         if (location == null || action == null) return null;
         String supplies = setupVerified
-                ? "No additional preparation is recorded for this observed ready opportunity."
+                ? PlayerText.get("SE1")
                 : "Before leaving, verify: " + String.join(", ", opportunity.getPreparation()) + ".";
         double score = 46.0 + preferences.weightFor(id) * 10.0
                 + preferences.timedScoreAdjustmentFor(id);
@@ -281,16 +281,16 @@ public class StrategyEngine
         RecommendationGuidance guidance = new RecommendationGuidance(
                 setupVerified
                         ? action
-                        : "Verify the listed setup for the ready " + opportunity.getTitle()
+                        : PlayerText.get("SE2") + opportunity.getTitle()
                                 + " before starting it.",
                 supplies,
                 location,
                 setupVerified
-                        ? "The ready state was observed and no remaining setup checks are known."
-                        : "The timer is ready, but this remains a preparation alternative until the listed setup is verified.");
+                        ? PlayerText.get("SE3")
+                        : PlayerText.get("SE4"));
         return new Recommendation(
                 id, opportunity.getTitle(),
-                "This observed ready opportunity is time-sensitive and can compete with ordinary progression.",
+                PlayerText.get("SE5"),
                 score, null, setupVerified
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
@@ -305,11 +305,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return "Empty all four birdhouses, rebuild them with the carried logs and clockworks, seed them, then leave the Fossil Island route.";
+                return PlayerText.get("SE6");
             case HERB_RUN:
-                return "Harvest each verified reachable herb patch, compost it, and replant with the carried herb seeds.";
+                return PlayerText.get("SE7");
             case BATTLESTAVES:
-                return "Buy the available daily battlestaves from Zaff.";
+                return PlayerText.get("SE8");
             default:
                 return null;
         }
@@ -322,11 +322,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return "The four birdhouse spaces on Fossil Island.";
+                return PlayerText.get("SE9");
             case HERB_RUN:
                 return verifiedHerbPatchRoute(context);
             case BATTLESTAVES:
-                return "Zaff's Superior Staves in central Varrock.";
+                return PlayerText.get("SE10");
             default:
                 return null;
         }

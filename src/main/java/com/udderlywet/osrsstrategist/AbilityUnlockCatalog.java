@@ -8,13 +8,13 @@ import javax.inject.Singleton;
 public final class AbilityUnlockCatalog
 {
     public static final String PROVENANCE =
-            "Maintained current-live quest and ability evidence; audited 2026-08-25";
+            PlayerText.get("AUC1");
     private final Map<String, AbilityUnlockDefinition> definitions = new LinkedHashMap<>();
 
     public AbilityUnlockCatalog()
     {
         for (AbilityUnlockDefinition value : BundledCatalogLoader.array(
-                "/content/catalogs/ability-unlocks.json", AbilityUnlockDefinition[].class))
+                PlayerText.get("AUC2"), AbilityUnlockDefinition[].class))
             if (definitions.put(normalize(value.getId()), value) != null)
                 throw new IllegalStateException("Duplicate ability unlock " + value.getId());
     }

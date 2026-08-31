@@ -20,11 +20,11 @@ public class MoneyMakingCandidateProviderTest
     @Test
     public void ironCashPressureProducesOneExecutablePyramidLoop()
     {
-        List<StrategyCandidate> candidates = provider.candidates(
+        List<Recommendation> candidates = provider.candidates(
                 context(1, 60));
 
         assertEquals(1, candidates.size());
-        StrategyCandidate candidate = candidates.get(0);
+        Recommendation candidate = candidates.get(0);
         assertEquals("money:agility-pyramid", candidate.getId());
         assertEquals(RecommendationConfidence.VERIFIED,
                 candidate.getConfidence());
@@ -33,7 +33,7 @@ public class MoneyMakingCandidateProviderTest
                 .contains("four waterskin(4)s"));
         assertTrue(candidate.getGuidance().getLocation().contains("Nardah"));
         assertTrue(new RecommendationActionabilityPolicy()
-                .canLeadQueue(candidate.toRecommendation()));
+                .canLeadQueue(candidate));
     }
 
     @Test

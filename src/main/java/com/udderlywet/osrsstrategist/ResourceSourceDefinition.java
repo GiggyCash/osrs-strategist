@@ -5,31 +5,20 @@ import java.util.*;
 import lombok.Getter;
 
 /** A stable, human-readable acquisition family for common progression resources. */
+@Getter
 public final class ResourceSourceDefinition
 {
-    @Getter
     private final String id;
-    @Getter
     private final List<String> nameTokens;
-    @Getter
     private final String mainRoute;
-    @Getter
     private final String ironRoute;
-    @Getter
     private final String uimRoute;
-    @Getter
     private final List<String> freeToPlayItemNames;
-    @Getter
     private final String freeToPlayMainRoute;
-    @Getter
     private final String freeToPlayIronRoute;
-    @Getter
     private final String freeToPlayUimRoute;
-    @Getter
     private final List<StrategySourceId> sourceIds;
-    @Getter
     private final boolean wilderness;
-    @Getter
     private final RiskLevel riskLevel;
 
     public ResourceSourceDefinition(String id, List<String> nameTokens,

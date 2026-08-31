@@ -12,11 +12,10 @@ import lombok.Getter;
  * Furniture keys remain data-driven so new rooms and objects do not require a
  * rewrite of the strategy engine.</p>
  */
+@Getter
 public final class PohSnapshot
 {
-    @Getter
     private final CapabilityState houseAccess;
-    @Getter
     private final Map<String, CapabilityState> furniture;
 
     public PohSnapshot(

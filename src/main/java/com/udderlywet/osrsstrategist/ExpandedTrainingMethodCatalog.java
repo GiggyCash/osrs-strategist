@@ -9,9 +9,9 @@ import net.runelite.api.Skill;
 public class ExpandedTrainingMethodCatalog
 {
     public static final String PROVENANCE =
-            "RuneLite 1.12.35 skill calculators plus maintained current-live strategy audit";
+            PlayerText.get("ETMC1");
     public static final String AUDITED_THROUGH = "2026-08-25";
-    private static final String RESOURCE = "/content/catalogs/expanded-training-methods.json";
+    private static final String RESOURCE = PlayerText.get("ETMC2");
     private final Map<Skill, List<CuratedTrainingMethod>> methods = new EnumMap<>(Skill.class);
 
     public ExpandedTrainingMethodCatalog()

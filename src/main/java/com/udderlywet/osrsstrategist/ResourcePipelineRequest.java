@@ -6,15 +6,12 @@ import lombok.Getter;
  * Typed input for consumable value. Tradeability and scarcity must come from
  * verified item/plan data; this service never guesses them from an item name.
  */
+@Getter
 public final class ResourcePipelineRequest
 {
-    @Getter
     private final ResourceNeed need;
-    @Getter
     private final ResourceUseKind useKind;
-    @Getter
     private final ResourceScarcity scarcity;
-    @Getter
     private final boolean tradeable;
 
     public ResourcePipelineRequest(ResourceNeed need, ResourceUseKind useKind,

@@ -131,11 +131,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new RecommendationGuidance(
-                "Mine one copper ore and one tin ore, smelt them into a bronze bar, smith the highest bronze item that fits the carried bars, and repeat until Smithing level "
+                PlayerText.get("RGS1")
                         + targetLevel + ".",
-                "Bring a pickaxe and hammer; buy a hammer from Lumbridge General Store if it is missing.",
-                "East Lumbridge Swamp copper and tin rocks, then the furnace and rusted bronze anvil in the Smithing tutor's building north of Lumbridge Castle.",
-                "The loop sources and consumes each pair of ores locally, so no conventional bank or stored bar supply is assumed.",
+                PlayerText.get("RGS2"),
+                PlayerText.get("RGS3"),
+                PlayerText.get("RGS4"),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -153,11 +153,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new RecommendationGuidance(
-                "Cook the carried raw fish on the permanent fire. If the carried supply runs out first, fly-fish trout and salmon at the adjacent river and cook each inventory until Cooking level "
+                PlayerText.get("RGS5")
                         + targetLevel + ".",
-                "Bring the carried raw fish. For the resupply loop, bring a fly fishing rod and feathers.",
-                "Barbarian Village river and the permanent fire immediately east of the fishing spots.",
-                "Inputs become useful food in place, so the loop is viable without conventional banking or an empty inventory.",
+                PlayerText.get("RGS6"),
+                PlayerText.get("RGS7"),
+                PlayerText.get("RGS8"),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -178,21 +178,21 @@ public class RecommendationGuidanceService
         String rune = level >= 20 ? "body" : level >= 14 ? "fire"
                 : level >= 9 ? "earth" : level >= 5 ? "water"
                 : level >= 2 ? "mind" : "air";
-        String altar = level >= 20 ? "Body Altar south of Edgeville Monastery"
+        String altar = level >= 20 ? PlayerText.get("RGS9")
                 : level >= 14 ? "Fire Altar north of Al Kharid"
                 : level >= 9 ? "Earth Altar northeast of Varrock"
                 : level >= 5 ? "Water Altar in Lumbridge Swamp"
                 : level >= 2 ? "Mind Altar north of Falador"
                 : "Air Altar southwest of Falador";
         return new RecommendationGuidance(
-                "Mine one carried inventory of rune essence through Sedridor, walk it to the "
+                PlayerText.get("RGS10")
                         + altar + ", craft " + rune
-                        + " runes, and repeat until Runecraft level "
+                        + PlayerText.get("RGS11")
                         + targetLevel + ".",
                 "Bring the " + rune + " talisman or wear the " + rune
-                        + " tiara; leave the remaining slots for rune essence.",
-                "Wizards' Tower rune-essence mine, then the " + altar + ".",
-                "Essence is mined and consumed one trip at a time; no conventional bank or banked essence is assumed.",
+                        + PlayerText.get("RGS12"),
+                PlayerText.get("RGS13") + altar + ".",
+                PlayerText.get("RGS14"),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -210,19 +210,19 @@ public class RecommendationGuidanceService
         String id = plan.getMethod().getId();
         if ("thieving_uim_lumbridge_people".equals(id))
             return new RecommendationGuidance(
-                    "Pickpocket men and women around Lumbridge Castle, stop before another failed pickpocket could be unsafe, ask a monk at Edgeville Monastery to heal you, and repeat until Thieving level "
+                    PlayerText.get("RGS15")
                             + targetLevel + ".",
-                    "No carried supplies are required; preserve the current inventory and do not bank between healing trips.",
-                    "Men and women around Lumbridge Castle, with healing from the monks at Edgeville Monastery.",
-                    "This is a slow bank-free recovery route for early UIM Thieving; stronger routes can replace it when their access and setup are proven.",
+                    PlayerText.get("RGS16"),
+                    PlayerText.get("RGS17"),
+                    PlayerText.get("RGS18"),
                     MethodBankingBehavior.NONE);
         if ("thieving_uim_fruit_stalls".equals(id))
             return new RecommendationGuidance(
-                    "Steal from both fruit stalls, drop only the freshly stolen fruit while moving between them, and repeat until Thieving level "
+                    PlayerText.get("RGS19")
                             + targetLevel + ".",
-                    "No carried supplies are required; preserve every pre-existing setup item.",
-                    "The two fruit stalls in the easternmost house near the Hosidius beach.",
-                    "This lower-rate fallback stays executable when a stronger UIM Thieving route or healing setup is not proven.",
+                    PlayerText.get("RGS20"),
+                    PlayerText.get("RGS21"),
+                    PlayerText.get("RGS22"),
                     MethodBankingBehavior.NONE);
         return null;
     }
@@ -258,7 +258,7 @@ public class RecommendationGuidanceService
         String supplies = supplyGuidance(
                 data, data.getAccount(), stages, useGroupStorage);
         String location = locationGuidance(data.getQuests());
-        String note = "Raw-fish totals include a conservative low-level burn buffer. Burns are random, so you may finish a stage with some raw fish left over.";
+        String note = PlayerText.get("RGS23");
 
         return new RecommendationGuidance(
                 action, supplies, location, note);
@@ -362,13 +362,13 @@ public class RecommendationGuidanceService
                     .append(joinNatural(ownedParts)).append(".");
             if (missingParts.isEmpty())
             {
-                text.append(" You already have enough in inventory/verified safe storage.");
+                text.append(PlayerText.get("RGS24"));
             }
             else
             {
                 text.append(" Acquire ")
                         .append(joinNatural(missingParts))
-                        .append(" just in time: buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village. Normal bank state is ignored for UIM.");
+                        .append(PlayerText.get("RGS25"));
             }
             return text.toString();
         }
@@ -376,7 +376,7 @@ public class RecommendationGuidanceService
         if (data.getBank() == null)
         {
             return "Plan for " + requiredSummary(stages)
-                    + ". Open your bank once to verify stored fish before calculating the remaining shortfall.";
+                    + PlayerText.get("RGS26");
         }
 
         List<String> ownedParts = new ArrayList<>();
@@ -419,7 +419,7 @@ public class RecommendationGuidanceService
 
         if (missingParts.isEmpty())
         {
-            text.append(" You already have enough for this milestone.");
+            text.append(PlayerText.get("RGS27"));
             return text.toString();
         }
 
@@ -439,7 +439,7 @@ public class RecommendationGuidanceService
         {
             text.append(" Source ")
                     .append(joinNatural(missingParts))
-                    .append(": buy sardines at Gerrant's Fishy Business in Port Sarim; catch herring or pike with a fishing rod and bait in Lumbridge; catch trout or salmon with a fly fishing rod and feathers at Barbarian Village.");
+                    .append(PlayerText.get("RGS28"));
         }
         return text.toString();
     }
@@ -460,10 +460,10 @@ public class RecommendationGuidanceService
         if (quests != null
                 && quests.statusOf("Cook's Assistant") == QuestStatus.COMPLETE)
         {
-            return "Use the Lumbridge Castle range to reduce burns, banking upstairs between inventories.";
+            return PlayerText.get("RGS29");
         }
 
-        return "Use the range immediately north of Al Kharid bank: withdraw raw fish, cook one inventory, bank, and repeat.";
+        return PlayerText.get("RGS30");
     }
 
     private static int quantityByName(

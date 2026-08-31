@@ -2,11 +2,10 @@ package com.udderlywet.osrsstrategist;
 
 import lombok.Getter;
 
+@Getter
 public final class ObservedFarmingPatchState
 {
-    @Getter
     private final FarmingPatchCycleState state;
-    @Getter
     private final long observedAtMillis;
 
     public ObservedFarmingPatchState(

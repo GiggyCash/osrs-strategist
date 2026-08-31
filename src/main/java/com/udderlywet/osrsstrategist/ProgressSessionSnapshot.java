@@ -7,21 +7,15 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Immutable render-safe view of the current local progress session. */
+@Getter
 public final class ProgressSessionSnapshot
 {
-    @Getter
     private final long startedAtMillis;
-    @Getter
     private final long updatedAtMillis;
-    @Getter
     private final long activeDurationMillis;
-    @Getter
     private final Map<Skill, SkillSessionProgress> skills;
-    @Getter
     private final List<ProgressTimeBucket> buckets;
-    @Getter
     private final List<ProgressMilestone> milestones;
-    @Getter
     private final ProgressTargetProjection targetProjection;
 
     ProgressSessionSnapshot(

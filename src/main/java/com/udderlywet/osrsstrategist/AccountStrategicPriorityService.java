@@ -49,29 +49,29 @@ public final class AccountStrategicPriorityService
                 occupied < 0 ? RecommendationConfidence.CHECK_NEEDED
                         : RecommendationConfidence.VERIFIED,
                 uim ? occupied < 0
-                        ? "UIM cannot bank conventionally; current inventory pressure is not observed."
+                        ? PlayerText.get("ASPS1")
                         : "UIM cannot bank conventionally; " + occupied
-                                + " occupied inventory stacks are observed."
-                        : "A conventional bank is legal, so inventory pressure is normally temporary.");
+                                + PlayerText.get("ASPS2")
+                        : PlayerText.get("ASPS3"));
         put(result, AccountStrategicDimension.BANK_AVAILABILITY,
                 uim ? StrategicPriority.CRITICAL : StrategicPriority.LOW,
                 uim ? CapabilityState.BLOCKED : CapabilityState.VERIFIED,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Conventional bank-dependent routes are illegal for UIM."
-                        : "This mode may use its conventional personal bank.");
+                uim ? PlayerText.get("ASPS4")
+                        : PlayerText.get("ASPS5"));
         put(result, AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY,
                 ge || selfSource ? StrategicPriority.HIGH : StrategicPriority.LOW,
                 ge ? CapabilityState.VERIFIED : CapabilityState.BLOCKED,
                 RecommendationConfidence.VERIFIED,
-                ge ? "Tradeable purchases are a legal substitute when price and affordability are verified."
-                        : "Grand Exchange acquisition is unavailable; executable routes must not depend on it.");
+                ge ? PlayerText.get("ASPS6")
+                        : PlayerText.get("ASPS7"));
         put(result, AccountStrategicDimension.SELF_SOURCING_BURDEN,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                selfSource ? "This mode must source its own tradeable resources."
-                        : "Tradeable shortfalls may be bought when doing so is worthwhile.");
+                selfSource ? PlayerText.get("ASPS8")
+                        : PlayerText.get("ASPS9"));
 
         GroupStorageSnapshot groupStorage = data == null
                 ? null : data.getGroupStorage();
@@ -88,86 +88,86 @@ public final class AccountStrategicPriorityService
                         : CapabilityState.BLOCKED,
                 group ? groupConfidence : RecommendationConfidence.VERIFIED,
                 freshGroupStorage
-                        ? "Fresh, enabled Group Storage evidence can satisfy shared resource shortfalls."
-                        : group ? "Shared resources cannot be counted without fresh, enabled Group Storage evidence."
-                        : "This account mode has no Group Storage.");
+                        ? PlayerText.get("ASPS10")
+                        : group ? PlayerText.get("ASPS11")
+                        : PlayerText.get("ASPS12"));
         put(result, AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE,
                 StrategicPriority.NONE,
                 group ? CapabilityState.UNKNOWN : CapabilityState.BLOCKED,
                 group ? RecommendationConfidence.CHECK_NEEDED
                         : RecommendationConfidence.VERIFIED,
-                group ? "No reliable teammate infrastructure snapshot is available, so shared POH or unlock value is not counted."
-                        : "This account mode has no group infrastructure to count.");
+                group ? PlayerText.get("ASPS13")
+                        : PlayerText.get("ASPS14"));
         put(result, AccountStrategicDimension.STORAGE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Verified legal storage changes inventory capacity and future setup cost for UIM."
-                        : selfSource ? "Long-lived self-sourced items make useful storage moderately valuable."
-                        : "Bank access makes specialised storage useful but usually substitutable.");
+                uim ? PlayerText.get("ASPS15")
+                        : selfSource ? PlayerText.get("ASPS16")
+                        : PlayerText.get("ASPS17"));
         put(result, AccountStrategicDimension.POH_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Personal POH storage, transport, and setup reuse can change the whole UIM route."
-                        : selfSource ? "Personal POH utility is a durable self-sufficient unlock."
-                        : "A personal POH is useful, while public-house access is only a possible substitute, never assumed live.");
+                uim ? PlayerText.get("ASPS18")
+                        : selfSource ? PlayerText.get("ASPS19")
+                        : PlayerText.get("ASPS20"));
         put(result, AccountStrategicDimension.TELEPORT_INFRASTRUCTURE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Reusable transport reduces repeated travel and inventory setup on UIM."
-                        : selfSource ? "Reusable transport reduces self-sourced consumables and repeated travel."
-                        : "Transport saves time, but tradeable teleports may sometimes substitute.");
+                uim ? PlayerText.get("ASPS21")
+                        : selfSource ? PlayerText.get("ASPS22")
+                        : PlayerText.get("ASPS23"));
         put(result, AccountStrategicDimension.SETUP_COST_SENSITIVITY,
                 uim ? StrategicPriority.CRITICAL
                         : hardcore ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Dismantling and rebuilding a UIM setup can require retrieval and inventory churn."
-                        : hardcore ? "Risk-safe preparation and recovery make setup cost important."
-                        : "Setup time should be weighed against session and activity value.");
+                uim ? PlayerText.get("ASPS24")
+                        : hardcore ? PlayerText.get("ASPS25")
+                        : PlayerText.get("ASPS26"));
         put(result, AccountStrategicDimension.DEATH_RISK_SENSITIVITY,
                 hardcore ? StrategicPriority.CRITICAL
                         : uim ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                hardcore ? "A dangerous route can permanently end Hardcore status."
-                        : uim ? "Death can disrupt or endanger retrieval-based UIM storage and setup."
-                        : "Death and recovery cost still matter, but do not carry Hardcore status loss.");
+                hardcore ? PlayerText.get("ASPS27")
+                        : uim ? PlayerText.get("ASPS28")
+                        : PlayerText.get("ASPS29"));
         put(result, AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                selfSource ? "Consumed supplies must be replaced through self-sourcing or verified shared stock."
-                        : "Tradeable supplies can often be replaced if price and liquidity support it.");
+                selfSource ? PlayerText.get("ASPS30")
+                        : PlayerText.get("ASPS31"));
         put(result, AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? "A useful item that can be stored and safely retrieved may save permanent inventory pressure."
-                        : "Conventional bank access limits the extra value of specialised equipment storage.");
+                uim ? PlayerText.get("ASPS32")
+                        : PlayerText.get("ASPS33"));
         put(result, AccountStrategicDimension.DUPLICATE_GRIND_PENALTY,
                 freshGroupStorage ? StrategicPriority.HIGH
                         : StrategicPriority.NONE,
                 group ? groupConfidence : RecommendationConfidence.VERIFIED,
                 freshGroupStorage
-                        ? "Observed shared stock can prove that repeating the same acquisition would duplicate group work."
-                        : group ? "No fresh shared evidence proves that a grind would be duplicated."
-                        : "There is no group-shared progression to duplicate.");
+                        ? PlayerText.get("ASPS34")
+                        : group ? PlayerText.get("ASPS35")
+                        : PlayerText.get("ASPS36"));
         put(result, AccountStrategicDimension.GP_LIQUIDITY_STORAGE_VALUE,
                 uim ? StrategicPriority.HIGH
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? "Coins are compact, but any proposed long-term storage or conversion must be mechanically verified."
-                        : selfSource ? "Self-sourced GP has meaningful replacement and opportunity value."
-                        : "GE purchasing makes spendable liquidity useful, while normal banking handles storage.");
+                uim ? PlayerText.get("ASPS37")
+                        : selfSource ? PlayerText.get("ASPS38")
+                        : PlayerText.get("ASPS39"));
 
         return new AccountStrategicPriorityProfile(mode, result);
     }
@@ -188,7 +188,7 @@ public final class AccountStrategicPriorityService
             put(values, dimension, priority,
                     CapabilityState.UNKNOWN,
                     RecommendationConfidence.CHECK_NEEDED,
-                    "Account mode is unknown; restricted capabilities must fail closed until verified.");
+                    PlayerText.get("ASPS40"));
         }
     }
 

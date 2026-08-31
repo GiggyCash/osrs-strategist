@@ -3,15 +3,12 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One typed dependency inside a long-term goal graph. */
+@Getter
 public final class GoalDependency
 {
-    @Getter
     private final String id;
-    @Getter
     private final String label;
-    @Getter
     private final GoalNodeKind kind;
-    @Getter
     private final boolean required;
 
     public GoalDependency(

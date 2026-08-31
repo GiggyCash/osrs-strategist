@@ -4,11 +4,10 @@ import java.util.*;
 
 import lombok.Getter;
 
+@Getter
 public final class StashBuildPlan
 {
-    @Getter
     private final StashUnitDefinition unit;
-    @Getter
     private final List<StashDependencyStep> steps;
 
     StashBuildPlan(StashUnitDefinition unit, List<StashDependencyStep> steps)

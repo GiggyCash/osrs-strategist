@@ -1,10 +1,12 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
 import java.util.*;
 
 import lombok.Getter;
 
 /** Sourced strategic properties shared by non-skill candidate families. */
+@RequiredArgsConstructor
 public final class ActivityStrategyProfile
 {
     @Getter
@@ -19,22 +21,6 @@ public final class ActivityStrategyProfile
     @Getter
     private final List<StrategySourceId> sources;
 
-    public ActivityStrategyProfile(String candidatePrefix,
-            Set<AccountMode> accountModes,
-            MethodInventoryFootprint inventoryFootprint,
-            double setupReuse, String strategicReason,
-            List<StrategySourceId> sources)
-    {
-        this.candidatePrefix = candidatePrefix;
-        this.accountModes = accountModes == null || accountModes.isEmpty()
-                ? Collections.emptySet()
-                : Collections.unmodifiableSet(EnumSet.copyOf(accountModes));
-        this.inventoryFootprint = inventoryFootprint;
-        this.setupReuse = Math.max(0.0, Math.min(1.0, setupReuse));
-        this.strategicReason = strategicReason;
-        this.sources = Collections.unmodifiableList(sources == null
-                ? new ArrayList<>() : new ArrayList<>(sources));
-    }
 
     public boolean supports(AccountMode mode) { return accountModes.contains(mode); }
 }

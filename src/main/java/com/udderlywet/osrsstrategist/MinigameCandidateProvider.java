@@ -31,9 +31,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
     public String getId() { return "minigame-candidates"; }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null
                 || context.getData().getMinigames() == null) return result;
@@ -82,11 +82,11 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                             verified ? setup.getSupplies() : itemResult.getAction(),
                             setup.getLocation(), definition.getRewardFocus() + ".");
 
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     id,
                     definition.getName(),
                     definition.getRewardFocus()
-                            + ". Unlock is verified, but loadout, consumables, currency and account-mode constraints must also pass before the activity is Ready.",
+                            + PlayerText.get("MCP1"),
                     score,
                     verified ? RecommendationConfidence.VERIFIED
                             : RecommendationConfidence.CHECK_NEEDED,
@@ -95,7 +95,7 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
     }
@@ -105,9 +105,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
     {
         String activity = definition.getName();
         return new RecommendationGuidance(
-                "Open your inventory and equipment tab with your " + activity
+                PlayerText.get("MCP2") + activity
                         + " setup equipped.",
-                "Carry the supplies you intend to use. Compass will keep this as preparation until the required setup can be proven.",
+                PlayerText.get("MCP3"),
                 "Use the verified in-game unlock for " + activity + ".",
                 definition.getRewardFocus() + ".");
     }
@@ -123,39 +123,39 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
         if (level < 30)
         {
             tree = "oak trees";
-            location = "the oak trees immediately east of Draynor Village bank";
+            location = PlayerText.get("MCP4");
         }
         else if (f2p || level < 45)
         {
             tree = "willow trees";
-            location = "the willow trees south of Draynor Village bank";
+            location = PlayerText.get("MCP5");
         }
         else if (level < 60)
         {
             tree = "maple trees";
-            location = "the maple trees north of Seers' Village bank";
+            location = PlayerText.get("MCP6");
         }
         else
         {
             tree = "yew trees";
-            location = "the yew trees at Seers' Village church";
+            location = PlayerText.get("MCP7");
         }
         boolean uim = AccountMode.fromTypeCode(account.getAccountTypeCode())
                 == AccountMode.ULTIMATE_IRONMAN;
         String loop = uim
-                ? "Switch to an official Forestry world, cut " + tree
-                        + ", drop only the freshly cut logs when the inventory fills, and complete every event that spawns. Never drop carried setup items."
-                : "Switch to an official Forestry world, cut " + tree
-                        + ", bank each inventory, and complete every event that spawns.";
+                ? PlayerText.get("MCP8") + tree
+                        + PlayerText.get("MCP9")
+                : PlayerText.get("MCP10") + tree
+                        + PlayerText.get("MCP11");
         return new RecommendationGuidance(
                 verified
                         ? loop
                         : itemResult.getAction() + " before starting Forestry.",
-                verified ? "Bring the observed axe and a Forestry kit when owned."
+                verified ? PlayerText.get("MCP12")
                         : itemResult.getAction(),
                 location + ".",
-                "The tree and location match the current Woodcutting level; event frequency varies, so no event count is invented."
-                        + (uim ? " Only renewable logs produced by this method are discarded." : ""));
+                PlayerText.get("MCP13")
+                        + (uim ? PlayerText.get("MCP14") : ""));
     }
 
     private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)

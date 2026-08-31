@@ -2,15 +2,12 @@ package com.udderlywet.osrsstrategist;
 
 import lombok.Getter;
 
+@Getter
 public final class GuidanceStep
 {
-    @Getter
     private final String id;
-    @Getter
     private final String label;
-    @Getter
     private final String detail;
-    @Getter
     private final GuidanceStepState state;
 
     public GuidanceStep(

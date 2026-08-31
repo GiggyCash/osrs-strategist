@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Observable completion rule for a strategic plan step. */
+@Getter
 public final class PlanCompletionCondition
 {
     public enum Kind
@@ -16,13 +17,9 @@ public final class PlanCompletionCondition
         NONE
     }
 
-    @Getter
     private final Kind kind;
-    @Getter
     private final Skill skill;
-    @Getter
     private final int level;
-    @Getter
     private final String quest;
 
     private PlanCompletionCondition(

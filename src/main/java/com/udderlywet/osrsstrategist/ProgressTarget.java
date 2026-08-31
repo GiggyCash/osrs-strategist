@@ -6,17 +6,13 @@ import net.runelite.api.Experience;
 import net.runelite.api.Skill;
 
 /** The skill checkpoint currently being executed by the active plan. */
+@Getter
 public final class ProgressTarget
 {
-    @Getter
     private final String activityId;
-    @Getter
     private final String methodId;
-    @Getter
     private final Skill skill;
-    @Getter
     private final int targetLevel;
-    @Getter
     private final int targetXp;
 
     public ProgressTarget(

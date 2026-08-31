@@ -7,11 +7,10 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Compact event-driven XP aggregation used by charts and persistence. */
+@Getter
 public final class ProgressTimeBucket
 {
-    @Getter
     private final long startedAtMillis;
-    @Getter
     private final Map<Skill, Integer> xpBySkill;
 
     ProgressTimeBucket(long startedAtMillis, Map<Skill, Integer> xpBySkill)

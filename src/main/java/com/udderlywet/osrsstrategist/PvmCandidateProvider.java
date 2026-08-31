@@ -25,9 +25,9 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
     public String getId() { return "pvm-candidates"; }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getPvm() == null) return result;
 
@@ -82,16 +82,16 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             RecommendationGuidance guidance = ready
                     ? readyGuidance(definition, title)
                     : new RecommendationGuidance(
-                            "Prepare the missing PvM evidence before attempting " + title + ": " + missing + ".",
+                            PlayerText.get("PCP1") + title + ": " + missing + ".",
                             missing,
-                            "Verify the encounter access route and prepare outside the encounter.",
-                            "Finish this preparation before attempting the encounter.");
-            result.add(new StrategyCandidate(
+                            PlayerText.get("PCP2"),
+                            PlayerText.get("PCP3"));
+            result.add(new Recommendation(
                     id,
                     "Do " + title,
                     ready
-                            ? "Observed equipped gear, carried supplies, access and conservative activity checks are ready."
-                            : "The encounter is not ready; complete the listed preparation before attempting it.",
+                            ? PlayerText.get("PCP4")
+                            : PlayerText.get("PCP5"),
                     score,
                     ready ? RecommendationConfidence.VERIFIED
                             : RecommendationConfidence.CHECK_NEEDED,
@@ -109,39 +109,39 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
         if (definition != null && "pvm:tztok_jad".equals(definition.getId()))
         {
             return new RecommendationGuidance(
-                    "Enter the Fight Cave, complete all 63 waves, tag Jad's healers, and finish TzTok-Jad without missing a prayer switch.",
-                    "Keep the Ranged weapon, ammunition or charges, prayer restoration, and healing that the live readiness check verified equipped or carried.",
-                    "TzHaar Fight Cave beneath Karamja volcano.",
-                    "Readiness reflects observed carried setup and conservative access checks; it does not claim a universal best loadout.");
+                    PlayerText.get("PCP6"),
+                    PlayerText.get("PCP7"),
+                    PlayerText.get("PCP8"),
+                    PlayerText.get("PCP9"));
         }
         if (definition != null && "pvm:obor".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    "Enter Obor's lair through the locked gate in the Edgeville Dungeon hill-giant area, then complete the fight with the observed melee setup.",
-                    "Obor's lair gate in Edgeville Dungeon.",
-                    "Keep the observed melee weapon, giant key, carried food, and prayer restoration in the live readiness snapshot.");
+                    PlayerText.get("PCP10"),
+                    PlayerText.get("PCP11"),
+                    PlayerText.get("PCP12"));
         if (definition != null && "pvm:bryophyta".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    "Enter Bryophyta's lair through the locked gate in the Varrock Sewers moss-giant area, then complete the fight with the observed melee setup.",
-                    "Bryophyta's lair gate in Varrock Sewers.",
-                    "Keep the observed melee weapon, mossy key, carried food, and prayer restoration in the live readiness snapshot.");
+                    PlayerText.get("PCP13"),
+                    PlayerText.get("PCP14"),
+                    PlayerText.get("PCP15"));
         if (definition != null && "pvm:scurrius".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    "Enter the public Scurrius arena and complete one fight with the observed melee setup; use a rat-bone weapon only when it is actually equipped.",
+                    PlayerText.get("PCP16"),
                     "Scurrius arena in Varrock Sewers.",
-                    "Keep the observed melee weapon, carried food, and prayer restoration in the live readiness snapshot.");
+                    PlayerText.get("PCP17"));
         return new RecommendationGuidance(
-                "Attempt " + title + " using the currently equipped and carried setup.",
-                "Keep the weapon, loadout, and minimum supplies that the live readiness check verified.",
-                "Use the exact non-Wilderness route recorded by the encounter readiness check.",
-                "This is conservative readiness, not a universal best-in-slot claim. Stop and reassess if the live setup changes.");
+                "Attempt " + title + PlayerText.get("PCP18"),
+                PlayerText.get("PCP19"),
+                PlayerText.get("PCP20"),
+                PlayerText.get("PCP21"));
     }
 
     private static RecommendationGuidance simpleReadyGuidance(String title,
             String action, String location, String supplies)
     {
         return new RecommendationGuidance(action, supplies, location,
-                "Readiness is limited to the observed carried setup for "
-                        + title + "; it does not claim mechanical execution or a universal best loadout.");
+                PlayerText.get("PCP22")
+                        + title + PlayerText.get("PCP23"));
     }
 
     private static boolean progressionRelevant(PvmActivityDefinition definition,

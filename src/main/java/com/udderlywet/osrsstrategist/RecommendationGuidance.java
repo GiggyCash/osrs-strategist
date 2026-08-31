@@ -9,23 +9,16 @@ import lombok.Getter;
  * turns that route into concrete instructions for the current milestone and
  * the supplies Compass has actually observed.</p>
  */
+@Getter
 public final class RecommendationGuidance
 {
-    @Getter
     private final String action;
-    @Getter
     private final String supplies;
-    @Getter
     private final String location;
-    @Getter
     private final String progress;
-    @Getter
     private final String note;
-    @Getter
     private final MethodBankingBehavior bankingBehavior;
-    @Getter
     private final UimStorageDecision storageDecision;
-    @Getter
     private final RecommendationRiskDisclosure riskDisclosure;
 
     public RecommendationGuidance(

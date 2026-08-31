@@ -39,9 +39,9 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null) return result;
         AccountSnapshot account = context.getData().getAccount();
@@ -67,24 +67,24 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         return result;
     }
 
-    private static StrategyCandidate verificationCandidate(
+    private static Recommendation verificationCandidate(
             StrategyContext context)
     {
         double modeValue = context.getAccountMode()
                 == AccountMode.ULTIMATE_IRONMAN ? 0.9
                 : AccountModePolicy.requiresSelfSourcing(
                         context.getAccountMode()) ? 0.55 : 0.25;
-        return new StrategyCandidate(
+        return new Recommendation(
                 "verify:poh-build-mode",
                 "Verify your own POH",
-                "A single ownership-proven scan lets Compass remember personal storage, restoration, and transport without counting a public or teammate house.",
+                PlayerText.get("ICP1"),
                 34.0 + modeValue * 12.0,
                 RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
-                        "At a house portal, choose Build mode. If the game says you do not own a house, buy one from the Varrock Estate agent for 1,000 coins, then enter in Build mode.",
-                        "1,000 coins only if you do not own a house",
+                        PlayerText.get("ICP2"),
+                        PlayerText.get("ICP3"),
                         "Varrock Estate agent, then your POH",
-                        "Compass records the complete personal-house scan automatically."),
+                        PlayerText.get("ICP4")),
                 CandidateSafetyEvidence.harmless(false),
                 RecommendationStrategicValue.builder()
                         .infrastructureValue(modeValue)
@@ -93,7 +93,7 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
                         .build());
     }
 
-    private static StrategyCandidate buildCandidate(
+    private static Recommendation buildCandidate(
             InfrastructureMilestoneDefinition definition,
             InfrastructureValueAssessment assessment,
             StrategyContext context,
@@ -118,25 +118,25 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         if (recurringRelief) score += 12.0;
 
         String modeReason = context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                ? " It reduces UIM inventory pressure, travel, or future setup churn without counting conventional bank storage."
+                ? PlayerText.get("ICP5")
                 : AccountModePolicy.requiresSelfSourcing(context.getAccountMode())
-                ? " Its reusable utility reduces future self-sourced travel or setup costs."
-                : " Its repeat utility is weighed against tradeable and public-house substitutes; neither substitute is assumed available.";
+                ? PlayerText.get("ICP6")
+                : PlayerText.get("ICP7");
         if (recurringRelief)
-            modeReason += " Distinct observed inventory layouts have blocked "
+            modeReason += PlayerText.get("ICP8")
                     + String.join(" and ", pressure.getBlockedFamilies())
-                    + ", so this is recurring pressure rather than a one-off full inventory.";
-        return new StrategyCandidate(
+                    + PlayerText.get("ICP9");
+        return new Recommendation(
                 "prepare:infrastructure:" + definition.getId(),
                 "Build " + definition.getName(),
-                "Your own-house scan proves this milestone is absent and its skill, quest, and POH prerequisites are complete."
+                PlayerText.get("ICP10")
                         + modeReason,
                 score,
                 RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         definition.getAction(), materials(definition.getId()),
                         "Your own POH in Build mode",
-                        "Compass will detect the completed furniture automatically."),
+                        PlayerText.get("ICP11")),
                 CandidateSafetyEvidence.skill(false, Skill.CONSTRUCTION),
                 RecommendationStrategicValue.builder()
                         .infrastructureValue(utility)
@@ -167,18 +167,18 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
             case "poh-costume-room": return "50,000 coins";
             case "poh-armour-case": return "Hammer, saw, 3 oak planks";
             case "poh-portal-chamber":
-                return "100,000 coins, hammer, saw, 2 limestone bricks, 3 teak planks, 300 air runes, 100 fire runes, 100 law runes";
+                return PlayerText.get("ICP12");
             case "poh-superior-garden": return "75,000 coins";
             case "poh-restoration-pool":
-                return "Hammer, saw, 5 limestone bricks, 5 buckets of water, 1,000 soul runes, 1,000 body runes";
+                return PlayerText.get("ICP13");
             case "poh-portal-nexus":
-                return "200,000 coins, hammer, saw, 4 marble blocks";
+                return PlayerText.get("ICP14");
             case "poh-spirit-tree":
                 return "Filled watering can, spirit sapling";
             case "poh-basic-jewellery-box":
-                return "Hammer, saw, bolt of cloth, steel bar, 3 games necklaces(8), 3 rings of dueling(8)";
+                return PlayerText.get("ICP15");
             case "poh-fairy-ring":
-                return "Filled watering can, 10 unnoted mushrooms, fairy enchantment";
+                return PlayerText.get("ICP16");
             default: return null;
         }
     }

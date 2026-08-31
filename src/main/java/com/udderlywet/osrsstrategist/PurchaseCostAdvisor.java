@@ -34,7 +34,7 @@ public class PurchaseCostAdvisor
         long total = estimate.getTotalCost();
 
         StringBuilder text = new StringBuilder();
-        text.append("At current RuneLite market prices, that purchase is about ")
+        text.append(PlayerText.get("PCA1"))
                 .append(format(total))
                 .append(" coins total.");
 
@@ -46,7 +46,7 @@ public class PurchaseCostAdvisor
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(" verified spendable coins, leaving about ")
+                        .append(PlayerText.get("PCA2"))
                         .append(format(cash - total))
                         .append(" after the buy.");
             }
@@ -54,14 +54,14 @@ public class PurchaseCostAdvisor
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(" verified spendable coins, so you are about ")
+                        .append(PlayerText.get("PCA3"))
                         .append(format(total - cash))
-                        .append(" coins short. Do not treat the purchase as ready until that cash gap closes or the live prices move.");
+                        .append(PlayerText.get("PCA4"));
             }
         }
         else
         {
-            text.append(" Cash is not fully verified yet, so affordability is still Check Needed.");
+            text.append(PlayerText.get("PCA5"));
         }
         return text.toString();
     }

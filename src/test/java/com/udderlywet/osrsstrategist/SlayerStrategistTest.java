@@ -52,7 +52,7 @@ public class SlayerStrategistTest
                 result.getAssignmentState());
         assertEquals("Dust devils", result.getRecommendedOffer().getTaskName());
         assertTrue(result.getGuidance().getAction().contains("Slayer XP"));
-        StrategyCandidate candidate = new SlayerCandidateProvider()
+        Recommendation candidate = new SlayerCandidateProvider()
                 .candidates(context).get(0);
         assertEquals("slayer:choose-task", candidate.getId());
         assertEquals("Choose Dust devils from Mortimer", candidate.getTitle());
@@ -169,7 +169,7 @@ public class SlayerStrategistTest
         assertTrue(result.getGuidance().getAction()
                 .contains("Bigger and Badder"));
         assertTrue(result.getGuidance().getNote().contains("30-point"));
-        StrategyCandidate candidate = new SlayerCandidateProvider()
+        Recommendation candidate = new SlayerCandidateProvider()
                 .candidates(context).get(0);
         assertEquals("slayer:unlock:bigger-and-badder", candidate.getId());
     }
@@ -429,7 +429,7 @@ public class SlayerStrategistTest
         assertNull(result.getSelectedAlternativeName());
         assertTrue(result.getGuidance().getAction().contains("Do not enter"));
         assertTrue(result.getGuidance().getAction().contains("30 Slayer points"));
-        StrategyCandidate candidate = new SlayerCandidateProvider()
+        Recommendation candidate = new SlayerCandidateProvider()
                 .candidates(context(3, task, StrategyMode.EFFICIENT,
                         SessionIntent.LONG_SESSION, GoalType.SLAYER_85,
                         true, Collections.emptyList(), null)).get(0);
@@ -471,12 +471,12 @@ public class SlayerStrategistTest
                 Collections.singletonList(new ItemStackSnapshot(
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())), null);
-        StrategyCandidate candidate = new SlayerCandidateProvider()
+        Recommendation candidate = new SlayerCandidateProvider()
                 .candidates(context).get(0);
 
         assertEquals("slayer:do-task", candidate.getId());
         assertTrue(new RecommendationActionabilityPolicy()
-                .canLeadQueue(candidate.toRecommendation()));
+                .canLeadQueue(candidate));
     }
 
     @Test

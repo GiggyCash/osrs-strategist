@@ -14,7 +14,7 @@ import net.runelite.client.plugins.cluescrolls.clues.emote.STASHUnit;
 public final class StashUnitCatalog
 {
     public static final int EXPECTED_CURRENT_COUNT = 119;
-    public static final String PROVENANCE = "Generated from RuneLite 1.12.35 STASHUnit and EmoteClue sources";
+    public static final String PROVENANCE = PlayerText.get("SUC1");
     public static final String AUDITED_THROUGH = "2026-08-25";
 
     private final List<StashUnitDefinition> units;

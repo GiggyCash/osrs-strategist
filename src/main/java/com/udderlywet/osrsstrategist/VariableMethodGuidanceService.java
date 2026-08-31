@@ -14,7 +14,7 @@ public class VariableMethodGuidanceService
 {
     private static final StaticGuidance[] STATIC_GUIDANCE =
             BundledCatalogLoader.array(
-                    "/content/catalogs/variable-method-guidance.json",
+                    PlayerText.get("VMGS1"),
                     StaticGuidance[].class);
     private static final FarmingAccessEvaluator FARMING_ACCESS =
             new FarmingAccessEvaluator(new FarmingAccessCatalog());
@@ -67,12 +67,12 @@ public class VariableMethodGuidanceService
         String harpoon = firstObserved(items, "Dragon harpoon",
                 "Crystal harpoon", "Infernal harpoon", "Harpoon");
         return new RecommendationGuidance(
-                "Fish harpoonfish, cook the catch, load both cannons, tether during waves, and repeat until you gain " + format(xp) + " Fishing XP for level " + target + ".",
+                PlayerText.get("VMGS2") + format(xp) + " Fishing XP for level " + target + ".",
                 harpoon == null
-                        ? "No supplies required; use the harpoon, rope, hammer, and buckets on the island."
-                        : "Bring " + harpoon + "; rope, hammer, and buckets are available on the island.",
-                "Tempoross island, entered from the Ruins of Unkah ferry.",
-                "Cooking choice, team size, storm timing, and reward strategy change Fishing XP per game, so no fake game count is shown."
+                        ? PlayerText.get("VMGS3")
+                        : "Bring " + harpoon + PlayerText.get("VMGS4"),
+                PlayerText.get("VMGS5"),
+                PlayerText.get("VMGS6")
         );
     }
 
@@ -81,11 +81,11 @@ public class VariableMethodGuidanceService
         String pouches = observed(items, "Small pouch", "Medium pouch",
                 "Large pouch", "Giant pouch", "Colossal pouch");
         return new RecommendationGuidance(
-                "Mine fragments, craft guardian essence, enter the open altars, charge guardians, and place cells until you gain " + format(xp) + " Runecraft XP for level " + target + ".",
+                PlayerText.get("VMGS7") + format(xp) + " Runecraft XP for level " + target + ".",
                 "Bring a pickaxe and chisel."
                         + (pouches.isEmpty() ? "" : " " + pouches),
-                "Guardians of the Rift arena in the Temple of the Eye.",
-                "Portal timing, altar choices, pouch capacity, and match outcome change XP per game. The planner therefore reports the exact XP gap, not a fabricated match count."
+                PlayerText.get("VMGS8"),
+                PlayerText.get("VMGS9")
         );
     }
 
@@ -94,16 +94,16 @@ public class VariableMethodGuidanceService
     {
         MembershipStatus membership = data.getAccount().getMembershipStatus();
         String scout = membership == MembershipStatus.P2P
-                ? "Use an unobstructed POH telescope to obtain the landing region and time, then check each named landing site in that region."
-                : "Check the 21 free-to-play landing sites after a star wave; begin with the safe Falador mine and Varrock mine sites and stop only when a crashed star is visible.";
+                ? PlayerText.get("VMGS10")
+                : PlayerText.get("VMGS11");
         String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                scout + " Mine the located star until it depletes or you gain " + format(xp) + " Mining XP toward level " + target + ".",
-                "Bring " + pickaxe + ". Keep stardust when Celestial ring or charge rewards still matter. " + observed(items, "Celestial ring", "Celestial signet"),
+                scout + PlayerText.get("VMGS12") + format(xp) + " Mining XP toward level " + target + ".",
+                "Bring " + pickaxe + PlayerText.get("VMGS13") + observed(items, "Celestial ring", "Celestial signet"),
                 membership == MembershipStatus.P2P
-                        ? "The exact non-Wilderness crash site found from the telescope's named region."
-                        : "A visible crashed star at a free-to-play Falador or Varrock mine landing site.",
-                "Stars land at random from fixed sites, so Compass cannot truthfully name an active crash site without observing one. Star tier changes while mining and affects XP; exact swing counts would be false precision."
+                        ? PlayerText.get("VMGS14")
+                        : PlayerText.get("VMGS15"),
+                PlayerText.get("VMGS16")
         );
     }
 
@@ -113,12 +113,12 @@ public class VariableMethodGuidanceService
         if (alloy == null) return null;
         return new RecommendationGuidance(
                 "Ask Kovac for a commission. Load " + alloy.description
-                        + " into the crucible. For each blade section, select the owned mould with the highest green score shown for that commission, pour the sword, then work every temperature station inside its target band. Repeat for "
+                        + PlayerText.get("VMGS17")
                         + format(xp) + " Smithing XP toward level " + target + ".",
-                "Bring " + alloy.description + "; each commissioned sword consumes 28 bars' worth of metal. "
+                "Bring " + alloy.description + PlayerText.get("VMGS18")
                         + observed(items, "Iron bar", "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
-                "Giants' Foundry beneath Kovac's workshop, east of Al Kharid.",
-                "The 14/14 adjacent-metal alloy is a verified default when both metals are observed. Mould score, commission, and mistakes change XP per sword, so no fixed sword count is shown."
+                PlayerText.get("VMGS19"),
+                PlayerText.get("VMGS20")
         );
     }
 
@@ -129,12 +129,12 @@ public class VariableMethodGuidanceService
         ContractTier tier = contractTier(level, items);
         if (tier == null) return null;
         return new RecommendationGuidance(
-                "Ask Amy for a " + tier.name + " contract, travel to the named client, repair every marked hotspot, speak to the client, and take another " + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
+                "Ask Amy for a " + tier.name + PlayerText.get("VMGS21") + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
                 "Bring a hammer, saw, at least 15 " + tier.plank.toLowerCase(java.util.Locale.ROOT)
-                        + ", one steel bar, and teleports for Falador, Varrock, East Ardougne, and Hosidius. Use a plank sack when owned. "
+                        + PlayerText.get("VMGS22")
                         + observed(items, "Plank sack", tier.plank, "Steel bar"),
-                "Amy at Mahogany Homes, immediately south of Falador Park.",
-                "Furniture mix varies by client, so exact planks and XP per contract require the live contract state. No universal contract count is fabricated."
+                PlayerText.get("VMGS23"),
+                PlayerText.get("VMGS24")
         );
     }
 
@@ -146,10 +146,10 @@ public class VariableMethodGuidanceService
         String seed = level >= 74 ? "Logavano"
                 : level >= 54 ? "Bologano" : "Golovanova";
         return new RecommendationGuidance(
-                "Take " + seed + " seeds from the table. Plant and immediately water a 20-plot cycle, revisit each plant for every watering stage, harvest, deposit the fruit, and repeat for " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring a spade, seed dibber, and eight filled watering cans; Gricoller's can replaces the eight cans. " + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
+                "Take " + seed + PlayerText.get("VMGS25") + format(xp) + " Farming XP to level " + target + ".",
+                PlayerText.get("VMGS26") + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
                 "Tithe Farm in Hosidius.",
-                "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint."
+                PlayerText.get("VMGS27")
         );
     }
 
@@ -162,15 +162,15 @@ public class VariableMethodGuidanceService
                 data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
-                "At " + patch + ", harvest each ready allotment, plant three "
+                "At " + patch + PlayerText.get("VMGS28")
                         + seed.toLowerCase(java.util.Locale.ROOT)
-                        + " in each cleared allotment, compost, and return after the crop is ready. Repeat for "
+                        + PlayerText.get("VMGS29")
                         + format(xp) + " Farming XP to level " + target + ".",
                 "Bring six " + seed.toLowerCase(java.util.Locale.ROOT)
-                        + ", a rake, seed dibber, spade, and compost. "
+                        + PlayerText.get("VMGS30")
                         + observed(items, seed, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
                 patch + ".",
-                "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
+                PlayerText.get("VMGS31")
         );
     }
 
@@ -184,10 +184,10 @@ public class VariableMethodGuidanceService
                 data == null ? null : data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
-                "At " + patch + ", harvest any ready herbs, plant " + seed + ", apply compost when carried, and return after the patch is ready. Repeat for " + format(xp) + " Farming XP to level " + target + ".",
-                "Bring " + seed + ", a seed dibber, and a spade. Compost is optional but protects yield. " + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+                "At " + patch + ", harvest any ready herbs, plant " + seed + PlayerText.get("VMGS32") + format(xp) + " Farming XP to level " + target + ".",
+                "Bring " + seed + PlayerText.get("VMGS33") + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
                 patch + ".",
-                "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
+                PlayerText.get("VMGS34")
         );
     }
 
@@ -216,10 +216,10 @@ public class VariableMethodGuidanceService
         int level = data.getAccount().getSkillLevel(Skill.FARMING);
         String tier = level >= 85 ? "hard" : level >= 65 ? "medium" : "easy";
         return new RecommendationGuidance(
-                "Ask Guildmaster Jane for a " + tier + " contract. Grow the named crop inside the Farming Guild, check its health or finish harvesting it, claim the seed pack, and request another " + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
-                "Keep common contract seeds and planting tools available when storage allows. " + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
-                "Guildmaster Jane in the central Farming Guild greenhouse, Kebos Lowlands.",
-                "Contracts are primarily a seed-supply progression loop, not constant XP per contract. They should be surfaced as a detour when the seed value outweighs continuous training."
+                "Ask Guildmaster Jane for a " + tier + PlayerText.get("VMGS35") + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
+                PlayerText.get("VMGS36") + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
+                PlayerText.get("VMGS37"),
+                PlayerText.get("VMGS38")
         );
     }
 
@@ -237,11 +237,11 @@ public class VariableMethodGuidanceService
                 : "Huntmaster Gilman";
         return new RecommendationGuidance(
                 "Get a " + tier + " rumour from " + hunter
-                        + ". Hunt the named creature until it drops the rare part, return the part for the loot sack, and take another rumour. Repeat for "
+                        + PlayerText.get("VMGS39")
                         + format(xp) + " Hunter XP toward level " + target + ".",
-                "Bring the trap or tool required by the assigned creature and your hunter's whistle when available. " + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
-                hunter + " in the Burrow beneath the Hunter Guild, Varlamore.",
-                "Assignment and rare-part RNG change XP per rumour. Creature-specific loadouts should replace this generic setup once the current rumour can be observed directly."
+                PlayerText.get("VMGS40") + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
+                hunter + PlayerText.get("VMGS41"),
+                PlayerText.get("VMGS42")
         );
     }
 
@@ -252,20 +252,20 @@ public class VariableMethodGuidanceService
         String tree = level >= 60 ? "yew trees" : level >= 45
                 ? "maple trees" : level >= 30 ? "willow trees" : "oak trees";
         String location = level >= 60
-                ? "Yew trees beside Seers' Village church."
+                ? PlayerText.get("VMGS43")
                 : level >= 45
-                        ? "Maple trees immediately north of Seers' Village bank."
+                        ? PlayerText.get("VMGS44")
                         : level >= 30
-                                ? "Willow trees south of Draynor Village bank."
-                                : "Oak trees east of Draynor Village bank.";
+                                ? PlayerText.get("VMGS45")
+                                : PlayerText.get("VMGS46");
         String axe = axe(items);
         return new RecommendationGuidance(
                 "On an official Forestry world, cut " + tree
-                        + " and complete each event that spawns until you gain "
+                        + PlayerText.get("VMGS47")
                         + format(xp) + " Woodcutting XP toward level " + target + ".",
                 "Bring " + axe + " and a Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
                 location,
-                "Event frequency and event type vary, so exact event counts are not meaningful. The planner treats Forestry as varied Woodcutting plus reward progression."
+                PlayerText.get("VMGS48")
         );
     }
 
@@ -414,7 +414,7 @@ public class VariableMethodGuidanceService
                 "Adamant pickaxe", "Mithril pickaxe", "Black pickaxe",
                 "Steel pickaxe", "Iron pickaxe", "Bronze pickaxe"};
         for (String name : names) if (items.has(name)) return name;
-        return "a bronze pickaxe; get one free from the Mining tutor at the east Lumbridge Swamp mine before leaving";
+        return PlayerText.get("VMGS49");
     }
 
     private static String axe(ObservedItemIndex items)
@@ -423,7 +423,7 @@ public class VariableMethodGuidanceService
                 "Rune axe", "Adamant axe", "Mithril axe", "Black axe",
                 "Steel axe", "Iron axe", "Bronze axe"};
         for (String name : names) if (items.has(name)) return name;
-        return "a bronze axe; buy one from Bob's Brilliant Axes in Lumbridge before leaving";
+        return PlayerText.get("VMGS50");
     }
 
     private static String firstObserved(

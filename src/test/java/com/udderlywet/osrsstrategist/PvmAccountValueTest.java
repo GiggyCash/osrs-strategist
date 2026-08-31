@@ -29,7 +29,7 @@ public class PvmAccountValueTest
         Map<String, PvmReadiness> readiness = new HashMap<>();
         readiness.put("pvm:zulrah", preparation("pvm:zulrah"));
         readiness.put("pvm:the_gauntlet", preparation("pvm:the_gauntlet"));
-        java.util.List<StrategyCandidate> result = new PvmCandidateProvider()
+        java.util.List<Recommendation> result = new PvmCandidateProvider()
                 .candidates(context(readiness, GoalType.BOWFA, null));
 
         assertTrue(contains(result, "Gauntlet"));
@@ -72,7 +72,7 @@ public class PvmAccountValueTest
                 1, 2000, 0L, levels, xp);
     }
 
-    private static boolean contains(java.util.List<StrategyCandidate> values,
+    private static boolean contains(java.util.List<Recommendation> values,
             String text)
     {
         return values.stream().anyMatch(value -> value.getTitle().contains(text));

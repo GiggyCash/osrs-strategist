@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** One actual level target and the typed reason it matters. */
+@Getter
 public final class SkillBreakpoint
 {
     public enum Kind
@@ -17,15 +18,10 @@ public final class SkillBreakpoint
         NEXT_LEVEL_FALLBACK
     }
 
-    @Getter
     private final Skill skill;
-    @Getter
     private final int level;
-    @Getter
     private final String label;
-    @Getter
     private final Kind kind;
-    @Getter
     private final String evidenceId;
 
     public SkillBreakpoint(Skill skill, int level, String label,

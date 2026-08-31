@@ -22,7 +22,7 @@ public class StrategistFeatureAccessPolicy
         if (feature == null || feature.isCoreLocal())
         {
             throw new IllegalArgumentException(
-                    "requireHosted may only guard hosted features");
+                    PlayerText.get("SFAP1"));
         }
         if (!canUse(feature, entitlements))
         {
@@ -37,7 +37,7 @@ public class StrategistFeatureAccessPolicy
 
         HostedFeatureUnavailableException(StrategistFeature feature)
         {
-            super("Hosted Compass feature is not entitled: " + feature);
+            super(PlayerText.get("SFAP2") + feature);
             this.feature = feature;
         }
 

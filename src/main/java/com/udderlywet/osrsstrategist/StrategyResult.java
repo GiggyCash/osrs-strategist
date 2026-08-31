@@ -12,13 +12,11 @@ import lombok.Getter;
  * tools, and future scoring layers can explain decisions without turning the
  * default sidebar into a wall of text.</p>
  */
+@Getter
 public final class StrategyResult
 {
-    @Getter
     private final List<Recommendation> recommendations;
-    @Getter
     private final List<Opportunity> opportunities;
-    @Getter
     private final StrategicPlan plan;
 
     public StrategyResult(

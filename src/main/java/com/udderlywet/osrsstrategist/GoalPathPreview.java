@@ -5,11 +5,10 @@ import java.util.*;
 import lombok.Getter;
 
 /** Read-only preview of the dependency groups behind a selected big goal. */
+@Getter
 public final class GoalPathPreview
 {
-    @Getter
     private final GoalType goal;
-    @Getter
     private final List<GoalDependency> dependencies;
 
     public GoalPathPreview(

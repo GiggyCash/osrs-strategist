@@ -7,22 +7,16 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** Compact persisted recap; raw XP events are intentionally not retained. */
+@Getter
 public final class ProgressSessionSummary
 {
     private static final int MAX_MILESTONES = 100;
-    @Getter
     private final long startedAtMillis;
-    @Getter
     private final long endedAtMillis;
-    @Getter
     private final long activeDurationMillis;
-    @Getter
     private final long totalXpGained;
-    @Getter
     private final int levelsGained;
-    @Getter
     private final Map<Skill, Integer> xpBySkill;
-    @Getter
     private final List<ProgressMilestone> milestones;
 
     public ProgressSessionSummary(ProgressSessionSnapshot snapshot)

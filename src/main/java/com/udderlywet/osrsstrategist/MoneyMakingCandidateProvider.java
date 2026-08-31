@@ -20,9 +20,9 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
     public String getId() { return "money-candidates"; }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getAccount() == null) return result;
 
@@ -67,9 +67,9 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
             String priceNote = method.isRequiresLivePrices()
-                    ? " Comparing Main-account profit requires current prices before showing GP/hour."
+                    ? PlayerText.get("MMCP1")
                     : "";
-            result.add(new StrategyCandidate(
+            result.add(new Recommendation(
                     id,
                     "Make money: " + method.getName(),
                     method.getDescription() + priceNote,
@@ -81,7 +81,7 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             ));
         }
 
-        result.sort(Comparator.comparingDouble(StrategyCandidate::getScore).reversed());
+        result.sort(Comparator.comparingDouble(Recommendation::getScore).reversed());
         if (result.size() > 4) return new ArrayList<>(result.subList(0, 4));
         return result;
     }
@@ -101,10 +101,10 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             return null;
         }
         return new RecommendationGuidance(
-                "Climb the Agility Pyramid, take the pyramid top, sell it to Simon Templeton for 10,000 coins, and repeat.",
-                "Buy four waterskin(4)s from the Pollnivneach general store and ten jugs of wine from Ali the Barman before each batch; restock before the final waterskin empties.",
-                "Pollnivneach shops -> Agility Pyramid west of Nardah -> Simon Templeton beside the pyramid.",
-                "Level 60 is the conservative cash breakpoint. Obstacle failures and damage vary, so Compass does not promise a lap rate or exact hourly coins.");
+                PlayerText.get("MMCP2"),
+                PlayerText.get("MMCP3"),
+                PlayerText.get("MMCP4"),
+                PlayerText.get("MMCP5"));
     }
 
     private static RecommendationStrategicValue strategicValue(

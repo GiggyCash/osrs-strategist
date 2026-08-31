@@ -26,21 +26,21 @@ public final class StashDependencyPlanner
         if (state == null || state == StashUnitState.UNKNOWN)
         {
             steps.add(step(GoalNodeKind.PREPARATION_ACTION,
-                    "Check Watson's noticeboard or an observed POH STASH chart to confirm whether this exact unit is built and filled.",
+                    PlayerText.get("SDP1"),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
         if (state == StashUnitState.BUILT_CONTENTS_UNKNOWN)
         {
             steps.add(step(GoalNodeKind.PREPARATION_ACTION,
-                    "Inspect this STASH and confirm its complete item set before relying on it.",
+                    PlayerText.get("SDP2"),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
         if (state == StashUnitState.BUILT_AND_FILLED)
         {
             steps.add(step(GoalNodeKind.CLUE,
-                    "Use the verified filled STASH for this emote step, then follow RuneLite Clue Helper.",
+                    PlayerText.get("SDP3"),
                     RecommendationConfidence.VERIFIED));
             return new StashBuildPlan(unit, steps);
         }
@@ -50,7 +50,7 @@ public final class StashDependencyPlanner
         if (account == null || account.getMembershipStatus() != MembershipStatus.P2P)
         {
             steps.add(step(GoalNodeKind.ACCESS,
-                    "Verify active membership; Construction STASH units are members-only.",
+                    PlayerText.get("SDP4"),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
@@ -76,7 +76,7 @@ public final class StashDependencyPlanner
             steps.add(step(GoalNodeKind.RESOURCE, materials.getAction(),
                     RecommendationConfidence.CHECK_NEEDED));
             steps.add(step(GoalNodeKind.PREPARATION_ACTION,
-                    "Self-source verified shortfalls on Iron accounts; mains may compare a GE purchase only after price and GP are observed.",
+                    PlayerText.get("SDP5"),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
@@ -85,14 +85,14 @@ public final class StashDependencyPlanner
                 || !context.isAllowWildernessMethods()))
         {
             steps.add(step(GoalNodeKind.ACCESS,
-                    "Do not route this Wilderness STASH until Wilderness risk is explicitly enabled and accepted.",
+                    PlayerText.get("SDP6"),
                     RecommendationConfidence.CHECK_NEEDED));
             return new StashBuildPlan(unit, steps);
         }
 
         steps.add(step(GoalNodeKind.TRANSPORTATION,
-                "Verify the quest/access route and travel to " + unit.getLocation()
-                        + " with a hammer, saw, and unnoted materials.",
+                PlayerText.get("SDP7") + unit.getLocation()
+                        + PlayerText.get("SDP8"),
                 RecommendationConfidence.CHECK_NEEDED));
         return new StashBuildPlan(unit, steps);
     }
@@ -107,15 +107,15 @@ public final class StashDependencyPlanner
     {
         if (targetLevel <= 32)
         {
-            return "In a verified POH Parlour, build and remove crude wooden chairs with two planks and two steel nails each until "
+            return PlayerText.get("SDP9")
                     + targetLevel + " Construction.";
         }
         if (currentLevel < 33)
         {
-            return "In a verified POH Parlour, build and remove crude wooden chairs to 33 Construction; then use a verified POH Kitchen to build and remove oak larders with eight oak planks each until "
+            return PlayerText.get("SDP10")
                     + targetLevel + " Construction.";
         }
-        return "In a verified POH Kitchen, build and remove oak larders with eight oak planks each until "
+        return PlayerText.get("SDP11")
                 + targetLevel + " Construction.";
     }
 }

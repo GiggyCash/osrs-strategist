@@ -19,10 +19,10 @@ public final class CurrentLiveSkillActionOverrides
         Map<String, Integer> levels = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-sepulchre-floor-4", VALIDATION_DATE))
-            levels.put("runelite:agility:hallowed_sepulchre_floor_4", 77);
+            levels.put(PlayerText.get("CLSAO1"), 77);
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-sepulchre-floor-5", VALIDATION_DATE))
-            levels.put("runelite:agility:hallowed_sepulchre_floor_5", 87);
+            levels.put(PlayerText.get("CLSAO2"), 87);
         LEVELS = Collections.unmodifiableMap(levels);
 
         Map<String, Float> xp = new LinkedHashMap<>();
@@ -45,8 +45,8 @@ public final class CurrentLiveSkillActionOverrides
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-colossal-wyrm-courses", VALIDATION_DATE))
         {
-            stale.add("runelite:agility:colossal_wyrm_basic_course");
-            stale.add("runelite:agility:colossal_wyrm_advanced_course");
+            stale.add(PlayerText.get("CLSAO3"));
+            stale.add(PlayerText.get("CLSAO4"));
         }
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-19-hunter-methods", VALIDATION_DATE))

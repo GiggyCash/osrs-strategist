@@ -9,7 +9,7 @@ public class ProgressionObjectiveCatalog
 {
     private final List<ProgressionObjectiveDefinition> objectives =
             Collections.unmodifiableList(Arrays.asList(BundledCatalogLoader.array(
-                    "/content/catalogs/progression-objectives.json",
+                    PlayerText.get("POC1"),
                     ProgressionObjectiveDefinition[].class)));
     public List<ProgressionObjectiveDefinition> all() { return objectives; }
     public ProgressionObjectiveDefinition forMethod(String methodId)

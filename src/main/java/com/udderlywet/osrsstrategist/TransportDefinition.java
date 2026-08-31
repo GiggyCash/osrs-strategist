@@ -1,5 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
 import java.util.*;
 
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.Getter;
 import net.runelite.api.Skill;
 
 /** One reusable transport system; destinations are fan-out evidence, not score hacks. */
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class TransportDefinition
 {
     @Getter
@@ -33,24 +36,6 @@ public final class TransportDefinition
     @Getter
     private final List<String> uses;
 
-    TransportDefinition(String id, String name, TransportCategory category,
-            boolean membersOnly, String quest, boolean questStartSuffices,
-            Skill skill, int level, String itemOrAccessCheck,
-            String pohFurniture, boolean wilderness, List<String> uses)
-    {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.membersOnly = membersOnly;
-        this.quest = quest;
-        this.questStartSuffices = questStartSuffices;
-        this.skill = skill;
-        this.level = Math.max(0, level);
-        this.itemOrAccessCheck = itemOrAccessCheck;
-        this.pohFurniture = pohFurniture;
-        this.wilderness = wilderness;
-        this.uses = Collections.unmodifiableList(new ArrayList<>(uses));
-    }
 
     public boolean isQuestStartSufficient() { return questStartSuffices; }
     public int getFanOut() { return uses.size(); }

@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public final class TransportCatalog
 {
     public static final String PROVENANCE =
-            "Maintained current-live transport and RuneLite shortcut audit";
+            PlayerText.get("TC1");
     private final Map<String, TransportDefinition> routes = new LinkedHashMap<>();
 
     public TransportCatalog()

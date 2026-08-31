@@ -51,10 +51,10 @@ public class CombatGuidanceService
                 && currentLevel < 20)
         {
             return new RecommendationGuidance(
-                    "Talk to Harlan, claim a training sword, and equip it. DO NEXT refreshes when the weapon is observed.",
+                    PlayerText.get("CGS1"),
                     "No coins or other supplies required.",
-                    "Melee combat tutor Harlan, north of Lumbridge Castle.",
-                    "A verified weapon is required before Compass can give a sensible melee loop.");
+                    PlayerText.get("CGS2"),
+                    PlayerText.get("CGS3"));
         }
         boolean unarmed = weapon == null && currentLevel < 10
                 && skill != Skill.RANGED;
@@ -80,13 +80,13 @@ public class CombatGuidanceService
             int damageNeeded = (int) Math.ceil(xpNeeded / route.xpPerDamage);
             action.append(" That is about ")
                     .append(format(damageNeeded))
-                    .append(" successful damage dealt on this style at ")
+                    .append(PlayerText.get("CGS4"))
                     .append(trim(route.xpPerDamage))
                     .append(" XP per damage.");
         }
 
         String supplies = unarmed
-                ? "No supplies required for the first trip."
+                ? PlayerText.get("CGS5")
                 : supplyGuidance(account, skill, build, route, weapon, items);
         if (supplies == null) return null;
         String location = route.location;
@@ -94,7 +94,7 @@ public class CombatGuidanceService
         if (build != RestrictedBuildType.STANDARD)
         {
             note += " Protected build: " + AccountBuildPolicy.label(account)
-                    + ". A blocked combat stat will not be trained intentionally.";
+                    + PlayerText.get("CGS6");
         }
 
         return new RecommendationGuidance(
@@ -122,16 +122,16 @@ public class CombatGuidanceService
                 if (intent == SessionIntent.AFK)
                 {
                     return new CombatRoute(
-                            "Edgeville Monastery, west of Edgeville.",
-                            "Fight monks and ask a monk to heal you when needed.",
+                            PlayerText.get("CGS7"),
+                            PlayerText.get("CGS8"),
                             4.0,
-                            "Monks are a low-risk Defence-pure target. Their healing can extend a training interaction, so do not turn the damage target into a fixed kill count.");
+                            PlayerText.get("CGS9"));
                 }
                 return new CombatRoute(
                         "Port Sarim docks and shoreline.",
-                        "Fight seagulls and stay on Defensive style.",
+                        PlayerText.get("CGS10"),
                         4.0,
-                        "Use Defensive style only. Seagulls suit a low-damage Defence pure because accuracy matters more than loot.");
+                        PlayerText.get("CGS11"));
             }
 
             CombatRoute crab = bestCrab(data, intent);
@@ -146,9 +146,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Scurrius arena in Varrock Sewers.",
-                    "Fight Scurrius and use the matching rat-bone weapon once it is observed and legal for the build.",
+                    PlayerText.get("CGS12"),
                     0.0,
-                    "Scurrius has a combat-XP bonus and rat-bone weapons change the effective XP model, so no fixed kill count is shown.");
+                    PlayerText.get("CGS13"));
         }
 
         if (methodId.contains("slayer"))
@@ -162,9 +162,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Nightmare Zone in Yanille.",
-                    "Enter with the verified setup and select only bosses already unlocked for this account.",
+                    PlayerText.get("CGS14"),
                     0.0,
-                    "Nightmare Zone boss choices and modifiers change effective XP per damage, so the remaining XP is exact but a universal kill count is not.");
+                    PlayerText.get("CGS15"));
         }
 
         if (methodId.contains("crab"))
@@ -176,9 +176,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Hill giants in Edgeville Dungeon.",
-                    "Fight hill giants, collect only the drops worth keeping, and repeat.",
+                    PlayerText.get("CGS16"),
                     4.0,
-                    "Hill giants provide a concrete F2P combat-and-Prayer-supply loop without requiring a members area.");
+                    PlayerText.get("CGS17"));
         }
 
         if (membership != MembershipStatus.P2P || methodId.contains("f2p"))
@@ -186,24 +186,24 @@ public class CombatGuidanceService
             if (level < 20)
             {
                 return new CombatRoute(
-                        "Edgeville Monastery, west of Edgeville.",
-                        "Fight monks and ask a monk to heal you when needed.",
+                        PlayerText.get("CGS18"),
+                        PlayerText.get("CGS19"),
                         4.0,
-                        "Monks can heal you and themselves, reducing food use while early accuracy and max hit are low.");
+                        PlayerText.get("CGS20"));
             }
             if (level < 40)
             {
                 return new CombatRoute(
-                        "Giant frogs in Lumbridge Swamp, south of Lumbridge Castle.",
-                        "Fight giant frogs, bury or keep the big bones, and repeat.",
+                        PlayerText.get("CGS21"),
+                        PlayerText.get("CGS22"),
                         4.0,
-                        "Giant frogs have high Hitpoints for their level, low Defence, and always drop big bones that can support Prayer progression.");
+                        PlayerText.get("CGS23"));
             }
             return new CombatRoute(
-                    "Flesh Crawlers in the Stronghold of Security's Catacomb of Famine.",
-                    "Fight Flesh Crawlers, reset aggression when they stop attacking, and repeat.",
+                    PlayerText.get("CGS24"),
+                    PlayerText.get("CGS25"),
                     4.0,
-                    "Flesh Crawlers stay aggressive for low-attention combat; this route does not ask the player to choose between two targets.");
+                    PlayerText.get("CGS26"));
         }
 
         CombatRoute crab = bestCrab(data, intent);
@@ -211,9 +211,9 @@ public class CombatGuidanceService
 
         return new CombatRoute(
                 "Sand crab beach south of Hosidius.",
-                "Fight sand crabs and reset aggression after roughly 10 minutes.",
+                PlayerText.get("CGS27"),
                 4.0,
-                "Sand crabs have 60 Hitpoints, very low combat stats, and no quest requirement for the basic beach route.");
+                PlayerText.get("CGS28"));
     }
 
     private static CombatRoute bestCrab(
@@ -227,24 +227,24 @@ public class CombatGuidanceService
         if (childrenOfSun && intent == SessionIntent.AFK)
         {
             return new CombatRoute(
-                    "Gemstone Crab cave in the Tlati Rainforest.",
-                    "Attack the Gemstone Crab and follow it through the cave when it relocates.",
+                    PlayerText.get("CGS29"),
+                    PlayerText.get("CGS30"),
                     3.5,
-                    "Gemstone Crab has effectively infinite Hitpoints and gives 87.5% of ordinary combat XP per damage. It is excellent for long idle sessions but not always the best low-level raw XP choice.");
+                    PlayerText.get("CGS31"));
         }
         if (boneVoyage)
         {
             return new CombatRoute(
                     "Ammonite Crab coast on Fossil Island.",
-                    "Fight Ammonite Crabs and reset aggression after roughly 10 minutes.",
+                    PlayerText.get("CGS32"),
                     4.0,
-                    "Ammonite Crabs have 100 Hitpoints and very low combat stats, reducing downtime and food use.");
+                    PlayerText.get("CGS33"));
         }
         return new CombatRoute(
                 "Sand crab beach south of Hosidius.",
-                "Fight sand crabs and reset aggression after roughly 10 minutes.",
+                PlayerText.get("CGS34"),
                 4.0,
-                "Sand crabs have 60 Hitpoints, very low combat stats, and the basic beach route has no quest requirement.");
+                PlayerText.get("CGS35"));
     }
 
     private static String chooseWeapon(
@@ -331,18 +331,18 @@ public class CombatGuidanceService
                     .append(food).append(" food stack");
             if (prayer != null) result.append(", plus ").append(prayer);
             if (boost != null) result.append(" and ").append(boost);
-            result.append(". Leave and restock before the final reliable healing item is consumed; rat-bone weapons replace the ordinary weapon only after one is observed.");
+            result.append(PlayerText.get("CGS36"));
             return result.toString();
         }
         return "Bring " + weapon
-                + "; no other supplies are required for the first trip. Leave if the target damages you faster than you recover.";
+                + PlayerText.get("CGS37");
     }
 
     private static String rangedSupplies(String weapon, ObservedItemIndex items)
     {
         if (weapon == null) return null;
         if ("Bow of faerdhinen (c)".equals(weapon))
-            return "Bring your charged Bow of faerdhinen (c); it supplies its own ammunition.";
+            return PlayerText.get("CGS38");
         if ("Bow of faerdhinen".equals(weapon)
                 || "Venator bow".equals(weapon)) return null;
         if (weapon.contains("Dorgeshuun crossbow")

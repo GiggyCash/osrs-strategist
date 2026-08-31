@@ -8,7 +8,7 @@ import net.runelite.api.Quest;
 @Singleton
 public class QuestCoverageManifest
 {
-    public static final String PROVENANCE = "RuneLite Quest enum 1.12.35; audited 2026-08-18";
+    public static final String PROVENANCE = PlayerText.get("QCM1");
     private static final Set<String> MINIQUESTS = normalizedSet(
             "Alfred Grimhand's Barcrawl", "Bear Your Soul", "Curse of the Empty Lord",
             "Daddy's Home", "The Enchanted Key", "Enter the Abyss", "Family Pest",
@@ -33,9 +33,9 @@ public class QuestCoverageManifest
                             : ContentCoverageState.CONSERVATIVE_FAIL_CLOSED,
                     structured
                             ? (definition.hasFieldUncertainty()
-                                    ? "Known direct quest and skill requirements are structured; explicitly listed fields remain fail-closed."
-                                    : "Structured requirements and progression effects are locally curated.")
-                            : "This " + kind + " is observed by RuneLite, but its full requirements and irreversible rewards have not passed local verification; it cannot lead DO NEXT.",
+                                    ? PlayerText.get("QCM2")
+                                    : PlayerText.get("QCM3"))
+                            : "This " + kind + PlayerText.get("QCM4"),
                     PROVENANCE));
         }
         entries = Collections.unmodifiableList(values);

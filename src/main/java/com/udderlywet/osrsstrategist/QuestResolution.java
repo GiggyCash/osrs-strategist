@@ -3,15 +3,12 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Actionability result for one fully identified quest. */
+@Getter
 public final class QuestResolution
 {
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final RecommendationGuidance guidance;
-    @Getter
     private final String reason;
-    @Getter
     private final CandidateSafetyEvidence safetyEvidence;
 
     public QuestResolution(RecommendationConfidence confidence,

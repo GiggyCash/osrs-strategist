@@ -11,6 +11,7 @@ import lombok.Getter;
  * data keys means the recommendation engine can gain new Sailing coverage by
  * updating structured game data instead of changing its core algorithm.</p>
  */
+@Getter
 public final class SailingSnapshot
 {
     public static final String PORT_SARIM = "port:sarim";
@@ -23,11 +24,8 @@ public final class SailingSnapshot
     public static final String TRIAL_JUBBLY_COMPLETE = "trial:jubbly-complete";
     public static final String TRIAL_GWENITH_COMPLETE = "trial:gwenith-complete";
 
-    @Getter
     private final Set<String> verifiedPorts;
-    @Getter
     private final Set<String> verifiedActivities;
-    @Getter
     private final RecommendationConfidence confidence;
 
     public SailingSnapshot(

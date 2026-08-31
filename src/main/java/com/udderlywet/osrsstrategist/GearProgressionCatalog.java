@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public class GearProgressionCatalog
 {
     private final List<GearProgressionEntry> entries = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array("/content/catalogs/gear-progression.json",
+            BundledCatalogLoader.array(PlayerText.get("GPC1"),
                     GearProgressionEntry[].class)));
 
     public List<GearProgressionEntry> all() { return entries; }

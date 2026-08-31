@@ -49,45 +49,45 @@ public class RestrictedBuildDetector
                     ? RestrictedBuildType.F2P_SKILLER
                     : RestrictedBuildType.SKILLER;
             return strong(type,
-                    "Combat stats remain at level-3 baselines while non-combat progression is established.");
+                    PlayerText.get("RBD1"));
         }
 
         if (baselineOffence && defence <= 1 && hp <= 10
                 && prayer >= 15 && highestNonCombat >= 20)
         {
             return strong(RestrictedBuildType.PRAYER_SKILLER,
-                    "Offensive combat and Defence remain at level-3 baselines while Prayer and non-combat skills are established.");
+                    PlayerText.get("RBD2"));
         }
 
         if (allNonCombatAtBaseline(account) && combatPeak >= 40)
         {
             return strong(RestrictedBuildType.COMBAT_ONLY,
-                    "Combat progression is established while every tracked non-combat skill remains at baseline.");
+                    PlayerText.get("RBD3"));
         }
 
         if (baselineOffence && defence >= 20)
         {
             return strong(RestrictedBuildType.DEFENCE_PURE,
-                    "Defence is established while Attack, Strength, Ranged, and Magic remain at baseline.");
+                    PlayerText.get("RBD4"));
         }
 
         if (hp <= 10 && (ranged >= 20 || magic >= 20 || prayer >= 20
                 || highestNonCombat >= 50))
         {
             return strong(RestrictedBuildType.TEN_HITPOINTS,
-                    "Hitpoints remain at 10 despite substantial account progress.");
+                    PlayerText.get("RBD5"));
         }
 
         if (attack <= 1 && defence <= 1 && strength >= 50)
         {
             return strong(RestrictedBuildType.OBSIDIAN_MAULER,
-                    "Attack and Defence remain at 1 while Strength is heavily trained, matching an obby-mauler style restriction.");
+                    PlayerText.get("RBD6"));
         }
 
         if (defence <= 1 && offensivePeak >= 40)
         {
             return strong(RestrictedBuildType.ONE_DEFENCE_PURE,
-                    "Defence is 1 while an offensive combat skill is 40+.");
+                    PlayerText.get("RBD7"));
         }
 
         // Exact/near-exact Defence stopping points become meaningful only after
@@ -99,28 +99,28 @@ public class RestrictedBuildDetector
             if (defence >= 2 && defence <= 13)
             {
                 return strong(RestrictedBuildType.LOW_DEFENCE_PURE,
-                        "Offensive stats are established while Defence is held in the low-defence pure bracket at or below 13.");
+                        PlayerText.get("RBD8"));
             }
             if (defence >= 14 && defence <= 20)
             {
                 return strong(RestrictedBuildType.INITIATE_PURE,
-                        "Offensive stats are established while Defence is held at or below the 20-Defence bracket.");
+                        PlayerText.get("RBD9"));
             }
             if (defence >= 39 && defence <= 40)
             {
                 return strong(RestrictedBuildType.RUNE_PURE,
-                        "Offensive stats are established while Defence is held around the 40-Defence rune-pure breakpoint.");
+                        PlayerText.get("RBD10"));
             }
             if (defence >= 41 && defence <= 42)
             {
                 return strong(RestrictedBuildType.VOID_PURE,
-                        "Offensive stats are established while Defence is held around the 42-Defence Void breakpoint.");
+                        PlayerText.get("RBD11"));
             }
             if (defence >= 43 && defence <= 45
                     && attack >= 50 && strength >= 50)
             {
                 return strong(RestrictedBuildType.ZERKER,
-                        "Defence is held at or below 45 with established melee stats, matching a berserker-style cap.");
+                        PlayerText.get("RBD12"));
             }
         }
 
@@ -131,7 +131,7 @@ public class RestrictedBuildDetector
                 && attack <= 60 && strength <= 70)
         {
             return suggestion(RestrictedBuildType.RANGE_TANK,
-                    "High Defence/Ranged/Magic with deliberately lower melee stats resembles a range tank. Protecting exact melee caps still needs confirmation.");
+                    PlayerText.get("RBD13"));
         }
 
         // A nearly untouched non-combat account with only modest combat is more
@@ -139,13 +139,13 @@ public class RestrictedBuildDetector
         if (lowestNonCombat <= 1 && highestNonCombat <= 5 && combatPeak >= 30)
         {
             return suggestion(RestrictedBuildType.COMBAT_ONLY,
-                    "Combat is progressing while non-combat skills remain very low; confirm which stats should be protected.");
+                    PlayerText.get("RBD14"));
         }
 
         return new RestrictedBuildSuggestion(
                 RestrictedBuildType.STANDARD,
                 RecommendationConfidence.VERIFIED,
-                "No strong restricted-build signature was detected."
+                PlayerText.get("RBD15")
         );
     }
 

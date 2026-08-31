@@ -3,15 +3,12 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** Short, player-facing explanation of a recommendation's goal relationship. */
+@Getter
 public final class GoalRecommendationContext
 {
-    @Getter
     private final GoalType goal;
-    @Getter
     private final GoalRecommendationRelationship relationship;
-    @Getter
     private final String status;
-    @Getter
     private final GoalDependencyProvenance provenance;
 
     private GoalRecommendationContext(GoalType goal,
@@ -32,7 +29,7 @@ public final class GoalRecommendationContext
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
-                    "Compass is choosing the best overall move.", null);
+                    PlayerText.get("GRC1"), null);
 
         String name = displayName(safeGoal);
         if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
@@ -42,13 +39,13 @@ public final class GoalRecommendationContext
                             : GoalRecommendationRelationship.FALLBACK,
                     membership == MembershipStatus.UNKNOWN
                             ? "Confirm membership before advancing " + name + "."
-                            : name + " requires members content, so Compass is recommending useful F2P progression for now.",
+                            : name + PlayerText.get("GRC2"),
                     null);
 
         if (recommendation == null)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.CHECK_NEEDED,
-                    "Compass needs more account evidence before advancing " + name + ".",
+                    PlayerText.get("GRC3") + name + ".",
                     null);
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,

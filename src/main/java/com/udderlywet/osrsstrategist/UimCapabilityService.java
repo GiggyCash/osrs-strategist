@@ -35,7 +35,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     RiskLevel.NONE,
-                    "UIM capability routing only applies to Ultimate Ironman accounts.");
+                    PlayerText.get("UCS1"));
         }
 
         if (UimStorageMechanics.isTooGenericToRecommend(capability))
@@ -43,7 +43,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     RiskLevel.HIGH,
-                    "Generic death-storage evidence does not identify the retrieval service, access, withdrawal order, or second-death rules. Verify an exact service first.");
+                    PlayerText.get("UCS2"));
         }
 
         if (UimStorageMechanics.isRestrictedRetrieval(capability))
@@ -55,7 +55,7 @@ public class UimCapabilityService
                 return decision(capability, false,
                         RecommendationConfidence.CHECK_NEEDED,
                         riskFor(capability),
-                        "The exact location, access, item, retrieval, cost, expiry, and second-death rules are not completely modeled.");
+                        PlayerText.get("UCS3"));
         }
 
         StorageSnapshot storage = data.getStorage();
@@ -68,14 +68,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    "This storage capability has been observed as unavailable.");
+                    PlayerText.get("UCS4"));
         }
         if (capabilityState != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    "This character's access to the storage system has not been verified.");
+                    PlayerText.get("UCS5"));
         }
 
         if (itemCompatibility == CapabilityState.BLOCKED)
@@ -83,14 +83,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    "The intended item has been verified as incompatible with this storage route.");
+                    PlayerText.get("UCS6"));
         }
         if (itemCompatibility != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    "Item compatibility with this storage route has not been verified.");
+                    PlayerText.get("UCS7"));
         }
 
         if (capacityOrPreconditions == CapabilityState.BLOCKED)
@@ -98,20 +98,20 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    "Required capacity or preconditions are not currently satisfied.");
+                    PlayerText.get("UCS8"));
         }
         if (capacityOrPreconditions != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    "Required capacity or preconditions have not been verified.");
+                    PlayerText.get("UCS9"));
         }
 
         return decision(capability, true,
                 RecommendationConfidence.VERIFIED,
                 riskFor(capability),
-                "Capability, item compatibility, and current preconditions are verified.");
+                PlayerText.get("UCS10"));
     }
 
     public boolean shouldRequireExplicitWarning(StorageCapability capability)

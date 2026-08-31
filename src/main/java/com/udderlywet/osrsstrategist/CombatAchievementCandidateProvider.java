@@ -14,9 +14,9 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
     }
 
     @Override
-    public List<StrategyCandidate> candidates(StrategyContext context)
+    public List<Recommendation> candidates(StrategyContext context)
     {
-        List<StrategyCandidate> result = new ArrayList<>();
+        List<Recommendation> result = new ArrayList<>();
         if (context == null || context.getData() == null
                 || context.getData().getCombatAchievements() == null
                 || context.getData().getAccount() == null)
@@ -51,12 +51,12 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
         }
         score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
-        result.add(new StrategyCandidate(
+        result.add(new Recommendation(
                 id,
                 "Combat Achievements: " + pretty(next.name()),
                 "The next reward tier is " + gap + " point"
                         + (gap == 1 ? "" : "s")
-                        + " away. Keep this as an alternative until a specific realistic task is proven ready.",
+                        + PlayerText.get("CACP1"),
                 score,
                 RecommendationConfidence.CHECK_NEEDED,
                 null,

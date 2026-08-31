@@ -5,19 +5,14 @@ import java.util.*;
 import lombok.Getter;
 
 /** Typed result suitable for a future candidate strategic-value payload. */
+@Getter
 public final class InfrastructureValueAssessment
 {
-    @Getter
     private final InfrastructureMilestoneDefinition milestone;
-    @Getter
     private final InfrastructureMilestoneState state;
-    @Getter
     private final RecommendationConfidence confidence;
-    @Getter
     private final StrategicPriority strategicValue;
-    @Getter
     private final List<InfrastructureValueContribution> contributions;
-    @Getter
     private final String reason;
 
     InfrastructureValueAssessment(InfrastructureMilestoneDefinition milestone,

@@ -3,13 +3,11 @@ package com.udderlywet.osrsstrategist;
 import lombok.Getter;
 
 /** One ordered, non-destructive step in a resource acquisition chain. */
+@Getter
 public final class ResourceAcquisitionStep
 {
-    @Getter
     private final AcquisitionSource source;
-    @Getter
     private final String action;
-    @Getter
     private final RecommendationConfidence confidence;
 
     public ResourceAcquisitionStep(AcquisitionSource source, String action,

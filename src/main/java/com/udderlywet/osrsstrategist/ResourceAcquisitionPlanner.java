@@ -49,7 +49,7 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.INVENTORY, inventoryQuantity,
                     RecommendationConfidence.VERIFIED,
-                    "Required quantity is confirmed in inventory."
+                    PlayerText.get("RAP1")
             );
         }
 
@@ -70,10 +70,10 @@ public class ResourceAcquisitionPlanner
                                 ? RecommendationConfidence.CHECK_NEEDED
                                 : RecommendationConfidence.VERIFIED,
                         needsAccessCheck
-                                ? "Required quantity is observed across inventory and "
+                                ? PlayerText.get("RAP2")
                                         + pretty(stored.capabilities)
-                                        + ", but retrieval needs an explicit UIM access/risk/precondition check."
-                                : "Required quantity is confirmed across inventory and observed "
+                                        + PlayerText.get("RAP3")
+                                : PlayerText.get("RAP4")
                                         + pretty(stored.capabilities) + "."
                 );
             }
@@ -88,7 +88,7 @@ public class ResourceAcquisitionPlanner
                 return new ResourceAcquisitionPlan(
                         need, AcquisitionSource.BANK, ordinaryQuantity,
                         RecommendationConfidence.VERIFIED,
-                        "Required quantity is confirmed across observed inventory and bank state."
+                        PlayerText.get("RAP5")
                 );
             }
 
@@ -106,7 +106,7 @@ public class ResourceAcquisitionPlanner
                                 need, AcquisitionSource.GROUP_STORAGE,
                                 confirmedQuantity,
                                 RecommendationConfidence.VERIFIED,
-                                "Required quantity is confirmed across observed inventory, bank, and Group Storage state."
+                                PlayerText.get("RAP6")
                         );
                     }
                 }
@@ -120,23 +120,23 @@ public class ResourceAcquisitionPlanner
         // require the bank, and opted-in GIM requires fresh Group Storage.
         if (data.getInventory() == null)
             return checkNeeded(need,
-                    "Open the inventory tab so carried resources can be observed before choosing an acquisition route.");
+                    PlayerText.get("RAP7"));
         if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
             return checkNeeded(need,
-                    "Open the bank once so stored resources can be observed before choosing an acquisition route.");
+                    PlayerText.get("RAP8"));
         if (AccountModePolicy.mayUseGroupStorage(mode,
                 context.isUseGroupStorage())
                 && (data.getGroupStorage() == null
                 || !data.getGroupStorage().isObserved()))
             return checkNeeded(need,
-                    "Group Storage is enabled but unobserved; inspect it before treating the resource as missing.");
+                    PlayerText.get("RAP9"));
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
-                    "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
+                    PlayerText.get("RAP10")
                             + sourceNote
             );
         }
@@ -147,14 +147,14 @@ public class ResourceAcquisitionPlanner
                     need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? "No sufficient directly usable UIM inventory/storage source is known."
-                            : "No sufficient owned source is confirmed yet.")
+                            ? PlayerText.get("RAP11")
+                            : PlayerText.get("RAP12"))
                             + sourceNote
             );
         }
 
         return checkNeeded(need,
-                "A verified acquisition route is not available yet." + sourceNote);
+                PlayerText.get("RAP13") + sourceNote);
     }
 
     /**
@@ -181,7 +181,7 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
                     RecommendationConfidence.CHECK_NEEDED,
-                    prefix + "GE is an option, but price, available GP, and opportunity cost must be verified before recommending a purchase."
+                    prefix + PlayerText.get("RAP14")
                             + sourceNote);
         }
 
@@ -191,13 +191,13 @@ public class ResourceAcquisitionPlanner
                     shortfall, AcquisitionSource.SELF_SOURCE, 0,
                     RecommendationConfidence.CHECK_NEEDED,
                     prefix + (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? "Acquire the missing quantity with a UIM-safe route."
+                            ? PlayerText.get("RAP15")
                             : "Self-source the missing quantity.")
                             + sourceNote);
         }
 
         return checkNeeded(shortfall,
-                prefix + "Verify account mode before choosing an acquisition route."
+                prefix + PlayerText.get("RAP16")
                         + sourceNote);
     }
 
@@ -270,7 +270,7 @@ public class ResourceAcquisitionPlanner
                 context != null && context.isAllowWildernessMethods());
         if (suggestions.isEmpty())
         {
-            return " No verified item-specific gathering, shop, crafting, minigame, or drop source is currently available for this resource.";
+            return PlayerText.get("RAP17");
         }
 
         StringBuilder note = new StringBuilder(" Useful route");

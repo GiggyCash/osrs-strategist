@@ -139,9 +139,9 @@ public class GlobalDecisionSimulationTest
                 QuestTolerance.NORMAL, GoalType.GEAR_TARGET,
                 true, false, false, new PreferenceProfile());
 
-        List<StrategyCandidate> upgrades =
+        List<Recommendation> upgrades =
                 new ProgressionUpgradeCandidateProvider().candidates(context);
-        for (StrategyCandidate candidate : upgrades)
+        for (Recommendation candidate : upgrades)
         {
             assertFalse(candidate.getId().startsWith("upgrade:fighter-torso"));
             assertFalse(candidate.getId().startsWith("upgrade:dragon-defender"));

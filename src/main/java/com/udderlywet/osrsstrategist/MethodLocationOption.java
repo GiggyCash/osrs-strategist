@@ -1,5 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -9,36 +10,18 @@ import lombok.Getter;
  * caller may only describe that route as available when the live transport
  * snapshot contains the exact route key.</p>
  */
+@RequiredArgsConstructor
+@Getter
 public final class MethodLocationOption
 {
-    @Getter
     private final String id;
-    @Getter
     private final String name;
-    @Getter
     private final int ordinaryTravelBurden;
-    @Getter
     private final String advantageousRouteId;
-    @Getter
     private final int verifiedRouteTravelBurden;
-    @Getter
     private final boolean membersOnly;
-    @Getter
     private final boolean wilderness;
 
-    public MethodLocationOption(String id, String name,
-            int ordinaryTravelBurden, String advantageousRouteId,
-            int verifiedRouteTravelBurden, boolean membersOnly,
-            boolean wilderness)
-    {
-        this.id = id;
-        this.name = name;
-        this.ordinaryTravelBurden = bounded(ordinaryTravelBurden);
-        this.advantageousRouteId = advantageousRouteId;
-        this.verifiedRouteTravelBurden = bounded(verifiedRouteTravelBurden);
-        this.membersOnly = membersOnly;
-        this.wilderness = wilderness;
-    }
 
 
     int effectiveBurden(TransportSnapshot transport)

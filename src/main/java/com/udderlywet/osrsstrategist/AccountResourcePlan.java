@@ -8,19 +8,14 @@ import lombok.Getter;
  * Immutable result of resolving a deterministic material list against the
  * account state Compass has actually observed.
  */
+@Getter
 public final class AccountResourcePlan
 {
-    @Getter
     private final AccountMode accountMode;
-    @Getter
     private final boolean primaryStorageObserved;
-    @Getter
     private final boolean groupStorageIncluded;
-    @Getter
     private final boolean groupStorageObserved;
-    @Getter
     private final List<ResourcePlanEntry> entries;
-    @Getter
     private final String guidance;
 
     public AccountResourcePlan(

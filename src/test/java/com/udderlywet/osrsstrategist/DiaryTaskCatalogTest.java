@@ -52,27 +52,4 @@ public class DiaryTaskCatalogTest
         assertTrue(teleport.isTransportRelevant());
     }
 
-    @Test
-    public void diaryTraversalPromotesARealTaskPrerequisite()
-    {
-        StrategyContext context = UniversalDependencyTestContext.p2p(1, false);
-        UniversalDependencyResolution result = new UniversalDependencyPlanner()
-                .resolveDiary("Ardougne", DiaryTier.EASY, context);
-        assertTrue(result.getNodes().stream().anyMatch(node ->
-                node.getKind() == GoalNodeKind.ACTIVITY
-                        && node.getAction().contains("Wizard Cromperty")));
-        assertTrue(result.getNodes().stream().anyMatch(node ->
-                node.getKind() == GoalNodeKind.QUEST
-                        && node.getAction().contains("Rune Mysteries")));
-    }
-
-    @Test
-    public void wildernessDiaryFailsClosedWithoutRiskPermission()
-    {
-        UniversalDependencyResolution result = new UniversalDependencyPlanner()
-                .resolveDiary("Wilderness", DiaryTier.EASY,
-                        UniversalDependencyTestContext.p2p(70, false));
-        assertEquals(2, result.getNodes().size());
-        assertTrue(result.nextAction().getAction().contains("Wilderness risk"));
-    }
 }

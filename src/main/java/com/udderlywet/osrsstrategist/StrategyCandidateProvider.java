@@ -6,7 +6,7 @@ import java.util.*;
 public interface StrategyCandidateProvider
 {
     String getId();
-    List<StrategyCandidate> candidates(StrategyContext context);
+    List<Recommendation> candidates(StrategyContext context);
 
     /**
      * Generic queue entries owned by this richer workflow. The entries are

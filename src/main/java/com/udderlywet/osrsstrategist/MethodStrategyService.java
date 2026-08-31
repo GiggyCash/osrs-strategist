@@ -31,17 +31,17 @@ public final class MethodStrategyService
                             : profile.getPlayerReason());
         if (profile == null)
             return new MethodStrategyAssessment(false, 0.0,
-                    "No verified strategy profile applies to this account.");
+                    PlayerText.get("MSS1"));
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
         if (!profile.supports(mode))
             return new MethodStrategyAssessment(false, 0.0,
-                    "The sourced strategy does not apply to this account mode.");
+                    PlayerText.get("MSS2"));
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && profile.getBankingBehavior()
                         == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP)
             return new MethodStrategyAssessment(false, 0.0,
-                    "The route requires conventional banking.");
+                    PlayerText.get("MSS3"));
 
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
         InventorySnapshot inventory = data.getInventory();
@@ -51,7 +51,7 @@ public final class MethodStrategyService
                 && (inventory == null
                 || !inventory.hasCompleteSlotObservation()))
             return new MethodStrategyAssessment(false, 0.0,
-                    "Exact live inventory slots are required before this UIM method can be generated.");
+                    PlayerText.get("MSS4"));
         int occupied = UimSetupCostService.occupiedInventorySlots(inventory);
         int free = Math.max(0, 28 - occupied);
         if (mode == AccountMode.ULTIMATE_IRONMAN

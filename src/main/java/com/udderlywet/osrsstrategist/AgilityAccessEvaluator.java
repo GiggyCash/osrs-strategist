@@ -48,7 +48,7 @@ public class AgilityAccessEvaluator
                     "agility:course",
                     "Usable Agility course",
                     RequirementState.CHECK_NEEDED,
-                    "No course has been proven available yet."
+                    PlayerText.get("AAE1")
             );
         }
 
@@ -76,7 +76,7 @@ public class AgilityAccessEvaluator
                     "agility:" + course.getId(),
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
-                    "This Agility method requires member access."
+                    PlayerText.get("AAE2")
             );
         }
 
@@ -85,7 +85,7 @@ public class AgilityAccessEvaluator
         {
             return verified(
                     course,
-                    "This character was previously observed in the course region."
+                    PlayerText.get("AAE3")
             );
         }
 
@@ -101,7 +101,7 @@ public class AgilityAccessEvaluator
             {
                 return verified(
                         course,
-                        quest + " is complete and the Agility level requirement is met."
+                        quest + PlayerText.get("AAE4")
                 );
             }
             if (status == QuestStatus.NOT_STARTED
@@ -122,7 +122,7 @@ public class AgilityAccessEvaluator
 
         return verified(
                 course,
-                "Current Agility level and member access satisfy this open course."
+                PlayerText.get("AAE5")
         );
     }
 
