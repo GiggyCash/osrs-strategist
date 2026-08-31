@@ -68,11 +68,11 @@ public final class QuestPathPlanningService
         List<QuestPathStep> result = new ArrayList<>();
         for (MutableNode node : nodes.values())
         {
-            QuestStatus status = statusOf(context, node.questName);
+            var status = statusOf(context, node.questName);
             if (status == QuestStatus.COMPLETE
                     || status == QuestStatus.UNKNOWN) continue;
-            QuestDefinition definition = quests.definitionFor(node.questName);
-            AccountSnapshot account = context.data().account();
+            var definition = quests.definitionFor(node.questName);
+            var account = context.data().account();
             if (definition == null
                     || !QuestMembershipPolicy.isAvailable(
                             definition.getName(),
@@ -85,7 +85,7 @@ public final class QuestPathPlanningService
             Confidence readiness = resolution == null
                     ? Confidence.CHECK_NEEDED
                     : resolution.getConfidence();
-            boolean prerequisitesComplete = definition != null;
+            var prerequisitesComplete = definition != null;
             if (definition != null)
                 for (String prerequisite : definition.getPrerequisites())
                     if (statusOf(context, prerequisite)
@@ -93,7 +93,7 @@ public final class QuestPathPlanningService
                         prerequisitesComplete = false;
             boolean eligible = prerequisitesComplete
                     && readiness != Confidence.BLOCKED;
-            Map<Skill, Integer> rewards = guaranteedRewards(definition);
+            var rewards = guaranteedRewards(definition);
             result.add(new QuestPathStep(node.questName, status,
                     node.paths, node.unfinishedDependents,
                     readiness, eligible, node.depth, rewards,
@@ -135,15 +135,15 @@ public final class QuestPathPlanningService
             StrategyContext context, Map<String, MutableNode> nodes,
             List<String> ancestors, Set<String> active)
     {
-        String key = normalize(questName);
+        var key = Names.words(questName);
         if (!active.add(key)) return;
-        QuestDefinition definition = quests.definitionFor(questName);
+        var definition = quests.definitionFor(questName);
         if (definition == null)
         {
             active.remove(key);
             return;
         }
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (!QuestMembershipPolicy.isAvailable(definition.getName(),
                 account.getMembershipStatus())
                 || !RestrictedQuestPolicy.isSafe(account,
@@ -165,12 +165,12 @@ public final class QuestPathPlanningService
         childAncestors.add(definition.getName());
         for (String prerequisite : definition.getPrerequisites())
         {
-            QuestStatus status = statusOf(context, prerequisite);
+            var status = statusOf(context, prerequisite);
             if (status != QuestStatus.COMPLETE
                     && status != QuestStatus.UNKNOWN)
             {
                 MutableNode child = nodes.computeIfAbsent(
-                        normalize(prerequisite),
+                        Names.words(prerequisite),
                         ignored -> new MutableNode(prerequisite));
                 if (!child.unfinishedDependents.contains(definition.getName()))
                     child.unfinishedDependents.add(definition.getName());
@@ -193,10 +193,10 @@ public final class QuestPathPlanningService
             Map<String, MutableNode> nodes, StrategyContext context)
     {
         EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         for (MutableNode node : nodes.values())
         {
-            QuestDefinition definition = quests.definitionFor(node.questName);
+            var definition = quests.definitionFor(node.questName);
             if (definition == null) continue;
             for (Map.Entry<Skill, Integer> requirement
                     : definition.getSkillRequirements().entrySet())
@@ -214,7 +214,7 @@ public final class QuestPathPlanningService
         if (definition == null) return Collections.emptyMap();
         for (String uncertainty : definition.getFieldUncertainties())
         {
-            String value = normalize(uncertainty);
+            var value = Names.words(uncertainty);
             if (value.contains("reward") || value.contains("irreversible xp"))
                 return Collections.emptyMap();
         }
@@ -224,17 +224,17 @@ public final class QuestPathPlanningService
     private static double rewardValue(Map<Skill, Integer> rewards,
             Map<Skill, Integer> targets, AccountSnapshot account)
     {
-        double value = 0.0;
+        var value = 0.0;
         for (Map.Entry<Skill, Integer> reward : rewards.entrySet())
         {
-            Integer target = targets.get(reward.getKey());
+            var target = targets.get(reward.getKey());
             if (target == null || reward.getValue() <= 0) continue;
-            int currentLevel = account.getSkillLevel(reward.getKey());
+            var currentLevel = account.getSkillLevel(reward.getKey());
             if (currentLevel >= target) continue;
             int currentXp = Math.max(account.getSkillExperience(reward.getKey()),
                     Experience.getXpForLevel(Math.max(1, currentLevel)));
-            int targetXp = Experience.getXpForLevel(target);
-            int gap = Math.max(1, targetXp - currentXp);
+            var targetXp = Experience.getXpForLevel(target);
+            var gap = Math.max(1, targetXp - currentXp);
             value += Math.min(1.0, reward.getValue() / (double) gap);
         }
         return Math.min(1.0, value);
@@ -245,17 +245,11 @@ public final class QuestPathPlanningService
     {
         for (Map.Entry<String, QuestStatus> entry
                 : context.data().quests().quests().entrySet())
-            if (normalize(entry.getKey()).equals(normalize(questName)))
+            if (Names.words(entry.getKey()).equals(Names.words(questName)))
                 return entry.getValue();
         return QuestStatus.UNKNOWN;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'')
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     private static final class MutableNode
     {

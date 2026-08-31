@@ -28,7 +28,7 @@ public final class ProgressHistory
     /** Returns a checkpoint document without closing the in-memory session. */
     public ProgressHistory checkpoint(ProgressSessionSnapshot snapshot)
     {
-        ProgressHistory copy = new ProgressHistory();
+        var copy = new ProgressHistory();
         copy.replaceAll(sessions, milestones, buckets);
         copy.archive(snapshot);
         return copy;
@@ -121,7 +121,7 @@ public final class ProgressHistory
 
     private static String milestoneIds(ProgressSessionSummary value)
     {
-        StringBuilder result = new StringBuilder();
+        var result = new StringBuilder();
         for (ProgressMilestone milestone : value.getMilestones())
             result.append(milestone.getId()).append('|');
         return result.toString();
@@ -129,7 +129,7 @@ public final class ProgressHistory
 
     private static int saturatingAdd(int first, int second)
     {
-        long result = (long) first + second;
+        var result = (long) first + second;
         return (int) Math.min(Integer.MAX_VALUE, Math.max(0L, result));
     }
 

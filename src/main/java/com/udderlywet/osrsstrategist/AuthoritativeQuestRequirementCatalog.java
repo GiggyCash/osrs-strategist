@@ -17,7 +17,7 @@ public final class AuthoritativeQuestRequirementCatalog
         for (Record record : BundledCatalogLoader.array(RESOURCE, Record[].class))
         {
             record.freeze();
-            String key = normalize(record.name);
+            var key = Names.words(record.name);
             if (key.isEmpty() || values.put(key, record) != null)
                 throw new IllegalStateException(Text.get(1124) + record.name);
         }
@@ -25,11 +25,6 @@ public final class AuthoritativeQuestRequirementCatalog
     }
 
     public Map<String, Record> all() { return records; }
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     @Getter
     public static final class Record

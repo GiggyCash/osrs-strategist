@@ -13,15 +13,10 @@ import javax.inject.Singleton;
  * follow later: live state first, remembered proof second, safe inference third.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class FarmingAccessEvaluator
 {
     private final FarmingAccessCatalog catalog;
-
-    @Inject
-    public FarmingAccessEvaluator(FarmingAccessCatalog catalog)
-    {
-        this.catalog = catalog;
-    }
 
     public FarmingSnapshot evaluate(
             AccountSnapshot account,
@@ -58,7 +53,7 @@ public class FarmingAccessEvaluator
                 continue;
             }
 
-            String requiredQuest = definition.getRequiredQuest();
+            var requiredQuest = definition.getRequiredQuest();
             if (requiredQuest == null)
             {
                 reachable.add(definition.getId());

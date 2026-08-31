@@ -26,7 +26,7 @@ public final class CombatAchievementSnapshot
     {
         this.completedTasks = Math.max(0, completedTasks);
         this.earnedPoints = Math.max(0, earnedPoints);
-        EnumSet<CombatAchievementTier> tiers = EnumSet.noneOf(CombatAchievementTier.class);
+        var tiers = EnumSet.noneOf(CombatAchievementTier.class);
         if (completedRewardTiers != null) tiers.addAll(completedRewardTiers);
         this.completedRewardTiers = Collections.unmodifiableSet(tiers);
     }

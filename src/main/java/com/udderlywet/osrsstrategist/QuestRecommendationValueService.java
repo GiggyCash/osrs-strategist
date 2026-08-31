@@ -27,9 +27,9 @@ public final class QuestRecommendationValueService
         if (recommendation == null || recommendation.getId() == null
                 || !recommendation.getId().startsWith("quest:")
                 || context == null) return recommendation;
-        QuestPathPlan plan = planner.plan(context);
-        String quest = recommendation.getId().substring("quest:".length());
-        QuestPathStep step = plan.stepForQuest(quest.replace('-', ' '));
+        var plan = planner.plan(context);
+        var quest = recommendation.getId().substring("quest:".length());
+        var step = plan.stepForQuest(quest.replace('-', ' '));
         return step == null ? recommendation
                 : recommendation.withStrategicValue(
                         recommendation.getStrategicValue().merge(

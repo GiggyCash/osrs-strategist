@@ -37,7 +37,7 @@ public final class RecurringOpportunitySnapshot
 
     public boolean isReadyNow(String opportunityId, long nowMillis)
     {
-        Long readyAt = readyAtMillis.get(opportunityId);
+        var readyAt = readyAtMillis.get(opportunityId);
         return readyAt != null && readyAt <= nowMillis;
     }
 

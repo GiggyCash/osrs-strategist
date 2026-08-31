@@ -20,14 +20,14 @@ final class RecommendationQualityPolicy
         if (recommendation == null || !hasText(recommendation.getTitle())) return false;
         if (isGenericTitle(recommendation.getTitle()))
             return false;
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
         if (guidance == null || !hasText(guidance.getAction())) return false;
         if (containsAny(guidance.getAction(), GENERIC_ACTIONS)) return false;
         if (containsAny(guidance.getLocation(), GENERIC_ACTIONS)) return false;
         if (containsAny(guidance.getLocation(), GENERIC_LOCATIONS)) return false;
         if (containsAny(guidance.getSupplies(), UNRESOLVED_SUPPLIES)) return false;
 
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan != null)
         {
             if (plan.getMethod() == null
@@ -49,8 +49,8 @@ final class RecommendationQualityPolicy
         {
             return true;
         }
-        String method = normalize(plan.getMethod().getName());
-        String action = normalize(guidance.getAction());
+        var method = Names.text(plan.getMethod().getName());
+        var action = Names.text(guidance.getAction());
         String[] runes = {"air", "mind", "water", "earth", "fire", "body"};
         for (String rune : runes)
         {
@@ -62,7 +62,7 @@ final class RecommendationQualityPolicy
 
     private static boolean containsAny(String value, List<String> needles)
     {
-        String normalized = normalize(value);
+        var normalized = Names.text(value);
         if (normalized.isEmpty()) return false;
         for (String needle : needles)
             if (normalized.contains(needle)) return true;
@@ -71,11 +71,11 @@ final class RecommendationQualityPolicy
 
     private static boolean isGenericTitle(String value)
     {
-        String normalized = normalize(value);
+        var normalized = Names.text(value);
         if (GENERIC_TITLES.contains(normalized)) return true;
         for (Skill skill : Skill.values())
         {
-            if (normalized.equals("train " + normalize(skill.getName())))
+            if (normalized.equals("train " + Names.text(skill.getName())))
                 return true;
         }
         return false;
@@ -86,9 +86,4 @@ final class RecommendationQualityPolicy
         return value != null && !value.trim().isEmpty();
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replaceAll("\\s+", " ").trim();
-    }
 }

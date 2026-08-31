@@ -102,8 +102,8 @@ public class TrainingMethodSelector
             SessionIntent sessionIntent, boolean allowWildernessMethods,
             boolean useGroupStorage)
     {
-        List<CuratedTrainingMethod> methods = candidates(data, skill);
-        MembershipStatus membershipStatus = membershipStatus(data);
+        var methods = candidates(data, skill);
+        var membershipStatus = membershipStatus(data);
         List<ScoredPlan> ranked = new ArrayList<>();
         AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN : AccountMode.fromTypeCode(
@@ -111,8 +111,8 @@ public class TrainingMethodSelector
 
         for (CuratedTrainingMethod candidate : methods)
         {
-            TrainingMethod method = candidate.getMethod();
-            TrainingMethodMetadata metadata = candidate.getMetadata();
+            var method = candidate.getMethod();
+            var metadata = candidate.getMetadata();
             MethodStrategyProfile strategyProfile = strategyCatalog.profileFor(
                     method, metadata, mode);
             MethodStrategyAssessment strategyAssessment = strategyService.assess(
@@ -132,7 +132,7 @@ public class TrainingMethodSelector
                             ? requirementEvidenceEngine.evaluate(
                                     data, method, true)
                             : requirementEvidenceEngine.evaluate(data, method);
-            Confidence confidence = assessConfidence(method, checks);
+            var confidence = assessConfidence(method, checks);
             if (confidence == Confidence.BLOCKED) continue;
 
             // A skill gets one selected method. Never let a higher-scoring
@@ -172,8 +172,8 @@ public class TrainingMethodSelector
         AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.account().getAccountTypeCode());
-        boolean fullyReady = true;
-        double missingResourcePenalty = 0.0;
+        var fullyReady = true;
+        var missingResourcePenalty = 0.0;
         for (RequirementCheck check : checks)
         {
             if (check == null)
@@ -186,7 +186,7 @@ public class TrainingMethodSelector
             if (check.getState() == RequirementState.CHECK_NEEDED
                     && RequirementActionability.isPreparationRequirement(check))
             {
-                double penalty = mode.isIronLike() ? 14.0 : 10.0;
+                var penalty = mode.isIronLike() ? 14.0 : 10.0;
                 if (sessionIntent == SessionIntent.QUICK_20_MIN) penalty += 4.0;
                 if (sessionIntent == SessionIntent.LONG_SESSION)
                     penalty -= mode.isIronLike() ? 5.0 : 8.0;
@@ -217,7 +217,7 @@ public class TrainingMethodSelector
     private List<CuratedTrainingMethod> candidates(GameData data, Skill skill)
     {
         List<CuratedTrainingMethod> candidates = new ArrayList<>();
-        MembershipStatus membership = membershipStatus(data);
+        var membership = membershipStatus(data);
 
         if (expandedCatalog == null)
         {
@@ -259,7 +259,7 @@ public class TrainingMethodSelector
         Map<String, CuratedTrainingMethod> unique = new LinkedHashMap<>();
         for (CuratedTrainingMethod candidate : candidates)
         {
-            String id = candidate.getMethod().getId();
+            var id = candidate.getMethod().getId();
             if (unique.containsKey(id)) unique.remove(id);
             unique.put(id, candidate);
         }
@@ -279,7 +279,7 @@ public class TrainingMethodSelector
             return Confidence.BLOCKED;
         if (checks != null && !checks.isEmpty())
         {
-            boolean hasUnknown = false;
+            var hasUnknown = false;
             for (RequirementCheck check : checks)
             {
                 if (check.getState() == RequirementState.BLOCKED)
@@ -300,7 +300,7 @@ public class TrainingMethodSelector
             SessionIntent sessionIntent, GameData data,
             MethodStrategyAssessment strategyAssessment)
     {
-        StringBuilder reason = new StringBuilder();
+        var reason = new StringBuilder();
         if (strategyAssessment != null
                 && strategyAssessment.getExplanation() != null
                 && !strategyAssessment.getExplanation().trim().isEmpty())
@@ -323,7 +323,7 @@ public class TrainingMethodSelector
     private static String pretty(String value)
     {
         if (value == null || value.isEmpty()) return "Unknown";
-        String lower = value.toLowerCase().replace('_', ' ');
+        var lower = value.toLowerCase().replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

@@ -39,8 +39,8 @@ public class FeedbackRecoveryTest
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
         RecordingPreferenceStore store = new RecordingPreferenceStore(
                 "character-a");
-        set(plugin, "accountPreferenceStore", store);
-        set(plugin, "loadedPreferenceProfileKey", "character-a");
+        set(plugin, "accountProfileStore", store);
+        set(plugin, "loadedProfileKey", "character-a");
         set(plugin, "latestRecommendations", Collections.singletonList(
                 recommendation()));
 
@@ -69,7 +69,7 @@ public class FeedbackRecoveryTest
     {
         OsrsStrategistPlugin plugin = new OsrsStrategistPlugin();
         RecordingPreferenceStore store = new RecordingPreferenceStore(null);
-        set(plugin, "accountPreferenceStore", store);
+        set(plugin, "accountProfileStore", store);
 
         assertFalse(plugin.resetLearnedFeedbackForActiveCharacter());
         assertEquals(0, store.clearCount);
@@ -102,7 +102,7 @@ public class FeedbackRecoveryTest
     }
 
     private static final class RecordingPreferenceStore
-            extends AccountPreferenceStore
+            extends AccountProfileStore
     {
         private final String profile;
         private int clearCount;
@@ -110,24 +110,24 @@ public class FeedbackRecoveryTest
 
         private RecordingPreferenceStore(String profile)
         {
-            super(null, new Gson());
+            super((net.runelite.client.config.ConfigManager) null, new Gson());
             this.profile = profile;
         }
 
         @Override
-        public String getActiveProfileKey()
+        public String activeProfileKey()
         {
             return profile;
         }
 
         @Override
-        public void loadInto(PreferenceProfile preferenceProfile)
+        public void loadPreferences(PreferenceProfile preferenceProfile)
         {
             // Tests seed the active in-memory profile directly.
         }
 
         @Override
-        public void clear()
+        public void clearPreferences()
         {
             clearCount++;
             clearedProfile = profile;

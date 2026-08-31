@@ -44,13 +44,11 @@ public class BrandingCompatibilityTest
     public void stableConfigurationAndProfileGroupsRemainCompatible()
     {
         assertEquals("osrs-strategist", OsrsStrategistConfig.GROUP);
-        assertEquals("osrs-strategist-profile", AccountStrategyProfileStore.GROUP);
-        assertEquals("osrs-strategist-profile", AccountPreferenceStore.GROUP);
+        assertEquals("osrs-strategist-profile", AccountProfileStore.GROUP);
         assertEquals("osrs-strategist-profile", AccountAccessMemoryStore.GROUP);
-        assertEquals("osrs-strategist-profile", AccountMilestoneStore.GROUP);
         assertEquals("osrs-strategist-profile", FarmingRunStateStore.GROUP);
         assertEquals("osrs-strategist-profile",
-                AccountRecommendationHistoryStore.GROUP);
+                AccountProfileStore.GROUP);
     }
 
     private static String allText(Component component)

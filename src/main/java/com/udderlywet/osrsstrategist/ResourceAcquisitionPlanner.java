@@ -40,10 +40,10 @@ public class ResourceAcquisitionPlanner
             return checkNeeded(need, get(1430));
         }
 
-        GameData data = context.data();
-        AccountMode mode = context.accountMode();
-        int inventoryQuantity = quantityIn(data.inventory(), need.getItemId());
-        int confirmedQuantity = inventoryQuantity;
+        var data = context.data();
+        var mode = context.accountMode();
+        var inventoryQuantity = quantityIn(data.inventory(), need.getItemId());
+        var confirmedQuantity = inventoryQuantity;
 
         if (inventoryQuantity >= need.getQuantity())
         {
@@ -56,12 +56,12 @@ public class ResourceAcquisitionPlanner
 
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            int remaining = Math.max(0, need.getQuantity() - inventoryQuantity);
+            var remaining = Math.max(0, need.getQuantity() - inventoryQuantity);
             StoredResource stored = findVerifiedStoredResource(
                     data.storage(), need.getItemId(), remaining);
             if (stored != null)
             {
-                boolean needsAccessCheck = stored.requiresAccessCheck();
+                var needsAccessCheck = stored.requiresAccessCheck();
                 confirmedQuantity = safeAdd(inventoryQuantity, stored.quantity);
                 return new AcquisitionPlan(
                         need,
@@ -81,8 +81,8 @@ public class ResourceAcquisitionPlanner
         }
         else
         {
-            int bankQuantity = quantityIn(data.bank(), need.getItemId());
-            int ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
+            var bankQuantity = quantityIn(data.bank(), need.getItemId());
+            var ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
             confirmedQuantity = ordinaryQuantity;
             if (ordinaryQuantity >= need.getQuantity())
             {
@@ -96,7 +96,7 @@ public class ResourceAcquisitionPlanner
             if (AccountModePolicy.mayUseGroupStorage(
                     mode, context.isUseGroupStorage()))
             {
-                ItemsState groupStorage = data.groupStorage();
+                var groupStorage = data.groupStorage();
                 int groupQuantity = groupStorage != null
                         && groupStorage.isObserved()
                         ? quantityIn(groupStorage, need.getItemId()) : 0;
@@ -116,7 +116,7 @@ public class ResourceAcquisitionPlanner
             }
         }
 
-        String sourceNote = sourceSuggestions(need, context);
+        var sourceNote = sourceSuggestions(need, context);
 
         // Do not turn an unobserved container into a proven shortfall. An
         // inventory read is required for every mode; ordinary accounts also
@@ -174,8 +174,8 @@ public class ResourceAcquisitionPlanner
             return checkNeeded(shortfall, get(1430));
         }
 
-        AccountMode mode = context.accountMode();
-        String sourceNote = sourceSuggestions(shortfall, context);
+        var mode = context.accountMode();
+        var sourceNote = sourceSuggestions(shortfall, context);
         String prefix = get(1431) + shortfall.getQuantity()
                 + " × " + shortfall.getItemName() + ". ";
 
@@ -208,7 +208,7 @@ public class ResourceAcquisitionPlanner
     public ResourceAcquisitionChain planChain(StrategyContext context,
             ResourceNeed need)
     {
-        AcquisitionPlan ownership = plan(context, need);
+        var ownership = plan(context, need);
         List<ResourceAcquisitionStep> steps = new ArrayList<>();
         int shortfall = ownership == null || need == null ? 0
                 : Math.max(0, need.getQuantity() - ownership.getConfirmedQuantity());
@@ -255,11 +255,11 @@ public class ResourceAcquisitionPlanner
             StrategyContext context, String itemName, int quantity)
     {
         if (dependencyCatalog == null) return null;
-        ResourceDependencyDefinition definition = dependencyCatalog.forItemName(itemName);
+        var definition = dependencyCatalog.forItemName(itemName);
         if (definition == null) return null;
         String canonical = definition.getItemName() == null
                 ? itemName : definition.getItemName();
-        ResourceNeed need = new ResourceNeed(definition.getItemId(), canonical, quantity);
+        var need = new ResourceNeed(definition.getItemId(), canonical, quantity);
         return new ResourceDependencyResolver(this, dependencyCatalog)
                 .resolveKnownShortfall(context, need);
     }
@@ -276,7 +276,7 @@ public class ResourceAcquisitionPlanner
             return get(574);
         }
 
-        StringBuilder note = new StringBuilder(" Useful route");
+        var note = new StringBuilder(" Useful route");
         if (suggestions.size() > 1) note.append("s");
         note.append(": ");
         for (int i = 0; i < suggestions.size(); i++)
@@ -303,14 +303,14 @@ public class ResourceAcquisitionPlanner
         if (storage == null) return null;
         List<StorageCapability> safeCapabilities = new ArrayList<>();
         List<StorageCapability> restrictedCapabilities = new ArrayList<>();
-        int safeQuantity = 0;
-        int restrictedQuantity = 0;
+        var safeQuantity = 0;
+        var restrictedQuantity = 0;
         for (Map.Entry<StorageCapability, java.util.List<ItemState>> entry
                 : storage.getObservedContents().entrySet())
         {
-            StorageCapability capability = entry.getKey();
+            var capability = entry.getKey();
             if (!storage.verified(capability)) continue;
-            int quantity = 0;
+            var quantity = 0;
             for (ItemState item : entry.getValue())
             {
                 if (item.getItemId() == itemId) quantity += item.getQuantity();
@@ -361,7 +361,7 @@ public class ResourceAcquisitionPlanner
 
     private static int quantityInItems(Iterable<ItemState> items, int itemId)
     {
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
         {
             if (item.getItemId() == itemId) total = safeAdd(total, item.getQuantity());
@@ -371,7 +371,7 @@ public class ResourceAcquisitionPlanner
 
     private static int safeAdd(int left, int right)
     {
-        int safeRight = Math.max(0, right);
+        var safeRight = Math.max(0, right);
         if (left > Integer.MAX_VALUE - safeRight) return Integer.MAX_VALUE;
         return left + safeRight;
     }

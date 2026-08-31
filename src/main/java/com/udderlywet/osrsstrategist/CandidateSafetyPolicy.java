@@ -14,7 +14,7 @@ public class CandidateSafetyPolicy
             return recommendation != null;
         }
 
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (AccountMode.fromTypeCode(account.getAccountTypeCode())
                     == AccountMode.ULTIMATE_IRONMAN
                 && (recommendation.getSafetyEvidence()
@@ -52,7 +52,7 @@ public class CandidateSafetyPolicy
             return false;
         }
 
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && (evidence.getBuildEffect()
@@ -65,7 +65,7 @@ public class CandidateSafetyPolicy
             return false;
         }
 
-        RestrictedBuildSuggestion suggestion = AccountBuildPolicy.detect(account);
+        var suggestion = AccountBuildPolicy.detect(account);
         if (suggestion.getConfidence() == Confidence.VERIFIED
                 && suggestion.getType() == RestrictedBuildType.STANDARD)
         {

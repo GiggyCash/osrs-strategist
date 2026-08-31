@@ -19,11 +19,11 @@ public class ClueCandidateProvider implements CandidateProvider
     {
         List<Recommendation> result = new ArrayList<>();
         if (context == null || context.data() == null) return result;
-        ClueSnapshot clue = context.data().clue();
+        var clue = context.data().clue();
         if (clue == null || !clue.isCluePresent()) return result;
 
-        ClueTier tier = ClueTier.fromText(clue.getClueType());
-        AccountSnapshot account = context.data().account();
+        var tier = ClueTier.fromText(clue.getClueType());
+        var account = context.data().account();
         MembershipStatus membership = account == null
                 ? MembershipStatus.UNKNOWN
                 : account.getMembershipStatus();
@@ -31,13 +31,13 @@ public class ClueCandidateProvider implements CandidateProvider
 
         // Keep one stable activity id across clue tiers so learned preference,
         // snoozes, and older profiles continue to work after this richer model.
-        String id = "clue:pending";
-        PreferenceProfile preferences = context.preferenceProfile();
+        var id = "clue:pending";
+        var preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return result;
 
         long age = Math.max(0L,
                 System.currentTimeMillis() - clue.getFirstSeenAtMillis());
-        double ageHours = age / 3_600_000.0;
+        var ageHours = age / 3_600_000.0;
         double score = 39.0
                 + tier.getPriorityBonus()
                 + Math.min(15.0, ageHours * 0.5)
@@ -54,8 +54,8 @@ public class ClueCandidateProvider implements CandidateProvider
         String type = tier == ClueTier.UNKNOWN
                 ? "clue"
                 : tier.name().toLowerCase() + " clue";
-        ClueStepSnapshot step = clue.getCurrentStep();
-        StringBuilder reason = new StringBuilder();
+        var step = clue.getCurrentStep();
+        var reason = new StringBuilder();
         reason.append(get(1361)).append(type)
                 .append(get(132));
         if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
@@ -176,7 +176,7 @@ public class ClueCandidateProvider implements CandidateProvider
     private static String display(String value)
     {
         if (value == null || value.isEmpty()) return "";
-        String lower = value.toLowerCase(Locale.ROOT);
+        var lower = value.toLowerCase(Locale.ROOT);
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

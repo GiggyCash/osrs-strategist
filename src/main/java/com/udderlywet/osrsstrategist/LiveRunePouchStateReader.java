@@ -16,6 +16,7 @@ import net.runelite.client.game.ItemManager;
  * removed while every unrelated storage capability is preserved.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveRunePouchStateReader
 {
     private static final int[] AMOUNT_VARBITS = {
@@ -34,13 +35,6 @@ public class LiveRunePouchStateReader
 
     private final Client client;
     private final ItemManager itemManager;
-
-    @Inject
-    public LiveRunePouchStateReader(Client client, ItemManager itemManager)
-    {
-        this.client = client;
-        this.itemManager = itemManager;
-    }
 
     public StorageSnapshot merge(
             StorageSnapshot base,
@@ -90,20 +84,20 @@ public class LiveRunePouchStateReader
     List<ItemState> readContents()
     {
         List<ItemState> result = new ArrayList<>(AMOUNT_VARBITS.length);
-        EnumComposition runeEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
+        var runeEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
         if (runeEnum == null) return result;
 
         for (int i = 0; i < AMOUNT_VARBITS.length; i++)
         {
-            int amount = client.getVarbitValue(AMOUNT_VARBITS[i]);
+            var amount = client.getVarbitValue(AMOUNT_VARBITS[i]);
             if (amount <= 0) continue;
 
-            int runeType = client.getVarbitValue(RUNE_VARBITS[i]);
+            var runeType = client.getVarbitValue(RUNE_VARBITS[i]);
             if (runeType == 0) continue;
 
-            int itemId = runeEnum.getIntValue(runeType);
+            var itemId = runeEnum.getIntValue(runeType);
             if (itemId <= 0) continue;
-            String name = itemManager.getItemComposition(itemId).getName();
+            var name = itemManager.getItemComposition(itemId).getName();
             if (name == null || name.trim().isEmpty()) continue;
             result.add(new ItemState(itemId, name, amount));
         }
@@ -117,7 +111,7 @@ public class LiveRunePouchStateReader
         {
             if (item == null || item.getQuantity() <= 0 || item.getName() == null)
                 continue;
-            String name = item.getName().trim().toLowerCase(Locale.ROOT);
+            var name = item.getName().trim().toLowerCase(Locale.ROOT);
 
             // Fail closed on identity. Generic substring matching could treat a
             // future note/token/placeholder containing "rune pouch" as an

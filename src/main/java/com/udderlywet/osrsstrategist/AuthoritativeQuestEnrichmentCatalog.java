@@ -17,7 +17,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         for (Record record : BundledCatalogLoader.array(RESOURCE, Record[].class))
         {
             record.validate();
-            if (values.put(normalize(record.name), record) != null)
+            if (values.put(Names.words(record.name), record) != null)
                 throw new IllegalStateException(get(1111) + record.name);
         }
         records = Collections.unmodifiableMap(values);
@@ -25,8 +25,8 @@ public final class AuthoritativeQuestEnrichmentCatalog
 
     public Record recordFor(String name)
     {
-        String wikiName = aliases().get(normalize(name));
-        return records.get(normalize(wikiName == null ? name : wikiName));
+        var wikiName = aliases().get(Names.words(name));
+        return records.get(Names.words(wikiName == null ? name : wikiName));
     }
     public Map<String, Record> all() { return records; }
     public boolean hasStrictFieldEvidence()
@@ -36,11 +36,6 @@ public final class AuthoritativeQuestEnrichmentCatalog
         return true;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
     private static Map<String, String> aliases()
     {
         Map<String, String> result = new HashMap<>();
@@ -57,7 +52,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
                 {get(1120), get(46)},
                 {"Vale Totems", get(1121)}
         };
-        for (String[] alias : values) result.put(normalize(alias[0]), alias[1]);
+        for (String[] alias : values) result.put(Names.words(alias[0]), alias[1]);
         return result;
     }
 
@@ -125,7 +120,7 @@ public final class AuthoritativeQuestEnrichmentCatalog
         {
             if (state == null || state == EvidenceState.LEGACY_NONE)
                 throw new IllegalStateException("Invalid " + field + " evidence state");
-            boolean blank = value == null || value.trim().isEmpty();
+            var blank = value == null || value.trim().isEmpty();
             if ((state == EvidenceState.VALUE) == blank
                     || ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE
                     || state == EvidenceState.SOURCE_MISSING || state == EvidenceState.PARSE_FAILURE

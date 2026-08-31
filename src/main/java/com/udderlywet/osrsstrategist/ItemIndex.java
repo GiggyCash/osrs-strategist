@@ -28,7 +28,7 @@ public final class ItemIndex
     /** Resolves an item requirement against the mode-safe observed containers. */
     public RequirementCheck check(ResourceRequirement need)
     {
-        int observed = quantity(need.getItemIds());
+        var observed = quantity(need.getItemIds());
         if (observed >= need.getRequiredQuantity())
             return new RequirementCheck(need.getId(), need.getLabel(),
                     RequirementState.VERIFIED, get(1435) + observed
@@ -37,7 +37,7 @@ public final class ItemIndex
                             + (usesGroupStorage() ? get(1436) : ".")));
         if (accountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
-            int restricted = restrictedQuantity(need.getItemIds());
+            var restricted = restrictedQuantity(need.getItemIds());
             if (observed + restricted >= need.getRequiredQuantity())
                 return checkNeeded(need, get(705));
             boolean knownStorage = data != null && data.storage() != null
@@ -78,7 +78,7 @@ public final class ItemIndex
         if (data == null || itemIds == null
                 || accountMode() != AccountMode.ULTIMATE_IRONMAN
                 || data.storage() == null) return 0;
-        int total = 0;
+        var total = 0;
         for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : data.storage().getObservedContents().entrySet())
             if (data.storage().verified(entry.getKey())
@@ -108,13 +108,13 @@ public final class ItemIndex
     public int quantity(String... names)
     {
         if (data == null || names == null || names.length == 0) return 0;
-        int total = 0;
+        var total = 0;
         total = safeAdd(total, quantityIn(data.inventory() == null
                 ? null : data.inventory().getItems(), names));
         total = safeAdd(total, quantityIn(data.equipment() == null
                 ? null : data.equipment().getEquippedItems(), names));
 
-        AccountMode mode = accountMode();
+        var mode = accountMode();
         if (mode != AccountMode.ULTIMATE_IRONMAN)
         {
             total = safeAdd(total, quantityIn(data.bank() == null
@@ -134,7 +134,7 @@ public final class ItemIndex
             for (Map.Entry<StorageCapability, List<ItemState>> entry
                     : data.storage().getObservedContents().entrySet())
             {
-                StorageCapability capability = entry.getKey();
+                var capability = entry.getKey();
                 if (!data.storage().verified(capability)) continue;
                 if (mode == AccountMode.ULTIMATE_IRONMAN
                         && isRestrictedUimStorage(capability))
@@ -160,11 +160,11 @@ public final class ItemIndex
             return 0;
         }
 
-        int total = 0;
+        var total = 0;
         for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : data.storage().getObservedContents().entrySet())
         {
-            StorageCapability capability = entry.getKey();
+            var capability = entry.getKey();
             if (!isRestrictedUimStorage(capability)
                     || !data.storage().verified(capability))
             {
@@ -179,12 +179,12 @@ public final class ItemIndex
             Iterable<String> excludedNames)
     {
         if (data == null || itemClass == null) return 0;
-        int total = 0;
+        var total = 0;
         total = safeAdd(total, quantityMatching(data.inventory() == null
                 ? null : data.inventory().getItems(), itemClass, excludedNames));
         total = safeAdd(total, quantityMatching(data.equipment() == null
                 ? null : data.equipment().getEquippedItems(), itemClass, excludedNames));
-        AccountMode mode = accountMode();
+        var mode = accountMode();
         if (mode != AccountMode.ULTIMATE_IRONMAN)
             total = safeAdd(total, quantityMatching(data.bank() == null
                     ? null : data.bank().getItems(), itemClass, excludedNames));
@@ -214,7 +214,7 @@ public final class ItemIndex
         if (data == null || itemClass == null
                 || accountMode() != AccountMode.ULTIMATE_IRONMAN
                 || data.storage() == null) return 0;
-        int total = 0;
+        var total = 0;
         for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : data.storage().getObservedContents().entrySet())
         {
@@ -274,7 +274,7 @@ public final class ItemIndex
     public boolean usableOwnershipObserved()
     {
         if (!primaryOwnershipObserved()) return false;
-        AccountMode mode = accountMode();
+        var mode = accountMode();
         return !mode.isGroupIronman() || !useGroupStorage
                 || groupStorageObserved();
     }
@@ -287,7 +287,7 @@ public final class ItemIndex
     {
         if (data == null || data.account() == null
                 || data.inventory() == null) return false;
-        AccountMode mode = accountMode();
+        var mode = accountMode();
         if (mode == AccountMode.ULTIMATE_IRONMAN) return true;
         if (!bankObserved()) return false;
         return !mode.isGroupIronman() || !useGroupStorage
@@ -317,14 +317,14 @@ public final class ItemIndex
             String... names)
     {
         if (items == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
         {
             if (item == null || item.getName() == null) continue;
-            String actual = normalize(item.getName());
+            var actual = Names.lower(item.getName());
             for (String name : names)
             {
-                if (name != null && actual.equals(normalize(name)))
+                if (name != null && actual.equals(Names.lower(name)))
                 {
                     total = safeAdd(total, Math.max(0, item.getQuantity()));
                     break;
@@ -342,7 +342,7 @@ public final class ItemIndex
     private static int quantityIn(Iterable<ItemState> items, int... ids)
     {
         if (items == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
             if (item != null)
                 for (int id : ids)
@@ -358,7 +358,7 @@ public final class ItemIndex
             ItemRequirementClass itemClass, Iterable<String> excludedNames)
     {
         if (items == null || itemClass == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
         {
             if (item == null || item.getName() == null
@@ -372,9 +372,9 @@ public final class ItemIndex
     private static boolean excluded(String itemName, Iterable<String> excludedNames)
     {
         if (itemName == null || excludedNames == null) return false;
-        String actual = normalize(itemName);
+        var actual = Names.lower(itemName);
         for (String excluded : excludedNames)
-            if (excluded != null && actual.equals(normalize(excluded))) return true;
+            if (excluded != null && actual.equals(Names.lower(excluded))) return true;
         return false;
     }
 
@@ -384,8 +384,4 @@ public final class ItemIndex
         return a + b;
     }
 
-    private static String normalize(String value)
-    {
-        return value.trim().toLowerCase(Locale.ROOT);
-    }
 }

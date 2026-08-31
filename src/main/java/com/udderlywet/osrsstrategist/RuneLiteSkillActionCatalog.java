@@ -51,12 +51,12 @@ public class RuneLiteSkillActionCatalog
 
     public List<ActionDef> actionsFor(Skill skill)
     {
-        SkillAction[] constants = actionsBySkill.get(skill);
+        var constants = actionsBySkill.get(skill);
         if (constants == null) return Collections.emptyList();
         List<ActionDef> actions = new ArrayList<>();
         for (SkillAction action : constants)
         {
-            Enum<?> enumValue = (Enum<?>) action;
+            var enumValue = (Enum<?>) action;
             String id = "runelite:" + skill.name().toLowerCase(Locale.ROOT)
                     + ":" + enumValue.name().toLowerCase(Locale.ROOT);
             String name = itemManager == null ? pretty(enumValue.name())
@@ -111,7 +111,7 @@ public class RuneLiteSkillActionCatalog
 
     private static String pretty(String value)
     {
-        String text = value.toLowerCase(Locale.ROOT).replace('_', ' ');
+        var text = value.toLowerCase(Locale.ROOT).replace('_', ' ');
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }

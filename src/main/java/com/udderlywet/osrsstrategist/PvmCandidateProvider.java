@@ -32,17 +32,17 @@ public class PvmCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().pvm() == null) return result;
 
-        AccountMode mode = context.accountMode();
-        AccountSnapshot account = context.data().account();
-        PreferenceProfile preferences = context.preferenceProfile();
+        var mode = context.accountMode();
+        var account = context.data().account();
+        var preferences = context.preferenceProfile();
         for (Map.Entry<String, PvmReadiness> entry
                 : context.data().pvm().getReadinessByActivity().entrySet())
         {
-            PvmReadiness readiness = entry.getValue();
+            var readiness = entry.getValue();
             if (readiness == null) continue;
             if (readiness.getConfidence() == Confidence.BLOCKED) continue;
 
-            PvmActivityDefinition definition = catalog.match(entry.getKey());
+            var definition = catalog.match(entry.getKey());
             if (definition != null)
             {
                 if (account == null || !ContentAccessRules.isContentAvailable(
@@ -56,10 +56,10 @@ public class PvmCandidateProvider implements CandidateProvider
 
             String normalizedKey = entry.getKey().startsWith("pvm:")
                     ? entry.getKey().substring(4) : entry.getKey();
-            String id = "pvm:" + normalizedKey;
+            var id = "pvm:" + normalizedKey;
             if (preferences.isOnCooldown(id)) continue;
-            boolean ready = readiness.isReadyForRecommendation();
-            boolean relevant = progressionRelevant(definition, context);
+            var ready = readiness.isReadyForRecommendation();
+            var relevant = progressionRelevant(definition, context);
             // A generic hiscore identity is not a reason to boss. Preparation
             // competes globally only when a goal/task makes the encounter
             // relevant and a curated readiness floor can name concrete work.
@@ -76,7 +76,7 @@ public class PvmCandidateProvider implements CandidateProvider
                         && AccountModePolicy.isRiskSensitive(mode)) score -= 8.0;
             }
 
-            String title = definition == null ? entry.getKey() : definition.getName();
+            var title = definition == null ? entry.getKey() : definition.getName();
             String missing = readiness.getMissingRequirements().isEmpty()
                     ? "" : String.join("; ", readiness.getMissingRequirements());
             if (!ready && missing.trim().isEmpty()) continue;
@@ -149,8 +149,8 @@ public class PvmCandidateProvider implements CandidateProvider
             StrategyContext context)
     {
         if (definition == null || context == null) return false;
-        String id = definition.getId();
-        GoalType goal = context.getActiveGoal();
+        var id = definition.getId();
+        var goal = context.getActiveGoal();
         if (goal == GoalType.BOWFA)
             return id.contains("gauntlet");
         if (goal == GoalType.FIRE_CAPE)
@@ -165,8 +165,8 @@ public class PvmCandidateProvider implements CandidateProvider
         SlayerSnapshot slayer = context.data() == null
                 ? null : context.data().slayer();
         if (slayer == null || !slayer.hasTask()) return false;
-        String task = normalize(slayer.getTaskName());
-        String boss = normalize(definition.getName());
+        var task = Names.words(slayer.getTaskName());
+        var boss = Names.words(definition.getName());
         return boss.contains(task) || task.contains(boss)
                 || (id.endsWith("kraken") && task.contains("kraken"))
                 || (id.endsWith("cerberus") && task.contains("hellhound"))
@@ -182,9 +182,4 @@ public class PvmCandidateProvider implements CandidateProvider
                 || id.endsWith("sol_heredit") || id.endsWith("nex"));
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(java.util.Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

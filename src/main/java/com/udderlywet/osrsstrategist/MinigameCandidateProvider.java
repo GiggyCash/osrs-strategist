@@ -39,9 +39,9 @@ public class MinigameCandidateProvider implements CandidateProvider
                 || context.data().account() == null
                 || context.data().minigames() == null) return result;
 
-        AccountSnapshot account = context.data().account();
-        AccountMode mode = context.accountMode();
-        MinigameSnapshot snapshot = context.data().minigames();
+        var account = context.data().account();
+        var mode = context.accountMode();
+        var snapshot = context.data().minigames();
 
         for (MinigameDefinition definition : catalog.all())
         {
@@ -56,9 +56,9 @@ public class MinigameCandidateProvider implements CandidateProvider
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                     && definition.getRiskLevel() == RiskLevel.HIGH) continue;
 
-            String id = "minigame:" + definition.getId();
+            var id = "minigame:" + definition.getId();
             if (context.preferenceProfile().isOnCooldown(id)) continue;
-            double score = 28.0;
+            var score = 28.0;
             if (definition.getRiskLevel() == RiskLevel.NONE) score += 4.0;
             if (context.getStrategyMode() == StrategyMode.RELAXED
                     && (definition.getAttention() == AttentionLevel.LOW
@@ -72,7 +72,7 @@ public class MinigameCandidateProvider implements CandidateProvider
             ItemRequirementResult itemResult = setup == null ? null
                     : itemEvaluator.evaluate(setup.getItems(), context.data(),
                             context.isUseGroupStorage());
-            boolean verified = setup != null && itemResult.isSatisfied();
+            var verified = setup != null && itemResult.isSatisfied();
             Guidance guidance = setup == null
                     ? verificationGuidance(definition)
                     : "forestry".equals(definition.getId())
@@ -104,7 +104,7 @@ public class MinigameCandidateProvider implements CandidateProvider
     private static Guidance verificationGuidance(
             MinigameDefinition definition)
     {
-        String activity = definition.getName();
+        var activity = definition.getName();
         return new Guidance(
                 get(350) + activity
                         + " setup equipped.",
@@ -117,8 +117,8 @@ public class MinigameCandidateProvider implements CandidateProvider
             AccountSnapshot account, boolean verified,
             ItemRequirementResult itemResult)
     {
-        int level = account.getSkillLevel(net.runelite.api.Skill.WOODCUTTING);
-        boolean f2p = account.getMembershipStatus() != MembershipStatus.P2P;
+        var level = account.getSkillLevel(net.runelite.api.Skill.WOODCUTTING);
+        var f2p = account.getMembershipStatus() != MembershipStatus.P2P;
         String tree;
         String location;
         if (level < 30)

@@ -33,14 +33,14 @@ public final class AccountStrategicPriorityService
             return new AccountStrategicPriorityProfile(mode, result);
         }
 
-        boolean ge = AccountModePolicy.mayUseGrandExchange(mode);
-        boolean selfSource = AccountModePolicy.requiresSelfSourcing(mode);
-        boolean uim = AccountModePolicy.requiresCapabilityCheckedStorage(mode);
-        boolean group = mode.isGroupIronman();
+        var ge = AccountModePolicy.mayUseGrandExchange(mode);
+        var selfSource = AccountModePolicy.requiresSelfSourcing(mode);
+        var uim = AccountModePolicy.requiresCapabilityCheckedStorage(mode);
+        var group = mode.isGroupIronman();
         boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN;
 
-        ItemsState inventory = data == null ? null : data.inventory();
+        var inventory = data == null ? null : data.inventory();
         int occupied = inventory == null
                 || !inventory.hasCompleteSlotObservation() ? -1
                 : UimSetupCostService.occupiedInventorySlots(inventory);

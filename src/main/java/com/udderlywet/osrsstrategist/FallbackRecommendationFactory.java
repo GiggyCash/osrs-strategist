@@ -42,10 +42,10 @@ final class FallbackRecommendationFactory
                     get(220),
                     get(221));
 
-        AccountSnapshot account = data.account();
+        var account = data.account();
         if (AccountBuildPolicy.allowsSkill(account, Skill.MINING))
         {
-            ItemIndex items = new ItemIndex(data, false);
+            var items = new ItemIndex(data, false);
             boolean hasPickaxe = items.quantityMatching(
                     ItemRequirementClass.PICKAXE,
                     java.util.Collections.emptyList()) > 0;
@@ -57,9 +57,9 @@ final class FallbackRecommendationFactory
                         get(223),
                         get(224));
             }
-            int current = Math.max(1, account.getSkillLevel(Skill.MINING));
-            int target = Math.min(99, current + 1);
-            boolean maxed = current >= 99;
+            var current = Math.max(1, account.getSkillLevel(Skill.MINING));
+            var target = Math.min(99, current + 1);
+            var maxed = current >= 99;
             return fallback("starter-mining",
                     maxed ? get(1311)
                             : get(1312) + target,
@@ -70,11 +70,11 @@ final class FallbackRecommendationFactory
                     get(228));
         }
 
-        Skill combatSkill = firstTrainableMeleeSkill(account);
+        var combatSkill = firstTrainableMeleeSkill(account);
         if (combatSkill != null)
         {
-            int current = Math.max(1, account.getSkillLevel(combatSkill));
-            int target = Math.min(99, current + 1);
+            var current = Math.max(1, account.getSkillLevel(combatSkill));
+            var target = Math.min(99, current + 1);
             return fallback("safe-combat-" + combatSkill.name().toLowerCase(),
                     "Train " + combatSkill.getName() + " to " + target,
                     get(1314) + attackStyle(combatSkill)

@@ -39,9 +39,9 @@ public class OpportunityEngine
         List<Opportunity> opportunities = new ArrayList<>();
         if (data == null || data.account() == null) return opportunities;
 
-        MembershipStatus membership = data.account().getMembershipStatus();
-        RecurringOpportunitySnapshot recurring = data.recurringOpportunities();
-        long now = System.currentTimeMillis();
+        var membership = data.account().getMembershipStatus();
+        var recurring = data.recurringOpportunities();
+        var now = System.currentTimeMillis();
 
         // Every currently-modelled recurring activity below is members content.
         // Keep the entire family out of an F2P plan even if its timer was
@@ -79,13 +79,13 @@ public class OpportunityEngine
                     get(1523), Collections.emptyList());
         }
 
-        ClueSnapshot clue = data.clue();
+        var clue = data.clue();
         if (clue != null && clue.isCluePresent())
         {
-            ClueTier tier = ClueTier.fromText(clue.getClueType());
+            var tier = ClueTier.fromText(clue.getClueType());
             if (tier.isAvailableFor(membership))
             {
-                ClueStepSnapshot step = clue.getCurrentStep();
+                var step = clue.getCurrentStep();
                 List<String> preparation = new ArrayList<>();
                 if (step == null)
                     preparation.add(get(392));
@@ -138,7 +138,7 @@ public class OpportunityEngine
             List<String> preparation)
     {
         if (recurring == null || recurring.readyAt(id) == null) return;
-        boolean ready = recurring.isReadyNow(id, now);
+        var ready = recurring.isReadyNow(id, now);
         result.add(new Opportunity(
                 id, type, title, ready,
                 Confidence.VERIFIED, preparation));
@@ -149,26 +149,26 @@ public class OpportunityEngine
             long now, FarmingAccessCatalog accessCatalog,
             FarmingSupplyCatalog supplyCatalog)
     {
-        String id = "opportunity:herb-run";
+        var id = "opportunity:herb-run";
         if (recurring == null || recurring.readyAt(id) == null) return;
 
         List<String> missing = new ArrayList<>();
-        ItemsState inventory = data.inventory();
+        var inventory = data.inventory();
         if (quantity(inventory, "spade") == 0) missing.add("Carry a spade");
         if (quantity(inventory, "seed dibber") == 0) missing.add(get(1527));
-        int farmingLevel = data.account().getSkillLevel(net.runelite.api.Skill.FARMING);
+        var farmingLevel = data.account().getSkillLevel(net.runelite.api.Skill.FARMING);
         ResourceRequirement herbSeeds = supplyCatalog.herbSeedsForLevel(
                 farmingLevel);
         if (inventory == null || inventory.quantityOf(herbSeeds.getItemIds()) == 0)
             missing.add(get(1528));
         if (farmingLevel < 9)
             missing.add(get(393));
-        FarmingSnapshot farming = data.farming();
+        var farming = data.farming();
         if (!hasReachableHerbPatch(farming, accessCatalog))
             missing.add(get(394));
 
-        boolean ready = recurring.isReadyNow(id, now);
-        boolean setupVerified = ready && missing.isEmpty();
+        var ready = recurring.isReadyNow(id, now);
+        var setupVerified = ready && missing.isEmpty();
         result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
                 ready, Confidence.VERIFIED, missing,
                 setupVerified, SafetyEvidence.skill(false,
@@ -179,13 +179,13 @@ public class OpportunityEngine
             GameData data, RecurringOpportunitySnapshot recurring,
             long now)
     {
-        String id = "opportunity:birdhouse";
+        var id = "opportunity:birdhouse";
         if (recurring == null || recurring.readyAt(id) == null) return;
         List<String> missing = new ArrayList<>();
-        QuestSnapshot quests = data.quests();
+        var quests = data.quests();
         if (quests == null || quests.statusOf("Bone Voyage") != QuestStatus.COMPLETE)
             missing.add(get(395));
-        ItemsState inventory = data.inventory();
+        var inventory = data.inventory();
         if (quantity(inventory, "hammer") == 0) missing.add("Carry a hammer");
         if (quantity(inventory, "chisel") == 0) missing.add("Carry a chisel");
         if (quantity(inventory, "clockwork") < 4)
@@ -200,8 +200,8 @@ public class OpportunityEngine
             missing.add(get(1532));
         if (data.account().getSkillLevel(net.runelite.api.Skill.CRAFTING) < 5)
             missing.add(get(1533));
-        boolean ready = recurring.isReadyNow(id, now);
-        boolean setupVerified = ready && missing.isEmpty();
+        var ready = recurring.isReadyNow(id, now);
+        var setupVerified = ready && missing.isEmpty();
         result.add(new Opportunity(id, OpportunityType.BIRDHOUSE_RUN,
                 "Birdhouse run", ready, Confidence.VERIFIED,
                 missing, setupVerified,

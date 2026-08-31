@@ -53,14 +53,14 @@ public final class StrategicPlanService
 
         List<StrategicPlanStep> steps = new ArrayList<>();
         Set<String> ids = new HashSet<>();
-        StrategicPlanStep current = currentStep(anchor, provenance);
+        var current = currentStep(anchor, provenance);
         steps.add(current);
         ids.add(current.getId());
 
-        List<String> path = provenance.getPath();
+        var path = provenance.getPath();
         for (int i = path.size() - 2; i >= 0; i--)
         {
-            String label = path.get(i);
+            var label = path.get(i);
             StrategicPlanStep step = dependencyStep(label,
                     context.getActiveGoal());
             if (ids.add(step.getId())) steps.add(step);
@@ -73,13 +73,13 @@ public final class StrategicPlanService
             Recommendation recommendation,
             GoalProvenance provenance)
     {
-        TrainingPlan training = recommendation.getTrainingPlan();
+        var training = recommendation.getTrainingPlan();
         if (training != null && training.getMethod() != null
                 && training.getMethod().getSkill() != null
                 && recommendation.getTargetLevel() > 0)
         {
-            Skill skill = training.getMethod().getSkill();
-            int currentTarget = recommendation.getCurrentExecutionTargetLevel();
+            var skill = training.getMethod().getSkill();
+            var currentTarget = recommendation.getCurrentExecutionTargetLevel();
             return new StrategicPlanStep(
                     "skill:" + skill.name().toLowerCase(Locale.ROOT) + ":"
                             + currentTarget,
@@ -92,7 +92,7 @@ public final class StrategicPlanService
                     recommendation.getId());
         }
 
-        String quest = questName(recommendation);
+        var quest = questName(recommendation);
         if (quest != null)
             return new StrategicPlanStep(
                     "quest:" + slug(quest), GoalNodeKind.QUEST,
@@ -109,7 +109,7 @@ public final class StrategicPlanService
 
     private StrategicPlanStep dependencyStep(String label, GoalType goal)
     {
-        QuestDefinition definition = quests.definitionFor(label);
+        var definition = quests.definitionFor(label);
         if (definition != null)
             return new StrategicPlanStep(
                     "quest:" + slug(definition.getName()), GoalNodeKind.QUEST,
@@ -117,7 +117,7 @@ public final class StrategicPlanService
                     PlanCompletionCondition.questComplete(definition.getName()),
                     "quest:" + slug(definition.getName()));
 
-        boolean target = label.equalsIgnoreCase(goal.toString());
+        var target = label.equalsIgnoreCase(goal.toString());
         return new StrategicPlanStep(
                 (target ? "goal:" : "dependency:") + slug(label),
                 target ? GoalNodeKind.META : GoalNodeKind.ACCESS,
@@ -133,9 +133,9 @@ public final class StrategicPlanService
         String title = recommendation.getTitle() == null ? ""
                 : recommendation.getTitle();
         title = title.replaceFirst(Text.get(1300), "");
-        int separator = title.indexOf(": ");
+        var separator = title.indexOf(": ");
         if (separator > 0) title = title.substring(0, separator);
-        QuestDefinition definition = quests.definitionFor(title);
+        var definition = quests.definitionFor(title);
         return definition == null ? null : definition.getName();
     }
 

@@ -52,7 +52,7 @@ public enum ItemRequirementClass
     public boolean matches(String itemName)
     {
         if (!nameObservable || itemName == null) return false;
-        String name = itemName.trim().toLowerCase(Locale.ROOT);
+        var name = itemName.trim().toLowerCase(Locale.ROOT);
         switch (this)
         {
             case AXE:

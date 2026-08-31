@@ -18,14 +18,14 @@ public final class PlanContinuityService
 
         StrategicPlan advanced = previous.advanceCompleted(
                 context == null ? null : context.data());
-        StrategicPlanStep current = advanced.getCurrentStep();
+        var current = advanced.getCurrentStep();
         Set<String> recommendationIds = recommendationIds(
                 currentRecommendations);
 
         // A current executable action becoming illegal, blocked or absent is a
         // material invalidation. Dependency-only future steps may remain while
         // the rebuilt plan supplies their newly executable recommendation.
-        String currentRecommendation = current.getRecommendationId();
+        var currentRecommendation = current.getRecommendationId();
         if (currentRecommendation != null
                 && !recommendationIds.contains(currentRecommendation))
             return rebuilt;

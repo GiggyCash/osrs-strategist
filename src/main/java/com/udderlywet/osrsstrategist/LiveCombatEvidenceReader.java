@@ -10,12 +10,10 @@ import net.runelite.api.gameval.VarbitID;
 
 /** Reads only official current RuneLite prayer/spellbook identifiers. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveCombatEvidenceReader
 {
     private final Client client;
-
-    @Inject
-    public LiveCombatEvidenceReader(Client client) { this.client = client; }
 
     public CombatEvidenceSnapshot read()
     {
@@ -23,7 +21,7 @@ public class LiveCombatEvidenceReader
             return null;
         try
         {
-            EnumSet<Prayer> active = EnumSet.noneOf(Prayer.class);
+            var active = EnumSet.noneOf(Prayer.class);
             for (Prayer prayer : Prayer.values())
                 if (client.getVarbitValue(prayer.getVarbit()) > 0) active.add(prayer);
             return new CombatEvidenceSnapshot(

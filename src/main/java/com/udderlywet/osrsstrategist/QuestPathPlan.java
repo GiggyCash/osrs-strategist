@@ -25,18 +25,12 @@ public final class QuestPathPlan
 
     public QuestPathStep stepForQuest(String questName)
     {
-        String expected = normalize(questName);
+        var expected = Names.words(questName);
         for (QuestPathStep step : steps)
-            if (normalize(step.getQuestName()).equals(expected)) return step;
+            if (Names.words(step.getQuestName()).equals(expected)) return step;
         return null;
     }
 
     public boolean isEmpty() { return steps.isEmpty(); }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(
-                java.util.Locale.ROOT).replace('\u2019', '\'')
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

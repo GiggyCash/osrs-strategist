@@ -59,14 +59,14 @@ public final class QuestPathStep
     /** Bounded property value for the common recommendation decision layer. */
     public double sharedDependencyValue()
     {
-        double goals = Math.max(0, getGoalCount() - 1) * 0.35;
-        double dependents = unfinishedDependents.size() * 0.12;
+        var goals = Math.max(0, getGoalCount() - 1) * 0.35;
+        var dependents = unfinishedDependents.size() * 0.12;
         return Math.min(1.0, goals + dependents);
     }
 
     public StrategicValue strategicValue()
     {
-        double shared = sharedDependencyValue();
+        var shared = sharedDependencyValue();
         if (shared <= 0.0 && goalPathRewardValue <= 0.0)
             return StrategicValue.neutral();
         return StrategicValue.builder()

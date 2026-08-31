@@ -46,7 +46,7 @@ public final class GuidanceChecklist
 
     public int completeCount()
     {
-        int count = 0;
+        var count = 0;
         for (GuidanceStep step : steps) if (step.isComplete()) count++;
         return count;
     }

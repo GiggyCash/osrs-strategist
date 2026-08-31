@@ -29,7 +29,7 @@ public final class SlayerPointEconomy
 
     public static int blockCapacity(int questPoints, boolean lumbridgeElite)
     {
-        int ordinary = Math.min(6, Math.max(0, questPoints) / 50);
+        var ordinary = Math.min(6, Math.max(0, questPoints) / 50);
         return ordinary + (lumbridgeElite ? 1 : 0);
     }
 
@@ -42,7 +42,7 @@ public final class SlayerPointEconomy
     /** Retains one further cancellation at the current master's actual cost. */
     public static boolean hasSustainableSkipBalance(int points, int cancelCost)
     {
-        int cost = Math.max(1, cancelCost);
+        var cost = Math.max(1, cancelCost);
         return points >= cost * 2;
     }
 }

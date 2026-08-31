@@ -47,7 +47,7 @@ public final class ProgressSessionSnapshot
 
     public long getTotalXpGained()
     {
-        long result = 0L;
+        var result = 0L;
         for (SkillSessionProgress progress : skills.values())
             result += progress.getXpGained();
         return result;
@@ -55,7 +55,7 @@ public final class ProgressSessionSnapshot
 
     public int getLevelsGained()
     {
-        int result = 0;
+        var result = 0;
         for (SkillSessionProgress progress : skills.values())
             result += progress.getLevelsGained();
         return result;

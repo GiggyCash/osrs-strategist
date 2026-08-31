@@ -21,8 +21,8 @@ public final class Presentation
             GoalRecommendationContext goalContext)
     {
         if (recommendation == null) return "";
-        StringBuilder text = new StringBuilder();
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var text = new StringBuilder();
+        var plan = recommendation.getTrainingPlan();
 
         appendGoalStatus(text, goalContext);
         appendRiskDisclosure(text, recommendation.getGuidance());
@@ -33,25 +33,25 @@ public final class Presentation
             return text.toString();
         }
 
-        TrainingMethod method = plan.getMethod();
+        var method = plan.getMethod();
         appendMethodHeader(text, recommendation, method);
 
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
         if (guidance != null)
         {
             appendCompactGuidance(text, guidance);
         }
 
-        List<RequirementCheck> unresolved = hardUnresolved(plan);
+        var unresolved = hardUnresolved(plan);
         if (!unresolved.isEmpty())
         {
             appendBreak(text, 2);
             text.append("<b>NEEDED</b><br>");
-            int shown = Math.min(2, unresolved.size());
+            var shown = Math.min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
                 if (i > 0) text.append("<br>");
-                RequirementCheck check = unresolved.get(i);
+                var check = unresolved.get(i);
                 text.append(check.getState() == RequirementState.BLOCKED
                                 ? "• Blocked: " : "• ")
                         .append(escape(check.getLabel()));
@@ -74,7 +74,7 @@ public final class Presentation
     public static String detailedHtml(Recommendation recommendation,
             GoalRecommendationContext goalContext)
     {
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         for (Section section : detailsSections(recommendation, goalContext))
         {
             if (text.length() > 0) appendBreak(text, 2);
@@ -112,7 +112,7 @@ public final class Presentation
     {
         if (recommendation == null) return Collections.emptyList();
         List<Section> sections = new ArrayList<>();
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
         if (guidance != null && guidance.getRiskDisclosure() != null)
             sections.add(new Section(
                     guidance.getRiskDisclosure().getHeading(),
@@ -122,11 +122,11 @@ public final class Presentation
             sections.add(new Section("GOAL",
                     compactSentence(goalContext.getStatus(), 160)));
 
-        String why = playerWhy(recommendation);
+        var why = playerWhy(recommendation);
         if (hasText(why))
             sections.add(new Section("WHY", compactSentence(why, 140)));
 
-        String needed = firstNeeded(recommendation);
+        var needed = firstNeeded(recommendation);
         if (hasText(needed))
             sections.add(new Section(
                     recommendation.getConfidence() == Confidence.BLOCKED
@@ -166,7 +166,7 @@ public final class Presentation
             StringBuilder text,
             Recommendation recommendation)
     {
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
         if (recommendation.getConfidence() == Confidence.BLOCKED)
         {
             text.append("<b>ACTIVITY</b><br>Blocked")
@@ -203,7 +203,7 @@ public final class Presentation
             Guidance guidance)
     {
         if (guidance == null || guidance.getRiskDisclosure() == null) return;
-        RecommendationRiskDisclosure disclosure = guidance.getRiskDisclosure();
+        var disclosure = guidance.getRiskDisclosure();
         text.append("<b>").append(escape(disclosure.getHeading()))
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
@@ -243,7 +243,7 @@ public final class Presentation
     private static boolean meaningfulSupplies(String supplies)
     {
         if (!hasText(supplies)) return false;
-        String normalized = supplies.trim().toLowerCase();
+        var normalized = supplies.trim().toLowerCase();
         return !normalized.equals("none")
                 && !normalized.startsWith(get(1234))
                 && !normalized.startsWith(get(1235))
@@ -259,17 +259,17 @@ public final class Presentation
     static String compactSentence(String value, int maxChars)
     {
         if (!hasText(value)) return "";
-        String normalized = value.trim().replaceAll("\\s+", " ");
+        var normalized = value.trim().replaceAll("\\s+", " ");
 
-        int sentence = normalized.indexOf(". ");
+        var sentence = normalized.indexOf(". ");
         if (sentence > 20 && sentence + 1 <= maxChars)
         {
             return normalized.substring(0, sentence + 1);
         }
         if (normalized.length() <= maxChars) return normalized;
 
-        int cut = Math.min(maxChars, normalized.length());
-        int word = normalized.lastIndexOf(' ', cut);
+        var cut = Math.min(maxChars, normalized.length());
+        var word = normalized.lastIndexOf(' ', cut);
         if (word >= Math.max(20, maxChars / 2)) cut = word;
         return normalized.substring(0, cut).trim() + "…";
     }
@@ -291,12 +291,12 @@ public final class Presentation
 
     private static String firstNeeded(Recommendation recommendation)
     {
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan != null)
             for (RequirementCheck check : hardUnresolved(plan))
                 if (check != null && hasText(check.getLabel()))
                     return check.getLabel();
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
         if (recommendation.getConfidence()
                     == Confidence.CHECK_NEEDED
                 && guidance != null && hasText(guidance.getSupplies()))

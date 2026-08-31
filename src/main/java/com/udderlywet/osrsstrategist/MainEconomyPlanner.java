@@ -28,8 +28,8 @@ public class MainEconomyPlanner
                     get(358));
         }
 
-        GameData data = context.data();
-        AccountEconomySnapshot economy = data == null ? null : data.economy();
+        var data = context.data();
+        var economy = data == null ? null : data.economy();
         if (economy == null
                 || economy.getConfidence() != Confidence.VERIFIED)
         {
@@ -39,8 +39,8 @@ public class MainEconomyPlanner
                     get(363));
         }
 
-        long cost = candidate.totalCost();
-        long coins = economy.getCoins();
+        var cost = candidate.totalCost();
+        var coins = economy.getCoins();
         if (cost == Long.MAX_VALUE)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
@@ -100,15 +100,15 @@ public class MainEconomyPlanner
                     Confidence.CHECK_NEEDED,
                     get(370));
 
-        long cost = estimate.getTotalCost();
-        long coins = Math.max(0L, economy.getCoins());
+        var cost = estimate.getTotalCost();
+        var coins = Math.max(0L, economy.getCoins());
         if (coins < cost)
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, Confidence.CHECK_NEEDED,
                     get(359));
 
-        long remaining = coins - cost;
-        boolean trivialSpend = cost <= 1_000L && coins >= 5_000L;
+        var remaining = coins - cost;
+        var trivialSpend = cost <= 1_000L && coins >= 5_000L;
         boolean lowBurden = cost <= coins / 10L
                 && remaining >= MINIMUM_LIQUID_BUFFER;
         if (trivialSpend || lowBurden)

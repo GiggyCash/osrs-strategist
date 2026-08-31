@@ -116,7 +116,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
         private void questReward(String suffix, String item, String quest,
                 String action, String supplies, String note, boolean ready)
         {
-            String id = "upgrade:" + suffix;
+            var id = "upgrade:" + suffix;
             // Retrieval-only UIM storage proves the item exists but does not
             // make it usable now; emit the retrieval action in that case.
             if (!eligible(id) || !questComplete(quest) || items.has(item)) return;
@@ -136,13 +136,13 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void dragonScimitar()
         {
-            String id = "upgrade:dragon-scimitar";
+            var id = "upgrade:dragon-scimitar";
             if (!members() || account.getSkillLevel(Skill.ATTACK) < 60
                     || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
                     || !eligible(id) || !questComplete("Monkey Madness I")
                     || owns("Dragon scimitar", "Abyssal whip",
                             "Blade of saeldor", get(1395))) return;
-            boolean cash = verifiedCoins(100_000L);
+            var cash = verifiedCoins(100_000L);
             String setup = mode == AccountMode.ULTIMATE_IRONMAN
                     ? get(459) : get(460);
             add(id, get(1396), get(461), 42.0,
@@ -156,8 +156,8 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void avaDevice()
         {
-            String id = "upgrade:ava-device";
-            int ranged = account.getSkillLevel(Skill.RANGED);
+            var id = "upgrade:ava-device";
+            var ranged = account.getSkillLevel(Skill.RANGED);
             if (!members() || ranged < 30
                     || !AccountBuildPolicy.allowsSkill(account, Skill.RANGED)
                     || !eligible(id) || !questComplete("Animal Magnetism")
@@ -166,7 +166,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             "Dizana's quiver")) return;
             String device = ranged >= 50
                     ? "Ava's accumulator" : "Ava's attractor";
-            String replacement = ranged >= 50 ? get(469) : get(470);
+            var replacement = ranged >= 50 ? get(469) : get(470);
             boolean ready = verifiedCoins(999L)
                     && (ranged < 50 || items.quantity("Steel arrow") >= 75);
             add(id, "Get " + device, get(471), 40.0,
@@ -182,9 +182,9 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void fighterTorso()
         {
-            String id = "upgrade:fighter-torso";
-            RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
-            boolean defencePure = build == RestrictedBuildType.DEFENCE_PURE;
+            var id = "upgrade:fighter-torso";
+            var build = AccountBuildPolicy.effectiveBuild(account);
+            var defencePure = build == RestrictedBuildType.DEFENCE_PURE;
             boolean protectedBuild = build == RestrictedBuildType.SKILLER
                     || build == RestrictedBuildType.F2P_SKILLER
                     || build == RestrictedBuildType.PRAYER_SKILLER
@@ -198,7 +198,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     || owns("Fighter torso", "Fighter torso (l)",
                             "Bandos chestplate", get(1398),
                             "Torva platebody", get(1399))) return;
-            double score = mode.isIronLike() ? 48.0 : 37.0;
+            var score = mode.isIronLike() ? 48.0 : 37.0;
             if (defencePure) score += 8.0;
             if (goalIs(GoalType.GEAR_TARGET, GoalType.RAID_READY)) score += 10.0;
             add(id, get(1400), get(487), score,
@@ -211,8 +211,8 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void abyssalWhip()
         {
-            String id = "upgrade:abyssal-whip";
-            int attack = account.getSkillLevel(Skill.ATTACK);
+            var id = "upgrade:abyssal-whip";
+            var attack = account.getSkillLevel(Skill.ATTACK);
             if (!members() || attack < 70
                     || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
                     || !eligible(id)
@@ -220,7 +220,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             "Abyssal tentacle", "Blade of saeldor",
                             get(1395), "Ghrazi rapier", "Osmumten's fang",
                             "Soulreaper axe", "Scythe of vitur")) return;
-            int slayer = account.getSkillLevel(Skill.SLAYER);
+            var slayer = account.getSkillLevel(Skill.SLAYER);
             if (mode.usesGrandExchange())
             {
                 add(id, get(1401), get(488), 41.0,
@@ -251,9 +251,9 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void dragonDefender()
         {
-            String id = "upgrade:dragon-defender";
-            int attack = account.getSkillLevel(Skill.ATTACK);
-            int strength = account.getSkillLevel(Skill.STRENGTH);
+            var id = "upgrade:dragon-defender";
+            var attack = account.getSkillLevel(Skill.ATTACK);
+            var strength = account.getSkillLevel(Skill.STRENGTH);
             if (!members() || !eligible(id)
                     || account.getSkillLevel(Skill.DEFENCE) < 60 || attack < 60
                     || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
@@ -272,18 +272,18 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void barrowsGloves()
         {
-            String id = "upgrade:barrows-gloves";
+            var id = "upgrade:barrows-gloves";
             if (!members() || !eligible(id) || !questComplete(get(1198))
                     || owns("Barrows gloves", "Ferocious gloves",
                             "Zaryte vambraces")) return;
             boolean elite = data.diaries() != null
                     && data.diaries().isTierComplete(get(1152),
                             DiaryTier.ELITE);
-            long price = elite ? 104_000L : 130_000L;
-            AccountEconomySnapshot economy = data.economy();
+            var price = elite ? 104_000L : 130_000L;
+            var economy = data.economy();
             boolean known = economy != null
                     && economy.getConfidence() == Confidence.VERIFIED;
-            boolean affordable = known && economy.getCoins() >= price;
+            var affordable = known && economy.getCoins() >= price;
             String supplies = !known
                     ? get(509) + format(price) + " coins."
                     : !affordable
@@ -291,7 +291,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             + get(1407) + format(price) + ". You are "
                             + format(price - economy.getCoins()) + " coins short."
                     : get(1408) + format(price) + " coin shop price.";
-            double score = 48.0;
+            var score = 48.0;
             if (goalIs(GoalType.BARROWS_GLOVES)) score += 35.0;
             if (goalIs(GoalType.GEAR_TARGET, GoalType.RAID_READY)) score += 10.0;
             add(id, get(1409), get(514), score,
@@ -303,20 +303,20 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void bowfa()
         {
-            String id = "upgrade:bowfa";
+            var id = "upgrade:bowfa";
             if (!members() || !goalIs(GoalType.BOWFA, GoalType.GEAR_TARGET,
                     GoalType.RAID_READY) || !questComplete("Song of the Elves")
                     || !eligible(id)
                     || owns("Bow of faerdhinen", get(1345))) return;
-            boolean seed = owns(get(1410));
-            int shards = items.quantity("Crystal shard");
-            double score = goalIs(GoalType.BOWFA) ? 78.0 : 54.0;
+            var seed = owns(get(1410));
+            var shards = items.quantity("Crystal shard");
+            var score = goalIs(GoalType.BOWFA) ? 78.0 : 54.0;
             if (seed)
             {
                 boolean selfSing = account.getSkillLevel(Skill.SMITHING) >= 82
                         && account.getSkillLevel(Skill.CRAFTING) >= 82;
-                int needed = selfSing ? 100 : 150;
-                int shortfall = Math.max(0, needed - shards);
+                var needed = selfSing ? 100 : 150;
+                var shortfall = Math.max(0, needed - shards);
                 add(id, get(1411), get(515), score,
                         shortfall == 0 ? Confidence.VERIFIED
                                 : Confidence.CHECK_NEEDED,
@@ -358,17 +358,17 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void anglerOutfit()
         {
-            String id = "upgrade:angler-outfit";
-            int fishing = account.getSkillLevel(Skill.FISHING);
+            var id = "upgrade:angler-outfit";
+            var fishing = account.getSkillLevel(Skill.FISHING);
             if (!members() || fishing < 15 || !eligible(id)) return;
             int pieces = (owns("Angler hat", get(1214)) ? 1 : 0)
                     + (owns("Angler top", "Spirit angler top") ? 1 : 0)
                     + (owns("Angler waders", get(1215)) ? 1 : 0)
                     + (owns("Angler boots", get(1216)) ? 1 : 0);
             if (pieces >= 4) return;
-            int xp = account.getSkillExperience(Skill.FISHING);
+            var xp = account.getSkillExperience(Skill.FISHING);
             if (xp <= 0) xp = Experience.getXpForLevel(fishing);
-            int remaining = Math.max(0, Experience.getXpForLevel(99) - xp);
+            var remaining = Math.max(0, Experience.getXpForLevel(99) - xp);
             double score = 16.0 + (context.isCollectionistMode() ? 30.0 : 0.0)
                     + (fishing >= 82 ? 17.0 : 0.0)
                     + (goalIs(GoalType.MAX) && remaining >= 5_000_000
@@ -395,7 +395,7 @@ public class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private boolean verifiedCoins(long needed)
         {
-            AccountEconomySnapshot economy = data.economy();
+            var economy = data.economy();
             return economy != null
                     && economy.getConfidence() == Confidence.VERIFIED
                     && economy.getCoins() >= needed;

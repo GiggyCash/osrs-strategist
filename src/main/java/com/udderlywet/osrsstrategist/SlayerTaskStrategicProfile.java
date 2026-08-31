@@ -95,7 +95,7 @@ public final class SlayerTaskStrategicProfile
 
     public Integer weightFor(String masterId)
     {
-        return assignmentWeights.get(normalize(masterId));
+        return assignmentWeights.get(Names.slug(masterId));
     }
 
     private static int scale(int value)
@@ -103,9 +103,4 @@ public final class SlayerTaskStrategicProfile
         return Math.max(1, Math.min(5, value));
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
-    }
 }

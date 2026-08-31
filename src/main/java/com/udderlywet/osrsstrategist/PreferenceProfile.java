@@ -34,14 +34,14 @@ public final class PreferenceProfile
 
     public double timedScoreAdjustmentFor(String activityId)
     {
-        TimedScoreAdjustment adjustment = timedAdjustments.get(activityId);
+        var adjustment = timedAdjustments.get(activityId);
 
         if (adjustment == null)
         {
             return 0.0;
         }
 
-        long now = System.currentTimeMillis();
+        var now = System.currentTimeMillis();
         if (adjustment.isExpired(now))
         {
             timedAdjustments.remove(activityId);
@@ -53,7 +53,7 @@ public final class PreferenceProfile
 
     public boolean isOnCooldown(String activityId)
     {
-        Long cooldownUntil = cooldowns.get(activityId);
+        var cooldownUntil = cooldowns.get(activityId);
 
         if (cooldownUntil == null)
         {
@@ -95,8 +95,8 @@ public final class PreferenceProfile
 
     public void apply(String activityId, FeedbackAction action)
     {
-        long now = System.currentTimeMillis();
-        double delta = 0.0;
+        var now = System.currentTimeMillis();
+        var delta = 0.0;
 
         switch (action)
         {
@@ -188,8 +188,8 @@ public final class PreferenceProfile
 
         for (Map.Entry<String, Double> entry : storedWeights.entrySet())
         {
-            String activityId = entry.getKey();
-            Double weight = entry.getValue();
+            var activityId = entry.getKey();
+            var weight = entry.getValue();
 
             if (activityId == null || weight == null)
             {
@@ -214,12 +214,12 @@ public final class PreferenceProfile
             return;
         }
 
-        long now = System.currentTimeMillis();
+        var now = System.currentTimeMillis();
 
         for (Map.Entry<String, Long> entry : storedCooldowns.entrySet())
         {
-            String activityId = entry.getKey();
-            Long cooldownUntil = entry.getValue();
+            var activityId = entry.getKey();
+            var cooldownUntil = entry.getValue();
 
             if (activityId == null
                     || cooldownUntil == null
@@ -245,12 +245,12 @@ public final class PreferenceProfile
             return;
         }
 
-        long now = System.currentTimeMillis();
+        var now = System.currentTimeMillis();
         for (Map.Entry<String, TimedScoreAdjustment> entry
                 : storedAdjustments.entrySet())
         {
-            String activityId = entry.getKey();
-            TimedScoreAdjustment adjustment = entry.getValue();
+            var activityId = entry.getKey();
+            var adjustment = entry.getValue();
 
             if (activityId == null
                     || adjustment == null

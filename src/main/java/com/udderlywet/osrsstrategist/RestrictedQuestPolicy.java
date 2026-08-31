@@ -17,7 +17,7 @@ public final class RestrictedQuestPolicy
     public static boolean isSafe(AccountSnapshot account, String questName)
     {
         if (account == null || questName == null) return false;
-        RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+        var build = AccountBuildPolicy.effectiveBuild(account);
         switch (build)
         {
             case STANDARD:
@@ -47,7 +47,7 @@ public final class RestrictedQuestPolicy
 
     private static boolean safeForPrayerOnly(String quest)
     {
-        String key = PolicyLists.normalize(quest);
+        var key = PolicyLists.normalize(quest);
         return LEVEL_THREE.contains(key) || PRAYER_EXTRA.contains(key);
     }
 }

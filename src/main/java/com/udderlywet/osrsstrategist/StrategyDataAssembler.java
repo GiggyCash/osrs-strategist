@@ -84,7 +84,7 @@ public class StrategyDataAssembler
 
     public synchronized GameData read()
     {
-        AccountSnapshot account = accountReader.read();
+        var account = accountReader.read();
         if (account == null) return null;
 
         // A name is mutable and must never be used to attach cached state to a
@@ -93,7 +93,7 @@ public class StrategyDataAssembler
         // identity only so the next proven hash can perform the correct clear.
         if (!account.hasStableAccountIdentity()) return null;
 
-        String identity = accountIdentity(account);
+        var identity = accountIdentity(account);
         if (lastAccountIdentity != null && !lastAccountIdentity.equals(identity))
         {
             // RuneScapeProfileChanged is the normal signal, but comparing the
@@ -113,10 +113,10 @@ public class StrategyDataAssembler
         lastAccountIdentity = identity;
         lastAccountTypeCode = account.getAccountTypeCode();
 
-        ItemsState inventory = itemStateReader.readInventory();
-        ItemsState bank = itemStateReader.readBank();
-        ItemsState equipment = itemStateReader.readEquipment();
-        StorageSnapshot rememberedStorage = observedStateStore.storage();
+        var inventory = itemStateReader.readInventory();
+        var bank = itemStateReader.readBank();
+        var equipment = itemStateReader.readEquipment();
+        var rememberedStorage = observedStateStore.storage();
         StorageSnapshot storage = runePouchStateReader == null
                 ? rememberedStorage
                 : runePouchStateReader.merge(rememberedStorage, inventory);
@@ -126,7 +126,7 @@ public class StrategyDataAssembler
         AccountEconomySnapshot economy = liveEconomy != null
                 ? liveEconomy : observedStateStore.economy();
 
-        QuestSnapshot liveQuests = questStateReader.read();
+        var liveQuests = questStateReader.read();
         QuestSnapshot quests = liveQuests != null
                 ? liveQuests : observedStateStore.quests();
         DiarySnapshot liveDiaries = diaryStateReader == null
@@ -140,12 +140,12 @@ public class StrategyDataAssembler
                         ? observedCombatAchievements
                         : combatAchievementReader.read(observedCombatAchievements);
 
-        AccountMode accountMode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var accountMode = AccountMode.fromTypeCode(account.getAccountTypeCode());
         ItemsState liveGroupStorage = accountMode.isGroupIronman()
                 ? itemStateReader.readGroupStorage() : null;
         ItemsState groupStorage = liveGroupStorage != null
                 ? liveGroupStorage : observedStateStore.groupStorage();
-        ClueSnapshot rememberedClue = observedStateStore.clue();
+        var rememberedClue = observedStateStore.clue();
         ClueSnapshot clue = clueStateReader == null
                 ? rememberedClue
                 : clueStateReader.read(accountMode, inventory, bank, rememberedClue);
@@ -163,13 +163,13 @@ public class StrategyDataAssembler
         SailingSnapshot sailing = liveSailing != null
                 ? liveSailing : observedStateStore.sailing();
 
-        PvmSnapshot observedPvm = observedStateStore.pvm();
+        var observedPvm = observedStateStore.pvm();
         PvmSnapshot pvm = pvmReadinessAnalyzer == null
                 ? observedPvm
                 : pvmReadinessAnalyzer.analyze(
                         account, quests, equipment, inventory, storage, bank,
                         observedPvm);
-        AccessMemorySnapshot accessMemory = accessMemoryStore.snapshot();
+        var accessMemory = accessMemoryStore.snapshot();
         FarmingSnapshot farming = farmingAccessEvaluator.evaluate(
                 account, quests, accessMemory, observedStateStore.farming());
         return GameData.builder(account)
@@ -204,12 +204,12 @@ public class StrategyDataAssembler
     public synchronized boolean observePoh()
     {
         if (pohStateReader == null) return false;
-        AccountSnapshot account = accountReader.read();
+        var account = accountReader.read();
         if (account == null || !account.hasStableAccountIdentity()
                 || lastAccountIdentity == null
                 || !lastAccountIdentity.equals(accountIdentity(account)))
             return false;
-        PohSnapshot observed = pohStateReader.read();
+        var observed = pohStateReader.read();
         if (observed == null || observed.equals(observedStateStore.poh()))
             return false;
         observedStateStore.setPoh(observed);

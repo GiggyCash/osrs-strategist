@@ -59,7 +59,7 @@ public class UimCapabilityService
                         get(943));
         }
 
-        StorageSnapshot storage = data.storage();
+        var storage = data.storage();
         CapabilityState capabilityState = storage == null
                 ? CapabilityState.UNKNOWN
                 : storage.stateOf(capability);
@@ -117,7 +117,7 @@ public class UimCapabilityService
 
     public boolean shouldRequireExplicitWarning(StorageCapability capability)
     {
-        RiskLevel risk = riskFor(capability);
+        var risk = riskFor(capability);
         return risk == RiskLevel.HIGH || risk == RiskLevel.IRREVERSIBLE;
     }
 

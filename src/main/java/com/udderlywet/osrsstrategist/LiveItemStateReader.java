@@ -19,21 +19,13 @@ import net.runelite.client.game.ItemManager;
  * an unopened bank as an empty bank.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveItemStateReader
 {
     private final Client client;
     private final ItemManager itemManager;
     private ItemsState lastBankSnapshot;
     private ItemsState lastGroupStorageSnapshot;
-
-    @Inject
-    public LiveItemStateReader(
-            Client client,
-            ItemManager itemManager)
-    {
-        this.client = client;
-        this.itemManager = itemManager;
-    }
 
     public ItemsState readInventory()
     {
@@ -79,7 +71,7 @@ public class LiveItemStateReader
 
     public void observeGroupStorage(ItemContainer container)
     {
-        List<ItemState> items = snapshot(container);
+        var items = snapshot(container);
         if (items != null)
             lastGroupStorageSnapshot = new ItemsState(
                     true, items, System.currentTimeMillis());
@@ -109,10 +101,10 @@ public class LiveItemStateReader
     {
         if (container == null) return null;
         List<ItemState> result = new ArrayList<>();
-        Item[] containerItems = container.getItems();
+        var containerItems = container.getItems();
         for (int slotIndex = 0; slotIndex < containerItems.length; slotIndex++)
         {
-            Item item = containerItems[slotIndex];
+            var item = containerItems[slotIndex];
             if (item == null
                     || item.getId() < 0
                     || item.getQuantity() <= 0)

@@ -17,21 +17,21 @@ public class CollectionLogCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().collectionLog() == null) return result;
 
-        CollectionLogSnapshot log = context.data().collectionLog();
+        var log = context.data().collectionLog();
         Set<String> categories = new HashSet<>(log.getCategoryTotals().keySet());
         categories.addAll(log.getCategoryCompleted().keySet());
         for (String category : categories)
         {
-            int total = log.getCategoryTotal(category);
-            int complete = log.getCategoryCompleted(category);
+            var total = log.getCategoryTotal(category);
+            var complete = log.getCategoryCompleted(category);
             if (total <= 0 || complete < 0 || complete >= total) continue;
-            int missing = total - complete;
+            var missing = total - complete;
             if (!context.isCollectionistMode() && missing > 3) continue;
 
-            String id = "collection-log:" + slug(category);
+            var id = "collection-log:" + slug(category);
             if (context.preferenceProfile().isOnCooldown(id)) continue;
-            double percent = complete * 100.0 / total;
-            double score = 20.0 + Math.min(20.0, percent * 0.20);
+            var percent = complete * 100.0 / total;
+            var score = 20.0 + Math.min(20.0, percent * 0.20);
             if (missing == 1) score += 14.0;
             else if (missing == 2) score += 9.0;
             else if (missing == 3) score += 5.0;

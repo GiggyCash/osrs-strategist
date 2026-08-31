@@ -175,7 +175,7 @@ public class RecommendationGuidanceService
                         data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        int level = data.account().getSkillLevel(Skill.RUNECRAFT);
+        var level = data.account().getSkillLevel(Skill.RUNECRAFT);
         String rune = level >= 20 ? "body" : level >= 14 ? "fire"
                 : level >= 9 ? "earth" : level >= 5 ? "water"
                 : level >= 2 ? "mind" : "air";
@@ -208,7 +208,7 @@ public class RecommendationGuidanceService
                         data.account().getAccountTypeCode())
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
-        String id = plan.getMethod().getId();
+        var id = plan.getMethod().getId();
         if ("thieving_uim_lumbridge_people".equals(id))
             return new Guidance(
                     get(668)
@@ -255,11 +255,11 @@ public class RecommendationGuidanceService
                 data.account(), currentLevel, targetLevel);
         if (stages.isEmpty()) return null;
 
-        String action = actionGuidance(stages);
+        var action = actionGuidance(stages);
         String supplies = supplyGuidance(
                 data, data.account(), stages, useGroupStorage);
-        String location = locationGuidance(data.quests());
-        String note = get(677);
+        var location = locationGuidance(data.quests());
+        var note = get(677);
 
         return new Guidance(
                 action, supplies, location, note);
@@ -271,13 +271,13 @@ public class RecommendationGuidanceService
             int targetLevel)
     {
         List<StagePlan> plans = new ArrayList<>();
-        int currentXp = account.getSkillExperience(Skill.COOKING);
+        var currentXp = account.getSkillExperience(Skill.COOKING);
         if (currentXp <= 0)
         {
             currentXp = Experience.getXpForLevel(currentLevel);
         }
 
-        int stageStartXp = currentXp;
+        var stageStartXp = currentXp;
         for (CookingStage stage : F2P_EARLY_COOKING)
         {
             if (stage.endLevel <= currentLevel
@@ -286,10 +286,10 @@ public class RecommendationGuidanceService
                 continue;
             }
 
-            int stageTargetLevel = Math.min(stage.endLevel, targetLevel);
-            int stageTargetXp = Experience.getXpForLevel(stageTargetLevel);
-            int xpNeeded = Math.max(0, stageTargetXp - stageStartXp);
-            int successfulCooks = divideRoundUp(xpNeeded, stage.xpEach);
+            var stageTargetLevel = Math.min(stage.endLevel, targetLevel);
+            var stageTargetXp = Experience.getXpForLevel(stageTargetLevel);
+            var xpNeeded = Math.max(0, stageTargetXp - stageStartXp);
+            var successfulCooks = divideRoundUp(xpNeeded, stage.xpEach);
             int rawNeeded = Math.max(
                     successfulCooks,
                     (int) Math.ceil(successfulCooks * LOW_LEVEL_BURN_BUFFER));
@@ -308,10 +308,10 @@ public class RecommendationGuidanceService
 
     private static String actionGuidance(List<StagePlan> stages)
     {
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         for (int i = 0; i < stages.size(); i++)
         {
-            StagePlan stage = stages.get(i);
+            var stage = stages.get(i);
             if (i > 0) text.append(" Then ");
             text.append("cook ")
                     .append(stage.stage.foodName)
@@ -332,7 +332,7 @@ public class RecommendationGuidanceService
             List<StagePlan> stages,
             boolean useGroupStorage)
     {
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
 
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
@@ -346,8 +346,8 @@ public class RecommendationGuidanceService
                         stage.stage.rawItemName);
                 int storage = quantityByNameSafeUimStorage(
                         data.storage(), stage.stage.rawItemName);
-                int verified = inventory + storage;
-                int missing = Math.max(0, stage.rawNeeded - verified);
+                var verified = inventory + storage;
+                var missing = Math.max(0, stage.rawNeeded - verified);
                 ownedParts.add(verified + " "
                         + stage.stage.rawItemName.toLowerCase());
                 if (missing > 0)
@@ -357,7 +357,7 @@ public class RecommendationGuidanceService
                 }
             }
 
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
             text.append("Plan for ").append(requiredSummary(stages))
                     .append(get(1445))
                     .append(joinNatural(ownedParts)).append(".");
@@ -390,7 +390,7 @@ public class RecommendationGuidanceService
                     stage.stage.rawItemName);
             int bankQuantity = quantityByName(
                     data.bank().getItems(), stage.stage.rawItemName);
-            int groupQuantity = 0;
+            var groupQuantity = 0;
             if (useGroupStorage && mode.isGroupIronman()
                     && data.groupStorage() != null
                     && data.groupStorage().isObserved())
@@ -399,8 +399,8 @@ public class RecommendationGuidanceService
                         data.groupStorage().getItems(),
                         stage.stage.rawItemName);
             }
-            int verified = bankQuantity + inventoryQuantity + groupQuantity;
-            int missing = Math.max(0, stage.rawNeeded - verified);
+            var verified = bankQuantity + inventoryQuantity + groupQuantity;
+            var missing = Math.max(0, stage.rawNeeded - verified);
 
             ownedParts.add(verified + " "
                     + stage.stage.rawItemName.toLowerCase());
@@ -411,7 +411,7 @@ public class RecommendationGuidanceService
             }
         }
 
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         text.append("Plan for ")
                 .append(requiredSummary(stages))
                 .append(". Verified: ")
@@ -472,7 +472,7 @@ public class RecommendationGuidanceService
             String expectedName)
     {
         if (items == null || expectedName == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
         {
             if (item != null && item.getName() != null
@@ -489,11 +489,11 @@ public class RecommendationGuidanceService
             String expectedName)
     {
         if (storage == null || expectedName == null) return 0;
-        int total = 0;
+        var total = 0;
         for (Map.Entry<StorageCapability, List<ItemState>> entry
                 : storage.getObservedContents().entrySet())
         {
-            StorageCapability capability = entry.getKey();
+            var capability = entry.getKey();
             if (!storage.verified(capability)
                     || UimStorageMechanics.isRestrictedRetrieval(capability))
             {
@@ -510,7 +510,7 @@ public class RecommendationGuidanceService
         if (parts.size() == 1) return parts.get(0);
         if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
 
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         for (int i = 0; i < parts.size(); i++)
         {
             if (i > 0)

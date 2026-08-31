@@ -38,10 +38,10 @@ public final class MethodRecommendationValueService
     {
         TrainingPlan plan = recommendation == null
                 ? null : recommendation.getTrainingPlan();
-        TrainingMethod method = plan == null ? null : plan.getMethod();
+        var method = plan == null ? null : plan.getMethod();
         if (method == null || context == null) return recommendation;
         recommendation = resources.attach(recommendation, context);
-        TravelAwareMethodAssessment assessment = travel.assess(method, context);
+        var assessment = travel.assess(method, context);
         if (assessment == null || assessment.getLocation() == null)
             return recommendation;
 
@@ -53,8 +53,8 @@ public final class MethodRecommendationValueService
                                 .evidence("travel:"
                                         + assessment.getLocation().getId())
                                 .build());
-        Recommendation result = recommendation.withStrategicValue(value);
-        Guidance guidance = result.getGuidance();
+        var result = recommendation.withStrategicValue(value);
+        var guidance = result.getGuidance();
         if (guidance == null) return result;
         return result.withGuidance(new Guidance(
                 guidance.getAction(), guidance.getSupplies(),

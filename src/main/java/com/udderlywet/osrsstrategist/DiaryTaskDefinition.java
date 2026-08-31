@@ -24,12 +24,12 @@ public final class DiaryTaskDefinition
 
     public String getId()
     {
-        return "diary-task:" + normalize(region) + ":"
-                + tier.name().toLowerCase(Locale.ROOT) + ":" + normalize(task);
+        return "diary-task:" + Names.slug(region) + ":"
+                + tier.name().toLowerCase(Locale.ROOT) + ":" + Names.slug(task);
     }
     public boolean isTransportRelevant()
     {
-        String value = task.toLowerCase(Locale.ROOT);
+        var value = task.toLowerCase(Locale.ROOT);
         return value.contains("teleport") || value.contains("travel")
                 || value.contains("fairy ring") || value.contains("glider")
                 || value.contains("balloon") || value.contains("boat")
@@ -40,9 +40,4 @@ public final class DiaryTaskDefinition
         return "Wilderness".equals(region);
     }
 
-    private static String normalize(String value)
-    {
-        return value.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
-    }
 }

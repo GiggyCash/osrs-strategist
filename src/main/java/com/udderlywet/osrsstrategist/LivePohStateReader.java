@@ -17,6 +17,7 @@ import net.runelite.client.plugins.poh.PohIcons;
  * presence and absence, while every other scene returns no observation.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LivePohStateReader
 {
     public static final String ARMOUR_CASE = "poh-armour-case";
@@ -45,19 +46,13 @@ public class LivePohStateReader
 
     private final Client client;
 
-    @Inject
-    public LivePohStateReader(Client client)
-    {
-        this.client = client;
-    }
-
     public PohSnapshot read()
     {
         if (client == null || client.getGameState() != GameState.LOGGED_IN
                 || client.getVarbitValue(VarbitID.POH_BUILDING_MODE) != 1)
             return null;
-        WorldView worldView = client.getTopLevelWorldView();
-        Scene scene = worldView == null ? null : worldView.getScene();
+        var worldView = client.getTopLevelWorldView();
+        var scene = worldView == null ? null : worldView.getScene();
         if (scene == null || scene.getTiles() == null) return null;
 
         Set<Integer> objectIds = new HashSet<>();
@@ -85,7 +80,7 @@ public class LivePohStateReader
         add(tile.getDecorativeObject(), ids);
         add(tile.getGroundObject(), ids);
         add(tile.getWallObject(), ids);
-        GameObject[] gameObjects = tile.getGameObjects();
+        var gameObjects = tile.getGameObjects();
         if (gameObjects != null)
             for (GameObject object : gameObjects) add(object, ids);
     }
@@ -106,7 +101,7 @@ public class LivePohStateReader
                 && id <= ObjectID.POH_COS_ROOM_ARMOUR_CASE_OPEN_MAHOGANY)
             verify(values, ARMOUR_CASE);
 
-        PohIcons icon = PohIcons.getIcon(id);
+        var icon = PohIcons.getIcon(id);
         if (icon != null)
         {
             switch (icon)

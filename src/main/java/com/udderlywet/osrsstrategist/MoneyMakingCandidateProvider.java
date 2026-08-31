@@ -6,15 +6,10 @@ import javax.inject.Singleton;
 
 /** Surfaces money/resource work only when cash pressure or a gear goal makes it relevant. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class MoneyMakingCandidateProvider implements CandidateProvider
 {
     private final MoneyMakingCatalog catalog;
-
-    @Inject
-    public MoneyMakingCandidateProvider(MoneyMakingCatalog catalog)
-    {
-        this.catalog = catalog;
-    }
 
     @Override
     public String getId() { return "money-candidates"; }
@@ -26,8 +21,8 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().account() == null) return result;
 
-        AccountSnapshot account = context.data().account();
-        AccountEconomySnapshot economy = context.data().economy();
+        var account = context.data().account();
+        var economy = context.data().economy();
         boolean explicitGearNeed = context.getActiveGoal() == GoalType.GEAR_TARGET
                 || context.getActiveGoal() == GoalType.RAID_READY;
         boolean observedCashPressure = economy != null
@@ -35,7 +30,7 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
                 && economy.getCoins() < 1_000_000L;
         if (!explicitGearNeed && !observedCashPressure) return result;
 
-        AccountMode mode = context.accountMode();
+        var mode = context.accountMode();
         for (MoneyMakingDefinition method : catalog.forAccount(mode))
         {
             if (!ContentAccessRules.isContentAvailable(
@@ -49,14 +44,14 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
                     || method.getRiskLevel() == RiskLevel.HIGH
                     || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)) continue;
 
-            String id = method.getId();
+            var id = method.getId();
             if (context.preferenceProfile().isOnCooldown(id)) continue;
-            Guidance guidance = guidanceFor(method, context);
+            var guidance = guidanceFor(method, context);
             // A catalog identity is not a recommendation. Price-sensitive,
             // encounter-dependent, or access-dependent methods stay hidden
             // until Compass can publish one coherent executable loop.
             if (guidance == null) continue;
-            double score = 25.0;
+            var score = 25.0;
             if (observedCashPressure) score += 12.0;
             if (explicitGearNeed) score += 7.0;
             if (method.getRiskLevel() == RiskLevel.NONE) score += 4.0;
@@ -91,7 +86,7 @@ public class MoneyMakingCandidateProvider implements CandidateProvider
     {
         if (method == null || context == null) return null;
         if (!"money:agility-pyramid".equals(method.getId())) return null;
-        AccountMode mode = context.accountMode();
+        var mode = context.accountMode();
         if (!mode.isIronLike()
                 || mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN

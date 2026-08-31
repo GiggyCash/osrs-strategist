@@ -9,6 +9,7 @@ import net.runelite.api.gameval.VarPlayerID;
 
 /** Reads only Sailing progression that RuneLite exposes as stable live state. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveSailingStateReader
 {
     private static final int[] PORT_TASK_VARPS = {
@@ -26,12 +27,6 @@ public class LiveSailingStateReader
     private int cachedTick = -1;
     private SailingSnapshot cached;
 
-    @Inject
-    public LiveSailingStateReader(Client client)
-    {
-        this.client = client;
-    }
-
     public SailingSnapshot read(QuestSnapshot quests)
     {
         if (client.getGameState() != GameState.LOGGED_IN)
@@ -40,7 +35,7 @@ public class LiveSailingStateReader
             cached = null;
             return null;
         }
-        int tick = client.getTickCount();
+        var tick = client.getTickCount();
         if (cached != null && cachedTick == tick) return cached;
 
         Set<String> ports = new HashSet<>();

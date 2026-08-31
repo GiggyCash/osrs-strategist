@@ -28,9 +28,9 @@ public class MilestoneTracker
             AccountSnapshot account)
     {
         if (tracked == null || account == null) return null;
-        Skill skill = tracked.getSkill();
+        var skill = tracked.getSkill();
         if (skill == null) return null;
-        int currentLevel = account.getSkillLevel(skill);
+        var currentLevel = account.getSkillLevel(skill);
         if (currentLevel < tracked.getTargetLevel()) return null;
         return new MilestoneCompletion(
                 tracked.getActivityId(), tracked.getTitle(), skill,
@@ -49,8 +49,8 @@ public class MilestoneTracker
             CollectionLogSnapshot collectionLog)
     {
         if (recommendations == null || recommendations.isEmpty()) return null;
-        Recommendation best = recommendations.get(0);
-        Skill skill = skillFor(best);
+        var best = recommendations.get(0);
+        var skill = skillFor(best);
         if (skill == null
                 || best.getCurrentLevel() <= 0
                 || best.getTargetLevel() <= best.getCurrentLevel())
@@ -58,7 +58,7 @@ public class MilestoneTracker
             return null;
         }
 
-        TrainingPlan plan = best.getTrainingPlan();
+        var plan = best.getTrainingPlan();
         boolean progressionProtected;
         if (progressionObjectiveService != null)
         {
@@ -91,7 +91,7 @@ public class MilestoneTracker
     public static Skill skillFor(Recommendation recommendation)
     {
         if (recommendation == null || recommendation.getId() == null) return null;
-        String prefix = "skill:";
+        var prefix = "skill:";
         if (!recommendation.getId().startsWith(prefix)) return null;
         String name = recommendation.getId().substring(prefix.length())
                 .toUpperCase(Locale.ROOT);

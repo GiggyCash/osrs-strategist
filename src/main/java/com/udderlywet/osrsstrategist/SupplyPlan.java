@@ -53,7 +53,7 @@ public final class SupplyPlan
 
     public int getTotalMissingUnits()
     {
-        long total = 0L;
+        var total = 0L;
         for (ResourcePlanEntry entry : entries)
         {
             total += entry.getMissing();

@@ -29,11 +29,11 @@ public class PurchaseCostAdvisor
             AccountEconomySnapshot economy,
             List<MethodInput> missing)
     {
-        PurchaseCostEstimate estimate = estimate(missing);
+        var estimate = estimate(missing);
         if (!estimate.isComplete() || estimate.getTotalCost() <= 0) return null;
-        long total = estimate.getTotalCost();
+        var total = estimate.getTotalCost();
 
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         text.append(Text.get(412))
                 .append(format(total))
                 .append(" coins total.");
@@ -41,7 +41,7 @@ public class PurchaseCostAdvisor
         if (economy != null
                 && economy.getConfidence() == Confidence.VERIFIED)
         {
-            long cash = economy.getCoins();
+            var cash = economy.getCoins();
             if (cash >= total)
             {
                 text.append(" You have ")
@@ -75,13 +75,13 @@ public class PurchaseCostAdvisor
         if (marketPriceService == null || missing == null || missing.isEmpty())
             return PurchaseCostEstimate.unknown();
 
-        long total = 0L;
-        boolean sawInput = false;
+        var total = 0L;
+        var sawInput = false;
         for (MethodInput input : missing)
         {
             if (input == null || input.getQuantity() <= 0) continue;
             sawInput = true;
-            MarketPriceQuote quote = marketPriceService.quote(input.getName());
+            var quote = marketPriceService.quote(input.getName());
             if (quote == null || !quote.hasPrice())
                 return PurchaseCostEstimate.unknown();
             total = safeAdd(total, safeMultiply(

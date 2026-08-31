@@ -23,7 +23,7 @@ public class SkillingXpModifierService
             boolean useGroupStorage)
     {
         if (data == null || skill == null) return SkillingXpModifier.none();
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
+        var items = new ItemIndex(data, useGroupStorage);
 
         switch (skill)
         {

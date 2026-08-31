@@ -11,15 +11,10 @@ import net.runelite.api.Skill;
  * direct region observations. Direct observation is the strongest evidence.
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AgilityAccessEvaluator
 {
     private final AgilityCourseCatalog catalog;
-
-    @Inject
-    public AgilityAccessEvaluator(AgilityCourseCatalog catalog)
-    {
-        this.catalog = catalog;
-    }
 
     public AgilityCourseDefinition bestStandardCourse(GameData data)
     {
@@ -53,13 +48,13 @@ public class AgilityAccessEvaluator
             );
         }
 
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         if (account == null)
         {
             return unknown(course, get(1391));
         }
 
-        int level = account.getSkillLevel(Skill.AGILITY);
+        var level = account.getSkillLevel(Skill.AGILITY);
         if (level < course.getRequiredLevel())
         {
             return new RequirementCheck(
@@ -81,7 +76,7 @@ public class AgilityAccessEvaluator
             );
         }
 
-        AccessMemorySnapshot memory = data.accessMemory();
+        var memory = data.accessMemory();
         if (memory != null && memory.hasObserved(course.observationKey()))
         {
             return verified(
@@ -90,10 +85,10 @@ public class AgilityAccessEvaluator
             );
         }
 
-        String quest = course.getRequiredQuest();
+        var quest = course.getRequiredQuest();
         if (quest != null)
         {
-            QuestSnapshot quests = data.quests();
+            var quests = data.quests();
             QuestStatus status = quests == null
                     ? QuestStatus.UNKNOWN
                     : quests.statusOf(quest);

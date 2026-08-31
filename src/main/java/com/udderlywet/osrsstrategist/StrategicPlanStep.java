@@ -46,7 +46,7 @@ public final class StrategicPlanStep
     {
         if (this == other) return true;
         if (!(other instanceof StrategicPlanStep)) return false;
-        StrategicPlanStep that = (StrategicPlanStep) other;
+        var that = (StrategicPlanStep) other;
         return id.equals(that.id) && kind == that.kind
                 && objective.equals(that.objective)
                 && reason.equals(that.reason)

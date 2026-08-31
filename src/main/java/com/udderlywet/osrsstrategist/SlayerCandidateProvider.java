@@ -37,11 +37,11 @@ public class SlayerCandidateProvider implements CandidateProvider
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
-        SlayerDecisionResult result = strategist.assess(context);
+        var result = strategist.assess(context);
         if (result == null || result.getGuidance() == null)
             return Collections.emptyList();
 
-        SlayerSnapshot slayer = context.data().slayer();
+        var slayer = context.data().slayer();
         String id;
         String title;
         if (result.getRecommendedReward() != null)
@@ -69,8 +69,8 @@ public class SlayerCandidateProvider implements CandidateProvider
         }
         else
         {
-            String task = slayer == null ? "Slayer task" : slayer.getTaskName();
-            SlayerTaskDecision decision = result.getDecision();
+            var task = slayer == null ? "Slayer task" : slayer.getTaskName();
+            var decision = result.getDecision();
             switch (decision)
             {
                 case BLOCK:
@@ -119,7 +119,7 @@ public class SlayerCandidateProvider implements CandidateProvider
         StrategicValue.Builder builder =
                 StrategicValue.builder()
                         .evidence("slayer:typed-decision");
-        SlayerTaskStrategicProfile task = result.getTaskProfile();
+        var task = result.getTaskProfile();
         if (task != null)
         {
             builder.resourceFit((task.getResourceValue() - 2.5) / 2.5)

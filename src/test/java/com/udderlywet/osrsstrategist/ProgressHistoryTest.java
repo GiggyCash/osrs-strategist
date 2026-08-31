@@ -143,19 +143,18 @@ public class ProgressHistoryTest
     public void storeUsesActiveRuneLiteProfileAndNeverLeaksAcrossCharacters()
     {
         FakeProfileConfiguration config = new FakeProfileConfiguration();
-        AccountProgressHistoryStore store =
-                new AccountProgressHistoryStore(config, gson);
+        AccountProfileStore store = new AccountProfileStore(config, gson);
 
         config.active = "alice";
-        store.save(populatedHistory());
+        store.saveProgress(populatedHistory());
         config.active = "bob";
-        assertTrue(store.load().getSessions().isEmpty());
-        store.save(new ProgressHistory());
+        assertTrue(store.loadProgress().getSessions().isEmpty());
+        store.saveProgress(new ProgressHistory());
         config.active = "alice";
-        assertEquals(1, store.load().getSessions().size());
+        assertEquals(1, store.loadProgress().getSessions().size());
 
         config.active = null;
-        store.save(populatedHistory());
+        store.saveProgress(populatedHistory());
         assertEquals(2, config.values.size());
     }
 
@@ -174,7 +173,7 @@ public class ProgressHistoryTest
     }
 
     private static final class FakeProfileConfiguration
-            implements AccountProgressHistoryStore.ProfileConfiguration
+            implements AccountProfileStore.ProfileConfiguration
     {
         private final Map<String, String> values = new HashMap<>();
         private String active;

@@ -13,7 +13,7 @@ public final class SupportLinks
     static boolean isConfigured(String url)
     {
         if (url == null) return false;
-        String value = url.trim().toLowerCase(java.util.Locale.ROOT);
+        var value = url.trim().toLowerCase(java.util.Locale.ROOT);
         return value.startsWith("https://") && value.length() > 8;
     }
 

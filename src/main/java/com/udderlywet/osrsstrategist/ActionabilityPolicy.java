@@ -24,8 +24,8 @@ public class ActionabilityPolicy
             return false;
         }
 
-        TrainingPlan plan = recommendation.getTrainingPlan();
-        Guidance guidance = recommendation.getGuidance();
+        var plan = recommendation.getTrainingPlan();
+        var guidance = recommendation.getGuidance();
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
         if (plan == null)
@@ -69,8 +69,8 @@ public class ActionabilityPolicy
 
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
-        Guidance guidance = recommendation.getGuidance();
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var guidance = recommendation.getGuidance();
+        var plan = recommendation.getTrainingPlan();
 
         // A secondary card still needs to tell the player something useful.
         // Bare "Needs Info" quest/upgrade placeholders are hidden until their

@@ -36,7 +36,7 @@ public class SlayerTaskStrategicCatalog
 
     public SlayerTaskStrategicProfile profileFor(String taskName)
     {
-        SlayerTaskProfile mechanics = taskProfiles.profileFor(taskName);
+        var mechanics = taskProfiles.profileFor(taskName);
         return mechanics == null ? null : byProfileId.get(mechanics.getId());
     }
 
@@ -45,9 +45,9 @@ public class SlayerTaskStrategicCatalog
 
     public boolean isWildernessBound(String taskName)
     {
-        SlayerTaskProfile mechanics = taskProfiles.profileFor(taskName);
+        var mechanics = taskProfiles.profileFor(taskName);
         if (mechanics == null) return false;
-        SlayerTaskStrategicProfile profile = byProfileId.get(mechanics.getId());
+        var profile = byProfileId.get(mechanics.getId());
         return INTRINSIC_WILDERNESS.contains(mechanics.getId())
                 || (profile != null && profile.isDirectEncounter()
                         && profile.getInherentRisk() == RiskLevel.HIGH);

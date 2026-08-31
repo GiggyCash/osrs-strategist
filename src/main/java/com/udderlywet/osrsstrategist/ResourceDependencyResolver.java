@@ -40,7 +40,7 @@ public class ResourceDependencyResolver
     public DependencyResolution resolve(StrategyContext context,
             ResourceNeed root)
     {
-        State state = new State(maxNodes);
+        var state = new State(maxNodes);
         visit(context, root, 0, new HashSet<>(), state, false);
         return result(state);
     }
@@ -52,7 +52,7 @@ public class ResourceDependencyResolver
     public DependencyResolution resolveKnownShortfall(
             StrategyContext context, ResourceNeed root)
     {
-        State state = new State(maxNodes);
+        var state = new State(maxNodes);
         visit(context, root, 0, new HashSet<>(), state, true);
         return result(state);
     }
@@ -72,7 +72,7 @@ public class ResourceDependencyResolver
             state.nodeLimit = true;
             return;
         }
-        String id = "resource:" + need.getItemId();
+        var id = "resource:" + need.getItemId();
         if (active.contains(id))
         {
             state.cycle = true;
@@ -80,10 +80,10 @@ public class ResourceDependencyResolver
                     Confidence.CHECK_NEEDED, depth, need.getQuantity());
             return;
         }
-        int previousRequested = state.requested.getOrDefault(need.getItemId(), 0);
-        int totalRequested = safeAdd(previousRequested, need.getQuantity());
+        var previousRequested = state.requested.getOrDefault(need.getItemId(), 0);
+        var totalRequested = safeAdd(previousRequested, need.getQuantity());
         state.requested.put(need.getItemId(), totalRequested);
-        int previousProcessed = state.processed.getOrDefault(need.getItemId(), 0);
+        var previousProcessed = state.processed.getOrDefault(need.getItemId(), 0);
         if (totalRequested <= previousProcessed) return;
         state.processed.put(need.getItemId(), totalRequested);
         ResourceNeed totalNeed = new ResourceNeed(need.getItemId(),
@@ -107,7 +107,7 @@ public class ResourceDependencyResolver
                     depth, totalRequested);
             return;
         }
-        AccountMode mode = context == null ? AccountMode.UNKNOWN : context.accountMode();
+        var mode = context == null ? AccountMode.UNKNOWN : context.accountMode();
         if (mode.usesGrandExchange())
         {
             addResource(state, id, ownership == null ? Text.get(1330) : ownership.getNote(),
@@ -117,12 +117,12 @@ public class ResourceDependencyResolver
 
         int confirmedOwned = knownShortfall || ownership == null
                 ? 0 : Math.min(totalRequested, ownership.getConfirmedQuantity());
-        int unresolvedRequested = Math.max(0, totalRequested - confirmedOwned);
+        var unresolvedRequested = Math.max(0, totalRequested - confirmedOwned);
         int previousUnresolved = knownShortfall
                 ? previousProcessed
                 : Math.max(0, previousProcessed - confirmedOwned);
 
-        ResourceDependencyDefinition definition = catalog.forItem(need.getItemId());
+        var definition = catalog.forItem(need.getItemId());
         if (definition == null)
         {
             addResource(state, id, ownership == null ? Text.get(1331) : ownership.getNote(),
@@ -149,9 +149,9 @@ public class ResourceDependencyResolver
                 continue;
             }
             if (batches <= 0) continue;
-            ResourceNeed child = requirement.getResource();
-            int required = safeMultiply(child.getQuantity(), batches);
-            ResourceNeed prior = resourceNeeds.get(child.getItemId());
+            var child = requirement.getResource();
+            var required = safeMultiply(child.getQuantity(), batches);
+            var prior = resourceNeeds.get(child.getItemId());
             int combined = prior == null ? required
                     : safeAdd(prior.getQuantity(), required);
             resourceNeeds.put(child.getItemId(), new ResourceNeed(
@@ -179,8 +179,8 @@ public class ResourceDependencyResolver
             state.nodeLimit = true;
             return;
         }
-        boolean verified = false;
-        GameData data = context == null ? null : context.data();
+        var verified = false;
+        var data = context == null ? null : context.data();
         if (data != null && data.account() != null)
         {
             switch (requirement.getKind())
@@ -216,7 +216,7 @@ public class ResourceDependencyResolver
     private static boolean rejectForOpportunityCost(StrategyContext context, int cost)
     {
         if (context == null) return cost > 20;
-        int limit = context.getSessionIntent() == SessionIntent.LONG_SESSION ? 70 : 35;
+        var limit = context.getSessionIntent() == SessionIntent.LONG_SESSION ? 70 : 35;
         if (context.getStrategyMode() == StrategyMode.RELAXED) limit += 10;
         return cost > limit;
     }

@@ -45,7 +45,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
         List<Recommendation> result = new ArrayList<>();
         if (context == null || context.data() == null
                 || context.data().account() == null) return result;
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (account.getMembershipStatus() != MembershipStatus.P2P) return result;
 
         if (context.data().poh() == null)
@@ -102,7 +102,7 @@ public class InfrastructureCandidateProvider implements CandidateProvider
     {
         double utility = assessment.getStrategicValue().ordinal()
                 / (double) StrategicPriority.CRITICAL.ordinal();
-        double score = 31.0 + utility * 26.0;
+        var score = 31.0 + utility * 26.0;
         if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
             score += 8.0;
         else if (AccountModePolicy.requiresSelfSourcing(context.accountMode()))

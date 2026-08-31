@@ -87,13 +87,13 @@ public class AdaptiveMilestoneGuidanceService
                 plan.getMethod().getId());
         if (profile == null) return null;
 
-        int currentXp = data.account().getSkillExperience(skill);
+        var currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0)
         {
             currentXp = Experience.getXpForLevel(currentLevel);
         }
-        int targetXp = Experience.getXpForLevel(targetLevel);
-        int xpNeeded = Math.max(0, targetXp - currentXp);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
 
         SkillingXpModifier modifier = xpModifierService == null
                 ? SkillingXpModifier.none()
@@ -113,7 +113,7 @@ public class AdaptiveMilestoneGuidanceService
                 useGroupStorage);
         if (action == null || action.getXp() <= 0) return null;
 
-        double xpPerAction = action.getXp() * combinedMultiplier;
+        var xpPerAction = action.getXp() * combinedMultiplier;
         if (xpPerAction <= 0) return null;
         List<ActionDef> routeOutputs =
                 unlockedRouteOutputs(actionCatalog.actionsFor(skill), profile,
@@ -156,7 +156,7 @@ public class AdaptiveMilestoneGuidanceService
                 action, plan.getMethod().getInstructions());
         String actionText = executionAction(plan.getMethod(), profile, action,
                 routeOutputs);
-        String note = profile.getNote();
+        var note = profile.getNote();
         if (note == null || note.trim().isEmpty())
         {
             note = get(5);
@@ -223,7 +223,7 @@ public class AdaptiveMilestoneGuidanceService
             boolean useGroupStorage)
     {
         if (methodId == null) return null;
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
+        var items = new ItemIndex(data, useGroupStorage);
         if (methodId.startsWith("mining_"))
         {
             String pickaxe = firstObserved(items,
@@ -259,7 +259,7 @@ public class AdaptiveMilestoneGuidanceService
             return get(8);
         if ("hunter_salamanders".equals(methodId))
         {
-            int traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
+            var traps = currentLevel >= 60 ? 4 : currentLevel >= 40 ? 3 : 2;
             return "Bring " + traps + get(1284) + traps
                     + get(9);
         }
@@ -286,7 +286,7 @@ public class AdaptiveMilestoneGuidanceService
             return get(19);
         if (methodId.startsWith("runecraft_f2p_"))
         {
-            String rune = methodId.substring("runecraft_f2p_".length());
+            var rune = methodId.substring("runecraft_f2p_".length());
             return "Bring the " + rune + get(1285) + rune
                     + " tiara.";
         }
@@ -342,7 +342,7 @@ public class AdaptiveMilestoneGuidanceService
                 return get(30);
             }
         }
-        String explicit = locationBeforeColon(fallback);
+        var explicit = locationBeforeColon(fallback);
         return explicit == null ? fallback : explicit;
     }
 
@@ -398,11 +398,11 @@ public class AdaptiveMilestoneGuidanceService
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;
-        String haystack = normalize(action.getId()) + " "
-                + normalize(action.getName()) + " "
-                + normalize(action.getCategory());
+        String haystack = Names.actionKey(action.getId()) + " "
+                + Names.actionKey(action.getName()) + " "
+                + Names.actionKey(action.getCategory());
         for (String term : terms)
-            if (haystack.contains(normalize(term))) return true;
+            if (haystack.contains(Names.actionKey(term))) return true;
         return false;
     }
 
@@ -410,7 +410,7 @@ public class AdaptiveMilestoneGuidanceService
             List<ActionDef> actions)
     {
         if (actions == null || actions.size() < 2) return false;
-        float first = actions.get(0).getXp();
+        var first = actions.get(0).getXp();
         for (ActionDef action : actions)
             if (Math.abs(action.getXp() - first) > 0.001f) return true;
         return false;
@@ -418,7 +418,7 @@ public class AdaptiveMilestoneGuidanceService
 
     private static double minimumXp(List<ActionDef> actions)
     {
-        double value = Double.POSITIVE_INFINITY;
+        var value = Double.POSITIVE_INFINITY;
         for (ActionDef action : actions)
             value = Math.min(value, action.getXp());
         return value;
@@ -426,7 +426,7 @@ public class AdaptiveMilestoneGuidanceService
 
     private static double maximumXp(List<ActionDef> actions)
     {
-        double value = 0.0;
+        var value = 0.0;
         for (ActionDef action : actions)
             value = Math.max(value, action.getXp());
         return value;
@@ -446,7 +446,7 @@ public class AdaptiveMilestoneGuidanceService
     {
         if (instructions == null || instructions.trim().isEmpty())
             return methodName;
-        int colon = instructions.indexOf(':');
+        var colon = instructions.indexOf(':');
         String action = colon >= 0 && colon + 1 < instructions.length()
                 ? instructions.substring(colon + 1).trim()
                 : instructions.trim();
@@ -463,7 +463,7 @@ public class AdaptiveMilestoneGuidanceService
                 == MethodProfile.ProgressEstimateMode
                         .VARIABLE_OUTPUT_RANGE)
         {
-            String names = outputNames(outputs).toLowerCase(Locale.ROOT);
+            var names = outputNames(outputs).toLowerCase(Locale.ROOT);
             if (isFlyFishingMethod(method.getId()))
                 return "Fly-fish " + names
                         + get(31);
@@ -474,8 +474,8 @@ public class AdaptiveMilestoneGuidanceService
         String instruction = routeAction(method.getInstructions(),
                 method.getName());
         if (selected == null || selected.getName() == null
-                || normalize(instruction).contains(
-                        normalize(selected.getName())))
+                || Names.actionKey(instruction).contains(
+                        Names.actionKey(selected.getName())))
             return instruction;
         return selected.getName() + ": " + instruction;
     }
@@ -483,7 +483,7 @@ public class AdaptiveMilestoneGuidanceService
     private static String locationBeforeColon(String instructions)
     {
         if (instructions == null) return null;
-        int colon = instructions.indexOf(':');
+        var colon = instructions.indexOf(':');
         if (colon < 3) return null;
         return instructions.substring(0, colon).trim() + ".";
     }
@@ -516,9 +516,4 @@ public class AdaptiveMilestoneGuidanceService
         return String.format(Locale.ROOT, "%,.1f", value);
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('-', '_').replace(' ', '_');
-    }
 }

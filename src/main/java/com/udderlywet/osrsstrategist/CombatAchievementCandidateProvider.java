@@ -33,15 +33,15 @@ public class CombatAchievementCandidateProvider implements CandidateProvider
             return result;
         }
 
-        CombatAchievementSnapshot snapshot = context.data().combatAchievements();
-        CombatAchievementTier next = snapshot.nextRewardTier();
+        var snapshot = context.data().combatAchievements();
+        var next = snapshot.nextRewardTier();
         if (next == null) return result;
 
-        String id = "combat-achievements:" + next.name().toLowerCase();
+        var id = "combat-achievements:" + next.name().toLowerCase();
         if (context.preferenceProfile().isOnCooldown(id)) return result;
 
-        int gap = Math.max(0, next.getRewardPoints() - snapshot.getEarnedPoints());
-        double score = 26.0;
+        var gap = Math.max(0, next.getRewardPoints() - snapshot.getEarnedPoints());
+        var score = 26.0;
         if (gap <= 20) score += 17.0;
         else if (gap <= 75) score += 10.0;
         else if (gap <= 200) score += 5.0;
@@ -67,7 +67,7 @@ public class CombatAchievementCandidateProvider implements CandidateProvider
 
     private static String pretty(String value)
     {
-        String lower = value.toLowerCase();
+        var lower = value.toLowerCase();
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

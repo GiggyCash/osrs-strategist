@@ -17,10 +17,10 @@ public class SlayerRewardAdvisor
         if (context == null || slayer == null || slayer.getRewards() == null)
             return null;
         List<SlayerRewardAdvice> candidates = new ArrayList<>();
-        AccountSnapshot account = context.data().account();
-        int slayerLevel = account.getSkillLevel(Skill.SLAYER);
-        int crafting = account.getSkillLevel(Skill.CRAFTING);
-        int fletching = account.getSkillLevel(Skill.FLETCHING);
+        var account = context.data().account();
+        var slayerLevel = account.getSkillLevel(Skill.SLAYER);
+        var crafting = account.getSkillLevel(Skill.CRAFTING);
+        var fletching = account.getSkillLevel(Skill.FLETCHING);
 
         add(candidates, slayer, SlayerReward.BIGGER_AND_BADDER,
                 slayerLevel >= 5, 100.0,

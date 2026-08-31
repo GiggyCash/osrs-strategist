@@ -19,7 +19,7 @@ public final class ContextualGearDecisionService
         ItemIndex items = new ItemIndex(
                 context == null ? null : context.data(),
                 context != null && context.isUseGroupStorage());
-        boolean ownershipObserved = items.usableOwnershipObserved();
+        var ownershipObserved = items.usableOwnershipObserved();
         List<String> owned = new ArrayList<>();
         List<String> unresolvedRoutes = new ArrayList<>();
         for (String target : entry.getRecommendedItems())
@@ -73,7 +73,7 @@ public final class ContextualGearDecisionService
     static boolean isExactOwnershipTarget(String target)
     {
         if (target == null || target.trim().isEmpty()) return false;
-        String value = target.toLowerCase(Locale.ROOT);
+        var value = target.toLowerCase(Locale.ROOT);
         return !value.contains(" or ") && !value.contains("/")
                 && !value.contains("depending") && !value.contains("target-")
                 && !value.contains(" mix") && !value.contains(" pieces")

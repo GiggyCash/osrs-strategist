@@ -41,9 +41,9 @@ public class RecommendationIntelligenceService
             return recommendation.getScore();
         }
 
-        double score = recommendation.getScore();
+        var score = recommendation.getScore();
         score += recommendation.getStrategicValue().scoreDelta();
-        Guidance guidance = recommendation.getGuidance();
+        var guidance = recommendation.getGuidance();
 
         score += readinessValue(recommendation, guidance);
         score += goalValue(recommendation, context.getActiveGoal());
@@ -74,7 +74,7 @@ public class RecommendationIntelligenceService
     static double goalValue(Recommendation recommendation, GoalType selectedGoal)
     {
         if (recommendation == null || selectedGoal == null) return 0.0;
-        GoalProvenance provenance = recommendation.getGoalProvenance();
+        var provenance = recommendation.getGoalProvenance();
         if (provenance == null
                 || !provenance.proves(selectedGoal, recommendation.getId()))
             return 0.0;
@@ -104,15 +104,15 @@ public class RecommendationIntelligenceService
     private double questRewardValue(
             Recommendation recommendation, StrategyContext context)
     {
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan == null || plan.getMethod() == null
                 || plan.getMethod().getSkill() == null
                 || recommendation.getTargetLevel() <= 0) return 0.0;
-        Skill skill = plan.getMethod().getSkill();
+        var skill = plan.getMethod().getSkill();
         GoalQuestRewardForecast forecast = goalProvenanceService
                 .guaranteedRewardsBeforeManualTraining(context, skill);
         if (!forecast.hasGuaranteedExperience()) return 0.0;
-        int currentXp = context.data().account().getSkillExperience(skill);
+        var currentXp = context.data().account().getSkillExperience(skill);
         if (currentXp <= 0)
             currentXp = Experience.getXpForLevel(
                     context.data().account().getSkillLevel(skill));
@@ -130,11 +130,11 @@ public class RecommendationIntelligenceService
 
     private static double sessionValue(Recommendation recommendation, SessionIntent intent)
     {
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan == null || plan.getMethod() == null || intent == null) return 0.0;
-        TrainingMethod method = plan.getMethod();
-        int setup = Math.max(0, method.getSetupMinutes());
-        int minimum = Math.max(0, method.getMinimumSessionMinutes());
+        var method = plan.getMethod();
+        var setup = Math.max(0, method.getSetupMinutes());
+        var minimum = Math.max(0, method.getMinimumSessionMinutes());
         switch (intent)
         {
             case QUICK_20_MIN:
@@ -161,10 +161,10 @@ public class RecommendationIntelligenceService
     private static double strategyModeValue(Recommendation recommendation,
             StrategyContext context)
     {
-        StrategyMode mode = context.getStrategyMode();
-        TrainingPlan plan = recommendation.getTrainingPlan();
-        TrainingMethod method = plan == null ? null : plan.getMethod();
-        StrategicValue value = recommendation.getStrategicValue();
+        var mode = context.getStrategyMode();
+        var plan = recommendation.getTrainingPlan();
+        var method = plan == null ? null : plan.getMethod();
+        var value = recommendation.getStrategicValue();
         switch (mode)
         {
             case EFFICIENT:

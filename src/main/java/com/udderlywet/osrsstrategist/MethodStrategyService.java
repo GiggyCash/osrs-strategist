@@ -43,8 +43,8 @@ public final class MethodStrategyService
             return new MethodStrategyAssessment(false, 0.0,
                     Text.get(390));
 
-        MethodInventoryFootprint footprint = profile.getInventoryFootprint();
-        ItemsState inventory = data.inventory();
+        var footprint = profile.getInventoryFootprint();
+        var inventory = data.inventory();
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && footprint != null
                 && footprint.getMinimumPracticalFreeSlots() > 0
@@ -52,8 +52,8 @@ public final class MethodStrategyService
                 || !inventory.hasCompleteSlotObservation()))
             return new MethodStrategyAssessment(false, 0.0,
                     Text.get(391));
-        int occupied = UimSetupCostService.occupiedInventorySlots(inventory);
-        int free = Math.max(0, 28 - occupied);
+        var occupied = UimSetupCostService.occupiedInventorySlots(inventory);
+        var free = Math.max(0, 28 - occupied);
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && inventory != null
                 && inventory.hasCompleteSlotObservation())
@@ -66,11 +66,11 @@ public final class MethodStrategyService
                         resolution.getReason());
         }
 
-        double score = profile.getAccountValueFit() * 8.0;
+        var score = profile.getAccountValueFit() * 8.0;
         if (mode == AccountMode.ULTIMATE_IRONMAN && inventory != null
                 && inventory.hasCompleteSlotObservation())
         {
-            int margin = free - footprint.getMinimumPracticalFreeSlots();
+            var margin = free - footprint.getMinimumPracticalFreeSlots();
             if (margin <= 1) score -= 5.0;
             if (footprint.tearsDownCurrentSetup()) score -= 8.0;
             if (footprint.getFlow()

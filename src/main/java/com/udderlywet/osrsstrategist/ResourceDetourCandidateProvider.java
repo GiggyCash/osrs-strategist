@@ -35,10 +35,10 @@ public class ResourceDetourCandidateProvider
             return result;
         }
 
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (!ContentAccessRules.hasVerifiedMembership(
                 account.getMembershipStatus())) return result;
-        AccountMode mode = context.accountMode();
+        var mode = context.accountMode();
         if (!mode.isIronLike() || mode == AccountMode.ULTIMATE_IRONMAN)
         {
             return result;
@@ -61,20 +61,20 @@ public class ResourceDetourCandidateProvider
             List<Recommendation> result)
     {
         if (!constructionRelevant(context.getActiveGoal())) return;
-        int construction = account.getSkillLevel(Skill.CONSTRUCTION);
+        var construction = account.getSkillLevel(Skill.CONSTRUCTION);
         if (construction >= 70) return;
 
         int planks = items.quantity(
                 "Plank", "Oak plank", "Teak plank", "Mahogany plank");
         if (planks >= 150) return;
 
-        int fishing = account.getSkillLevel(Skill.FISHING);
+        var fishing = account.getSkillLevel(Skill.FISHING);
         if (fishing >= 35 && fishing < 80)
         {
-            String id = "detour:tempoross-planks";
+            var id = "detour:tempoross-planks";
             if (!context.preferenceProfile().isOnCooldown(id))
             {
-                double score = 27.0;
+                var score = 27.0;
                 if (construction < 50) score += 5.0;
                 if (fishing < 70) score += 5.0;
                 if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
@@ -98,7 +98,7 @@ public class ResourceDetourCandidateProvider
             }
         }
 
-        int firemaking = account.getSkillLevel(Skill.FIREMAKING);
+        var firemaking = account.getSkillLevel(Skill.FIREMAKING);
         int logs = items.quantity(
                 "Logs", "Oak logs", "Willow logs", "Maple logs",
                 "Yew logs", "Teak logs", "Mahogany logs");
@@ -107,10 +107,10 @@ public class ResourceDetourCandidateProvider
                 && context.accountMode() != AccountMode.HARDCORE_IRONMAN
                 && context.accountMode() != AccountMode.HARDCORE_GROUP_IRONMAN)
         {
-            String id = "detour:wintertodt-logs";
+            var id = "detour:wintertodt-logs";
             if (!context.preferenceProfile().isOnCooldown(id))
             {
-                double score = 20.0;
+                var score = 20.0;
                 if (account.getSkillLevel(Skill.WOODCUTTING) < 60) score += 2.0;
                 if (context.getSessionIntent() == SessionIntent.LONG_SESSION)
                     score += 3.0;

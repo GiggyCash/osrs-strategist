@@ -27,7 +27,7 @@ public class SailingGuidanceService
         {
             return null;
         }
-        AccountSnapshot account = data.account();
+        var account = data.account();
         if (account.getMembershipStatus() != MembershipStatus.P2P)
         {
             return null;
@@ -35,10 +35,10 @@ public class SailingGuidanceService
 
         String id = plan.getMethod().getId() == null
                 ? "" : plan.getMethod().getId();
-        int currentXp = account.getSkillExperience(Skill.SAILING);
+        var currentXp = account.getSkillExperience(Skill.SAILING);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
-        int targetXp = Experience.getXpForLevel(targetLevel);
-        int xpNeeded = Math.max(0, targetXp - currentXp);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
 
         if (id.startsWith("sailing_barracuda_"))
         {
@@ -98,7 +98,7 @@ public class SailingGuidanceService
                     get(790));
         }
 
-        int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
+        var marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
         var action = get(733)
                 + trial.name + get(734)
                 + marlinCompletions + get(1373)
@@ -107,8 +107,8 @@ public class SailingGuidanceService
                 + get(1374) + format(xpNeeded)
                 + " XP to level " + targetLevel + ".";
 
-        String supplies = trial.requirements;
-        String note = get(735);
+        var supplies = trial.requirements;
+        var note = get(735);
         return new Guidance(
                 action, supplies, trial.location, note);
     }
@@ -122,8 +122,8 @@ public class SailingGuidanceService
         var action = get(736)
                 + format(xpNeeded) + " XP toward level " + targetLevel + ".";
         var supplies = get(737);
-        String where = get(738);
-        String note = get(739);
+        var where = get(738);
+        var note = get(739);
         return new Guidance(action, supplies, where, note);
     }
 
@@ -136,8 +136,8 @@ public class SailingGuidanceService
         var action = get(740)
                 + format(xpNeeded) + get(1375) + targetLevel + ".";
         var supplies = get(741);
-        String where = get(742);
-        String note = get(744);
+        var where = get(742);
+        var note = get(744);
         return new Guidance(action, supplies, where, note);
     }
 
@@ -147,7 +147,7 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        QuestSnapshot quests = data.quests();
+        var quests = data.quests();
         if (!complete(quests, "Pandemonium"))
         {
             return new Guidance(
@@ -158,7 +158,7 @@ public class SailingGuidanceService
             );
         }
 
-        StringBuilder action = new StringBuilder();
+        var action = new StringBuilder();
         action.append(get(749))
                 .append(format(xpNeeded)).append(get(1375))
                 .append(targetLevel).append(".");
@@ -174,7 +174,7 @@ public class SailingGuidanceService
         }
         if (currentLevel >= 15)
         {
-            AccountEconomySnapshot economy = data.economy();
+            var economy = data.economy();
             if (economy != null
                     && economy.getConfidence() == Confidence.VERIFIED)
             {
@@ -195,8 +195,8 @@ public class SailingGuidanceService
             }
         }
 
-        String where = get(757);
-        String note = get(758);
+        var where = get(757);
+        var note = get(758);
         return new Guidance(
                 action.toString(), supplies.toString(), where, note);
     }

@@ -57,8 +57,8 @@ public final class ActivityStrategyKnowledgeService
             ActivityStrategyProfile profile,
             UimInventoryResolutionService inventoryResolution)
     {
-        ItemsState inventory = data == null ? null : data.inventory();
-        MethodInventoryFootprint footprint = profile.getInventoryFootprint();
+        var inventory = data == null ? null : data.inventory();
+        var footprint = profile.getInventoryFootprint();
         if (footprint == null) return true;
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return footprint.getMinimumPracticalFreeSlots() == 0;

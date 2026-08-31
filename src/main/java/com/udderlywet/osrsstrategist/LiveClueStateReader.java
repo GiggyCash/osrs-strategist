@@ -67,16 +67,16 @@ public class LiveClueStateReader
             visible.addAll(bank.getItems());
         }
 
-        ClueTier bestTier = ClueTier.UNKNOWN;
-        boolean clueIntermediateObserved = false;
+        var bestTier = ClueTier.UNKNOWN;
+        var clueIntermediateObserved = false;
         for (ItemState item : visible)
         {
-            String name = normalize(item.getName());
+            var name = Names.lower(item.getName());
             if (name.isEmpty()) continue;
 
             if (isActualClueScroll(name))
             {
-                ClueTier tier = ClueTier.fromText(name);
+                var tier = ClueTier.fromText(name);
                 if (tierPriority(tier) > tierPriority(bestTier))
                 {
                     bestTier = tier;
@@ -90,7 +90,7 @@ public class LiveClueStateReader
 
         if (bestTier != ClueTier.UNKNOWN)
         {
-            long firstSeen = System.currentTimeMillis();
+            var firstSeen = System.currentTimeMillis();
             if (previous != null
                     && previous.isCluePresent()
                     && ClueTier.fromText(previous.getClueType()) == bestTier)
@@ -141,7 +141,7 @@ public class LiveClueStateReader
         }
         if (clue == null) return null;
 
-        String kind = clueKind(clue);
+        var kind = clueKind(clue);
         String action;
         String location;
         try { action = actionOf(clue); }
@@ -150,8 +150,8 @@ public class LiveClueStateReader
         catch (RuntimeException ex) { location = null; }
         if (action == null || action.trim().isEmpty())
             action = get(1562) + kind + " solution.";
-        WorldPoint point = worldPointOf(clue);
-        List<String> requirements = itemRequirements(clue);
+        var point = worldPointOf(clue);
+        var requirements = itemRequirements(clue);
         String enemy = clue.getEnemy() == null
                 ? null : clue.getEnemy().getText();
         String stash = clue instanceof EmoteClue
@@ -181,7 +181,7 @@ public class LiveClueStateReader
             return ((MapClue) clue).getDescription();
         if (clue instanceof MusicClue)
         {
-            String npc = firstNpc((MusicClue) clue);
+            var npc = firstNpc((MusicClue) clue);
             return "Play " + ((MusicClue) clue).getSong()
                     + (npc == null ? get(1563)
                             : " for " + npc + ".");
@@ -192,7 +192,7 @@ public class LiveClueStateReader
             return ((SkillChallengeClue) clue).getChallenge();
         if (clue instanceof HotColdClue)
         {
-            String solution = ((HotColdClue) clue).getSolution();
+            var solution = ((HotColdClue) clue).getSolution();
             return solution == null || solution.trim().isEmpty()
                     ? get(341)
                     : solution;
@@ -215,7 +215,7 @@ public class LiveClueStateReader
             return ((MapClue) clue).getDescription();
         if (clue instanceof NpcClueScroll)
         {
-            String npc = firstNpc((NpcClueScroll) clue);
+            var npc = firstNpc((NpcClueScroll) clue);
             if (npc != null) return npc;
         }
         return clue instanceof LocationClueScroll
@@ -267,7 +267,7 @@ public class LiveClueStateReader
                 : clue.getClueSteps())
             if (!Boolean.TRUE.equals(step.getValue()))
             {
-                String solution = step.getKey().getSolution(cluePlugin);
+                var solution = step.getKey().getSolution(cluePlugin);
                 if (solution != null && !solution.trim().isEmpty())
                     return solution;
             }
@@ -303,14 +303,14 @@ public class LiveClueStateReader
     {
         if (point != null)
         {
-            int x = point.getX();
-            int y = point.getY();
+            var x = point.getX();
+            var y = point.getY();
             if (x >= 2944 && x < 3392 && y >= 3523 && y < 3971)
                 return true;
             if (x >= 2944 && x < 3264 && y >= 9918 && y < 10360)
                 return true;
         }
-        String text = normalize((action == null ? "" : action) + " "
+        String text = Names.lower((action == null ? "" : action) + " "
                 + (location == null ? "" : location));
         return text.contains("wilderness");
     }
@@ -346,8 +346,4 @@ public class LiveClueStateReader
         }
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
-    }
 }

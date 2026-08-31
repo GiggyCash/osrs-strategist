@@ -20,17 +20,17 @@ public class VariableMethodGuidanceService
     {
         if (data == null || data.account() == null || skill == null
                 || plan == null || plan.getMethod() == null) return null;
-        int currentXp = data.account().getSkillExperience(skill);
+        var currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         Map<String, String> common = new HashMap<>();
         common.put("xp", format(Math.max(0,
                 Experience.getXpForLevel(targetLevel) - currentXp)));
         common.put("target", Integer.toString(targetLevel));
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
+        var items = new ItemIndex(data, useGroupStorage);
         for (Profile profile : PROFILES)
         {
             if (!profile.matches(plan.getMethod().getId())) continue;
-            Map<String, String> values = variables(profile, data, items);
+            var values = variables(profile, data, items);
             if (values == null) return null;
             values.putAll(common);
             values.putIfAbsent("observed", observed(items, profile.observed));
@@ -47,9 +47,9 @@ public class VariableMethodGuidanceService
             GameData data, ItemIndex items)
     {
         Map<String, String> v = new HashMap<>();
-        String kind = profile.kind;
+        var kind = profile.kind;
         if (kind == null) return v;
-        int farming = data.account().getSkillLevel(Skill.FARMING);
+        var farming = data.account().getSkillLevel(Skill.FARMING);
         switch (kind)
         {
             case "tempoross":
@@ -70,7 +70,7 @@ public class VariableMethodGuidanceService
                 v.put("starLocation", get(members ? 1062 : 1063));
                 break;
             case "foundry":
-                String alloy = alloy(items);
+                var alloy = alloy(items);
                 if (alloy == null) return null;
                 v.put("alloy", alloy);
                 break;
@@ -87,8 +87,8 @@ public class VariableMethodGuidanceService
                         : farming >= 54 ? "Bologano" : "Golovanova");
                 break;
             case "allotments":
-                String seed = tier(items, farming, 6, ALLOTMENTS);
-                String patch = FARMING.firstReachablePatchName(data.farming());
+                var seed = tier(items, farming, 6, ALLOTMENTS);
+                var patch = FARMING.firstReachablePatchName(data.farming());
                 if (seed == null || patch == null) return null;
                 v.put("seedLower", seed.toLowerCase(Locale.ROOT));
                 v.put("patch", patch);
@@ -96,7 +96,7 @@ public class VariableMethodGuidanceService
                         "Rake", get(1478), "Gricoller's can"));
                 break;
             case "herbs":
-                String herb = tier(items, farming, 1, HERBS);
+                var herb = tier(items, farming, 1, HERBS);
                 patch = FARMING.firstReachableHerbPatchName(data.farming());
                 if (herb == null || patch == null) return null;
                 v.put("herbSeed", "one " + herb.toLowerCase(Locale.ROOT));
@@ -109,7 +109,7 @@ public class VariableMethodGuidanceService
                         : farming >= 65 ? "medium" : "easy");
                 break;
             case "rumours":
-                int hunter = data.account().getSkillLevel(Skill.HUNTER);
+                var hunter = data.account().getSkillLevel(Skill.HUNTER);
                 boolean master = hunter >= 91 && data.quests() != null
                         && data.quests().statusOf("At First Light")
                         == QuestStatus.COMPLETE;
@@ -120,7 +120,7 @@ public class VariableMethodGuidanceService
                         ? get(1482) : "Huntmaster Gilman");
                 break;
             case "forestry":
-                int level = data.account().getSkillLevel(Skill.WOODCUTTING);
+                var level = data.account().getSkillLevel(Skill.WOODCUTTING);
                 v.put("tree", level >= 60 ? "yew trees" : level >= 45
                         ? "maple trees" : level >= 30 ? "willow trees" : "oak trees");
                 v.put("treeLocation", get(level >= 60 ? 1094
@@ -183,7 +183,7 @@ public class VariableMethodGuidanceService
 
     private static String tool(ItemIndex items, boolean pickaxe)
     {
-        String suffix = pickaxe ? "pickaxe" : "axe";
+        var suffix = pickaxe ? "pickaxe" : "axe";
         for (String metal : new String[]{"Crystal", "Infernal", "Dragon", "Rune",
                 "Adamant", "Mithril", "Black", "Steel", "Iron", "Bronze"})
             if (items.has(metal + " " + suffix)) return metal + " " + suffix;
@@ -202,7 +202,7 @@ public class VariableMethodGuidanceService
         List<String> found = new ArrayList<>();
         for (String name : names)
         {
-            int quantity = items.quantity(name);
+            var quantity = items.quantity(name);
             if (quantity > 0) found.add(quantity + "x " + name);
         }
         return found.isEmpty() ? "" : "Observed: " + String.join(", ", found) + ".";
@@ -223,7 +223,7 @@ public class VariableMethodGuidanceService
 
         private String render(String template, Map<String, String> values)
         {
-            String result = template == null ? "" : template;
+            var result = template == null ? "" : template;
             for (Map.Entry<String, String> value : values.entrySet())
                 result = result.replace("{" + value.getKey() + "}", value.getValue());
             return result.trim();

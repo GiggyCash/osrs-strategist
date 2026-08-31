@@ -68,7 +68,7 @@ public class RecommendationDetailsOverlay extends OverlayPanel
                 .color(StrategistTheme.GOLD)
                 .build());
 
-        FontMetrics metrics = graphics.getFontMetrics();
+        var metrics = graphics.getFontMetrics();
         for (Presentation.Section section
                 : Presentation.detailsSections(
                         recommendation, goalContext))
@@ -110,8 +110,8 @@ public class RecommendationDetailsOverlay extends OverlayPanel
             return result;
         }
 
-        String[] words = text.trim().split("\\s+");
-        StringBuilder line = new StringBuilder();
+        var words = text.trim().split("\\s+");
+        var line = new StringBuilder();
         for (String word : words)
         {
             if (word.isEmpty()) continue;
@@ -121,7 +121,7 @@ public class RecommendationDetailsOverlay extends OverlayPanel
                 continue;
             }
 
-            String candidate = line + " " + word;
+            var candidate = line + " " + word;
             if (metrics.stringWidth(candidate) <= maxWidth)
             {
                 line.append(' ').append(word);
@@ -151,10 +151,10 @@ public class RecommendationDetailsOverlay extends OverlayPanel
             return;
         }
 
-        StringBuilder chunk = new StringBuilder();
+        var chunk = new StringBuilder();
         for (int i = 0; i < word.length(); i++)
         {
-            char ch = word.charAt(i);
+            var ch = word.charAt(i);
             if (chunk.length() > 0
                     && metrics.stringWidth(chunk.toString() + ch) > maxWidth)
             {

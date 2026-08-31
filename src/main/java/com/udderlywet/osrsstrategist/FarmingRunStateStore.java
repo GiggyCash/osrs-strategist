@@ -8,6 +8,7 @@ import net.runelite.client.config.ConfigManager;
 
 /** Per-character memory of directly observed herb/tree patch state. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class FarmingRunStateStore
 {
     static final String GROUP = "osrs-strategist-profile";
@@ -16,13 +17,6 @@ public class FarmingRunStateStore
     private final Gson gson;
     private final Map<String, ObservedFarmingPatchState> states = new HashMap<>();
     private String loadedProfileKey;
-
-    @Inject
-    public FarmingRunStateStore(ConfigManager configManager, Gson gson)
-    {
-        this.configManager = configManager;
-        this.gson = gson;
-    }
 
     public synchronized FarmingRunSnapshot snapshot()
     {
@@ -39,7 +33,7 @@ public class FarmingRunStateStore
             return false;
         }
         syncProfile();
-        ObservedFarmingPatchState previous = states.get(patchId);
+        var previous = states.get(patchId);
         if (previous != null && previous.getState() == state)
         {
             return false;
@@ -60,12 +54,12 @@ public class FarmingRunStateStore
 
     private void syncProfile()
     {
-        String active = configManager.getRSProfileKey();
+        var active = configManager.getRSProfileKey();
         if (Objects.equals(loadedProfileKey, active) && active != null) return;
         states.clear();
         if (active != null)
         {
-            String json = configManager.getRSProfileConfiguration(GROUP, KEY);
+            var json = configManager.getRSProfileConfiguration(GROUP, KEY);
             if (json != null && !json.trim().isEmpty())
             {
                 Map<String, ObservedFarmingPatchState> stored =

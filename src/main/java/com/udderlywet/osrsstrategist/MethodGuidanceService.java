@@ -7,26 +7,21 @@ import net.runelite.api.Skill;
 
 /** Converts any selected method into the same reusable checklist model. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class MethodGuidanceService
 {
     private final FarmingRunPlanner farmingRunPlanner;
-
-    @Inject
-    public MethodGuidanceService(FarmingRunPlanner farmingRunPlanner)
-    {
-        this.farmingRunPlanner = farmingRunPlanner;
-    }
 
     public GuidanceChecklist build(
             Recommendation recommendation,
             GameData data)
     {
         if (recommendation == null) return null;
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan == null || plan.getMethod() == null) return null;
 
-        TrainingMethod method = plan.getMethod();
-        Guidance guidance = recommendation.getGuidance();
+        var method = plan.getMethod();
+        var guidance = recommendation.getGuidance();
         if (method.getSkill() == Skill.FARMING && guidance == null)
         {
             return farmingRunPlanner.build(data, recommendation.getId());
@@ -82,7 +77,7 @@ public class MethodGuidanceService
     private static String criticalNote(String note)
     {
         if (note == null || note.trim().isEmpty()) return null;
-        String lower = note.toLowerCase(java.util.Locale.ROOT);
+        var lower = note.toLowerCase(java.util.Locale.ROOT);
         if (!(lower.contains("wilderness") || lower.contains("hardcore")
                 || lower.contains("uim") || lower.contains("iron")
                 || lower.contains("restricted") || lower.contains("mandatory")

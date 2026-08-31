@@ -16,16 +16,49 @@ import javax.inject.Singleton;
 public class AdaptiveActionSelector
 {
     private final MethodInputResolver inputResolver;
+    private final RuneLiteSkillActionCatalog actionCatalog;
+    private final MethodExecutionProfileCatalog profiles;
 
     @Inject
-    public AdaptiveActionSelector(MethodInputResolver inputResolver)
+    public AdaptiveActionSelector(MethodInputResolver inputResolver,
+            RuneLiteSkillActionCatalog actionCatalog,
+            MethodExecutionProfileCatalog profiles)
     {
         this.inputResolver = inputResolver;
+        this.actionCatalog = actionCatalog;
+        this.profiles = profiles;
     }
 
     public AdaptiveActionSelector()
     {
-        this(new MethodInputResolver());
+        this(new MethodInputResolver(), new RuneLiteSkillActionCatalog(),
+                new MethodExecutionProfileCatalog());
+    }
+
+    AdaptiveActionSelector(RuneLiteSkillActionCatalog actionCatalog,
+            MethodExecutionProfileCatalog profiles)
+    {
+        this(new MethodInputResolver(), actionCatalog, profiles);
+    }
+
+    /** Stops at the next output/input boundary inside the selected route. */
+    public int resolve(TrainingPlan plan, int currentLevel,
+            int objectiveTargetLevel)
+    {
+        var objective = Math.max(currentLevel + 1, objectiveTargetLevel);
+        if (plan == null || plan.getMethod() == null) return objective;
+        var method = plan.getMethod();
+        int boundary = method.getMaxLevel() >= currentLevel
+                && method.getMaxLevel() < objective
+                ? method.getMaxLevel() + 1 : objective;
+        var profile = profiles.forMethod(method.getId());
+        if (profile == null || method.getSkill() == null) return boundary;
+        for (ActionDef action : actionCatalog.actionsFor(method.getSkill()))
+            if (action != null && action.getLevel() > currentLevel
+                    && action.getLevel() < boundary
+                    && matches(action, profile.getActionTerms()))
+                boundary = action.getLevel();
+        return Math.max(currentLevel + 1, Math.min(objective, boundary));
     }
 
     public ActionDef select(
@@ -43,11 +76,11 @@ public class AdaptiveActionSelector
         AccountMode mode = data == null || data.account() == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.account().getAccountTypeCode());
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
-        boolean storageKnown = items.resourceContainersObserved();
+        var items = new ItemIndex(data, useGroupStorage);
+        var storageKnown = items.resourceContainersObserved();
 
         ActionDef best = null;
-        double bestScore = Double.NEGATIVE_INFINITY;
+        var bestScore = Double.NEGATIVE_INFINITY;
         for (ActionDef action : actions)
         {
             if (action == null || action.getXp() <= 0
@@ -58,7 +91,7 @@ public class AdaptiveActionSelector
             }
             if (!matches(action, profile.getActionTerms())) continue;
 
-            double xpPerAction = action.getXp() * Math.max(1.0, xpMultiplier);
+            var xpPerAction = action.getXp() * Math.max(1.0, xpMultiplier);
             int actionsNeeded = divideRoundUp(
                     Math.max(0, targetXp - currentXp), xpPerAction);
             List<MethodInput> needs = inputResolver.resolve(
@@ -72,7 +105,7 @@ public class AdaptiveActionSelector
 
             if (storageKnown && !needs.isEmpty())
             {
-                double coverage = materialCoverage(items, needs);
+                var coverage = materialCoverage(items, needs);
                 if (mode == AccountMode.ULTIMATE_IRONMAN)
                 {
                     score += coverage * 120.0;
@@ -152,12 +185,12 @@ public class AdaptiveActionSelector
             List<MethodInput> needs)
     {
         if (needs == null || needs.isEmpty()) return 1.0;
-        double total = 0.0;
-        int counted = 0;
+        var total = 0.0;
+        var counted = 0;
         for (MethodInput need : needs)
         {
             if (need == null || need.getQuantity() <= 0) continue;
-            int owned = items.quantity(need.getName());
+            var owned = items.quantity(need.getName());
             total += Math.min(1.0, owned / (double) need.getQuantity());
             counted++;
         }
@@ -169,12 +202,12 @@ public class AdaptiveActionSelector
             List<String> terms)
     {
         if (terms == null || terms.isEmpty()) return false;
-        String haystack = normalize(action.getId()) + " "
-                + normalize(action.getName()) + " "
-                + normalize(action.getCategory());
+        String haystack = Names.actionKey(action.getId()) + " "
+                + Names.actionKey(action.getName()) + " "
+                + Names.actionKey(action.getCategory());
         for (String term : terms)
         {
-            if (haystack.contains(normalize(term))) return true;
+            if (haystack.contains(Names.actionKey(term))) return true;
         }
         return false;
     }
@@ -185,11 +218,4 @@ public class AdaptiveActionSelector
         return (int) Math.ceil(numerator / denominator);
     }
 
-    private static String normalize(String value)
-    {
-        if (value == null) return "";
-        return value.toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
-    }
 }

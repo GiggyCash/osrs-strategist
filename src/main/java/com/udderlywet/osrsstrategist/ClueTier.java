@@ -46,7 +46,7 @@ public enum ClueTier
     public static ClueTier fromText(String value)
     {
         if (value == null) return UNKNOWN;
-        String normalized = value.toLowerCase(Locale.ROOT);
+        var normalized = value.toLowerCase(Locale.ROOT);
         for (ClueTier tier : values())
             if (tier != UNKNOWN && normalized.contains(tier.name().toLowerCase(Locale.ROOT)))
                 return tier;

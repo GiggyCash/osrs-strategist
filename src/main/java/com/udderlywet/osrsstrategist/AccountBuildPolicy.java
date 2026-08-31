@@ -21,18 +21,18 @@ public final class AccountBuildPolicy
             return build(RestrictedBuildType.STANDARD,
                     Confidence.CHECK_NEEDED, get(1206));
 
-        int attack = account.getSkillLevel(Skill.ATTACK);
-        int strength = account.getSkillLevel(Skill.STRENGTH);
-        int defence = account.getSkillLevel(Skill.DEFENCE);
-        int ranged = account.getSkillLevel(Skill.RANGED);
-        int prayer = account.getSkillLevel(Skill.PRAYER);
-        int magic = account.getSkillLevel(Skill.MAGIC);
-        int hp = account.getSkillLevel(Skill.HITPOINTS);
-        int highNonCombat = nonCombatExtreme(account, true);
-        int lowNonCombat = nonCombatExtreme(account, false);
+        var attack = account.getSkillLevel(Skill.ATTACK);
+        var strength = account.getSkillLevel(Skill.STRENGTH);
+        var defence = account.getSkillLevel(Skill.DEFENCE);
+        var ranged = account.getSkillLevel(Skill.RANGED);
+        var prayer = account.getSkillLevel(Skill.PRAYER);
+        var magic = account.getSkillLevel(Skill.MAGIC);
+        var hp = account.getSkillLevel(Skill.HITPOINTS);
+        var highNonCombat = nonCombatExtreme(account, true);
+        var lowNonCombat = nonCombatExtreme(account, false);
         int offence = Math.max(Math.max(attack, strength),
                 Math.max(ranged, magic));
-        int combat = Math.max(Math.max(offence, defence), prayer);
+        var combat = Math.max(Math.max(offence, defence), prayer);
         boolean baselineOffence = attack <= 1 && strength <= 1
                 && ranged <= 1 && magic <= 1;
 
@@ -95,7 +95,7 @@ public final class AccountBuildPolicy
     private static int nonCombatExtreme(AccountSnapshot account,
             boolean highest)
     {
-        int value = highest ? 1 : Integer.MAX_VALUE;
+        var value = highest ? 1 : Integer.MAX_VALUE;
         for (Skill skill : Skill.values())
             if (!isCombatProgressionSkill(skill))
                 value = highest ? Math.max(value, account.getSkillLevel(skill))
@@ -110,7 +110,7 @@ public final class AccountBuildPolicy
      */
     public static RestrictedBuildType effectiveBuild(AccountSnapshot account)
     {
-        RestrictedBuildSuggestion suggestion = detect(account);
+        var suggestion = detect(account);
         if (suggestion.getConfidence() != Confidence.VERIFIED)
         {
             return RestrictedBuildType.STANDARD;
@@ -121,7 +121,7 @@ public final class AccountBuildPolicy
     public static boolean allowsSkill(AccountSnapshot account, Skill skill)
     {
         if (account == null || skill == null) return true;
-        RestrictedBuildType build = effectiveBuild(account);
+        var build = effectiveBuild(account);
 
         switch (build)
         {
@@ -198,8 +198,8 @@ public final class AccountBuildPolicy
         if (account == null || method == null) return true;
         if (!allowsSkill(account, method.getSkill())) return false;
 
-        RestrictedBuildType build = effectiveBuild(account);
-        String id = method.getId() == null ? "" : method.getId().toLowerCase();
+        var build = effectiveBuild(account);
+        var id = method.getId() == null ? "" : method.getId().toLowerCase();
 
         if (build == RestrictedBuildType.TEN_HITPOINTS)
         {
@@ -237,8 +237,8 @@ public final class AccountBuildPolicy
             GearProgressionEntry entry)
     {
         if (account == null || entry == null) return true;
-        RestrictedBuildType build = effectiveBuild(account);
-        String id = entry.getId() == null ? "" : entry.getId().toLowerCase();
+        var build = effectiveBuild(account);
+        var id = entry.getId() == null ? "" : entry.getId().toLowerCase();
 
         switch (build)
         {
@@ -323,7 +323,7 @@ public final class AccountBuildPolicy
 
     private static String pretty(RestrictedBuildType type)
     {
-        String text = type.name().toLowerCase().replace('_', ' ');
+        var text = type.name().toLowerCase().replace('_', ' ');
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }

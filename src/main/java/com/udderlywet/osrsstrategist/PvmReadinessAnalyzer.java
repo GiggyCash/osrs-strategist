@@ -61,11 +61,11 @@ public class PvmReadinessAnalyzer
             PvmSnapshot observed)
     {
         if (account == null) return observed;
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
         Map<String, PvmReadiness> result = new HashMap<>();
         for (PvmActivityDefinition activity : catalog.all())
         {
-            PvmReadiness prior = priorFor(observed, activity.getId());
+            var prior = priorFor(observed, activity.getId());
             if (prior != null
                     && prior.getConfidence() == Confidence.BLOCKED)
             {
@@ -141,7 +141,7 @@ public class PvmReadinessAnalyzer
             if (mode == AccountMode.ULTIMATE_IRONMAN && preparation.isRequiresSupplies())
                 addMissing(missing, get(452));
 
-            boolean fullyVerified = exact != null && missing.isEmpty();
+            var fullyVerified = exact != null && missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
                     activity.getId(),
                     fullyVerified,
@@ -157,7 +157,7 @@ public class PvmReadinessAnalyzer
     private static PvmReadiness priorFor(PvmSnapshot observed, String activityId)
     {
         if (observed == null || activityId == null) return null;
-        PvmReadiness prior = observed.readinessFor(activityId);
+        var prior = observed.readinessFor(activityId);
         if (prior != null) return prior;
         String shortId = activityId.startsWith("pvm:")
                 ? activityId.substring("pvm:".length()) : activityId;
@@ -193,7 +193,7 @@ public class PvmReadinessAnalyzer
         {
             // Persisted snapshots without slot provenance cannot prove a readied weapon.
             if (item.getSlotIndex() != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;
-            String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
+            var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             melee |= containsAny(name, "scimitar", "sword", "whip", "mace", "axe",
                     "halberd", "spear", "hasta", "fang", "scythe", "maul", "bludgeon", "lance");
             ranged |= containsAny(name, "bow", "crossbow", "blowpipe", "ballista", "atlatl");
@@ -257,10 +257,10 @@ public class PvmReadinessAnalyzer
     private static int carriedQuantity(ItemsState inventory, String... terms)
     {
         if (inventory == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : inventory.getItems())
         {
-            String name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
+            var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             if (containsAny(name, terms)) total += Math.max(0, item.getQuantity());
         }
         return total;

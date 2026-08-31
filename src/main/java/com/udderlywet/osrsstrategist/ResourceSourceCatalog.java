@@ -23,7 +23,7 @@ public class ResourceSourceCatalog
 
     public List<ResourceSourceDefinition> match(String itemName)
     {
-        String normalized = normalize(itemName);
+        var normalized = normalize(itemName);
         if (normalized.isEmpty()) return Collections.emptyList();
         List<ResourceSourceDefinition> result = new ArrayList<>();
         for (ResourceSourceDefinition source : sources)
@@ -74,8 +74,8 @@ public class ResourceSourceCatalog
     private static String freeToPlayRoute(ResourceSourceDefinition source,
             String itemName, AccountMode mode)
     {
-        String normalized = normalize(itemName);
-        boolean explicitlySafe = false;
+        var normalized = normalize(itemName);
+        var explicitlySafe = false;
         for (String safeName : source.getFreeToPlayItemNames())
             if (normalized.equals(normalize(safeName)))
             {

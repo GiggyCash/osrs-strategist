@@ -27,7 +27,7 @@ public class ResourceDependencyCatalog
                 if (value == null) continue;
                 if (byId.put(value.getItemId(), value) != null)
                     throw new IllegalStateException(Text.get(1170) + value.getItemId());
-                String name = normalize(value.getItemName());
+                var name = Names.words(value.getItemName());
                 if (!name.isEmpty()) byName.put(name, value);
             }
         definitions = Collections.unmodifiableMap(byId);
@@ -37,13 +37,8 @@ public class ResourceDependencyCatalog
     public ResourceDependencyDefinition forItem(int itemId) { return definitions.get(itemId); }
     public ResourceDependencyDefinition forItemName(String itemName)
     {
-        return definitionsByName.get(normalize(itemName));
+        return definitionsByName.get(Names.words(itemName));
     }
     public int size() { return definitions.size(); }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('’', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

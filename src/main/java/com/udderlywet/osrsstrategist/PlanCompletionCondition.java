@@ -70,7 +70,7 @@ public final class PlanCompletionCondition
     {
         if (this == other) return true;
         if (!(other instanceof PlanCompletionCondition)) return false;
-        PlanCompletionCondition that = (PlanCompletionCondition) other;
+        var that = (PlanCompletionCondition) other;
         return level == that.level && kind == that.kind
                 && skill == that.skill && Objects.equals(quest, that.quest);
     }

@@ -30,7 +30,7 @@ public class ExpandedTrainingMethodCatalog
 
     public List<CuratedTrainingMethod> methodsFor(Skill skill)
     {
-        List<CuratedTrainingMethod> list = methods.get(skill);
+        var list = methods.get(skill);
         return list == null ? Collections.emptyList() : Collections.unmodifiableList(list);
     }
 }

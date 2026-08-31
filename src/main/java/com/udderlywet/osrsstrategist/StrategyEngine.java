@@ -194,9 +194,9 @@ public class StrategyEngine
         {
             for (CandidateProvider provider : candidateRegistry.getProviders())
             {
-                List<Recommendation> candidates = provider.candidates(context);
+                var candidates = provider.candidates(context);
                 if (candidates == null || candidates.isEmpty()) continue;
-                Set<String> superseded = provider.supersededCandidateIds();
+                var superseded = provider.supersededCandidateIds();
                 if (superseded != null && !superseded.isEmpty())
                     pool.removeIf(value -> value != null
                             && superseded.contains(value.getId()));
@@ -216,7 +216,7 @@ public class StrategyEngine
 
         for (Opportunity opportunity : opportunities)
         {
-            Recommendation promoted = opportunityRecommendation(opportunity, context);
+            var promoted = opportunityRecommendation(opportunity, context);
             if (promoted != null) pool.add(promoted);
         }
 
@@ -230,7 +230,7 @@ public class StrategyEngine
 
         // Only after legality/actionability is known do we compare account value
         // across skills, quests, upgrades, detours, PvM, gear and minigames.
-        List<Recommendation> recommendations = buildPlayerQueue(pool, context);
+        var recommendations = buildPlayerQueue(pool, context);
         if (recommendations.isEmpty())
         {
             recommendations = Collections.singletonList(
@@ -258,13 +258,13 @@ public class StrategyEngine
         {
             return null;
         }
-        String id = opportunity.getId();
-        PreferenceProfile preferences = context.preferenceProfile();
+        var id = opportunity.getId();
+        var preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return null;
 
-        boolean setupVerified = opportunity.isSetupVerified();
+        var setupVerified = opportunity.isSetupVerified();
         if (!setupVerified && opportunity.getPreparation().isEmpty()) return null;
-        String location = opportunityLocation(opportunity.getType(), context);
+        var location = opportunityLocation(opportunity.getType(), context);
         String action = opportunityAction(opportunity.getType(),
                 opportunity.getTitle());
         if (location == null || action == null) return null;
@@ -400,7 +400,7 @@ public class StrategyEngine
         {
             recommendation = goalProvenanceService.attach(
                     recommendation, context);
-            String semanticKey = deduplicator.semanticKey(recommendation);
+            var semanticKey = deduplicator.semanticKey(recommendation);
             if (context != null && (context.preferenceProfile()
                     .isOnCooldown(recommendation.getId())
                     || context.preferenceProfile()
@@ -444,7 +444,7 @@ public class StrategyEngine
         for (Recommendation recommendation : candidates)
         {
             if (result.size() >= 3) return;
-            String dimension = alternativeDimension(recommendation);
+            var dimension = alternativeDimension(recommendation);
             if (!result.isEmpty() && representedDimensions.contains(dimension))
                 continue;
             result.add(recommendation);
@@ -455,13 +455,13 @@ public class StrategyEngine
     static String alternativeDimension(Recommendation recommendation)
     {
         if (recommendation == null) return "unknown";
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan != null && plan.getMethod() != null
                 && plan.getMethod().getSkill() != null)
             return "skill:" + plan.getMethod().getSkill().name();
         String id = recommendation.getId() == null ? ""
                 : recommendation.getId().toLowerCase(Locale.ROOT);
-        int colon = id.indexOf(':');
+        var colon = id.indexOf(':');
         return colon < 0 ? id : id.substring(0, colon);
     }
 
@@ -469,7 +469,7 @@ public class StrategyEngine
             StrategyContext context)
     {
         if (recommendation == null || context == null) return 0.0;
-        String key = deduplicator.semanticKey(recommendation);
+        var key = deduplicator.semanticKey(recommendation);
         return context.preferenceProfile().semanticWeightFor(key) * 10.0
                 + context.preferenceProfile()
                 .semanticTimedScoreAdjustmentFor(key);

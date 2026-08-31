@@ -66,7 +66,7 @@ public final class StrategicPlan
 
     public StrategicPlan advanceCompleted(GameData data)
     {
-        int next = currentIndex;
+        var next = currentIndex;
         while (next < steps.size() - 1 && steps.get(next).isComplete(data))
             next++;
         if (next == currentIndex) return this;
@@ -84,7 +84,7 @@ public final class StrategicPlan
         if (context == null || context.data() == null
                 || context.data().account() == null
                 || goal != context.getActiveGoal()) return false;
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (accountHash != 0L && account.getAccountHash() != 0L)
             return accountHash == account.getAccountHash()
                     && accountMode == context.accountMode()

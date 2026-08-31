@@ -26,13 +26,13 @@ public final class GoalRecommendationContext
     public static GoalRecommendationContext assess(GoalType goal,
             Recommendation recommendation, MembershipStatus membership)
     {
-        GoalType safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
+        var safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
                     get(296), null);
 
-        String name = displayName(safeGoal);
+        var name = displayName(safeGoal);
         if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
             return new GoalRecommendationContext(safeGoal,
                     membership == MembershipStatus.UNKNOWN
@@ -54,7 +54,7 @@ public final class GoalRecommendationContext
                     get(1230) + name + " yet.",
                     null);
 
-        GoalProvenance provenance = recommendation.getGoalProvenance();
+        var provenance = recommendation.getGoalProvenance();
         if (provenance != null
                 && provenance.proves(safeGoal, recommendation.getId()))
         {

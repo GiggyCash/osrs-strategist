@@ -20,7 +20,7 @@ final class SidebarAccessibility
     static void apply(Container root, SidebarTextSize size)
     {
         if (root == null) return;
-        float scale = size == null ? 1.0f : size.getScale();
+        var scale = size == null ? 1.0f : size.getScale();
         scaleChildren(root, scale);
         root.revalidate();
         root.repaint();
@@ -45,9 +45,9 @@ final class SidebarAccessibility
 
     private static void scaleFont(JComponent component, float scale)
     {
-        Font current = component.getFont();
+        var current = component.getFont();
         if (current == null) return;
-        Font base = (Font) component.getClientProperty(BASE_FONT);
+        var base = (Font) component.getClientProperty(BASE_FONT);
         if (base == null)
         {
             base = current;
@@ -64,7 +64,7 @@ final class SidebarAccessibility
                 component.getMinimumSize());
         Dimension maximum = base(component, BASE_MAXIMUM,
                 component.getMaximumSize());
-        int bonus = Math.round(Math.max(0f, scale - 1f) * 22f);
+        var bonus = Math.round(Math.max(0f, scale - 1f) * 22f);
         component.setPreferredSize(withHeight(preferred, bonus));
         component.setMinimumSize(withHeight(minimum, bonus));
         if (maximum != null && maximum.height < Integer.MAX_VALUE)
@@ -74,19 +74,19 @@ final class SidebarAccessibility
     /** Recompute BoxLayout's fixed text height after a font-size change. */
     private static void reflowFixedWidthText(JTextArea area)
     {
-        Dimension maximum = area.getMaximumSize();
+        var maximum = area.getMaximumSize();
         if (maximum == null || maximum.width <= 0
                 || maximum.height == Integer.MAX_VALUE) return;
-        int width = maximum.width;
+        var width = maximum.width;
         area.setPreferredSize(null);
         area.setMinimumSize(null);
         area.setMaximumSize(null);
         area.setSize(new Dimension(width, 10_000));
-        Dimension measured = area.getPreferredSize();
-        int lineHeight = area.getFontMetrics(area.getFont()).getHeight();
+        var measured = area.getPreferredSize();
+        var lineHeight = area.getFontMetrics(area.getFont()).getHeight();
         int height = area.getText() == null || area.getText().isEmpty()
                 ? 1 : Math.max(lineHeight, measured.height);
-        Dimension fixed = new Dimension(width, height);
+        var fixed = new Dimension(width, height);
         area.setPreferredSize(fixed);
         area.setMinimumSize(fixed);
         area.setMaximumSize(fixed);
@@ -95,7 +95,7 @@ final class SidebarAccessibility
     private static Dimension base(JComponent component, String key,
             Dimension current)
     {
-        Dimension stored = (Dimension) component.getClientProperty(key);
+        var stored = (Dimension) component.getClientProperty(key);
         if (stored != null) return stored;
         if (current == null) return null;
         stored = new Dimension(current);

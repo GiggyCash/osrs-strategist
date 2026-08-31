@@ -15,23 +15,13 @@ import net.runelite.api.coords.WorldPoint;
  * checks even after RuneLite is restarted.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AccessObservationService
 {
     private final Client client;
     private final AccountAccessMemoryStore memoryStore;
     private final FarmingAccessCatalog farmingAccessCatalog;
     private int lastRegionId = -1;
-
-    @Inject
-    public AccessObservationService(
-            Client client,
-            AccountAccessMemoryStore memoryStore,
-            FarmingAccessCatalog farmingAccessCatalog)
-    {
-        this.client = client;
-        this.memoryStore = memoryStore;
-        this.farmingAccessCatalog = farmingAccessCatalog;
-    }
 
     /**
      * @return true only when newly learned evidence can affect current strategy.
@@ -43,19 +33,19 @@ public class AccessObservationService
             return false;
         }
 
-        Player player = client.getLocalPlayer();
+        var player = client.getLocalPlayer();
         if (player == null)
         {
             return false;
         }
 
-        WorldPoint location = player.getWorldLocation();
+        var location = player.getWorldLocation();
         if (location == null)
         {
             return false;
         }
 
-        int regionId = location.getRegionID();
+        var regionId = location.getRegionID();
         if (regionId == lastRegionId)
         {
             return false;

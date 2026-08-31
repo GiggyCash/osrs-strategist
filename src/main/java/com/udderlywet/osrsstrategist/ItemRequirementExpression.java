@@ -111,14 +111,14 @@ public final class ItemRequirementExpression
     {
         if (kind == Kind.ITEM)
         {
-            String names = String.join(" or ", itemNames);
+            var names = String.join(" or ", itemNames);
             if (quantity <= 1) return names;
             return quantityPrefix() + (itemNames.size() > 1
                     ? "(" + names + ")" : names);
         }
         if (kind == Kind.ITEM_CLASS)
         {
-            String value = itemClass == null ? "item class" : itemClass.getLabel();
+            var value = itemClass == null ? "item class" : itemClass.getLabel();
             if (!excludedItemNames.isEmpty())
                 value += " (excluding " + String.join(" or ", excludedItemNames) + ")";
             return quantity <= 1 ? value : quantityPrefix() + value;
@@ -127,7 +127,7 @@ public final class ItemRequirementExpression
         List<String> labels = new ArrayList<>();
         for (ItemRequirementExpression child : children)
         {
-            String label = child.label();
+            var label = child.label();
             if (child.kind != Kind.ITEM && child.kind != Kind.ITEM_CLASS
                     && child.kind != Kind.CHECK_NEEDED
                     && child.kind != kind)

@@ -23,14 +23,14 @@ public class UimSetupCostService
             return 0.0;
         }
 
-        GameData data = context.data();
+        var data = context.data();
         if (data == null) return 0.0;
 
-        double value = 0.0;
-        TrainingPlan plan = recommendation.getTrainingPlan();
-        TrainingMethod method = plan == null ? null : plan.getMethod();
-        int setupMinutes = method == null ? 0 : Math.max(0, method.getSetupMinutes());
-        int occupied = occupiedInventorySlots(data.inventory());
+        var value = 0.0;
+        var plan = recommendation.getTrainingPlan();
+        var method = plan == null ? null : plan.getMethod();
+        var setupMinutes = method == null ? 0 : Math.max(0, method.getSetupMinutes());
+        var occupied = occupiedInventorySlots(data.inventory());
 
         // Unknown/non-skill setup does not receive a fake "low setup" bonus.
         if (method != null)
@@ -43,7 +43,7 @@ public class UimSetupCostService
         if (occupied >= 24 && setupMinutes >= 7) value -= 8.0;
         else if (occupied >= 20 && setupMinutes >= 7) value -= 4.0;
 
-        StorageSnapshot storage = data.storage();
+        var storage = data.storage();
         boolean deathStorageObserved = hasObservedItems(
                 storage, StorageCapability.DEATH_STORAGE)
                 || hasObservedItems(storage,
@@ -82,7 +82,7 @@ public class UimSetupCostService
     static int occupiedInventorySlots(ItemsState inventory)
     {
         if (inventory == null || inventory.getItems() == null) return 0;
-        int slots = 0;
+        var slots = 0;
         for (ItemState item : inventory.getItems())
         {
             if (item != null && item.getQuantity() > 0) slots++;
@@ -99,7 +99,7 @@ public class UimSetupCostService
         {
             return false;
         }
-        List<ItemState> items = storage.contentsOf(capability);
+        var items = storage.contentsOf(capability);
         if (items == null) return false;
         for (ItemState item : items)
         {

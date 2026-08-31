@@ -46,22 +46,22 @@ public class AccountResourcePlanner
             List<MethodInput> rawNeeds,
             boolean useGroupStorage)
     {
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
-        ItemIndex observed = new ItemIndex(data, useGroupStorage);
-        boolean primaryObserved = observed.usableOwnershipObserved();
-        boolean groupIncluded = useGroupStorage && mode.isGroupIronman();
-        boolean groupObserved = observed.groupStorageObserved();
+        var observed = new ItemIndex(data, useGroupStorage);
+        var primaryObserved = observed.usableOwnershipObserved();
+        var groupIncluded = useGroupStorage && mode.isGroupIronman();
+        var groupObserved = observed.groupStorageObserved();
 
-        List<MethodInput> needs = merge(rawNeeds);
+        var needs = merge(rawNeeds);
         List<ResourcePlanEntry> entries = new ArrayList<>();
         for (MethodInput need : needs)
         {
-            String reusable = reusableSourceFor(observed, need.getName());
-            int owned = observed.quantity(need.getName());
-            int restricted = observed.restrictedQuantity(need.getName());
+            var reusable = reusableSourceFor(observed, need.getName());
+            var owned = observed.quantity(need.getName());
+            var restricted = observed.restrictedQuantity(need.getName());
             int missing = reusable == null
                     ? Math.max(0, need.getQuantity() - owned)
                     : 0;
@@ -137,7 +137,7 @@ public class AccountResourcePlanner
             }
         }
 
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         text.append("Need ").append(join(required)).append(". ");
         if (!reusable.isEmpty())
         {
@@ -177,7 +177,7 @@ public class AccountResourcePlanner
             return text.toString();
         }
 
-        String shortfall = join(missing);
+        var shortfall = join(missing);
         if (mode.usesGrandExchange())
         {
             appendMainOpportunityGuidance(text, data, shortfall,
@@ -341,7 +341,7 @@ public class AccountResourcePlanner
             String itemName)
     {
         if (observed == null || itemName == null) return null;
-        String rune = normalize(itemName);
+        var rune = Names.lower(itemName);
         if ("fire rune".equals(rune))
         {
             return firstEquipped(observed,
@@ -403,8 +403,8 @@ public class AccountResourcePlanner
             {
                 continue;
             }
-            String key = normalize(input.getName());
-            MutableNeed existing = merged.get(key);
+            var key = Names.lower(input.getName());
+            var existing = merged.get(key);
             if (existing == null)
             {
                 merged.put(key, new MutableNeed(
@@ -439,7 +439,7 @@ public class AccountResourcePlanner
         if (parts == null || parts.isEmpty()) return "nothing";
         if (parts.size() == 1) return parts.get(0);
         if (parts.size() == 2) return parts.get(0) + " and " + parts.get(1);
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         for (int i = 0; i < parts.size(); i++)
         {
             if (i > 0) text.append(i == parts.size() - 1 ? ", and " : ", ");
@@ -453,10 +453,6 @@ public class AccountResourcePlanner
         return String.format(Locale.ROOT, "%,d", Math.max(0, value));
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
-    }
 
     private static final class MutableNeed
     {

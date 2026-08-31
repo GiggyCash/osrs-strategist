@@ -93,7 +93,7 @@ public final class StorageSnapshot
     public int quantityOf(StorageCapability capability, int itemId)
     {
         if (!verified(capability) || !hasObservedContents(capability)) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState item : contentsOf(capability))
         {
             if (item.getItemId() == itemId) total += item.getQuantity();

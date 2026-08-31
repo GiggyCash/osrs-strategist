@@ -15,7 +15,7 @@ public class F2pBaselineMethodCatalog
         for (CuratedTrainingMethod value : BundledCatalogLoader.array(
                 Text.get(217), CuratedTrainingMethod[].class))
         {
-            Skill skill = value.getMethod().getSkill();
+            var skill = value.getMethod().getSkill();
             bySkill.computeIfAbsent(skill, ignored -> new ArrayList<>()).add(value);
         }
         for (Map.Entry<Skill, List<CuratedTrainingMethod>> entry : bySkill.entrySet())
@@ -24,7 +24,7 @@ public class F2pBaselineMethodCatalog
 
     public List<CuratedTrainingMethod> methodsFor(Skill skill)
     {
-        List<CuratedTrainingMethod> methods = bySkill.get(skill);
+        var methods = bySkill.get(skill);
         return methods == null ? Collections.emptyList() : methods;
     }
 }

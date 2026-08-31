@@ -65,22 +65,22 @@ public class QuestCandidateProvider implements CandidateProvider
             return result;
         }
 
-        AccountSnapshot account = context.data().account();
-        MembershipStatus membership = account.getMembershipStatus();
-        PreferenceProfile preferences = context.preferenceProfile();
+        var account = context.data().account();
+        var membership = account.getMembershipStatus();
+        var preferences = context.preferenceProfile();
         Set<String> neededPrerequisites = neededPrerequisites(
                 context.data().quests());
         for (Map.Entry<String, QuestStatus> entry
                 : context.data().quests().quests().entrySet())
         {
-            QuestStatus status = entry.getValue();
+            var status = entry.getValue();
             if (status == null || status == QuestStatus.COMPLETE
                     || status == QuestStatus.UNKNOWN)
             {
                 continue;
             }
 
-            String questName = entry.getKey();
+            var questName = entry.getKey();
             if (!QuestMembershipPolicy.isAvailable(questName, membership))
             {
                 continue;
@@ -93,12 +93,12 @@ public class QuestCandidateProvider implements CandidateProvider
                 continue;
             }
 
-            String id = "quest:" + slug(questName);
+            var id = "quest:" + slug(questName);
             if (preferences.isOnCooldown(id)) continue;
 
             QuestPriorityCatalog.QuestPriority priority =
                     priorityCatalog.priorityFor(questName);
-            QuestDefinition definition = knowledgeCatalog.definitionFor(questName);
+            var definition = knowledgeCatalog.definitionFor(questName);
             QuestResolution resolution = definition == null ? null
                     : requirementResolver.resolve(definition, context);
             boolean requiredForGoal = goalProvenanceService.isRequiredQuest(
@@ -118,7 +118,7 @@ public class QuestCandidateProvider implements CandidateProvider
                 reason = Text.get(547);
             }
 
-            RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+            var build = AccountBuildPolicy.effectiveBuild(account);
             if (build != RestrictedBuildType.STANDARD)
             {
                 reason += Text.get(548)
@@ -131,7 +131,7 @@ public class QuestCandidateProvider implements CandidateProvider
                 reason += " " + priority.getReason() + ".";
             }
 
-            if (neededPrerequisites.contains(normalize(questName)))
+            if (neededPrerequisites.contains(Names.words(questName)))
             {
                 score += 24.0;
                 reason += Text.get(549);
@@ -204,18 +204,13 @@ public class QuestCandidateProvider implements CandidateProvider
         for (Map.Entry<String, QuestStatus> entry : quests.quests().entrySet())
         {
             if (entry.getValue() == QuestStatus.COMPLETE) continue;
-            QuestDefinition definition = knowledgeCatalog.definitionFor(entry.getKey());
+            var definition = knowledgeCatalog.definitionFor(entry.getKey());
             if (definition == null) continue;
             for (String prerequisite : definition.getPrerequisites())
                 if (quests.statusOf(prerequisite) != QuestStatus.COMPLETE)
-                    result.add(normalize(prerequisite));
+                    result.add(Names.words(prerequisite));
         }
         return result;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

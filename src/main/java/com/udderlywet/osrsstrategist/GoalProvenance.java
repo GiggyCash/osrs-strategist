@@ -63,13 +63,13 @@ public final class GoalProvenance
     /** Causal player copy derived only from the validated dependency path. */
     public String playerReason()
     {
-        String goalName = path.isEmpty() ? goal.toString() : path.get(0);
-        String action = path.get(path.size() - 1);
+        var goalName = path.isEmpty() ? goal.toString() : path.get(0);
+        var action = path.get(path.size() - 1);
         if (relationship == GoalRecommendationRelationship.DIRECT)
             return action + Text.get(1226) + goalName + " goal.";
         if (path.size() >= 3)
         {
-            String parent = path.get(path.size() - 2);
+            var parent = path.get(path.size() - 2);
             return action + " is required for " + parent
                     + Text.get(1227) + goalName + " path.";
         }

@@ -13,7 +13,7 @@ public class TrainingMethodPolicy
             boolean allowWildernessMethods)
     {
         if (method == null || metadata == null) return false;
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -68,7 +68,7 @@ public class TrainingMethodPolicy
             SessionIntent sessionIntent)
     {
         if (metadata == null) return 0.0;
-        AccountSnapshot account = data == null ? null : data.account();
+        var account = data == null ? null : data.account();
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -92,9 +92,9 @@ public class TrainingMethodPolicy
             StrategyMode mode,
             SessionIntent intent)
     {
-        double score = 0.0;
-        StrategyMode safeMode = mode == null ? StrategyMode.BALANCED : mode;
-        SessionIntent safeIntent = intent == null ? SessionIntent.PICK_FOR_ME : intent;
+        var score = 0.0;
+        var safeMode = mode == null ? StrategyMode.BALANCED : mode;
+        var safeIntent = intent == null ? SessionIntent.PICK_FOR_ME : intent;
 
         switch (safeMode)
         {

@@ -35,9 +35,9 @@ public class CombatGuidanceService
             return null;
         }
 
-        AccountSnapshot account = data.account();
+        var account = data.account();
         if (account.getMembershipStatus() == MembershipStatus.UNKNOWN) return null;
-        RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+        var build = AccountBuildPolicy.effectiveBuild(account);
         if (!AccountBuildPolicy.allowsSkill(account, skill)) return null;
 
         String methodId = plan.getMethod().getId() == null
@@ -47,8 +47,8 @@ public class CombatGuidanceService
                 methodId, sessionIntent);
         if (route == null) return null;
 
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
-        String weapon = chooseWeapon(account, skill, build, items);
+        var items = new ItemIndex(data, useGroupStorage);
+        var weapon = chooseWeapon(account, skill, build, items);
         if (weapon == null && skill != Skill.RANGED
                 && build == RestrictedBuildType.STANDARD
                 && currentLevel < 20)
@@ -62,14 +62,14 @@ public class CombatGuidanceService
         boolean unarmed = weapon == null && currentLevel < 10
                 && skill != Skill.RANGED;
         if (weapon == null && !unarmed) return null;
-        String style = attackStyle(skill);
+        var style = attackStyle(skill);
 
-        int currentXp = account.getSkillExperience(skill);
+        var currentXp = account.getSkillExperience(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
-        int targetXp = Experience.getXpForLevel(targetLevel);
-        int xpNeeded = Math.max(0, targetXp - currentXp);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
 
-        StringBuilder action = new StringBuilder();
+        var action = new StringBuilder();
         action.append(withoutPeriod(route.loop));
         if (weapon != null) action.append(" with ").append(weapon);
         else if (unarmed) action.append(" while unarmed");
@@ -80,7 +80,7 @@ public class CombatGuidanceService
 
         if (route.xpPerDamage > 0)
         {
-            int damageNeeded = (int) Math.ceil(xpNeeded / route.xpPerDamage);
+            var damageNeeded = (int) Math.ceil(xpNeeded / route.xpPerDamage);
             action.append(" That is about ")
                     .append(format(damageNeeded))
                     .append(get(183))
@@ -92,8 +92,8 @@ public class CombatGuidanceService
                 ? get(184)
                 : supplyGuidance(account, skill, build, route, weapon, items);
         if (supplies == null) return null;
-        String location = route.location;
-        String note = route.note;
+        var location = route.location;
+        var note = route.note;
         if (build != RestrictedBuildType.STANDARD)
         {
             note += get(1335) + AccountBuildPolicy.label(account)
@@ -116,7 +116,7 @@ public class CombatGuidanceService
             String methodId,
             SessionIntent intent)
     {
-        MembershipStatus membership = account.getMembershipStatus();
+        var membership = account.getMembershipStatus();
 
         if (build == RestrictedBuildType.DEFENCE_PURE)
         {
@@ -137,7 +137,7 @@ public class CombatGuidanceService
                         get(153));
             }
 
-            CombatRoute crab = bestCrab(data, intent);
+            var crab = bestCrab(data, intent);
             if (crab != null)
             {
                 crab.note = get(1337) + crab.note;
@@ -209,7 +209,7 @@ public class CombatGuidanceService
                     get(169));
         }
 
-        CombatRoute crab = bestCrab(data, intent);
+        var crab = bestCrab(data, intent);
         if (crab != null) return crab;
 
         return new CombatRoute(
@@ -223,9 +223,9 @@ public class CombatGuidanceService
             GameData data,
             SessionIntent intent)
     {
-        QuestSnapshot quests = data == null ? null : data.quests();
-        boolean childrenOfSun = completed(quests, get(1342));
-        boolean boneVoyage = completed(quests, "Bone Voyage");
+        var quests = data == null ? null : data.quests();
+        var childrenOfSun = completed(quests, get(1342));
+        var boneVoyage = completed(quests, "Bone Voyage");
 
         if (childrenOfSun && intent == SessionIntent.AFK)
         {
@@ -295,10 +295,10 @@ public class CombatGuidanceService
         }
         if (route.location.contains("Scurrius"))
         {
-            String food = firstObserved(items, LOADOUTS.food);
+            var food = firstObserved(items, LOADOUTS.food);
             if (food == null) return null;
-            String prayer = firstObserved(items, LOADOUTS.prayer);
-            String boost = firstObserved(items, LOADOUTS.boost);
+            var prayer = firstObserved(items, LOADOUTS.prayer);
+            var boost = firstObserved(items, LOADOUTS.boost);
             StringBuilder result = new StringBuilder("Bring ")
                     .append(weapon).append(get(1344))
                     .append(food).append(" food stack");
@@ -321,18 +321,18 @@ public class CombatGuidanceService
         if (weapon.contains(get(1346))
                 || weapon.contains("Bone crossbow"))
         {
-            String bolts = firstObserved(items, "Bone bolts");
+            var bolts = firstObserved(items, "Bone bolts");
             return bolts == null ? null : "Bring " + weapon + " and " + bolts + ".";
         }
         if (weapon.toLowerCase().contains("crossbow"))
         {
-            String bolts = firstObserved(items, LOADOUTS.bolts);
+            var bolts = firstObserved(items, LOADOUTS.bolts);
             return bolts == null ? null : "Bring " + weapon + " and " + bolts + ".";
         }
         if (weapon.toLowerCase().contains("bow")
                 && !weapon.toLowerCase().contains("blowpipe"))
         {
-            String arrows = firstObserved(items, LOADOUTS.arrows);
+            var arrows = firstObserved(items, LOADOUTS.arrows);
             return arrows == null ? null : "Bring " + weapon + " and " + arrows + ".";
         }
         // Blowpipe, Venator, and other charged/ammo-bearing weapons need live
@@ -389,7 +389,7 @@ public class CombatGuidanceService
     private static String withoutPeriod(String value)
     {
         if (value == null) return get(1348);
-        String trimmed = value.trim();
+        var trimmed = value.trim();
         return trimmed.endsWith(".")
                 ? trimmed.substring(0, trimmed.length() - 1) : trimmed;
     }

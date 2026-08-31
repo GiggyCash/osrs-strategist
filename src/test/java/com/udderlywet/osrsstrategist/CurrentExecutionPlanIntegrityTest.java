@@ -35,8 +35,8 @@ public class CurrentExecutionPlanIntegrityTest
     @Test
     public void distantFishingTargetStopsAtEveryCurrentExecutionTransition()
     {
-        CurrentExecutionStageResolver resolver =
-                new CurrentExecutionStageResolver(fishingActions,
+        AdaptiveActionSelector resolver =
+                new AdaptiveActionSelector(fishingActions,
                         new MethodExecutionProfileCatalog());
 
         assertEquals(20, resolver.resolve(
@@ -85,8 +85,8 @@ public class CurrentExecutionPlanIntegrityTest
                         value.getId()))
                 .findFirst().orElseThrow(AssertionError::new);
         TrainingPlan fallbackPlan = plan(fallback);
-        CurrentExecutionStageResolver resolver =
-                new CurrentExecutionStageResolver(fishingActions,
+        AdaptiveActionSelector resolver =
+                new AdaptiveActionSelector(fishingActions,
                         new MethodExecutionProfileCatalog());
 
         assertEquals("Fly fishing", fallback.getName());
@@ -208,8 +208,7 @@ public class CurrentExecutionPlanIntegrityTest
     {
         ExpandedTrainingMethodCatalog catalog =
                 new ExpandedTrainingMethodCatalog();
-        CurrentExecutionStageResolver resolver =
-                new CurrentExecutionStageResolver();
+        AdaptiveActionSelector resolver = new AdaptiveActionSelector();
         EnumSet<Skill> covered = EnumSet.noneOf(Skill.class);
         for (Skill skill : Skill.values())
         {

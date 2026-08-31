@@ -46,7 +46,7 @@ public class PlayerStrategyProfile
 
     public static PlayerStrategyProfile fromConfig(OsrsStrategistConfig config)
     {
-        PlayerGoal configuredGoal = config.activeGoal();
+        var configuredGoal = config.activeGoal();
         return new PlayerStrategyProfile(
                 config.strategyMode(), config.sessionIntent(),
                 config.questTolerance(), configuredGoal == null

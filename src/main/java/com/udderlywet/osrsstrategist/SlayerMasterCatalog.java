@@ -25,21 +25,21 @@ public class SlayerMasterCatalog
 
     public SlayerMasterProfile byId(String id)
     {
-        String key = normalize(id);
+        var key = Names.words(id);
         for (SlayerMasterProfile profile : profiles)
-            if (normalize(profile.getId()).equals(key)) return profile;
+            if (Names.words(profile.getId()).equals(key)) return profile;
         return null;
     }
 
     public SlayerMasterProfile match(String name)
     {
-        String key = normalize(name);
+        var key = Names.words(name);
         if (key.isEmpty()) return null;
         for (SlayerMasterProfile profile : profiles)
         {
-            if (normalize(profile.getId()).equals(key)) return profile;
+            if (Names.words(profile.getId()).equals(key)) return profile;
             for (String alias : profile.getNames())
-                if (normalize(alias).equals(key)) return profile;
+                if (Names.words(alias).equals(key)) return profile;
         }
         return null;
     }
@@ -48,12 +48,12 @@ public class SlayerMasterCatalog
     {
         if (context == null || context.data() == null
                 || context.data().account() == null) return Collections.emptyList();
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         if (account.getMembershipStatus() != MembershipStatus.P2P)
             return Collections.emptyList();
-        int combat = SlayerGuidanceService.combatLevel(account);
-        int slayer = account.getSkillLevel(net.runelite.api.Skill.SLAYER);
-        QuestSnapshot quests = context.data().quests();
+        var combat = SlayerGuidanceService.combatLevel(account);
+        var slayer = account.getSkillLevel(net.runelite.api.Skill.SLAYER);
+        var quests = context.data().quests();
         List<SlayerMasterProfile> result = new ArrayList<>();
         for (SlayerMasterProfile profile : profiles)
         {
@@ -64,7 +64,7 @@ public class SlayerMasterCatalog
             if (profile.isWilderness() && !context.isAllowWildernessMethods()) continue;
             if ("mortimer".equals(profile.getId()))
             {
-                SlayerSnapshot live = context.data().slayer();
+                var live = context.data().slayer();
                 boolean capeIntroduction = slayer >= 99 && live != null
                         && Boolean.TRUE.equals(live.isMortimerIntroduced());
                 if (!capeIntroduction && (combat < profile.getMinimumCombat()
@@ -83,15 +83,10 @@ public class SlayerMasterCatalog
             QuestSnapshot quests)
     {
         if (quests == null) return false;
-        QuestStatus status = quests.statusOf(profile.getRequiredQuest());
+        var status = quests.statusOf(profile.getRequiredQuest());
         return status == QuestStatus.COMPLETE
                 || profile.isQuestStartSufficient()
                 && status == QuestStatus.IN_PROGRESS;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

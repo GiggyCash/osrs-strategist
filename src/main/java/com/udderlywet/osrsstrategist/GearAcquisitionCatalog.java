@@ -14,7 +14,7 @@ public class GearAcquisitionCatalog
     {
         for (GearAcquisitionRoute route : BundledCatalogLoader.array(
                 Text.get(250), GearAcquisitionRoute[].class))
-            if (routes.put(normalize(route.getItemName()), route) != null)
+            if (routes.put(Names.words(route.getItemName()), route) != null)
                 throw new IllegalStateException(Text.get(1136) + route.getItemName());
     }
 
@@ -22,11 +22,6 @@ public class GearAcquisitionCatalog
     {
         return Collections.unmodifiableList(new ArrayList<>(routes.values()));
     }
-    public GearAcquisitionRoute forItem(String itemName) { return routes.get(normalize(itemName)); }
+    public GearAcquisitionRoute forItem(String itemName) { return routes.get(Names.words(itemName)); }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

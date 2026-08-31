@@ -57,7 +57,7 @@ public class QuestKnowledgeCatalog
                 else if (hasUnparsedCombatXp(details.getRewards(), rewardXp(details.getRewards())))
                     uncertainties.add("irreversible xp");
             }
-            String start = record.getStartLocation();
+            var start = record.getStartLocation();
             if (start.trim().isEmpty() && details != null && details.hasStartEvidence())
                 start = plain(details.getStart());
             if (start.trim().isEmpty() && !uncertainties.contains("start location"))
@@ -85,7 +85,7 @@ public class QuestKnowledgeCatalog
     private static Map<Skill, Integer> rewardXp(String rewards)
     {
         EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
-        Matcher matcher = REWARD_XP.matcher(rewards == null ? "" : rewards);
+        var matcher = REWARD_XP.matcher(rewards == null ? "" : rewards);
         while (matcher.find())
         {
             Skill skill;
@@ -102,7 +102,7 @@ public class QuestKnowledgeCatalog
 
     private static boolean hasUnparsedCombatXp(String rewards, Map<Skill, Integer> parsed)
     {
-        String text = plain(rewards).toLowerCase(Locale.ROOT);
+        var text = plain(rewards).toLowerCase(Locale.ROOT);
         for (Skill skill : Arrays.asList(Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE,
                 Skill.HITPOINTS, Skill.PRAYER, Skill.RANGED, Skill.MAGIC))
             if (text.matches("(?s).*\\b" + skill.getName().toLowerCase(Locale.ROOT)
@@ -127,21 +127,16 @@ public class QuestKnowledgeCatalog
         return value.length() <= length ? value : value.substring(0, length - 1).trim() + "…";
     }
 
-    public QuestDefinition definitionFor(String name) { return definitions.get(normalize(name)); }
+    public QuestDefinition definitionFor(String name) { return definitions.get(Names.words(name)); }
     public Map<String, QuestDefinition> all() { return Collections.unmodifiableMap(definitions); }
 
     private void add(QuestDefinition definition)
     {
         if (definition == null || definition.getName() == null)
             throw new IllegalStateException(Text.get(1167) + RESOURCE);
-        String id = normalize(definition.getName());
+        var id = Names.words(definition.getName());
         if (definitions.put(id, definition) != null)
             throw new IllegalStateException(Text.get(1168) + definition.getName());
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('’', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
 }

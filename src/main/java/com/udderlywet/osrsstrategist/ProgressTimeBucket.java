@@ -23,7 +23,7 @@ public final class ProgressTimeBucket
 
     public int getTotalXp()
     {
-        long total = 0L;
+        var total = 0L;
         for (Integer value : xpBySkill.values())
             total += value == null ? 0 : Math.max(0, value);
         return (int) Math.min(Integer.MAX_VALUE, total);

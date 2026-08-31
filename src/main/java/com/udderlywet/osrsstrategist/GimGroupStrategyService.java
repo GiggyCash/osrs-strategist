@@ -26,7 +26,7 @@ public final class GimGroupStrategyService
             return result(GroupResourceState.GROUP_STORAGE_DISABLED,
                     Confidence.VERIFIED, 0, need, 0.0,
                     get(288));
-        GameData data = context.data();
+        var data = context.data();
         ItemsState storage = data == null
                 ? null : data.groupStorage();
         if (storage == null || !storage.isObserved())
@@ -34,7 +34,7 @@ public final class GimGroupStrategyService
                     Confidence.CHECK_NEEDED, 0, need, 0.0,
                     get(289));
 
-        int quantity = quantity(storage, need.getAcceptableItemIds());
+        var quantity = quantity(storage, need.getAcceptableItemIds());
         if (quantity <= 0)
             return result(GroupResourceState.SHARED_STOCK_NONE,
                     Confidence.VERIFIED, 0, need, 0.0,
@@ -46,7 +46,7 @@ public final class GimGroupStrategyService
                     Confidence.VERIFIED, quantity, need,
                     fraction * 0.45,
                     get(291));
-        double avoidance = need.isReusable() ? 1.0 : 0.75;
+        var avoidance = need.isReusable() ? 1.0 : 0.75;
         return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
                 Confidence.VERIFIED, quantity, need, avoidance,
                 get(292));
@@ -74,11 +74,11 @@ public final class GimGroupStrategyService
 
     private static int quantity(ItemsState storage, Set<Integer> ids)
     {
-        int total = 0;
+        var total = 0;
         for (ItemState item : storage.getItems())
         {
             if (item == null || !ids.contains(item.getItemId())) continue;
-            int amount = Math.max(0, item.getQuantity());
+            var amount = Math.max(0, item.getQuantity());
             if (total >= Integer.MAX_VALUE - amount) return Integer.MAX_VALUE;
             total += amount;
         }

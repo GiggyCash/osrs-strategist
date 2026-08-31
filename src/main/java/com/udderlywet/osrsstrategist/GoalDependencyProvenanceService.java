@@ -29,12 +29,12 @@ public class GoalDependencyProvenanceService
             Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null) return null;
-        GoalProvenance existing = recommendation.getGoalProvenance();
+        var existing = recommendation.getGoalProvenance();
         if (context != null && existing != null
                 && existing.proves(context.getActiveGoal(),
                         recommendation.getId()))
             return recommendation;
-        GoalProvenance provenance = resolve(recommendation, context);
+        var provenance = resolve(recommendation, context);
         return recommendation.withGoalProvenance(provenance);
     }
 
@@ -42,14 +42,14 @@ public class GoalDependencyProvenanceService
             Recommendation recommendation, StrategyContext context)
     {
         if (recommendation == null || context == null) return null;
-        GoalType goal = context.getActiveGoal();
+        var goal = context.getActiveGoal();
         if (goal == null || goal == GoalType.AUTOMATIC
                 || goal == GoalType.CUSTOM) return null;
 
-        Skill skill = recommendationSkill(recommendation);
+        var skill = recommendationSkill(recommendation);
         if (skill != null)
         {
-            List<String> path = skillPath(goal, skill, context);
+            var path = skillPath(goal, skill, context);
             if (path == null) return null;
             return isDirectSkillGoal(goal, skill)
                     ? GoalProvenance.direct(goal,
@@ -58,10 +58,10 @@ public class GoalDependencyProvenanceService
                             recommendation.getId(), path);
         }
 
-        String quest = recommendationQuest(recommendation, context);
+        var quest = recommendationQuest(recommendation, context);
         if (quest != null)
         {
-            List<String> path = questPath(goal, quest, context);
+            var path = questPath(goal, quest, context);
             if (path == null) return null;
             boolean direct = goal == GoalType.QUEST_CAPE
                     || path.size() == 2;
@@ -72,7 +72,7 @@ public class GoalDependencyProvenanceService
                             recommendation.getId(), path);
         }
 
-        List<String> direct = directActivityPath(goal, recommendation);
+        var direct = directActivityPath(goal, recommendation);
         return direct == null ? null : GoalProvenance.direct(
                 goal, recommendation.getId(), direct);
     }
@@ -90,17 +90,17 @@ public class GoalDependencyProvenanceService
         if (goal == null || skill == null || context == null
                 || context.data() == null
                 || context.data().account() == null) return 0;
-        int current = context.data().account().getSkillLevel(skill);
+        var current = context.data().account().getSkillLevel(skill);
         if (isDirectSkillGoal(goal, skill))
         {
             int target = goal == GoalType.BASE_70S ? 70
                     : goal == GoalType.SLAYER_85 ? 85 : 99;
             return current < target ? target : 0;
         }
-        int nearest = Integer.MAX_VALUE;
+        var nearest = Integer.MAX_VALUE;
         for (String quest : requiredQuestNames(goal, context))
         {
-            QuestDefinition definition = quests.definitionFor(quest);
+            var definition = quests.definitionFor(quest);
             if (definition == null) continue;
             int level = definition.getSkillRequirements()
                     .getOrDefault(skill, 0);
@@ -118,23 +118,23 @@ public class GoalDependencyProvenanceService
             return new GoalQuestRewardForecast(skill, 0,
                     Collections.emptyList());
 
-        int currentLevel = context.data().account().getSkillLevel(skill);
-        Set<String> goalQuests = requiredQuestNames(context.getActiveGoal(), context);
-        int experience = 0;
+        var currentLevel = context.data().account().getSkillLevel(skill);
+        var goalQuests = requiredQuestNames(context.getActiveGoal(), context);
+        var experience = 0;
         List<String> sources = new ArrayList<>();
         for (String quest : goalQuests)
         {
-            QuestStatus status = statusOf(context, quest);
+            var status = statusOf(context, quest);
             if (status == QuestStatus.COMPLETE || status == QuestStatus.UNKNOWN)
                 continue;
-            QuestDefinition definition = quests.definitionFor(quest);
+            var definition = quests.definitionFor(quest);
             if (definition == null
                     || definition.getSkillRequirements().getOrDefault(skill, 1)
                             > currentLevel
                     || !canReachWithoutTrainingSkill(definition, context,
                             skill, new HashSet<>()))
                 continue;
-            int reward = definition.getRewardXp().getOrDefault(skill, 0);
+            var reward = definition.getRewardXp().getOrDefault(skill, 0);
             if (reward <= 0) continue;
             experience += reward;
             sources.add(quest);
@@ -146,14 +146,14 @@ public class GoalDependencyProvenanceService
             StrategyContext context, Skill skill, Set<String> active)
     {
         if (definition == null) return false;
-        String key = normalize(definition.getName());
+        var key = Names.words(definition.getName());
         if (!active.add(key)) return false;
         for (Map.Entry<Skill, Integer> requirement
                 : definition.getSkillRequirements().entrySet())
         {
             int current = context.data().account()
                     .getSkillLevel(requirement.getKey());
-            int gap = requirement.getValue() - current;
+            var gap = requirement.getValue() - current;
             // The forecast may look through one short prerequisite grind, but
             // never treat a distant quest reward as near-term XP.
             if (gap > 0 && (requirement.getKey() == skill || gap > 10))
@@ -164,7 +164,7 @@ public class GoalDependencyProvenanceService
         }
         for (String prerequisite : definition.getPrerequisites())
         {
-            QuestStatus status = statusOf(context, prerequisite);
+            var status = statusOf(context, prerequisite);
             if (status == QuestStatus.COMPLETE) continue;
             if (status == QuestStatus.UNKNOWN)
             {
@@ -186,7 +186,7 @@ public class GoalDependencyProvenanceService
             GoalType goal, String questName, StrategyContext context)
     {
         if (goal == null || questName == null) return null;
-        QuestStatus targetStatus = statusOf(context, questName);
+        var targetStatus = statusOf(context, questName);
         if (targetStatus != QuestStatus.NOT_STARTED
                 && targetStatus != QuestStatus.IN_PROGRESS) return null;
         if (goal == GoalType.QUEST_CAPE)
@@ -212,11 +212,11 @@ public class GoalDependencyProvenanceService
     private List<String> findQuestPath(
             String current, String target, Set<String> active)
     {
-        if (normalize(current).equals(normalize(target)))
+        if (Names.words(current).equals(Names.words(target)))
             return list(current);
-        String key = normalize(current);
+        var key = Names.words(current);
         if (!active.add(key)) return null;
-        QuestDefinition definition = quests.definitionFor(current);
+        var definition = quests.definitionFor(current);
         if (definition != null)
         {
             for (String prerequisite : definition.getPrerequisites())
@@ -242,7 +242,7 @@ public class GoalDependencyProvenanceService
     {
         if (isDirectSkillGoal(goal, skill))
         {
-            int target = goal == GoalType.BASE_70S ? 70 : 99;
+            var target = goal == GoalType.BASE_70S ? 70 : 99;
             if (goal == GoalType.SLAYER_85) target = 85;
             return list(goal.toString(), target + " " + display(skill));
         }
@@ -284,23 +284,23 @@ public class GoalDependencyProvenanceService
     private List<String> skillPathInQuest(String quest, Skill skill,
             StrategyContext context, Set<String> active)
     {
-        String key = normalize(quest);
+        var key = Names.words(quest);
         if (!active.add(key)) return null;
-        QuestDefinition definition = quests.definitionFor(quest);
+        var definition = quests.definitionFor(quest);
         if (definition == null)
         {
             active.remove(key);
             return null;
         }
-        QuestStatus questStatus = statusOf(context, quest);
+        var questStatus = statusOf(context, quest);
         if (questStatus == QuestStatus.COMPLETE
                 || questStatus == QuestStatus.UNKNOWN)
         {
             active.remove(key);
             return null;
         }
-        int required = definition.getSkillRequirements().getOrDefault(skill, 0);
-        int current = context.data().account().getSkillLevel(skill);
+        var required = definition.getSkillRequirements().getOrDefault(skill, 0);
+        var current = context.data().account().getSkillLevel(skill);
         List<String> best = null;
         if (required > current)
             best = list(quest, required + " " + display(skill));
@@ -331,8 +331,8 @@ public class GoalDependencyProvenanceService
     private static int requirementLevel(List<String> path)
     {
         if (path == null || path.isEmpty()) return 0;
-        String value = path.get(path.size() - 1);
-        int space = value.indexOf(' ');
+        var value = path.get(path.size() - 1);
+        var space = value.indexOf(' ');
         if (space <= 0) return 0;
         try { return Integer.parseInt(value.substring(0, space)); }
         catch (NumberFormatException ex) { return 0; }
@@ -358,15 +358,15 @@ public class GoalDependencyProvenanceService
 
     private void collectQuestTree(String quest, Set<String> result)
     {
-        String key = normalize(quest);
+        var key = Names.words(quest);
         if (!result.add(quest)) return;
-        QuestDefinition definition = quests.definitionFor(quest);
+        var definition = quests.definitionFor(quest);
         if (definition == null) return;
         for (String prerequisite : definition.getPrerequisites())
         {
-            boolean seen = false;
+            var seen = false;
             for (String value : result)
-                if (normalize(value).equals(normalize(prerequisite))) seen = true;
+                if (Names.words(value).equals(Names.words(prerequisite))) seen = true;
             if (!seen) collectQuestTree(prerequisite, result);
         }
     }
@@ -382,7 +382,7 @@ public class GoalDependencyProvenanceService
     private static List<String> directActivityPath(
             GoalType goal, Recommendation recommendation)
     {
-        String identity = normalize(recommendation.getId() + " "
+        String identity = Names.words(recommendation.getId() + " "
                 + recommendation.getTitle());
         switch (goal)
         {
@@ -405,7 +405,7 @@ public class GoalDependencyProvenanceService
 
     private static Skill recommendationSkill(Recommendation recommendation)
     {
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         return plan == null || plan.getMethod() == null
                 ? null : plan.getMethod().getSkill();
     }
@@ -413,10 +413,10 @@ public class GoalDependencyProvenanceService
     private static String recommendationQuest(
             Recommendation recommendation, StrategyContext context)
     {
-        String id = recommendation.getId();
+        var id = recommendation.getId();
         if (id == null || !id.startsWith("quest:") || context.data() == null
                 || context.data().quests() == null) return null;
-        String slug = id.substring("quest:".length());
+        var slug = id.substring("quest:".length());
         for (String quest : context.data().quests().quests().keySet())
             if (slug(quest).equals(slug)) return quest;
         return null;
@@ -430,21 +430,21 @@ public class GoalDependencyProvenanceService
             return QuestStatus.UNKNOWN;
         for (Map.Entry<String, QuestStatus> entry
                 : context.data().quests().quests().entrySet())
-            if (normalize(entry.getKey()).equals(normalize(quest)))
+            if (Names.words(entry.getKey()).equals(Names.words(quest)))
                 return entry.getValue();
         return QuestStatus.UNKNOWN;
     }
 
     private static String display(Skill skill)
     {
-        String value = skill.name().toLowerCase(Locale.ROOT).replace('_', ' ');
+        var value = skill.name().toLowerCase(Locale.ROOT).replace('_', ' ');
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
     private static boolean contains(String value, String... tokens)
     {
         for (String token : tokens)
-            if (value.contains(normalize(token))) return true;
+            if (value.contains(Names.words(token))) return true;
         return false;
     }
 
@@ -454,11 +454,6 @@ public class GoalDependencyProvenanceService
                 .replaceAll("[^a-z0-9]+", "-").replaceAll("^-|-$", "");
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     private static List<String> list(String... values)
     {

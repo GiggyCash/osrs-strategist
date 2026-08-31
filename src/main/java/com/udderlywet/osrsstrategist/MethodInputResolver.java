@@ -20,12 +20,12 @@ public class MethodInputResolver
 
         for (MethodInputRule rule : profile.getInputs())
         {
-            MethodInput input = resolveOne(rule, action, actions);
+            var input = resolveOne(rule, action, actions);
             if (input == null || input.getQuantity() <= 0) continue;
             String key = input.getItemId() > 0
                     ? "id:" + input.getItemId()
                     : "name:" + input.getName().toLowerCase(Locale.ROOT);
-            MethodInput previous = merged.get(key);
+            var previous = merged.get(key);
             if (previous == null)
             {
                 merged.put(key, input);
@@ -53,8 +53,8 @@ public class MethodInputResolver
         }
 
         String name;
-        int itemId = -1;
-        double perAction = rule.getQuantityPerAction();
+        var itemId = -1;
+        var perAction = rule.getQuantityPerAction();
         switch (rule.getMode())
         {
             case ACTION_ITEM:
@@ -75,7 +75,7 @@ public class MethodInputResolver
                 if (name == null) return null;
                 if (perAction <= 0)
                 {
-                    perAction = normalize(action.getName()).contains("platebody")
+                    perAction = Names.actionKey(action.getName()).contains("platebody")
                             ? 5.0 : 1.0;
                 }
                 break;
@@ -116,7 +116,7 @@ public class MethodInputResolver
 
     private static String rawName(String actionName)
     {
-        String clean = actionName == null ? "" : actionName.trim();
+        var clean = actionName == null ? "" : actionName.trim();
         if (clean.toLowerCase(Locale.ROOT).startsWith("cooked "))
             clean = clean.substring(7);
         return "Raw " + clean;
@@ -126,7 +126,7 @@ public class MethodInputResolver
     {
         String clean = actionName == null ? "" : actionName
                 .replace("(u)", "").trim();
-        String lower = clean.toLowerCase(Locale.ROOT);
+        var lower = clean.toLowerCase(Locale.ROOT);
         String[] woods = {"oak", "willow", "maple", "yew", "magic", "redwood"};
         for (String wood : woods)
         {
@@ -138,7 +138,7 @@ public class MethodInputResolver
 
     private static String barForSmithing(String actionName)
     {
-        String lower = normalize(actionName);
+        var lower = Names.actionKey(actionName);
         if (lower.contains("bronze")) return "Bronze bar";
         if (lower.contains("iron")) return "Iron bar";
         if (lower.contains("steel")) return "Steel bar";
@@ -150,7 +150,7 @@ public class MethodInputResolver
 
     private static String uncutGem(String actionName)
     {
-        String clean = actionName == null ? "gem" : actionName.trim();
+        var clean = actionName == null ? "gem" : actionName.trim();
         if (clean.toLowerCase(Locale.ROOT).startsWith("uncut ")) return clean;
         return "Uncut " + clean.toLowerCase(Locale.ROOT);
     }
@@ -158,12 +158,12 @@ public class MethodInputResolver
     private static String saplingForTree(String actionName)
     {
         if (actionName == null) return null;
-        String clean = actionName.trim();
-        String lower = clean.toLowerCase(Locale.ROOT);
+        var clean = actionName.trim();
+        var lower = clean.toLowerCase(Locale.ROOT);
         if (lower.equals("spirit tree")) return "Spirit seed";
         if (lower.equals("crystal tree")) return "Crystal acorn";
         if (!lower.endsWith(" tree")) return null;
-        String tree = clean.substring(0, clean.length() - 5).trim();
+        var tree = clean.substring(0, clean.length() - 5).trim();
         if (tree.isEmpty()) return null;
         return tree + " sapling";
     }
@@ -171,8 +171,8 @@ public class MethodInputResolver
     private static String dartTipForDart(String actionName)
     {
         if (actionName == null) return null;
-        String clean = actionName.trim();
-        String lower = clean.toLowerCase(Locale.ROOT);
+        var clean = actionName.trim();
+        var lower = clean.toLowerCase(Locale.ROOT);
         if (!lower.endsWith(" dart")) return null;
         return clean.substring(0, clean.length() - 5).trim() + " dart tip";
     }
@@ -180,19 +180,12 @@ public class MethodInputResolver
     private static String unfinishedBolt(String actionName)
     {
         if (actionName == null) return null;
-        String clean = actionName.trim();
-        String lower = clean.toLowerCase(Locale.ROOT);
+        var clean = actionName.trim();
+        var lower = clean.toLowerCase(Locale.ROOT);
         if (!lower.endsWith(" bolts")) return null;
         return clean + " (unf)";
     }
 
-    private static String normalize(String value)
-    {
-        if (value == null) return "";
-        return value.toLowerCase(Locale.ROOT)
-                .replace('-', '_')
-                .replace(' ', '_');
-    }
 
     private static String capitalize(String value)
     {

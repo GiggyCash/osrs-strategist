@@ -39,7 +39,7 @@ public final class UimInventoryResolutionService
         if (mode != AccountMode.ULTIMATE_IRONMAN)
             return unresolved(get(997));
 
-        ItemsState inventory = data.inventory();
+        var inventory = data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return unresolved(get(999));
         MethodInventoryFootprint needed = footprint == null
@@ -66,11 +66,11 @@ public final class UimInventoryResolutionService
 
         for (UimStorageOption option : options)
         {
-            StorageCapability capability = option.getCapability();
+            var capability = option.getCapability();
             if (option.isRequiresConstruction()
                     || UimStorageMechanics.isRestrictedRetrieval(capability))
                 continue;
-            UimStorageDecision decision = evaluate(data, option);
+            var decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_VERIFIED_SAFE_STORAGE,
                         Confidence.VERIFIED, decision, null,
@@ -93,7 +93,7 @@ public final class UimInventoryResolutionService
         {
             if (option.getCapability() != StorageCapability.LOOTING_BAG)
                 continue;
-            UimStorageDecision decision = evaluate(data, option);
+            var decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_RESTRICTED_RETRIEVAL,
                         Confidence.CHECK_NEEDED, decision, null,
@@ -102,10 +102,10 @@ public final class UimInventoryResolutionService
 
         for (UimStorageOption option : options)
         {
-            StorageCapability capability = option.getCapability();
+            var capability = option.getCapability();
             if (!UimStorageMechanics.isDangerous(capability)
                     || !option.isMajorProgressionTransition()) continue;
-            UimStorageDecision decision = evaluate(data, option);
+            var decision = evaluate(data, option);
             if (decision.isAllowed())
                 return result(UimInventoryResolutionKind.USE_DANGEROUS_DEATH_STORAGE,
                         Confidence.CHECK_NEEDED, decision,

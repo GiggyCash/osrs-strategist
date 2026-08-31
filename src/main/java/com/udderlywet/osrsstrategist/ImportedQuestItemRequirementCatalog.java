@@ -19,7 +19,7 @@ public final class ImportedQuestItemRequirementCatalog
             if (entry.quest == null || entry.result == null)
                 throw new IllegalStateException(Text.get(1137) + RESOURCE);
             entry.result.freeze();
-            if (result.put(normalize(entry.quest), entry.result) != null)
+            if (result.put(Names.words(entry.quest), entry.result) != null)
                 throw new IllegalStateException(Text.get(1138) + entry.quest);
         }
         requirements = Collections.unmodifiableMap(result);
@@ -27,7 +27,7 @@ public final class ImportedQuestItemRequirementCatalog
 
     public Result resultFor(String questName)
     {
-        return requirements.get(normalize(questName));
+        return requirements.get(Names.words(questName));
     }
 
     public int questCount() { return requirements.size(); }
@@ -52,11 +52,6 @@ public final class ImportedQuestItemRequirementCatalog
                         && !result.getUnresolved().isEmpty()).count();
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'').replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     private static final class Entry
     {
@@ -90,7 +85,7 @@ public final class ImportedQuestItemRequirementCatalog
         private static int countChecks(ItemRequirementExpression value)
         {
             if (value == null) return 0;
-            int count = value.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED ? 1 : 0;
+            var count = value.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED ? 1 : 0;
             for (ItemRequirementExpression child : value.getChildren())
                 count += countChecks(child);
             return count;

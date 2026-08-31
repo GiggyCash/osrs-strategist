@@ -24,13 +24,13 @@ public final class TravelRouteEvidenceService
     {
         if (routeId == null || context == null || context.data() == null)
             return false;
-        GameData data = context.data();
+        var data = context.data();
         if (data.transport() != null
                 && data.transport().hasVerifiedRoute(routeId)) return true;
         if (data.account() == null
                 || data.account().getMembershipStatus() != MembershipStatus.P2P)
             return false;
-        TravelRouteEvidenceDefinition definition = catalog.get(routeId);
+        var definition = catalog.get(routeId);
         if (definition == null) return false;
         if (definition.getRequiredCompletedQuest() != null
                 && (data.quests() == null

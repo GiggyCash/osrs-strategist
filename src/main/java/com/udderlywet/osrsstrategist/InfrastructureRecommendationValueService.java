@@ -31,7 +31,7 @@ public final class InfrastructureRecommendationValueService
         if (recommendation == null || context == null
                 || context.data() == null
                 || context.data().account() == null) return recommendation;
-        StrategicValue merged = recommendation.getStrategicValue();
+        var merged = recommendation.getStrategicValue();
         for (InfrastructureMilestone definition : catalog.all())
         {
             InfrastructureValueAssessment assessment = values.assess(
@@ -57,12 +57,12 @@ public final class InfrastructureRecommendationValueService
             InfrastructureMilestone definition,
             StrategyContext context)
     {
-        TrainingPlan training = recommendation.getTrainingPlan();
+        var training = recommendation.getTrainingPlan();
         Skill skill = training == null || training.getMethod() == null
                 ? null : training.getMethod().getSkill();
         int current = skill == null ? 0 : context.data().account()
                 .getSkillLevel(skill);
-        int required = definition.getRequiredSkills().getOrDefault(skill, 0);
+        var required = definition.getRequiredSkills().getOrDefault(skill, 0);
         if (skill != null && required > 0
                 && current < required
                 && recommendation.getTargetLevel()

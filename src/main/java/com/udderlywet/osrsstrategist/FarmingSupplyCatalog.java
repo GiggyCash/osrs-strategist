@@ -83,7 +83,7 @@ public class FarmingSupplyCatalog
         {
             if (level >= option.level) ids.add(option.itemId);
         }
-        int[] result = new int[ids.size()];
+        var result = new int[ids.size()];
         for (int i = 0; i < ids.size(); i++) result[i] = ids.get(i);
         return result;
     }

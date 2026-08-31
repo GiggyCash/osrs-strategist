@@ -6,15 +6,10 @@ import javax.inject.Singleton;
 
 /** Builds a live economy snapshot from observed item containers and RuneLite prices. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveEconomyReader
 {
     private final MarketPriceService marketPriceService;
-
-    @Inject
-    public LiveEconomyReader(MarketPriceService marketPriceService)
-    {
-        this.marketPriceService = marketPriceService;
-    }
 
     public AccountEconomySnapshot read(
             AccountSnapshot account,
@@ -22,7 +17,7 @@ public class LiveEconomyReader
             ItemsState bank)
     {
         if (account == null) return null;
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
 
         long coins = spendableCurrency(inventory == null
                 ? null : inventory.getItems());
@@ -31,7 +26,7 @@ public class LiveEconomyReader
             coins = safeAdd(coins, spendableCurrency(bank.getItems()));
         }
 
-        long bankValue = 0L;
+        var bankValue = 0L;
         if (bank != null && mode != AccountMode.ULTIMATE_IRONMAN)
         {
             for (ItemState item : bank.getItems())
@@ -70,7 +65,7 @@ public class LiveEconomyReader
     private static long spendableCurrency(List<ItemState> items)
     {
         if (items == null) return 0L;
-        long total = 0L;
+        var total = 0L;
         for (ItemState item : items)
         {
             if (item == null || item.getName() == null) continue;

@@ -26,13 +26,13 @@ public final class InfrastructureUnlockValueService
     public InfrastructureValueAssessment assess(String milestoneId,
             StrategyContext context)
     {
-        InfrastructureMilestone definition = catalog.get(milestoneId);
+        var definition = catalog.get(milestoneId);
         if (definition == null)
             throw new IllegalArgumentException(
                     Text.get(1422) + milestoneId);
         AccountStrategicPriorityProfile priorities =
                 priorityService.assess(context);
-        GameData data = context == null ? null : context.data();
+        var data = context == null ? null : context.data();
         return assess(definition, priorities, data);
     }
 
@@ -45,7 +45,7 @@ public final class InfrastructureUnlockValueService
         if (priorities == null) throw new IllegalArgumentException("priorities");
 
         List<InfrastructureValueContribution> contributions = new ArrayList<>();
-        StrategicPriority overall = StrategicPriority.NONE;
+        var overall = StrategicPriority.NONE;
         for (Map.Entry<InfrastructureBenefit, StrategicPriority> entry
                 : definition.getBenefits().entrySet())
         {
@@ -77,13 +77,13 @@ public final class InfrastructureUnlockValueService
                         Text.get(334));
         }
 
-        CapabilityState completion = completionState(definition, data);
+        var completion = completionState(definition, data);
         if (completion == CapabilityState.VERIFIED)
             return result(definition, InfrastructureMilestoneState.COMPLETE,
                     Confidence.VERIFIED, overall, contributions,
                     Text.get(335));
 
-        RequirementState requirements = requirements(definition, data);
+        var requirements = requirements(definition, data);
         if (requirements == RequirementState.BLOCKED)
             return result(definition,
                     InfrastructureMilestoneState.REQUIREMENTS_MISSING,
@@ -116,9 +116,9 @@ public final class InfrastructureUnlockValueService
         for (Map.Entry<String, Boolean> quest
                 : definition.getRequiredQuests().entrySet())
         {
-            QuestSnapshot quests = data.quests();
+            var quests = data.quests();
             if (quests == null) return RequirementState.CHECK_NEEDED;
-            QuestStatus status = quests.statusOf(quest.getKey());
+            var status = quests.statusOf(quest.getKey());
             boolean satisfied = status == QuestStatus.COMPLETE
                     || quest.getValue()
                     && status == QuestStatus.IN_PROGRESS;
@@ -132,7 +132,7 @@ public final class InfrastructureUnlockValueService
         {
             InfrastructureMilestone prerequisite = catalog.get(
                     definition.getPrerequisiteMilestoneId());
-            CapabilityState state = completionState(prerequisite, data);
+            var state = completionState(prerequisite, data);
             if (state == CapabilityState.UNKNOWN)
                 return RequirementState.CHECK_NEEDED;
             if (state == CapabilityState.BLOCKED)

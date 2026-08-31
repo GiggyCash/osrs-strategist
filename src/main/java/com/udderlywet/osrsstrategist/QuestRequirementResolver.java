@@ -45,9 +45,9 @@ public class QuestRequirementResolver
         if (definition == null || context == null || context.data() == null
                 || context.data().account() == null) return null;
 
-        GameData data = context.data();
-        AccountSnapshot account = data.account();
-        QuestSnapshot quests = data.quests();
+        var data = context.data();
+        var account = data.account();
+        var quests = data.quests();
         List<Preparation> missing = new ArrayList<>();
 
         for (String prerequisite : definition.getPrerequisites())
@@ -68,7 +68,7 @@ public class QuestRequirementResolver
         for (Map.Entry<Skill, Integer> requirement
                 : definition.getSkillRequirements().entrySet())
         {
-            int current = account.getSkillLevel(requirement.getKey());
+            var current = account.getSkillLevel(requirement.getKey());
             if (current < requirement.getValue())
                 missing.add(new Preparation("Train "
                         + requirement.getKey().getName() + " from " + current
@@ -80,11 +80,11 @@ public class QuestRequirementResolver
         ItemIndex items = new ItemIndex(data,
                 context.isUseGroupStorage());
         // An inventory observation does not prove that an unobserved bank is empty.
-        boolean ownershipObserved = items.usableOwnershipObserved();
+        var ownershipObserved = items.usableOwnershipObserved();
         for (QuestDefinition.QuestItemRequirement requirement
                 : definition.getItemRequirements())
         {
-            int owned = items.quantity(requirement.getName());
+            var owned = items.quantity(requirement.getName());
             if (owned < requirement.getQuantity())
                 missing.add(new Preparation((ownershipObserved ? "Obtain " : get(1350))
                         + Math.max(0, requirement.getQuantity() - owned) + " × "
@@ -94,7 +94,7 @@ public class QuestRequirementResolver
 
         ImportedQuestItemRequirementCatalog.Result imported = hasImportedItemEvidence(definition)
                 ? importedItems.resultFor(definition.getName()) : null;
-        ItemRequirementExpression expression = definition.getItemRequirementExpression();
+        var expression = definition.getItemRequirementExpression();
         if (expression == null && imported != null)
             expression = imported.getExpression();
         ItemRequirementResult expressionResult = new ItemRequirementEvaluator()
@@ -169,16 +169,16 @@ public class QuestRequirementResolver
         if (result.getMissingInputs().isEmpty())
             return new Preparation(result.getAction(), safety);
 
-        MethodInput first = result.getMissingInputs().get(0);
-        DependencyResolution dependency = dependencyResolution(context, first);
-        ResolvedDependencyNode next = dependency == null ? null : dependency.nextAction();
+        var first = result.getMissingInputs().get(0);
+        var dependency = dependencyResolution(context, first);
+        var next = dependency == null ? null : dependency.nextAction();
         if (next != null
                 && next.getConfidence() != Confidence.VERIFIED
                 && next.getAction() != null
                 && !next.getAction().trim().isEmpty())
         {
-            String action = withoutTerminalPeriod(next.getAction().trim());
-            StringBuilder detail = new StringBuilder(result.getAction());
+            var action = withoutTerminalPeriod(next.getAction().trim());
+            var detail = new StringBuilder(result.getAction());
             detail.append(get(1356))
                     .append(formatInputs(result.getMissingInputs())).append(".");
             detail.append(get(1357))
@@ -189,7 +189,7 @@ public class QuestRequirementResolver
             return new Preparation(action, detail.toString(), safety);
         }
 
-        AccountMode mode = context.accountMode();
+        var mode = context.accountMode();
         String action;
         if (mode == AccountMode.ULTIMATE_IRONMAN)
             action = "Acquire " + quantity(first) + " just in time";
@@ -200,10 +200,10 @@ public class QuestRequirementResolver
         else
             action = "Acquire " + quantity(first);
 
-        List<String> routes = sourceRoutes(context, first.getName());
+        var routes = sourceRoutes(context, first.getName());
         if (!routes.isEmpty()) action += ": " + routes.get(0);
 
-        StringBuilder detail = new StringBuilder(result.getAction());
+        var detail = new StringBuilder(result.getAction());
         detail.append(get(1356))
                 .append(formatInputs(result.getMissingInputs())).append(".");
         if (!routes.isEmpty())
@@ -248,7 +248,7 @@ public class QuestRequirementResolver
     private static String withoutTerminalPeriod(String value)
     {
         if (value == null) return "";
-        String result = value.trim();
+        var result = value.trim();
         while (result.endsWith("."))
             result = result.substring(0, result.length() - 1).trim();
         return result;

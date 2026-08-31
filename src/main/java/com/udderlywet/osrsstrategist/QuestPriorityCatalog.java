@@ -13,18 +13,13 @@ public class QuestPriorityCatalog
     {
         for (QuestPriority priority : BundledCatalogLoader.array(
                 Text.get(559), QuestPriority[].class))
-            if (priorities.put(normalize(priority.getName()), priority) != null)
+            if (priorities.put(Names.words(priority.getName()), priority) != null)
                 throw new IllegalStateException(Text.get(1169) + priority.getName());
     }
 
-    public QuestPriority priorityFor(String questName) { return priorities.get(normalize(questName)); }
+    public QuestPriority priorityFor(String questName) { return priorities.get(Names.words(questName)); }
     public Map<String, QuestPriority> snapshot() { return Collections.unmodifiableMap(priorities); }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT).replace('’', '\'')
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     public static final class QuestPriority
     {

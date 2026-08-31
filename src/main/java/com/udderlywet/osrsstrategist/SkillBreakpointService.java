@@ -128,7 +128,7 @@ public final class SkillBreakpointService
             AccountSnapshot account)
     {
         Skill next = null;
-        int smallestGap = Integer.MAX_VALUE;
+        var smallestGap = Integer.MAX_VALUE;
         for (java.util.Map.Entry<Skill, Integer> requirement
                 : definition.getRequiredSkills().entrySet())
         {

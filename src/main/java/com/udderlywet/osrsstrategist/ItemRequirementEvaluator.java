@@ -11,7 +11,7 @@ public final class ItemRequirementEvaluator
     {
         if (expression == null)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
+        var items = new ItemIndex(data, useGroupStorage);
         return evaluate(expression, data, items, useGroupStorage);
     }
 
@@ -53,7 +53,7 @@ public final class ItemRequirementEvaluator
 
         List<String> actions = new ArrayList<>();
         List<MethodInput> inputs = new ArrayList<>();
-        RequirementState state = RequirementState.VERIFIED;
+        var state = RequirementState.VERIFIED;
         for (ItemRequirementResult result : results)
         {
             if (!result.isSatisfied() && !result.getAction().isEmpty())
@@ -72,7 +72,7 @@ public final class ItemRequirementEvaluator
             GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
-        String[] names = expression.getItemNames().toArray(new String[0]);
+        var names = expression.getItemNames().toArray(new String[0]);
         int owned;
         boolean observed;
         switch (expression.getScope())
@@ -107,8 +107,8 @@ public final class ItemRequirementEvaluator
         if (owned >= expression.getQuantity())
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
 
-        int shortfall = Math.max(0, expression.getQuantity() - owned);
-        String target = String.join(" or ", expression.getItemNames());
+        var shortfall = Math.max(0, expression.getQuantity() - owned);
+        var target = String.join(" or ", expression.getItemNames());
         if (expression.getItemNames().size() > 1) target = "(" + target + ")";
         String action = (observed ? "Get " : get(1321))
                 + shortfall + " × " + target;
@@ -128,7 +128,7 @@ public final class ItemRequirementEvaluator
             GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
-        ItemRequirementClass itemClass = expression.getItemClass();
+        var itemClass = expression.getItemClass();
         if (itemClass == null)
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     get(1322));
@@ -179,8 +179,8 @@ public final class ItemRequirementEvaluator
         }
         if (owned >= expression.getQuantity())
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
-        int shortfall = Math.max(0, expression.getQuantity() - owned);
-        String target = itemClass.getLabel();
+        var shortfall = Math.max(0, expression.getQuantity() - owned);
+        var target = itemClass.getLabel();
         if (!expression.getExcludedItemNames().isEmpty())
             target += " (excluding " + String.join(" or ",
                     expression.getExcludedItemNames()) + ")";
@@ -193,11 +193,11 @@ public final class ItemRequirementEvaluator
     private static ItemRequirementResult freeInventorySlots(
             ItemRequirementExpression expression, GameData data)
     {
-        ItemsState inventory = data == null ? null : data.inventory();
+        var inventory = data == null ? null : data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     get(332));
-        int required = Math.max(1, expression.getQuantity());
+        var required = Math.max(1, expression.getQuantity());
         int free = Math.max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
         if (free >= required)
@@ -212,11 +212,11 @@ public final class ItemRequirementEvaluator
             List<ItemRequirementResult> results)
     {
         List<MethodInput> best = Collections.emptyList();
-        long bestCost = Long.MAX_VALUE;
+        var bestCost = Long.MAX_VALUE;
         for (ItemRequirementResult result : results)
         {
             if (result.getMissingInputs().isEmpty()) continue;
-            long cost = 0L;
+            var cost = 0L;
             for (MethodInput input : result.getMissingInputs())
                 cost += Math.max(1, input.getQuantity());
             if (cost < bestCost)
@@ -245,7 +245,7 @@ public final class ItemRequirementEvaluator
     private static int quantityIn(Iterable<ItemState> stacks, String[] names)
     {
         if (stacks == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState stack : stacks)
         {
             if (stack == null || stack.getName() == null) continue;
@@ -263,12 +263,12 @@ public final class ItemRequirementEvaluator
             ItemRequirementClass itemClass, Iterable<String> excludedNames)
     {
         if (stacks == null || itemClass == null) return 0;
-        int total = 0;
+        var total = 0;
         for (ItemState stack : stacks)
         {
             if (stack == null || stack.getName() == null
                     || !itemClass.matches(stack.getName())) continue;
-            boolean excluded = false;
+            var excluded = false;
             if (excludedNames != null)
                 for (String value : excludedNames)
                     if (value != null && stack.getName().trim()

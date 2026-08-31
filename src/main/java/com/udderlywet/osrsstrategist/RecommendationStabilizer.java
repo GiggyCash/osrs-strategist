@@ -14,11 +14,11 @@ final class RecommendationStabilizer
         if (fresh == null || fresh.getRecommendations().isEmpty()
                 || previous == null || previous.isEmpty()) return fresh;
 
-        Recommendation oldTop = previous.get(0);
+        var oldTop = previous.get(0);
         if (oldTop == null || FallbackRecommendationFactory.isFallback(oldTop))
             return fresh;
 
-        List<Recommendation> current = fresh.getRecommendations();
+        var current = fresh.getRecommendations();
         Recommendation stillValid = null;
         for (Recommendation candidate : current)
         {

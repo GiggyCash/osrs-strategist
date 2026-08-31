@@ -70,17 +70,17 @@ public final class MethodStrategyKnowledgeCatalog
             return selected;
         }
 
-        boolean bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.getId());
+        var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.getId());
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && (bankLoop || !metadata.isUimFriendly())) return null;
 
-        Set<AccountMode> modes = EnumSet.copyOf(ALL_KNOWN);
+        var modes = EnumSet.copyOf(ALL_KNOWN);
         if (!metadata.isUimFriendly() || bankLoop)
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
-        String key = mode.name() + ':' + method.getId();
+        var key = mode.name() + ':' + method.getId();
         return generated.computeIfAbsent(key, ignored -> genericProfile(
                 method, metadata, mode, bankLoop, modes,
                 executionProfiles.forMethod(method.getId())));
@@ -115,7 +115,7 @@ public final class MethodStrategyKnowledgeCatalog
             TrainingMethod method, TrainingMethodMetadata metadata,
             MethodProfile executionProfile)
     {
-        boolean tearsDown = method.getSetupMinutes() >= 8;
+        var tearsDown = method.getSetupMinutes() >= 8;
         switch (method.getSkill())
         {
             case AGILITY:

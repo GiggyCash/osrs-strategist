@@ -140,8 +140,8 @@ public final class AccountProgressMilestoneDetector
     private static boolean differentAccount(
             GameData first, GameData second)
     {
-        AccountSnapshot left = first.account();
-        AccountSnapshot right = second.account();
+        var left = first.account();
+        var right = second.account();
         if (left.getAccountHash() != 0L && right.getAccountHash() != 0L)
             return left.getAccountHash() != right.getAccountHash();
         return !left.getPlayerName().equals(right.getPlayerName());

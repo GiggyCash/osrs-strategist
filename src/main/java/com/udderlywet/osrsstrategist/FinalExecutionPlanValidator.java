@@ -13,17 +13,17 @@ public final class FinalExecutionPlanValidator
             StrategyContext context)
     {
         if (recommendation == null) return null;
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         MethodStrategyProfile profile = plan == null
                 ? null : plan.getStrategyProfile();
 
-        SafetyEvidence evidence = recommendation.getSafetyEvidence();
-        Guidance guidance = recommendation.getGuidance();
+        var evidence = recommendation.getSafetyEvidence();
+        var guidance = recommendation.getGuidance();
         if (plan != null)
         {
-            TrainingMethod method = plan.getMethod();
-            int current = recommendation.getCurrentLevel();
-            int stageTarget = recommendation.getCurrentExecutionTargetLevel();
+            var method = plan.getMethod();
+            var current = recommendation.getCurrentLevel();
+            var stageTarget = recommendation.getCurrentExecutionTargetLevel();
             boolean invalid = method == null
                     || blank(method.getName())
                     || current <= 0
@@ -50,8 +50,8 @@ public final class FinalExecutionPlanValidator
         }
         if (guidance != null && guidance.getStorageCapability() != null)
         {
-            StorageCapability capability = guidance.getStorageCapability();
-            UimStorageDecision decision = guidance.getStorageDecision();
+            var capability = guidance.getStorageCapability();
+            var decision = guidance.getStorageDecision();
             boolean storageUnverified = decision == null
                     || !decision.isAllowed()
                     || decision.getConfidence()

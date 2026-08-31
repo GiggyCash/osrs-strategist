@@ -40,32 +40,32 @@ public class SlayerGuidanceService
             boolean useGroupStorage)
     {
         if (data == null || data.account() == null) return null;
-        AccountSnapshot account = data.account();
+        var account = data.account();
         if (!AccountBuildPolicy.allowsSkill(account, Skill.SLAYER)) return null;
         if (account.getMembershipStatus() != MembershipStatus.P2P) return null;
 
-        int currentXp = account.getSkillExperience(Skill.SLAYER);
+        var currentXp = account.getSkillExperience(Skill.SLAYER);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
-        int targetXp = Experience.getXpForLevel(targetLevel);
-        int xpNeeded = Math.max(0, targetXp - currentXp);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
 
-        SlayerSnapshot slayer = data.slayer();
+        var slayer = data.slayer();
         if (slayer != null && slayer.hasTask())
         {
-            SlayerTaskProfile profile = taskProfiles.profileFor(slayer.getTaskName());
-            ItemIndex items = new ItemIndex(data, useGroupStorage);
-            String action = taskAction(slayer, profile, xpNeeded, targetLevel);
-            String supplies = taskSupplies(account, items, profile);
-            String where = taskLocation(slayer, profile);
-            String note = taskNote(account, profile);
+            var profile = taskProfiles.profileFor(slayer.getTaskName());
+            var items = new ItemIndex(data, useGroupStorage);
+            var action = taskAction(slayer, profile, xpNeeded, targetLevel);
+            var supplies = taskSupplies(account, items, profile);
+            var where = taskLocation(slayer, profile);
+            var note = taskNote(account, profile);
             return new Guidance(action, supplies, where, note);
         }
 
-        SlayerMasterChoice master = bestMaster(account, data.quests());
+        var master = bestMaster(account, data.quests());
         var action = get(1452) + master.name
                 + ". You need " + format(xpNeeded)
                 + get(1453) + targetLevel + ".";
-        String supplies = get(759);
+        var supplies = get(759);
         var note = master.reason + get(760);
         return new Guidance(action, supplies, master.location, note);
     }
@@ -76,7 +76,7 @@ public class SlayerGuidanceService
             int xpNeeded,
             int targetLevel)
     {
-        StringBuilder action = new StringBuilder();
+        var action = new StringBuilder();
         action.append(get(1454))
                 .append(slayer.getTaskName())
                 .append(" assignment: ")
@@ -102,19 +102,19 @@ public class SlayerGuidanceService
             return get(761);
         }
 
-        List<String> required = profile.getRequiredProtection();
-        String owned = firstOwned(items, required);
+        var required = profile.getRequiredProtection();
+        var owned = firstOwned(items, required);
         if (owned != null)
         {
             return get(1456) + owned
                     + get(762);
         }
 
-        AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
-        String choices = joinChoices(required);
+        var mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
+        var choices = joinChoices(required);
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            int restricted = restrictedOwned(items, required);
+            var restricted = restrictedOwned(items, required);
             if (restricted > 0)
             {
                 return get(763)
@@ -168,9 +168,9 @@ public class SlayerGuidanceService
     private static String taskNote(AccountSnapshot account,
             SlayerTaskProfile profile)
     {
-        String base = get(775);
+        var base = get(775);
         if (profile == null) return base;
-        StringBuilder note = new StringBuilder();
+        var note = new StringBuilder();
         if (hasText(profile.getMechanicsNote()))
         {
             note.append(profile.getMechanicsNote()).append(" ");
@@ -205,7 +205,7 @@ public class SlayerGuidanceService
             ItemIndex items,
             List<String> candidates)
     {
-        int total = 0;
+        var total = 0;
         for (String candidate : candidates)
         {
             total += items.restrictedQuantity(candidate);
@@ -215,7 +215,7 @@ public class SlayerGuidanceService
 
     private static String joinChoices(List<String> choices)
     {
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         for (int i = 0; i < choices.size(); i++)
         {
             if (i > 0) text.append(i == choices.size() - 1 ? " or " : ", ");
@@ -228,8 +228,8 @@ public class SlayerGuidanceService
             AccountSnapshot account,
             QuestSnapshot quests)
     {
-        int combat = combatLevel(account);
-        int slayer = account.getSkillLevel(Skill.SLAYER);
+        var combat = combatLevel(account);
+        var slayer = account.getSkillLevel(Skill.SLAYER);
 
         if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
@@ -261,8 +261,8 @@ public class SlayerGuidanceService
                 + Math.floor(account.getSkillLevel(Skill.PRAYER) / 2.0));
         double melee = 0.325 * (account.getSkillLevel(Skill.ATTACK)
                 + account.getSkillLevel(Skill.STRENGTH));
-        double ranged = 0.325 * Math.floor(account.getSkillLevel(Skill.RANGED) * 1.5);
-        double magic = 0.325 * Math.floor(account.getSkillLevel(Skill.MAGIC) * 1.5);
+        var ranged = 0.325 * Math.floor(account.getSkillLevel(Skill.RANGED) * 1.5);
+        var magic = 0.325 * Math.floor(account.getSkillLevel(Skill.MAGIC) * 1.5);
         return (int) Math.floor(base + Math.max(melee, Math.max(ranged, magic)));
     }
 

@@ -40,7 +40,7 @@ public final class TravelAwareMethodValueService
         {
             return null;
         }
-        AccountSnapshot account = context.data().account();
+        var account = context.data().account();
         MethodLocationOption selected = profile.getLocations().stream()
                 .filter(option -> !option.isMembersOnly()
                         || account.getMembershipStatus() == MembershipStatus.P2P)
@@ -54,10 +54,10 @@ public final class TravelAwareMethodValueService
 
         boolean routed = routeEvidence.verified(
                 selected.getAdvantageousRouteId(), context);
-        int burden = selected.effectiveBurden(routed);
+        var burden = selected.effectiveBurden(routed);
         // Travel can refine close method choices but cannot overpower legality,
         // goal provenance, or readiness. The value is intentionally bounded.
-        int adjustment = Math.max(-6, Math.min(4, 3 - burden));
+        var adjustment = Math.max(-6, Math.min(4, 3 - burden));
         String evidence = routed
                 ? "Verified route " + selected.getAdvantageousRouteId()
                         + Text.get(1297)

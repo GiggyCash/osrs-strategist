@@ -19,8 +19,8 @@ public final class RecommendationDeduplicator
             if (candidate == null) continue;
             // Do not allow weaker evidence to borrow VERIFIED status from an
             // equivalent-looking action emitted by another provider.
-            String key = semanticKey(candidate) + "|" + candidate.getConfidence();
-            Recommendation previous = merged.get(key);
+            var key = semanticKey(candidate) + "|" + candidate.getConfidence();
+            var previous = merged.get(key);
             merged.put(key, previous == null ? candidate : merge(previous, candidate));
         }
         return new ArrayList<>(merged.values());
@@ -29,34 +29,34 @@ public final class RecommendationDeduplicator
     String semanticKey(Recommendation candidate)
     {
         if (candidate == null) return "";
-        TrainingPlan plan = candidate.getTrainingPlan();
-        String activity = canonicalActivity(candidate, plan);
+        var plan = candidate.getTrainingPlan();
+        var activity = canonicalActivity(candidate, plan);
         if (activity != null) return "activity:" + activity;
         if (plan != null && plan.getMethod() != null
                 && candidate.getTargetLevel() > 0)
-            return "skill-level:" + normalize(plan.getMethod().getSkill().getName())
+            return "skill-level:" + Names.words(plan.getMethod().getSkill().getName())
                     + ":" + candidate.getTargetLevel();
 
-        Matcher training = TRAIN_TO.matcher(safe(candidate.getTitle()).trim());
+        var training = TRAIN_TO.matcher(safe(candidate.getTitle()).trim());
         if (training.matches())
-            return "skill-level:" + normalize(training.group(1))
+            return "skill-level:" + Names.words(training.group(1))
                     + ":" + training.group(2);
 
-        String id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
+        var id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
         if (id.startsWith("quest:") || id.startsWith("diary:")
                 || id.startsWith("clue:") || id.startsWith("stash:")
                 || id.startsWith("gear:") || id.startsWith("upgrade:")
                 || id.startsWith("pvm:") || id.startsWith("slayer:"))
-            return family(id) + ":" + normalize(candidate.getTitle());
-        return normalize(candidate.getTitle());
+            return family(id) + ":" + Names.words(candidate.getTitle());
+        return Names.words(candidate.getTitle());
     }
 
     private static Recommendation merge(Recommendation first,
             Recommendation second)
     {
-        Recommendation primary = better(first, second);
-        Recommendation other = primary == first ? second : first;
-        String reason = mergeText(primary.getReason(), other.getReason());
+        var primary = better(first, second);
+        var other = primary == first ? second : first;
+        var reason = mergeText(primary.getReason(), other.getReason());
         double sharedBenefitBonus = sameText(first.getReason(), second.getReason())
                 ? 0.0 : 3.0;
         return new Recommendation(primary.getId(), primary.getTitle(), reason,
@@ -71,10 +71,10 @@ public final class RecommendationDeduplicator
     private static String canonicalActivity(Recommendation candidate,
             TrainingPlan plan)
     {
-        String id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
+        var id = safe(candidate.getId()).toLowerCase(Locale.ROOT);
         if (id.startsWith("minigame:")) return id.substring("minigame:".length());
         if (plan == null || plan.getMethod() == null) return null;
-        String method = safe(plan.getMethod().getId()).toLowerCase(Locale.ROOT);
+        var method = safe(plan.getMethod().getId()).toLowerCase(Locale.ROOT);
         switch (method)
         {
             case "firemaking_wintertodt": return "wintertodt";
@@ -109,8 +109,8 @@ public final class RecommendationDeduplicator
 
     private static String mergeText(String first, String second)
     {
-        String left = safe(first).trim();
-        String right = safe(second).trim();
+        var left = safe(first).trim();
+        var right = safe(second).trim();
         if (right.isEmpty() || sameText(left, right)) return left;
         if (left.isEmpty()) return right;
         return left + " Also advances: " + right;
@@ -118,20 +118,15 @@ public final class RecommendationDeduplicator
 
     private static boolean sameText(String first, String second)
     {
-        return normalize(first).equals(normalize(second));
+        return Names.words(first).equals(Names.words(second));
     }
 
     private static String family(String id)
     {
-        int colon = id.indexOf(':');
+        var colon = id.indexOf(':');
         return colon < 0 ? id : id.substring(0, colon);
     }
 
-    private static String normalize(String value)
-    {
-        return safe(value).toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ").trim();
-    }
 
     private static String safe(String value)
     {

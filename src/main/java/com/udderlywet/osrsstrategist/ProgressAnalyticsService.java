@@ -51,8 +51,8 @@ public class ProgressAnalyticsService
         for (Skill skill : Skill.values())
         {
             if (overall(skill)) continue;
-            int xp = account.getSkillExperience(skill);
-            int level = account.getSkillLevel(skill);
+            var xp = account.getSkillExperience(skill);
+            var level = account.getSkillLevel(skill);
             if (validXp(xp) && level > 0)
                 skills.put(skill, new MutableSkill(xp, level));
         }
@@ -101,7 +101,7 @@ public class ProgressAnalyticsService
                 || nowMillis < updatedAtMillis)
             return false;
 
-        MutableSkill state = skills.get(skill);
+        var state = skills.get(skill);
         if (state == null)
         {
             skills.put(skill, new MutableSkill(absoluteXp, level));
@@ -111,7 +111,7 @@ public class ProgressAnalyticsService
         if (nowMillis < state.lastObservationAtMillis)
             return false;
 
-        int previousXp = state.currentXp;
+        var previousXp = state.currentXp;
         state.lastObservationAtMillis = nowMillis;
         state.currentLevel = Math.max(state.currentLevel, level);
         updatedAtMillis = Math.max(updatedAtMillis, nowMillis);
@@ -128,7 +128,7 @@ public class ProgressAnalyticsService
         }
         if (absoluteXp == previousXp) return false;
 
-        int gained = absoluteXp - previousXp;
+        var gained = absoluteXp - previousXp;
         state.currentXp = absoluteXp;
         addActiveTime(nowMillis);
         addRateInterval(state, gained, nowMillis);
@@ -139,13 +139,13 @@ public class ProgressAnalyticsService
     /** Updates the active plan checkpoint and rebases incompatible method rates. */
     public synchronized boolean setTarget(ProgressTarget next)
     {
-        boolean changed = !sameTarget(target, next);
+        var changed = !sameTarget(target, next);
         if (!changed) return false;
         if (target != null && next != null
                 && (target.getSkill() != next.getSkill()
                 || !Objects.equals(target.getMethodId(), next.getMethodId())))
         {
-            MutableSkill state = skills.get(next.getSkill());
+            var state = skills.get(next.getSkill());
             if (state != null) state.rateIntervals.clear();
         }
         target = next;
@@ -178,7 +178,7 @@ public class ProgressAnalyticsService
         milestones.add(milestone);
         while (milestones.size() > MAX_SESSION_MILESTONES)
         {
-            ProgressMilestone removed = milestones.remove(0);
+            var removed = milestones.remove(0);
             milestoneIds.remove(removed.getId());
         }
         updatedAtMillis = Math.max(updatedAtMillis,
@@ -194,7 +194,7 @@ public class ProgressAnalyticsService
                 new EnumMap<>(Skill.class);
         for (Map.Entry<Skill, MutableSkill> entry : skills.entrySet())
         {
-            MutableSkill value = entry.getValue();
+            var value = entry.getValue();
             result.put(entry.getKey(), new SkillSessionProgress(
                     entry.getKey(), value.startingXp, value.currentXp,
                     value.startingLevel, value.currentLevel,
@@ -217,7 +217,7 @@ public class ProgressAnalyticsService
     {
         if (lastProgressAtMillis > 0L)
         {
-            long gap = nowMillis - lastProgressAtMillis;
+            var gap = nowMillis - lastProgressAtMillis;
             if (gap >= 0L && gap <= IDLE_GAP_MILLIS)
                 activeDurationMillis += gap;
         }
@@ -229,7 +229,7 @@ public class ProgressAnalyticsService
     {
         if (state.lastProgressAtMillis > 0L)
         {
-            long gap = nowMillis - state.lastProgressAtMillis;
+            var gap = nowMillis - state.lastProgressAtMillis;
             if (gap > IDLE_GAP_MILLIS)
                 state.rateIntervals.clear();
             else if (gap > 0L)
@@ -251,8 +251,8 @@ public class ProgressAnalyticsService
 
     private void addBucket(Skill skill, int gained, long nowMillis)
     {
-        long start = nowMillis - Math.floorMod(nowMillis, BUCKET_MILLIS);
-        MutableBucket bucket = buckets.peekLast();
+        var start = nowMillis - Math.floorMod(nowMillis, BUCKET_MILLIS);
+        var bucket = buckets.peekLast();
         if (bucket == null || bucket.startedAtMillis != start)
         {
             bucket = new MutableBucket(start);
@@ -265,8 +265,8 @@ public class ProgressAnalyticsService
     private static XpRateEstimate rateFor(MutableSkill state, long nowMillis)
     {
         trimRate(state.rateIntervals, nowMillis);
-        long xp = 0L;
-        long millis = 0L;
+        var xp = 0L;
+        var millis = 0L;
         for (RateInterval interval : state.rateIntervals)
         {
             xp += interval.xp;
@@ -275,7 +275,7 @@ public class ProgressAnalyticsService
         if (state.rateIntervals.size() < MIN_RATE_INTERVALS
                 || millis < MIN_RATE_DURATION_MILLIS || xp <= 0L)
             return XpRateEstimate.calculating(state.rateIntervals.size());
-        long hourly = Math.round(xp * 3_600_000.0 / millis);
+        var hourly = Math.round(xp * 3_600_000.0 / millis);
         return hourly <= 0L
                 ? XpRateEstimate.calculating(state.rateIntervals.size())
                 : XpRateEstimate.ready(hourly, state.rateIntervals.size());
@@ -285,16 +285,16 @@ public class ProgressAnalyticsService
             Map<Skill, SkillSessionProgress> progress)
     {
         if (target == null) return ProgressTargetProjection.noTarget();
-        SkillSessionProgress skill = progress.get(target.getSkill());
-        int currentXp = skill == null ? 0 : skill.getCurrentXp();
-        int remaining = Math.max(0, target.getTargetXp() - currentXp);
+        var skill = progress.get(target.getSkill());
+        var currentXp = skill == null ? 0 : skill.getCurrentXp();
+        var remaining = Math.max(0, target.getTargetXp() - currentXp);
         if (remaining == 0) return ProgressTargetProjection.complete(target);
         if (skill == null || !skill.getRate().isReady())
             return ProgressTargetProjection.calculating(target, remaining);
-        long rate = skill.getRate().getXpPerHour();
+        var rate = skill.getRate().getXpPerHour();
         if (rate <= 0L)
             return ProgressTargetProjection.calculating(target, remaining);
-        double eta = remaining * 3_600_000.0 / rate;
+        var eta = remaining * 3_600_000.0 / rate;
         long etaMillis = eta >= Long.MAX_VALUE
                 ? Long.MAX_VALUE : Math.max(1L, Math.round(eta));
         return ProgressTargetProjection.ready(target, remaining, etaMillis);
@@ -366,7 +366,7 @@ public class ProgressAnalyticsService
         private void add(Skill skill, int value)
         {
             xp.merge(skill, value, (first, second) -> {
-                long total = (long) first + second;
+                var total = (long) first + second;
                 return (int) Math.min(Integer.MAX_VALUE, total);
             });
         }

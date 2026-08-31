@@ -16,6 +16,7 @@ import net.runelite.api.gameval.VarbitID;
  * task. Task count, task row, area, and points all come from live client state.
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveSlayerStateReader
 {
     private static final int BOSS_TASK_ID = 98;
@@ -46,12 +47,6 @@ public class LiveSlayerStateReader
     private int cachedTick = -1;
     private SlayerSnapshot cached;
 
-    @Inject
-    public LiveSlayerStateReader(Client client)
-    {
-        this.client = client;
-    }
-
     public SlayerSnapshot read()
     {
         if (client.getGameState() != GameState.LOGGED_IN)
@@ -61,27 +56,27 @@ public class LiveSlayerStateReader
             return null;
         }
 
-        int tick = client.getTickCount();
+        var tick = client.getTickCount();
         if (cached != null && cachedTick == tick)
         {
             return cached;
         }
 
-        int amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
-        int points = Math.max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
-        int masterId = client.getVarbitValue(VarbitID.SLAYER_MASTER);
+        var amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
+        var points = Math.max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
+        var masterId = client.getVarbitValue(VarbitID.SLAYER_MASTER);
         List<SlayerTaskOffer> offers = amount <= 0
                 ? readMortimerOffers() : java.util.Collections.emptyList();
         if (!offers.isEmpty()) masterId = MORTIMER_MASTER_ID;
-        String masterName = masterName(masterId);
-        SlayerRewardSnapshot rewards = readRewards();
-        Integer streak = streak(masterId);
-        int questPoints = Math.max(0, client.getVarpValue(VarPlayerID.QP));
+        var masterName = masterName(masterId);
+        var rewards = readRewards();
+        var streak = streak(masterId);
+        var questPoints = Math.max(0, client.getVarpValue(VarPlayerID.QP));
         boolean lumbridgeElite = client.getVarbitValue(
                 VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) > 0;
         int blockCapacity = masterId == MORTIMER_MASTER_ID ? 2
                 : SlayerPointEconomy.blockCapacity(questPoints, lumbridgeElite);
-        Integer occupiedBlockSlots = occupiedBlockSlots(masterId, blockCapacity);
+        var occupiedBlockSlots = occupiedBlockSlots(masterId, blockCapacity);
         boolean mortimerIntroduced = client.getVarbitValue(
                 VarbitID.MORTIMER_INTRODUCTION) > 0;
         if (amount <= 0)
@@ -105,7 +100,7 @@ public class LiveSlayerStateReader
                     mortimerIntroduced, tick);
 
             String taskLocation = null;
-            int areaId = client.getVarpValue(VarPlayerID.SLAYER_AREA);
+            var areaId = client.getVarpValue(VarPlayerID.SLAYER_AREA);
             if (areaId > 0)
             {
                 var rows = client.getDBRowsByValue(
@@ -213,12 +208,12 @@ public class LiveSlayerStateReader
             int bossVarbit, int modifierVarbit, int valueVarbit,
             int negativeVarbit)
     {
-        int taskId = client.getVarbitValue(taskVarbit);
+        var taskId = client.getVarbitValue(taskVarbit);
         if (taskId <= 0) return;
         String task = null;
         String modifier = null;
-        int value = client.getVarbitValue(valueVarbit);
-        boolean negative = client.getVarbitValue(negativeVarbit) > 0;
+        var value = client.getVarbitValue(valueVarbit);
+        var negative = client.getVarbitValue(negativeVarbit) > 0;
         try
         {
             task = taskName(taskId, client.getVarbitValue(bossVarbit));
@@ -288,10 +283,10 @@ public class LiveSlayerStateReader
 
     private Integer occupiedBlockSlots(int masterId, int capacity)
     {
-        int[] slots = blockVarbits(masterId);
+        var slots = blockVarbits(masterId);
         if (slots == null) return null;
-        int occupied = 0;
-        int visible = Math.min(capacity, slots.length);
+        var occupied = 0;
+        var visible = Math.min(capacity, slots.length);
         for (int i = 0; i < visible; i++)
             if (client.getVarbitValue(slots[i]) > 0) occupied++;
         return occupied;

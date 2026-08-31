@@ -40,8 +40,8 @@ public class FarmingRunPlanner
                     get(1463), steps);
         }
 
-        AccountSnapshot account = data.account();
-        int farmingLevel = account.getSkillLevel(Skill.FARMING);
+        var account = data.account();
+        var farmingLevel = account.getSkillLevel(Skill.FARMING);
         if (account.getMembershipStatus() != MembershipStatus.P2P)
         {
             return new GuidanceChecklist(activityId, "Farming run",
@@ -69,7 +69,7 @@ public class FarmingRunPlanner
             GameData data,
             int farmingLevel)
     {
-        FarmingSnapshot farming = data.farming();
+        var farming = data.farming();
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
                 get(245)));
@@ -115,7 +115,7 @@ public class FarmingRunPlanner
             GameData data,
             FarmingRunPatchDefinition patch)
     {
-        AccessMemorySnapshot memory = data.accessMemory();
+        var memory = data.accessMemory();
         if (memory != null)
         {
             for (Integer region : patch.getRegionIds())
@@ -123,9 +123,9 @@ public class FarmingRunPlanner
                 if (memory.hasObserved("region." + region)) return true;
             }
         }
-        String quest = patch.getRequiredQuest();
+        var quest = patch.getRequiredQuest();
         if (quest == null) return true;
-        QuestSnapshot quests = data.quests();
+        var quests = data.quests();
         return quests != null && quests.statusOf(quest) == QuestStatus.COMPLETE;
     }
 

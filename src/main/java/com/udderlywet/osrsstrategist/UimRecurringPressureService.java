@@ -25,12 +25,12 @@ public final class UimRecurringPressureService
     public synchronized UimRecurringPressureAssessment observe(
             StrategyContext context)
     {
-        List<String> blocked = blockedFamilies(context);
+        var blocked = blockedFamilies(context);
         if (blocked.size() < 2)
             return new UimRecurringPressureAssessment(0, blocked);
 
-        GameData data = context.data();
-        String account = accountKey(data.account());
+        var data = context.data();
+        var account = accountKey(data.account());
         LinkedHashSet<Integer> observed = layouts.computeIfAbsent(account,
                 ignored -> new LinkedHashSet<>());
         observed.add(fingerprint(data.inventory()));
@@ -45,7 +45,7 @@ public final class UimRecurringPressureService
         if (context == null
                 || context.accountMode() != AccountMode.ULTIMATE_IRONMAN
                 || context.data() == null) return result;
-        ItemsState inventory = context.data().inventory();
+        var inventory = context.data().inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return result;
         int free = Math.max(0, 28
@@ -54,21 +54,21 @@ public final class UimRecurringPressureService
         if (blockedSkilling(context.data().account(), free))
             result.add("skilling");
 
-        QuestSnapshot quests = context.data().quests();
+        var quests = context.data().quests();
         if (quests != null && quests.quests().values().stream().anyMatch(
                 status -> status == QuestStatus.NOT_STARTED
                         || status == QuestStatus.IN_PROGRESS)
                 && blocked("quest:observed", free)) result.add("questing");
 
-        ClueSnapshot clue = context.data().clue();
+        var clue = context.data().clue();
         if (clue != null && clue.isCluePresent()
                 && blocked("clue:observed", free)) result.add("clues");
 
-        PvmSnapshot pvm = context.data().pvm();
+        var pvm = context.data().pvm();
         if (pvm != null && !pvm.getReadinessByActivity().isEmpty()
                 && blocked("pvm:observed", free)) result.add("pvm");
 
-        MinigameSnapshot minigames = context.data().minigames();
+        var minigames = context.data().minigames();
         if (minigames != null)
             for (String id : minigames.getUnlocked())
                 if (blocked("minigame:" + id, free))
@@ -84,8 +84,8 @@ public final class UimRecurringPressureService
         if (account == null) return false;
         for (CuratedTrainingMethod candidate : skillingMethods)
         {
-            TrainingMethod method = candidate.getMethod();
-            TrainingMethodMetadata metadata = candidate.getMetadata();
+            var method = candidate.getMethod();
+            var metadata = candidate.getMetadata();
             if (method == null || metadata == null
                     || !metadata.isUimFriendly()
                     || !method.supportsLevel(account.getSkillLevel(
@@ -125,7 +125,7 @@ public final class UimRecurringPressureService
 
     private static int fingerprint(ItemsState inventory)
     {
-        int value = 1;
+        var value = 1;
         for (ItemState item : inventory.getItems())
         {
             value = 31 * value + (item == null ? 0 : item.getItemId());
@@ -140,7 +140,7 @@ public final class UimRecurringPressureService
         List<CuratedTrainingMethod> result = new ArrayList<>();
         ExpandedTrainingMethodCatalog expanded =
                 new ExpandedTrainingMethodCatalog();
-        F2pBaselineMethodCatalog f2p = new F2pBaselineMethodCatalog();
+        var f2p = new F2pBaselineMethodCatalog();
         for (Skill skill : Skill.values())
         {
             result.addAll(expanded.methodsFor(skill));

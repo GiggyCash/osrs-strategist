@@ -28,10 +28,10 @@ public class DiaryCandidateProvider implements CandidateProvider
             return result;
         }
 
-        DiarySnapshot diaries = context.data().diaries();
+        var diaries = context.data().diaries();
         for (String region : diaries.getRegions())
         {
-            DiaryTier next = nextIncomplete(diaries, region);
+            var next = nextIncomplete(diaries, region);
             if (next == null) continue;
             if ("Wilderness".equals(region) && !context.isAllowWildernessMethods())
             {
@@ -42,13 +42,13 @@ public class DiaryCandidateProvider implements CandidateProvider
                     .replaceAll("[^a-z0-9]+", "-") + ":"
                     + next.name().toLowerCase();
 
-            double score = tierScore(next);
+            var score = tierScore(next);
             if (context.getActiveGoal() == GoalType.DIARY_CAPE) score += 20.0;
-            int observedTasks = diaries.completedIn(region);
+            var observedTasks = diaries.completedIn(region);
             score += Math.min(8.0, observedTasks * 0.15);
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
-            List<DiaryTaskDefinition> tierTasks = taskCatalog.forTier(region, next);
+            var tierTasks = taskCatalog.forTier(region, next);
             DiaryTaskDefinition ready = firstReadyIncomplete(
                     tierTasks, diaries, context);
             boolean tierObserved = tierTasks.stream().anyMatch(task ->
@@ -57,7 +57,7 @@ public class DiaryCandidateProvider implements CandidateProvider
 
             if (!tierObserved)
             {
-                String verifyId = "verify:" + id;
+                var verifyId = "verify:" + id;
                 if (context.preferenceProfile().isOnCooldown(verifyId))
                     continue;
                 result.add(new Recommendation(
@@ -112,8 +112,8 @@ public class DiaryCandidateProvider implements CandidateProvider
     private static boolean requirementsMet(DiaryTaskDefinition task,
             StrategyContext context)
     {
-        AccountSnapshot account = context.data().account();
-        QuestSnapshot quests = context.data().quests();
+        var account = context.data().account();
+        var quests = context.data().quests();
         for (DiaryTaskRequirement requirement : task.getRequirements())
         {
             switch (requirement.getKind())
@@ -177,7 +177,7 @@ public class DiaryCandidateProvider implements CandidateProvider
 
     private static String pretty(String value)
     {
-        String lower = value.toLowerCase();
+        var lower = value.toLowerCase();
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

@@ -17,12 +17,12 @@ final class BundledCatalogLoader
 
     static <T> T[] array(String resource, Class<T[]> type)
     {
-        InputStream stream = BundledCatalogLoader.class.getResourceAsStream(resource);
+        var stream = BundledCatalogLoader.class.getResourceAsStream(resource);
         if (stream == null)
             throw new IllegalStateException(Text.get(1125) + resource);
         try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8))
         {
-            T[] values = GSON.fromJson(reader, type);
+            var values = GSON.fromJson(reader, type);
             if (values == null)
                 throw new IllegalStateException(Text.get(1126) + resource);
             for (int index = 0; index < values.length; index++)

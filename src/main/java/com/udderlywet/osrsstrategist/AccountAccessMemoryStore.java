@@ -13,6 +13,7 @@ import net.runelite.client.config.ConfigManager;
  * recalculated from live state instead of being permanently cached as fact.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AccountAccessMemoryStore
 {
     static final String GROUP = "osrs-strategist-profile";
@@ -21,15 +22,6 @@ public class AccountAccessMemoryStore
     private final Gson gson;
     private final Map<String, Long> memory = new HashMap<>();
     private String loadedProfileKey;
-
-    @Inject
-    public AccountAccessMemoryStore(
-            ConfigManager configManager,
-            Gson gson)
-    {
-        this.configManager = configManager;
-        this.gson = gson;
-    }
 
     public synchronized AccessMemorySnapshot snapshot()
     {
@@ -73,7 +65,7 @@ public class AccountAccessMemoryStore
 
     private void syncProfile()
     {
-        String activeKey = configManager.getRSProfileKey();
+        var activeKey = configManager.getRSProfileKey();
 
         if (Objects.equals(loadedProfileKey, activeKey)
                 && loadedProfileKey != null)
@@ -85,10 +77,10 @@ public class AccountAccessMemoryStore
 
         if (activeKey != null)
         {
-            String json = configManager.getRSProfileConfiguration(GROUP, KEY);
+            var json = configManager.getRSProfileConfiguration(GROUP, KEY);
             if (json != null && !json.trim().isEmpty())
             {
-                Map<String, Long> stored = ProfileJsonCodec.longs(gson, json);
+                var stored = ProfileJsonCodec.longs(gson, json);
                 if (stored != null)
                 {
                     memory.putAll(stored);

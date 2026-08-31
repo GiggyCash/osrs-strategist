@@ -45,7 +45,7 @@ public class StrategistFeatureAccessPolicy
 
         public Snapshot(Set<Feature> features, Confidence confidence, String source)
         {
-            EnumSet<Feature> copy = EnumSet.noneOf(Feature.class);
+            var copy = EnumSet.noneOf(Feature.class);
             if (features != null) for (Feature feature : features)
                 if (feature != null && feature.isHostedPremium()) copy.add(feature);
             hostedFeatures = Collections.unmodifiableSet(copy);

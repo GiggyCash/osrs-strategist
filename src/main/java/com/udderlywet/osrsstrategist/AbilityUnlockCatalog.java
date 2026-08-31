@@ -15,20 +15,15 @@ public final class AbilityUnlockCatalog
     {
         for (AbilityUnlockDefinition value : BundledCatalogLoader.array(
                 Text.get(130), AbilityUnlockDefinition[].class))
-            if (definitions.put(normalize(value.getId()), value) != null)
+            if (definitions.put(Names.slug(value.getId()), value) != null)
                 throw new IllegalStateException(Text.get(1107) + value.getId());
     }
     public AbilityUnlockDefinition get(String id)
     {
-        return id == null ? null : definitions.get(normalize(id));
+        return id == null ? null : definitions.get(Names.slug(id));
     }
     public List<AbilityUnlockDefinition> all()
     {
         return Collections.unmodifiableList(new ArrayList<>(definitions.values()));
-    }
-    private static String normalize(String value)
-    {
-        return value.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
     }
 }

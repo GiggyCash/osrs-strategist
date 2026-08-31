@@ -14,7 +14,7 @@ public class RecommendationEngine
     private final SlayerGuidanceService slayerGuidanceService;
     private final SailingGuidanceService sailingGuidanceService;
     private final SkillBreakpointService breakpointService;
-    private final CurrentExecutionStageResolver executionStageResolver;
+    private final AdaptiveActionSelector actionResolver;
 
     @Inject
     public RecommendationEngine(
@@ -24,7 +24,7 @@ public class RecommendationEngine
             SlayerGuidanceService slayerGuidanceService,
             SailingGuidanceService sailingGuidanceService,
             SkillBreakpointService breakpointService,
-            CurrentExecutionStageResolver executionStageResolver)
+            AdaptiveActionSelector actionResolver)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
@@ -33,8 +33,8 @@ public class RecommendationEngine
         this.sailingGuidanceService = sailingGuidanceService;
         this.breakpointService = breakpointService == null
                 ? new SkillBreakpointService() : breakpointService;
-        this.executionStageResolver = executionStageResolver == null
-                ? new CurrentExecutionStageResolver() : executionStageResolver;
+        this.actionResolver = actionResolver == null
+                ? new AdaptiveActionSelector() : actionResolver;
     }
 
     public RecommendationEngine(
@@ -44,7 +44,7 @@ public class RecommendationEngine
         this(trainingMethodSelector, guidanceService,
                 new CombatGuidanceService(), new SlayerGuidanceService(),
                 new SailingGuidanceService(), new SkillBreakpointService(),
-                new CurrentExecutionStageResolver());
+                new AdaptiveActionSelector());
     }
 
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
@@ -52,7 +52,7 @@ public class RecommendationEngine
         this(trainingMethodSelector, new RecommendationGuidanceService(),
                 new CombatGuidanceService(), new SlayerGuidanceService(),
                 new SailingGuidanceService(), new SkillBreakpointService(),
-                new CurrentExecutionStageResolver());
+                new AdaptiveActionSelector());
     }
 
     public List<Recommendation> recommend(
@@ -157,7 +157,7 @@ public class RecommendationEngine
         List<Recommendation> recommendations = new ArrayList<>();
         if (trainingMethodSelector == null || data == null
                 || data.account() == null) return recommendations;
-        AccountSnapshot snapshot = data.account();
+        var snapshot = data.account();
         PreferenceProfile safePreferences = preferenceProfile == null
                 ? new PreferenceProfile() : preferenceProfile;
         StrategyContext context = new StrategyContext(data, strategyMode,
@@ -167,18 +167,18 @@ public class RecommendationEngine
 
         for (Skill skill : Skill.values())
         {
-            int level = snapshot.getSkillLevel(skill);
+            var level = snapshot.getSkillLevel(skill);
             if (level >= 99 || skill == Skill.HITPOINTS) continue;
             if (!ContentAccessRules.isSkillAvailable(skill,
                     snapshot.getMembershipStatus())) continue;
             if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
 
-            String activityId = "skill:" + skill.name().toLowerCase();
+            var activityId = "skill:" + skill.name().toLowerCase();
             if (safePreferences.isOnCooldown(activityId)) continue;
 
             SkillBreakpoint breakpoint = breakpointService.next(
                     skill, level, context);
-            int target = breakpoint.getLevel();
+            var target = breakpoint.getLevel();
             TrainingPlan trainingPlan = null;
             Guidance guidance = null;
             TrainingPlan highestRankedPlan = null;
@@ -189,7 +189,7 @@ public class RecommendationEngine
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
                 Guidance candidateGuidance = buildGuidance(
                         data, skill, level,
-                        executionStageResolver.resolve(candidate, level, target),
+                        actionResolver.resolve(candidate, level, target),
                         candidate, sessionIntent,
                         useGroupStorage);
                 if (candidateGuidance != null
@@ -205,7 +205,7 @@ public class RecommendationEngine
                 // skill's only candidate and hide a ready lower-ranked route.
                 if (candidateGuidance == null) continue;
                 trainingPlan = candidate.withCurrentStageTargetLevel(
-                        executionStageResolver.resolve(candidate, level, target));
+                        actionResolver.resolve(candidate, level, target));
                 guidance = candidateGuidance;
                 break;
             }
@@ -216,12 +216,12 @@ public class RecommendationEngine
             if (trainingPlan == null) trainingPlan = highestRankedPlan;
             if (trainingPlan == null || trainingPlan.getMethod() == null) continue;
 
-            double score = baseScore(level, breakpoint);
+            var score = baseScore(level, breakpoint);
             score += safePreferences.weightFor(activityId) * 10.0;
             score += safePreferences.timedScoreAdjustmentFor(activityId);
             score += milestoneMomentum(level, target);
 
-            String primaryReason = trainingPlan.getWhyThisMethod();
+            var primaryReason = trainingPlan.getWhyThisMethod();
             if (primaryReason == null || primaryReason.trim().isEmpty())
                 primaryReason = breakpoint.getLabel() + ".";
             Recommendation recommendation = new Recommendation(
@@ -300,7 +300,7 @@ public class RecommendationEngine
 
     private double baseScore(int level, SkillBreakpoint breakpoint)
     {
-        int distance = Math.max(1, breakpoint.getLevel() - level);
+        var distance = Math.max(1, breakpoint.getLevel() - level);
         double proximity = distance <= 1 ? 12.0
                 : distance <= 3 ? 7.0 : distance <= 7 ? 3.0 : 0.0;
         return 24.0 + proximity + breakpoint.strategicValue() * 20.0;
@@ -308,7 +308,7 @@ public class RecommendationEngine
 
     private double milestoneMomentum(int level, int target)
     {
-        int remaining = target - level;
+        var remaining = target - level;
         if (remaining <= 1) return 8.0;
         if (remaining <= 3) return 4.0;
         return 0.0;

@@ -72,12 +72,12 @@ public final class DiaryTaskCatalog
                 stream, StandardCharsets.UTF_8)))
         {
             String line;
-            int number = 0;
+            var number = 0;
             while ((line = reader.readLine()) != null)
             {
                 number++;
                 if (line.trim().isEmpty() || line.startsWith("#")) continue;
-                String[] fields = line.split("\\t", 4);
+                var fields = line.split("\\t", 4);
                 if (fields.length != 4)
                     throw new IllegalStateException(Text.get(1130)
                             + number);
@@ -103,22 +103,22 @@ public final class DiaryTaskCatalog
                     Text.get(214) + raw));
             return result;
         }
-        Matcher skill = SKILL.matcher(raw);
+        var skill = SKILL.matcher(raw);
         while (skill.find())
             result.add(DiaryTaskRequirement.skill(
                     Skill.valueOf(skill.group(1)),
                     Integer.parseInt(skill.group(2))));
-        Matcher quest = QUEST.matcher(raw);
+        var quest = QUEST.matcher(raw);
         while (quest.find())
         {
-            Quest identity = Quest.valueOf(quest.group(1));
+            var identity = Quest.valueOf(quest.group(1));
             result.add(DiaryTaskRequirement.quest(identity.getName(),
                     Boolean.parseBoolean(quest.group(2))));
         }
-        Matcher combat = COMBAT.matcher(raw);
+        var combat = COMBAT.matcher(raw);
         while (combat.find()) result.add(DiaryTaskRequirement.combat(
                 Integer.parseInt(combat.group(1))));
-        Matcher points = QUEST_POINTS.matcher(raw);
+        var points = QUEST_POINTS.matcher(raw);
         while (points.find()) result.add(DiaryTaskRequirement.questPoints(
                 Integer.parseInt(points.group(1))));
         return result;

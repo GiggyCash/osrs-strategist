@@ -38,7 +38,7 @@ public final class AccountStrategicPriorityProfile
 
     public StrategicPriority priorityOf(AccountStrategicDimension dimension)
     {
-        AccountStrategicPriority value = get(dimension);
+        var value = get(dimension);
         return value == null ? StrategicPriority.NONE : value.getPriority();
     }
 

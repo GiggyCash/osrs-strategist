@@ -55,7 +55,7 @@ public final class PohSnapshot
     {
         if (this == other) return true;
         if (!(other instanceof PohSnapshot)) return false;
-        PohSnapshot that = (PohSnapshot) other;
+        var that = (PohSnapshot) other;
         return houseAccess == that.houseAccess
                 && furniture.equals(that.furniture);
     }

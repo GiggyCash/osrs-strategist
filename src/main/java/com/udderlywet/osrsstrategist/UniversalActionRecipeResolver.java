@@ -17,9 +17,9 @@ public class UniversalActionRecipeResolver
     {
         if (action == null || action.getSkill() == null || count <= 0)
             return unknown(get(1259));
-        String name = action.getName() == null ? "" : action.getName().trim();
-        String lower = name.toLowerCase(Locale.ROOT);
-        Recipe exact = exact(action.getSkill(), lower);
+        var name = action.getName() == null ? "" : action.getName().trim();
+        var lower = name.toLowerCase(Locale.ROOT);
+        var exact = exact(action.getSkill(), lower);
         if (exact != null) return exact.build(count);
         switch (action.getSkill())
         {
@@ -104,7 +104,7 @@ public class UniversalActionRecipeResolver
             return recipe(get(1264), n, "Hard leather", 1);
         if (jewellery(lower))
         {
-            String gem = gemName(lower);
+            var gem = gemName(lower);
             String bar = gem != null && contains(gem, "opal", "jade", "red topaz")
                     ? "Silver bar" : "Gold bar";
             return gem == null ? recipe(get(1265), n, bar, 1)
@@ -112,7 +112,7 @@ public class UniversalActionRecipeResolver
         }
         if (contains(lower, "battlestaff", "battlestave"))
         {
-            String element = first(lower, "air", "water", "earth", "fire");
+            var element = first(lower, "air", "water", "earth", "fire");
             if (element != null) return recipe(get(912), n, "Battlestaff", 1,
                     capitalize(element) + " orb", 1);
         }
@@ -132,7 +132,7 @@ public class UniversalActionRecipeResolver
         if (lower.endsWith(" shield") || lower.endsWith(" stock"))
             return recipe("Bring a knife.", n, wood(name, null),
                     lower.endsWith(" shield") ? 2 : 1);
-        String metal = firstWord(name);
+        var metal = firstWord(name);
         if (lower.endsWith(" dart") || lower.endsWith(" darts"))
             return recipe(get(916), n, metal + " dart tip", 1, "Feather", 1);
         if (lower.contains("broad arrow")) return recipe(get(917), n,
@@ -148,7 +148,7 @@ public class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe smithing(String lower, int n)
     {
-        int bars = smithingBarsFor(lower);
+        var bars = smithingBarsFor(lower);
         String metal = first(lower, "bronze", "iron", "steel", "mithril",
                 "adamant", "rune");
         if (bars <= 0 || metal == null) return unknown(get(924));
@@ -159,7 +159,7 @@ public class UniversalActionRecipeResolver
 
     static int smithingBarsFor(String value)
     {
-        String lower = value == null ? "" : value;
+        var lower = value == null ? "" : value;
         if (lower.contains("platebody")) return 5;
         if (contains(lower, "plateskirt", "platelegs", "2h sword", "kiteshield",
                 "chainbody", "battleaxe", "warhammer")) return 3;
@@ -245,7 +245,7 @@ public class UniversalActionRecipeResolver
     }
     private static String firstWord(String value)
     {
-        int space = value.indexOf(' ');
+        var space = value.indexOf(' ');
         return space < 0 ? value : value.substring(0, space);
     }
 

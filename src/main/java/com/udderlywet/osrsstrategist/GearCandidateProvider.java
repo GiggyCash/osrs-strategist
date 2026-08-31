@@ -38,13 +38,13 @@ public class GearCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().account() == null) return result;
 
-        AccountSnapshot account = context.data().account();
-        AccountMode mode = context.accountMode();
+        var account = context.data().account();
+        var mode = context.accountMode();
         ItemIndex items = new ItemIndex(context.data(),
                 context.isUseGroupStorage());
-        boolean f2pSafeOnly = account.getMembershipStatus() != MembershipStatus.P2P;
-        CombatStyle primaryStyle = primaryStyle(account);
-        GearBudgetTier targetTier = targetTier(account, f2pSafeOnly);
+        var f2pSafeOnly = account.getMembershipStatus() != MembershipStatus.P2P;
+        var primaryStyle = primaryStyle(account);
+        var targetTier = targetTier(account, f2pSafeOnly);
 
         for (GearProgressionEntry entry : catalog.all())
         {
@@ -68,15 +68,15 @@ public class GearCandidateProvider implements CandidateProvider
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                     && !entry.isHardcoreSafe()) continue;
 
-            String id = "gear:" + entry.getId();
+            var id = "gear:" + entry.getId();
             if (context.preferenceProfile().isOnCooldown(id)) continue;
-            double score = 23.0;
+            var score = 23.0;
             if (context.getActiveGoal() == GoalType.GEAR_TARGET) score += 25.0;
             if (context.getActiveGoal() == GoalType.RAID_READY
                     && entry.getStyle() == CombatStyle.HYBRID) score += 22.0;
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
-            RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+            var build = AccountBuildPolicy.effectiveBuild(account);
             String buildNote = build == RestrictedBuildType.STANDARD
                     ? ""
                     : get(1289) + AccountBuildPolicy.label(account) + ".";
@@ -133,7 +133,7 @@ public class GearCandidateProvider implements CandidateProvider
         }
         String next = unresolved.isEmpty()
                 ? entry.getWeaponGuidance() : unresolved.get(0);
-        GearAcquisitionRoute route = acquisitionCatalog.forItem(next);
+        var route = acquisitionCatalog.forItem(next);
         String action;
         if (route != null && !route.getSteps().isEmpty()
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
@@ -175,7 +175,7 @@ public class GearCandidateProvider implements CandidateProvider
 
     private static CombatStyle primaryStyle(AccountSnapshot account)
     {
-        RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
+        var build = AccountBuildPolicy.effectiveBuild(account);
         if (build == RestrictedBuildType.DEFENCE_PURE
                 || build == RestrictedBuildType.RANGE_TANK)
         {
@@ -187,8 +187,8 @@ public class GearCandidateProvider implements CandidateProvider
 
         int melee = Math.max(account.getSkillLevel(Skill.ATTACK),
                 account.getSkillLevel(Skill.STRENGTH));
-        int ranged = account.getSkillLevel(Skill.RANGED);
-        int magic = account.getSkillLevel(Skill.MAGIC);
+        var ranged = account.getSkillLevel(Skill.RANGED);
+        var magic = account.getSkillLevel(Skill.MAGIC);
         if (ranged >= melee && ranged >= magic) return CombatStyle.RANGED;
         if (magic >= melee) return CombatStyle.MAGIC;
         return CombatStyle.MELEE_SLASH;
@@ -196,7 +196,7 @@ public class GearCandidateProvider implements CandidateProvider
 
     private static String pretty(Enum<?> value)
     {
-        String text = value.name().toLowerCase().replace('_', ' ');
+        var text = value.name().toLowerCase().replace('_', ' ');
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }

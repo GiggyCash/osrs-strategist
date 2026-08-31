@@ -22,12 +22,12 @@ public class SlayerTaskProfileCatalog
 
     public SlayerTaskProfile profileFor(String taskName)
     {
-        String normalized = normalize(taskName);
+        var normalized = Names.lower(taskName);
         if (normalized.isEmpty()) return null;
         for (SlayerTaskProfile profile : profiles)
             for (String alias : profile.getAliases())
             {
-                String candidate = normalize(alias);
+                var candidate = Names.lower(alias);
                 if (normalized.equals(candidate) || normalized.contains(candidate)
                         || candidate.contains(normalized)) return profile;
             }
@@ -36,8 +36,4 @@ public class SlayerTaskProfileCatalog
 
     public List<SlayerTaskProfile> all() { return profiles; }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
-    }
 }

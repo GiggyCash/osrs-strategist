@@ -29,19 +29,19 @@ public final class ProgressViewPanel extends JPanel
 
     public ProgressViewPanel(float textScale)
     {
-        float scale = Math.max(1.0f, Math.min(1.6f, textScale));
+        var scale = Math.max(1.0f, Math.min(1.6f, textScale));
         setLayout(new BorderLayout());
         setOpaque(true);
         setBackground(StrategistTheme.BACKGROUND);
 
-        JPanel content = new JPanel();
+        var content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         content.add(heading("PROGRESS", 15f * scale));
         content.add(Box.createVerticalStrut(8));
 
-        JPanel summary = card();
+        var summary = card();
         sessionXp.setForeground(StrategistTheme.GOLD);
         sessionXp.setFont(sessionXp.getFont().deriveFont(Font.BOLD, 17f * scale));
         sessionMeta.setForeground(StrategistTheme.MUTED_TEXT);
@@ -52,7 +52,7 @@ public final class ProgressViewPanel extends JPanel
         content.add(summary);
         content.add(Box.createVerticalStrut(8));
 
-        JPanel current = card();
+        var current = card();
         current.add(heading("CURRENT TARGET", 12f * scale));
         current.add(Box.createVerticalStrut(5));
         target.setFont(target.getFont().deriveFont(14f * scale));
@@ -64,7 +64,7 @@ public final class ProgressViewPanel extends JPanel
         content.add(current);
         content.add(Box.createVerticalStrut(8));
 
-        JPanel plan = card();
+        var plan = card();
         plan.add(heading("CURRENT PLAN", 12f * scale));
         plan.add(Box.createVerticalStrut(5));
         planPath.setFont(planPath.getFont().deriveFont(13f * scale));
@@ -72,7 +72,7 @@ public final class ProgressViewPanel extends JPanel
         content.add(plan);
         content.add(Box.createVerticalStrut(8));
 
-        JPanel chartCard = card();
+        var chartCard = card();
         chartCard.add(heading("SESSION XP", 12f * scale));
         chartCard.add(Box.createVerticalStrut(5));
         chart.setAlignmentX(LEFT_ALIGNMENT);
@@ -133,13 +133,13 @@ public final class ProgressViewPanel extends JPanel
             planPath.setText(get(1160));
             return;
         }
-        StringBuilder text = new StringBuilder();
+        var text = new StringBuilder();
         text.append("NOW  ").append(plan.getCurrentStep().getObjective());
         if (plan.getNextStep() != null)
             text.append("\nNEXT  ").append(plan.getNextStep().getObjective());
         text.append("\nTARGET  ")
                 .append(GoalRecommendationContext.displayName(plan.getGoal()));
-        int steps = plan.getSteps().size();
+        var steps = plan.getSteps().size();
         if (steps > 1)
             text.append("\nStep ").append(plan.getCurrentIndex() + 1)
                     .append(" of ").append(steps);
@@ -156,7 +156,7 @@ public final class ProgressViewPanel extends JPanel
             lastSessionCard.setVisible(false);
             return;
         }
-        ProgressSessionSummary summary = sessions.get(sessions.size() - 1);
+        var summary = sessions.get(sessions.size() - 1);
         StringBuilder text = new StringBuilder()
                 .append('+').append(format(summary.getTotalXpGained()))
                 .append(" XP • ").append(summary.getLevelsGained())
@@ -170,7 +170,7 @@ public final class ProgressViewPanel extends JPanel
                         .append(format(value.getValue())));
         if (!summary.getMilestones().isEmpty())
         {
-            int first = Math.max(0, summary.getMilestones().size() - 2);
+            var first = Math.max(0, summary.getMilestones().size() - 2);
             text.append(get(1162));
             for (int index = first; index < summary.getMilestones().size(); index++)
             {
@@ -201,8 +201,8 @@ public final class ProgressViewPanel extends JPanel
             milestoneCard.setVisible(false);
             return;
         }
-        StringBuilder text = new StringBuilder();
-        int first = Math.max(0, values.size() - 3);
+        var text = new StringBuilder();
+        var first = Math.max(0, values.size() - 3);
         for (int i = first; i < values.size(); i++)
         {
             if (text.length() > 0) text.append('\n');
@@ -220,7 +220,7 @@ public final class ProgressViewPanel extends JPanel
             target.setText(get(1159));
             return;
         }
-        ProgressTarget value = projection.getTarget();
+        var value = projection.getTarget();
         String prefix = value.getSkill().getName() + " to "
                 + value.getTargetLevel() + "\n"
                 + format(projection.getXpRemaining()) + " XP remaining";
@@ -241,7 +241,7 @@ public final class ProgressViewPanel extends JPanel
 
     private static JPanel card()
     {
-        JPanel panel = new JPanel();
+        var panel = new JPanel();
         panel.setOpaque(true);
         panel.setBackground(StrategistTheme.CARD);
         panel.setBorder(StrategistTheme.cardBorder());
@@ -252,7 +252,7 @@ public final class ProgressViewPanel extends JPanel
 
     private static JLabel heading(String text, float size)
     {
-        JLabel label = new JLabel(text);
+        var label = new JLabel(text);
         label.setForeground(StrategistTheme.GOLD_SOFT);
         label.setFont(label.getFont().deriveFont(Font.BOLD, size));
         label.setAlignmentX(LEFT_ALIGNMENT);
@@ -261,7 +261,7 @@ public final class ProgressViewPanel extends JPanel
 
     private static JTextArea textArea(String text)
     {
-        JTextArea area = new JTextArea(text);
+        var area = new JTextArea(text);
         area.setEditable(false);
         area.setOpaque(false);
         area.setLineWrap(true);
@@ -280,10 +280,10 @@ public final class ProgressViewPanel extends JPanel
 
     private static String duration(long millis)
     {
-        long minutes = Math.max(0L, Math.round(millis / 60_000.0));
+        var minutes = Math.max(0L, Math.round(millis / 60_000.0));
         if (minutes < 60L) return minutes + " min";
-        long hours = minutes / 60L;
-        long remainder = minutes % 60L;
+        var hours = minutes / 60L;
+        var remainder = minutes % 60L;
         return remainder == 0L ? hours + " hr"
                 : hours + " hr " + remainder + " min";
     }

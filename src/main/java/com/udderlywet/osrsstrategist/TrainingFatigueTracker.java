@@ -66,7 +66,7 @@ public class TrainingFatigueTracker
             return FatigueSignal.none();
         }
 
-        long duration = Math.max(0L, now - startedAtMillis);
+        var duration = Math.max(0L, now - startedAtMillis);
         long threshold = strategyMode == StrategyMode.RELAXED
                 ? RELAXED_THRESHOLD_MILLIS
                 : BALANCED_THRESHOLD_MILLIS;
@@ -77,7 +77,7 @@ public class TrainingFatigueTracker
 
         // Relaxed rotates sooner and more strongly. Balanced still allows a
         // strategically valuable continuation to overcome the soft penalty.
-        double penalty = strategyMode == StrategyMode.RELAXED ? -14.0 : -8.0;
+        var penalty = strategyMode == StrategyMode.RELAXED ? -14.0 : -8.0;
         return new FatigueSignal(
                 "skill:" + skill.name().toLowerCase(),
                 penalty,

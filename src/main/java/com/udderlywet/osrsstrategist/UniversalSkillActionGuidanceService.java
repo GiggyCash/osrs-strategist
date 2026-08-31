@@ -72,16 +72,16 @@ public class UniversalSkillActionGuidanceService
             return null;
         }
 
-        int currentXp = data.account().getSkillExperience(skill);
+        var currentXp = data.account().getSkillExperience(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
-        int targetXp = Experience.getXpForLevel(targetLevel);
-        int xpNeeded = Math.max(0, targetXp - currentXp);
+        var targetXp = Experience.getXpForLevel(targetLevel);
+        var xpNeeded = Math.max(0, targetXp - currentXp);
         if (xpNeeded <= 0) return null;
 
         SkillingXpModifier modifier = xpModifierService == null
                 ? SkillingXpModifier.none()
                 : xpModifierService.modifier(data, skill, useGroupStorage);
-        double multiplier = Math.max(1.0, modifier.getMultiplier());
+        var multiplier = Math.max(1.0, modifier.getMultiplier());
 
         Choice choice = choose(
                 data,
@@ -93,9 +93,9 @@ public class UniversalSkillActionGuidanceService
                 useGroupStorage);
         if (choice == null) return null;
 
-        ActionDef action = choice.action;
-        double xpEach = action.getXp() * multiplier;
-        int actions = divideRoundUp(xpNeeded, xpEach);
+        var action = choice.action;
+        var xpEach = action.getXp() * multiplier;
+        var actions = divideRoundUp(xpNeeded, xpEach);
         UniversalActionRecipe recipe = recipeResolver.resolve(
                 action, actions, data.account().getMembershipStatus());
         if (requiresExactRecipe(skill) && !recipe.hasExactInputs()) return null;
@@ -133,7 +133,7 @@ public class UniversalSkillActionGuidanceService
 
         if (skill == Skill.RUNECRAFT)
         {
-            String altarEntry = runecraftEntryInstruction(action.getName());
+            var altarEntry = runecraftEntryInstruction(action.getName());
             if (altarEntry != null)
             {
                 supplies = supplies == null || supplies.trim().isEmpty()
@@ -151,7 +151,7 @@ public class UniversalSkillActionGuidanceService
             location = F2P_ANVIL_ROUTE;
         }
 
-        StringBuilder note = new StringBuilder();
+        var note = new StringBuilder();
         note.append(get(1015))
                 .append(get(1016));
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
@@ -185,18 +185,18 @@ public class UniversalSkillActionGuidanceService
         if (skill == Skill.RUNECRAFT)
             return "Craft " + pluralRunes(action.getName())
                     + get(1019);
-        String loop = actionAfterColon(instructions);
+        var loop = actionAfterColon(instructions);
         if (loop == null) loop = instructions;
         if (loop == null || loop.trim().isEmpty())
             return "Repeat " + action.getName() + ".";
-        if (normalize(loop).contains(normalize(action.getName()))) return loop;
+        if (Names.actionText(loop).contains(Names.actionText(action.getName()))) return loop;
         return action.getName() + ": " + loop;
     }
 
     private static String locationBeforeColon(String instructions)
     {
         if (instructions == null) return null;
-        int colon = instructions.indexOf(':');
+        var colon = instructions.indexOf(':');
         if (colon < 3) return instructions;
         return instructions.substring(0, colon).trim() + ".";
     }
@@ -204,9 +204,9 @@ public class UniversalSkillActionGuidanceService
     private static String actionAfterColon(String instructions)
     {
         if (instructions == null) return null;
-        int colon = instructions.indexOf(':');
+        var colon = instructions.indexOf(':');
         if (colon < 0 || colon + 1 >= instructions.length()) return null;
-        String value = instructions.substring(colon + 1).trim();
+        var value = instructions.substring(colon + 1).trim();
         return value.isEmpty() ? null
                 : Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
@@ -221,11 +221,11 @@ public class UniversalSkillActionGuidanceService
             boolean useGroupStorage)
     {
         if (actions == null || actions.isEmpty()) return null;
-        MembershipStatus membership = data.account().getMembershipStatus();
-        Set<String> routeTokens = routeTokens(method);
-        ItemIndex observed = new ItemIndex(data, useGroupStorage);
-        boolean genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
-        boolean anvilSmithing = isAnvilSmithingMethod(method);
+        var membership = data.account().getMembershipStatus();
+        var routeTokens = routeTokens(method);
+        var observed = new ItemIndex(data, useGroupStorage);
+        var genericRoute = GENERIC_ROUTE_IDS.contains(method.getId());
+        var anvilSmithing = isAnvilSmithingMethod(method);
         Choice best = null;
 
         for (ActionDef action : actions)
@@ -235,7 +235,7 @@ public class UniversalSkillActionGuidanceService
                     || !membershipAllowed(action, membership)
                     || isOneTimeOrRewardAction(action)
                     || (action.getSkill() == Skill.RUNECRAFT
-                            && !normalize(action.getName()).endsWith(" rune"))
+                            && !Names.actionText(action.getName()).endsWith(" rune"))
                     || (anvilSmithing && isBarSmeltingAction(action)))
             {
                 continue;
@@ -250,10 +250,10 @@ public class UniversalSkillActionGuidanceService
                 continue;
             }
 
-            int matches = routeMatchCount(routeTokens, action);
+            var matches = routeMatchCount(routeTokens, action);
             if (matches == 0 && !genericRoute) continue;
 
-            double score = matches * 1000.0;
+            var score = matches * 1000.0;
             score += Math.min(300.0, action.getLevel() * 3.0);
             score += Math.min(250.0, Math.log1p(action.getXp()) * 35.0);
             score += resourceCoverageScore(data, observed, recipe);
@@ -272,8 +272,8 @@ public class UniversalSkillActionGuidanceService
             UniversalActionRecipe recipe)
     {
         if (recipe == null || recipe.getInputs().isEmpty()) return 0.0;
-        long required = 0;
-        long owned = 0;
+        var required = 0;
+        var owned = 0;
         for (MethodInput input : recipe.getInputs())
         {
             required += input.getQuantity();
@@ -281,7 +281,7 @@ public class UniversalSkillActionGuidanceService
         }
         if (required <= 0) return 0.0;
 
-        double coverage = Math.min(1.0, owned / (double) required);
+        var coverage = Math.min(1.0, owned / (double) required);
         AccountMode mode = AccountMode.fromTypeCode(
                 data.account().getAccountTypeCode());
         if (mode == AccountMode.ULTIMATE_IRONMAN)
@@ -323,8 +323,8 @@ public class UniversalSkillActionGuidanceService
     private static boolean isAnvilSmithingMethod(TrainingMethod method)
     {
         if (method == null || method.getSkill() != Skill.SMITHING) return false;
-        String name = normalize(method.getName());
-        String instructions = normalize(method.getInstructions());
+        var name = Names.actionText(method.getName());
+        var instructions = Names.actionText(method.getInstructions());
         return name.startsWith("smith ")
                 || name.startsWith("smithing ")
                 || instructions.contains("anvil");
@@ -334,7 +334,7 @@ public class UniversalSkillActionGuidanceService
     {
         return action != null
                 && action.getSkill() == Skill.SMITHING
-                && normalize(action.getName()).endsWith(" bar");
+                && Names.actionText(action.getName()).endsWith(" bar");
     }
 
     private static boolean membershipAllowed(
@@ -355,7 +355,7 @@ public class UniversalSkillActionGuidanceService
 
     private static boolean isOneTimeOrRewardAction(ActionDef action)
     {
-        String text = normalize(action.getName() + " "
+        String text = Names.actionText(action.getName() + " "
                 + action.getCategory() + " " + action.getId());
         return containsAny(text,
                 "quest reward", "experience lamp", "xp lamp", "diary reward",
@@ -367,8 +367,8 @@ public class UniversalSkillActionGuidanceService
     {
         Set<String> result = new HashSet<>();
         if (method == null) return result;
-        String skillToken = stem(normalize(method.getSkill().getName()));
-        String text = normalize(method.getId() + " "
+        var skillToken = stem(Names.actionText(method.getSkill().getName()));
+        String text = Names.actionText(method.getId() + " "
                 + method.getName() + " " + method.getInstructions());
         for (String token : text.split("[^a-z0-9]+"))
         {
@@ -383,14 +383,14 @@ public class UniversalSkillActionGuidanceService
             Set<String> routeTokens,
             ActionDef action)
     {
-        String text = normalize(action.getName() + " "
+        String text = Names.actionText(action.getName() + " "
                 + action.getCategory() + " " + action.getId());
         Set<String> actionTokens = new HashSet<>();
         for (String token : text.split("[^a-z0-9]+"))
         {
             if (token.length() >= 3) actionTokens.add(stem(token));
         }
-        int matches = 0;
+        var matches = 0;
         for (String token : routeTokens)
         {
             if (actionTokens.contains(token)) matches++;
@@ -400,7 +400,7 @@ public class UniversalSkillActionGuidanceService
 
     private static String stem(String token)
     {
-        String value = token == null ? "" : token.toLowerCase(Locale.ROOT);
+        var value = token == null ? "" : token.toLowerCase(Locale.ROOT);
         if (value.endsWith("ies") && value.length() > 4)
             return value.substring(0, value.length() - 3) + "y";
         if (value.endsWith("ing") && value.length() > 5)
@@ -414,9 +414,9 @@ public class UniversalSkillActionGuidanceService
 
     private static String pluralRunes(String actionName)
     {
-        String name = actionName == null ? "runes" : actionName.trim();
+        var name = actionName == null ? "runes" : actionName.trim();
         if (name.isEmpty()) return "runes";
-        String lower = name.toLowerCase(Locale.ROOT);
+        var lower = name.toLowerCase(Locale.ROOT);
         if (lower.endsWith(" runes")) return name;
         if (lower.endsWith(" rune")) return name + "s";
         return name;
@@ -424,7 +424,7 @@ public class UniversalSkillActionGuidanceService
 
     private static String runecraftEntryInstruction(String actionName)
     {
-        String lower = normalize(actionName);
+        var lower = Names.actionText(actionName);
         if (lower.contains("air rune"))
             return get(1020);
         if (lower.contains("mind rune"))
@@ -442,10 +442,10 @@ public class UniversalSkillActionGuidanceService
 
     private static String playerAction(Skill skill, String actionName, int count)
     {
-        String name = actionName == null ? "" : actionName.trim();
+        var name = actionName == null ? "" : actionName.trim();
         if (skill == Skill.WOODCUTTING)
         {
-            String tree = name.replaceAll("(?i)\\s+logs?$", "").trim();
+            var tree = name.replaceAll("(?i)\\s+logs?$", "").trim();
             if (tree.isEmpty()) tree = "tree";
             return tree.toLowerCase(Locale.ROOT) + " chop" + (count == 1 ? "" : "s");
         }
@@ -457,7 +457,7 @@ public class UniversalSkillActionGuidanceService
             return name + " cook" + (count == 1 ? "" : "s");
         if (skill == Skill.SMITHING)
         {
-            if (normalize(name).endsWith(" bar"))
+            if (Names.actionText(name).endsWith(" bar"))
                 return name + " smelt" + (count == 1 ? "" : "s");
             return name + " smithing action" + (count == 1 ? "" : "s");
         }
@@ -497,12 +497,6 @@ public class UniversalSkillActionGuidanceService
         return false;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('_', ' ').replace('-', ' ')
-                .replaceAll("\\s+", " ").trim();
-    }
 
     private static String format(double value)
     {

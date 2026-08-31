@@ -33,12 +33,12 @@ public class PvmActivityCatalog
                 "/content/catalogs/pvm-activities.json", PvmActivityDefinition[].class))
             if (value.getId() == null || values.put(value.getId(), value) != null)
                 throw new IllegalStateException(Text.get(1199));
-        int bosses = 0;
+        var bosses = 0;
         for (HiscoreSkill skill : HiscoreSkill.values())
             if (skill.getType() == HiscoreSkillType.BOSS)
             {
                 bosses++;
-                String id = "pvm:" + skill.name().toLowerCase(Locale.ROOT);
+                var id = "pvm:" + skill.name().toLowerCase(Locale.ROOT);
                 if (!values.containsKey(id))
                     throw new IllegalStateException(Text.get(1200) + id);
             }
@@ -53,7 +53,7 @@ public class PvmActivityCatalog
     public PvmActivityDefinition match(String raw)
     {
         if (raw == null) return null;
-        String key = normalize(raw);
+        var key = normalize(raw);
         for (PvmActivityDefinition value : activities)
             if (normalize(value.getId()).equals(key)
                     || normalize(value.getName()).equals(key)) return value;

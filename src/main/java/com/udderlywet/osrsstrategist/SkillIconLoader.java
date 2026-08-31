@@ -21,18 +21,13 @@ import net.runelite.client.util.ImageUtil;
  * asynchronous sprite callback from replacing a newer recommendation icon.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SkillIconLoader
 {
     private final SpriteManager spriteManager;
     private final Map<String, ImageIcon> iconCache = new ConcurrentHashMap<>();
     private final Map<JLabel, String> latestRequest =
             Collections.synchronizedMap(new WeakHashMap<>());
-
-    @Inject
-    public SkillIconLoader(SpriteManager spriteManager)
-    {
-        this.spriteManager = spriteManager;
-    }
 
     public void load(Skill skill, JLabel target, int size)
     {
@@ -51,10 +46,10 @@ public class SkillIconLoader
             return;
         }
 
-        String requestKey = skill.name() + ':' + size;
+        var requestKey = skill.name() + ':' + size;
         latestRequest.put(target, requestKey);
 
-        ImageIcon cached = iconCache.get(requestKey);
+        var cached = iconCache.get(requestKey);
         if (cached != null)
         {
             applyIcon(target, requestKey, cached);
@@ -76,7 +71,7 @@ public class SkillIconLoader
     public void clear(JLabel target)
     {
         if (target == null) return;
-        String requestKey = "clear:" + System.nanoTime();
+        var requestKey = "clear:" + System.nanoTime();
         latestRequest.put(target, requestKey);
         Runnable clear = () ->
         {
@@ -108,7 +103,7 @@ public class SkillIconLoader
                 size,
                 size
         );
-        ImageIcon icon = new ImageIcon(scaled);
+        var icon = new ImageIcon(scaled);
         iconCache.put(requestKey, icon);
         applyIcon(target, requestKey, icon);
     }

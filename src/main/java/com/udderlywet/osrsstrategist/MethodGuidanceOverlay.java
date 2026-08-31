@@ -46,7 +46,7 @@ public class MethodGuidanceOverlay extends OverlayPanel
                 .text("Method Guidance")
                 .color(StrategistTheme.GOLD)
                 .build());
-        FontMetrics metrics = graphics.getFontMetrics();
+        var metrics = graphics.getFontMetrics();
         addSection("METHOD", checklist.getTitle(), metrics);
         addSection("BRING", checklist.getBring(), metrics);
         addSection("WHERE", checklist.getWhere(), metrics);
@@ -77,7 +77,7 @@ public class MethodGuidanceOverlay extends OverlayPanel
         if (checklist.getAction() != null
                 && !checklist.getAction().trim().isEmpty())
             return checklist.getAction();
-        GuidanceStep pending = checklist.firstPending();
+        var pending = checklist.firstPending();
         return pending == null ? checklist.getSubtitle() : pending.getLabel();
     }
 
@@ -93,7 +93,7 @@ public class MethodGuidanceOverlay extends OverlayPanel
             return lines;
         }
 
-        StringBuilder current = new StringBuilder();
+        var current = new StringBuilder();
         for (String word : text.trim().split("\\s+"))
         {
             String candidate = current.length() == 0
@@ -114,10 +114,10 @@ public class MethodGuidanceOverlay extends OverlayPanel
 
             // Very long unbroken labels are split by measured character width
             // rather than allowed to bleed out of the overlay.
-            StringBuilder fragment = new StringBuilder();
+            var fragment = new StringBuilder();
             for (int i = 0; i < word.length(); i++)
             {
-                char ch = word.charAt(i);
+                var ch = word.charAt(i);
                 if (fragment.length() > 0
                         && metrics.stringWidth(fragment.toString() + ch) > maxWidth)
                 {

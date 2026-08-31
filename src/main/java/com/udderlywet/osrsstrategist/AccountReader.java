@@ -8,15 +8,10 @@ import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.gameval.VarPlayerID;
 
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AccountReader
 {
     private final Client client;
-
-    @Inject
-    public AccountReader(Client client)
-    {
-        this.client = client;
-    }
 
     public AccountSnapshot read()
     {
@@ -26,7 +21,7 @@ public class AccountReader
             return null;
         }
 
-        String playerName = client.getLocalPlayer().getName();
+        var playerName = client.getLocalPlayer().getName();
 
         if (playerName == null || playerName.isEmpty())
         {

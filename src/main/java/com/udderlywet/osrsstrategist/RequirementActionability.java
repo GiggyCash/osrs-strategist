@@ -26,10 +26,10 @@ public final class RequirementActionability
             return false;
         }
 
-        List<RequirementCheck> checks = plan.getRequirementChecks();
+        var checks = plan.getRequirementChecks();
         if (checks == null || checks.isEmpty()) return true;
 
-        boolean hasPreparation = false;
+        var hasPreparation = false;
         for (RequirementCheck check : checks)
         {
             if (check == null) return false;
@@ -67,15 +67,15 @@ public final class RequirementActionability
             return false;
         }
 
-        String id = normalize(check.getId());
-        String label = normalize(check.getLabel());
+        var id = Names.lower(check.getId());
+        var label = Names.lower(check.getLabel());
 
         // Domain evaluators reserve preparation:* for a fully understood,
         // reversible setup such as fitting specified boat parts. Unknown area,
         // quest, risk, and live-assignment gates retain their typed IDs.
         if (id.startsWith("preparation:"))
         {
-            String evidence = normalize(check.getEvidence());
+            var evidence = Names.lower(check.getEvidence());
             return !evidence.contains("unknown")
                     && !evidence.contains(Text.get(1202))
                     && !evidence.contains(Text.get(1203));
@@ -86,7 +86,7 @@ public final class RequirementActionability
         // whether a quest, region, spellbook, or activity is available.
         if (id.startsWith("resource:"))
         {
-            String evidence = normalize(check.getEvidence());
+            var evidence = Names.lower(check.getEvidence());
             // Retrieval-only UIM storage is not ordinary shopping/banking
             // preparation. The route must first model its extra access or
             // death-risk setup explicitly.
@@ -144,8 +144,4 @@ public final class RequirementActionability
         return value != null && !value.trim().isEmpty();
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
-    }
 }

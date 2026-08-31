@@ -13,13 +13,13 @@ final class ProfileJsonCodec
 
     static Map<String, Double> doubles(Gson gson, String json)
     {
-        JsonObject object = object(gson, json);
+        var object = object(gson, json);
         if (object == null) return Collections.emptyMap();
         Map<String, Double> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
             if (number(entry.getValue()))
             {
-                double value = entry.getValue().getAsDouble();
+                var value = entry.getValue().getAsDouble();
                 if (Double.isFinite(value)) result.put(entry.getKey(), value);
             }
         return result;
@@ -27,7 +27,7 @@ final class ProfileJsonCodec
 
     static Map<String, Long> longs(Gson gson, String json)
     {
-        JsonObject object = object(gson, json);
+        var object = object(gson, json);
         if (object == null) return Collections.emptyMap();
         Map<String, Long> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
@@ -40,7 +40,7 @@ final class ProfileJsonCodec
     {
         try
         {
-            JsonArray array = gson.fromJson(json, JsonArray.class);
+            var array = gson.fromJson(json, JsonArray.class);
             if (array == null) return Collections.emptySet();
             Set<Integer> result = new LinkedHashSet<>();
             for (JsonElement value : array)
@@ -56,15 +56,15 @@ final class ProfileJsonCodec
     static Map<String, TimedScoreAdjustment> timedAdjustments(
             Gson gson, String json)
     {
-        JsonObject object = object(gson, json);
+        var object = object(gson, json);
         if (object == null) return Collections.emptyMap();
         Map<String, TimedScoreAdjustment> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
         {
-            JsonObject value = asObject(entry.getValue());
+            var value = asObject(entry.getValue());
             if (value == null || !number(value.get("scoreDelta"))
                     || !number(value.get("expiresAtMillis"))) continue;
-            double score = value.get("scoreDelta").getAsDouble();
+            var score = value.get("scoreDelta").getAsDouble();
             if (!Double.isFinite(score)) continue;
             result.put(entry.getKey(), new TimedScoreAdjustment(score,
                     value.get("expiresAtMillis").getAsLong()));
@@ -75,12 +75,12 @@ final class ProfileJsonCodec
     static Map<String, ObservedFarmingPatchState> farmingStates(
             Gson gson, String json)
     {
-        JsonObject object = object(gson, json);
+        var object = object(gson, json);
         if (object == null) return Collections.emptyMap();
         Map<String, ObservedFarmingPatchState> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
         {
-            JsonObject value = asObject(entry.getValue());
+            var value = asObject(entry.getValue());
             if (value == null || value.get("state") == null
                     || !number(value.get("observedAtMillis"))) continue;
             try

@@ -149,7 +149,7 @@ public class OsrsStrategistPanel extends PluginPanel
         setLayout(new BorderLayout());
         setBackground(StrategistTheme.BACKGROUND);
 
-        JPanel content = new JPanel();
+        var content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBackground(StrategistTheme.BACKGROUND);
         content.setBorder(BorderFactory.createEmptyBorder(
@@ -160,11 +160,11 @@ public class OsrsStrategistPanel extends PluginPanel
         buildRecommendationCard(content);
         buildSecondaryCards(content);
         buildFooter(content);
-        JPanel primary = new JPanel(new BorderLayout());
+        var primary = new JPanel(new BorderLayout());
         primary.setBackground(StrategistTheme.BACKGROUND);
         primary.add(content, BorderLayout.NORTH);
 
-        JPanel navigation = new JPanel(new GridLayout(1, 2, 6, 0));
+        var navigation = new JPanel(new GridLayout(1, 2, 6, 0));
         navigation.setBackground(StrategistTheme.BACKGROUND);
         navigation.setBorder(BorderFactory.createEmptyBorder(
                 8, CONTENT_PADDING, 0, CONTENT_PADDING));
@@ -184,18 +184,18 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildHeader(JPanel content)
     {
-        JLabel title = label("GIELINOR COMPASS");
+        var title = label("GIELINOR COMPASS");
         title.setForeground(StrategistTheme.GOLD);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 17f));
         content.add(title);
         content.add(Box.createVerticalStrut(4));
 
-        JLabel subtitle = mutedLabel(get(1243));
+        var subtitle = mutedLabel(get(1243));
         subtitle.setFont(subtitle.getFont().deriveFont(MUTED_FONT_SIZE));
         content.add(subtitle);
         content.add(Box.createVerticalStrut(11));
 
-        JPanel accountCard = cardPanel(false);
+        var accountCard = cardPanel(false);
         accountName.setFont(accountName.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE));
         accountCard.add(accountName);
         accountCard.add(Box.createVerticalStrut(5));
@@ -206,7 +206,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void buildStrategyCard(JPanel content)
     {
-        JPanel card = cardPanel(false);
+        var card = cardPanel(false);
         activeGoal.setForeground(StrategistTheme.GOLD);
         activeGoal.setFont(activeGoal.getFont().deriveFont(Font.BOLD, EMPHASIS_FONT_SIZE));
         card.add(eyebrow("STRATEGY"));
@@ -240,7 +240,7 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(eyebrow("DO NEXT"));
         content.add(Box.createVerticalStrut(6));
 
-        JPanel identityRow = new JPanel(new BorderLayout(7, 0));
+        var identityRow = new JPanel(new BorderLayout(7, 0));
         identityRow.setOpaque(false);
         identityRow.setAlignmentX(LEFT_ALIGNMENT);
         identityRow.setMaximumSize(new Dimension(INNER_WIDTH, 34));
@@ -289,7 +289,7 @@ public class OsrsStrategistPanel extends PluginPanel
         feedbackPanel.setAlignmentX(LEFT_ALIGNMENT);
         feedbackPanel.add(eyebrow("FEEDBACK"));
         feedbackPanel.add(Box.createVerticalStrut(6));
-        JPanel feedbackGrid = new JPanel(new GridLayout(2, 2, 6, 6));
+        var feedbackGrid = new JPanel(new GridLayout(2, 2, 6, 6));
         feedbackGrid.setOpaque(false);
         feedbackGrid.setAlignmentX(LEFT_ALIGNMENT);
         feedbackGrid.setMaximumSize(new Dimension(INNER_WIDTH, 74));
@@ -349,7 +349,7 @@ public class OsrsStrategistPanel extends PluginPanel
         content.add(refreshButton);
 
         content.add(Box.createVerticalStrut(12));
-        Dimension supportSize = new Dimension(CONTENT_WIDTH, 34);
+        var supportSize = new Dimension(CONTENT_WIDTH, 34);
         supportButton.setPreferredSize(supportSize);
         supportButton.setMinimumSize(supportSize);
         supportButton.setMaximumSize(supportSize);
@@ -395,7 +395,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     public void updateGoal(GoalType goal)
     {
-        GoalType safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
+        var safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
         selectedGoal = safeGoal;
         activeGoal.setText(html("Goal: "
                 + GoalRecommendationContext.displayName(safeGoal)));
@@ -445,7 +445,7 @@ public class OsrsStrategistPanel extends PluginPanel
                     FallbackRecommendationFactory.forState(null));
         }
 
-        Recommendation best = recommendations.get(0);
+        var best = recommendations.get(0);
         String previousId = currentRecommendation == null
                 ? null
                 : currentRecommendation.getId();
@@ -466,7 +466,7 @@ public class OsrsStrategistPanel extends PluginPanel
                 !FallbackRecommendationFactory.isFallback(best));
         setWrappedText(recommendationTitle, safe(best.getTitle()), TEXT_WIDTH);
 
-        Skill skill = MilestoneTracker.skillFor(best);
+        var skill = MilestoneTracker.skillFor(best);
         if (recommendationChanged)
         {
             if (skillIconLoader != null) skillIconLoader.clear(recommendationIcon);
@@ -551,8 +551,8 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void updateProgress(Recommendation recommendation)
     {
-        int current = recommendation.getCurrentLevel();
-        int target = recommendation.getCurrentExecutionTargetLevel();
+        var current = recommendation.getCurrentLevel();
+        var target = recommendation.getCurrentExecutionTargetLevel();
         if (current <= 0 || target <= current)
         {
             progressText.setText(html(""));
@@ -638,8 +638,8 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (currentRecommendation == null || feedbackHandler == null) return;
 
-        String title = currentRecommendation.getTitle();
-        String id = currentRecommendation.getId();
+        var title = currentRecommendation.getTitle();
+        var id = currentRecommendation.getId();
         setWrappedText(feedbackStatus, feedbackStatusText(action, title), TEXT_WIDTH);
         acknowledgeFirstUse();
         feedbackHandler.accept(id, action);
@@ -732,7 +732,7 @@ public class OsrsStrategistPanel extends PluginPanel
     static String alternativeText(Recommendation recommendation)
     {
         if (recommendation == null) return "";
-        TrainingPlan plan = recommendation.getTrainingPlan();
+        var plan = recommendation.getTrainingPlan();
         if (plan != null && plan.getMethod() != null
                 && plan.getMethod().getSkill() != null)
         {
@@ -754,7 +754,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private static void makeFullWidth(JButton button, int height)
     {
         button.setAlignmentX(LEFT_ALIGNMENT);
-        Dimension size = new Dimension(INNER_WIDTH, height);
+        var size = new Dimension(INNER_WIDTH, height);
         button.setPreferredSize(size);
         button.setMaximumSize(size);
         button.setMinimumSize(size);
@@ -762,7 +762,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JButton actionButton(String text)
     {
-        JButton button = new JButton(text);
+        var button = new JButton(text);
         button.setFocusable(false);
         button.setFont(button.getFont().deriveFont(BUTTON_FONT_SIZE));
         button.setMargin(new Insets(4, 6, 4, 6));
@@ -773,7 +773,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JPanel cardPanel(boolean highlighted)
     {
-        JPanel panel = new JPanel();
+        var panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(StrategistTheme.CARD);
         panel.setAlignmentX(LEFT_ALIGNMENT);
@@ -790,7 +790,7 @@ public class OsrsStrategistPanel extends PluginPanel
             Color foreground,
             boolean bold)
     {
-        JTextArea area = new JTextArea(text == null ? "" : text);
+        var area = new JTextArea(text == null ? "" : text);
         area.setEditable(false);
         area.setFocusable(false);
         area.setOpaque(false);
@@ -814,7 +814,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private static void setWrappedText(JTextArea area, String text, int width)
     {
         if (area == null) return;
-        String value = text == null ? "" : text;
+        var value = text == null ? "" : text;
         area.setText(value);
         // setPreferredSize makes Swing cache the previous measurement. Clear
         // all three explicit bounds before measuring new copy, otherwise an
@@ -824,10 +824,10 @@ public class OsrsStrategistPanel extends PluginPanel
         area.setMinimumSize(null);
         area.setMaximumSize(null);
         area.setSize(new Dimension(width, 10_000));
-        Dimension preferred = area.getPreferredSize();
-        int lineHeight = area.getFontMetrics(area.getFont()).getHeight();
-        int height = value.isEmpty() ? 1 : Math.max(lineHeight, preferred.height);
-        Dimension size = new Dimension(width, height);
+        var preferred = area.getPreferredSize();
+        var lineHeight = area.getFontMetrics(area.getFont()).getHeight();
+        var height = value.isEmpty() ? 1 : Math.max(lineHeight, preferred.height);
+        var size = new Dimension(width, height);
         area.setPreferredSize(size);
         area.setMinimumSize(size);
         area.setMaximumSize(size);
@@ -835,7 +835,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JLabel eyebrow(String text)
     {
-        JLabel label = mutedLabel(text);
+        var label = mutedLabel(text);
         label.setForeground(StrategistTheme.GOLD_SOFT);
         label.setFont(label.getFont().deriveFont(Font.BOLD, EYEBROW_FONT_SIZE));
         return label;
@@ -843,7 +843,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JLabel label(String text)
     {
-        JLabel label = new JLabel(html(text));
+        var label = new JLabel(html(text));
         label.setForeground(StrategistTheme.TEXT);
         label.setFont(label.getFont().deriveFont(BODY_FONT_SIZE));
         label.setAlignmentX(LEFT_ALIGNMENT);
@@ -852,7 +852,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JLabel mutedLabel(String text)
     {
-        JLabel label = label(text);
+        var label = label(text);
         label.setForeground(StrategistTheme.MUTED_TEXT);
         label.setFont(label.getFont().deriveFont(MUTED_FONT_SIZE));
         return label;
@@ -860,7 +860,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static JLabel inlineMutedLabel(String text)
     {
-        JLabel label = new JLabel(text);
+        var label = new JLabel(text);
         label.setForeground(StrategistTheme.MUTED_TEXT);
         label.setFont(label.getFont().deriveFont(MUTED_FONT_SIZE));
         label.setAlignmentX(LEFT_ALIGNMENT);
@@ -884,7 +884,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private static String feedbackStatusText(FeedbackAction action, String title)
     {
-        String activity = safe(title == null ? "Recommendation" : title);
+        var activity = safe(title == null ? "Recommendation" : title);
         switch (action)
         {
             case LATER:
@@ -901,7 +901,7 @@ public class OsrsStrategistPanel extends PluginPanel
     private static String prettyName(String text)
     {
         if (text == null || text.isEmpty()) return "Unknown";
-        String lower = text.toLowerCase().replace('_', ' ');
+        var lower = text.toLowerCase().replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 

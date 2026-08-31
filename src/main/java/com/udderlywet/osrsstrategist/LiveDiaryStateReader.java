@@ -12,6 +12,7 @@ import net.runelite.client.util.Text;
 
 /** Reads all 12 regions x 4 Achievement Diary tier states directly from RuneLite. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveDiaryStateReader
 {
     private static final String[] REGIONS = {
@@ -38,12 +39,6 @@ public class LiveDiaryStateReader
     private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
     private final Map<String, Boolean> observedTaskCompletion = new HashMap<>();
 
-    @Inject
-    public LiveDiaryStateReader(Client client)
-    {
-        this.client = client;
-    }
-
     public DiarySnapshot read()
     {
         if (client.getGameState() != GameState.LOGGED_IN) return null;
@@ -66,12 +61,12 @@ public class LiveDiaryStateReader
     public boolean observeOpenDiary()
     {
         if (client.getGameState() != GameState.LOGGED_IN) return false;
-        Widget title = client.getWidget(InterfaceID.Journalscroll.TITLE);
-        Widget layer = client.getWidget(InterfaceID.Journalscroll.TEXTLAYER);
+        var title = client.getWidget(InterfaceID.Journalscroll.TITLE);
+        var layer = client.getWidget(InterfaceID.Journalscroll.TEXTLAYER);
         if (title == null || layer == null) return false;
-        Widget[] children = layer.getStaticChildren();
+        var children = layer.getStaticChildren();
         if (children == null || children.length == 0) return false;
-        String region = regionFor(title.getText());
+        var region = regionFor(title.getText());
         if (region == null && children[0] != null)
             region = regionFor(children[0].getText());
         if (region == null) return false;
@@ -91,17 +86,17 @@ public class LiveDiaryStateReader
     {
         Map<String, Boolean> result = new HashMap<>();
         if (region == null || rows == null || catalog == null) return result;
-        List<DiaryTaskDefinition> regionTasks = catalog.all();
-        String buffered = "";
-        boolean bufferedComplete = false;
+        var regionTasks = catalog.all();
+        var buffered = "";
+        var bufferedComplete = false;
         for (String raw : rows)
         {
             if (raw == null) continue;
-            String row = normalizeSpace(Text.removeTags(raw));
+            var row = normalizeSpace(Text.removeTags(raw));
             if (row.isEmpty()) continue;
-            boolean struck = raw.toLowerCase(Locale.ROOT).contains("<str>");
+            var struck = raw.toLowerCase(Locale.ROOT).contains("<str>");
 
-            Match direct = match(regionTasks, region, row);
+            var direct = match(regionTasks, region, row);
             if (direct != null)
             {
                 result.put(direct.task.getId(), struck);
@@ -110,8 +105,8 @@ public class LiveDiaryStateReader
                 continue;
             }
 
-            String combined = buffered.isEmpty() ? row : buffered + " " + row;
-            Match wrapped = match(regionTasks, region, combined);
+            var combined = buffered.isEmpty() ? row : buffered + " " + row;
+            var wrapped = match(regionTasks, region, combined);
             if (wrapped != null)
             {
                 result.put(wrapped.task.getId(),
@@ -151,7 +146,7 @@ public class LiveDiaryStateReader
         for (DiaryTaskDefinition task : tasks)
         {
             if (!task.getRegion().equals(region)) continue;
-            String instruction = normalizeSpace(task.getTask());
+            var instruction = normalizeSpace(task.getTask());
             if (row.equals(instruction)
                     || row.startsWith(instruction + " ("))
                 return new Match(task);
@@ -201,7 +196,7 @@ public class LiveDiaryStateReader
             tierMap.put(values[i], client.getVarbitValue(ids[i]) >= 1);
         tiers.put(region, tierMap);
 
-        int done = 0;
+        var done = 0;
         for (int i = 4; i < ids.length; i++)
             done += Math.max(0, client.getVarbitValue(ids[i]));
         completed.put(region, done);

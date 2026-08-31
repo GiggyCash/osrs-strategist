@@ -41,19 +41,19 @@ public class MarketPriceService
 
         try
         {
-            List<ItemPrice> results = itemManager.search(exactItemName);
+            var results = itemManager.search(exactItemName);
             if (results == null) return null;
             for (ItemPrice result : results)
             {
-                int itemId = result.getId();
+                var itemId = result.getId();
                 if (itemId <= 0) continue;
-                ItemComposition composition = itemManager.getItemComposition(itemId);
+                var composition = itemManager.getItemComposition(itemId);
                 if (composition == null || composition.getName() == null
                         || !exactItemName.equalsIgnoreCase(composition.getName()))
                 {
                     continue;
                 }
-                int price = itemManager.getItemPrice(itemId);
+                var price = itemManager.getItemPrice(itemId);
                 if (price <= 0) return null;
                 return new MarketPriceQuote(
                         itemId,

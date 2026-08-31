@@ -34,19 +34,19 @@ public final class MethodResourceValueService
     {
         TrainingPlan plan = recommendation == null ? null
                 : recommendation.getTrainingPlan();
-        TrainingMethod method = plan == null ? null : plan.getMethod();
+        var method = plan == null ? null : plan.getMethod();
         if (method == null || method.getSkill() == null || context == null
                 || context.data() == null || context.data().account() == null
                 || recommendation.getTargetLevel() <= 0) return recommendation;
-        MethodProfile profile = profiles.forMethod(method.getId());
+        var profile = profiles.forMethod(method.getId());
         if (profile == null) return recommendation;
 
-        AccountSnapshot account = context.data().account();
-        Skill skill = method.getSkill();
-        int currentXp = account.getSkillExperience(skill);
+        var account = context.data().account();
+        var skill = method.getSkill();
+        var currentXp = account.getSkillExperience(skill);
         if (currentXp <= 0)
             currentXp = Experience.getXpForLevel(account.getSkillLevel(skill));
-        int targetXp = Experience.getXpForLevel(recommendation.getTargetLevel());
+        var targetXp = Experience.getXpForLevel(recommendation.getTargetLevel());
         double multiplier = profile.getXpMultiplier() * modifiers.modifier(
                 context.data(), skill, context.isUseGroupStorage()).getMultiplier();
         ActionDef action = selector.select(context.data(), profile,
@@ -57,17 +57,17 @@ public final class MethodResourceValueService
         int count = (int) Math.ceil(Math.max(0, targetXp - currentXp)
                 / (action.getXp() * multiplier));
 
-        int score = 0;
-        boolean known = false;
-        StrategicValue shared = StrategicValue.neutral();
+        var score = 0;
+        var known = false;
+        var shared = StrategicValue.neutral();
         for (MethodInput input : inputs.resolve(profile, action, count))
         {
-            int[] policy = policy(input.getName());
+            var policy = policy(input.getName());
             if (policy == null) continue;
             known = true;
             score += resourceAdjustment(context, input.getName(),
                     input.getQuantity(), policy[0], policy[1] == 1);
-            Set<Integer> sharedIds = observedGroupItemIds(context, input.getName());
+            var sharedIds = observedGroupItemIds(context, input.getName());
             if (!sharedIds.isEmpty())
                 shared = shared.merge(groupStrategy.assess(context,
                         new GroupResourceNeed(input.getName(), sharedIds,
@@ -90,8 +90,8 @@ public final class MethodResourceValueService
         if (context == null || context.data() == null || name == null) return -4;
         ItemIndex items = new ItemIndex(context.data(),
                 context.isUseGroupStorage());
-        int observed = items.quantity(name);
-        AccountMode mode = context.accountMode();
+        var observed = items.quantity(name);
+        var mode = context.accountMode();
         int burden = mode.usesGrandExchange() && tradeable ? 1
                 : mode.isIronLike() ? 5 : 4;
         if (mode.isGroupIronman() && context.isUseGroupStorage()
@@ -106,7 +106,7 @@ public final class MethodResourceValueService
 
     private static int[] policy(String name)
     {
-        String value = normalize(name);
+        var value = Names.words(name);
         if (value.equals("spirit seed") || value.equals("crystal acorn"))
             return new int[]{4, 0};
         for (String term : new String[]{"rune", "essence", "bar", "plank",
@@ -126,19 +126,13 @@ public final class MethodResourceValueService
                 || context.data().groupStorage() == null
                 || !context.data().groupStorage().isObserved())
             return Collections.emptySet();
-        String target = normalize(itemName);
+        var target = Names.words(itemName);
         Set<Integer> ids = new LinkedHashSet<>();
         for (ItemState item : context.data().groupStorage().getItems())
             if (item != null && item.getQuantity() > 0 && item.getItemId() > 0
-                    && target.equals(normalize(item.getName())))
+                    && target.equals(Names.words(item.getName())))
                 ids.add(item.getItemId());
         return ids;
     }
 
-    private static String normalize(String value)
-    {
-        return value == null ? "" : value.toLowerCase(Locale.ROOT)
-                .replace('\u2019', '\'').replaceAll("[^a-z0-9 ]+", " ")
-                .replaceAll("\\s+", " ").trim();
-    }
 }

@@ -73,13 +73,13 @@ public final class ItemsState
     {
         if (!observed) return false;
         if (!expires) return true;
-        long age = System.currentTimeMillis() - capturedAtMillis;
+        var age = System.currentTimeMillis() - capturedAtMillis;
         return capturedAtMillis > 0L && age >= 0L && age <= FRESH_FOR_MILLIS;
     }
 
     public int quantityOf(int itemId)
     {
-        int total = 0;
+        var total = 0;
         for (ItemState item : items)
             if (item != null && item.getItemId() == itemId)
                 total += item.getQuantity();
@@ -88,7 +88,7 @@ public final class ItemsState
 
     public int quantityOf(int... itemIds)
     {
-        int total = 0;
+        var total = 0;
         if (itemIds == null) return total;
         for (ItemState item : items)
             if (item != null) for (int id : itemIds)
@@ -106,7 +106,7 @@ public final class ItemsState
 
     public int quantityWhere(Predicate<String> nameTest)
     {
-        int total = 0;
+        var total = 0;
         if (nameTest == null) return total;
         for (ItemState item : items)
             if (item != null && item.getName() != null

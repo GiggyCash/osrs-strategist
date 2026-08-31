@@ -5,15 +5,10 @@ import javax.inject.Singleton;
 
 /** Decides whether a method is still serving a larger reward objective. */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ProgressionObjectiveService
 {
     private final ProgressionObjectiveCatalog catalog;
-
-    @Inject
-    public ProgressionObjectiveService(ProgressionObjectiveCatalog catalog)
-    {
-        this.catalog = catalog;
-    }
 
     public ProgressionObjectiveDefinition activeObjective(
             TrainingPlan plan,

@@ -13,17 +13,12 @@ import net.runelite.api.*;
  * repeating the same reads unnecessarily.</p>
  */
 @Singleton
+@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
 public class LiveQuestStateReader
 {
     private final Client client;
     private int cachedTick = -1;
     private QuestSnapshot cachedSnapshot;
-
-    @Inject
-    public LiveQuestStateReader(Client client)
-    {
-        this.client = client;
-    }
 
     public QuestSnapshot read()
     {
@@ -34,7 +29,7 @@ public class LiveQuestStateReader
             return null;
         }
 
-        int tick = client.getTickCount();
+        var tick = client.getTickCount();
         if (cachedSnapshot != null && cachedTick == tick)
         {
             return cachedSnapshot;
@@ -44,7 +39,7 @@ public class LiveQuestStateReader
 
         for (Quest quest : Quest.values())
         {
-            QuestState state = quest.getState(client);
+            var state = quest.getState(client);
             states.put(quest.getName(), convert(state));
         }
 
