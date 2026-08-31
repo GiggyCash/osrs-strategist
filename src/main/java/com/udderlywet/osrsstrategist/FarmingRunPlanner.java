@@ -60,7 +60,7 @@ public class FarmingRunPlanner
 
         return new GuidanceChecklist(
                 activityId, "Farming run",
-                PlayerText.get("FRP1"), steps);
+                Text.get(244), steps);
     }
 
     private void appendPrep(
@@ -71,13 +71,13 @@ public class FarmingRunPlanner
         FarmingSnapshot farming = data.getFarming();
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
-                PlayerText.get("FRP2")));
+                Text.get(245)));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.dibber(), toolState(farming, "dibber"),
-                PlayerText.get("FRP3")));
+                Text.get(246)));
         appendResource(steps, resources.evaluate(
                 data, supplyCatalog.spade(), toolState(farming, "spade"),
-                PlayerText.get("FRP4")));
+                Text.get(247)));
 
         if (farmingLevel >= 9)
         {
@@ -137,7 +137,7 @@ public class FarmingRunPlanner
         if (observed == null)
         {
             return new GuidanceStep(patch.getId(), prefix + patch.getDisplayName(),
-                    PlayerText.get("FRP5"),
+                    Text.get(248),
                     GuidanceStepState.CHECK_NEEDED);
         }
         switch (observed.getState())

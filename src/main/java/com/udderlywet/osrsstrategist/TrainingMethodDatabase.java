@@ -8,7 +8,7 @@ import net.runelite.api.Skill;
 @Singleton
 public class TrainingMethodDatabase
 {
-    private static final String RESOURCE = PlayerText.get("TMD1");
+    private static final String RESOURCE = Text.get(897);
     private final List<TrainingMethod> methods;
 
     public TrainingMethodDatabase()

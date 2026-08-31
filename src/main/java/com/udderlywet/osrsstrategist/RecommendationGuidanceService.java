@@ -131,11 +131,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new RecommendationGuidance(
-                PlayerText.get("RGS1")
+                Text.get(662)
                         + targetLevel + ".",
-                PlayerText.get("RGS2"),
-                PlayerText.get("RGS3"),
-                PlayerText.get("RGS4"),
+                Text.get(673),
+                Text.get(684),
+                Text.get(686),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -153,11 +153,11 @@ public class RecommendationGuidanceService
                         != AccountMode.ULTIMATE_IRONMAN)
             return null;
         return new RecommendationGuidance(
-                PlayerText.get("RGS5")
+                Text.get(687)
                         + targetLevel + ".",
-                PlayerText.get("RGS6"),
-                PlayerText.get("RGS7"),
-                PlayerText.get("RGS8"),
+                Text.get(688),
+                Text.get(689),
+                Text.get(690),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -178,21 +178,21 @@ public class RecommendationGuidanceService
         String rune = level >= 20 ? "body" : level >= 14 ? "fire"
                 : level >= 9 ? "earth" : level >= 5 ? "water"
                 : level >= 2 ? "mind" : "air";
-        String altar = level >= 20 ? PlayerText.get("RGS9")
+        String altar = level >= 20 ? Text.get(691)
                 : level >= 14 ? "Fire Altar north of Al Kharid"
                 : level >= 9 ? "Earth Altar northeast of Varrock"
                 : level >= 5 ? "Water Altar in Lumbridge Swamp"
                 : level >= 2 ? "Mind Altar north of Falador"
                 : "Air Altar southwest of Falador";
         return new RecommendationGuidance(
-                PlayerText.get("RGS10")
+                Text.get(663)
                         + altar + ", craft " + rune
-                        + PlayerText.get("RGS11")
+                        + Text.get(664)
                         + targetLevel + ".",
                 "Bring the " + rune + " talisman or wear the " + rune
-                        + PlayerText.get("RGS12"),
-                PlayerText.get("RGS13") + altar + ".",
-                PlayerText.get("RGS14"),
+                        + Text.get(665),
+                Text.get(666) + altar + ".",
+                Text.get(667),
                 MethodBankingBehavior.LOCAL_PROCESSING);
     }
 
@@ -210,19 +210,19 @@ public class RecommendationGuidanceService
         String id = plan.getMethod().getId();
         if ("thieving_uim_lumbridge_people".equals(id))
             return new RecommendationGuidance(
-                    PlayerText.get("RGS15")
+                    Text.get(668)
                             + targetLevel + ".",
-                    PlayerText.get("RGS16"),
-                    PlayerText.get("RGS17"),
-                    PlayerText.get("RGS18"),
+                    Text.get(669),
+                    Text.get(670),
+                    Text.get(671),
                     MethodBankingBehavior.NONE);
         if ("thieving_uim_fruit_stalls".equals(id))
             return new RecommendationGuidance(
-                    PlayerText.get("RGS19")
+                    Text.get(672)
                             + targetLevel + ".",
-                    PlayerText.get("RGS20"),
-                    PlayerText.get("RGS21"),
-                    PlayerText.get("RGS22"),
+                    Text.get(674),
+                    Text.get(675),
+                    Text.get(676),
                     MethodBankingBehavior.NONE);
         return null;
     }
@@ -258,7 +258,7 @@ public class RecommendationGuidanceService
         String supplies = supplyGuidance(
                 data, data.getAccount(), stages, useGroupStorage);
         String location = locationGuidance(data.getQuests());
-        String note = PlayerText.get("RGS23");
+        String note = Text.get(677);
 
         return new RecommendationGuidance(
                 action, supplies, location, note);
@@ -362,13 +362,13 @@ public class RecommendationGuidanceService
                     .append(joinNatural(ownedParts)).append(".");
             if (missingParts.isEmpty())
             {
-                text.append(PlayerText.get("RGS24"));
+                text.append(Text.get(678));
             }
             else
             {
                 text.append(" Acquire ")
                         .append(joinNatural(missingParts))
-                        .append(PlayerText.get("RGS25"));
+                        .append(Text.get(679));
             }
             return text.toString();
         }
@@ -376,7 +376,7 @@ public class RecommendationGuidanceService
         if (data.getBank() == null)
         {
             return "Plan for " + requiredSummary(stages)
-                    + PlayerText.get("RGS26");
+                    + Text.get(680);
         }
 
         List<String> ownedParts = new ArrayList<>();
@@ -419,7 +419,7 @@ public class RecommendationGuidanceService
 
         if (missingParts.isEmpty())
         {
-            text.append(PlayerText.get("RGS27"));
+            text.append(Text.get(681));
             return text.toString();
         }
 
@@ -439,7 +439,7 @@ public class RecommendationGuidanceService
         {
             text.append(" Source ")
                     .append(joinNatural(missingParts))
-                    .append(PlayerText.get("RGS28"));
+                    .append(Text.get(682));
         }
         return text.toString();
     }
@@ -460,10 +460,10 @@ public class RecommendationGuidanceService
         if (quests != null
                 && quests.statusOf("Cook's Assistant") == QuestStatus.COMPLETE)
         {
-            return PlayerText.get("RGS29");
+            return Text.get(683);
         }
 
-        return PlayerText.get("RGS30");
+        return Text.get(685);
     }
 
     private static int quantityByName(

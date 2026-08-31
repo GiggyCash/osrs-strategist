@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ResourceSourceCatalog
 {
-    private static final String RESOURCE = PlayerText.get("RSC1");
+    private static final String RESOURCE = Text.get(708);
     private final List<ResourceSourceDefinition> sources;
 
     public ResourceSourceCatalog()

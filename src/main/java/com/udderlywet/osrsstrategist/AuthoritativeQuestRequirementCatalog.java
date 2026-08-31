@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 /** Canonical direct quest and skill requirements from the pinned Wiki import. */
 public final class AuthoritativeQuestRequirementCatalog
 {
-    public static final String PROVENANCE = PlayerText.get("AQRC1");
+    public static final String PROVENANCE = Text.get(55);
     private static final String RESOURCE = "/content/quest-requirements.json";
     private final Map<String, Record> records;
 

@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public final class TransportCatalog
 {
     public static final String PROVENANCE =
-            PlayerText.get("TC1");
+            Text.get(896);
     private final Map<String, TransportDefinition> routes = new LinkedHashMap<>();
 
     public TransportCatalog()

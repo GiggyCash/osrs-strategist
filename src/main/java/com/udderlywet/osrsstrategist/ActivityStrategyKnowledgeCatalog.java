@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public final class ActivityStrategyKnowledgeCatalog
 {
     private final List<ActivityStrategyProfile> profiles = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array(PlayerText.get("ASKC1"),
+            BundledCatalogLoader.array(Text.get(88),
                     ActivityStrategyProfile[].class)));
 
     public ActivityStrategyProfile profileFor(String candidateId, AccountMode mode)

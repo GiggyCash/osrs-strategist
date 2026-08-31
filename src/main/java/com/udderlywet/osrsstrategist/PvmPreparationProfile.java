@@ -1,20 +1,23 @@
 package com.udderlywet.osrsstrategist;
 
-import lombok.RequiredArgsConstructor;
 import java.util.*;
 
 import lombok.Getter;
 
 /** Reviewable preparation evidence that may produce actions but never READY. */
-@RequiredArgsConstructor
 @Getter
 public final class PvmPreparationProfile
 {
-    private final String activityId;
-    private final String style;
-    private final List<String> checks;
-    private final String accountValue;
-    private final String provenance;
+    private String activityId;
+    private String style;
+    private List<String> checks;
+    private String accountValue;
+    private String provenance;
+    private int attack, strength, defence, ranged, magic, prayer, slayer;
+    private String preferredStyle;
+    private String requiredQuest;
+    private boolean questMayBeInProgress;
+    private boolean requiresSupplies;
 
 
 }

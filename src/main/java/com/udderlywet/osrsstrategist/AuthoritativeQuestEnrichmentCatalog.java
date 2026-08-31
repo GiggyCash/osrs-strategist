@@ -6,7 +6,7 @@ import lombok.Getter;
 /** Pinned Wiki quest-detail evidence. Runtime access is strictly local. */
 public final class AuthoritativeQuestEnrichmentCatalog
 {
-    public static final String PROVENANCE = PlayerText.get("AQEC1");
+    public static final String PROVENANCE = Text.get(39);
     private static final String RESOURCE = "/content/quest-enrichment.json";
     private final Map<String, Record> records;
 
@@ -44,16 +44,16 @@ public final class AuthoritativeQuestEnrichmentCatalog
     {
         Map<String, String> result = new HashMap<>();
         String[][] values = {
-                {PlayerText.get("AQEC6"), PlayerText.get("AQEC7")},
-                {"Recipe for Disaster - Mountain Dwarf", PlayerText.get("AQEC8")},
-                {PlayerText.get("AQEC9"), PlayerText.get("AQEC10")},
-                {"Recipe for Disaster - Pirate Pete", PlayerText.get("AQEC11")},
-                {"Recipe for Disaster - Lumbridge Guide", PlayerText.get("AQEC12")},
+                {Text.get(51), Text.get(52)},
+                {"Recipe for Disaster - Mountain Dwarf", Text.get(53)},
+                {Text.get(54), Text.get(40)},
+                {"Recipe for Disaster - Pirate Pete", Text.get(41)},
+                {"Recipe for Disaster - Lumbridge Guide", Text.get(42)},
                 {"Recipe for Disaster - Evil Dave", "Recipe for Disaster/Freeing Evil Dave"},
-                {"Recipe for Disaster - Skrach Uglogwee", PlayerText.get("AQEC13")},
-                {"Recipe for Disaster - Sir Amik Varze", PlayerText.get("AQEC14")},
-                {"Recipe for Disaster - King Awowogei", PlayerText.get("AQEC15")},
-                {"Recipe for Disaster - Culinaromancer", PlayerText.get("AQEC16")},
+                {"Recipe for Disaster - Skrach Uglogwee", Text.get(43)},
+                {"Recipe for Disaster - Sir Amik Varze", Text.get(44)},
+                {"Recipe for Disaster - King Awowogei", Text.get(45)},
+                {"Recipe for Disaster - Culinaromancer", Text.get(46)},
                 {"Vale Totems", "Vale Totems (miniquest)"}
         };
         for (String[] alias : values) result.put(normalize(alias[0]), alias[1]);

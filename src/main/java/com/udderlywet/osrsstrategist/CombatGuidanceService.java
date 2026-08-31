@@ -51,10 +51,10 @@ public class CombatGuidanceService
                 && currentLevel < 20)
         {
             return new RecommendationGuidance(
-                    PlayerText.get("CGS1"),
+                    Text.get(151),
                     "No coins or other supplies required.",
-                    PlayerText.get("CGS2"),
-                    PlayerText.get("CGS3"));
+                    Text.get(162),
+                    Text.get(173));
         }
         boolean unarmed = weapon == null && currentLevel < 10
                 && skill != Skill.RANGED;
@@ -80,13 +80,13 @@ public class CombatGuidanceService
             int damageNeeded = (int) Math.ceil(xpNeeded / route.xpPerDamage);
             action.append(" That is about ")
                     .append(format(damageNeeded))
-                    .append(PlayerText.get("CGS4"))
+                    .append(Text.get(183))
                     .append(trim(route.xpPerDamage))
                     .append(" XP per damage.");
         }
 
         String supplies = unarmed
-                ? PlayerText.get("CGS5")
+                ? Text.get(184)
                 : supplyGuidance(account, skill, build, route, weapon, items);
         if (supplies == null) return null;
         String location = route.location;
@@ -94,7 +94,7 @@ public class CombatGuidanceService
         if (build != RestrictedBuildType.STANDARD)
         {
             note += " Protected build: " + AccountBuildPolicy.label(account)
-                    + PlayerText.get("CGS6");
+                    + Text.get(185);
         }
 
         return new RecommendationGuidance(
@@ -122,16 +122,16 @@ public class CombatGuidanceService
                 if (intent == SessionIntent.AFK)
                 {
                     return new CombatRoute(
-                            PlayerText.get("CGS7"),
-                            PlayerText.get("CGS8"),
+                            Text.get(186),
+                            Text.get(187),
                             4.0,
-                            PlayerText.get("CGS9"));
+                            Text.get(188));
                 }
                 return new CombatRoute(
                         "Port Sarim docks and shoreline.",
-                        PlayerText.get("CGS10"),
+                        Text.get(152),
                         4.0,
-                        PlayerText.get("CGS11"));
+                        Text.get(153));
             }
 
             CombatRoute crab = bestCrab(data, intent);
@@ -146,9 +146,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Scurrius arena in Varrock Sewers.",
-                    PlayerText.get("CGS12"),
+                    Text.get(154),
                     0.0,
-                    PlayerText.get("CGS13"));
+                    Text.get(155));
         }
 
         if (methodId.contains("slayer"))
@@ -162,9 +162,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Nightmare Zone in Yanille.",
-                    PlayerText.get("CGS14"),
+                    Text.get(156),
                     0.0,
-                    PlayerText.get("CGS15"));
+                    Text.get(157));
         }
 
         if (methodId.contains("crab"))
@@ -176,9 +176,9 @@ public class CombatGuidanceService
         {
             return new CombatRoute(
                     "Hill giants in Edgeville Dungeon.",
-                    PlayerText.get("CGS16"),
+                    Text.get(158),
                     4.0,
-                    PlayerText.get("CGS17"));
+                    Text.get(159));
         }
 
         if (membership != MembershipStatus.P2P || methodId.contains("f2p"))
@@ -186,24 +186,24 @@ public class CombatGuidanceService
             if (level < 20)
             {
                 return new CombatRoute(
-                        PlayerText.get("CGS18"),
-                        PlayerText.get("CGS19"),
+                        Text.get(160),
+                        Text.get(161),
                         4.0,
-                        PlayerText.get("CGS20"));
+                        Text.get(163));
             }
             if (level < 40)
             {
                 return new CombatRoute(
-                        PlayerText.get("CGS21"),
-                        PlayerText.get("CGS22"),
+                        Text.get(164),
+                        Text.get(165),
                         4.0,
-                        PlayerText.get("CGS23"));
+                        Text.get(166));
             }
             return new CombatRoute(
-                    PlayerText.get("CGS24"),
-                    PlayerText.get("CGS25"),
+                    Text.get(167),
+                    Text.get(168),
                     4.0,
-                    PlayerText.get("CGS26"));
+                    Text.get(169));
         }
 
         CombatRoute crab = bestCrab(data, intent);
@@ -211,9 +211,9 @@ public class CombatGuidanceService
 
         return new CombatRoute(
                 "Sand crab beach south of Hosidius.",
-                PlayerText.get("CGS27"),
+                Text.get(170),
                 4.0,
-                PlayerText.get("CGS28"));
+                Text.get(171));
     }
 
     private static CombatRoute bestCrab(
@@ -227,24 +227,24 @@ public class CombatGuidanceService
         if (childrenOfSun && intent == SessionIntent.AFK)
         {
             return new CombatRoute(
-                    PlayerText.get("CGS29"),
-                    PlayerText.get("CGS30"),
+                    Text.get(172),
+                    Text.get(174),
                     3.5,
-                    PlayerText.get("CGS31"));
+                    Text.get(175));
         }
         if (boneVoyage)
         {
             return new CombatRoute(
                     "Ammonite Crab coast on Fossil Island.",
-                    PlayerText.get("CGS32"),
+                    Text.get(176),
                     4.0,
-                    PlayerText.get("CGS33"));
+                    Text.get(177));
         }
         return new CombatRoute(
                 "Sand crab beach south of Hosidius.",
-                PlayerText.get("CGS34"),
+                Text.get(178),
                 4.0,
-                PlayerText.get("CGS35"));
+                Text.get(179));
     }
 
     private static String chooseWeapon(
@@ -331,18 +331,18 @@ public class CombatGuidanceService
                     .append(food).append(" food stack");
             if (prayer != null) result.append(", plus ").append(prayer);
             if (boost != null) result.append(" and ").append(boost);
-            result.append(PlayerText.get("CGS36"));
+            result.append(Text.get(180));
             return result.toString();
         }
         return "Bring " + weapon
-                + PlayerText.get("CGS37");
+                + Text.get(181);
     }
 
     private static String rangedSupplies(String weapon, ObservedItemIndex items)
     {
         if (weapon == null) return null;
         if ("Bow of faerdhinen (c)".equals(weapon))
-            return PlayerText.get("CGS38");
+            return Text.get(182);
         if ("Bow of faerdhinen".equals(weapon)
                 || "Venator bow".equals(weapon)) return null;
         if (weapon.contains("Dorgeshuun crossbow")

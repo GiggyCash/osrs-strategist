@@ -29,7 +29,7 @@ public final class GoalRecommendationContext
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.AUTOMATIC,
-                    PlayerText.get("GRC1"), null);
+                    Text.get(296), null);
 
         String name = displayName(safeGoal);
         if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
@@ -39,13 +39,13 @@ public final class GoalRecommendationContext
                             : GoalRecommendationRelationship.FALLBACK,
                     membership == MembershipStatus.UNKNOWN
                             ? "Confirm membership before advancing " + name + "."
-                            : name + PlayerText.get("GRC2"),
+                            : name + Text.get(297),
                     null);
 
         if (recommendation == null)
             return new GoalRecommendationContext(safeGoal,
                     GoalRecommendationRelationship.CHECK_NEEDED,
-                    PlayerText.get("GRC3") + name + ".",
+                    Text.get(298) + name + ".",
                     null);
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,

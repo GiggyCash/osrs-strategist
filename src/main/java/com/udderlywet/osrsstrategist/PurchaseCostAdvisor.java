@@ -34,7 +34,7 @@ public class PurchaseCostAdvisor
         long total = estimate.getTotalCost();
 
         StringBuilder text = new StringBuilder();
-        text.append(PlayerText.get("PCA1"))
+        text.append(Text.get(412))
                 .append(format(total))
                 .append(" coins total.");
 
@@ -46,7 +46,7 @@ public class PurchaseCostAdvisor
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(PlayerText.get("PCA2"))
+                        .append(Text.get(413))
                         .append(format(cash - total))
                         .append(" after the buy.");
             }
@@ -54,14 +54,14 @@ public class PurchaseCostAdvisor
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(PlayerText.get("PCA3"))
+                        .append(Text.get(414))
                         .append(format(total - cash))
-                        .append(PlayerText.get("PCA4"));
+                        .append(Text.get(415));
             }
         }
         else
         {
-            text.append(PlayerText.get("PCA5"));
+            text.append(Text.get(416));
         }
         return text.toString();
     }

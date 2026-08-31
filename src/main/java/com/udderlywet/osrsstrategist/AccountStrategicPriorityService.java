@@ -49,29 +49,29 @@ public final class AccountStrategicPriorityService
                 occupied < 0 ? RecommendationConfidence.CHECK_NEEDED
                         : RecommendationConfidence.VERIFIED,
                 uim ? occupied < 0
-                        ? PlayerText.get("ASPS1")
+                        ? Text.get(89)
                         : "UIM cannot bank conventionally; " + occupied
-                                + PlayerText.get("ASPS2")
-                        : PlayerText.get("ASPS3"));
+                                + Text.get(100)
+                        : Text.get(111));
         put(result, AccountStrategicDimension.BANK_AVAILABILITY,
                 uim ? StrategicPriority.CRITICAL : StrategicPriority.LOW,
                 uim ? CapabilityState.BLOCKED : CapabilityState.VERIFIED,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS4")
-                        : PlayerText.get("ASPS5"));
+                uim ? Text.get(122)
+                        : Text.get(124));
         put(result, AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY,
                 ge || selfSource ? StrategicPriority.HIGH : StrategicPriority.LOW,
                 ge ? CapabilityState.VERIFIED : CapabilityState.BLOCKED,
                 RecommendationConfidence.VERIFIED,
-                ge ? PlayerText.get("ASPS6")
-                        : PlayerText.get("ASPS7"));
+                ge ? Text.get(125)
+                        : Text.get(126));
         put(result, AccountStrategicDimension.SELF_SOURCING_BURDEN,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                selfSource ? PlayerText.get("ASPS8")
-                        : PlayerText.get("ASPS9"));
+                selfSource ? Text.get(127)
+                        : Text.get(128));
 
         GroupStorageSnapshot groupStorage = data == null
                 ? null : data.getGroupStorage();
@@ -88,86 +88,86 @@ public final class AccountStrategicPriorityService
                         : CapabilityState.BLOCKED,
                 group ? groupConfidence : RecommendationConfidence.VERIFIED,
                 freshGroupStorage
-                        ? PlayerText.get("ASPS10")
-                        : group ? PlayerText.get("ASPS11")
-                        : PlayerText.get("ASPS12"));
+                        ? Text.get(90)
+                        : group ? Text.get(91)
+                        : Text.get(92));
         put(result, AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE,
                 StrategicPriority.NONE,
                 group ? CapabilityState.UNKNOWN : CapabilityState.BLOCKED,
                 group ? RecommendationConfidence.CHECK_NEEDED
                         : RecommendationConfidence.VERIFIED,
-                group ? PlayerText.get("ASPS13")
-                        : PlayerText.get("ASPS14"));
+                group ? Text.get(93)
+                        : Text.get(94));
         put(result, AccountStrategicDimension.STORAGE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS15")
-                        : selfSource ? PlayerText.get("ASPS16")
-                        : PlayerText.get("ASPS17"));
+                uim ? Text.get(95)
+                        : selfSource ? Text.get(96)
+                        : Text.get(97));
         put(result, AccountStrategicDimension.POH_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS18")
-                        : selfSource ? PlayerText.get("ASPS19")
-                        : PlayerText.get("ASPS20"));
+                uim ? Text.get(98)
+                        : selfSource ? Text.get(99)
+                        : Text.get(101));
         put(result, AccountStrategicDimension.TELEPORT_INFRASTRUCTURE_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS21")
-                        : selfSource ? PlayerText.get("ASPS22")
-                        : PlayerText.get("ASPS23"));
+                uim ? Text.get(102)
+                        : selfSource ? Text.get(103)
+                        : Text.get(104));
         put(result, AccountStrategicDimension.SETUP_COST_SENSITIVITY,
                 uim ? StrategicPriority.CRITICAL
                         : hardcore ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS24")
-                        : hardcore ? PlayerText.get("ASPS25")
-                        : PlayerText.get("ASPS26"));
+                uim ? Text.get(105)
+                        : hardcore ? Text.get(106)
+                        : Text.get(107));
         put(result, AccountStrategicDimension.DEATH_RISK_SENSITIVITY,
                 hardcore ? StrategicPriority.CRITICAL
                         : uim ? StrategicPriority.HIGH
                         : StrategicPriority.MODERATE,
                 RecommendationConfidence.VERIFIED,
-                hardcore ? PlayerText.get("ASPS27")
-                        : uim ? PlayerText.get("ASPS28")
-                        : PlayerText.get("ASPS29"));
+                hardcore ? Text.get(108)
+                        : uim ? Text.get(109)
+                        : Text.get(110));
         put(result, AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.HIGH
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                selfSource ? PlayerText.get("ASPS30")
-                        : PlayerText.get("ASPS31"));
+                selfSource ? Text.get(112)
+                        : Text.get(113));
         put(result, AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE,
                 uim ? StrategicPriority.CRITICAL
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS32")
-                        : PlayerText.get("ASPS33"));
+                uim ? Text.get(114)
+                        : Text.get(115));
         put(result, AccountStrategicDimension.DUPLICATE_GRIND_PENALTY,
                 freshGroupStorage ? StrategicPriority.HIGH
                         : StrategicPriority.NONE,
                 group ? groupConfidence : RecommendationConfidence.VERIFIED,
                 freshGroupStorage
-                        ? PlayerText.get("ASPS34")
-                        : group ? PlayerText.get("ASPS35")
-                        : PlayerText.get("ASPS36"));
+                        ? Text.get(116)
+                        : group ? Text.get(117)
+                        : Text.get(118));
         put(result, AccountStrategicDimension.GP_LIQUIDITY_STORAGE_VALUE,
                 uim ? StrategicPriority.HIGH
                         : selfSource ? StrategicPriority.MODERATE
                         : StrategicPriority.LOW,
                 RecommendationConfidence.VERIFIED,
-                uim ? PlayerText.get("ASPS37")
-                        : selfSource ? PlayerText.get("ASPS38")
-                        : PlayerText.get("ASPS39"));
+                uim ? Text.get(119)
+                        : selfSource ? Text.get(120)
+                        : Text.get(121));
 
         return new AccountStrategicPriorityProfile(mode, result);
     }
@@ -188,7 +188,7 @@ public final class AccountStrategicPriorityService
             put(values, dimension, priority,
                     CapabilityState.UNKNOWN,
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("ASPS40"));
+                    Text.get(123));
         }
     }
 

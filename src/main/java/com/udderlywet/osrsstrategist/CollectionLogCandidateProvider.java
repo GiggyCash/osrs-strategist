@@ -42,7 +42,7 @@ public class CollectionLogCandidateProvider implements StrategyCandidateProvider
                     id,
                     "Collection Log: " + category,
                     complete + "/" + total + " entries are observed complete ("
-                            + missing + PlayerText.get("CLCP1"),
+                            + missing + Text.get(200),
                     score,
                     RecommendationConfidence.CHECK_NEEDED,
                     null,

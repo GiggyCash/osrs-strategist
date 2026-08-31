@@ -268,7 +268,7 @@ public class StrategyEngine
                 opportunity.getTitle());
         if (location == null || action == null) return null;
         String supplies = setupVerified
-                ? PlayerText.get("SE1")
+                ? Text.get(720)
                 : "Before leaving, verify: " + String.join(", ", opportunity.getPreparation()) + ".";
         double score = 46.0 + preferences.weightFor(id) * 10.0
                 + preferences.timedScoreAdjustmentFor(id);
@@ -281,16 +281,16 @@ public class StrategyEngine
         RecommendationGuidance guidance = new RecommendationGuidance(
                 setupVerified
                         ? action
-                        : PlayerText.get("SE2") + opportunity.getTitle()
+                        : Text.get(722) + opportunity.getTitle()
                                 + " before starting it.",
                 supplies,
                 location,
                 setupVerified
-                        ? PlayerText.get("SE3")
-                        : PlayerText.get("SE4"));
+                        ? Text.get(723)
+                        : Text.get(724));
         return new Recommendation(
                 id, opportunity.getTitle(),
-                PlayerText.get("SE5"),
+                Text.get(725),
                 score, null, setupVerified
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
@@ -305,11 +305,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return PlayerText.get("SE6");
+                return Text.get(726);
             case HERB_RUN:
-                return PlayerText.get("SE7");
+                return Text.get(727);
             case BATTLESTAVES:
-                return PlayerText.get("SE8");
+                return Text.get(728);
             default:
                 return null;
         }
@@ -322,11 +322,11 @@ public class StrategyEngine
         switch (type)
         {
             case BIRDHOUSE_RUN:
-                return PlayerText.get("SE9");
+                return Text.get(729);
             case HERB_RUN:
                 return verifiedHerbPatchRoute(context);
             case BATTLESTAVES:
-                return PlayerText.get("SE10");
+                return Text.get(721);
             default:
                 return null;
         }

@@ -49,45 +49,45 @@ public class RestrictedBuildDetector
                     ? RestrictedBuildType.F2P_SKILLER
                     : RestrictedBuildType.SKILLER;
             return strong(type,
-                    PlayerText.get("RBD1"));
+                    Text.get(583));
         }
 
         if (baselineOffence && defence <= 1 && hp <= 10
                 && prayer >= 15 && highestNonCombat >= 20)
         {
             return strong(RestrictedBuildType.PRAYER_SKILLER,
-                    PlayerText.get("RBD2"));
+                    Text.get(590));
         }
 
         if (allNonCombatAtBaseline(account) && combatPeak >= 40)
         {
             return strong(RestrictedBuildType.COMBAT_ONLY,
-                    PlayerText.get("RBD3"));
+                    Text.get(591));
         }
 
         if (baselineOffence && defence >= 20)
         {
             return strong(RestrictedBuildType.DEFENCE_PURE,
-                    PlayerText.get("RBD4"));
+                    Text.get(592));
         }
 
         if (hp <= 10 && (ranged >= 20 || magic >= 20 || prayer >= 20
                 || highestNonCombat >= 50))
         {
             return strong(RestrictedBuildType.TEN_HITPOINTS,
-                    PlayerText.get("RBD5"));
+                    Text.get(593));
         }
 
         if (attack <= 1 && defence <= 1 && strength >= 50)
         {
             return strong(RestrictedBuildType.OBSIDIAN_MAULER,
-                    PlayerText.get("RBD6"));
+                    Text.get(594));
         }
 
         if (defence <= 1 && offensivePeak >= 40)
         {
             return strong(RestrictedBuildType.ONE_DEFENCE_PURE,
-                    PlayerText.get("RBD7"));
+                    Text.get(595));
         }
 
         // Exact/near-exact Defence stopping points become meaningful only after
@@ -99,28 +99,28 @@ public class RestrictedBuildDetector
             if (defence >= 2 && defence <= 13)
             {
                 return strong(RestrictedBuildType.LOW_DEFENCE_PURE,
-                        PlayerText.get("RBD8"));
+                        Text.get(596));
             }
             if (defence >= 14 && defence <= 20)
             {
                 return strong(RestrictedBuildType.INITIATE_PURE,
-                        PlayerText.get("RBD9"));
+                        Text.get(597));
             }
             if (defence >= 39 && defence <= 40)
             {
                 return strong(RestrictedBuildType.RUNE_PURE,
-                        PlayerText.get("RBD10"));
+                        Text.get(584));
             }
             if (defence >= 41 && defence <= 42)
             {
                 return strong(RestrictedBuildType.VOID_PURE,
-                        PlayerText.get("RBD11"));
+                        Text.get(585));
             }
             if (defence >= 43 && defence <= 45
                     && attack >= 50 && strength >= 50)
             {
                 return strong(RestrictedBuildType.ZERKER,
-                        PlayerText.get("RBD12"));
+                        Text.get(586));
             }
         }
 
@@ -131,7 +131,7 @@ public class RestrictedBuildDetector
                 && attack <= 60 && strength <= 70)
         {
             return suggestion(RestrictedBuildType.RANGE_TANK,
-                    PlayerText.get("RBD13"));
+                    Text.get(587));
         }
 
         // A nearly untouched non-combat account with only modest combat is more
@@ -139,13 +139,13 @@ public class RestrictedBuildDetector
         if (lowestNonCombat <= 1 && highestNonCombat <= 5 && combatPeak >= 30)
         {
             return suggestion(RestrictedBuildType.COMBAT_ONLY,
-                    PlayerText.get("RBD14"));
+                    Text.get(588));
         }
 
         return new RestrictedBuildSuggestion(
                 RestrictedBuildType.STANDARD,
                 RecommendationConfidence.VERIFIED,
-                PlayerText.get("RBD15")
+                Text.get(589)
         );
     }
 

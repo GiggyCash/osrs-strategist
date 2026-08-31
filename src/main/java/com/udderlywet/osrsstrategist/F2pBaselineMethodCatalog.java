@@ -13,7 +13,7 @@ public class F2pBaselineMethodCatalog
     public F2pBaselineMethodCatalog()
     {
         for (CuratedTrainingMethod value : BundledCatalogLoader.array(
-                PlayerText.get("FBMC1"), CuratedTrainingMethod[].class))
+                Text.get(217), CuratedTrainingMethod[].class))
         {
             Skill skill = value.getMethod().getSkill();
             bySkill.computeIfAbsent(skill, ignored -> new ArrayList<>()).add(value);

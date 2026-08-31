@@ -19,10 +19,10 @@ public final class CurrentLiveSkillActionOverrides
         Map<String, Integer> levels = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-sepulchre-floor-4", VALIDATION_DATE))
-            levels.put(PlayerText.get("CLSAO1"), 77);
+            levels.put(Text.get(201), 77);
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-sepulchre-floor-5", VALIDATION_DATE))
-            levels.put(PlayerText.get("CLSAO2"), 87);
+            levels.put(Text.get(202), 87);
         LEVELS = Collections.unmodifiableMap(levels);
 
         Map<String, Float> xp = new LinkedHashMap<>();
@@ -45,8 +45,8 @@ public final class CurrentLiveSkillActionOverrides
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-12-colossal-wyrm-courses", VALIDATION_DATE))
         {
-            stale.add(PlayerText.get("CLSAO3"));
-            stale.add(PlayerText.get("CLSAO4"));
+            stale.add(Text.get(203));
+            stale.add(Text.get(204));
         }
         if (CurrentLiveContentChanges.mayAffectPlanning(
                 "2026-08-19-hunter-methods", VALIDATION_DATE))

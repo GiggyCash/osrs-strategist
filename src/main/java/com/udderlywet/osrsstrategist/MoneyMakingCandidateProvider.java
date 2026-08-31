@@ -67,7 +67,7 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
             String priceNote = method.isRequiresLivePrices()
-                    ? PlayerText.get("MMCP1")
+                    ? Text.get(378)
                     : "";
             result.add(new Recommendation(
                     id,
@@ -101,10 +101,10 @@ public class MoneyMakingCandidateProvider implements StrategyCandidateProvider
             return null;
         }
         return new RecommendationGuidance(
-                PlayerText.get("MMCP2"),
-                PlayerText.get("MMCP3"),
-                PlayerText.get("MMCP4"),
-                PlayerText.get("MMCP5"));
+                Text.get(379),
+                Text.get(380),
+                Text.get(381),
+                Text.get(382));
     }
 
     private static RecommendationStrategicValue strategicValue(

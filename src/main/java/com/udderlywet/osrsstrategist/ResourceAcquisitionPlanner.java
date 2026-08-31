@@ -49,7 +49,7 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.INVENTORY, inventoryQuantity,
                     RecommendationConfidence.VERIFIED,
-                    PlayerText.get("RAP1")
+                    Text.get(566)
             );
         }
 
@@ -70,10 +70,10 @@ public class ResourceAcquisitionPlanner
                                 ? RecommendationConfidence.CHECK_NEEDED
                                 : RecommendationConfidence.VERIFIED,
                         needsAccessCheck
-                                ? PlayerText.get("RAP2")
+                                ? Text.get(575)
                                         + pretty(stored.capabilities)
-                                        + PlayerText.get("RAP3")
-                                : PlayerText.get("RAP4")
+                                        + Text.get(576)
+                                : Text.get(577)
                                         + pretty(stored.capabilities) + "."
                 );
             }
@@ -88,7 +88,7 @@ public class ResourceAcquisitionPlanner
                 return new ResourceAcquisitionPlan(
                         need, AcquisitionSource.BANK, ordinaryQuantity,
                         RecommendationConfidence.VERIFIED,
-                        PlayerText.get("RAP5")
+                        Text.get(578)
                 );
             }
 
@@ -106,7 +106,7 @@ public class ResourceAcquisitionPlanner
                                 need, AcquisitionSource.GROUP_STORAGE,
                                 confirmedQuantity,
                                 RecommendationConfidence.VERIFIED,
-                                PlayerText.get("RAP6")
+                                Text.get(579)
                         );
                     }
                 }
@@ -120,23 +120,23 @@ public class ResourceAcquisitionPlanner
         // require the bank, and opted-in GIM requires fresh Group Storage.
         if (data.getInventory() == null)
             return checkNeeded(need,
-                    PlayerText.get("RAP7"));
+                    Text.get(580));
         if (mode != AccountMode.ULTIMATE_IRONMAN && data.getBank() == null)
             return checkNeeded(need,
-                    PlayerText.get("RAP8"));
+                    Text.get(581));
         if (AccountModePolicy.mayUseGroupStorage(mode,
                 context.isUseGroupStorage())
                 && (data.getGroupStorage() == null
                 || !data.getGroupStorage().isObserved()))
             return checkNeeded(need,
-                    PlayerText.get("RAP9"));
+                    Text.get(582));
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
             return new ResourceAcquisitionPlan(
                     need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("RAP10")
+                    Text.get(567)
                             + sourceNote
             );
         }
@@ -147,14 +147,14 @@ public class ResourceAcquisitionPlanner
                     need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
                     RecommendationConfidence.CHECK_NEEDED,
                     (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? PlayerText.get("RAP11")
-                            : PlayerText.get("RAP12"))
+                            ? Text.get(568)
+                            : Text.get(569))
                             + sourceNote
             );
         }
 
         return checkNeeded(need,
-                PlayerText.get("RAP13") + sourceNote);
+                Text.get(570) + sourceNote);
     }
 
     /**
@@ -181,7 +181,7 @@ public class ResourceAcquisitionPlanner
             return new ResourceAcquisitionPlan(
                     shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
                     RecommendationConfidence.CHECK_NEEDED,
-                    prefix + PlayerText.get("RAP14")
+                    prefix + Text.get(571)
                             + sourceNote);
         }
 
@@ -191,13 +191,13 @@ public class ResourceAcquisitionPlanner
                     shortfall, AcquisitionSource.SELF_SOURCE, 0,
                     RecommendationConfidence.CHECK_NEEDED,
                     prefix + (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? PlayerText.get("RAP15")
+                            ? Text.get(572)
                             : "Self-source the missing quantity.")
                             + sourceNote);
         }
 
         return checkNeeded(shortfall,
-                prefix + PlayerText.get("RAP16")
+                prefix + Text.get(573)
                         + sourceNote);
     }
 
@@ -270,7 +270,7 @@ public class ResourceAcquisitionPlanner
                 context != null && context.isAllowWildernessMethods());
         if (suggestions.isEmpty())
         {
-            return PlayerText.get("RAP17");
+            return Text.get(574);
         }
 
         StringBuilder note = new StringBuilder(" Useful route");

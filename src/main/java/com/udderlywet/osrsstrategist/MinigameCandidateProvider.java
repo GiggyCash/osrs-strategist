@@ -86,7 +86,7 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
                     id,
                     definition.getName(),
                     definition.getRewardFocus()
-                            + PlayerText.get("MCP1"),
+                            + Text.get(344),
                     score,
                     verified ? RecommendationConfidence.VERIFIED
                             : RecommendationConfidence.CHECK_NEEDED,
@@ -105,9 +105,9 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
     {
         String activity = definition.getName();
         return new RecommendationGuidance(
-                PlayerText.get("MCP2") + activity
+                Text.get(350) + activity
                         + " setup equipped.",
-                PlayerText.get("MCP3"),
+                Text.get(351),
                 "Use the verified in-game unlock for " + activity + ".",
                 definition.getRewardFocus() + ".");
     }
@@ -123,39 +123,39 @@ public class MinigameCandidateProvider implements StrategyCandidateProvider
         if (level < 30)
         {
             tree = "oak trees";
-            location = PlayerText.get("MCP4");
+            location = Text.get(352);
         }
         else if (f2p || level < 45)
         {
             tree = "willow trees";
-            location = PlayerText.get("MCP5");
+            location = Text.get(353);
         }
         else if (level < 60)
         {
             tree = "maple trees";
-            location = PlayerText.get("MCP6");
+            location = Text.get(354);
         }
         else
         {
             tree = "yew trees";
-            location = PlayerText.get("MCP7");
+            location = Text.get(355);
         }
         boolean uim = AccountMode.fromTypeCode(account.getAccountTypeCode())
                 == AccountMode.ULTIMATE_IRONMAN;
         String loop = uim
-                ? PlayerText.get("MCP8") + tree
-                        + PlayerText.get("MCP9")
-                : PlayerText.get("MCP10") + tree
-                        + PlayerText.get("MCP11");
+                ? Text.get(356) + tree
+                        + Text.get(357)
+                : Text.get(345) + tree
+                        + Text.get(346);
         return new RecommendationGuidance(
                 verified
                         ? loop
                         : itemResult.getAction() + " before starting Forestry.",
-                verified ? PlayerText.get("MCP12")
+                verified ? Text.get(347)
                         : itemResult.getAction(),
                 location + ".",
-                PlayerText.get("MCP13")
-                        + (uim ? PlayerText.get("MCP14") : ""));
+                Text.get(348)
+                        + (uim ? Text.get(349) : ""));
     }
 
     private static CandidateSafetyEvidence safetyFor(MinigameDefinition definition)

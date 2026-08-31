@@ -54,7 +54,7 @@ public final class SlayerTaskProfile
         this.wildernessVariantKnown = wildernessVariantKnown;
         this.ironObjectives = immutable(ironObjectives);
         this.taskDecisionGuidance = taskDecisionGuidance == null
-                ? PlayerText.get("STP2")
+                ? Text.get(891)
                 : taskDecisionGuidance;
     }
 

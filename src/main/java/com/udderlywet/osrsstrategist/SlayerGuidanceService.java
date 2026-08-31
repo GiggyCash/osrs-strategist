@@ -64,8 +64,8 @@ public class SlayerGuidanceService
         String action = "Get a new Slayer assignment from " + master.name
                 + ". You need " + format(xpNeeded)
                 + " Slayer XP to level " + targetLevel + ".";
-        String supplies = PlayerText.get("SGS34");
-        String note = master.reason + PlayerText.get("SGS35");
+        String supplies = Text.get(759);
+        String note = master.reason + Text.get(760);
         return new RecommendationGuidance(action, supplies, master.location, note);
     }
 
@@ -98,7 +98,7 @@ public class SlayerGuidanceService
     {
         if (profile == null || profile.getRequiredProtection().isEmpty())
         {
-            return PlayerText.get("SGS36");
+            return Text.get(761);
         }
 
         List<String> required = profile.getRequiredProtection();
@@ -106,7 +106,7 @@ public class SlayerGuidanceService
         if (owned != null)
         {
             return "Verified: you own " + owned
-                    + PlayerText.get("SGS37");
+                    + Text.get(762);
         }
 
         AccountMode mode = AccountMode.fromTypeCode(account.getAccountTypeCode());
@@ -116,29 +116,29 @@ public class SlayerGuidanceService
             int restricted = restrictedOwned(items, required);
             if (restricted > 0)
             {
-                return PlayerText.get("SGS38")
+                return Text.get(763)
                         + choices
-                        + PlayerText.get("SGS39");
+                        + Text.get(764);
             }
-            return PlayerText.get("SGS40")
+            return Text.get(766)
                     + choices
-                    + PlayerText.get("SGS41");
+                    + Text.get(767);
         }
 
         if (!items.primaryOwnershipObserved())
         {
-            return PlayerText.get("SGS42")
+            return Text.get(768)
                     + choices + ".";
         }
 
         if (mode.isIronLike())
         {
-            return PlayerText.get("SGS43")
+            return Text.get(769)
                     + choices + ".";
         }
-        return PlayerText.get("SGS44")
+        return Text.get(770)
                 + choices
-                + PlayerText.get("SGS45");
+                + Text.get(771);
     }
 
     private static String taskLocation(
@@ -149,7 +149,7 @@ public class SlayerGuidanceService
         {
             return "Your live assignment specifies "
                     + slayer.getTaskLocation()
-                    + PlayerText.get("SGS46");
+                    + Text.get(772);
         }
         if (profile != null && hasText(profile.getPreferredLocation()))
         {
@@ -159,15 +159,15 @@ public class SlayerGuidanceService
         {
             return "Continue the assignment from "
                     + slayer.getMasterName()
-                    + PlayerText.get("SGS47");
+                    + Text.get(773);
         }
-        return PlayerText.get("SGS48");
+        return Text.get(774);
     }
 
     private static String taskNote(AccountSnapshot account,
             SlayerTaskProfile profile)
     {
-        String base = PlayerText.get("SGS49");
+        String base = Text.get(775);
         if (profile == null) return base;
         StringBuilder note = new StringBuilder();
         if (hasText(profile.getMechanicsNote()))
@@ -175,11 +175,11 @@ public class SlayerGuidanceService
             note.append(profile.getMechanicsNote()).append(" ");
         }
         if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
-            note.append(PlayerText.get("SGS50"));
+            note.append(Text.get(777));
         if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
-            note.append(PlayerText.get("SGS51"));
+            note.append(Text.get(778));
         if (profile.isWildernessVariantKnown())
-            note.append(PlayerText.get("SGS52"));
+            note.append(Text.get(779));
         if (AccountMode.fromTypeCode(account.getAccountTypeCode()).isIronLike()
                 && !profile.getIronObjectives().isEmpty())
             note.append("Iron objective: ").append(String.join(", ",
@@ -232,24 +232,24 @@ public class SlayerGuidanceService
 
         if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
-                    PlayerText.get("SGS53"));
+                    Text.get(780));
         if (combat >= 85)
             return new SlayerMasterChoice("Nieve/Steve", "Tree Gnome Stronghold",
-                    PlayerText.get("SGS54"));
+                    Text.get(781));
         if (combat >= 75)
             return new SlayerMasterChoice("Konar quo Maten", "Mount Karuulm",
-                    PlayerText.get("SGS55"));
+                    Text.get(782));
         if (combat >= 70 && complete(quests, "Lost City"))
             return new SlayerMasterChoice("Chaeldar", "Zanaris",
-                    PlayerText.get("SGS56"));
+                    Text.get(783));
         if (combat >= 40)
             return new SlayerMasterChoice("Vannaka", "Edgeville Dungeon",
-                    PlayerText.get("SGS57"));
+                    Text.get(784));
         if (combat >= 20 && complete(quests, "Priest in Peril"))
             return new SlayerMasterChoice("Mazchna/Achtryn", "Canifis",
-                    PlayerText.get("SGS58"));
+                    Text.get(785));
         return new SlayerMasterChoice("Turael/Aya", "Burthorpe",
-                PlayerText.get("SGS59"));
+                Text.get(786));
     }
 
     /** Mirrors the standard OSRS combat-level formula closely enough for gates. */

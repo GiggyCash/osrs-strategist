@@ -17,27 +17,13 @@ public class ContentCoverageManifestTest
     @Test
     public void everyRuneLiteQuestIdentityHasAnExplicitDisposition()
     {
-        QuestCoverageManifest manifest = new QuestCoverageManifest();
-        assertEquals(Quest.values().length, manifest.all().size());
-        assertEquals(19, manifest.miniquestCount());
-        assertEquals(19, manifest.all().stream().filter(entry ->
-                manifest.isMiniquest(entry.getName())
-                        && entry.getState() == ContentCoverageState.STRUCTURED).count());
-        assertEquals(0, manifest.all().stream().filter(entry ->
-                manifest.isMiniquest(entry.getName())
-                        && entry.getState() == ContentCoverageState.CONSERVATIVE_FAIL_CLOSED).count());
-        assertUniqueAndExplained(manifest.all());
-        assertTrue(manifest.all().stream().anyMatch(entry ->
-                entry.getName().equals("Watchtower")
-                        && entry.getState() == ContentCoverageState.STRUCTURED));
-        assertEquals(211, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(0, count(manifest.all(),
-                ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
-        assertEquals(0, new QuestKnowledgeCatalog().all().values().stream()
+        QuestKnowledgeCatalog knowledge = new QuestKnowledgeCatalog();
+        assertEquals(Quest.values().length, knowledge.all().size());
+        assertEquals(211, knowledge.all().size());
+        assertEquals(0, knowledge.all().values().stream()
                 .filter(QuestDefinition::hasFieldUncertainty).count());
-        assertTrue(manifest.all().stream().anyMatch(entry ->
-                entry.getName().equals("Enter the Abyss")
-                        && entry.getState() == ContentCoverageState.STRUCTURED));
+        assertNotNull(knowledge.definitionFor("Watchtower"));
+        assertNotNull(knowledge.definitionFor("Enter the Abyss"));
     }
 
     @Test

@@ -56,9 +56,9 @@ public class SailingGuidanceService
             return new RecommendationGuidance(
                     "Use Deep Sea Trawling until you gain " + format(xpNeeded)
                             + " Sailing XP toward level " + targetLevel + ".",
-                    PlayerText.get("SGS1"),
-                    PlayerText.get("SGS2"),
-                    PlayerText.get("SGS3")
+                    Text.get(732),
+                    Text.get(743),
+                    Text.get(754)
             );
         }
 
@@ -77,29 +77,29 @@ public class SailingGuidanceService
             trial = new Trial(
                     "The Gwenith Glide",
                     16050,
-                    PlayerText.get("SGS4"),
-                    PlayerText.get("SGS5"));
+                    Text.get(765),
+                    Text.get(776));
         }
         else if (methodId.contains("jubbly"))
         {
             trial = new Trial(
                     "The Jubbly Jive",
                     6200,
-                    PlayerText.get("SGS6"),
-                    PlayerText.get("SGS7"));
+                    Text.get(787),
+                    Text.get(788));
         }
         else
         {
             trial = new Trial(
                     "The Tempor Tantrum",
                     1250,
-                    PlayerText.get("SGS8"),
-                    PlayerText.get("SGS9"));
+                    Text.get(789),
+                    Text.get(790));
         }
 
         int marlinCompletions = divideRoundUp(xpNeeded, trial.marlinXp);
-        String action = PlayerText.get("SGS10")
-                + trial.name + PlayerText.get("SGS11")
+        String action = Text.get(733)
+                + trial.name + Text.get(734)
                 + marlinCompletions + " Marlin completion"
                 + (marlinCompletions == 1 ? "" : "s")
                 + " at " + format(trial.marlinXp)
@@ -107,7 +107,7 @@ public class SailingGuidanceService
                 + " XP to level " + targetLevel + ".";
 
         String supplies = trial.requirements;
-        String note = PlayerText.get("SGS12");
+        String note = Text.get(735);
         return new RecommendationGuidance(
                 action, supplies, trial.location, note);
     }
@@ -118,11 +118,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = PlayerText.get("SGS13")
+        String action = Text.get(736)
                 + format(xpNeeded) + " XP toward level " + targetLevel + ".";
-        String supplies = PlayerText.get("SGS14");
-        String where = PlayerText.get("SGS15");
-        String note = PlayerText.get("SGS16");
+        String supplies = Text.get(737);
+        String where = Text.get(738);
+        String note = Text.get(739);
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -132,11 +132,11 @@ public class SailingGuidanceService
             int targetLevel,
             int xpNeeded)
     {
-        String action = PlayerText.get("SGS17")
+        String action = Text.get(740)
                 + format(xpNeeded) + " Sailing XP to level " + targetLevel + ".";
-        String supplies = PlayerText.get("SGS18");
-        String where = PlayerText.get("SGS19");
-        String note = PlayerText.get("SGS20");
+        String supplies = Text.get(741);
+        String where = Text.get(742);
+        String note = Text.get(744);
         return new RecommendationGuidance(action, supplies, where, note);
     }
 
@@ -150,26 +150,26 @@ public class SailingGuidanceService
         if (!complete(quests, "Pandemonium"))
         {
             return new RecommendationGuidance(
-                    PlayerText.get("SGS21"),
-                    PlayerText.get("SGS22"),
-                    PlayerText.get("SGS23"),
-                    PlayerText.get("SGS24")
+                    Text.get(745),
+                    Text.get(746),
+                    Text.get(747),
+                    Text.get(748)
             );
         }
 
         StringBuilder action = new StringBuilder();
-        action.append(PlayerText.get("SGS25"))
+        action.append(Text.get(749))
                 .append(format(xpNeeded)).append(" Sailing XP to level ")
                 .append(targetLevel).append(".");
 
-        StringBuilder supplies = new StringBuilder(PlayerText.get("SGS26"));
+        StringBuilder supplies = new StringBuilder(Text.get(750));
         if (currentLevel >= 12 && !complete(quests, "Prying Times"))
         {
-            supplies.append(PlayerText.get("SGS27"));
+            supplies.append(Text.get(751));
         }
         if (currentLevel >= 22 && !complete(quests, "Current Affairs"))
         {
-            supplies.append(PlayerText.get("SGS28"));
+            supplies.append(Text.get(752));
         }
         if (currentLevel >= 15)
         {
@@ -179,23 +179,23 @@ public class SailingGuidanceService
             {
                 if (economy.getCoins() >= 15000)
                 {
-                    supplies.append(PlayerText.get("SGS29"));
+                    supplies.append(Text.get(753));
                 }
                 else
                 {
                     supplies.append(" You are ")
                             .append(format(15000 - economy.getCoins()))
-                            .append(PlayerText.get("SGS30"));
+                            .append(Text.get(755));
                 }
             }
             else
             {
-                supplies.append(PlayerText.get("SGS31"));
+                supplies.append(Text.get(756));
             }
         }
 
-        String where = PlayerText.get("SGS32");
-        String note = PlayerText.get("SGS33");
+        String where = Text.get(757);
+        String note = Text.get(758);
         return new RecommendationGuidance(
                 action.toString(), supplies.toString(), where, note);
     }

@@ -24,7 +24,7 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.NOT_APPLICABLE,
                     candidate.totalCost(), 0L,
                     RecommendationConfidence.VERIFIED,
-                    PlayerText.get("MEP1"));
+                    Text.get(358));
         }
 
         StrategyDataBundle data = context.getData();
@@ -35,7 +35,7 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     candidate.totalCost(), economy == null ? 0L : economy.getCoins(),
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP2"));
+                    Text.get(363));
         }
 
         long cost = candidate.totalCost();
@@ -44,14 +44,14 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP3"));
+                    Text.get(364));
         }
 
         if (coins < cost)
         {
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP4"));
+                    Text.get(365));
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() > 0
@@ -60,19 +60,19 @@ public class MainEconomyPlanner
         {
             return decision(MainPurchaseChoice.SELF_SOURCE,
                     cost, coins, RecommendationConfidence.VERIFIED,
-                    PlayerText.get("MEP5"));
+                    Text.get(366));
         }
 
         if (candidate.getEstimatedSelfSourceMinutes() <= 0)
         {
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     cost, coins, RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP6"));
+                    Text.get(367));
         }
 
         return decision(MainPurchaseChoice.BUY,
                 cost, coins, RecommendationConfidence.VERIFIED,
-                PlayerText.get("MEP7"));
+                Text.get(368));
     }
 
     /**
@@ -90,21 +90,21 @@ public class MainEconomyPlanner
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
                     economy == null ? 0L : economy.getCoins(),
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP8"));
+                    Text.get(369));
         if (economy == null
                 || economy.getConfidence() != RecommendationConfidence.VERIFIED)
             return decision(MainPurchaseChoice.CHECK_NEEDED,
                     estimate.getTotalCost(),
                     economy == null ? 0L : economy.getCoins(),
                     RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP9"));
+                    Text.get(370));
 
         long cost = estimate.getTotalCost();
         long coins = Math.max(0L, economy.getCoins());
         if (coins < cost)
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, RecommendationConfidence.CHECK_NEEDED,
-                    PlayerText.get("MEP10"));
+                    Text.get(359));
 
         long remaining = coins - cost;
         boolean trivialSpend = cost <= 1_000L && coins >= 5_000L;
@@ -113,16 +113,16 @@ public class MainEconomyPlanner
         if (trivialSpend || lowBurden)
             return decision(MainPurchaseChoice.BUY, cost, coins,
                     RecommendationConfidence.VERIFIED,
-                    PlayerText.get("MEP11"));
+                    Text.get(360));
 
         if (reviewedSelfSourceRoute)
             return decision(MainPurchaseChoice.SELF_SOURCE, cost, coins,
                     RecommendationConfidence.VERIFIED,
-                    PlayerText.get("MEP12"));
+                    Text.get(361));
 
         return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
                 RecommendationConfidence.CHECK_NEEDED,
-                PlayerText.get("MEP13"));
+                Text.get(362));
     }
 
     public boolean maySuggestSale(

@@ -22,7 +22,7 @@ public class StrategistFeatureAccessPolicy
         if (feature == null || feature.isCoreLocal())
         {
             throw new IllegalArgumentException(
-                    PlayerText.get("SFAP1"));
+                    Text.get(730));
         }
         if (!canUse(feature, entitlements))
         {
@@ -37,7 +37,7 @@ public class StrategistFeatureAccessPolicy
 
         HostedFeatureUnavailableException(StrategistFeature feature)
         {
-            super(PlayerText.get("SFAP2") + feature);
+            super(Text.get(731) + feature);
             this.feature = feature;
         }
 

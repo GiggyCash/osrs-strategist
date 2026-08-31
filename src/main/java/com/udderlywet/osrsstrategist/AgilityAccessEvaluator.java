@@ -48,7 +48,7 @@ public class AgilityAccessEvaluator
                     "agility:course",
                     "Usable Agility course",
                     RequirementState.CHECK_NEEDED,
-                    PlayerText.get("AAE1")
+                    Text.get(0)
             );
         }
 
@@ -76,7 +76,7 @@ public class AgilityAccessEvaluator
                     "agility:" + course.getId(),
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
-                    PlayerText.get("AAE2")
+                    Text.get(1)
             );
         }
 
@@ -85,7 +85,7 @@ public class AgilityAccessEvaluator
         {
             return verified(
                     course,
-                    PlayerText.get("AAE3")
+                    Text.get(2)
             );
         }
 
@@ -101,7 +101,7 @@ public class AgilityAccessEvaluator
             {
                 return verified(
                         course,
-                        quest + PlayerText.get("AAE4")
+                        quest + Text.get(3)
                 );
             }
             if (status == QuestStatus.NOT_STARTED
@@ -122,7 +122,7 @@ public class AgilityAccessEvaluator
 
         return verified(
                 course,
-                PlayerText.get("AAE5")
+                Text.get(4)
         );
     }
 

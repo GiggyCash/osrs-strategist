@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 public class PvmPreparationProfileCatalog
 {
     public static final String PROVENANCE =
-            PlayerText.get("PPPC1");
-    private static final String RESOURCE = PlayerText.get("PPPC2");
+            Text.get(441);
+    private static final String RESOURCE = Text.get(442);
     private final Map<String, PvmPreparationProfile> profiles;
 
     public PvmPreparationProfileCatalog()

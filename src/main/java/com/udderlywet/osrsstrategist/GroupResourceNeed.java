@@ -18,14 +18,14 @@ public final class GroupResourceNeed
     {
         if (acceptableItemIds == null || acceptableItemIds.isEmpty())
             throw new IllegalArgumentException(
-                    PlayerText.get("GRN1"));
+                    Text.get(299));
         this.label = label == null ? "Required item" : label;
         LinkedHashSet<Integer> ids = new LinkedHashSet<>();
         for (Integer itemId : acceptableItemIds)
             if (itemId != null && itemId > 0) ids.add(itemId);
         if (ids.isEmpty())
             throw new IllegalArgumentException(
-                    PlayerText.get("GRN2"));
+                    Text.get(300));
         this.acceptableItemIds = Collections.unmodifiableSet(ids);
         this.quantity = Math.max(1, quantity);
         this.reusable = reusable;

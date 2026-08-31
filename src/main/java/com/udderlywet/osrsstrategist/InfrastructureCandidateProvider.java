@@ -77,14 +77,14 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         return new Recommendation(
                 "verify:poh-build-mode",
                 "Verify your own POH",
-                PlayerText.get("ICP1"),
+                Text.get(301),
                 34.0 + modeValue * 12.0,
                 RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
-                        PlayerText.get("ICP2"),
-                        PlayerText.get("ICP3"),
+                        Text.get(309),
+                        Text.get(310),
                         "Varrock Estate agent, then your POH",
-                        PlayerText.get("ICP4")),
+                        Text.get(311)),
                 CandidateSafetyEvidence.harmless(false),
                 RecommendationStrategicValue.builder()
                         .infrastructureValue(modeValue)
@@ -118,25 +118,25 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
         if (recurringRelief) score += 12.0;
 
         String modeReason = context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                ? PlayerText.get("ICP5")
+                ? Text.get(312)
                 : AccountModePolicy.requiresSelfSourcing(context.getAccountMode())
-                ? PlayerText.get("ICP6")
-                : PlayerText.get("ICP7");
+                ? Text.get(313)
+                : Text.get(314);
         if (recurringRelief)
-            modeReason += PlayerText.get("ICP8")
+            modeReason += Text.get(315)
                     + String.join(" and ", pressure.getBlockedFamilies())
-                    + PlayerText.get("ICP9");
+                    + Text.get(316);
         return new Recommendation(
                 "prepare:infrastructure:" + definition.getId(),
                 "Build " + definition.getName(),
-                PlayerText.get("ICP10")
+                Text.get(302)
                         + modeReason,
                 score,
                 RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         definition.getAction(), materials(definition.getId()),
                         "Your own POH in Build mode",
-                        PlayerText.get("ICP11")),
+                        Text.get(303)),
                 CandidateSafetyEvidence.skill(false, Skill.CONSTRUCTION),
                 RecommendationStrategicValue.builder()
                         .infrastructureValue(utility)
@@ -167,18 +167,18 @@ public class InfrastructureCandidateProvider implements StrategyCandidateProvide
             case "poh-costume-room": return "50,000 coins";
             case "poh-armour-case": return "Hammer, saw, 3 oak planks";
             case "poh-portal-chamber":
-                return PlayerText.get("ICP12");
+                return Text.get(304);
             case "poh-superior-garden": return "75,000 coins";
             case "poh-restoration-pool":
-                return PlayerText.get("ICP13");
+                return Text.get(305);
             case "poh-portal-nexus":
-                return PlayerText.get("ICP14");
+                return Text.get(306);
             case "poh-spirit-tree":
                 return "Filled watering can, spirit sapling";
             case "poh-basic-jewellery-box":
-                return PlayerText.get("ICP15");
+                return Text.get(307);
             case "poh-fairy-ring":
-                return PlayerText.get("ICP16");
+                return Text.get(308);
             default: return null;
         }
     }

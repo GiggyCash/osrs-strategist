@@ -110,18 +110,18 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (status == QuestStatus.IN_PROGRESS)
             {
                 score += 12.0;
-                reason = PlayerText.get("QCP1");
+                reason = Text.get(546);
             }
             else
             {
                 score -= 7.0;
-                reason = PlayerText.get("QCP2");
+                reason = Text.get(547);
             }
 
             RestrictedBuildType build = AccountBuildPolicy.effectiveBuild(account);
             if (build != RestrictedBuildType.STANDARD)
             {
-                reason += PlayerText.get("QCP3")
+                reason += Text.get(548)
                         + AccountBuildPolicy.label(account) + " build.";
             }
 
@@ -134,11 +134,11 @@ public class QuestCandidateProvider implements StrategyCandidateProvider
             if (neededPrerequisites.contains(normalize(questName)))
             {
                 score += 24.0;
-                reason += PlayerText.get("QCP4");
+                reason += Text.get(549);
             }
 
             if (requiredForGoal)
-                reason += PlayerText.get("QCP5");
+                reason += Text.get(550);
 
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);

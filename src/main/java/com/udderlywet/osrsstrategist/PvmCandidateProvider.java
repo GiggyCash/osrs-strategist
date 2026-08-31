@@ -82,16 +82,16 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
             RecommendationGuidance guidance = ready
                     ? readyGuidance(definition, title)
                     : new RecommendationGuidance(
-                            PlayerText.get("PCP1") + title + ": " + missing + ".",
+                            Text.get(417) + title + ": " + missing + ".",
                             missing,
-                            PlayerText.get("PCP2"),
-                            PlayerText.get("PCP3"));
+                            Text.get(428),
+                            Text.get(433));
             result.add(new Recommendation(
                     id,
                     "Do " + title,
                     ready
-                            ? PlayerText.get("PCP4")
-                            : PlayerText.get("PCP5"),
+                            ? Text.get(434)
+                            : Text.get(435),
                     score,
                     ready ? RecommendationConfidence.VERIFIED
                             : RecommendationConfidence.CHECK_NEEDED,
@@ -109,39 +109,39 @@ public class PvmCandidateProvider implements StrategyCandidateProvider
         if (definition != null && "pvm:tztok_jad".equals(definition.getId()))
         {
             return new RecommendationGuidance(
-                    PlayerText.get("PCP6"),
-                    PlayerText.get("PCP7"),
-                    PlayerText.get("PCP8"),
-                    PlayerText.get("PCP9"));
+                    Text.get(436),
+                    Text.get(437),
+                    Text.get(438),
+                    Text.get(439));
         }
         if (definition != null && "pvm:obor".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    PlayerText.get("PCP10"),
-                    PlayerText.get("PCP11"),
-                    PlayerText.get("PCP12"));
+                    Text.get(418),
+                    Text.get(419),
+                    Text.get(420));
         if (definition != null && "pvm:bryophyta".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    PlayerText.get("PCP13"),
-                    PlayerText.get("PCP14"),
-                    PlayerText.get("PCP15"));
+                    Text.get(421),
+                    Text.get(422),
+                    Text.get(423));
         if (definition != null && "pvm:scurrius".equals(definition.getId()))
             return simpleReadyGuidance(title,
-                    PlayerText.get("PCP16"),
+                    Text.get(424),
                     "Scurrius arena in Varrock Sewers.",
-                    PlayerText.get("PCP17"));
+                    Text.get(425));
         return new RecommendationGuidance(
-                "Attempt " + title + PlayerText.get("PCP18"),
-                PlayerText.get("PCP19"),
-                PlayerText.get("PCP20"),
-                PlayerText.get("PCP21"));
+                "Attempt " + title + Text.get(426),
+                Text.get(427),
+                Text.get(429),
+                Text.get(430));
     }
 
     private static RecommendationGuidance simpleReadyGuidance(String title,
             String action, String location, String supplies)
     {
         return new RecommendationGuidance(action, supplies, location,
-                PlayerText.get("PCP22")
-                        + title + PlayerText.get("PCP23"));
+                Text.get(431)
+                        + title + Text.get(432));
     }
 
     private static boolean progressionRelevant(PvmActivityDefinition definition,

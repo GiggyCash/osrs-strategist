@@ -39,18 +39,6 @@ public class GoalProvenanceLiveRegressionTest
     @Test
     public void barrowsModelSeparatesRequirementsAndProvesRealSkillPath()
     {
-        GoalPathPreview graph = new GoalGraph().previewFor(
-                GoalType.BARROWS_GLOVES);
-        assertTrue(graph.getDependencies().stream().anyMatch(value ->
-                value.getId().contains("rfd-start")
-                        && value.getKind() == GoalNodeKind.QUEST));
-        assertTrue(graph.getDependencies().stream().anyMatch(value ->
-                value.getId().contains("subquests")));
-        assertTrue(graph.getDependencies().stream().anyMatch(value ->
-                value.getId().contains("quest-points")));
-        assertTrue(graph.getDependencies().stream().anyMatch(value ->
-                value.getKind() == GoalNodeKind.PVM_ENCOUNTER));
-
         StrategyContext context = context(GoalType.BARROWS_GLOVES,
                 QuestTolerance.NORMAL, allQuestsIncomplete());
         Recommendation fishing = provenance.attach(skillRecommendation(

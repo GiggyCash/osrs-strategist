@@ -20,35 +20,35 @@ public final class GimGroupStrategyService
         if (!mode.isGroupIronman())
             return result(GroupResourceState.NOT_A_GROUP_ACCOUNT,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    PlayerText.get("GGSS1"));
+                    Text.get(287));
         if (!context.isUseGroupStorage())
             return result(GroupResourceState.GROUP_STORAGE_DISABLED,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    PlayerText.get("GGSS2"));
+                    Text.get(288));
         StrategyDataBundle data = context.getData();
         GroupStorageSnapshot storage = data == null
                 ? null : data.getGroupStorage();
         if (storage == null || !storage.isObserved())
             return result(GroupResourceState.GROUP_STORAGE_UNKNOWN,
                     RecommendationConfidence.CHECK_NEEDED, 0, need, 0.0,
-                    PlayerText.get("GGSS3"));
+                    Text.get(289));
 
         int quantity = quantity(storage, need.getAcceptableItemIds());
         if (quantity <= 0)
             return result(GroupResourceState.SHARED_STOCK_NONE,
                     RecommendationConfidence.VERIFIED, 0, need, 0.0,
-                    PlayerText.get("GGSS4"));
+                    Text.get(290));
         double fraction = Math.min(1.0, quantity
                 / (double) need.getQuantity());
         if (quantity < need.getQuantity())
             return result(GroupResourceState.SHARED_STOCK_PARTIAL,
                     RecommendationConfidence.VERIFIED, quantity, need,
                     fraction * 0.45,
-                    PlayerText.get("GGSS5"));
+                    Text.get(291));
         double avoidance = need.isReusable() ? 1.0 : 0.75;
         return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
                 RecommendationConfidence.VERIFIED, quantity, need, avoidance,
-                PlayerText.get("GGSS6"));
+                Text.get(292));
     }
 
     public SharedInfrastructureAssessment assessTeammateInfrastructure(
@@ -57,10 +57,10 @@ public final class GimGroupStrategyService
         if (context == null || !context.getAccountMode().isGroupIronman())
             return new SharedInfrastructureAssessment(CapabilityState.BLOCKED,
                     RecommendationConfidence.VERIFIED,
-                    PlayerText.get("GGSS7"));
+                    Text.get(293));
         return new SharedInfrastructureAssessment(CapabilityState.UNKNOWN,
                 RecommendationConfidence.CHECK_NEEDED,
-                PlayerText.get("GGSS8"));
+                Text.get(294));
     }
 
     private static GroupResourceAssessment result(GroupResourceState state,

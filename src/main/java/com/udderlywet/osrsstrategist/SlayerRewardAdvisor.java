@@ -23,35 +23,35 @@ public class SlayerRewardAdvisor
 
         add(candidates, slayer, SlayerReward.BIGGER_AND_BADDER,
                 slayerLevel >= 5, 100.0,
-                PlayerText.get("SRA1"));
+                Text.get(792));
         add(candidates, slayer, SlayerReward.MALEVOLENT_MASQUERADE,
                 crafting >= 55, context.getAccountMode().isIronLike() ? 82.0 : 74.0,
-                PlayerText.get("SRA2"));
+                Text.get(797));
         add(candidates, slayer, SlayerReward.BROADER_FLETCHING,
                 context.getAccountMode().isIronLike() && fletching >= 52,
                 78.0,
-                PlayerText.get("SRA3"));
+                Text.get(798));
         add(candidates, slayer, SlayerReward.RING_BLING,
                 crafting >= 75 && context.getAccountMode().isIronLike(),
                 context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                         ? 76.0 : 68.0,
-                PlayerText.get("SRA4"));
+                Text.get(799));
         add(candidates, slayer, SlayerReward.TASK_STORAGE,
                 context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                         || context.getSessionIntent() == SessionIntent.QUICK_20_MIN,
                 context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                         ? 72.0 : 62.0,
-                PlayerText.get("SRA5"));
+                Text.get(800));
         add(candidates, slayer, SlayerReward.HOT_STUFF,
                 context.getActiveGoal() == GoalType.FIRE_CAPE
                         || context.getActiveGoal() == GoalType.INFERNAL_CAPE,
                 70.0,
-                PlayerText.get("SRA6"));
+                Text.get(801));
         add(candidates, slayer, SlayerReward.LIKE_A_BOSS,
                 context.getActiveGoal() == GoalType.ELITE_COMBAT_ACHIEVEMENTS
                         || context.getActiveGoal() == GoalType.GEAR_TARGET,
                 66.0,
-                PlayerText.get("SRA7"));
+                Text.get(802));
 
         boolean longXpSession = context.getSessionIntent()
                 == SessionIntent.LONG_SESSION
@@ -59,31 +59,31 @@ public class SlayerRewardAdvisor
                     || context.getActiveGoal() == GoalType.MAX);
         add(candidates, slayer, SlayerReward.EXTEND_DUST_DEVILS,
                 longXpSession && slayerLevel >= 65, 64.0,
-                PlayerText.get("SRA8"));
+                Text.get(803));
         add(candidates, slayer, SlayerReward.EXTEND_NECHRYAELS,
                 longXpSession && slayerLevel >= 80, 65.0,
-                PlayerText.get("SRA9"));
+                Text.get(804));
         add(candidates, slayer, SlayerReward.EXTEND_ABYSSAL_DEMONS,
                 longXpSession && slayerLevel >= 85, 61.0,
-                PlayerText.get("SRA10"));
+                Text.get(793));
         add(candidates, slayer, SlayerReward.EXTEND_BLOODVELDS,
                 context.getAccountMode().isIronLike()
                         && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
                         && slayerLevel >= 50,
                 58.0,
-                PlayerText.get("SRA11"));
+                Text.get(794));
         add(candidates, slayer, SlayerReward.EXTEND_GARGOYLES,
                 context.getAccountMode().isIronLike()
                         && context.getSessionIntent() != SessionIntent.QUICK_20_MIN
                         && slayerLevel >= 75,
                 57.0,
-                PlayerText.get("SRA12"));
+                Text.get(795));
         add(candidates, slayer, SlayerReward.EXTEND_KRAKEN,
                 slayerLevel >= 87
                         && (context.getActiveGoal() == GoalType.GEAR_TARGET
                             || context.getStrategyMode() == StrategyMode.RELAXED),
                 56.0,
-                PlayerText.get("SRA13"));
+                Text.get(796));
 
         return candidates.stream().max(Comparator.comparingDouble(
                 SlayerRewardAdvice::getScore)).orElse(null);

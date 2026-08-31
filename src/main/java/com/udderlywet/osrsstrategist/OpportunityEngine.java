@@ -80,7 +80,7 @@ public class OpportunityEngine
                 ClueStepSnapshot step = clue.getCurrentStep();
                 List<String> preparation = new ArrayList<>();
                 if (step == null)
-                    preparation.add(PlayerText.get("OE1"));
+                    preparation.add(Text.get(392));
                 else
                 {
                     preparation.addAll(step.getItemRequirements());
@@ -154,10 +154,10 @@ public class OpportunityEngine
         if (!inventoryHasAnyId(inventory, herbSeeds.getItemIds()))
             missing.add("Carry one guam seed");
         if (farmingLevel < 9)
-            missing.add(PlayerText.get("OE2"));
+            missing.add(Text.get(393));
         FarmingSnapshot farming = data.getFarming();
         if (!hasReachableHerbPatch(farming, accessCatalog))
-            missing.add(PlayerText.get("OE3"));
+            missing.add(Text.get(394));
 
         boolean ready = recurring.isReadyNow(id, now);
         boolean setupVerified = ready && missing.isEmpty();
@@ -176,7 +176,7 @@ public class OpportunityEngine
         List<String> missing = new ArrayList<>();
         QuestSnapshot quests = data.getQuests();
         if (quests == null || quests.statusOf("Bone Voyage") != QuestStatus.COMPLETE)
-            missing.add(PlayerText.get("OE4"));
+            missing.add(Text.get(395));
         InventorySnapshot inventory = data.getInventory();
         if (!inventoryHas(inventory, "hammer")) missing.add("Carry a hammer");
         if (!inventoryHas(inventory, "chisel")) missing.add("Carry a chisel");

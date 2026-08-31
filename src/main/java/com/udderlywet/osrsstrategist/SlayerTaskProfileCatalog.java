@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 @Singleton
 public class SlayerTaskProfileCatalog
 {
-    private static final String RESOURCE = PlayerText.get("STPC1");
+    private static final String RESOURCE = Text.get(892);
     private final List<SlayerTaskProfile> profiles;
 
     public SlayerTaskProfileCatalog()

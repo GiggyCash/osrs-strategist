@@ -13,7 +13,7 @@ public class ResourceDependencyCatalog
     public ResourceDependencyCatalog()
     {
         this(java.util.Arrays.asList(BundledCatalogLoader.array(
-                PlayerText.get("RDC12"),
+                Text.get(598),
                 ResourceDependencyDefinition[].class)));
     }
 

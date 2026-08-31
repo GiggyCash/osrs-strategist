@@ -28,7 +28,7 @@ public class UniversalSkillActionGuidanceService
             "herblore_low_potions"));
 
     private static final String F2P_ANVIL_ROUTE =
-            PlayerText.get("USAGS1");
+            Text.get(1007);
 
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final UniversalActionRecipeResolver recipeResolver;
@@ -122,8 +122,8 @@ public class UniversalSkillActionGuidanceService
         if (recipe.getInputs().isEmpty())
         {
             supplies = recipe.hasExactInputs()
-                    ? PlayerText.get("USAGS2")
-                    : PlayerText.get("USAGS3");
+                    ? Text.get(1013)
+                    : Text.get(1014);
         }
         else
         {
@@ -151,8 +151,8 @@ public class UniversalSkillActionGuidanceService
         }
 
         StringBuilder note = new StringBuilder();
-        note.append(PlayerText.get("USAGS4"))
-                .append(PlayerText.get("USAGS5"));
+        note.append(Text.get(1015))
+                .append(Text.get(1016));
         if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
         {
             note.append(" Count assumes the ")
@@ -164,13 +164,13 @@ public class UniversalSkillActionGuidanceService
         }
         if (skill == Skill.COOKING)
         {
-            note.append(PlayerText.get("USAGS6"));
+            note.append(Text.get(1017));
         }
         if (resources != null
                 && resources.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
                 && resources.getTotalMissingUnits() > 0)
         {
-            note.append(PlayerText.get("USAGS7"));
+            note.append(Text.get(1018));
         }
 
         return new RecommendationGuidance(
@@ -183,7 +183,7 @@ public class UniversalSkillActionGuidanceService
     {
         if (skill == Skill.RUNECRAFT)
             return "Craft " + pluralRunes(action.getName())
-                    + PlayerText.get("USAGS8");
+                    + Text.get(1019);
         String loop = actionAfterColon(instructions);
         if (loop == null) loop = instructions;
         if (loop == null || loop.trim().isEmpty())
@@ -425,17 +425,17 @@ public class UniversalSkillActionGuidanceService
     {
         String lower = normalize(actionName);
         if (lower.contains("air rune"))
-            return PlayerText.get("USAGS9");
+            return Text.get(1020);
         if (lower.contains("mind rune"))
-            return PlayerText.get("USAGS10");
+            return Text.get(1008);
         if (lower.contains("water rune"))
-            return PlayerText.get("USAGS11");
+            return Text.get(1009);
         if (lower.contains("earth rune"))
-            return PlayerText.get("USAGS12");
+            return Text.get(1010);
         if (lower.contains("fire rune"))
-            return PlayerText.get("USAGS13");
+            return Text.get(1011);
         if (lower.contains("body rune"))
-            return PlayerText.get("USAGS14");
+            return Text.get(1012);
         return null;
     }
 

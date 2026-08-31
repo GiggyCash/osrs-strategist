@@ -56,14 +56,14 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         ClueStepSnapshot step = clue.getCurrentStep();
         StringBuilder reason = new StringBuilder();
         reason.append("Clears the pending ").append(type)
-                .append(PlayerText.get("CCP1"));
+                .append(Text.get(132));
         if (context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
         {
-            reason.append(PlayerText.get("CCP2"));
+            reason.append(Text.get(134));
         }
         if (step == null)
         {
-            reason.append(PlayerText.get("CCP3"));
+            reason.append(Text.get(135));
         }
         else
             reason.append(" RuneLite identified the current ")
@@ -77,8 +77,8 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
         {
             score -= hardcore ? 30.0 : 18.0;
             reason.append(hardcore
-                    ? PlayerText.get("CCP4")
-                    : PlayerText.get("CCP5"));
+                    ? Text.get(136)
+                    : Text.get(137));
         }
 
         String title;
@@ -90,8 +90,8 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
             title = "Inspect " + type;
             candidateId = "verify:clue-current-step";
             guidance = new RecommendationGuidance(
-                    PlayerText.get("CCP6"),
-                    null, "Inventory", PlayerText.get("CCP7"));
+                    Text.get(138),
+                    null, "Inventory", Text.get(139));
             confidence = RecommendationConfidence.CHECK_NEEDED;
         }
         else if (wildernessHold)
@@ -100,10 +100,10 @@ public class ClueCandidateProvider implements StrategyCandidateProvider
             candidateId = "prepare:clue-wilderness-hold";
             guidance = new RecommendationGuidance(
                     context.getAccountMode() == AccountMode.ULTIMATE_IRONMAN
-                            ? PlayerText.get("CCP8")
-                            : PlayerText.get("CCP9"),
+                            ? Text.get(140)
+                            : Text.get(141),
                     supplies(step), step.getLocation(),
-                    PlayerText.get("CCP10"));
+                    Text.get(133));
             confidence = RecommendationConfidence.CHECK_NEEDED;
         }
         else

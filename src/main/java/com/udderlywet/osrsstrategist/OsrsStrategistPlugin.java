@@ -607,7 +607,7 @@ public class OsrsStrategistPlugin extends Plugin
                             ProgressMilestoneType.PLAN_STEP,
                             previousPlan.getCurrentStep().getObjective()
                                     + " complete",
-                            PlayerText.get("OSP3"),
+                            Text.get(410),
                             profile.getActiveGoal().name(),
                             System.currentTimeMillis()));
         return fresh.withPlan(latestPlan);
@@ -860,7 +860,7 @@ public class OsrsStrategistPlugin extends Plugin
                                     + completion.getTargetLevel(),
                             ProgressMilestoneType.SKILL_LEVEL,
                             completion.getTitle(),
-                            PlayerText.get("OSP4"),
+                            Text.get(411),
                             effectiveStrategyProfile().getActiveGoal().name(),
                             System.currentTimeMillis()));
         }

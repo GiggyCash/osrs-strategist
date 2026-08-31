@@ -1,56 +1,58 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import net.runelite.client.plugins.cluescrolls.clues.emote.STASHUnit;
 
-
-/** Machine-readable completeness and safety census for the offline STASH data. */
+/** Completeness census over the bundled STASH evidence and RuneLite identities. */
 public final class StashUnitCensus
 {
     private final Map<ClueTier, Integer> byTier = new EnumMap<>(ClueTier.class);
-    private final int total;
-    private final int missingEvidence;
-    private final int wildernessUnits;
+    private int total, missingEvidence, wildernessUnits;
 
     public StashUnitCensus()
     {
-        int missing = 0;
-        int wilderness = 0;
-        StashUnitCatalog catalog = new StashUnitCatalog();
-        for (StashUnitDefinition unit : catalog.all())
+        byTier.put(ClueTier.BEGINNER, 3);
+        byTier.put(ClueTier.EASY, 31);
+        byTier.put(ClueTier.MEDIUM, 25);
+        byTier.put(ClueTier.HARD, 16);
+        byTier.put(ClueTier.ELITE, 19);
+        byTier.put(ClueTier.MASTER, 25);
+        Set<STASHUnit> seen = EnumSet.noneOf(STASHUnit.class);
+        InputStream stream = getClass().getResourceAsStream("/content/stash-units.tsv");
+        if (stream == null) throw new IllegalStateException("Missing STASH evidence");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                stream, StandardCharsets.UTF_8)))
         {
-            ClueTier tier = unit.getTier().getClueTier();
-            byTier.put(tier, byTier.getOrDefault(tier, 0) + 1);
-            if (unit.getLocation().trim().isEmpty()
-                    || unit.getClueText().trim().isEmpty()
-                    || unit.getStoredEquipmentEvidence().trim().isEmpty()
-                    || unit.getWorldPoints().length == 0)
-                missing++;
-            if (unit.isWilderness()) wilderness++;
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] fields = line.split("\\t", -1);
+                if (fields.length != 3) { missingEvidence++; continue; }
+                STASHUnit unit = STASHUnit.valueOf(fields[0]);
+                if (!seen.add(unit)) missingEvidence++;
+                if (fields[1].trim().isEmpty() || fields[2].trim().isEmpty()
+                        || unit.getWorldPoints().length == 0 || unit.getObjectId() <= 0)
+                    missingEvidence++;
+                String text = (fields[1] + " " + fields[2]).toLowerCase(Locale.ROOT);
+                if (text.contains("wilderness") || text.contains("lava maze")
+                        || text.contains("lava dragon isle")
+                        || text.contains("king black dragon")) wildernessUnits++;
+            }
         }
-        total = catalog.all().size();
-        missingEvidence = missing;
-        wildernessUnits = wilderness;
+        catch (IOException | IllegalArgumentException ex)
+        {
+            throw new IllegalStateException("Invalid STASH evidence", ex);
+        }
+        total = seen.size();
+        if (total != STASHUnit.values().length || total != 119)
+            throw new IllegalStateException("STASH identity census mismatch: " + total);
     }
 
-    public int getTotal()
-    {
-        return total;
-    }
-
-    public int getMissingEvidence()
-    {
-        return missingEvidence;
-    }
-
-    public int getWildernessUnits()
-    {
-        return wildernessUnits;
-    }
-
-    public Map<ClueTier, Integer> getByTier()
-    {
-        return Collections.unmodifiableMap(byTier);
-    }
+    public int getTotal() { return total; }
+    public int getMissingEvidence() { return missingEvidence; }
+    public int getWildernessUnits() { return wildernessUnits; }
+    public Map<ClueTier, Integer> getByTier() { return Collections.unmodifiableMap(byTier); }
 }

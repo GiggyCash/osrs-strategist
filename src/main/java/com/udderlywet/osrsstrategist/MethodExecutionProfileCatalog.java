@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 @Singleton
 public class MethodExecutionProfileCatalog
 {
-    private static final String RESOURCE = PlayerText.get("MEPC1");
+    private static final String RESOURCE = Text.get(371);
     private final Map<String, MethodExecutionProfile> profiles;
 
     public MethodExecutionProfileCatalog()

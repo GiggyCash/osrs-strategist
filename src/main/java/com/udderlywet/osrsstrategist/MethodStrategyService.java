@@ -31,17 +31,17 @@ public final class MethodStrategyService
                             : profile.getPlayerReason());
         if (profile == null)
             return new MethodStrategyAssessment(false, 0.0,
-                    PlayerText.get("MSS1"));
+                    Text.get(388));
         AccountMode mode = AccountMode.fromTypeCode(
                 data.getAccount().getAccountTypeCode());
         if (!profile.supports(mode))
             return new MethodStrategyAssessment(false, 0.0,
-                    PlayerText.get("MSS2"));
+                    Text.get(389));
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && profile.getBankingBehavior()
                         == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP)
             return new MethodStrategyAssessment(false, 0.0,
-                    PlayerText.get("MSS3"));
+                    Text.get(390));
 
         MethodInventoryFootprint footprint = profile.getInventoryFootprint();
         InventorySnapshot inventory = data.getInventory();
@@ -51,7 +51,7 @@ public final class MethodStrategyService
                 && (inventory == null
                 || !inventory.hasCompleteSlotObservation()))
             return new MethodStrategyAssessment(false, 0.0,
-                    PlayerText.get("MSS4"));
+                    Text.get(391));
         int occupied = UimSetupCostService.occupiedInventorySlots(inventory);
         int free = Math.max(0, 28 - occupied);
         if (mode == AccountMode.ULTIMATE_IRONMAN

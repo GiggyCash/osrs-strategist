@@ -64,20 +64,20 @@ public class ProgressionUpgradeCandidateProvider
 
         addQuestRewardGear(context, items, result,
                 "salve-amulet", "Salve amulet", "Haunted Mine",
-                PlayerText.get("PUCP1"),
-                PlayerText.get("PUCP2"),
-                PlayerText.get("PUCP3"),
+                Text.get(453),
+                Text.get(464),
+                Text.get(475),
                 items.has("Chisel"));
         addQuestRewardGear(context, items, result,
                 "helm-of-neitiznot", "Helm of neitiznot", "The Fremennik Isles",
-                PlayerText.get("PUCP4"),
-                PlayerText.get("PUCP5"),
-                PlayerText.get("PUCP6"), false);
+                Text.get(486),
+                Text.get(497),
+                Text.get(508), false);
         addQuestRewardGear(context, items, result,
                 "ibans-staff", "Iban's staff", "Underground Pass",
-                PlayerText.get("PUCP7"),
-                PlayerText.get("PUCP8"),
-                PlayerText.get("PUCP9"), false);
+                Text.get(519),
+                Text.get(530),
+                Text.get(541), false);
     }
 
     private static void addQuestRewardGear(StrategyContext context,
@@ -93,20 +93,20 @@ public class ProgressionUpgradeCandidateProvider
         boolean retrievalOnly = mode == AccountMode.ULTIMATE_IRONMAN
                 && items.restrictedQuantity(item) > 0;
         String uim = mode == AccountMode.ULTIMATE_IRONMAN
-                ? PlayerText.get("PUCP10")
+                ? Text.get(454)
                 : "";
         String nextAction = retrievalOnly
-                ? PlayerText.get("PUCP11")
-                        + item + PlayerText.get("PUCP12")
+                ? Text.get(455)
+                        + item + Text.get(456)
                 : action;
         result.add(new Recommendation(id,
                 (retrievalOnly ? "Retrieve " : "Recover ") + item,
-                quest + PlayerText.get("PUCP13"),
+                quest + Text.get(457),
                 34.0 + preference(context, id), ready && !retrievalOnly
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(nextAction, supplies + uim,
-                        PlayerText.get("PUCP14"), note),
+                        Text.get(458), note),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
@@ -127,22 +127,22 @@ public class ProgressionUpgradeCandidateProvider
         if (context.getPreferenceProfile().isOnCooldown(id)) return;
         AccountMode mode = context.getAccountMode();
         String setup = mode == AccountMode.ULTIMATE_IRONMAN
-                ? PlayerText.get("PUCP15")
-                : PlayerText.get("PUCP16");
+                ? Text.get(459)
+                : Text.get(460);
         boolean cashReady = verifiedCoins(context.getData(), 100_000L);
         result.add(new Recommendation(id, "Buy a Dragon scimitar",
-                PlayerText.get("PUCP17"),
+                Text.get(461),
                 42.0 + preference(context, id), cashReady
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         cashReady
-                                ? PlayerText.get("PUCP18")
-                                : PlayerText.get("PUCP19"),
-                        setup + (cashReady ? " Coin affordability is observed." : PlayerText.get("PUCP20"))
-                                + PlayerText.get("PUCP21"),
-                        PlayerText.get("PUCP22"),
-                        PlayerText.get("PUCP23")),
+                                ? Text.get(462)
+                                : Text.get(463),
+                        setup + (cashReady ? " Coin affordability is observed." : Text.get(465))
+                                + Text.get(466),
+                        Text.get(467),
+                        Text.get(468)),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
@@ -164,26 +164,26 @@ public class ProgressionUpgradeCandidateProvider
         String device = account.getSkillLevel(Skill.RANGED) >= 50
                 ? "Ava's accumulator" : "Ava's attractor";
         String replacement = account.getSkillLevel(Skill.RANGED) >= 50
-                ? PlayerText.get("PUCP24")
-                : PlayerText.get("PUCP25");
+                ? Text.get(469)
+                : Text.get(470);
         boolean arrowsReady = account.getSkillLevel(Skill.RANGED) < 50
                 || items.quantity("Steel arrow") >= 75;
         boolean replacementReady = verifiedCoins(context.getData(), 999L)
                 && arrowsReady;
         result.add(new Recommendation(id, "Get " + device,
-                PlayerText.get("PUCP26"),
+                Text.get(471),
                 40.0 + preference(context, id), replacementReady
                         ? RecommendationConfidence.VERIFIED
                         : RecommendationConfidence.CHECK_NEEDED,
                 new RecommendationGuidance(
                         replacementReady
-                                ? PlayerText.get("PUCP27") + device + PlayerText.get("PUCP28")
-                                : PlayerText.get("PUCP29") + device + ".",
+                                ? Text.get(472) + device + Text.get(473)
+                                : Text.get(474) + device + ".",
                         replacement + (replacementReady
-                                ? PlayerText.get("PUCP30")
-                                : PlayerText.get("PUCP31")),
-                        PlayerText.get("PUCP32"),
-                        PlayerText.get("PUCP33")),
+                                ? Text.get(476)
+                                : Text.get(477)),
+                        Text.get(478),
+                        Text.get(479)),
                 CandidateSafetyEvidence.verifiedSafe(false)));
     }
 
@@ -235,19 +235,19 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
 
         String buildNote = defencePure
-                ? PlayerText.get("PUCP34")
-                : PlayerText.get("PUCP35");
+                ? Text.get(480)
+                : Text.get(481);
         RecommendationGuidance guidance = new RecommendationGuidance(
-                PlayerText.get("PUCP36"),
-                PlayerText.get("PUCP37") + buildNote,
-                PlayerText.get("PUCP38"),
-                PlayerText.get("PUCP39")
+                Text.get(482),
+                Text.get(483) + buildNote,
+                Text.get(484),
+                Text.get(485)
         );
 
         result.add(new Recommendation(
                 id,
                 "Get a Fighter torso",
-                PlayerText.get("PUCP40"),
+                Text.get(487),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,
@@ -288,26 +288,26 @@ public class ProgressionUpgradeCandidateProvider
         {
             score = 41.0;
             title = "Get an Abyssal whip";
-            reason = PlayerText.get("PUCP41");
+            reason = Text.get(488);
             confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    PlayerText.get("PUCP42"),
-                    PlayerText.get("PUCP43"),
+                    Text.get(489),
+                    Text.get(490),
                     "Grand Exchange.",
-                    PlayerText.get("PUCP44")
+                    Text.get(491)
             );
         }
         else if (slayer >= 85)
         {
             score = 49.0;
             title = "Get an Abyssal whip";
-            reason = PlayerText.get("PUCP45");
+            reason = Text.get(492);
             confidence = RecommendationConfidence.CHECK_NEEDED;
             guidance = new RecommendationGuidance(
-                    PlayerText.get("PUCP46"),
-                    PlayerText.get("PUCP47"),
-                    PlayerText.get("PUCP48"),
-                    PlayerText.get("PUCP49")
+                    Text.get(493),
+                    Text.get(494),
+                    Text.get(495),
+                    Text.get(496)
             );
         }
         else
@@ -322,13 +322,13 @@ public class ProgressionUpgradeCandidateProvider
             int remaining = 85 - slayer;
             score = Math.max(24.0, 42.0 - remaining * 0.8);
             title = "Work toward 85 Slayer for a whip";
-            reason = PlayerText.get("PUCP50");
+            reason = Text.get(498);
             confidence = RecommendationConfidence.VERIFIED;
             guidance = new RecommendationGuidance(
-                    "Train Slayer from " + slayer + PlayerText.get("PUCP51"),
-                    PlayerText.get("PUCP52"),
-                    PlayerText.get("PUCP53"),
-                    PlayerText.get("PUCP54")
+                    "Train Slayer from " + slayer + Text.get(499),
+                    Text.get(500),
+                    Text.get(501),
+                    Text.get(502)
             );
         }
 
@@ -377,15 +377,15 @@ public class ProgressionUpgradeCandidateProvider
         score += preference(context, id);
 
         RecommendationGuidance guidance = new RecommendationGuidance(
-                PlayerText.get("PUCP55"),
-                PlayerText.get("PUCP56"),
-                PlayerText.get("PUCP57"),
-                PlayerText.get("PUCP58")
+                Text.get(503),
+                Text.get(504),
+                Text.get(505),
+                Text.get(506)
         );
         result.add(new Recommendation(
                 id,
                 "Get a Dragon defender",
-                PlayerText.get("PUCP59"),
+                Text.get(507),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,
@@ -436,7 +436,7 @@ public class ProgressionUpgradeCandidateProvider
         String supplies;
         if (!cashVerified)
         {
-            supplies = PlayerText.get("PUCP60") + format(price) + " coins.";
+            supplies = Text.get(509) + format(price) + " coins.";
         }
         else if (!affordable)
         {
@@ -452,17 +452,17 @@ public class ProgressionUpgradeCandidateProvider
         }
 
         RecommendationGuidance guidance = new RecommendationGuidance(
-                PlayerText.get("PUCP61"),
+                Text.get(510),
                 supplies,
-                PlayerText.get("PUCP62"),
+                Text.get(511),
                 eliteLumbridge
-                        ? PlayerText.get("PUCP63")
-                        : PlayerText.get("PUCP64")
+                        ? Text.get(512)
+                        : Text.get(513)
         );
         result.add(new Recommendation(
                 id,
                 "Buy Barrows gloves",
-                PlayerText.get("PUCP65"),
+                Text.get(514),
                 score,
                 confidence,
                 guidance,
@@ -518,14 +518,14 @@ public class ProgressionUpgradeCandidateProvider
                     ? RecommendationConfidence.VERIFIED
                     : RecommendationConfidence.CHECK_NEEDED;
             title = "Create your Bow of faerdhinen";
-            reason = PlayerText.get("PUCP66");
+            reason = Text.get(515);
             String action = canSelfSing
-                    ? PlayerText.get("PUCP67") + neededShards
-                            + PlayerText.get("PUCP68")
-                    : PlayerText.get("PUCP69")
-                            + neededShards + PlayerText.get("PUCP70");
+                    ? Text.get(516) + neededShards
+                            + Text.get(517)
+                    : Text.get(518)
+                            + neededShards + Text.get(520);
             String supplies = shortfall == 0
-                    ? PlayerText.get("PUCP71")
+                    ? Text.get(521)
                             + neededShards + " Crystal shards are observed."
                     : "The seed is observed, but you need " + shortfall
                             + " more Crystal shard" + (shortfall == 1 ? "" : "s")
@@ -533,20 +533,20 @@ public class ProgressionUpgradeCandidateProvider
             guidance = new RecommendationGuidance(
                     action,
                     supplies,
-                    PlayerText.get("PUCP72"),
-                    PlayerText.get("PUCP73")
+                    Text.get(522),
+                    Text.get(523)
             );
         }
         else if (mode.usesGrandExchange())
         {
             confidence = RecommendationConfidence.CHECK_NEEDED;
             title = "Get a Bow of faerdhinen";
-            reason = PlayerText.get("PUCP74");
+            reason = Text.get(524);
             guidance = new RecommendationGuidance(
-                    PlayerText.get("PUCP75"),
-                    PlayerText.get("PUCP76"),
-                    PlayerText.get("PUCP77"),
-                    PlayerText.get("PUCP78")
+                    Text.get(525),
+                    Text.get(526),
+                    Text.get(527),
+                    Text.get(528)
             );
         }
         else
@@ -560,16 +560,16 @@ public class ProgressionUpgradeCandidateProvider
                     ? RecommendationConfidence.CHECK_NEEDED
                     : RecommendationConfidence.VERIFIED;
             title = "Hunt the Enhanced crystal weapon seed";
-            reason = PlayerText.get("PUCP79");
+            reason = Text.get(529);
             guidance = new RecommendationGuidance(
-                    PlayerText.get("PUCP80"),
-                    PlayerText.get("PUCP81"),
+                    Text.get(531),
+                    Text.get(532),
                     "The Corrupted Gauntlet in Prifddinas.",
                     hardcore
-                            ? PlayerText.get("PUCP82")
+                            ? Text.get(533)
                             : uimDeathStorage
-                            ? PlayerText.get("PUCP83")
-                            : PlayerText.get("PUCP84")
+                            ? Text.get(534)
+                            : Text.get(535)
             );
         }
 
@@ -612,15 +612,15 @@ public class ProgressionUpgradeCandidateProvider
 
         if (score < 25.0) return;
         RecommendationGuidance guidance = new RecommendationGuidance(
-                PlayerText.get("PUCP85"),
-                PlayerText.get("PUCP86"),
-                PlayerText.get("PUCP87"),
-                "You currently have " + pieces + PlayerText.get("PUCP88")
+                Text.get(536),
+                Text.get(537),
+                Text.get(538),
+                "You currently have " + pieces + Text.get(539)
         );
         result.add(new Recommendation(
                 id,
                 "Finish the Angler outfit (" + pieces + "/4)",
-                PlayerText.get("PUCP89"),
+                Text.get(540),
                 score,
                 RecommendationConfidence.VERIFIED,
                 guidance,

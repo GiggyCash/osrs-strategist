@@ -76,7 +76,7 @@ public class ResourceDependencyResolver
         if (active.contains(id))
         {
             state.cycle = true;
-            addResource(state, id + ":cycle", PlayerText.get("RDR1"),
+            addResource(state, id + ":cycle", Text.get(610),
                     RecommendationConfidence.CHECK_NEEDED, depth, need.getQuantity());
             return;
         }
@@ -91,7 +91,7 @@ public class ResourceDependencyResolver
         if (depth > maxDepth)
         {
             state.depth = true;
-            addResource(state, id + ":depth", PlayerText.get("RDR2"),
+            addResource(state, id + ":depth", Text.get(611),
                     RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
@@ -132,7 +132,7 @@ public class ResourceDependencyResolver
         if (rejectForOpportunityCost(context, definition.getOpportunityCost()))
         {
             state.cost = true;
-            addResource(state, id, PlayerText.get("RDR3"),
+            addResource(state, id, Text.get(612),
                     RecommendationConfidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }

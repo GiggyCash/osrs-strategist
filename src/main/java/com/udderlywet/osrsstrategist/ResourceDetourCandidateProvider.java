@@ -81,15 +81,15 @@ public class ResourceDetourCandidateProvider
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
-                        PlayerText.get("RDCP1"),
-                        "Only " + planks + PlayerText.get("RDCP2"),
-                        PlayerText.get("RDCP3"),
-                        PlayerText.get("RDCP4")
+                        Text.get(599),
+                        "Only " + planks + Text.get(602),
+                        Text.get(603),
+                        Text.get(604)
                 );
                 result.add(new Recommendation(
                         id,
                         "Tempoross for Fishing + early planks",
-                        "Only " + planks + PlayerText.get("RDCP5"),
+                        "Only " + planks + Text.get(605),
                         score,
                         RecommendationConfidence.VERIFIED,
                         guidance,
@@ -116,15 +116,15 @@ public class ResourceDetourCandidateProvider
                 score += context.getPreferenceProfile().weightFor(id) * 10.0;
 
                 RecommendationGuidance guidance = new RecommendationGuidance(
-                        PlayerText.get("RDCP6"),
-                        "Only " + logs + " useful logs and " + planks + PlayerText.get("RDCP7"),
-                        PlayerText.get("RDCP8"),
-                        PlayerText.get("RDCP9")
+                        Text.get(606),
+                        "Only " + logs + " useful logs and " + planks + Text.get(607),
+                        Text.get(608),
+                        Text.get(609)
                 );
                 result.add(new Recommendation(
                         id,
-                        PlayerText.get("RDCP10"),
-                        PlayerText.get("RDCP11"),
+                        Text.get(600),
+                        Text.get(601),
                         score,
                         RecommendationConfidence.VERIFIED,
                         guidance,

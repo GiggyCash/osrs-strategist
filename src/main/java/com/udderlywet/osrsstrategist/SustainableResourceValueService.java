@@ -31,12 +31,12 @@ public final class SustainableResourceValueService
         if (context == null || context.getData() == null || request == null
                 || request.getNeed() == null)
         {
-            return unknown(PlayerText.get("SRVS1"));
+            return unknown(Text.get(805));
         }
         ResourceNeed need = request.getNeed();
         String name = need.getItemName();
         if (name == null || name.trim().isEmpty())
-            return unknown(PlayerText.get("SRVS2"));
+            return unknown(Text.get(807));
 
         ObservedItemIndex items = new ObservedItemIndex(context.getData(),
                 context.isUseGroupStorage());
@@ -67,7 +67,7 @@ public final class SustainableResourceValueService
             }
             return result(ResourcePipelineState.READY_CURRENT_SUPPLY,
                     adjustment, observed, required, routes,
-                    PlayerText.get("SRVS3")
+                    Text.get(808)
                             + replacementEvidence(request, mode, routes));
         }
 
@@ -75,14 +75,14 @@ public final class SustainableResourceValueService
         {
             return result(ResourcePipelineState.UNKNOWN_STORAGE, -2, observed,
                     required, routes,
-                    PlayerText.get("SRVS4"));
+                    Text.get(809));
         }
 
         if (!knownFamily)
         {
             return result(ResourcePipelineState.UNKNOWN_SOURCE, -4, observed,
                     required, routes,
-                    PlayerText.get("SRVS5"));
+                    Text.get(810));
         }
 
         int burden = replacementBurden(request, mode, context);
@@ -156,14 +156,14 @@ public final class SustainableResourceValueService
     {
         String access;
         if (mode.usesGrandExchange() && request.isTradeable())
-            access = PlayerText.get("SRVS6");
+            access = Text.get(811);
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
-            access = PlayerText.get("SRVS7");
+            access = Text.get(812);
         else if (mode.isIronLike())
-            access = PlayerText.get("SRVS8");
-        else access = PlayerText.get("SRVS9");
+            access = Text.get(813);
+        else access = Text.get(814);
         return access + (routes.isEmpty() ? "."
-                : PlayerText.get("SRVS10"));
+                : Text.get(806));
     }
 
     private static ResourcePipelineAssessment unknown(String evidence)

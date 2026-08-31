@@ -26,16 +26,16 @@ public enum ItemRequirementClass
     LIGHT_SOURCE("a suitable light source", false),
     SLASH_WEAPON("a suitable slash weapon", false),
     WEB_CUTTING_TOOL("a tool or weapon that can cut webs", false),
-    MAGIC_COMBAT_LOADOUT(PlayerText.get("IRC1"), false),
-    MAGIC_OR_RANGED_LOADOUT(PlayerText.get("IRC2"), false),
-    TELEKINETIC_GRAB_RUNES(PlayerText.get("IRC3"), false),
-    SPELL_RUNE_LOADOUT(PlayerText.get("IRC4"), false),
+    MAGIC_COMBAT_LOADOUT(Text.get(327), false),
+    MAGIC_OR_RANGED_LOADOUT(Text.get(328), false),
+    TELEKINETIC_GRAB_RUNES(Text.get(329), false),
+    SPELL_RUNE_LOADOUT(Text.get(330), false),
     POISON_CURE("any mechanically valid poison cure", false),
     WATER_CONTAINER("a mechanically valid water container", false),
     EMPTY_INVENTORY_SPACE("the required empty inventory space", false),
     COMBAT_EQUIPMENT("suitable combat equipment", false),
     HEALING_FOOD("suitable healing food", false),
-    MULTI_STYLE_OR_POISON(PlayerText.get("IRC5"), false),
+    MULTI_STYLE_OR_POISON(Text.get(331), false),
     FULL_HAM_ROBE_SET("a full seven-piece H.A.M. robe set", false);
 
     private final String label;

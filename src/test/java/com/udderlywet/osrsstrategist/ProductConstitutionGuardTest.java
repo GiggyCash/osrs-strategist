@@ -34,8 +34,7 @@ public class ProductConstitutionGuardTest
         for (PlayerGoal goal : PlayerGoal.values())
         {
             if (goal == PlayerGoal.AUTOMATIC) continue;
-            assertFalse(goal.name(), graph.previewFor(goal.toPlanningGoal())
-                    .getDependencies().isEmpty());
+            assertTrue(goal.name(), graph.hasPlanningPath(goal.toPlanningGoal()));
         }
     }
 

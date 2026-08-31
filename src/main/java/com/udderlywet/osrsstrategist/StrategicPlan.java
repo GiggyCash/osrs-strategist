@@ -50,7 +50,7 @@ public final class StrategicPlan
         if (goal == null || goal == GoalType.AUTOMATIC
                 || steps == null || steps.isEmpty())
             throw new IllegalArgumentException(
-                    PlayerText.get("SP1"));
+                    Text.get(791));
         this.goal = goal;
         this.accountHash = accountHash;
         this.playerName = playerName == null ? "" : playerName;

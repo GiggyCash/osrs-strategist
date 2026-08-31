@@ -187,10 +187,10 @@ public class RequirementEvidenceEngine
                         : standard ? RequirementState.VERIFIED
                                 : RequirementState.BLOCKED,
                 !spellbookObserved
-                        ? PlayerText.get("REE1")
+                        ? Text.get(613)
                         : standard
                                 ? "The Standard spellbook is active."
-                                : PlayerText.get("REE2")));
+                                : Text.get(624)));
         if ("magic_f2p_curse".equals(methodId))
         {
             checks.add(resource(data, useGroupStorage, "curse_body",
@@ -268,8 +268,8 @@ public class RequirementEvidenceEngine
                     route ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     route
-                            ? PlayerText.get("REE3")
-                            : PlayerText.get("REE4")));
+                            ? Text.get(635)
+                            : Text.get(646)));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:captains-log",
                             "Captain's log", 1,
@@ -282,7 +282,7 @@ public class RequirementEvidenceEngine
             checks.add(new RequirementCheck(
                     "sailing:uncompleted-chart", "Exact uncompleted sea-chart",
                     RequirementState.CHECK_NEEDED,
-                    PlayerText.get("REE5")));
+                    Text.get(657)));
             return checks;
         }
         if (id != null && id.startsWith("sailing_barracuda_"))
@@ -296,13 +296,13 @@ public class RequirementEvidenceEngine
             checks.add(new RequirementCheck(
                     "preparation:sailing-trial-boat", "Trial-ready boat",
                     RequirementState.CHECK_NEEDED,
-                    PlayerText.get("REE6")));
+                    Text.get(658)));
             return checks;
         }
         checks.add(new RequirementCheck(
-                "sailing:live-route", PlayerText.get("REE7"),
+                "sailing:live-route", Text.get(659),
                 RequirementState.CHECK_NEEDED,
-                PlayerText.get("REE8")));
+                Text.get(660)));
         return checks;
     }
 
@@ -321,12 +321,12 @@ public class RequirementEvidenceEngine
         EquipmentSnapshot equipment = data == null ? null : data.getEquipment();
         boolean verified = equipment != null && hasSplashingSet(equipment);
         return new RequirementCheck("equipment:f2p_splashing",
-                PlayerText.get("REE9"),
+                Text.get(661),
                 verified ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 verified
-                        ? PlayerText.get("REE10")
-                        : PlayerText.get("REE11"));
+                        ? Text.get(614)
+                        : Text.get(615));
     }
 
     private static boolean hasSplashingSet(EquipmentSnapshot equipment)
@@ -412,8 +412,8 @@ public class RequirementEvidenceEngine
                 "access:hosidius_kitchen", "Kourend & Kebos Easy Diary",
                 kitchen ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
                 kitchen
-                        ? PlayerText.get("REE12")
-                        : PlayerText.get("REE13")));
+                        ? Text.get(616)
+                        : Text.get(617)));
         return checks;
     }
 
@@ -446,8 +446,8 @@ public class RequirementEvidenceEngine
                     questComplete ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     questComplete
-                            ? PlayerText.get("REE14")
-                            : PlayerText.get("REE15")));
+                            ? Text.get(618)
+                            : Text.get(619)));
             TransportSnapshot transport = data == null ? null
                     : data.getTransport();
             boolean observedFairyRoute = transport != null
@@ -461,8 +461,8 @@ public class RequirementEvidenceEngine
                     fairyRings ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     fairyRings
-                            ? PlayerText.get("REE16")
-                            : PlayerText.get("REE17")));
+                            ? Text.get(620)
+                            : Text.get(621)));
             DiarySnapshot diaries = data == null ? null : data.getDiaries();
             boolean staffless = diaries != null
                     && diaries.isTierComplete("Lumbridge & Draynor",
@@ -473,12 +473,12 @@ public class RequirementEvidenceEngine
             boolean staffReady = observedFairyRoute || staffless || staff > 0;
             checks.add(new RequirementCheck(
                     "resource:fairy_ring_staff",
-                    PlayerText.get("REE18"),
+                    Text.get(622),
                     staffReady ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     staffReady
-                            ? PlayerText.get("REE19")
-                            : PlayerText.get("REE20")));
+                            ? Text.get(623)
+                            : Text.get(625)));
             checks.add(resourceReadinessService.evaluate(data,
                     new ResourceRequirement("resource:karambwan_vessel",
                             "Karambwan vessel", 1,
@@ -547,8 +547,8 @@ public class RequirementEvidenceEngine
                     boneVoyage ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     boneVoyage
-                            ? PlayerText.get("REE21")
-                            : PlayerText.get("REE22")));
+                            ? Text.get(626)
+                            : Text.get(627)));
             return checks;
         }
         return null;
@@ -566,7 +566,7 @@ public class RequirementEvidenceEngine
                 complete ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 complete
-                        ? questName + PlayerText.get("REE23")
+                        ? questName + Text.get(628)
                         : questName + " completion has not been observed."));
         return checks;
     }
@@ -581,9 +581,9 @@ public class RequirementEvidenceEngine
         CapabilityState parlour = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:parlour");
         checks.add(capabilityCheck("construction:poh", "Player-owned house",
-                house, PlayerText.get("REE24")));
+                house, Text.get(629)));
         checks.add(capabilityCheck("construction:parlour", "POH Parlour",
-                parlour, PlayerText.get("REE25")));
+                parlour, Text.get(630)));
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement("resource:construction_planks",
                         "Planks", 2, ItemID.WOODPLANK), useGroupStorage));
@@ -614,9 +614,9 @@ public class RequirementEvidenceEngine
         CapabilityState kitchen = poh == null
                 ? CapabilityState.UNKNOWN : poh.furnitureState("room:kitchen");
         checks.add(capabilityCheck("construction:poh", "Player-owned house",
-                house, PlayerText.get("REE26")));
+                house, Text.get(631)));
         checks.add(capabilityCheck("construction:kitchen", "POH Kitchen",
-                kitchen, PlayerText.get("REE27")));
+                kitchen, Text.get(632)));
         checks.add(resourceReadinessService.evaluate(data,
                 new ResourceRequirement("resource:construction_oak_planks",
                         "Oak planks", 8, ItemID.PLANK_OAK), useGroupStorage));
@@ -678,9 +678,9 @@ public class RequirementEvidenceEngine
                 usable > 0 ? RequirementState.VERIFIED
                         : RequirementState.CHECK_NEEDED,
                 usable > 0
-                        ? label + PlayerText.get("REE28")
+                        ? label + Text.get(633)
                         : "No " + label.toLowerCase()
-                                + PlayerText.get("REE29"));
+                                + Text.get(634));
     }
 
     /**
@@ -720,7 +720,7 @@ public class RequirementEvidenceEngine
                     "agility:wilderness_risk",
                     "Wilderness risk accepted",
                     RequirementState.VERIFIED,
-                    PlayerText.get("REE30")
+                    Text.get(636)
             ));
             return checks;
         }
@@ -751,14 +751,14 @@ public class RequirementEvidenceEngine
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
                     patch == null
-                            ? PlayerText.get("REE31")
-                            : patch + PlayerText.get("REE32")
+                            ? Text.get(637)
+                            : patch + Text.get(638)
             ));
             checks.add(new RequirementCheck(
                     "farming:supplies",
                     "Seeds and farming tools",
                     RequirementState.CHECK_NEEDED,
-                    PlayerText.get("REE33")
+                    Text.get(639)
             ));
             return checks;
         }
@@ -773,8 +773,8 @@ public class RequirementEvidenceEngine
                     reachable ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     reachable
-                            ? PlayerText.get("REE34")
-                            : PlayerText.get("REE35")));
+                            ? Text.get(640)
+                            : Text.get(641)));
             RequirementCheck seeds = resourceReadinessService.evaluate(data,
                     "farming_falador_watermelons".equals(method.getId())
                             ? farmingSupplyCatalog.watermelonSeeds()
@@ -788,18 +788,18 @@ public class RequirementEvidenceEngine
             {
                 checks.add(new RequirementCheck(
                         "farming:watermelon_seed_source",
-                        PlayerText.get("REE36"),
+                        Text.get(642),
                         RequirementState.BLOCKED,
-                        PlayerText.get("REE37")));
+                        Text.get(643)));
             }
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.rake(),
-                    "rake", PlayerText.get("REE38"),
+                    "rake", Text.get(644),
                     useGroupStorage));
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.dibber(),
-                    "dibber", PlayerText.get("REE39"),
+                    "dibber", Text.get(645),
                     useGroupStorage));
             checks.add(toolCheck(data, farming, farmingSupplyCatalog.spade(),
-                    "spade", PlayerText.get("REE40"),
+                    "spade", Text.get(647),
                     useGroupStorage));
             return checks;
         }
@@ -823,12 +823,12 @@ public class RequirementEvidenceEngine
                     useGroupStorage, ItemID.ZEAH_WATERINGCAN);
             boolean waterReady = cans >= 8 || gricoller > 0;
             tithe.add(new RequirementCheck(
-                    "resource:tithe_watering", PlayerText.get("REE41"),
+                    "resource:tithe_watering", Text.get(648),
                     waterReady ? RequirementState.VERIFIED
                             : RequirementState.CHECK_NEEDED,
                     waterReady
-                            ? PlayerText.get("REE42")
-                            : PlayerText.get("REE43")));
+                            ? Text.get(649)
+                            : Text.get(650)));
             return tithe;
         }
 
@@ -852,8 +852,8 @@ public class RequirementEvidenceEngine
                             ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED,
                     patch == null
-                            ? PlayerText.get("REE44")
-                            : patch + PlayerText.get("REE45")
+                            ? Text.get(651)
+                            : patch + Text.get(652)
             ));
 
             checks.add(resourceReadinessService.evaluate(
@@ -866,7 +866,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.rake(),
                     "rake",
-                    PlayerText.get("REE46"),
+                    Text.get(653),
                     useGroupStorage
             ));
             checks.add(toolCheck(
@@ -874,7 +874,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.dibber(),
                     "dibber",
-                    PlayerText.get("REE47"),
+                    Text.get(654),
                     useGroupStorage
             ));
             checks.add(toolCheck(
@@ -882,7 +882,7 @@ public class RequirementEvidenceEngine
                     farming,
                     farmingSupplyCatalog.spade(),
                     "spade",
-                    PlayerText.get("REE48"),
+                    Text.get(655),
                     useGroupStorage
             ));
             return checks;
@@ -919,7 +919,7 @@ public class RequirementEvidenceEngine
                 "generic:" + requirement,
                 requirement,
                 RequirementState.CHECK_NEEDED,
-                PlayerText.get("REE49")
+                Text.get(656)
         );
     }
 }

@@ -9,9 +9,9 @@ import net.runelite.api.Skill;
 public class ExpandedTrainingMethodCatalog
 {
     public static final String PROVENANCE =
-            PlayerText.get("ETMC1");
+            Text.get(215);
     public static final String AUDITED_THROUGH = "2026-08-25";
-    private static final String RESOURCE = PlayerText.get("ETMC2");
+    private static final String RESOURCE = Text.get(216);
     private final Map<Skill, List<CuratedTrainingMethod>> methods = new EnumMap<>(Skill.class);
 
     public ExpandedTrainingMethodCatalog()

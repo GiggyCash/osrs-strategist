@@ -68,9 +68,9 @@ public class ResourceReadinessService
                     RequirementState.VERIFIED,
                     uim
                             ? "Observed quantity: " + observed
-                                    + PlayerText.get("RRS1")
+                                    + Text.get(703)
                             : "Observed quantity: " + observed
-                                    + PlayerText.get("RRS2")
+                                    + Text.get(704)
                                     + (usesObservedGroupStorage(data, useGroupStorage)
                                             ? ", and recent Group Storage state." : "."));
         }
@@ -85,7 +85,7 @@ public class ResourceReadinessService
                 return new RequirementCheck(
                         requirement.getId(), requirement.getLabel(),
                         RequirementState.CHECK_NEEDED,
-                        PlayerText.get("RRS3")
+                        Text.get(705)
                 );
             }
 
@@ -97,10 +97,10 @@ public class ResourceReadinessService
                     RequirementState.CHECK_NEEDED,
                     storageContentsKnown
                             ? "Only " + observed
-                                    + PlayerText.get("RRS4")
+                                    + Text.get(706)
                                     + requirement.getRequiredQuantity() + "."
                             : "Equipment and inventory have " + observed
-                                    + PlayerText.get("RRS5")
+                                    + Text.get(707)
             );
         }
 

@@ -71,58 +71,64 @@ public class PvmReadinessAnalyzer
                 result.put(activity.getId(), prior);
                 continue;
             }
-            ReadinessFloor floor = floorFor(activity);
             List<String> missing = new ArrayList<>();
             PvmEvidenceProfile exact = evidenceProfiles == null ? null
                     : evidenceProfiles.forActivity(activity.getId());
             PvmPreparationProfile preparation = preparationProfiles == null ? null
                     : preparationProfiles.forActivity(activity.getId());
+            if (preparation == null)
+            {
+                result.put(activity.getId(), new PvmReadiness(activity.getId(), false,
+                        RecommendationConfidence.CHECK_NEEDED,
+                        Collections.singletonList("Verify current encounter requirements")));
+                continue;
+            }
             // Exact profiles are recomputed from current carried state so a
             // preparation -> ready transition cannot retain stale failures.
             if (exact == null && prior != null)
                 missing.addAll(prior.getMissingRequirements());
 
-            requireLevel(account, Skill.ATTACK, floor.attack, missing);
-            requireLevel(account, Skill.STRENGTH, floor.strength, missing);
-            requireLevel(account, Skill.DEFENCE, floor.defence, missing);
-            requireLevel(account, Skill.RANGED, floor.ranged, missing);
-            requireLevel(account, Skill.MAGIC, floor.magic, missing);
-            requireLevel(account, Skill.PRAYER, floor.prayer, missing);
-            requireLevel(account, Skill.SLAYER, floor.slayer, missing);
+            requireLevel(account, Skill.ATTACK, preparation.getAttack(), missing);
+            requireLevel(account, Skill.STRENGTH, preparation.getStrength(), missing);
+            requireLevel(account, Skill.DEFENCE, preparation.getDefence(), missing);
+            requireLevel(account, Skill.RANGED, preparation.getRanged(), missing);
+            requireLevel(account, Skill.MAGIC, preparation.getMagic(), missing);
+            requireLevel(account, Skill.PRAYER, preparation.getPrayer(), missing);
+            requireLevel(account, Skill.SLAYER, preparation.getSlayer(), missing);
 
-            if (floor.requiredQuest != null
-                    && !questUsable(quests, floor.requiredQuest,
-                    floor.questMayBeInProgress))
+            if (preparation.getRequiredQuest() != null
+                    && !questUsable(quests, preparation.getRequiredQuest(),
+                    preparation.isQuestMayBeInProgress()))
             {
-                missing.add("Quest/access: " + floor.requiredQuest);
+                missing.add("Quest/access: " + preparation.getRequiredQuest());
             }
 
-            String requiredStyle = exact == null ? floor.preferredStyle
+            String requiredStyle = exact == null ? preparation.getPreferredStyle()
                     : exact.getWeaponStyle();
             if (!hasCombatWeapon(equipment, requiredStyle))
-                addMissing(missing, "Equip a usable " + floor.preferredStyle + " combat weapon/loadout");
+                addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + " combat weapon/loadout");
             else if (exact == null)
-                addMissing(missing, PlayerText.get("PRA1"));
+                addMissing(missing, Text.get(443));
 
-            int requiredFood = exact == null ? (floor.requiresSupplies ? 5 : 0)
+            int requiredFood = exact == null ? (preparation.isRequiresSupplies() ? 5 : 0)
                     : exact.getMinimumFood();
             if (carriedFoodQuantity(inventory) < requiredFood)
-                addMissing(missing, PlayerText.get("PRA2"));
-            int requiredRestore = exact == null ? (floor.prayer >= 43 ? 1 : 0)
+                addMissing(missing, Text.get(445));
+            int requiredRestore = exact == null ? (preparation.getPrayer() >= 43 ? 1 : 0)
                     : exact.getMinimumRestoration();
             if (carriedRestorationQuantity(inventory) < requiredRestore)
-                addMissing(missing, PlayerText.get("PRA3"));
-            if (usesRanged(floor.preferredStyle))
+                addMissing(missing, Text.get(446));
+            if (usesRanged(preparation.getPreferredStyle()))
                 addMissing(missing, carriedAmmoQuantity(inventory, equipment) > 0
-                        ? PlayerText.get("PRA4")
-                        : PlayerText.get("PRA5"));
-            if (usesMagic(floor.preferredStyle))
+                        ? Text.get(447)
+                        : Text.get(448));
+            if (usesMagic(preparation.getPreferredStyle()))
                 addMissing(missing, runeEvidence(inventory, storage)
-                        ? PlayerText.get("PRA6")
-                        : PlayerText.get("PRA7"));
+                        ? Text.get(449)
+                        : Text.get(450));
 
             if (exact == null)
-                addMissing(missing, PlayerText.get("PRA8"));
+                addMissing(missing, Text.get(451));
             else
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
@@ -131,8 +137,8 @@ public class PvmReadinessAnalyzer
             if (exact == null && preparation != null)
                 for (String check : preparation.getChecks()) addMissing(missing, check);
 
-            if (mode == AccountMode.ULTIMATE_IRONMAN && floor.requiresSupplies)
-                addMissing(missing, PlayerText.get("PRA9"));
+            if (mode == AccountMode.ULTIMATE_IRONMAN && preparation.isRequiresSupplies())
+                addMissing(missing, Text.get(452));
 
             boolean fullyVerified = exact != null && missing.isEmpty();
             result.put(activity.getId(), new PvmReadiness(
@@ -146,65 +152,6 @@ public class PvmReadinessAnalyzer
         return new PvmSnapshot(result);
     }
 
-    private static ReadinessFloor floorFor(PvmActivityDefinition activity)
-    {
-        String name = activity.getId().substring("pvm:".length())
-                .toUpperCase(Locale.ROOT);
-
-        if ("BRUTUS".equals(name))
-            return floor(20, 20, 10, 1, 1, 1, 1, "melee", "The Ides of Milk", false, true);
-        if ("OBOR".equals(name) || "BRYOPHYTA".equals(name))
-            return floor(40, 40, 40, 1, 1, 31, 1, "melee", null, false, true);
-        if ("BARROWS_CHESTS".equals(name))
-            return floor(1, 1, 40, 1, 50, 43, 1, "magic", "Priest in Peril", false, true);
-        if ("SCURRIUS".equals(name))
-            return floor(40, 40, 40, 1, 1, 31, 1, "melee", null, false, true);
-        if ("GIANT_MOLE".equals(name))
-            return floor(40, 40, 40, 1, 1, 43, 1, "melee", null, false, true);
-        if ("SARACHNIS".equals(name))
-            return floor(60, 60, 60, 1, 1, 43, 1, "melee", null, false, true);
-        if ("HESPORI".equals(name))
-            return floor(50, 50, 50, 1, 1, 43, 1, "melee", null, false, true);
-        if ("ZULRAH".equals(name))
-            return floor(1, 1, 60, 75, 75, 43, 1, "ranged or magic", "Regicide", true, true);
-        if ("VORKATH".equals(name))
-            return floor(1, 1, 70, 75, 1, 43, 1, "ranged", "Dragon Slayer II", false, true);
-        if (name.contains("GAUNTLET"))
-            return floor(75, 75, 70, 75, 75, 43, 1, "hybrid", "Song of the Elves", false, false);
-        if (name.startsWith("TOMBS_OF_AMASCUT"))
-            return floor(75, 75, 70, 75, 75, 70, 1, "hybrid", "Beneath Cursed Sands", false, true);
-        if (name.startsWith("CHAMBERS_OF_XERIC"))
-            return floor(75, 75, 70, 75, 75, 70, 1, "hybrid", null, false, true);
-        if (name.startsWith("THEATRE_OF_BLOOD"))
-            return floor(85, 85, 75, 85, 85, 70, 1, "hybrid", "A Taste of Hope", false, true);
-        if ("ALCHEMICAL_HYDRA".equals(name))
-            return floor(1, 1, 70, 85, 1, 70, 95, "ranged", null, false, true);
-        if ("CERBERUS".equals(name))
-            return floor(75, 75, 70, 1, 1, 70, 91, "melee", null, false, true);
-        if ("ARAXXOR".equals(name))
-            return floor(80, 80, 70, 1, 1, 70, 92, "melee", null, false, true);
-        if ("KRAKEN".equals(name))
-            return floor(1, 1, 60, 1, 75, 43, 87, "magic", null, false, true);
-        if ("TZTOK_JAD".equals(name))
-            return floor(1, 1, 60, 70, 1, 43, 1, "ranged", null, false, true);
-        if ("TZKAL_ZUK".equals(name))
-            return floor(1, 1, 85, 92, 75, 77, 1, "ranged", null, false, true);
-        if ("SOL_HEREDIT".equals(name))
-            return floor(85, 85, 85, 85, 85, 77, 1, "hybrid", null, false, true);
-        if ("NEX".equals(name))
-            return floor(1, 1, 80, 90, 1, 70, 1, "ranged", null, false, true);
-        if (name.contains("GENERAL_GRAARDOR") || name.contains("KREEARRA")
-                || name.contains("COMMANDER_ZILYANA") || name.contains("KRIL_TSUTSAROTH"))
-            return floor(70, 70, 70, 75, 70, 70, 1, "hybrid", null, false, true);
-        if (name.contains("DUKE_SUCELLUS") || name.contains("LEVIATHAN")
-                || name.contains("VARDORVIS") || name.contains("WHISPERER"))
-            return floor(80, 80, 75, 80, 80, 70, 1, "hybrid",
-                    PlayerText.get("PRA10"), false, true);
-        if (activity.isRaid() || activity.getRiskLevel() == RiskLevel.HIGH)
-            return floor(80, 80, 75, 80, 80, 70, 1, "hybrid", null, false, true);
-
-        return floor(60, 60, 60, 60, 60, 43, 1, "combat", null, false, true);
-    }
 
     private static PvmReadiness priorFor(PvmSnapshot observed, String activityId)
     {
@@ -334,38 +281,4 @@ public class PvmReadinessAnalyzer
         return false;
     }
 
-    private static ReadinessFloor floor(int attack, int strength, int defence,
-            int ranged, int magic, int prayer, int slayer, String style,
-            String quest, boolean questMayBeInProgress, boolean supplies)
-    {
-        return new ReadinessFloor(attack, strength, defence, ranged, magic,
-                prayer, slayer, style, quest, questMayBeInProgress, supplies);
-    }
-
-    private static final class ReadinessFloor
-    {
-        private final int attack, strength, defence, ranged, magic, prayer, slayer;
-        private final String preferredStyle;
-        private final String requiredQuest;
-        private final boolean questMayBeInProgress;
-        private final boolean requiresSupplies;
-
-        private ReadinessFloor(int attack, int strength, int defence, int ranged,
-                int magic, int prayer, int slayer, String preferredStyle,
-                String requiredQuest, boolean questMayBeInProgress,
-                boolean requiresSupplies)
-        {
-            this.attack = attack;
-            this.strength = strength;
-            this.defence = defence;
-            this.ranged = ranged;
-            this.magic = magic;
-            this.prayer = prayer;
-            this.slayer = slayer;
-            this.preferredStyle = preferredStyle;
-            this.requiredQuest = requiredQuest;
-            this.questMayBeInProgress = questMayBeInProgress;
-            this.requiresSupplies = requiresSupplies;
-        }
-    }
 }

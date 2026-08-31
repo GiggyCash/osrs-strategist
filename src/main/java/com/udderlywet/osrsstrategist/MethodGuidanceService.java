@@ -44,7 +44,7 @@ public class MethodGuidanceService
         {
             steps.add(new GuidanceStep(
                     "method:ready", "Method ready",
-                    PlayerText.get("MGS1"),
+                    Text.get(372),
                     GuidanceStepState.COMPLETE));
         }
 

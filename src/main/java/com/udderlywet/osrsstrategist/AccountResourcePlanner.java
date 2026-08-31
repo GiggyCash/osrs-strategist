@@ -100,7 +100,7 @@ public class AccountResourcePlanner
     {
         if (entries.isEmpty())
         {
-            return PlayerText.get("ARP1");
+            return Text.get(69);
         }
 
         List<String> required = new ArrayList<>();
@@ -148,13 +148,13 @@ public class AccountResourcePlanner
         if (!primaryObserved)
         {
             if (mode == AccountMode.ULTIMATE_IRONMAN)
-                text.append(PlayerText.get("ARP2"));
+                text.append(Text.get(80));
             else
                 text.append("Open your bank once to verify stored ")
-                        .append(PlayerText.get("ARP3"));
+                        .append(Text.get(81));
             if (groupIncluded && !groupObserved)
             {
-                text.append(PlayerText.get("ARP4"));
+                text.append(Text.get(82));
             }
             return text.toString();
         }
@@ -167,10 +167,10 @@ public class AccountResourcePlanner
 
         if (missing.isEmpty())
         {
-            text.append(PlayerText.get("ARP5"));
+            text.append(Text.get(83));
             if (groupIncluded && groupObserved)
             {
-                text.append(PlayerText.get("ARP6"));
+                text.append(Text.get(84));
             }
             appendRestrictedUimNote(text, restricted);
             return text.toString();
@@ -189,10 +189,10 @@ public class AccountResourcePlanner
                             ? MembershipStatus.UNKNOWN
                             : data.getAccount().getMembershipStatus(), true);
             text.append("Current-stage shortfall: ").append(shortfall)
-                    .append(PlayerText.get("ARP7"));
+                    .append(Text.get(85));
             if (!routes.isEmpty())
                 text.append(" Route: ").append(routes.get(0));
-            text.append(PlayerText.get("ARP8"));
+            text.append(Text.get(86));
         }
         else if (mode.isGroupIronman())
         {
@@ -200,11 +200,11 @@ public class AccountResourcePlanner
                     .append(" in practical batches.");
             if (groupIncluded && groupObserved)
             {
-                text.append(PlayerText.get("ARP9"));
+                text.append(Text.get(87));
             }
             else if (groupIncluded)
             {
-                text.append(PlayerText.get("ARP10"));
+                text.append(Text.get(70));
             }
         }
         else if (mode.isIronLike())
@@ -221,7 +221,7 @@ public class AccountResourcePlanner
         else
         {
             text.append("Source ").append(shortfall)
-                    .append(PlayerText.get("ARP11"));
+                    .append(Text.get(71));
         }
 
         appendRestrictedUimNote(text, restricted);
@@ -250,7 +250,7 @@ public class AccountResourcePlanner
                     .append(" at the Grand Exchange. ")
                     .append("The exact live total is about ")
                     .append(format(decision.getTotalCost()))
-                    .append(PlayerText.get("ARP12"))
+                    .append(Text.get(72))
                     .append(format(decision.getObservedCoins()))
                     .append(" verified liquid coins.");
             return;
@@ -264,7 +264,7 @@ public class AccountResourcePlanner
                     .append(format(decision.getTotalCost()))
                     .append(" of ")
                     .append(format(decision.getObservedCoins()))
-                    .append(PlayerText.get("ARP13"))
+                    .append(Text.get(73))
                     .append(routes.get(0));
             return;
         }
@@ -272,19 +272,19 @@ public class AccountResourcePlanner
         if (decision != null && decision.getChoice()
                 == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
         {
-            text.append(PlayerText.get("ARP14"))
+            text.append(Text.get(74))
                     .append(format(decision.getTotalCost()))
                     .append(" coins, but only ")
                     .append(format(decision.getObservedCoins()))
                     .append(" liquid coins are verified.");
             if (!routes.isEmpty())
-                text.append(PlayerText.get("ARP15"))
+                text.append(Text.get(75))
                         .append(routes.get(0));
             return;
         }
 
-        text.append(PlayerText.get("ARP16"))
-                .append(PlayerText.get("ARP17"));
+        text.append(Text.get(76))
+                .append(Text.get(77));
         if (!routes.isEmpty())
             text.append(" Reviewed self-source route: ").append(routes.get(0));
     }
@@ -325,9 +325,9 @@ public class AccountResourcePlanner
             List<String> restricted)
     {
         if (restricted == null || restricted.isEmpty()) return;
-        text.append(PlayerText.get("ARP18"))
+        text.append(Text.get(78))
                 .append(join(restricted))
-                .append(PlayerText.get("ARP19"));
+                .append(Text.get(79));
     }
 
     /**

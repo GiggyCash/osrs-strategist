@@ -9,22 +9,22 @@ public final class InfrastructureMilestoneCatalog
 {
     public static final String AUDITED_AT = "2026-08-29";
     public static final List<String> PROVENANCE_URLS = Collections.unmodifiableList(Arrays.asList(
-            PlayerText.get("IMC1"),
-            PlayerText.get("IMC2"),
-            PlayerText.get("IMC3"),
-            PlayerText.get("IMC4"),
-            PlayerText.get("IMC5"),
-            PlayerText.get("IMC6"),
-            PlayerText.get("IMC7"),
-            PlayerText.get("IMC8"),
-            PlayerText.get("IMC9")));
+            Text.get(317),
+            Text.get(319),
+            Text.get(320),
+            Text.get(321),
+            Text.get(322),
+            Text.get(323),
+            Text.get(324),
+            Text.get(325),
+            Text.get(326)));
     private final Map<String, InfrastructureMilestoneDefinition> milestones;
 
     public InfrastructureMilestoneCatalog()
     {
         Map<String, InfrastructureMilestoneDefinition> values = new LinkedHashMap<>();
         for (InfrastructureMilestoneDefinition value : BundledCatalogLoader.array(
-                PlayerText.get("IMC10"),
+                Text.get(318),
                 InfrastructureMilestoneDefinition[].class))
             if (values.put(value.getId(), value) != null)
                 throw new IllegalStateException("Duplicate infrastructure milestone " + value.getId());

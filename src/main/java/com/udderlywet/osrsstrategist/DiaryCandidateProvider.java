@@ -62,14 +62,14 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                 result.add(new Recommendation(
                         verifyId,
                         "Check " + pretty(next.name()) + " " + region + " Diary",
-                        PlayerText.get("DCP1"),
+                        Text.get(205),
                         score,
                         RecommendationConfidence.CHECK_NEEDED,
                         new RecommendationGuidance(
-                                "Open the " + region + PlayerText.get("DCP2"),
-                                PlayerText.get("DCP3"),
+                                "Open the " + region + Text.get(206),
+                                Text.get(207),
                                 "Quest tab → Achievement Diaries → " + region + ".",
-                                PlayerText.get("DCP4")),
+                                Text.get(208)),
                         CandidateSafetyEvidence.harmless(false)
                 ));
                 continue;
@@ -81,14 +81,14 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
             result.add(new Recommendation(
                     ready.getId(),
                     "Complete a " + pretty(next.name()) + " " + region + " task",
-                    PlayerText.get("DCP5"),
+                    Text.get(209),
                     score,
                     RecommendationConfidence.VERIFIED,
                     new RecommendationGuidance(
                             ready.getTask(),
                             requirementSummary(ready),
-                            region + PlayerText.get("DCP6"),
-                            PlayerText.get("DCP7")),
+                            region + Text.get(210),
+                            Text.get(211)),
                     CandidateSafetyEvidence.potentiallyIrreversible(false)
             ));
         }
@@ -151,7 +151,7 @@ public class DiaryCandidateProvider implements StrategyCandidateProvider
                         + (requirement.isStartedOnly() ? " started" : " complete"));
         }
         return values.isEmpty()
-                ? PlayerText.get("DCP8")
+                ? Text.get(212)
                 : "Verified: " + String.join(", ", values) + ".";
     }
 

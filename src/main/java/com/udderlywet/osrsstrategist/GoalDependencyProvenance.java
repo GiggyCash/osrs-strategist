@@ -24,7 +24,7 @@ public final class GoalDependencyProvenance
                 || path == null || path.size() < 2)
         {
             throw new IllegalArgumentException(
-                    PlayerText.get("GDP2"));
+                    Text.get(263));
         }
         this.goal = goal;
         this.relationship = relationship;

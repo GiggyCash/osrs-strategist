@@ -393,7 +393,7 @@ public class GoalDependencyProvenanceService
                         : null;
             case BOWFA:
                 return contains(identity, "bowfa", "enhanced crystal weapon seed")
-                        ? list(goal.toString(), PlayerText.get("GDPS1"))
+                        ? list(goal.toString(), Text.get(264))
                         : null;
             case INFERNAL_CAPE:
                 return contains(identity, "inferno", "infernal cape", "tzkal zuk")

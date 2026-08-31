@@ -56,7 +56,7 @@ public class CombatAchievementCandidateProvider implements StrategyCandidateProv
                 "Combat Achievements: " + pretty(next.name()),
                 "The next reward tier is " + gap + " point"
                         + (gap == 1 ? "" : "s")
-                        + PlayerText.get("CACP1"),
+                        + Text.get(131),
                 score,
                 RecommendationConfidence.CHECK_NEEDED,
                 null,

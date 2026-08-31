@@ -50,10 +50,10 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JLabel accountMeta = mutedLabel("Unknown • -- / 2376");
     private final JLabel activeGoal = label("Goal: Automatic");
     private final JLabel strategySummary = mutedLabel(
-            PlayerText.get("OSP1")
+            Text.get(408)
     );
     private final JTextArea firstUseHint = wrappingArea(
-            PlayerText.get("OSP2"),
+            Text.get(409),
             MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
     private final JPanel milestoneBanner = cardPanel(true);

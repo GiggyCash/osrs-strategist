@@ -18,7 +18,7 @@ public final class DiaryTaskCatalog
 {
     public static final int EXPECTED_TASKS = 378;
     public static final String PROVENANCE =
-            PlayerText.get("DTC1");
+            Text.get(213);
     private static final Pattern SKILL = Pattern.compile(
             "new SkillRequirement\\(Skill\\.([A-Z_]+),\\s*(\\d+)\\)");
     private static final Pattern QUEST = Pattern.compile(
@@ -100,7 +100,7 @@ public final class DiaryTaskCatalog
         if (raw.contains("new OrRequirement"))
         {
             result.add(DiaryTaskRequirement.alternative(
-                    PlayerText.get("DTC2") + raw));
+                    Text.get(214) + raw));
             return result;
         }
         Matcher skill = SKILL.matcher(raw);

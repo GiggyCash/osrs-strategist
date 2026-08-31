@@ -7,13 +7,13 @@ import javax.inject.Singleton;
 @Singleton
 public class GearAcquisitionCatalog
 {
-    public static final String PROVENANCE = PlayerText.get("GAC1");
+    public static final String PROVENANCE = Text.get(249);
     private final Map<String, GearAcquisitionRoute> routes = new LinkedHashMap<>();
 
     public GearAcquisitionCatalog()
     {
         for (GearAcquisitionRoute route : BundledCatalogLoader.array(
-                PlayerText.get("GAC2"), GearAcquisitionRoute[].class))
+                Text.get(250), GearAcquisitionRoute[].class))
             if (routes.put(normalize(route.getItemName()), route) != null)
                 throw new IllegalStateException("Duplicate gear route " + route.getItemName());
     }

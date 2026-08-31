@@ -43,20 +43,20 @@ public class UniversalActionRecipeResolver
         String lower = name.toLowerCase(Locale.ROOT);
         switch (action.getSkill())
         {
-            case AGILITY: return none(PlayerText.get("UARR1"));
-            case MINING: return none(PlayerText.get("UARR2"));
-            case FISHING: return none(PlayerText.get("UARR3"));
-            case WOODCUTTING: return none(PlayerText.get("UARR4"));
-            case THIEVING: return none(PlayerText.get("UARR5"));
-            case HUNTER: return none(PlayerText.get("UARR6"));
+            case AGILITY: return none(Text.get(899));
+            case MINING: return none(Text.get(910));
+            case FISHING: return none(Text.get(921));
+            case WOODCUTTING: return none(Text.get(932));
+            case THIEVING: return none(Text.get(935));
+            case HUNTER: return none(Text.get(936));
             case COOKING: return cooking(name, lower, actions);
             case FIREMAKING: return lower.contains("log")
-                    ? recipe(PlayerText.get("UARR7"), actions, name, 1)
-                    : unknown(PlayerText.get("UARR8"));
+                    ? recipe(Text.get(937), actions, name, 1)
+                    : unknown(Text.get(938));
             case PRAYER: return contains(lower, "bones", "ashes", "head")
-                    ? recipe(PlayerText.get("UARR9"), actions, name, 1)
-                    : unknown(PlayerText.get("UARR10"));
-            case RUNECRAFT: return recipe(PlayerText.get("UARR11"), actions,
+                    ? recipe(Text.get(939), actions, name, 1)
+                    : unknown(Text.get(900));
+            case RUNECRAFT: return recipe(Text.get(901), actions,
                     membership == MembershipStatus.P2P ? "Pure essence" : "Rune essence", 1);
             case CRAFTING: return crafting(name, lower, actions);
             case FLETCHING: return fletching(name, lower, actions);
@@ -65,21 +65,21 @@ public class UniversalActionRecipeResolver
             case CONSTRUCTION: return construction(lower, actions);
             case FARMING: return farming(name, lower, actions);
             case MAGIC: return magic(lower, actions);
-            default: return unknown(PlayerText.get("UARR12"));
+            default: return unknown(Text.get(902));
         }
     }
 
     private static UniversalActionRecipe cooking(String name, String lower, int n)
     {
         if (contains(lower, "jug of wine") || lower.equals("wine"))
-            return recipe(PlayerText.get("UARR13"), n,
+            return recipe(Text.get(903), n,
                     "Grapes", 1, "Jug of water", 1);
         if (contains(lower, "cake", "pie", "pizza", "stew", "curry"))
-            return unknown(PlayerText.get("UARR14"));
+            return unknown(Text.get(904));
         String raw = lower.startsWith("raw ") ? name
                 : "Raw " + (lower.startsWith("cooked ") ? name.substring(7) : name).toLowerCase(Locale.ROOT);
-        return raw.trim().length() <= 4 ? unknown(PlayerText.get("UARR15"))
-                : recipe(PlayerText.get("UARR16"), n, raw, 1);
+        return raw.trim().length() <= 4 ? unknown(Text.get(905))
+                : recipe(Text.get(906), n, raw, 1);
     }
 
     private static UniversalActionRecipe crafting(String name, String lower, int n)
@@ -96,9 +96,9 @@ public class UniversalActionRecipeResolver
             case "bowl": return recipe("Use a pottery oven.", n, "Unfired bowl", 1);
             case "empty plant pot": return recipe("Use a pottery oven.", n, "Unfired plant pot", 1);
             case "pot lid": return recipe("Use a pottery oven.", n, "Unfired pot lid", 1);
-            case "molten glass": return recipe(PlayerText.get("UARR17"), n,
+            case "molten glass": return recipe(Text.get(907), n,
                     "Bucket of sand", 1, "Soda ash", 1);
-            case "tiara": return recipe(PlayerText.get("UARR18"), n,
+            case "tiara": return recipe(Text.get(908), n,
                     "Silver bar", 1);
             case "gold tiara": return recipe("Bring a tiara mould to a furnace.", n, "Gold bar", 1);
             default: break;
@@ -107,9 +107,9 @@ public class UniversalActionRecipeResolver
             return recipe("Bring a chisel.", n, lower.startsWith("uncut ") ? name : "Uncut " + lower, 1);
         if (contains(lower, "beer glass", "candle lantern", "oil lamp", "vial",
                 "fishbowl", "unpowered orb", "lantern lens") && !lower.contains("molten"))
-            return recipe(PlayerText.get("UARR19"), n, "Molten glass", 1);
+            return recipe(Text.get(909), n, "Molten glass", 1);
         if (lower.contains("bird house"))
-            return recipe(PlayerText.get("UARR20"), n, woodItem(name, "Logs"), 1);
+            return recipe(Text.get(911), n, woodItem(name, "Logs"), 1);
         if (contains(lower, "d'hide", "dragonhide"))
         {
             int hides = lower.contains("body") ? 3 : lower.contains("chaps") ? 2
@@ -133,18 +133,18 @@ public class UniversalActionRecipeResolver
         if (contains(lower, "battlestaff", "battlestave"))
         {
             String element = firstMatch(lower, "air", "water", "earth", "fire");
-            if (element != null) return recipe(PlayerText.get("UARR21"), n,
+            if (element != null) return recipe(Text.get(912), n,
                     "Battlestaff", 1, capitalize(element) + " orb", 1);
         }
-        return unknown(PlayerText.get("UARR22"));
+        return unknown(Text.get(913));
     }
 
     private static UniversalActionRecipe fletching(String name, String lower, int n)
     {
         if (lower.equals("arrow shaft") || lower.equals("arrow shafts"))
-            return recipe(PlayerText.get("UARR23"), 1, "Logs", ceil(n, 15));
+            return recipe(Text.get(914), 1, "Logs", ceil(n, 15));
         if (lower.equals("headless arrow") || lower.equals("headless arrows"))
-            return recipe(PlayerText.get("UARR24"), n,
+            return recipe(Text.get(915), n,
                     "Arrow shaft", 1, "Feather", 1);
         if (lower.endsWith("bow (u)")) return recipe("Bring a knife.", n, woodItem(name, "Logs"), 1);
         if (contains(lower, "shortbow", "longbow") && !lower.contains("(u)"))
@@ -153,20 +153,20 @@ public class UniversalActionRecipeResolver
         if (lower.endsWith(" stock")) return recipe("Bring a knife.", n, woodItem(name, null), 1);
         String metal = firstWord(name);
         if (lower.endsWith(" dart") || lower.endsWith(" darts"))
-            return recipe(PlayerText.get("UARR25"), n, metal + " dart tip", 1, "Feather", 1);
+            return recipe(Text.get(916), n, metal + " dart tip", 1, "Feather", 1);
         if (lower.contains("broad arrow"))
-            return recipe(PlayerText.get("UARR26"), n,
+            return recipe(Text.get(917), n,
                     "Headless arrow", 1, "Broad arrowhead", 1);
         if (isMetalProjectile(lower, "arrow"))
-            return recipe(PlayerText.get("UARR27"), n,
+            return recipe(Text.get(918), n,
                     "Headless arrow", 1, metal + " arrowhead", 1);
         if (isMetalProjectile(lower, "javelin"))
-            return recipe(PlayerText.get("UARR28"), n,
+            return recipe(Text.get(919), n,
                     "Javelin shaft", 1, metal + " javelin head", 1);
         if (isBasicBolt(lower))
-            return recipe(PlayerText.get("UARR29"), n,
+            return recipe(Text.get(920), n,
                     metal + " bolts (unf)", 1, "Feather", 1);
-        return unknown(PlayerText.get("UARR30"));
+        return unknown(Text.get(922));
     }
 
     private static UniversalActionRecipe smithing(String lower, int n)
@@ -184,10 +184,10 @@ public class UniversalActionRecipeResolver
         int count = smithingBarsFor(lower);
         String metal = firstMatch(lower, "bronze", "iron", "steel", "mithril", "adamant", "rune");
         if (count > 0 && metal != null)
-            return recipe(PlayerText.get("UARR31"), n,
+            return recipe(Text.get(923), n,
                     metal.equals("adamant") ? "Adamantite bar"
                             : metal.equals("rune") ? "Runite bar" : capitalize(metal) + " bar", count);
-        return unknown(PlayerText.get("UARR32"));
+        return unknown(Text.get(924));
     }
 
     static int smithingBarsFor(String lower)
@@ -207,8 +207,8 @@ public class UniversalActionRecipeResolver
         for (Map.Entry<String, String[]> row : POTIONS.entrySet())
             if (lower.contains(row.getKey()) && (!isBasicPotion(row.getKey()) || !lower.contains("super")))
             { ingredients = row.getValue(); break; }
-        return ingredients == null ? unknown(PlayerText.get("UARR33"))
-                : recipe(PlayerText.get("UARR34"), n,
+        return ingredients == null ? unknown(Text.get(925))
+                : recipe(Text.get(926), n,
                         ingredients[0], 1, ingredients[1], 1, "Vial of water", 1);
     }
 
@@ -220,14 +220,14 @@ public class UniversalActionRecipeResolver
         if (lower.contains("crude wooden chair")) return recipe("Bring a hammer and saw.", n,
                 "Plank", 2, "Steel nails", 2);
         if (lower.contains("teak garden bench")) return recipe("Bring a hammer and saw.", n, "Teak plank", 6);
-        if (lower.contains("mythical cape")) return recipe(PlayerText.get("UARR35"), n, "Teak plank", 3);
-        return unknown(PlayerText.get("UARR36"));
+        if (lower.contains("mythical cape")) return recipe(Text.get(927), n, "Teak plank", 3);
+        return unknown(Text.get(928));
     }
 
     private static UniversalActionRecipe farming(String name, String lower, int n)
     {
-        if (!lower.endsWith(" tree")) return unknown(PlayerText.get("UARR37"));
-        return recipe(PlayerText.get("UARR38"), n,
+        if (!lower.endsWith(" tree")) return unknown(Text.get(929));
+        return recipe(Text.get(930), n,
                 name.substring(0, name.length() - 5).trim() + " sapling", 1);
     }
 
@@ -239,12 +239,12 @@ public class UniversalActionRecipeResolver
         if (lower.equals("fire blast")) return recipe("Full base rune cost.", n,
                 "Air rune", 4, "Fire rune", 5, "Death rune", 1);
         if (contains(lower, "high level alchemy", "high alchemy"))
-            return recipe(PlayerText.get("UARR39"), n,
+            return recipe(Text.get(931), n,
                     "Nature rune", 1, "Fire rune", 5);
         if (lower.equals("curse") || lower.endsWith(" curse"))
-            return recipe(PlayerText.get("UARR40"), n,
+            return recipe(Text.get(933), n,
                     "Earth rune", 3, "Water rune", 2, "Body rune", 1);
-        return unknown(PlayerText.get("UARR41"));
+        return unknown(Text.get(934));
     }
 
     private static UniversalActionRecipe recipe(String setup, int actions, Object... itemAndUnits)

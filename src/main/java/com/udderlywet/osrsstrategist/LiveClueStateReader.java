@@ -175,7 +175,7 @@ public class LiveClueStateReader
         if (clue instanceof CipherClue)
             return talkTo(((CipherClue) clue).getNpcs(cluePlugin));
         if (clue instanceof CoordinateClue)
-            return PlayerText.get("LCSR1");
+            return Text.get(339);
         if (clue instanceof MapClue)
             return ((MapClue) clue).getDescription();
         if (clue instanceof MusicClue)
@@ -186,14 +186,14 @@ public class LiveClueStateReader
                             : " for " + npc + ".");
         }
         if (clue instanceof FaloTheBardClue)
-            return PlayerText.get("LCSR2");
+            return Text.get(340);
         if (clue instanceof SkillChallengeClue)
             return ((SkillChallengeClue) clue).getChallenge();
         if (clue instanceof HotColdClue)
         {
             String solution = ((HotColdClue) clue).getSolution();
             return solution == null || solution.trim().isEmpty()
-                    ? PlayerText.get("LCSR3")
+                    ? Text.get(341)
                     : solution;
         }
         if (clue instanceof FairyRingClue)
@@ -270,7 +270,7 @@ public class LiveClueStateReader
                 if (solution != null && !solution.trim().isEmpty())
                     return solution;
             }
-        return PlayerText.get("LCSR4");
+        return Text.get(342);
     }
 
     private static String clueKind(ClueScroll clue)
@@ -293,7 +293,7 @@ public class LiveClueStateReader
     private String talkTo(String[] npcs)
     {
         return npcs == null || npcs.length == 0
-                ? PlayerText.get("LCSR5")
+                ? Text.get(343)
                 : "Talk to " + npcs[0] + ".";
     }
 

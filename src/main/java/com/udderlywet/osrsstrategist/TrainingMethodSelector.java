@@ -316,7 +316,7 @@ public class TrainingMethodSelector
             reason.append(" It also fits ").append(pretty(sessionIntent.name()))
                     .append(" sessions.");
         if (method.isWilderness())
-            reason.append(PlayerText.get("TMS1"));
+            reason.append(Text.get(898));
         return reason.toString();
     }
 

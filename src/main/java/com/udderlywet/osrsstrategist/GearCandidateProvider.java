@@ -115,10 +115,10 @@ public class GearCandidateProvider implements StrategyCandidateProvider
         if (!items.primaryOwnershipObserved())
         {
             return new RecommendationGuidance(
-                    PlayerText.get("GCP1"),
-                    PlayerText.get("GCP2"),
-                    PlayerText.get("GCP3"),
-                    PlayerText.get("GCP4"));
+                    Text.get(251),
+                    Text.get(255),
+                    Text.get(256),
+                    Text.get(257));
         }
 
         List<String> owned = new ArrayList<>();
@@ -138,14 +138,14 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 && (!mode.usesGrandExchange() || !route.isTradeable()))
             action = route.getSteps().get(0).getAction();
         else if (mode.usesGrandExchange())
-            action = PlayerText.get("GCP5") + next
-                    + PlayerText.get("GCP6");
+            action = Text.get(258) + next
+                    + Text.get(259);
         else if (mode == AccountMode.ULTIMATE_IRONMAN)
-            action = PlayerText.get("GCP7")
-                    + next + PlayerText.get("GCP8");
+            action = Text.get(260)
+                    + next + Text.get(261);
         else
-            action = PlayerText.get("GCP9") + next
-                    + PlayerText.get("GCP10");
+            action = Text.get(262) + next
+                    + Text.get(252);
 
         String supplies = "Observed matching targets: "
                 + (owned.isEmpty() ? "none" : String.join(", ", owned))
@@ -153,9 +153,9 @@ public class GearCandidateProvider implements StrategyCandidateProvider
                 + (unresolved.isEmpty() ? "weapon/context comparison only"
                 : String.join(", ", unresolved)) + ".";
         String location = route == null
-                ? PlayerText.get("GCP11")
+                ? Text.get(253)
                 : "Route starts with " + route.getSteps().get(0).getTarget()
-                        + PlayerText.get("GCP12");
+                        + Text.get(254);
         return new RecommendationGuidance(action, supplies, location,
                 entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
     }

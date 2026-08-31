@@ -29,9 +29,9 @@ public final class ContextualGearDecisionService
                 unresolvedRoutes.add(target);
         }
         String ownedValue = !ownershipObserved
-                ? PlayerText.get("CGDS1")
+                ? Text.get(142)
                 : owned.isEmpty()
-                ? PlayerText.get("CGDS2")
+                ? Text.get(143)
                 : owned.get(0);
         put(result, GearDecisionKind.BEST_OWNED, ownedValue,
                 ownershipObserved && !owned.isEmpty()
@@ -39,8 +39,8 @@ public final class ContextualGearDecisionService
                         : RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_USABLE,
                 owned.isEmpty()
-                        ? PlayerText.get("CGDS3")
-                        : owned.get(0) + PlayerText.get("CGDS4"),
+                        ? Text.get(144)
+                        : owned.get(0) + Text.get(145),
                 RecommendationConfidence.CHECK_NEEDED);
 
         String routed = unresolvedRoutes.isEmpty() ? null
@@ -48,18 +48,18 @@ public final class ContextualGearDecisionService
         AccountMode mode = context == null ? AccountMode.UNKNOWN
                 : context.getAccountMode();
         String available = routed == null
-                ? PlayerText.get("CGDS5")
+                ? Text.get(146)
                 : mode.usesGrandExchange()
-                ? PlayerText.get("CGDS6") + routed
-                : PlayerText.get("CGDS7") + routed;
+                ? Text.get(147) + routed
+                : Text.get(148) + routed;
         put(result, GearDecisionKind.BEST_AVAILABLE_NOW, available,
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_VALUE_UPGRADE,
-                PlayerText.get("CGDS8"),
+                Text.get(149),
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.BEST_PRACTICAL_UPGRADE,
                 routed == null ? entry.getWeaponGuidance()
-                        : routed + PlayerText.get("CGDS9"),
+                        : routed + Text.get(150),
                 RecommendationConfidence.CHECK_NEEDED);
         put(result, GearDecisionKind.LONG_TERM_TARGET,
                 entry.getWeaponGuidance(), RecommendationConfidence.CHECK_NEEDED);

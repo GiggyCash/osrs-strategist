@@ -74,32 +74,32 @@ public final class InfrastructureUnlockValueService
                         InfrastructureMilestoneState.CHECK_NEEDED,
                         RecommendationConfidence.CHECK_NEEDED, overall,
                         contributions,
-                        PlayerText.get("IUVS1"));
+                        Text.get(334));
         }
 
         CapabilityState completion = completionState(definition, data);
         if (completion == CapabilityState.VERIFIED)
             return result(definition, InfrastructureMilestoneState.COMPLETE,
                     RecommendationConfidence.VERIFIED, overall, contributions,
-                    PlayerText.get("IUVS2"));
+                    Text.get(335));
 
         RequirementState requirements = requirements(definition, data);
         if (requirements == RequirementState.BLOCKED)
             return result(definition,
                     InfrastructureMilestoneState.REQUIREMENTS_MISSING,
                     RecommendationConfidence.BLOCKED, overall, contributions,
-                    PlayerText.get("IUVS3"));
+                    Text.get(336));
         if (requirements == RequirementState.CHECK_NEEDED
                 || completion == CapabilityState.UNKNOWN)
             return result(definition,
                     InfrastructureMilestoneState.CHECK_NEEDED,
                     RecommendationConfidence.CHECK_NEEDED, overall,
                     contributions,
-                    PlayerText.get("IUVS4"));
+                    Text.get(337));
 
         return result(definition, InfrastructureMilestoneState.ACTIONABLE,
                 RecommendationConfidence.VERIFIED, overall, contributions,
-                PlayerText.get("IUVS5"));
+                Text.get(338));
     }
 
     private RequirementState requirements(

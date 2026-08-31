@@ -16,7 +16,7 @@ public final class RecommendationRiskDisclosure
     public static RecommendationRiskDisclosure deathStorage()
     {
         return new RecommendationRiskDisclosure("HIGH RISK",
-                PlayerText.get("RRD1"),
+                Text.get(702),
                 true);
     }
 

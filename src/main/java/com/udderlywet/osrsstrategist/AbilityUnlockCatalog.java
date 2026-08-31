@@ -8,13 +8,13 @@ import javax.inject.Singleton;
 public final class AbilityUnlockCatalog
 {
     public static final String PROVENANCE =
-            PlayerText.get("AUC1");
+            Text.get(129);
     private final Map<String, AbilityUnlockDefinition> definitions = new LinkedHashMap<>();
 
     public AbilityUnlockCatalog()
     {
         for (AbilityUnlockDefinition value : BundledCatalogLoader.array(
-                PlayerText.get("AUC2"), AbilityUnlockDefinition[].class))
+                Text.get(130), AbilityUnlockDefinition[].class))
             if (definitions.put(normalize(value.getId()), value) != null)
                 throw new IllegalStateException("Duplicate ability unlock " + value.getId());
     }

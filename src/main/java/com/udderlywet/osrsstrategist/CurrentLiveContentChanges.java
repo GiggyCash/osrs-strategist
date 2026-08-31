@@ -42,38 +42,38 @@ public final class CurrentLiveContentChanges
         public String getSource() { return source; }
     }
 
-    private static final String OFFICIAL = PlayerText.get("CLCC1");
+    private static final String OFFICIAL = Text.get(189);
     private static final List<Entry> ENTRIES = Collections.unmodifiableList(Arrays.asList(
             new Entry("2026-08-12-sepulchre-floor-4", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC2"), OFFICIAL),
+                    Text.get(192), OFFICIAL),
             new Entry("2026-08-12-sepulchre-floor-5", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC3"), OFFICIAL),
+                    Text.get(193), OFFICIAL),
             new Entry("2026-08-12-colossal-wyrm-courses", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC4"), OFFICIAL),
+                    Text.get(194), OFFICIAL),
             new Entry("2026-08-12-agility-shortcuts", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC5"), OFFICIAL),
+                    Text.get(195), OFFICIAL),
             new Entry("2026-08-12-bonfire-tending", LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC6"), OFFICIAL),
+                    Text.get(196), OFFICIAL),
             new Entry("2026-08-19-birdhouse-nests", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC7"), OFFICIAL),
+                    Text.get(197), OFFICIAL),
             new Entry("2026-08-19-birdhouse-xp", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC8"), OFFICIAL),
+                    Text.get(198), OFFICIAL),
             new Entry("2026-08-19-hunter-methods", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC9"), OFFICIAL),
+                    Text.get(199), OFFICIAL),
             new Entry("2026-08-19-skilling-reward-shops", LocalDate.of(2026, 8, 19),
                     Status.LIVE_CURRENT,
-                    PlayerText.get("CLCC10"), OFFICIAL),
+                    Text.get(190), OFFICIAL),
             new Entry("2026-09-02-sweep-up-follow-up", LocalDate.of(2026, 9, 2),
                     Status.ANNOUNCED_NOT_LIVE,
-                    PlayerText.get("CLCC11"), OFFICIAL)
+                    Text.get(191), OFFICIAL)
     ));
 
     private CurrentLiveContentChanges() { }

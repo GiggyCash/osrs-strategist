@@ -169,7 +169,7 @@ public final class RecommendationPresentation
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
         {
             text.append("<b>ACTIVITY</b><br>Blocked")
-                    .append(PlayerText.get("RP1"));
+                    .append(Text.get(692));
             return;
         }
         text.append("<b>ACTIVITY</b><br>")
@@ -182,7 +182,7 @@ public final class RecommendationPresentation
             {
                 appendBreak(text, 2);
                 text.append("<b>DO</b><br>");
-                text.append(PlayerText.get("RP2"));
+                text.append(Text.get(693));
             }
             return;
         }
@@ -194,7 +194,7 @@ public final class RecommendationPresentation
         else if (hasText(recommendation.getReason()))
         {
             appendBreak(text, 2);
-            text.append(PlayerText.get("RP3"));
+            text.append(Text.get(694));
         }
     }
 
@@ -207,7 +207,7 @@ public final class RecommendationPresentation
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
         if (disclosure.isAcknowledgementRequired())
-            text.append(PlayerText.get("RP4"));
+            text.append(Text.get(695));
         appendBreak(text, 2);
     }
 
@@ -301,9 +301,9 @@ public final class RecommendationPresentation
                 && guidance != null && hasText(guidance.getSupplies()))
             return guidance.getSupplies();
         if (recommendation.getConfidence() == RecommendationConfidence.CHECK_NEEDED)
-            return PlayerText.get("RP5");
+            return Text.get(696);
         if (recommendation.getConfidence() == RecommendationConfidence.BLOCKED)
-            return PlayerText.get("RP6");
+            return Text.get(697);
         return "";
     }
 

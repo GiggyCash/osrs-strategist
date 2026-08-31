@@ -44,11 +44,11 @@ public final class MethodStrategyKnowledgeCatalog
     public MethodStrategyKnowledgeCatalog()
     {
         for (MethodStrategyProfile profile : BundledCatalogLoader.array(
-                PlayerText.get("MSKC1"),
+                Text.get(384),
                 MethodStrategyProfile[].class))
         {
             if (profile.getMethodId() == null || profile.getTier() == null)
-                throw new IllegalStateException(PlayerText.get("MSKC2"));
+                throw new IllegalStateException(Text.get(385));
             addExact(profile);
         }
     }
@@ -94,8 +94,8 @@ public final class MethodStrategyKnowledgeCatalog
         StrategySourceId source = accountSkillSource(
                 method.getSkill(), mode, metadata.isFreeToPlayAllowed());
         String reason = metadata.isSelfSourceFriendly() && mode.isIronLike()
-                ? PlayerText.get("MSKC3")
-                : PlayerText.get("MSKC4");
+                ? Text.get(386)
+                : Text.get(387);
         return new MethodStrategyProfile(method.getId(),
                 StrategyKnowledgeTier.VERIFIED_SHARED, modes,
                 bankLoop ? MethodBankingBehavior.CONVENTIONAL_BANK_LOOP

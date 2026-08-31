@@ -14,7 +14,7 @@ public class VariableMethodGuidanceService
 {
     private static final StaticGuidance[] STATIC_GUIDANCE =
             BundledCatalogLoader.array(
-                    PlayerText.get("VMGS1"),
+                    Text.get(1057),
                     StaticGuidance[].class);
     private static final FarmingAccessEvaluator FARMING_ACCESS =
             new FarmingAccessEvaluator(new FarmingAccessCatalog());
@@ -67,12 +67,12 @@ public class VariableMethodGuidanceService
         String harpoon = firstObserved(items, "Dragon harpoon",
                 "Crystal harpoon", "Infernal harpoon", "Harpoon");
         return new RecommendationGuidance(
-                PlayerText.get("VMGS2") + format(xp) + " Fishing XP for level " + target + ".",
+                Text.get(1068) + format(xp) + " Fishing XP for level " + target + ".",
                 harpoon == null
-                        ? PlayerText.get("VMGS3")
-                        : "Bring " + harpoon + PlayerText.get("VMGS4"),
-                PlayerText.get("VMGS5"),
-                PlayerText.get("VMGS6")
+                        ? Text.get(1079)
+                        : "Bring " + harpoon + Text.get(1090),
+                Text.get(1101),
+                Text.get(1103)
         );
     }
 
@@ -81,11 +81,11 @@ public class VariableMethodGuidanceService
         String pouches = observed(items, "Small pouch", "Medium pouch",
                 "Large pouch", "Giant pouch", "Colossal pouch");
         return new RecommendationGuidance(
-                PlayerText.get("VMGS7") + format(xp) + " Runecraft XP for level " + target + ".",
+                Text.get(1104) + format(xp) + " Runecraft XP for level " + target + ".",
                 "Bring a pickaxe and chisel."
                         + (pouches.isEmpty() ? "" : " " + pouches),
-                PlayerText.get("VMGS8"),
-                PlayerText.get("VMGS9")
+                Text.get(1105),
+                Text.get(1106)
         );
     }
 
@@ -94,16 +94,16 @@ public class VariableMethodGuidanceService
     {
         MembershipStatus membership = data.getAccount().getMembershipStatus();
         String scout = membership == MembershipStatus.P2P
-                ? PlayerText.get("VMGS10")
-                : PlayerText.get("VMGS11");
+                ? Text.get(1058)
+                : Text.get(1059);
         String pickaxe = pickaxe(items);
         return new RecommendationGuidance(
-                scout + PlayerText.get("VMGS12") + format(xp) + " Mining XP toward level " + target + ".",
-                "Bring " + pickaxe + PlayerText.get("VMGS13") + observed(items, "Celestial ring", "Celestial signet"),
+                scout + Text.get(1060) + format(xp) + " Mining XP toward level " + target + ".",
+                "Bring " + pickaxe + Text.get(1061) + observed(items, "Celestial ring", "Celestial signet"),
                 membership == MembershipStatus.P2P
-                        ? PlayerText.get("VMGS14")
-                        : PlayerText.get("VMGS15"),
-                PlayerText.get("VMGS16")
+                        ? Text.get(1062)
+                        : Text.get(1063),
+                Text.get(1064)
         );
     }
 
@@ -113,12 +113,12 @@ public class VariableMethodGuidanceService
         if (alloy == null) return null;
         return new RecommendationGuidance(
                 "Ask Kovac for a commission. Load " + alloy.description
-                        + PlayerText.get("VMGS17")
+                        + Text.get(1065)
                         + format(xp) + " Smithing XP toward level " + target + ".",
-                "Bring " + alloy.description + PlayerText.get("VMGS18")
+                "Bring " + alloy.description + Text.get(1066)
                         + observed(items, "Iron bar", "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"),
-                PlayerText.get("VMGS19"),
-                PlayerText.get("VMGS20")
+                Text.get(1067),
+                Text.get(1069)
         );
     }
 
@@ -129,12 +129,12 @@ public class VariableMethodGuidanceService
         ContractTier tier = contractTier(level, items);
         if (tier == null) return null;
         return new RecommendationGuidance(
-                "Ask Amy for a " + tier.name + PlayerText.get("VMGS21") + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
+                "Ask Amy for a " + tier.name + Text.get(1070) + tier.name + " contract. Repeat for " + format(xp) + " Construction XP toward level " + target + ".",
                 "Bring a hammer, saw, at least 15 " + tier.plank.toLowerCase(java.util.Locale.ROOT)
-                        + PlayerText.get("VMGS22")
+                        + Text.get(1071)
                         + observed(items, "Plank sack", tier.plank, "Steel bar"),
-                PlayerText.get("VMGS23"),
-                PlayerText.get("VMGS24")
+                Text.get(1072),
+                Text.get(1073)
         );
     }
 
@@ -146,10 +146,10 @@ public class VariableMethodGuidanceService
         String seed = level >= 74 ? "Logavano"
                 : level >= 54 ? "Bologano" : "Golovanova";
         return new RecommendationGuidance(
-                "Take " + seed + PlayerText.get("VMGS25") + format(xp) + " Farming XP to level " + target + ".",
-                PlayerText.get("VMGS26") + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
+                "Take " + seed + Text.get(1074) + format(xp) + " Farming XP to level " + target + ".",
+                Text.get(1075) + observed(items, "Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"),
                 "Tithe Farm in Hosidius.",
-                PlayerText.get("VMGS27")
+                Text.get(1076)
         );
     }
 
@@ -162,15 +162,15 @@ public class VariableMethodGuidanceService
                 data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
-                "At " + patch + PlayerText.get("VMGS28")
+                "At " + patch + Text.get(1077)
                         + seed.toLowerCase(java.util.Locale.ROOT)
-                        + PlayerText.get("VMGS29")
+                        + Text.get(1078)
                         + format(xp) + " Farming XP to level " + target + ".",
                 "Bring six " + seed.toLowerCase(java.util.Locale.ROOT)
-                        + PlayerText.get("VMGS30")
+                        + Text.get(1080)
                         + observed(items, seed, "Seed dibber", "Spade", "Rake", "Bottomless compost bucket", "Gricoller's can"),
                 patch + ".",
-                PlayerText.get("VMGS31")
+                Text.get(1081)
         );
     }
 
@@ -184,10 +184,10 @@ public class VariableMethodGuidanceService
                 data == null ? null : data.getFarming());
         if (patch == null) return null;
         return new RecommendationGuidance(
-                "At " + patch + ", harvest any ready herbs, plant " + seed + PlayerText.get("VMGS32") + format(xp) + " Farming XP to level " + target + ".",
-                "Bring " + seed + PlayerText.get("VMGS33") + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
+                "At " + patch + ", harvest any ready herbs, plant " + seed + Text.get(1082) + format(xp) + " Farming XP to level " + target + ".",
+                "Bring " + seed + Text.get(1083) + observed(items, "Seed dibber", "Spade", "Bottomless compost bucket", "Magic secateurs", "Seed box"),
                 patch + ".",
-                PlayerText.get("VMGS34")
+                Text.get(1084)
         );
     }
 
@@ -216,10 +216,10 @@ public class VariableMethodGuidanceService
         int level = data.getAccount().getSkillLevel(Skill.FARMING);
         String tier = level >= 85 ? "hard" : level >= 65 ? "medium" : "easy";
         return new RecommendationGuidance(
-                "Ask Guildmaster Jane for a " + tier + PlayerText.get("VMGS35") + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
-                PlayerText.get("VMGS36") + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
-                PlayerText.get("VMGS37"),
-                PlayerText.get("VMGS38")
+                "Ask Guildmaster Jane for a " + tier + Text.get(1085) + tier + " contract. Farming still needs " + format(xp) + " XP to level " + target + ".",
+                Text.get(1086) + observed(items, "Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"),
+                Text.get(1087),
+                Text.get(1088)
         );
     }
 
@@ -237,11 +237,11 @@ public class VariableMethodGuidanceService
                 : "Huntmaster Gilman";
         return new RecommendationGuidance(
                 "Get a " + tier + " rumour from " + hunter
-                        + PlayerText.get("VMGS39")
+                        + Text.get(1089)
                         + format(xp) + " Hunter XP toward level " + target + ".",
-                PlayerText.get("VMGS40") + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
-                hunter + PlayerText.get("VMGS41"),
-                PlayerText.get("VMGS42")
+                Text.get(1091) + observed(items, "Basic quetzal whistle", "Enhanced quetzal whistle", "Perfected quetzal whistle"),
+                hunter + Text.get(1092),
+                Text.get(1093)
         );
     }
 
@@ -252,20 +252,20 @@ public class VariableMethodGuidanceService
         String tree = level >= 60 ? "yew trees" : level >= 45
                 ? "maple trees" : level >= 30 ? "willow trees" : "oak trees";
         String location = level >= 60
-                ? PlayerText.get("VMGS43")
+                ? Text.get(1094)
                 : level >= 45
-                        ? PlayerText.get("VMGS44")
+                        ? Text.get(1095)
                         : level >= 30
-                                ? PlayerText.get("VMGS45")
-                                : PlayerText.get("VMGS46");
+                                ? Text.get(1096)
+                                : Text.get(1097);
         String axe = axe(items);
         return new RecommendationGuidance(
                 "On an official Forestry world, cut " + tree
-                        + PlayerText.get("VMGS47")
+                        + Text.get(1098)
                         + format(xp) + " Woodcutting XP toward level " + target + ".",
                 "Bring " + axe + " and a Forestry kit when owned. " + observed(items, "Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"),
                 location,
-                PlayerText.get("VMGS48")
+                Text.get(1099)
         );
     }
 
@@ -414,7 +414,7 @@ public class VariableMethodGuidanceService
                 "Adamant pickaxe", "Mithril pickaxe", "Black pickaxe",
                 "Steel pickaxe", "Iron pickaxe", "Bronze pickaxe"};
         for (String name : names) if (items.has(name)) return name;
-        return PlayerText.get("VMGS49");
+        return Text.get(1100);
     }
 
     private static String axe(ObservedItemIndex items)
@@ -423,7 +423,7 @@ public class VariableMethodGuidanceService
                 "Rune axe", "Adamant axe", "Mithril axe", "Black axe",
                 "Steel axe", "Iron axe", "Bronze axe"};
         for (String name : names) if (items.has(name)) return name;
-        return PlayerText.get("VMGS50");
+        return Text.get(1102);
     }
 
     private static String firstObserved(

@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 public class FarmingRunCatalog
 {
     private final List<FarmingRunPatchDefinition> patches = Collections.unmodifiableList(Arrays.asList(
-            BundledCatalogLoader.array(PlayerText.get("FRC1"),
+            BundledCatalogLoader.array(Text.get(218),
                     FarmingRunPatchDefinition[].class)));
     public List<FarmingRunPatchDefinition> all() { return patches; }
     public List<FarmingRunPatchDefinition> forRegion(int regionId)

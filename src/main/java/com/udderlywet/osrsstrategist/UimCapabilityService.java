@@ -35,7 +35,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     RiskLevel.NONE,
-                    PlayerText.get("UCS1"));
+                    Text.get(940));
         }
 
         if (UimStorageMechanics.isTooGenericToRecommend(capability))
@@ -43,7 +43,7 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     RiskLevel.HIGH,
-                    PlayerText.get("UCS2"));
+                    Text.get(942));
         }
 
         if (UimStorageMechanics.isRestrictedRetrieval(capability))
@@ -55,7 +55,7 @@ public class UimCapabilityService
                 return decision(capability, false,
                         RecommendationConfidence.CHECK_NEEDED,
                         riskFor(capability),
-                        PlayerText.get("UCS3"));
+                        Text.get(943));
         }
 
         StorageSnapshot storage = data.getStorage();
@@ -68,14 +68,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    PlayerText.get("UCS4"));
+                    Text.get(944));
         }
         if (capabilityState != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    PlayerText.get("UCS5"));
+                    Text.get(945));
         }
 
         if (itemCompatibility == CapabilityState.BLOCKED)
@@ -83,14 +83,14 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    PlayerText.get("UCS6"));
+                    Text.get(946));
         }
         if (itemCompatibility != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    PlayerText.get("UCS7"));
+                    Text.get(947));
         }
 
         if (capacityOrPreconditions == CapabilityState.BLOCKED)
@@ -98,20 +98,20 @@ public class UimCapabilityService
             return decision(capability, false,
                     RecommendationConfidence.BLOCKED,
                     riskFor(capability),
-                    PlayerText.get("UCS8"));
+                    Text.get(948));
         }
         if (capacityOrPreconditions != CapabilityState.VERIFIED)
         {
             return decision(capability, false,
                     RecommendationConfidence.CHECK_NEEDED,
                     riskFor(capability),
-                    PlayerText.get("UCS9"));
+                    Text.get(949));
         }
 
         return decision(capability, true,
                 RecommendationConfidence.VERIFIED,
                 riskFor(capability),
-                PlayerText.get("UCS10"));
+                Text.get(941));
     }
 
     public boolean shouldRequireExplicitWarning(StorageCapability capability)
