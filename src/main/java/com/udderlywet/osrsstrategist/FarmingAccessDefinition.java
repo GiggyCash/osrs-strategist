@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import lombok.Getter;
 

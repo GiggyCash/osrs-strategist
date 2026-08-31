@@ -1,12 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -70,23 +64,6 @@ public class StrategyEngine
                 ? new FinalExecutionPlanValidator() : finalExecutionValidator;
     }
 
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
-            StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy,
-            RecommendationIntelligenceService intelligenceService,
-            CandidateSafetyPolicy candidateSafetyPolicy,
-            GoalDependencyProvenanceService goalProvenanceService,
-            MethodRecommendationValueService methodValue)
-    {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
-                candidateRegistry, actionabilityPolicy, intelligenceService,
-                candidateSafetyPolicy, goalProvenanceService, methodValue,
-                new FinalExecutionPlanValidator());
-    }
-
     /** Compatibility constructor retained for focused tests/older callers. */
     public StrategyEngine(
             RecommendationEngine recommendationEngine,
@@ -101,22 +78,8 @@ public class StrategyEngine
         this(recommendationEngine, opportunityEngine, moduleRegistry,
                 candidateRegistry, actionabilityPolicy, intelligenceService,
                 candidateSafetyPolicy, goalProvenanceService,
-                new MethodRecommendationValueService());
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
-            StrategyCandidateRegistry candidateRegistry,
-            RecommendationActionabilityPolicy actionabilityPolicy,
-            RecommendationIntelligenceService intelligenceService,
-            CandidateSafetyPolicy candidateSafetyPolicy)
-    {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
-                candidateRegistry, actionabilityPolicy, intelligenceService,
-                candidateSafetyPolicy, new GoalDependencyProvenanceService());
+                new MethodRecommendationValueService(),
+                new FinalExecutionPlanValidator());
     }
 
     /** Compatibility constructor retained for focused tests/older callers. */
@@ -143,31 +106,6 @@ public class StrategyEngine
     {
         this(recommendationEngine, opportunityEngine, moduleRegistry,
                 candidateRegistry, actionabilityPolicy,
-                new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry,
-            StrategyCandidateRegistry candidateRegistry)
-    {
-        this(recommendationEngine, opportunityEngine, moduleRegistry,
-                candidateRegistry, new RecommendationActionabilityPolicy(),
-                new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            StrategyModuleRegistry moduleRegistry)
-    {
-        this(recommendationEngine, opportunityEngine, moduleRegistry, null,
-                new RecommendationActionabilityPolicy(),
                 new RecommendationIntelligenceService(),
                 new CandidateSafetyPolicy(), new GoalDependencyProvenanceService());
     }

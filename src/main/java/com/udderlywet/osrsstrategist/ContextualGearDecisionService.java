@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Produces seven evidence-separated gear answers for one encounter context. */

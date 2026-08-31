@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /** Typed setup properties for an activity; it contains no method identity rules. */
 public final class ActivitySetupProfile

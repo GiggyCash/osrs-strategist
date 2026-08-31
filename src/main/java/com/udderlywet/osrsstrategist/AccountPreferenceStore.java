@@ -1,8 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import com.google.gson.Gson;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.client.config.ConfigManager;

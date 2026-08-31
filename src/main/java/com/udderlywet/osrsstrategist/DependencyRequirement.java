@@ -7,22 +7,17 @@ import lombok.RequiredArgsConstructor;
 import net.runelite.api.Skill;
 
 /** Typed prerequisite in a resource acquisition route. */
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DependencyRequirement
 {
     public enum Kind { RESOURCE, QUEST, SKILL, GEAR }
 
-    @Getter
     private final String id;
-    @Getter
     private final String label;
-    @Getter
     private final Kind kind;
-    @Getter
     private final ResourceNeed resource;
-    @Getter
     private final Skill skill;
-    @Getter
     private final int level;
 
 

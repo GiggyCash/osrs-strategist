@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Executable subset of the pinned authoritative quest item evidence.

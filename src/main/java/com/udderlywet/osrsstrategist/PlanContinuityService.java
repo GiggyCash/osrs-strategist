@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Retains a valid goal step across minor score/inventory refreshes. */

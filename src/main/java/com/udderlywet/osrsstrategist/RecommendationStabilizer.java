@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /** Keeps a still-valid plan steady across low-signal account refreshes. */
 final class RecommendationStabilizer

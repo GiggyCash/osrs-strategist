@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 

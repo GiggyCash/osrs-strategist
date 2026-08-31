@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Resolves profile input rules against a concrete RuneLite action. */

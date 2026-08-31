@@ -7,9 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import javax.swing.JPanel;
 
 /** Lightweight, dependency-free XP-over-time chart for RuneLite's sidebar. */

@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Measures setup reuse from observed items, region and spellbook evidence. */

@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ContextualGearAssessment
 {

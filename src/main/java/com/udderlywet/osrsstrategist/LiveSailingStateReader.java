@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;

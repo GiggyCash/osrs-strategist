@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Lets an observed clue become actual DO NEXT work without making it spammy. */

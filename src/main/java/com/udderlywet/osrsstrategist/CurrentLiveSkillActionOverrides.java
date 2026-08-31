@@ -1,11 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 /**
  * Narrow corrections for verified live changes newer than the pinned RuneLite

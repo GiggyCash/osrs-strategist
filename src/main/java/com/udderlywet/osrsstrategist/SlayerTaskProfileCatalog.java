@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Stable task mechanics loaded from the required bundled catalog. */

@@ -1,12 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Singleton;
 
@@ -154,66 +148,6 @@ public final class MethodStrategyKnowledgeCatalog
                 tearsDown);
     }
 
-    private static MethodStrategyProfile uim(String id, int slots,
-            InventoryFlow flow, String reason, StrategySourceId source)
-    {
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.LOCAL_PROCESSING,
-                new MethodInventoryFootprint(slots, 1, Math.max(0, slots - 1),
-                        flow, slots >= 8), 0.8, reason,
-                Arrays.asList(source, StrategySourceId.UIM_SKILL_GUIDES,
-                        StrategySourceId.UIM_ITEM_MANAGEMENT));
-    }
-
-    private static MethodStrategyProfile sharedIronUim(String id, int slots,
-            String reason, StrategySourceId ironSource,
-            StrategySourceId uimSource)
-    {
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.IRONMAN, AccountMode.GROUP_IRONMAN,
-                        AccountMode.UNRANKED_GROUP_IRONMAN,
-                        AccountMode.HARDCORE_IRONMAN,
-                        AccountMode.HARDCORE_GROUP_IRONMAN,
-                        AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.LOCAL_PROCESSING,
-                new MethodInventoryFootprint(slots, 2,
-                        Math.max(0, slots - 2),
-                        InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
-                0.75, reason,
-                Arrays.asList(ironSource, uimSource,
-                        StrategySourceId.IRONMAN_SKILL_GUIDES,
-                        StrategySourceId.UIM_SKILL_GUIDES));
-    }
-
-    private static MethodStrategyProfile sharedForMain(String id, int slots,
-            String reason, StrategySourceId source)
-    {
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_SHARED,
-                EnumSet.of(AccountMode.MAIN), MethodBankingBehavior.NONE,
-                new MethodInventoryFootprint(slots, Math.min(2, slots),
-                        Math.max(0, slots - 2),
-                        InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS, false),
-                0.45, reason, Arrays.asList(source,
-                        StrategySourceId.GENERAL_SKILL_TRAINING));
-    }
-
-    private static MethodStrategyProfile sharedForNonUim(String id, int slots,
-            String reason, StrategySourceId source)
-    {
-        EnumSet<AccountMode> modes = EnumSet.allOf(AccountMode.class);
-        modes.remove(AccountMode.ULTIMATE_IRONMAN);
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_SHARED, modes,
-                MethodBankingBehavior.NONE,
-                new MethodInventoryFootprint(slots, slots > 0 ? 1 : 0, 0,
-                        InventoryFlow.NEUTRAL, false), 0.45, reason,
-                Collections.singletonList(source));
-    }
-
     private static StrategySourceId accountSkillSource(
             net.runelite.api.Skill skill, AccountMode mode, boolean f2p)
     {
@@ -258,27 +192,6 @@ public final class MethodStrategyKnowledgeCatalog
             default: return uim ? StrategySourceId.UIM_SKILL_GUIDES
                     : StrategySourceId.IRONMAN_SKILL_GUIDES;
         }
-    }
-
-    private static MethodStrategyProfile uimNoBank(String id, String reason,
-            StrategySourceId source)
-    {
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
-                EnumSet.of(AccountMode.ULTIMATE_IRONMAN),
-                MethodBankingBehavior.NONE,
-                MethodInventoryFootprint.lowPressure(), 0.35, reason,
-                Arrays.asList(source, StrategySourceId.UIM_ITEM_MANAGEMENT));
-    }
-
-    private static MethodStrategyProfile shared(String id,
-            MethodBankingBehavior banking, int slots, String reason)
-    {
-        return new MethodStrategyProfile(id,
-                StrategyKnowledgeTier.VERIFIED_SHARED, ALL_KNOWN, banking,
-                new MethodInventoryFootprint(slots, slots > 0 ? 1 : 0, 0,
-                        InventoryFlow.NEUTRAL, false), 0.55, reason,
-                Collections.singletonList(StrategySourceId.GENERAL_SKILL_TRAINING));
     }
 
     private void addExact(MethodStrategyProfile profile)

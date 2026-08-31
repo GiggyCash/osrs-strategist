@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /** Evaluates ALL/ANY item alternatives without treating unobserved storage as empty. */
 public final class ItemRequirementEvaluator

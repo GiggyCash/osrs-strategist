@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /** Exact minigame setup profiles loaded from the bundled catalog. */
 public final class MinigameSetupCatalog

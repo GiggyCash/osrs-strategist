@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import net.runelite.api.Skill;
 
 /** Verified quest requirements and progression effects used by the local planner. */

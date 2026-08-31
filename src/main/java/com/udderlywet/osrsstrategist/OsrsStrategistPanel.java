@@ -10,16 +10,7 @@ import java.awt.Insets;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.*;
 import net.runelite.api.Skill;
 import net.runelite.client.ui.PluginPanel;
 

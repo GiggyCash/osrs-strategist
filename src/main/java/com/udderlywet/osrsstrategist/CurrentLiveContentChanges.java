@@ -1,9 +1,7 @@
 package com.udderlywet.osrsstrategist;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Reviewed, recommendation-relevant live changes that are easy to regress.

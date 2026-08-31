@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Separates unresolved knowledge from ordinary preparation work.

@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /** Detects durable non-XP progress from successive live account snapshots. */
 public final class AccountProgressMilestoneDetector

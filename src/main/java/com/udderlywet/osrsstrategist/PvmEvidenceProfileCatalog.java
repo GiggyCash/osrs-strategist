@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Fully locally-verifiable subset; other encounters retain readiness floors. */

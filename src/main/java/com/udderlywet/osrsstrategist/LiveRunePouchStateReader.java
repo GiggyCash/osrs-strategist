@@ -1,16 +1,9 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import net.runelite.api.Client;
-import net.runelite.api.EnumComposition;
-import net.runelite.api.EnumID;
-import net.runelite.api.GameState;
+import net.runelite.api.*;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.game.ItemManager;
 

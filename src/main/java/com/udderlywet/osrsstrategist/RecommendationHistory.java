@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /** Bounded local history so learning cannot grow profile config forever. */
 public final class RecommendationHistory

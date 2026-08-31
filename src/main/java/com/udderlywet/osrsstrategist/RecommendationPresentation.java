@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /** Converts a recommendation into concise sidebar copy and full detail copy. */
 public final class RecommendationPresentation

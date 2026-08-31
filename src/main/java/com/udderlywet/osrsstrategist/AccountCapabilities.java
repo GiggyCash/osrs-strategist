@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Stores only capabilities the plugin can verify or the player has confirmed.

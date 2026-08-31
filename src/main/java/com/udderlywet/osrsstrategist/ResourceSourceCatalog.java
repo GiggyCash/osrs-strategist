@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Common progression resource routes loaded from the bundled catalog. */

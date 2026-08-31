@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -41,64 +39,20 @@ public class RecommendationEngine
 
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService,
-            CombatGuidanceService combatGuidanceService,
-            SlayerGuidanceService slayerGuidanceService,
-            SailingGuidanceService sailingGuidanceService,
-            SkillBreakpointService breakpointService)
-    {
-        this(trainingMethodSelector, guidanceService, combatGuidanceService,
-                slayerGuidanceService, sailingGuidanceService,
-                breakpointService, new CurrentExecutionStageResolver());
-    }
-
-    public RecommendationEngine(
-            TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService,
-            CombatGuidanceService combatGuidanceService,
-            SlayerGuidanceService slayerGuidanceService,
-            SailingGuidanceService sailingGuidanceService)
-    {
-        this(trainingMethodSelector, guidanceService, combatGuidanceService,
-                slayerGuidanceService, sailingGuidanceService,
-                new SkillBreakpointService());
-    }
-
-    public RecommendationEngine(
-            TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService,
-            CombatGuidanceService combatGuidanceService,
-            SlayerGuidanceService slayerGuidanceService)
-    {
-        this(trainingMethodSelector, guidanceService,
-                combatGuidanceService, slayerGuidanceService,
-                new SailingGuidanceService());
-    }
-
-    public RecommendationEngine(
-            TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService,
-            CombatGuidanceService combatGuidanceService)
-    {
-        this(trainingMethodSelector, guidanceService,
-                combatGuidanceService, new SlayerGuidanceService(),
-                new SailingGuidanceService());
-    }
-
-    public RecommendationEngine(
-            TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService)
     {
         this(trainingMethodSelector, guidanceService,
                 new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService());
+                new SailingGuidanceService(), new SkillBreakpointService(),
+                new CurrentExecutionStageResolver());
     }
 
     public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
     {
         this(trainingMethodSelector, new RecommendationGuidanceService(),
                 new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService());
+                new SailingGuidanceService(), new SkillBreakpointService(),
+                new CurrentExecutionStageResolver());
     }
 
     public List<Recommendation> recommend(

@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Quest safety gate for player-imposed account builds.

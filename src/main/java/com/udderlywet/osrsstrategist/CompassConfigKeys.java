@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /** Central config-event routing prevents cosmetic toggles from reranking. */
 final class CompassConfigKeys

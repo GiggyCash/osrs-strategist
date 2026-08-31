@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.List;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 /** Provider of verified non-skill work that may compete with skill training. */
 public interface StrategyCandidateProvider

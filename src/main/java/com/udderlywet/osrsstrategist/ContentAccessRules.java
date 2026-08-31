@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 import net.runelite.api.Skill;
 
 /**

@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Assesses infrastructure through typed utility and observed provenance. */

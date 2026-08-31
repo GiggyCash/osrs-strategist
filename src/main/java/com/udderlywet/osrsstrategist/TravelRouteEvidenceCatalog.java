@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Audited exact routes that can be derived from ordinary live account state. */

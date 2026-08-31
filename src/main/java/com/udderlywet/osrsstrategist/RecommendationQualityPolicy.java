@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import net.runelite.api.Skill;
 
 /** Rejects known placeholder-shaped copy before it can reach player cards. */

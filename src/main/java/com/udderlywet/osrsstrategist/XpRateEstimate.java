@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /** A measured XP rate, or an honest indication that evidence is insufficient. */
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class XpRateEstimate
 {
@@ -14,11 +15,8 @@ public final class XpRateEstimate
         READY
     }
 
-    @Getter
     private final State state;
-    @Getter
     private final long xpPerHour;
-    @Getter
     private final int timedIntervals;
 
 

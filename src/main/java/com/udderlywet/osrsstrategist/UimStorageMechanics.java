@@ -1,10 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.EnumSet;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /** Verified behavior classes for UIM storage; distinct systems never alias. */
 public final class UimStorageMechanics

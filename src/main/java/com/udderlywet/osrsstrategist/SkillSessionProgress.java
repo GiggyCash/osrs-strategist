@@ -7,20 +7,15 @@ import lombok.RequiredArgsConstructor;
 import net.runelite.api.Skill;
 
 /** Immutable per-skill progress for the current client session. */
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public final class SkillSessionProgress
 {
-    @Getter
     private final Skill skill;
-    @Getter
     private final int startingXp;
-    @Getter
     private final int currentXp;
-    @Getter
     private final int startingLevel;
-    @Getter
     private final int currentLevel;
-    @Getter
     private final XpRateEstimate rate;
 
 

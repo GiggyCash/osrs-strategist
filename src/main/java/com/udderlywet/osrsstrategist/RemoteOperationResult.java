@@ -4,12 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RemoteOperationResult
 {
-    @Getter
     private final boolean accepted;
-    @Getter
     private final String message;
 
 

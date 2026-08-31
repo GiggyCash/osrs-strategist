@@ -1,9 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Encounter-context gear progression loaded from the bundled catalog. */

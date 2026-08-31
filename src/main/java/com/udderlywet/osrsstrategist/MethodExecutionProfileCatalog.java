@@ -1,8 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /** Deterministic execution profiles loaded from the required bundled catalog. */

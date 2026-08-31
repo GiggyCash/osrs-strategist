@@ -1,15 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
 import net.runelite.api.events.StatChanged;

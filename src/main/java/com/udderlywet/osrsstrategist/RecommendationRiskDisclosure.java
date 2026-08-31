@@ -4,14 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /** Prominent, typed warning for an unusual player-visible dangerous action. */
+@Getter
 @RequiredArgsConstructor
 public final class RecommendationRiskDisclosure
 {
-    @Getter
     private final String heading;
-    @Getter
     private final String message;
-    @Getter
     private final boolean acknowledgementRequired;
 
 

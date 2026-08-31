@@ -11,12 +11,11 @@ import lombok.RequiredArgsConstructor;
  * completion uses this to encourage variety without preventing Compass from
  * recommending the same skill again when it is still clearly the best move.</p>
  */
+@Getter
 @RequiredArgsConstructor
 public final class TimedScoreAdjustment
 {
-    @Getter
     private final double scoreDelta;
-    @Getter
     private final long expiresAtMillis;
 
 

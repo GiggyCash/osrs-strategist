@@ -1,7 +1,6 @@
 package com.udderlywet.osrsstrategist;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 import javax.inject.Singleton;
 
 /**

@@ -4,10 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.AbstractButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 /** Idempotent font and control scaling scoped to the Compass component tree. */
