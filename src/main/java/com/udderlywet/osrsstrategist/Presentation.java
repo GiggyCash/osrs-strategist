@@ -326,20 +326,6 @@ public final class Presentation
         return unresolved;
     }
 
-    private static String readinessMarker(RequirementCheck check)
-    {
-        if (check != null && RequirementActionability.isPreparationRequirement(check))
-            return "•";
-        return stateMarker(check == null ? RequirementState.CHECK_NEEDED : check.getState());
-    }
-
-    private static String stateMarker(RequirementState state)
-    {
-        if (state == RequirementState.VERIFIED) return "✓";
-        if (state == RequirementState.BLOCKED) return "✕";
-        return "?";
-    }
-
     private static void appendMethodHeader(
             StringBuilder text,
             Recommendation recommendation,
@@ -347,30 +333,6 @@ public final class Presentation
     {
         text.append("<b>METHOD</b><br>")
                 .append(escape(method.getName()));
-    }
-
-    private static String attentionLabel(AttentionLevel attention)
-    {
-        if (attention == null) return "Unknown attention";
-        switch (attention)
-        {
-            case AFK: return "AFK";
-            case LOW: return "Low attention";
-            case ACTIVE: return "Active";
-            case MODERATE:
-            default: return Text.get(1237);
-        }
-    }
-
-    private static String confidenceLabel(Recommendation recommendation)
-    {
-        if (recommendation == null) return "Check Needed";
-        if (recommendation.getConfidence() == Confidence.VERIFIED) return "Ready";
-        if (recommendation.getConfidence() == Confidence.BLOCKED) return "Blocked";
-        if (RequirementActionability.isActionablePreparation(
-                recommendation.getTrainingPlan(), recommendation.getGuidance()))
-            return "Ready to prep";
-        return "Check Needed";
     }
 
     private static void appendBreak(StringBuilder text, int count)

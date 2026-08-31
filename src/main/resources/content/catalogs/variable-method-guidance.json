@@ -182,5 +182,100 @@
       "Rogue gloves",
       "Rogue boots"
     ]
+  },
+  {
+    "ids": ["fishing_tempoross"],
+    "kind": "tempoross",
+    "action": "Fish harpoonfish, cook the catch, load both cannons, tether during waves, and repeat until you gain {xp} Fishing XP for level {target}.",
+    "supplies": "{temporossSupplies}",
+    "location": "Tempoross island, entered from the Ruins of Unkah ferry.",
+    "note": "Cooking choice, team size, storm timing, and reward strategy change Fishing XP per game, so no fake game count is shown."
+  },
+  {
+    "ids": ["runecraft_gotr"],
+    "kind": "gotr",
+    "action": "Mine fragments, craft guardian essence, enter the open altars, charge guardians, and place cells until you gain {xp} Runecraft XP for level {target}.",
+    "supplies": "Bring a pickaxe and chisel.{pouches}",
+    "location": "Guardians of the Rift arena in the Temple of the Eye.",
+    "note": "Portal timing, altar choices, pouch capacity, and match outcome change XP per game. The planner therefore reports the exact XP gap, not a fabricated match count."
+  },
+  {
+    "ids": ["mining_stars"],
+    "kind": "stars",
+    "action": "{starScout} Mine the located star until it depletes or you gain {xp} Mining XP toward level {target}.",
+    "supplies": "Bring {pickaxe}. Keep stardust when Celestial ring or charge rewards still matter. {observed}",
+    "location": "{starLocation}",
+    "note": "Stars land at random from fixed sites, so Compass cannot truthfully name an active crash site without observing one. Star tier changes while mining and affects XP; exact swing counts would be false precision.",
+    "observed": ["Celestial ring", "Celestial signet"]
+  },
+  {
+    "ids": ["smithing_foundry", "smithing_giants_foundry"],
+    "kind": "foundry",
+    "action": "Ask Kovac for a commission. Load {alloy} into the crucible. For each blade section, select the owned mould with the highest green score shown for that commission, pour the sword, then work every temperature station inside its target band. Repeat for {xp} Smithing XP toward level {target}.",
+    "supplies": "Bring {alloy}; each commissioned sword consumes 28 bars' worth of metal. {observed}",
+    "location": "Giants' Foundry beneath Kovac's workshop, east of Al Kharid.",
+    "note": "The 14/14 adjacent-metal alloy is a verified default when both metals are observed. Mould score, commission, and mistakes change XP per sword, so no fixed sword count is shown.",
+    "observed": ["Iron bar", "Steel bar", "Mithril bar", "Adamantite bar", "Runite bar"]
+  },
+  {
+    "ids": ["construction_homes", "construction_mahogany_homes"],
+    "kind": "homes",
+    "action": "Ask Amy for a {contract} contract, travel to the named client, repair every marked hotspot, speak to the client, and take another {contract} contract. Repeat for {xp} Construction XP toward level {target}.",
+    "supplies": "Bring a hammer, saw, at least 15 {plankLower}, one steel bar, and teleports for Falador, Varrock, East Ardougne, and Hosidius. Use a plank sack when owned. {observed}",
+    "location": "Amy at Mahogany Homes, immediately south of Falador Park.",
+    "note": "Furniture mix varies by client, so exact planks and XP per contract require the live contract state. No universal contract count is fabricated.",
+    "observed": ["Plank sack", "Steel bar"]
+  },
+  {
+    "ids": ["farming_tithe"],
+    "kind": "tithe",
+    "action": "Take {seed} seeds from the table. Plant and immediately water a 20-plot cycle, revisit each plant for every watering stage, harvest, deposit the fruit, and repeat for {xp} Farming XP to level {target}.",
+    "supplies": "Bring a spade, seed dibber, and eight filled watering cans; Gricoller's can replaces the eight cans. {observed}",
+    "location": "Tithe Farm in Hosidius.",
+    "note": "Plot count and missed cycles change XP per hour. Reward goals such as the can, seed box, or outfit can remain protected instead of being abandoned at a level breakpoint.",
+    "observed": ["Gricoller's can", "Seed box", "Farmer's strawhat", "Farmer's jacket", "Farmer's boro trousers", "Farmer's boots"]
+  },
+  {
+    "ids": ["farming_allotments_expanded"],
+    "kind": "allotments",
+    "action": "At {patch}, harvest each ready allotment, plant three {seedLower} in each cleared allotment, compost, and return after the crop is ready. Repeat for {xp} Farming XP to level {target}.",
+    "supplies": "Bring six {seedLower}, a rake, seed dibber, spade, and compost. {observed}",
+    "location": "{patch}.",
+    "note": "Harvest yield is variable, so a seed-to-level count would be false. Patch state, seed supply, and travel access should drive the next run."
+  },
+  {
+    "ids": ["farming_herbs_expanded"],
+    "kind": "herbs",
+    "action": "At {patch}, harvest any ready herbs, plant {herbSeed}, apply compost when carried, and return after the patch is ready. Repeat for {xp} Farming XP to level {target}.",
+    "supplies": "Bring {herbSeed}, a seed dibber, and a spade. Compost is optional but protects yield. {observed}",
+    "location": "{patch}.",
+    "note": "Herb yield is variable and Iron accounts may value potion supply over raw Farming XP, so no fabricated exact seed count is shown."
+  },
+  {
+    "ids": ["farming_contracts"],
+    "kind": "contracts",
+    "action": "Ask Guildmaster Jane for a {contract} contract. Grow the named crop inside the Farming Guild, check its health or finish harvesting it, claim the seed pack, and request another {contract} contract. Farming still needs {xp} XP to level {target}.",
+    "supplies": "Keep common contract seeds and planting tools available when storage allows. {observed}",
+    "location": "Guildmaster Jane in the central Farming Guild greenhouse, Kebos Lowlands.",
+    "note": "Contracts are primarily a seed-supply progression loop, not constant XP per contract. They should be surfaced as a detour when the seed value outweighs continuous training.",
+    "observed": ["Seed box", "Spade", "Seed dibber", "Bottomless compost bucket"]
+  },
+  {
+    "ids": ["hunter_rumours"],
+    "kind": "rumours",
+    "action": "Get a {rumourTier} rumour from {hunter}. Hunt the named creature until it drops the rare part, return the part for the loot sack, and take another rumour. Repeat for {xp} Hunter XP toward level {target}.",
+    "supplies": "Bring the trap or tool required by the assigned creature and your hunter's whistle when available. {observed}",
+    "location": "{hunter} in the Burrow beneath the Hunter Guild, Varlamore.",
+    "note": "Assignment and rare-part RNG change XP per rumour. Creature-specific loadouts should replace this generic setup once the current rumour can be observed directly.",
+    "observed": ["Guild hunter outfit", "Hunter's spear", "Quetzal whistle"]
+  },
+  {
+    "ids": ["woodcutting_forestry"],
+    "kind": "forestry",
+    "action": "On an official Forestry world, cut {tree} and complete each event that spawns until you gain {xp} Woodcutting XP toward level {target}.",
+    "supplies": "Bring {axe} and a Forestry kit when owned. {observed}",
+    "location": "{treeLocation}",
+    "note": "Event frequency and event type vary, so exact event counts are not meaningful. The planner treats Forestry as varied Woodcutting plus reward progression.",
+    "observed": ["Forestry kit", "Dragon axe", "Crystal axe", "Rune axe", "Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"]
   }
 ]

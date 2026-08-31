@@ -48,8 +48,4 @@ public final class SlayerMasterProfile
         return normalPoints * SlayerPointEconomy.pointMultiplier(completedAfterTask);
     }
 
-    private static double bounded(double value)
-    {
-        return Math.max(0.0, Math.min(1.0, value));
-    }
 }

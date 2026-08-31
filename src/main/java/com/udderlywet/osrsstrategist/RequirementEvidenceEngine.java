@@ -3,923 +3,503 @@ package com.udderlywet.osrsstrategist;
 import java.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.ItemID;
 
-/**
- * Turns static method requirements into account-specific evidence checks.
- * Dedicated evaluators replace generic Needs Info rows one system at a time.
- */
+/** Resolves method requirements from live access, account and item evidence. */
 @Singleton
 public class RequirementEvidenceEngine
 {
-    private final FarmingAccessEvaluator farmingAccessEvaluator;
-    private final AgilityAccessEvaluator agilityAccessEvaluator;
-    private final FarmingSupplyCatalog farmingSupplyCatalog;
-    private final RunecraftSupplyCatalog runecraftSupplyCatalog;
-    private final ResourceReadinessService resourceReadinessService;
+    private final FarmingAccessEvaluator farmingAccess;
+    private final AgilityAccessEvaluator agilityAccess;
+    private final FarmingSupplyCatalog farmingSupplies;
+    private final RunecraftSupplyCatalog runecraftSupplies;
 
     @Inject
-    public RequirementEvidenceEngine(
-            FarmingAccessEvaluator farmingAccessEvaluator,
-            AgilityAccessEvaluator agilityAccessEvaluator,
-            FarmingSupplyCatalog farmingSupplyCatalog,
-            RunecraftSupplyCatalog runecraftSupplyCatalog,
-            ResourceReadinessService resourceReadinessService)
+    public RequirementEvidenceEngine(FarmingAccessEvaluator farmingAccess,
+            AgilityAccessEvaluator agilityAccess,
+            FarmingSupplyCatalog farmingSupplies,
+            RunecraftSupplyCatalog runecraftSupplies)
     {
-        this.farmingAccessEvaluator = farmingAccessEvaluator;
-        this.agilityAccessEvaluator = agilityAccessEvaluator;
-        this.farmingSupplyCatalog = farmingSupplyCatalog;
-        this.runecraftSupplyCatalog = runecraftSupplyCatalog;
-        this.resourceReadinessService = resourceReadinessService;
+        this.farmingAccess = farmingAccess;
+        this.agilityAccess = agilityAccess;
+        this.farmingSupplies = farmingSupplies;
+        this.runecraftSupplies = runecraftSupplies;
     }
 
-    /** Compatibility constructor retained for focused tests. */
-    public RequirementEvidenceEngine(
-            FarmingAccessEvaluator farmingAccessEvaluator,
-            AgilityAccessEvaluator agilityAccessEvaluator)
+    public RequirementEvidenceEngine(FarmingAccessEvaluator farming,
+            AgilityAccessEvaluator agility)
     {
-        this(
-                farmingAccessEvaluator,
-                agilityAccessEvaluator,
-                new FarmingSupplyCatalog(),
-                new RunecraftSupplyCatalog(),
-                new ResourceReadinessService()
-        );
+        this(farming, agility, new FarmingSupplyCatalog(),
+                new RunecraftSupplyCatalog());
     }
 
-    /** Compatibility constructor retained for older focused tests. */
-    public RequirementEvidenceEngine(FarmingAccessEvaluator farmingAccessEvaluator)
+    public RequirementEvidenceEngine(FarmingAccessEvaluator farming)
     {
-        this(farmingAccessEvaluator, null);
+        this(farming, null);
     }
 
-    public List<RequirementCheck> evaluate(
-            GameData data,
-            TrainingMethod method)
+    public List<RequirementCheck> evaluate(GameData data, TrainingMethod method)
     {
         return evaluate(data, method, false);
     }
 
-    public List<RequirementCheck> evaluate(
-            GameData data,
-            TrainingMethod method,
-            boolean useGroupStorage)
+    public List<RequirementCheck> evaluate(GameData data, TrainingMethod method,
+            boolean group)
     {
-        List<RequirementCheck> checks = new ArrayList<>();
-        if (method == null)
-        {
-            return checks;
-        }
-        if (method.getSkill() == Skill.FARMING)
-        {
-            return evaluateFarming(data, method, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.AGILITY && agilityAccessEvaluator != null)
-        {
-            return evaluateAgility(data, method);
-        }
-        if (method.getSkill() == Skill.SAILING)
-        {
-            return evaluateSailing(data, method, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.RUNECRAFT
-                && runecraftSupplyCatalog.supports(method.getId()))
-        {
-            return evaluateRunecraft(data, method, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.MAGIC
-                && ("magic_f2p_combat".equals(method.getId())
-                    || "magic_f2p_fire_bolt".equals(method.getId())
-                    || "magic_f2p_fire_blast".equals(method.getId())
-                    || "magic_f2p_fire_strike_splash".equals(method.getId())
-                    || "magic_f2p_curse".equals(method.getId())))
-        {
-            return evaluateF2pCombatMagic(data, method.getId(),
-                    useGroupStorage);
-        }
-        if (method.getSkill() == Skill.COOKING
-                && "cooking_f2p_fish".equals(method.getId()))
-        {
-            return evaluateCookedFish(data, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.COOKING
-                && ("cooking_hosidius".equals(method.getId())
-                    || "cooking_wines".equals(method.getId())))
-        {
-            return evaluateMembersCooking(data, method.getId(), useGroupStorage);
-        }
-        if (method.getSkill() == Skill.FISHING)
-        {
-            List<RequirementCheck> fishing = evaluateFishing(
-                    data, method, useGroupStorage);
-            if (fishing != null) return fishing;
-        }
-        if (method.getSkill() == Skill.HUNTER)
-        {
-            List<RequirementCheck> hunter = evaluateHunter(
-                    data, method, useGroupStorage);
-            if (hunter != null) return hunter;
-        }
-        if ("runecraft_gotr".equals(method.getId()))
-        {
-            List<RequirementCheck> gotr = evaluateQuestCompletion(
-                    data, "Temple of the Eye", "quest:temple_of_the_eye");
-            gotr.add(usableToolCheck(data, ItemRequirementClass.PICKAXE,
-                    useGroupStorage, "resource:gotr_pickaxe", "Usable pickaxe"));
-            gotr.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:gotr_chisel", "Chisel",
-                            1, ItemID.CHISEL), useGroupStorage));
-            return gotr;
-        }
-        if ("runecraft_zmi".equals(method.getId()))
-        {
-            List<RequirementCheck> zmiChecks = new ArrayList<>();
-            zmiChecks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:zmi_pure_essence",
-                            "Pure essence", 1, ItemID.BLANKRUNE_HIGH),
-                    useGroupStorage));
-            return zmiChecks;
-        }
-        if (method.getSkill() == Skill.CONSTRUCTION
-                && "construction_crude_chairs".equals(method.getId()))
-        {
-            return evaluateCrudeChairs(data, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.CONSTRUCTION
-                && "construction_oak_larders".equals(method.getId()))
-        {
-            return evaluateOakLarders(data, useGroupStorage);
-        }
-        if (method.getSkill() == Skill.MINING)
-        {
-            return evaluateTool(data, method, ItemRequirementClass.PICKAXE,
-                    useGroupStorage,
-                    "resource:usable-pickaxe", "Usable pickaxe");
-        }
-        if (method.getSkill() == Skill.WOODCUTTING)
-        {
-            return evaluateTool(data, method, ItemRequirementClass.AXE,
-                    useGroupStorage,
-                    "resource:usable-axe", "Usable axe");
-        }
-
-        for (String requirement : method.getRequirements())
-        {
-            checks.add(generic(requirement));
-        }
-        return checks;
-    }
-
-    private List<RequirementCheck> evaluateF2pCombatMagic(
-            GameData data, String methodId,
-            boolean useGroupStorage)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
-        CombatEvidenceSnapshot combat = data == null ? null
-                : data.combatEvidence();
-        boolean spellbookObserved = combat != null;
-        boolean standard = spellbookObserved
-                && combat.getSpellbookSelector() == 0;
-        checks.add(new RequirementCheck(
-                "spellbook:standard", Text.get(1534),
-                !spellbookObserved ? RequirementState.CHECK_NEEDED
-                        : standard ? RequirementState.VERIFIED
-                                : RequirementState.BLOCKED,
-                !spellbookObserved
-                        ? Text.get(613)
-                        : standard
-                                ? Text.get(1535)
-                                : Text.get(624)));
-        if ("magic_f2p_curse".equals(methodId))
-        {
-            checks.add(resource(data, useGroupStorage, "curse_body",
-                    "Body rune", 1, ItemID.BODYRUNE));
-            checks.add(resource(data, useGroupStorage, "curse_earth",
-                    "Earth runes", 3, ItemID.EARTHRUNE));
-            checks.add(resource(data, useGroupStorage, "curse_water",
-                    "Water runes", 2, ItemID.WATERRUNE));
-            checks.add(splashingEquipmentCheck(data));
-            return checks;
-        }
-        boolean fireStrikeSplash =
-                "magic_f2p_fire_strike_splash".equals(methodId);
-        int airPerCast = "magic_f2p_fire_blast".equals(methodId) ? 4
-                : "magic_f2p_fire_bolt".equals(methodId) ? 3
-                : fireStrikeSplash ? 2 : 1;
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement(
-                        "resource:combat_magic_air",
-                        Text.get(1536), airPerCast,
-                        ItemID.AIRRUNE),
-                useGroupStorage));
-        if (fireStrikeSplash)
-        {
-            checks.add(resource(data, useGroupStorage, "splash_fire",
-                    "Fire runes", 3, ItemID.FIRERUNE));
-            checks.add(resource(data, useGroupStorage, "splash_mind",
-                    "Mind rune", 1, ItemID.MINDRUNE));
-            checks.add(splashingEquipmentCheck(data));
-            return checks;
-        }
-        if ("magic_f2p_fire_bolt".equals(methodId)
-                || "magic_f2p_fire_blast".equals(methodId))
-        {
-            int firePerCast = "magic_f2p_fire_blast".equals(methodId) ? 5 : 4;
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement(
-                            "resource:combat_magic_fire",
-                            Text.get(1537), firePerCast,
-                            ItemID.FIRERUNE), useGroupStorage));
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement(
-                            "resource:combat_magic_catalytic",
-                            Text.get(1538), 1,
-                            "magic_f2p_fire_blast".equals(methodId)
-                                    ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE),
-                    useGroupStorage));
-            return checks;
-        }
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement(
-                        "resource:wind_strike_mind",
-                        "Mind rune", 1, ItemID.MINDRUNE),
-                useGroupStorage));
-        return checks;
-    }
-
-    private List<RequirementCheck> evaluateSailing(
-            GameData data, TrainingMethod method,
-            boolean useGroupStorage)
-    {
-        List<RequirementCheck> checks = evaluateQuestCompletion(
-                data, "Pandemonium", "quest:pandemonium");
+        if (method == null) return new ArrayList<>();
         String id = method.getId();
-        if ("sailing_courier".equals(id))
+        Skill skill = method.getSkill();
+        ItemIndex items = new ItemIndex(data, group);
+        if (skill == Skill.FARMING) return farming(data, method, items);
+        if (skill == Skill.AGILITY && agilityAccess != null)
+            return agility(data, id);
+        if (skill == Skill.SAILING) return sailing(data, id, items);
+        if (skill == Skill.RUNECRAFT && runecraftSupplies.supports(id))
+            return runecraft(id, items);
+        if (skill == Skill.MAGIC && (id.equals("magic_f2p_combat")
+                || id.equals("magic_f2p_fire_bolt")
+                || id.equals("magic_f2p_fire_blast")
+                || id.equals("magic_f2p_fire_strike_splash")
+                || id.equals("magic_f2p_curse"))) return magic(data, id, items);
+        if (skill == Skill.COOKING && id.equals("cooking_f2p_fish"))
+            return cookedFish(data, items);
+        if (skill == Skill.COOKING && (id.equals("cooking_hosidius")
+                || id.equals("cooking_wines"))) return cooking(data, id, items);
+        if (skill == Skill.FISHING)
+        {
+            List<RequirementCheck> result = fishing(data, id, items);
+            if (result != null) return result;
+        }
+        if (skill == Skill.HUNTER)
+        {
+            List<RequirementCheck> result = hunter(data, id, items);
+            if (result != null) return result;
+        }
+        if (id.equals("runecraft_gotr"))
+        {
+            List<RequirementCheck> result = quest(data, "Temple of the Eye",
+                    "quest:temple_of_the_eye");
+            result.add(tool(items, ItemRequirementClass.PICKAXE,
+                    "resource:gotr_pickaxe", "Usable pickaxe"));
+            result.add(item(items, "resource:gotr_chisel", "Chisel", 1,
+                    ItemID.CHISEL));
+            return result;
+        }
+        if (id.equals("runecraft_zmi")) return list(item(items,
+                "resource:zmi_pure_essence", "Pure essence", 1,
+                ItemID.BLANKRUNE_HIGH));
+        if (id.equals("construction_crude_chairs"))
+            return construction(data, items, false);
+        if (id.equals("construction_oak_larders"))
+            return construction(data, items, true);
+        if (skill == Skill.MINING || skill == Skill.WOODCUTTING)
+        {
+            ItemRequirementClass type = skill == Skill.MINING
+                    ? ItemRequirementClass.PICKAXE : ItemRequirementClass.AXE;
+            List<RequirementCheck> result = list(tool(items, type,
+                    skill == Skill.MINING ? "resource:usable-pickaxe"
+                            : "resource:usable-axe",
+                    skill == Skill.MINING ? "Usable pickaxe" : "Usable axe"));
+            addGeneric(result, method);
+            return result;
+        }
+        List<RequirementCheck> result = new ArrayList<>();
+        addGeneric(result, method);
+        return result;
+    }
+
+    private static List<RequirementCheck> magic(GameData data, String id,
+            ItemIndex items)
+    {
+        CombatEvidenceSnapshot combat = data == null ? null : data.combatEvidence();
+        boolean observed = combat != null;
+        List<RequirementCheck> result = list(new RequirementCheck(
+                "spellbook:standard", Text.get(1534), observed
+                        ? combat.getSpellbookSelector() == 0
+                        ? RequirementState.VERIFIED : RequirementState.BLOCKED
+                        : RequirementState.CHECK_NEEDED,
+                !observed ? Text.get(613) : combat.getSpellbookSelector() == 0
+                        ? Text.get(1535) : Text.get(624)));
+        if (id.equals("magic_f2p_curse"))
+        {
+            result.add(item(items, "resource:curse_body", "Body rune", 1,
+                    ItemID.BODYRUNE));
+            result.add(item(items, "resource:curse_earth", "Earth runes", 3,
+                    ItemID.EARTHRUNE));
+            result.add(item(items, "resource:curse_water", "Water runes", 2,
+                    ItemID.WATERRUNE));
+            result.add(splashing(data));
+            return result;
+        }
+        boolean splash = id.equals("magic_f2p_fire_strike_splash");
+        int air = id.equals("magic_f2p_fire_blast") ? 4
+                : id.equals("magic_f2p_fire_bolt") ? 3 : splash ? 2 : 1;
+        result.add(item(items, "resource:combat_magic_air", Text.get(1536),
+                air, ItemID.AIRRUNE));
+        if (splash)
+        {
+            result.add(item(items, "resource:splash_fire", "Fire runes", 3,
+                    ItemID.FIRERUNE));
+            result.add(item(items, "resource:splash_mind", "Mind rune", 1,
+                    ItemID.MINDRUNE));
+            result.add(splashing(data));
+        }
+        else if (id.equals("magic_f2p_fire_bolt")
+                || id.equals("magic_f2p_fire_blast"))
+        {
+            boolean blast = id.endsWith("blast");
+            result.add(item(items, "resource:combat_magic_fire", Text.get(1537),
+                    blast ? 5 : 4, ItemID.FIRERUNE));
+            result.add(item(items, "resource:combat_magic_catalytic",
+                    Text.get(1538), 1, blast ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE));
+        }
+        else result.add(item(items, "resource:wind_strike_mind", "Mind rune",
+                1, ItemID.MINDRUNE));
+        return result;
+    }
+
+    private static RequirementCheck splashing(GameData data)
+    {
+        ItemsState equipment = data == null ? null : data.equipment();
+        boolean helm = false, body = false, legs = false, shield = false,
+                boots = false, staff = false;
+        if (equipment != null) for (ItemState item : equipment.getEquippedItems())
+        {
+            if (item == null || item.getName() == null || item.getQuantity() <= 0)
+                continue;
+            String name = item.getName().toLowerCase(Locale.ROOT);
+            helm |= metal(name, "full helm");
+            body |= metal(name, "platebody");
+            legs |= metal(name, "platelegs") || metal(name, "plateskirt");
+            shield |= metal(name, "kiteshield");
+            boots |= name.equals("fancy boots") || name.equals("fighting boots")
+                    || name.equals("decorative boots");
+            staff |= name.equals(Text.get(1542));
+        }
+        boolean ready = helm && body && legs && shield && boots && staff;
+        return new RequirementCheck("equipment:f2p_splashing", Text.get(661),
+                ready ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
+                Text.get(ready ? 614 : 615));
+    }
+
+    private static boolean metal(String name, String piece)
+    {
+        if (!name.endsWith(piece)) return false;
+        for (String metal : new String[]{"bronze ", "iron ", "steel ", "black ",
+                "mithril ", "adamant ", "rune ", "gilded "})
+            if (name.startsWith(metal)) return true;
+        return false;
+    }
+
+    private static List<RequirementCheck> sailing(GameData data, String id,
+            ItemIndex items)
+    {
+        List<RequirementCheck> result = quest(data, "Pandemonium",
+                "quest:pandemonium");
+        if (id.equals("sailing_courier"))
         {
             SailingSnapshot sailing = data == null ? null : data.sailing();
             boolean route = sailing != null
                     && sailing.hasPort(SailingSnapshot.PORT_SARIM)
                     && sailing.hasPort(SailingSnapshot.PORT_PANDEMONIUM)
                     && sailing.hasActivity(SailingSnapshot.ACTIVITY_COURIER);
-            checks.add(new RequirementCheck(
-                    "sailing:courier-route",
-                    Text.get(1539),
-                    route ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    route
-                            ? Text.get(635)
-                            : Text.get(646)));
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:captains-log",
-                            "Captain's log", 1,
-                            ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG),
-                    useGroupStorage));
-            return checks;
+            result.add(state("sailing:courier-route", Text.get(1539), route,
+                    Text.get(635), Text.get(646)));
+            result.add(item(items, "resource:captains-log", "Captain's log", 1,
+                    ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG));
         }
-        if ("sailing_charting".equals(id))
+        else if (id.equals("sailing_charting")) result.add(new RequirementCheck(
+                "sailing:uncompleted-chart", Text.get(1540),
+                RequirementState.CHECK_NEEDED, Text.get(657)));
+        else if (id.startsWith("sailing_barracuda_"))
         {
-            checks.add(new RequirementCheck(
-                    "sailing:uncompleted-chart", Text.get(1540),
-                    RequirementState.CHECK_NEEDED,
-                    Text.get(657)));
-            return checks;
-        }
-        if (id != null && id.startsWith("sailing_barracuda_"))
-        {
-            if (id.contains("jubbly"))
-                checks.addAll(evaluateQuestCompletion(data,
-                        Text.get(1541), "quest:zogre-flesh-eaters"));
-            if (id.contains("gwenith"))
-                checks.addAll(evaluateQuestCompletion(data,
-                        "Regicide", "quest:regicide"));
-            checks.add(new RequirementCheck(
-                    "preparation:sailing-trial-boat", "Trial-ready boat",
-                    RequirementState.CHECK_NEEDED,
+            if (id.contains("jubbly")) result.addAll(quest(data, Text.get(1541),
+                    "quest:zogre-flesh-eaters"));
+            if (id.contains("gwenith")) result.addAll(quest(data, "Regicide",
+                    "quest:regicide"));
+            result.add(new RequirementCheck("preparation:sailing-trial-boat",
+                    "Trial-ready boat", RequirementState.CHECK_NEEDED,
                     Text.get(658)));
-            return checks;
         }
-        checks.add(new RequirementCheck(
-                "sailing:live-route", Text.get(659),
-                RequirementState.CHECK_NEEDED,
-                Text.get(660)));
-        return checks;
+        else result.add(new RequirementCheck("sailing:live-route", Text.get(659),
+                    RequirementState.CHECK_NEEDED, Text.get(660)));
+        return result;
     }
 
-    private RequirementCheck resource(GameData data,
-            boolean useGroupStorage, String id, String label, int quantity,
-            int itemId)
+    private static List<RequirementCheck> cookedFish(GameData data,
+            ItemIndex items)
     {
-        return resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:" + id, label, quantity,
-                        itemId), useGroupStorage);
-    }
-
-    private static RequirementCheck splashingEquipmentCheck(
-            GameData data)
-    {
-        ItemsState equipment = data == null ? null : data.equipment();
-        boolean verified = equipment != null && hasSplashingSet(equipment);
-        return new RequirementCheck("equipment:f2p_splashing",
-                Text.get(661),
-                verified ? RequirementState.VERIFIED
-                        : RequirementState.CHECK_NEEDED,
-                verified
-                        ? Text.get(614)
-                        : Text.get(615));
-    }
-
-    private static boolean hasSplashingSet(ItemsState equipment)
-    {
-        boolean helm = false;
-        boolean body = false;
-        boolean legs = false;
-        boolean shield = false;
-        boolean boots = false;
-        boolean staff = false;
-        for (ItemState item : equipment.getEquippedItems())
-        {
-            if (item == null || item.getName() == null
-                    || item.getQuantity() <= 0) continue;
-            String name = item.getName().toLowerCase(java.util.Locale.ROOT);
-            helm |= isMetal(name, "full helm");
-            body |= isMetal(name, "platebody");
-            legs |= isMetal(name, "platelegs") || isMetal(name, "plateskirt");
-            shield |= isMetal(name, "kiteshield");
-            boots |= name.equals("fancy boots") || name.equals("fighting boots")
-                    || name.equals("decorative boots");
-            staff |= name.equals(Text.get(1542));
-        }
-        return helm && body && legs && shield && boots && staff;
-    }
-
-    private static boolean isMetal(String name, String piece)
-    {
-        if (name == null || !name.endsWith(piece)) return false;
-        return name.startsWith("bronze ") || name.startsWith("iron ")
-                || name.startsWith("steel ") || name.startsWith("black ")
-                || name.startsWith("mithril ") || name.startsWith("adamant ")
-                || name.startsWith("rune ") || name.startsWith("gilded ");
-    }
-
-    private List<RequirementCheck> evaluateCookedFish(
-            GameData data, boolean useGroupStorage)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
         int level = data == null || data.account() == null ? 1
                 : data.account().getSkillLevel(Skill.COOKING);
-        List<Integer> legal = new ArrayList<>();
-        legal.add(ItemID.RAW_SHRIMP);
-        legal.add(ItemID.RAW_SARDINE);
-        if (level >= 5) legal.add(ItemID.RAW_HERRING);
-        if (level >= 15) legal.add(ItemID.RAW_TROUT);
-        if (level >= 20) legal.add(ItemID.RAW_PIKE);
-        if (level >= 25) legal.add(ItemID.RAW_SALMON);
-        if (level >= 30) legal.add(ItemID.RAW_TUNA);
-        if (level >= 40) legal.add(ItemID.RAW_LOBSTER);
-        if (level >= 45) legal.add(ItemID.RAW_SWORDFISH);
-        int[] legalIds = new int[legal.size()];
-        for (int i = 0; i < legal.size(); i++) legalIds[i] = legal.get(i);
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement(
-                        "resource:raw_fish", Text.get(1543), 1,
-                        legalIds),
-                useGroupStorage));
-        return checks;
+        int[] ids = {ItemID.RAW_SHRIMP, ItemID.RAW_SARDINE, ItemID.RAW_HERRING,
+                ItemID.RAW_TROUT, ItemID.RAW_PIKE, ItemID.RAW_SALMON,
+                ItemID.RAW_TUNA, ItemID.RAW_LOBSTER, ItemID.RAW_SWORDFISH};
+        int[] levels = {1, 1, 5, 15, 20, 25, 30, 40, 45};
+        int count = 0;
+        for (int required : levels) if (level >= required) count++;
+        return list(item(items, "resource:raw_fish", Text.get(1543), 1,
+                Arrays.copyOf(ids, count)));
     }
 
-    private List<RequirementCheck> evaluateMembersCooking(
-            GameData data, String methodId,
-            boolean useGroupStorage)
+    private static List<RequirementCheck> cooking(GameData data, String id,
+            ItemIndex items)
     {
-        if ("cooking_wines".equals(methodId))
-        {
-            List<RequirementCheck> checks = new ArrayList<>();
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:wine_grapes", "Grapes",
-                            1, ItemID.GRAPES), useGroupStorage));
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:wine_water", "Jug of water",
-                            1, ItemID.JUG_WATER), useGroupStorage));
-            return checks;
-        }
-
-        List<RequirementCheck> checks = evaluateCookedFish(data, useGroupStorage);
+        if (id.equals("cooking_wines")) return list(
+                item(items, "resource:wine_grapes", "Grapes", 1, ItemID.GRAPES),
+                item(items, "resource:wine_water", "Jug of water", 1,
+                        ItemID.JUG_WATER));
+        List<RequirementCheck> result = cookedFish(data, items);
         DiarySnapshot diaries = data == null ? null : data.diaries();
-        boolean kitchen = diaries != null
+        boolean ready = diaries != null
                 && diaries.isTierComplete("Kourend & Kebos", DiaryTier.EASY);
-        checks.add(new RequirementCheck(
-                "access:hosidius_kitchen", Text.get(1544),
-                kitchen ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
-                kitchen
-                        ? Text.get(616)
-                        : Text.get(617)));
-        return checks;
+        result.add(state("access:hosidius_kitchen", Text.get(1544), ready,
+                Text.get(616), Text.get(617)));
+        return result;
     }
 
-    private List<RequirementCheck> evaluateFishing(
-            GameData data, TrainingMethod method,
-            boolean useGroupStorage)
+    private static List<RequirementCheck> fishing(GameData data, String id,
+            ItemIndex items)
     {
-        if ("fishing_lumbridge_shrimps".equals(method.getId()))
-        {
-            // The tutor beside this exact spot replaces a lost net, so lack of
-            // an observed net does not block the first executable trip.
-            return new ArrayList<>();
-        }
-        if ("fishing_tempoross".equals(method.getId()))
-        {
-            // Membership and the method's 35 Fishing level gate are the only
-            // access requirements. Required tools are available at the cove.
-            return new ArrayList<>();
-        }
-        if ("fishing_karambwan".equals(method.getId()))
-        {
-            List<RequirementCheck> checks = new ArrayList<>();
-            QuestSnapshot quests = data == null ? null : data.quests();
-            boolean questComplete = quests != null
-                    && quests.statusOf(Text.get(1545))
-                            == QuestStatus.COMPLETE;
-            checks.add(new RequirementCheck(
-                    "quest:tai_bwo_wannai_trio",
-                    Text.get(1546),
-                    questComplete ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    questComplete
-                            ? Text.get(618)
-                            : Text.get(619)));
-            TransportSnapshot transport = data == null ? null
-                    : data.transport();
-            boolean observedFairyRoute = transport != null
-                    && transport.hasVerifiedRoute("fairy-rings");
-            boolean fairyQuestComplete = quests != null
-                    && quests.statusOf(Text.get(1547))
-                            == QuestStatus.COMPLETE;
-            boolean fairyRings = observedFairyRoute || fairyQuestComplete;
-            checks.add(new RequirementCheck(
-                    "transport:fairy-rings", Text.get(1548),
-                    fairyRings ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    fairyRings
-                            ? Text.get(620)
-                            : Text.get(621)));
-            DiarySnapshot diaries = data == null ? null : data.diaries();
-            boolean staffless = diaries != null
-                    && diaries.isTierComplete(Text.get(1152),
-                            DiaryTier.ELITE);
-            int staff = resourceReadinessService.observedQuantity(data,
-                    useGroupStorage, ItemID.DRAMEN_STAFF,
-                    ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF);
-            boolean staffReady = observedFairyRoute || staffless || staff > 0;
-            checks.add(new RequirementCheck(
-                    "resource:fairy_ring_staff",
-                    Text.get(622),
-                    staffReady ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    staffReady
-                            ? Text.get(623)
-                            : Text.get(625)));
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:karambwan_vessel",
-                            "Karambwan vessel", 1,
-                            ItemID.TBWT_KARAMBWAN_VESSEL,
-                            ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
-                    useGroupStorage));
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement("resource:karambwanji",
-                            Text.get(1549), 1,
-                            ItemID.TBWT_RAW_KARAMBWANJI,
-                            ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
-                    useGroupStorage));
-            return checks;
-        }
-        if (!"fishing_f2p_fly".equals(method.getId())) return null;
-        List<RequirementCheck> checks = new ArrayList<>();
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement(
-                        "resource:fly_rod", "Fly fishing rod", 1,
-                        ItemID.FLY_FISHING_ROD), useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement(
-                        "resource:fly_feathers", "Feathers", 1,
-                        ItemID.FEATHER), useGroupStorage));
-        return checks;
-    }
-
-    private List<RequirementCheck> evaluateHunter(
-            GameData data, TrainingMethod method,
-            boolean useGroupStorage)
-    {
-        if ("hunter_falconry".equals(method.getId()))
-        {
-            List<RequirementCheck> checks = new ArrayList<>();
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement(
-                            "resource:falcon_rental", Text.get(1550),
-                            500, ItemID.COINS), useGroupStorage));
-            return checks;
-        }
-        if ("hunter_bird_traps".equals(method.getId()))
-        {
-            List<RequirementCheck> checks = new ArrayList<>();
-            checks.add(resourceReadinessService.evaluate(data,
-                    new ResourceRequirement(
-                            "resource:bird_snare", "Bird snare", 1,
-                            ItemID.HUNTING_SNARE), useGroupStorage));
-            return checks;
-        }
-        if ("hunter_herbiboar".equals(method.getId()))
-        {
-            List<RequirementCheck> checks = new ArrayList<>();
-            AccountSnapshot account = data == null ? null : data.account();
-            int herblore = account == null ? 1
-                    : account.getSkillLevel(Skill.HERBLORE);
-            checks.add(new RequirementCheck(
-                    "skill:herbiboar_herblore", "31 Herblore",
-                    herblore >= 31 ? RequirementState.VERIFIED
-                            : RequirementState.BLOCKED,
-                    Text.get(1551) + herblore + "."));
-            QuestSnapshot quests = data == null ? null : data.quests();
-            boolean boneVoyage = quests != null
-                    && quests.statusOf("Bone Voyage") == QuestStatus.COMPLETE;
-            checks.add(new RequirementCheck(
-                    "quest:bone_voyage", Text.get(1552),
-                    boneVoyage ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    boneVoyage
-                            ? Text.get(626)
-                            : Text.get(627)));
-            return checks;
-        }
-        return null;
-    }
-
-    private static List<RequirementCheck> evaluateQuestCompletion(
-            GameData data, String questName, String id)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
+        if (id.equals("fishing_lumbridge_shrimps")
+                || id.equals("fishing_tempoross")) return new ArrayList<>();
+        if (id.equals("fishing_f2p_fly")) return list(
+                item(items, "resource:fly_rod", "Fly fishing rod", 1,
+                        ItemID.FLY_FISHING_ROD),
+                item(items, "resource:fly_feathers", "Feathers", 1,
+                        ItemID.FEATHER));
+        if (!id.equals("fishing_karambwan")) return null;
         QuestSnapshot quests = data == null ? null : data.quests();
-        boolean complete = quests != null
-                && quests.statusOf(questName) == QuestStatus.COMPLETE;
-        checks.add(new RequirementCheck(
-                id, questName + " completed",
-                complete ? RequirementState.VERIFIED
-                        : RequirementState.CHECK_NEEDED,
-                complete
-                        ? questName + Text.get(628)
-                        : questName + Text.get(1553)));
-        return checks;
+        boolean trio = complete(quests, Text.get(1545));
+        TransportSnapshot transport = data == null ? null : data.transport();
+        boolean observedRoute = transport != null
+                && transport.hasVerifiedRoute("fairy-rings");
+        boolean fairy = observedRoute || complete(quests, Text.get(1547));
+        DiarySnapshot diaries = data == null ? null : data.diaries();
+        boolean staffless = diaries != null && diaries.isTierComplete(
+                Text.get(1152), DiaryTier.ELITE);
+        boolean staff = observedRoute || staffless || items.quantity(
+                ItemID.DRAMEN_STAFF, ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF) > 0;
+        return list(state("quest:tai_bwo_wannai_trio", Text.get(1546), trio,
+                        Text.get(618), Text.get(619)),
+                state("transport:fairy-rings", Text.get(1548), fairy,
+                        Text.get(620), Text.get(621)),
+                state("resource:fairy_ring_staff", Text.get(622), staff,
+                        Text.get(623), Text.get(625)),
+                item(items, "resource:karambwan_vessel", "Karambwan vessel", 1,
+                        ItemID.TBWT_KARAMBWAN_VESSEL,
+                        ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
+                item(items, "resource:karambwanji", Text.get(1549), 1,
+                        ItemID.TBWT_RAW_KARAMBWANJI,
+                        ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI));
     }
 
-    private List<RequirementCheck> evaluateCrudeChairs(
-            GameData data, boolean useGroupStorage)
+    private static List<RequirementCheck> hunter(GameData data, String id,
+            ItemIndex items)
     {
-        List<RequirementCheck> checks = new ArrayList<>();
+        if (id.equals("hunter_falconry")) return list(item(items,
+                "resource:falcon_rental", Text.get(1550), 500, ItemID.COINS));
+        if (id.equals("hunter_bird_traps")) return list(item(items,
+                "resource:bird_snare", "Bird snare", 1, ItemID.HUNTING_SNARE));
+        if (!id.equals("hunter_herbiboar")) return null;
+        int herblore = data == null || data.account() == null ? 1
+                : data.account().getSkillLevel(Skill.HERBLORE);
+        boolean voyage = complete(data == null ? null : data.quests(), "Bone Voyage");
+        return list(new RequirementCheck("skill:herbiboar_herblore",
+                        "31 Herblore", herblore >= 31 ? RequirementState.VERIFIED
+                        : RequirementState.BLOCKED, Text.get(1551) + herblore + "."),
+                state("quest:bone_voyage", Text.get(1552), voyage,
+                        Text.get(626), Text.get(627)));
+    }
+
+    private static List<RequirementCheck> construction(GameData data,
+            ItemIndex items, boolean oak)
+    {
         PohSnapshot poh = data == null ? null : data.poh();
-        CapabilityState house = poh == null
-                ? CapabilityState.UNKNOWN : poh.getHouseAccess();
-        CapabilityState parlour = poh == null
-                ? CapabilityState.UNKNOWN : poh.furnitureState("room:parlour");
-        checks.add(capabilityCheck("construction:poh", Text.get(1554),
-                house, Text.get(629)));
-        checks.add(capabilityCheck("construction:parlour", "POH Parlour",
-                parlour, Text.get(630)));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_planks",
-                        "Planks", 2, ItemID.WOODPLANK), useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_nails",
-                        "Nails", 2, ItemID.NAILS_BRONZE, ItemID.NAILS_IRON,
-                        ItemID.NAILS, ItemID.NAILS_BLACK, ItemID.NAILS_MITHRIL,
-                        ItemID.NAILS_ADAMANT, ItemID.NAILS_RUNE),
-                useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_hammer",
-                        "Hammer", 1, ItemID.HAMMER), useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_saw",
-                        "Saw", 1, ItemID.POH_SAW,
-                        ItemID.EYEGLO_CRYSTAL_SAW, ItemID.WEARABLE_SAW),
-                useGroupStorage));
-        return checks;
+        CapabilityState house = poh == null ? CapabilityState.UNKNOWN
+                : poh.getHouseAccess();
+        CapabilityState room = poh == null ? CapabilityState.UNKNOWN
+                : poh.furnitureState(oak ? "room:kitchen" : "room:parlour");
+        List<RequirementCheck> result = list(
+                capability("construction:poh", Text.get(1554), house,
+                        Text.get(oak ? 631 : 629)),
+                capability(oak ? "construction:kitchen" : "construction:parlour",
+                        oak ? "POH Kitchen" : "POH Parlour", room,
+                        Text.get(oak ? 632 : 630)),
+                item(items, oak ? "resource:construction_oak_planks"
+                        : "resource:construction_planks",
+                        oak ? "Oak planks" : "Planks", oak ? 8 : 2,
+                        oak ? ItemID.PLANK_OAK : ItemID.WOODPLANK));
+        if (!oak) result.add(item(items, "resource:construction_nails", "Nails",
+                2, ItemID.NAILS_BRONZE, ItemID.NAILS_IRON, ItemID.NAILS,
+                ItemID.NAILS_BLACK, ItemID.NAILS_MITHRIL, ItemID.NAILS_ADAMANT,
+                ItemID.NAILS_RUNE));
+        result.add(item(items, "resource:construction_hammer", "Hammer", 1,
+                ItemID.HAMMER));
+        result.add(item(items, "resource:construction_saw", "Saw", 1,
+                ItemID.POH_SAW, ItemID.EYEGLO_CRYSTAL_SAW, ItemID.WEARABLE_SAW));
+        return result;
     }
 
-    private List<RequirementCheck> evaluateOakLarders(
-            GameData data, boolean useGroupStorage)
+    private List<RequirementCheck> runecraft(String id, ItemIndex items)
     {
-        List<RequirementCheck> checks = new ArrayList<>();
-        PohSnapshot poh = data == null ? null : data.poh();
-        CapabilityState house = poh == null
-                ? CapabilityState.UNKNOWN : poh.getHouseAccess();
-        CapabilityState kitchen = poh == null
-                ? CapabilityState.UNKNOWN : poh.furnitureState("room:kitchen");
-        checks.add(capabilityCheck("construction:poh", Text.get(1554),
-                house, Text.get(631)));
-        checks.add(capabilityCheck("construction:kitchen", "POH Kitchen",
-                kitchen, Text.get(632)));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_oak_planks",
-                        "Oak planks", 8, ItemID.PLANK_OAK), useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_hammer",
-                        "Hammer", 1, ItemID.HAMMER), useGroupStorage));
-        checks.add(resourceReadinessService.evaluate(data,
-                new ResourceRequirement("resource:construction_saw",
-                        "Saw", 1, ItemID.POH_SAW,
-                        ItemID.EYEGLO_CRYSTAL_SAW, ItemID.WEARABLE_SAW),
-                useGroupStorage));
-        return checks;
+        List<RequirementCheck> result = list(items.check(
+                runecraftSupplies.runeEssence()));
+        ResourceRequirement entry = runecraftSupplies.altarEntryFor(id);
+        if (entry != null) result.add(items.check(entry));
+        return result;
     }
 
-    private static RequirementCheck capabilityCheck(
-            String id, String label, CapabilityState state,
-            String unknownEvidence)
+    private List<RequirementCheck> agility(GameData data, String id)
     {
-        return new RequirementCheck(id, label,
-                state == CapabilityState.VERIFIED
-                        ? RequirementState.VERIFIED
-                        : RequirementState.CHECK_NEEDED,
-                state == CapabilityState.VERIFIED
-                        ? label + Text.get(1555)
-                        : unknownEvidence);
+        if (id.equals("agility_wilderness")) return list(
+                agilityAccess.wildernessCourseCheck(data), new RequirementCheck(
+                        "agility:wilderness_risk", Text.get(1556),
+                        RequirementState.VERIFIED, Text.get(636)));
+        return list(agilityAccess.courseCheck(data,
+                agilityAccess.bestStandardCourse(data)));
     }
 
-    private List<RequirementCheck> evaluateTool(
-            GameData data,
-            TrainingMethod method,
-            ItemRequirementClass itemClass,
-            boolean useGroupStorage,
-            String requirementId,
-            String label)
+    private List<RequirementCheck> farming(GameData data, TrainingMethod method,
+            ItemIndex items)
     {
-        List<RequirementCheck> checks = new ArrayList<>();
-        checks.add(usableToolCheck(data, itemClass, useGroupStorage,
-                requirementId, label));
-        for (String requirement : method.getRequirements())
-        {
-            checks.add(generic(requirement));
-        }
-        return checks;
-    }
-
-    private static RequirementCheck usableToolCheck(
-            GameData data,
-            ItemRequirementClass itemClass,
-            boolean useGroupStorage,
-            String requirementId,
-            String label)
-    {
-        ItemIndex items = new ItemIndex(data, useGroupStorage);
-        int usable = items.quantityMatching(itemClass,
-                java.util.Collections.emptyList());
-        return new RequirementCheck(
-                requirementId,
-                label,
-                usable > 0 ? RequirementState.VERIFIED
-                        : RequirementState.CHECK_NEEDED,
-                usable > 0
-                        ? label + Text.get(633)
-                        : "No " + label.toLowerCase()
-                                + Text.get(634));
-    }
-
-    /**
-     * Conventional F2P altar routes are resource-driven. The player does not
-     * need to manually confirm them once Compass has observed the essence and
-     * the matching talisman/tiara in equipment, inventory, bank, or safe
-     * account-specific storage.
-     */
-    private List<RequirementCheck> evaluateRunecraft(
-            GameData data,
-            TrainingMethod method,
-            boolean useGroupStorage)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
-        checks.add(resourceReadinessService.evaluate(
-                data,
-                runecraftSupplyCatalog.runeEssence(), useGroupStorage
-        ));
-        ResourceRequirement entry = runecraftSupplyCatalog.altarEntryFor(method.getId());
-        if (entry != null)
-        {
-            checks.add(resourceReadinessService.evaluate(
-                    data, entry, useGroupStorage));
-        }
-        return checks;
-    }
-
-    private List<RequirementCheck> evaluateAgility(
-            GameData data,
-            TrainingMethod method)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
-        if ("agility_wilderness".equals(method.getId()))
-        {
-            checks.add(agilityAccessEvaluator.wildernessCourseCheck(data));
-            checks.add(new RequirementCheck(
-                    "agility:wilderness_risk",
-                    Text.get(1556),
-                    RequirementState.VERIFIED,
-                    Text.get(636)
-            ));
-            return checks;
-        }
-
-        AgilityCourseDefinition course =
-                agilityAccessEvaluator.bestStandardCourse(data);
-        checks.add(agilityAccessEvaluator.courseCheck(data, course));
-        return checks;
-    }
-
-    private List<RequirementCheck> evaluateFarming(
-            GameData data,
-            TrainingMethod method,
-            boolean useGroupStorage)
-    {
-        List<RequirementCheck> checks = new ArrayList<>();
+        String id = method.getId();
         AccountSnapshot account = data == null ? null : data.account();
         FarmingSnapshot farming = data == null ? null : data.farming();
         int level = account == null ? 1 : account.getSkillLevel(Skill.FARMING);
-
-        if ("farming_early".equals(method.getId()))
+        if (id.equals("farming_early"))
         {
-            String patch = farmingAccessEvaluator.firstReachablePatchName(farming);
-            checks.add(new RequirementCheck(
-                    "farming:reachable_patch",
-                    Text.get(1557),
-                    patch == null
-                            ? RequirementState.CHECK_NEEDED
-                            : RequirementState.VERIFIED,
-                    patch == null
-                            ? Text.get(637)
-                            : patch + Text.get(638)
-            ));
-            checks.add(new RequirementCheck(
-                    "farming:supplies",
-                    Text.get(1558),
-                    RequirementState.CHECK_NEEDED,
-                    Text.get(639)
-            ));
-            return checks;
+            String patch = farmingAccess.firstReachablePatchName(farming);
+            return list(new RequirementCheck("farming:reachable_patch",
+                    Text.get(1557), patch == null ? RequirementState.CHECK_NEEDED
+                    : RequirementState.VERIFIED, patch == null ? Text.get(637)
+                    : patch + Text.get(638)), new RequirementCheck(
+                    "farming:supplies", Text.get(1558),
+                    RequirementState.CHECK_NEEDED, Text.get(639)));
         }
-
-        if ("farming_falador_potatoes".equals(method.getId())
-                || "farming_falador_watermelons".equals(method.getId()))
+        if (id.equals("farming_falador_potatoes")
+                || id.equals("farming_falador_watermelons"))
         {
-            boolean reachable = farming != null
-                    && farming.isPatchReachable("falador");
-            checks.add(new RequirementCheck(
-                    "farming:falador_patch", Text.get(1559),
-                    reachable ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    reachable
-                            ? Text.get(640)
-                            : Text.get(641)));
-            RequirementCheck seeds = resourceReadinessService.evaluate(data,
-                    "farming_falador_watermelons".equals(method.getId())
-                            ? farmingSupplyCatalog.watermelonSeeds()
-                            : farmingSupplyCatalog.potatoSeeds(),
-                    useGroupStorage);
-            checks.add(seeds);
-            if ("farming_falador_watermelons".equals(method.getId())
-                    && seeds.getState() != RequirementState.VERIFIED
-                    && (account == null
-                        || account.getSkillLevel(Skill.THIEVING) < 38))
-            {
-                checks.add(new RequirementCheck(
-                        "farming:watermelon_seed_source",
-                        Text.get(642),
-                        RequirementState.BLOCKED,
-                        Text.get(643)));
-            }
-            checks.add(toolCheck(data, farming, farmingSupplyCatalog.rake(),
-                    "rake", Text.get(644),
-                    useGroupStorage));
-            checks.add(toolCheck(data, farming, farmingSupplyCatalog.dibber(),
-                    "dibber", Text.get(645),
-                    useGroupStorage));
-            checks.add(toolCheck(data, farming, farmingSupplyCatalog.spade(),
-                    "spade", Text.get(647),
-                    useGroupStorage));
-            return checks;
+            boolean watermelon = id.endsWith("watermelons");
+            boolean reachable = farming != null && farming.isPatchReachable("falador");
+            RequirementCheck seeds = items.check(watermelon
+                    ? farmingSupplies.watermelonSeeds()
+                    : farmingSupplies.potatoSeeds());
+            List<RequirementCheck> result = list(state("farming:falador_patch",
+                    Text.get(1559), reachable, Text.get(640), Text.get(641)), seeds);
+            if (watermelon && seeds.getState() != RequirementState.VERIFIED
+                    && (account == null || account.getSkillLevel(Skill.THIEVING) < 38))
+                result.add(new RequirementCheck("farming:watermelon_seed_source",
+                        Text.get(642), RequirementState.BLOCKED, Text.get(643)));
+            result.add(farmingTool(items, farming, farmingSupplies.rake(),
+                    "rake", Text.get(644)));
+            result.add(farmingTool(items, farming, farmingSupplies.dibber(),
+                    "dibber", Text.get(645)));
+            result.add(farmingTool(items, farming, farmingSupplies.spade(),
+                    "spade", Text.get(647)));
+            return result;
         }
-
-        if ("farming_tithe".equals(method.getId()))
+        if (id.equals("farming_tithe"))
         {
-            // Membership and the method's 34 Farming level gate are the only
-            // access requirements. Everything below is ordinary preparation.
-            List<RequirementCheck> tithe = new ArrayList<>();
-            tithe.add(resourceReadinessService.evaluate(data,
-                    farmingSupplyCatalog.spade(), useGroupStorage));
-            tithe.add(resourceReadinessService.evaluate(data,
-                    farmingSupplyCatalog.dibber(), useGroupStorage));
-            int cans = resourceReadinessService.observedQuantity(data,
-                    useGroupStorage, ItemID.WATERING_CAN_1,
-                    ItemID.WATERING_CAN_2, ItemID.WATERING_CAN_3,
-                    ItemID.WATERING_CAN_4, ItemID.WATERING_CAN_5,
-                    ItemID.WATERING_CAN_6, ItemID.WATERING_CAN_7,
-                    ItemID.WATERING_CAN_8);
-            int gricoller = resourceReadinessService.observedQuantity(data,
-                    useGroupStorage, ItemID.ZEAH_WATERINGCAN);
-            boolean waterReady = cans >= 8 || gricoller > 0;
-            tithe.add(new RequirementCheck(
-                    "resource:tithe_watering", Text.get(648),
-                    waterReady ? RequirementState.VERIFIED
-                            : RequirementState.CHECK_NEEDED,
-                    waterReady
-                            ? Text.get(649)
-                            : Text.get(650)));
-            return tithe;
+            int cans = items.quantity(ItemID.WATERING_CAN_1, ItemID.WATERING_CAN_2,
+                    ItemID.WATERING_CAN_3, ItemID.WATERING_CAN_4,
+                    ItemID.WATERING_CAN_5, ItemID.WATERING_CAN_6,
+                    ItemID.WATERING_CAN_7, ItemID.WATERING_CAN_8);
+            boolean water = cans >= 8 || items.quantity(ItemID.ZEAH_WATERINGCAN) > 0;
+            return list(items.check(farmingSupplies.spade()),
+                    items.check(farmingSupplies.dibber()),
+                    state("resource:tithe_watering", Text.get(648), water,
+                            Text.get(649), Text.get(650)));
         }
-
-        if ("farming_herbs".equals(method.getId())
-                || "farming_herbs_expanded".equals(method.getId()))
+        if (id.equals("farming_herbs") || id.equals("farming_herbs_expanded"))
         {
-            checks.add(new RequirementCheck(
-                    "farming:level_9",
-                    "9 Farming",
-                    level >= 9
-                            ? RequirementState.VERIFIED
-                            : RequirementState.BLOCKED,
-                    Text.get(1560) + level + "."
-            ));
-
-            String patch = farmingAccessEvaluator.firstReachableHerbPatchName(farming);
-            checks.add(new RequirementCheck(
-                    "farming:herb_patch",
-                    Text.get(1561),
-                    patch == null
-                            ? RequirementState.CHECK_NEEDED
-                            : RequirementState.VERIFIED,
-                    patch == null
-                            ? Text.get(651)
-                            : patch + Text.get(652)
-            ));
-
-            checks.add(resourceReadinessService.evaluate(
-                    data,
-                    farmingSupplyCatalog.herbSeedsForLevel(level),
-                    useGroupStorage
-            ));
-            checks.add(toolCheck(
-                    data,
-                    farming,
-                    farmingSupplyCatalog.rake(),
-                    "rake",
-                    Text.get(653),
-                    useGroupStorage
-            ));
-            checks.add(toolCheck(
-                    data,
-                    farming,
-                    farmingSupplyCatalog.dibber(),
-                    "dibber",
-                    Text.get(654),
-                    useGroupStorage
-            ));
-            checks.add(toolCheck(
-                    data,
-                    farming,
-                    farmingSupplyCatalog.spade(),
-                    "spade",
-                    Text.get(655),
-                    useGroupStorage
-            ));
-            return checks;
+            String patch = farmingAccess.firstReachableHerbPatchName(farming);
+            return list(new RequirementCheck("farming:level_9", "9 Farming",
+                            level >= 9 ? RequirementState.VERIFIED
+                            : RequirementState.BLOCKED, Text.get(1560) + level + "."),
+                    new RequirementCheck("farming:herb_patch", Text.get(1561),
+                            patch == null ? RequirementState.CHECK_NEEDED
+                            : RequirementState.VERIFIED, patch == null
+                            ? Text.get(651) : patch + Text.get(652)),
+                    items.check(farmingSupplies.herbSeedsForLevel(level)),
+                    farmingTool(items, farming, farmingSupplies.rake(), "rake",
+                            Text.get(653)),
+                    farmingTool(items, farming, farmingSupplies.dibber(), "dibber",
+                            Text.get(654)),
+                    farmingTool(items, farming, farmingSupplies.spade(), "spade",
+                            Text.get(655)));
         }
-
-        for (String requirement : method.getRequirements())
-        {
-            checks.add(generic(requirement));
-        }
-        return checks;
+        List<RequirementCheck> result = new ArrayList<>();
+        addGeneric(result, method);
+        return result;
     }
 
-    private RequirementCheck toolCheck(
-            GameData data,
-            FarmingSnapshot farming,
-            ResourceRequirement requirement,
-            String toolId,
-            String leprechaunEvidence,
-            boolean useGroupStorage)
+    private static RequirementCheck farmingTool(ItemIndex items,
+            FarmingSnapshot farming, ResourceRequirement need, String tool,
+            String evidence)
     {
-        CapabilityState stored = farming == null
-                ? CapabilityState.UNKNOWN
-                : farming.leprechaunToolState(toolId);
-        if (stored == CapabilityState.VERIFIED)
-            return resourceReadinessService.evaluate(data, requirement,
-                    stored, leprechaunEvidence);
-        return resourceReadinessService.evaluate(
-                data, requirement, useGroupStorage);
+        if (farming != null
+                && farming.leprechaunToolState(tool) == CapabilityState.VERIFIED)
+            return new RequirementCheck(need.getId(), need.getLabel(),
+                    RequirementState.VERIFIED, evidence == null
+                    ? Text.get(1569) : evidence);
+        return items.check(need);
     }
 
-    private RequirementCheck generic(String requirement)
+    private static RequirementCheck item(ItemIndex items, String id,
+            String label, int quantity, int... itemIds)
     {
-        return new RequirementCheck(
-                "generic:" + requirement,
-                requirement,
-                RequirementState.CHECK_NEEDED,
-                Text.get(656)
-        );
+        return items.check(new ResourceRequirement(id, label, quantity, itemIds));
+    }
+
+    private static RequirementCheck tool(ItemIndex items,
+            ItemRequirementClass type, String id, String label)
+    {
+        boolean ready = items.quantityMatching(type, Collections.emptyList()) > 0;
+        return new RequirementCheck(id, label, ready ? RequirementState.VERIFIED
+                : RequirementState.CHECK_NEEDED, ready ? label + Text.get(633)
+                : "No " + label.toLowerCase() + Text.get(634));
+    }
+
+    private static RequirementCheck state(String id, String label,
+            boolean ready, String yes, String no)
+    {
+        return new RequirementCheck(id, label, ready ? RequirementState.VERIFIED
+                : RequirementState.CHECK_NEEDED, ready ? yes : no);
+    }
+
+    private static RequirementCheck capability(String id, String label,
+            CapabilityState value, String unknown)
+    {
+        boolean ready = value == CapabilityState.VERIFIED;
+        return state(id, label, ready, label + Text.get(1555), unknown);
+    }
+
+    private static List<RequirementCheck> quest(GameData data, String name,
+            String id)
+    {
+        boolean ready = complete(data == null ? null : data.quests(), name);
+        return list(state(id, name + " completed", ready,
+                name + Text.get(628), name + Text.get(1553)));
+    }
+
+    private static boolean complete(QuestSnapshot quests, String name)
+    {
+        return quests != null && quests.statusOf(name) == QuestStatus.COMPLETE;
+    }
+
+    @SafeVarargs
+    private static <T> List<T> list(T... values)
+    {
+        return new ArrayList<>(Arrays.asList(values));
+    }
+
+    private static void addGeneric(List<RequirementCheck> result,
+            TrainingMethod method)
+    {
+        for (String value : method.getRequirements()) result.add(
+                new RequirementCheck("generic:" + value, value,
+                        RequirementState.CHECK_NEEDED, Text.get(656)));
     }
 }

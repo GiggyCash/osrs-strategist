@@ -43,8 +43,4 @@ public final class MethodLocationOption
                 && transport.hasVerifiedRoute(advantageousRouteId);
     }
 
-    private static int bounded(int burden)
-    {
-        return Math.max(0, Math.min(10, burden));
-    }
 }

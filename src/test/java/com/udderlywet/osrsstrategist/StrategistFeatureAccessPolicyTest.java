@@ -15,7 +15,7 @@ public class StrategistFeatureAccessPolicyTest
     @Test
     public void localSafetyAndPlannerRemainAvailableWithoutEntitlementService()
     {
-        for (StrategistFeature feature : StrategistFeature.values())
+        for (StrategistFeatureAccessPolicy.Feature feature : StrategistFeatureAccessPolicy.Feature.values())
         {
             if (feature.isCoreLocal())
             {
@@ -28,9 +28,9 @@ public class StrategistFeatureAccessPolicyTest
     @Test
     public void hostedFeaturesFailClosedWithoutVerifiedEvidence()
     {
-        StrategistEntitlementSnapshot unknown =
-                StrategistEntitlementSnapshot.none();
-        for (StrategistFeature feature : StrategistFeature.values())
+        StrategistFeatureAccessPolicy.Snapshot unknown =
+                StrategistFeatureAccessPolicy.Snapshot.none();
+        for (StrategistFeatureAccessPolicy.Feature feature : StrategistFeatureAccessPolicy.Feature.values())
         {
             if (feature.isHostedPremium())
             {
@@ -43,42 +43,42 @@ public class StrategistFeatureAccessPolicyTest
     @Test
     public void verifiedSnapshotOnlyGrantsExplicitHostedFeatures()
     {
-        StrategistEntitlementSnapshot snapshot =
-                new StrategistEntitlementSnapshot(
+        StrategistFeatureAccessPolicy.Snapshot snapshot =
+                new StrategistFeatureAccessPolicy.Snapshot(
                         EnumSet.of(
-                                StrategistFeature.CLOUD_PROFILE_SYNC,
-                                StrategistFeature.CROSS_DEVICE_HISTORY),
+                                StrategistFeatureAccessPolicy.Feature.CLOUD_PROFILE_SYNC,
+                                StrategistFeatureAccessPolicy.Feature.CROSS_DEVICE_HISTORY),
                         Confidence.VERIFIED,
                         "test");
 
         assertTrue(policy.canUse(
-                StrategistFeature.CLOUD_PROFILE_SYNC, snapshot));
+                StrategistFeatureAccessPolicy.Feature.CLOUD_PROFILE_SYNC, snapshot));
         assertTrue(policy.canUse(
-                StrategistFeature.CROSS_DEVICE_HISTORY, snapshot));
+                StrategistFeatureAccessPolicy.Feature.CROSS_DEVICE_HISTORY, snapshot));
         assertFalse(policy.canUse(
-                StrategistFeature.ONLINE_REASONING, snapshot));
+                StrategistFeatureAccessPolicy.Feature.ONLINE_REASONING, snapshot));
         assertTrue(policy.canUse(
-                StrategistFeature.CORE_PLANNER, snapshot));
+                StrategistFeatureAccessPolicy.Feature.CORE_PLANNER, snapshot));
     }
 
     @Test
     public void unverifiedSnapshotCannotUnlockHostedCapability()
     {
-        StrategistEntitlementSnapshot snapshot =
-                new StrategistEntitlementSnapshot(
+        StrategistFeatureAccessPolicy.Snapshot snapshot =
+                new StrategistFeatureAccessPolicy.Snapshot(
                         Collections.singleton(
-                                StrategistFeature.ONLINE_REASONING),
+                                StrategistFeatureAccessPolicy.Feature.ONLINE_REASONING),
                         Confidence.CHECK_NEEDED,
                         "stale-cache");
         assertFalse(policy.canUse(
-                StrategistFeature.ONLINE_REASONING, snapshot));
+                StrategistFeatureAccessPolicy.Feature.ONLINE_REASONING, snapshot));
     }
 
     @Test(expected = StrategistFeatureAccessPolicy.HostedFeatureUnavailableException.class)
     public void requireHostedRejectsUnentitledFeature()
     {
         policy.requireHosted(
-                StrategistFeature.GIM_TEAM_PLANNING,
-                StrategistEntitlementSnapshot.none());
+                StrategistFeatureAccessPolicy.Feature.GIM_TEAM_PLANNING,
+                StrategistFeatureAccessPolicy.Snapshot.none());
     }
 }

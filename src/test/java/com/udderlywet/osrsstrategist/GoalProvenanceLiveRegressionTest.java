@@ -176,8 +176,7 @@ public class GoalProvenanceLiveRegressionTest
     {
         RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
                 new FarmingAccessEvaluator(new FarmingAccessCatalog()), null,
-                new FarmingSupplyCatalog(), new RunecraftSupplyCatalog(),
-                new ResourceReadinessService());
+                new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethodSelector selector = new TrainingMethodSelector(
                 new TrainingMethodDatabase(), evidence,
                 new ExpandedTrainingMethodCatalog(),
