@@ -33,6 +33,24 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
 }
 
+def catalogGsonTestAgent = tasks.register('catalogGsonTestAgent', Jar) {
+    dependsOn testClasses
+    archiveFileName = 'catalog-gson-test-agent.jar'
+    destinationDirectory = layout.buildDirectory.dir('test-agent')
+    from(sourceSets.test.output) {
+        include 'compass/CatalogGsonTestAgent.class'
+    }
+    manifest {
+        attributes 'Premain-Class': 'compass.CatalogGsonTestAgent'
+    }
+}
+
+test {
+    dependsOn catalogGsonTestAgent
+    jvmArgs "-javaagent:${layout.buildDirectory.file(
+            'test-agent/catalog-gson-test-agent.jar').get().asFile}"
+}
+
 tasks.register('run', JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass = pluginMainClass
