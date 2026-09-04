@@ -31,15 +31,15 @@ public class LiveRunePouchStateReaderTest
     @Test
     public void liveContentsReplaceStaleRunePouchAndPreserveOtherStorage()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.RUNE_POUCH,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.RUNE_POUCH, Capability.VERIFIED);
+        states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.RUNE_POUCH,
                 Collections.singletonList(item(554, "Fire rune", 10)));
-        contents.put(StorageCapability.DEATH_STORAGE,
+        contents.put(StorageKind.DEATH_STORAGE,
                 Collections.singletonList(item(1, "Stored item", 1)));
         StorageSnapshot base = new StorageSnapshot(states, contents);
 
@@ -50,33 +50,33 @@ public class LiveRunePouchStateReaderTest
                         item(561, "Nature rune", 600),
                         item(554, "Fire rune", 3000)));
 
-        assertTrue(merged.verified(StorageCapability.RUNE_POUCH));
-        assertEquals(2, merged.contentsOf(StorageCapability.RUNE_POUCH).size());
-        assertEquals(600, merged.quantityOf(StorageCapability.RUNE_POUCH, 561));
-        assertEquals(1, merged.quantityOf(StorageCapability.DEATH_STORAGE, 1));
+        assertTrue(merged.verified(StorageKind.RUNE_POUCH));
+        assertEquals(2, merged.contentsOf(StorageKind.RUNE_POUCH).size());
+        assertEquals(600, merged.quantityOf(StorageKind.RUNE_POUCH, 561));
+        assertEquals(1, merged.quantityOf(StorageKind.DEATH_STORAGE, 1));
     }
 
     @Test
     public void absentPouchRemovesStalePouchWithoutErasingDeathStorage()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.RUNE_POUCH,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.RUNE_POUCH, Capability.VERIFIED);
+        states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.RUNE_POUCH,
                 Collections.singletonList(item(561, "Nature rune", 5000)));
-        contents.put(StorageCapability.DEATH_STORAGE,
+        contents.put(StorageKind.DEATH_STORAGE,
                 Collections.singletonList(item(1, "Stored item", 1)));
 
         StorageSnapshot merged = LiveRunePouchStateReader.mergeObserved(
                 new StorageSnapshot(states, contents), false, null);
 
-        assertFalse(merged.hasObservedContents(StorageCapability.RUNE_POUCH));
-        assertEquals(CapabilityState.UNKNOWN,
-                merged.stateOf(StorageCapability.RUNE_POUCH));
-        assertEquals(1, merged.quantityOf(StorageCapability.DEATH_STORAGE, 1));
+        assertFalse(merged.hasObservedContents(StorageKind.RUNE_POUCH));
+        assertEquals(Capability.UNKNOWN,
+                merged.stateOf(StorageKind.RUNE_POUCH));
+        assertEquals(1, merged.quantityOf(StorageKind.DEATH_STORAGE, 1));
     }
 
     @Test
@@ -125,9 +125,6 @@ public class LiveRunePouchStateReaderTest
             total += level;
             totalXp += value;
         }
-        return new AccountSnapshot(
-                "Rune Pouch Test", typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                MembershipStatus.P2P, 1, total, totalXp, levels, xp);
+        return new AccountSnapshot("Rune Pouch Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

@@ -21,7 +21,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Arrays.asList(
@@ -48,7 +48,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "curse", "Curse", 19, 29));
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.MAGIC, 19, Experience.getXpForLevel(19));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Collections.emptyList(), 1L))
@@ -72,7 +72,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "fire_strike", "Fire Strike", 13, 11.5f));
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.MAGIC, 13, Experience.getXpForLevel(13));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Collections.emptyList(), 1L))
@@ -97,7 +97,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Collections.singletonList(
@@ -122,7 +122,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Arrays.asList(
@@ -147,7 +147,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
-        AccountSnapshot account = account(2, MembershipStatus.P2P,
+        AccountSnapshot account = account(2, Membership.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Arrays.asList(
@@ -173,14 +173,14 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.MAGIC, "high_level_alchemy", "High Level Alchemy", 55, 65));
-        AccountSnapshot account = account(2, MembershipStatus.P2P,
+        AccountSnapshot account = account(2, Membership.P2P,
                 Skill.MAGIC, 55, Experience.getXpForLevel(55));
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.RUNE_POUCH, Arrays.asList(
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.RUNE_POUCH, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.RUNE_POUCH, Arrays.asList(
                 item(561, "Nature rune", 2000),
                 item(554, "Fire rune", 10000)));
         GameData data = GameData.builder(account)
@@ -208,7 +208,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.HERBLORE, "prayer_potion", "Prayer potion", 38, 87.5f));
-        AccountSnapshot account = account(4, MembershipStatus.P2P,
+        AccountSnapshot account = account(4, Membership.P2P,
                 Skill.HERBLORE, 38, Experience.getXpForLevel(38));
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(Collections.emptyList(), 1L))
@@ -244,7 +244,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
         int lower = (int) Math.ceil(xpNeeded / (70.0 * 1.025));
         int upper = (int) Math.ceil(xpNeeded / (50.0 * 1.025));
 
-        AccountSnapshot account = account(0, MembershipStatus.P2P,
+        AccountSnapshot account = account(0, Membership.P2P,
                 Skill.FISHING, 70, currentXp);
         ItemsState equipment = new ItemsState(Arrays.asList(
                 item(1, "Angler hat", 1),
@@ -274,7 +274,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 action(Skill.HUNTER, "red_salamander",
                         "Red salamander", 59, 272));
         GameData data = GameData.builder(
-                account(1, MembershipStatus.P2P, Skill.HUNTER, 60,
+                account(1, Membership.P2P, Skill.HUNTER, 60,
                         Experience.getXpForLevel(60)))
                 .inventory(new ItemsState(Arrays.asList(
                         item(954, "Rope", 4),
@@ -297,7 +297,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
         AdaptiveMilestoneGuidanceService service = serviceWith(
                 action(Skill.CRAFTING, "sapphire", "Sapphire", 20, 50));
         GameData data = GameData.builder(
-                account(2, MembershipStatus.P2P, Skill.CRAFTING, 20,
+                account(2, Membership.P2P, Skill.CRAFTING, 20,
                         Experience.getXpForLevel(20)))
                 .inventory(new ItemsState(Collections.singletonList(
                         item(1623, "Uncut sapphire", 20))))
@@ -330,7 +330,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 return result;
             }
         };
-        return new AdaptiveMilestoneGuidanceService(
+        return TestFixtures.adaptiveMilestoneGuidanceService(
                 catalog,
                 new MethodExecutionProfileCatalog(),
                 new SkillingXpModifierService());
@@ -346,7 +346,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 level,
                 xp,
                 null,
-                MembershipStatus.P2P,
+                Membership.P2P,
                 -1);
     }
 
@@ -365,7 +365,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
 
     private static AccountSnapshot account(
             int typeCode,
-            MembershipStatus membership,
+            Membership membership,
             Skill trainedSkill,
             int level,
             int trainedXp)
@@ -379,16 +379,7 @@ public class AdaptiveMilestoneGuidanceServiceTest
         }
         levels.put(trainedSkill, level);
         xp.put(trainedSkill, trainedXp);
-        return new AccountSnapshot(
-                "Guidance Test",
-                typeCode,
-                typeCode == 0 ? "Main" : "Restricted",
-                membership,
-                1,
-                2200,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Guidance Test", 0L, typeCode, typeCode == 0 ? "Main" : "Restricted", membership, 1, 2200, 0L, levels, xp);
     }
 
     private static ItemState item(int id, String name, int quantity)

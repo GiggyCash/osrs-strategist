@@ -22,8 +22,8 @@ public class DangerousStorageDisclosureTest
     {
         StrategyContext context = context();
         UimStorageDecision decision = capabilityService.evaluateStorage(
-                context.data(), StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                CapabilityState.VERIFIED, CapabilityState.VERIFIED);
+                context.data(), StorageKind.HESPORI_ITEM_RETRIEVAL,
+                Capability.VERIFIED, Capability.VERIFIED);
         Recommendation withoutWarning = recommendation(
                 guidance(decision, null));
 
@@ -46,7 +46,7 @@ public class DangerousStorageDisclosureTest
     {
         StrategyContext context = context();
         UimStorageDecision generic = new UimStorageDecision(
-                StorageCapability.DEATH_STORAGE, true,
+                StorageKind.DEATH_STORAGE, true,
                 Confidence.VERIFIED, RiskLevel.HIGH,
                 "Synthetic generic evidence");
         Recommendation result = validator.validate(recommendation(
@@ -60,8 +60,8 @@ public class DangerousStorageDisclosureTest
     {
         return new Guidance("View the verified steps.",
                 "Exact observed setup", "Hespori cave",
-                "Do not begin until every retrieval rule is understood.")
-                .withStorageDecision(decision, disclosure);
+                "Do not begin until every retrieval rule is understood.",
+                BankingMode.UNKNOWN, decision, disclosure);
     }
 
     private static Recommendation recommendation(
@@ -70,15 +70,15 @@ public class DangerousStorageDisclosureTest
         return new Recommendation("uim:dangerous-storage", "Storage transition",
                 "A major progression transition is otherwise blocked.", 10.0,
                 null, Confidence.VERIFIED, 0, 0, guidance,
-                SafetyEvidence.harmless(false));
+                Safety.harmless(false));
     }
 
     private static StrategyContext context()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                CapabilityState.VERIFIED);
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.HESPORI_ITEM_RETRIEVAL,
+                Capability.VERIFIED);
         GameData data = GameData.builder(uim())
                 .inventory(new ItemsState(Collections.emptyList()))
                 .storage(new StorageSnapshot(states))
@@ -98,7 +98,6 @@ public class DangerousStorageDisclosureTest
             levels.put(skill, 50);
             xp.put(skill, 101_333);
         }
-        return new AccountSnapshot("Uim", 2, "Ultimate Ironman",
-                MembershipStatus.P2P, 50, 50, 101_333L, levels, xp);
+        return new AccountSnapshot("Uim", 0L, 2, "Ultimate Ironman", Membership.P2P, 50, 50, 101_333L, levels, xp);
     }
 }

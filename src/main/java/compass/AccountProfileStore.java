@@ -1,13 +1,17 @@
 package compass;
+import lombok.*;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import com.google.gson.Gson;
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import net.runelite.client.config.ConfigManager;
 
 /** Central RuneLite character-profile persistence boundary. */
 @Singleton
+@RequiredArgsConstructor
 public class AccountProfileStore
 {
     static final String GROUP = Text.get(1609);
@@ -35,13 +39,6 @@ public class AccountProfileStore
     {
         this(new RuneLiteProfileConfiguration(configManager), gson);
     }
-
-    AccountProfileStore(ProfileConfiguration configuration, Gson gson)
-    {
-        this.configuration = configuration;
-        this.gson = gson;
-    }
-
     public String activeProfileKey() { return configuration.activeProfileKey(); }
 
     public void loadPreferences(PreferenceProfile profile)
@@ -52,10 +49,10 @@ public class AccountProfileStore
         var cooldowns = ProfileJsonCodec.longs(gson, get(COOLDOWNS));
         Map<String, TimedScoreAdjustment> adjustments =
                 ProfileJsonCodec.timedAdjustments(gson, get(ADJUSTMENTS));
-        profile.replaceAll(preferences == null ? Collections.emptyMap() : preferences);
-        profile.replaceCooldowns(cooldowns == null ? Collections.emptyMap() : cooldowns);
+        profile.replaceAll(preferences == null ? emptyMap() : preferences);
+        profile.replaceCooldowns(cooldowns == null ? emptyMap() : cooldowns);
         profile.replaceTimedAdjustments(adjustments == null
-                ? Collections.emptyMap() : adjustments);
+                ? emptyMap() : adjustments);
     }
 
     public void savePreferences(PreferenceProfile profile)
@@ -124,9 +121,6 @@ public class AccountProfileStore
             configuration.set(GROUP, PROGRESS,
                     ProgressHistoryCodec.encode(gson, history));
     }
-
-    public void clearProgress() { unset(PROGRESS); }
-
     private String get(String key)
     {
         var json = configuration.get(GROUP, key);
@@ -149,11 +143,12 @@ public class AccountProfileStore
         if (activeProfileKey() != null) configuration.unset(GROUP, key);
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class RuneLiteProfileConfiguration
             implements ProfileConfiguration
     {
         private final ConfigManager config;
-        private RuneLiteProfileConfiguration(ConfigManager config) { this.config = config; }
         public String activeProfileKey() { return config.getRSProfileKey(); }
         public String get(String group, String key)
         { return config.getRSProfileConfiguration(group, key); }

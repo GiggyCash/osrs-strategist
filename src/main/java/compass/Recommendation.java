@@ -1,6 +1,7 @@
 package compass;
+import static java.lang.Math.*;
+import lombok.*;
 
-import lombok.Getter;
 
 /**
  * One ranked action the player could take next.
@@ -13,17 +14,17 @@ import lombok.Getter;
 public final class Recommendation
 {
     final String id;
-    private final String title;
-    private final String reason;
-    private final double score;
-    private final TrainingPlan trainingPlan;
-    private final Confidence confidence;
-    private final int currentLevel;
-    private final int targetLevel;
-    private final Guidance guidance;
-    private final SafetyEvidence safetyEvidence;
-    private final GoalProvenance goalProvenance;
-    private final StrategicValue strategicValue;
+    final String title;
+    final String reason;
+    final double score;
+    final TrainingPlan trainingPlan;
+    final Confidence confidence;
+    final int currentLevel;
+    final int targetLevel;
+    final Guidance guidance;
+    final Safety safetyEvidence;
+    final GoalProvenance goalProvenance;
+    final StrategicValue strategicValue;
 
     TrainingPlan plan() { return trainingPlan; }
 
@@ -43,7 +44,7 @@ public final class Recommendation
                 0,
                 0,
                 null,
-                SafetyEvidence.unknown()
+                Safety.unknown()
         );
     }
 
@@ -52,7 +53,7 @@ public final class Recommendation
             Confidence confidence)
     {
         this(id, title, reason, score, confidence, null,
-                SafetyEvidence.unknown(),
+                Safety.unknown(),
                 StrategicValue.neutral());
     }
 
@@ -60,13 +61,13 @@ public final class Recommendation
             Confidence confidence, Guidance guidance)
     {
         this(id, title, reason, score, confidence, guidance,
-                SafetyEvidence.unknown(),
+                Safety.unknown(),
                 StrategicValue.neutral());
     }
 
     public Recommendation(String id, String title, String reason, double score,
             Confidence confidence, Guidance guidance,
-            SafetyEvidence safetyEvidence)
+            Safety safetyEvidence)
     {
         this(id, title, reason, score, confidence, guidance, safetyEvidence,
                 StrategicValue.neutral());
@@ -74,7 +75,7 @@ public final class Recommendation
 
     public Recommendation(String id, String title, String reason, double score,
             Confidence confidence, Guidance guidance,
-            SafetyEvidence safetyEvidence,
+            Safety safetyEvidence,
             StrategicValue strategicValue)
     {
         this(id, title, reason, score, null, confidence, 0, 0, guidance,
@@ -99,7 +100,7 @@ public final class Recommendation
                 0,
                 0,
                 null,
-                SafetyEvidence.unknown()
+                Safety.unknown()
         );
     }
 
@@ -123,7 +124,7 @@ public final class Recommendation
                 currentLevel,
                 targetLevel,
                 null,
-                SafetyEvidence.unknown()
+                Safety.unknown()
         );
     }
 
@@ -139,14 +140,14 @@ public final class Recommendation
             Guidance guidance)
     {
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
-                targetLevel, guidance, SafetyEvidence.unknown());
+                targetLevel, guidance, Safety.unknown());
     }
 
     public Recommendation(
             String id, String title, String reason, double score,
             TrainingPlan trainingPlan, Confidence confidence,
             int currentLevel, int targetLevel, Guidance guidance,
-            SafetyEvidence safetyEvidence)
+            Safety safetyEvidence)
     {
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
                 targetLevel, guidance, safetyEvidence, null,
@@ -157,7 +158,7 @@ public final class Recommendation
             String id, String title, String reason, double score,
             TrainingPlan trainingPlan, Confidence confidence,
             int currentLevel, int targetLevel, Guidance guidance,
-            SafetyEvidence safetyEvidence,
+            Safety safetyEvidence,
             GoalProvenance goalProvenance,
             StrategicValue strategicValue)
     {
@@ -169,11 +170,11 @@ public final class Recommendation
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED
                 : confidence;
-        this.currentLevel = Math.max(0, currentLevel);
-        this.targetLevel = Math.max(0, targetLevel);
+        this.currentLevel = max(0, currentLevel);
+        this.targetLevel = max(0, targetLevel);
         this.guidance = guidance;
         this.safetyEvidence = safetyEvidence == null
-                ? SafetyEvidence.unknown() : safetyEvidence;
+                ? Safety.unknown() : safetyEvidence;
         this.goalProvenance = goalProvenance;
         this.strategicValue = strategicValue == null
                 ? StrategicValue.neutral() : strategicValue;
@@ -210,7 +211,7 @@ public final class Recommendation
                 goalProvenance, strategicValue);
     }
 
-    public Recommendation withSafetyEvidence(SafetyEvidence value)
+    public Recommendation withSafetyEvidence(Safety value)
     {
         return new Recommendation(id, title, reason, score, trainingPlan,
                 confidence, currentLevel, targetLevel, guidance, value,

@@ -41,7 +41,7 @@ public class PvmAccountValueTest
     {
         Map<String, PvmReadiness> readiness = Collections.singletonMap(
                 "pvm:kraken", preparation("pvm:kraken"));
-        SlayerSnapshot task = new SlayerSnapshot("Cave krakens", 100,
+        SlayerSnapshot task = TestFixtures.slayerSnapshot("Cave krakens", 100,
                 "Duradel", 0, Confidence.VERIFIED);
         assertTrue(contains(new PvmCandidateProvider().candidates(
                 context(readiness, GoalType.SLAYER_85, task)), "Kraken"));
@@ -68,8 +68,7 @@ public class PvmAccountValueTest
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 90); xp.put(skill, 0); }
-        return new AccountSnapshot("Value", 0, "Main", MembershipStatus.P2P,
-                1, 2000, 0L, levels, xp);
+        return new AccountSnapshot("Value", 0L, 0, "Main", Membership.P2P, 1, 2000, 0L, levels, xp);
     }
 
     private static boolean contains(java.util.List<Recommendation> values,

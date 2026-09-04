@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PurchaseCostAdvisorTest
 {
-    private final MarketPriceService prices = new MarketPriceService()
+    private final MarketPriceService prices = new MarketPriceService(null)
     {
         @Override
         public MarketPriceQuote quote(String name)

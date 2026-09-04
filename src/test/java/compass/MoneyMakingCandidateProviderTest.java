@@ -60,9 +60,7 @@ public class MoneyMakingCandidateProviderTest
             total += level;
             totalXp += value;
         }
-        AccountSnapshot account = new AccountSnapshot("Money test", type,
-                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
-                1, total, totalXp, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Money test", 0L, type, AccountMode.fromTypeCode(type).name(), Membership.P2P, 1, total, totalXp, levels, xp);
         GameData data = GameData.builder(account)
                 .economy(new AccountEconomySnapshot(10_000L, 10_000L,
                         Confidence.VERIFIED))

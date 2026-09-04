@@ -132,8 +132,6 @@ public class ExpandedOpportunityEngineTest
             levels.put(skill, 50);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Test", 0, "Main", MembershipStatus.P2P,
-                1, 1, 0L, levels, xp);
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.P2P, 1, 1, 0L, levels, xp);
     }
 }

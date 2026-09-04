@@ -82,8 +82,6 @@ public class ResourceDetourCandidateProviderTest
             total += level;
             totalXp += value;
         }
-        return new AccountSnapshot("Detour Test", typeCode,
-                AccountMode.fromTypeCode(typeCode).name(), MembershipStatus.P2P,
-                1, total, totalXp, levels, xp);
+        return new AccountSnapshot("Detour Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

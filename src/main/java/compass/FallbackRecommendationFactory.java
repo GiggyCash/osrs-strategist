@@ -1,4 +1,6 @@
 package compass;
+import static net.runelite.api.Skill.*;
+import static java.lang.Math.*;
 import static compass.Text.get;
 
 import net.runelite.api.Skill;
@@ -43,7 +45,7 @@ final class FallbackRecommendationFactory
                     get(221));
 
         var account = data.account();
-        if (AccountBuildPolicy.allowsSkill(account, Skill.MINING))
+        if (AccountBuildPolicy.allowsSkill(account, MINING))
         {
             var items = new ItemIndex(data, false);
             boolean hasPickaxe = items.quantityMatching(
@@ -57,8 +59,8 @@ final class FallbackRecommendationFactory
                         get(223),
                         get(224));
             }
-            var current = Math.max(1, account.level(Skill.MINING));
-            var target = Math.min(99, current + 1);
+            var current = max(1, account.level(MINING));
+            var target = min(99, current + 1);
             var maxed = current >= 99;
             return fallback("starter-mining",
                     maxed ? get(1311)
@@ -73,8 +75,8 @@ final class FallbackRecommendationFactory
         var combatSkill = firstTrainableMeleeSkill(account);
         if (combatSkill != null)
         {
-            var current = Math.max(1, account.level(combatSkill));
-            var target = Math.min(99, current + 1);
+            var current = max(1, account.level(combatSkill));
+            var target = min(99, current + 1);
             return fallback("safe-combat-" + combatSkill.name().toLowerCase(),
                     "Train " + combatSkill.getName() + " to " + target,
                     get(1314) + attackStyle(combatSkill)
@@ -100,7 +102,7 @@ final class FallbackRecommendationFactory
 
     private static Skill firstTrainableMeleeSkill(AccountSnapshot account)
     {
-        Skill[] skills = {Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE};
+        Skill[] skills = {ATTACK, STRENGTH, DEFENCE};
         for (Skill skill : skills)
             if (AccountBuildPolicy.allowsSkill(account, skill)
                     && account.level(skill) < 99) return skill;
@@ -109,8 +111,8 @@ final class FallbackRecommendationFactory
 
     private static String attackStyle(Skill skill)
     {
-        if (skill == Skill.ATTACK) return get(1317);
-        if (skill == Skill.STRENGTH) return get(1318);
+        if (skill == ATTACK) return get(1317);
+        if (skill == STRENGTH) return get(1318);
         return get(1319);
     }
 
@@ -122,6 +124,6 @@ final class FallbackRecommendationFactory
                 Confidence.VERIFIED, 0, 0,
                 new Guidance(action, supplies, location,
                         get(236)),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 }

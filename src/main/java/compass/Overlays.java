@@ -1,15 +1,11 @@
 package compass;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import javax.inject.Inject;
-import net.runelite.client.ui.overlay.OverlayPanel;
-import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.components.LineComponent;
-import net.runelite.client.ui.overlay.components.TitleComponent;
+import net.runelite.client.ui.overlay.*;
+import net.runelite.client.ui.overlay.components.*;
 
 /** Movable on-game checklist complementing the Compass sidebar. */
 class MethodGuidanceOverlay extends OverlayPanel
@@ -48,7 +44,7 @@ class MethodGuidanceOverlay extends OverlayPanel
                 .color(StrategistTheme.GOLD)
                 .build());
         var metrics = graphics.getFontMetrics();
-        addSection("METHOD", checklist.getTitle(), metrics);
+        addSection("METHOD", checklist.title, metrics);
         addSection("BRING", checklist.getBring(), metrics);
         addSection("WHERE", checklist.getWhere(), metrics);
         addSection("DO", fallbackAction(checklist), metrics);
@@ -218,7 +214,7 @@ class RecommendationDetailsOverlay extends OverlayPanel
                 : Presentation.detailsSections(
                         recommendation, goalContext))
         {
-            addLine(section.getHeading(), StrategistTheme.GOLD_SOFT);
+            addLine(section.heading, StrategistTheme.GOLD_SOFT);
             for (String wrapped : wrap(section.getValue(), metrics, TEXT_WIDTH))
                 addLine(wrapped, stateColor(section.getValue()));
         }

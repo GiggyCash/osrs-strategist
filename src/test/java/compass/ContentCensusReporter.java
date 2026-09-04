@@ -91,14 +91,14 @@ public final class ContentCensusReporter
         for (DiaryTaskDefinition task : diaries.all())
         {
             requirements += task.getRequirements().size();
-            if (task.isTransportRelevant()) transportTasks++;
+            if (DiaryTaskCensusSupport.transportRelevant(task)) transportTasks++;
             for (DiaryTaskRequirement requirement : task.getRequirements())
                 if (requirement.getKind()
                         == DiaryTaskRequirement.Kind.ALTERNATIVE_CHECK)
                     alternativeChecks++;
         }
         output.append("\n  \"diaryTasks\": {")
-                .append("\n    \"regions\": ").append(diaries.census().size())
+                .append("\n    \"regions\": ").append(DiaryTaskCensusSupport.census(diaries).size())
                 .append(",\n    \"tiers\": 48")
                 .append(",\n    \"tasks\": ").append(diaries.all().size())
                 .append(",\n    \"structuredRequirements\": ")
@@ -157,7 +157,7 @@ public final class ContentCensusReporter
                 .append(",\n    \"gearContextLadders\": ")
                 .append(new GearProgressionCatalog().all().size())
                 .append(",\n    \"gearDecisionKinds\": ")
-                .append(GearDecisionKind.values().length)
+                .append(GearAspect.values().length)
                 .append(",\n    \"deterministicResourceDefinitions\": ")
                 .append(new ResourceDependencyCatalog().size())
                 .append(",\n    \"accountAwareResourceSourceFamilies\": ")

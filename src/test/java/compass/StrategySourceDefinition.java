@@ -9,7 +9,7 @@ import java.util.List;
 /** Provenance for one reviewed strategic source family. */
 public final class StrategySourceDefinition
 {
-    private final StrategySourceId id;
+    private final Source id;
     private final String url;
     private final String subject;
     private final LocalDate reviewedDate;
@@ -17,7 +17,7 @@ public final class StrategySourceDefinition
     private final String license;
     private final List<String> derivedStrategyFamilies;
 
-    public StrategySourceDefinition(StrategySourceId id, String url,
+    public StrategySourceDefinition(Source id, String url,
             String subject, LocalDate reviewedDate, String revision,
             String license)
     {
@@ -25,7 +25,7 @@ public final class StrategySourceDefinition
                 Collections.emptyList());
     }
 
-    public StrategySourceDefinition(StrategySourceId id, String url,
+    public StrategySourceDefinition(Source id, String url,
             String subject, LocalDate reviewedDate, String revision,
             String license, List<String> derivedStrategyFamilies)
     {
@@ -40,7 +40,7 @@ public final class StrategySourceDefinition
                         : new ArrayList<>(derivedStrategyFamilies));
     }
 
-    public StrategySourceId getId()
+    public Source getId()
     {
         return id;
     }

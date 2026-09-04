@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class LiveClueStateReaderTest
 {
-    private final LiveClueStateReader reader = new LiveClueStateReader();
+    private final LiveClueStateReader reader = TestFixtures.liveClueStateReader();
 
     @Test
     public void detectsHighestObservedClueTierAcrossInventoryAndBank()

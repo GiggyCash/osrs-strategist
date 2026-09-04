@@ -12,12 +12,12 @@ public class GoalRecommendationContextTest
     {
         GoalRecommendationContext automatic = GoalRecommendationContext.assess(
                 GoalType.AUTOMATIC, recommendation("skill:woodcutting",
-                        Confidence.VERIFIED), MembershipStatus.P2P);
+                        Confidence.VERIFIED), Membership.P2P);
         GoalRecommendationContext max = GoalRecommendationContext.assess(
                 GoalType.MAX, recommendation("skill:woodcutting",
-                        Confidence.VERIFIED), MembershipStatus.P2P);
+                        Confidence.VERIFIED), Membership.P2P);
 
-        assertEquals(GoalRecommendationRelationship.AUTOMATIC,
+        assertEquals(GoalRelation.AUTOMATIC,
                 automatic.getRelationship());
         assertEquals("Automatic", automatic.getGoalName());
         assertEquals("Max cape", max.getGoalName());
@@ -34,14 +34,14 @@ public class GoalRecommendationContextTest
                                 GoalProvenance.direct(GoalType.BOWFA,
                                         "upgrade:bowfa", java.util.Arrays.asList(
                                                 "Bowfa", "Enhanced crystal weapon seed"))),
-                MembershipStatus.P2P);
+                Membership.P2P);
         GoalRecommendationContext fallback = GoalRecommendationContext.assess(
                 GoalType.BOWFA, recommendation("skill:woodcutting",
-                        Confidence.VERIFIED), MembershipStatus.P2P);
+                        Confidence.VERIFIED), Membership.P2P);
 
-        assertEquals(GoalRecommendationRelationship.DIRECT,
+        assertEquals(GoalRelation.DIRECT,
                 direct.getRelationship());
-        assertEquals(GoalRecommendationRelationship.FALLBACK,
+        assertEquals(GoalRelation.FALLBACK,
                 fallback.getRelationship());
         assertTrue(fallback.getStatus().isEmpty());
     }
@@ -51,8 +51,8 @@ public class GoalRecommendationContextTest
     {
         GoalRecommendationContext context = GoalRecommendationContext.assess(
                 GoalType.BOWFA, recommendation("skill:woodcutting",
-                        Confidence.VERIFIED), MembershipStatus.F2P);
-        assertEquals(GoalRecommendationRelationship.FALLBACK,
+                        Confidence.VERIFIED), Membership.F2P);
+        assertEquals(GoalRelation.FALLBACK,
                 context.getRelationship());
         assertTrue(context.getStatus().contains("requires members content"));
         assertTrue(context.getStatus().contains("F2P progression"));
@@ -63,8 +63,8 @@ public class GoalRecommendationContextTest
     {
         GoalRecommendationContext context = GoalRecommendationContext.assess(
                 GoalType.PRIFDDINAS, recommendation("skill:agility",
-                        Confidence.VERIFIED), MembershipStatus.UNKNOWN);
-        assertEquals(GoalRecommendationRelationship.CHECK_NEEDED,
+                        Confidence.VERIFIED), Membership.UNKNOWN);
+        assertEquals(GoalRelation.CHECK_NEEDED,
                 context.getRelationship());
         assertTrue(context.getStatus().startsWith("Confirm membership"));
     }

@@ -54,7 +54,6 @@ public class PvmReadyGuidanceTest
             levels.put(skill, 70);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot("PvM", 0, "Main",
-                MembershipStatus.P2P, 1, 1600, 0L, levels, xp);
+        return new AccountSnapshot("PvM", 0L, 0, "Main", Membership.P2P, 1, 1600, 0L, levels, xp);
     }
 }

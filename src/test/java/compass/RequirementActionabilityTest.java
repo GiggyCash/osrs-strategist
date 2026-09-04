@@ -17,7 +17,7 @@ public class RequirementActionabilityTest
                 method,
                 "test",
                 Confidence.CHECK_NEEDED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "generic:Steel bar supply",
                         "Steel bar supply",
                         RequirementState.CHECK_NEEDED,
@@ -56,7 +56,7 @@ public class RequirementActionabilityTest
                 method,
                 "test",
                 Confidence.CHECK_NEEDED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "generic:Volcanic Mine access",
                         "Volcanic Mine access",
                         RequirementState.CHECK_NEEDED,
@@ -94,7 +94,7 @@ public class RequirementActionabilityTest
                 method("runecraft_zmi", Skill.RUNECRAFT),
                 "test",
                 Confidence.CHECK_NEEDED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "generic:Ourania Altar route and essence supply",
                         "Ourania Altar route and essence supply",
                         RequirementState.CHECK_NEEDED,
@@ -116,11 +116,11 @@ public class RequirementActionabilityTest
                 method("runecraft_f2p_earth", Skill.RUNECRAFT),
                 "test", Confidence.CHECK_NEEDED,
                 java.util.Arrays.asList(
-                        new RequirementCheck("resource:runecraft_essence",
+                        new EvidenceCheck("resource:runecraft_essence",
                                 "Rune or pure essence",
                                 RequirementState.CHECK_NEEDED,
                                 "No essence is currently observed."),
-                        new RequirementCheck("resource:runecraft_earth_entry",
+                        new EvidenceCheck("resource:runecraft_earth_entry",
                                 "Earth talisman or earth tiara",
                                 RequirementState.CHECK_NEEDED,
                                 "No entry item is currently observed.")));
@@ -137,7 +137,7 @@ public class RequirementActionabilityTest
     @Test
     public void knownTypedBoatSetupCanLeadPreparation()
     {
-        RequirementCheck check = new RequirementCheck(
+        EvidenceCheck check = new EvidenceCheck(
                 "preparation:sailing-trial-boat", "Trial-ready boat",
                 RequirementState.CHECK_NEEDED,
                 "Fit an iron helm, oak mast, and linen sails.");
@@ -156,7 +156,7 @@ public class RequirementActionabilityTest
     @Test
     public void locationDoesNotMasqueradeAsALogSupply()
     {
-        RequirementCheck check = new RequirementCheck(
+        EvidenceCheck check = new EvidenceCheck(
                 "generic:Forestry-enabled tree location",
                 "Forestry-enabled tree location",
                 RequirementState.CHECK_NEEDED,
@@ -175,7 +175,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method("fishing_barbarian", Skill.FISHING),
                 "test", Confidence.CHECK_NEEDED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "generic:Barbarian Fishing training",
                         "Barbarian Fishing training",
                         RequirementState.CHECK_NEEDED,
@@ -193,7 +193,7 @@ public class RequirementActionabilityTest
         TrainingPlan plan = new TrainingPlan(
                 method("farming_allotments_expanded", Skill.FARMING),
                 "test", Confidence.CHECK_NEEDED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "generic:Reachable allotment patches and supplies",
                         "Reachable allotment patches and supplies",
                         RequirementState.CHECK_NEEDED,
@@ -205,7 +205,7 @@ public class RequirementActionabilityTest
     @Test
     public void retrievalOnlyUimResourceStillRequiresExplicitRoute()
     {
-        RequirementCheck check = new RequirementCheck(
+        EvidenceCheck check = new EvidenceCheck(
                 "resource:runecraft_essence", "Rune or pure essence",
                 RequirementState.CHECK_NEEDED,
                 "Enough is observed only after counting UIM storage with additional access/risk preconditions; verify that route before using the resource.");
@@ -225,7 +225,7 @@ public class RequirementActionabilityTest
                 method,
                 "test",
                 Confidence.BLOCKED,
-                Collections.singletonList(new RequirementCheck(
+                Collections.singletonList(new EvidenceCheck(
                         "build:restriction",
                         "Build restriction",
                         RequirementState.BLOCKED,

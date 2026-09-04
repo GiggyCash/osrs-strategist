@@ -69,16 +69,6 @@ public class OpportunityEngineTest
         levels.put(Skill.HUNTER, hunter);
         levels.put(Skill.FARMING, farming);
 
-        return new AccountSnapshot(
-                "Test",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                24,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.P2P, 1, 24, 0L, levels, experience);
     }
 }

@@ -74,7 +74,7 @@ public class FeedbackTortureTest
 
     private static StrategyEngine engine()
     {
-        return new StrategyEngine(null, null, null, null,
+        return TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
@@ -89,7 +89,7 @@ public class FeedbackTortureTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Feedback", 700L, 0,
-                "MAIN", MembershipStatus.P2P, 1,
+                "MAIN", Membership.P2P, 1,
                 70 * Skill.values().length, 0L, levels, xp);
         return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
@@ -110,6 +110,6 @@ public class FeedbackTortureTest
                 Confidence.VERIFIED, 70, 71,
                 new Guidance("Do it now.",
                         "Setup verified.", "Safe location.", "Useful."),
-                SafetyEvidence.skill(false, skill));
+                Safety.skill(false, skill));
     }
 }

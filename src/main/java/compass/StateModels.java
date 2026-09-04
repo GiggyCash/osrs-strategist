@@ -1,11 +1,13 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import java.util.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import net.runelite.api.Prayer;
-import net.runelite.api.Skill;
+import net.runelite.api.*;
 
 /**
  * Per-character memory of places/capabilities Compass has directly observed.
@@ -17,11 +19,11 @@ import net.runelite.api.Skill;
 final class AccessMemorySnapshot
 {
     @Getter
-    private final Map<String, Long> lastObservedAtMillis;
+    final Map<String, Long> lastObservedAtMillis;
 
     public AccessMemorySnapshot(Map<String, Long> values)
     {
-        this.lastObservedAtMillis = Collections.unmodifiableMap(
+        this.lastObservedAtMillis = unmodifiableMap(
                 values == null
                         ? new HashMap<>()
                         : new HashMap<>(values)
@@ -30,106 +32,55 @@ final class AccessMemorySnapshot
 
     public static AccessMemorySnapshot empty()
     {
-        return new AccessMemorySnapshot(Collections.emptyMap());
+        return new AccessMemorySnapshot(emptyMap());
     }
 
     public boolean hasObserved(String key)
     {
         return key != null && lastObservedAtMillis.containsKey(key);
     }
-
-    public Long lastObservedAt(String key)
-    {
-        return lastObservedAtMillis.get(key);
-    }
-
 }
 
 @Getter
 @RequiredArgsConstructor
 final class AccountEconomySnapshot
 {
-    private final long coins;
-    private final long estimatedBankValue;
-    private final Confidence confidence;
-
-
-
+    final long coins;
+    final long estimatedBankValue;
+    final Confidence confidence;
 
 }
 
 final class AccountSnapshot
 {
     @Getter
-    private final String playerName;
-    private final long accountHash;
+    final String playerName;
     @Getter
-    private final int accountTypeCode;
+    final long accountHash;
     @Getter
-    private final String accountTypeName;
+    final int accountTypeCode;
     @Getter
-    private final MembershipStatus membershipStatus;
+    final String accountTypeName;
     @Getter
-    private final int membershipCredit;
+    final Membership membershipStatus;
     @Getter
-    private final int totalLevel;
+    final int membershipCredit;
     @Getter
-    private final long totalExperience;
+    final int totalLevel;
+    @Getter
+    final long totalExperience;
 
     @Getter
-    private final Map<Skill, Integer> skillLevels;
+    final Map<Skill, Integer> skillLevels;
     @Getter
-    private final Map<Skill, Integer> skillExperience;
+    final Map<Skill, Integer> skillExperience;
 
-    /**
-     * Compatibility constructor for tests and callers that do not yet supply
-     * membership state.
-     */
-    public AccountSnapshot(
-            String playerName,
-            int accountTypeCode,
-            String accountTypeName,
-            int totalLevel,
-            long totalExperience,
-            Map<Skill, Integer> skillLevels,
-            Map<Skill, Integer> skillExperience)
-    {
-        this(
-                playerName,
-                0L,
-                accountTypeCode,
-                accountTypeName,
-                MembershipStatus.UNKNOWN,
-                0,
-                totalLevel,
-                totalExperience,
-                skillLevels,
-                skillExperience
-        );
-    }
-
-    public AccountSnapshot(
-            String playerName,
-            int accountTypeCode,
-            String accountTypeName,
-            MembershipStatus membershipStatus,
-            int membershipCredit,
-            int totalLevel,
-            long totalExperience,
-            Map<Skill, Integer> skillLevels,
-            Map<Skill, Integer> skillExperience)
-    {
-        this(playerName, 0L, accountTypeCode, accountTypeName,
-                membershipStatus, membershipCredit, totalLevel,
-                totalExperience, skillLevels, skillExperience);
-    }
-
-    public AccountSnapshot(
+       public AccountSnapshot(
             String playerName,
             long accountHash,
             int accountTypeCode,
             String accountTypeName,
-            MembershipStatus membershipStatus,
+            Membership membershipStatus,
             int membershipCredit,
             int totalLevel,
             long totalExperience,
@@ -141,40 +92,28 @@ final class AccountSnapshot
         this.accountTypeCode = accountTypeCode;
         this.accountTypeName = accountTypeName;
         this.membershipStatus = membershipStatus == null
-                ? MembershipStatus.UNKNOWN
+                ? Membership.UNKNOWN
                 : membershipStatus;
         this.membershipCredit = membershipCredit;
         this.totalLevel = totalLevel;
         this.totalExperience = totalExperience;
 
-        this.skillLevels = Collections.unmodifiableMap(
+        this.skillLevels = unmodifiableMap(
                 new EnumMap<>(skillLevels)
         );
 
-        this.skillExperience = Collections.unmodifiableMap(
+        this.skillExperience = unmodifiableMap(
                 new EnumMap<>(skillExperience)
         );
     }
 
 
     /** Stable local character identity. Zero means RuneLite has not supplied it yet. */
-    public long getAccountHash()
-    {
-        return accountHash;
-    }
 
     public boolean hasStableAccountIdentity()
     {
         return accountHash != 0L;
     }
-
-
-
-
-
-
-
-
 
     public int getSkillLevel(Skill skill)
     {
@@ -183,28 +122,24 @@ final class AccountSnapshot
 
     int level(Skill skill) { return getSkillLevel(skill); }
     int xp(Skill skill) { return getSkillExperience(skill); }
-    MembershipStatus membership() { return membershipStatus; }
+    Membership membership() { return membershipStatus; }
     int modeCode() { return accountTypeCode; }
 
     public int getSkillExperience(Skill skill)
     {
         return skillExperience.getOrDefault(skill, 0);
     }
-
-    public int getTrackedSkillCount()
-    {
-        return skillLevels.size();
-    }
 }
 
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 final class ClueSnapshot
 {
-    private final boolean cluePresent;
-    private final String clueType;
-    private final long firstSeenAtMillis;
-    private final Confidence confidence;
-    private final ClueStepSnapshot currentStep;
+    final boolean cluePresent;
+    final String clueType;
+    final long firstSeenAtMillis;
+    final Confidence confidence;
+    final ClueStepSnapshot currentStep;
 
     public ClueSnapshot(
             boolean cluePresent,
@@ -215,24 +150,6 @@ final class ClueSnapshot
         this(cluePresent, clueType, firstSeenAtMillis, confidence, null);
     }
 
-    public ClueSnapshot(
-            boolean cluePresent,
-            String clueType,
-            long firstSeenAtMillis,
-            Confidence confidence,
-            ClueStepSnapshot currentStep)
-    {
-        this.cluePresent = cluePresent;
-        this.clueType = clueType;
-        this.firstSeenAtMillis = firstSeenAtMillis;
-        this.confidence = confidence;
-        this.currentStep = currentStep;
-    }
-
-
-
-
-
     public boolean hasObservedCurrentStep() { return currentStep != null; }
 }
 
@@ -240,15 +157,15 @@ final class ClueSnapshot
 @Getter
 final class ClueStepSnapshot
 {
-    private final String kind;
-    private final String action;
-    private final String location;
-    private final List<String> itemRequirements;
-    private final boolean requiresSpade;
-    private final boolean requiresLight;
-    private final String enemy;
-    private final boolean wilderness;
-    private final String stashUnit;
+    final String kind;
+    final String action;
+    final String location;
+    final List<String> itemRequirements;
+    final boolean requiresSpade;
+    final boolean requiresLight;
+    final String enemy;
+    final boolean wilderness;
+    final String stashUnit;
 
     public ClueStepSnapshot(String kind, String action, String location,
             List<String> itemRequirements, boolean requiresSpade,
@@ -258,9 +175,9 @@ final class ClueStepSnapshot
         this.kind = clean(kind);
         this.action = clean(action);
         this.location = clean(location);
-        this.itemRequirements = Collections.unmodifiableList(new ArrayList<>(
+        this.itemRequirements = unmodifiableList(new ArrayList<>(
                 itemRequirements == null
-                        ? Collections.emptyList() : itemRequirements));
+                        ? emptyList() : itemRequirements));
         this.requiresSpade = requiresSpade;
         this.requiresLight = requiresLight;
         this.enemy = clean(enemy);
@@ -294,15 +211,15 @@ final class ClueStepSnapshot
 @Getter
 final class CollectionLogSnapshot
 {
-    private final Set<Integer> obtainedItemIds;
-    private final Set<String> completedObjectiveIds;
-    private final Map<String, Integer> categoryCompleted;
-    private final Map<String, Integer> categoryTotals;
+    final Set<Integer> obtainedItemIds;
+    final Set<String> completedObjectiveIds;
+    final Map<String, Integer> categoryCompleted;
+    final Map<String, Integer> categoryTotals;
 
     public CollectionLogSnapshot(Set<Integer> obtainedItemIds)
     {
-        this(obtainedItemIds, Collections.emptySet(),
-                Collections.emptyMap(), Collections.emptyMap());
+        this(obtainedItemIds, emptySet(),
+                emptyMap(), emptyMap());
     }
 
     public CollectionLogSnapshot(
@@ -310,7 +227,7 @@ final class CollectionLogSnapshot
             Set<String> completedObjectiveIds)
     {
         this(obtainedItemIds, completedObjectiveIds,
-                Collections.emptyMap(), Collections.emptyMap());
+                emptyMap(), emptyMap());
     }
 
     public CollectionLogSnapshot(
@@ -319,44 +236,32 @@ final class CollectionLogSnapshot
             Map<String, Integer> categoryCompleted,
             Map<String, Integer> categoryTotals)
     {
-        this.obtainedItemIds = Collections.unmodifiableSet(
+        this.obtainedItemIds = unmodifiableSet(
                 obtainedItemIds == null
                         ? new HashSet<>()
                         : new HashSet<>(obtainedItemIds)
         );
-        this.completedObjectiveIds = Collections.unmodifiableSet(
+        this.completedObjectiveIds = unmodifiableSet(
                 completedObjectiveIds == null
                         ? new HashSet<>()
                         : new HashSet<>(completedObjectiveIds)
         );
-        this.categoryCompleted = Collections.unmodifiableMap(
+        this.categoryCompleted = unmodifiableMap(
                 categoryCompleted == null
                         ? new HashMap<>()
                         : new HashMap<>(categoryCompleted)
         );
-        this.categoryTotals = Collections.unmodifiableMap(
+        this.categoryTotals = unmodifiableMap(
                 categoryTotals == null
                         ? new HashMap<>()
                         : new HashMap<>(categoryTotals)
         );
     }
-
-    public boolean hasItem(int itemId)
-    {
-        return obtainedItemIds.contains(itemId);
-    }
-
     public boolean isObjectiveComplete(String objectiveId)
     {
         return objectiveId != null
                 && completedObjectiveIds.contains(objectiveId);
     }
-
-    public int obtainedCount()
-    {
-        return obtainedItemIds.size();
-    }
-
     public int getCategoryCompleted(String category)
     {
         return categoryCompleted.getOrDefault(category, 0);
@@ -367,24 +272,21 @@ final class CollectionLogSnapshot
         return categoryTotals.getOrDefault(category, 0);
     }
 
-
-
-
 }
 
 @Getter
 final class CombatAchievementSnapshot
 {
-    private final int completedTasks;
-    private final int earnedPoints;
-    private final Set<CombatAchievementTier> completedRewardTiers;
+    final int completedTasks;
+    final int earnedPoints;
+    final Set<CombatAchievementTier> completedRewardTiers;
 
     public CombatAchievementSnapshot(
             int completedTasks,
             int earnedPoints)
     {
         this(completedTasks, earnedPoints,
-                Collections.emptySet());
+                emptySet());
     }
 
     public CombatAchievementSnapshot(
@@ -392,21 +294,12 @@ final class CombatAchievementSnapshot
             int earnedPoints,
             Set<CombatAchievementTier> completedRewardTiers)
     {
-        this.completedTasks = Math.max(0, completedTasks);
-        this.earnedPoints = Math.max(0, earnedPoints);
+        this.completedTasks = max(0, completedTasks);
+        this.earnedPoints = max(0, earnedPoints);
         var tiers = EnumSet.noneOf(CombatAchievementTier.class);
         if (completedRewardTiers != null) tiers.addAll(completedRewardTiers);
-        this.completedRewardTiers = Collections.unmodifiableSet(tiers);
+        this.completedRewardTiers = unmodifiableSet(tiers);
     }
-
-
-
-
-    public boolean isRewardTierComplete(CombatAchievementTier tier)
-    {
-        return completedRewardTiers.contains(tier);
-    }
-
     public CombatAchievementTier nextRewardTier()
     {
         for (CombatAchievementTier tier : CombatAchievementTier.values())
@@ -419,18 +312,18 @@ final class CombatAchievementSnapshot
 @Getter
 final class CombatEvidenceSnapshot
 {
-    private final int spellbookSelector;
-    private final Set<Prayer> activePrayers;
-    private final boolean rigourUnlocked;
-    private final boolean auguryUnlocked;
-    private final boolean preserveUnlocked;
+    final int spellbookSelector;
+    final Set<Prayer> activePrayers;
+    final boolean rigourUnlocked;
+    final boolean auguryUnlocked;
+    final boolean preserveUnlocked;
 
     public CombatEvidenceSnapshot(int spellbookSelector,
             Set<Prayer> activePrayers, boolean rigourUnlocked,
             boolean auguryUnlocked, boolean preserveUnlocked)
     {
         this.spellbookSelector = spellbookSelector;
-        this.activePrayers = Collections.unmodifiableSet(activePrayers == null
+        this.activePrayers = unmodifiableSet(activePrayers == null
                 || activePrayers.isEmpty() ? EnumSet.noneOf(Prayer.class)
                 : EnumSet.copyOf(activePrayers));
         this.rigourUnlocked = rigourUnlocked;
@@ -442,19 +335,19 @@ final class CombatEvidenceSnapshot
 
 final class DiarySnapshot
 {
-    private final Map<String, Integer> completedTasksByRegion;
-    private final Map<String, Integer> totalTasksByRegion;
+    final Map<String, Integer> completedTasksByRegion;
+    final Map<String, Integer> totalTasksByRegion;
     @Getter
-    private final Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion;
+    final Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion;
     @Getter
-    private final Map<String, Boolean> observedTaskCompletion;
+    final Map<String, Boolean> observedTaskCompletion;
 
     public DiarySnapshot(
             Map<String, Integer> completedTasksByRegion,
             Map<String, Integer> totalTasksByRegion)
     {
         this(completedTasksByRegion, totalTasksByRegion,
-                Collections.emptyMap(), Collections.emptyMap());
+                emptyMap(), emptyMap());
     }
 
     public DiarySnapshot(
@@ -463,7 +356,7 @@ final class DiarySnapshot
             Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion)
     {
         this(completedTasksByRegion, totalTasksByRegion,
-                completedTiersByRegion, Collections.emptyMap());
+                completedTiersByRegion, emptyMap());
     }
 
     public DiarySnapshot(
@@ -472,12 +365,12 @@ final class DiarySnapshot
             Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion,
             Map<String, Boolean> observedTaskCompletion)
     {
-        this.completedTasksByRegion = Collections.unmodifiableMap(
+        this.completedTasksByRegion = unmodifiableMap(
                 completedTasksByRegion == null
                         ? new HashMap<>()
                         : new HashMap<>(completedTasksByRegion)
         );
-        this.totalTasksByRegion = Collections.unmodifiableMap(
+        this.totalTasksByRegion = unmodifiableMap(
                 totalTasksByRegion == null
                         ? new HashMap<>()
                         : new HashMap<>(totalTasksByRegion)
@@ -490,11 +383,11 @@ final class DiarySnapshot
             {
                 EnumMap<DiaryTier, Boolean> copy = new EnumMap<>(DiaryTier.class);
                 if (entry.getValue() != null) copy.putAll(entry.getValue());
-                tiers.put(entry.getKey(), Collections.unmodifiableMap(copy));
+                tiers.put(entry.getKey(), unmodifiableMap(copy));
             }
         }
-        this.completedTiersByRegion = Collections.unmodifiableMap(tiers);
-        this.observedTaskCompletion = Collections.unmodifiableMap(
+        this.completedTiersByRegion = unmodifiableMap(tiers);
+        this.observedTaskCompletion = unmodifiableMap(
                 observedTaskCompletion == null
                         ? new HashMap<>()
                         : new HashMap<>(observedTaskCompletion));
@@ -504,18 +397,12 @@ final class DiarySnapshot
     {
         return completedTasksByRegion.getOrDefault(region, 0);
     }
-
-    public int totalIn(String region)
-    {
-        return totalTasksByRegion.getOrDefault(region, 0);
-    }
-
     public Set<String> getRegions()
     {
         Set<String> result = new HashSet<>(completedTasksByRegion.keySet());
         result.addAll(totalTasksByRegion.keySet());
         result.addAll(completedTiersByRegion.keySet());
-        return Collections.unmodifiableSet(result);
+        return unmodifiableSet(result);
     }
 
     public boolean isTierComplete(String region, DiaryTier tier)
@@ -523,13 +410,6 @@ final class DiarySnapshot
         var tiers = completedTiersByRegion.get(region);
         return tiers != null && Boolean.TRUE.equals(tiers.get(tier));
     }
-
-    public Map<DiaryTier, Boolean> tiersFor(String region)
-    {
-        var tiers = completedTiersByRegion.get(region);
-        return tiers == null ? Collections.emptyMap() : tiers;
-    }
-
 
     /** Null means the individual task row has not been observed. */
     public Boolean taskCompletion(String taskId)
@@ -542,17 +422,17 @@ final class DiarySnapshot
 final class FarmingRunSnapshot
 {
     @Getter
-    private final Map<String, ObservedFarmingPatchState> states;
+    final Map<String, ObservedFarmingPatchState> states;
 
     public FarmingRunSnapshot(Map<String, ObservedFarmingPatchState> states)
     {
-        this.states = Collections.unmodifiableMap(
+        this.states = unmodifiableMap(
                 states == null ? new HashMap<>() : new HashMap<>(states));
     }
 
     public static FarmingRunSnapshot empty()
     {
-        return new FarmingRunSnapshot(Collections.emptyMap());
+        return new FarmingRunSnapshot(emptyMap());
     }
 
     public ObservedFarmingPatchState stateOf(String patchId)
@@ -572,26 +452,26 @@ final class FarmingRunSnapshot
 @Getter
 final class FarmingSnapshot
 {
-    private final Set<String> reachablePatchIds;
-    private final Map<String, CapabilityState> leprechaunTools;
-    private final Map<String, Long> patchReadyAtMillis;
+    final Set<String> reachablePatchIds;
+    final Map<String, Capability> leprechaunTools;
+    final Map<String, Long> patchReadyAtMillis;
 
     public FarmingSnapshot(
             Set<String> reachablePatchIds,
-            Map<String, CapabilityState> leprechaunTools,
+            Map<String, Capability> leprechaunTools,
             Map<String, Long> patchReadyAtMillis)
     {
-        this.reachablePatchIds = Collections.unmodifiableSet(
+        this.reachablePatchIds = unmodifiableSet(
                 reachablePatchIds == null
                         ? new HashSet<>()
                         : new HashSet<>(reachablePatchIds)
         );
-        this.leprechaunTools = Collections.unmodifiableMap(
+        this.leprechaunTools = unmodifiableMap(
                 leprechaunTools == null
                         ? new HashMap<>()
                         : new HashMap<>(leprechaunTools)
         );
-        this.patchReadyAtMillis = Collections.unmodifiableMap(
+        this.patchReadyAtMillis = unmodifiableMap(
                 patchReadyAtMillis == null
                         ? new HashMap<>()
                         : new HashMap<>(patchReadyAtMillis)
@@ -601,9 +481,9 @@ final class FarmingSnapshot
     public static FarmingSnapshot unknown()
     {
         return new FarmingSnapshot(
-                Collections.emptySet(),
-                Collections.emptyMap(),
-                Collections.emptyMap()
+                emptySet(),
+                emptyMap(),
+                emptyMap()
         );
     }
 
@@ -612,11 +492,11 @@ final class FarmingSnapshot
         return patchId != null && reachablePatchIds.contains(patchId);
     }
 
-    public CapabilityState leprechaunToolState(String toolId)
+    public Capability leprechaunToolState(String toolId)
     {
         return leprechaunTools.getOrDefault(
                 toolId,
-                CapabilityState.UNKNOWN
+                Capability.UNKNOWN
         );
     }
 
@@ -638,19 +518,19 @@ final class FarmingSnapshot
 @Getter
 final class MinigameSnapshot
 {
-    private final Set<String> unlocked;
-    private final Map<String, Integer> currencies;
+    final Set<String> unlocked;
+    final Map<String, Integer> currencies;
 
     public MinigameSnapshot(
             Set<String> unlocked,
             Map<String, Integer> currencies)
     {
-        this.unlocked = Collections.unmodifiableSet(
+        this.unlocked = unmodifiableSet(
                 unlocked == null
                         ? new HashSet<>()
                         : new HashSet<>(unlocked)
         );
-        this.currencies = Collections.unmodifiableMap(
+        this.currencies = unmodifiableMap(
                 currencies == null
                         ? new HashMap<>()
                         : new HashMap<>(currencies)
@@ -660,8 +540,8 @@ final class MinigameSnapshot
     public static MinigameSnapshot unknown()
     {
         return new MinigameSnapshot(
-                Collections.emptySet(),
-                Collections.emptyMap()
+                emptySet(),
+                emptyMap()
         );
     }
 
@@ -669,12 +549,6 @@ final class MinigameSnapshot
     {
         return minigameId != null && unlocked.contains(minigameId);
     }
-
-    public int currency(String currencyId)
-    {
-        return currencies.getOrDefault(currencyId, 0);
-    }
-
 }
 
 /**
@@ -688,17 +562,17 @@ final class MinigameSnapshot
 @Getter
 final class PohSnapshot
 {
-    private final CapabilityState houseAccess;
-    private final Map<String, CapabilityState> furniture;
+    final Capability houseAccess;
+    final Map<String, Capability> furniture;
 
     public PohSnapshot(
-            CapabilityState houseAccess,
-            Map<String, CapabilityState> furniture)
+            Capability houseAccess,
+            Map<String, Capability> furniture)
     {
         this.houseAccess = houseAccess == null
-                ? CapabilityState.UNKNOWN
+                ? Capability.UNKNOWN
                 : houseAccess;
-        this.furniture = Collections.unmodifiableMap(
+        this.furniture = unmodifiableMap(
                 furniture == null
                         ? new HashMap<>()
                         : new HashMap<>(furniture)
@@ -708,17 +582,17 @@ final class PohSnapshot
     public static PohSnapshot unknown()
     {
         return new PohSnapshot(
-                CapabilityState.UNKNOWN,
-                Collections.emptyMap()
+                Capability.UNKNOWN,
+                emptyMap()
         );
     }
 
 
-    public CapabilityState furnitureState(String furnitureId)
+    public Capability furnitureState(String furnitureId)
     {
         return furniture.getOrDefault(
                 furnitureId,
-                CapabilityState.UNKNOWN
+                Capability.UNKNOWN
         );
     }
 
@@ -744,13 +618,13 @@ final class PohSnapshot
 @Getter
 final class ProgressSessionSnapshot
 {
-    private final long startedAtMillis;
-    private final long updatedAtMillis;
-    private final long activeDurationMillis;
-    private final Map<Skill, SkillSessionProgress> skills;
-    private final List<ProgressTimeBucket> buckets;
-    private final List<ProgressMilestone> milestones;
-    private final ProgressTargetProjection targetProjection;
+    final long startedAtMillis;
+    final long updatedAtMillis;
+    final long activeDurationMillis;
+    final Map<Skill, SkillSessionProgress> skills;
+    final List<ProgressTimeBucket> buckets;
+    final List<ProgressMilestone> milestones;
+    final TargetProjection targetProjection;
 
     ProgressSessionSnapshot(
             long startedAtMillis,
@@ -759,26 +633,20 @@ final class ProgressSessionSnapshot
             Map<Skill, SkillSessionProgress> skills,
             List<ProgressTimeBucket> buckets,
             List<ProgressMilestone> milestones,
-            ProgressTargetProjection targetProjection)
+            TargetProjection targetProjection)
     {
         this.startedAtMillis = startedAtMillis;
         this.updatedAtMillis = updatedAtMillis;
-        this.activeDurationMillis = Math.max(0L, activeDurationMillis);
+        this.activeDurationMillis = max(0L, activeDurationMillis);
         EnumMap<Skill, SkillSessionProgress> skillCopy =
                 new EnumMap<>(Skill.class);
         if (skills != null) skillCopy.putAll(skills);
-        this.skills = Collections.unmodifiableMap(skillCopy);
-        this.buckets = Collections.unmodifiableList(new ArrayList<>(buckets));
-        this.milestones = Collections.unmodifiableList(
+        this.skills = unmodifiableMap(skillCopy);
+        this.buckets = unmodifiableList(new ArrayList<>(buckets));
+        this.milestones = unmodifiableList(
                 new ArrayList<>(milestones));
         this.targetProjection = targetProjection;
     }
-
-    public long getSessionDurationMillis()
-    {
-        return Math.max(0L, updatedAtMillis - startedAtMillis);
-    }
-
     public long getTotalXpGained()
     {
         var result = 0L;
@@ -807,11 +675,11 @@ final class ProgressSessionSnapshot
 final class PvmSnapshot
 {
     @Getter
-    private final Map<String, PvmReadiness> readinessByActivity;
+    final Map<String, PvmReadiness> readinessByActivity;
 
     public PvmSnapshot(Map<String, PvmReadiness> readinessByActivity)
     {
-        this.readinessByActivity = Collections.unmodifiableMap(
+        this.readinessByActivity = unmodifiableMap(
                 readinessByActivity == null
                         ? new HashMap<>()
                         : new HashMap<>(readinessByActivity)
@@ -820,7 +688,7 @@ final class PvmSnapshot
 
     public static PvmSnapshot unknown()
     {
-        return new PvmSnapshot(Collections.emptyMap());
+        return new PvmSnapshot(emptyMap());
     }
 
     public PvmReadiness readinessFor(String activityId)
@@ -834,11 +702,11 @@ final class QuestSnapshot
 {
     @Getter
     @Accessors(fluent = true)
-    private final Map<String, QuestStatus> quests;
+    final Map<String, QuestStatus> quests;
 
     public QuestSnapshot(Map<String, QuestStatus> quests)
     {
-        this.quests = Collections.unmodifiableMap(
+        this.quests = unmodifiableMap(
                 new HashMap<>(quests)
         );
     }
@@ -863,11 +731,11 @@ final class QuestSnapshot
 final class RecurringOpportunitySnapshot
 {
     @Getter
-    private final Map<String, Long> readyAtMillis;
+    final Map<String, Long> readyAtMillis;
 
     public RecurringOpportunitySnapshot(Map<String, Long> readyAtMillis)
     {
-        this.readyAtMillis = Collections.unmodifiableMap(
+        this.readyAtMillis = unmodifiableMap(
                 readyAtMillis == null
                         ? new HashMap<>()
                         : new HashMap<>(readyAtMillis)
@@ -876,7 +744,7 @@ final class RecurringOpportunitySnapshot
 
     public static RecurringOpportunitySnapshot unknown()
     {
-        return new RecurringOpportunitySnapshot(Collections.emptyMap());
+        return new RecurringOpportunitySnapshot(emptyMap());
     }
 
     public Long readyAt(String opportunityId)
@@ -903,30 +771,30 @@ final class RecurringOpportunitySnapshot
 final class SailingSnapshot
 {
     public static final String PORT_SARIM = "port:sarim";
-    public static final String PORT_PANDEMONIUM = Text.get(1960);
-    public static final String ACTIVITY_COURIER = Text.get(1961);
-    public static final String ACTIVITY_ACTIVE_PORT_TASK = Text.get(1962);
-    public static final String ACTIVITY_SEA_CHARTING = Text.get(1963);
-    public static final String ACTIVITY_BOAT_OWNED = Text.get(1964);
-    public static final String TRIAL_TEMPOR_COMPLETE = Text.get(1965);
-    public static final String TRIAL_JUBBLY_COMPLETE = Text.get(1966);
-    public static final String TRIAL_GWENITH_COMPLETE = Text.get(1967);
+    public static final String PORT_PANDEMONIUM = get(1960);
+    public static final String ACTIVITY_COURIER = get(1961);
+    public static final String ACTIVITY_ACTIVE_PORT_TASK = get(1962);
+    public static final String ACTIVITY_SEA_CHARTING = get(1963);
+    public static final String ACTIVITY_BOAT_OWNED = get(1964);
+    public static final String TRIAL_TEMPOR_COMPLETE = get(1965);
+    public static final String TRIAL_JUBBLY_COMPLETE = get(1966);
+    public static final String TRIAL_GWENITH_COMPLETE = get(1967);
 
-    private final Set<String> verifiedPorts;
-    private final Set<String> verifiedActivities;
-    private final Confidence confidence;
+    final Set<String> verifiedPorts;
+    final Set<String> verifiedActivities;
+    final Confidence confidence;
 
     public SailingSnapshot(
             Set<String> verifiedPorts,
             Set<String> verifiedActivities,
             Confidence confidence)
     {
-        this.verifiedPorts = Collections.unmodifiableSet(
+        this.verifiedPorts = unmodifiableSet(
                 verifiedPorts == null
                         ? new HashSet<>()
                         : new HashSet<>(verifiedPorts)
         );
-        this.verifiedActivities = Collections.unmodifiableSet(
+        this.verifiedActivities = unmodifiableSet(
                 verifiedActivities == null
                         ? new HashSet<>()
                         : new HashSet<>(verifiedActivities)
@@ -939,8 +807,8 @@ final class SailingSnapshot
     public static SailingSnapshot unknown()
     {
         return new SailingSnapshot(
-                Collections.emptySet(),
-                Collections.emptySet(),
+                emptySet(),
+                emptySet(),
                 Confidence.CHECK_NEEDED
         );
     }
@@ -961,30 +829,30 @@ final class SailingSnapshot
 final class SlayerRewardSnapshot
 {
     @Getter
-    private final Map<SlayerReward, CapabilityState> states;
+    final Map<SlayerReward, Capability> states;
 
-    public SlayerRewardSnapshot(Map<SlayerReward, CapabilityState> states)
+    public SlayerRewardSnapshot(Map<SlayerReward, Capability> states)
     {
-        EnumMap<SlayerReward, CapabilityState> copy =
+        EnumMap<SlayerReward, Capability> copy =
                 new EnumMap<>(SlayerReward.class);
         if (states != null) copy.putAll(states);
-        this.states = Collections.unmodifiableMap(copy);
+        this.states = unmodifiableMap(copy);
     }
 
     public static SlayerRewardSnapshot unknown()
     {
-        return new SlayerRewardSnapshot(Collections.emptyMap());
+        return new SlayerRewardSnapshot(emptyMap());
     }
 
-    public CapabilityState stateOf(SlayerReward reward)
+    public Capability stateOf(SlayerReward reward)
     {
-        return reward == null ? CapabilityState.UNKNOWN
-                : states.getOrDefault(reward, CapabilityState.UNKNOWN);
+        return reward == null ? Capability.UNKNOWN
+                : states.getOrDefault(reward, Capability.UNKNOWN);
     }
 
     public boolean isUnlocked(SlayerReward reward)
     {
-        return stateOf(reward) == CapabilityState.VERIFIED;
+        return stateOf(reward) == Capability.VERIFIED;
     }
 
 }
@@ -994,68 +862,68 @@ final class SlayerRewardSnapshot
  *
  * <p>UNKNOWN remains different from unavailable. Contents are only stored when
  * actually observed. This is especially important for UIM, where a generic
- * Text.get(1947) assumption can create unsafe or impossible advice.</p>
+ * get(1947) assumption can create unsafe or impossible advice.</p>
  */
 final class StorageSnapshot
 {
     @Getter
-    private final Map<StorageCapability, CapabilityState> states;
-    private final Map<StorageCapability, List<ItemState>> contents;
+    final Map<StorageKind, Capability> states;
+    final Map<StorageKind, List<ItemState>> contents;
 
-    public StorageSnapshot(Map<StorageCapability, CapabilityState> states)
+    public StorageSnapshot(Map<StorageKind, Capability> states)
     {
-        this(states, Collections.emptyMap());
+        this(states, emptyMap());
     }
 
     public StorageSnapshot(
-            Map<StorageCapability, CapabilityState> states,
-            Map<StorageCapability, List<ItemState>> contents)
+            Map<StorageKind, Capability> states,
+            Map<StorageKind, List<ItemState>> contents)
     {
-        EnumMap<StorageCapability, CapabilityState> stateCopy =
-                new EnumMap<>(StorageCapability.class);
+        EnumMap<StorageKind, Capability> stateCopy =
+                new EnumMap<>(StorageKind.class);
         if (states != null) stateCopy.putAll(states);
-        this.states = Collections.unmodifiableMap(stateCopy);
+        this.states = unmodifiableMap(stateCopy);
 
-        EnumMap<StorageCapability, List<ItemState>> contentCopy =
-                new EnumMap<>(StorageCapability.class);
+        EnumMap<StorageKind, List<ItemState>> contentCopy =
+                new EnumMap<>(StorageKind.class);
         if (contents != null)
         {
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
+            for (Map.Entry<StorageKind, List<ItemState>> entry
                     : contents.entrySet())
             {
-                contentCopy.put(entry.getKey(), Collections.unmodifiableList(
+                contentCopy.put(entry.getKey(), unmodifiableList(
                         entry.getValue() == null
                                 ? new ArrayList<>()
                                 : new ArrayList<>(entry.getValue())
                 ));
             }
         }
-        this.contents = Collections.unmodifiableMap(contentCopy);
+        this.contents = unmodifiableMap(contentCopy);
     }
 
     public static StorageSnapshot unknown()
     {
-        return new StorageSnapshot(Collections.emptyMap());
+        return new StorageSnapshot(emptyMap());
     }
 
-    public CapabilityState stateOf(StorageCapability capability)
+    public Capability stateOf(StorageKind capability)
     {
-        return states.getOrDefault(capability, CapabilityState.UNKNOWN);
+        return states.getOrDefault(capability, Capability.UNKNOWN);
     }
 
-    public boolean verified(StorageCapability capability)
+    public boolean verified(StorageKind capability)
     {
-        return stateOf(capability) == CapabilityState.VERIFIED;
+        return stateOf(capability) == Capability.VERIFIED;
     }
 
-    public boolean hasObservedContents(StorageCapability capability)
+    public boolean hasObservedContents(StorageKind capability)
     {
         return capability != null && contents.containsKey(capability);
     }
 
-    public List<ItemState> contentsOf(StorageCapability capability)
+    public List<ItemState> contentsOf(StorageKind capability)
     {
-        return contents.getOrDefault(capability, Collections.emptyList());
+        return contents.getOrDefault(capability, emptyList());
     }
 
     /**
@@ -1067,27 +935,27 @@ final class StorageSnapshot
     public List<ItemState> getDeathStorageItems()
     {
         List<ItemState> observed = new ArrayList<>();
-        observed.addAll(contentsOf(StorageCapability.DEATH_STORAGE));
-        observed.addAll(contentsOf(StorageCapability.HESPORI_ITEM_RETRIEVAL));
-        observed.addAll(contentsOf(StorageCapability.ZULRAH_ITEM_RETRIEVAL));
+        observed.addAll(contentsOf(StorageKind.DEATH_STORAGE));
+        observed.addAll(contentsOf(StorageKind.HESPORI_ITEM_RETRIEVAL));
+        observed.addAll(contentsOf(StorageKind.ZULRAH_ITEM_RETRIEVAL));
         observed.addAll(contentsOf(
-                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL));
-        return Collections.unmodifiableList(observed);
+                StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL));
+        return unmodifiableList(observed);
     }
 
-    public int quantityOf(StorageCapability capability, int itemId)
+    public int quantityOf(StorageKind capability, int itemId)
     {
         if (!verified(capability) || !hasObservedContents(capability)) return 0;
         var total = 0;
         for (ItemState item : contentsOf(capability))
         {
-            if (item.getItemId() == itemId) total += item.getQuantity();
+            if (item.itemId == itemId) total += item.quantity;
         }
         return total;
     }
 
 
-    public Map<StorageCapability, List<ItemState>> getObservedContents()
+    public Map<StorageKind, List<ItemState>> getObservedContents()
     {
         return contents;
     }
@@ -1103,11 +971,11 @@ final class StorageSnapshot
 final class TransportSnapshot
 {
     @Getter
-    private final Set<String> verifiedRoutes;
+    final Set<String> verifiedRoutes;
 
     public TransportSnapshot(Set<String> verifiedRoutes)
     {
-        this.verifiedRoutes = Collections.unmodifiableSet(
+        this.verifiedRoutes = unmodifiableSet(
                 verifiedRoutes == null
                         ? new HashSet<>()
                         : new HashSet<>(verifiedRoutes)
@@ -1116,7 +984,7 @@ final class TransportSnapshot
 
     public static TransportSnapshot unknown()
     {
-        return new TransportSnapshot(Collections.emptySet());
+        return new TransportSnapshot(emptySet());
     }
 
     public boolean hasVerifiedRoute(String routeId)

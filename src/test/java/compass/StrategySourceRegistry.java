@@ -13,12 +13,12 @@ public final class StrategySourceRegistry
 {
     public static final String WIKI_LICENSE = "CC BY-NC-SA 3.0";
     private static final String RESOURCE = "/content/catalogs/strategy-sources.json";
-    private final Map<StrategySourceId, StrategySourceDefinition> sources;
+    private final Map<Source, StrategySourceDefinition> sources;
 
     public StrategySourceRegistry()
     {
-        EnumMap<StrategySourceId, StrategySourceDefinition> values =
-                new EnumMap<>(StrategySourceId.class);
+        EnumMap<Source, StrategySourceDefinition> values =
+                new EnumMap<>(Source.class);
         for (Record record : BundledCatalogLoader.array(RESOURCE, Record[].class))
         {
             if (record.id == null || record.url == null || record.reviewedDate == null)
@@ -32,12 +32,12 @@ public final class StrategySourceRegistry
         sources = Collections.unmodifiableMap(values);
     }
 
-    public StrategySourceDefinition get(StrategySourceId id) { return sources.get(id); }
-    public Map<StrategySourceId, StrategySourceDefinition> all() { return sources; }
+    public StrategySourceDefinition get(Source id) { return sources.get(id); }
+    public Map<Source, StrategySourceDefinition> all() { return sources; }
 
     private static final class Record
     {
-        private StrategySourceId id;
+        private Source id;
         private String url;
         private String subject;
         private String reviewedDate;

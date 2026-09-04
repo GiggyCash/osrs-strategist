@@ -24,14 +24,14 @@ public class UniversalGuidanceCoherenceTest
                         new ActionDef(
                                 Skill.MAGIC, "runelite:magic:high_alchemy",
                                 "High Level Alchemy", 55, 65, "Magic",
-                                MembershipStatus.P2P, -1));
+                                Membership.P2P, -1));
             }
         };
         UniversalSkillActionGuidanceService service =
                 new UniversalSkillActionGuidanceService(actions,
                         new UniversalActionRecipeResolver(),
                         new SkillingXpModifierService(),
-                        new AccountResourcePlanner());
+                        TestFixtures.accountResourcePlanner());
 
         assertNull(service.build(data(), Skill.MAGIC, 80, 81,
                 plan("magic_slayer", "Magic through Slayer",
@@ -47,9 +47,7 @@ public class UniversalGuidanceCoherenceTest
             levels.put(skill, 80);
             xp.put(skill, Experience.getXpForLevel(80));
         }
-        AccountSnapshot account = new AccountSnapshot(
-                "Coherence", 0, "Main", MembershipStatus.P2P,
-                1, 1920, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Coherence", 0L, 0, "Main", Membership.P2P, 1, 1920, 0L, levels, xp);
         return GameData.builder(account)
                 .bank(new ItemsState(Collections.emptyList(), 1L))
                 .build();

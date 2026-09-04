@@ -168,7 +168,7 @@ public class RecommendationStabilizerTest
                 Confidence.VERIFIED, 49, 50,
                 new Guidance("Follow the named route.",
                         "Required setup.", "Named location.", null),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 
     private static Recommendation skillPlan(String id, String title,
@@ -186,6 +186,6 @@ public class RecommendationStabilizerTest
                 Confidence.VERIFIED, 49, 50,
                 new Guidance(action, "Bronze pickaxe.",
                         "Varrock East mine, southeast of Varrock.", null),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 }

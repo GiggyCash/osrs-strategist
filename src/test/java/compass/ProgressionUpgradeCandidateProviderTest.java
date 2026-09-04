@@ -28,7 +28,7 @@ public class ProgressionUpgradeCandidateProviderTest
         List<Recommendation> candidates = provider.candidates(
                 context(data(account), GoalType.GEAR_TARGET, false));
 
-        assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE,
+        assertEquals(BuildType.ONE_DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
         assertNull(find(candidates, "upgrade:fighter-torso"));
         assertNull(find(candidates, "upgrade:dragon-defender"));
@@ -226,12 +226,12 @@ public class ProgressionUpgradeCandidateProviderTest
     public void uimRetrievalStoredTorsoSuppressesDuplicateTorsoGrind()
     {
         AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.DEATH_STORAGE,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.DEATH_STORAGE,
                 Collections.singletonList(
                         new ItemState(10551, "Fighter torso", 1)));
         StorageSnapshot storage = new StorageSnapshot(states, contents);
@@ -293,12 +293,12 @@ public class ProgressionUpgradeCandidateProviderTest
     public void uimStoredSalvePromotesRetrievalInsteadOfDuplicateAcquisition()
     {
         AccountSnapshot account = account(2, 70, 70, 70, 70, 60, 70, 80, 70, 70);
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.DEATH_STORAGE,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.DEATH_STORAGE,
                 Collections.singletonList(new ItemState(
                         1, "Salve amulet", 1)));
         GameData data = builder(account)
@@ -421,15 +421,6 @@ public class ProgressionUpgradeCandidateProviderTest
             totalXp += skillXp;
         }
 
-        return new AccountSnapshot(
-                "Upgrade Test",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                MembershipStatus.P2P,
-                1,
-                total,
-                totalXp,
-                levels,
-                xp);
+        return new AccountSnapshot("Upgrade Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

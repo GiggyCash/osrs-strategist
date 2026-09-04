@@ -25,18 +25,17 @@ public class TrainingMethodSelectorEvidenceTest
             }
         };
 
-        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()))
+        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog())
         {
             @Override
-            public List<RequirementCheck> evaluate(
+            public List<EvidenceCheck> evaluate(
                     GameData data,
                     TrainingMethod method)
             {
                 if ("fast".equals(method.getId()))
                 {
                     return Collections.singletonList(
-                            new RequirementCheck(
+                            new EvidenceCheck(
                                     "locked",
                                     "Required unlock",
                                     RequirementState.BLOCKED,
@@ -46,7 +45,7 @@ public class TrainingMethodSelectorEvidenceTest
                 }
 
                 return Collections.singletonList(
-                        new RequirementCheck(
+                        new EvidenceCheck(
                                 "ready",
                                 "Required unlock",
                                 RequirementState.VERIFIED,
@@ -57,7 +56,7 @@ public class TrainingMethodSelectorEvidenceTest
         };
 
         TrainingMethodSelector selector =
-                new TrainingMethodSelector(database, evidence);
+                new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
 
         TrainingPlan plan = selector.select(
                 null,
@@ -87,28 +86,27 @@ public class TrainingMethodSelectorEvidenceTest
                 return Arrays.asList(unknownFast, usableSlower);
             }
         };
-        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()))
+        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog())
         {
             @Override
-            public List<RequirementCheck> evaluate(
+            public List<EvidenceCheck> evaluate(
                     GameData data, TrainingMethod method)
             {
                 if ("unknown-fast".equals(method.getId()))
                 {
-                    return Collections.singletonList(new RequirementCheck(
+                    return Collections.singletonList(new EvidenceCheck(
                             "generic:Minigame access and food supply",
                             "Minigame access and food supply",
                             RequirementState.CHECK_NEEDED,
                             "Access has not been observed."));
                 }
-                return Collections.singletonList(new RequirementCheck(
+                return Collections.singletonList(new EvidenceCheck(
                         "ready", "Ready", RequirementState.VERIFIED,
                         "Verified."));
             }
         };
 
-        TrainingPlan plan = new TrainingMethodSelector(database, evidence)
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService())
                 .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME);
 
@@ -128,14 +126,13 @@ public class TrainingMethodSelectorEvidenceTest
                 return Arrays.asList(oneCheck, threeChecks);
             }
         };
-        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()))
+        RequirementEvidenceEngine evidence = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog())
         {
             @Override
-            public List<RequirementCheck> evaluate(
+            public List<EvidenceCheck> evaluate(
                     GameData data, TrainingMethod method)
             {
-                RequirementCheck ready = new RequirementCheck(
+                EvidenceCheck ready = new EvidenceCheck(
                         "access:ready", "Ready", RequirementState.VERIFIED,
                         "Verified.");
                 return "one-check".equals(method.getId())
@@ -144,7 +141,7 @@ public class TrainingMethodSelectorEvidenceTest
             }
         };
 
-        TrainingPlan plan = new TrainingMethodSelector(database, evidence)
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService())
                 .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME);
 

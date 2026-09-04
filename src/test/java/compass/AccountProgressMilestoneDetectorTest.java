@@ -83,14 +83,14 @@ public class AccountProgressMilestoneDetectorTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Progress", hash, 0,
-                "MAIN", MembershipStatus.P2P, 1,
+                "MAIN", Membership.P2P, 1,
                 70 * Skill.values().length, 0L, levels, xp);
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Cook's Assistant", quest);
-        Map<StorageCapability, CapabilityState> storage =
-                new EnumMap<>(StorageCapability.class);
-        storage.put(StorageCapability.POH_COSTUME_ROOM, unlocked
-                ? CapabilityState.VERIFIED : CapabilityState.UNKNOWN);
+        Map<StorageKind, Capability> storage =
+                new EnumMap<>(StorageKind.class);
+        storage.put(StorageKind.POH_COSTUME_ROOM, unlocked
+                ? Capability.VERIFIED : Capability.UNKNOWN);
         return GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .transport(new TransportSnapshot(unlocked
@@ -107,14 +107,14 @@ public class AccountProgressMilestoneDetectorTest
         tiers.put(DiaryTier.MEDIUM, complete);
         Map<String, Map<DiaryTier, Boolean>> regions = new HashMap<>();
         regions.put("Varrock", tiers);
-        Map<SlayerReward, CapabilityState> rewards =
+        Map<SlayerReward, Capability> rewards =
                 new EnumMap<>(SlayerReward.class);
         rewards.put(SlayerReward.BIGGER_AND_BADDER, complete
-                ? CapabilityState.VERIFIED : CapabilityState.BLOCKED);
+                ? Capability.VERIFIED : Capability.BLOCKED);
         return GameData.builder(base.account())
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
                         Collections.emptyMap(), regions))
-                .slayer(new SlayerSnapshot(null, 0, "Nieve", null, 0,
+                .slayer(TestFixtures.slayerSnapshot(null, 0, "Nieve", null, 0,
                         10, 100, 2, 0,
                         new SlayerRewardSnapshot(rewards),
                         Confidence.VERIFIED))

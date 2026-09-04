@@ -22,9 +22,9 @@ public class UimCapabilityServiceTest
 
         UimStorageDecision decision = service.evaluateStorage(
                 data,
-                StorageCapability.STASH,
-                CapabilityState.VERIFIED,
-                CapabilityState.VERIFIED
+                StorageKind.STASH,
+                Capability.VERIFIED,
+                Capability.VERIFIED
         );
 
         assertFalse(decision.isAllowed());
@@ -35,25 +35,25 @@ public class UimCapabilityServiceTest
     @Test
     public void requiresCapabilityCompatibilityAndCapacityTogether()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.POH_STORAGE, Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 
         assertFalse(service.evaluateStorage(
                 data,
-                StorageCapability.POH_STORAGE,
-                CapabilityState.UNKNOWN,
-                CapabilityState.VERIFIED
+                StorageKind.POH_STORAGE,
+                Capability.UNKNOWN,
+                Capability.VERIFIED
         ).isAllowed());
 
         assertTrue(service.evaluateStorage(
                 data,
-                StorageCapability.POH_STORAGE,
-                CapabilityState.VERIFIED,
-                CapabilityState.VERIFIED
+                StorageKind.POH_STORAGE,
+                Capability.VERIFIED,
+                Capability.VERIFIED
         ).isAllowed());
     }
 
@@ -61,23 +61,23 @@ public class UimCapabilityServiceTest
     public void deathpileAlwaysCarriesIrreversibleRisk()
     {
         assertTrue(service.shouldRequireExplicitWarning(
-                StorageCapability.DEATHPILE));
+                StorageKind.DEATHPILE));
     }
 
     @Test
     public void genericDeathStorageCanNeverAuthorizeAPlan()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.DEATH_STORAGE,
-                CapabilityState.VERIFIED);
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.DEATH_STORAGE,
+                Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 
         UimStorageDecision decision = service.evaluateStorage(data,
-                StorageCapability.DEATH_STORAGE,
-                CapabilityState.VERIFIED, CapabilityState.VERIFIED);
+                StorageKind.DEATH_STORAGE,
+                Capability.VERIFIED, Capability.VERIFIED);
         assertFalse(decision.isAllowed());
         assertTrue(decision.getExplanation().contains("exact service"));
     }
@@ -85,36 +85,36 @@ public class UimCapabilityServiceTest
     @Test
     public void exactRetrievalServiceStillRequiresAllEvidence()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                CapabilityState.VERIFIED);
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.HESPORI_ITEM_RETRIEVAL,
+                Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
                 .storage(new StorageSnapshot(states))
                 .build();
 
         assertFalse(service.evaluateStorage(data,
-                StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                CapabilityState.UNKNOWN, CapabilityState.VERIFIED)
+                StorageKind.HESPORI_ITEM_RETRIEVAL,
+                Capability.UNKNOWN, Capability.VERIFIED)
                 .isAllowed());
         assertTrue(service.evaluateStorage(data,
-                StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                CapabilityState.VERIFIED, CapabilityState.VERIFIED)
+                StorageKind.HESPORI_ITEM_RETRIEVAL,
+                Capability.VERIFIED, Capability.VERIFIED)
                 .isAllowed());
         assertTrue(service.shouldRequireExplicitWarning(
-                StorageCapability.HESPORI_ITEM_RETRIEVAL));
+                StorageKind.HESPORI_ITEM_RETRIEVAL));
     }
 
     @Test
     public void everyDangerousSystemHasCompleteDistinctReviewedMechanics()
     {
-        StorageCapability[] exact = {
-                StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                StorageCapability.ZULRAH_ITEM_RETRIEVAL,
-                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
-                StorageCapability.DEATHPILE
+        StorageKind[] exact = {
+                StorageKind.HESPORI_ITEM_RETRIEVAL,
+                StorageKind.ZULRAH_ITEM_RETRIEVAL,
+                StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL,
+                StorageKind.DEATHPILE
         };
-        for (StorageCapability capability : exact)
+        for (StorageKind capability : exact)
         {
             UimStorageMechanicProfile profile =
                     UimStorageMechanics.profile(capability);
@@ -122,23 +122,23 @@ public class UimCapabilityServiceTest
             assertTrue(capability.name(),
                     profile.hasCompleteRecommendationRules());
             assertTrue(capability.name(),
-                    profile.getSource() == StrategySourceId.ITEM_RETRIEVAL_SERVICES
+                    profile.getSource() == Source.ITEM_RETRIEVAL_SERVICES
                     || profile.getSource()
-                            == StrategySourceId.UIM_ITEM_MANAGEMENT);
+                            == Source.UIM_ITEM_MANAGEMENT);
         }
         assertTrue(UimStorageMechanics.profile(
-                StorageCapability.ZULRAH_ITEM_RETRIEVAL).getCost()
+                StorageKind.ZULRAH_ITEM_RETRIEVAL).getCost()
                 .contains("Free for Ultimate Ironmen"));
         assertTrue(UimStorageMechanics.profile(
-                StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL).getCost()
+                StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL).getCost()
                 .contains("150 numulite"));
         assertTrue(UimStorageMechanics.profile(
-                StorageCapability.HESPORI_ITEM_RETRIEVAL).getCost()
+                StorageKind.HESPORI_ITEM_RETRIEVAL).getCost()
                 .contains("25,000 coins"));
-        assertTrue(UimStorageMechanics.profile(StorageCapability.DEATHPILE)
+        assertTrue(UimStorageMechanics.profile(StorageKind.DEATHPILE)
                 .getExpiration().contains("60 minutes"));
         assertFalse(UimStorageMechanics.profile(
-                StorageCapability.DEATH_STORAGE)
+                StorageKind.DEATH_STORAGE)
                 .hasCompleteRecommendationRules());
     }
 
@@ -151,9 +151,6 @@ public class UimCapabilityServiceTest
             levels.put(skill, 1);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Tester", typeCode, "UIM", MembershipStatus.P2P,
-                1, 1, 0L, levels, xp
-        );
+        return new AccountSnapshot("Tester", 0L, typeCode, "UIM", Membership.P2P, 1, 1, 0L, levels, xp);
     }
 }

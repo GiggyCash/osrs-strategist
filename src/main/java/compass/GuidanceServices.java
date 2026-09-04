@@ -1,11 +1,11 @@
 package compass;
+import lombok.*;
+import static net.runelite.api.Skill.*;
+import static java.lang.Math.*;
 
 import java.util.*;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.Experience;
-import net.runelite.api.Skill;
+import javax.inject.*;
+import net.runelite.api.*;
 import static compass.Text.get;
 
 /**
@@ -17,6 +17,7 @@ import static compass.Text.get;
  * only emitted when its math can be resolved without inventing a rate.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class AdaptiveMilestoneGuidanceService
 {
     private final RuneLiteSkillActionCatalog actionCatalog;
@@ -25,50 +26,6 @@ class AdaptiveMilestoneGuidanceService
     private final AdaptiveActionSelector actionSelector;
     private final MethodInputResolver inputResolver;
     private final AccountResourcePlanner resourcePlanner;
-
-    @Inject
-    public AdaptiveMilestoneGuidanceService(
-            RuneLiteSkillActionCatalog actionCatalog,
-            MethodExecutionProfileCatalog profileCatalog,
-            SkillingXpModifierService xpModifierService,
-            AdaptiveActionSelector actionSelector,
-            MethodInputResolver inputResolver,
-            AccountResourcePlanner resourcePlanner)
-    {
-        this.actionCatalog = actionCatalog;
-        this.profileCatalog = profileCatalog;
-        this.xpModifierService = xpModifierService;
-        this.actionSelector = actionSelector;
-        this.inputResolver = inputResolver;
-        this.resourcePlanner = resourcePlanner;
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public AdaptiveMilestoneGuidanceService(
-            RuneLiteSkillActionCatalog actionCatalog,
-            MethodExecutionProfileCatalog profileCatalog,
-            SkillingXpModifierService xpModifierService)
-    {
-        this(actionCatalog, profileCatalog, xpModifierService,
-                new AdaptiveActionSelector(), new MethodInputResolver(),
-                new AccountResourcePlanner());
-    }
-
-    /** Compatibility constructor retained for older callers. */
-    public AdaptiveMilestoneGuidanceService(
-            RuneLiteSkillActionCatalog actionCatalog,
-            MethodExecutionProfileCatalog profileCatalog)
-    {
-        this(actionCatalog, profileCatalog, new SkillingXpModifierService());
-    }
-
-    /** Compatibility constructor for tests without RuneLite injection. */
-    public AdaptiveMilestoneGuidanceService()
-    {
-        this(new RuneLiteSkillActionCatalog(),
-                new MethodExecutionProfileCatalog(),
-                new SkillingXpModifierService());
-    }
 
     public Guidance build(
             GameData data,
@@ -94,13 +51,13 @@ class AdaptiveMilestoneGuidanceService
             currentXp = Experience.getXpForLevel(currentLevel);
         }
         var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = Math.max(0, targetXp - currentXp);
+        var xpNeeded = max(0, targetXp - currentXp);
 
         SkillingXpModifier modifier = xpModifierService == null
                 ? SkillingXpModifier.none()
                 : xpModifierService.modifier(data, skill, useGroupStorage);
         double combinedMultiplier = profile.getXpMultiplier()
-                * modifier.getMultiplier();
+                * modifier.multiplier;
 
         ActionDef action = actionSelector.select(
                 data,
@@ -112,9 +69,9 @@ class AdaptiveMilestoneGuidanceService
                 targetXp,
                 combinedMultiplier,
                 useGroupStorage);
-        if (action == null || action.getXp() <= 0) return null;
+        if (action == null || action.xp <= 0) return null;
 
-        var xpPerAction = action.getXp() * combinedMultiplier;
+        var xpPerAction = action.xp * combinedMultiplier;
         if (xpPerAction <= 0) return null;
         List<ActionDef> routeOutputs =
                 unlockedRouteOutputs(actionCatalog.actionsFor(skill), profile,
@@ -143,7 +100,7 @@ class AdaptiveMilestoneGuidanceService
                 : resourcePlanner.plan(data, inputs, useGroupStorage);
         String supplies = inputs.isEmpty()
                 ? null
-                : resources == null ? null : resources.getGuidance();
+                : resources == null ? null : resources.guidance;
         String routeSetup = routeSetup(
                 data, plan.method().id, action, currentLevel,
                 useGroupStorage);
@@ -154,10 +111,10 @@ class AdaptiveMilestoneGuidanceService
         }
 
         String location = routeLocation(data, plan.method().id,
-                action, plan.method().getInstructions());
+                action, plan.method().instructions);
         String actionText = executionAction(plan.method(), profile, action,
                 routeOutputs);
-        var note = profile.getNote();
+        var note = profile.note;
         if (note == null || note.trim().isEmpty())
         {
             note = get(5);
@@ -167,7 +124,7 @@ class AdaptiveMilestoneGuidanceService
             note += get(16);
         }
 
-        if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
+        if (modifier.multiplier > 1.0 && modifier.getLabel() != null)
         {
             note += get(1280) + modifier.getLabel() + ".";
         }
@@ -198,24 +155,10 @@ class AdaptiveMilestoneGuidanceService
         return result.withProgress(progressText);
     }
 
-    /**
-     * Compatibility hook used by focused selector tests. Resource-aware builds
-     * use AdaptiveActionSelector.select from build(...).
-     */
-    ActionDef selectAction(
-            List<ActionDef> actions,
-            MethodProfile profile,
-            int currentLevel,
-            MembershipStatus membership)
-    {
-        return actionSelector.selectSimple(
-                actions, profile, currentLevel, membership);
-    }
-
-    private static int divideRoundUp(int numerator, double denominator)
+        private static int divideRoundUp(int numerator, double denominator)
     {
         if (numerator <= 0) return 0;
-        return (int) Math.ceil(numerator / denominator);
+        return (int) ceil(numerator / denominator);
     }
 
     /** Reusable tools are not consumed recipes, but still belong in BRING. */
@@ -372,27 +315,27 @@ class AdaptiveMilestoneGuidanceService
     private static List<ActionDef> unlockedRouteOutputs(
             List<ActionDef> actions,
             MethodProfile profile, int currentLevel,
-            MembershipStatus membership)
+            Membership membership)
     {
         List<ActionDef> result = new ArrayList<>();
         if (actions == null || profile == null) return result;
         for (ActionDef action : actions)
         {
-            if (action == null || action.getXp() <= 0
+            if (action == null || action.xp <= 0
                     || action.getLevel() > currentLevel
-                    || !membershipAllowed(action.getMembership(), membership)
-                    || !matches(action, profile.getActionTerms())) continue;
+                    || !membershipAllowed(action.membership, membership)
+                    || !matches(action, profile.actionTerms)) continue;
             result.add(action);
         }
         return result;
     }
 
-    private static boolean membershipAllowed(MembershipStatus action,
-            MembershipStatus account)
+    private static boolean membershipAllowed(Membership action,
+            Membership account)
     {
-        if (action == MembershipStatus.F2P) return true;
-        return action == MembershipStatus.P2P
-                && account == MembershipStatus.P2P;
+        if (action == Membership.F2P) return true;
+        return action == Membership.P2P
+                && account == Membership.P2P;
     }
 
     private static boolean matches(ActionDef action,
@@ -411,9 +354,9 @@ class AdaptiveMilestoneGuidanceService
             List<ActionDef> actions)
     {
         if (actions == null || actions.size() < 2) return false;
-        var first = actions.get(0).getXp();
+        var first = actions.get(0).xp;
         for (ActionDef action : actions)
-            if (Math.abs(action.getXp() - first) > 0.001f) return true;
+            if (abs(action.xp - first) > 0.001f) return true;
         return false;
     }
 
@@ -421,7 +364,7 @@ class AdaptiveMilestoneGuidanceService
     {
         var value = Double.POSITIVE_INFINITY;
         for (ActionDef action : actions)
-            value = Math.min(value, action.getXp());
+            value = min(value, action.xp);
         return value;
     }
 
@@ -429,7 +372,7 @@ class AdaptiveMilestoneGuidanceService
     {
         var value = 0.0;
         for (ActionDef action : actions)
-            value = Math.max(value, action.getXp());
+            value = max(value, action.xp);
         return value;
     }
 
@@ -472,7 +415,7 @@ class AdaptiveMilestoneGuidanceService
                 return get(1288) + names
                         + get(32);
         }
-        String instruction = routeAction(method.getInstructions(),
+        String instruction = routeAction(method.instructions,
                 method.getName());
         if (selected == null || selected.getName() == null
                 || Names.actionKey(instruction).contains(
@@ -510,9 +453,9 @@ class AdaptiveMilestoneGuidanceService
 
     private static String format(double value)
     {
-        if (Math.abs(value - Math.rint(value)) < 0.001)
+        if (abs(value - rint(value)) < 0.001)
         {
-            return String.format(Locale.ROOT, "%,d", (long) Math.rint(value));
+            return String.format(Locale.ROOT, "%,d", (long) rint(value));
         }
         return String.format(Locale.ROOT, "%,.1f", value);
     }
@@ -550,7 +493,7 @@ class CombatGuidanceService
         }
 
         var account = data.account();
-        if (account.membership() == MembershipStatus.UNKNOWN) return null;
+        if (account.membership() == Membership.UNKNOWN) return null;
         var build = AccountBuildPolicy.effectiveBuild(account);
         if (!AccountBuildPolicy.allowsSkill(account, skill)) return null;
 
@@ -564,7 +507,7 @@ class CombatGuidanceService
         var items = new ItemIndex(data, useGroupStorage);
         var weapon = chooseWeapon(account, skill, build, items);
         if (weapon == null && skill != Skill.RANGED
-                && build == RestrictedBuildType.STANDARD
+                && build == BuildType.STANDARD
                 && currentLevel < 20)
         {
             return new Guidance(
@@ -581,7 +524,7 @@ class CombatGuidanceService
         var currentXp = account.xp(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = Math.max(0, targetXp - currentXp);
+        var xpNeeded = max(0, targetXp - currentXp);
 
         var action = new StringBuilder();
         action.append(withoutPeriod(route.loop));
@@ -594,7 +537,7 @@ class CombatGuidanceService
 
         if (route.xpPerDamage > 0)
         {
-            var damageNeeded = (int) Math.ceil(xpNeeded / route.xpPerDamage);
+            var damageNeeded = (int) ceil(xpNeeded / route.xpPerDamage);
             action.append(" That is about ")
                     .append(format(damageNeeded))
                     .append(get(183))
@@ -608,7 +551,7 @@ class CombatGuidanceService
         if (supplies == null) return null;
         var location = route.location;
         var note = route.note;
-        if (build != RestrictedBuildType.STANDARD)
+        if (build != BuildType.STANDARD)
         {
             note += get(1335) + AccountBuildPolicy.label(account)
                     + get(185);
@@ -626,15 +569,15 @@ class CombatGuidanceService
             AccountSnapshot account,
             Skill skill,
             int level,
-            RestrictedBuildType build,
+            BuildType build,
             String methodId,
             SessionIntent intent)
     {
         var membership = account.membership();
 
-        if (build == RestrictedBuildType.DEFENCE_PURE)
+        if (build == BuildType.DEFENCE_PURE)
         {
-            if (membership != MembershipStatus.P2P)
+            if (membership != Membership.P2P)
             {
                 if (intent == SessionIntent.AFK)
                 {
@@ -698,7 +641,7 @@ class CombatGuidanceService
                     get(159));
         }
 
-        if (membership != MembershipStatus.P2P || methodId.contains("f2p"))
+        if (membership != Membership.P2P || methodId.contains("f2p"))
         {
             if (level < 20)
             {
@@ -767,7 +710,7 @@ class CombatGuidanceService
     private static String chooseWeapon(
             AccountSnapshot account,
             Skill skill,
-            RestrictedBuildType build,
+            BuildType build,
             ItemIndex items)
     {
         if (skill == Skill.RANGED)
@@ -775,12 +718,12 @@ class CombatGuidanceService
             return firstObserved(items, LOADOUTS.rangedWeapons);
         }
 
-        if (build == RestrictedBuildType.DEFENCE_PURE)
+        if (build == BuildType.DEFENCE_PURE)
         {
             return firstObserved(items, LOADOUTS.defenceWeapons);
         }
 
-        if (build == RestrictedBuildType.OBSIDIAN_MAULER)
+        if (build == BuildType.OBSIDIAN_MAULER)
         {
             return firstObserved(items, LOADOUTS.obsidianWeapons);
         }
@@ -798,7 +741,7 @@ class CombatGuidanceService
     private static String supplyGuidance(
             AccountSnapshot account,
             Skill skill,
-            RestrictedBuildType build,
+            BuildType build,
             CombatRoute route,
             String weapon,
             ItemIndex items)
@@ -895,8 +838,8 @@ class CombatGuidanceService
 
     private static String trim(double value)
     {
-        if (Math.abs(value - Math.rint(value)) < 0.001)
-            return Long.toString(Math.round(value));
+        if (abs(value - rint(value)) < 0.001)
+            return Long.toString(round(value));
         return String.format(java.util.Locale.ROOT, "%.1f", value);
     }
 
@@ -935,7 +878,7 @@ class CombatGuidanceService
 
 /** Converts any selected method into the same reusable checklist model. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class MethodGuidanceService
 {
     private final FarmingRunPlanner farmingRunPlanner;
@@ -949,17 +892,17 @@ class MethodGuidanceService
         if (plan == null || plan.method() == null) return null;
 
         var method = plan.method();
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         if (method.getSkill() == Skill.FARMING && guidance == null)
         {
             return farmingRunPlanner.build(data, recommendation.id);
         }
 
         List<GuidanceStep> steps = new ArrayList<>();
-        for (RequirementCheck check : plan.getRequirementChecks())
+        for (EvidenceCheck check : plan.requirementChecks)
         {
             steps.add(new GuidanceStep(
-                    check.id, check.getLabel(), check.getEvidence(),
+                    check.id, check.getLabel(), check.evidence,
                     convert(check.getState())));
         }
 
@@ -967,34 +910,34 @@ class MethodGuidanceService
         {
             steps.add(new GuidanceStep(
                     "method:ready", "Method ready",
-                    Text.get(372),
+                    get(372),
                     GuidanceStepState.COMPLETE));
         }
 
         String bring = guidance == null ? null
                 : Presentation.compactSentence(
-                        guidance.getSupplies(), 120);
+                        guidance.supplies, 120);
         String where = guidance == null ? null
                 : Presentation.compactSentence(
-                        guidance.getLocation(), 110);
+                        guidance.location, 110);
         String action = guidance == null
-                ? method.getInstructions()
+                ? method.instructions
                 : guidance.getAction();
         action = Presentation.compactSentence(action, 135);
         String progress = guidance != null
                 && guidance.getProgress() != null
                 && !guidance.getProgress().trim().isEmpty()
                 ? guidance.getProgress()
-                : recommendation.getCurrentLevel() > 0
+                : recommendation.currentLevel > 0
                 && recommendation.getCurrentExecutionTargetLevel()
-                        > recommendation.getCurrentLevel()
-                ? "Level " + recommendation.getCurrentLevel() + " → "
+                        > recommendation.currentLevel
+                ? "Level " + recommendation.currentLevel + " → "
                         + recommendation.getCurrentExecutionTargetLevel() : null;
         String important = guidance == null ? null
                 : guidance.getRiskDisclosure() != null
-                ? guidance.getRiskDisclosure().getHeading() + ": "
+                ? guidance.getRiskDisclosure().heading + ": "
                         + guidance.getRiskDisclosure().getMessage()
-                : criticalNote(guidance.getNote());
+                : criticalNote(guidance.note);
 
         return new GuidanceChecklist(
                 recommendation.id, method.getName(),
@@ -1009,7 +952,7 @@ class MethodGuidanceService
         if (!(lower.contains("wilderness") || lower.contains("hardcore")
                 || lower.contains("uim") || lower.contains("iron")
                 || lower.contains("restricted") || lower.contains("mandatory")
-                || lower.contains(Text.get(1238))
+                || lower.contains(get(1238))
                 || lower.contains("irreversible"))) return null;
         return Presentation.compactSentence(note, 135);
     }
@@ -1030,6 +973,7 @@ class MethodGuidanceService
  * RuneLite action fallback. Every layer refuses to invent data it cannot prove.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class RecommendationGuidanceService
 {
     private static final String LOW_LEVEL_FISH_METHOD = get(1735);
@@ -1046,34 +990,6 @@ class RecommendationGuidanceService
     private final AdaptiveMilestoneGuidanceService adaptiveGuidance;
     private final VariableMethodGuidanceService variableGuidance;
     private final UniversalSkillActionGuidanceService universalGuidance;
-
-    @Inject
-    public RecommendationGuidanceService(
-            AdaptiveMilestoneGuidanceService adaptiveGuidance,
-            VariableMethodGuidanceService variableGuidance,
-            UniversalSkillActionGuidanceService universalGuidance)
-    {
-        this.adaptiveGuidance = adaptiveGuidance;
-        this.variableGuidance = variableGuidance;
-        this.universalGuidance = universalGuidance;
-    }
-
-    /** Compatibility constructor retained for focused tests and older callers. */
-    public RecommendationGuidanceService(
-            AdaptiveMilestoneGuidanceService adaptiveGuidance)
-    {
-        this(adaptiveGuidance,
-                new VariableMethodGuidanceService(),
-                new UniversalSkillActionGuidanceService());
-    }
-
-    /** Compatibility constructor for focused tests and older callers. */
-    public RecommendationGuidanceService()
-    {
-        this(new AdaptiveMilestoneGuidanceService(),
-                new VariableMethodGuidanceService(),
-                new UniversalSkillActionGuidanceService());
-    }
 
     public Guidance build(
             GameData data,
@@ -1138,7 +1054,7 @@ class RecommendationGuidanceService
             TrainingPlan plan)
     {
         if (data == null || data.account() == null
-                || skill != Skill.SMITHING || plan == null
+                || skill != SMITHING || plan == null
                 || plan.method() == null
                 || !get(1632).equals(
                         plan.method().id)
@@ -1152,7 +1068,7 @@ class RecommendationGuidanceService
                 get(673),
                 get(684),
                 get(686),
-                MethodBankingBehavior.LOCAL_PROCESSING);
+                BankingMode.LOCAL_PROCESSING);
     }
 
     private static Guidance uimF2pCookingGuidance(
@@ -1160,7 +1076,7 @@ class RecommendationGuidanceService
             TrainingPlan plan)
     {
         if (data == null || data.account() == null
-                || skill != Skill.COOKING || plan == null
+                || skill != COOKING || plan == null
                 || plan.method() == null
                 || !get(1857).equals(
                         plan.method().id)
@@ -1174,7 +1090,7 @@ class RecommendationGuidanceService
                 get(688),
                 get(689),
                 get(690),
-                MethodBankingBehavior.LOCAL_PROCESSING);
+                BankingMode.LOCAL_PROCESSING);
     }
 
     private static Guidance uimF2pRunecraftGuidance(
@@ -1209,7 +1125,7 @@ class RecommendationGuidanceService
                         + get(665),
                 get(666) + altar + ".",
                 get(667),
-                MethodBankingBehavior.LOCAL_PROCESSING);
+                BankingMode.LOCAL_PROCESSING);
     }
 
     private static Guidance uimThievingGuidance(
@@ -1231,7 +1147,7 @@ class RecommendationGuidanceService
                     get(669),
                     get(670),
                     get(671),
-                    MethodBankingBehavior.NONE);
+                    BankingMode.NONE);
         if (get(1860).equals(id))
             return new Guidance(
                     get(672)
@@ -1239,7 +1155,7 @@ class RecommendationGuidanceService
                     get(674),
                     get(675),
                     get(676),
-                    MethodBankingBehavior.NONE);
+                    BankingMode.NONE);
         return null;
     }
 
@@ -1253,7 +1169,7 @@ class RecommendationGuidanceService
     {
         if (data == null
                 || data.account() == null
-                || skill != Skill.COOKING
+                || skill != COOKING
                 || trainingPlan == null
                 || trainingPlan.method() == null
                 || !LOW_LEVEL_FISH_METHOD.equals(trainingPlan.method().id))
@@ -1286,7 +1202,7 @@ class RecommendationGuidanceService
             int targetLevel)
     {
         List<StagePlan> plans = new ArrayList<>();
-        var currentXp = account.xp(Skill.COOKING);
+        var currentXp = account.xp(COOKING);
         if (currentXp <= 0)
         {
             currentXp = Experience.getXpForLevel(currentLevel);
@@ -1301,13 +1217,13 @@ class RecommendationGuidanceService
                 continue;
             }
 
-            var stageTargetLevel = Math.min(stage.endLevel, targetLevel);
+            var stageTargetLevel = min(stage.endLevel, targetLevel);
             var stageTargetXp = Experience.getXpForLevel(stageTargetLevel);
-            var xpNeeded = Math.max(0, stageTargetXp - stageStartXp);
+            var xpNeeded = max(0, stageTargetXp - stageStartXp);
             var successfulCooks = divideRoundUp(xpNeeded, stage.xpEach);
-            int rawNeeded = Math.max(
+            int rawNeeded = max(
                     successfulCooks,
-                    (int) Math.ceil(successfulCooks * LOW_LEVEL_BURN_BUFFER));
+                    (int) ceil(successfulCooks * LOW_LEVEL_BURN_BUFFER));
 
             if (successfulCooks > 0)
             {
@@ -1359,7 +1275,7 @@ class RecommendationGuidanceService
         for (StagePlan stage : stages)
         {
             var verified = items.quantity(stage.stage.rawItemName);
-            var missing = Math.max(0, stage.rawNeeded - verified);
+            var missing = max(0, stage.rawNeeded - verified);
             ownedParts.add(verified + " "
                     + stage.stage.rawItemName.toLowerCase());
             if (missing > 0)
@@ -1453,6 +1369,8 @@ class RecommendationGuidanceService
         return (numerator + denominator - 1) / denominator;
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class CookingStage
     {
         private final int startLevel;
@@ -1460,21 +1378,9 @@ class RecommendationGuidanceService
         private final String foodName;
         private final String rawItemName;
         private final int xpEach;
-
-        private CookingStage(
-                int startLevel,
-                int endLevel,
-                String foodName,
-                String rawItemName,
-                int xpEach)
-        {
-            this.startLevel = startLevel;
-            this.endLevel = endLevel;
-            this.foodName = foodName;
-            this.rawItemName = rawItemName;
-            this.xpEach = xpEach;
-        }
     }
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 
     private static final class StagePlan
     {
@@ -1482,18 +1388,6 @@ class RecommendationGuidanceService
         private final int targetLevel;
         private final int successfulCooks;
         private final int rawNeeded;
-
-        private StagePlan(
-                CookingStage stage,
-                int targetLevel,
-                int successfulCooks,
-                int rawNeeded)
-        {
-            this.stage = stage;
-            this.targetLevel = targetLevel;
-            this.successfulCooks = successfulCooks;
-            this.rawNeeded = rawNeeded;
-        }
     }
 }
 
@@ -1520,17 +1414,17 @@ class SailingGuidanceService
             return null;
         }
         var account = data.account();
-        if (account.membership() != MembershipStatus.P2P)
+        if (account.membership() != Membership.P2P)
         {
             return null;
         }
 
         String id = plan.method().id == null
                 ? "" : plan.method().id;
-        var currentXp = account.xp(Skill.SAILING);
+        var currentXp = account.xp(SAILING);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = Math.max(0, targetXp - currentXp);
+        var xpNeeded = max(0, targetXp - currentXp);
 
         if (id.startsWith(get(1760)))
         {
@@ -1668,16 +1562,16 @@ class SailingGuidanceService
         {
             var economy = data.economy();
             if (economy != null
-                    && economy.getConfidence() == Confidence.VERIFIED)
+                    && economy.confidence == Confidence.VERIFIED)
             {
-                if (economy.getCoins() >= 15000)
+                if (economy.coins >= 15000)
                 {
                     supplies.append(get(753));
                 }
                 else
                 {
                     supplies.append(" You are ")
-                            .append(format(15000 - economy.getCoins()))
+                            .append(format(15000 - economy.coins))
                             .append(get(755));
                 }
             }
@@ -1709,20 +1603,14 @@ class SailingGuidanceService
         return String.format("%,d", value);
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class Trial
     {
         private final String name;
         private final int marlinXp;
         private final String requirements;
         private final String location;
-
-        private Trial(String name, int marlinXp, String requirements, String location)
-        {
-            this.name = name;
-            this.marlinXp = marlinXp;
-            this.requirements = requirements;
-            this.location = location;
-        }
     }
 }
 
@@ -1760,18 +1648,18 @@ class SlayerGuidanceService
     {
         if (data == null || data.account() == null) return null;
         var account = data.account();
-        if (!AccountBuildPolicy.allowsSkill(account, Skill.SLAYER)) return null;
-        if (account.membership() != MembershipStatus.P2P) return null;
+        if (!AccountBuildPolicy.allowsSkill(account, SLAYER)) return null;
+        if (account.membership() != Membership.P2P) return null;
 
-        var currentXp = account.xp(Skill.SLAYER);
+        var currentXp = account.xp(SLAYER);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = Math.max(0, targetXp - currentXp);
+        var xpNeeded = max(0, targetXp - currentXp);
 
         var slayer = data.slayer();
         if (slayer != null && slayer.hasTask())
         {
-            var profile = taskProfiles.profileFor(slayer.getTaskName());
+            var profile = taskProfiles.profileFor(slayer.taskName);
             var items = new ItemIndex(data, useGroupStorage);
             var action = taskAction(slayer, profile, xpNeeded, targetLevel);
             var supplies = taskSupplies(account, items, profile);
@@ -1797,7 +1685,7 @@ class SlayerGuidanceService
     {
         var action = new StringBuilder();
         action.append(get(1454))
-                .append(slayer.getTaskName())
+                .append(slayer.taskName)
                 .append(" assignment: ")
                 .append(slayer.getRemaining())
                 .append(get(1455))
@@ -1816,12 +1704,12 @@ class SlayerGuidanceService
             ItemIndex items,
             SlayerTaskProfile profile)
     {
-        if (profile == null || profile.getRequiredProtection().isEmpty())
+        if (profile == null || profile.requiredProtection.isEmpty())
         {
             return get(761);
         }
 
-        var required = profile.getRequiredProtection();
+        var required = profile.requiredProtection;
         var owned = firstOwned(items, required);
         if (owned != null)
         {
@@ -1894,9 +1782,9 @@ class SlayerGuidanceService
         {
             note.append(profile.getMechanicsNote()).append(" ");
         }
-        if (profile.getMultiTargetMagicEligibility() == CapabilityState.VERIFIED)
+        if (profile.getMultiTargetMagicEligibility() == Capability.VERIFIED)
             note.append(get(777));
-        if (profile.getCannonEligibility() == CapabilityState.UNKNOWN)
+        if (profile.getCannonEligibility() == Capability.UNKNOWN)
             note.append(get(778));
         if (profile.isWildernessVariantKnown())
             note.append(get(779));
@@ -1948,7 +1836,7 @@ class SlayerGuidanceService
             QuestSnapshot quests)
     {
         var combat = combatLevel(account);
-        var slayer = account.level(Skill.SLAYER);
+        var slayer = account.level(SLAYER);
 
         if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
             return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
@@ -1976,13 +1864,13 @@ class SlayerGuidanceService
     static int combatLevel(AccountSnapshot account)
     {
         double base = 0.25 * (account.level(Skill.DEFENCE)
-                + account.level(Skill.HITPOINTS)
-                + Math.floor(account.level(Skill.PRAYER) / 2.0));
+                + account.level(HITPOINTS)
+                + floor(account.level(Skill.PRAYER) / 2.0));
         double melee = 0.325 * (account.level(Skill.ATTACK)
                 + account.level(Skill.STRENGTH));
-        var ranged = 0.325 * Math.floor(account.level(Skill.RANGED) * 1.5);
-        var magic = 0.325 * Math.floor(account.level(Skill.MAGIC) * 1.5);
-        return (int) Math.floor(base + Math.max(melee, Math.max(ranged, magic)));
+        var ranged = 0.325 * floor(account.level(Skill.RANGED) * 1.5);
+        var magic = 0.325 * floor(account.level(Skill.MAGIC) * 1.5);
+        return (int) floor(base + max(melee, max(ranged, magic)));
     }
 
     private static boolean complete(QuestSnapshot quests, String quest)
@@ -2000,18 +1888,13 @@ class SlayerGuidanceService
         return String.format("%,d", value);
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class SlayerMasterChoice
     {
         private final String name;
         private final String location;
         private final String reason;
-
-        private SlayerMasterChoice(String name, String location, String reason)
-        {
-            this.name = name;
-            this.location = location;
-            this.reason = reason;
-        }
     }
 }
 
@@ -2023,6 +1906,7 @@ class SlayerGuidanceService
  * match, membership, and material recipe can all be proven.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class UniversalSkillActionGuidanceService
 {
     private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList(
@@ -2044,27 +1928,6 @@ class UniversalSkillActionGuidanceService
     private final SkillingXpModifierService xpModifierService;
     private final AccountResourcePlanner resourcePlanner;
 
-    @Inject
-    public UniversalSkillActionGuidanceService(
-            RuneLiteSkillActionCatalog actionCatalog,
-            UniversalActionRecipeResolver recipeResolver,
-            SkillingXpModifierService xpModifierService,
-            AccountResourcePlanner resourcePlanner)
-    {
-        this.actionCatalog = actionCatalog;
-        this.recipeResolver = recipeResolver;
-        this.xpModifierService = xpModifierService;
-        this.resourcePlanner = resourcePlanner;
-    }
-
-    public UniversalSkillActionGuidanceService()
-    {
-        this(new RuneLiteSkillActionCatalog(),
-                new UniversalActionRecipeResolver(),
-                new SkillingXpModifierService(),
-                new AccountResourcePlanner());
-    }
-
     public Guidance build(
             GameData data,
             Skill skill,
@@ -2083,13 +1946,13 @@ class UniversalSkillActionGuidanceService
         var currentXp = data.account().xp(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = Math.max(0, targetXp - currentXp);
+        var xpNeeded = max(0, targetXp - currentXp);
         if (xpNeeded <= 0) return null;
 
         SkillingXpModifier modifier = xpModifierService == null
                 ? SkillingXpModifier.none()
                 : xpModifierService.modifier(data, skill, useGroupStorage);
-        var multiplier = Math.max(1.0, modifier.getMultiplier());
+        var multiplier = max(1.0, modifier.multiplier);
 
         Choice choice = choose(
                 data,
@@ -2102,7 +1965,7 @@ class UniversalSkillActionGuidanceService
         if (choice == null) return null;
 
         var action = choice.action;
-        var xpEach = action.getXp() * multiplier;
+        var xpEach = action.xp * multiplier;
         var actions = divideRoundUp(xpNeeded, xpEach);
         UniversalActionRecipe recipe = recipeResolver.resolve(
                 action, actions, data.account().membership());
@@ -2126,9 +1989,9 @@ class UniversalSkillActionGuidanceService
 
         SupplyPlan resources = resourcePlanner == null
                 ? null
-                : resourcePlanner.plan(data, recipe.getInputs(), useGroupStorage);
+                : resourcePlanner.plan(data, recipe.inputs, useGroupStorage);
         String supplies;
-        if (recipe.getInputs().isEmpty())
+        if (recipe.inputs.isEmpty())
         {
             supplies = recipe.hasExactInputs()
                     ? get(1013)
@@ -2136,7 +1999,7 @@ class UniversalSkillActionGuidanceService
         }
         else
         {
-            supplies = resources == null ? null : resources.getGuidance();
+            supplies = resources == null ? null : resources.guidance;
         }
 
         if (skill == Skill.RUNECRAFT)
@@ -2151,9 +2014,9 @@ class UniversalSkillActionGuidanceService
         }
 
         String location = locationBeforeColon(
-                plan.method().getInstructions());
+                plan.method().instructions);
         String actionText = executionAction(skill, action,
-                plan.method().getInstructions());
+                plan.method().instructions);
         if (isAnvilSmithingMethod(plan.method()))
         {
             location = F2P_ANVIL_ROUTE;
@@ -2162,7 +2025,7 @@ class UniversalSkillActionGuidanceService
         var note = new StringBuilder();
         note.append(get(1015))
                 .append(get(1016));
-        if (modifier.getMultiplier() > 1.0 && modifier.getLabel() != null)
+        if (modifier.multiplier > 1.0 && modifier.getLabel() != null)
         {
             note.append(get(1275))
                     .append(modifier.getLabel()).append(" is worn.");
@@ -2171,7 +2034,7 @@ class UniversalSkillActionGuidanceService
         {
             note.append(" ").append(recipe.getSetup());
         }
-        if (skill == Skill.COOKING)
+        if (skill == COOKING)
         {
             note.append(get(1017));
         }
@@ -2238,7 +2101,7 @@ class UniversalSkillActionGuidanceService
 
         for (ActionDef action : actions)
         {
-            if (action == null || action.getXp() <= 0
+            if (action == null || action.xp <= 0
                     || action.getLevel() > currentLevel
                     || !membershipAllowed(action, membership)
                     || isOneTimeOrRewardAction(action)
@@ -2250,7 +2113,7 @@ class UniversalSkillActionGuidanceService
             }
 
             int actionsNeeded = divideRoundUp(
-                    xpNeeded, action.getXp() * multiplier);
+                    xpNeeded, action.xp * multiplier);
             UniversalActionRecipe recipe = recipeResolver.resolve(
                     action, actionsNeeded, membership);
             if (requiresExactRecipe(action.getSkill()) && !recipe.hasExactInputs())
@@ -2262,8 +2125,8 @@ class UniversalSkillActionGuidanceService
             if (matches == 0 && !genericRoute) continue;
 
             var score = matches * 1000.0;
-            score += Math.min(300.0, action.getLevel() * 3.0);
-            score += Math.min(250.0, Math.log1p(action.getXp()) * 35.0);
+            score += min(300.0, action.getLevel() * 3.0);
+            score += min(250.0, log1p(action.xp) * 35.0);
             score += resourceCoverageScore(data, observed, recipe);
 
             if (best == null || score > best.score)
@@ -2279,17 +2142,17 @@ class UniversalSkillActionGuidanceService
             ItemIndex observed,
             UniversalActionRecipe recipe)
     {
-        if (recipe == null || recipe.getInputs().isEmpty()) return 0.0;
+        if (recipe == null || recipe.inputs.isEmpty()) return 0.0;
         var required = 0;
         var owned = 0;
-        for (MethodInput input : recipe.getInputs())
+        for (MethodInput input : recipe.inputs)
         {
-            required += input.getQuantity();
-            owned += Math.min(input.getQuantity(), observed.quantity(input.getName()));
+            required += input.quantity;
+            owned += min(input.quantity, observed.quantity(input.getName()));
         }
         if (required <= 0) return 0.0;
 
-        var coverage = Math.min(1.0, owned / (double) required);
+        var coverage = min(1.0, owned / (double) required);
         AccountMode mode = AccountMode.fromTypeCode(
                 data.account().modeCode());
         if (mode == AccountMode.ULTIMATE_IRONMAN)
@@ -2309,19 +2172,19 @@ class UniversalSkillActionGuidanceService
                 && skill != Skill.STRENGTH
                 && skill != Skill.DEFENCE
                 && skill != Skill.RANGED
-                && skill != Skill.HITPOINTS
-                && skill != Skill.SLAYER
-                && skill != Skill.SAILING;
+                && skill != HITPOINTS
+                && skill != SLAYER
+                && skill != SAILING;
     }
 
     private static boolean requiresExactRecipe(Skill skill)
     {
-        return skill == Skill.COOKING
+        return skill == COOKING
                 || skill == Skill.CRAFTING
                 || skill == Skill.FLETCHING
                 || skill == Skill.FIREMAKING
                 || skill == Skill.HERBLORE
-                || skill == Skill.SMITHING
+                || skill == SMITHING
                 || skill == Skill.CONSTRUCTION
                 || skill == Skill.MAGIC
                 || skill == Skill.PRAYER
@@ -2330,9 +2193,9 @@ class UniversalSkillActionGuidanceService
 
     private static boolean isAnvilSmithingMethod(TrainingMethod method)
     {
-        if (method == null || method.getSkill() != Skill.SMITHING) return false;
+        if (method == null || method.getSkill() != SMITHING) return false;
         var name = Names.actionText(method.getName());
-        var instructions = Names.actionText(method.getInstructions());
+        var instructions = Names.actionText(method.instructions);
         return name.startsWith("smith ")
                 || name.startsWith("smithing ")
                 || instructions.contains("anvil");
@@ -2341,22 +2204,22 @@ class UniversalSkillActionGuidanceService
     private static boolean isBarSmeltingAction(ActionDef action)
     {
         return action != null
-                && action.getSkill() == Skill.SMITHING
+                && action.getSkill() == SMITHING
                 && Names.actionText(action.getName()).endsWith(" bar");
     }
 
     private static boolean membershipAllowed(
             ActionDef action,
-            MembershipStatus account)
+            Membership account)
     {
-        if (account == MembershipStatus.F2P)
+        if (account == Membership.F2P)
         {
-            return action.getMembership() == MembershipStatus.F2P;
+            return action.membership == Membership.F2P;
         }
-        if (account == MembershipStatus.P2P)
+        if (account == Membership.P2P)
         {
-            return action.getMembership() == MembershipStatus.F2P
-                    || action.getMembership() == MembershipStatus.P2P;
+            return action.membership == Membership.F2P
+                    || action.membership == Membership.P2P;
         }
         return false;
     }
@@ -2377,7 +2240,7 @@ class UniversalSkillActionGuidanceService
         if (method == null) return result;
         var skillToken = stem(Names.actionText(method.getSkill().getName()));
         String text = Names.actionText(method.id + " "
-                + method.getName() + " " + method.getInstructions());
+                + method.getName() + " " + method.instructions);
         for (String token : text.split("[^a-z0-9]+"))
         {
             if (token.length() < 3 || STOP_WORDS.contains(token)
@@ -2451,19 +2314,19 @@ class UniversalSkillActionGuidanceService
     private static String playerAction(Skill skill, String actionName, int count)
     {
         var name = actionName == null ? "" : actionName.trim();
-        if (skill == Skill.WOODCUTTING)
+        if (skill == WOODCUTTING)
         {
             var tree = name.replaceAll("(?i)\\s+logs?$", "").trim();
             if (tree.isEmpty()) tree = "tree";
             return tree.toLowerCase(Locale.ROOT) + " chop" + (count == 1 ? "" : "s");
         }
-        if (skill == Skill.FISHING)
+        if (skill == FISHING)
             return name + " catch" + (count == 1 ? "" : "es");
-        if (skill == Skill.MINING)
+        if (skill == MINING)
             return name + " mining action" + (count == 1 ? "" : "s");
-        if (skill == Skill.COOKING)
+        if (skill == COOKING)
             return name + " cook" + (count == 1 ? "" : "s");
-        if (skill == Skill.SMITHING)
+        if (skill == SMITHING)
         {
             if (Names.actionText(name).endsWith(" bar"))
                 return name + " smelt" + (count == 1 ? "" : "s");
@@ -2493,7 +2356,7 @@ class UniversalSkillActionGuidanceService
     private static int divideRoundUp(int numerator, double denominator)
     {
         if (numerator <= 0 || denominator <= 0) return 0;
-        return (int) Math.ceil(numerator / denominator);
+        return (int) ceil(numerator / denominator);
     }
 
     private static boolean containsAny(String text, String... values)
@@ -2508,21 +2371,17 @@ class UniversalSkillActionGuidanceService
 
     private static String format(double value)
     {
-        if (Math.abs(value - Math.rint(value)) < 0.001)
-            return String.format(Locale.ROOT, "%,d", (long) Math.rint(value));
+        if (abs(value - rint(value)) < 0.001)
+            return String.format(Locale.ROOT, "%,d", (long) rint(value));
         return String.format(Locale.ROOT, "%,.1f", value);
     }
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 
     private static final class Choice
     {
         private final ActionDef action;
         private final double score;
-
-        private Choice(ActionDef action, double score)
-        {
-            this.action = action;
-            this.score = score;
-        }
     }
 }
 
@@ -2543,7 +2402,7 @@ class VariableMethodGuidanceService
         var currentXp = data.account().xp(skill);
         if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
         Map<String, String> common = new HashMap<>();
-        common.put("xp", format(Math.max(0,
+        common.put("xp", format(max(0,
                 Experience.getXpForLevel(targetLevel) - currentXp)));
         common.put("target", Integer.toString(targetLevel));
         var items = new ItemIndex(data, useGroupStorage);
@@ -2585,7 +2444,7 @@ class VariableMethodGuidanceService
                 break;
             case "stars":
                 boolean members = data.account().membership()
-                        == MembershipStatus.P2P;
+                        == Membership.P2P;
                 v.put("starScout", get(members ? 1058 : 1059));
                 v.put("starLocation", get(members ? 1062 : 1063));
                 break;
@@ -2640,7 +2499,7 @@ class VariableMethodGuidanceService
                         ? get(1482) : get(1574));
                 break;
             case "forestry":
-                var level = data.account().level(Skill.WOODCUTTING);
+                var level = data.account().level(WOODCUTTING);
                 v.put("tree", level >= 60 ? "yew trees" : level >= 45
                         ? "maple trees" : level >= 30 ? "willow trees" : "oak trees");
                 v.put("treeLocation", get(level >= 60 ? 1094

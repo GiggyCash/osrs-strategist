@@ -42,7 +42,7 @@ public class ResourceDependencyResolverTest
     public void branchingAndRepeatedDependenciesAreDeduplicated()
     {
         int root = 900001, leaf = 900002;
-        ResourceDependencyDefinition definition = new ResourceDependencyDefinition(
+        ResourceDependency definition = new ResourceDependency(
                 root, "Make root.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
@@ -58,8 +58,8 @@ public class ResourceDependencyResolverTest
     public void cyclesAndDepthLimitsTerminateDeterministically()
     {
         int a = 910001, b = 910002;
-        ResourceDependencyDefinition first = definition(a, b, 1);
-        ResourceDependencyDefinition second = definition(b, a, 1);
+        ResourceDependency first = definition(a, b, 1);
+        ResourceDependency second = definition(b, a, 1);
         DependencyResolution cycle = resolver(first, second).resolve(
                 context(1, false, null, null, null),
                 new ResourceNeed(a, "A", 1));
@@ -67,7 +67,7 @@ public class ResourceDependencyResolverTest
         assertTrue(cycle.getNodes().size() <= 4);
 
         DependencyResolution depth = new ResourceDependencyResolver(
-                new ResourceAcquisitionPlanner(),
+                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
                 new ResourceDependencyCatalog(Arrays.asList(first, second)), 1)
                 .resolve(context(1, false, null, null, null),
                         new ResourceNeed(a, "A", 1));
@@ -77,7 +77,7 @@ public class ResourceDependencyResolverTest
     @Test
     public void broadAcyclicGraphsRespectIndependentNodeLimit()
     {
-        java.util.ArrayList<ResourceDependencyDefinition> definitions =
+        java.util.ArrayList<ResourceDependency> definitions =
                 new java.util.ArrayList<>();
         java.util.ArrayList<DependencyRequirement> children =
                 new java.util.ArrayList<>();
@@ -87,15 +87,15 @@ public class ResourceDependencyResolverTest
             int child = root + i;
             children.add(DependencyRequirement.resource(
                     new ResourceNeed(child, "Child " + i, 1)));
-            definitions.add(new ResourceDependencyDefinition(child,
+            definitions.add(new ResourceDependency(child,
                     "Resolve child " + i + ".", 1,
                     Collections.emptyList()));
         }
-        definitions.add(new ResourceDependencyDefinition(root,
+        definitions.add(new ResourceDependency(root,
                 "Resolve root.", 1, children));
 
         DependencyResolution result = new ResourceDependencyResolver(
-                new ResourceAcquisitionPlanner(),
+                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
                 new ResourceDependencyCatalog(definitions), 8, 12)
                 .resolve(context(1, false, null, null, null),
                         new ResourceNeed(root, "Root", 1));
@@ -150,12 +150,12 @@ public class ResourceDependencyResolverTest
         int id = 940001;
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(id, "UIM part", 2)), 1L);
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.LOOTING_BAG, Collections.singletonList(
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.LOOTING_BAG, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.LOOTING_BAG, Collections.singletonList(
                 new ItemState(id, "UIM part", 2)));
         StorageSnapshot storage = new StorageSnapshot(states, contents);
 
@@ -171,7 +171,7 @@ public class ResourceDependencyResolverTest
     public void expensiveDetourIsRejectedForShortSession()
     {
         int root = 950001;
-        ResourceDependencyDefinition expensive = new ResourceDependencyDefinition(
+        ResourceDependency expensive = new ResourceDependency(
                 root, "Long detour", 90, Collections.emptyList());
         DependencyResolution result = resolver(expensive).resolve(
                 context(1, false, null, null, null),
@@ -232,7 +232,7 @@ public class ResourceDependencyResolverTest
     public void repeatedChildRequirementsAreSummedBeforeTraversal()
     {
         int root = 960001, leaf = 960002;
-        ResourceDependencyDefinition combined = new ResourceDependencyDefinition(
+        ResourceDependency combined = new ResourceDependency(
                 root, "Combine leaf parts.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2)),
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 3))));
@@ -251,12 +251,12 @@ public class ResourceDependencyResolverTest
     public void sharedLeafAcrossBranchesIsDeduplicatedAndSummed()
     {
         int root = 970001, left = 970002, right = 970003, leaf = 970004;
-        ResourceDependencyDefinition rootDefinition = new ResourceDependencyDefinition(
+        ResourceDependency rootDefinition = new ResourceDependency(
                 root, "Assemble root.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(left, "Left", 1)),
                 DependencyRequirement.resource(new ResourceNeed(right, "Right", 1))));
-        ResourceDependencyDefinition leftDefinition = definition(left, leaf, 1);
-        ResourceDependencyDefinition rightDefinition = new ResourceDependencyDefinition(
+        ResourceDependency leftDefinition = definition(left, leaf, 1);
+        ResourceDependency rightDefinition = new ResourceDependency(
                 right, "Make right.", 1, Collections.singletonList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2))));
         DependencyResolution result = resolver(rootDefinition,
@@ -270,21 +270,21 @@ public class ResourceDependencyResolverTest
         assertEquals(3, node.getRequiredQuantity());
     }
 
-    private static ResourceDependencyDefinition definition(int item, int child,
+    private static ResourceDependency definition(int item, int child,
             int cost)
     {
-        return new ResourceDependencyDefinition(item, "Make " + item, cost,
+        return new ResourceDependency(item, "Make " + item, cost,
                 Collections.singletonList(DependencyRequirement.resource(
                         new ResourceNeed(child, "Child", 1))));
     }
 
     private static ResourceDependencyResolver resolver(
-            ResourceDependencyDefinition... definitions)
+            ResourceDependency... definitions)
     {
         ResourceDependencyCatalog catalog = definitions.length == 0
                 ? new ResourceDependencyCatalog()
                 : new ResourceDependencyCatalog(Arrays.asList(definitions));
-        return new ResourceDependencyResolver(new ResourceAcquisitionPlanner(),
+        return new ResourceDependencyResolver(new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
                 catalog, 8);
     }
 
@@ -303,9 +303,7 @@ public class ResourceDependencyResolverTest
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 50); xp.put(skill, 0); }
-        AccountSnapshot account = new AccountSnapshot("Graph", type,
-                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
-                1, 1000, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Graph", 0L, type, AccountMode.fromTypeCode(type).name(), Membership.P2P, 1, 1000, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .inventory(inventory)
                 .bank(bank).groupStorage(group).storage(storage)

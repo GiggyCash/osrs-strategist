@@ -57,7 +57,7 @@ public class SustainableResourceValueServiceTest
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 70); xp.put(skill, 0); }
         AccountSnapshot account = new AccountSnapshot("Resource", 88L, type,
-                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P, 1,
+                AccountMode.fromTypeCode(type).name(), Membership.P2P, 1,
                 70 * Skill.values().length, 0L, levels, xp);
         GameData.Builder data = GameData.builder(account)
                 .inventory(new ItemsState(Collections.emptyList()))

@@ -19,13 +19,13 @@ public class F2pCandidateIsolationTest
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Pandemonium", QuestStatus.NOT_STARTED);
         quests.put("The Ides of Milk", QuestStatus.NOT_STARTED);
-        GameData data = GameData.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(Membership.F2P))
                 .quests(new QuestSnapshot(quests))
                 .build();
         StrategyContext context = context(data);
 
         List<Recommendation> candidates =
-                new QuestCandidateProvider(new QuestPriorityCatalog()).candidates(context);
+                TestFixtures.questCandidateProvider(new QuestPriorityCatalog()).candidates(context);
 
         assertFalse(containsTitle(candidates, "Pandemonium"));
         assertTrue(containsTitle(candidates, "The Ides of Milk"));
@@ -34,7 +34,7 @@ public class F2pCandidateIsolationTest
     @Test
     public void combatAchievementRewardTierDoesNotAppearForF2p()
     {
-        GameData data = GameData.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(Membership.F2P))
                 .combatAchievements(new CombatAchievementSnapshot(10, 20))
                 .build();
 
@@ -45,7 +45,7 @@ public class F2pCandidateIsolationTest
     @Test
     public void combatAchievementTierCanRemainP2pAlternative()
     {
-        GameData data = GameData.builder(account(MembershipStatus.P2P))
+        GameData data = GameData.builder(account(Membership.P2P))
                 .combatAchievements(new CombatAchievementSnapshot(10, 20))
                 .build();
 
@@ -76,7 +76,7 @@ public class F2pCandidateIsolationTest
                 new PreferenceProfile());
     }
 
-    private static AccountSnapshot account(MembershipStatus membership)
+    private static AccountSnapshot account(Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -85,15 +85,6 @@ public class F2pCandidateIsolationTest
             levels.put(skill, 60);
             xp.put(skill, Experience.getXpForLevel(60));
         }
-        return new AccountSnapshot(
-                "F2P Test",
-                0,
-                "Main",
-                membership,
-                80,
-                1500,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("F2P Test", 0L, 0, "Main", membership, 80, 1500, 0L, levels, xp);
     }
 }

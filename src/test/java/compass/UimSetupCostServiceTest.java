@@ -114,14 +114,14 @@ public class UimSetupCostServiceTest
             inventory.add(new ItemState(1000 + i, "Item " + i, 1));
         }
 
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
         if (deathStorage)
         {
-            states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-            contents.put(StorageCapability.DEATH_STORAGE,
+            states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+            contents.put(StorageKind.DEATH_STORAGE,
                     Collections.singletonList(
                             new ItemState(2000, "Stored valuable", 1)));
         }
@@ -148,8 +148,6 @@ public class UimSetupCostServiceTest
             total += level;
             totalXp += value;
         }
-        return new AccountSnapshot(
-                "UIM Test", 2, "Ultimate Ironman",
-                MembershipStatus.P2P, 1, total, totalXp, levels, xp);
+        return new AccountSnapshot("UIM Test", 0L, 2, "Ultimate Ironman", Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

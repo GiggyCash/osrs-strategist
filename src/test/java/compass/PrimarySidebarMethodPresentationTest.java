@@ -18,7 +18,7 @@ public class PrimarySidebarMethodPresentationTest
     {
         Recommendation recommendation = cookingRecommendation();
         GuidanceChecklist checklist = new MethodGuidanceService(
-                new FarmingRunPlanner(new FarmingRunCatalog()))
+                TestFixtures.farmingRunPlanner(new FarmingRunCatalog()))
                 .build(recommendation, null);
 
         assertFalse(checklist.getTitle().trim().isEmpty());
@@ -27,7 +27,7 @@ public class PrimarySidebarMethodPresentationTest
         OsrsStrategistPanel panel = panel();
         SidebarAccessibility.apply(panel, SidebarTextSize.STANDARD);
         panel.updateAccount("Live UIM", "Ultimate Ironman",
-                MembershipStatus.F2P, 500);
+                Membership.F2P, 500);
         panel.updateGoal(GoalType.AUTOMATIC);
         panel.updateStrategy(StrategyMode.EFFICIENT,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL);
@@ -38,7 +38,7 @@ public class PrimarySidebarMethodPresentationTest
         // The normal login/account initialization calls must not replace the
         // already resolved primary card with an empty-height rendering.
         panel.updateAccount("Live UIM", "Ultimate Ironman",
-                MembershipStatus.F2P, 500);
+                Membership.F2P, 500);
         panel.updateGoal(GoalType.AUTOMATIC);
         assertSidebarMatchesChecklist(panel, checklist);
 
@@ -47,7 +47,7 @@ public class PrimarySidebarMethodPresentationTest
         Recommendation refreshed = cookingRecommendation();
         panel.updateRecommendations(Collections.singletonList(refreshed));
         GuidanceChecklist refreshedChecklist = new MethodGuidanceService(
-                new FarmingRunPlanner(new FarmingRunCatalog()))
+                TestFixtures.farmingRunPlanner(new FarmingRunCatalog()))
                 .build(refreshed, null);
         assertSidebarMatchesChecklist(panel, refreshedChecklist);
     }
@@ -55,7 +55,7 @@ public class PrimarySidebarMethodPresentationTest
     private static void assertSidebarMatchesChecklist(
             OsrsStrategistPanel panel, GuidanceChecklist checklist)
     {
-        String sidebar = panel.recommendationTextForTest();
+        String sidebar = panel.recommendationBody.getText();
         assertTrue(sidebar.contains("METHOD\n" + checklist.getTitle()));
         assertTrue(sidebar.contains("BRING\nBring the carried raw fish"));
         assertTrue(sidebar.contains("WHERE\nBarbarian Village river / permanent fire"));
@@ -64,9 +64,9 @@ public class PrimarySidebarMethodPresentationTest
         // Assert paintable geometry, not only the JTextArea backing string.
         // Before the fix this height was exactly one line, so RuneLite painted
         // METHOD and clipped its value plus every following primary field.
-        assertTrue(panel.recommendationTextHeightForTest()
-                >= panel.recommendationTextLineCountForTest()
-                * panel.recommendationTextLineHeightForTest());
+        assertTrue(panel.recommendationBody.getPreferredSize().height
+                >= panel.recommendationBody.getLineCount()
+                * panel.recommendationBody.getFontMetrics(panel.recommendationBody.getFont()).getHeight());
     }
 
     private static OsrsStrategistPanel panel()
@@ -102,7 +102,7 @@ public class PrimarySidebarMethodPresentationTest
                 "Bring the carried raw fish",
                 "Barbarian Village river / permanent fire",
                 null,
-                MethodBankingBehavior.LOCAL_PROCESSING).withProgress("19 → 20");
+                BankingMode.LOCAL_PROCESSING).withProgress("19 → 20");
         return new Recommendation(
                 "skill:cooking",
                 "Train Cooking to 20",
@@ -113,6 +113,6 @@ public class PrimarySidebarMethodPresentationTest
                 19,
                 20,
                 guidance,
-                SafetyEvidence.skill(true, Skill.COOKING));
+                Safety.skill(true, Skill.COOKING));
     }
 }

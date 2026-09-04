@@ -1,45 +1,24 @@
 package compass;
+import lombok.*;
+import static net.runelite.api.Skill.*;
 import static compass.Text.get;
 
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.Skill;
+import javax.inject.*;
+import net.runelite.api.*;
 
 /**
  * Conservative first-pass readiness for every boss identity RuneLite exposes.
  * Exact encounter modules can override these broad floors with better evidence.
  */
 @Singleton
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC, onConstructor_ = @Inject)
 public class PvmReadinessAnalyzer
 {
     private final PvmActivityCatalog catalog;
     private final PvmEvidenceProfileCatalog evidenceProfiles;
     private final PvmPreparationProfileCatalog preparationProfiles;
-
-    public PvmReadinessAnalyzer(PvmActivityCatalog catalog)
-    {
-        this(catalog, new PvmEvidenceProfileCatalog(),
-                new PvmPreparationProfileCatalog());
-    }
-
     @Inject
-    public PvmReadinessAnalyzer(PvmActivityCatalog catalog,
-            PvmEvidenceProfileCatalog evidenceProfiles)
-    {
-        this(catalog, evidenceProfiles, new PvmPreparationProfileCatalog());
-    }
-
-    public PvmReadinessAnalyzer(PvmActivityCatalog catalog,
-            PvmEvidenceProfileCatalog evidenceProfiles,
-            PvmPreparationProfileCatalog preparationProfiles)
-    {
-        this.catalog = catalog;
-        this.evidenceProfiles = evidenceProfiles;
-        this.preparationProfiles = preparationProfiles;
-    }
-
     public PvmSnapshot analyze(
             AccountSnapshot account,
             QuestSnapshot quests,
@@ -63,11 +42,11 @@ public class PvmReadinessAnalyzer
         if (account == null) return observed;
         var mode = AccountMode.fromTypeCode(account.modeCode());
         Map<String, PvmReadiness> result = new HashMap<>();
-        for (PvmActivityDefinition activity : catalog.all())
+        for (PvmActivity activity : catalog.all())
         {
             var prior = priorFor(observed, activity.id);
             if (prior != null
-                    && prior.getConfidence() == Confidence.BLOCKED)
+                    && prior.confidence == Confidence.BLOCKED)
             {
                 result.put(activity.id, prior);
                 continue;
@@ -87,21 +66,21 @@ public class PvmReadinessAnalyzer
             // Exact profiles are recomputed from current carried state so a
             // preparation -> ready transition cannot retain stale failures.
             if (exact == null && prior != null)
-                missing.addAll(prior.getMissingRequirements());
+                missing.addAll(prior.missingRequirements);
 
-            requireLevel(account, Skill.ATTACK, preparation.getAttack(), missing);
-            requireLevel(account, Skill.STRENGTH, preparation.getStrength(), missing);
-            requireLevel(account, Skill.DEFENCE, preparation.getDefence(), missing);
-            requireLevel(account, Skill.RANGED, preparation.getRanged(), missing);
-            requireLevel(account, Skill.MAGIC, preparation.getMagic(), missing);
-            requireLevel(account, Skill.PRAYER, preparation.getPrayer(), missing);
-            requireLevel(account, Skill.SLAYER, preparation.getSlayer(), missing);
+            requireLevel(account, ATTACK, preparation.getAttack(), missing);
+            requireLevel(account, STRENGTH, preparation.getStrength(), missing);
+            requireLevel(account, DEFENCE, preparation.getDefence(), missing);
+            requireLevel(account, RANGED, preparation.getRanged(), missing);
+            requireLevel(account, MAGIC, preparation.getMagic(), missing);
+            requireLevel(account, PRAYER, preparation.getPrayer(), missing);
+            requireLevel(account, SLAYER, preparation.getSlayer(), missing);
 
-            if (preparation.getRequiredQuest() != null
-                    && !questUsable(quests, preparation.getRequiredQuest(),
+            if (preparation.requiredQuest != null
+                    && !questUsable(quests, preparation.requiredQuest,
                     preparation.isQuestMayBeInProgress()))
             {
-                missing.add("Quest/access: " + preparation.getRequiredQuest());
+                missing.add("Quest/access: " + preparation.requiredQuest);
             }
 
             String requiredStyle = exact == null ? preparation.getPreferredStyle()
@@ -192,7 +171,7 @@ public class PvmReadinessAnalyzer
         for (ItemState item : items)
         {
             // Persisted snapshots without slot provenance cannot prove a readied weapon.
-            if (item.getSlotIndex() != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;
+            if (item.slotIndex != EquipmentInventorySlot.WEAPON.getSlotIdx()) continue;
             var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             melee |= containsAny(name, "scimitar", "sword", "whip", "mace", "axe",
                     "halberd", "spear", "hasta", "fang", "scythe", "maul", "bludgeon", "lance");
@@ -225,11 +204,11 @@ public class PvmReadinessAnalyzer
                 "javelin", "chinchompa");
         if (equipment != null)
             for (ItemState item : equipment.getEquippedItems())
-                if (item.getSlotIndex() == EquipmentInventorySlot.AMMO.getSlotIdx()
+                if (item.slotIndex == EquipmentInventorySlot.AMMO.getSlotIdx()
                         && containsAny(item.getName() == null ? ""
                         : item.getName().toLowerCase(Locale.ROOT),
                         "arrow", "bolt", "dart", "javelin"))
-                    quantity += item.getQuantity();
+                    quantity += item.quantity;
         return quantity;
     }
 
@@ -243,9 +222,9 @@ public class PvmReadinessAnalyzer
     {
         if (carriedRuneQuantity(inventory) > 0) return true;
         return storage != null
-                && storage.verified(StorageCapability.RUNE_POUCH)
-                && storage.hasObservedContents(StorageCapability.RUNE_POUCH)
-                && !storage.contentsOf(StorageCapability.RUNE_POUCH).isEmpty();
+                && storage.verified(StorageKind.RUNE_POUCH)
+                && storage.hasObservedContents(StorageKind.RUNE_POUCH)
+                && !storage.contentsOf(StorageKind.RUNE_POUCH).isEmpty();
     }
 
     private static void addMissing(List<String> missing, String requirement)
@@ -261,7 +240,7 @@ public class PvmReadinessAnalyzer
         for (ItemState item : inventory.getItems())
         {
             var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
-            if (containsAny(name, terms)) total += Math.max(0, item.getQuantity());
+            if (containsAny(name, terms)) total += Math.max(0, item.quantity);
         }
         return total;
     }

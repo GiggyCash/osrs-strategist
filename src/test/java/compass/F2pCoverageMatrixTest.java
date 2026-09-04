@@ -59,7 +59,7 @@ public class F2pCoverageMatrixTest
                     if (method.supportsLevel(level)
                             && metadata.isFreeToPlayAllowed()
                             && ContentAccessRules.isMethodAvailable(
-                                    method, MembershipStatus.F2P))
+                                    method, Membership.F2P))
                     {
                         found = true;
                         break;
@@ -99,7 +99,7 @@ public class F2pCoverageMatrixTest
                         ContentAccessRules.isFreeToPlaySkill(method.getSkill()));
                 assertTrue(method.getId() + " is F2P-tagged but access rules reject it",
                         ContentAccessRules.isMethodAvailable(
-                                method, MembershipStatus.F2P));
+                                method, Membership.F2P));
             }
         }
     }

@@ -20,25 +20,25 @@ public class PlayerFacingScenarioQualityTest
     public void representativeAccountsAlwaysReceiveAConcreteDoNext()
     {
         List<Scenario> scenarios = new ArrayList<>();
-        scenarios.add(new Scenario("fresh F2P Main", MembershipStatus.F2P, 0,
+        scenarios.add(new Scenario("fresh F2P Main", Membership.F2P, 0,
                 1, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME));
-        scenarios.add(new Scenario("low-level F2P Main", MembershipStatus.F2P, 0,
+        scenarios.add(new Scenario("low-level F2P Main", Membership.F2P, 0,
                 29, StrategyMode.BALANCED, SessionIntent.QUICK_20_MIN));
-        scenarios.add(new Scenario("fresh P2P Main", MembershipStatus.P2P, 0,
+        scenarios.add(new Scenario("fresh P2P Main", Membership.P2P, 0,
                 1, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME));
-        scenarios.add(new Scenario("midgame Main", MembershipStatus.P2P, 0,
+        scenarios.add(new Scenario("midgame Main", Membership.P2P, 0,
                 60, StrategyMode.EFFICIENT, SessionIntent.ONE_HOUR));
-        scenarios.add(new Scenario("fresh Ironman", MembershipStatus.P2P, 1,
+        scenarios.add(new Scenario("fresh Ironman", Membership.P2P, 1,
                 1, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME));
-        scenarios.add(new Scenario("midgame Ironman", MembershipStatus.P2P, 1,
+        scenarios.add(new Scenario("midgame Ironman", Membership.P2P, 1,
                 60, StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION));
-        scenarios.add(new Scenario("GIM", MembershipStatus.P2P, 4,
+        scenarios.add(new Scenario("GIM", Membership.P2P, 4,
                 45, StrategyMode.BALANCED, SessionIntent.ONE_HOUR));
-        scenarios.add(new Scenario("UIM", MembershipStatus.P2P, 2,
+        scenarios.add(new Scenario("UIM", Membership.P2P, 2,
                 45, StrategyMode.BALANCED, SessionIntent.QUICK_20_MIN));
-        scenarios.add(new Scenario("HCIM", MembershipStatus.P2P, 3,
+        scenarios.add(new Scenario("HCIM", Membership.P2P, 3,
                 45, StrategyMode.RELAXED, SessionIntent.AFK));
-        scenarios.add(new Scenario("unknown membership", MembershipStatus.UNKNOWN, 0,
+        scenarios.add(new Scenario("unknown membership", Membership.UNKNOWN, 0,
                 1, StrategyMode.RELAXED, SessionIntent.AFK));
 
         StrategyEngine engine = engine();
@@ -65,13 +65,11 @@ public class PlayerFacingScenarioQualityTest
     {
         TrainingMethodSelector selector = new TrainingMethodSelector(
                 new TrainingMethodDatabase(),
-                new RequirementEvidenceEngine(
-                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
-                        new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+                new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
                 new ExpandedTrainingMethodCatalog(),
                 new F2pBaselineMethodCatalog(),
                 new TrainingMethodPolicy());
-        return new StrategyEngine(new RecommendationEngine(selector), null,
+        return TestFixtures.strategyEngine(TestFixtures.recommendationEngine(selector), null,
                 null, null, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
@@ -96,7 +94,7 @@ public class PlayerFacingScenarioQualityTest
                 scenario.name, 100L + scenario.type, scenario.type,
                 AccountMode.fromTypeCode(scenario.type).name(),
                 scenario.membership,
-                scenario.membership == MembershipStatus.P2P ? 1 : 0,
+                scenario.membership == Membership.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
         GameData.Builder builder = GameData.builder(account)
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -109,13 +107,13 @@ public class PlayerFacingScenarioQualityTest
     private static final class Scenario
     {
         private final String name;
-        private final MembershipStatus membership;
+        private final Membership membership;
         private final int type;
         private final int level;
         private final StrategyMode mode;
         private final SessionIntent session;
 
-        private Scenario(String name, MembershipStatus membership, int type,
+        private Scenario(String name, Membership membership, int type,
                 int level, StrategyMode mode, SessionIntent session)
         {
             this.name = name;

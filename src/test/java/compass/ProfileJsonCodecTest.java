@@ -19,7 +19,6 @@ public class ProfileJsonCodecTest
                 "{\"skill:mining\":1.5}").get("skill:mining"), 0.0);
         assertEquals(Long.valueOf(1234), ProfileJsonCodec.longs(gson,
                 "{\"quest:test\":1234}").get("quest:test"));
-        assertTrue(ProfileJsonCodec.integers(gson, "[1,2,3]").contains(2));
 
         Map<String, TimedScoreAdjustment> timed =
                 ProfileJsonCodec.timedAdjustments(gson,
@@ -36,7 +35,7 @@ public class ProfileJsonCodecTest
                         "{\"falador-herb\":{"
                                 + "\"state\":\"READY\","
                                 + "\"observedAtMillis\":8000}}");
-        assertEquals(FarmingPatchCycleState.READY,
+        assertEquals(PatchState.READY,
                 farming.get("falador-herb").getState());
     }
 
@@ -45,7 +44,6 @@ public class ProfileJsonCodecTest
     {
         assertTrue(ProfileJsonCodec.doubles(gson, "not-json").isEmpty());
         assertTrue(ProfileJsonCodec.longs(gson, "[]").isEmpty());
-        assertTrue(ProfileJsonCodec.integers(gson, "{}").isEmpty());
         assertTrue(ProfileJsonCodec.timedAdjustments(gson,
                 "{\"bad\":{\"scoreDelta\":\"x\"}}").isEmpty());
         Map<String, ObservedFarmingPatchState> farming =

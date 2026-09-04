@@ -1,8 +1,10 @@
 package compass;
+import static java.lang.Math.*;
+import lombok.*;
+import static java.util.Collections.*;
 
 import java.util.*;
 import java.util.function.Predicate;
-import lombok.Getter;
 
 /**
  * Observed contents of an inventory-like container.  The optional timestamp
@@ -52,17 +54,17 @@ public final class ItemsState
     private ItemsState(List<ItemState> values, boolean observed, long time,
             boolean completeSlots, boolean expires)
     {
-        this.items = Collections.unmodifiableList(new ArrayList<>(
-                values == null ? Collections.emptyList() : values));
+        this.items = unmodifiableList(new ArrayList<>(
+                values == null ? emptyList() : values));
         this.observed = observed;
-        this.capturedAtMillis = Math.max(0L, time);
+        this.capturedAtMillis = max(0L, time);
         this.completeSlotObservation = completeSlots;
         this.expires = expires;
     }
 
     public static ItemsState unknown()
     {
-        return new ItemsState(false, Collections.emptyList(), 0L);
+        return new ItemsState(false, emptyList(), 0L);
     }
 
     public List<ItemState> getEquippedItems() { return items; }
@@ -81,8 +83,8 @@ public final class ItemsState
     {
         var total = 0;
         for (ItemState item : items)
-            if (item != null && item.getItemId() == itemId)
-                total += item.getQuantity();
+            if (item != null && item.itemId == itemId)
+                total += item.quantity;
         return total;
     }
 
@@ -92,7 +94,7 @@ public final class ItemsState
         if (itemIds == null) return total;
         for (ItemState item : items)
             if (item != null) for (int id : itemIds)
-                if (item.getItemId() == id) total += item.getQuantity();
+                if (item.itemId == id) total += item.quantity;
         return total;
     }
 
@@ -111,7 +113,7 @@ public final class ItemsState
         for (ItemState item : items)
             if (item != null && item.getName() != null
                     && nameTest.test(item.getName().toLowerCase(Locale.ROOT)))
-                total += Math.max(0, item.getQuantity());
+                total += max(0, item.quantity);
         return total;
     }
 
@@ -124,7 +126,7 @@ public final class ItemsState
     {
         if (items != null)
             for (ItemState item : items)
-                if (item != null && item.getSlotIndex() >= 0) return true;
+                if (item != null && item.slotIndex >= 0) return true;
         return false;
     }
 }

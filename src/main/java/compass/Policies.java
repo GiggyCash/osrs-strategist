@@ -1,9 +1,9 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
 
 import java.util.*;
-import java.util.Set;
 import javax.inject.Singleton;
-import lombok.Getter;
 import net.runelite.api.Skill;
 import static compass.Text.get;
 
@@ -22,7 +22,7 @@ final class AccountBuildPolicy
     public static RestrictedBuildSuggestion detect(AccountSnapshot account)
     {
         if (account == null)
-            return build(RestrictedBuildType.STANDARD,
+            return build(BuildType.STANDARD,
                     Confidence.CHECK_NEEDED, get(1206));
 
         var attack = account.level(Skill.ATTACK);
@@ -34,63 +34,63 @@ final class AccountBuildPolicy
         var hp = account.level(Skill.HITPOINTS);
         var highNonCombat = nonCombatExtreme(account, true);
         var lowNonCombat = nonCombatExtreme(account, false);
-        int offence = Math.max(Math.max(attack, strength),
-                Math.max(ranged, magic));
-        var combat = Math.max(Math.max(offence, defence), prayer);
+        int offence = max(max(attack, strength),
+                max(ranged, magic));
+        var combat = max(max(offence, defence), prayer);
         boolean baselineOffence = attack <= 1 && strength <= 1
                 && ranged <= 1 && magic <= 1;
 
         if (baselineOffence && defence <= 1 && prayer <= 1 && hp <= 10
                 && highNonCombat >= 20)
-            return verified(account.membership() != MembershipStatus.P2P
-                    ? RestrictedBuildType.F2P_SKILLER
-                    : RestrictedBuildType.SKILLER, get(583));
+            return verified(account.membership() != Membership.P2P
+                    ? BuildType.F2P_SKILLER
+                    : BuildType.SKILLER, get(583));
         if (baselineOffence && defence <= 1 && hp <= 10 && prayer >= 15
                 && highNonCombat >= 20)
-            return verified(RestrictedBuildType.PRAYER_SKILLER, get(590));
+            return verified(BuildType.PRAYER_SKILLER, get(590));
         if (lowNonCombat <= 1 && highNonCombat <= 1 && combat >= 40)
-            return verified(RestrictedBuildType.COMBAT_ONLY, get(591));
+            return verified(BuildType.COMBAT_ONLY, get(591));
         if (baselineOffence && defence >= 20)
-            return verified(RestrictedBuildType.DEFENCE_PURE, get(592));
+            return verified(BuildType.DEFENCE_PURE, get(592));
         if (hp <= 10 && (ranged >= 20 || magic >= 20 || prayer >= 20
                 || highNonCombat >= 50))
-            return verified(RestrictedBuildType.TEN_HITPOINTS, get(593));
+            return verified(BuildType.TEN_HITPOINTS, get(593));
         if (attack <= 1 && defence <= 1 && strength >= 50)
-            return verified(RestrictedBuildType.OBSIDIAN_MAULER, get(594));
+            return verified(BuildType.OBSIDIAN_MAULER, get(594));
         if (defence <= 1 && offence >= 40)
-            return verified(RestrictedBuildType.ONE_DEFENCE_PURE, get(595));
+            return verified(BuildType.ONE_DEFENCE_PURE, get(595));
 
         if (offence >= 50)
         {
             if (defence >= 2 && defence <= 13)
-                return verified(RestrictedBuildType.LOW_DEFENCE_PURE,
+                return verified(BuildType.LOW_DEFENCE_PURE,
                         get(596));
             if (defence <= 20)
-                return verified(RestrictedBuildType.INITIATE_PURE, get(597));
+                return verified(BuildType.INITIATE_PURE, get(597));
             if (defence >= 39 && defence <= 40)
-                return verified(RestrictedBuildType.RUNE_PURE, get(584));
+                return verified(BuildType.RUNE_PURE, get(584));
             if (defence <= 42 && defence >= 41)
-                return verified(RestrictedBuildType.VOID_PURE, get(585));
+                return verified(BuildType.VOID_PURE, get(585));
             if (defence >= 43 && defence <= 45 && attack >= 50 && strength >= 50)
-                return verified(RestrictedBuildType.ZERKER, get(586));
+                return verified(BuildType.ZERKER, get(586));
         }
         if (defence >= 70 && ranged >= 80 && magic >= 70
                 && attack <= 60 && strength <= 70)
-            return build(RestrictedBuildType.RANGE_TANK,
+            return build(BuildType.RANGE_TANK,
                     Confidence.CHECK_NEEDED, get(587));
         if (lowNonCombat <= 1 && highNonCombat <= 5 && combat >= 30)
-            return build(RestrictedBuildType.COMBAT_ONLY,
+            return build(BuildType.COMBAT_ONLY,
                     Confidence.CHECK_NEEDED, get(588));
-        return verified(RestrictedBuildType.STANDARD, get(589));
+        return verified(BuildType.STANDARD, get(589));
     }
 
     private static RestrictedBuildSuggestion verified(
-            RestrictedBuildType type, String evidence)
+            BuildType type, String evidence)
     {
         return build(type, Confidence.VERIFIED, evidence);
     }
 
-    private static RestrictedBuildSuggestion build(RestrictedBuildType type,
+    private static RestrictedBuildSuggestion build(BuildType type,
             Confidence confidence, String evidence)
     {
         return new RestrictedBuildSuggestion(type, confidence, evidence);
@@ -102,8 +102,8 @@ final class AccountBuildPolicy
         var value = highest ? 1 : Integer.MAX_VALUE;
         for (Skill skill : Skill.values())
             if (!isCombatProgressionSkill(skill))
-                value = highest ? Math.max(value, account.level(skill))
-                        : Math.min(value, account.level(skill));
+                value = highest ? max(value, account.level(skill))
+                        : min(value, account.level(skill));
         return value == Integer.MAX_VALUE ? 1 : value;
     }
 
@@ -112,12 +112,12 @@ final class AccountBuildPolicy
      * CHECK_NEEDED suggestions remain STANDARD until the player confirms them in
      * a future explicit build setting.
      */
-    public static RestrictedBuildType effectiveBuild(AccountSnapshot account)
+    public static BuildType effectiveBuild(AccountSnapshot account)
     {
         var suggestion = detect(account);
-        if (suggestion.getConfidence() != Confidence.VERIFIED)
+        if (suggestion.confidence != Confidence.VERIFIED)
         {
-            return RestrictedBuildType.STANDARD;
+            return BuildType.STANDARD;
         }
         return suggestion.getType();
     }
@@ -205,7 +205,7 @@ final class AccountBuildPolicy
         var build = effectiveBuild(account);
         var id = method.id == null ? "" : method.id.toLowerCase();
 
-        if (build == RestrictedBuildType.TEN_HITPOINTS)
+        if (build == BuildType.TEN_HITPOINTS)
         {
             if (method.getSkill() == Skill.MAGIC)
             {
@@ -220,9 +220,9 @@ final class AccountBuildPolicy
             return !isHpGeneratingCombatSkill(method.getSkill());
         }
 
-        if ((build == RestrictedBuildType.SKILLER
-                || build == RestrictedBuildType.F2P_SKILLER
-                || build == RestrictedBuildType.PRAYER_SKILLER)
+        if ((build == BuildType.SKILLER
+                || build == BuildType.F2P_SKILLER
+                || build == BuildType.PRAYER_SKILLER)
                 && isHpGeneratingCombatSkill(method.getSkill()))
         {
             return false;
@@ -253,7 +253,7 @@ final class AccountBuildPolicy
             case COMBAT_ONLY:
                 // Combat-only can use gear normally. The fall-through is split
                 // below to keep the restricted non-aggressor builds explicit.
-                return build == RestrictedBuildType.COMBAT_ONLY;
+                return build == BuildType.COMBAT_ONLY;
 
             case ONE_DEFENCE_PURE:
             case OBSIDIAN_MAULER:
@@ -281,8 +281,8 @@ final class AccountBuildPolicy
                 return id.contains("defence-pure") || id.contains("tank");
 
             case RANGE_TANK:
-                return entry.getStyle() == CombatStyle.RANGED
-                        || entry.getStyle() == CombatStyle.MAGIC
+                return entry.style == CombatStyle.RANGED
+                        || entry.style == CombatStyle.MAGIC
                         || id.contains("tank");
 
             case MED_BUILD:
@@ -325,7 +325,7 @@ final class AccountBuildPolicy
                 || skill == Skill.SLAYER;
     }
 
-    private static String pretty(RestrictedBuildType type)
+    private static String pretty(BuildType type)
     {
         var text = type.name().toLowerCase().replace('_', ' ');
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
@@ -394,13 +394,13 @@ class ActionabilityPolicy
     public boolean canLeadQueue(Recommendation recommendation)
     {
         if (recommendation == null
-                || recommendation.getConfidence() == Confidence.BLOCKED)
+                || recommendation.confidence == Confidence.BLOCKED)
         {
             return false;
         }
 
         var plan = recommendation.plan();
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
         if (plan == null)
@@ -409,9 +409,9 @@ class ActionabilityPolicy
             // they can displace a concrete training action. The one exception
             // is an explicitly typed preparation/verification action whose
             // remaining work is fully described by the quality contract.
-            return (recommendation.getConfidence()
+            return (recommendation.confidence
                         == Confidence.VERIFIED
-                    || (recommendation.getConfidence()
+                    || (recommendation.confidence
                         == Confidence.CHECK_NEEDED
                         && isExplicitPreparation(recommendation)))
                     && guidance != null && hasText(guidance.getAction());
@@ -423,7 +423,7 @@ class ActionabilityPolicy
             return false;
         }
 
-        if (recommendation.getConfidence() == Confidence.VERIFIED)
+        if (recommendation.confidence == Confidence.VERIFIED)
         {
             return !RequirementActionability.hasHardUnresolvedRequirement(plan);
         }
@@ -436,7 +436,7 @@ class ActionabilityPolicy
     public boolean mayAppearAsAlternative(Recommendation recommendation)
     {
         if (recommendation == null
-                || recommendation.getConfidence() == Confidence.BLOCKED)
+                || recommendation.confidence == Confidence.BLOCKED)
         {
             return false;
         }
@@ -444,7 +444,7 @@ class ActionabilityPolicy
 
         if (!qualityPolicy.isPresentable(recommendation)) return false;
 
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         var plan = recommendation.plan();
 
         // A secondary card still needs to tell the player something useful.
@@ -453,7 +453,7 @@ class ActionabilityPolicy
         if (plan == null)
         {
             return guidance != null && hasText(guidance.getAction())
-                    && (recommendation.getConfidence()
+                    && (recommendation.confidence
                             == Confidence.VERIFIED
                         || isExplicitPreparation(recommendation));
         }
@@ -502,20 +502,20 @@ class CandidateSafetyPolicy
         var account = context.data().account();
         if (AccountMode.fromTypeCode(account.modeCode())
                     == AccountMode.ULTIMATE_IRONMAN
-                && (recommendation.getSafetyEvidence()
+                && (recommendation.safetyEvidence
                         .isConventionalBankRequired()
-                    || recommendation.getSafetyEvidence()
+                    || recommendation.safetyEvidence
                         .hasUnverifiedDangerousStorage()
-                    || recommendation.getGuidance() != null
-                        && recommendation.getGuidance().getBankingBehavior()
-                            == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP))
+                    || recommendation.guidance != null
+                        && recommendation.guidance.bankingBehavior
+                            == BankingMode.CONVENTIONAL_BANK_LOOP))
             return false;
-        if (recommendation.getSafetyEvidence().hasInvalidCurrentExecution())
+        if (recommendation.safetyEvidence.hasInvalidCurrentExecution())
             return false;
-        return isAllowed(recommendation.getSafetyEvidence(), account);
+        return isAllowed(recommendation.safetyEvidence, account);
     }
 
-    public boolean isAllowed(SafetyEvidence evidence,
+    public boolean isAllowed(Safety evidence,
             StrategyContext context)
     {
         if (evidence == null || context == null || context.data() == null
@@ -523,7 +523,7 @@ class CandidateSafetyPolicy
         return isAllowed(evidence, context.data().account());
     }
 
-    private static boolean isAllowed(SafetyEvidence evidence,
+    private static boolean isAllowed(Safety evidence,
             AccountSnapshot account)
     {
 
@@ -531,8 +531,8 @@ class CandidateSafetyPolicy
 
         // Unannotated content is never assumed F2P-safe. This is the final
         // protection against a new provider forgetting its early access filter.
-        if (account.membership() != MembershipStatus.P2P
-                && evidence.getAccess() != SafetyEvidence.Access.F2P_SAFE)
+        if (account.membership() != Membership.P2P
+                && evidence.getAccess() != Safety.Access.F2P_SAFE)
         {
             return false;
         }
@@ -541,9 +541,9 @@ class CandidateSafetyPolicy
         if ((mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && (evidence.getBuildEffect()
-                == SafetyEvidence.BuildEffect.POTENTIALLY_IRREVERSIBLE
+                == Safety.BuildEffect.POTENTIALLY_IRREVERSIBLE
                 || evidence.getBuildEffect()
-                == SafetyEvidence.BuildEffect.UNKNOWN))
+                == Safety.BuildEffect.UNKNOWN))
         {
             // When the candidate cannot prove its risk/build effects, preserving
             // a Hardcore life takes precedence over provider score.
@@ -551,8 +551,8 @@ class CandidateSafetyPolicy
         }
 
         var suggestion = AccountBuildPolicy.detect(account);
-        if (suggestion.getConfidence() == Confidence.VERIFIED
-                && suggestion.getType() == RestrictedBuildType.STANDARD)
+        if (suggestion.confidence == Confidence.VERIFIED
+                && suggestion.getType() == BuildType.STANDARD)
         {
             return true;
         }
@@ -594,10 +594,10 @@ final class QuestMembershipPolicy
     {
     }
 
-    public static boolean isAvailable(String questName, MembershipStatus membership)
+    public static boolean isAvailable(String questName, Membership membership)
     {
         if (questName == null || questName.trim().isEmpty()) return false;
-        if (membership == MembershipStatus.P2P) return true;
+        if (membership == Membership.P2P) return true;
         return FREE_TO_PLAY_QUESTS.contains(normalize(questName));
     }
 
@@ -631,22 +631,22 @@ final class RecommendationQualityPolicy
 
     boolean isPresentable(Recommendation recommendation)
     {
-        if (recommendation == null || !hasText(recommendation.getTitle())) return false;
-        if (isGenericTitle(recommendation.getTitle()))
+        if (recommendation == null || !hasText(recommendation.title)) return false;
+        if (isGenericTitle(recommendation.title))
             return false;
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         if (guidance == null || !hasText(guidance.getAction())) return false;
         if (containsAny(guidance.getAction(), GENERIC_ACTIONS)) return false;
-        if (containsAny(guidance.getLocation(), GENERIC_ACTIONS)) return false;
-        if (containsAny(guidance.getLocation(), GENERIC_LOCATIONS)) return false;
-        if (containsAny(guidance.getSupplies(), UNRESOLVED_SUPPLIES)) return false;
+        if (containsAny(guidance.location, GENERIC_ACTIONS)) return false;
+        if (containsAny(guidance.location, GENERIC_LOCATIONS)) return false;
+        if (containsAny(guidance.supplies, UNRESOLVED_SUPPLIES)) return false;
 
         var plan = recommendation.plan();
         if (plan != null)
         {
             if (plan.method() == null
                     || !hasText(plan.method().getName())
-                    || !hasText(guidance.getLocation())) return false;
+                    || !hasText(guidance.location)) return false;
             if (containsAny(plan.method().getName(), GENERIC_ACTIONS))
             {
                 return false;
@@ -752,80 +752,6 @@ final class RestrictedQuestPolicy
     }
 }
 
-/** Single access boundary for optional hosted capabilities; local safety is unconditional. */
-@Singleton
-class StrategistFeatureAccessPolicy
-{
-    public boolean canUse(Feature feature, Snapshot entitlement)
-    {
-        return feature != null && (feature.isCoreLocal()
-                || entitlement != null && entitlement.has(feature));
-    }
-
-    public void requireHosted(Feature feature, Snapshot entitlement)
-    {
-        if (feature == null || feature.isCoreLocal())
-            throw new IllegalArgumentException(Text.get(730));
-        if (!canUse(feature, entitlement))
-            throw new HostedFeatureUnavailableException(feature);
-    }
-
-    public enum Feature
-    {
-        CORE_PLANNER(false), LOCAL_PROFILE_MEMORY(false),
-        LOCAL_METHOD_GUIDANCE(false), LOCAL_BUILD_SAFETY(false),
-        LOCAL_RESOURCE_PLANNING(false), LOCAL_RECOMMENDATION_HISTORY(false),
-        CLOUD_PROFILE_SYNC(true), CROSS_DEVICE_HISTORY(true),
-        GIM_TEAM_PLANNING(true), REMOTE_REMINDERS(true), WEB_DASHBOARD(true),
-        ONLINE_REASONING(true), ADVANCED_CLOUD_ANALYTICS(true);
-
-        @Getter private final boolean hostedPremium;
-        Feature(boolean hosted) { hostedPremium = hosted; }
-        public boolean isCoreLocal() { return !hostedPremium; }
-    }
-
-    @Getter
-    public static final class Snapshot
-    {
-        private final Set<Feature> hostedFeatures;
-        private final Confidence confidence;
-        private final String source;
-
-        public Snapshot(Set<Feature> features, Confidence confidence, String source)
-        {
-            var copy = EnumSet.noneOf(Feature.class);
-            if (features != null) for (Feature feature : features)
-                if (feature != null && feature.isHostedPremium()) copy.add(feature);
-            hostedFeatures = Collections.unmodifiableSet(copy);
-            this.confidence = confidence == null ? Confidence.CHECK_NEEDED : confidence;
-            this.source = source == null ? "unknown" : source;
-        }
-
-        public static Snapshot none()
-        {
-            return new Snapshot(Collections.emptySet(), Confidence.CHECK_NEEDED,
-                    "not-connected");
-        }
-
-        boolean has(Feature feature)
-        {
-            return confidence == Confidence.VERIFIED
-                    && feature.isHostedPremium() && hostedFeatures.contains(feature);
-        }
-    }
-
-    public static final class HostedFeatureUnavailableException
-            extends IllegalStateException
-    {
-        @Getter private final Feature feature;
-        HostedFeatureUnavailableException(Feature feature)
-        {
-            super(Text.get(731) + feature);
-            this.feature = feature;
-        }
-    }
-}
-
 /** Account-mode, restricted-build, and play-style guardrails for training methods. */
 @Singleton
 class TrainingMethodPolicy
@@ -841,8 +767,8 @@ class TrainingMethodPolicy
         AccountMode mode = account == null
                 ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(account.modeCode());
-        MembershipStatus membership = account == null
-                ? MembershipStatus.UNKNOWN
+        Membership membership = account == null
+                ? Membership.UNKNOWN
                 : account.membership();
 
         if (!AccountBuildPolicy.allowsMethod(account, method)) return false;
@@ -850,34 +776,34 @@ class TrainingMethodPolicy
         // UNKNOWN membership is intentionally treated like F2P here. The route
         // can widen as soon as membership is verified, but it can never leak a
         // members-only method into an F2P account during a transient read.
-        if (membership != MembershipStatus.P2P
+        if (membership != Membership.P2P
                 && !metadata.isFreeToPlayAllowed())
         {
             return false;
         }
 
-        if (method.isWilderness() && !allowWildernessMethods) return false;
+        if (method.wilderness && !allowWildernessMethods) return false;
 
         if (mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
         {
-            if (method.isWilderness()
+            if (method.wilderness
                     || !metadata.isHardcoreSafe()
-                    || metadata.getRiskLevel() == RiskLevel.HIGH
-                    || metadata.getRiskLevel() == RiskLevel.IRREVERSIBLE)
+                    || metadata.riskLevel == RiskLevel.HIGH
+                    || metadata.riskLevel == RiskLevel.IRREVERSIBLE)
             {
                 return false;
             }
         }
 
         if (mode == AccountMode.ULTIMATE_IRONMAN
-                && !metadata.isUimFriendly())
+                && !metadata.uimFriendly)
         {
             return false;
         }
 
         if (AccountModePolicy.isRiskSensitive(mode)
-                && metadata.getRiskLevel() == RiskLevel.IRREVERSIBLE)
+                && metadata.riskLevel == RiskLevel.IRREVERSIBLE)
         {
             return false;
         }
@@ -905,8 +831,8 @@ class TrainingMethodPolicy
         // arbitrary Iron/UIM/method-cost bonuses over the knowledge model.
         if (AccountModePolicy.isRiskSensitive(mode))
         {
-            if (metadata.getRiskLevel() == RiskLevel.MEDIUM) score -= 5.0;
-            if (metadata.getRiskLevel() == RiskLevel.HIGH) score -= 10.0;
+            if (metadata.riskLevel == RiskLevel.MEDIUM) score -= 5.0;
+            if (metadata.riskLevel == RiskLevel.HIGH) score -= 10.0;
         }
         return score;
     }

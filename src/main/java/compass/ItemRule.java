@@ -1,31 +1,32 @@
 package compass;
+import lombok.*;
+import static java.util.Collections.*;
 
 import java.util.*;
 
-import lombok.Getter;
 
 /** A composable, local-evidence item requirement shared by planning systems. */
 @Getter
-public final class ItemRequirementExpression
+public final class ItemRule
 {
     public enum Kind { ITEM, ITEM_CLASS, CHECK_NEEDED, ALL_OF, ANY_OF }
 
-    private final Kind kind;
-    private final List<String> itemNames;
-    private final int quantity;
-    private final ItemQuantityMode quantityMode;
-    private final ItemRequirementScope scope;
-    private final ItemRequirementClass itemClass;
-    private final List<String> excludedItemNames;
-    private final String checkAction;
-    private final List<ItemRequirementExpression> children;
+    final Kind kind;
+    final List<String> itemNames;
+    final int quantity;
+    final ItemQuantityMode quantityMode;
+    final ItemRequirementScope scope;
+    final ItemRequirementClass itemClass;
+    final List<String> excludedItemNames;
+    final String checkAction;
+    final List<ItemRule> children;
 
-    private ItemRequirementExpression(Kind kind, List<String> itemNames,
+    ItemRule(Kind kind, List<String> itemNames,
             int quantity, ItemQuantityMode quantityMode,
             ItemRequirementScope scope,
             ItemRequirementClass itemClass, List<String> excludedItemNames,
             String checkAction,
-            List<ItemRequirementExpression> children)
+            List<ItemRule> children)
     {
         this.kind = kind;
         this.itemNames = immutable(itemNames);
@@ -36,74 +37,52 @@ public final class ItemRequirementExpression
         this.itemClass = itemClass;
         this.excludedItemNames = immutable(excludedItemNames);
         this.checkAction = checkAction == null ? "" : checkAction;
-        this.children = children == null ? Collections.emptyList()
-                : Collections.unmodifiableList(new ArrayList<>(children));
+        this.children = children == null ? emptyList()
+                : unmodifiableList(new ArrayList<>(children));
     }
 
-    public static ItemRequirementExpression item(String name, int quantity,
+    public static ItemRule item(String name, int quantity,
             ItemRequirementScope scope, String... substitutes)
     {
         List<String> names = new ArrayList<>();
         names.add(name);
         if (substitutes != null) names.addAll(Arrays.asList(substitutes));
-        return new ItemRequirementExpression(Kind.ITEM, names, quantity,
+        return new ItemRule(Kind.ITEM, names, quantity,
                 ItemQuantityMode.EXACT, scope,
                 null, null, null, null);
     }
-
-    public static ItemRequirementExpression itemAtLeast(String name, int quantity,
-            ItemRequirementScope scope, String... substitutes)
-    {
-        List<String> names = new ArrayList<>();
-        names.add(name);
-        if (substitutes != null) names.addAll(Arrays.asList(substitutes));
-        return new ItemRequirementExpression(Kind.ITEM, names, quantity,
-                ItemQuantityMode.AT_LEAST, scope, null, null, null, null);
-    }
-
-    public static ItemRequirementExpression itemClass(
+    public static ItemRule itemClass(
             ItemRequirementClass itemClass, int quantity,
             ItemRequirementScope scope, String... excludedItemNames)
     {
-        return new ItemRequirementExpression(Kind.ITEM_CLASS, null, quantity,
+        return new ItemRule(Kind.ITEM_CLASS, null, quantity,
                 ItemQuantityMode.EXACT, scope, itemClass, excludedItemNames == null
                         ? null : Arrays.asList(excludedItemNames), null, null);
     }
-
-    public static ItemRequirementExpression itemClassAtLeast(
-            ItemRequirementClass itemClass, int quantity,
-            ItemRequirementScope scope, String... excludedItemNames)
+    public static ItemRule checkNeeded(String action)
     {
-        return new ItemRequirementExpression(Kind.ITEM_CLASS, null, quantity,
-                ItemQuantityMode.AT_LEAST, scope, itemClass,
-                excludedItemNames == null ? null : Arrays.asList(excludedItemNames),
-                null, null);
-    }
-
-    public static ItemRequirementExpression checkNeeded(String action)
-    {
-        return new ItemRequirementExpression(Kind.CHECK_NEEDED, null, 1,
+        return new ItemRule(Kind.CHECK_NEEDED, null, 1,
                 ItemQuantityMode.EXACT, null,
                 null, null, action, null);
     }
 
-    public static ItemRequirementExpression allOf(ItemRequirementExpression... children)
+    public static ItemRule allOf(ItemRule... children)
     {
         return composite(Kind.ALL_OF, children);
     }
 
-    public static ItemRequirementExpression anyOf(ItemRequirementExpression... children)
+    public static ItemRule anyOf(ItemRule... children)
     {
         return composite(Kind.ANY_OF, children);
     }
 
-    private static ItemRequirementExpression composite(Kind kind,
-            ItemRequirementExpression... children)
+    static ItemRule composite(Kind kind,
+            ItemRule... children)
     {
-        return new ItemRequirementExpression(kind, null, 1,
+        return new ItemRule(kind, null, 1,
                 ItemQuantityMode.EXACT, null,
                 null, null, null,
-                children == null ? Collections.emptyList() : Arrays.asList(children));
+                children == null ? emptyList() : Arrays.asList(children));
     }
 
 
@@ -125,7 +104,7 @@ public final class ItemRequirementExpression
         }
         if (kind == Kind.CHECK_NEEDED) return checkAction;
         List<String> labels = new ArrayList<>();
-        for (ItemRequirementExpression child : children)
+        for (ItemRule child : children)
         {
             var label = child.label();
             if (child.kind != Kind.ITEM && child.kind != Kind.ITEM_CLASS
@@ -137,24 +116,24 @@ public final class ItemRequirementExpression
         return String.join(kind == Kind.ALL_OF ? " and " : " or ", labels);
     }
 
-    private static List<String> immutable(List<String> values)
+    static List<String> immutable(List<String> values)
     {
-        return values == null ? Collections.emptyList()
-                : Collections.unmodifiableList(new ArrayList<>(values));
+        return values == null ? emptyList()
+                : unmodifiableList(new ArrayList<>(values));
     }
 
-    private String quantityPrefix()
+    String quantityPrefix()
     {
         return (quantityMode == ItemQuantityMode.AT_LEAST ? "at least " : "")
                 + quantity + " × ";
     }
 
     /** Restores the immutable boundary after Gson hydrates bundled evidence. */
-    ItemRequirementExpression freeze()
+    ItemRule freeze()
     {
-        List<ItemRequirementExpression> frozen = new ArrayList<>();
-        for (ItemRequirementExpression child : children) frozen.add(child.freeze());
-        return new ItemRequirementExpression(kind, itemNames, quantity,
+        List<ItemRule> frozen = new ArrayList<>();
+        for (ItemRule child : children) frozen.add(child.freeze());
+        return new ItemRule(kind, itemNames, quantity,
                 quantityMode, scope, itemClass, excludedItemNames, checkAction,
                 frozen);
     }

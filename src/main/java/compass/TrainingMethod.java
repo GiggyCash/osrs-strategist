@@ -1,8 +1,8 @@
 package compass;
+import lombok.*;
 
 import java.util.*;
 
-import lombok.Getter;
 
 import net.runelite.api.Skill;
 
@@ -11,35 +11,35 @@ public final class TrainingMethod
     @Getter
     final String id;
     @Getter
-    private final Skill skill;
+    final Skill skill;
     @Getter
-    private final int minLevel;
+    final int minLevel;
     @Getter
-    private final int maxLevel;
+    final int maxLevel;
     @Getter
-    private final String name;
+    final String name;
     @Getter
-    private final String instructions;
-    private final double efficientScore;
-    private final double balancedScore;
-    private final double relaxedScore;
+    final String instructions;
+    final double efficientScore;
+    final double balancedScore;
+    final double relaxedScore;
     @Getter
-    private final AttentionLevel attentionLevel;
+    final AttentionLevel attentionLevel;
     @Getter
-    private final int minimumSessionMinutes;
+    final int minimumSessionMinutes;
     @Getter
-    private final int setupMinutes;
+    final int setupMinutes;
     @Getter
-    private final List<String> requirements;
+    final List<String> requirements;
     @Getter
-    private final Confidence confidence;
+    final Confidence confidence;
     @Getter
-    private final boolean membersOnly;
+    final boolean membersOnly;
     @Getter
-    private final boolean wilderness;
+    final boolean wilderness;
     @Getter
-    private final boolean progressionProtected;
-    private final boolean delegatesMethodChoice;
+    final boolean progressionProtected;
+    final boolean delegatesMethodChoice;
 
     public TrainingMethod(
             String id,

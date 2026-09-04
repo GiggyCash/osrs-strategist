@@ -1,10 +1,11 @@
 package compass;
+import lombok.*;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 
 /** Builds one immutable GameData from live and remembered evidence. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class StrategyDataAssembler
 {
     private final AccountReader accountReader;
@@ -26,61 +27,6 @@ public class StrategyDataAssembler
     private final ObservedStateStore observedStateStore;
     private String lastAccountIdentity;
     private Integer lastAccountTypeCode;
-
-    @Inject
-    public StrategyDataAssembler(
-            AccountReader accountReader,
-            LiveItemStateReader itemStateReader,
-            LiveRunePouchStateReader runePouchStateReader,
-            LiveQuestStateReader questStateReader,
-            LiveDiaryStateReader diaryStateReader,
-            LiveCombatAchievementReader combatAchievementReader,
-            LiveClueStateReader clueStateReader,
-            LiveSlayerStateReader slayerStateReader,
-            LivePohStateReader pohStateReader,
-            LiveSailingStateReader sailingStateReader,
-            LiveEconomyReader economyReader,
-            LiveCombatEvidenceReader combatEvidenceReader,
-            PvmReadinessAnalyzer pvmReadinessAnalyzer,
-            AccountAccessMemoryStore accessMemoryStore,
-            FarmingRunStateStore farmingRunStateStore,
-            FarmingAccessEvaluator farmingAccessEvaluator,
-            ObservedStateStore observedStateStore)
-    {
-        this.accountReader = accountReader;
-        this.itemStateReader = itemStateReader;
-        this.runePouchStateReader = runePouchStateReader;
-        this.questStateReader = questStateReader;
-        this.diaryStateReader = diaryStateReader;
-        this.combatAchievementReader = combatAchievementReader;
-        this.clueStateReader = clueStateReader;
-        this.slayerStateReader = slayerStateReader;
-        this.pohStateReader = pohStateReader;
-        this.sailingStateReader = sailingStateReader;
-        this.economyReader = economyReader;
-        this.combatEvidenceReader = combatEvidenceReader;
-        this.pvmReadinessAnalyzer = pvmReadinessAnalyzer;
-        this.accessMemoryStore = accessMemoryStore;
-        this.farmingRunStateStore = farmingRunStateStore;
-        this.farmingAccessEvaluator = farmingAccessEvaluator;
-        this.observedStateStore = observedStateStore;
-    }
-
-    /** Compatibility constructor for focused tests created before live readers/analyzers. */
-    public StrategyDataAssembler(
-            AccountReader accountReader,
-            LiveItemStateReader itemStateReader,
-            LiveQuestStateReader questStateReader,
-            AccountAccessMemoryStore accessMemoryStore,
-            FarmingRunStateStore farmingRunStateStore,
-            FarmingAccessEvaluator farmingAccessEvaluator,
-            ObservedStateStore observedStateStore)
-    {
-        this(accountReader, itemStateReader, null, questStateReader,
-                null, null, null, null, null, null, null, null, null,
-                accessMemoryStore, farmingRunStateStore,
-                farmingAccessEvaluator, observedStateStore);
-    }
 
     public synchronized GameData read()
     {
@@ -243,6 +189,6 @@ public class StrategyDataAssembler
     {
         if (account == null || !account.hasStableAccountIdentity()) return "";
         // This value is an internal equality key only. Never render or log it.
-        return Long.toUnsignedString(account.getAccountHash());
+        return Long.toUnsignedString(account.accountHash);
     }
 }

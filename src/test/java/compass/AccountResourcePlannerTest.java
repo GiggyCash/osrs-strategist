@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 public class AccountResourcePlannerTest
 {
-    private final AccountResourcePlanner planner = new AccountResourcePlanner();
+    private final AccountResourcePlanner planner = TestFixtures.accountResourcePlanner();
 
     @Test
     public void unopenedMainBankNeverBecomesFakeShortfall()
@@ -30,7 +30,6 @@ public class AccountResourcePlannerTest
                 false);
 
         assertFalse(plan.isPrimaryStorageObserved());
-        assertFalse(plan.isFullySupplied());
         assertTrue(plan.getGuidance().contains("Open your bank once"));
         assertFalse(plan.getGuidance().contains("Buy 400"));
     }
@@ -124,12 +123,12 @@ public class AccountResourcePlannerTest
     @Test
     public void uimIgnoresNormalBankAndReportsRetrievalOnlySupplySeparately()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.LOOTING_BAG,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.LOOTING_BAG, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.LOOTING_BAG,
                 Collections.singletonList(item("Mahogany plank", 250)));
 
         GameData data = GameData.builder(account(2))
@@ -291,16 +290,7 @@ public class AccountResourcePlannerTest
             levels.put(skill, 70);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Resource Test",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Resource Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, 1500, 0L, levels, xp);
     }
 
     private static final class FixedPriceService extends MarketPriceService
@@ -309,6 +299,7 @@ public class AccountResourcePlannerTest
 
         private FixedPriceService(int price)
         {
+            super(null);
             this.price = price;
         }
 

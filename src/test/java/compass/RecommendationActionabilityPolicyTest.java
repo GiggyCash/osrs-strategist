@@ -83,7 +83,7 @@ public class RecommendationActionabilityPolicyTest
                 method,
                 "test",
                 Confidence.CHECK_NEEDED,
-                java.util.Collections.singletonList(new RequirementCheck(
+                java.util.Collections.singletonList(new EvidenceCheck(
                         "bank",
                         "Open bank",
                         RequirementState.CHECK_NEEDED,

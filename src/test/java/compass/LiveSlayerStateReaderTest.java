@@ -22,7 +22,7 @@ public class LiveSlayerStateReaderTest
 
         SlayerSnapshot snapshot = reader.read();
 
-        assertEquals(SlayerAssignmentState.NO_TASK,
+        assertEquals(SlayerState.NO_TASK,
                 snapshot.getAssignmentState());
         assertEquals(190, snapshot.getPoints());
         assertEquals(Integer.valueOf(49), snapshot.getTaskStreak());
@@ -43,7 +43,7 @@ public class LiveSlayerStateReaderTest
         assertEquals(Integer.valueOf(6), snapshot.getBlockSlotCapacity());
         assertEquals("Krystilia", snapshot.getMasterName());
         assertEquals(Integer.valueOf(0), snapshot.getOccupiedBlockSlots());
-        assertEquals(CapabilityState.BLOCKED,
+        assertEquals(Capability.BLOCKED,
                 snapshot.getRewards().stateOf(SlayerReward.BIGGER_AND_BADDER));
     }
 
@@ -79,7 +79,7 @@ public class LiveSlayerStateReaderTest
         SlayerSnapshot snapshot = new LiveSlayerStateReader(
                 mortimerChoiceClient()).read();
 
-        assertEquals(SlayerAssignmentState.CHOICE_PENDING,
+        assertEquals(SlayerState.CHOICE_PENDING,
                 snapshot.getAssignmentState());
         assertEquals(2, snapshot.getTaskOffers().size());
         assertEquals("Dust devils",

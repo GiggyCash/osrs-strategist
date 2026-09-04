@@ -44,36 +44,36 @@ public class InfrastructureUnlockValueServiceTest
     public void sameCostumeRoomPropertiesAreMoreValuableForUimThanMain()
     {
         GameData mainData = costumeData(AccountMode.MAIN,
-                MembershipStatus.P2P, CapabilityState.BLOCKED);
+                Membership.P2P, Capability.BLOCKED);
         GameData uimData = costumeData(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P, CapabilityState.BLOCKED);
+                Membership.P2P, Capability.BLOCKED);
 
-        InfrastructureValueAssessment main = service.assess(
+        InfraAssessment main = service.assess(
                 catalog.get("poh-costume-room"),
                 priorities.assess(AccountMode.MAIN, mainData, false), mainData);
-        InfrastructureValueAssessment uim = service.assess(
+        InfraAssessment uim = service.assess(
                 catalog.get("poh-costume-room"),
                 priorities.assess(AccountMode.ULTIMATE_IRONMAN, uimData, false),
                 uimData);
 
         assertEquals(InfrastructureMilestoneState.ACTIONABLE, main.getState());
         assertEquals(InfrastructureMilestoneState.ACTIONABLE, uim.getState());
-        assertEquals(StrategicPriority.MODERATE, main.getStrategicValue());
-        assertEquals(StrategicPriority.HIGH, uim.getStrategicValue());
+        assertEquals(Priority.MODERATE, main.getStrategicValue());
+        assertEquals(Priority.HIGH, uim.getStrategicValue());
         assertTrue(uim.canRecommendAcquisition());
         assertTrue(uim.getContributions().stream().anyMatch(value ->
                 value.getDimension()
-                        == AccountStrategicDimension.POH_VALUE
+                        == AccountDimension.POH_VALUE
                         && value.getEffectivePriority()
-                        == StrategicPriority.HIGH));
+                        == Priority.HIGH));
     }
 
     @Test
     public void unknownCompletionCannotMasqueradeAsActionable()
     {
         GameData data = costumeData(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P, CapabilityState.UNKNOWN);
-        InfrastructureValueAssessment assessment = service.assess(
+                Membership.P2P, Capability.UNKNOWN);
+        InfraAssessment assessment = service.assess(
                 catalog.get("poh-costume-room"), priorities.assess(
                         AccountMode.ULTIMATE_IRONMAN, data, false), data);
 
@@ -88,8 +88,8 @@ public class InfrastructureUnlockValueServiceTest
     public void f2pCannotReceiveMembersInfrastructureAction()
     {
         GameData data = costumeData(AccountMode.MAIN,
-                MembershipStatus.F2P, CapabilityState.BLOCKED);
-        InfrastructureValueAssessment assessment = service.assess(
+                Membership.F2P, Capability.BLOCKED);
+        InfraAssessment assessment = service.assess(
                 catalog.get("poh-costume-room"),
                 priorities.assess(AccountMode.MAIN, data, false), data);
 
@@ -105,7 +105,7 @@ public class InfrastructureUnlockValueServiceTest
     {
         GameData missing = transportData(QuestStatus.NOT_STARTED,
                 Collections.emptySet());
-        InfrastructureValueAssessment missingAssessment = service.assess(
+        InfraAssessment missingAssessment = service.assess(
                 catalog.get("fairy-ring-network"),
                 priorities.assess(AccountMode.IRONMAN, missing, false), missing);
         assertEquals(InfrastructureMilestoneState.REQUIREMENTS_MISSING,
@@ -113,7 +113,7 @@ public class InfrastructureUnlockValueServiceTest
 
         GameData approaching = transportData(QuestStatus.IN_PROGRESS,
                 Collections.emptySet());
-        InfrastructureValueAssessment approachingAssessment = service.assess(
+        InfraAssessment approachingAssessment = service.assess(
                 catalog.get("fairy-ring-network"), priorities.assess(
                         AccountMode.IRONMAN, approaching, false), approaching);
         assertEquals(InfrastructureMilestoneState.CHECK_NEEDED,
@@ -121,7 +121,7 @@ public class InfrastructureUnlockValueServiceTest
 
         GameData observed = transportData(QuestStatus.IN_PROGRESS,
                 Collections.singleton("fairy-rings"));
-        InfrastructureValueAssessment complete = service.assess(
+        InfraAssessment complete = service.assess(
                 catalog.get("fairy-ring-network"),
                 priorities.assess(AccountMode.IRONMAN, observed, false), observed);
         assertEquals(InfrastructureMilestoneState.COMPLETE,
@@ -134,7 +134,7 @@ public class InfrastructureUnlockValueServiceTest
     public void roomLevelDoesNotProveRoomExists()
     {
         GameData data = portalData();
-        InfrastructureValueAssessment assessment = service.assess(
+        InfraAssessment assessment = service.assess(
                 catalog.get("poh-portal-chamber"),
                 priorities.assess(AccountMode.IRONMAN, data, false), data);
 
@@ -146,12 +146,12 @@ public class InfrastructureUnlockValueServiceTest
     }
 
     private static GameData costumeData(AccountMode mode,
-            MembershipStatus membership, CapabilityState costume)
+            Membership membership, Capability costume)
     {
-        Map<String, CapabilityState> furniture = new HashMap<>();
+        Map<String, Capability> furniture = new HashMap<>();
         furniture.put(LivePohStateReader.COSTUME_ROOM, costume);
         return GameData.builder(account(mode, membership, 70))
-                .poh(new PohSnapshot(CapabilityState.VERIFIED,
+                .poh(new PohSnapshot(Capability.VERIFIED,
                         furniture))
                 .build();
     }
@@ -159,8 +159,8 @@ public class InfrastructureUnlockValueServiceTest
     private static GameData portalData()
     {
         return GameData.builder(account(AccountMode.IRONMAN,
-                        MembershipStatus.P2P, 70))
-                .poh(new PohSnapshot(CapabilityState.VERIFIED,
+                        Membership.P2P, 70))
+                .poh(new PohSnapshot(Capability.VERIFIED,
                         Collections.emptyMap()))
                 .transport(new TransportSnapshot(Collections.emptySet()))
                 .build();
@@ -172,14 +172,14 @@ public class InfrastructureUnlockValueServiceTest
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Fairytale II - Cure a Queen", quest);
         return GameData.builder(account(AccountMode.IRONMAN,
-                        MembershipStatus.P2P, 70))
+                        Membership.P2P, 70))
                 .quests(new QuestSnapshot(quests))
                 .transport(new TransportSnapshot(new HashSet<>(routes)))
                 .build();
     }
 
     private static AccountSnapshot account(AccountMode mode,
-            MembershipStatus membership, int level)
+            Membership membership, int level)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -189,7 +189,7 @@ public class InfrastructureUnlockValueServiceTest
             xp.put(skill, 0);
         }
         return new AccountSnapshot("Infrastructure", 2L, mode.ordinal(),
-                mode.name(), membership, membership == MembershipStatus.P2P
+                mode.name(), membership, membership == Membership.P2P
                         ? 1 : 0, level * Skill.values().length, 0L, levels, xp);
     }
 }

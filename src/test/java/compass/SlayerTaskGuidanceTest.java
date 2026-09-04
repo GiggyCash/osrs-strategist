@@ -94,7 +94,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData data = data(
                 account(0),
-                new SlayerSnapshot("Dust devils", 143, "Duradel", 500,
+                TestFixtures.slayerSnapshot("Dust devils", 143, "Duradel", 500,
                         Confidence.VERIFIED),
                 Arrays.asList(new ItemState(4164, "Facemask", 1)));
 
@@ -116,7 +116,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData data = data(
                 account(0),
-                new SlayerSnapshot("Dust devils", 90, "Konar quo Maten",
+                TestFixtures.slayerSnapshot("Dust devils", 90, "Konar quo Maten",
                         "Smoke Dungeon", 200,
                         Confidence.VERIFIED),
                 Arrays.asList(new ItemState(4164, "Facemask", 1)));
@@ -131,7 +131,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData data = data(
                 account(1),
-                new SlayerSnapshot("Kurasks", 120, "Nieve", 200,
+                TestFixtures.slayerSnapshot("Kurasks", 120, "Nieve", 200,
                         Confidence.VERIFIED),
                 Collections.emptyList());
 
@@ -146,7 +146,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData data = data(
                 account(2),
-                new SlayerSnapshot("Aberrant spectres", 80, "Nieve", 200,
+                TestFixtures.slayerSnapshot("Aberrant spectres", 80, "Nieve", 200,
                         Confidence.VERIFIED),
                 Arrays.asList(new ItemState(4168, "Nose peg", 1)));
 
@@ -160,7 +160,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData data = data(
                 account(0),
-                new SlayerSnapshot("Future monster", 50, "Nieve", 0,
+                TestFixtures.slayerSnapshot("Future monster", 50, "Nieve", 0,
                         Confidence.VERIFIED),
                 Collections.emptyList());
 
@@ -173,13 +173,9 @@ public class SlayerTaskGuidanceTest
     public void unknownMembershipCannotReceiveSlayerGuidanceDirectly()
     {
         AccountSnapshot p2p = account(0);
-        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(),
-                p2p.getAccountTypeCode(), p2p.getAccountTypeName(),
-                MembershipStatus.UNKNOWN, 0, p2p.getTotalLevel(),
-                p2p.getTotalExperience(), p2p.getSkillLevels(),
-                p2p.getSkillExperience());
+        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(), 0L, p2p.getAccountTypeCode(), p2p.getAccountTypeName(), Membership.UNKNOWN, 0, p2p.getTotalLevel(), p2p.getTotalExperience(), p2p.getSkillLevels(), p2p.getSkillExperience());
         assertTrue(service.build(data(unknown,
-                new SlayerSnapshot("Future monster", 10, "Unknown", 0,
+                TestFixtures.slayerSnapshot("Future monster", 10, "Unknown", 0,
                         Confidence.VERIFIED),
                 Collections.emptyList()), 80, 81, true) == null);
     }
@@ -189,7 +185,7 @@ public class SlayerTaskGuidanceTest
     {
         GameData assigned = data(
                 account(0),
-                new SlayerSnapshot("Dust devils", 143, "Duradel", 500,
+                TestFixtures.slayerSnapshot("Dust devils", 143, "Duradel", 500,
                         Confidence.VERIFIED),
                 Collections.singletonList(
                         new ItemState(4164, "Facemask", 1)));
@@ -298,7 +294,7 @@ public class SlayerTaskGuidanceTest
                 new TrainingPlan(method, "Live task",
                         Confidence.VERIFIED),
                 Confidence.VERIFIED, 80, 81, guidance,
-                SafetyEvidence.skill(false, Skill.SLAYER));
+                Safety.skill(false, Skill.SLAYER));
     }
 
     private static AccountSnapshot account(int typeCode)
@@ -316,15 +312,6 @@ public class SlayerTaskGuidanceTest
             total += level;
             totalXp += skillXp;
         }
-        return new AccountSnapshot(
-                "Slayer Test",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                MembershipStatus.P2P,
-                1,
-                total,
-                totalXp,
-                levels,
-                xp);
+        return new AccountSnapshot("Slayer Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

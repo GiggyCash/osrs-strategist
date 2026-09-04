@@ -26,7 +26,7 @@ public class InfrastructureCandidateProviderTest
     public void unknownPohGetsOneOwnershipSafeVerificationAction()
     {
         Recommendation candidate = provider.candidates(context(
-                AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
+                AccountMode.ULTIMATE_IRONMAN, Membership.P2P,
                 46, 25, null)).get(0);
 
         assertEquals("verify:poh-build-mode", candidate.getId());
@@ -42,7 +42,7 @@ public class InfrastructureCandidateProviderTest
                 java.util.Collections.singleton(
                         ObjectID.POH_COS_ROOM_ARMOUR_CASE_HOTSPOT));
         List<Recommendation> candidates = provider.candidates(context(
-                AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
+                AccountMode.ULTIMATE_IRONMAN, Membership.P2P,
                 46, 25, roomOnly));
         Recommendation armour = candidates.stream()
                 .filter(value -> value.getId().endsWith("poh-armour-case"))
@@ -62,10 +62,10 @@ public class InfrastructureCandidateProviderTest
         PohSnapshot empty = LivePohStateReader.snapshotForObjectIds(
                 java.util.Collections.emptySet());
         Recommendation main = find(provider.candidates(context(
-                AccountMode.MAIN, MembershipStatus.P2P, 50, 25, empty)),
+                AccountMode.MAIN, Membership.P2P, 50, 25, empty)),
                 "poh-costume-room");
         Recommendation uim = find(provider.candidates(context(
-                AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
+                AccountMode.ULTIMATE_IRONMAN, Membership.P2P,
                 50, 25, empty)), "poh-costume-room");
 
         assertTrue(uim.getScore() > main.getScore());
@@ -77,7 +77,7 @@ public class InfrastructureCandidateProviderTest
     public void f2pNeverReceivesPohCandidates()
     {
         assertTrue(provider.candidates(context(AccountMode.MAIN,
-                MembershipStatus.F2P, 99, 99, null)).isEmpty());
+                Membership.F2P, 99, 99, null)).isEmpty());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class InfrastructureCandidateProviderTest
     }
 
     private static StrategyContext context(AccountMode mode,
-            MembershipStatus membership, int construction, int magic,
+            Membership membership, int construction, int magic,
             PohSnapshot poh)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -142,7 +142,7 @@ public class InfrastructureCandidateProviderTest
         }
         AccountSnapshot account = new AccountSnapshot("Infrastructure", 88L,
                 type(AccountMode.ULTIMATE_IRONMAN), "ULTIMATE_IRONMAN",
-                MembershipStatus.P2P, 1, 1, 0L, levels, xp);
+                Membership.P2P, 1, 1, 0L, levels, xp);
         List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 24; slot++)
             inventory.add(new ItemState(firstItemId + slot,

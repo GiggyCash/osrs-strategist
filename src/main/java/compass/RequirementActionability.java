@@ -1,5 +1,7 @@
 package compass;
 
+import static compass.Text.get;
+
 import java.util.*;
 
 /**
@@ -26,11 +28,11 @@ public final class RequirementActionability
             return false;
         }
 
-        var checks = plan.getRequirementChecks();
+        var checks = plan.requirementChecks;
         if (checks == null || checks.isEmpty()) return true;
 
         var hasPreparation = false;
-        for (RequirementCheck check : checks)
+        for (EvidenceCheck check : checks)
         {
             if (check == null) return false;
             if (check.getState() == RequirementState.BLOCKED) return false;
@@ -41,13 +43,13 @@ public final class RequirementActionability
 
         // If preparation is outstanding, the recommendation must actually tell
         // the player what supplies/setup to prepare instead of hiding the gap.
-        return !hasPreparation || hasText(guidance.getSupplies());
+        return !hasPreparation || hasText(guidance.supplies);
     }
 
     public static boolean hasHardUnresolvedRequirement(TrainingPlan plan)
     {
-        if (plan == null || plan.getRequirementChecks() == null) return false;
-        for (RequirementCheck check : plan.getRequirementChecks())
+        if (plan == null || plan.requirementChecks == null) return false;
+        for (EvidenceCheck check : plan.requirementChecks)
         {
             if (check == null) return true;
             if (check.getState() == RequirementState.BLOCKED) return true;
@@ -60,7 +62,7 @@ public final class RequirementActionability
         return false;
     }
 
-    public static boolean isPreparationRequirement(RequirementCheck check)
+    public static boolean isPreparationRequirement(EvidenceCheck check)
     {
         if (check == null || check.getState() != RequirementState.CHECK_NEEDED)
         {
@@ -75,10 +77,10 @@ public final class RequirementActionability
         // quest, risk, and live-assignment gates retain their typed IDs.
         if (id.startsWith("preparation:"))
         {
-            var evidence = Names.lower(check.getEvidence());
+            var evidence = Names.lower(check.evidence);
             return !evidence.contains("unknown")
-                    && !evidence.contains(Text.get(1202))
-                    && !evidence.contains(Text.get(1203));
+                    && !evidence.contains(get(1202))
+                    && !evidence.contains(get(1203));
         }
 
         // ResourceReadinessService uses typed resource:* checks. A known tool
@@ -86,16 +88,16 @@ public final class RequirementActionability
         // whether a quest, region, spellbook, or activity is available.
         if (id.startsWith("resource:"))
         {
-            var evidence = Names.lower(check.getEvidence());
+            var evidence = Names.lower(check.evidence);
             // Retrieval-only UIM storage is not ordinary shopping/banking
             // preparation. The route must first model its extra access or
             // death-risk setup explicitly.
-            return !evidence.contains(Text.get(1204))
-                    && !evidence.contains(Text.get(1805));
+            return !evidence.contains(get(1204))
+                    && !evidence.contains(get(1805));
         }
         if (!id.startsWith("generic:")) return false;
 
-        // A combined label such as Text.get(1806) is an
+        // A combined label such as get(1806) is an
         // access check, not ordinary shopping/banking preparation. Check hard
         // gates first so one supply word cannot accidentally make an unknown
         // quest, area, activity, room, assignment, or risk gate actionable.
@@ -117,12 +119,12 @@ public final class RequirementActionability
                 "supply", "supplies", "food", "healing", "rune", "runes",
                 "ammo", "ammunition", "arrow", "bolt", "dart", "cannonball",
                 "chinchompa", "bone", "bones", "head", "heads",
-                "essence", "talisman", "tiara", Text.get(1807),
+                "essence", "talisman", "tiara", get(1807),
                 "ore", "bars", "metal", "log", "logs", "plank",
                 "planks", "herb", "herbs", "secondary", "secondaries",
                 "seed", "seeds", "compost", "payment", "payments",
                 "potion", "potions", "grape", "grapes", "jug",
-                "dynamite", Text.get(1205), "warm clothing",
+                "dynamite", get(1205), "warm clothing",
                 "knife", "hammer", "saw", "chisel", "rope", "bucket",
                 "pickaxe", "hatchet", "axe", "harpoon", "fishing rod",
                 "fly fishing rod", "net", "lobster pot", "cage", "snare",

@@ -27,9 +27,9 @@ public class CandidateSafetyPolicyTest
     {
         StrategyContext skiller = context(account(1, 1, 1, 1, 1, 1, 10, 50));
         assertTrue(policy.isAllowed(recommendation("money:f2p-iron",
-                SafetyEvidence.skill(true, Skill.MINING)), skiller));
+                Safety.skill(true, Skill.MINING)), skiller));
         assertTrue(policy.isAllowed(recommendation("detour:tempoross-planks",
-                SafetyEvidence.skill(false, Skill.FISHING)), skiller));
+                Safety.skill(false, Skill.FISHING)), skiller));
 
         StrategyContext main = context(account(70, 70, 70, 70, 70, 70, 70, 70));
         assertTrue(policy.isAllowed(recommendation("pvm:test"), main));
@@ -47,16 +47,16 @@ public class CandidateSafetyPolicyTest
         assertFalse(policy.isAllowed(recommendation("minigame:pest-control"), context));
         assertFalse(policy.isAllowed(recommendation("opportunity:tears-of-guthix"), context));
         assertTrue(policy.isAllowed(recommendation("opportunity:herb-run",
-                SafetyEvidence.skill(false, Skill.FARMING)), context));
+                Safety.skill(false, Skill.FARMING)), context));
     }
 
     private static Recommendation recommendation(String id)
     {
-        return recommendation(id, SafetyEvidence.unknown());
+        return recommendation(id, Safety.unknown());
     }
 
     private static Recommendation recommendation(String id,
-            SafetyEvidence evidence)
+            Safety evidence)
     {
         return new Recommendation(id, id, "test", 10, null,
                 Confidence.VERIFIED, 0, 0,
@@ -82,7 +82,6 @@ public class CandidateSafetyPolicyTest
         levels.put(Skill.DEFENCE, defence); levels.put(Skill.RANGED, ranged);
         levels.put(Skill.PRAYER, prayer); levels.put(Skill.MAGIC, magic);
         levels.put(Skill.HITPOINTS, hp); levels.put(Skill.SLAYER, 1);
-        return new AccountSnapshot("Safety", 0, "Main", MembershipStatus.P2P,
-                1, 1000, 0L, levels, xp);
+        return new AccountSnapshot("Safety", 0L, 0, "Main", Membership.P2P, 1, 1000, 0L, levels, xp);
     }
 }

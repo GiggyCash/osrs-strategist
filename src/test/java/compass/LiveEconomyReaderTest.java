@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class LiveEconomyReaderTest
 {
-    private final MarketPriceService prices = new MarketPriceService()
+    private final MarketPriceService prices = new MarketPriceService(null)
     {
         @Override
         public int priceByItemId(int itemId)
@@ -82,15 +82,6 @@ public class LiveEconomyReaderTest
             levels.put(skill, 1);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Economy Test",
-                typeCode,
-                typeCode == 0 ? "Main" : "UIM",
-                MembershipStatus.P2P,
-                1,
-                32,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Economy Test", 0L, typeCode, typeCode == 0 ? "Main" : "UIM", Membership.P2P, 1, 32, 0L, levels, xp);
     }
 }

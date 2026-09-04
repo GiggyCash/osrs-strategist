@@ -20,7 +20,7 @@ public class TrainingMethodPolicyAccountModeTest
         TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.HIGH, false,
                 TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.HARDCORE_IRONMAN,
-                MembershipStatus.P2P), method, metadata, true));
+                Membership.P2P), method, metadata, true));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class TrainingMethodPolicyAccountModeTest
         TrainingMethodMetadata metadata = metadata(false, true, RiskLevel.NONE, false,
                 TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P), method, metadata, false));
+                Membership.P2P), method, metadata, false));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class TrainingMethodPolicyAccountModeTest
         TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.MAIN,
-                MembershipStatus.F2P), method, metadata, false));
+                Membership.F2P), method, metadata, false));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TrainingMethodPolicyAccountModeTest
         TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.BALANCED);
         assertFalse(policy.isAllowed(data(AccountMode.MAIN,
-                MembershipStatus.UNKNOWN), method, metadata, false));
+                Membership.UNKNOWN), method, metadata, false));
     }
 
     @Test
@@ -60,14 +60,14 @@ public class TrainingMethodPolicyAccountModeTest
         TrainingMethodMetadata metadata = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.BALANCED);
         assertTrue(policy.isAllowed(data(AccountMode.IRONMAN,
-                MembershipStatus.P2P), method, metadata, false));
+                Membership.P2P), method, metadata, false));
     }
 
     @Test
     public void balancedUimPrefersSustainableRelaxedMethodOverSweatySwitching()
     {
         GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P);
+                Membership.P2P);
         TrainingMethodMetadata relaxed = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.RELAXED);
         TrainingMethodMetadata sweaty = metadata(true, true, RiskLevel.NONE, false,
@@ -85,7 +85,7 @@ public class TrainingMethodPolicyAccountModeTest
     public void efficientUimDoesNotApplyExtraSustainabilityPenalty()
     {
         GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P);
+                Membership.P2P);
         TrainingMethodMetadata sweaty = metadata(true, true, RiskLevel.NONE, false,
                 TrainingIntensity.SWEATY);
         double balanced = policy.scoreAdjustment(
@@ -112,13 +112,12 @@ public class TrainingMethodPolicyAccountModeTest
                 Collections.emptyList());
     }
 
-    private static GameData data(AccountMode mode, MembershipStatus membership)
+    private static GameData data(AccountMode mode, Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 1); xp.put(skill, 0); }
-        AccountSnapshot account = new AccountSnapshot("Test", code(mode), mode.name(),
-                membership, 0, 1, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Test", 0L, code(mode), mode.name(), membership, 0, 1, 0L, levels, xp);
         return GameData.builder(account).build();
     }
 

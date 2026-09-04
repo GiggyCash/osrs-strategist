@@ -1,15 +1,12 @@
 package compass;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import java.util.*;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import net.runelite.api.Experience;
-import net.runelite.api.Skill;
+import lombok.*;
+import net.runelite.api.*;
 
 /**
  * Safe acquisition recommendation for one resource requirement.
@@ -21,11 +18,11 @@ import net.runelite.api.Skill;
 @Getter
 final class AcquisitionPlan
 {
-    private final ResourceNeed need;
-    private final AcquisitionSource source;
-    private final int confirmedQuantity;
-    private final Confidence confidence;
-    private final String note;
+    final ResourceNeed need;
+    final AcquisitionSource source;
+    final int confirmedQuantity;
+    final Confidence confidence;
+    final String note;
 
     public AcquisitionPlan(
             ResourceNeed need,
@@ -36,7 +33,7 @@ final class AcquisitionPlan
     {
         this.need = need;
         this.source = source;
-        this.confirmedQuantity = Math.max(0, confirmedQuantity);
+        this.confirmedQuantity = max(0, confirmedQuantity);
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED
                 : confidence;
@@ -47,27 +44,27 @@ final class AcquisitionPlan
     public boolean hasEnoughConfirmed()
     {
         return need != null
-                && confirmedQuantity >= need.getQuantity();
+                && confirmedQuantity >= need.quantity;
     }
 }
 
-final class ContextualGearAssessment
+final class GearAssessment
 {
-    private final Map<GearDecisionKind, ContextualGearDecision> decisions;
+    final Map<GearAspect, GearDecision> decisions;
 
-    ContextualGearAssessment(
-            Map<GearDecisionKind, ContextualGearDecision> decisions)
+    GearAssessment(
+            Map<GearAspect, GearDecision> decisions)
     {
-        this.decisions = Collections.unmodifiableMap(
+        this.decisions = unmodifiableMap(
                 new EnumMap<>(decisions));
     }
 
-    public ContextualGearDecision get(GearDecisionKind kind)
+    public GearDecision get(GearAspect kind)
     {
         return decisions.get(kind);
     }
 
-    public Map<GearDecisionKind, ContextualGearDecision> all()
+    public Map<GearAspect, GearDecision> all()
     {
         return decisions;
     }
@@ -75,11 +72,11 @@ final class ContextualGearAssessment
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class ContextualGearDecision
+final class GearDecision
 {
-    private final GearDecisionKind kind;
-    private final String value;
-    private final Confidence confidence;
+    final GearAspect kind;
+    final String value;
+    final Confidence confidence;
 
 
 }
@@ -92,17 +89,17 @@ final class DependencyRequirement
     public enum Kind { RESOURCE, QUEST, SKILL, GEAR }
 
     final String id;
-    private final String label;
-    private final Kind kind;
-    private final ResourceNeed resource;
-    private final Skill skill;
-    private final int level;
+    final String label;
+    final Kind kind;
+    final ResourceNeed resource;
+    final Skill skill;
+    final int level;
 
 
     public static DependencyRequirement resource(ResourceNeed need)
     {
-        return new DependencyRequirement("resource:" + need.getItemId(),
-                need.getItemName(), Kind.RESOURCE, need, null, 0);
+        return new DependencyRequirement("resource:" + need.itemId,
+                need.itemName, Kind.RESOURCE, need, null, 0);
     }
 
     public static DependencyRequirement quest(String name)
@@ -135,11 +132,11 @@ final class DependencyRequirement
 @Getter
 final class DependencyResolution
 {
-    private final List<ResolvedDependencyNode> nodes;
-    private final boolean cycleDetected;
-    private final boolean depthLimited;
-    private final boolean opportunityCostRejected;
-    private final boolean nodeLimited;
+    final List<ResolvedDependencyNode> nodes;
+    final boolean cycleDetected;
+    final boolean depthLimited;
+    final boolean opportunityCostRejected;
+    final boolean nodeLimited;
 
     public DependencyResolution(List<ResolvedDependencyNode> nodes,
             boolean cycleDetected, boolean depthLimited,
@@ -152,7 +149,7 @@ final class DependencyResolution
             boolean cycleDetected, boolean depthLimited,
             boolean opportunityCostRejected, boolean nodeLimited)
     {
-        this.nodes = Collections.unmodifiableList(new ArrayList<>(nodes));
+        this.nodes = unmodifiableList(new ArrayList<>(nodes));
         this.cycleDetected = cycleDetected;
         this.depthLimited = depthLimited;
         this.opportunityCostRejected = opportunityCostRejected;
@@ -162,7 +159,7 @@ final class DependencyResolution
     public ResolvedDependencyNode nextAction()
     {
         for (ResolvedDependencyNode node : nodes)
-            if (node.getConfidence() != Confidence.VERIFIED) return node;
+            if (node.confidence != Confidence.VERIFIED) return node;
         return nodes.isEmpty() ? null : nodes.get(nodes.size() - 1);
     }
 }
@@ -172,19 +169,19 @@ final class DiaryTaskRequirement
 {
     public enum Kind { SKILL, QUEST, COMBAT_LEVEL, QUEST_POINTS, ALTERNATIVE_CHECK }
 
-    private final Kind kind;
-    private final Skill skill;
-    private final int level;
-    private final String quest;
-    private final boolean startedOnly;
-    private final String check;
+    final Kind kind;
+    final Skill skill;
+    final int level;
+    final String quest;
+    final boolean startedOnly;
+    final String check;
 
     private DiaryTaskRequirement(Kind kind, Skill skill, int level,
             String quest, boolean startedOnly, String check)
     {
         this.kind = kind;
         this.skill = skill;
-        this.level = Math.max(0, level);
+        this.level = max(0, level);
         this.quest = quest;
         this.startedOnly = startedOnly;
         this.check = check;
@@ -229,9 +226,9 @@ final class GearAcquisitionStep
 {
     public enum Kind { QUEST, SKILL, BOSS, MINIGAME, RESOURCE, SHOP, VERIFY }
 
-    private final Kind kind;
-    private final String target;
-    private final String action;
+    final Kind kind;
+    final String target;
+    final String action;
 
 
 }
@@ -240,12 +237,12 @@ final class GearAcquisitionStep
 @Getter
 final class GroupResourceAssessment
 {
-    private final GroupResourceState state;
-    private final Confidence confidence;
-    private final int observedSharedQuantity;
-    private final int requiredQuantity;
-    private final double duplicateGrindAvoidance;
-    private final String reason;
+    final GroupResourceState state;
+    final Confidence confidence;
+    final int observedSharedQuantity;
+    final int requiredQuantity;
+    final double duplicateGrindAvoidance;
+    final String reason;
 
     GroupResourceAssessment(GroupResourceState state,
             Confidence confidence, int observedSharedQuantity,
@@ -253,10 +250,10 @@ final class GroupResourceAssessment
     {
         this.state = state;
         this.confidence = confidence;
-        this.observedSharedQuantity = Math.max(0, observedSharedQuantity);
-        this.requiredQuantity = Math.max(1, requiredQuantity);
-        this.duplicateGrindAvoidance = Math.max(0.0,
-                Math.min(1.0, duplicateGrindAvoidance));
+        this.observedSharedQuantity = max(0, observedSharedQuantity);
+        this.requiredQuantity = max(1, requiredQuantity);
+        this.duplicateGrindAvoidance = max(0.0,
+                min(1.0, duplicateGrindAvoidance));
         this.reason = reason == null ? "" : reason;
     }
 
@@ -282,9 +279,9 @@ final class GroupResourceAssessment
 final class GuidanceStep
 {
     final String id;
-    private final String label;
-    private final String detail;
-    private final GuidanceStepState state;
+    final String label;
+    final String detail;
+    final GuidanceStepState state;
 
     public GuidanceStep(
             String id,
@@ -303,27 +300,27 @@ final class GuidanceStep
 
 /** Typed result suitable for a future candidate strategic-value payload. */
 @Getter
-final class InfrastructureValueAssessment
+final class InfraAssessment
 {
-    private final InfrastructureMilestone milestone;
-    private final InfrastructureMilestoneState state;
-    private final Confidence confidence;
-    private final StrategicPriority strategicValue;
-    private final List<InfrastructureValueContribution> contributions;
-    private final String reason;
+    final InfrastructureMilestone milestone;
+    final InfrastructureMilestoneState state;
+    final Confidence confidence;
+    final Priority strategicValue;
+    final List<InfraContribution> contributions;
+    final String reason;
 
-    InfrastructureValueAssessment(InfrastructureMilestone milestone,
+    InfraAssessment(InfrastructureMilestone milestone,
             InfrastructureMilestoneState state,
             Confidence confidence,
-            StrategicPriority strategicValue,
-            List<InfrastructureValueContribution> contributions,
+            Priority strategicValue,
+            List<InfraContribution> contributions,
             String reason)
     {
         this.milestone = milestone;
         this.state = state;
         this.confidence = confidence;
         this.strategicValue = strategicValue;
-        this.contributions = Collections.unmodifiableList(
+        this.contributions = unmodifiableList(
                 new ArrayList<>(contributions));
         this.reason = reason == null ? "" : reason;
     }
@@ -339,14 +336,15 @@ final class InfrastructureValueAssessment
 final class ItemRequirementResult
 {
     @Getter
-    private final RequirementState state;
+    final RequirementState state;
     @Getter
-    private final String action;
-    private final List<MethodInput> missingInputs;
+    final String action;
+    @Getter
+    final List<MethodInput> missingInputs;
 
     public ItemRequirementResult(RequirementState state, String action)
     {
-        this(state, action, Collections.emptyList());
+        this(state, action, emptyList());
     }
 
     public ItemRequirementResult(RequirementState state, String action,
@@ -354,23 +352,22 @@ final class ItemRequirementResult
     {
         this.state = state;
         this.action = action == null ? "" : action;
-        this.missingInputs = Collections.unmodifiableList(missingInputs == null
+        this.missingInputs = unmodifiableList(missingInputs == null
                 ? new ArrayList<>() : new ArrayList<>(missingInputs));
     }
 
     /** Exact, evidence-backed shortfalls only. Unknown storage never appears here. */
-    public List<MethodInput> getMissingInputs() { return missingInputs; }
     public boolean isSatisfied() { return state == RequirementState.VERIFIED; }
 }
 
 @Getter
 final class MainPurchaseDecision
 {
-    private final MainPurchaseChoice choice;
-    private final long totalCost;
-    private final long observedCoins;
-    private final Confidence confidence;
-    private final String explanation;
+    final MainPurchaseChoice choice;
+    final long totalCost;
+    final long observedCoins;
+    final Confidence confidence;
+    final String explanation;
 
     public MainPurchaseDecision(
             MainPurchaseChoice choice,
@@ -380,8 +377,8 @@ final class MainPurchaseDecision
             String explanation)
     {
         this.choice = choice;
-        this.totalCost = Math.max(0L, totalCost);
-        this.observedCoins = Math.max(0L, observedCoins);
+        this.totalCost = max(0L, totalCost);
+        this.observedCoins = max(0L, observedCoins);
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED
                 : confidence;
@@ -395,9 +392,9 @@ final class MainPurchaseDecision
 @RequiredArgsConstructor
 final class MethodStrategyAssessment
 {
-    private final boolean viable;
-    private final double scoreAdjustment;
-    private final String explanation;
+    final boolean viable;
+    final double scoreAdjustment;
+    final String explanation;
 
 
 }
@@ -407,11 +404,11 @@ final class MethodStrategyAssessment
 final class ProgressMilestone
 {
     final String id;
-    private final ProgressMilestoneType type;
-    private final String title;
-    private final String detail;
-    private final String goalId;
-    private final long occurredAtMillis;
+    final ProgressMilestoneType type;
+    final String title;
+    final String detail;
+    final String goalId;
+    final long occurredAtMillis;
 
     public ProgressMilestone(
             String id,
@@ -424,14 +421,14 @@ final class ProgressMilestone
         if (id == null || id.trim().isEmpty() || type == null
                 || title == null || title.trim().isEmpty())
         {
-            throw new IllegalArgumentException(Text.get(1156));
+            throw new IllegalArgumentException(get(1156));
         }
         this.id = id;
         this.type = type;
         this.title = title;
         this.detail = detail;
         this.goalId = goalId;
-        this.occurredAtMillis = Math.max(0L, occurredAtMillis);
+        this.occurredAtMillis = max(0L, occurredAtMillis);
     }
 
 }
@@ -440,11 +437,11 @@ final class ProgressMilestone
 @Getter
 final class ProgressTarget
 {
-    private final String activityId;
-    private final String methodId;
-    private final Skill skill;
-    private final int targetLevel;
-    private final int targetXp;
+    final String activityId;
+    final String methodId;
+    final Skill skill;
+    final int targetLevel;
+    final int targetXp;
 
     public ProgressTarget(
             String activityId,
@@ -454,7 +451,7 @@ final class ProgressTarget
     {
         if (skill == null || targetLevel < 2 || targetLevel > 126)
         {
-            throw new IllegalArgumentException(Text.get(1157));
+            throw new IllegalArgumentException(get(1157));
         }
         this.activityId = activityId;
         this.methodId = methodId;
@@ -467,7 +464,7 @@ final class ProgressTarget
 
 /** Remaining work and ETA for the current skill target. */
 @Getter
-final class ProgressTargetProjection
+final class TargetProjection
 {
     public enum State
     {
@@ -477,12 +474,12 @@ final class ProgressTargetProjection
         COMPLETE
     }
 
-    private final State state;
-    private final ProgressTarget target;
-    private final int xpRemaining;
-    private final long etaMillis;
+    final State state;
+    final ProgressTarget target;
+    final int xpRemaining;
+    final long etaMillis;
 
-    private ProgressTargetProjection(
+    private TargetProjection(
             State state,
             ProgressTarget target,
             int xpRemaining,
@@ -490,32 +487,32 @@ final class ProgressTargetProjection
     {
         this.state = state;
         this.target = target;
-        this.xpRemaining = Math.max(0, xpRemaining);
-        this.etaMillis = Math.max(0L, etaMillis);
+        this.xpRemaining = max(0, xpRemaining);
+        this.etaMillis = max(0L, etaMillis);
     }
 
-    public static ProgressTargetProjection noTarget()
+    public static TargetProjection noTarget()
     {
-        return new ProgressTargetProjection(State.NO_TARGET, null, 0, 0L);
+        return new TargetProjection(State.NO_TARGET, null, 0, 0L);
     }
 
-    public static ProgressTargetProjection calculating(
+    public static TargetProjection calculating(
             ProgressTarget target, int xpRemaining)
     {
-        return new ProgressTargetProjection(State.CALCULATING, target,
+        return new TargetProjection(State.CALCULATING, target,
                 xpRemaining, 0L);
     }
 
-    public static ProgressTargetProjection ready(
+    public static TargetProjection ready(
             ProgressTarget target, int xpRemaining, long etaMillis)
     {
-        return new ProgressTargetProjection(State.READY, target,
+        return new TargetProjection(State.READY, target,
                 xpRemaining, etaMillis);
     }
 
-    public static ProgressTargetProjection complete(ProgressTarget target)
+    public static TargetProjection complete(ProgressTarget target)
     {
-        return new ProgressTargetProjection(State.COMPLETE, target, 0, 0L);
+        return new TargetProjection(State.COMPLETE, target, 0, 0L);
     }
 
 }
@@ -524,11 +521,11 @@ final class ProgressTargetProjection
 final class QuestPathPlan
 {
     @Getter
-    private final List<QuestPathStep> steps;
+    final List<QuestPathStep> steps;
 
     QuestPathPlan(List<QuestPathStep> steps)
     {
-        this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
+        this.steps = unmodifiableList(new ArrayList<>(steps));
     }
 
 
@@ -555,15 +552,15 @@ final class QuestPathPlan
 @Getter
 final class QuestPathStep
 {
-    private final String questName;
-    private final QuestStatus status;
-    private final Map<GoalType, List<String>> provenancePaths;
-    private final List<String> unfinishedDependents;
-    private final Confidence readiness;
-    private final boolean eligibleNow;
-    private final int depth;
-    private final Map<Skill, Integer> guaranteedRewardXp;
-    private final double goalPathRewardValue;
+    final String questName;
+    final QuestStatus status;
+    final Map<GoalType, List<String>> provenancePaths;
+    final List<String> unfinishedDependents;
+    final Confidence readiness;
+    final boolean eligibleNow;
+    final int depth;
+    final Map<Skill, Integer> guaranteedRewardXp;
+    final double goalPathRewardValue;
 
     QuestPathStep(String questName, QuestStatus status,
             Map<GoalType, List<String>> provenancePaths,
@@ -580,23 +577,23 @@ final class QuestPathStep
         {
             for (Map.Entry<GoalType, List<String>> entry
                     : provenancePaths.entrySet())
-                paths.put(entry.getKey(), Collections.unmodifiableList(
+                paths.put(entry.getKey(), unmodifiableList(
                         new ArrayList<>(entry.getValue())));
         }
-        this.provenancePaths = Collections.unmodifiableMap(paths);
-        this.unfinishedDependents = Collections.unmodifiableList(
+        this.provenancePaths = unmodifiableMap(paths);
+        this.unfinishedDependents = unmodifiableList(
                 new ArrayList<>(unfinishedDependents == null
-                        ? Collections.emptyList() : unfinishedDependents));
+                        ? emptyList() : unfinishedDependents));
         this.readiness = readiness == null
                 ? Confidence.CHECK_NEEDED : readiness;
         this.eligibleNow = eligibleNow;
-        this.depth = Math.max(0, depth);
+        this.depth = max(0, depth);
         EnumMap<Skill, Integer> rewards = new EnumMap<>(Skill.class);
         if (guaranteedRewardXp != null)
             rewards.putAll(guaranteedRewardXp);
-        this.guaranteedRewardXp = Collections.unmodifiableMap(rewards);
-        this.goalPathRewardValue = Math.max(0.0,
-                Math.min(1.0, goalPathRewardValue));
+        this.guaranteedRewardXp = unmodifiableMap(rewards);
+        this.goalPathRewardValue = max(0.0,
+                min(1.0, goalPathRewardValue));
     }
 
     public int getGoalCount() { return provenancePaths.size(); }
@@ -604,9 +601,9 @@ final class QuestPathStep
     /** Bounded property value for the common recommendation decision layer. */
     public double sharedDependencyValue()
     {
-        var goals = Math.max(0, getGoalCount() - 1) * 0.35;
+        var goals = max(0, getGoalCount() - 1) * 0.35;
         var dependents = unfinishedDependents.size() * 0.12;
-        return Math.min(1.0, goals + dependents);
+        return min(1.0, goals + dependents);
     }
 
     public StrategicValue strategicValue()
@@ -624,48 +621,19 @@ final class QuestPathStep
 
 /** Actionability result for one fully identified quest. */
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 final class QuestResolution
 {
-    private final Confidence confidence;
-    private final Guidance guidance;
-    private final String reason;
-    private final SafetyEvidence safetyEvidence;
+    final Confidence confidence;
+    final Guidance guidance;
+    final String reason;
+    final Safety safetyEvidence;
 
     public QuestResolution(Confidence confidence,
             Guidance guidance, String reason)
     {
-        this(confidence, guidance, reason, SafetyEvidence.unknown());
+        this(confidence, guidance, reason, Safety.unknown());
     }
-
-    public QuestResolution(Confidence confidence,
-            Guidance guidance, String reason,
-            SafetyEvidence safetyEvidence)
-    {
-        this.confidence = confidence;
-        this.guidance = guidance;
-        this.reason = reason;
-        this.safetyEvidence = safetyEvidence;
-    }
-
-}
-
-/** One ordered, non-destructive step in a resource acquisition chain. */
-@Getter
-final class ResourceAcquisitionStep
-{
-    private final AcquisitionSource source;
-    private final String action;
-    private final Confidence confidence;
-
-    public ResourceAcquisitionStep(AcquisitionSource source, String action,
-            Confidence confidence)
-    {
-        this.source = source;
-        this.action = action;
-        this.confidence = confidence == null
-                ? Confidence.CHECK_NEEDED : confidence;
-    }
-
 }
 
 /**
@@ -677,10 +645,10 @@ final class ResourceRequirement
     @Getter
     final String id;
     @Getter
-    private final String label;
+    final String label;
     @Getter
-    private final int requiredQuantity;
-    private final int[] itemIds;
+    final int requiredQuantity;
+    final int[] itemIds;
 
     public ResourceRequirement(
             String id,
@@ -690,7 +658,7 @@ final class ResourceRequirement
     {
         this.id = id;
         this.label = label;
-        this.requiredQuantity = Math.max(1, requiredQuantity);
+        this.requiredQuantity = max(1, requiredQuantity);
         this.itemIds = itemIds == null ? new int[0] : Arrays.copyOf(itemIds, itemIds.length);
     }
 
@@ -699,7 +667,7 @@ final class ResourceRequirement
 
 /** Structured access/build evidence consumed by the final recommendation gate. */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-final class SafetyEvidence
+final class Safety
 {
     public enum Access
     {
@@ -718,63 +686,63 @@ final class SafetyEvidence
     }
 
     @Getter
-    private final Access access;
+    final Access access;
     @Getter
-    private final BuildEffect buildEffect;
+    final BuildEffect buildEffect;
     @Getter
-    private final Skill affectedSkill;
+    final Skill affectedSkill;
     @Getter
-    private final boolean conventionalBankRequired;
-    private final boolean unverifiedDangerousStorage;
-    private final boolean invalidCurrentExecution;
+    final boolean conventionalBankRequired;
+    final boolean unverifiedDangerousStorage;
+    final boolean invalidCurrentExecution;
 
-    public static SafetyEvidence unknown()
+    public static Safety unknown()
     {
-        return new SafetyEvidence(Access.UNKNOWN, BuildEffect.UNKNOWN,
+        return new Safety(Access.UNKNOWN, BuildEffect.UNKNOWN,
                 null, false, false, false);
     }
 
-    public static SafetyEvidence harmless(boolean freeToPlay)
+    public static Safety harmless(boolean freeToPlay)
     {
-        return new SafetyEvidence(access(freeToPlay),
+        return new Safety(access(freeToPlay),
                 BuildEffect.HARMLESS, null, false, false, false);
     }
 
-    public static SafetyEvidence skill(boolean freeToPlay, Skill skill)
+    public static Safety skill(boolean freeToPlay, Skill skill)
     {
-        return new SafetyEvidence(access(freeToPlay),
+        return new Safety(access(freeToPlay),
                 BuildEffect.SKILL_XP, skill, false, false, false);
     }
 
-    public static SafetyEvidence verifiedSafe(boolean freeToPlay)
+    public static Safety verifiedSafe(boolean freeToPlay)
     {
-        return new SafetyEvidence(access(freeToPlay),
+        return new Safety(access(freeToPlay),
                 BuildEffect.VERIFIED_SAFE, null, false, false, false);
     }
 
-    public static SafetyEvidence potentiallyIrreversible(boolean freeToPlay)
+    public static Safety potentiallyIrreversible(boolean freeToPlay)
     {
-        return new SafetyEvidence(access(freeToPlay),
+        return new Safety(access(freeToPlay),
                 BuildEffect.POTENTIALLY_IRREVERSIBLE, null, false, false, false);
     }
 
-    public SafetyEvidence requiringConventionalBank()
+    public Safety requiringConventionalBank()
     {
-        return new SafetyEvidence(access, buildEffect,
+        return new Safety(access, buildEffect,
                 affectedSkill, true, unverifiedDangerousStorage,
                 invalidCurrentExecution);
     }
 
-    public SafetyEvidence withUnverifiedDangerousStorage()
+    public Safety withUnverifiedDangerousStorage()
     {
-        return new SafetyEvidence(access, buildEffect,
+        return new Safety(access, buildEffect,
                 affectedSkill, conventionalBankRequired, true,
                 invalidCurrentExecution);
     }
 
-    public SafetyEvidence withInvalidCurrentExecution()
+    public Safety withInvalidCurrentExecution()
     {
-        return new SafetyEvidence(access, buildEffect, affectedSkill,
+        return new Safety(access, buildEffect, affectedSkill,
                 conventionalBankRequired, unverifiedDangerousStorage, true);
     }
 
@@ -793,37 +761,25 @@ final class SafetyEvidence
     }
 }
 
-/** Explicit boundary for group capabilities RuneLite does not observe. */
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class SharedInfrastructureAssessment
-{
-    private final CapabilityState state;
-    private final Confidence confidence;
-    private final String reason;
-
-
-}
-
 /** Immutable explanation and execution payload from the Slayer strategist. */
 @Getter
 final class SlayerDecisionResult
 {
-    private final SlayerAssignmentState assignmentState;
-    private final SlayerTaskDecision decision;
-    private final SlayerMasterProfile master;
-    private final SlayerTaskStrategicProfile taskProfile;
-    private final double score;
-    private final Confidence confidence;
-    private final String reason;
-    private final Guidance guidance;
-    private final String selectedAlternativeName;
-    private final SlayerReward recommendedReward;
-    private final SlayerTaskOffer recommendedOffer;
+    final SlayerState assignmentState;
+    final SlayerDecision decision;
+    final SlayerMasterProfile master;
+    final SlayerStrategy taskProfile;
+    final double score;
+    final Confidence confidence;
+    final String reason;
+    final Guidance guidance;
+    final String selectedAlternativeName;
+    final SlayerReward recommendedReward;
+    final SlayerTaskOffer recommendedOffer;
 
-    public SlayerDecisionResult(SlayerAssignmentState assignmentState,
-            SlayerTaskDecision decision, SlayerMasterProfile master,
-            SlayerTaskStrategicProfile taskProfile, double score,
+    public SlayerDecisionResult(SlayerState assignmentState,
+            SlayerDecision decision, SlayerMasterProfile master,
+            SlayerStrategy taskProfile, double score,
             Confidence confidence, String reason,
             Guidance guidance)
     {
@@ -831,9 +787,9 @@ final class SlayerDecisionResult
                 confidence, reason, guidance, null, null, null);
     }
 
-    public SlayerDecisionResult(SlayerAssignmentState assignmentState,
-            SlayerTaskDecision decision, SlayerMasterProfile master,
-            SlayerTaskStrategicProfile taskProfile, double score,
+    public SlayerDecisionResult(SlayerState assignmentState,
+            SlayerDecision decision, SlayerMasterProfile master,
+            SlayerStrategy taskProfile, double score,
             Confidence confidence, String reason,
             Guidance guidance, String selectedAlternativeName)
     {
@@ -841,9 +797,9 @@ final class SlayerDecisionResult
                 reason, guidance, selectedAlternativeName, null, null);
     }
 
-    public SlayerDecisionResult(SlayerAssignmentState assignmentState,
-            SlayerTaskDecision decision, SlayerMasterProfile master,
-            SlayerTaskStrategicProfile taskProfile, double score,
+    public SlayerDecisionResult(SlayerState assignmentState,
+            SlayerDecision decision, SlayerMasterProfile master,
+            SlayerStrategy taskProfile, double score,
             Confidence confidence, String reason,
             Guidance guidance, String selectedAlternativeName,
             SlayerReward recommendedReward)
@@ -853,15 +809,15 @@ final class SlayerDecisionResult
                 null);
     }
 
-    public SlayerDecisionResult(SlayerAssignmentState assignmentState,
-            SlayerTaskDecision decision, SlayerMasterProfile master,
-            SlayerTaskStrategicProfile taskProfile, double score,
+    public SlayerDecisionResult(SlayerState assignmentState,
+            SlayerDecision decision, SlayerMasterProfile master,
+            SlayerStrategy taskProfile, double score,
             Confidence confidence, String reason,
             Guidance guidance, String selectedAlternativeName,
             SlayerReward recommendedReward, SlayerTaskOffer recommendedOffer)
     {
         this.assignmentState = assignmentState == null
-                ? SlayerAssignmentState.UNKNOWN : assignmentState;
+                ? SlayerState.UNKNOWN : assignmentState;
         this.decision = decision;
         this.master = master;
         this.taskProfile = taskProfile;
@@ -881,17 +837,17 @@ final class SlayerDecisionResult
 final class StrategicPlan
 {
     @Getter
-    private final GoalType goal;
-    private final long accountHash;
-    private final String playerName;
-    private final AccountMode accountMode;
-    private final MembershipStatus membership;
+    final GoalType goal;
+    final long accountHash;
+    final String playerName;
+    final AccountMode accountMode;
+    final Membership membership;
     @Getter
-    private final List<StrategicPlanStep> steps;
+    final List<StrategicPlanStep> steps;
     @Getter
-    private final int currentIndex;
+    final int currentIndex;
     @Getter
-    private final long createdAtMillis;
+    final long createdAtMillis;
 
     public StrategicPlan(
             GoalType goal,
@@ -901,11 +857,11 @@ final class StrategicPlan
             long createdAtMillis)
     {
         this(goal,
-                account == null ? 0L : account.getAccountHash(),
-                account == null ? "" : account.getPlayerName(),
+                account == null ? 0L : account.accountHash,
+                account == null ? "" : account.playerName,
                 account == null ? AccountMode.UNKNOWN
                         : AccountMode.fromTypeCode(account.modeCode()),
-                account == null ? MembershipStatus.UNKNOWN
+                account == null ? Membership.UNKNOWN
                         : account.membership(),
                 steps, currentIndex, createdAtMillis);
     }
@@ -915,7 +871,7 @@ final class StrategicPlan
             long accountHash,
             String playerName,
             AccountMode accountMode,
-            MembershipStatus membership,
+            Membership membership,
             List<StrategicPlanStep> steps,
             int currentIndex,
             long createdAtMillis)
@@ -923,18 +879,18 @@ final class StrategicPlan
         if (goal == null || goal == GoalType.AUTOMATIC
                 || steps == null || steps.isEmpty())
             throw new IllegalArgumentException(
-                    Text.get(791));
+                    get(791));
         this.goal = goal;
         this.accountHash = accountHash;
         this.playerName = playerName == null ? "" : playerName;
         this.accountMode = accountMode == null
                 ? AccountMode.UNKNOWN : accountMode;
         this.membership = membership == null
-                ? MembershipStatus.UNKNOWN : membership;
-        this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
-        this.currentIndex = Math.max(0,
-                Math.min(currentIndex, this.steps.size() - 1));
-        this.createdAtMillis = Math.max(0L, createdAtMillis);
+                ? Membership.UNKNOWN : membership;
+        this.steps = unmodifiableList(new ArrayList<>(steps));
+        this.currentIndex = max(0,
+                min(currentIndex, this.steps.size() - 1));
+        this.createdAtMillis = max(0L, createdAtMillis);
     }
 
     public StrategicPlan advanceCompleted(GameData data)
@@ -958,11 +914,11 @@ final class StrategicPlan
                 || context.data().account() == null
                 || goal != context.goal()) return false;
         var account = context.data().account();
-        if (accountHash != 0L && account.getAccountHash() != 0L)
-            return accountHash == account.getAccountHash()
+        if (accountHash != 0L && account.accountHash != 0L)
+            return accountHash == account.accountHash
                     && accountMode == context.accountMode()
                     && membership == account.membership();
-        return playerName != null && playerName.equals(account.getPlayerName())
+        return playerName != null && playerName.equals(account.playerName)
                 && accountMode == context.accountMode()
                 && membership == account.membership();
     }
@@ -980,29 +936,29 @@ final class StrategicPlan
 final class StrategicPlanStep
 {
     final String id;
-    private final GoalNodeKind kind;
-    private final String objective;
-    private final String reason;
-    private final PlanCompletionCondition completion;
-    private final String recommendationId;
+    final GoalNodeKind kind;
+    final String objective;
+    final String reason;
+    final CompletionRule completion;
+    final String recommendationId;
 
     public StrategicPlanStep(
             String id,
             GoalNodeKind kind,
             String objective,
             String reason,
-            PlanCompletionCondition completion,
+            CompletionRule completion,
             String recommendationId)
     {
         if (id == null || id.trim().isEmpty()
                 || objective == null || objective.trim().isEmpty())
-            throw new IllegalArgumentException(Text.get(1207));
+            throw new IllegalArgumentException(get(1207));
         this.id = id;
         this.kind = kind == null ? GoalNodeKind.META : kind;
         this.objective = objective.trim();
         this.reason = reason == null ? "" : reason.trim();
         this.completion = completion == null
-                ? PlanCompletionCondition.none() : completion;
+                ? CompletionRule.none() : completion;
         this.recommendationId = recommendationId;
     }
 
@@ -1044,9 +1000,9 @@ final class StrategicPlanStep
 @Getter
 final class StrategyResult
 {
-    private final List<Recommendation> recommendations;
-    private final List<Opportunity> opportunities;
-    private final StrategicPlan plan;
+    final List<Recommendation> recommendations;
+    final List<Opportunity> opportunities;
+    final StrategicPlan plan;
 
     public StrategyResult(
             List<Recommendation> recommendations,
@@ -1064,18 +1020,14 @@ final class StrategyResult
             List<Opportunity> opportunities,
             StrategicPlan plan)
     {
-        this.recommendations = Collections.unmodifiableList(
+        this.recommendations = unmodifiableList(
                 new ArrayList<>(recommendations)
         );
-        this.opportunities = Collections.unmodifiableList(
+        this.opportunities = unmodifiableList(
                 new ArrayList<>(opportunities)
         );
         this.plan = plan;
     }
-
-
-
-
 
     public StrategyResult withPlan(StrategicPlan value)
     {
@@ -1090,12 +1042,12 @@ final class StrategyResult
 @Getter
 final class SupplyPlan
 {
-    private final AccountMode accountMode;
-    private final boolean primaryStorageObserved;
-    private final boolean groupStorageIncluded;
-    private final boolean groupStorageObserved;
-    private final List<ResourcePlanEntry> entries;
-    private final String guidance;
+    final AccountMode accountMode;
+    final boolean primaryStorageObserved;
+    final boolean groupStorageIncluded;
+    final boolean groupStorageObserved;
+    final List<ResourcePlanEntry> entries;
+    final String guidance;
 
     public SupplyPlan(
             AccountMode accountMode,
@@ -1109,24 +1061,11 @@ final class SupplyPlan
         this.primaryStorageObserved = primaryStorageObserved;
         this.groupStorageIncluded = groupStorageIncluded;
         this.groupStorageObserved = groupStorageObserved;
-        this.entries = Collections.unmodifiableList(entries == null
+        this.entries = unmodifiableList(entries == null
                 ? new ArrayList<>() : new ArrayList<>(entries));
         this.guidance = guidance;
     }
 
-
-    public boolean isFullySupplied()
-    {
-        if (!primaryStorageObserved && accountMode != AccountMode.ULTIMATE_IRONMAN)
-        {
-            return false;
-        }
-        for (ResourcePlanEntry entry : entries)
-        {
-            if (!entry.isSatisfied()) return false;
-        }
-        return true;
-    }
 
     public AccountMode accountMode() { return accountMode; }
 
@@ -1148,20 +1087,21 @@ final class SupplyPlan
         {
             if (entry.getMissing() > 0) result.add(entry.missingInput());
         }
-        return Collections.unmodifiableList(result);
+        return unmodifiableList(result);
     }
 }
 
 /** The recommendation Compass is currently watching for natural completion. */
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 final class TrackedMilestone
 {
-    private final String activityId;
-    private final String title;
-    private final String skillName;
-    private final int startedAtLevel;
-    private final int targetLevel;
-    private final boolean progressionProtected;
+    final String activityId;
+    final String title;
+    final String skillName;
+    final int startedAtLevel;
+    final int targetLevel;
+    final boolean progressionProtected;
 
     public TrackedMilestone(
             String activityId,
@@ -1173,23 +1113,6 @@ final class TrackedMilestone
         this(activityId, title, skillName, startedAtLevel,
                 targetLevel, false);
     }
-
-    public TrackedMilestone(
-            String activityId,
-            String title,
-            String skillName,
-            int startedAtLevel,
-            int targetLevel,
-            boolean progressionProtected)
-    {
-        this.activityId = activityId;
-        this.title = title;
-        this.skillName = skillName;
-        this.startedAtLevel = startedAtLevel;
-        this.targetLevel = targetLevel;
-        this.progressionProtected = progressionProtected;
-    }
-
 
     public Skill getSkill()
     {
@@ -1215,16 +1138,17 @@ final class TrackedMilestone
 final class TrainingPlan
 {
     @Getter
-    private final TrainingMethod method;
+    final TrainingMethod method;
     @Getter
-    private final String whyThisMethod;
+    final String whyThisMethod;
     @Getter
-    private final Confidence confidence;
+    final Confidence confidence;
     @Getter
-    private final List<RequirementCheck> requirementChecks;
+    final List<EvidenceCheck> requirementChecks;
     @Getter
-    private final MethodStrategyProfile strategyProfile;
-    private final int currentStageTargetLevel;
+    final MethodStrategyProfile strategyProfile;
+    @Getter
+    final int currentStageTargetLevel;
 
     TrainingMethod method() { return method; }
 
@@ -1237,8 +1161,8 @@ final class TrainingPlan
                 whyThisMethod,
                 method == null
                         ? Confidence.CHECK_NEEDED
-                        : method.getConfidence(),
-                Collections.emptyList(),
+                        : method.confidence,
+                emptyList(),
                 null
         );
     }
@@ -1252,7 +1176,7 @@ final class TrainingPlan
                 method,
                 whyThisMethod,
                 confidence,
-                Collections.emptyList(),
+                emptyList(),
                 null
         );
     }
@@ -1261,7 +1185,7 @@ final class TrainingPlan
             TrainingMethod method,
             String whyThisMethod,
             Confidence confidence,
-            List<RequirementCheck> requirementChecks)
+            List<EvidenceCheck> requirementChecks)
     {
         this(method, whyThisMethod, confidence, requirementChecks, null);
     }
@@ -1270,7 +1194,7 @@ final class TrainingPlan
             TrainingMethod method,
             String whyThisMethod,
             Confidence confidence,
-            List<RequirementCheck> requirementChecks,
+            List<EvidenceCheck> requirementChecks,
             MethodStrategyProfile strategyProfile)
     {
         this(method, whyThisMethod, confidence, requirementChecks,
@@ -1281,7 +1205,7 @@ final class TrainingPlan
             TrainingMethod method,
             String whyThisMethod,
             Confidence confidence,
-            List<RequirementCheck> requirementChecks,
+            List<EvidenceCheck> requirementChecks,
             MethodStrategyProfile strategyProfile,
             int currentStageTargetLevel)
     {
@@ -1290,28 +1214,15 @@ final class TrainingPlan
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED
                 : confidence;
-        this.requirementChecks = Collections.unmodifiableList(
+        this.requirementChecks = unmodifiableList(
                 requirementChecks == null
                         ? new ArrayList<>()
                         : new ArrayList<>(requirementChecks)
         );
         this.strategyProfile = strategyProfile;
-        this.currentStageTargetLevel = Math.max(0, currentStageTargetLevel);
+        this.currentStageTargetLevel = max(0, currentStageTargetLevel);
     }
 
-
-
-
-
-
-    /**
-     * The next level at which the visible execution plan must be rebuilt. This
-     * is deliberately separate from the recommendation's distant objective.
-     */
-    public int getCurrentStageTargetLevel()
-    {
-        return currentStageTargetLevel;
-    }
 
     public TrainingPlan withCurrentStageTargetLevel(int targetLevel)
     {
@@ -1320,30 +1231,16 @@ final class TrainingPlan
     }
 }
 
-/** Travel evidence and bounded value for a selected concrete method location. */
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class TravelAwareMethodAssessment
-{
-    private final MethodLocationOption location;
-    private final int travelBurden;
-    private final int scoreAdjustment;
-    private final boolean verifiedRouteUsed;
-    private final String evidence;
-
-
-}
-
 /** Result of the ordered UIM inventory-resolution policy. */
 @Getter
 @RequiredArgsConstructor
 final class UimInventoryResolution
 {
-    private final UimInventoryResolutionKind kind;
-    private final Confidence confidence;
-    private final UimStorageDecision storageDecision;
-    private final RecommendationRiskDisclosure riskDisclosure;
-    private final String reason;
+    final UimInventoryKind kind;
+    final Confidence confidence;
+    final UimStorageDecision storageDecision;
+    final RecommendationRiskDisclosure riskDisclosure;
+    final String reason;
 
 
 }
@@ -1352,15 +1249,15 @@ final class UimInventoryResolution
 @Getter
 final class UimRecurringPressureAssessment
 {
-    private final int distinctObservedLayouts;
-    private final List<String> blockedFamilies;
+    final int distinctObservedLayouts;
+    final List<String> blockedFamilies;
 
     UimRecurringPressureAssessment(int distinctObservedLayouts,
             List<String> blockedFamilies)
     {
-        this.distinctObservedLayouts = Math.max(0, distinctObservedLayouts);
-        this.blockedFamilies = Collections.unmodifiableList(new ArrayList<>(
-                blockedFamilies == null ? Collections.emptyList()
+        this.distinctObservedLayouts = max(0, distinctObservedLayouts);
+        this.blockedFamilies = unmodifiableList(new ArrayList<>(
+                blockedFamilies == null ? emptyList()
                         : blockedFamilies));
     }
 
@@ -1374,14 +1271,14 @@ final class UimRecurringPressureAssessment
 @Getter
 final class UimStorageDecision
 {
-    private final StorageCapability capability;
-    private final boolean allowed;
-    private final Confidence confidence;
-    private final RiskLevel riskLevel;
-    private final String explanation;
+    final StorageKind capability;
+    final boolean allowed;
+    final Confidence confidence;
+    final RiskLevel riskLevel;
+    final String explanation;
 
     public UimStorageDecision(
-            StorageCapability capability,
+            StorageKind capability,
             boolean allowed,
             Confidence confidence,
             RiskLevel riskLevel,

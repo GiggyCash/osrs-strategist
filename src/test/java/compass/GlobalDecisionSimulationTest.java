@@ -82,12 +82,12 @@ public class GlobalDecisionSimulationTest
     @Test
     public void uimDeathStorageMakesDangerousGearHuntLoseToSustainableProgress()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.DEATH_STORAGE, CapabilityState.VERIFIED);
-        Map<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.DEATH_STORAGE,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.DEATH_STORAGE, Capability.VERIFIED);
+        Map<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.DEATH_STORAGE,
                 Collections.singletonList(new ItemState(
                         100, "Stored gear", 1)));
         StorageSnapshot storage = new StorageSnapshot(states, contents);
@@ -128,7 +128,7 @@ public class GlobalDecisionSimulationTest
     @Test
     public void f2pSimulationContainsNoMembersUpgradeCandidate()
     {
-        AccountSnapshot f2p = account(0, MembershipStatus.F2P);
+        AccountSnapshot f2p = account(0, Membership.F2P);
         GameData data = GameData.builder(f2p)
                 .bank(new ItemsState(Collections.emptyList(), 1L))
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -153,7 +153,7 @@ public class GlobalDecisionSimulationTest
 
     private static StrategyEngine engine()
     {
-        return new StrategyEngine(
+        return TestFixtures.strategyEngine(
                 null, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
@@ -213,11 +213,11 @@ public class GlobalDecisionSimulationTest
 
     private static AccountSnapshot account(int typeCode)
     {
-        return account(typeCode, MembershipStatus.P2P);
+        return account(typeCode, Membership.P2P);
     }
 
     private static AccountSnapshot account(
-            int typeCode, MembershipStatus membership)
+            int typeCode, Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -232,10 +232,6 @@ public class GlobalDecisionSimulationTest
             total += level;
             totalXp += value;
         }
-        return new AccountSnapshot(
-                "Simulation", typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                membership, membership == MembershipStatus.P2P ? 1 : 0,
-                total, totalXp, levels, xp);
+        return new AccountSnapshot("Simulation", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), membership, membership == Membership.P2P ? 1 : 0, total, totalXp, levels, xp);
     }
 }

@@ -63,7 +63,7 @@ public class DoNextInvariantTest
                         "No supplies required.",
                         "Grand Exchange bank booths, northwest of Varrock.",
                         "This records an observed snapshot."),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
 
         assertEquals(preparation.getId(), evaluate(engine(preparation),
                 observedData(), new PreferenceProfile()).getId());
@@ -92,7 +92,7 @@ public class DoNextInvariantTest
                 new Guidance("Choose the best available method.",
                         "Get supplies.", "A nearby mine.",
                         "Quality gate diagnostic."),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
 
         Recommendation result = evaluate(engine(vague), observedData(),
                 new PreferenceProfile());
@@ -152,25 +152,25 @@ public class DoNextInvariantTest
     public void missingStateFallbacksAreSpecificAndUimNeverRequestsBank()
     {
         GameData accountOnly = GameData.builder(
-                account(0, MembershipStatus.P2P)).build();
+                account(0, Membership.P2P)).build();
         assertEquals("fallback:inventory", evaluate(engine(), accountOnly,
                 new PreferenceProfile()).getId());
 
         GameData inventoryOnly = GameData.builder(
-                        account(0, MembershipStatus.P2P))
+                        account(0, Membership.P2P))
                 .inventory(new ItemsState(Collections.emptyList())).build();
         assertEquals("fallback:equipment", evaluate(engine(), inventoryOnly,
                 new PreferenceProfile()).getId());
 
         GameData noBank = GameData.builder(
-                        account(0, MembershipStatus.P2P))
+                        account(0, Membership.P2P))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList())).build();
         assertEquals("fallback:bank", evaluate(engine(), noBank,
                 new PreferenceProfile()).getId());
 
         GameData uim = GameData.builder(
-                        account(2, MembershipStatus.P2P))
+                        account(2, Membership.P2P))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList())).build();
         Recommendation uimFallback = evaluate(engine(), uim,
@@ -187,11 +187,11 @@ public class DoNextInvariantTest
                 "Unsafe test", 500, null, Confidence.VERIFIED,
                 0, 0, new Guidance("Enter the encounter.",
                 "Bring gear.", "Members area.", "Unsafe."),
-                SafetyEvidence.potentiallyIrreversible(false));
+                Safety.potentiallyIrreversible(false));
         for (GameData data : Arrays.asList(
-                data(account(0, MembershipStatus.UNKNOWN)),
+                data(account(0, Membership.UNKNOWN)),
                 data(oneDefenceAccount()),
-                data(account(3, MembershipStatus.P2P))))
+                data(account(3, Membership.P2P))))
         {
             Recommendation result = evaluate(engine(membersOnly), data,
                     new PreferenceProfile());
@@ -202,8 +202,9 @@ public class DoNextInvariantTest
 
     private static StrategyEngine engine(Recommendation... candidates)
     {
-        RecommendationEngine recommendations = new RecommendationEngine(
-                (TrainingMethodSelector) null)
+        RecommendationEngine recommendations = new RecommendationEngine((TrainingMethodSelector) null,
+                TestFixtures.recommendationGuidanceService(),
+                null, null, null, null, null)
         {
             @Override
             public List<Recommendation> recommendAll(GameData data,
@@ -216,7 +217,7 @@ public class DoNextInvariantTest
                 return visible;
             }
         };
-        return new StrategyEngine(recommendations, null, null, null,
+        return TestFixtures.strategyEngine(recommendations, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
@@ -250,7 +251,7 @@ public class DoNextInvariantTest
                                 ? "Bronze pickaxe."
                                 : "Small fishing net.",
                         location, "This is a legal training action."),
-                SafetyEvidence.skill(true, skill));
+                Safety.skill(true, skill));
     }
 
     private static GameData observedData()
@@ -258,8 +259,7 @@ public class DoNextInvariantTest
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 20); xp.put(skill, 0); }
-        AccountSnapshot account = new AccountSnapshot("Fallback", 0, "Main",
-                MembershipStatus.F2P, 0, 460, 0, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Fallback", 0L, 0, "Main", Membership.F2P, 0, 460, 0, levels, xp);
         return GameData.builder(account)
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
@@ -274,15 +274,12 @@ public class DoNextInvariantTest
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
     }
 
-    private static AccountSnapshot account(int type, MembershipStatus membership)
+    private static AccountSnapshot account(int type, Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 70); xp.put(skill, 0); }
-        return new AccountSnapshot("Invariant", type,
-                AccountMode.fromTypeCode(type).name(), membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
-                1500, 0, levels, xp);
+        return new AccountSnapshot("Invariant", 0L, type, AccountMode.fromTypeCode(type).name(), membership, membership == Membership.P2P ? 1 : 0, 1500, 0, levels, xp);
     }
 
     private static AccountSnapshot oneDefenceAccount()
@@ -291,8 +288,7 @@ public class DoNextInvariantTest
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 70); xp.put(skill, 0); }
         levels.put(Skill.DEFENCE, 1);
-        return new AccountSnapshot("Pure", 0, "Main", MembershipStatus.P2P,
-                1, 1400, 0, levels, xp);
+        return new AccountSnapshot("Pure", 0L, 0, "Main", Membership.P2P, 1, 1400, 0, levels, xp);
     }
 
     private static String allText(Component component)

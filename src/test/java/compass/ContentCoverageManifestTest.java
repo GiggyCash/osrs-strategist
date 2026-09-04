@@ -58,8 +58,8 @@ public class ContentCoverageManifestTest
     {
         DiaryTaskCatalog diaries = new DiaryTaskCatalog();
         assertEquals(378, diaries.all().size());
-        assertEquals(12, diaries.census().size());
-        assertEquals(48, diaries.census().values().stream()
+        assertEquals(12, DiaryTaskCensusSupport.census(diaries).size());
+        assertEquals(48, DiaryTaskCensusSupport.census(diaries).values().stream()
                 .mapToInt(Map::size).sum());
 
         TransportCatalog transports = new TransportCatalog();

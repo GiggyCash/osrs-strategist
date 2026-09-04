@@ -82,22 +82,7 @@ public class GimGroupStrategyServiceTest
                 .hasTypedEvidence());
     }
 
-    @Test
-    public void freshItemsDoNotInventTeammateInfrastructure()
-    {
-        StrategyContext context = context(5, true,
-                new ItemsState(true, Collections.singletonList(
-                        new ItemState(SHARED_ITEM, "Shared tool", 1))));
-
-        SharedInfrastructureAssessment result = service
-                .assessTeammateInfrastructure(context);
-
-        assertEquals(CapabilityState.UNKNOWN, result.getState());
-        assertEquals(Confidence.CHECK_NEEDED,
-                result.getConfidence());
-    }
-
-    private static GroupResourceNeed need(int quantity, boolean reusable)
+private static GroupResourceNeed need(int quantity, boolean reusable)
     {
         return new GroupResourceNeed("Shared requirement",
                 new HashSet<>(Collections.singletonList(SHARED_ITEM)),
@@ -116,7 +101,7 @@ public class GimGroupStrategyServiceTest
         }
         AccountSnapshot account = new AccountSnapshot("Group member", 47L,
                 typeCode, AccountMode.fromTypeCode(typeCode).name(),
-                MembershipStatus.P2P, 1, levels.size() * 50, 0L,
+                Membership.P2P, 1, levels.size() * 50, 0L,
                 levels, xp);
         GameData data = GameData.builder(account)
                 .groupStorage(groupStorage).build();

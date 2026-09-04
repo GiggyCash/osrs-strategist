@@ -31,9 +31,9 @@ public class GoalProvenanceLiveRegressionTest
 
         Recommendation attributed = provenance.attach(farming, context);
         assertNull(attributed.getGoalProvenance());
-        assertEquals(GoalRecommendationRelationship.FALLBACK,
+        assertEquals(GoalRelation.FALLBACK,
                 GoalRecommendationContext.assess(GoalType.BARROWS_GLOVES,
-                        attributed, MembershipStatus.P2P).getRelationship());
+                        attributed, Membership.P2P).getRelationship());
     }
 
     @Test
@@ -56,9 +56,9 @@ public class GoalProvenanceLiveRegressionTest
                 Skill.SLAYER, 1, 10, 50.0, "slayer_test");
         assertEquals(0.0, RecommendationIntelligenceService.goalValue(
                 unproven, GoalType.BARROWS_GLOVES), 0.0);
-        assertEquals(GoalRecommendationRelationship.FALLBACK,
+        assertEquals(GoalRelation.FALLBACK,
                 GoalRecommendationContext.assess(GoalType.BARROWS_GLOVES,
-                        unproven, MembershipStatus.P2P).getRelationship());
+                        unproven, Membership.P2P).getRelationship());
 
         for (GoalType goal : new GoalType[]{GoalType.FIRE_CAPE,
                 GoalType.QUEST_CAPE, GoalType.PRIFDDINAS, GoalType.BOWFA,
@@ -88,7 +88,7 @@ public class GoalProvenanceLiveRegressionTest
         statuses.put("Below Ice Mountain", QuestStatus.NOT_STARTED);
         StrategyContext low = context(GoalType.BARROWS_GLOVES,
                 QuestTolerance.LOW, statuses);
-        List<Recommendation> candidates = new QuestCandidateProvider(
+        List<Recommendation> candidates = TestFixtures.questCandidateProvider(
                 new QuestPriorityCatalog()).candidates(low);
         Recommendation required = named(candidates, "Wartface & Bentnoze");
         Recommendation optional = named(candidates, "Below Ice Mountain");
@@ -102,11 +102,11 @@ public class GoalProvenanceLiveRegressionTest
     {
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Below Ice Mountain", QuestStatus.NOT_STARTED);
-        Recommendation low = named(new QuestCandidateProvider(
+        Recommendation low = named(TestFixtures.questCandidateProvider(
                         new QuestPriorityCatalog()).candidates(context(
                                 GoalType.BARROWS_GLOVES, QuestTolerance.LOW,
                                 statuses)), "Below Ice Mountain");
-        Recommendation high = named(new QuestCandidateProvider(
+        Recommendation high = named(TestFixtures.questCandidateProvider(
                         new QuestPriorityCatalog()).candidates(context(
                                 GoalType.BARROWS_GLOVES, QuestTolerance.HIGH,
                                 statuses)), "Below Ice Mountain");
@@ -141,7 +141,7 @@ public class GoalProvenanceLiveRegressionTest
         Recommendation farming = skillRecommendation(
                 Skill.FARMING, 1, 10, 50.0, "farming_falador_potatoes");
         GoalRecommendationContext goal = GoalRecommendationContext.assess(
-                GoalType.BARROWS_GLOVES, farming, MembershipStatus.P2P);
+                GoalType.BARROWS_GLOVES, farming, Membership.P2P);
         assertFalse(Presentation.compactText(farming, goal)
                 .contains("GOAL"));
         assertFalse(Presentation.detailedText(farming, goal)
@@ -161,7 +161,7 @@ public class GoalProvenanceLiveRegressionTest
                 base.getTitle(), base.getReason(), base.getScore(),
                 base.getTrainingPlan(), base.getConfidence(), 1, 10, guidance);
         GuidanceChecklist checklist = new MethodGuidanceService(
-                new FarmingRunPlanner(new FarmingRunCatalog()))
+                TestFixtures.farmingRunPlanner(new FarmingRunCatalog()))
                 .build(farming, data);
 
         assertFalse(checklist.getTitle().equalsIgnoreCase("Farming run"));
@@ -185,7 +185,7 @@ public class GoalProvenanceLiveRegressionTest
         TrainingPlan plan = selector.select(data, Skill.FARMING, 1,
                 StrategyMode.EFFICIENT, SessionIntent.PICK_FOR_ME,
                 false, true);
-        Guidance guidance = new RecommendationGuidanceService()
+        Guidance guidance = TestFixtures.recommendationGuidanceService()
                 .build(data, Skill.FARMING, 1, 10, plan, true);
 
         assertEquals("farming_falador_potatoes", plan.getMethod().getId());
@@ -252,9 +252,7 @@ public class GoalProvenanceLiveRegressionTest
             levels.put(skill, level);
             xp.put(skill, level <= 1 ? 0 : Experience.getXpForLevel(level));
         }
-        AccountSnapshot account = new AccountSnapshot("Live GIM", 4,
-                "GROUP_IRONMAN", MembershipStatus.P2P, 1, levels.size(),
-                0, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Live GIM", 0L, 4, "GROUP_IRONMAN", Membership.P2P, 1, levels.size(), 0, levels, xp);
         return GameData.builder(account)
                 .quests(new QuestSnapshot(statuses))
                 .bank(new ItemsState(Collections.emptyList(), 1L))
@@ -266,10 +264,10 @@ public class GoalProvenanceLiveRegressionTest
     private static GameData readyFarmingData()
     {
         GameData base = data(rfdEarlyStatuses(false));
-        Map<String, CapabilityState> tools = new java.util.HashMap<>();
-        tools.put("rake", CapabilityState.VERIFIED);
-        tools.put("dibber", CapabilityState.VERIFIED);
-        tools.put("spade", CapabilityState.VERIFIED);
+        Map<String, Capability> tools = new java.util.HashMap<>();
+        tools.put("rake", Capability.VERIFIED);
+        tools.put("dibber", Capability.VERIFIED);
+        tools.put("spade", Capability.VERIFIED);
         return GameData.builder(base.account())
                 .quests(base.quests())
                 .farming(new FarmingSnapshot(

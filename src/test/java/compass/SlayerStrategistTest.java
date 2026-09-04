@@ -27,8 +27,8 @@ public class SlayerStrategistTest
                 SessionIntent.PICK_FOR_ME, GoalType.SLAYER_85,
                 false, Collections.emptyList(), null));
 
-        assertEquals(SlayerAssignmentState.UNKNOWN, result.getAssignmentState());
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerState.UNKNOWN, result.getAssignmentState());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertTrue(result.getGuidance().getNote().contains("kept unknown"));
@@ -37,7 +37,7 @@ public class SlayerStrategistTest
     @Test
     public void mortimerLiveChoiceIsResolvedFromTaskAndModifierProperties()
     {
-        SlayerSnapshot choice = new SlayerSnapshot(null, 0, "Mortimer", null,
+        SlayerSnapshot choice = TestFixtures.slayerSnapshot(null, 0, "Mortimer", null,
                 250, null, 300, 2, 0, null, Arrays.asList(
                         new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
                         new SlayerTaskOffer("Hellhounds", "Quantity", 10, false)),
@@ -48,7 +48,7 @@ public class SlayerStrategistTest
 
         SlayerDecisionResult result = strategist.assess(context);
 
-        assertEquals(SlayerAssignmentState.CHOICE_PENDING,
+        assertEquals(SlayerState.CHOICE_PENDING,
                 result.getAssignmentState());
         assertEquals("Dust devils", result.getRecommendedOffer().getTaskName());
         assertTrue(result.getGuidance().getAction().contains("Slayer XP"));
@@ -61,7 +61,7 @@ public class SlayerStrategistTest
     @Test
     public void incompleteMortimerChoiceFailsClosedInsteadOfHidingAnOption()
     {
-        SlayerSnapshot choice = new SlayerSnapshot(null, 0, "Mortimer", null,
+        SlayerSnapshot choice = TestFixtures.slayerSnapshot(null, 0, "Mortimer", null,
                 250, null, 300, 2, 0, null, Arrays.asList(
                         new SlayerTaskOffer("Dust devils", "Slayer XP", 20, false),
                         new SlayerTaskOffer(null, null, 0, false)),
@@ -87,7 +87,7 @@ public class SlayerStrategistTest
                 StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
                 GoalType.GEAR_TARGET, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertTrue(result.getGuidance().getAction().contains("Vorkath"));
         assertTrue(result.getGuidance().getSupplies().contains("generic Slayer"));
     }
@@ -100,14 +100,14 @@ public class SlayerStrategistTest
         SlayerDecisionResult keep = strategist.assess(context(0, lowPoints,
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
-        assertEquals(SlayerTaskDecision.DO, keep.getDecision());
+        assertEquals(SlayerDecision.DO, keep.getDecision());
 
         SlayerSnapshot sustainable = snapshot("Hellhounds", 180, "Mortimer",
                 null, 200, null, 300, 2, 2);
         SlayerDecisionResult skip = strategist.assess(context(0, sustainable,
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
-        assertEquals(SlayerTaskDecision.SKIP, skip.getDecision());
+        assertEquals(SlayerDecision.SKIP, skip.getDecision());
         assertTrue(skip.getGuidance().getAction().contains("100 Slayer points"));
     }
 
@@ -120,7 +120,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerAssignmentState.NO_TASK, result.getAssignmentState());
+        assertEquals(SlayerState.NO_TASK, result.getAssignmentState());
         assertNull(result.getDecision());
         assertEquals("duradel", result.getMaster().getId());
         assertTrue(result.getGuidance().getAction().contains("Duradel/Kuradal"));
@@ -150,11 +150,11 @@ public class SlayerStrategistTest
     @Test
     public void liveLockedRewardCanLeadBeforeTheNextAssignment()
     {
-        EnumMap<SlayerReward, CapabilityState> rewardStates =
+        EnumMap<SlayerReward, Capability> rewardStates =
                 new EnumMap<>(SlayerReward.class);
         for (SlayerReward reward : SlayerReward.values())
-            rewardStates.put(reward, CapabilityState.BLOCKED);
-        SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
+            rewardStates.put(reward, Capability.BLOCKED);
+        SlayerSnapshot noTask = TestFixtures.slayerSnapshot(null, 0, null, null,
                 100, 20, 300, 6, null,
                 new SlayerRewardSnapshot(rewardStates),
                 Confidence.VERIFIED);
@@ -190,13 +190,13 @@ public class SlayerStrategistTest
     @Test
     public void extensionPurchaseRequiresMatchingGoalSessionAndLiveLockState()
     {
-        EnumMap<SlayerReward, CapabilityState> rewardStates =
+        EnumMap<SlayerReward, Capability> rewardStates =
                 new EnumMap<>(SlayerReward.class);
         for (SlayerReward reward : SlayerReward.values())
-            rewardStates.put(reward, CapabilityState.VERIFIED);
+            rewardStates.put(reward, Capability.VERIFIED);
         rewardStates.put(SlayerReward.EXTEND_NECHRYAELS,
-                CapabilityState.BLOCKED);
-        SlayerSnapshot noTask = new SlayerSnapshot(null, 0, null, null,
+                Capability.BLOCKED);
+        SlayerSnapshot noTask = TestFixtures.slayerSnapshot(null, 0, null, null,
                 200, 20, 300, 6, null,
                 new SlayerRewardSnapshot(rewardStates),
                 Confidence.VERIFIED);
@@ -244,7 +244,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertEquals(Confidence.CHECK_NEEDED,
                 result.getConfidence());
         assertTrue(result.getReason().contains("mandatory"));
@@ -262,7 +262,7 @@ public class SlayerStrategistTest
                         4164, "Facemask", 1,
                         net.runelite.api.EquipmentInventorySlot.HEAD.getSlotIdx())), null));
 
-        assertEquals(SlayerTaskDecision.DO, result.getDecision());
+        assertEquals(SlayerDecision.DO, result.getDecision());
         assertEquals(Confidence.VERIFIED,
                 result.getConfidence());
         assertTrue(result.getGuidance().getAction().contains("remaining 140"));
@@ -288,7 +288,7 @@ public class SlayerStrategistTest
 
         SlayerDecisionResult result = strategist.assess(context);
 
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertTrue(result.getReason().contains("no recognised healing"));
         assertFalse(result.getGuidance().getSupplies().contains(
                 "Keep the currently carried inventory"));
@@ -315,7 +315,7 @@ public class SlayerStrategistTest
 
         SlayerDecisionResult result = strategist.assess(context);
 
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertTrue(result.getGuidance().getAction().contains("withdraw Shark"));
         assertFalse(result.getGuidance().getAction().contains("Cake tin"));
         assertFalse(result.getGuidance().getAction().contains("Raw salmon"));
@@ -330,7 +330,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.PREP_FIRST, result.getDecision());
+        assertEquals(SlayerDecision.PREP_FIRST, result.getDecision());
         assertTrue(result.getReason().contains("Magic-only"));
         assertTrue(result.getReason().contains("Abyssal whip"));
     }
@@ -344,7 +344,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.BLOCK, result.getDecision());
+        assertEquals(SlayerDecision.BLOCK, result.getDecision());
         assertTrue(result.getGuidance().getNote().contains("weight 10"));
         assertTrue(result.getGuidance().getSupplies().contains("100 Slayer points"));
     }
@@ -358,7 +358,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.SKIP, result.getDecision());
+        assertEquals(SlayerDecision.SKIP, result.getDecision());
         assertFalse(result.getGuidance().getNote().toLowerCase()
                 .contains("free slot"));
     }
@@ -372,7 +372,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.DO, result.getDecision());
+        assertEquals(SlayerDecision.DO, result.getDecision());
         assertTrue(result.getReason().contains("milestone"));
     }
 
@@ -385,7 +385,7 @@ public class SlayerStrategistTest
                 StrategyMode.RELAXED, SessionIntent.AFK,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.DO, result.getDecision());
+        assertEquals(SlayerDecision.DO, result.getDecision());
     }
 
     @Test
@@ -402,7 +402,7 @@ public class SlayerStrategistTest
                 GoalType.GEAR_TARGET, false, Collections.emptyList(),
                 new PvmSnapshot(readiness)));
 
-        assertEquals(SlayerTaskDecision.ALTERNATIVE, result.getDecision());
+        assertEquals(SlayerDecision.ALTERNATIVE, result.getDecision());
         assertEquals("Cerberus", result.getSelectedAlternativeName());
         assertTrue(result.getGuidance().getAction().contains("Cerberus"));
 
@@ -413,7 +413,7 @@ public class SlayerStrategistTest
                 StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
                 GoalType.GEAR_TARGET, false, Collections.emptyList(),
                 new PvmSnapshot(readiness)));
-        assertFalse(result.getDecision() == SlayerTaskDecision.ALTERNATIVE);
+        assertFalse(result.getDecision() == SlayerDecision.ALTERNATIVE);
     }
 
     @Test
@@ -425,7 +425,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
                 GoalType.SLAYER_85, true, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.ALTERNATIVE, result.getDecision());
+        assertEquals(SlayerDecision.ALTERNATIVE, result.getDecision());
         assertNull(result.getSelectedAlternativeName());
         assertTrue(result.getGuidance().getAction().contains("Do not enter"));
         assertTrue(result.getGuidance().getAction().contains("30 Slayer points"));
@@ -445,7 +445,7 @@ public class SlayerStrategistTest
                 StrategyMode.BALANCED, SessionIntent.LONG_SESSION,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.ALTERNATIVE, result.getDecision());
+        assertEquals(SlayerDecision.ALTERNATIVE, result.getDecision());
         assertTrue(result.getGuidance().getAction().contains("Do not enter"));
     }
 
@@ -458,7 +458,7 @@ public class SlayerStrategistTest
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN,
                 GoalType.AUTOMATIC, false, Collections.emptyList(), null));
 
-        assertEquals(SlayerTaskDecision.DO, result.getDecision());
+        assertEquals(SlayerDecision.DO, result.getDecision());
     }
 
     @Test
@@ -483,11 +483,7 @@ public class SlayerStrategistTest
     public void f2pAndRestrictedBuildsDoNotProduceSlayerCandidates()
     {
         AccountSnapshot member = account(0);
-        AccountSnapshot f2p = new AccountSnapshot(member.getPlayerName(),
-                member.getAccountTypeCode(), member.getAccountTypeName(),
-                MembershipStatus.F2P, 0, member.getTotalLevel(),
-                member.getTotalExperience(), member.getSkillLevels(),
-                member.getSkillExperience());
+        AccountSnapshot f2p = new AccountSnapshot(member.getPlayerName(), 0L, member.getAccountTypeCode(), member.getAccountTypeName(), Membership.F2P, 0, member.getTotalLevel(), member.getTotalExperience(), member.getSkillLevels(), member.getSkillExperience());
         GameData data = GameData.builder(f2p)
                 .slayer(SlayerSnapshot.unknown()).build();
         StrategyContext context = new StrategyContext(data,
@@ -568,7 +564,7 @@ public class SlayerStrategistTest
             String master, String location, int points, Integer streak,
             Integer questPoints, Integer capacity, Integer occupied)
     {
-        return new SlayerSnapshot(task, remaining, master, location, points,
+        return TestFixtures.slayerSnapshot(task, remaining, master, location, points,
                 streak, questPoints, capacity, occupied,
                 Confidence.VERIFIED);
     }
@@ -588,8 +584,6 @@ public class SlayerStrategistTest
             total += level;
             totalXp += value;
         }
-        return new AccountSnapshot("Slayer strategist", typeCode,
-                AccountMode.fromTypeCode(typeCode).name(), MembershipStatus.P2P,
-                1, total, totalXp, levels, xp);
+        return new AccountSnapshot("Slayer strategist", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), Membership.P2P, 1, total, totalXp, levels, xp);
     }
 }

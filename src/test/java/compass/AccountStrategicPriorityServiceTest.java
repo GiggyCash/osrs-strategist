@@ -19,12 +19,12 @@ public class AccountStrategicPriorityServiceTest
     @Test
     public void profileIsExhaustiveAndMethodIdentityFree()
     {
-        AccountStrategicPriorityProfile profile = service.assess(
+        AccountPriorities profile = service.assess(
                 AccountMode.MAIN, data(AccountMode.MAIN, 10, null), false);
 
-        assertEquals(AccountStrategicDimension.values().length,
+        assertEquals(AccountDimension.values().length,
                 profile.getPriorities().size());
-        for (AccountStrategicPriority priority
+        for (AccountPriority priority
                 : profile.getPriorities().values())
         {
             assertTrue(priority.getReason().length() > 10);
@@ -34,51 +34,51 @@ public class AccountStrategicPriorityServiceTest
     @Test
     public void identicalMainAndIronStateDivergesOnEconomicProperties()
     {
-        AccountStrategicPriorityProfile main = service.assess(
+        AccountPriorities main = service.assess(
                 AccountMode.MAIN, data(AccountMode.MAIN, 10, null), false);
-        AccountStrategicPriorityProfile iron = service.assess(
+        AccountPriorities iron = service.assess(
                 AccountMode.IRONMAN,
                 data(AccountMode.IRONMAN, 10, null), false);
 
-        assertEquals(StrategicPriority.LOW, main.priorityOf(
-                AccountStrategicDimension.SELF_SOURCING_BURDEN));
-        assertEquals(StrategicPriority.HIGH, iron.priorityOf(
-                AccountStrategicDimension.SELF_SOURCING_BURDEN));
-        assertEquals(StrategicPriority.LOW, main.priorityOf(
-                AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY));
-        assertEquals(StrategicPriority.HIGH, iron.priorityOf(
-                AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY));
-        assertEquals(CapabilityState.VERIFIED, main.get(
-                AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY)
+        assertEquals(Priority.LOW, main.priorityOf(
+                AccountDimension.SELF_SOURCING_BURDEN));
+        assertEquals(Priority.HIGH, iron.priorityOf(
+                AccountDimension.SELF_SOURCING_BURDEN));
+        assertEquals(Priority.LOW, main.priorityOf(
+                AccountDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY));
+        assertEquals(Priority.HIGH, iron.priorityOf(
+                AccountDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY));
+        assertEquals(Capability.VERIFIED, main.get(
+                AccountDimension.GRAND_EXCHANGE_AVAILABILITY)
                 .getCapabilityState());
-        assertEquals(CapabilityState.BLOCKED, iron.get(
-                AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY)
+        assertEquals(Capability.BLOCKED, iron.get(
+                AccountDimension.GRAND_EXCHANGE_AVAILABILITY)
                 .getCapabilityState());
-        assertTrue(iron.priorityOf(AccountStrategicDimension.POH_VALUE)
+        assertTrue(iron.priorityOf(AccountDimension.POH_VALUE)
                 .isAtLeast(main.priorityOf(
-                        AccountStrategicDimension.POH_VALUE)));
+                        AccountDimension.POH_VALUE)));
     }
 
     @Test
     public void uimInventoryAndSetupPropertiesAreCritical()
     {
-        AccountStrategicPriorityProfile uim = service.assess(
+        AccountPriorities uim = service.assess(
                 AccountMode.ULTIMATE_IRONMAN,
                 data(AccountMode.ULTIMATE_IRONMAN, 25, null), false);
 
-        assertEquals(StrategicPriority.CRITICAL, uim.priorityOf(
-                AccountStrategicDimension.INVENTORY_PRESSURE));
-        assertEquals(StrategicPriority.CRITICAL, uim.priorityOf(
-                AccountStrategicDimension.BANK_AVAILABILITY));
-        assertEquals(CapabilityState.BLOCKED, uim.get(
-                AccountStrategicDimension.BANK_AVAILABILITY)
+        assertEquals(Priority.CRITICAL, uim.priorityOf(
+                AccountDimension.INVENTORY_PRESSURE));
+        assertEquals(Priority.CRITICAL, uim.priorityOf(
+                AccountDimension.BANK_AVAILABILITY));
+        assertEquals(Capability.BLOCKED, uim.get(
+                AccountDimension.BANK_AVAILABILITY)
                 .getCapabilityState());
-        assertEquals(StrategicPriority.CRITICAL, uim.priorityOf(
-                AccountStrategicDimension.STORAGE_VALUE));
-        assertEquals(StrategicPriority.CRITICAL, uim.priorityOf(
-                AccountStrategicDimension.SETUP_COST_SENSITIVITY));
-        assertEquals(StrategicPriority.CRITICAL, uim.priorityOf(
-                AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE));
+        assertEquals(Priority.CRITICAL, uim.priorityOf(
+                AccountDimension.STORAGE_VALUE));
+        assertEquals(Priority.CRITICAL, uim.priorityOf(
+                AccountDimension.SETUP_COST_SENSITIVITY));
+        assertEquals(Priority.CRITICAL, uim.priorityOf(
+                AccountDimension.STORABLE_EQUIPMENT_VALUE));
     }
 
     @Test
@@ -86,12 +86,12 @@ public class AccountStrategicPriorityServiceTest
     {
         GameData data = GameData.builder(account(
                         AccountMode.ULTIMATE_IRONMAN,
-                        MembershipStatus.P2P, 70))
+                        Membership.P2P, 70))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
-        AccountStrategicPriority value = service.assess(
+        AccountPriority value = service.assess(
                 AccountMode.ULTIMATE_IRONMAN, data, false).get(
-                AccountStrategicDimension.INVENTORY_PRESSURE);
+                AccountDimension.INVENTORY_PRESSURE);
 
         assertEquals(Confidence.CHECK_NEEDED,
                 value.getConfidence());
@@ -101,17 +101,17 @@ public class AccountStrategicPriorityServiceTest
     @Test
     public void hardcoreRiskIsHigherThanOrdinaryIronRisk()
     {
-        AccountStrategicPriorityProfile iron = service.assess(
+        AccountPriorities iron = service.assess(
                 AccountMode.IRONMAN,
                 data(AccountMode.IRONMAN, 10, null), false);
-        AccountStrategicPriorityProfile hardcore = service.assess(
+        AccountPriorities hardcore = service.assess(
                 AccountMode.HARDCORE_IRONMAN,
                 data(AccountMode.HARDCORE_IRONMAN, 10, null), false);
 
-        assertEquals(StrategicPriority.MODERATE, iron.priorityOf(
-                AccountStrategicDimension.DEATH_RISK_SENSITIVITY));
-        assertEquals(StrategicPriority.CRITICAL, hardcore.priorityOf(
-                AccountStrategicDimension.DEATH_RISK_SENSITIVITY));
+        assertEquals(Priority.MODERATE, iron.priorityOf(
+                AccountDimension.DEATH_RISK_SENSITIVITY));
+        assertEquals(Priority.CRITICAL, hardcore.priorityOf(
+                AccountDimension.DEATH_RISK_SENSITIVITY));
     }
 
     @Test
@@ -125,53 +125,53 @@ public class AccountStrategicPriorityServiceTest
                 Collections.singletonList(new ItemState(
                         995, "Coins", 10)), now - 10L * 60L * 1000L);
 
-        AccountStrategicPriorityProfile usable = service.assess(
+        AccountPriorities usable = service.assess(
                 AccountMode.GROUP_IRONMAN,
                 data(AccountMode.GROUP_IRONMAN, 10, fresh), true);
-        AccountStrategicPriorityProfile disabled = service.assess(
+        AccountPriorities disabled = service.assess(
                 AccountMode.GROUP_IRONMAN,
                 data(AccountMode.GROUP_IRONMAN, 10, fresh), false);
-        AccountStrategicPriorityProfile expired = service.assess(
+        AccountPriorities expired = service.assess(
                 AccountMode.GROUP_IRONMAN,
                 data(AccountMode.GROUP_IRONMAN, 10, stale), true);
 
-        assertEquals(StrategicPriority.HIGH, usable.priorityOf(
-                AccountStrategicDimension.SHARED_RESOURCE_VALUE));
-        assertEquals(StrategicPriority.HIGH, usable.priorityOf(
-                AccountStrategicDimension.DUPLICATE_GRIND_PENALTY));
-        assertEquals(StrategicPriority.NONE, disabled.priorityOf(
-                AccountStrategicDimension.SHARED_RESOURCE_VALUE));
-        assertEquals(StrategicPriority.NONE, expired.priorityOf(
-                AccountStrategicDimension.DUPLICATE_GRIND_PENALTY));
+        assertEquals(Priority.HIGH, usable.priorityOf(
+                AccountDimension.SHARED_RESOURCE_VALUE));
+        assertEquals(Priority.HIGH, usable.priorityOf(
+                AccountDimension.DUPLICATE_GRIND_PENALTY));
+        assertEquals(Priority.NONE, disabled.priorityOf(
+                AccountDimension.SHARED_RESOURCE_VALUE));
+        assertEquals(Priority.NONE, expired.priorityOf(
+                AccountDimension.DUPLICATE_GRIND_PENALTY));
         assertEquals(Confidence.CHECK_NEEDED,
-                usable.get(AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE)
+                usable.get(AccountDimension.SHARED_INFRASTRUCTURE_VALUE)
                         .getConfidence());
-        assertEquals(CapabilityState.UNKNOWN, usable.get(
-                AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE)
+        assertEquals(Capability.UNKNOWN, usable.get(
+                AccountDimension.SHARED_INFRASTRUCTURE_VALUE)
                 .getCapabilityState());
     }
 
     @Test
     public void unknownModeFailsClosedOnEconomicCapabilities()
     {
-        AccountStrategicPriorityProfile unknown = service.assess(
+        AccountPriorities unknown = service.assess(
                 AccountMode.UNKNOWN, null, true);
 
-        assertEquals(StrategicPriority.CRITICAL, unknown.priorityOf(
-                AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY));
+        assertEquals(Priority.CRITICAL, unknown.priorityOf(
+                AccountDimension.GRAND_EXCHANGE_AVAILABILITY));
         assertEquals(Confidence.CHECK_NEEDED,
-                unknown.get(AccountStrategicDimension.BANK_AVAILABILITY)
+                unknown.get(AccountDimension.BANK_AVAILABILITY)
                         .getConfidence());
-        assertEquals(StrategicPriority.NONE, unknown.priorityOf(
-                AccountStrategicDimension.SHARED_RESOURCE_VALUE));
-        assertEquals(CapabilityState.UNKNOWN, unknown.get(
-                AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY)
+        assertEquals(Priority.NONE, unknown.priorityOf(
+                AccountDimension.SHARED_RESOURCE_VALUE));
+        assertEquals(Capability.UNKNOWN, unknown.get(
+                AccountDimension.GRAND_EXCHANGE_AVAILABILITY)
                 .getCapabilityState());
-        assertEquals(AccountStrategicDimensionRole.CAPABILITY_GATE,
-                AccountStrategicDimension.GRAND_EXCHANGE_AVAILABILITY
+        assertEquals(AccountDimensionRole.CAPABILITY_GATE,
+                AccountDimension.GRAND_EXCHANGE_AVAILABILITY
                         .getRole());
-        assertEquals(AccountStrategicDimensionRole.BURDEN_WEIGHT,
-                AccountStrategicDimension.DEATH_RISK_SENSITIVITY.getRole());
+        assertEquals(AccountDimensionRole.BURDEN_WEIGHT,
+                AccountDimension.DEATH_RISK_SENSITIVITY.getRole());
     }
 
     private static GameData data(AccountMode mode, int occupied,
@@ -180,14 +180,14 @@ public class AccountStrategicPriorityServiceTest
         List<ItemState> items = new ArrayList<>();
         for (int i = 0; i < occupied; i++)
             items.add(new ItemState(10_000 + i, "Item " + i, 1, i));
-        return GameData.builder(account(mode, MembershipStatus.P2P, 70))
+        return GameData.builder(account(mode, Membership.P2P, 70))
                 .inventory(new ItemsState(items))
                 .groupStorage(groupStorage)
                 .build();
     }
 
     private static AccountSnapshot account(AccountMode mode,
-            MembershipStatus membership, int level)
+            Membership membership, int level)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -197,7 +197,7 @@ public class AccountStrategicPriorityServiceTest
             xp.put(skill, 0);
         }
         return new AccountSnapshot("Priority", 1L, mode.ordinal(),
-                mode.name(), membership, membership == MembershipStatus.P2P
+                mode.name(), membership, membership == Membership.P2P
                         ? 1 : 0, level * Skill.values().length, 0L, levels, xp);
     }
 }

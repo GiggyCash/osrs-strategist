@@ -24,17 +24,17 @@ public class ContextualGearDecisionServiceTest
                 new ItemsState(Arrays.asList(
                         new ItemState(1, "Crystal body", 1)), 1L));
 
-        ContextualGearAssessment assessment =
+        GearAssessment assessment =
                 new ContextualGearDecisionService().assess(entry, context);
 
-        assertEquals(GearDecisionKind.values().length, assessment.all().size());
+        assertEquals(GearAspect.values().length, assessment.all().size());
         assertEquals(Confidence.VERIFIED,
-                assessment.get(GearDecisionKind.BEST_OWNED).getConfidence());
+                assessment.get(GearAspect.BEST_OWNED).getConfidence());
         assertEquals("Crystal body",
-                assessment.get(GearDecisionKind.BEST_OWNED).getValue());
-        assertTrue(assessment.get(GearDecisionKind.TARGET_SPECIFIC_BEST)
+                assessment.get(GearAspect.BEST_OWNED).getValue());
+        assertTrue(assessment.get(GearAspect.TARGET_SPECIFIC_BEST)
                 .getValue().contains("Bowfa"));
-        for (ContextualGearDecision decision : assessment.all().values())
+        for (GearDecision decision : assessment.all().values())
             assertFalse(decision.getValue().trim().isEmpty());
     }
 
@@ -45,14 +45,14 @@ public class ContextualGearDecisionServiceTest
                 .forStyle(CombatStyle.MELEE_SLASH).stream()
                 .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
                 .findFirst().orElseThrow(AssertionError::new);
-        ContextualGearAssessment assessment =
+        GearAssessment assessment =
                 new ContextualGearDecisionService().assess(entry,
                         context(0, null));
 
-        assertTrue(assessment.get(GearDecisionKind.BEST_OWNED).getValue()
+        assertTrue(assessment.get(GearAspect.BEST_OWNED).getValue()
                 .contains("Open the bank"));
         assertEquals(Confidence.CHECK_NEEDED,
-                assessment.get(GearDecisionKind.BEST_OWNED).getConfidence());
+                assessment.get(GearAspect.BEST_OWNED).getConfidence());
         assertFalse(ContextualGearDecisionService.isExactOwnershipTarget(
                 "Dragon/Avernic defender"));
         assertFalse(ContextualGearDecisionService.isExactOwnershipTarget(
@@ -71,9 +71,9 @@ public class ContextualGearDecisionServiceTest
                 new ContextualGearDecisionService();
 
         String iron = service.assess(entry, context(1, observed))
-                .get(GearDecisionKind.BEST_AVAILABLE_NOW).getValue();
+                .get(GearAspect.BEST_AVAILABLE_NOW).getValue();
         String main = service.assess(entry, context(0, observed))
-                .get(GearDecisionKind.BEST_AVAILABLE_NOW).getValue();
+                .get(GearAspect.BEST_AVAILABLE_NOW).getValue();
         assertTrue(iron, iron.contains("self-source"));
         assertTrue(main, main.contains("live price"));
     }
@@ -88,7 +88,7 @@ public class ContextualGearDecisionServiceTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Gear", 301L, type,
-                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
+                AccountMode.fromTypeCode(type).name(), Membership.P2P,
                 1, 80 * Skill.values().length, 0L, levels, xp);
         GameData.Builder data = GameData.builder(account)
                 .inventory(new ItemsState(Collections.emptyList()))

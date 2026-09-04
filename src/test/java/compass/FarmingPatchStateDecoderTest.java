@@ -11,30 +11,30 @@ public class FarmingPatchStateDecoderTest
     @Test
     public void herbPatchTurnsCompleteWhenGrowing()
     {
-        assertEquals(FarmingPatchCycleState.EMPTY,
+        assertEquals(PatchState.EMPTY,
                 decoder.decode(FarmingPatchKind.HERB, 0));
-        assertEquals(FarmingPatchCycleState.GROWING,
+        assertEquals(PatchState.GROWING,
                 decoder.decode(FarmingPatchKind.HERB, 4));
-        assertEquals(FarmingPatchCycleState.READY,
+        assertEquals(PatchState.READY,
                 decoder.decode(FarmingPatchKind.HERB, 8));
-        assertEquals(FarmingPatchCycleState.DISEASED,
+        assertEquals(PatchState.DISEASED,
                 decoder.decode(FarmingPatchKind.HERB, 128));
-        assertEquals(FarmingPatchCycleState.DEAD,
+        assertEquals(PatchState.DEAD,
                 decoder.decode(FarmingPatchKind.HERB, 170));
     }
 
     @Test
     public void treePatchTracksPlantAndReplantCycle()
     {
-        assertEquals(FarmingPatchCycleState.EMPTY,
+        assertEquals(PatchState.EMPTY,
                 decoder.decode(FarmingPatchKind.TREE, 0));
-        assertEquals(FarmingPatchCycleState.GROWING,
+        assertEquals(PatchState.GROWING,
                 decoder.decode(FarmingPatchKind.TREE, 8));
-        assertEquals(FarmingPatchCycleState.READY,
+        assertEquals(PatchState.READY,
                 decoder.decode(FarmingPatchKind.TREE, 13));
-        assertEquals(FarmingPatchCycleState.DISEASED,
+        assertEquals(PatchState.DISEASED,
                 decoder.decode(FarmingPatchKind.TREE, 73));
-        assertEquals(FarmingPatchCycleState.DEAD,
+        assertEquals(PatchState.DEAD,
                 decoder.decode(FarmingPatchKind.TREE, 137));
     }
 }

@@ -14,7 +14,7 @@ public class ResourceSourceCatalogTest
     {
         ResourceSourceCatalog catalog = new ResourceSourceCatalog();
         assertEquals(60, catalog.all().size());
-        for (ResourceSourceDefinition source : catalog.all())
+        for (ResourceSource source : catalog.all())
             assertFalse(source.getId(), source.getSourceIds().isEmpty());
     }
     private final ResourceSourceCatalog catalog = new ResourceSourceCatalog();
@@ -78,15 +78,15 @@ public class ResourceSourceCatalogTest
     @Test
     public void f2pAndUnknownMembershipUseOnlyExplicitlySafeItemRoutes()
     {
-        for (MembershipStatus membership : new MembershipStatus[]{
-                MembershipStatus.F2P, MembershipStatus.UNKNOWN})
+        for (Membership membership : new Membership[]{
+                Membership.F2P, Membership.UNKNOWN})
         {
             List<String> logs = catalog.suggestions("Oak logs",
                     AccountMode.IRONMAN, membership, false);
             assertFalse(logs.isEmpty());
             assertTrue(logs.get(0).contains("F2P tree tier"));
             assertTrue(catalog.match("Oak logs").get(0).getSourceIds()
-                    .contains(StrategySourceId.F2P_IRONMAN_GENERAL));
+                    .contains(Source.F2P_IRONMAN_GENERAL));
 
             assertTrue(catalog.suggestions("Teak logs", AccountMode.IRONMAN,
                     membership, false).isEmpty());
@@ -101,10 +101,10 @@ public class ResourceSourceCatalogTest
     public void f2pIronQuestMaterialsHaveConcreteSelfSources()
     {
         assertTrue(catalog.suggestions("Raw beef", AccountMode.IRONMAN,
-                MembershipStatus.F2P, false).get(0).contains("F2P cow"));
+                Membership.F2P, false).get(0).contains("F2P cow"));
         assertTrue(catalog.suggestions("Rune essence", AccountMode.IRONMAN,
-                MembershipStatus.F2P, false).get(0).contains("Sedridor"));
+                Membership.F2P, false).get(0).contains("Sedridor"));
         assertTrue(catalog.suggestions("Soft clay", AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.F2P, false).get(0).contains("F2P clay"));
+                Membership.F2P, false).get(0).contains("F2P clay"));
     }
 }

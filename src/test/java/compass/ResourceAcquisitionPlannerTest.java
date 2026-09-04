@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class ResourceAcquisitionPlannerTest
 {
     private final ResourceAcquisitionPlanner planner =
-            new ResourceAcquisitionPlanner();
+            new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
     private final ResourceNeed planks =
             new ResourceNeed(960, "Plank", 10);
 
@@ -120,15 +120,15 @@ public class ResourceAcquisitionPlannerTest
     @Test
     public void uimMergesDuplicateResourcesAcrossVerifiedSafeStorage()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
-        states.put(StorageCapability.STASH, CapabilityState.VERIFIED);
-        Map<StorageCapability, java.util.List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.POH_STORAGE, Collections.singletonList(
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.POH_STORAGE, Capability.VERIFIED);
+        states.put(StorageKind.STASH, Capability.VERIFIED);
+        Map<StorageKind, java.util.List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.POH_STORAGE, Collections.singletonList(
                 new ItemState(960, "Plank", 4)));
-        contents.put(StorageCapability.STASH, Collections.singletonList(
+        contents.put(StorageKind.STASH, Collections.singletonList(
                 new ItemState(960, "Plank", 3)));
         StrategyContext uim = context(GameData.builder(
                         account(AccountMode.ULTIMATE_IRONMAN))
@@ -147,15 +147,15 @@ public class ResourceAcquisitionPlannerTest
     @Test
     public void mergedRestrictedStorageStillRequiresExplicitRetrieval()
     {
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.POH_STORAGE, CapabilityState.VERIFIED);
-        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
-        Map<StorageCapability, java.util.List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.POH_STORAGE, Collections.singletonList(
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.POH_STORAGE, Capability.VERIFIED);
+        states.put(StorageKind.LOOTING_BAG, Capability.VERIFIED);
+        Map<StorageKind, java.util.List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.POH_STORAGE, Collections.singletonList(
                 new ItemState(960, "Plank", 3)));
-        contents.put(StorageCapability.LOOTING_BAG, Collections.singletonList(
+        contents.put(StorageKind.LOOTING_BAG, Collections.singletonList(
                 new ItemState(960, "Plank", 4)));
         StrategyContext uim = context(GameData.builder(
                         account(AccountMode.ULTIMATE_IRONMAN))
@@ -214,15 +214,7 @@ public class ResourceAcquisitionPlannerTest
             experience.put(skill, 0);
         }
 
-        return new AccountSnapshot(
-                "Test",
-                typeCode(mode),
-                mode.name(),
-                24,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Test", 0L, typeCode(mode), mode.name(), Membership.UNKNOWN, 0, 24, 0L, levels, experience);
     }
 
     private static int typeCode(AccountMode mode)

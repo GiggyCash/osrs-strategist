@@ -58,8 +58,6 @@ public class RestrictedQuestPolicyTest
         levels.put(Skill.PRAYER, prayer);
         levels.put(Skill.MAGIC, magic);
         levels.put(Skill.HITPOINTS, hp);
-        return new AccountSnapshot(
-                "Quest Build Test", 0, "Main",
-                MembershipStatus.P2P, 1, 1000, 0L, levels, xp);
+        return new AccountSnapshot("Quest Build Test", 0L, 0, "Main", Membership.P2P, 1, 1000, 0L, levels, xp);
     }
 }

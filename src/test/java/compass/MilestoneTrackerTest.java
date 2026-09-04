@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNull;
 
 public class MilestoneTrackerTest
 {
-    private final MilestoneTracker tracker = new MilestoneTracker();
+    private final MilestoneTracker tracker = TestFixtures.milestoneTracker();
 
     @Test
     public void doesNotCompleteBeforeTarget()
@@ -92,14 +92,6 @@ public class MilestoneTrackerTest
 
         levels.put(Skill.FARMING, farmingLevel);
 
-        return new AccountSnapshot(
-                "Test",
-                0,
-                "Main",
-                100,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.UNKNOWN, 0, 100, 0L, levels, experience);
     }
 }

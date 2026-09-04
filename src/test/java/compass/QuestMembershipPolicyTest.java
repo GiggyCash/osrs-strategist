@@ -11,24 +11,24 @@ public class QuestMembershipPolicyTest
     public void f2pAllowsCurrentFreeQuestsAndRejectsMembersQuests()
     {
         assertTrue(QuestMembershipPolicy.isAvailable(
-                "Cook's Assistant", MembershipStatus.F2P));
+                "Cook's Assistant", Membership.F2P));
         assertTrue(QuestMembershipPolicy.isAvailable(
-                "The Ides of Milk", MembershipStatus.F2P));
+                "The Ides of Milk", Membership.F2P));
         assertTrue(QuestMembershipPolicy.isAvailable(
-                "Dragon Slayer I", MembershipStatus.F2P));
+                "Dragon Slayer I", Membership.F2P));
         assertFalse(QuestMembershipPolicy.isAvailable(
-                "Pandemonium", MembershipStatus.F2P));
+                "Pandemonium", Membership.F2P));
         assertFalse(QuestMembershipPolicy.isAvailable(
-                "Recipe for Disaster", MembershipStatus.F2P));
+                "Recipe for Disaster", Membership.F2P));
     }
 
     @Test
     public void p2pDoesNotApplyF2pWhitelist()
     {
         assertTrue(QuestMembershipPolicy.isAvailable(
-                "Pandemonium", MembershipStatus.P2P));
+                "Pandemonium", Membership.P2P));
         assertTrue(QuestMembershipPolicy.isAvailable(
-                "Recipe for Disaster", MembershipStatus.P2P));
+                "Recipe for Disaster", Membership.P2P));
     }
 
     @Test

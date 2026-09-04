@@ -28,10 +28,10 @@ public class ProgressViewPanelTest
         panel.setSnapshot(service.snapshot(60_000L));
         paint(panel, 140, 520);
 
-        assertEquals("1,500 XP", panel.getSessionXpText());
-        assertTrue(panel.getTargetText().contains("Agility to 20"));
-        assertTrue(panel.getTargetText().contains("calculating ETA"));
-        assertEquals(1, panel.getChart().getRenderedBucketCount());
+        assertEquals("1,500 XP", panel.sessionXp.getText());
+        assertTrue(panel.target.getText().contains("Agility to 20"));
+        assertTrue(panel.target.getText().contains("calculating ETA"));
+        assertEquals(1, panel.chart.getRenderedBucketCount());
     }
 
     @Test
@@ -41,9 +41,9 @@ public class ProgressViewPanelTest
         panel.setSnapshot(null);
         paint(panel, 220, 420);
 
-        assertEquals("0 XP", panel.getSessionXpText());
-        assertEquals("No progress this session", panel.getSessionMetaText());
-        assertEquals("No active skill target", panel.getTargetText());
+        assertEquals("0 XP", panel.sessionXp.getText());
+        assertEquals("No progress this session", panel.sessionMeta.getText());
+        assertEquals("No active skill target", panel.target.getText());
     }
 
     @Test
@@ -59,9 +59,9 @@ public class ProgressViewPanelTest
         panel.setHistory(history);
         paint(panel, 220, 520);
 
-        assertTrue(panel.getLastSessionText().contains("+87,420 XP"));
-        assertTrue(panel.getLastSessionText().contains("3 levels"));
-        assertTrue(panel.getLastSessionText().contains("Fishing +87,420"));
+        assertTrue(panel.lastSession.getText().contains("+87,420 XP"));
+        assertTrue(panel.lastSession.getText().contains("3 levels"));
+        assertTrue(panel.lastSession.getText().contains("Fishing +87,420"));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class ProgressViewPanelTest
 
         panel.setHistory(history);
 
-        assertTrue(panel.getLastSessionText().contains("+0 XP"));
-        assertTrue(panel.getLastSessionText().contains(
+        assertTrue(panel.lastSession.getText().contains("+0 XP"));
+        assertTrue(panel.lastSession.getText().contains(
                 "Account progress: POH upgrade: fairy ring"));
     }
 
@@ -99,13 +99,13 @@ public class ProgressViewPanelTest
 
         panel.setPlan(plan);
 
-        assertTrue(panel.getPlanText().contains("Step 3 of 3"));
+        assertTrue(panel.planPath.getText().contains("Step 3 of 3"));
     }
 
     private static StrategicPlanStep step(String id, String objective)
     {
         return new StrategicPlanStep(id, GoalNodeKind.ACTIVITY, objective,
-                "Proven path", PlanCompletionCondition.none(), null);
+                "Proven path", CompletionRule.none(), null);
     }
 
     private static AccountSnapshot account()
@@ -118,7 +118,7 @@ public class ProgressViewPanelTest
             xp.put(skill, 0);
         }
         return new AccountSnapshot("Progress", 7L, 0, "MAIN",
-                MembershipStatus.P2P, 1, 70 * Skill.values().length,
+                Membership.P2P, 1, 70 * Skill.values().length,
                 0L, levels, xp);
     }
 

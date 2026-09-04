@@ -71,7 +71,7 @@ public class F2pRunecraftRecommendationTest
     @Test
     public void p2pLevelNineUsesConcreteEarthRunesAndAcceptsPureEssence()
     {
-        AccountSnapshot account = account(MembershipStatus.P2P, 9);
+        AccountSnapshot account = account(Membership.P2P, 9);
         GameData data = GameData.builder(account)
                 .inventory(new ItemsState(Arrays.asList(
                         new ItemState(ItemID.BLANKRUNE_HIGH, "Pure essence", 174))))
@@ -104,7 +104,7 @@ public class F2pRunecraftRecommendationTest
     public void gimLevelNineCanUseRecentlyObservedSharedEssenceForEarthRunes()
     {
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 9, 4))
+                        account(Membership.P2P, 9, 4))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.singletonList(
                         new ItemState(ItemID.TIARA_EARTH,
@@ -131,7 +131,7 @@ public class F2pRunecraftRecommendationTest
     public void skillRecommendationsNeverLeakWithoutConcreteMethods()
     {
         GameData data = GameData.builder(f2pAccount()).build();
-        RecommendationEngine engine = new RecommendationEngine(selector());
+        RecommendationEngine engine = TestFixtures.recommendationEngine(selector());
 
         java.util.List<Recommendation> recommendations = engine.recommend(
                 data,
@@ -195,13 +195,13 @@ public class F2pRunecraftRecommendationTest
                 return Arrays.asList(
                         new ActionDef(Skill.RUNECRAFT,
                                 "test:water_tiara", "Water tiara", 1, 50,
-                                null, MembershipStatus.F2P),
+                                null, Membership.F2P),
                         new ActionDef(Skill.RUNECRAFT,
                                 "test:water_rune", "Water rune", 5, 5,
-                                null, MembershipStatus.F2P));
+                                null, Membership.F2P));
             }
         };
-        AccountSnapshot account = account(MembershipStatus.F2P, 5);
+        AccountSnapshot account = account(Membership.F2P, 5);
         GameData data = GameData.builder(account)
                 .inventory(new ItemsState(Collections.singletonList(
                         new ItemState(ItemID.BLANKRUNE,
@@ -214,14 +214,14 @@ public class F2pRunecraftRecommendationTest
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR, false);
         RecommendationGuidanceService guidanceService =
                 new RecommendationGuidanceService(
-                        new AdaptiveMilestoneGuidanceService(actions,
+                        TestFixtures.adaptiveMilestoneGuidanceService(actions,
                                 new MethodExecutionProfileCatalog(),
                                 new SkillingXpModifierService()),
                         new VariableMethodGuidanceService(),
                         new UniversalSkillActionGuidanceService(actions,
                                 new UniversalActionRecipeResolver(),
                                 new SkillingXpModifierService(),
-                                new AccountResourcePlanner()));
+                                TestFixtures.accountResourcePlanner()));
 
         Guidance guidance = guidanceService.build(
                 data, Skill.RUNECRAFT, 5, 10, plan, false);
@@ -235,7 +235,7 @@ public class F2pRunecraftRecommendationTest
     {
         return new TrainingMethodSelector(
                 new TrainingMethodDatabase(),
-                new RequirementEvidenceEngine((FarmingAccessEvaluator) null),
+                new RequirementEvidenceEngine((FarmingAccessEvaluator) null, null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
                 new ExpandedTrainingMethodCatalog(),
                 new F2pBaselineMethodCatalog(),
                 new TrainingMethodPolicy()
@@ -244,15 +244,15 @@ public class F2pRunecraftRecommendationTest
 
     private static AccountSnapshot f2pAccount()
     {
-        return account(MembershipStatus.F2P, 1);
+        return account(Membership.F2P, 1);
     }
 
-    private static AccountSnapshot account(MembershipStatus membership, int runecraftLevel)
+    private static AccountSnapshot account(Membership membership, int runecraftLevel)
     {
         return account(membership, runecraftLevel, 0);
     }
 
-    private static AccountSnapshot account(MembershipStatus membership,
+    private static AccountSnapshot account(Membership membership,
             int runecraftLevel, int accountType)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -263,16 +263,6 @@ public class F2pRunecraftRecommendationTest
             xp.put(skill, 0);
         }
         levels.put(Skill.RUNECRAFT, runecraftLevel);
-        return new AccountSnapshot(
-                membership == MembershipStatus.F2P ? "F2P Test" : "P2P Test",
-                accountType,
-                AccountMode.fromTypeCode(accountType).name(),
-                membership,
-                1,
-                1,
-                0L,
-                levels,
-                xp
-        );
+        return new AccountSnapshot(membership == Membership.F2P ? "F2P Test" : "P2P Test", 0L, accountType, AccountMode.fromTypeCode(accountType).name(), membership, 1, 1, 0L, levels, xp);
     }
 }

@@ -41,7 +41,7 @@ public class MethodGuidanceReleaseTest
     private static MethodGuidanceService service()
     {
         return new MethodGuidanceService(
-                new FarmingRunPlanner(new FarmingRunCatalog()));
+                TestFixtures.farmingRunPlanner(new FarmingRunCatalog()));
     }
 
     private static Recommendation recommendation(String supplies,

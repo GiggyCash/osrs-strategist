@@ -1,9 +1,10 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
 import static compass.Text.get;
 
 import java.util.*;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Read-only item ownership queries over the evidence Compass has actually
@@ -26,11 +27,11 @@ public final class ItemIndex
     }
 
     /** Resolves an item requirement against the mode-safe observed containers. */
-    public RequirementCheck check(ResourceRequirement need)
+    public EvidenceCheck check(ResourceRequirement need)
     {
         var observed = quantity(need.getItemIds());
         if (observed >= need.getRequiredQuantity())
-            return new RequirementCheck(need.id, need.getLabel(),
+            return new EvidenceCheck(need.id, need.getLabel(),
                     RequirementState.VERIFIED, get(1435) + observed
                     + (accountMode() == AccountMode.ULTIMATE_IRONMAN
                             ? get(703) : get(704)
@@ -74,9 +75,9 @@ public final class ItemIndex
         return total;
     }
 
-    private RequirementCheck checkNeeded(ResourceRequirement need, String evidence)
+    private EvidenceCheck checkNeeded(ResourceRequirement need, String evidence)
     {
-        return new RequirementCheck(need.id, need.getLabel(),
+        return new EvidenceCheck(need.id, need.getLabel(),
                 RequirementState.CHECK_NEEDED, evidence);
     }
 
@@ -162,7 +163,7 @@ public final class ItemIndex
         for (Iterable<ItemState> items : sources)
             if (items != null) for (ItemState item : items)
             {
-                if (item == null || item.getQuantity() <= 0) continue;
+                if (item == null || item.quantity <= 0) continue;
                 int value = rank.applyAsInt(Names.lower(item.getName()));
                 if (value > bestRank) { bestRank = value; best = item.getName(); }
             }
@@ -274,7 +275,7 @@ public final class ItemIndex
             result.add(data.bank().getItems());
         if (usesGroupStorage()) result.add(data.groupStorage().getItems());
         if (data.storage() != null)
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
+            for (Map.Entry<StorageKind, List<ItemState>> entry
                     : data.storage().getObservedContents().entrySet())
                 if (data.storage().verified(entry.getKey())
                         && (mode != AccountMode.ULTIMATE_IRONMAN
@@ -288,7 +289,7 @@ public final class ItemIndex
         List<Iterable<ItemState>> result = new ArrayList<>();
         if (data != null && accountMode() == AccountMode.ULTIMATE_IRONMAN
                 && data.storage() != null)
-            for (Map.Entry<StorageCapability, List<ItemState>> entry
+            for (Map.Entry<StorageKind, List<ItemState>> entry
                     : data.storage().getObservedContents().entrySet())
                 if (data.storage().verified(entry.getKey())
                         && isRestrictedUimStorage(entry.getKey()))
@@ -296,7 +297,7 @@ public final class ItemIndex
         return result;
     }
 
-    private static boolean isRestrictedUimStorage(StorageCapability capability)
+    private static boolean isRestrictedUimStorage(StorageKind capability)
     {
         return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
@@ -315,7 +316,7 @@ public final class ItemIndex
             {
                 if (name != null && actual.equals(Names.lower(name)))
                 {
-                    total = safeAdd(total, Math.max(0, item.getQuantity()));
+                    total = safeAdd(total, max(0, item.quantity));
                     break;
                 }
             }
@@ -330,9 +331,9 @@ public final class ItemIndex
         for (ItemState item : items)
             if (item != null)
                 for (int id : ids)
-                    if (item.getItemId() == id)
+                    if (item.itemId == id)
                     {
-                        total = safeAdd(total, Math.max(0, item.getQuantity()));
+                        total = safeAdd(total, max(0, item.quantity));
                         break;
                     }
         return total;
@@ -348,7 +349,7 @@ public final class ItemIndex
             if (item == null || item.getName() == null
                     || !itemClass.matches(item.getName())
                     || excluded(item.getName(), excludedNames)) continue;
-            total = safeAdd(total, Math.max(0, item.getQuantity()));
+            total = safeAdd(total, max(0, item.quantity));
         }
         return total;
     }

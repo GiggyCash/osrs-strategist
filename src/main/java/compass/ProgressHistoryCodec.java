@@ -1,10 +1,8 @@
 package compass;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import static compass.Text.get;
+
+import com.google.gson.*;
 import java.util.*;
 import net.runelite.api.Skill;
 
@@ -25,25 +23,25 @@ final class ProgressHistoryCodec
         for (ProgressSessionSummary value : history.getSessions())
         {
             var object = new JsonObject();
-            object.addProperty("startedAtMillis", value.getStartedAtMillis());
+            object.addProperty("startedAtMillis", value.startedAtMillis);
             object.addProperty("endedAtMillis", value.getEndedAtMillis());
-            object.addProperty(Text.get(1906),
-                    value.getActiveDurationMillis());
+            object.addProperty(get(1906),
+                    value.activeDurationMillis);
             object.addProperty("totalXpGained", value.getTotalXpGained());
             object.addProperty("levelsGained", value.getLevelsGained());
             object.add("xpBySkill", skills(value.getXpBySkill()));
-            object.add("milestones", milestones(value.getMilestones()));
+            object.add("milestones", milestones(value.milestones));
             sessions.add(object);
         }
         root.add("sessions", sessions);
 
-        root.add("milestones", milestones(history.getMilestones()));
+        root.add("milestones", milestones(history.milestones));
 
         var buckets = new JsonArray();
         for (ProgressTimeBucket value : history.getBuckets())
         {
             var object = new JsonObject();
-            object.addProperty("startedAtMillis", value.getStartedAtMillis());
+            object.addProperty("startedAtMillis", value.startedAtMillis);
             object.add("xpBySkill", skills(value.getXpBySkill()));
             buckets.add(object);
         }
@@ -84,7 +82,7 @@ final class ProgressHistoryCodec
             if (object == null) continue;
             var started = naturalLong(object.get("startedAtMillis"), -1L);
             var ended = naturalLong(object.get("endedAtMillis"), -1L);
-            var active = naturalLong(object.get(Text.get(1906)), -1L);
+            var active = naturalLong(object.get(get(1906)), -1L);
             var xp = naturalLong(object.get("totalXpGained"), -1L);
             var levels = integer(object.get("levelsGained"), -1);
             if (started < 0L || ended < started || active < 0L
@@ -115,7 +113,7 @@ final class ProgressHistoryCodec
             var type = string(object, "type");
             var title = string(object, "title");
             long at = object == null ? -1L
-                    : naturalLong(object.get(Text.get(1907)), -1L);
+                    : naturalLong(object.get(get(1907)), -1L);
             if (id == null || type == null || title == null || at < 0L)
                 continue;
             try
@@ -142,10 +140,10 @@ final class ProgressHistoryCodec
             var object = new JsonObject();
             object.addProperty("id", value.id);
             object.addProperty("type", value.getType().name());
-            object.addProperty("title", value.getTitle());
+            object.addProperty("title", value.title);
             addOptional(object, "detail", value.getDetail());
             addOptional(object, "goalId", value.getGoalId());
-            object.addProperty(Text.get(1907), value.getOccurredAtMillis());
+            object.addProperty(get(1907), value.getOccurredAtMillis());
             result.add(object);
         }
         return result;

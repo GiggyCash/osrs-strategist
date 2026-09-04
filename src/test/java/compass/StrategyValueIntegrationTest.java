@@ -88,7 +88,7 @@ public class StrategyValueIntegrationTest
                                         Skill.FIREMAKING,
                                         "runelite:firemaking:logs", "Logs",
                                         1, 40.0f, null,
-                                        MembershipStatus.F2P, ItemID.LOGS));
+                                        Membership.F2P, ItemID.LOGS));
                     }
                 };
         Recommendation valued = new MethodResourceValueService(liveActions)
@@ -112,7 +112,7 @@ public class StrategyValueIntegrationTest
                 Collections.singletonList(new Recommendation(
                         "slayer:get-task", "Get a task", "Observed no-task state.",
                         60.0, Confidence.VERIFIED, guidance(),
-                        SafetyEvidence.verifiedSafe(false))),
+                        Safety.verifiedSafe(false))),
                 Collections.singleton("skill:slayer"));
         GameData data = GameData.builder(account("MAIN"))
                 .build();
@@ -140,7 +140,7 @@ public class StrategyValueIntegrationTest
         StrategyCandidateRegistry registry = provider == null ? null
                 : new StrategyCandidateRegistry(
                         Collections.singletonList(provider));
-        return new StrategyEngine(recommendations, null, null, registry,
+        return TestFixtures.strategyEngine(recommendations, null, null, registry,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
@@ -161,7 +161,9 @@ public class StrategyValueIntegrationTest
     private static RecommendationEngine recommendationEngine(
             Recommendation recommendation)
     {
-        return new RecommendationEngine((TrainingMethodSelector) null)
+        return new RecommendationEngine((TrainingMethodSelector) null,
+                TestFixtures.recommendationGuidanceService(),
+                null, null, null, null, null)
         {
             @Override
             public List<Recommendation> recommendAll(
@@ -183,7 +185,7 @@ public class StrategyValueIntegrationTest
                 Collections.emptyList());
         return new Recommendation(id, "Train Farming", "Test.", 40.0,
                 plan, Confidence.VERIFIED, current, target,
-                guidance(), SafetyEvidence.skill(false,
+                guidance(), Safety.skill(false,
                         method.getSkill()));
     }
 
@@ -192,7 +194,7 @@ public class StrategyValueIntegrationTest
     {
         return new Recommendation(id, id, "Neutral test wording.", score,
                 null, Confidence.VERIFIED, 0, 0, guidance(),
-                SafetyEvidence.verifiedSafe(false))
+                Safety.verifiedSafe(false))
                 .withStrategicValue(value);
     }
 
@@ -236,7 +238,7 @@ public class StrategyValueIntegrationTest
         }
         if (override != null) levels.put(override, overrideLevel);
         return new AccountSnapshot("Integration", 991L, typeCode, type,
-                MembershipStatus.P2P, 1, 70 * Skill.values().length,
+                Membership.P2P, 1, 70 * Skill.values().length,
                 100, levels, xp);
     }
 }

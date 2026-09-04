@@ -27,9 +27,7 @@ public class AccountModePairRedTeamTest
             Skill.FISHING, Skill.SLAYER);
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
             new TrainingMethodDatabase(),
-            new RequirementEvidenceEngine(
-                    new FarmingAccessEvaluator(new FarmingAccessCatalog()),
-                    new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+            new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
             new ExpandedTrainingMethodCatalog(),
             new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
 
@@ -39,7 +37,7 @@ public class AccountModePairRedTeamTest
         for (AccountMode mode : Arrays.asList(AccountMode.MAIN,
                 AccountMode.IRONMAN, AccountMode.ULTIMATE_IRONMAN))
         {
-            GameData data = data(mode, MembershipStatus.P2P,
+            GameData data = data(mode, Membership.P2P,
                     carriedSetup(), null);
             for (Skill skill : HIGH_IMPACT_SKILLS)
             {
@@ -51,7 +49,7 @@ public class AccountModePairRedTeamTest
                 if (mode == AccountMode.ULTIMATE_IRONMAN)
                     for (TrainingPlan plan : plans)
                         assertNotEquals(skill + " leaked a bank loop",
-                                MethodBankingBehavior.CONVENTIONAL_BANK_LOOP,
+                                BankingMode.CONVENTIONAL_BANK_LOOP,
                                 plan.getStrategyProfile().getBankingBehavior());
             }
         }
@@ -61,9 +59,9 @@ public class AccountModePairRedTeamTest
     public void mainVersusUimChangesSmithingAndRunecraftGeneration()
     {
         GameData main = data(AccountMode.MAIN,
-                MembershipStatus.F2P, carriedSetup(), null);
+                Membership.F2P, carriedSetup(), null);
         GameData uim = data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.F2P, carriedSetup(), null);
+                Membership.F2P, carriedSetup(), null);
 
         TrainingPlan mainSmithing = winner(main, Skill.SMITHING, 1);
         TrainingPlan uimSmithing = winner(uim, Skill.SMITHING, 1);
@@ -130,10 +128,10 @@ public class AccountModePairRedTeamTest
             assertNotNull(id + " Main", main);
             assertNotNull(id + " Iron", iron);
             assertNotNull(id + " UIM", uim);
-            assertEquals(id + " Main tier", StrategyKnowledgeTier.VERIFIED_SHARED,
+            assertEquals(id + " Main tier", KnowledgeTier.VERIFIED_SHARED,
                     main.getTier());
             assertEquals(id + " UIM tier",
-                    StrategyKnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
+                    KnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
                     uim.getTier());
         }
     }
@@ -142,15 +140,15 @@ public class AccountModePairRedTeamTest
     public void mainIronGimAndUimResourceRoutesUseModeEvidence()
     {
         ResourceNeed need = new ResourceNeed(5000, "Steel bar", 10);
-        ResourceAcquisitionPlanner planner = new ResourceAcquisitionPlanner();
+        ResourceAcquisitionPlanner planner = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
 
         assertEquals(AcquisitionSource.GRAND_EXCHANGE,
                 planner.plan(context(data(AccountMode.MAIN,
-                        MembershipStatus.P2P, carriedSetup(), null), false),
+                        Membership.P2P, carriedSetup(), null), false),
                         need).getSource());
         assertEquals(AcquisitionSource.SELF_SOURCE,
                 planner.plan(context(data(AccountMode.IRONMAN,
-                        MembershipStatus.P2P, carriedSetup(), null), false),
+                        Membership.P2P, carriedSetup(), null), false),
                         need).getSource());
 
         ItemsState group = new ItemsState(true,
@@ -160,11 +158,11 @@ public class AccountModePairRedTeamTest
                 AccountMode.UNRANKED_GROUP_IRONMAN))
             assertEquals(groupMode.name(), AcquisitionSource.GROUP_STORAGE,
                     planner.plan(context(data(groupMode,
-                            MembershipStatus.P2P, carriedSetup(), group), true),
+                            Membership.P2P, carriedSetup(), group), true),
                             need).getSource());
 
         GameData uimBase = data(
-                AccountMode.ULTIMATE_IRONMAN, MembershipStatus.P2P,
+                AccountMode.ULTIMATE_IRONMAN, Membership.P2P,
                 carriedSetup(), null);
         GameData uimWithIllegalBank = GameData.builder(
                 uimBase.account())
@@ -194,14 +192,14 @@ public class AccountModePairRedTeamTest
         TrainingMethodPolicy policy = new TrainingMethodPolicy();
 
         assertTrue(policy.isAllowed(data(AccountMode.IRONMAN,
-                MembershipStatus.P2P, carriedSetup(), null), wilderness,
+                Membership.P2P, carriedSetup(), null), wilderness,
                 metadata, true));
         assertFalse(policy.isAllowed(data(AccountMode.HARDCORE_IRONMAN,
-                MembershipStatus.P2P, carriedSetup(), null), wilderness,
+                Membership.P2P, carriedSetup(), null), wilderness,
                 metadata, true));
         assertFalse(policy.isAllowed(data(
                 AccountMode.HARDCORE_GROUP_IRONMAN,
-                MembershipStatus.P2P, carriedSetup(), null), wilderness,
+                Membership.P2P, carriedSetup(), null), wilderness,
                 metadata, true));
     }
 
@@ -211,9 +209,9 @@ public class AccountModePairRedTeamTest
         ActivityStrategyKnowledgeService knowledge =
                 new ActivityStrategyKnowledgeService();
         StrategyContext uim = context(data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P, fullInventory(), null), false);
+                Membership.P2P, fullInventory(), null), false);
         StrategyContext main = context(data(AccountMode.MAIN,
-                MembershipStatus.P2P, fullInventory(), null), false);
+                Membership.P2P, fullInventory(), null), false);
 
         for (String id : Arrays.asList("quest:waterfall-quest", "clue:step",
                 "minigame:tempoross", "upgrade:fighter-torso", "pvm:tztok_jad",
@@ -230,9 +228,9 @@ public class AccountModePairRedTeamTest
     public void fullInventoryRejectsEverySkillingFootprintThatDoesNotFit()
     {
         GameData normal = data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P, carriedSetup(), null);
+                Membership.P2P, carriedSetup(), null);
         GameData full = data(AccountMode.ULTIMATE_IRONMAN,
-                MembershipStatus.P2P, fullInventory(), null);
+                Membership.P2P, fullInventory(), null);
         for (Skill skill : Arrays.asList(Skill.SMITHING, Skill.CRAFTING,
                 Skill.HERBLORE, Skill.CONSTRUCTION, Skill.RUNECRAFT,
                 Skill.FARMING, Skill.PRAYER, Skill.FISHING))
@@ -248,7 +246,7 @@ public class AccountModePairRedTeamTest
                 assertEquals(skill.getName() + " plan does not fit zero free slots",
                         0, plan.getStrategyProfile().getInventoryFootprint()
                                 .getMinimumPracticalFreeSlots());
-                assertNotEquals(MethodBankingBehavior.CONVENTIONAL_BANK_LOOP,
+                assertNotEquals(BankingMode.CONVENTIONAL_BANK_LOOP,
                         plan.getStrategyProfile().getBankingBehavior());
             }
         }
@@ -268,7 +266,7 @@ public class AccountModePairRedTeamTest
                 Confidence.VERIFIED, 0, 0,
                 new Guidance("Do it.", "Observed setup",
                         "Verified location", "Note"),
-                SafetyEvidence.harmless(false));
+                Safety.harmless(false));
     }
 
     private static StrategyContext context(GameData data,
@@ -281,7 +279,7 @@ public class AccountModePairRedTeamTest
     }
 
     private static GameData data(AccountMode mode,
-            MembershipStatus membership, List<ItemState> inventory,
+            Membership membership, List<ItemState> inventory,
             ItemsState groupStorage)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -302,7 +300,7 @@ public class AccountModePairRedTeamTest
         quests.put("The Knight's Sword", QuestStatus.COMPLETE);
         AccountSnapshot account = new AccountSnapshot(mode.name(),
                 1000L + typeCode(mode), typeCode(mode), mode.name(),
-                membership, membership == MembershipStatus.P2P ? 1 : 0,
+                membership, membership == Membership.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
         GameData.Builder builder = GameData.builder(account)
                 .inventory(new ItemsState(inventory, true))

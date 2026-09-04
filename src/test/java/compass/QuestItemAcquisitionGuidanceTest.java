@@ -16,7 +16,7 @@ public class QuestItemAcquisitionGuidanceTest
     @Test
     public void observedShortfallIsExposedStructurally()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Death rune", 5, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         GameData data = GameData.builder(account(0))
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -36,7 +36,7 @@ public class QuestItemAcquisitionGuidanceTest
     @Test
     public void unobservedEnabledGroupStorageDoesNotBecomeFakeGimShortfall()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Rope", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         GameData data = GameData.builder(account(4))
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -54,10 +54,10 @@ public class QuestItemAcquisitionGuidanceTest
     @Test
     public void verifiedMissingAlternativeChoosesOneConcreteBranch()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.anyOf(
-                ItemRequirementExpression.item("Death rune", 5,
+        ItemRule requirement = ItemRule.anyOf(
+                ItemRule.item("Death rune", 5,
                         ItemRequirementScope.OWNED_OR_RETRIEVABLE),
-                ItemRequirementExpression.item("Chaos rune", 10,
+                ItemRule.item("Chaos rune", 10,
                         ItemRequirementScope.OWNED_OR_RETRIEVABLE));
         GameData data = GameData.builder(account(1))
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -75,19 +75,15 @@ public class QuestItemAcquisitionGuidanceTest
     @Test
     public void ironQuestPreparationUsesAccountAwareSourceGuidance()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Death rune", 5, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("Test quest", false,
-                Collections.emptyList(), Collections.<Skill, Integer>emptyMap(),
-                Collections.emptyList(), requirement, 0, Collections.emptyList(),
-                "Test location", Collections.singletonList("Test unlock"),
-                Collections.<Skill, Integer>emptyMap());
+        QuestDefinition quest = new QuestDefinition("Test quest", false, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         GameData data = GameData.builder(account(1))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
-        QuestResolution result = new QuestRequirementResolver().resolve(
+        QuestResolution result = TestFixtures.questRequirementResolver().resolve(
                 quest, context(data, false));
 
         assertEquals(Confidence.CHECK_NEEDED,
@@ -102,20 +98,16 @@ public class QuestItemAcquisitionGuidanceTest
     @Test
     public void f2pIronQuestUsesOnlyAnExplicitF2pResourceRoute()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Raw beef", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("F2P test quest", true,
-                Collections.emptyList(), Collections.<Skill, Integer>emptyMap(),
-                Collections.emptyList(), requirement, 0, Collections.emptyList(),
-                "Lumbridge", Collections.emptyList(),
-                Collections.<Skill, Integer>emptyMap());
+        QuestDefinition quest = new QuestDefinition("F2P test quest", true, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Lumbridge", Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         GameData data = GameData.builder(
-                        account(1, MembershipStatus.F2P))
+                        account(1, Membership.F2P))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
-        QuestResolution result = new QuestRequirementResolver().resolve(
+        QuestResolution result = TestFixtures.questRequirementResolver().resolve(
                 quest, context(data, false));
 
         assertTrue(result.getGuidance().getAction().contains("F2P cow"));
@@ -131,11 +123,11 @@ public class QuestItemAcquisitionGuidanceTest
 
     private static AccountSnapshot account(int type)
     {
-        return account(type, MembershipStatus.P2P);
+        return account(type, Membership.P2P);
     }
 
     private static AccountSnapshot account(int type,
-            MembershipStatus membership)
+            Membership membership)
     {
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);
         EnumMap<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -144,8 +136,7 @@ public class QuestItemAcquisitionGuidanceTest
             levels.put(skill, 70);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot("Player", type, "test",
-                membership, 0, 1500, 0L, levels, xp);
+        return new AccountSnapshot("Player", 0L, type, "test", membership, 0, 1500, 0L, levels, xp);
     }
 
     private static ItemState item(String name, int quantity)

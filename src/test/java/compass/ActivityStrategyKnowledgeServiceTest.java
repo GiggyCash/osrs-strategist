@@ -66,7 +66,7 @@ public class ActivityStrategyKnowledgeServiceTest
                 Confidence.VERIFIED, 0, 0,
                 new Guidance("Do it.", "Observed setup",
                         "Verified location", "Note"),
-                SafetyEvidence.harmless(false));
+                Safety.harmless(false));
     }
 
     private static GameData fullInventory()
@@ -97,7 +97,6 @@ public class ActivityStrategyKnowledgeServiceTest
             levels.put(skill, 50);
             xp.put(skill, 101_333);
         }
-        return new AccountSnapshot("Uim", 2, "Ultimate Ironman",
-                MembershipStatus.P2P, 50, 50, 101_333L, levels, xp);
+        return new AccountSnapshot("Uim", 0L, 2, "Ultimate Ironman", Membership.P2P, 50, 50, 101_333L, levels, xp);
     }
 }

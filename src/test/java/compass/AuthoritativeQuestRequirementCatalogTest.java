@@ -65,7 +65,7 @@ public class AuthoritativeQuestRequirementCatalogTest
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.QUEST_CAPE, false, false,
                 new PreferenceProfile());
-        QuestResolution result = new QuestRequirementResolver().resolve(quest, context);
+        QuestResolution result = TestFixtures.questRequirementResolver().resolve(quest, context);
         assertTrue(result.getGuidance().getAction().contains("Smithing"));
     }
 
@@ -74,7 +74,6 @@ public class AuthoritativeQuestRequirementCatalogTest
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);
         EnumMap<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, level); xp.put(skill, 0); }
-        return new AccountSnapshot("Player", 0, "Main", MembershipStatus.P2P,
-                0, level * Skill.values().length, 0, levels, xp);
+        return new AccountSnapshot("Player", 0L, 0, "Main", Membership.P2P, 0, level * Skill.values().length, 0, levels, xp);
     }
 }

@@ -19,7 +19,7 @@ public class UimRecommendationSafetyPolicyTest
         Recommendation banked = recommendation(
                 "Mine pay-dirt, bank the ores, and repeat.",
                 "Bank near Motherlode Mine.")
-                .withSafetyEvidence(SafetyEvidence
+                .withSafetyEvidence(Safety
                         .skill(true, Skill.MINING)
                         .requiringConventionalBank());
         Recommendation carried = recommendation(
@@ -35,12 +35,12 @@ public class UimRecommendationSafetyPolicyTest
     public void everyTypedConventionalBankDependencyIsRejectedForUim()
     {
         CandidateSafetyPolicy policy = new CandidateSafetyPolicy();
-        SafetyEvidence[] evidence = {
-                SafetyEvidence.harmless(true),
-                SafetyEvidence.skill(true, Skill.MINING),
-                SafetyEvidence.verifiedSafe(true)
+        Safety[] evidence = {
+                Safety.harmless(true),
+                Safety.skill(true, Skill.MINING),
+                Safety.verifiedSafe(true)
         };
-        for (SafetyEvidence value : evidence)
+        for (Safety value : evidence)
             assertFalse(policy.isAllowed(recommendation(
                     "Follow the named mining loop.", "East Lumbridge Swamp.")
                     .withSafetyEvidence(
@@ -53,7 +53,7 @@ public class UimRecommendationSafetyPolicyTest
                 "Reason", 10, null, Confidence.VERIFIED,
                 45, 50, new Guidance(action,
                         "Bronze pickaxe.", location, null),
-                SafetyEvidence.skill(true, Skill.MINING));
+                Safety.skill(true, Skill.MINING));
     }
 
     private static StrategyContext context(int type)
@@ -67,7 +67,7 @@ public class UimRecommendationSafetyPolicyTest
         }
         AccountSnapshot account = new AccountSnapshot("Mode", 100L + type,
                 type, AccountMode.fromTypeCode(type).name(),
-                MembershipStatus.P2P, 1, 45 * Skill.values().length,
+                Membership.P2P, 1, 45 * Skill.values().length,
                 0L, levels, xp);
         return new StrategyContext(GameData.builder(account).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,

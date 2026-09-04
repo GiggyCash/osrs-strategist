@@ -1,49 +1,20 @@
 package compass;
+import lombok.*;
+import static net.runelite.api.gameval.ItemID.*;
+import static net.runelite.api.Skill.*;
+import static java.util.Collections.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import lombok.Getter;
-import net.runelite.api.Quest;
-import net.runelite.api.Skill;
-import net.runelite.api.gameval.ItemID;
+import java.util.regex.*;
+import javax.inject.*;
+import net.runelite.api.*;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.hiscore.HiscoreSkill;
 import net.runelite.client.hiscore.HiscoreSkillType;
-import net.runelite.client.plugins.skillcalculator.skills.AgilityAction;
-import net.runelite.client.plugins.skillcalculator.skills.ConstructionAction;
-import net.runelite.client.plugins.skillcalculator.skills.CookingAction;
-import net.runelite.client.plugins.skillcalculator.skills.CraftingAction;
-import net.runelite.client.plugins.skillcalculator.skills.FarmingAction;
-import net.runelite.client.plugins.skillcalculator.skills.FiremakingAction;
-import net.runelite.client.plugins.skillcalculator.skills.FishingAction;
-import net.runelite.client.plugins.skillcalculator.skills.FletchingAction;
-import net.runelite.client.plugins.skillcalculator.skills.HerbloreAction;
-import net.runelite.client.plugins.skillcalculator.skills.HunterAction;
-import net.runelite.client.plugins.skillcalculator.skills.MagicAction;
-import net.runelite.client.plugins.skillcalculator.skills.MiningAction;
-import net.runelite.client.plugins.skillcalculator.skills.PrayerAction;
-import net.runelite.client.plugins.skillcalculator.skills.RunecraftAction;
-import net.runelite.client.plugins.skillcalculator.skills.SkillAction;
-import net.runelite.client.plugins.skillcalculator.skills.SmithingAction;
-import net.runelite.client.plugins.skillcalculator.skills.ThievingAction;
-import net.runelite.client.plugins.skillcalculator.skills.WoodcuttingAction;
+import net.runelite.client.plugins.skillcalculator.skills.*;
 import static compass.Text.get;
 
 /** High-value abilities loaded from the bundled catalog. */
@@ -68,7 +39,7 @@ final class AbilityUnlockCatalog extends IndexedCatalog<AbilityUnlockDefinition>
 @Singleton
 final class ActivityStrategyKnowledgeCatalog
 {
-    private final List<ActivityStrategyProfile> profiles = Collections.unmodifiableList(Arrays.asList(
+    private final List<ActivityStrategyProfile> profiles = unmodifiableList(Arrays.asList(
             BundledCatalogLoader.array(Text.get(88),
                     ActivityStrategyProfile[].class)));
 
@@ -104,8 +75,8 @@ class AgilityCourseCatalog extends CatalogStore<AgilityCourseDefinition>
 /** Pinned Wiki quest-detail evidence. Runtime access is strictly local. */
 final class AuthoritativeQuestEnrichmentCatalog
 {
-    public static final String PROVENANCE = get(39);
-    private static final String RESOURCE = get(1586);
+    public static final String PROVENANCE = Text.get(39);
+    private static final String RESOURCE = Text.get(1586);
     private final Map<String, Record> records;
 
     public AuthoritativeQuestEnrichmentCatalog()
@@ -115,9 +86,9 @@ final class AuthoritativeQuestEnrichmentCatalog
         {
             record.validate();
             if (values.put(Names.words(record.name), record) != null)
-                throw new IllegalStateException(get(1111) + record.name);
+                throw new IllegalStateException(Text.get(1111) + record.name);
         }
-        records = Collections.unmodifiableMap(values);
+        records = unmodifiableMap(values);
     }
 
     public Record recordFor(String name)
@@ -137,17 +108,17 @@ final class AuthoritativeQuestEnrichmentCatalog
     {
         Map<String, String> result = new HashMap<>();
         String[][] values = {
-                {get(51), get(52)},
-                {get(1112), get(53)},
-                {get(54), get(40)},
-                {get(1113), get(41)},
-                {get(1114), get(42)},
-                {get(1115), get(1116)},
-                {get(1117), get(43)},
-                {get(1118), get(44)},
-                {get(1119), get(45)},
-                {get(1120), get(46)},
-                {"Vale Totems", get(1121)}
+                {Text.get(51), Text.get(52)},
+                {Text.get(1112), Text.get(53)},
+                {Text.get(54), Text.get(40)},
+                {Text.get(1113), Text.get(41)},
+                {Text.get(1114), Text.get(42)},
+                {Text.get(1115), Text.get(1116)},
+                {Text.get(1117), Text.get(43)},
+                {Text.get(1118), Text.get(44)},
+                {Text.get(1119), Text.get(45)},
+                {Text.get(1120), Text.get(46)},
+                {"Vale Totems", Text.get(1121)}
         };
         for (String[] alias : values) result.put(Names.words(alias[0]), alias[1]);
         return result;
@@ -192,8 +163,6 @@ final class AuthoritativeQuestEnrichmentCatalog
         public boolean hasCombatEvidence() { return combatState.isEvidence(); }
         public boolean hasRewardEvidence() { return rewardsState.isEvidence(); }
         public boolean hasStrictItemEvidence() { return itemsState.isStrictEvidence(); }
-        public boolean hasStrictRequirementEvidence() { return requirementsState.isStrictEvidence(); }
-        public boolean hasStrictCombatEvidence() { return combatState.isStrictEvidence(); }
         public boolean hasStrictRewardEvidence() { return rewardsState.isStrictEvidence(); }
         public boolean hasLegacyEvidence()
         {
@@ -206,7 +175,7 @@ final class AuthoritativeQuestEnrichmentCatalog
         private void validate()
         {
             if (name == null || name.trim().isEmpty())
-                throw new IllegalStateException(get(1122));
+                throw new IllegalStateException(Text.get(1122));
             validate(start, startState, "start");
             validate(requirements, requirementsState, "requirements");
             validate(items, itemsState, "items");
@@ -222,7 +191,7 @@ final class AuthoritativeQuestEnrichmentCatalog
                     || ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE
                     || state == EvidenceState.SOURCE_MISSING || state == EvidenceState.PARSE_FAILURE
                     || state == EvidenceState.UNSUPPORTED_STRUCTURE) && !blank))
-                throw new IllegalStateException(get(1123) + field);
+                throw new IllegalStateException(Text.get(1123) + field);
         }
     }
 }
@@ -244,7 +213,7 @@ final class AuthoritativeQuestRequirementCatalog
             if (key.isEmpty() || values.put(key, record) != null)
                 throw new IllegalStateException(Text.get(1124) + record.name);
         }
-        records = Collections.unmodifiableMap(values);
+        records = unmodifiableMap(values);
     }
 
     public Map<String, Record> all() { return records; }
@@ -265,13 +234,13 @@ final class AuthoritativeQuestRequirementCatalog
             otherChecks = immutable(otherChecks);
             EnumMap<Skill, Integer> skillCopy = new EnumMap<>(Skill.class);
             if (skills != null) skillCopy.putAll(skills);
-            skills = Collections.unmodifiableMap(skillCopy);
+            skills = unmodifiableMap(skillCopy);
             startLocation = startLocation == null ? "" : startLocation;
         }
         private static List<String> immutable(List<String> values)
         {
-            return values == null ? Collections.emptyList()
-                    : Collections.unmodifiableList(new ArrayList<>(values));
+            return values == null ? emptyList()
+                    : unmodifiableList(new ArrayList<>(values));
         }
     }
 }
@@ -296,7 +265,7 @@ final class DiaryTaskCatalog
 
     public DiaryTaskCatalog()
     {
-        tasks = Collections.unmodifiableList(load());
+        tasks = unmodifiableList(load());
         if (tasks.size() != EXPECTED_TASKS)
             throw new IllegalStateException("Expected " + EXPECTED_TASKS
                     + Text.get(1128) + tasks.size());
@@ -309,20 +278,8 @@ final class DiaryTaskCatalog
         List<DiaryTaskDefinition> result = new ArrayList<>();
         for (DiaryTaskDefinition task : tasks)
             if (task.getRegion().equalsIgnoreCase(region)
-                    && task.getTier() == tier) result.add(task);
-        return Collections.unmodifiableList(result);
-    }
-
-    public Map<String, Map<DiaryTier, Integer>> census()
-    {
-        Map<String, Map<DiaryTier, Integer>> result = new LinkedHashMap<>();
-        for (DiaryTaskDefinition task : tasks)
-        {
-            Map<DiaryTier, Integer> tiers = result.computeIfAbsent(
-                    task.getRegion(), key -> new LinkedHashMap<>());
-            tiers.put(task.getTier(), tiers.getOrDefault(task.getTier(), 0) + 1);
-        }
-        return Collections.unmodifiableMap(result);
+                    && task.tier == tier) result.add(task);
+        return unmodifiableList(result);
     }
 
     private static List<DiaryTaskDefinition> load()
@@ -418,43 +375,43 @@ class FarmingRunCatalog extends CatalogStore<FarmingRunPatchDefinition>
 class FarmingSupplyCatalog
 {
     private static final SupplyOption[] HERB_SEEDS = {
-            option(9, ItemID.GUAM_SEED),
-            option(14, ItemID.MARRENTILL_SEED),
-            option(19, ItemID.TARROMIN_SEED),
-            option(26, ItemID.HARRALANDER_SEED),
-            option(32, ItemID.RANARR_SEED),
-            option(38, ItemID.TOADFLAX_SEED),
-            option(44, ItemID.IRIT_SEED),
-            option(50, ItemID.AVANTOE_SEED),
-            option(56, ItemID.KWUARM_SEED),
-            option(62, ItemID.SNAPDRAGON_SEED),
-            option(67, ItemID.CADANTINE_SEED),
-            option(73, ItemID.LANTADYME_SEED),
-            option(79, ItemID.DWARF_WEED_SEED),
-            option(85, ItemID.TORSTOL_SEED)
+            option(9, GUAM_SEED),
+            option(14, MARRENTILL_SEED),
+            option(19, TARROMIN_SEED),
+            option(26, HARRALANDER_SEED),
+            option(32, RANARR_SEED),
+            option(38, TOADFLAX_SEED),
+            option(44, IRIT_SEED),
+            option(50, AVANTOE_SEED),
+            option(56, KWUARM_SEED),
+            option(62, SNAPDRAGON_SEED),
+            option(67, CADANTINE_SEED),
+            option(73, LANTADYME_SEED),
+            option(79, DWARF_WEED_SEED),
+            option(85, TORSTOL_SEED)
     };
 
     private static final SupplyOption[] TREE_SAPLINGS = {
-            option(15, ItemID.PLANTPOT_OAK_SAPLING),
-            option(30, ItemID.PLANTPOT_WILLOW_SAPLING),
-            option(45, ItemID.PLANTPOT_MAPLE_SAPLING),
-            option(60, ItemID.PLANTPOT_YEW_SAPLING),
-            option(75, ItemID.PLANTPOT_MAGIC_TREE_SAPLING)
+            option(15, PLANTPOT_OAK_SAPLING),
+            option(30, PLANTPOT_WILLOW_SAPLING),
+            option(45, PLANTPOT_MAPLE_SAPLING),
+            option(60, PLANTPOT_YEW_SAPLING),
+            option(75, PLANTPOT_MAGIC_TREE_SAPLING)
     };
 
     public ResourceRequirement rake()
     {
-        return new ResourceRequirement("resource:rake", "Rake", 1, ItemID.RAKE);
+        return new ResourceRequirement("resource:rake", "Rake", 1, RAKE);
     }
 
     public ResourceRequirement dibber()
     {
-        return new ResourceRequirement("resource:dibber", "Seed dibber", 1, ItemID.DIBBER);
+        return new ResourceRequirement("resource:dibber", "Seed dibber", 1, DIBBER);
     }
 
     public ResourceRequirement spade()
     {
-        return new ResourceRequirement("resource:spade", "Spade", 1, ItemID.SPADE);
+        return new ResourceRequirement("resource:spade", "Spade", 1, SPADE);
     }
 
     public ResourceRequirement herbSeedsForLevel(int level)
@@ -468,14 +425,14 @@ class FarmingSupplyCatalog
     {
         return new ResourceRequirement(
                 Text.get(1700), Text.get(1133), 3,
-                ItemID.POTATO_SEED);
+                POTATO_SEED);
     }
 
     public ResourceRequirement watermelonSeeds()
     {
         return new ResourceRequirement(
                 Text.get(1701), Text.get(1134), 3,
-                ItemID.WATERMELON_SEED);
+                WATERMELON_SEED);
     }
 
     public ResourceRequirement treeSaplingsForLevel(int level)
@@ -502,15 +459,12 @@ class FarmingSupplyCatalog
         return new SupplyOption(level, itemId);
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class SupplyOption
     {
         private final int level;
         private final int itemId;
-        private SupplyOption(int level, int itemId)
-        {
-            this.level = level;
-            this.itemId = itemId;
-        }
     }
 }
 
@@ -536,7 +490,7 @@ class GearProgressionCatalog extends CatalogStore<GearProgressionEntry>
     public GearProgressionCatalog() { super(Text.get(295), GearProgressionEntry[].class); }
     public List<GearProgressionEntry> forStyle(CombatStyle style)
     {
-        return filter(entry -> entry.getStyle() == style);
+        return filter(entry -> entry.style == style);
     }
     public List<GearProgressionEntry> forContext(String contextId)
     {
@@ -564,36 +518,13 @@ final class ImportedQuestItemRequirementCatalog
             if (result.put(Names.words(entry.quest), entry.result) != null)
                 throw new IllegalStateException(Text.get(1138) + entry.quest);
         }
-        requirements = Collections.unmodifiableMap(result);
+        requirements = unmodifiableMap(result);
     }
 
     public Result resultFor(String questName)
     {
         return requirements.get(Names.words(questName));
     }
-
-    public int questCount() { return requirements.size(); }
-
-    public long fullyExecutableCount()
-    {
-        return requirements.values().stream()
-                .filter(Result::isFullyExecutable).count();
-    }
-
-    public long partiallyExecutableCount()
-    {
-        return requirements.values().stream()
-                .filter(result -> result.getExpression() != null
-                        && !result.isFullyExecutable()).count();
-    }
-
-    public long rawOnlyCount()
-    {
-        return requirements.values().stream()
-                .filter(result -> result.getExpression() == null
-                        && !result.getUnresolved().isEmpty()).count();
-    }
-
 
     private static final class Entry
     {
@@ -604,31 +535,28 @@ final class ImportedQuestItemRequirementCatalog
     /** Immutable executable evidence generated from the pinned source snapshot. */
     public static final class Result
     {
-        private ItemRequirementExpression expression;
-        private List<String> unresolved;
+        @Getter private ItemRule expression;
+        @Getter private List<String> unresolved;
         private int parsedLineCount;
 
         private void freeze()
         {
             expression = expression == null ? null : expression.freeze();
-            unresolved = unresolved == null ? Collections.emptyList()
-                    : Collections.unmodifiableList(new ArrayList<>(unresolved));
+            unresolved = unresolved == null ? emptyList()
+                    : unmodifiableList(new ArrayList<>(unresolved));
         }
 
-        public ItemRequirementExpression getExpression() { return expression; }
-        public List<String> getUnresolved() { return unresolved; }
-        public int getParsedLineCount() { return parsedLineCount; }
         public boolean isFullyExecutable() { return unresolved.isEmpty(); }
         public boolean isDeterministicallyExecutable()
         {
             return unresolved.isEmpty() && countChecks(expression) == 0;
         }
         public int getCheckNeededExpressionCount() { return countChecks(expression); }
-        private static int countChecks(ItemRequirementExpression value)
+        private static int countChecks(ItemRule value)
         {
             if (value == null) return 0;
-            var count = value.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED ? 1 : 0;
-            for (ItemRequirementExpression child : value.getChildren())
+            var count = value.getKind() == ItemRule.Kind.CHECK_NEEDED ? 1 : 0;
+            for (ItemRule child : value.getChildren())
                 count += countChecks(child);
             return count;
         }
@@ -640,7 +568,7 @@ final class ImportedQuestItemRequirementCatalog
 final class InfrastructureMilestoneCatalog
 {
     public static final String AUDITED_AT = "2026-08-29";
-    public static final List<String> PROVENANCE_URLS = Collections.unmodifiableList(Arrays.asList(
+    public static final List<String> PROVENANCE_URLS = unmodifiableList(Arrays.asList(
             Text.get(317),
             Text.get(319),
             Text.get(320),
@@ -660,7 +588,7 @@ final class InfrastructureMilestoneCatalog
                 InfrastructureMilestone[].class))
             if (values.put(value.id, value) != null)
                 throw new IllegalStateException(Text.get(1258) + value.id);
-        milestones = Collections.unmodifiableMap(values);
+        milestones = unmodifiableMap(values);
     }
 
     public InfrastructureMilestone get(String id)
@@ -670,7 +598,7 @@ final class InfrastructureMilestoneCatalog
 
     public List<InfrastructureMilestone> all()
     {
-        return Collections.unmodifiableList(new ArrayList<>(milestones.values()));
+        return unmodifiableList(new ArrayList<>(milestones.values()));
     }
 }
 
@@ -682,7 +610,7 @@ class MethodExecutionProfileCatalog extends IndexedCatalog<MethodProfile>
     public MethodExecutionProfileCatalog()
     {
         super(RESOURCE, MethodProfile[].class, MethodProfile::getMethodId);
-        for (MethodProfile profile : values) if (profile.getActionTerms() == null)
+        for (MethodProfile profile : values) if (profile.actionTerms == null)
             throw new IllegalStateException(Text.get(1224) + RESOURCE);
     }
 
@@ -720,7 +648,7 @@ final class MethodStrategyKnowledgeCatalog
     private static final Set<AccountMode> ALL_KNOWN =
             EnumSet.allOf(AccountMode.class);
     private static final Set<String> CONVENTIONAL_BANK_LOOPS =
-            Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            unmodifiableSet(new HashSet<>(Arrays.asList(
                     Text.get(1863),
                     Text.get(1735), Text.get(1864),
                     Text.get(1577), "cooking_wines",
@@ -753,7 +681,7 @@ final class MethodStrategyKnowledgeCatalog
                 Text.get(384),
                 MethodStrategyProfile[].class))
         {
-            if (profile.getMethodId() == null || profile.getTier() == null)
+            if (profile.methodId == null || profile.tier == null)
                 throw new IllegalStateException(Text.get(385));
             addExact(profile);
         }
@@ -770,8 +698,8 @@ final class MethodStrategyKnowledgeCatalog
             MethodStrategyProfile selected = null;
             for (MethodStrategyProfile profile : specific)
                 if (profile.supports(mode)
-                        && (selected == null || profile.getTier().ordinal()
-                                < selected.getTier().ordinal()))
+                        && (selected == null || profile.tier.ordinal()
+                                < selected.tier.ordinal()))
                     selected = profile;
             return selected;
         }
@@ -779,10 +707,10 @@ final class MethodStrategyKnowledgeCatalog
         var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.id);
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
         if (mode == AccountMode.ULTIMATE_IRONMAN
-                && (bankLoop || !metadata.isUimFriendly())) return null;
+                && (bankLoop || !metadata.uimFriendly)) return null;
 
         var modes = EnumSet.copyOf(ALL_KNOWN);
-        if (!metadata.isUimFriendly() || bankLoop)
+        if (!metadata.uimFriendly || bankLoop)
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
@@ -797,18 +725,18 @@ final class MethodStrategyKnowledgeCatalog
             boolean bankLoop, Set<AccountMode> modes,
             MethodProfile executionProfile)
     {
-        StrategySourceId source = accountSkillSource(
+        Source source = accountSkillSource(
                 method.getSkill(), mode, metadata.isFreeToPlayAllowed());
-        String reason = metadata.isSelfSourceFriendly() && mode.isIronLike()
+        String reason = metadata.selfSourceFriendly && mode.isIronLike()
                 ? Text.get(386)
                 : Text.get(387);
         return new MethodStrategyProfile(method.id,
-                StrategyKnowledgeTier.VERIFIED_SHARED, modes,
-                bankLoop ? MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
-                        : MethodBankingBehavior.NONE,
+                KnowledgeTier.VERIFIED_SHARED, modes,
+                bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP
+                        : BankingMode.NONE,
                 typedFootprint(method, metadata, executionProfile),
-                metadata.isSelfSourceFriendly() && mode.isIronLike() ? 0.55 : 0.35,
-                reason, Collections.singletonList(source));
+                metadata.selfSourceFriendly && mode.isIronLike() ? 0.55 : 0.35,
+                reason, singletonList(source));
     }
 
     /**
@@ -817,7 +745,7 @@ final class MethodStrategyKnowledgeCatalog
      * exact sourced records above; method names and IDs never change a
      * footprint.
      */
-    private static MethodInventoryFootprint typedFootprint(
+    private static InventoryFootprint typedFootprint(
             TrainingMethod method, TrainingMethodMetadata metadata,
             MethodProfile executionProfile)
     {
@@ -833,52 +761,52 @@ final class MethodStrategyKnowledgeCatalog
             case MAGIC:
             case SLAYER:
             case THIEVING:
-                return new MethodInventoryFootprint(0, 0, 0,
+                return new InventoryFootprint(0, 0, 0,
                         InventoryFlow.NEUTRAL, tearsDown);
             case MINING:
             case FISHING:
             case WOODCUTTING:
-                return new MethodInventoryFootprint(1, 1, 0,
+                return new InventoryFootprint(1, 1, 0,
                         InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, tearsDown);
             case HUNTER:
-                return new MethodInventoryFootprint(3, 2, 1,
+                return new InventoryFootprint(3, 2, 1,
                         InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS, tearsDown);
             default:
                 break;
         }
         boolean consumesInputs = executionProfile != null
-                && !executionProfile.getInputs().isEmpty();
-        return new MethodInventoryFootprint(2, 1, 1,
+                && !executionProfile.inputs.isEmpty();
+        return new InventoryFootprint(2, 1, 1,
                 consumesInputs ? InventoryFlow.REPLACES_INPUTS_WITH_OUTPUTS
                         : InventoryFlow.NEUTRAL,
                 tearsDown);
     }
 
-    private static StrategySourceId accountSkillSource(
+    private static Source accountSkillSource(
             net.runelite.api.Skill skill, AccountMode mode, boolean f2p)
     {
-        if (skill == net.runelite.api.Skill.SAILING)
-            return StrategySourceId.SAILING_TRAINING;
+        if (skill == Skill.SAILING)
+            return Source.SAILING_TRAINING;
         if (skill == null || mode == null || !mode.isIronLike())
-            return f2p ? StrategySourceId.F2P_SKILL_TRAINING
-                    : StrategySourceId.GENERAL_SKILL_TRAINING;
+            return f2p ? Source.F2P_SKILL_TRAINING
+                    : Source.GENERAL_SKILL_TRAINING;
         var prefix = mode == AccountMode.ULTIMATE_IRONMAN
                 ? "UIM_" : "IRONMAN_";
         try
         {
-            return StrategySourceId.valueOf(prefix + skill.name());
+            return Source.valueOf(prefix + skill.name());
         }
         catch (IllegalArgumentException absentSpecializedGuide)
         {
             return mode == AccountMode.ULTIMATE_IRONMAN
-                    ? StrategySourceId.UIM_SKILL_GUIDES
-                    : StrategySourceId.IRONMAN_SKILL_GUIDES;
+                    ? Source.UIM_SKILL_GUIDES
+                    : Source.IRONMAN_SKILL_GUIDES;
         }
     }
 
     private void addExact(MethodStrategyProfile profile)
     {
-        exact.computeIfAbsent(profile.getMethodId(),
+        exact.computeIfAbsent(profile.methodId,
                 ignored -> new java.util.ArrayList<>()).add(profile);
     }
 }
@@ -926,7 +854,7 @@ class ProgressionObjectiveCatalog extends CatalogStore<ProgressionObjectiveDefin
     public ProgressionObjectiveDefinition forMethod(String methodId)
     {
         return methodId == null ? null
-                : find(value -> methodId.equals(value.getMethodId()));
+                : find(value -> methodId.equals(value.methodId));
     }
 }
 
@@ -934,7 +862,7 @@ class ProgressionObjectiveCatalog extends CatalogStore<ProgressionObjectiveDefin
 @Singleton
 class PvmActivityCatalog
 {
-    private static final Set<String> PROFILED = Collections.unmodifiableSet(
+    private static final Set<String> PROFILED = unmodifiableSet(
             new HashSet<>(Arrays.asList(
                     "pvm:brutus", "pvm:obor", "pvm:bryophyta", Text.get(1815),
                     "pvm:scurrius", "pvm:giant_mole", "pvm:sarachnis", "pvm:hespori",
@@ -948,14 +876,14 @@ class PvmActivityCatalog
                     "pvm:vardorvis", Text.get(1827),
                     Text.get(1828),
                     Text.get(1829), Text.get(1830))));
-    private final List<PvmActivityDefinition> activities;
-    private final Map<String, PvmActivityDefinition> byId;
+    private final List<PvmActivity> activities;
+    private final Map<String, PvmActivity> byId;
 
     public PvmActivityCatalog()
     {
-        Map<String, PvmActivityDefinition> values = new LinkedHashMap<>();
-        for (PvmActivityDefinition value : BundledCatalogLoader.array(
-                Text.get(1831), PvmActivityDefinition[].class))
+        Map<String, PvmActivity> values = new LinkedHashMap<>();
+        for (PvmActivity value : BundledCatalogLoader.array(
+                Text.get(1831), PvmActivity[].class))
             if (value.id == null || values.put(value.id, value) != null)
                 throw new IllegalStateException(Text.get(1199));
         var bosses = 0;
@@ -969,17 +897,17 @@ class PvmActivityCatalog
             }
         if (values.size() != bosses)
             throw new IllegalStateException(Text.get(1201));
-        byId = Collections.unmodifiableMap(values);
-        activities = Collections.unmodifiableList(new ArrayList<>(values.values()));
+        byId = unmodifiableMap(values);
+        activities = unmodifiableList(new ArrayList<>(values.values()));
     }
 
-    public List<PvmActivityDefinition> all() { return activities; }
-    public PvmActivityDefinition byId(String id) { return byId.get(id); }
-    public PvmActivityDefinition match(String raw)
+    public List<PvmActivity> all() { return activities; }
+    public PvmActivity byId(String id) { return byId.get(id); }
+    public PvmActivity match(String raw)
     {
         if (raw == null) return null;
         var key = normalize(raw);
-        for (PvmActivityDefinition value : activities)
+        for (PvmActivity value : activities)
             if (normalize(value.id).equals(key)
                     || normalize(value.getName()).equals(key)) return value;
         return null;
@@ -1006,13 +934,13 @@ class PvmEvidenceProfileCatalog
     public PvmEvidenceProfileCatalog()
     {
         add(new PvmEvidenceProfile("pvm:brutus", "melee",
-                Collections.emptyList(), 5, 0));
+                emptyList(), 5, 0));
         add(new PvmEvidenceProfile("pvm:obor", "melee",
-                Collections.singletonList("Giant key"), 5, 0));
+                singletonList("Giant key"), 5, 0));
         add(new PvmEvidenceProfile("pvm:bryophyta", "melee",
-                Collections.singletonList("Mossy key"), 5, 0));
+                singletonList("Mossy key"), 5, 0));
         add(new PvmEvidenceProfile("pvm:scurrius", "melee",
-                Collections.emptyList(), 5, 1));
+                emptyList(), 5, 1));
     }
 
     public PvmEvidenceProfile forActivity(String id)
@@ -1024,7 +952,7 @@ class PvmEvidenceProfileCatalog
 
     private void add(PvmEvidenceProfile profile)
     {
-        profiles.put(profile.getActivityId(), profile);
+        profiles.put(profile.activityId, profile);
     }
 }
 
@@ -1097,14 +1025,14 @@ class QuestKnowledgeCatalog
             if (start.trim().isEmpty() && !uncertainties.contains("start location"))
                 uncertainties.add("start location");
             List<String> unlocks = details != null && details.hasRewardEvidence()
-                    ? Collections.singletonList("Quest rewards: "
+                    ? singletonList("Quest rewards: "
                             + abbreviate(plain(details.getRewards()), 500))
-                    : Collections.emptyList();
+                    : emptyList();
             add(new QuestDefinition(record.getName(),
                     QuestMembershipPolicy.isFreeToPlayQuest(record.getName()),
-                    record.getPrerequisites(), record.getSkills(), Collections.emptyList(), null,
+                    record.getPrerequisites(), record.getSkills(), emptyList(), null,
                     record.getQuestPoints(), checks, start, unlocks,
-                    details == null ? Collections.emptyMap() : rewardXp(details.getRewards()),
+                    details == null ? emptyMap() : rewardXp(details.getRewards()),
                     uncertainties));
         }
     }
@@ -1138,7 +1066,7 @@ class QuestKnowledgeCatalog
     {
         var text = plain(rewards).toLowerCase(Locale.ROOT);
         for (Skill skill : Arrays.asList(Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE,
-                Skill.HITPOINTS, Skill.PRAYER, Skill.RANGED, Skill.MAGIC))
+                Skill.HITPOINTS, PRAYER, Skill.RANGED, Skill.MAGIC))
             if (text.matches("(?s).*\\b" + skill.getName().toLowerCase(Locale.ROOT)
                     + Text.get(1921)) && !parsed.containsKey(skill))
                 return true;
@@ -1162,7 +1090,7 @@ class QuestKnowledgeCatalog
     }
 
     public QuestDefinition definitionFor(String name) { return definitions.get(Names.words(name)); }
-    public Map<String, QuestDefinition> all() { return Collections.unmodifiableMap(definitions); }
+    public Map<String, QuestDefinition> all() { return unmodifiableMap(definitions); }
 
     private void add(QuestDefinition definition)
     {
@@ -1190,17 +1118,15 @@ class QuestPriorityCatalog
     }
 
     public QuestPriority priorityFor(String questName) { return priorities.get(Names.words(questName)); }
-    public Map<String, QuestPriority> snapshot() { return Collections.unmodifiableMap(priorities); }
+    public Map<String, QuestPriority> snapshot() { return unmodifiableMap(priorities); }
 
 
+    @Getter
     public static final class QuestPriority
     {
         private String name;
         private double scoreBonus;
         private String reason;
-        public String getName() { return name; }
-        public double getScoreBonus() { return scoreBonus; }
-        public String getReason() { return reason; }
     }
 }
 
@@ -1208,35 +1134,35 @@ class QuestPriorityCatalog
 @Singleton
 class ResourceDependencyCatalog
 {
-    private final Map<Integer, ResourceDependencyDefinition> definitions;
-    private final Map<String, ResourceDependencyDefinition> definitionsByName;
+    private final Map<Integer, ResourceDependency> definitions;
+    private final Map<String, ResourceDependency> definitionsByName;
 
     public ResourceDependencyCatalog()
     {
         this(java.util.Arrays.asList(BundledCatalogLoader.array(
                 Text.get(598),
-                ResourceDependencyDefinition[].class)));
+                ResourceDependency[].class)));
     }
 
-    ResourceDependencyCatalog(List<ResourceDependencyDefinition> values)
+    ResourceDependencyCatalog(List<ResourceDependency> values)
     {
-        Map<Integer, ResourceDependencyDefinition> byId = new LinkedHashMap<>();
-        Map<String, ResourceDependencyDefinition> byName = new LinkedHashMap<>();
+        Map<Integer, ResourceDependency> byId = new LinkedHashMap<>();
+        Map<String, ResourceDependency> byName = new LinkedHashMap<>();
         if (values != null)
-            for (ResourceDependencyDefinition value : values)
+            for (ResourceDependency value : values)
             {
                 if (value == null) continue;
-                if (byId.put(value.getItemId(), value) != null)
-                    throw new IllegalStateException(Text.get(1170) + value.getItemId());
-                var name = Names.words(value.getItemName());
+                if (byId.put(value.itemId, value) != null)
+                    throw new IllegalStateException(Text.get(1170) + value.itemId);
+                var name = Names.words(value.itemName);
                 if (!name.isEmpty()) byName.put(name, value);
             }
-        definitions = Collections.unmodifiableMap(byId);
-        definitionsByName = Collections.unmodifiableMap(byName);
+        definitions = unmodifiableMap(byId);
+        definitionsByName = unmodifiableMap(byName);
     }
 
-    public ResourceDependencyDefinition forItem(int itemId) { return definitions.get(itemId); }
-    public ResourceDependencyDefinition forItemName(String itemName)
+    public ResourceDependency forItem(int itemId) { return definitions.get(itemId); }
+    public ResourceDependency forItemName(String itemName)
     {
         return definitionsByName.get(Names.words(itemName));
     }
@@ -1249,25 +1175,25 @@ class ResourceDependencyCatalog
 class ResourceSourceCatalog
 {
     private static final String RESOURCE = Text.get(708);
-    private final List<ResourceSourceDefinition> sources;
+    private final List<ResourceSource> sources;
 
     public ResourceSourceCatalog()
     {
-        sources = Collections.unmodifiableList(Arrays.asList(
-                BundledCatalogLoader.array(RESOURCE, ResourceSourceDefinition[].class)));
-        for (ResourceSourceDefinition source : sources)
+        sources = unmodifiableList(Arrays.asList(
+                BundledCatalogLoader.array(RESOURCE, ResourceSource[].class)));
+        for (ResourceSource source : sources)
             if (source.id == null || source.getNameTokens() == null)
                 throw new IllegalStateException(Text.get(1171) + RESOURCE);
     }
 
-    public List<ResourceSourceDefinition> all() { return sources; }
+    public List<ResourceSource> all() { return sources; }
 
-    public List<ResourceSourceDefinition> match(String itemName)
+    public List<ResourceSource> match(String itemName)
     {
         var normalized = normalize(itemName);
-        if (normalized.isEmpty()) return Collections.emptyList();
-        List<ResourceSourceDefinition> result = new ArrayList<>();
-        for (ResourceSourceDefinition source : sources)
+        if (normalized.isEmpty()) return emptyList();
+        List<ResourceSource> result = new ArrayList<>();
+        for (ResourceSource source : sources)
         {
             if ("raw-fish".equals(source.id) && !normalized.startsWith("raw ")) continue;
             if ("cooked-food".equals(source.id) && normalized.startsWith("raw ")) continue;
@@ -1278,41 +1204,41 @@ class ResourceSourceCatalog
                     break;
                 }
         }
-        return Collections.unmodifiableList(result);
+        return unmodifiableList(result);
     }
 
     public List<String> suggestions(String itemName, AccountMode mode, boolean allowWilderness)
     {
-        return suggestions(itemName, mode, MembershipStatus.P2P, allowWilderness);
+        return suggestions(itemName, mode, Membership.P2P, allowWilderness);
     }
 
     public List<String> suggestions(String itemName, AccountMode mode,
-            MembershipStatus membership, boolean allowWilderness)
+            Membership membership, boolean allowWilderness)
     {
         List<String> result = new ArrayList<>();
-        for (ResourceSourceDefinition source : match(itemName))
+        for (ResourceSource source : match(itemName))
         {
-            if (source.isWilderness() && !allowWilderness) continue;
+            if (source.wilderness && !allowWilderness) continue;
             if ((mode == AccountMode.HARDCORE_IRONMAN
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                    && source.getRiskLevel() == RiskLevel.HIGH) continue;
-            String route = membership == MembershipStatus.P2P
+                    && source.riskLevel == RiskLevel.HIGH) continue;
+            String route = membership == Membership.P2P
                     ? memberRoute(source, mode) : freeToPlayRoute(source, itemName, mode);
             if (route != null && !route.trim().isEmpty() && !result.contains(route))
                 result.add(route);
             if (result.size() >= 4) break;
         }
-        return Collections.unmodifiableList(result);
+        return unmodifiableList(result);
     }
 
-    private static String memberRoute(ResourceSourceDefinition source, AccountMode mode)
+    private static String memberRoute(ResourceSource source, AccountMode mode)
     {
         if (mode == AccountMode.ULTIMATE_IRONMAN) return source.getUimRoute();
         if (mode != null && mode.isIronLike()) return source.getIronRoute();
         return source.getMainRoute();
     }
 
-    private static String freeToPlayRoute(ResourceSourceDefinition source,
+    private static String freeToPlayRoute(ResourceSource source,
             String itemName, AccountMode mode)
     {
         var normalized = normalize(itemName);
@@ -1370,7 +1296,7 @@ class RuneLiteSkillActionCatalog
     public List<ActionDef> actionsFor(Skill skill)
     {
         var constants = actionsBySkill.get(skill);
-        if (constants == null) return Collections.emptyList();
+        if (constants == null) return emptyList();
         List<ActionDef> actions = new ArrayList<>();
         for (SkillAction action : constants)
         {
@@ -1379,10 +1305,10 @@ class RuneLiteSkillActionCatalog
                     + ":" + enumValue.name().toLowerCase(Locale.ROOT);
             String name = itemManager == null ? pretty(enumValue.name())
                     : action.getName(itemManager);
-            MembershipStatus membership = itemManager == null
-                    ? MembershipStatus.UNKNOWN
+            Membership membership = itemManager == null
+                    ? Membership.UNKNOWN
                     : action.isMembers(itemManager)
-                            ? MembershipStatus.P2P : MembershipStatus.F2P;
+                            ? Membership.P2P : Membership.F2P;
             actions.add(new ActionDef(
                     skill,
                     id,
@@ -1393,36 +1319,26 @@ class RuneLiteSkillActionCatalog
                     membership,
                     action.getIcon()));
         }
-        return Collections.unmodifiableList(actions);
-    }
-
-    public Map<Skill, Integer> coverageCounts()
-    {
-        Map<Skill, Integer> result = new EnumMap<>(Skill.class);
-        for (Skill skill : actionsBySkill.keySet())
-        {
-            result.put(skill, actionsFor(skill).size());
-        }
-        return Collections.unmodifiableMap(result);
+        return unmodifiableList(actions);
     }
 
     private void seedClassMap()
     {
         actionsBySkill.put(Skill.AGILITY, AgilityAction.values());
-        actionsBySkill.put(Skill.COOKING, CookingAction.values());
-        actionsBySkill.put(Skill.CONSTRUCTION, ConstructionAction.values());
-        actionsBySkill.put(Skill.CRAFTING, CraftingAction.values());
-        actionsBySkill.put(Skill.FARMING, FarmingAction.values());
-        actionsBySkill.put(Skill.FIREMAKING, FiremakingAction.values());
+        actionsBySkill.put(COOKING, CookingAction.values());
+        actionsBySkill.put(CONSTRUCTION, ConstructionAction.values());
+        actionsBySkill.put(CRAFTING, CraftingAction.values());
+        actionsBySkill.put(FARMING, FarmingAction.values());
+        actionsBySkill.put(FIREMAKING, FiremakingAction.values());
         actionsBySkill.put(Skill.FISHING, FishingAction.values());
-        actionsBySkill.put(Skill.FLETCHING, FletchingAction.values());
-        actionsBySkill.put(Skill.HERBLORE, HerbloreAction.values());
+        actionsBySkill.put(FLETCHING, FletchingAction.values());
+        actionsBySkill.put(HERBLORE, HerbloreAction.values());
         actionsBySkill.put(Skill.HUNTER, HunterAction.values());
         actionsBySkill.put(Skill.MAGIC, MagicAction.values());
         actionsBySkill.put(Skill.MINING, MiningAction.values());
-        actionsBySkill.put(Skill.PRAYER, PrayerAction.values());
-        actionsBySkill.put(Skill.RUNECRAFT, RunecraftAction.values());
-        actionsBySkill.put(Skill.SMITHING, SmithingAction.values());
+        actionsBySkill.put(PRAYER, PrayerAction.values());
+        actionsBySkill.put(RUNECRAFT, RunecraftAction.values());
+        actionsBySkill.put(SMITHING, SmithingAction.values());
         actionsBySkill.put(Skill.THIEVING, ThievingAction.values());
         actionsBySkill.put(Skill.WOODCUTTING, WoodcuttingAction.values());
     }
@@ -1450,8 +1366,8 @@ class RunecraftSupplyCatalog
                 Text.get(1941),
                 Text.get(1172),
                 1,
-                ItemID.BLANKRUNE,
-                ItemID.BLANKRUNE_HIGH
+                BLANKRUNE,
+                BLANKRUNE_HIGH
         );
     }
 
@@ -1459,22 +1375,22 @@ class RunecraftSupplyCatalog
     {
         if (Text.get(1875).equals(methodId))
             return entry("air", Text.get(1173),
-                    ItemID.AIR_TALISMAN, ItemID.TIARA_AIR);
+                    AIR_TALISMAN, TIARA_AIR);
         if (Text.get(1876).equals(methodId))
             return entry("mind", Text.get(1174),
-                    ItemID.MIND_TALISMAN, ItemID.TIARA_MIND);
+                    MIND_TALISMAN, TIARA_MIND);
         if (Text.get(1877).equals(methodId))
             return entry("water", Text.get(1175),
-                    ItemID.WATER_TALISMAN, ItemID.TIARA_WATER);
+                    WATER_TALISMAN, TIARA_WATER);
         if (Text.get(1878).equals(methodId))
             return entry("earth", Text.get(1176),
-                    ItemID.EARTH_TALISMAN, ItemID.TIARA_EARTH);
+                    EARTH_TALISMAN, TIARA_EARTH);
         if (Text.get(1879).equals(methodId))
             return entry("fire", Text.get(1177),
-                    ItemID.FIRE_TALISMAN, ItemID.TIARA_FIRE);
+                    FIRE_TALISMAN, TIARA_FIRE);
         if (Text.get(1880).equals(methodId))
             return entry("body", Text.get(1178),
-                    ItemID.BODY_TALISMAN, ItemID.TIARA_BODY);
+                    BODY_TALISMAN, TIARA_BODY);
         return null;
     }
 
@@ -1510,7 +1426,7 @@ class RunecraftSupplyCatalog
 class SlayerMasterCatalog
 {
     private final List<SlayerMasterProfile> profiles =
-            Collections.unmodifiableList(Arrays.asList(BundledCatalogLoader.array(
+            unmodifiableList(Arrays.asList(BundledCatalogLoader.array(
                     Text.get(1948),
                     SlayerMasterProfile[].class)));
 
@@ -1543,10 +1459,10 @@ class SlayerMasterCatalog
     public List<SlayerMasterProfile> eligible(StrategyContext context)
     {
         if (context == null || context.data() == null
-                || context.data().account() == null) return Collections.emptyList();
+                || context.data().account() == null) return emptyList();
         var account = context.data().account();
-        if (account.membership() != MembershipStatus.P2P)
-            return Collections.emptyList();
+        if (account.membership() != Membership.P2P)
+            return emptyList();
         var combat = SlayerGuidanceService.combatLevel(account);
         var slayer = account.level(net.runelite.api.Skill.SLAYER);
         var quests = context.data().quests();
@@ -1557,7 +1473,7 @@ class SlayerMasterCatalog
             // replace another master's task. Without a proximity goal Turael's
             // replacement flexibility strictly dominates her for a new task.
             if ("spria".equals(profile.id)) continue;
-            if (profile.isWilderness() && !context.allowsWilderness()) continue;
+            if (profile.wilderness && !context.allowsWilderness()) continue;
             if ("mortimer".equals(profile.id))
             {
                 var live = context.data().slayer();
@@ -1568,7 +1484,7 @@ class SlayerMasterCatalog
             }
             else if (combat < profile.getMinimumCombat()
                     || slayer < profile.getMinimumSlayer()) continue;
-            if (profile.getRequiredQuest() != null
+            if (profile.requiredQuest != null
                     && !questRequirementMet(profile, quests)) continue;
             result.add(profile);
         }
@@ -1579,7 +1495,7 @@ class SlayerMasterCatalog
             QuestSnapshot quests)
     {
         if (quests == null) return false;
-        var status = quests.statusOf(profile.getRequiredQuest());
+        var status = quests.statusOf(profile.requiredQuest);
         return status == QuestStatus.COMPLETE
                 || profile.isQuestStartSufficient()
                 && status == QuestStatus.IN_PROGRESS;
@@ -1596,7 +1512,7 @@ class SlayerTaskProfileCatalog
 
     public SlayerTaskProfileCatalog()
     {
-        profiles = Collections.unmodifiableList(Arrays.asList(
+        profiles = unmodifiableList(Arrays.asList(
                 BundledCatalogLoader.array(RESOURCE, SlayerTaskProfile[].class)));
         for (SlayerTaskProfile profile : profiles)
             if (profile.id == null || profile.getAliases() == null
@@ -1631,15 +1547,15 @@ class SlayerTaskStrategicCatalog
             "black-knights", "dark-warriors", "earth-warriors", "ents", "green-dragons",
             "lava-dragons", "magic-axes", "mammoths", "revenants", "rogues");
     private final SlayerTaskProfileCatalog taskProfiles;
-    private final Map<String, SlayerTaskStrategicProfile> byProfileId;
+    private final Map<String, SlayerStrategy> byProfileId;
 
     @Inject
     public SlayerTaskStrategicCatalog(SlayerTaskProfileCatalog taskProfiles)
     {
         this.taskProfiles = taskProfiles == null ? new SlayerTaskProfileCatalog() : taskProfiles;
-        Map<String, SlayerTaskStrategicProfile> values = new HashMap<>();
-        for (SlayerTaskStrategicProfile profile
-                : BundledCatalogLoader.array(RESOURCE, SlayerTaskStrategicProfile[].class))
+        Map<String, SlayerStrategy> values = new HashMap<>();
+        for (SlayerStrategy profile
+                : BundledCatalogLoader.array(RESOURCE, SlayerStrategy[].class))
         {
             if (profile.getTaskProfileId() == null)
                 throw new IllegalStateException(Text.get(1185) + RESOURCE);
@@ -1647,19 +1563,19 @@ class SlayerTaskStrategicCatalog
                 throw new IllegalStateException(Text.get(1186)
                         + profile.getTaskProfileId());
         }
-        byProfileId = Collections.unmodifiableMap(values);
+        byProfileId = unmodifiableMap(values);
     }
 
     public SlayerTaskStrategicCatalog() { this(new SlayerTaskProfileCatalog()); }
 
-    public SlayerTaskStrategicProfile profileFor(String taskName)
+    public SlayerStrategy profileFor(String taskName)
     {
         var mechanics = taskProfiles.profileFor(taskName);
         return mechanics == null ? null : byProfileId.get(mechanics.id);
     }
 
     public int size() { return byProfileId.size(); }
-    public Collection<SlayerTaskStrategicProfile> all() { return byProfileId.values(); }
+    public Collection<SlayerStrategy> all() { return byProfileId.values(); }
 
     public boolean isWildernessBound(String taskName)
     {
@@ -1668,14 +1584,14 @@ class SlayerTaskStrategicCatalog
         var profile = byProfileId.get(mechanics.id);
         return INTRINSIC_WILDERNESS.contains(mechanics.id)
                 || (profile != null && profile.isDirectEncounter()
-                        && profile.getInherentRisk() == RiskLevel.HIGH);
+                        && profile.inherentRisk == RiskLevel.HIGH);
     }
 
     private static Set<String> ids(String... values)
     {
         Set<String> result = new HashSet<>();
-        Collections.addAll(result, values);
-        return Collections.unmodifiableSet(result);
+        addAll(result, values);
+        return unmodifiableSet(result);
     }
 }
 
@@ -1708,17 +1624,17 @@ class TrainingMethodCatalog
 
     public List<TrainingMethod> legacyFor(Skill skill)
     {
-        return legacy.getOrDefault(skill, Collections.emptyList());
+        return legacy.getOrDefault(skill, emptyList());
     }
 
     public List<CuratedTrainingMethod> curatedFor(Skill skill)
     {
-        return curated.getOrDefault(skill, Collections.emptyList());
+        return curated.getOrDefault(skill, emptyList());
     }
 
     public List<CuratedTrainingMethod> f2pFor(Skill skill)
     {
-        return f2p.getOrDefault(skill, Collections.emptyList());
+        return f2p.getOrDefault(skill, emptyList());
     }
 
     boolean legacyOnly() { return false; }
@@ -1740,7 +1656,7 @@ class TrainingMethodCatalog
     private static <T> void freeze(Map<Skill, List<T>> values)
     {
         for (Map.Entry<Skill, List<T>> entry : values.entrySet())
-            entry.setValue(Collections.unmodifiableList(entry.getValue()));
+            entry.setValue(unmodifiableList(entry.getValue()));
     }
 
     private static IllegalStateException invalid(String resource)
@@ -1753,29 +1669,29 @@ class TrainingMethodCatalog
 @Singleton
 final class TravelRouteEvidenceCatalog
 {
-    private final Map<String, TravelRouteEvidenceDefinition> definitions =
+    private final Map<String, RouteEvidence> definitions =
             new LinkedHashMap<>();
 
     public TravelRouteEvidenceCatalog()
     {
-        add(new TravelRouteEvidenceDefinition(
+        add(new RouteEvidence(
                 Text.get(1587), "The Grand Tree",
-                Collections.emptyList()));
-        add(new TravelRouteEvidenceDefinition("ectophial", "Ghosts Ahoy",
+                emptyList()));
+        add(new RouteEvidence("ectophial", "Ghosts Ahoy",
                 Arrays.asList("Ectophial")));
     }
 
-    public TravelRouteEvidenceDefinition get(String id)
+    public RouteEvidence get(String id)
     {
         return id == null ? null : definitions.get(id);
     }
 
-    public Map<String, TravelRouteEvidenceDefinition> all()
+    public Map<String, RouteEvidence> all()
     {
-        return Collections.unmodifiableMap(definitions);
+        return unmodifiableMap(definitions);
     }
 
-    private void add(TravelRouteEvidenceDefinition definition)
+    private void add(RouteEvidence definition)
     {
         if (definitions.put(definition.getRouteId(), definition) != null)
             throw new IllegalStateException(Text.get(1188)

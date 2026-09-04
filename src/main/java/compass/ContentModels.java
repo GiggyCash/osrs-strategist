@@ -1,9 +1,11 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import java.util.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.runelite.api.Skill;
 
 /** Verified prerequisites for a prayer, spell, or spellbook unlock. */
@@ -12,56 +14,56 @@ import net.runelite.api.Skill;
 final class AbilityUnlockDefinition
 {
     final String id;
-    private final String name;
-    private final GoalNodeKind kind;
-    private final String quest;
-    private final Skill skill;
-    private final int level;
-    private final Skill secondarySkill;
-    private final int secondaryLevel;
-    private final String requiredItem;
-    private final String encounterId;
-    private final String accessCheck;
+    final String name;
+    final GoalNodeKind kind;
+    final String quest;
+    final Skill skill;
+    final int level;
+    final Skill secondarySkill;
+    final int secondaryLevel;
+    final String requiredItem;
+    final String encounterId;
+    final String accessCheck;
 
 
 }
 
 /** Immutable, exhaustive account strategic-priority profile. */
-final class AccountStrategicPriorityProfile
+final class AccountPriorities
 {
     @Getter
-    private final AccountMode accountMode;
+    final AccountMode accountMode;
     @Getter
-    private final Map<AccountStrategicDimension, AccountStrategicPriority>
+    final Map<AccountDimension, AccountPriority>
             priorities;
 
-    AccountStrategicPriorityProfile(AccountMode accountMode,
-            Map<AccountStrategicDimension, AccountStrategicPriority> values)
+    AccountPriorities(AccountMode accountMode,
+            Map<AccountDimension, AccountPriority> values)
     {
         this.accountMode = accountMode == null ? AccountMode.UNKNOWN : accountMode;
-        EnumMap<AccountStrategicDimension, AccountStrategicPriority> copy =
-                new EnumMap<>(AccountStrategicDimension.class);
+        EnumMap<AccountDimension, AccountPriority> copy =
+                new EnumMap<>(AccountDimension.class);
         if (values != null) copy.putAll(values);
-        for (AccountStrategicDimension dimension
-                : AccountStrategicDimension.values())
+        for (AccountDimension dimension
+                : AccountDimension.values())
         {
             if (!copy.containsKey(dimension))
                 throw new IllegalArgumentException(
                         Text.get(1110) + dimension);
         }
-        this.priorities = Collections.unmodifiableMap(copy);
+        this.priorities = unmodifiableMap(copy);
     }
 
 
-    public AccountStrategicPriority get(AccountStrategicDimension dimension)
+    public AccountPriority get(AccountDimension dimension)
     {
         return priorities.get(dimension);
     }
 
-    public StrategicPriority priorityOf(AccountStrategicDimension dimension)
+    public Priority priorityOf(AccountDimension dimension)
     {
         var value = get(dimension);
-        return value == null ? StrategicPriority.NONE : value.getPriority();
+        return value == null ? Priority.NONE : value.getPriority();
     }
 
 }
@@ -71,16 +73,16 @@ final class AccountStrategicPriorityProfile
 final class ActivityStrategyProfile
 {
     @Getter
-    private final String candidatePrefix;
-    private final Set<AccountMode> accountModes;
+    final String candidatePrefix;
+    final Set<AccountMode> accountModes;
     @Getter
-    private final MethodInventoryFootprint inventoryFootprint;
+    final InventoryFootprint inventoryFootprint;
     @Getter
-    private final double setupReuse;
+    final double setupReuse;
     @Getter
-    private final String strategicReason;
+    final String strategicReason;
     @Getter
-    private final List<StrategySourceId> sources;
+    final List<Source> sources;
 
 
     public boolean supports(AccountMode mode) { return accountModes.contains(mode); }
@@ -91,13 +93,11 @@ final class ActivityStrategyProfile
 final class AgilityCourseDefinition
 {
     final String id;
-    private final String displayName;
-    private final int requiredLevel;
-    private final int regionId;
-    private final String requiredQuest;
-    private final boolean wilderness;
-
-
+    final String displayName;
+    final int requiredLevel;
+    final int regionId;
+    final String requiredQuest;
+    final boolean wilderness;
 
     public String observationKey()
     {
@@ -108,10 +108,10 @@ final class AgilityCourseDefinition
 @Getter
 final class DiaryTaskDefinition
 {
-    private final String region;
-    private final DiaryTier tier;
-    private final String task;
-    private final List<DiaryTaskRequirement> requirements;
+    final String region;
+    final DiaryTier tier;
+    final String task;
+    final List<DiaryTaskRequirement> requirements;
 
     DiaryTaskDefinition(String region, DiaryTier tier, String task,
             List<DiaryTaskRequirement> requirements)
@@ -119,7 +119,7 @@ final class DiaryTaskDefinition
         this.region = region;
         this.tier = tier;
         this.task = task;
-        this.requirements = Collections.unmodifiableList(
+        this.requirements = unmodifiableList(
                 new ArrayList<>(requirements));
     }
 
@@ -127,14 +127,6 @@ final class DiaryTaskDefinition
     {
         return "diary-task:" + Names.slug(region) + ":"
                 + tier.name().toLowerCase(Locale.ROOT) + ":" + Names.slug(task);
-    }
-    public boolean isTransportRelevant()
-    {
-        var value = task.toLowerCase(Locale.ROOT);
-        return value.contains("teleport") || value.contains("travel")
-                || value.contains("fairy ring") || value.contains("glider")
-                || value.contains("balloon") || value.contains("boat")
-                || value.contains("minecart");
     }
     public boolean isWilderness()
     {
@@ -154,12 +146,10 @@ final class DiaryTaskDefinition
 final class FarmingAccessDefinition
 {
     final String id;
-    private final String displayName;
-    private final Set<Integer> regionIds;
-    private final String requiredQuest;
-    private final boolean herbPatch;
-
-
+    final String displayName;
+    final Set<Integer> regionIds;
+    final String requiredQuest;
+    final boolean herbPatch;
 
     public String observationKey()
     {
@@ -172,14 +162,12 @@ final class FarmingAccessDefinition
 final class FarmingRunPatchDefinition
 {
     final String id;
-    private final String displayName;
-    private final FarmingPatchKind kind;
-    private final int minimumLevel;
-    private final Set<Integer> regionIds;
-    private final int varbitId;
-    private final String requiredQuest;
-
-
+    final String displayName;
+    final FarmingPatchKind kind;
+    final int minimumLevel;
+    final Set<Integer> regionIds;
+    final int varbitId;
+    final String requiredQuest;
 
     public boolean matchesRegion(int regionId)
     {
@@ -198,12 +186,12 @@ final class FarmingRunPatchDefinition
 final class GearAcquisitionRoute
 {
     final String id;
-    private final String itemName;
-    private final CombatStyle style;
-    private final boolean tradeable;
-    private final List<GearAcquisitionStep> steps;
-    private final String valueRule;
-    private final String provenance;
+    final String itemName;
+    final CombatStyle style;
+    final boolean tradeable;
+    final List<GearAcquisitionStep> steps;
+    final String valueRule;
+    final String provenance;
 
 
 }
@@ -214,16 +202,16 @@ final class GearAcquisitionRoute
 final class GearProgressionEntry
 {
     final String id;
-    private final String contextId;
-    private final CombatStyle style;
-    private final GearBudgetTier tier;
-    private final List<String> recommendedItems;
-    private final String weaponGuidance;
-    private final String note;
-    private final boolean freeToPlay;
-    private final boolean selfSourceFriendly;
-    private final boolean uimFriendly;
-    private final boolean hardcoreSafe;
+    final String contextId;
+    final CombatStyle style;
+    final GearBudgetTier tier;
+    final List<String> recommendedItems;
+    final String weaponGuidance;
+    final String note;
+    final boolean freeToPlay;
+    final boolean selfSourceFriendly;
+    final boolean uimFriendly;
+    final boolean hardcoreSafe;
 
 
 }
@@ -233,9 +221,9 @@ final class GearProgressionEntry
 @Getter
 final class MethodInputRule
 {
-    private final MethodProfile.InputMode mode;
-    private final String fixedName;
-    private final double quantityPerAction;
+    final MethodProfile.InputMode mode;
+    final String fixedName;
+    final double quantityPerAction;
 
 
 }
@@ -252,14 +240,12 @@ final class MethodInputRule
 final class MethodLocationOption
 {
     final String id;
-    private final String name;
-    private final int ordinaryTravelBurden;
-    private final String advantageousRouteId;
-    private final int verifiedRouteTravelBurden;
-    private final boolean membersOnly;
-    private final boolean wilderness;
-
-
+    final String name;
+    final int ordinaryTravelBurden;
+    final String advantageousRouteId;
+    final int verifiedRouteTravelBurden;
+    final boolean membersOnly;
+    final boolean wilderness;
 
     int effectiveBurden(TransportSnapshot transport)
     {
@@ -273,13 +259,6 @@ final class MethodLocationOption
         return advantageousRouteId != null && verifiedRoute
                 ? verifiedRouteTravelBurden : ordinaryTravelBurden;
     }
-
-    boolean usesVerifiedRoute(TransportSnapshot transport)
-    {
-        return advantageousRouteId != null && transport != null
-                && transport.hasVerifiedRoute(advantageousRouteId);
-    }
-
 }
 
 /** Data descriptor connecting a training method to legal concrete locations. */
@@ -287,9 +266,9 @@ final class MethodLocationOption
 @Getter
 final class MethodLocationProfile
 {
-    private final String methodId;
-    private final List<MethodLocationOption> locations;
-    private final String sourceUrl;
+    final String methodId;
+    final List<MethodLocationOption> locations;
+    final String sourceUrl;
 
 
 }
@@ -299,14 +278,14 @@ final class MethodLocationProfile
 @Getter
 final class MethodStrategyProfile
 {
-    private final String methodId;
-    private final StrategyKnowledgeTier tier;
-    private final Set<AccountMode> accountModes;
-    private final MethodBankingBehavior bankingBehavior;
-    private final MethodInventoryFootprint inventoryFootprint;
-    private final double accountValueFit;
-    private final String playerReason;
-    private final List<StrategySourceId> sources;
+    final String methodId;
+    final KnowledgeTier tier;
+    final Set<AccountMode> accountModes;
+    final BankingMode bankingBehavior;
+    final InventoryFootprint inventoryFootprint;
+    final double accountValueFit;
+    final String playerReason;
+    final List<Source> sources;
 
 
     public boolean supports(AccountMode mode) { return accountModes.contains(mode); }
@@ -316,15 +295,15 @@ final class MethodStrategyProfile
 final class MinigameDefinition
 {
     final String id;
-    private final String name;
-    private final Skill primarySkill;
-    private final int minimumLevel;
-    private final boolean freeToPlay;
-    private final RiskLevel riskLevel;
-    private final AttentionLevel attention;
-    private final Set<AccountMode> supportedModes;
-    private final String rewardFocus;
-    private final boolean combatActivity;
+    final String name;
+    final Skill primarySkill;
+    final int minimumLevel;
+    final boolean freeToPlay;
+    final RiskLevel riskLevel;
+    final AttentionLevel attention;
+    final Set<AccountMode> supportedModes;
+    final String rewardFocus;
+    final boolean combatActivity;
 
     public MinigameDefinition(String id, String name, Skill primarySkill,
             int minimumLevel, boolean freeToPlay, RiskLevel riskLevel,
@@ -343,13 +322,13 @@ final class MinigameDefinition
         this.id = id;
         this.name = name;
         this.primarySkill = primarySkill;
-        this.minimumLevel = Math.max(1, minimumLevel);
+        this.minimumLevel = max(1, minimumLevel);
         this.freeToPlay = freeToPlay;
         this.riskLevel = riskLevel == null ? RiskLevel.NONE : riskLevel;
         this.attention = attention == null ? AttentionLevel.MODERATE : attention;
         this.supportedModes = supportedModes == null || supportedModes.isEmpty()
-                ? Collections.emptySet()
-                : Collections.unmodifiableSet(EnumSet.copyOf(supportedModes));
+                ? emptySet()
+                : unmodifiableSet(EnumSet.copyOf(supportedModes));
         this.rewardFocus = rewardFocus;
         this.combatActivity = combatActivity;
     }
@@ -362,11 +341,11 @@ final class MinigameDefinition
 @RequiredArgsConstructor
 final class MinigameSetupProfile
 {
-    private final String activityId;
-    private final ItemRequirementExpression items;
-    private final String location;
-    private final String supplies;
-    private final String instructions;
+    final String activityId;
+    final ItemRule items;
+    final String location;
+    final String supplies;
+    final String instructions;
 
 
 }
@@ -377,18 +356,16 @@ final class MinigameSetupProfile
 final class MoneyMakingDefinition
 {
     final String id;
-    private final String name;
-    private final String description;
-    private final Skill primarySkill;
-    private final int minimumLevel;
-    private final boolean freeToPlay;
-    private final Set<AccountMode> supportedModes;
-    private final RiskLevel riskLevel;
-    private final AttentionLevel attention;
-    private final boolean wilderness;
-    private final boolean requiresLivePrices;
-
-
+    final String name;
+    final String description;
+    final Skill primarySkill;
+    final int minimumLevel;
+    final boolean freeToPlay;
+    final Set<AccountMode> supportedModes;
+    final RiskLevel riskLevel;
+    final AttentionLevel attention;
+    final boolean wilderness;
+    final boolean requiresLivePrices;
 
     public boolean supports(AccountMode mode)
     {
@@ -400,13 +377,13 @@ final class MoneyMakingDefinition
 @Getter
 class PlayerStrategyProfile
 {
-    private final StrategyMode strategyMode;
-    private final SessionIntent sessionIntent;
-    private final QuestTolerance questTolerance;
-    private final GoalType activeGoal;
-    private final boolean useGroupStorage;
-    private final boolean collectionistMode;
-    private final boolean allowWildernessMethods;
+    final StrategyMode strategyMode;
+    final SessionIntent sessionIntent;
+    final QuestTolerance questTolerance;
+    final GoalType activeGoal;
+    final boolean useGroupStorage;
+    final boolean collectionistMode;
+    final boolean allowWildernessMethods;
 
     public PlayerStrategyProfile(
             StrategyMode strategyMode,
@@ -453,7 +430,6 @@ class PlayerStrategyProfile
 
     StrategyMode mode() { return strategyMode; }
     SessionIntent intent() { return sessionIntent; }
-    QuestTolerance tolerance() { return questTolerance; }
     GoalType goal() { return activeGoal; }
     boolean usesGroupStorage() { return useGroupStorage; }
     boolean collectionist() { return collectionistMode; }
@@ -478,79 +454,24 @@ class PlayerStrategyProfile
 final class ProgressionObjectiveDefinition
 {
     final String id;
-    private final String title;
-    private final String methodId;
-    private final ProgressionObjectiveType type;
+    final String title;
+    final String methodId;
+    final ProgressionObjectiveType type;
 
 
-}
-
-/**
- * Per-character list of items Compass must never suggest selling, dropping,
- * alching, destroying, or otherwise consuming as an "obsolete" resource.
- *
- * <p>Built-in protection rules for quest/rare/progression items will eventually
- * be layered on top of this explicit player list.</p>
- */
-final class ProtectedItemProfile
-{
-    private final Set<Integer> protectedItemIds = new HashSet<>();
-
-    public boolean isProtected(int itemId)
-    {
-        return protectedItemIds.contains(itemId);
-    }
-
-    public void protect(int itemId)
-    {
-        if (itemId >= 0)
-        {
-            protectedItemIds.add(itemId);
-        }
-    }
-
-    public void unprotect(int itemId)
-    {
-        protectedItemIds.remove(itemId);
-    }
-
-    public void replaceAll(Set<Integer> itemIds)
-    {
-        protectedItemIds.clear();
-
-        if (itemIds == null)
-        {
-            return;
-        }
-
-        for (Integer itemId : itemIds)
-        {
-            if (itemId != null && itemId >= 0)
-            {
-                protectedItemIds.add(itemId);
-            }
-        }
-    }
-
-    public Set<Integer> snapshot()
-    {
-        return Collections.unmodifiableSet(
-                new HashSet<>(protectedItemIds)
-        );
-    }
 }
 
 /** Current boss/raid identity plus Compass safety metadata. */
 @Getter
-final class PvmActivityDefinition
+final class PvmActivity
 {
     String id;
-    private String name;
-    private boolean wilderness;
-    private boolean raid;
-    private boolean freeToPlay;
-    private RiskLevel riskLevel;
-    private boolean hardcoreSafeByDefault;
+    String name;
+    boolean wilderness;
+    boolean raid;
+    boolean freeToPlay;
+    RiskLevel riskLevel;
+    boolean hardcoreSafeByDefault;
 
 }
 
@@ -559,11 +480,11 @@ final class PvmActivityDefinition
 @Getter
 final class PvmEvidenceProfile
 {
-    private final String activityId;
-    private final String weaponStyle;
-    private final List<String> accessItems;
-    private final int minimumFood;
-    private final int minimumRestoration;
+    final String activityId;
+    final String weaponStyle;
+    final List<String> accessItems;
+    final int minimumFood;
+    final int minimumRestoration;
 
 
 }
@@ -572,16 +493,16 @@ final class PvmEvidenceProfile
 @Getter
 final class PvmPreparationProfile
 {
-    private String activityId;
-    private String style;
-    private List<String> checks;
-    private String accountValue;
-    private String provenance;
-    private int attack, strength, defence, ranged, magic, prayer, slayer;
-    private String preferredStyle;
-    private String requiredQuest;
-    private boolean questMayBeInProgress;
-    private boolean requiresSupplies;
+    String activityId;
+    String style;
+    List<String> checks;
+    String accountValue;
+    String provenance;
+    int attack, strength, defence, ranged, magic, prayer, slayer;
+    String preferredStyle;
+    String requiredQuest;
+    boolean questMayBeInProgress;
+    boolean requiresSupplies;
 
 
 }
@@ -591,54 +512,54 @@ final class PvmPreparationProfile
 @RequiredArgsConstructor
 final class RecommendationHistoryEntry
 {
-    private final String activityId;
-    private final String title;
-    private final RecommendationHistoryAction action;
-    private final long occurredAtMillis;
+    final String activityId;
+    final String title;
+    final RecommendationHistoryAction action;
+    final long occurredAtMillis;
 
 
 }
 
 /** Verified self-source recipe/access route for one resource family. */
 @Getter
-final class ResourceDependencyDefinition
+final class ResourceDependency
 {
-    private final int itemId;
-    private final String itemName;
-    private final String action;
-    private final int opportunityCost;
-    private final int outputQuantity;
-    private final List<DependencyRequirement> prerequisites;
+    final int itemId;
+    final String itemName;
+    final String action;
+    final int opportunityCost;
+    final int outputQuantity;
+    final List<DependencyRequirement> prerequisites;
 
-    public ResourceDependencyDefinition(int itemId, String action,
+    public ResourceDependency(int itemId, String action,
             int opportunityCost, List<DependencyRequirement> prerequisites)
     {
         this(itemId, null, action, opportunityCost, 1, prerequisites);
     }
 
-    public ResourceDependencyDefinition(int itemId, String action,
+    public ResourceDependency(int itemId, String action,
             int opportunityCost, int outputQuantity,
             List<DependencyRequirement> prerequisites)
     {
         this(itemId, null, action, opportunityCost, outputQuantity, prerequisites);
     }
 
-    public ResourceDependencyDefinition(int itemId, String itemName, String action,
+    public ResourceDependency(int itemId, String itemName, String action,
             int opportunityCost, List<DependencyRequirement> prerequisites)
     {
         this(itemId, itemName, action, opportunityCost, 1, prerequisites);
     }
 
-    public ResourceDependencyDefinition(int itemId, String itemName, String action,
+    public ResourceDependency(int itemId, String itemName, String action,
             int opportunityCost, int outputQuantity,
             List<DependencyRequirement> prerequisites)
     {
         this.itemId = itemId;
         this.itemName = itemName == null ? null : itemName.trim();
         this.action = action;
-        this.opportunityCost = Math.max(0, opportunityCost);
-        this.outputQuantity = Math.max(1, outputQuantity);
-        this.prerequisites = Collections.unmodifiableList(prerequisites == null
+        this.opportunityCost = max(0, opportunityCost);
+        this.outputQuantity = max(1, outputQuantity);
+        this.prerequisites = unmodifiableList(prerequisites == null
                 ? new ArrayList<>() : new ArrayList<>(prerequisites));
     }
 
@@ -655,13 +576,13 @@ final class ResourceDependencyDefinition
 @Getter
 final class ResourcePlanEntry
 {
-    private final String name;
-    private final int itemId;
-    private final int required;
-    private final int usableOwned;
-    private final int missing;
-    private final int restrictedOwned;
-    private final String reusableSource;
+    final String name;
+    final int itemId;
+    final int required;
+    final int usableOwned;
+    final int missing;
+    final int restrictedOwned;
+    final String reusableSource;
 
     public ResourcePlanEntry(
             String name,
@@ -674,10 +595,10 @@ final class ResourcePlanEntry
     {
         this.name = name;
         this.itemId = itemId;
-        this.required = Math.max(0, required);
-        this.usableOwned = Math.max(0, usableOwned);
-        this.missing = Math.max(0, missing);
-        this.restrictedOwned = Math.max(0, restrictedOwned);
+        this.required = max(0, required);
+        this.usableOwned = max(0, usableOwned);
+        this.missing = max(0, missing);
+        this.restrictedOwned = max(0, restrictedOwned);
         this.reusableSource = reusableSource;
     }
 
@@ -700,57 +621,57 @@ final class ResourcePlanEntry
 
 /** A stable, human-readable acquisition family for common progression resources. */
 @Getter
-final class ResourceSourceDefinition
+final class ResourceSource
 {
     final String id;
-    private final List<String> nameTokens;
-    private final String mainRoute;
-    private final String ironRoute;
-    private final String uimRoute;
-    private final List<String> freeToPlayItemNames;
-    private final String freeToPlayMainRoute;
-    private final String freeToPlayIronRoute;
-    private final String freeToPlayUimRoute;
-    private final List<StrategySourceId> sourceIds;
-    private final boolean wilderness;
-    private final RiskLevel riskLevel;
+    final List<String> nameTokens;
+    final String mainRoute;
+    final String ironRoute;
+    final String uimRoute;
+    final List<String> freeToPlayItemNames;
+    final String freeToPlayMainRoute;
+    final String freeToPlayIronRoute;
+    final String freeToPlayUimRoute;
+    final List<Source> sourceIds;
+    final boolean wilderness;
+    final RiskLevel riskLevel;
 
-    public ResourceSourceDefinition(String id, List<String> nameTokens,
+    public ResourceSource(String id, List<String> nameTokens,
             String mainRoute, String ironRoute, String uimRoute,
             boolean wilderness, RiskLevel riskLevel)
     {
         this(id, nameTokens, mainRoute, ironRoute, uimRoute,
-                Collections.emptyList(), null, null, null,
+                emptyList(), null, null, null,
                 wilderness, riskLevel);
     }
 
-    public ResourceSourceDefinition(String id, List<String> nameTokens,
+    public ResourceSource(String id, List<String> nameTokens,
             String mainRoute, String ironRoute, String uimRoute,
             List<String> freeToPlayItemNames, String freeToPlayMainRoute,
             String freeToPlayIronRoute, String freeToPlayUimRoute,
             boolean wilderness, RiskLevel riskLevel)
     {
         this.id = id;
-        this.nameTokens = Collections.unmodifiableList(nameTokens == null
+        this.nameTokens = unmodifiableList(nameTokens == null
                 ? new ArrayList<>() : new ArrayList<>(nameTokens));
         this.mainRoute = mainRoute;
         this.ironRoute = ironRoute;
         this.uimRoute = uimRoute;
-        this.freeToPlayItemNames = Collections.unmodifiableList(
+        this.freeToPlayItemNames = unmodifiableList(
                 freeToPlayItemNames == null ? new ArrayList<>()
                         : new ArrayList<>(freeToPlayItemNames));
         this.freeToPlayMainRoute = freeToPlayMainRoute;
         this.freeToPlayIronRoute = freeToPlayIronRoute;
         this.freeToPlayUimRoute = freeToPlayUimRoute;
-        this.sourceIds = Collections.unmodifiableList(
+        this.sourceIds = unmodifiableList(
                 freeToPlayItemNames == null || freeToPlayItemNames.isEmpty()
-                        ? Arrays.asList(StrategySourceId.GENERAL_SKILL_TRAINING,
-                                StrategySourceId.IRONMAN_GENERAL,
-                                StrategySourceId.UIM_GENERAL)
-                        : Arrays.asList(StrategySourceId.GENERAL_SKILL_TRAINING,
-                                StrategySourceId.IRONMAN_GENERAL,
-                                StrategySourceId.F2P_IRONMAN_GENERAL,
-                                StrategySourceId.UIM_GENERAL));
+                        ? Arrays.asList(Source.GENERAL_SKILL_TRAINING,
+                                Source.IRONMAN_GENERAL,
+                                Source.UIM_GENERAL)
+                        : Arrays.asList(Source.GENERAL_SKILL_TRAINING,
+                                Source.IRONMAN_GENERAL,
+                                Source.F2P_IRONMAN_GENERAL,
+                                Source.UIM_GENERAL));
         this.wilderness = wilderness;
         this.riskLevel = riskLevel == null ? RiskLevel.NONE : riskLevel;
     }
@@ -764,32 +685,32 @@ final class SlayerMasterProfile
     @Getter
     final String id;
     @Getter
-    private final List<String> names;
+    final List<String> names;
     @Getter
-    private final String location;
+    final String location;
     @Getter
-    private final int minimumCombat;
+    final int minimumCombat;
     @Getter
-    private final int minimumSlayer;
+    final int minimumSlayer;
     @Getter
-    private final String requiredQuest;
-    private final boolean questStartSuffices;
+    final String requiredQuest;
+    final boolean questStartSuffices;
     @Getter
-    private final int normalPoints;
+    final int normalPoints;
     @Getter
-    private final int cancelCost;
+    final int cancelCost;
     @Getter
-    private final int blockCost;
+    final int blockCost;
     @Getter
-    private final double experiencePotential;
+    final double experiencePotential;
     @Getter
-    private final double supplyValue;
+    final double supplyValue;
     @Getter
-    private final double setupBurden;
+    final double setupBurden;
     @Getter
-    private final double locationConstraint;
+    final double locationConstraint;
     @Getter
-    private final boolean wilderness;
+    final boolean wilderness;
 
 
     public String getDisplayName() { return names.get(0); }
@@ -807,16 +728,16 @@ final class SlayerMasterProfile
 final class SlayerTaskProfile
 {
     final String id;
-    private final List<String> aliases;
-    private final List<String> requiredProtection;
-    private final String preferredLocation;
-    private final String styleGuidance;
-    private final String mechanicsNote;
-    private final CapabilityState cannonEligibility;
-    private final CapabilityState multiTargetMagicEligibility;
-    private final boolean wildernessVariantKnown;
-    private final List<String> ironObjectives;
-    private final String taskDecisionGuidance;
+    final List<String> aliases;
+    final List<String> requiredProtection;
+    final String preferredLocation;
+    final String styleGuidance;
+    final String mechanicsNote;
+    final Capability cannonEligibility;
+    final Capability multiTargetMagicEligibility;
+    final boolean wildernessVariantKnown;
+    final List<String> ironObjectives;
+    final String taskDecisionGuidance;
 
     public SlayerTaskProfile(
             String id,
@@ -827,15 +748,15 @@ final class SlayerTaskProfile
             String mechanicsNote)
     {
         this(id, aliases, requiredProtection, preferredLocation, styleGuidance,
-                mechanicsNote, CapabilityState.UNKNOWN, CapabilityState.UNKNOWN,
-                false, Collections.emptyList(), null);
+                mechanicsNote, Capability.UNKNOWN, Capability.UNKNOWN,
+                false, emptyList(), null);
     }
 
     public SlayerTaskProfile(String id, List<String> aliases,
             List<String> requiredProtection, String preferredLocation,
             String styleGuidance, String mechanicsNote,
-            CapabilityState cannonEligibility,
-            CapabilityState multiTargetMagicEligibility,
+            Capability cannonEligibility,
+            Capability multiTargetMagicEligibility,
             boolean wildernessVariantKnown, List<String> ironObjectives,
             String taskDecisionGuidance)
     {
@@ -846,9 +767,9 @@ final class SlayerTaskProfile
         this.styleGuidance = styleGuidance;
         this.mechanicsNote = mechanicsNote;
         this.cannonEligibility = cannonEligibility == null
-                ? CapabilityState.UNKNOWN : cannonEligibility;
+                ? Capability.UNKNOWN : cannonEligibility;
         this.multiTargetMagicEligibility = multiTargetMagicEligibility == null
-                ? CapabilityState.UNKNOWN : multiTargetMagicEligibility;
+                ? Capability.UNKNOWN : multiTargetMagicEligibility;
         this.wildernessVariantKnown = wildernessVariantKnown;
         this.ironObjectives = immutable(ironObjectives);
         this.taskDecisionGuidance = taskDecisionGuidance == null
@@ -860,43 +781,43 @@ final class SlayerTaskProfile
     private static List<String> immutable(List<String> values)
     {
         return values == null
-                ? Collections.emptyList()
-                : Collections.unmodifiableList(new ArrayList<>(values));
+                ? emptyList()
+                : unmodifiableList(new ArrayList<>(values));
     }
 }
 
 /** Strategic task properties; decisions score these rather than task identities. */
-final class SlayerTaskStrategicProfile
+final class SlayerStrategy
 {
     @Getter
-    private final String taskProfileId;
+    final String taskProfileId;
     @Getter
-    private final int xpQuality;
+    final int xpQuality;
     @Getter
-    private final int resourceValue;
+    final int resourceValue;
     @Getter
-    private final int completionBurden;
+    final int completionBurden;
     @Getter
-    private final int setupBurden;
+    final int setupBurden;
     @Getter
-    private final AttentionLevel attention;
+    final AttentionLevel attention;
     @Getter
-    private final RiskLevel inherentRisk;
+    final RiskLevel inherentRisk;
     @Getter
-    private final SlayerRequiredItemUse requiredItemUse;
+    final SlayerRequiredItemUse requiredItemUse;
     @Getter
-    private final CombatStyle requiredCombatStyle;
-    private final Map<String, Integer> assignmentWeights;
+    final CombatStyle requiredCombatStyle;
+    final Map<String, Integer> assignmentWeights;
     @Getter
-    private final String alternativeActivityId;
+    final String alternativeActivityId;
     @Getter
-    private final String alternativeName;
+    final String alternativeName;
     @Getter
-    private final String alternativeLocation;
+    final String alternativeLocation;
     @Getter
-    private final boolean directEncounter;
+    final boolean directEncounter;
 
-    public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
+    public SlayerStrategy(String taskProfileId, int xpQuality,
             int resourceValue, int completionBurden, int setupBurden,
             AttentionLevel attention, RiskLevel inherentRisk,
             SlayerRequiredItemUse requiredItemUse,
@@ -910,7 +831,7 @@ final class SlayerTaskStrategicProfile
                 alternativeLocation, false);
     }
 
-    public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
+    public SlayerStrategy(String taskProfileId, int xpQuality,
             int resourceValue, int completionBurden, int setupBurden,
             AttentionLevel attention, RiskLevel inherentRisk,
             SlayerRequiredItemUse requiredItemUse,
@@ -925,7 +846,7 @@ final class SlayerTaskStrategicProfile
                 alternativeName, alternativeLocation, false);
     }
 
-    public SlayerTaskStrategicProfile(String taskProfileId, int xpQuality,
+    public SlayerStrategy(String taskProfileId, int xpQuality,
             int resourceValue, int completionBurden, int setupBurden,
             AttentionLevel attention, RiskLevel inherentRisk,
             SlayerRequiredItemUse requiredItemUse,
@@ -944,8 +865,8 @@ final class SlayerTaskStrategicProfile
         this.requiredItemUse = requiredItemUse == null
                 ? SlayerRequiredItemUse.CARRIED_OR_EQUIPPED : requiredItemUse;
         this.requiredCombatStyle = requiredCombatStyle;
-        this.assignmentWeights = Collections.unmodifiableMap(
-                assignmentWeights == null ? Collections.emptyMap()
+        this.assignmentWeights = unmodifiableMap(
+                assignmentWeights == null ? emptyMap()
                         : new HashMap<>(assignmentWeights));
         this.alternativeActivityId = alternativeActivityId;
         this.alternativeName = alternativeName;
@@ -961,7 +882,7 @@ final class SlayerTaskStrategicProfile
 
     private static int scale(int value)
     {
-        return Math.max(1, Math.min(5, value));
+        return max(1, min(5, value));
     }
 
 }
@@ -969,11 +890,11 @@ final class SlayerTaskStrategicProfile
 /** Exact, deterministic evidence that proves a destination route is usable. */
 @RequiredArgsConstructor
 @Getter
-final class TravelRouteEvidenceDefinition
+final class RouteEvidence
 {
-    private final String routeId;
-    private final String requiredCompletedQuest;
-    private final List<String> requiredItems;
+    final String routeId;
+    final String requiredCompletedQuest;
+    final List<String> requiredItems;
 
 
 }
@@ -987,20 +908,18 @@ final class TravelRouteEvidenceDefinition
 @Getter
 final class UimStorageMechanicProfile
 {
-    private final StorageCapability capability;
-    private final String location;
-    private final String accessRequirements;
-    private final String eligibleItems;
-    private final String insertionOrDepositRules;
-    private final String retrievalRules;
-    private final String cost;
-    private final String expiration;
-    private final String secondDeathBehavior;
-    private final RiskLevel risk;
-    private final StrategySourceId source;
-    private final boolean recommendationEligible;
-
-
+    final StorageKind capability;
+    final String location;
+    final String accessRequirements;
+    final String eligibleItems;
+    final String insertionOrDepositRules;
+    final String retrievalRules;
+    final String cost;
+    final String expiration;
+    final String secondDeathBehavior;
+    final RiskLevel risk;
+    final Source source;
+    final boolean recommendationEligible;
 
     public boolean hasCompleteRecommendationRules()
     {
@@ -1022,12 +941,12 @@ final class UimStorageMechanicProfile
 @Getter
 final class UimStorageOption
 {
-    private final StorageCapability capability;
-    private final CapabilityState itemCompatibility;
-    private final CapabilityState capacityOrPreconditions;
-    private final boolean requiresConstruction;
-    private final StrategicPriority recurringInfrastructureValue;
-    private final boolean majorProgressionTransition;
+    final StorageKind capability;
+    final Capability itemCompatibility;
+    final Capability capacityOrPreconditions;
+    final boolean requiresConstruction;
+    final Priority recurringInfrastructureValue;
+    final boolean majorProgressionTransition;
 
 
 }

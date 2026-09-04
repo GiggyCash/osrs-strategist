@@ -20,7 +20,7 @@ public class RequirementEvidenceEngineTest
         FarmingAccessEvaluator accessEvaluator =
                 new FarmingAccessEvaluator(new FarmingAccessCatalog());
         RequirementEvidenceEngine engine =
-                new RequirementEvidenceEngine(accessEvaluator);
+                new RequirementEvidenceEngine(accessEvaluator, null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
 
         FarmingSnapshot farming = new FarmingSnapshot(
                 Collections.singleton("falador"),
@@ -34,7 +34,7 @@ public class RequirementEvidenceEngineTest
                 .build();
 
         TrainingMethod method = method("farming_early");
-        java.util.List<RequirementCheck> checks =
+        java.util.List<EvidenceCheck> checks =
                 engine.evaluate(data, method);
 
         assertEquals(2, checks.size());
@@ -50,12 +50,12 @@ public class RequirementEvidenceEngineTest
         FarmingAccessEvaluator accessEvaluator =
                 new FarmingAccessEvaluator(new FarmingAccessCatalog());
         RequirementEvidenceEngine engine =
-                new RequirementEvidenceEngine(accessEvaluator);
+                new RequirementEvidenceEngine(accessEvaluator, null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
 
-        Map<String, CapabilityState> tools = new HashMap<>();
-        tools.put("rake", CapabilityState.VERIFIED);
-        tools.put("dibber", CapabilityState.VERIFIED);
-        tools.put("spade", CapabilityState.VERIFIED);
+        Map<String, Capability> tools = new HashMap<>();
+        tools.put("rake", Capability.VERIFIED);
+        tools.put("dibber", Capability.VERIFIED);
+        tools.put("spade", Capability.VERIFIED);
         FarmingSnapshot farming = new FarmingSnapshot(
                 Collections.singleton("falador"),
                 tools,
@@ -70,11 +70,11 @@ public class RequirementEvidenceEngineTest
                 ), 1L))
                 .build();
 
-        java.util.List<RequirementCheck> checks =
+        java.util.List<EvidenceCheck> checks =
                 engine.evaluate(data, method("farming_herbs"));
 
         assertEquals(6, checks.size());
-        for (RequirementCheck check : checks)
+        for (EvidenceCheck check : checks)
         {
             assertEquals(check.getLabel(),
                     RequirementState.VERIFIED,
@@ -85,8 +85,7 @@ public class RequirementEvidenceEngineTest
     @Test
     public void miningRequiresAnObservedImmediatelyUsablePickaxe()
     {
-        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethod mining = new ExpandedTrainingMethodCatalog()
                 .methodsFor(Skill.MINING).stream()
                 .filter(candidate -> "mining_mlm".equals(
@@ -115,8 +114,7 @@ public class RequirementEvidenceEngineTest
     @Test
     public void observedNonStandardSpellbookBlocksStandardCombatMagic()
     {
-        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethod fireBlast = new ExpandedTrainingMethodCatalog()
                 .methodsFor(Skill.MAGIC).stream()
                 .map(CuratedTrainingMethod::getMethod)
@@ -127,7 +125,7 @@ public class RequirementEvidenceEngineTest
                         Collections.emptySet(), false, false, false))
                 .build();
 
-        java.util.List<RequirementCheck> checks = engine.evaluate(data, fireBlast);
+        java.util.List<EvidenceCheck> checks = engine.evaluate(data, fireBlast);
         assertEquals("spellbook:standard", checks.get(0).getId());
         assertEquals(RequirementState.BLOCKED, checks.get(0).getState());
     }
@@ -135,11 +133,10 @@ public class RequirementEvidenceEngineTest
     @Test
     public void unknownSpellbookCannotBecomeVerifiedFromRunesAlone()
     {
-        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethod fireBlast = expanded("magic_f2p_fire_blast", Skill.MAGIC);
 
-        java.util.List<RequirementCheck> checks = engine.evaluate(
+        java.util.List<EvidenceCheck> checks = engine.evaluate(
                 GameData.builder(account(1)).build(), fireBlast);
 
         assertEquals("spellbook:standard", checks.get(0).getId());
@@ -149,8 +146,7 @@ public class RequirementEvidenceEngineTest
     @Test
     public void lowAttentionSplashingRequiresObservedRunesSpellbookAndEquipment()
     {
-        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethod method = expanded(
                 "magic_f2p_fire_strike_splash", Skill.MAGIC);
         GameData ready = GameData.builder(account(1))
@@ -166,7 +162,7 @@ public class RequirementEvidenceEngineTest
                         equipped("Fancy boots"), equipped("Cursed goblin staff"))))
                 .build();
 
-        java.util.List<RequirementCheck> checks = engine.evaluate(ready, method);
+        java.util.List<EvidenceCheck> checks = engine.evaluate(ready, method);
 
         assertTrue(checks.stream().allMatch(check ->
                 check.getState() == RequirementState.VERIFIED));
@@ -177,8 +173,7 @@ public class RequirementEvidenceEngineTest
     @Test
     public void realAccessRulesReplaceSyntheticMinigameUnlocks()
     {
-        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(
-                new FarmingAccessEvaluator(new FarmingAccessCatalog()));
+        RequirementEvidenceEngine engine = new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         Map<String, QuestStatus> quests = new HashMap<>();
         quests.put("Temple of the Eye", QuestStatus.COMPLETE);
         GameData data = GameData.builder(account(80))
@@ -189,7 +184,7 @@ public class RequirementEvidenceEngineTest
                         new ItemState(ItemID.CHISEL, "Chisel", 1)), 1L))
                 .build();
 
-        java.util.List<RequirementCheck> gotr = engine.evaluate(data,
+        java.util.List<EvidenceCheck> gotr = engine.evaluate(data,
                 expanded("runecraft_gotr", Skill.RUNECRAFT));
         assertEquals("quest:temple_of_the_eye", gotr.get(0).getId());
         assertEquals(RequirementState.VERIFIED, gotr.get(0).getState());
@@ -199,7 +194,7 @@ public class RequirementEvidenceEngineTest
         assertTrue(engine.evaluate(data,
                 expanded("fishing_tempoross", Skill.FISHING)).isEmpty());
 
-        java.util.List<RequirementCheck> tithe = engine.evaluate(data,
+        java.util.List<EvidenceCheck> tithe = engine.evaluate(data,
                 expanded("farming_tithe", Skill.FARMING));
         assertTrue(tithe.stream().allMatch(check ->
                 check.getId().startsWith("resource:")));
@@ -233,17 +228,7 @@ public class RequirementEvidenceEngineTest
             xp.put(skill, 0);
         }
 
-        return new AccountSnapshot(
-                "Tester",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                1,
-                0L,
-                levels,
-                xp
-        );
+        return new AccountSnapshot("Tester", 0L, 0, "Main", Membership.P2P, 1, 1, 0L, levels, xp);
     }
 
     private static ItemState equipped(String name)

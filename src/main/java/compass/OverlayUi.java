@@ -1,10 +1,9 @@
 package compass;
+import static java.util.Collections.*;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import net.runelite.client.ui.overlay.components.LineComponent;
 
 /** Shared measured text and line rendering for Compass overlays. */
@@ -20,7 +19,7 @@ final class OverlayUi
     static List<String> wrap(String text, FontMetrics metrics, int width)
     {
         List<String> lines = new ArrayList<>();
-        if (text == null || text.trim().isEmpty()) return Collections.singletonList("");
+        if (text == null || text.trim().isEmpty()) return singletonList("");
         var current = new StringBuilder();
         for (String word : text.trim().split("\\s+"))
         {
@@ -53,6 +52,6 @@ final class OverlayUi
             }
         }
         if (current.length() > 0) lines.add(current.toString());
-        return lines.isEmpty() ? Collections.singletonList(text) : lines;
+        return lines.isEmpty() ? singletonList(text) : lines;
     }
 }

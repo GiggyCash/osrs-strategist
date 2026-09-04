@@ -18,7 +18,7 @@ public class ClueMembershipTest
     @Test
     public void f2pHidesHardClueOpportunity()
     {
-        GameData data = GameData.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(Membership.F2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
                         Confidence.VERIFIED))
                 .build();
@@ -30,7 +30,7 @@ public class ClueMembershipTest
     @Test
     public void f2pKeepsBeginnerClueOpportunity()
     {
-        GameData data = GameData.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(Membership.F2P))
                 .clue(new ClueSnapshot(true, "beginner", System.currentTimeMillis(),
                         Confidence.VERIFIED))
                 .build();
@@ -42,7 +42,7 @@ public class ClueMembershipTest
     @Test
     public void p2pKeepsHardClueOpportunity()
     {
-        GameData data = GameData.builder(account(MembershipStatus.P2P))
+        GameData data = GameData.builder(account(Membership.P2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
                         Confidence.VERIFIED))
                 .build();
@@ -55,7 +55,7 @@ public class ClueMembershipTest
     public void tierObservationAloneIsNotReportedReady()
     {
         GameData data = GameData.builder(
-                account(MembershipStatus.P2P))
+                account(Membership.P2P))
                 .clue(new ClueSnapshot(true, "hard", 1L,
                         Confidence.VERIFIED)).build();
 
@@ -78,7 +78,7 @@ public class ClueMembershipTest
                 Collections.singletonList("Maple longbow"), false, false,
                 null, false, "outside catherby bank");
         GameData data = GameData.builder(
-                account(MembershipStatus.P2P))
+                account(Membership.P2P))
                 .clue(new ClueSnapshot(true, "medium", 1L,
                         Confidence.VERIFIED, step)).build();
 
@@ -101,7 +101,7 @@ public class ClueMembershipTest
         timers.put("opportunity:birdhouse", 0L);
         timers.put("opportunity:herb-run", 0L);
 
-        GameData data = GameData.builder(account(MembershipStatus.F2P))
+        GameData data = GameData.builder(account(Membership.F2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .build();
 
@@ -112,16 +112,16 @@ public class ClueMembershipTest
     @Test
     public void clueTierMembershipRuleIsCentralized()
     {
-        assertTrue(ClueTier.BEGINNER.isAvailableFor(MembershipStatus.F2P));
-        assertFalse(ClueTier.EASY.isAvailableFor(MembershipStatus.F2P));
-        assertFalse(ClueTier.MEDIUM.isAvailableFor(MembershipStatus.F2P));
-        assertFalse(ClueTier.HARD.isAvailableFor(MembershipStatus.F2P));
-        assertFalse(ClueTier.ELITE.isAvailableFor(MembershipStatus.F2P));
-        assertFalse(ClueTier.MASTER.isAvailableFor(MembershipStatus.F2P));
-        assertTrue(ClueTier.HARD.isAvailableFor(MembershipStatus.P2P));
+        assertTrue(ClueTier.BEGINNER.isAvailableFor(Membership.F2P));
+        assertFalse(ClueTier.EASY.isAvailableFor(Membership.F2P));
+        assertFalse(ClueTier.MEDIUM.isAvailableFor(Membership.F2P));
+        assertFalse(ClueTier.HARD.isAvailableFor(Membership.F2P));
+        assertFalse(ClueTier.ELITE.isAvailableFor(Membership.F2P));
+        assertFalse(ClueTier.MASTER.isAvailableFor(Membership.F2P));
+        assertTrue(ClueTier.HARD.isAvailableFor(Membership.P2P));
     }
 
-    private static AccountSnapshot account(MembershipStatus membership)
+    private static AccountSnapshot account(Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -130,8 +130,6 @@ public class ClueMembershipTest
             levels.put(skill, 1);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Membership Test", 0, "Main", membership,
-                1, 1, 0L, levels, xp);
+        return new AccountSnapshot("Membership Test", 0L, 0, "Main", membership, 1, 1, 0L, levels, xp);
     }
 }

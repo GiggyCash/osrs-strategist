@@ -19,7 +19,7 @@ public class RecommendationIntelligenceServiceTest
     public void gearGoalCanBeatHigherRawSkillingScore()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 0, 80),
+                account(Membership.P2P, 0, 80),
                 GoalType.GEAR_TARGET,
                 SessionIntent.PICK_FOR_ME);
 
@@ -48,7 +48,7 @@ public class RecommendationIntelligenceServiceTest
     public void quickSessionPrefersLowSetupMethod()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 0, 70),
+                account(Membership.P2P, 0, 70),
                 GoalType.MAX,
                 SessionIntent.QUICK_20_MIN);
 
@@ -67,7 +67,7 @@ public class RecommendationIntelligenceServiceTest
     public void uimStronglyPenalizesHighSetupTraining()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 2, 70),
+                account(Membership.P2P, 2, 70),
                 GoalType.MAX,
                 SessionIntent.PICK_FOR_ME);
 
@@ -86,7 +86,7 @@ public class RecommendationIntelligenceServiceTest
     public void slayer85GoalDominatesGenericSkillProgress()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 1, 75),
+                account(Membership.P2P, 1, 75),
                 GoalType.SLAYER_85,
                 SessionIntent.LONG_SESSION);
 
@@ -107,7 +107,7 @@ public class RecommendationIntelligenceServiceTest
     public void typedRiskChangesRankButWildernessWordingDoesNot()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 0, 85),
+                account(Membership.P2P, 0, 85),
                 GoalType.GEAR_TARGET,
                 SessionIntent.LONG_SESSION);
         Recommendation wildernessWording = new Recommendation(
@@ -147,7 +147,7 @@ public class RecommendationIntelligenceServiceTest
     public void relaxedModePricesAttentionAndSetupReuseNotNames()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 0, 85),
+                account(Membership.P2P, 0, 85),
                 GoalType.AUTOMATIC,
                 SessionIntent.PICK_FOR_ME,
                 StrategyMode.RELAXED);
@@ -170,7 +170,7 @@ public class RecommendationIntelligenceServiceTest
     public void efficientModePricesTypedUnlockAndSharedDependencyValue()
     {
         StrategyContext context = context(
-                account(MembershipStatus.P2P, 0, 70),
+                account(Membership.P2P, 0, 70),
                 GoalType.AUTOMATIC,
                 SessionIntent.PICK_FOR_ME,
                 StrategyMode.EFFICIENT);
@@ -274,7 +274,7 @@ public class RecommendationIntelligenceServiceTest
     }
 
     private static AccountSnapshot account(
-            MembershipStatus membership,
+            Membership membership,
             int typeCode,
             int level)
     {
@@ -291,15 +291,6 @@ public class RecommendationIntelligenceServiceTest
             total += effective;
             totalXp += skillXp;
         }
-        return new AccountSnapshot(
-                "Intelligence Test",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
-                total,
-                totalXp,
-                levels,
-                xp);
+        return new AccountSnapshot("Intelligence Test", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), membership, membership == Membership.P2P ? 1 : 0, total, totalXp, levels, xp);
     }
 }

@@ -1,16 +1,10 @@
 package compass;
+import static java.lang.Math.*;
 import static compass.Text.get;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.*;
 import javax.swing.*;
 import net.runelite.api.Skill;
 import net.runelite.client.ui.PluginPanel;
@@ -69,43 +63,43 @@ public class OsrsStrategistPanel extends PluginPanel
     private final JTextArea recommendationTitle = wrappingArea(
             get(1242), EMPHASIS_FONT_SIZE, StrategistTheme.TEXT, true);
     private final JLabel progressText = mutedLabel("");
-    private final JProgressBar progressBar = new JProgressBar(0, 100);
-    private final JTextArea recommendationBody = wrappingArea(
+    final JProgressBar progressBar = new JProgressBar(0, 100);
+    final JTextArea recommendationBody = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
     private final JTextArea feedbackStatus = wrappingArea(
             "", MUTED_FONT_SIZE, StrategistTheme.MUTED_TEXT, false);
 
-    private final JTextArea alternativeOne = wrappingArea(
+    final JTextArea alternativeOne = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
     private final JTextArea alternativeTwo = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
-    private final JTextArea opportunityOne = wrappingArea(
+    final JTextArea opportunityOne = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
     private final JTextArea opportunityTwo = wrappingArea(
             "", BODY_FONT_SIZE, StrategistTheme.TEXT, false);
-    private final JPanel alternativesCard = cardPanel(false);
-    private final JPanel opportunitiesCard = cardPanel(false);
+    final JPanel alternativesCard = cardPanel(false);
+    final JPanel opportunitiesCard = cardPanel(false);
 
-    private final JButton detailsButton = actionButton("Details");
-    private final JButton laterButton = actionButton("Later");
-    private final JButton notTodayButton = actionButton("Not Today");
-    private final JButton dislikeButton = actionButton("Dislike");
+    final JButton detailsButton = actionButton("Details");
+    final JButton laterButton = actionButton("Later");
+    final JButton notTodayButton = actionButton("Not Today");
+    final JButton dislikeButton = actionButton("Dislike");
     private final JButton refreshButton = actionButton("Refresh Plan");
-    private final JButton supportButton = actionButton("Support Compass");
+    final JButton supportButton = actionButton("Support Compass");
     private final JButton doNextViewButton = actionButton("Do Next");
     private final JButton progressViewButton = actionButton("Progress");
     private final JPanel recommendationControls = new JPanel();
-    private final JPanel feedbackPanel = new JPanel();
+    final JPanel feedbackPanel = new JPanel();
     private final CardLayout viewLayout = new CardLayout();
     private final JPanel viewCards = new JPanel(viewLayout);
-    private final ProgressViewPanel progressView = new ProgressViewPanel();
+    final ProgressViewPanel progressView = new ProgressViewPanel();
 
     private Recommendation currentRecommendation;
     private boolean detailsVisible;
     private String riskAcknowledgedRecommendationId;
     private boolean detailsOverlayEnabled = true;
     private GoalType selectedGoal = GoalType.AUTOMATIC;
-    private MembershipStatus membership = MembershipStatus.UNKNOWN;
+    private Membership membership = Membership.UNKNOWN;
 
     public OsrsStrategistPanel(
             BiConsumer<String, FeedbackAction> feedbackHandler,
@@ -386,10 +380,10 @@ public class OsrsStrategistPanel extends PluginPanel
     }
 
     public void updateAccount(String name, String type,
-            MembershipStatus membership, int total)
+            Membership membership, int total)
     {
         this.membership = membership == null
-                ? MembershipStatus.UNKNOWN : membership;
+                ? Membership.UNKNOWN : membership;
         updateAccount(name, type, this.membership.getDisplayName(), total);
     }
 
@@ -416,10 +410,6 @@ public class OsrsStrategistPanel extends PluginPanel
         progressView.setHistory(history);
     }
 
-    ProgressViewPanel getProgressView()
-    {
-        return progressView;
-    }
 
     public void updateStrategy(StrategyMode mode, QuestTolerance tolerance)
     {
@@ -464,7 +454,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
         setRecommendationButtonsEnabled(
                 !FallbackRecommendationFactory.isFallback(best));
-        setWrappedText(recommendationTitle, safe(best.getTitle()), TEXT_WIDTH);
+        setWrappedText(recommendationTitle, safe(best.title), TEXT_WIDTH);
 
         var skill = MilestoneTracker.skillFor(best);
         if (recommendationChanged)
@@ -511,7 +501,7 @@ public class OsrsStrategistPanel extends PluginPanel
                         + " "
                         + completion.getStartedAtLevel()
                         + " → "
-                        + completion.getTargetLevel()
+                        + completion.targetLevel
                         + get(1248),
                 TEXT_WIDTH);
         milestoneBanner.setVisible(true);
@@ -551,7 +541,7 @@ public class OsrsStrategistPanel extends PluginPanel
 
     private void updateProgress(Recommendation recommendation)
     {
-        var current = recommendation.getCurrentLevel();
+        var current = recommendation.currentLevel;
         var target = recommendation.getCurrentExecutionTargetLevel();
         if (current <= 0 || target <= current)
         {
@@ -566,15 +556,15 @@ public class OsrsStrategistPanel extends PluginPanel
                 ? 1
                 : target == 99
                 ? 90
-                : Math.max(1, target - 10);
-        int percent = Math.max(
+                : max(1, target - 10);
+        int percent = max(
                 0,
-                Math.min(
+                min(
                         100,
-                        (int) Math.round(
-                                Math.max(0, current - start)
+                        (int) round(
+                                max(0, current - start)
                                         * 100.0
-                                        / Math.max(1, target - start))));
+                                        / max(1, target - start))));
         progressText.setText(html("Level " + current + " → " + target));
         progressBar.setValue(percent);
         progressText.setVisible(true);
@@ -613,10 +603,10 @@ public class OsrsStrategistPanel extends PluginPanel
     private static boolean requiresRiskAcknowledgement(
             Recommendation recommendation)
     {
-        if (recommendation == null || recommendation.getGuidance() == null
-                || recommendation.getGuidance().getRiskDisclosure() == null)
+        if (recommendation == null || recommendation.guidance == null
+                || recommendation.guidance.getRiskDisclosure() == null)
             return false;
-        return recommendation.getGuidance().getRiskDisclosure()
+        return recommendation.guidance.getRiskDisclosure()
                 .isAcknowledgementRequired();
     }
 
@@ -638,7 +628,7 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         if (currentRecommendation == null || feedbackHandler == null) return;
 
-        var title = currentRecommendation.getTitle();
+        var title = currentRecommendation.title;
         var id = currentRecommendation.id;
         setWrappedText(feedbackStatus, feedbackStatusText(action, title), TEXT_WIDTH);
         acknowledgeFirstUse();
@@ -675,39 +665,6 @@ public class OsrsStrategistPanel extends PluginPanel
         repaint();
     }
 
-    boolean isSupportVisible() { return supportButton.isVisible(); }
-    boolean isFirstUseHintVisible() { return firstUseHint.isVisible(); }
-    boolean isDetailsControlEnabled() { return detailsButton.isEnabled(); }
-    boolean isDetailsControlVisible() { return detailsButton.isVisible(); }
-    boolean isFeedbackVisibleForTest() { return feedbackPanel.isVisible(); }
-    boolean isProgressVisibleForTest() { return progressBar.isVisible(); }
-    String detailsLabelForTest() { return detailsButton.getText(); }
-    void clickDetailsForTest() { detailsButton.doClick(); }
-    void clickSupportForTest() { supportButton.doClick(); }
-    String recommendationTextForTest() { return recommendationBody.getText(); }
-    int recommendationTextHeightForTest()
-    {
-        return recommendationBody.getPreferredSize().height;
-    }
-    int recommendationTextLineHeightForTest()
-    {
-        return recommendationBody.getFontMetrics(
-                recommendationBody.getFont()).getHeight();
-    }
-    int recommendationTextLineCountForTest()
-    {
-        return recommendationBody.getLineCount();
-    }
-    boolean areAlternativesVisibleForTest() { return alternativesCard.isVisible(); }
-    boolean areOpportunitiesVisibleForTest() { return opportunitiesCard.isVisible(); }
-    String firstAlternativeTextForTest() { return alternativeOne.getText(); }
-    String firstOpportunityTextForTest() { return opportunityOne.getText(); }
-    java.util.List<String> feedbackLabelsForTest()
-    {
-        return java.util.Arrays.asList(
-                laterButton.getText(), notTodayButton.getText(), dislikeButton.getText());
-    }
-
     private GoalRecommendationContext currentGoalContext()
     {
         return GoalRecommendationContext.assess(
@@ -720,13 +677,13 @@ public class OsrsStrategistPanel extends PluginPanel
         firstUseHandler.run();
     }
 
-    private static MembershipStatus membershipFromDisplay(String display)
+    private static Membership membershipFromDisplay(String display)
     {
-        if (display == null) return MembershipStatus.UNKNOWN;
-        for (MembershipStatus status : MembershipStatus.values())
+        if (display == null) return Membership.UNKNOWN;
+        for (Membership status : Membership.values())
             if (status.getDisplayName().equalsIgnoreCase(display.trim()))
                 return status;
-        return MembershipStatus.UNKNOWN;
+        return Membership.UNKNOWN;
     }
 
     static String alternativeText(Recommendation recommendation)
@@ -738,17 +695,17 @@ public class OsrsStrategistPanel extends PluginPanel
         {
             StringBuilder value = new StringBuilder()
                     .append(plan.method().getSkill().getName());
-            if (recommendation.getCurrentLevel() > 0
-                    && recommendation.getTargetLevel()
-                            > recommendation.getCurrentLevel())
-                value.append(' ').append(recommendation.getCurrentLevel())
-                        .append(" → ").append(recommendation.getTargetLevel());
+            if (recommendation.currentLevel > 0
+                    && recommendation.targetLevel
+                            > recommendation.currentLevel)
+                value.append(' ').append(recommendation.currentLevel)
+                        .append(" → ").append(recommendation.targetLevel);
             value.append('\n').append(Presentation.compactSentence(
                     plan.method().getName(), 58));
             return value.toString();
         }
         return Presentation.compactSentence(
-                safe(recommendation.getTitle()), 82);
+                safe(recommendation.title), 82);
     }
 
     private static void makeFullWidth(JButton button, int height)
@@ -826,7 +783,7 @@ public class OsrsStrategistPanel extends PluginPanel
         area.setSize(new Dimension(width, 10_000));
         var preferred = area.getPreferredSize();
         var lineHeight = area.getFontMetrics(area.getFont()).getHeight();
-        var height = value.isEmpty() ? 1 : Math.max(lineHeight, preferred.height);
+        var height = value.isEmpty() ? 1 : max(lineHeight, preferred.height);
         var size = new Dimension(width, height);
         area.setPreferredSize(size);
         area.setMinimumSize(size);
@@ -871,15 +828,15 @@ public class OsrsStrategistPanel extends PluginPanel
     {
         boolean actionable = opportunity.isReady()
                 && (opportunity.isSetupVerified()
-                || opportunity.getPreparation().isEmpty());
+                || opportunity.preparation.isEmpty());
         String state;
         if (actionable)
             state = "Ready";
-        else if (!opportunity.getPreparation().isEmpty())
-            state = "Prep: " + opportunity.getPreparation().get(0);
+        else if (!opportunity.preparation.isEmpty())
+            state = "Prep: " + opportunity.preparation.get(0);
         else
             state = "Wait";
-        return "• " + safe(opportunity.getTitle()) + "\n" + state;
+        return "• " + safe(opportunity.title) + "\n" + state;
     }
 
     private static String feedbackStatusText(FeedbackAction action, String title)

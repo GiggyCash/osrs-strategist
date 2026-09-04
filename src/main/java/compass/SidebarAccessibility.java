@@ -1,19 +1,19 @@
 package compass;
+import static java.lang.Math.*;
 
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
+import static compass.Text.get;
+
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 /** Idempotent font and control scaling scoped to the Compass component tree. */
 final class SidebarAccessibility
 {
-    private static final String BASE_FONT = Text.get(1943);
-    private static final String BASE_PREFERRED = Text.get(1944);
-    private static final String BASE_MINIMUM = Text.get(1945);
-    private static final String BASE_MAXIMUM = Text.get(1946);
+    private static final String BASE_FONT = get(1943);
+    private static final String BASE_PREFERRED = get(1944);
+    private static final String BASE_MINIMUM = get(1945);
+    private static final String BASE_MAXIMUM = get(1946);
 
     private SidebarAccessibility() {}
 
@@ -64,7 +64,7 @@ final class SidebarAccessibility
                 component.getMinimumSize());
         Dimension maximum = base(component, BASE_MAXIMUM,
                 component.getMaximumSize());
-        var bonus = Math.round(Math.max(0f, scale - 1f) * 22f);
+        var bonus = round(max(0f, scale - 1f) * 22f);
         component.setPreferredSize(withHeight(preferred, bonus));
         component.setMinimumSize(withHeight(minimum, bonus));
         if (maximum != null && maximum.height < Integer.MAX_VALUE)
@@ -85,7 +85,7 @@ final class SidebarAccessibility
         var measured = area.getPreferredSize();
         var lineHeight = area.getFontMetrics(area.getFont()).getHeight();
         int height = area.getText() == null || area.getText().isEmpty()
-                ? 1 : Math.max(lineHeight, measured.height);
+                ? 1 : max(lineHeight, measured.height);
         var fixed = new Dimension(width, height);
         area.setPreferredSize(fixed);
         area.setMinimumSize(fixed);

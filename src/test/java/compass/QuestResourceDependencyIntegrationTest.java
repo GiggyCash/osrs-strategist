@@ -17,7 +17,7 @@ public class QuestResourceDependencyIntegrationTest
     @Test
     public void dependencyCatalogResolvesNamedOutputsCaseInsensitively()
     {
-        ResourceDependencyDefinition definition =
+        ResourceDependency definition =
                 new ResourceDependencyCatalog().forItemName("molten GLASS");
 
         assertNotNull(definition);
@@ -33,7 +33,7 @@ public class QuestResourceDependencyIntegrationTest
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(ItemID.STEEL_BAR, "Steel bar", 2)), 1L);
 
-        AcquisitionPlan result = new ResourceAcquisitionPlanner().plan(
+        AcquisitionPlan result = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()).plan(
                 context(bank, inventory),
                 new ResourceNeed(ItemID.STEEL_BAR, "Steel bar", 3));
 
@@ -49,7 +49,7 @@ public class QuestResourceDependencyIntegrationTest
                 new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
         StrategyContext context = context(bank);
 
-        DependencyResolution result = new ResourceAcquisitionPlanner()
+        DependencyResolution result = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog())
                 .resolveKnownShortfall(context, "Molten glass", 3);
 
         assertNotNull(result);
@@ -68,8 +68,10 @@ public class QuestResourceDependencyIntegrationTest
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(ItemID.STEEL_BAR, "Steel bar", 24)), 1L);
 
-        DependencyResolution result = new ResourceAcquisitionPlanner()
-                .resolveDependencies(context(bank),
+        DependencyResolution result = new ResourceDependencyResolver(
+                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
+                new ResourceDependencyCatalog())
+                .resolve(context(bank),
                         new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 100));
 
         ResolvedDependencyNode iron = result.getNodes().stream()
@@ -85,17 +87,13 @@ public class QuestResourceDependencyIntegrationTest
     @Test
     public void questPreparationPromotesFirstRecursiveResourceStep()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Molten glass", 8, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("Dependency test quest", false,
-                Collections.emptyList(), Collections.<Skill, Integer>emptyMap(),
-                Collections.emptyList(), requirement, 0, Collections.emptyList(),
-                "Test location", Collections.singletonList("Test unlock"),
-                Collections.<Skill, Integer>emptyMap());
+        QuestDefinition quest = new QuestDefinition("Dependency test quest", false, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
 
-        QuestResolution result = new QuestRequirementResolver().resolve(
+        QuestResolution result = TestFixtures.questRequirementResolver().resolve(
                 quest, context(bank));
 
         assertNotNull(result);
@@ -121,9 +119,7 @@ public class QuestResourceDependencyIntegrationTest
             levels.put(skill, 70);
             xp.put(skill, 0);
         }
-        AccountSnapshot account = new AccountSnapshot("Dependency", 1,
-                AccountMode.IRONMAN.name(), MembershipStatus.P2P,
-                1, 1500, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Dependency", 0L, 1, AccountMode.IRONMAN.name(), Membership.P2P, 1, 1500, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .inventory(inventory)
                 .equipment(new ItemsState(Collections.emptyList()))

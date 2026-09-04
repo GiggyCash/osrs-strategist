@@ -103,11 +103,7 @@ public class CombatGuidanceServiceTest
     public void unknownMembershipCannotReceiveCombatRouteGuidanceDirectly()
     {
         AccountSnapshot p2p = standard(70);
-        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(),
-                p2p.getAccountTypeCode(), p2p.getAccountTypeName(),
-                MembershipStatus.UNKNOWN, 0, p2p.getTotalLevel(),
-                p2p.getTotalExperience(), p2p.getSkillLevels(),
-                p2p.getSkillExperience());
+        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(), 0L, p2p.getAccountTypeCode(), p2p.getAccountTypeName(), Membership.UNKNOWN, 0, p2p.getTotalLevel(), p2p.getTotalExperience(), p2p.getSkillLevels(), p2p.getSkillExperience());
         Guidance guidance = service.build(
                 GameData.builder(unknown).build(), Skill.ATTACK,
                 70, 80, plan("attack_crabs", Skill.ATTACK),
@@ -176,9 +172,7 @@ public class CombatGuidanceServiceTest
         levels.put(Skill.PRAYER, 43);
         levels.put(Skill.HITPOINTS, 63);
         xp.put(Skill.DEFENCE, Experience.getXpForLevel(75));
-        return new AccountSnapshot(
-                "Def pure", 0, "Main", MembershipStatus.P2P, 1,
-                1000, 0L, levels, xp);
+        return new AccountSnapshot("Def pure", 0L, 0, "Main", Membership.P2P, 1, 1000, 0L, levels, xp);
     }
 
     private static AccountSnapshot standard(int combatLevel)
@@ -195,9 +189,7 @@ public class CombatGuidanceServiceTest
         xp.put(Skill.ATTACK, Experience.getXpForLevel(combatLevel));
         xp.put(Skill.STRENGTH, Experience.getXpForLevel(combatLevel));
         xp.put(Skill.DEFENCE, Experience.getXpForLevel(combatLevel));
-        return new AccountSnapshot(
-                "Main", 0, "Main", MembershipStatus.P2P, 1,
-                1600, 0L, levels, xp);
+        return new AccountSnapshot("Main", 0L, 0, "Main", Membership.P2P, 1, 1600, 0L, levels, xp);
     }
 
     private static Map<Skill, Integer> baseLevels(int value)

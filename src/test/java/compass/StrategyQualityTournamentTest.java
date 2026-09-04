@@ -26,9 +26,7 @@ public class StrategyQualityTournamentTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
             new TrainingMethodDatabase(),
-            new RequirementEvidenceEngine(
-                    new FarmingAccessEvaluator(new FarmingAccessCatalog()),
-                    new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+            new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
             new ExpandedTrainingMethodCatalog(),
             new F2pBaselineMethodCatalog(),
             new TrainingMethodPolicy());
@@ -36,7 +34,7 @@ public class StrategyQualityTournamentTest
     @Test
     public void cookingStyleAndOwnedSuppliesChangeThePracticalWinner()
     {
-        GameData ready = data(0, MembershipStatus.P2P,
+        GameData ready = data(0, Membership.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200),
                         item(ItemID.GRAPES, "Grapes", 200),
                         item(ItemID.JUG_WATER, "Jug of water", 200)),
@@ -49,7 +47,7 @@ public class StrategyQualityTournamentTest
         assertLowAttentionCookingWinner(ready, StrategyMode.EFFICIENT,
                 SessionIntent.AFK);
 
-        GameData noWineSupplies = data(0, MembershipStatus.P2P,
+        GameData noWineSupplies = data(0, Membership.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
         assertLowAttentionCookingWinner(noWineSupplies,
@@ -57,7 +55,7 @@ public class StrategyQualityTournamentTest
         assertWinner("cooking_wines", noWineSupplies, Skill.COOKING, 70,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
 
-        GameData iron = data(1, MembershipStatus.P2P,
+        GameData iron = data(1, Membership.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                 quests(), minigames(), true);
         assertLowAttentionCookingWinner(iron, StrategyMode.EFFICIENT,
@@ -69,7 +67,7 @@ public class StrategyQualityTournamentTest
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Temple of the Eye", QuestStatus.COMPLETE);
-        GameData ready = data(0, MembershipStatus.P2P,
+        GameData ready = data(0, Membership.P2P,
                 items(item(ItemID.BLANKRUNE_HIGH, "Pure essence", 2_000),
                         item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1),
                         item(ItemID.CHISEL, "Chisel", 1)),
@@ -79,7 +77,7 @@ public class StrategyQualityTournamentTest
         assertWinner("runecraft_zmi", ready, Skill.RUNECRAFT, 70,
                 StrategyMode.RELAXED, SessionIntent.ONE_HOUR);
 
-        GameData runeEssenceOnly = data(0, MembershipStatus.P2P,
+        GameData runeEssenceOnly = data(0, Membership.P2P,
                 items(item(ItemID.BLANKRUNE, "Rune essence", 2_000),
                         item(ItemID.BODY_TALISMAN, "Body talisman", 1)),
                 quests(), minigames(), false);
@@ -96,7 +94,7 @@ public class StrategyQualityTournamentTest
         Map<String, QuestStatus> completed = quests();
         completed.put("Tai Bwo Wannai Trio", QuestStatus.COMPLETE);
         completed.put("Fairytale II - Cure a Queen", QuestStatus.COMPLETE);
-        GameData ready = data(1, MembershipStatus.P2P,
+        GameData ready = data(1, Membership.P2P,
                 items(item(ItemID.TBWT_KARAMBWAN_VESSEL,
                                 "Karambwan vessel", 1),
                         item(ItemID.TBWT_RAW_KARAMBWANJI,
@@ -114,7 +112,7 @@ public class StrategyQualityTournamentTest
     {
         Map<String, QuestStatus> completed = quests();
         completed.put("Bone Voyage", QuestStatus.COMPLETE);
-        GameData ready = data(1, MembershipStatus.P2P,
+        GameData ready = data(1, Membership.P2P,
                 items(item(ItemID.COINS, "Coins", 500)), completed,
                 minigames(), false);
 
@@ -137,7 +135,7 @@ public class StrategyQualityTournamentTest
     @Test
     public void f2pCannotWinHosidiusCookingRoute()
     {
-        GameData f2p = data(0, MembershipStatus.F2P,
+        GameData f2p = data(0, Membership.F2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 200),
                         item(ItemID.GRAPES, "Grapes", 200),
                         item(ItemID.JUG_WATER, "Jug of water", 200)),
@@ -229,7 +227,7 @@ public class StrategyQualityTournamentTest
         for (int i = 0; i < accountTypes.length; i++)
         {
             GameData account = data(accountTypes[i],
-                    MembershipStatus.P2P,
+                    Membership.P2P,
                     items(item(ItemID.RAW_SALMON, "Raw salmon", 200)),
                     quests(), minigames(), true);
             TrainingPlan plan = winner(account, Skill.COOKING, 70,
@@ -312,7 +310,7 @@ public class StrategyQualityTournamentTest
         completed.put("Tai Bwo Wannai Trio", QuestStatus.COMPLETE);
         completed.put("Fairytale II - Cure a Queen", QuestStatus.COMPLETE);
         completed.put("Temple of the Eye", QuestStatus.COMPLETE);
-        return data(1, MembershipStatus.P2P,
+        return data(1, Membership.P2P,
                 items(item(ItemID.RAW_SALMON, "Raw salmon", 500),
                         item(ItemID.GRAPES, "Grapes", 500),
                         item(ItemID.JUG_WATER, "Jug of water", 500),
@@ -356,14 +354,14 @@ public class StrategyQualityTournamentTest
                 return Collections.singletonList(
                         new ActionDef(Skill.MAGIC,
                                 "runelite:magic:fire_strike", "Fire Strike",
-                                13, 11.5f, null, MembershipStatus.F2P));
+                                13, 11.5f, null, Membership.F2P));
             }
         };
         RecommendationGuidanceService guidance =
-                new RecommendationGuidanceService(
-                        new AdaptiveMilestoneGuidanceService(catalog,
+                TestFixtures.recommendationGuidanceService(
+                        TestFixtures.adaptiveMilestoneGuidanceService(catalog,
                                 new MethodExecutionProfileCatalog()));
-        List<Recommendation> recommendations = new RecommendationEngine(
+        List<Recommendation> recommendations = TestFixtures.recommendationEngine(
                 selector, guidance)
                 .recommendAll(data, StrategyMode.RELAXED, SessionIntent.AFK,
                         false, false, GoalType.AUTOMATIC,
@@ -390,7 +388,7 @@ public class StrategyQualityTournamentTest
             totalXp += skillXp;
         }
         AccountSnapshot account = new AccountSnapshot("Magic tournament",
-                90_099L, 0, AccountMode.MAIN.name(), MembershipStatus.P2P,
+                90_099L, 0, AccountMode.MAIN.name(), Membership.P2P,
                 1, total, totalXp, levels, xp);
         List<ItemState> equipment = equipped
                 ? items(item(1, "Iron full helm", 1),
@@ -439,7 +437,7 @@ public class StrategyQualityTournamentTest
     }
 
     private static GameData data(int accountType,
-            MembershipStatus membership, List<ItemState> inventory,
+            Membership membership, List<ItemState> inventory,
             Map<String, QuestStatus> quests, MinigameSnapshot minigames,
             boolean easyKourendDiary)
     {
@@ -448,7 +446,7 @@ public class StrategyQualityTournamentTest
     }
 
     private static GameData data(int accountType,
-            MembershipStatus membership, List<ItemState> inventory,
+            Membership membership, List<ItemState> inventory,
             Map<String, QuestStatus> quests, MinigameSnapshot minigames,
             boolean easyKourendDiary, List<ItemState> equipment,
             CombatEvidenceSnapshot combatEvidence)
@@ -468,7 +466,7 @@ public class StrategyQualityTournamentTest
         AccountSnapshot account = new AccountSnapshot("Tournament",
                 90_000L + accountType, accountType,
                 AccountMode.fromTypeCode(accountType).name(), membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
+                membership == Membership.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
         Map<String, Map<DiaryTier, Boolean>> tiers = new HashMap<>();
         if (easyKourendDiary)
@@ -477,10 +475,10 @@ public class StrategyQualityTournamentTest
             kourend.put(DiaryTier.EASY, true);
             tiers.put("Kourend & Kebos", kourend);
         }
-        Map<String, CapabilityState> tools = new HashMap<>();
-        tools.put("rake", CapabilityState.VERIFIED);
-        tools.put("dibber", CapabilityState.VERIFIED);
-        tools.put("spade", CapabilityState.VERIFIED);
+        Map<String, Capability> tools = new HashMap<>();
+        tools.put("rake", Capability.VERIFIED);
+        tools.put("dibber", Capability.VERIFIED);
+        tools.put("spade", Capability.VERIFIED);
         return GameData.builder(account)
                 .inventory(new ItemsState(inventory))
                 .equipment(new ItemsState(equipment))

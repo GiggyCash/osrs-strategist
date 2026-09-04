@@ -1,14 +1,15 @@
 package compass;
 
+import static compass.Text.get;
+
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 /** Stable semantic collapse for equivalent actions emitted by several domains. */
 public final class RecommendationDeduplicator
 {
     private static final Pattern TRAIN_TO = Pattern.compile(
-            Text.get(1898));
+            get(1898));
 
     public List<Recommendation> deduplicate(List<Recommendation> candidates)
     {
@@ -19,7 +20,7 @@ public final class RecommendationDeduplicator
             if (candidate == null) continue;
             // Do not allow weaker evidence to borrow VERIFIED status from an
             // equivalent-looking action emitted by another provider.
-            var key = semanticKey(candidate) + "|" + candidate.getConfidence();
+            var key = semanticKey(candidate) + "|" + candidate.confidence;
             var previous = merged.get(key);
             merged.put(key, previous == null ? candidate : merge(previous, candidate));
         }
@@ -33,11 +34,11 @@ public final class RecommendationDeduplicator
         var activity = canonicalActivity(candidate, plan);
         if (activity != null) return "activity:" + activity;
         if (plan != null && plan.method() != null
-                && candidate.getTargetLevel() > 0)
+                && candidate.targetLevel > 0)
             return "skill-level:" + Names.words(plan.method().getSkill().getName())
-                    + ":" + candidate.getTargetLevel();
+                    + ":" + candidate.targetLevel;
 
-        var training = TRAIN_TO.matcher(safe(candidate.getTitle()).trim());
+        var training = TRAIN_TO.matcher(safe(candidate.title).trim());
         if (training.matches())
             return "skill-level:" + Names.words(training.group(1))
                     + ":" + training.group(2);
@@ -47,8 +48,8 @@ public final class RecommendationDeduplicator
                 || id.startsWith("clue:") || id.startsWith("stash:")
                 || id.startsWith("gear:") || id.startsWith("upgrade:")
                 || id.startsWith("pvm:") || id.startsWith("slayer:"))
-            return family(id) + ":" + Names.words(candidate.getTitle());
-        return Names.words(candidate.getTitle());
+            return family(id) + ":" + Names.words(candidate.title);
+        return Names.words(candidate.title);
     }
 
     private static Recommendation merge(Recommendation first,
@@ -56,16 +57,16 @@ public final class RecommendationDeduplicator
     {
         var primary = better(first, second);
         var other = primary == first ? second : first;
-        var reason = mergeText(primary.getReason(), other.getReason());
-        double sharedBenefitBonus = sameText(first.getReason(), second.getReason())
+        var reason = mergeText(primary.reason, other.reason);
+        double sharedBenefitBonus = sameText(first.reason, second.reason)
                 ? 0.0 : 3.0;
-        return new Recommendation(primary.id, primary.getTitle(), reason,
-                Math.max(first.getScore(), second.getScore()) + sharedBenefitBonus,
-                primary.plan(), primary.getConfidence(),
-                primary.getCurrentLevel(), primary.getTargetLevel(),
-                primary.getGuidance(), primary.getSafetyEvidence())
-                .withStrategicValue(first.getStrategicValue().merge(
-                        second.getStrategicValue()));
+        return new Recommendation(primary.id, primary.title, reason,
+                Math.max(first.score, second.score) + sharedBenefitBonus,
+                primary.plan(), primary.confidence,
+                primary.currentLevel, primary.targetLevel,
+                primary.guidance, primary.safetyEvidence)
+                .withStrategicValue(first.strategicValue.merge(
+                        second.strategicValue));
     }
 
     private static String canonicalActivity(Recommendation candidate,
@@ -79,7 +80,7 @@ public final class RecommendationDeduplicator
         {
             case "firemaking_wintertodt": return "wintertodt";
             case "fishing_tempoross": return "tempoross";
-            case "runecraft_gotr": return Text.get(1899);
+            case "runecraft_gotr": return get(1899);
             case "smithing_giants_foundry": return "giants-foundry";
             case "construction_mahogany_homes": return "mahogany-homes";
             case "farming_tithe": return "tithe-farm";
@@ -88,8 +89,8 @@ public final class RecommendationDeduplicator
             case "mining_blast_mine": return "blast-mine";
             case "thieving_pyramid": return "pyramid-plunder";
             case "fishing_aerial": return "aerial-fishing";
-            case "fishing_drift_net": return Text.get(1900);
-            case "thieving_artefacts": return Text.get(1901);
+            case "fishing_drift_net": return get(1900);
+            case "thieving_artefacts": return get(1901);
             case "woodcutting_forestry": return "forestry";
             case "mining_stars": return "shooting-stars";
             case "smithing_blast_furnace_gold":
@@ -101,8 +102,8 @@ public final class RecommendationDeduplicator
     private static Recommendation better(Recommendation first,
             Recommendation second)
     {
-        if (second.getScore() > first.getScore()) return second;
-        if (second.getScore() < first.getScore()) return first;
+        if (second.score > first.score) return second;
+        if (second.score < first.score) return first;
         return safe(second.id).compareTo(safe(first.id)) < 0
                 ? second : first;
     }
@@ -113,7 +114,7 @@ public final class RecommendationDeduplicator
         var right = safe(second).trim();
         if (right.isEmpty() || sameText(left, right)) return left;
         if (left.isEmpty()) return right;
-        return left + Text.get(1902) + right;
+        return left + get(1902) + right;
     }
 
     private static boolean sameText(String first, String second)

@@ -14,11 +14,11 @@ public class DiaryTaskCatalogTest
     {
         DiaryTaskCatalog catalog = new DiaryTaskCatalog();
         assertEquals(378, catalog.all().size());
-        assertEquals(12, catalog.census().size());
+        assertEquals(12, DiaryTaskCensusSupport.census(catalog).size());
         int tiers = 0;
         int requirements = 0;
         int transports = 0;
-        for (Map<DiaryTier, Integer> region : catalog.census().values())
+        for (Map<DiaryTier, Integer> region : DiaryTaskCensusSupport.census(catalog).values())
         {
             assertEquals(4, region.size());
             tiers += region.size();
@@ -28,7 +28,7 @@ public class DiaryTaskCatalogTest
         {
             assertFalse(task.getTask().trim().isEmpty());
             requirements += task.getRequirements().size();
-            if (task.isTransportRelevant()) transports++;
+            if (DiaryTaskCensusSupport.transportRelevant(task)) transports++;
         }
         assertEquals(48, tiers);
         assertTrue(requirements > 250);
@@ -49,7 +49,7 @@ public class DiaryTaskCatalogTest
         assertTrue(teleport.getRequirements().stream().anyMatch(requirement ->
                 requirement.getKind() == DiaryTaskRequirement.Kind.QUEST
                         && "Plague City".equals(requirement.getQuest())));
-        assertTrue(teleport.isTransportRelevant());
+        assertTrue(DiaryTaskCensusSupport.transportRelevant(teleport));
     }
 
 }

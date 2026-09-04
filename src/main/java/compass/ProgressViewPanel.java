@@ -1,26 +1,26 @@
 package compass;
+import static java.lang.Math.*;
 import static compass.Text.get;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 
 /** Calm secondary progress view; DO NEXT remains outside this component. */
 public final class ProgressViewPanel extends JPanel
 {
-    private final JLabel sessionXp = new JLabel("0 XP");
-    private final JLabel sessionMeta = new JLabel(get(1158));
-    private final JTextArea target = textArea(get(1159));
+    final JLabel sessionXp = new JLabel("0 XP");
+    final JLabel sessionMeta = new JLabel(get(1158));
+    final JTextArea target = textArea(get(1159));
     private final JTextArea leadingSkill = textArea("");
-    private final JTextArea planPath = textArea(get(1160));
+    final JTextArea planPath = textArea(get(1160));
     private final JTextArea milestones = textArea("");
     private final JPanel milestoneCard = card();
-    private final JTextArea lastSession = textArea("");
+    final JTextArea lastSession = textArea("");
     private final JPanel lastSessionCard = card();
-    private final ProgressChartPanel chart = new ProgressChartPanel();
+    final ProgressChartPanel chart = new ProgressChartPanel();
 
     public ProgressViewPanel()
     {
@@ -29,7 +29,7 @@ public final class ProgressViewPanel extends JPanel
 
     public ProgressViewPanel(float textScale)
     {
-        var scale = Math.max(1.0f, Math.min(1.6f, textScale));
+        var scale = max(1.0f, min(1.6f, textScale));
         setLayout(new BorderLayout());
         setOpaque(true);
         setBackground(StrategistTheme.BACKGROUND);
@@ -113,7 +113,7 @@ public final class ProgressViewPanel extends JPanel
         }
         sessionXp.setText(format(snapshot.getTotalXpGained()) + " XP");
         sessionMeta.setText(snapshot.getLevelsGained() + " levels • "
-                + duration(snapshot.getActiveDurationMillis()) + " active");
+                + duration(snapshot.activeDurationMillis) + " active");
         chart.setBuckets(snapshot.getBuckets());
         updateTarget(snapshot.getTargetProjection());
         snapshot.getSkills().values().stream()
@@ -123,7 +123,7 @@ public final class ProgressViewPanel extends JPanel
                         value.getSkill().getName() + " +"
                                 + format(value.getXpGained())),
                         () -> leadingSkill.setText(get(1161)));
-        updateMilestones(snapshot.getMilestones());
+        updateMilestones(snapshot.milestones);
     }
 
     public void setPlan(StrategicPlan plan)
@@ -161,37 +161,28 @@ public final class ProgressViewPanel extends JPanel
                 .append('+').append(format(summary.getTotalXpGained()))
                 .append(" XP • ").append(summary.getLevelsGained())
                 .append(" levels • ")
-                .append(duration(summary.getActiveDurationMillis()))
+                .append(duration(summary.activeDurationMillis))
                 .append(" active");
         summary.getXpBySkill().entrySet().stream()
                 .max(java.util.Map.Entry.comparingByValue())
                 .ifPresent(value -> text.append("\nTop: ")
                         .append(value.getKey().getName()).append(" +")
                         .append(format(value.getValue())));
-        if (!summary.getMilestones().isEmpty())
+        if (!summary.milestones.isEmpty())
         {
-            var first = Math.max(0, summary.getMilestones().size() - 2);
+            var first = max(0, summary.milestones.size() - 2);
             text.append(get(1162));
-            for (int index = first; index < summary.getMilestones().size(); index++)
+            for (int index = first; index < summary.milestones.size(); index++)
             {
                 if (index > first) text.append("; ");
-                text.append(summary.getMilestones().get(index).getTitle());
+                text.append(summary.milestones.get(index).title);
             }
         }
         lastSession.setText(text.toString());
         lastSessionCard.setVisible(true);
     }
 
-    public ProgressChartPanel getChart()
-    {
-        return chart;
-    }
 
-    String getSessionXpText() { return sessionXp.getText(); }
-    String getSessionMetaText() { return sessionMeta.getText(); }
-    String getTargetText() { return target.getText(); }
-    String getPlanText() { return planPath.getText(); }
-    String getLastSessionText() { return lastSession.getText(); }
 
     private void updateMilestones(List<ProgressMilestone> values)
     {
@@ -202,33 +193,33 @@ public final class ProgressViewPanel extends JPanel
             return;
         }
         var text = new StringBuilder();
-        var first = Math.max(0, values.size() - 3);
+        var first = max(0, values.size() - 3);
         for (int i = first; i < values.size(); i++)
         {
             if (text.length() > 0) text.append('\n');
-            text.append("• ").append(values.get(i).getTitle());
+            text.append("• ").append(values.get(i).title);
         }
         milestones.setText(text.toString());
         milestoneCard.setVisible(true);
     }
 
-    private void updateTarget(ProgressTargetProjection projection)
+    private void updateTarget(TargetProjection projection)
     {
         if (projection == null
-                || projection.getState() == ProgressTargetProjection.State.NO_TARGET)
+                || projection.getState() == TargetProjection.State.NO_TARGET)
         {
             target.setText(get(1159));
             return;
         }
         var value = projection.getTarget();
         String prefix = value.getSkill().getName() + " to "
-                + value.getTargetLevel() + "\n"
+                + value.targetLevel + "\n"
                 + format(projection.getXpRemaining()) + " XP remaining";
         switch (projection.getState())
         {
             case COMPLETE:
                 target.setText(value.getSkill().getName() + " "
-                        + value.getTargetLevel() + " complete");
+                        + value.targetLevel + " complete");
                 break;
             case READY:
                 target.setText(prefix + " • " + duration(projection.getEtaMillis()));
@@ -280,7 +271,7 @@ public final class ProgressViewPanel extends JPanel
 
     private static String duration(long millis)
     {
-        var minutes = Math.max(0L, Math.round(millis / 60_000.0));
+        var minutes = max(0L, round(millis / 60_000.0));
         if (minutes < 60L) return minutes + " min";
         var hours = minutes / 60L;
         var remainder = minutes % 60L;

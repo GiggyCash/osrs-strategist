@@ -83,7 +83,7 @@ public class FeedbackRecoveryTest
                 new Guidance("Mine copper and drop it when full.",
                         "Bronze pickaxe.",
                         "East Lumbridge Swamp mine.", null),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 
     private static Object get(Object target, String name) throws Exception

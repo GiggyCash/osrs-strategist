@@ -27,15 +27,15 @@ public class RealProviderStrategyTournamentTest
             GoalType.BOWFA, GoalType.INFERNAL_CAPE, GoalType.MAX
     };
     private static final Scenario[] ACCOUNTS = {
-            new Scenario("F2P Main", MembershipStatus.F2P, 0),
-            new Scenario("P2P Main", MembershipStatus.P2P, 0),
-            new Scenario("Iron", MembershipStatus.P2P, 1),
-            new Scenario("UIM", MembershipStatus.P2P, 2),
-            new Scenario("HCIM", MembershipStatus.P2P, 3),
-            new Scenario("GIM", MembershipStatus.P2P, 4),
-            new Scenario("HCGIM", MembershipStatus.P2P, 5),
-            new Scenario("Unranked GIM", MembershipStatus.P2P, 6),
-            new Scenario("Unknown membership", MembershipStatus.UNKNOWN, 0)
+            new Scenario("F2P Main", Membership.F2P, 0),
+            new Scenario("P2P Main", Membership.P2P, 0),
+            new Scenario("Iron", Membership.P2P, 1),
+            new Scenario("UIM", Membership.P2P, 2),
+            new Scenario("HCIM", Membership.P2P, 3),
+            new Scenario("GIM", Membership.P2P, 4),
+            new Scenario("HCGIM", Membership.P2P, 5),
+            new Scenario("Unranked GIM", Membership.P2P, 6),
+            new Scenario("Unknown membership", Membership.UNKNOWN, 0)
     };
 
     @Test
@@ -85,10 +85,10 @@ public class RealProviderStrategyTournamentTest
                             assertSpecific(label, lead);
                             winningDomains.add(
                                     StrategyEngine.alternativeDimension(lead));
-                            if (account.membership != MembershipStatus.P2P)
+                            if (account.membership != Membership.P2P)
                                 assertTrue(label + " leaked members content",
                                         lead.getSafetyEvidence().getAccess()
-                                                == SafetyEvidence.Access.F2P_SAFE);
+                                                == Safety.Access.F2P_SAFE);
                             scenarios++;
                         }
                     }
@@ -172,16 +172,14 @@ public class RealProviderStrategyTournamentTest
     {
         TrainingMethodSelector selector = new TrainingMethodSelector(
                 new TrainingMethodDatabase(),
-                new RequirementEvidenceEngine(
-                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
-                        new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+                new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
                 new ExpandedTrainingMethodCatalog(),
                 new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
         StrategyCandidateRegistry registry = new StrategyCandidateRegistry(
                 Arrays.asList(
                         new ClueCandidateProvider(),
                         new PvmCandidateProvider(),
-                        new QuestCandidateProvider(new QuestPriorityCatalog()),
+                        TestFixtures.questCandidateProvider(new QuestPriorityCatalog()),
                         new DiaryCandidateProvider(),
                         new CombatAchievementCandidateProvider(),
                         new InfrastructureCandidateProvider(
@@ -194,7 +192,7 @@ public class RealProviderStrategyTournamentTest
                         new MoneyMakingCandidateProvider(new MoneyMakingCatalog()),
                         new MinigameCandidateProvider(new MinigameCatalog()),
                         new CollectionLogCandidateProvider()));
-        return new StrategyEngine(new RecommendationEngine(selector), null,
+        return TestFixtures.strategyEngine(TestFixtures.recommendationEngine(selector), null,
                 null, registry, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService(),
                 new CandidateSafetyPolicy(),
@@ -220,13 +218,13 @@ public class RealProviderStrategyTournamentTest
                 50_000L + scenario.type, scenario.type,
                 AccountMode.fromTypeCode(scenario.type).name(),
                 scenario.membership,
-                scenario.membership == MembershipStatus.P2P ? 1 : 0,
+                scenario.membership == Membership.P2P ? 1 : 0,
                 total, totalXp, levels, xp);
 
         Map<String, QuestStatus> questStates = new HashMap<>();
         questStates.put("Cook's Assistant", QuestStatus.NOT_STARTED);
         questStates.put("The Restless Ghost", QuestStatus.NOT_STARTED);
-        if (scenario.membership == MembershipStatus.P2P)
+        if (scenario.membership == Membership.P2P)
         {
             questStates.put("Waterfall Quest", QuestStatus.NOT_STARTED);
             questStates.put("Tree Gnome Village", QuestStatus.NOT_STARTED);
@@ -239,9 +237,9 @@ public class RealProviderStrategyTournamentTest
                 .quests(new QuestSnapshot(questStates));
         if (scenario.type != 2)
             builder.bank(new ItemsState(Collections.emptyList(), 1L));
-        if (scenario.membership == MembershipStatus.P2P)
+        if (scenario.membership == Membership.P2P)
         {
-            builder.slayer(new SlayerSnapshot(null, 0, null, 0,
+            builder.slayer(TestFixtures.slayerSnapshot(null, 0, null, 0,
                     Confidence.VERIFIED));
             builder.poh(observedEmptyPoh());
         }
@@ -253,14 +251,14 @@ public class RealProviderStrategyTournamentTest
 
     private static PohSnapshot observedEmptyPoh()
     {
-        Map<String, CapabilityState> furniture = new HashMap<>();
+        Map<String, Capability> furniture = new HashMap<>();
         for (InfrastructureMilestone definition
                 : new InfrastructureMilestoneCatalog().all())
             if (definition.getEvidenceKind()
                     == InfrastructureEvidenceKind.POH_FURNITURE)
                 furniture.put(definition.getEvidenceKey(),
-                        CapabilityState.BLOCKED);
-        return new PohSnapshot(CapabilityState.VERIFIED, furniture);
+                        Capability.BLOCKED);
+        return new PohSnapshot(Capability.VERIFIED, furniture);
     }
 
     private static List<ItemState> preparedItems()
@@ -285,10 +283,10 @@ public class RealProviderStrategyTournamentTest
     private static final class Scenario
     {
         private final String name;
-        private final MembershipStatus membership;
+        private final Membership membership;
         private final int type;
 
-        private Scenario(String name, MembershipStatus membership, int type)
+        private Scenario(String name, Membership membership, int type)
         {
             this.name = name;
             this.membership = membership;

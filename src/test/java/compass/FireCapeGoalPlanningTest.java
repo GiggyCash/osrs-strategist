@@ -20,7 +20,7 @@ public class FireCapeGoalPlanningTest
     @Test
     public void selectedGoalPromotesOnlyReadinessBackedFightCavePlan()
     {
-        GameData data = data(0, MembershipStatus.P2P,
+        GameData data = data(0, Membership.P2P,
                 new PvmReadiness("pvm:tztok_jad", true,
                         Confidence.VERIFIED,
                         Collections.emptyList()));
@@ -42,7 +42,7 @@ public class FireCapeGoalPlanningTest
     @Test
     public void statsWithoutObservedReadinessCannotBecomeAFightCaveAttempt()
     {
-        GameData data = data(0, MembershipStatus.P2P,
+        GameData data = data(0, Membership.P2P,
                 new PvmReadiness("pvm:tztok_jad", false,
                         Confidence.CHECK_NEEDED,
                         Collections.singletonList(
@@ -64,10 +64,10 @@ public class FireCapeGoalPlanningTest
         PvmReadiness ready = new PvmReadiness("pvm:tztok_jad", true,
                 Confidence.VERIFIED, Collections.emptyList());
         assertTrue(provider.candidates(context(
-                data(0, MembershipStatus.F2P, ready), GoalType.FIRE_CAPE))
+                data(0, Membership.F2P, ready), GoalType.FIRE_CAPE))
                 .isEmpty());
         assertTrue(provider.candidates(context(
-                data(3, MembershipStatus.P2P, ready), GoalType.FIRE_CAPE))
+                data(3, Membership.P2P, ready), GoalType.FIRE_CAPE))
                 .isEmpty());
     }
 
@@ -80,7 +80,7 @@ public class FireCapeGoalPlanningTest
     }
 
     private static GameData data(int type,
-            MembershipStatus membership, PvmReadiness readiness)
+            Membership membership, PvmReadiness readiness)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -91,7 +91,7 @@ public class FireCapeGoalPlanningTest
         }
         AccountSnapshot account = new AccountSnapshot("Fire cape", 900L,
                 type, AccountMode.fromTypeCode(type).name(), membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
+                membership == Membership.P2P ? 1 : 0,
                 70 * Skill.values().length, 0L, levels, xp);
         Map<String, PvmReadiness> values = new HashMap<>();
         values.put("pvm:tztok_jad", readiness);

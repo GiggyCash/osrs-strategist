@@ -17,10 +17,10 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void allOfAndSubstitutesUseObservedEvidence()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.allOf(
-                ItemRequirementExpression.item("Spade", 1,
+        ItemRule requirement = ItemRule.allOf(
+                ItemRule.item("Spade", 1,
                         ItemRequirementScope.IMMEDIATELY_USABLE),
-                ItemRequirementExpression.item("Bronze axe", 1,
+                ItemRule.item("Bronze axe", 1,
                         ItemRequirementScope.IMMEDIATELY_USABLE, "Iron axe"));
         GameData data = bundle(0)
                 .bank(new ItemsState(Arrays.asList(item("Spade", 1),
@@ -31,10 +31,10 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void anyOfProducesOneConcreteBranch()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.anyOf(
-                ItemRequirementExpression.item("Sapphire lantern", 1,
+        ItemRule requirement = ItemRule.anyOf(
+                ItemRule.item("Sapphire lantern", 1,
                         ItemRequirementScope.CARRIED),
-                ItemRequirementExpression.item("Emerald lantern", 1,
+                ItemRule.item("Emerald lantern", 1,
                         ItemRequirementScope.CARRIED));
         GameData data = bundle(0).inventory(new ItemsState(
                 Collections.singletonList(item("Emerald lantern", 1)))).build();
@@ -45,7 +45,7 @@ public class ItemRequirementEvaluatorTest
     public void unobservedBankRemainsCheckNeeded()
     {
         ItemRequirementResult result = evaluator.evaluate(
-                ItemRequirementExpression.item("Rope", 1,
+                ItemRule.item("Rope", 1,
                         ItemRequirementScope.IMMEDIATELY_USABLE),
                 bundle(0).inventory(new ItemsState(
                         Collections.emptyList())).build(), false);
@@ -56,7 +56,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void groupStorageCountsOnlyWhenObservedAndEnabled()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Rope", 1, ItemRequirementScope.IMMEDIATELY_USABLE);
         GameData data = bundle(4)
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -72,14 +72,14 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void uimBankNeverSatisfiesAndRetrievalIsExplicit()
     {
-        ItemRequirementExpression usable = ItemRequirementExpression.item(
+        ItemRule usable = ItemRule.item(
                 "Rope", 1, ItemRequirementScope.IMMEDIATELY_USABLE);
-        Map<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
-        states.put(StorageCapability.LOOTING_BAG, CapabilityState.VERIFIED);
-        Map<StorageCapability, java.util.List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        contents.put(StorageCapability.LOOTING_BAG,
+        Map<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
+        states.put(StorageKind.LOOTING_BAG, Capability.VERIFIED);
+        Map<StorageKind, java.util.List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        contents.put(StorageKind.LOOTING_BAG,
                 Collections.singletonList(item("Rope", 1)));
         GameData data = bundle(2)
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -89,7 +89,7 @@ public class ItemRequirementEvaluatorTest
         assertEquals(RequirementState.BLOCKED,
                 evaluator.evaluate(usable, data, false).getState());
 
-        ItemRequirementExpression retrievable = ItemRequirementExpression.item(
+        ItemRule retrievable = ItemRule.item(
                 "Rope", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         assertTrue(evaluator.evaluate(retrievable, data, false).isSatisfied());
     }
@@ -101,7 +101,7 @@ public class ItemRequirementEvaluatorTest
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
         ItemRequirementResult result = evaluator.evaluate(
-                ItemRequirementExpression.item("Rope", 1,
+                ItemRule.item("Rope", 1,
                         ItemRequirementScope.IMMEDIATELY_USABLE),
                 data, false);
 
@@ -112,7 +112,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void equippedRequirementCannotBeSatisfiedByBankedItem()
     {
-        ItemRequirementExpression requirement = ItemRequirementExpression.item(
+        ItemRule requirement = ItemRule.item(
                 "Anti-dragon shield", 1, ItemRequirementScope.EQUIPPED);
         GameData data = bundle(0)
                 .equipment(new ItemsState(Collections.emptyList()))
@@ -125,7 +125,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void stackableEquippedQuantitySatisfiesExactRequirement()
     {
-        ItemRequirementExpression equipped = ItemRequirementExpression.item(
+        ItemRule equipped = ItemRule.item(
                 "Broad bolts", 50, ItemRequirementScope.EQUIPPED);
         GameData data = bundle(0)
                 .equipment(new ItemsState(Collections.singletonList(
@@ -136,7 +136,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void carriedAndEquippedStacksCombineForExactRequirement()
     {
-        ItemRequirementExpression available = ItemRequirementExpression.item(
+        ItemRule available = ItemRule.item(
                 "Broad bolts", 100, ItemRequirementScope.CARRIED_OR_EQUIPPED);
         GameData data = bundle(0)
                 .inventory(new ItemsState(Collections.singletonList(
@@ -149,7 +149,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void nameObservableClassUsesObservedItemsAndExclusions()
     {
-        ItemRequirementExpression axe = ItemRequirementExpression.itemClass(
+        ItemRule axe = ItemRule.itemClass(
                 ItemRequirementClass.AXE, 1,
                 ItemRequirementScope.IMMEDIATELY_USABLE);
         GameData data = bundle(0)
@@ -159,7 +159,7 @@ public class ItemRequirementEvaluatorTest
                         item("Dragon axe", 1)), 1L)).build();
         assertTrue(evaluator.evaluate(axe, data, false).isSatisfied());
 
-        ItemRequirementExpression cat = ItemRequirementExpression.itemClass(
+        ItemRule cat = ItemRule.itemClass(
                 ItemRequirementClass.CAT_OR_KITTEN, 1,
                 ItemRequirementScope.IMMEDIATELY_USABLE, "Overgrown cat");
         GameData overgrownOnly = bundle(0)
@@ -174,7 +174,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void mechanicalClassStaysExplicitCheckNeeded()
     {
-        ItemRequirementExpression light = ItemRequirementExpression.itemClass(
+        ItemRule light = ItemRule.itemClass(
                 ItemRequirementClass.LIGHT_SOURCE, 1,
                 ItemRequirementScope.OWNED_OR_RETRIEVABLE);
         GameData data = bundle(0)
@@ -189,7 +189,7 @@ public class ItemRequirementEvaluatorTest
     public void explicitVerificationNodeCannotClaimSatisfied()
     {
         ItemRequirementResult result = evaluator.evaluate(
-                ItemRequirementExpression.checkNeeded(
+                ItemRule.checkNeeded(
                         "Check the route-specific item requirement"),
                 bundle(0).bank(new ItemsState(Collections.emptyList(), 1L))
                         .build(), false);
@@ -201,7 +201,7 @@ public class ItemRequirementEvaluatorTest
     @Test
     public void exactQuestInventorySlotsUseObservedLayout()
     {
-        ItemRequirementExpression slots = ItemRequirementExpression.itemClass(
+        ItemRule slots = ItemRule.itemClass(
                 ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
                 ItemRequirementScope.CARRIED);
         java.util.List<ItemState> twentyFour = new java.util.ArrayList<>();
@@ -225,8 +225,7 @@ public class ItemRequirementEvaluatorTest
         EnumMap<Skill, Integer> levels = new EnumMap<>(Skill.class);
         EnumMap<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 99); xp.put(skill, 0); }
-        return GameData.builder(new AccountSnapshot("Player", type,
-                "test", MembershipStatus.P2P, 0, 2277, 0, levels, xp));
+        return GameData.builder(new AccountSnapshot("Player", 0L, type, "test", Membership.P2P, 0, 2277, 0, levels, xp));
     }
 
     private static ItemState item(String name, int quantity)

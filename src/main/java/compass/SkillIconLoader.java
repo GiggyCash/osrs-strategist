@@ -1,10 +1,10 @@
 package compass;
+import lombok.*;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import javax.swing.*;
 import net.runelite.api.Skill;
 import net.runelite.client.game.SpriteManager;
@@ -21,7 +21,7 @@ import net.runelite.client.util.ImageUtil;
  * asynchronous sprite callback from replacing a newer recommendation icon.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class SkillIconLoader
 {
     private final SpriteManager spriteManager;

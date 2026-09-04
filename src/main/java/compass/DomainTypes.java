@@ -1,28 +1,20 @@
 package compass;
+import static net.runelite.api.Skill.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import com.google.gson.Gson;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Singular;
+import lombok.*;
 import lombok.experimental.Accessors;
 import net.runelite.api.*;
-import net.runelite.api.Skill;
-import net.runelite.api.gameval.VarPlayerID;
-import net.runelite.api.gameval.VarbitID;
+import net.runelite.api.gameval.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.ui.ColorScheme;
 import static compass.Text.get;
@@ -34,14 +26,14 @@ import static compass.Text.get;
  * recalculated from live state instead of being permanently cached as fact.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class AccountAccessMemoryStore
 {
-    static final String GROUP = Text.get(1609);
+    static final String GROUP = get(1609);
     private static final String KEY = "accessMemory";
-    private final ConfigManager configManager;
-    private final Gson gson;
-    private final Map<String, Long> memory = new HashMap<>();
+    final ConfigManager configManager;
+    final Gson gson;
+    final Map<String, Long> memory = new HashMap<>();
     private String loadedProfileKey;
 
     public synchronized AccessMemorySnapshot snapshot()
@@ -120,21 +112,21 @@ class AccountAccessMemoryStore
  */
 final class AccountCapabilities
 {
-    private final Map<String, CapabilityState> states = new HashMap<>();
+    final Map<String, Capability> states = new HashMap<>();
 
-    public CapabilityState get(String key)
+    public Capability get(String key)
     {
-        return states.getOrDefault(key, CapabilityState.UNKNOWN);
+        return states.getOrDefault(key, Capability.UNKNOWN);
     }
 
-    public void set(String key, CapabilityState state)
+    public void set(String key, Capability state)
     {
         states.put(key, state);
     }
 
     public boolean verified(String key)
     {
-        return get(key) == CapabilityState.VERIFIED;
+        return get(key) == Capability.VERIFIED;
     }
 }
 
@@ -175,12 +167,6 @@ enum AccountMode
                 || this == HARDCORE_GROUP_IRONMAN
                 || this == UNRANKED_GROUP_IRONMAN;
     }
-
-    public boolean isUltimateIronman()
-    {
-        return this == ULTIMATE_IRONMAN;
-    }
-
     public boolean isIronLike()
     {
         return this != MAIN && this != UNKNOWN;
@@ -188,10 +174,10 @@ enum AccountMode
 }
 
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class AccountReader
 {
-    private final Client client;
+    final Client client;
 
     public AccountSnapshot read()
     {
@@ -224,10 +210,10 @@ class AccountReader
         boolean membersWorld = client.getWorldType() != null
                 && client.getWorldType().contains(WorldType.MEMBERS);
 
-        MembershipStatus membershipStatus =
+        Membership membershipStatus =
                 membershipCredit > 0 || membersWorld
-                        ? MembershipStatus.P2P
-                        : MembershipStatus.F2P;
+                        ? Membership.P2P
+                        : Membership.F2P;
 
         Map<Skill, Integer> skillLevels =
                 new EnumMap<>(Skill.class);
@@ -272,19 +258,19 @@ class AccountReader
                 return "Ironman";
 
             case 2:
-                return Text.get(1606);
+                return get(1606);
 
             case 3:
-                return Text.get(1607);
+                return get(1607);
 
             case 4:
                 return "Group Ironman";
 
             case 5:
-                return Text.get(1108);
+                return get(1108);
 
             case 6:
-                return Text.get(1109);
+                return get(1109);
 
             default:
                 return "Unknown";
@@ -299,57 +285,52 @@ class AccountReader
  * matched to these dimensions without teaching the selector that a named
  * account mode should always choose a named method.</p>
  */
-enum AccountStrategicDimension
+@RequiredArgsConstructor
+@Getter
+enum AccountDimension
 {
-    INVENTORY_PRESSURE(AccountStrategicDimensionRole.BURDEN_WEIGHT),
-    BANK_AVAILABILITY(AccountStrategicDimensionRole.CAPABILITY_GATE),
-    GRAND_EXCHANGE_AVAILABILITY(AccountStrategicDimensionRole.CAPABILITY_GATE),
-    SELF_SOURCING_BURDEN(AccountStrategicDimensionRole.BURDEN_WEIGHT),
-    SHARED_RESOURCE_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    SHARED_INFRASTRUCTURE_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    STORAGE_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    POH_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    TELEPORT_INFRASTRUCTURE_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    SETUP_COST_SENSITIVITY(AccountStrategicDimensionRole.BURDEN_WEIGHT),
-    DEATH_RISK_SENSITIVITY(AccountStrategicDimensionRole.BURDEN_WEIGHT),
+    INVENTORY_PRESSURE(AccountDimensionRole.BURDEN_WEIGHT),
+    BANK_AVAILABILITY(AccountDimensionRole.CAPABILITY_GATE),
+    GRAND_EXCHANGE_AVAILABILITY(AccountDimensionRole.CAPABILITY_GATE),
+    SELF_SOURCING_BURDEN(AccountDimensionRole.BURDEN_WEIGHT),
+    SHARED_RESOURCE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    SHARED_INFRASTRUCTURE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    STORAGE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    POH_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    TELEPORT_INFRASTRUCTURE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    SETUP_COST_SENSITIVITY(AccountDimensionRole.BURDEN_WEIGHT),
+    DEATH_RISK_SENSITIVITY(AccountDimensionRole.BURDEN_WEIGHT),
     CONSUMABLE_REPLACEMENT_DIFFICULTY(
-            AccountStrategicDimensionRole.BURDEN_WEIGHT),
-    STORABLE_EQUIPMENT_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT),
-    DUPLICATE_GRIND_PENALTY(AccountStrategicDimensionRole.BURDEN_WEIGHT),
-    GP_LIQUIDITY_STORAGE_VALUE(AccountStrategicDimensionRole.BENEFIT_WEIGHT);
+            AccountDimensionRole.BURDEN_WEIGHT),
+    STORABLE_EQUIPMENT_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
+    DUPLICATE_GRIND_PENALTY(AccountDimensionRole.BURDEN_WEIGHT),
+    GP_LIQUIDITY_STORAGE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT);
 
-    private final AccountStrategicDimensionRole role;
-
-    AccountStrategicDimension(AccountStrategicDimensionRole role)
-    {
-        this.role = role;
-    }
-
-    public AccountStrategicDimensionRole getRole() { return role; }
+    final AccountDimensionRole role;
 }
 
 /** One explainable account-mode/state contribution. */
 @Getter
-final class AccountStrategicPriority
+final class AccountPriority
 {
-    private final AccountStrategicDimension dimension;
-    private final StrategicPriority priority;
-    private final CapabilityState capabilityState;
-    private final Confidence confidence;
-    private final String reason;
+    final AccountDimension dimension;
+    final Priority priority;
+    final Capability capabilityState;
+    final Confidence confidence;
+    final String reason;
 
-    public AccountStrategicPriority(
-            AccountStrategicDimension dimension,
-            StrategicPriority priority,
-            CapabilityState capabilityState,
+    public AccountPriority(
+            AccountDimension dimension,
+            Priority priority,
+            Capability capabilityState,
             Confidence confidence,
             String reason)
     {
         if (dimension == null) throw new IllegalArgumentException("dimension");
         this.dimension = dimension;
-        this.priority = priority == null ? StrategicPriority.NONE : priority;
+        this.priority = priority == null ? Priority.NONE : priority;
         this.capabilityState = capabilityState == null
-                ? CapabilityState.UNKNOWN : capabilityState;
+                ? Capability.UNKNOWN : capabilityState;
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED : confidence;
         this.reason = reason == null ? "" : reason;
@@ -361,23 +342,23 @@ final class AccountStrategicPriority
 @Getter
 final class ActionDef
 {
-    private final Skill skill;
+    final Skill skill;
     final String id;
-    private final String name;
-    private final int level;
-    private final float xp;
-    private final String category;
-    private final MembershipStatus membership;
-    private final int itemId;
+    final String name;
+    final int level;
+    final float xp;
+    final String category;
+    final Membership membership;
+    final int itemId;
 
     public ActionDef(Skill skill, String id, String name,
-            int level, float xp, String category, MembershipStatus membership)
+            int level, float xp, String category, Membership membership)
     {
         this(skill, id, name, level, xp, category, membership, -1);
     }
 
     public ActionDef(Skill skill, String id, String name,
-            int level, float xp, String category, MembershipStatus membership,
+            int level, float xp, String category, Membership membership,
             int itemId)
     {
         this.skill = skill;
@@ -386,7 +367,7 @@ final class ActionDef
         this.level = level;
         this.xp = xp;
         this.category = category;
-        this.membership = membership == null ? MembershipStatus.UNKNOWN : membership;
+        this.membership = membership == null ? Membership.UNKNOWN : membership;
         this.itemId = itemId;
     }
 
@@ -408,6 +389,8 @@ enum AttentionLevel
  * same rule. This prevents a members-only clue left in a bank from being
  * presented as actionable while the character is currently F2P.</p>
  */
+@RequiredArgsConstructor
+@Getter
 enum ClueTier
 {
     BEGINNER(0.0),
@@ -418,23 +401,16 @@ enum ClueTier
     MASTER(7.0),
     UNKNOWN(0.0);
 
-    private final double priorityBonus;
-
-    ClueTier(double priorityBonus)
-    {
-        this.priorityBonus = priorityBonus;
-    }
-
-    public double getPriorityBonus() { return priorityBonus; }
+    final double priorityBonus;
 
     /**
      * Only beginner Treasure Trails are actionable on a F2P planning profile.
      * Unknown tiers stay eligible so Compass can surface them as Needs Info
      * rather than silently pretending it knows the tier.
      */
-    public boolean isAvailableFor(MembershipStatus membershipStatus)
+    public boolean isAvailableFor(Membership membershipStatus)
     {
-        if (membershipStatus != MembershipStatus.P2P)
+        if (membershipStatus != Membership.P2P)
         {
             return this == BEGINNER;
         }
@@ -452,6 +428,8 @@ enum ClueTier
     }
 }
 
+@RequiredArgsConstructor
+@Getter
 enum CombatAchievementTier
 {
     EASY(41),
@@ -461,17 +439,7 @@ enum CombatAchievementTier
     MASTER(1904),
     GRANDMASTER(2630);
 
-    private final int rewardPoints;
-
-    CombatAchievementTier(int rewardPoints)
-    {
-        this.rewardPoints = rewardPoints;
-    }
-
-    public int getRewardPoints()
-    {
-        return rewardPoints;
-    }
+    final int rewardPoints;
 }
 
 enum Confidence
@@ -489,39 +457,39 @@ enum Confidence
 final class ContentAccessRules
 {
     private static final Set<Skill> FREE_TO_PLAY_SKILLS = EnumSet.of(
-            Skill.ATTACK,
-            Skill.STRENGTH,
-            Skill.DEFENCE,
-            Skill.RANGED,
-            Skill.PRAYER,
-            Skill.MAGIC,
-            Skill.RUNECRAFT,
-            Skill.HITPOINTS,
-            Skill.CRAFTING,
-            Skill.MINING,
-            Skill.SMITHING,
-            Skill.FISHING,
-            Skill.COOKING,
-            Skill.FIREMAKING,
-            Skill.WOODCUTTING
+            ATTACK,
+            STRENGTH,
+            DEFENCE,
+            RANGED,
+            PRAYER,
+            MAGIC,
+            RUNECRAFT,
+            HITPOINTS,
+            CRAFTING,
+            MINING,
+            SMITHING,
+            FISHING,
+            COOKING,
+            FIREMAKING,
+            WOODCUTTING
     );
 
     private static final Set<String> MEMBERS_ONLY_METHOD_IDS = Set.of(
             "runecraft_gotr",
             "mining_mlm",
-            Text.get(1671),
-            Text.get(1672),
-            Text.get(1673),
-            Text.get(1674),
-            Text.get(1675),
-            Text.get(1676),
-            Text.get(1677),
+            get(1671),
+            get(1672),
+            get(1673),
+            get(1674),
+            get(1675),
+            get(1676),
+            get(1677),
             "farming_tithe",
             "hunter_rumours",
-            Text.get(1678),
-            Text.get(1679),
-            Text.get(1680),
-            Text.get(1681)
+            get(1678),
+            get(1679),
+            get(1680),
+            get(1681)
     );
 
     private ContentAccessRules()
@@ -530,10 +498,10 @@ final class ContentAccessRules
 
     public static boolean isSkillAvailable(
             Skill skill,
-            MembershipStatus membershipStatus)
+            Membership membershipStatus)
     {
         if (skill == null) return false;
-        if (membershipStatus == MembershipStatus.P2P) return true;
+        if (membershipStatus == Membership.P2P) return true;
 
         // F2P and UNKNOWN both use the F2P skill boundary. UNKNOWN is treated
         // conservatively until RuneLite gives Compass verified membership.
@@ -542,18 +510,18 @@ final class ContentAccessRules
 
     public static boolean isMethodAvailable(
             TrainingMethod method,
-            MembershipStatus membershipStatus)
+            Membership membershipStatus)
     {
         if (method == null || !isSkillAvailable(method.getSkill(), membershipStatus))
         {
             return false;
         }
-        if (membershipStatus == MembershipStatus.P2P) return true;
+        if (membershipStatus == Membership.P2P) return true;
 
         // F2P and UNKNOWN are intentionally identical here. A transient access
         // read may temporarily narrow a member to safe F2P routes, but can never
         // expose a members-only route to an F2P account.
-        return !method.isMembersOnly()
+        return !method.membersOnly
                 && !MEMBERS_ONLY_METHOD_IDS.contains(method.id);
     }
 
@@ -564,15 +532,15 @@ final class ContentAccessRules
 
     /** UNKNOWN receives only records explicitly marked F2P-safe. */
     public static boolean isContentAvailable(
-            MembershipStatus membershipStatus,
+            Membership membershipStatus,
             boolean freeToPlay)
     {
-        return membershipStatus == MembershipStatus.P2P || freeToPlay;
+        return membershipStatus == Membership.P2P || freeToPlay;
     }
 
-    public static boolean hasVerifiedMembership(MembershipStatus membershipStatus)
+    public static boolean hasVerifiedMembership(Membership membershipStatus)
     {
-        return membershipStatus == MembershipStatus.P2P;
+        return membershipStatus == Membership.P2P;
     }
 }
 
@@ -581,10 +549,10 @@ final class ContentAccessRules
 @RequiredArgsConstructor
 final class CuratedTrainingMethod
 {
-    private final TrainingMethod method;
+    final TrainingMethod method;
 
     TrainingMethod method() { return method; }
-    private final TrainingMethodMetadata metadata;
+    final TrainingMethodMetadata metadata;
 
 
 }
@@ -603,33 +571,19 @@ final class CurrentLiveContentChanges
         REMOVED_SUPERSEDED
     }
 
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Entry
     {
         final String id;
-        private final LocalDate effectiveDate;
-        private final Status status;
-        private final String behavior;
-        private final String source;
-
-        private Entry(String id, LocalDate effectiveDate, Status status,
-                String behavior, String source)
-        {
-            this.id = id;
-            this.effectiveDate = effectiveDate;
-            this.status = status;
-            this.behavior = behavior;
-            this.source = source;
-        }
-
-        public String getId() { return id; }
-        public LocalDate getEffectiveDate() { return effectiveDate; }
-        public Status getStatus() { return status; }
-        public String getBehavior() { return behavior; }
-        public String getSource() { return source; }
+        final LocalDate effectiveDate;
+        final Status status;
+        final String behavior;
+        final String source;
     }
 
     private static final String OFFICIAL = get(189);
-    private static final List<Entry> ENTRIES = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Entry> ENTRIES = unmodifiableList(Arrays.asList(
             new Entry(get(1652), LocalDate.of(2026, 8, 12),
                     Status.LIVE_CURRENT,
                     get(192), OFFICIAL),
@@ -691,46 +645,46 @@ final class CurrentLiveSkillActionOverrides
     {
         Map<String, Integer> levels = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                Text.get(1652), VALIDATION_DATE))
-            levels.put(Text.get(201), 77);
+                get(1652), VALIDATION_DATE))
+            levels.put(get(201), 77);
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                Text.get(1653), VALIDATION_DATE))
-            levels.put(Text.get(202), 87);
-        LEVELS = Collections.unmodifiableMap(levels);
+                get(1653), VALIDATION_DATE))
+            levels.put(get(202), 87);
+        LEVELS = unmodifiableMap(levels);
 
         Map<String, Float> xp = new LinkedHashMap<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                Text.get(1654), VALIDATION_DATE))
+                get(1654), VALIDATION_DATE))
         {
-            xp.put(Text.get(1655), 112f);
-            xp.put(Text.get(1656), 168f);
-            xp.put(Text.get(1657), 224f);
-            xp.put(Text.get(1658), 280f);
-            xp.put(Text.get(1659), 369f);
-            xp.put(Text.get(1660), 480f);
-            xp.put(Text.get(1661), 612f);
-            xp.put(Text.get(1662), 969f);
-            xp.put(Text.get(1663), 1200f);
+            xp.put(get(1655), 112f);
+            xp.put(get(1656), 168f);
+            xp.put(get(1657), 224f);
+            xp.put(get(1658), 280f);
+            xp.put(get(1659), 369f);
+            xp.put(get(1660), 480f);
+            xp.put(get(1661), 612f);
+            xp.put(get(1662), 969f);
+            xp.put(get(1663), 1200f);
         }
-        XP = Collections.unmodifiableMap(xp);
+        XP = unmodifiableMap(xp);
 
         Set<String> stale = new LinkedHashSet<>();
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                Text.get(1664), VALIDATION_DATE))
+                get(1664), VALIDATION_DATE))
         {
-            stale.add(Text.get(203));
-            stale.add(Text.get(204));
+            stale.add(get(203));
+            stale.add(get(204));
         }
         if (CurrentLiveContentChanges.mayAffectPlanning(
-                Text.get(1665), VALIDATION_DATE))
+                get(1665), VALIDATION_DATE))
         {
-            stale.add(Text.get(1666));
-            stale.add(Text.get(1667));
-            stale.add(Text.get(1668));
-            stale.add(Text.get(1669));
-            stale.add(Text.get(1670));
+            stale.add(get(1666));
+            stale.add(get(1667));
+            stale.add(get(1668));
+            stale.add(get(1669));
+            stale.add(get(1670));
         }
-        UNSAFE_STALE_XP = Collections.unmodifiableSet(stale);
+        UNSAFE_STALE_XP = unmodifiableSet(stale);
     }
 
     private CurrentLiveSkillActionOverrides() { }
@@ -763,7 +717,7 @@ enum DiaryTier
     ELITE
 }
 
-enum FarmingPatchCycleState
+enum PatchState
 {
     UNKNOWN,
     EMPTY,
@@ -781,14 +735,14 @@ enum FarmingPatchKind
 
 /** Per-character memory of directly observed herb/tree patch state. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class FarmingRunStateStore
 {
-    static final String GROUP = Text.get(1609);
-    private static final String KEY = Text.get(1705);
-    private final ConfigManager configManager;
-    private final Gson gson;
-    private final Map<String, ObservedFarmingPatchState> states = new HashMap<>();
+    static final String GROUP = get(1609);
+    private static final String KEY = get(1705);
+    final ConfigManager configManager;
+    final Gson gson;
+    final Map<String, ObservedFarmingPatchState> states = new HashMap<>();
     private String loadedProfileKey;
 
     public synchronized FarmingRunSnapshot snapshot()
@@ -799,9 +753,9 @@ class FarmingRunStateStore
 
     public synchronized boolean remember(
             String patchId,
-            FarmingPatchCycleState state)
+            PatchState state)
     {
-        if (patchId == null || state == null || state == FarmingPatchCycleState.UNKNOWN)
+        if (patchId == null || state == null || state == PatchState.UNKNOWN)
         {
             return false;
         }
@@ -866,20 +820,20 @@ final class FinalExecutionPlanValidator
         MethodStrategyProfile profile = plan == null
                 ? null : plan.getStrategyProfile();
 
-        var evidence = recommendation.getSafetyEvidence();
-        var guidance = recommendation.getGuidance();
+        var evidence = recommendation.safetyEvidence;
+        var guidance = recommendation.guidance;
         if (plan != null)
         {
             var method = plan.method();
-            var current = recommendation.getCurrentLevel();
+            var current = recommendation.currentLevel;
             var stageTarget = recommendation.getCurrentExecutionTargetLevel();
             boolean invalid = method == null
                     || blank(method.getName())
                     || current <= 0
                     || !method.supportsLevel(current)
                     || stageTarget <= current
-                    || recommendation.getTargetLevel() > 0
-                        && stageTarget > recommendation.getTargetLevel()
+                    || recommendation.targetLevel > 0
+                        && stageTarget > recommendation.targetLevel
                     || context != null && context.data() != null
                         && context.data().account() != null
                         && !ContentAccessRules.isMethodAvailable(method,
@@ -887,13 +841,13 @@ final class FinalExecutionPlanValidator
                                         .membership())
                     || guidance == null
                     || blank(guidance.getAction())
-                    || blank(guidance.getLocation());
+                    || blank(guidance.location);
             if (invalid) evidence = evidence.withInvalidCurrentExecution();
         }
-        if (profile != null && profile.getBankingBehavior()
-                        == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP
-                || guidance != null && guidance.getBankingBehavior()
-                        == MethodBankingBehavior.CONVENTIONAL_BANK_LOOP)
+        if (profile != null && profile.bankingBehavior
+                        == BankingMode.CONVENTIONAL_BANK_LOOP
+                || guidance != null && guidance.bankingBehavior
+                        == BankingMode.CONVENTIONAL_BANK_LOOP)
         {
             evidence = evidence.requiringConventionalBank();
         }
@@ -903,7 +857,7 @@ final class FinalExecutionPlanValidator
             var decision = guidance.getStorageDecision();
             boolean storageUnverified = decision == null
                     || !decision.isAllowed()
-                    || decision.getConfidence()
+                    || decision.confidence
                             != Confidence.VERIFIED;
             boolean incompleteDangerDisclosure =
                     UimStorageMechanics.isDangerous(capability)
@@ -931,30 +885,30 @@ final class FinalExecutionPlanValidator
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class GameData
 {
-    private final AccountSnapshot account;
-    private final ItemsState inventory;
-    private final ItemsState bank;
-    private final ItemsState equipment;
-    private final QuestSnapshot quests;
-    private final DiarySnapshot diaries;
-    private final ClueSnapshot clue;
-    private final CombatAchievementSnapshot combatAchievements;
-    private final CollectionLogSnapshot collectionLog;
-    private final AccountEconomySnapshot economy;
-    private final AccountCapabilities capabilities;
-    private final AccessMemorySnapshot accessMemory;
-    private final FarmingRunSnapshot farmingRuns;
-    private final StorageSnapshot storage;
-    private final TransportSnapshot transport;
-    private final PohSnapshot poh;
-    private final ItemsState groupStorage;
-    private final SlayerSnapshot slayer;
-    private final FarmingSnapshot farming;
-    private final SailingSnapshot sailing;
-    private final MinigameSnapshot minigames;
-    private final PvmSnapshot pvm;
-    private final RecurringOpportunitySnapshot recurringOpportunities;
-    private final CombatEvidenceSnapshot combatEvidence;
+    final AccountSnapshot account;
+    final ItemsState inventory;
+    final ItemsState bank;
+    final ItemsState equipment;
+    final QuestSnapshot quests;
+    final DiarySnapshot diaries;
+    final ClueSnapshot clue;
+    final CombatAchievementSnapshot combatAchievements;
+    final CollectionLogSnapshot collectionLog;
+    final AccountEconomySnapshot economy;
+    final AccountCapabilities capabilities;
+    final AccessMemorySnapshot accessMemory;
+    final FarmingRunSnapshot farmingRuns;
+    final StorageSnapshot storage;
+    final TransportSnapshot transport;
+    final PohSnapshot poh;
+    final ItemsState groupStorage;
+    final SlayerSnapshot slayer;
+    final FarmingSnapshot farming;
+    final SailingSnapshot sailing;
+    final MinigameSnapshot minigames;
+    final PvmSnapshot pvm;
+    final RecurringOpportunitySnapshot recurringOpportunities;
+    final CombatEvidenceSnapshot combatEvidence;
 
     public GameData(
             AccountSnapshot account,
@@ -990,17 +944,17 @@ final class GoalGraph
     {
         Map<GoalType, List<String>> roots = new EnumMap<>(GoalType.class);
         roots.put(GoalType.BARROWS_GLOVES,
-                Collections.singletonList(Text.get(1198)));
+                singletonList(get(1198)));
         roots.put(GoalType.PRIFDDINAS,
-                Collections.singletonList(Text.get(1721)));
+                singletonList(get(1721)));
         roots.put(GoalType.BOWFA,
-                Collections.singletonList(Text.get(1721)));
-        QUEST_ROOTS = Collections.unmodifiableMap(roots);
+                singletonList(get(1721)));
+        QUEST_ROOTS = unmodifiableMap(roots);
     }
 
     public List<String> questRootsFor(GoalType goal)
     {
-        return QUEST_ROOTS.getOrDefault(goal, Collections.emptyList());
+        return QUEST_ROOTS.getOrDefault(goal, emptyList());
     }
 
     public boolean hasPlanningPath(GoalType goal)
@@ -1014,35 +968,35 @@ final class GoalGraph
 @Getter
 final class GoalProvenance
 {
-    private final GoalType goal;
-    private final GoalRecommendationRelationship relationship;
-    private final String recommendationId;
-    private final List<String> path;
+    final GoalType goal;
+    final GoalRelation relationship;
+    final String recommendationId;
+    final List<String> path;
 
     private GoalProvenance(GoalType goal,
-            GoalRecommendationRelationship relationship,
+            GoalRelation relationship,
             String recommendationId, List<String> path)
     {
         if (goal == null || goal == GoalType.AUTOMATIC
-                || relationship != GoalRecommendationRelationship.DIRECT
-                && relationship != GoalRecommendationRelationship.PREREQUISITE
+                || relationship != GoalRelation.DIRECT
+                && relationship != GoalRelation.PREREQUISITE
                 || recommendationId == null || recommendationId.trim().isEmpty()
                 || path == null || path.size() < 2)
         {
             throw new IllegalArgumentException(
-                    Text.get(263));
+                    get(263));
         }
         this.goal = goal;
         this.relationship = relationship;
         this.recommendationId = recommendationId;
-        this.path = Collections.unmodifiableList(new ArrayList<>(path));
+        this.path = unmodifiableList(new ArrayList<>(path));
     }
 
     public static GoalProvenance direct(GoalType goal,
             String recommendationId, List<String> path)
     {
         return new GoalProvenance(goal,
-                GoalRecommendationRelationship.DIRECT,
+                GoalRelation.DIRECT,
                 recommendationId, path);
     }
 
@@ -1050,7 +1004,7 @@ final class GoalProvenance
             String recommendationId, List<String> path)
     {
         return new GoalProvenance(goal,
-                GoalRecommendationRelationship.PREREQUISITE,
+                GoalRelation.PREREQUISITE,
                 recommendationId, path);
     }
 
@@ -1071,15 +1025,15 @@ final class GoalProvenance
     {
         var goalName = path.isEmpty() ? goal.toString() : path.get(0);
         var action = path.get(path.size() - 1);
-        if (relationship == GoalRecommendationRelationship.DIRECT)
-            return action + Text.get(1226) + goalName + " goal.";
+        if (relationship == GoalRelation.DIRECT)
+            return action + get(1226) + goalName + " goal.";
         if (path.size() >= 3)
         {
             var parent = path.get(path.size() - 2);
-            return action + Text.get(1708) + parent
-                    + Text.get(1227) + goalName + " path.";
+            return action + get(1708) + parent
+                    + get(1227) + goalName + " path.";
         }
-        return action + Text.get(1228) + goalName + " goal.";
+        return action + get(1228) + goalName + " goal.";
     }
 }
 
@@ -1087,15 +1041,15 @@ final class GoalProvenance
 @Getter
 final class GoalQuestRewardForecast
 {
-    private final Skill skill;
-    private final int experience;
-    private final List<String> sourceQuests;
+    final Skill skill;
+    final int experience;
+    final List<String> sourceQuests;
 
     GoalQuestRewardForecast(Skill skill, int experience, List<String> sourceQuests)
     {
         this.skill = skill;
-        this.experience = Math.max(0, experience);
-        this.sourceQuests = Collections.unmodifiableList(
+        this.experience = max(0, experience);
+        this.sourceQuests = unmodifiableList(
                 new ArrayList<>(sourceQuests));
     }
 
@@ -1137,26 +1091,26 @@ enum GoalType
 @Getter
 final class GroupResourceNeed
 {
-    private final String label;
-    private final Set<Integer> acceptableItemIds;
-    private final int quantity;
-    private final boolean reusable;
+    final String label;
+    final Set<Integer> acceptableItemIds;
+    final int quantity;
+    final boolean reusable;
 
     public GroupResourceNeed(String label, Set<Integer> acceptableItemIds,
             int quantity, boolean reusable)
     {
         if (acceptableItemIds == null || acceptableItemIds.isEmpty())
             throw new IllegalArgumentException(
-                    Text.get(299));
+                    get(299));
         this.label = label == null ? "Required item" : label;
         LinkedHashSet<Integer> ids = new LinkedHashSet<>();
         for (Integer itemId : acceptableItemIds)
             if (itemId != null && itemId > 0) ids.add(itemId);
         if (ids.isEmpty())
             throw new IllegalArgumentException(
-                    Text.get(300));
-        this.acceptableItemIds = Collections.unmodifiableSet(ids);
-        this.quantity = Math.max(1, quantity);
+                    get(300));
+        this.acceptableItemIds = unmodifiableSet(ids);
+        this.quantity = max(1, quantity);
         this.reusable = reusable;
     }
 
@@ -1173,14 +1127,14 @@ final class GroupResourceNeed
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 final class Guidance
 {
-    private final String action;
-    private final String supplies;
-    private final String location;
-    private final String progress;
-    private final String note;
-    private final MethodBankingBehavior bankingBehavior;
-    private final UimStorageDecision storageDecision;
-    private final RecommendationRiskDisclosure riskDisclosure;
+    final String action;
+    final String supplies;
+    final String location;
+    final String progress;
+    final String note;
+    final BankingMode bankingBehavior;
+    final UimStorageDecision storageDecision;
+    final RecommendationRiskDisclosure riskDisclosure;
 
     public Guidance(
             String action,
@@ -1189,7 +1143,7 @@ final class Guidance
             String note)
     {
         this(action, supplies, location, null, note,
-                MethodBankingBehavior.UNKNOWN, null, null);
+                BankingMode.UNKNOWN, null, null);
     }
 
     public Guidance(
@@ -1197,7 +1151,7 @@ final class Guidance
             String supplies,
             String location,
             String note,
-            MethodBankingBehavior bankingBehavior)
+            BankingMode bankingBehavior)
     {
         this(action, supplies, location, null, note, bankingBehavior, null, null);
     }
@@ -1207,7 +1161,7 @@ final class Guidance
             String supplies,
             String location,
             String note,
-            MethodBankingBehavior bankingBehavior,
+            BankingMode bankingBehavior,
             UimStorageDecision storageDecision,
             RecommendationRiskDisclosure riskDisclosure)
     {
@@ -1215,34 +1169,23 @@ final class Guidance
                 storageDecision, riskDisclosure);
     }
 
-    public MethodBankingBehavior getBankingBehavior()
+    public BankingMode getBankingBehavior()
     {
-        return bankingBehavior == null ? MethodBankingBehavior.UNKNOWN : bankingBehavior;
+        return bankingBehavior == null ? BankingMode.UNKNOWN : bankingBehavior;
     }
 
-    public StorageCapability getStorageCapability()
+    public StorageKind getStorageCapability()
     {
         return storageDecision == null ? null
-                : storageDecision.getCapability();
+                : storageDecision.capability;
     }
 
-
-
     public Guidance withBankingBehavior(
-            MethodBankingBehavior value)
+            BankingMode value)
     {
         return new Guidance(action, supplies, location, progress,
                 note,
                 value, storageDecision, riskDisclosure);
-    }
-
-    public Guidance withStorageDecision(
-            UimStorageDecision decision,
-            RecommendationRiskDisclosure disclosure)
-    {
-        return new Guidance(action, supplies, location, progress,
-                note,
-                bankingBehavior, decision, disclosure);
     }
 
     public Guidance withProgress(String value)
@@ -1255,15 +1198,15 @@ final class Guidance
 @Getter
 final class GuidanceChecklist
 {
-    private final String activityId;
-    private final String title;
-    private final String subtitle;
-    private final List<GuidanceStep> steps;
-    private final String bring;
-    private final String where;
-    private final String action;
-    private final String progress;
-    private final String important;
+    final String activityId;
+    final String title;
+    final String subtitle;
+    final List<GuidanceStep> steps;
+    final String bring;
+    final String where;
+    final String action;
+    final String progress;
+    final String important;
 
     public GuidanceChecklist(
             String activityId,
@@ -1282,23 +1225,14 @@ final class GuidanceChecklist
         this.activityId = activityId;
         this.title = title;
         this.subtitle = subtitle;
-        this.steps = Collections.unmodifiableList(new ArrayList<>(
-                steps == null ? Collections.emptyList() : steps));
+        this.steps = unmodifiableList(new ArrayList<>(
+                steps == null ? emptyList() : steps));
         this.bring = bring;
         this.where = where;
         this.action = action;
         this.progress = progress;
         this.important = important;
     }
-
-
-    public int completeCount()
-    {
-        var count = 0;
-        for (GuidanceStep step : steps) if (step.isComplete()) count++;
-        return count;
-    }
-
     public GuidanceStep firstPending()
     {
         for (GuidanceStep step : steps)
@@ -1310,50 +1244,45 @@ final class GuidanceChecklist
 }
 
 /** A reusable property supplied by an account infrastructure milestone. */
-enum InfrastructureBenefit
+@RequiredArgsConstructor
+@Getter
+enum InfraBenefit
 {
-    INVENTORY_RELIEF(AccountStrategicDimension.INVENTORY_PRESSURE),
-    POH_PLATFORM(AccountStrategicDimension.POH_VALUE),
-    STORAGE(AccountStrategicDimension.STORAGE_VALUE),
-    TRAVEL_NETWORK(AccountStrategicDimension.TELEPORT_INFRASTRUCTURE_VALUE),
-    SETUP_REUSE(AccountStrategicDimension.SETUP_COST_SENSITIVITY),
-    SELF_SUFFICIENCY(AccountStrategicDimension.SELF_SOURCING_BURDEN),
-    SHARED_UTILITY(AccountStrategicDimension.SHARED_INFRASTRUCTURE_VALUE),
-    RISK_REDUCTION(AccountStrategicDimension.DEATH_RISK_SENSITIVITY),
+    INVENTORY_RELIEF(AccountDimension.INVENTORY_PRESSURE),
+    POH_PLATFORM(AccountDimension.POH_VALUE),
+    STORAGE(AccountDimension.STORAGE_VALUE),
+    TRAVEL_NETWORK(AccountDimension.TELEPORT_INFRASTRUCTURE_VALUE),
+    SETUP_REUSE(AccountDimension.SETUP_COST_SENSITIVITY),
+    SELF_SUFFICIENCY(AccountDimension.SELF_SOURCING_BURDEN),
+    SHARED_UTILITY(AccountDimension.SHARED_INFRASTRUCTURE_VALUE),
+    RISK_REDUCTION(AccountDimension.DEATH_RISK_SENSITIVITY),
     RESOURCE_SUSTAINABILITY(
-            AccountStrategicDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY),
-    STORABLE_EQUIPMENT(AccountStrategicDimension.STORABLE_EQUIPMENT_VALUE),
-    GP_LIQUIDITY(AccountStrategicDimension.GP_LIQUIDITY_STORAGE_VALUE);
+            AccountDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY),
+    STORABLE_EQUIPMENT(AccountDimension.STORABLE_EQUIPMENT_VALUE),
+    GP_LIQUIDITY(AccountDimension.GP_LIQUIDITY_STORAGE_VALUE);
 
-    private final AccountStrategicDimension dimension;
-
-    InfrastructureBenefit(AccountStrategicDimension dimension)
-    {
-        this.dimension = dimension;
-    }
-
-    public AccountStrategicDimension getDimension() { return dimension; }
+    final AccountDimension dimension;
 }
 
 /** Property-level explanation of an infrastructure value assessment. */
 @Getter
-final class InfrastructureValueContribution
+final class InfraContribution
 {
-    private final InfrastructureBenefit benefit;
-    private final AccountStrategicDimension dimension;
-    private final StrategicPriority accountPriority;
-    private final StrategicPriority milestoneUtility;
-    private final StrategicPriority effectivePriority;
+    final InfraBenefit benefit;
+    final AccountDimension dimension;
+    final Priority accountPriority;
+    final Priority milestoneUtility;
+    final Priority effectivePriority;
 
-    InfrastructureValueContribution(InfrastructureBenefit benefit,
-            StrategicPriority accountPriority,
-            StrategicPriority milestoneUtility)
+    InfraContribution(InfraBenefit benefit,
+            Priority accountPriority,
+            Priority milestoneUtility)
     {
         this.benefit = benefit;
         this.dimension = benefit.getDimension();
         this.accountPriority = accountPriority;
         this.milestoneUtility = milestoneUtility;
-        this.effectivePriority = StrategicPriority.lowerOf(accountPriority,
+        this.effectivePriority = Priority.lowerOf(accountPriority,
                 milestoneUtility);
     }
 
@@ -1377,6 +1306,7 @@ enum InventoryFlow
  * source, or a suitable encounter loadout.</p>
  */
 @Getter
+@RequiredArgsConstructor
 enum ItemRequirementClass
 {
     AXE("any usable axe", true),
@@ -1402,15 +1332,8 @@ enum ItemRequirementClass
     MULTI_STYLE_OR_POISON(get(331), false),
     FULL_HAM_ROBE_SET(get(1151), false);
 
-    private final String label;
-    private final boolean nameObservable;
-
-    ItemRequirementClass(String label, boolean nameObservable)
-    {
-        this.label = label;
-        this.nameObservable = nameObservable;
-    }
-
+    final String label;
+    final boolean nameObservable;
 
     public boolean matches(String itemName)
     {
@@ -1453,65 +1376,17 @@ enum ItemRequirementClass
 
 /** One observed item stack; slot is -1 for persisted or synthetic evidence. */
 @Getter
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 final class ItemState
 {
-    private final int itemId;
-    private final String name;
-    private final int quantity;
-    private final int slotIndex;
+    final int itemId;
+    final String name;
+    final int quantity;
+    final int slotIndex;
 
     public ItemState(int itemId, String name, int quantity)
     {
         this(itemId, name, quantity, -1);
-    }
-
-    public ItemState(int itemId, String name, int quantity, int slotIndex)
-    {
-        this.itemId = itemId;
-        this.name = name;
-        this.quantity = quantity;
-        this.slotIndex = slotIndex;
-    }
-}
-
-/** Verified-price input for comparing a Main's buy-vs-gather options. */
-@Getter
-final class MainPurchaseCandidate
-{
-    private final int itemId;
-    private final String itemName;
-    private final int quantity;
-    private final long verifiedUnitPrice;
-    private final int estimatedBuyMinutes;
-    private final int estimatedSelfSourceMinutes;
-
-    public MainPurchaseCandidate(
-            int itemId,
-            String itemName,
-            int quantity,
-            long verifiedUnitPrice,
-            int estimatedBuyMinutes,
-            int estimatedSelfSourceMinutes)
-    {
-        this.itemId = itemId;
-        this.itemName = itemName;
-        this.quantity = Math.max(0, quantity);
-        this.verifiedUnitPrice = Math.max(0L, verifiedUnitPrice);
-        this.estimatedBuyMinutes = Math.max(0, estimatedBuyMinutes);
-        this.estimatedSelfSourceMinutes = Math.max(0, estimatedSelfSourceMinutes);
-    }
-
-
-    public long totalCost()
-    {
-        try
-        {
-            return Math.multiplyExact(verifiedUnitPrice, (long) quantity);
-        }
-        catch (ArithmeticException ex)
-        {
-            return Long.MAX_VALUE;
-        }
     }
 }
 
@@ -1519,15 +1394,15 @@ final class MainPurchaseCandidate
 @Getter
 final class MarketPriceQuote
 {
-    private final int itemId;
-    private final String itemName;
-    private final int unitPrice;
+    final int itemId;
+    final String itemName;
+    final int unitPrice;
 
     public MarketPriceQuote(int itemId, String itemName, int unitPrice)
     {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.unitPrice = Math.max(0, unitPrice);
+        this.unitPrice = max(0, unitPrice);
     }
 
 
@@ -1540,23 +1415,15 @@ final class MarketPriceQuote
 /**
  * Membership access observed for the currently logged-in RuneScape profile.
  */
-enum MembershipStatus
+@RequiredArgsConstructor
+@Getter
+enum Membership
 {
     F2P("F2P"),
     P2P("P2P"),
     UNKNOWN("Unknown access");
 
-    private final String displayName;
-
-    MembershipStatus(String displayName)
-    {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName()
-    {
-        return displayName;
-    }
+    final String displayName;
 
     public boolean isFreeToPlay()
     {
@@ -1573,37 +1440,37 @@ enum MembershipStatus
 @Getter
 final class MethodInput
 {
-    private final String name;
-    private final int itemId;
-    private final int quantity;
+    final String name;
+    final int itemId;
+    final int quantity;
 
     public MethodInput(String name, int itemId, int quantity)
     {
         this.name = name;
         this.itemId = itemId;
-        this.quantity = Math.max(0, quantity);
+        this.quantity = max(0, quantity);
     }
 
 }
 
 /** Plan-relative inventory requirements; deliberately avoids fake precision. */
 @RequiredArgsConstructor
-final class MethodInventoryFootprint
+final class InventoryFootprint
 {
     @Getter
-    private final int minimumPracticalFreeSlots;
+    final int minimumPracticalFreeSlots;
     @Getter
-    private final int persistentRequiredSlots;
+    final int persistentRequiredSlots;
     @Getter
-    private final int temporarySlots;
+    final int temporarySlots;
     @Getter
-    private final InventoryFlow flow;
-    private final boolean tearsDownCurrentSetup;
+    final InventoryFlow flow;
+    final boolean tearsDownCurrentSetup;
 
 
-    public static MethodInventoryFootprint lowPressure()
+    public static InventoryFootprint lowPressure()
     {
-        return new MethodInventoryFootprint(0, 0, 0,
+        return new InventoryFootprint(0, 0, 0,
                 InventoryFlow.NEUTRAL, false);
     }
 
@@ -1617,16 +1484,11 @@ final class MethodInventoryFootprint
 @RequiredArgsConstructor
 final class MilestoneCompletion
 {
-    private final String activityId;
-    private final String title;
-    private final Skill skill;
-    private final int startedAtLevel;
-    private final int targetLevel;
-
-
-
-
-
+    final String activityId;
+    final String title;
+    final Skill skill;
+    final int startedAtLevel;
+    final int targetLevel;
 
 }
 
@@ -1670,14 +1532,14 @@ final class Names
 @Getter
 final class ObservedFarmingPatchState
 {
-    private final FarmingPatchCycleState state;
-    private final long observedAtMillis;
+    final PatchState state;
+    final long observedAtMillis;
 
     public ObservedFarmingPatchState(
-            FarmingPatchCycleState state,
+            PatchState state,
             long observedAtMillis)
     {
-        this.state = state == null ? FarmingPatchCycleState.UNKNOWN : state;
+        this.state = state == null ? PatchState.UNKNOWN : state;
         this.observedAtMillis = observedAtMillis;
     }
 
@@ -1687,13 +1549,13 @@ final class ObservedFarmingPatchState
 final class Opportunity
 {
     final String id;
-    private final OpportunityType type;
-    private final String title;
-    private final boolean ready;
-    private final Confidence confidence;
-    private final List<String> preparation;
-    private final boolean setupVerified;
-    private final SafetyEvidence safetyEvidence;
+    final OpportunityType type;
+    final String title;
+    final boolean ready;
+    final Confidence confidence;
+    final List<String> preparation;
+    final boolean setupVerified;
+    final Safety safetyEvidence;
 
     public Opportunity(
             String id,
@@ -1704,7 +1566,7 @@ final class Opportunity
             List<String> preparation)
     {
         this(id, type, title, ready, confidence, preparation, false,
-                SafetyEvidence.unknown());
+                Safety.unknown());
     }
 
     public Opportunity(
@@ -1713,33 +1575,26 @@ final class Opportunity
             boolean setupVerified)
     {
         this(id, type, title, ready, confidence, preparation, setupVerified,
-                SafetyEvidence.unknown());
+                Safety.unknown());
     }
 
     public Opportunity(
             String id, OpportunityType type, String title, boolean ready,
             Confidence confidence, List<String> preparation,
-            boolean setupVerified, SafetyEvidence safetyEvidence)
+            boolean setupVerified, Safety safetyEvidence)
     {
         this.id = id;
         this.type = type;
         this.title = title;
         this.ready = ready;
         this.confidence = confidence;
-        this.preparation = Collections.unmodifiableList(
+        this.preparation = unmodifiableList(
                 preparation == null ? new ArrayList<>() : new ArrayList<>(preparation)
         );
         this.setupVerified = setupVerified;
         this.safetyEvidence = safetyEvidence == null
-                ? SafetyEvidence.unknown() : safetyEvidence;
+                ? Safety.unknown() : safetyEvidence;
     }
-
-
-
-
-
-
-
 
 }
 
@@ -1763,8 +1618,8 @@ enum OpportunityType
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 final class OverlayDisplayState
 {
-    private final boolean details;
-    private final boolean methodGuidance;
+    final boolean details;
+    final boolean methodGuidance;
 
 
     static OverlayDisplayState from(OsrsStrategistConfig config)
@@ -1785,7 +1640,7 @@ final class OverlayDisplayState
 /** Idempotence guard for sidebar overlay registration and removal. */
 final class OverlayLifecycleGuard
 {
-    private boolean registered;
+    @Getter private boolean registered;
 
     boolean beginRegistration()
     {
@@ -1801,12 +1656,11 @@ final class OverlayLifecycleGuard
         return true;
     }
 
-    boolean isRegistered() { return registered; }
 }
 
 /** Observable completion rule for a strategic plan step. */
 @Getter
-final class PlanCompletionCondition
+final class CompletionRule
 {
     public enum Kind
     {
@@ -1815,39 +1669,39 @@ final class PlanCompletionCondition
         NONE
     }
 
-    private final Kind kind;
-    private final Skill skill;
-    private final int level;
-    private final String quest;
+    final Kind kind;
+    final Skill skill;
+    final int level;
+    final String quest;
 
-    private PlanCompletionCondition(
+    private CompletionRule(
             Kind kind, Skill skill, int level, String quest)
     {
         this.kind = kind;
         this.skill = skill;
-        this.level = Math.max(0, level);
+        this.level = max(0, level);
         this.quest = quest;
     }
 
-    public static PlanCompletionCondition skillLevel(Skill skill, int level)
+    public static CompletionRule skillLevel(Skill skill, int level)
     {
         if (skill == null || level < 1)
-            throw new IllegalArgumentException(Text.get(1328));
-        return new PlanCompletionCondition(
+            throw new IllegalArgumentException(get(1328));
+        return new CompletionRule(
                 Kind.SKILL_LEVEL, skill, level, null);
     }
 
-    public static PlanCompletionCondition questComplete(String quest)
+    public static CompletionRule questComplete(String quest)
     {
         if (quest == null || quest.trim().isEmpty())
-            throw new IllegalArgumentException(Text.get(1329));
-        return new PlanCompletionCondition(
+            throw new IllegalArgumentException(get(1329));
+        return new CompletionRule(
                 Kind.QUEST_COMPLETE, null, 0, quest.trim());
     }
 
-    public static PlanCompletionCondition none()
+    public static CompletionRule none()
     {
-        return new PlanCompletionCondition(Kind.NONE, null, 0, null);
+        return new CompletionRule(Kind.NONE, null, 0, null);
     }
 
     public boolean isComplete(GameData data)
@@ -1867,8 +1721,8 @@ final class PlanCompletionCondition
     public boolean equals(Object other)
     {
         if (this == other) return true;
-        if (!(other instanceof PlanCompletionCondition)) return false;
-        var that = (PlanCompletionCondition) other;
+        if (!(other instanceof CompletionRule)) return false;
+        var that = (CompletionRule) other;
         return level == that.level && kind == that.kind
                 && skill == that.skill && Objects.equals(quest, that.quest);
     }
@@ -1887,6 +1741,7 @@ final class PlanCompletionCondition
  * separate prevents experimental enum values from silently becoming public
  * controls.</p>
  */
+@RequiredArgsConstructor
 enum PlayerGoal
 {
     AUTOMATIC(GoalType.AUTOMATIC, "Automatic"),
@@ -1898,15 +1753,8 @@ enum PlayerGoal
     INFERNAL_CAPE(GoalType.INFERNAL_CAPE, "Infernal cape"),
     MAX(GoalType.MAX, "Max cape");
 
-    private final GoalType planningGoal;
-    private final String displayName;
-
-    PlayerGoal(GoalType planningGoal, String displayName)
-    {
-        this.planningGoal = planningGoal;
-        this.displayName = displayName;
-    }
-
+    final GoalType planningGoal;
+    final String displayName;
     public GoalType toPlanningGoal()
     {
         return planningGoal;
@@ -1931,7 +1779,7 @@ enum PlayerGoal
 final class PolicyLists
 {
     static final PolicyLists DATA = BundledCatalogLoader.array(
-            Text.get(1908), PolicyLists[].class)[0];
+            get(1908), PolicyLists[].class)[0];
     String[] one_defence_safe;
     String[] level_three_safe;
     String[] prayer_skiller_extra;
@@ -1946,12 +1794,12 @@ final class PolicyLists
         Set<String> result = new HashSet<>();
         if (values != null)
             for (String value : values) result.add(normalize(value));
-        return Collections.unmodifiableSet(result);
+        return unmodifiableSet(result);
     }
 
     static List<String> list(String[] values)
     {
-        return Collections.unmodifiableList(Arrays.asList(values));
+        return unmodifiableList(Arrays.asList(values));
     }
 
     static String normalize(String value)
@@ -1966,23 +1814,23 @@ final class PolicyLists
 final class ProgressSessionSummary
 {
     private static final int MAX_MILESTONES = 100;
-    private final long startedAtMillis;
-    private final long endedAtMillis;
-    private final long activeDurationMillis;
-    private final long totalXpGained;
-    private final int levelsGained;
-    private final Map<Skill, Integer> xpBySkill;
-    private final List<ProgressMilestone> milestones;
+    final long startedAtMillis;
+    final long endedAtMillis;
+    final long activeDurationMillis;
+    final long totalXpGained;
+    final int levelsGained;
+    final Map<Skill, Integer> xpBySkill;
+    final List<ProgressMilestone> milestones;
 
     public ProgressSessionSummary(ProgressSessionSnapshot snapshot)
     {
-        this(snapshot == null ? 0L : snapshot.getStartedAtMillis(),
+        this(snapshot == null ? 0L : snapshot.startedAtMillis,
                 snapshot == null ? 0L : snapshot.getUpdatedAtMillis(),
-                snapshot == null ? 0L : snapshot.getActiveDurationMillis(),
+                snapshot == null ? 0L : snapshot.activeDurationMillis,
                 snapshot == null ? 0L : snapshot.getTotalXpGained(),
                 snapshot == null ? 0 : snapshot.getLevelsGained(),
                 gains(snapshot), snapshot == null
-                        ? Collections.emptyList() : snapshot.getMilestones());
+                        ? emptyList() : snapshot.milestones);
     }
 
     ProgressSessionSummary(
@@ -1995,7 +1843,7 @@ final class ProgressSessionSummary
     {
         this(startedAtMillis, endedAtMillis, activeDurationMillis,
                 totalXpGained, levelsGained, xpBySkill,
-                Collections.emptyList());
+                emptyList());
     }
 
     ProgressSessionSummary(
@@ -2007,25 +1855,25 @@ final class ProgressSessionSummary
             Map<Skill, Integer> xpBySkill,
             List<ProgressMilestone> milestones)
     {
-        this.startedAtMillis = Math.max(0L, startedAtMillis);
-        this.endedAtMillis = Math.max(this.startedAtMillis, endedAtMillis);
-        this.activeDurationMillis = Math.max(0L,
-                Math.min(activeDurationMillis,
+        this.startedAtMillis = max(0L, startedAtMillis);
+        this.endedAtMillis = max(this.startedAtMillis, endedAtMillis);
+        this.activeDurationMillis = max(0L,
+                min(activeDurationMillis,
                         this.endedAtMillis - this.startedAtMillis));
-        this.totalXpGained = Math.max(0L, totalXpGained);
-        this.levelsGained = Math.max(0, levelsGained);
+        this.totalXpGained = max(0L, totalXpGained);
+        this.levelsGained = max(0, levelsGained);
         EnumMap<Skill, Integer> copy = new EnumMap<>(Skill.class);
         if (xpBySkill != null)
             for (Map.Entry<Skill, Integer> entry : xpBySkill.entrySet())
                 if (entry.getKey() != null && entry.getValue() != null
                         && entry.getValue() > 0)
                     copy.put(entry.getKey(), entry.getValue());
-        this.xpBySkill = Collections.unmodifiableMap(copy);
+        this.xpBySkill = unmodifiableMap(copy);
         List<ProgressMilestone> milestoneCopy = new ArrayList<>(
-                milestones == null ? Collections.emptyList() : milestones);
+                milestones == null ? emptyList() : milestones);
         while (milestoneCopy.size() > MAX_MILESTONES)
             milestoneCopy.remove(0);
-        this.milestones = Collections.unmodifiableList(milestoneCopy);
+        this.milestones = unmodifiableList(milestoneCopy);
     }
 
     private static Map<Skill, Integer> gains(ProgressSessionSnapshot snapshot)
@@ -2044,43 +1892,32 @@ final class ProgressSessionSummary
 @Getter
 final class ProgressTimeBucket
 {
-    private final long startedAtMillis;
-    private final Map<Skill, Integer> xpBySkill;
+    final long startedAtMillis;
+    final Map<Skill, Integer> xpBySkill;
 
     ProgressTimeBucket(long startedAtMillis, Map<Skill, Integer> xpBySkill)
     {
         this.startedAtMillis = startedAtMillis;
         EnumMap<Skill, Integer> copy = new EnumMap<>(Skill.class);
         if (xpBySkill != null) copy.putAll(xpBySkill);
-        this.xpBySkill = Collections.unmodifiableMap(copy);
+        this.xpBySkill = unmodifiableMap(copy);
     }
 
     public int getTotalXp()
     {
         var total = 0L;
         for (Integer value : xpBySkill.values())
-            total += value == null ? 0 : Math.max(0, value);
-        return (int) Math.min(Integer.MAX_VALUE, total);
+            total += value == null ? 0 : max(0, value);
+        return (int) min(Integer.MAX_VALUE, total);
     }
 }
 
 /** Converts an exact Main-account material shortfall into live GE cost advice. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class PurchaseCostAdvisor
 {
-    private final MarketPriceService marketPriceService;
-
-    @Inject
-    public PurchaseCostAdvisor(MarketPriceService marketPriceService)
-    {
-        this.marketPriceService = marketPriceService;
-    }
-
-    public PurchaseCostAdvisor()
-    {
-        this(new MarketPriceService());
-    }
-
+    final MarketPriceService marketPriceService;
     /**
      * Returns an optional cost sentence. If any item price is unresolved, the
      * caller should still show exact quantities but omit a fake total GP value.
@@ -2090,23 +1927,23 @@ class PurchaseCostAdvisor
             List<MethodInput> missing)
     {
         var estimate = estimate(missing);
-        if (!estimate.isComplete() || estimate.getTotalCost() <= 0) return null;
-        var total = estimate.getTotalCost();
+        if (!estimate.isComplete() || estimate.totalCost <= 0) return null;
+        var total = estimate.totalCost;
 
         var text = new StringBuilder();
-        text.append(Text.get(412))
+        text.append(get(412))
                 .append(format(total))
                 .append(" coins total.");
 
         if (economy != null
-                && economy.getConfidence() == Confidence.VERIFIED)
+                && economy.confidence == Confidence.VERIFIED)
         {
-            var cash = economy.getCoins();
+            var cash = economy.coins;
             if (cash >= total)
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(Text.get(413))
+                        .append(get(413))
                         .append(format(cash - total))
                         .append(" after the buy.");
             }
@@ -2114,14 +1951,14 @@ class PurchaseCostAdvisor
             {
                 text.append(" You have ")
                         .append(format(cash))
-                        .append(Text.get(414))
+                        .append(get(414))
                         .append(format(total - cash))
-                        .append(Text.get(415));
+                        .append(get(415));
             }
         }
         else
         {
-            text.append(Text.get(416));
+            text.append(get(416));
         }
         return text.toString();
     }
@@ -2139,13 +1976,13 @@ class PurchaseCostAdvisor
         var sawInput = false;
         for (MethodInput input : missing)
         {
-            if (input == null || input.getQuantity() <= 0) continue;
+            if (input == null || input.quantity <= 0) continue;
             sawInput = true;
             var quote = marketPriceService.quote(input.getName());
             if (quote == null || !quote.hasPrice())
                 return PurchaseCostEstimate.unknown();
             total = safeAdd(total, safeMultiply(
-                    quote.getUnitPrice(), input.getQuantity()));
+                    quote.getUnitPrice(), input.quantity));
         }
         return sawInput && total > 0
                 ? new PurchaseCostEstimate(true, total)
@@ -2175,13 +2012,13 @@ class PurchaseCostAdvisor
 @Getter
 final class PurchaseCostEstimate
 {
-    private final boolean complete;
-    private final long totalCost;
+    final boolean complete;
+    final long totalCost;
 
     public PurchaseCostEstimate(boolean complete, long totalCost)
     {
         this.complete = complete;
-        this.totalCost = Math.max(0L, totalCost);
+        this.totalCost = max(0L, totalCost);
     }
 
 
@@ -2194,10 +2031,10 @@ final class PurchaseCostEstimate
 @Getter
 final class PvmReadiness
 {
-    private final String activityId;
-    private final boolean realisticallyReady;
-    private final Confidence confidence;
-    private final List<String> missingRequirements;
+    final String activityId;
+    final boolean realisticallyReady;
+    final Confidence confidence;
+    final List<String> missingRequirements;
 
     public PvmReadiness(
             String activityId,
@@ -2208,12 +2045,10 @@ final class PvmReadiness
         this.activityId = activityId;
         this.realisticallyReady = realisticallyReady;
         this.confidence = confidence;
-        this.missingRequirements = Collections.unmodifiableList(
+        this.missingRequirements = unmodifiableList(
                 new ArrayList<>(missingRequirements)
         );
     }
-
-
 
     /** Conservative beta contract: observed carried setup is ready to attempt. */
     public boolean isReadyForRecommendation()
@@ -2243,7 +2078,7 @@ enum QuestTolerance
 final class RecommendationHistory
 {
     private static final int MAX_ENTRIES = 200;
-    private final List<RecommendationHistoryEntry> entries = new ArrayList<>();
+    final List<RecommendationHistoryEntry> entries = new ArrayList<>();
 
     public void add(
             String activityId,
@@ -2270,7 +2105,7 @@ final class RecommendationHistory
 
     public List<RecommendationHistoryEntry> snapshot()
     {
-        return Collections.unmodifiableList(new ArrayList<>(entries));
+        return unmodifiableList(new ArrayList<>(entries));
     }
 
     private void trim()
@@ -2292,21 +2127,19 @@ enum RecommendationHistoryAction
 
 final class RecommendationHistoryDocument
 {
-    private final int schemaVersion;
-    private final List<RecommendationHistoryEntry> entries;
+    final int schemaVersion;
+    final List<RecommendationHistoryEntry> entries;
 
     RecommendationHistoryDocument(List<RecommendationHistoryEntry> entries)
     {
         this.schemaVersion = 1;
         this.entries = entries == null
-                ? Collections.emptyList()
+                ? emptyList()
                 : new ArrayList<>(entries);
     }
-
-    int getSchemaVersion() { return schemaVersion; }
     List<RecommendationHistoryEntry> getEntries()
     {
-        return entries == null ? Collections.emptyList() : entries;
+        return entries == null ? emptyList() : entries;
     }
 }
 
@@ -2315,15 +2148,15 @@ final class RecommendationHistoryDocument
 @RequiredArgsConstructor
 final class RecommendationRiskDisclosure
 {
-    private final String heading;
-    private final String message;
-    private final boolean acknowledgementRequired;
+    final String heading;
+    final String message;
+    final boolean acknowledgementRequired;
 
 
     public static RecommendationRiskDisclosure deathStorage()
     {
         return new RecommendationRiskDisclosure("HIGH RISK",
-                Text.get(702),
+                get(702),
                 true);
     }
 
@@ -2333,19 +2166,19 @@ final class RecommendationRiskDisclosure
 final class RecommendationStabilizer
 {
     private static final double MAX_SCORE_DEFICIT = 5.0;
-    private final ActionabilityPolicy actionabilityPolicy =
+    final ActionabilityPolicy actionabilityPolicy =
             new ActionabilityPolicy();
 
     StrategyResult stabilize(List<Recommendation> previous, StrategyResult fresh)
     {
-        if (fresh == null || fresh.getRecommendations().isEmpty()
+        if (fresh == null || fresh.recommendations.isEmpty()
                 || previous == null || previous.isEmpty()) return fresh;
 
         var oldTop = previous.get(0);
         if (oldTop == null || FallbackRecommendationFactory.isFallback(oldTop))
             return fresh;
 
-        var current = fresh.getRecommendations();
+        var current = fresh.recommendations;
         Recommendation stillValid = null;
         for (Recommendation candidate : current)
         {
@@ -2361,7 +2194,7 @@ final class RecommendationStabilizer
         if (stillValid == null
                 || !actionabilityPolicy.canLeadQueue(stillValid)
                 || stillValid == current.get(0)) return fresh;
-        if (current.get(0).getScore() - stillValid.getScore()
+        if (current.get(0).score - stillValid.score
                 > MAX_SCORE_DEFICIT) return fresh;
 
         List<Recommendation> stable = new ArrayList<>(current.size());
@@ -2378,8 +2211,8 @@ final class RecommendationStabilizer
         if (previous == null || current == null
                 || previous.id == null
                 || !previous.id.equals(current.id)) return false;
-        return previous.getTargetLevel() == current.getTargetLevel()
-                && safe(previous.getTitle()).equals(safe(current.getTitle()));
+        return previous.targetLevel == current.targetLevel
+                && safe(previous.title).equals(safe(current.title));
     }
 
     private static String safe(String value)
@@ -2395,14 +2228,14 @@ final class RecommendationStabilizer
  * "Check Needed" actionable instead of a vague warning.</p>
  */
 @Getter
-final class RequirementCheck
+final class EvidenceCheck
 {
     final String id;
-    private final String label;
-    private final RequirementState state;
-    private final String evidence;
+    final String label;
+    final RequirementState state;
+    final String evidence;
 
-    public RequirementCheck(
+    public EvidenceCheck(
             String id,
             String label,
             RequirementState state,
@@ -2423,10 +2256,10 @@ final class RequirementCheck
 final class ResolvedDependencyNode
 {
     final String id;
-    private final String action;
-    private final Confidence confidence;
-    private final int depth;
-    private final int requiredQuantity;
+    final String action;
+    final Confidence confidence;
+    final int depth;
+    final int requiredQuantity;
 
     public ResolvedDependencyNode(String id, String action,
             Confidence confidence, int depth)
@@ -2442,31 +2275,9 @@ final class ResolvedDependencyNode
         this.action = action;
         this.confidence = confidence;
         this.depth = depth;
-        this.requiredQuantity = Math.max(0, requiredQuantity);
+        this.requiredQuantity = max(0, requiredQuantity);
     }
 
-}
-
-/** Ordered resource route from current ownership to the requested quantity. */
-@Getter
-final class ResourceAcquisitionChain
-{
-    private final ResourceNeed need;
-    private final int shortfall;
-    private final List<ResourceAcquisitionStep> steps;
-
-    public ResourceAcquisitionChain(ResourceNeed need, int shortfall,
-            List<ResourceAcquisitionStep> steps)
-    {
-        this.need = need;
-        this.shortfall = Math.max(0, shortfall);
-        this.steps = Collections.unmodifiableList(new ArrayList<>(steps));
-    }
-
-    public ResourceAcquisitionStep nextStep()
-    {
-        return steps.isEmpty() ? null : steps.get(0);
-    }
 }
 
 /**
@@ -2476,15 +2287,15 @@ final class ResourceAcquisitionChain
 @Getter
 final class ResourceNeed
 {
-    private final int itemId;
-    private final String itemName;
-    private final int quantity;
+    final int itemId;
+    final String itemName;
+    final int quantity;
 
     public ResourceNeed(int itemId, String itemName, int quantity)
     {
         this.itemId = itemId;
         this.itemName = itemName;
-        this.quantity = Math.max(1, quantity);
+        this.quantity = max(1, quantity);
     }
 
 }
@@ -2493,9 +2304,9 @@ final class ResourceNeed
 @RequiredArgsConstructor
 final class RestrictedBuildSuggestion
 {
-    private final RestrictedBuildType type;
-    private final Confidence confidence;
-    private final String evidence;
+    final BuildType type;
+    final Confidence confidence;
+    final String evidence;
 
 
 }
@@ -2507,7 +2318,7 @@ final class RestrictedBuildSuggestion
  * separate from Main/Ironman/UIM/Hardcore/GIM because any of those account
  * modes can also be a pure or skiller.</p>
  */
-enum RestrictedBuildType
+enum BuildType
 {
     STANDARD,
     SKILLER,
@@ -2540,6 +2351,7 @@ enum RiskLevel
     IRREVERSIBLE
 }
 
+@RequiredArgsConstructor
 enum SessionIntent
 {
     QUICK_20_MIN("Quick session"),
@@ -2548,13 +2360,7 @@ enum SessionIntent
     AFK("AFK"),
     PICK_FOR_ME("Pick for me");
 
-    private final String displayName;
-
-    SessionIntent(String displayName)
-    {
-        this.displayName = displayName;
-    }
-
+    final String displayName;
     @Override
     public String toString()
     {
@@ -2563,22 +2369,16 @@ enum SessionIntent
 }
 
 /** User-selectable scaling limited to the Compass sidebar. */
+@RequiredArgsConstructor
+@Getter
 enum SidebarTextSize
 {
     STANDARD("Standard", 1.00f),
     LARGE("Large", 1.12f),
     EXTRA_LARGE("Extra large", 1.24f);
 
-    private final String displayName;
-    private final float scale;
-
-    SidebarTextSize(String displayName, float scale)
-    {
-        this.displayName = displayName;
-        this.scale = scale;
-    }
-
-    float getScale() { return scale; }
+    final String displayName;
+    final float scale;
 
     @Override
     public String toString() { return displayName; }
@@ -2598,18 +2398,18 @@ final class SkillBreakpoint
         NEXT_LEVEL_FALLBACK
     }
 
-    private final Skill skill;
-    private final int level;
-    private final String label;
-    private final Kind kind;
-    private final String evidenceId;
+    final Skill skill;
+    final int level;
+    final String label;
+    final Kind kind;
+    final String evidenceId;
 
     public SkillBreakpoint(Skill skill, int level, String label,
             Kind kind, String evidenceId)
     {
         if (skill == null || level < 2 || label == null
                 || label.trim().isEmpty() || kind == null)
-            throw new IllegalArgumentException(Text.get(1179));
+            throw new IllegalArgumentException(get(1179));
         this.skill = skill;
         this.level = level;
         this.label = label.trim();
@@ -2638,18 +2438,18 @@ final class SkillBreakpoint
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 final class SkillSessionProgress
 {
-    private final Skill skill;
-    private final int startingXp;
-    private final int currentXp;
-    private final int startingLevel;
-    private final int currentLevel;
-    private final XpRateEstimate rate;
+    final Skill skill;
+    final int startingXp;
+    final int currentXp;
+    final int startingLevel;
+    final int currentLevel;
+    final XpRateEstimate rate;
 
 
-    public int getXpGained() { return Math.max(0, currentXp - startingXp); }
+    public int getXpGained() { return max(0, currentXp - startingXp); }
     public int getLevelsGained()
     {
-        return Math.max(0, currentLevel - startingLevel);
+        return max(0, currentLevel - startingLevel);
     }
 }
 
@@ -2657,8 +2457,8 @@ final class SkillSessionProgress
 @Getter
 final class SkillingXpModifier
 {
-    private final double multiplier;
-    private final String label;
+    final double multiplier;
+    final String label;
 
     public SkillingXpModifier(double multiplier, String label)
     {
@@ -2702,7 +2502,7 @@ final class SlayerPointEconomy
 
     public static int blockCapacity(int questPoints, boolean lumbridgeElite)
     {
-        var ordinary = Math.min(6, Math.max(0, questPoints) / 50);
+        var ordinary = min(6, max(0, questPoints) / 50);
         return ordinary + (lumbridgeElite ? 1 : 0);
     }
 
@@ -2715,19 +2515,21 @@ final class SlayerPointEconomy
     /** Retains one further cancellation at the current master's actual cost. */
     public static boolean hasSustainableSkipBalance(int points, int cancelCost)
     {
-        var cost = Math.max(1, cancelCost);
+        var cost = max(1, cancelCost);
         return points >= cost * 2;
     }
 }
 
 /** Reviewed, strategically meaningful Slayer rewards with live ownership varbits. */
+@RequiredArgsConstructor
+@Getter
 enum SlayerReward
 {
-    BIGGER_AND_BADDER(Text.get(1926), Text.get(1927), 50,
+    BIGGER_AND_BADDER(get(1926), get(1927), 50,
             VarbitID.SLAYER_UNLOCK_SUPERIORMOBS),
-    MALEVOLENT_MASQUERADE(Text.get(1928), Text.get(1180), 400,
+    MALEVOLENT_MASQUERADE(get(1928), get(1180), 400,
             VarbitID.SLAYER_HELM_UNLOCKED),
-    BROADER_FLETCHING(Text.get(1929), Text.get(1930), 300,
+    BROADER_FLETCHING(get(1929), get(1930), 300,
             VarbitID.SLAYER_AMMO_UNLOCKED),
     RING_BLING("ring-bling", "Ring Bling", 150,
             VarbitID.SLAYER_RING_UNLOCKED),
@@ -2737,46 +2539,33 @@ enum SlayerReward
             VarbitID.SLAYER_UNLOCK_BOSSES),
     HOT_STUFF("hot-stuff", "Hot Stuff", 100,
             VarbitID.SLAYER_UNLOCK_TZHAAR),
-    WATCH_THE_BIRDIE(Text.get(1931), Text.get(1932), 80,
+    WATCH_THE_BIRDIE(get(1931), get(1932), 80,
             VarbitID.SLAYER_UNLOCK_AVIANSIES),
     BASILOCKED("basilocked", "Basilocked", 80,
             VarbitID.SLAYER_UNLOCK_BASILISK),
-    ACTUAL_VAMPYRE_SLAYER(Text.get(1933), Text.get(1181), 80,
+    ACTUAL_VAMPYRE_SLAYER(get(1933), get(1181), 80,
             VarbitID.SLAYER_UNLOCK_VAMPYRES),
-    REPTILE_GOT_RIPPED(Text.get(1934), Text.get(1182), 75,
+    REPTILE_GOT_RIPPED(get(1934), get(1182), 75,
             VarbitID.SLAYER_UNLOCK_LIZARDMEN),
     STOP_THE_WYVERN("stop-the-wyvern", "Stop the Wyvern", 500,
             VarbitID.SLAYER_UNLOCK_FOSSILWYVERNBLOCK),
-    EXTEND_ABYSSAL_DEMONS(Text.get(1935), Text.get(1936), 100,
+    EXTEND_ABYSSAL_DEMONS(get(1935), get(1936), 100,
             VarbitID.SLAYER_LONGER_ABYSSALDEMONS),
-    EXTEND_BLOODVELDS(Text.get(1937), "Bleed Me Dry", 75,
+    EXTEND_BLOODVELDS(get(1937), "Bleed Me Dry", 75,
             VarbitID.SLAYER_LONGER_BLOODVELD),
-    EXTEND_DUST_DEVILS(Text.get(1938), Text.get(1183), 100,
+    EXTEND_DUST_DEVILS(get(1938), get(1183), 100,
             VarbitID.SLAYER_LONGER_DUSTDEVILS),
-    EXTEND_GARGOYLES(Text.get(1939), "Get Smashed", 100,
+    EXTEND_GARGOYLES(get(1939), "Get Smashed", 100,
             VarbitID.SLAYER_LONGER_GARGOYLES),
-    EXTEND_NECHRYAELS(Text.get(1940), "Nechs Please", 100,
+    EXTEND_NECHRYAELS(get(1940), "Nechs Please", 100,
             VarbitID.SLAYER_LONGER_NECHRYAEL),
     EXTEND_KRAKEN("extend-kraken", "Krack On", 100,
             VarbitID.SLAYER_LONGER_CAVEKRAKEN);
 
     final String id;
-    private final String displayName;
-    private final int pointCost;
-    private final int varbitId;
-
-    SlayerReward(String id, String displayName, int pointCost, int varbitId)
-    {
-        this.id = id;
-        this.displayName = displayName;
-        this.pointCost = pointCost;
-        this.varbitId = varbitId;
-    }
-
-    public String getId() { return id; }
-    public String getDisplayName() { return displayName; }
-    public int getPointCost() { return pointCost; }
-    public int getVarbitId() { return varbitId; }
+    final String displayName;
+    final int pointCost;
+    final int varbitId;
 }
 
 /** One live-evidence-backed Slayer reward purchase decision. */
@@ -2784,9 +2573,9 @@ enum SlayerReward
 @RequiredArgsConstructor
 final class SlayerRewardAdvice
 {
-    private final SlayerReward reward;
-    private final double score;
-    private final String reason;
+    final SlayerReward reward;
+    final double score;
+    final String reason;
 
 
 }
@@ -2795,17 +2584,17 @@ final class SlayerRewardAdvice
 @Getter
 final class SlayerTaskOffer
 {
-    private final String taskName;
-    private final String modifierName;
-    private final int modifierValue;
-    private final boolean negativeModifier;
+    final String taskName;
+    final String modifierName;
+    final int modifierValue;
+    final boolean negativeModifier;
 
     public SlayerTaskOffer(String taskName, String modifierName,
             int modifierValue, boolean negativeModifier)
     {
         this.taskName = taskName;
         this.modifierName = modifierName;
-        this.modifierValue = Math.max(0, modifierValue);
+        this.modifierValue = max(0, modifierValue);
         this.negativeModifier = negativeModifier;
     }
 
@@ -2817,7 +2606,7 @@ final class SlayerTaskOffer
  * <p>These are capabilities, not assumptions. A UIM should only be told to use
  * one of these when the matching {@link StorageSnapshot} entry is VERIFIED.</p>
  */
-enum StorageCapability
+enum StorageKind
 {
     TOOL_LEPRECHAUN,
     STASH,
@@ -2840,7 +2629,7 @@ enum StorageCapability
 }
 
 /** Qualitative importance; intentionally not a hidden recommendation score. */
-enum StrategicPriority
+enum Priority
 {
     NONE,
     LOW,
@@ -2848,23 +2637,23 @@ enum StrategicPriority
     HIGH,
     CRITICAL;
 
-    public boolean isAtLeast(StrategicPriority other)
+    public boolean isAtLeast(Priority other)
     {
         return other != null && ordinal() >= other.ordinal();
     }
 
-    public static StrategicPriority higherOf(
-            StrategicPriority left,
-            StrategicPriority right)
+    public static Priority higherOf(
+            Priority left,
+            Priority right)
     {
         if (left == null) return right == null ? NONE : right;
         if (right == null) return left;
         return left.ordinal() >= right.ordinal() ? left : right;
     }
 
-    public static StrategicPriority lowerOf(
-            StrategicPriority left,
-            StrategicPriority right)
+    public static Priority lowerOf(
+            Priority left,
+            Priority right)
     {
         if (left == null || right == null) return NONE;
         return left.ordinal() <= right.ordinal() ? left : right;
@@ -2876,10 +2665,10 @@ enum StrategicPriority
 final class StrategicValue
 {
     private static final StrategicValue NEUTRAL = builder().build();
-    private final double accountModeFit, infrastructureValue, unlockValue,
+    final double accountModeFit, infrastructureValue, unlockValue,
             travelFit, resourceFit, setupReuse, sharedDependencyValue,
             riskBurden, opportunityCost;
-    private final List<String> evidenceIds;
+    final List<String> evidenceIds;
 
     @lombok.Builder(builderClassName = "Builder")
     private StrategicValue(double accountModeFit, double infrastructureValue,
@@ -2907,14 +2696,14 @@ final class StrategicValue
         if (other == null || other == NEUTRAL) return this;
         Builder value = builder()
                 .accountModeFit(stronger(accountModeFit, other.accountModeFit))
-                .infrastructureValue(Math.max(infrastructureValue, other.infrastructureValue))
-                .unlockValue(Math.max(unlockValue, other.unlockValue))
+                .infrastructureValue(max(infrastructureValue, other.infrastructureValue))
+                .unlockValue(max(unlockValue, other.unlockValue))
                 .travelFit(stronger(travelFit, other.travelFit))
                 .resourceFit(stronger(resourceFit, other.resourceFit))
-                .setupReuse(Math.max(setupReuse, other.setupReuse))
-                .sharedDependencyValue(Math.max(sharedDependencyValue, other.sharedDependencyValue))
-                .riskBurden(Math.max(riskBurden, other.riskBurden))
-                .opportunityCost(Math.max(opportunityCost, other.opportunityCost));
+                .setupReuse(max(setupReuse, other.setupReuse))
+                .sharedDependencyValue(max(sharedDependencyValue, other.sharedDependencyValue))
+                .riskBurden(max(riskBurden, other.riskBurden))
+                .opportunityCost(max(opportunityCost, other.opportunityCost));
         evidenceIds.forEach(value::evidence);
         other.evidenceIds.forEach(value::evidence);
         return value.build();
@@ -2932,17 +2721,17 @@ final class StrategicValue
 
     private static double unit(double value)
     {
-        return Math.max(0, Math.min(1, value));
+        return max(0, min(1, value));
     }
 
     private static double signed(double value)
     {
-        return Math.max(-1, Math.min(1, value));
+        return max(-1, min(1, value));
     }
 
     private static double stronger(double left, double right)
     {
-        return Math.abs(left) >= Math.abs(right) ? left : right;
+        return abs(left) >= abs(right) ? left : right;
     }
 }
 
@@ -2952,11 +2741,11 @@ final class StrategicValue
 final class StrategistRewardNotification
 {
     final String id;
-    private final String header;
-    private final String left;
-    private final String right;
-    private final String footerLeft;
-    private final String footerRight;
+    final String header;
+    final String left;
+    final String right;
+    final String footerLeft;
+    final String footerRight;
 
 
     public static StrategistRewardNotification fromMilestone(
@@ -2964,10 +2753,10 @@ final class StrategistRewardNotification
     {
         if (completion == null) return null;
         return new StrategistRewardNotification(
-                completion.getActivityId(),
-                Text.get(1707),
+                completion.activityId,
+                get(1707),
                 completion.getSkill().getName(),
-                completion.getStartedAtLevel() + " → " + completion.getTargetLevel(),
+                completion.getStartedAtLevel() + " → " + completion.targetLevel,
                 "Goal complete",
                 "Next move ready"
         );
@@ -2978,7 +2767,7 @@ final class StrategistRewardNotification
 /**
  * Central visual language for the Compass sidebar.
  *
- * <p>The goal is Text.get(1706): charcoal surfaces,
+ * <p>The goal is get(1706): charcoal surfaces,
  * muted gold accents, and restrained status colors. Keeping colors here avoids
  * turning individual panels into a pile of one-off styling decisions.</p>
  */
@@ -3023,7 +2812,7 @@ final class StrategistTheme
 class StrategyCandidateRegistry
 {
     @Getter
-    private final List<CandidateProvider> providers;
+    final List<CandidateProvider> providers;
 
     @Inject
     public StrategyCandidateRegistry(
@@ -3041,7 +2830,7 @@ class StrategyCandidateRegistry
             MinigameCandidateProvider minigameProvider,
             CollectionLogCandidateProvider collectionLogProvider)
     {
-        this.providers = Collections.unmodifiableList(
+        this.providers = unmodifiableList(
                 new ArrayList<>(Arrays.asList(
                         clueProvider,
                         pvmProvider,
@@ -3059,20 +2848,10 @@ class StrategyCandidateRegistry
         );
     }
 
-    /** Compatibility constructor for focused tests written before the expanded registry. */
-    public StrategyCandidateRegistry(
-            ClueCandidateProvider clueProvider,
-            PvmCandidateProvider pvmProvider)
-    {
-        this.providers = Collections.unmodifiableList(
-                new ArrayList<>(Arrays.asList(clueProvider, pvmProvider))
-        );
-    }
-
     StrategyCandidateRegistry(List<CandidateProvider> providers)
     {
-        this.providers = Collections.unmodifiableList(new ArrayList<>(
-                providers == null ? Collections.emptyList() : providers));
+        this.providers = unmodifiableList(new ArrayList<>(
+                providers == null ? emptyList() : providers));
     }
 
 }
@@ -3082,9 +2861,9 @@ class StrategyCandidateRegistry
 @Accessors(fluent = true)
 final class StrategyContext extends PlayerStrategyProfile
 {
-    private final GameData data;
-    private final PreferenceProfile preferenceProfile;
-    private final AccountMode accountMode;
+    final GameData data;
+    final PreferenceProfile preferenceProfile;
+    final AccountMode accountMode;
 
     public StrategyContext(
             GameData data,
@@ -3123,7 +2902,7 @@ final class StrategyContext extends PlayerStrategyProfile
 }
 
 /** Evidence hierarchy for strategy candidate generation, not a score bonus. */
-enum StrategyKnowledgeTier
+enum KnowledgeTier
 {
     VERIFIED_ACCOUNT_SPECIFIC,
     VERIFIED_SHARED,
@@ -3139,7 +2918,7 @@ enum StrategyMode
 }
 
 /** Stable keys for development-time strategy sources. */
-enum StrategySourceId
+enum Source
 {
     GENERAL_SKILL_TRAINING,
     F2P_SKILL_TRAINING,
@@ -3208,11 +2987,8 @@ enum StrategySourceId
 @RequiredArgsConstructor
 final class TimedScoreAdjustment
 {
-    private final double scoreDelta;
-    private final long expiresAtMillis;
-
-
-
+    final double scoreDelta;
+    final long expiresAtMillis;
 
     public boolean isExpired(long nowMillis)
     {
@@ -3235,28 +3011,26 @@ enum TrainingIntensity
 @Getter
 final class TrainingMethodMetadata
 {
-    private final TrainingIntensity intensity;
-    private final MethodCostTier costTier;
-    private final RiskLevel riskLevel;
-    private final boolean freeToPlayAllowed;
-    private final boolean selfSourceFriendly;
-    private final boolean uimFriendly;
-    private final boolean hardcoreSafe;
-    private final List<String> tags;
-
-
+    final TrainingIntensity intensity;
+    final MethodCostTier costTier;
+    final RiskLevel riskLevel;
+    final boolean freeToPlayAllowed;
+    final boolean selfSourceFriendly;
+    final boolean uimFriendly;
+    final boolean hardcoreSafe;
+    final List<String> tags;
 
     public static TrainingMethodMetadata legacy(TrainingMethod method)
     {
         return new TrainingMethodMetadata(
                 TrainingIntensity.BALANCED,
                 MethodCostTier.LOW,
-                method != null && method.isWilderness() ? RiskLevel.HIGH : RiskLevel.NONE,
-                method == null || !method.isMembersOnly(),
+                method != null && method.wilderness ? RiskLevel.HIGH : RiskLevel.NONE,
+                method == null || !method.membersOnly,
                 true,
                 true,
-                method == null || !method.isWilderness(),
-                Collections.singletonList("legacy")
+                method == null || !method.wilderness,
+                singletonList("legacy")
         );
     }
 }
@@ -3264,7 +3038,7 @@ final class TrainingMethodMetadata
 /** Rejects Swing work queued before a newer account/UI refresh. */
 final class UiGenerationGuard
 {
-    private final AtomicLong generation = new AtomicLong();
+    final AtomicLong generation = new AtomicLong();
 
     long next() { return generation.incrementAndGet(); }
     void invalidate() { generation.incrementAndGet(); }
@@ -3275,10 +3049,10 @@ final class UiGenerationGuard
 final class UniversalActionRecipe
 {
     @Getter
-    private final List<MethodInput> inputs;
+    final List<MethodInput> inputs;
     @Getter
-    private final String setup;
-    private final boolean exactInputs;
+    final String setup;
+    final boolean exactInputs;
 
     public UniversalActionRecipe(
             List<MethodInput> inputs,
@@ -3287,22 +3061,20 @@ final class UniversalActionRecipe
     {
         List<MethodInput> copy = new ArrayList<>();
         if (inputs != null) copy.addAll(inputs);
-        this.inputs = Collections.unmodifiableList(copy);
+        this.inputs = unmodifiableList(copy);
         this.setup = setup;
         this.exactInputs = exactInputs;
     }
 
     public static UniversalActionRecipe noConsumedInputs(String setup)
     {
-        return new UniversalActionRecipe(Collections.emptyList(), setup, true);
+        return new UniversalActionRecipe(emptyList(), setup, true);
     }
 
     public static UniversalActionRecipe unknown(String setup)
     {
-        return new UniversalActionRecipe(Collections.emptyList(), setup, false);
+        return new UniversalActionRecipe(emptyList(), setup, false);
     }
-
-
 
     public boolean hasExactInputs()
     {
@@ -3321,21 +3093,21 @@ final class XpRateEstimate
         READY
     }
 
-    private final State state;
-    private final long xpPerHour;
-    private final int timedIntervals;
+    final State state;
+    final long xpPerHour;
+    final int timedIntervals;
 
 
     public static XpRateEstimate calculating(int timedIntervals)
     {
         return new XpRateEstimate(State.CALCULATING, 0L,
-                Math.max(0, timedIntervals));
+                max(0, timedIntervals));
     }
 
     public static XpRateEstimate ready(long xpPerHour, int timedIntervals)
     {
-        return new XpRateEstimate(State.READY, Math.max(1L, xpPerHour),
-                Math.max(0, timedIntervals));
+        return new XpRateEstimate(State.READY, max(1L, xpPerHour),
+                max(0, timedIntervals));
     }
 
     public boolean isReady() { return state == State.READY; }

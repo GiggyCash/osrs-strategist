@@ -1,27 +1,15 @@
 package compass;
+import lombok.*;
 
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import net.runelite.api.Skill;
 
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class MilestoneTracker
 {
     private final ProgressionObjectiveService progressionObjectiveService;
-
-    /** Compatibility constructor retained for focused unit tests. */
-    public MilestoneTracker()
-    {
-        this.progressionObjectiveService = null;
-    }
-
-    @Inject
-    public MilestoneTracker(
-            ProgressionObjectiveService progressionObjectiveService)
-    {
-        this.progressionObjectiveService = progressionObjectiveService;
-    }
 
     public MilestoneCompletion detectCompletion(
             TrackedMilestone tracked,
@@ -31,10 +19,10 @@ public class MilestoneTracker
         var skill = tracked.getSkill();
         if (skill == null) return null;
         var currentLevel = account.level(skill);
-        if (currentLevel < tracked.getTargetLevel()) return null;
+        if (currentLevel < tracked.targetLevel) return null;
         return new MilestoneCompletion(
-                tracked.getActivityId(), tracked.getTitle(), skill,
-                tracked.getStartedAtLevel(), tracked.getTargetLevel()
+                tracked.activityId, tracked.title, skill,
+                tracked.getStartedAtLevel(), tracked.targetLevel
         );
     }
 
@@ -52,8 +40,8 @@ public class MilestoneTracker
         var best = recommendations.get(0);
         var skill = skillFor(best);
         if (skill == null
-                || best.getCurrentLevel() <= 0
-                || best.getTargetLevel() <= best.getCurrentLevel())
+                || best.currentLevel <= 0
+                || best.targetLevel <= best.currentLevel)
         {
             return null;
         }
@@ -70,12 +58,12 @@ public class MilestoneTracker
         {
             progressionProtected = plan != null
                     && plan.method() != null
-                    && plan.method().isProgressionProtected();
+                    && plan.method().progressionProtected;
         }
 
         return new TrackedMilestone(
-                best.id, best.getTitle(), skill.name(),
-                best.getCurrentLevel(), best.getTargetLevel(),
+                best.id, best.title, skill.name(),
+                best.currentLevel, best.targetLevel,
                 progressionProtected
         );
     }
@@ -83,9 +71,9 @@ public class MilestoneTracker
     public boolean sameCheckpoint(TrackedMilestone first, TrackedMilestone second)
     {
         if (first == null || second == null) return first == second;
-        return safeEquals(first.getActivityId(), second.getActivityId())
-                && first.getTargetLevel() == second.getTargetLevel()
-                && first.isProgressionProtected() == second.isProgressionProtected();
+        return safeEquals(first.activityId, second.activityId)
+                && first.targetLevel == second.targetLevel
+                && first.progressionProtected == second.progressionProtected;
     }
 
     public static Skill skillFor(Recommendation recommendation)

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class RecommendationGuidanceServiceTest
 {
     private final RecommendationGuidanceService service =
-            new RecommendationGuidanceService();
+            TestFixtures.recommendationGuidanceService();
 
     @Test
     public void mainAccountGetsExactGrandExchangeShortfall()
@@ -199,17 +199,7 @@ public class RecommendationGuidanceServiceTest
         levels.put(Skill.COOKING, cookingLevel);
         xp.put(Skill.COOKING, cookingXp);
 
-        return new AccountSnapshot(
-                "Guidance Test",
-                typeCode,
-                typeCode == 0 ? "Main" : "Ironman",
-                MembershipStatus.F2P,
-                1,
-                2200,
-                cookingXp,
-                levels,
-                xp
-        );
+        return new AccountSnapshot("Guidance Test", 0L, typeCode, typeCode == 0 ? "Main" : "Ironman", Membership.F2P, 1, 2200, cookingXp, levels, xp);
     }
 
     private static ItemsState bank(ItemState... items)

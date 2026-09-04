@@ -16,6 +16,8 @@ public class RuneLiteSkillActionCatalogTest
         assertFalse(catalog.actionsFor(Skill.COOKING).isEmpty());
         assertFalse(catalog.actionsFor(Skill.CRAFTING).isEmpty());
         assertFalse(catalog.actionsFor(Skill.AGILITY).isEmpty());
-        assertTrue(catalog.coverageCounts().size() >= 16);
+        long coveredSkills = java.util.Arrays.stream(Skill.values())
+                .filter(skill -> !catalog.actionsFor(skill).isEmpty()).count();
+        assertTrue(coveredSkills >= 16);
     }
 }

@@ -23,9 +23,9 @@ public class UnknownMembershipCandidateIsolationTest
         quests.put("The Ides of Milk", QuestStatus.NOT_STARTED);
         GameData questData = GameData.builder(account)
                 .quests(new QuestSnapshot(quests)).build();
-        assertFalse(contains(new QuestCandidateProvider(new QuestPriorityCatalog())
+        assertFalse(contains(TestFixtures.questCandidateProvider(new QuestPriorityCatalog())
                 .candidates(context(questData)), "Pandemonium"));
-        assertTrue(contains(new QuestCandidateProvider(new QuestPriorityCatalog())
+        assertTrue(contains(TestFixtures.questCandidateProvider(new QuestPriorityCatalog())
                 .candidates(context(questData)), "The Ides of Milk"));
 
         GameData minigameData = GameData.builder(account)
@@ -80,7 +80,7 @@ public class UnknownMembershipCandidateIsolationTest
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
         assertTrue(new OpportunityEngine().evaluate(data).isEmpty());
 
-        GameData f2p = GameData.builder(account(0, MembershipStatus.F2P))
+        GameData f2p = GameData.builder(account(0, Membership.F2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
         assertTrue(new OpportunityEngine().evaluate(f2p).isEmpty());
     }
@@ -96,7 +96,7 @@ public class UnknownMembershipCandidateIsolationTest
         assertTrue(new OpportunityEngine().evaluate(unknown).isEmpty());
 
         GameData p2p = GameData.builder(
-                        account(0, MembershipStatus.P2P))
+                        account(0, Membership.P2P))
                 .clue(medium).build();
         assertFalse(new ClueCandidateProvider().candidates(context(p2p)).isEmpty());
         assertTrue(new OpportunityEngine().evaluate(p2p).stream()
@@ -131,15 +131,14 @@ public class UnknownMembershipCandidateIsolationTest
 
     private static AccountSnapshot account(int typeCode)
     {
-        return account(typeCode, MembershipStatus.UNKNOWN);
+        return account(typeCode, Membership.UNKNOWN);
     }
 
-    private static AccountSnapshot account(int typeCode, MembershipStatus membership)
+    private static AccountSnapshot account(int typeCode, Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 60); xp.put(skill, 0); }
-        return new AccountSnapshot("Unknown", typeCode, "Unknown",
-                membership, 1, 1200, 0L, levels, xp);
+        return new AccountSnapshot("Unknown", 0L, typeCode, "Unknown", membership, 1, 1200, 0L, levels, xp);
     }
 }

@@ -17,10 +17,8 @@ public class RecommendationEngineMilestoneTest
     @Test
     public void completedSkillRemainsEligibleDespiteLargeSoftPenalty()
     {
-        TrainingMethodSelector selector = new TrainingMethodSelector(
-                new TrainingMethodDatabase()
-        );
-        RecommendationEngine engine = new RecommendationEngine(selector);
+        TrainingMethodSelector selector = new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+        RecommendationEngine engine = TestFixtures.recommendationEngine(selector);
         PreferenceProfile profile = new PreferenceProfile();
 
         profile.addTemporaryScoreAdjustment(
@@ -60,16 +58,6 @@ public class RecommendationEngineMilestoneTest
         // Hitpoints is skipped by the recommendation engine either way.
         levels.put(Skill.FARMING, 10);
 
-        return new AccountSnapshot(
-                "Test",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                2200,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.P2P, 1, 2200, 0L, levels, experience);
     }
 }

@@ -21,7 +21,7 @@ public class StrategicPlanServiceTest
     @Test
     public void provenSkillDependencyBuildsNowThenTargetPlan()
     {
-        StrategyContext context = context(52, MembershipStatus.P2P,
+        StrategyContext context = context(52, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         Recommendation fishing = new GoalDependencyProvenanceService().attach(
                 skillRecommendation(52, 53), context);
@@ -31,7 +31,7 @@ public class StrategicPlanServiceTest
 
         assertNotNull(plan);
         assertEquals("skill:fishing:53", plan.getCurrentStep().getId());
-        assertEquals(PlanCompletionCondition.Kind.SKILL_LEVEL,
+        assertEquals(CompletionRule.Kind.SKILL_LEVEL,
                 plan.getCurrentStep().getCompletion().getKind());
         assertTrue(plan.getSteps().stream().anyMatch(step ->
                 step.getObjective().equals("Heroes' Quest")
@@ -43,7 +43,7 @@ public class StrategicPlanServiceTest
     @Test
     public void unrelatedRecommendationCannotCreateGoalPlan()
     {
-        StrategyContext context = context(1, MembershipStatus.P2P,
+        StrategyContext context = context(1, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         Recommendation farming = skillRecommendation(
                 Skill.FARMING, 1, 10, "skill:farming");
@@ -54,7 +54,7 @@ public class StrategicPlanServiceTest
     @Test
     public void minorRerankRetainsUnfinishedCurrentStep()
     {
-        StrategyContext context = context(52, MembershipStatus.P2P,
+        StrategyContext context = context(52, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         Recommendation fishing = new GoalDependencyProvenanceService().attach(
                 skillRecommendation(52, 53), context);
@@ -75,13 +75,13 @@ public class StrategicPlanServiceTest
     @Test
     public void completedSkillAdvancesToProvenQuestTransition()
     {
-        StrategyContext before = context(52, MembershipStatus.P2P,
+        StrategyContext before = context(52, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         Recommendation fishing = new GoalDependencyProvenanceService().attach(
                 skillRecommendation(52, 53), before);
         StrategicPlan previous = new StrategicPlanService().build(
                 Collections.singletonList(fishing), before, 10L);
-        StrategyContext after = context(53, MembershipStatus.P2P,
+        StrategyContext after = context(53, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         StrategicPlan advanced = previous.advanceCompleted(after.data());
 
@@ -93,16 +93,16 @@ public class StrategicPlanServiceTest
     @Test
     public void goalMembershipAndAccountChangesInvalidatePlan()
     {
-        StrategyContext original = context(52, MembershipStatus.P2P,
+        StrategyContext original = context(52, Membership.P2P,
                 GoalType.BARROWS_GLOVES);
         Recommendation fishing = new GoalDependencyProvenanceService().attach(
                 skillRecommendation(52, 53), original);
         StrategicPlan plan = new StrategicPlanService().build(
                 Collections.singletonList(fishing), original, 10L);
 
-        assertFalse(plan.matchesContext(context(52, MembershipStatus.F2P,
+        assertFalse(plan.matchesContext(context(52, Membership.F2P,
                 GoalType.BARROWS_GLOVES)));
-        assertFalse(plan.matchesContext(context(52, MembershipStatus.P2P,
+        assertFalse(plan.matchesContext(context(52, Membership.P2P,
                 GoalType.FIRE_CAPE)));
     }
 
@@ -137,11 +137,11 @@ public class StrategicPlanServiceTest
                 Confidence.VERIFIED, current, target,
                 new Guidance("Repeat to the target.",
                         "Bring supplies.", "Named location.", null),
-                SafetyEvidence.skill(true, skill));
+                Safety.skill(true, skill));
     }
 
     private static StrategyContext context(int fishing,
-            MembershipStatus membership, GoalType goal)
+            Membership membership, GoalType goal)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -152,7 +152,7 @@ public class StrategicPlanServiceTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Planner", 42L, 0,
-                "MAIN", membership, membership == MembershipStatus.P2P ? 1 : 0,
+                "MAIN", membership, membership == Membership.P2P ? 1 : 0,
                 levels.size(), 0, levels, xp);
         Map<String, QuestStatus> quests = new LinkedHashMap<>();
         for (Quest quest : Quest.values())

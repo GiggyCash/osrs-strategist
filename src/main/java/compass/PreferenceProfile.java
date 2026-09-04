@@ -1,4 +1,6 @@
 package compass;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import java.util.*;
 
@@ -132,9 +134,9 @@ public final class PreferenceProfile
 
         if (delta != 0.0)
         {
-            double next = Math.max(
+            double next = max(
                     -1.5,
-                    Math.min(
+                    min(
                             1.5,
                             weightFor(activityId) + delta
                     )
@@ -196,9 +198,9 @@ public final class PreferenceProfile
                 continue;
             }
 
-            double clamped = Math.max(
+            double clamped = max(
                     -1.5,
-                    Math.min(1.5, weight)
+                    min(1.5, weight)
             );
 
             weights.put(activityId, clamped);
@@ -265,14 +267,14 @@ public final class PreferenceProfile
 
     public Map<String, Double> snapshot()
     {
-        return Collections.unmodifiableMap(
+        return unmodifiableMap(
                 new HashMap<>(weights)
         );
     }
 
     public Map<String, Long> cooldownSnapshot()
     {
-        return Collections.unmodifiableMap(
+        return unmodifiableMap(
                 new HashMap<>(cooldowns)
         );
     }
@@ -285,7 +287,7 @@ public final class PreferenceProfile
             timedScoreAdjustmentFor(activityId);
         }
 
-        return Collections.unmodifiableMap(
+        return unmodifiableMap(
                 new HashMap<>(timedAdjustments)
         );
     }

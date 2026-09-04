@@ -1,8 +1,9 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
 
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 
 /**
  * Picks the concrete RuneLite action inside a curated method.
@@ -13,21 +14,12 @@ import javax.inject.Singleton;
  * faster action that would require a large detour to self-source materials.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AdaptiveActionSelector
 {
     private final MethodInputResolver inputResolver;
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final MethodExecutionProfileCatalog profiles;
-
-    @Inject
-    public AdaptiveActionSelector(MethodInputResolver inputResolver,
-            RuneLiteSkillActionCatalog actionCatalog,
-            MethodExecutionProfileCatalog profiles)
-    {
-        this.inputResolver = inputResolver;
-        this.actionCatalog = actionCatalog;
-        this.profiles = profiles;
-    }
 
     public AdaptiveActionSelector()
     {
@@ -45,7 +37,7 @@ public class AdaptiveActionSelector
     public int resolve(TrainingPlan plan, int currentLevel,
             int objectiveTargetLevel)
     {
-        var objective = Math.max(currentLevel + 1, objectiveTargetLevel);
+        var objective = max(currentLevel + 1, objectiveTargetLevel);
         if (plan == null || plan.method() == null) return objective;
         var method = plan.method();
         int boundary = method.getMaxLevel() >= currentLevel
@@ -56,9 +48,9 @@ public class AdaptiveActionSelector
         for (ActionDef action : actionCatalog.actionsFor(method.getSkill()))
             if (action != null && action.getLevel() > currentLevel
                     && action.getLevel() < boundary
-                    && matches(action, profile.getActionTerms()))
+                    && matches(action, profile.actionTerms))
                 boundary = action.getLevel();
-        return Math.max(currentLevel + 1, Math.min(objective, boundary));
+        return max(currentLevel + 1, min(objective, boundary));
     }
 
     public ActionDef select(
@@ -66,7 +58,7 @@ public class AdaptiveActionSelector
             MethodProfile profile,
             List<ActionDef> actions,
             int currentLevel,
-            MembershipStatus membership,
+            Membership membership,
             int currentXp,
             int targetXp,
             double xpMultiplier,
@@ -83,24 +75,24 @@ public class AdaptiveActionSelector
         var bestScore = Double.NEGATIVE_INFINITY;
         for (ActionDef action : actions)
         {
-            if (action == null || action.getXp() <= 0
+            if (action == null || action.xp <= 0
                     || action.getLevel() > currentLevel
-                    || !membershipAllowed(action.getMembership(), membership))
+                    || !membershipAllowed(action.membership, membership))
             {
                 continue;
             }
-            if (!matches(action, profile.getActionTerms())) continue;
+            if (!matches(action, profile.actionTerms)) continue;
 
-            var xpPerAction = action.getXp() * Math.max(1.0, xpMultiplier);
+            var xpPerAction = action.xp * max(1.0, xpMultiplier);
             int actionsNeeded = divideRoundUp(
-                    Math.max(0, targetXp - currentXp), xpPerAction);
+                    max(0, targetXp - currentXp), xpPerAction);
             List<MethodInput> needs = inputResolver.resolve(
                     profile, action, actionsNeeded);
 
             // Base ranking remains tied to the actual action inside the already
             // selected strategic method. Logarithmic XP weighting prevents a
             // large per-action XP number from overwhelming account readiness.
-            double score = Math.log1p(xpPerAction) * 8.0
+            double score = log1p(xpPerAction) * 8.0
                     + action.getLevel() * 0.03;
 
             if (storageKnown && !needs.isEmpty())
@@ -133,51 +125,24 @@ public class AdaptiveActionSelector
         return best;
     }
 
-    /** Compatibility/simple selector used when no account-resource state exists. */
-    public ActionDef selectSimple(
-            List<ActionDef> actions,
-            MethodProfile profile,
-            int currentLevel,
-            MembershipStatus membership)
+        private static boolean membershipAllowed(
+            Membership actionMembership,
+            Membership accountMembership)
     {
-        ActionDef best = null;
-        for (ActionDef action : actions)
-        {
-            if (action == null || action.getLevel() > currentLevel
-                    || !membershipAllowed(action.getMembership(), membership))
-            {
-                continue;
-            }
-            if (!matches(action, profile.getActionTerms())) continue;
-            if (best == null
-                    || action.getLevel() > best.getLevel()
-                    || action.getLevel() == best.getLevel()
-                    && action.getXp() > best.getXp())
-            {
-                best = action;
-            }
-        }
-        return best;
-    }
-
-    private static boolean membershipAllowed(
-            MembershipStatus actionMembership,
-            MembershipStatus accountMembership)
-    {
-        if (actionMembership == null || actionMembership == MembershipStatus.UNKNOWN)
+        if (actionMembership == null || actionMembership == Membership.UNKNOWN)
         {
             return false;
         }
-        if (accountMembership == MembershipStatus.P2P)
+        if (accountMembership == Membership.P2P)
         {
-            return actionMembership == MembershipStatus.F2P
-                    || actionMembership == MembershipStatus.P2P;
+            return actionMembership == Membership.F2P
+                    || actionMembership == Membership.P2P;
         }
 
         // F2P and UNKNOWN fail closed to actions RuneLite explicitly identifies
         // as F2P. This mirrors ContentAccessRules and prevents transient reads
         // from leaking member actions into an F2P route.
-        return actionMembership == MembershipStatus.F2P;
+        return actionMembership == Membership.F2P;
     }
 
     private static double materialCoverage(
@@ -189,9 +154,9 @@ public class AdaptiveActionSelector
         var counted = 0;
         for (MethodInput need : needs)
         {
-            if (need == null || need.getQuantity() <= 0) continue;
+            if (need == null || need.quantity <= 0) continue;
             var owned = items.quantity(need.getName());
-            total += Math.min(1.0, owned / (double) need.getQuantity());
+            total += min(1.0, owned / (double) need.quantity);
             counted++;
         }
         return counted == 0 ? 1.0 : total / counted;
@@ -215,7 +180,7 @@ public class AdaptiveActionSelector
     private static int divideRoundUp(int numerator, double denominator)
     {
         if (numerator <= 0) return 0;
-        return (int) Math.ceil(numerator / denominator);
+        return (int) ceil(numerator / denominator);
     }
 
 }

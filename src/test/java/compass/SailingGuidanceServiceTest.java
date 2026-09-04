@@ -119,7 +119,7 @@ public class SailingGuidanceServiceTest
                 "Exact salvage baseline.", 10.0,
                 plan("sailing_salvage_small"),
                 Confidence.VERIFIED, 53, 54, guidance,
-                SafetyEvidence.skill(false, Skill.SAILING));
+                Safety.skill(false, Skill.SAILING));
     }
 
     private static TrainingPlan plan(String id)
@@ -157,16 +157,7 @@ public class SailingGuidanceServiceTest
         }
         levels.put(Skill.SAILING, level);
         xp.put(Skill.SAILING, xpValue);
-        return new AccountSnapshot(
-                "Sailing Test",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Sailing Test", 0L, 0, "Main", Membership.P2P, 1, 1500, 0L, levels, xp);
     }
 
     private static QuestSnapshot completed(String quest)

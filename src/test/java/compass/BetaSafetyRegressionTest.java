@@ -26,11 +26,11 @@ public class BetaSafetyRegressionTest
     public void unknownMembershipFailsClosedToF2pContent()
     {
         assertTrue(ContentAccessRules.isSkillAvailable(
-                Skill.DEFENCE, MembershipStatus.UNKNOWN));
+                Skill.DEFENCE, Membership.UNKNOWN));
         assertFalse(ContentAccessRules.isSkillAvailable(
-                Skill.SLAYER, MembershipStatus.UNKNOWN));
+                Skill.SLAYER, Membership.UNKNOWN));
         assertFalse(ContentAccessRules.isSkillAvailable(
-                Skill.SAILING, MembershipStatus.UNKNOWN));
+                Skill.SAILING, Membership.UNKNOWN));
 
         TrainingMethod f2p = method(
                 "mining_f2p_iron", Skill.MINING, false,
@@ -40,16 +40,16 @@ public class BetaSafetyRegressionTest
                 Confidence.VERIFIED);
 
         assertTrue(ContentAccessRules.isMethodAvailable(
-                f2p, MembershipStatus.UNKNOWN));
+                f2p, Membership.UNKNOWN));
         assertFalse(ContentAccessRules.isMethodAvailable(
-                members, MembershipStatus.UNKNOWN));
+                members, Membership.UNKNOWN));
     }
 
     @Test
     public void f2pNeverGetsCombatAchievementRewardTierCandidate()
     {
         AccountSnapshot account = account(
-                MembershipStatus.F2P, 0, 60, 1, 1, 1, 1);
+                Membership.F2P, 0, 60, 1, 1, 1, 1);
         GameData data = GameData.builder(account)
                 .combatAchievements(new CombatAchievementSnapshot(18, 27))
                 .build();
@@ -126,9 +126,9 @@ public class BetaSafetyRegressionTest
     public void defencePureAllowsDefenceAndPrayerButBlocksOffence()
     {
         AccountSnapshot account = account(
-                MembershipStatus.F2P, 0, 75, 1, 1, 1, 43);
+                Membership.F2P, 0, 75, 1, 1, 1, 43);
 
-        assertEquals(RestrictedBuildType.DEFENCE_PURE,
+        assertEquals(BuildType.DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
         assertTrue(AccountBuildPolicy.allowsSkill(account, Skill.DEFENCE));
         assertTrue(AccountBuildPolicy.allowsSkill(account, Skill.PRAYER));
@@ -143,7 +143,7 @@ public class BetaSafetyRegressionTest
     public void uimNeverCountsNormalBankAsImmediatelyUsable()
     {
         AccountSnapshot uim = account(
-                MembershipStatus.P2P, 2, 70, 1, 1, 1, 43);
+                Membership.P2P, 2, 70, 1, 1, 1, 43);
         ItemsState bank = new ItemsState(
                 Collections.singletonList(
                         new ItemState(383, "Raw shark", 1000)),
@@ -164,7 +164,7 @@ public class BetaSafetyRegressionTest
     public void uimModeAloneNeverProvesAnUnobservedInventoryEmpty()
     {
         GameData data = GameData.builder(account(
-                MembershipStatus.P2P, 2, 70, 1, 1, 1, 43)).build();
+                Membership.P2P, 2, 70, 1, 1, 1, 43)).build();
 
         ItemIndex items = new ItemIndex(data, false);
         assertFalse(items.bankObserved());
@@ -176,7 +176,7 @@ public class BetaSafetyRegressionTest
     public void ordinaryAccountCountsObservedBank()
     {
         AccountSnapshot main = account(
-                MembershipStatus.P2P, 0, 70, 70, 70, 70, 70);
+                Membership.P2P, 0, 70, 70, 70, 70, 70);
         ItemsState bank = new ItemsState(
                 Collections.singletonList(
                         new ItemState(383, "Raw shark", 1000)),
@@ -194,7 +194,7 @@ public class BetaSafetyRegressionTest
     public void groupStorageOnlyCountsWhenEnabledAndObserved()
     {
         AccountSnapshot gim = account(
-                MembershipStatus.P2P, 4, 70, 70, 70, 70, 70);
+                Membership.P2P, 4, 70, 70, 70, 70, 70);
         ItemsState group = new ItemsState(
                 true,
                 Collections.singletonList(
@@ -214,9 +214,9 @@ public class BetaSafetyRegressionTest
             List<Recommendation> pool,
             ActionabilityPolicy policy)
     {
-        StrategyEngine engine = new StrategyEngine(
+        StrategyEngine engine = TestFixtures.strategyEngine(
                 null, null, null, null, policy);
-        return engine.buildPlayerQueue(pool);
+        return engine.buildPlayerQueue(pool, null);
     }
 
     private static TrainingMethod method(
@@ -246,7 +246,7 @@ public class BetaSafetyRegressionTest
     }
 
     private static AccountSnapshot account(
-            MembershipStatus membership,
+            Membership membership,
             int typeCode,
             int defence,
             int attack,
@@ -277,15 +277,6 @@ public class BetaSafetyRegressionTest
         xp.put(Skill.HITPOINTS, Experience.getXpForLevel(
                 Math.max(10, defence >= 20 ? 63 : 10)));
 
-        return new AccountSnapshot(
-                "Beta Safety",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                membership,
-                1,
-                1200,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Beta Safety", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), membership, 1, 1200, 0L, levels, xp);
     }
 }

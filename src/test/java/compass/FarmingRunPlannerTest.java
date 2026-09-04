@@ -13,16 +13,16 @@ import static org.junit.Assert.assertTrue;
 
 public class FarmingRunPlannerTest
 {
-    private final FarmingRunPlanner planner = new FarmingRunPlanner(new FarmingRunCatalog());
+    private final FarmingRunPlanner planner = TestFixtures.farmingRunPlanner(new FarmingRunCatalog());
 
     @Test
     public void plantedPatchIsGreenCompleteAndReadyPatchBecomesAction()
     {
         Map<String, ObservedFarmingPatchState> states = new HashMap<>();
         states.put("herb_falador", new ObservedFarmingPatchState(
-                FarmingPatchCycleState.GROWING, 1L));
+                PatchState.GROWING, 1L));
         states.put("herb_catherby", new ObservedFarmingPatchState(
-                FarmingPatchCycleState.READY, 1L));
+                PatchState.READY, 1L));
 
         GameData data = data(20, states);
         GuidanceChecklist checklist = planner.build(data, "skill:farming");
@@ -57,9 +57,7 @@ public class FarmingRunPlannerTest
             xp.put(skill, 0);
         }
         levels.put(Skill.FARMING, farming);
-        AccountSnapshot account = new AccountSnapshot(
-                "Tester", 0, "Main", MembershipStatus.P2P, 1,
-                farming, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Tester", 0L, 0, "Main", Membership.P2P, 1, farming, 0L, levels, xp);
         return GameData.builder(account)
                 .quests(new QuestSnapshot(Collections.emptyMap()))
                 .accessMemory(AccessMemorySnapshot.empty())

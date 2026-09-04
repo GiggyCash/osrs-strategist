@@ -1,4 +1,7 @@
 package compass;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import java.util.*;
 
@@ -13,12 +16,12 @@ public final class AccountProgressMilestoneDetector
         if (current == null || current.account() == null)
         {
             previous = null;
-            return Collections.emptyList();
+            return emptyList();
         }
         if (previous == null || differentAccount(previous, current))
         {
             previous = current;
-            return Collections.emptyList();
+            return emptyList();
         }
         List<ProgressMilestone> result = new ArrayList<>();
         quests(previous.quests(), current.quests(), goal, nowMillis,
@@ -63,21 +66,21 @@ public final class AccountProgressMilestoneDetector
             if (!before.hasVerifiedRoute(route))
                 result.add(milestone("transport:" + route,
                         ProgressMilestoneType.TRANSPORT,
-                        Text.get(1448) + display(route), goal, now));
+                        get(1448) + display(route), goal, now));
     }
 
     private static void storage(StorageSnapshot before, StorageSnapshot after,
             GoalType goal, long now, List<ProgressMilestone> result)
     {
         if (before == null || after == null) return;
-        for (StorageCapability capability : StorageCapability.values())
-            if (after.stateOf(capability) == CapabilityState.VERIFIED
+        for (StorageKind capability : StorageKind.values())
+            if (after.stateOf(capability) == Capability.VERIFIED
                     && before.stateOf(capability)
-                            != CapabilityState.VERIFIED)
+                            != Capability.VERIFIED)
                 result.add(milestone("storage:"
                                 + capability.name().toLowerCase(Locale.ROOT),
                         ProgressMilestoneType.INFRASTRUCTURE,
-                        Text.get(1449) + display(capability.name()),
+                        get(1449) + display(capability.name()),
                         goal, now));
     }
 
@@ -85,17 +88,17 @@ public final class AccountProgressMilestoneDetector
             GoalType goal, long now, List<ProgressMilestone> result)
     {
         if (before == null || after == null) return;
-        if (after.getHouseAccess() == CapabilityState.VERIFIED
-                && before.getHouseAccess() != CapabilityState.VERIFIED)
-            result.add(milestone(Text.get(1610),
+        if (after.getHouseAccess() == Capability.VERIFIED
+                && before.getHouseAccess() != Capability.VERIFIED)
+            result.add(milestone(get(1610),
                     ProgressMilestoneType.INFRASTRUCTURE,
-                    Text.get(1450), goal, now));
-        for (Map.Entry<String, CapabilityState> entry
+                    get(1450), goal, now));
+        for (Map.Entry<String, Capability> entry
                 : after.getFurniture().entrySet())
-            if (entry.getValue() == CapabilityState.VERIFIED
+            if (entry.getValue() == Capability.VERIFIED
                     && before.furnitureState(entry.getKey())
-                            != CapabilityState.VERIFIED)
-                result.add(milestone(Text.get(1611)
+                            != Capability.VERIFIED)
+                result.add(milestone(get(1611)
                                 + entry.getKey(),
                         ProgressMilestoneType.INFRASTRUCTURE,
                         "POH upgrade: " + display(entry.getKey()), goal, now));
@@ -133,7 +136,7 @@ public final class AccountProgressMilestoneDetector
             ProgressMilestoneType type, String title, GoalType goal, long now)
     {
         return new ProgressMilestone(id, type, title,
-                Text.get(1451),
+                get(1451),
                 goal == null ? null : goal.name(), now);
     }
 
@@ -142,9 +145,9 @@ public final class AccountProgressMilestoneDetector
     {
         var left = first.account();
         var right = second.account();
-        if (left.getAccountHash() != 0L && right.getAccountHash() != 0L)
-            return left.getAccountHash() != right.getAccountHash();
-        return !left.getPlayerName().equals(right.getPlayerName());
+        if (left.accountHash != 0L && right.accountHash != 0L)
+            return left.accountHash != right.accountHash;
+        return !left.playerName.equals(right.playerName);
     }
 
     private static String display(String value)

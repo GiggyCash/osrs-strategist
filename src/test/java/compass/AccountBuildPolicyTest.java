@@ -15,7 +15,7 @@ public class AccountBuildPolicyTest
     public void oneDefencePureNeverGetsDefenceTraining()
     {
         AccountSnapshot pure = account(60, 80, 1, 80, 52, 80, 70, 30);
-        assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE,
+        assertEquals(BuildType.ONE_DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(pure));
         assertFalse(AccountBuildPolicy.allowsSkill(pure, Skill.DEFENCE));
         assertTrue(AccountBuildPolicy.allowsSkill(pure, Skill.RANGED));
@@ -25,7 +25,7 @@ public class AccountBuildPolicyTest
     public void defencePureOnlyAllowsDefenceAndPrayerCombatProgression()
     {
         AccountSnapshot pure = account(1, 1, 75, 1, 43, 1, 63, 30);
-        assertEquals(RestrictedBuildType.DEFENCE_PURE,
+        assertEquals(BuildType.DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(pure));
         assertTrue(AccountBuildPolicy.allowsSkill(pure, Skill.DEFENCE));
         assertTrue(AccountBuildPolicy.allowsSkill(pure, Skill.PRAYER));
@@ -40,7 +40,7 @@ public class AccountBuildPolicyTest
     public void establishedLevelThreeSkillerProtectsAllCombatSkills()
     {
         AccountSnapshot skiller = account(1, 1, 1, 1, 1, 1, 10, 70);
-        assertEquals(RestrictedBuildType.SKILLER,
+        assertEquals(BuildType.SKILLER,
                 AccountBuildPolicy.effectiveBuild(skiller));
         assertFalse(AccountBuildPolicy.allowsSkill(skiller, Skill.ATTACK));
         assertFalse(AccountBuildPolicy.allowsSkill(skiller, Skill.PRAYER));
@@ -52,7 +52,7 @@ public class AccountBuildPolicyTest
     public void tenHpBuildAllowsNonDamagingMagicButRejectsCombatMagic()
     {
         AccountSnapshot tenHp = account(1, 1, 1, 1, 20, 55, 10, 60);
-        assertEquals(RestrictedBuildType.TEN_HITPOINTS,
+        assertEquals(BuildType.TEN_HITPOINTS,
                 AccountBuildPolicy.effectiveBuild(tenHp));
 
         TrainingMethod alch = method("magic_high_alch", Skill.MAGIC);
@@ -90,8 +90,6 @@ public class AccountBuildPolicyTest
         levels.put(Skill.HITPOINTS, hp);
         levels.put(Skill.SLAYER, nonCombat);
 
-        return new AccountSnapshot(
-                "Build Test", 0, "Main", MembershipStatus.P2P, 1,
-                1000, 0L, levels, xp);
+        return new AccountSnapshot("Build Test", 0L, 0, "Main", Membership.P2P, 1, 1000, 0L, levels, xp);
     }
 }

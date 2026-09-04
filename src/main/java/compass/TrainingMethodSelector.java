@@ -1,8 +1,11 @@
 package compass;
+import static java.util.Collections.*;
+import lombok.*;
+
+import static compass.Text.get;
 
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import net.runelite.api.Skill;
 
 @Singleton
@@ -30,20 +33,7 @@ public class TrainingMethodSelector
         this.strategyService = strategyService == null
                 ? new MethodStrategyService() : strategyService;
     }
-
-    public TrainingMethodSelector(TrainingMethodCatalog catalog,
-            RequirementEvidenceEngine requirementEvidenceEngine)
-    {
-        this(catalog, requirementEvidenceEngine, new TrainingMethodPolicy(),
-                new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
-    }
-
-    public TrainingMethodSelector(TrainingMethodCatalog catalog)
-    {
-        this(catalog, null);
-    }
-
-    TrainingMethodSelector(TrainingMethodCatalog catalog,
+   TrainingMethodSelector(TrainingMethodCatalog catalog,
             RequirementEvidenceEngine evidence, TrainingMethodCatalog ignoredCurated,
             TrainingMethodCatalog ignoredF2p, TrainingMethodPolicy policy)
     {
@@ -104,15 +94,15 @@ public class TrainingMethodSelector
                     data, strategyProfile);
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
-                    || method.getConfidence() == Confidence.BLOCKED
+                    || method.confidence == Confidence.BLOCKED
                     || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods)
                     || !strategyAssessment.isViable())
             {
                 continue;
             }
 
-            List<RequirementCheck> checks = requirementEvidenceEngine == null
-                    ? Collections.emptyList()
+            List<EvidenceCheck> checks = requirementEvidenceEngine == null
+                    ? emptyList()
                     : useGroupStorage
                             ? requirementEvidenceEngine.evaluate(
                                     data, method, true)
@@ -147,11 +137,11 @@ public class TrainingMethodSelector
         ranked.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed());
         List<TrainingPlan> plans = new ArrayList<>();
         for (ScoredPlan candidate : ranked) plans.add(candidate.plan);
-        return Collections.unmodifiableList(plans);
+        return unmodifiableList(plans);
     }
 
     private static double readinessAdjustment(GameData data,
-            List<RequirementCheck> checks, SessionIntent sessionIntent)
+            List<EvidenceCheck> checks, SessionIntent sessionIntent)
     {
         if (checks == null || checks.isEmpty()) return 0.0;
         AccountMode mode = data == null || data.account() == null
@@ -159,7 +149,7 @@ public class TrainingMethodSelector
                 : AccountMode.fromTypeCode(data.account().modeCode());
         var fullyReady = true;
         var missingResourcePenalty = 0.0;
-        for (RequirementCheck check : checks)
+        for (EvidenceCheck check : checks)
         {
             if (check == null)
             {
@@ -185,18 +175,13 @@ public class TrainingMethodSelector
         return (fullyReady ? 10.0 : 0.0) - missingResourcePenalty;
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class ScoredPlan
     {
         private final TrainingPlan plan;
+        @Getter
         private final double score;
-
-        private ScoredPlan(TrainingPlan plan, double score)
-        {
-            this.plan = plan;
-            this.score = score;
-        }
-
-        private double getScore() { return score; }
     }
 
     private List<CuratedTrainingMethod> candidates(GameData data, Skill skill)
@@ -214,7 +199,7 @@ public class TrainingMethodSelector
 
         // In production, legacy methods predate route-level F2P metadata. F2P
         // therefore uses only catalogs whose membership compatibility is explicit.
-        if (membership == MembershipStatus.P2P)
+        if (membership == Membership.P2P)
         {
             for (TrainingMethod method : catalog.legacyFor(skill))
             {
@@ -246,21 +231,21 @@ public class TrainingMethodSelector
         return new ArrayList<>(unique.values());
     }
 
-    private static MembershipStatus membershipStatus(GameData data)
+    private static Membership membershipStatus(GameData data)
     {
-        if (data == null || data.account() == null) return MembershipStatus.UNKNOWN;
+        if (data == null || data.account() == null) return Membership.UNKNOWN;
         return data.account().membership();
     }
 
     private Confidence assessConfidence(
-            TrainingMethod method, List<RequirementCheck> checks)
+            TrainingMethod method, List<EvidenceCheck> checks)
     {
-        if (method.getConfidence() == Confidence.BLOCKED)
+        if (method.confidence == Confidence.BLOCKED)
             return Confidence.BLOCKED;
         if (checks != null && !checks.isEmpty())
         {
             var hasUnknown = false;
-            for (RequirementCheck check : checks)
+            for (EvidenceCheck check : checks)
             {
                 if (check.getState() == RequirementState.BLOCKED)
                     return Confidence.BLOCKED;
@@ -269,8 +254,8 @@ public class TrainingMethodSelector
             return hasUnknown ? Confidence.CHECK_NEEDED
                     : Confidence.VERIFIED;
         }
-        if (method.getRequirements().isEmpty()
-                && method.getConfidence() == Confidence.VERIFIED)
+        if (method.requirements.isEmpty()
+                && method.confidence == Confidence.VERIFIED)
             return Confidence.VERIFIED;
         return Confidence.CHECK_NEEDED;
     }
@@ -289,14 +274,14 @@ public class TrainingMethodSelector
         }
         else
         {
-            reason.append(Text.get(1279))
+            reason.append(get(1279))
                     .append(pretty(strategyMode.name())).append(" play.");
         }
         if (sessionIntent != SessionIntent.PICK_FOR_ME)
             reason.append(" It also fits ").append(pretty(sessionIntent.name()))
                     .append(" sessions.");
-        if (method.isWilderness())
-            reason.append(Text.get(898));
+        if (method.wilderness)
+            reason.append(get(898));
         return reason.toString();
     }
 

@@ -9,51 +9,51 @@ import javax.inject.Singleton;
 @Singleton
 public class FarmingPatchStateDecoder
 {
-    public FarmingPatchCycleState decode(FarmingPatchKind kind, int value)
+    public PatchState decode(FarmingPatchKind kind, int value)
     {
         if (kind == FarmingPatchKind.HERB) return decodeHerb(value);
         if (kind == FarmingPatchKind.TREE) return decodeTree(value);
-        return FarmingPatchCycleState.UNKNOWN;
+        return PatchState.UNKNOWN;
     }
 
-    private FarmingPatchCycleState decodeHerb(int value)
+    private PatchState decodeHerb(int value)
     {
         if (between(value, 0, 3) || value == 67
                 || between(value, 176, 191)
                 || between(value, 204, 219)
                 || between(value, 221, 255))
         {
-            return FarmingPatchCycleState.EMPTY;
+            return PatchState.EMPTY;
         }
         if (between(value, 128, 169)
                 || between(value, 173, 175)
                 || between(value, 198, 200))
         {
-            return FarmingPatchCycleState.DISEASED;
+            return PatchState.DISEASED;
         }
         if (between(value, 170, 172)
                 || between(value, 201, 203))
         {
-            return FarmingPatchCycleState.DEAD;
+            return PatchState.DEAD;
         }
         if (inRanges(value,
                 8,10, 15,17, 22,24, 29,31, 36,38, 43,45,
                 50,52, 57,59, 64,66, 72,74, 79,81, 86,88,
                 93,95, 100,102, 107,109, 196,197))
         {
-            return FarmingPatchCycleState.READY;
+            return PatchState.READY;
         }
         if (inRanges(value,
                 4,7, 11,14, 18,21, 25,28, 32,35, 39,42,
                 46,49, 53,56, 60,63, 68,71, 75,78, 82,85,
                 89,92, 96,99, 103,106, 192,195))
         {
-            return FarmingPatchCycleState.GROWING;
+            return PatchState.GROWING;
         }
-        return FarmingPatchCycleState.UNKNOWN;
+        return PatchState.UNKNOWN;
     }
 
-    private FarmingPatchCycleState decodeTree(int value)
+    private PatchState decodeTree(int value)
     {
         if (between(value, 0, 7)
                 || between(value, 63, 72)
@@ -69,31 +69,31 @@ public class FarmingPatchStateDecoder
                 || between(value, 190, 191)
                 || between(value, 198, 255))
         {
-            return FarmingPatchCycleState.EMPTY;
+            return PatchState.EMPTY;
         }
         if (inRanges(value,
                 73,75, 77,77, 80,84, 86,86, 89,95, 97,97,
                 100,108, 110,110, 113,123, 125,125))
         {
-            return FarmingPatchCycleState.DISEASED;
+            return PatchState.DISEASED;
         }
         if (inRanges(value,
                 137,139, 141,141, 144,148, 150,150, 153,159,
                 161,161, 164,172, 174,174, 177,187, 189,189))
         {
-            return FarmingPatchCycleState.DEAD;
+            return PatchState.DEAD;
         }
         if (inRanges(value,
                 13,14, 22,23, 33,34, 46,47, 61,62, 192,197))
         {
-            return FarmingPatchCycleState.READY;
+            return PatchState.READY;
         }
         if (inRanges(value,
                 8,12, 15,21, 24,32, 35,45, 48,60))
         {
-            return FarmingPatchCycleState.GROWING;
+            return PatchState.GROWING;
         }
-        return FarmingPatchCycleState.UNKNOWN;
+        return PatchState.UNKNOWN;
     }
 
     private static boolean inRanges(int value, int... endpoints)

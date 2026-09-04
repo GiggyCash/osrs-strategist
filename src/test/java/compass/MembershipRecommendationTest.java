@@ -13,16 +13,16 @@ import static org.junit.Assert.assertNotNull;
 public class MembershipRecommendationTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(new TrainingMethodDatabase());
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
 
     private final RecommendationEngine engine =
-            new RecommendationEngine(selector);
+            TestFixtures.recommendationEngine(selector);
 
     @Test
     public void f2pRecommendationQueueContainsOnlyFreeSkills()
     {
         AccountSnapshot account = account(
-                MembershipStatus.F2P,
+                Membership.F2P,
                 30
         );
 
@@ -50,7 +50,7 @@ public class MembershipRecommendationTest
     public void f2pMiningDoesNotChooseMotherlodeMine()
     {
         AccountSnapshot account = account(
-                MembershipStatus.F2P,
+                Membership.F2P,
                 30
         );
 
@@ -70,7 +70,7 @@ public class MembershipRecommendationTest
     public void p2pMiningCanChooseMotherlodeMine()
     {
         AccountSnapshot account = account(
-                MembershipStatus.P2P,
+                Membership.P2P,
                 30
         );
 
@@ -87,7 +87,7 @@ public class MembershipRecommendationTest
     }
 
     private static AccountSnapshot account(
-            MembershipStatus membershipStatus,
+            Membership membershipStatus,
             int miningLevel)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -112,16 +112,6 @@ public class MembershipRecommendationTest
         levels.put(Skill.HUNTER, 1);
         levels.put(Skill.SAILING, 1);
 
-        return new AccountSnapshot(
-                "Membership Test",
-                0,
-                "Main",
-                membershipStatus,
-                membershipStatus == MembershipStatus.P2P ? 14 : 0,
-                1500,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Membership Test", 0L, 0, "Main", membershipStatus, membershipStatus == Membership.P2P ? 14 : 0, 1500, 0L, levels, experience);
     }
 }

@@ -101,7 +101,7 @@ public class ProductConstitutionGuardTest
                 Confidence.VERIFIED, 0, 0,
                 new Guidance("Inspect the current loadout.",
                         "No supplies.", "Lumbridge Castle courtyard.", null),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
         assertFalse(new ActionabilityPolicy()
                 .canLeadQueue(vague));
 
@@ -115,7 +115,7 @@ public class ProductConstitutionGuardTest
                             "Complete the named training loop.",
                             "Required setup.",
                             "Lumbridge Castle courtyard.", null),
-                    SafetyEvidence.skill(true, skill));
+                    Safety.skill(true, skill));
             assertFalse(skill.getName(),
                     new ActionabilityPolicy()
                             .canLeadQueue(categoryOnly));
@@ -145,7 +145,7 @@ public class ProductConstitutionGuardTest
     @Test
     public void alternativesRepresentDifferentActivityDimensions()
     {
-        StrategyEngine engine = new StrategyEngine(null, null, null, null,
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy());
         java.util.List<Recommendation> queue = engine.buildPlayerQueue(
                 Arrays.asList(
@@ -165,7 +165,7 @@ public class ProductConstitutionGuardTest
                 id.endsWith("a") ? 30 : 20, null,
                 Confidence.VERIFIED, 0, 0,
                 new Guidance(action, "Required setup.",
-                        location, null), SafetyEvidence.harmless(true));
+                        location, null), Safety.harmless(true));
     }
 
     private static Recommendation skill()
@@ -183,6 +183,6 @@ public class ProductConstitutionGuardTest
                 new Guidance(
                         "Mine iron, drop it, and repeat until level 40.",
                         "A usable pickaxe.", "South-east Varrock mine.", null),
-                SafetyEvidence.skill(true, Skill.MINING));
+                Safety.skill(true, Skill.MINING));
     }
 }

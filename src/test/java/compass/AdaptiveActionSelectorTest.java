@@ -34,7 +34,7 @@ public class AdaptiveActionSelectorTest
                 profile,
                 actions(),
                 70,
-                MembershipStatus.P2P,
+                Membership.P2P,
                 Experience.getXpForLevel(70),
                 Experience.getXpForLevel(80),
                 1.0,
@@ -60,7 +60,7 @@ public class AdaptiveActionSelectorTest
                 profile,
                 actions(),
                 70,
-                MembershipStatus.P2P,
+                Membership.P2P,
                 Experience.getXpForLevel(70),
                 Experience.getXpForLevel(80),
                 1.0,
@@ -80,7 +80,7 @@ public class AdaptiveActionSelectorTest
                 .build();
 
         ActionDef selected = selector.select(
-                data, profile, actions(), 70, MembershipStatus.P2P,
+                data, profile, actions(), 70, Membership.P2P,
                 Experience.getXpForLevel(70),
                 Experience.getXpForLevel(80), 1.0, true);
 
@@ -97,7 +97,7 @@ public class AdaptiveActionSelectorTest
                         40,
                         41.5f,
                         null,
-                        MembershipStatus.P2P,
+                        Membership.P2P,
                         -1),
                 new ActionDef(
                         Skill.FLETCHING,
@@ -106,7 +106,7 @@ public class AdaptiveActionSelectorTest
                         65,
                         75.0f,
                         null,
-                        MembershipStatus.P2P,
+                        Membership.P2P,
                         -1));
     }
 
@@ -121,15 +121,6 @@ public class AdaptiveActionSelectorTest
         }
         levels.put(Skill.FLETCHING, 70);
         xp.put(Skill.FLETCHING, Experience.getXpForLevel(70));
-        return new AccountSnapshot(
-                "Selector Test",
-                typeCode,
-                typeCode == 0 ? "Main" : "Ironman",
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp);
+        return new AccountSnapshot("Selector Test", 0L, typeCode, typeCode == 0 ? "Main" : "Ironman", Membership.P2P, 1, 1500, 0L, levels, xp);
     }
 }

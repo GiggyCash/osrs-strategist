@@ -1,28 +1,25 @@
 package compass;
+import static java.util.Collections.*;
+
+import static compass.Text.get;
 
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.Objects;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
-import net.runelite.api.GameState;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.events.RuneScapeProfileChanged;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
-import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.events.*;
+import net.runelite.client.plugins.*;
 import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
-import net.runelite.client.ui.ClientToolbar;
-import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.*;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.runelite.client.util.ImageUtil;
-import net.runelite.client.util.LinkBrowser;
+import net.runelite.client.util.*;
 
 @PluginDescriptor(
         name = "Gielinor Compass",
@@ -66,7 +63,7 @@ public class OsrsStrategistPlugin extends Plugin
     private PlayerStrategyProfile strategyProfile;
     private TrackedMilestone trackedMilestone;
     private GameData latestData;
-    private List<Recommendation> latestRecommendations = Collections.emptyList();
+    private List<Recommendation> latestRecommendations = emptyList();
     private StrategicPlan latestPlan;
     private ProgressHistory progressHistory = new ProgressHistory();
     private final AccountProgressMilestoneDetector progressMilestoneDetector =
@@ -150,7 +147,7 @@ public class OsrsStrategistPlugin extends Plugin
         strategyProfile = null;
         trackedMilestone = null;
         latestData = null;
-        latestRecommendations = Collections.emptyList();
+        latestRecommendations = emptyList();
         latestPlan = null;
         varbitRefreshPending = false;
         accountRefreshPending = false;
@@ -298,7 +295,7 @@ public class OsrsStrategistPlugin extends Plugin
         if (fatigue.isPresent())
         {
             preferenceProfile.addTemporaryScoreAdjustment(
-                    fatigue.getActivityId(),
+                    fatigue.activityId,
                     fatigue.getScoreDelta(),
                     fatigue.getDurationMillis());
         }
@@ -351,7 +348,7 @@ public class OsrsStrategistPlugin extends Plugin
         lastStrategyRefreshAtMillis = Long.MIN_VALUE;
         lastPohObservationAtMillis = Long.MIN_VALUE;
         lastFarmingObservationAtMillis = Long.MIN_VALUE;
-        latestRecommendations = Collections.emptyList();
+        latestRecommendations = emptyList();
         latestPlan = null;
         latestData = null;
         preferenceProfile.clear();
@@ -430,7 +427,7 @@ public class OsrsStrategistPlugin extends Plugin
         }
         // A deliberate strategy-setting change is allowed to replace the plan
         // immediately; stability is for incidental game events only.
-        latestRecommendations = Collections.emptyList();
+        latestRecommendations = emptyList();
         latestPlan = null;
         if (panel != null) panel.closeDetails();
         recommendationDetailsOverlay.clear();
@@ -451,7 +448,7 @@ public class OsrsStrategistPlugin extends Plugin
         // Bypass hysteresis for this deliberate recovery action. Completion
         // history, goal/settings, milestone state, and observed account data
         // are intentionally left untouched.
-        latestRecommendations = Collections.emptyList();
+        latestRecommendations = emptyList();
         accountRefreshPending = true;
         pohRefreshPending = true;
         if (recommendationDetailsOverlay != null)
@@ -505,7 +502,7 @@ public class OsrsStrategistPlugin extends Plugin
                     GoalRecommendationContext.assess(
                             effectiveStrategyProfile().goal(),
                             recommendation,
-                            account == null ? MembershipStatus.UNKNOWN
+                            account == null ? Membership.UNKNOWN
                                     : account.membership()));
             methodGuidanceOverlay.clear();
         }
@@ -519,9 +516,9 @@ public class OsrsStrategistPlugin extends Plugin
         var profile = effectiveStrategyProfile();
         var result = evaluateAndStabilize(latestData, profile);
         latestRecommendations = new java.util.ArrayList<>(
-                result.getRecommendations());
+                result.recommendations);
         updateTrackedMilestone(
-                result.getRecommendations(),
+                result.recommendations,
                 latestData.collectionLog());
         updateGuidance(result, latestData);
         updateProgressTarget(result);
@@ -529,7 +526,7 @@ public class OsrsStrategistPlugin extends Plugin
         Runnable update = () ->
         {
             if (!uiGeneration.isCurrent(generation) || panel == null) return;
-            panel.updateRecommendations(result.getRecommendations());
+            panel.updateRecommendations(result.recommendations);
             panel.updateOpportunities(result.getOpportunities());
             panel.updateProgress(progressAnalyticsService.snapshot(),
                     result.getPlan(), progressHistory);
@@ -546,7 +543,7 @@ public class OsrsStrategistPlugin extends Plugin
                 data,
                 profile.mode(),
                 profile.intent(),
-                profile.getQuestTolerance(),
+                profile.questTolerance,
                 profile.goal(),
                 profile.usesGroupStorage(),
                 profile.collectionist(),
@@ -561,12 +558,12 @@ public class OsrsStrategistPlugin extends Plugin
                 latestRecommendations, evaluate(data, profile));
         StrategyContext context = new StrategyContext(data,
                 profile.mode(), profile.intent(),
-                profile.getQuestTolerance(), profile.goal(),
+                profile.questTolerance, profile.goal(),
                 profile.usesGroupStorage(), profile.collectionist(),
                 profile.allowsWilderness(), preferenceProfile);
         var previousPlan = latestPlan;
         latestPlan = planContinuityService.reconcile(previousPlan,
-                fresh.getPlan(), context, fresh.getRecommendations());
+                fresh.getPlan(), context, fresh.recommendations);
         if (previousPlan != null && previousPlan.matchesContext(context)
                 && previousPlan.getCurrentStep().isComplete(data)
                 && latestPlan != null
@@ -579,7 +576,7 @@ public class OsrsStrategistPlugin extends Plugin
                             ProgressMilestoneType.PLAN_STEP,
                             previousPlan.getCurrentStep().getObjective()
                                     + " complete",
-                            Text.get(410),
+                            get(410),
                             profile.goal().name(),
                             System.currentTimeMillis()));
         return fresh.withPlan(latestPlan);
@@ -587,12 +584,12 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void updateProgressTarget(StrategyResult result)
     {
-        if (result == null || result.getRecommendations().isEmpty())
+        if (result == null || result.recommendations.isEmpty())
         {
             progressAnalyticsService.clearTarget();
             return;
         }
-        var top = result.getRecommendations().get(0);
+        var top = result.recommendations.get(0);
         var plan = top.plan();
         if (plan == null || plan.method() == null
                 || plan.method().getSkill() == null
@@ -626,13 +623,13 @@ public class OsrsStrategistPlugin extends Plugin
         if (!OverlayDisplayState.from(config).showsMethodGuidance(
                     recommendationDetailsOverlay.hasRecommendation())
                 || result == null
-                || result.getRecommendations().isEmpty())
+                || result.recommendations.isEmpty())
         {
             methodGuidanceOverlay.clear();
             return;
         }
         GuidanceChecklist checklist = methodGuidanceService.build(
-                result.getRecommendations().get(0), data);
+                result.recommendations.get(0), data);
         methodGuidanceOverlay.update(checklist);
     }
 
@@ -730,7 +727,7 @@ public class OsrsStrategistPlugin extends Plugin
         if (data == null || data.account() == null)
         {
             latestData = null;
-            latestRecommendations = Collections.emptyList();
+            latestRecommendations = emptyList();
             methodGuidanceOverlay.clear();
             recommendationDetailsOverlay.clear();
             var profile = effectiveStrategyProfile();
@@ -740,9 +737,9 @@ public class OsrsStrategistPlugin extends Plugin
                 panel.updateAccount("Waiting for login...", "Unknown", 0);
                 panel.updateGoal(profile.goal());
                 panel.updateStrategy(profile.mode(),
-                        profile.intent(), profile.getQuestTolerance());
-            panel.updateRecommendations(Collections.emptyList());
-            panel.updateOpportunities(Collections.emptyList());
+                        profile.intent(), profile.questTolerance);
+            panel.updateRecommendations(emptyList());
+            panel.updateOpportunities(emptyList());
             panel.updateProgress(null, null, null);
             });
             return;
@@ -763,17 +760,17 @@ public class OsrsStrategistPlugin extends Plugin
         if (completion != null)
         {
             if (completedCheckpoint == null
-                    || !completedCheckpoint.isProgressionProtected())
+                    || !completedCheckpoint.progressionProtected)
             {
                 preferenceProfile.addTemporaryScoreAdjustment(
-                        completion.getActivityId(), COMPLETION_VARIETY_PENALTY,
+                        completion.activityId, COMPLETION_VARIETY_PENALTY,
                         COMPLETION_VARIETY_DURATION_MILLIS);
                 savePreferenceProfile();
             }
 
             recommendationHistory.add(
-                    completion.getActivityId(),
-                    completion.getTitle(),
+                    completion.activityId,
+                    completion.title,
                     RecommendationHistoryAction.COMPLETED);
             saveRecommendationHistory();
 
@@ -782,13 +779,13 @@ public class OsrsStrategistPlugin extends Plugin
             milestoneRewardOverlay.show(completion);
             progressCheckpointPending |= progressAnalyticsService
                     .recordMilestone(new ProgressMilestone(
-                            "skill-checkpoint:" + completion.getActivityId()
+                            "skill-checkpoint:" + completion.activityId
                                     + ":" + completion.getSkill().name()
                                     .toLowerCase(java.util.Locale.ROOT) + ":"
-                                    + completion.getTargetLevel(),
+                                    + completion.targetLevel,
                             ProgressMilestoneType.SKILL_LEVEL,
-                            completion.getTitle(),
-                            Text.get(411),
+                            completion.title,
+                            get(411),
                             effectiveStrategyProfile().goal().name(),
                             System.currentTimeMillis()));
         }
@@ -796,9 +793,9 @@ public class OsrsStrategistPlugin extends Plugin
         var profile = effectiveStrategyProfile();
         var result = evaluateAndStabilize(data, profile);
         latestRecommendations = new java.util.ArrayList<>(
-                result.getRecommendations());
+                result.recommendations);
         updateTrackedMilestone(
-                result.getRecommendations(),
+                result.recommendations,
                 data.collectionLog());
         updateGuidance(result, data);
         updateProgressTarget(result);
@@ -808,7 +805,7 @@ public class OsrsStrategistPlugin extends Plugin
         {
             if (!uiGeneration.isCurrent(generation) || panel == null) return;
             panel.updateAccount(
-                    account.getPlayerName(),
+                    account.playerName,
                     account.getAccountTypeName(),
                     account.membership(),
                     account.getTotalLevel());
@@ -816,8 +813,8 @@ public class OsrsStrategistPlugin extends Plugin
             panel.updateStrategy(
                     profile.mode(),
                     profile.intent(),
-                    profile.getQuestTolerance());
-            panel.updateRecommendations(result.getRecommendations());
+                    profile.questTolerance);
+            panel.updateRecommendations(result.recommendations);
             panel.updateOpportunities(result.getOpportunities());
             panel.updateProgress(progressAnalyticsService.snapshot(),
                     result.getPlan(), progressHistory);

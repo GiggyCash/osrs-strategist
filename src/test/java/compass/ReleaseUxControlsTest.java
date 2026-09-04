@@ -18,8 +18,8 @@ public class ReleaseUxControlsTest
         AtomicInteger opened = new AtomicInteger();
         OsrsStrategistPanel panel = panel("", value -> opened.incrementAndGet(),
                 () -> { });
-        assertFalse(panel.isSupportVisible());
-        panel.clickSupportForTest();
+        assertFalse(panel.supportButton.isVisible());
+        panel.supportButton.doClick();
         assertEquals(0, opened.get());
     }
 
@@ -29,9 +29,9 @@ public class ReleaseUxControlsTest
         AtomicReference<String> opened = new AtomicReference<>();
         OsrsStrategistPanel panel = panel("https://example.test/support",
                 opened::set, () -> { });
-        assertTrue(panel.isSupportVisible());
+        assertTrue(panel.supportButton.isVisible());
         assertNull(opened.get());
-        panel.clickSupportForTest();
+        panel.supportButton.doClick();
         assertEquals("https://example.test/support", opened.get());
     }
 
@@ -41,19 +41,19 @@ public class ReleaseUxControlsTest
         OsrsStrategistPanel panel = panel("", value -> { },
                 () -> { });
         assertEquals(java.util.Arrays.asList("Later", "Not Today", "Dislike"),
-                panel.feedbackLabelsForTest());
-        assertFalse(panel.feedbackLabelsForTest().contains("Do This"));
+                java.util.Arrays.asList(panel.laterButton.getText(), panel.notTodayButton.getText(), panel.dislikeButton.getText()));
+        assertFalse(java.util.Arrays.asList(panel.laterButton.getText(), panel.notTodayButton.getText(), panel.dislikeButton.getText()).contains("Do This"));
     }
 
     @Test
     public void selectedGoalFallbackIsVisibleWithoutBlankingDoNext()
     {
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
-        panel.updateAccount("Player", "Main", MembershipStatus.F2P, 500);
+        panel.updateAccount("Player", "Main", Membership.F2P, 500);
         panel.updateGoal(GoalType.BOWFA);
         panel.updateRecommendations(Collections.singletonList(recommendation()));
-        assertFalse(panel.recommendationTextForTest().contains("GOAL"));
-        assertFalse(panel.recommendationTextForTest().trim().isEmpty());
+        assertFalse(panel.recommendationBody.getText().contains("GOAL"));
+        assertFalse(panel.recommendationBody.getText().trim().isEmpty());
     }
 
     @Test
@@ -61,14 +61,14 @@ public class ReleaseUxControlsTest
     {
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
         panel.updateRecommendations(Collections.singletonList(recommendation()));
-        String before = panel.recommendationTextForTest();
+        String before = panel.recommendationBody.getText();
         panel.setDetailsOverlayEnabled(false);
-        assertFalse(panel.isDetailsControlEnabled());
-        assertFalse(panel.isDetailsControlVisible());
-        assertEquals(before, panel.recommendationTextForTest());
+        assertFalse(panel.detailsButton.isEnabled());
+        assertFalse(panel.detailsButton.isVisible());
+        assertEquals(before, panel.recommendationBody.getText());
         panel.setDetailsOverlayEnabled(true);
-        assertTrue(panel.isDetailsControlEnabled());
-        assertTrue(panel.isDetailsControlVisible());
+        assertTrue(panel.detailsButton.isEnabled());
+        assertTrue(panel.detailsButton.isVisible());
     }
 
     @Test
@@ -80,24 +80,24 @@ public class ReleaseUxControlsTest
                 () -> { }, () -> { }, "", value -> { });
         Guidance guidance = new Guidance(
                 "Follow only the verified retrieval sequence.",
-                "Exact observed setup", "Hespori cave", "Second deaths can delete stored items.")
-                .withStorageDecision(new UimStorageDecision(
-                        StorageCapability.HESPORI_ITEM_RETRIEVAL, true,
+                "Exact observed setup", "Hespori cave", "Second deaths can delete stored items.",
+                BankingMode.UNKNOWN, new UimStorageDecision(
+                        StorageKind.HESPORI_ITEM_RETRIEVAL, true,
                         Confidence.VERIFIED, RiskLevel.HIGH,
                         "Verified exact service"),
-                        RecommendationRiskDisclosure.deathStorage());
+                RecommendationRiskDisclosure.deathStorage());
         Recommendation dangerous = new Recommendation(
                 "uim:hespori-transition", "Death-storage transition",
                 "A major transition is otherwise blocked.", 1.0, null,
                 Confidence.CHECK_NEEDED, 0, 0, guidance,
-                SafetyEvidence.harmless(false));
+                Safety.harmless(false));
 
         panel.updateRecommendations(Collections.singletonList(dangerous));
-        assertEquals("View Risk Steps", panel.detailsLabelForTest());
+        assertEquals("View Risk Steps", panel.detailsButton.getText());
         assertNull(shown.get());
-        panel.clickDetailsForTest();
+        panel.detailsButton.doClick();
         assertEquals(dangerous, shown.get());
-        assertEquals("Hide Risk Steps", panel.detailsLabelForTest());
+        assertEquals("Hide Risk Steps", panel.detailsButton.getText());
     }
 
     @Test
@@ -106,8 +106,8 @@ public class ReleaseUxControlsTest
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
         panel.updateRecommendations(Collections.singletonList(recommendation()));
         panel.updateOpportunities(Collections.emptyList());
-        assertFalse(panel.areAlternativesVisibleForTest());
-        assertFalse(panel.areOpportunitiesVisibleForTest());
+        assertFalse(panel.alternativesCard.isVisible());
+        assertFalse(panel.opportunitiesCard.isVisible());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ReleaseUxControlsTest
         Recommendation second = recommendation("skill:fishing", "Train Fishing to 40");
         panel.updateRecommendations(java.util.Arrays.asList(first, second));
 
-        String text = panel.firstAlternativeTextForTest();
+        String text = panel.alternativeOne.getText();
         assertTrue(text.contains("Concrete method"));
         assertTrue(text.contains("30 → 40"));
         assertFalse(text.contains("Named location"));
@@ -130,9 +130,9 @@ public class ReleaseUxControlsTest
         OsrsStrategistPanel panel = panel("", value -> { }, () -> { });
         panel.updateRecommendations(Collections.emptyList());
 
-        assertFalse(panel.isDetailsControlVisible());
-        assertFalse(panel.isFeedbackVisibleForTest());
-        assertFalse(panel.isProgressVisibleForTest());
+        assertFalse(panel.detailsButton.isVisible());
+        assertFalse(panel.feedbackPanel.isVisible());
+        assertFalse(panel.progressBar.isVisible());
     }
 
     @Test
@@ -143,14 +143,14 @@ public class ReleaseUxControlsTest
                 OpportunityType.HERB_RUN, "Herb run", true,
                 Confidence.VERIFIED,
                 Collections.singletonList("Carry a spade"), false,
-                SafetyEvidence.skill(false,
+                Safety.skill(false,
                         net.runelite.api.Skill.FARMING));
 
         panel.updateOpportunities(Collections.singletonList(herb));
 
-        assertTrue(panel.firstOpportunityTextForTest()
+        assertTrue(panel.opportunityOne.getText()
                 .contains("Prep: Carry a spade"));
-        assertFalse(panel.firstOpportunityTextForTest()
+        assertFalse(panel.opportunityOne.getText()
                 .contains("Check Needed"));
     }
 

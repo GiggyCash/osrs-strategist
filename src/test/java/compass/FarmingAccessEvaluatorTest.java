@@ -19,7 +19,7 @@ public class FarmingAccessEvaluatorTest
     public void p2pInfersOpenWorldPatchesButNotLockedQuestPatches()
     {
         FarmingSnapshot result = evaluator.evaluate(
-                account(MembershipStatus.P2P),
+                account(Membership.P2P),
                 new QuestSnapshot(Collections.emptyMap()),
                 AccessMemorySnapshot.empty(),
                 null
@@ -37,7 +37,7 @@ public class FarmingAccessEvaluatorTest
         quests.put("My Arm's Big Adventure", QuestStatus.COMPLETE);
 
         FarmingSnapshot result = evaluator.evaluate(
-                account(MembershipStatus.P2P),
+                account(Membership.P2P),
                 new QuestSnapshot(quests),
                 AccessMemorySnapshot.empty(),
                 null
@@ -53,7 +53,7 @@ public class FarmingAccessEvaluatorTest
         memory.put("farming.patch.troll_stronghold", 1L);
 
         FarmingSnapshot result = evaluator.evaluate(
-                account(MembershipStatus.P2P),
+                account(Membership.P2P),
                 new QuestSnapshot(Collections.emptyMap()),
                 new AccessMemorySnapshot(memory),
                 null
@@ -66,7 +66,7 @@ public class FarmingAccessEvaluatorTest
     public void f2pDoesNotInferMembersFarmingPatches()
     {
         FarmingSnapshot result = evaluator.evaluate(
-                account(MembershipStatus.F2P),
+                account(Membership.F2P),
                 new QuestSnapshot(Collections.emptyMap()),
                 AccessMemorySnapshot.empty(),
                 null
@@ -76,7 +76,7 @@ public class FarmingAccessEvaluatorTest
         assertFalse(result.isPatchReachable("troll_stronghold"));
     }
 
-    private static AccountSnapshot account(MembershipStatus membership)
+    private static AccountSnapshot account(Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -86,16 +86,6 @@ public class FarmingAccessEvaluatorTest
             xp.put(skill, 0);
         }
 
-        return new AccountSnapshot(
-                "Tester",
-                0,
-                "Main",
-                membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
-                1,
-                0L,
-                levels,
-                xp
-        );
+        return new AccountSnapshot("Tester", 0L, 0, "Main", membership, membership == Membership.P2P ? 1 : 0, 1, 0L, levels, xp);
     }
 }

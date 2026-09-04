@@ -32,7 +32,7 @@ public class F2pSmithingGuidanceTest
                                 15,
                                 12.5f,
                                 null,
-                                MembershipStatus.F2P),
+                                Membership.F2P),
                         new ActionDef(
                                 Skill.SMITHING,
                                 "runelite:smithing:iron_2h_sword",
@@ -40,7 +40,7 @@ public class F2pSmithingGuidanceTest
                                 29,
                                 75.0f,
                                 null,
-                                MembershipStatus.F2P));
+                                Membership.F2P));
             }
         };
 
@@ -49,7 +49,7 @@ public class F2pSmithingGuidanceTest
                         actions,
                         new UniversalActionRecipeResolver(),
                         new SkillingXpModifierService(),
-                        new AccountResourcePlanner());
+                        TestFixtures.accountResourcePlanner());
 
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
@@ -65,7 +65,7 @@ public class F2pSmithingGuidanceTest
                 1L,
                 0,
                 "MAIN",
-                MembershipStatus.F2P,
+                Membership.F2P,
                 0,
                 500,
                 0L,

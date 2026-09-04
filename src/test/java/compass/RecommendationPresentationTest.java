@@ -76,19 +76,19 @@ public class RecommendationPresentationTest
                 "Selected for the current strategy style.",
                 Confidence.CHECK_NEEDED,
                 Arrays.asList(
-                        new RequirementCheck(
+                        new EvidenceCheck(
                                 "poh",
                                 "POH access",
                                 RequirementState.VERIFIED,
                                 "Verified POH access"
                         ),
-                        new RequirementCheck(
+                        new EvidenceCheck(
                                 "planks",
                                 "Planks/materials",
                                 RequirementState.CHECK_NEEDED,
                                 "Need to confirm materials"
                         ),
-                        new RequirementCheck(
+                        new EvidenceCheck(
                                 "transport",
                                 "Transport",
                                 RequirementState.CHECK_NEEDED,

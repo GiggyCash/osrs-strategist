@@ -34,12 +34,12 @@ public class RecommendationCoverageCensusTest
             SessionIntent.AFK
     };
     private static final Scenario[] ACCOUNTS = {
-            new Scenario("F2P Main", MembershipStatus.F2P, 0),
-            new Scenario("P2P Main", MembershipStatus.P2P, 0),
-            new Scenario("Ironman", MembershipStatus.P2P, 1),
-            new Scenario("GIM", MembershipStatus.P2P, 4),
-            new Scenario("UIM", MembershipStatus.P2P, 2),
-            new Scenario("HCIM", MembershipStatus.P2P, 3)
+            new Scenario("F2P Main", Membership.F2P, 0),
+            new Scenario("P2P Main", Membership.P2P, 0),
+            new Scenario("Ironman", Membership.P2P, 1),
+            new Scenario("GIM", Membership.P2P, 4),
+            new Scenario("UIM", Membership.P2P, 2),
+            new Scenario("HCIM", Membership.P2P, 3)
     };
     private static final EnumSet<Skill> INDIRECT_ONLY =
             EnumSet.of(Skill.HITPOINTS);
@@ -385,7 +385,7 @@ public class RecommendationCoverageCensusTest
             {
                 RecommendationEngine engine = recommendationEngine(
                         account.membership);
-                StrategyEngine strategy = new StrategyEngine(
+                StrategyEngine strategy = TestFixtures.strategyEngine(
                         engine, null, null, null, policy,
                         new RecommendationIntelligenceService());
                 for (int level : LEVELS)
@@ -484,7 +484,7 @@ public class RecommendationCoverageCensusTest
         {
             RecommendationEngine recommendationEngine = recommendationEngine(
                     account.membership);
-            StrategyEngine strategyEngine = new StrategyEngine(
+            StrategyEngine strategyEngine = TestFixtures.strategyEngine(
                     recommendationEngine, null, null, null, policy,
                     new RecommendationIntelligenceService());
             for (int level : LEVELS)
@@ -598,7 +598,7 @@ public class RecommendationCoverageCensusTest
     private static boolean hasOutstandingPreparation(TrainingPlan plan)
     {
         if (plan == null) return false;
-        for (RequirementCheck check : plan.getRequirementChecks())
+        for (EvidenceCheck check : plan.getRequirementChecks())
         {
             if (check.getState() == RequirementState.CHECK_NEEDED)
                 return true;
@@ -649,13 +649,13 @@ public class RecommendationCoverageCensusTest
     }
 
     private static RecommendationEngine recommendationEngine(
-            MembershipStatus membership)
+            Membership membership)
     {
         RuneLiteSkillActionCatalog actions =
                 new CensusSkillActionCatalog(membership);
         RecommendationGuidanceService guidance =
                 new RecommendationGuidanceService(
-                        new AdaptiveMilestoneGuidanceService(
+                        TestFixtures.adaptiveMilestoneGuidanceService(
                                 actions,
                                 new MethodExecutionProfileCatalog(),
                                 new SkillingXpModifierService()),
@@ -664,20 +664,18 @@ public class RecommendationCoverageCensusTest
                                 actions,
                                 new UniversalActionRecipeResolver(),
                                 new SkillingXpModifierService(),
-                                new AccountResourcePlanner()));
-        return new RecommendationEngine(new TrainingMethodSelector(
+                                TestFixtures.accountResourcePlanner()));
+        return TestFixtures.recommendationEngine(new TrainingMethodSelector(
                 new TrainingMethodDatabase(),
-                new RequirementEvidenceEngine(
-                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
-                        new AgilityAccessEvaluator(new AgilityCourseCatalog())),
+                new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
                 new ExpandedTrainingMethodCatalog(),
                 new F2pBaselineMethodCatalog(),
                 new TrainingMethodPolicy()), guidance);
     }
 
-    private static StrategyEngine strategyEngine(MembershipStatus membership)
+    private static StrategyEngine strategyEngine(Membership membership)
     {
-        return new StrategyEngine(recommendationEngine(membership), null, null, null,
+        return TestFixtures.strategyEngine(recommendationEngine(membership), null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
     }
@@ -692,9 +690,9 @@ public class RecommendationCoverageCensusTest
     private static final class CensusSkillActionCatalog
             extends RuneLiteSkillActionCatalog
     {
-        private final MembershipStatus membership;
+        private final Membership membership;
 
-        private CensusSkillActionCatalog(MembershipStatus membership)
+        private CensusSkillActionCatalog(Membership membership)
         {
             this.membership = membership;
         }
@@ -739,7 +737,7 @@ public class RecommendationCoverageCensusTest
                 scenario.name, 10_000L + scenario.type, scenario.type,
                 AccountMode.fromTypeCode(scenario.type).name(),
                 scenario.membership,
-                scenario.membership == MembershipStatus.P2P ? 1 : 0,
+                scenario.membership == Membership.P2P ? 1 : 0,
                 totalLevel, totalXp, levels, xp);
         List<ItemState> items = prepared
                 ? AccountMode.fromTypeCode(scenario.type)
@@ -757,14 +755,14 @@ public class RecommendationCoverageCensusTest
             builder.combatEvidence(new CombatEvidenceSnapshot(0,
                     Collections.emptySet(), false, false, false));
         }
-        if (scenario.membership == MembershipStatus.P2P)
+        if (scenario.membership == Membership.P2P)
         {
-            Map<String, CapabilityState> tools = new HashMap<>();
+            Map<String, Capability> tools = new HashMap<>();
             if (prepared)
             {
-                tools.put("rake", CapabilityState.VERIFIED);
-                tools.put("dibber", CapabilityState.VERIFIED);
-                tools.put("spade", CapabilityState.VERIFIED);
+                tools.put("rake", Capability.VERIFIED);
+                tools.put("dibber", Capability.VERIFIED);
+                tools.put("spade", Capability.VERIFIED);
             }
             builder.farming(new FarmingSnapshot(
                     new HashSet<>(Collections.singletonList("falador")),
@@ -783,10 +781,10 @@ public class RecommendationCoverageCensusTest
                                 SailingSnapshot.ACTIVITY_SEA_CHARTING,
                                 SailingSnapshot.ACTIVITY_BOAT_OWNED)),
                         Confidence.VERIFIED));
-                Map<String, CapabilityState> poh = new HashMap<>();
-                poh.put("room:parlour", CapabilityState.VERIFIED);
-                poh.put("room:kitchen", CapabilityState.VERIFIED);
-                builder.poh(new PohSnapshot(CapabilityState.VERIFIED, poh));
+                Map<String, Capability> poh = new HashMap<>();
+                poh.put("room:parlour", Capability.VERIFIED);
+                poh.put("room:kitchen", Capability.VERIFIED);
+                builder.poh(new PohSnapshot(Capability.VERIFIED, poh));
             }
         }
         if (scenario.type != 2)
@@ -896,10 +894,10 @@ public class RecommendationCoverageCensusTest
     private static final class Scenario
     {
         private final String name;
-        private final MembershipStatus membership;
+        private final Membership membership;
         private final int type;
 
-        private Scenario(String name, MembershipStatus membership, int type)
+        private Scenario(String name, Membership membership, int type)
         {
             this.name = name;
             this.membership = membership;

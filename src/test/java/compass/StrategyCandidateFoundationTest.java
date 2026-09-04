@@ -104,7 +104,7 @@ public class StrategyCandidateFoundationTest
         AccountSnapshot base = account();
         AccountSnapshot selected = new AccountSnapshot("Test", 99L,
                 mode == AccountMode.ULTIMATE_IRONMAN ? 4 : 0, mode.name(),
-                MembershipStatus.P2P, 1, 1, 0L,
+                Membership.P2P, 1, 1, 0L,
                 base.getSkillLevels(), base.getSkillExperience());
         return new StrategyContext(GameData.builder(selected)
                 .clue(clue).build(), StrategyMode.BALANCED,
@@ -121,8 +121,6 @@ public class StrategyCandidateFoundationTest
             levels.put(skill, 1);
             xp.put(skill, 0);
         }
-        return new AccountSnapshot(
-                "Test", 0, "Main", MembershipStatus.P2P,
-                1, 1, 0L, levels, xp);
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.P2P, 1, 1, 0L, levels, xp);
     }
 }

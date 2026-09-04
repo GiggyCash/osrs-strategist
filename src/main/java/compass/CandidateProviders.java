@@ -1,10 +1,12 @@
 package compass;
+import lombok.*;
+import static net.runelite.api.Skill.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import java.util.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.Experience;
-import net.runelite.api.Skill;
+import javax.inject.*;
+import net.runelite.api.*;
 import static compass.Text.get;
 
 /** Provider of verified non-skill work that may compete with skill training. */
@@ -20,7 +22,7 @@ interface CandidateProvider
      */
     default Set<String> supersededCandidateIds()
     {
-        return Collections.emptySet();
+        return emptySet();
     }
 }
 
@@ -40,12 +42,12 @@ class ClueCandidateProvider implements CandidateProvider
         List<Recommendation> result = new ArrayList<>();
         if (context == null || context.data() == null) return result;
         var clue = context.data().clue();
-        if (clue == null || !clue.isCluePresent()) return result;
+        if (clue == null || !clue.cluePresent) return result;
 
-        var tier = ClueTier.fromText(clue.getClueType());
+        var tier = ClueTier.fromText(clue.clueType);
         var account = context.data().account();
-        MembershipStatus membership = account == null
-                ? MembershipStatus.UNKNOWN
+        Membership membership = account == null
+                ? Membership.UNKNOWN
                 : account.membership();
         if (!tier.isAvailableFor(membership)) return result;
 
@@ -55,12 +57,12 @@ class ClueCandidateProvider implements CandidateProvider
         var preferences = context.preferenceProfile();
         if (preferences.isOnCooldown(id)) return result;
 
-        long age = Math.max(0L,
+        long age = max(0L,
                 System.currentTimeMillis() - clue.getFirstSeenAtMillis());
         var ageHours = age / 3_600_000.0;
         double score = 39.0
                 + tier.getPriorityBonus()
-                + Math.min(15.0, ageHours * 0.5)
+                + min(15.0, ageHours * 0.5)
                 + preferences.weightFor(id) * 10.0;
 
         if (context.collectionist()) score += 6.0;
@@ -92,7 +94,7 @@ class ClueCandidateProvider implements CandidateProvider
 
         boolean hardcore = context.accountMode() == AccountMode.HARDCORE_IRONMAN
                 || context.accountMode() == AccountMode.HARDCORE_GROUP_IRONMAN;
-        boolean wildernessHold = step != null && step.isWilderness()
+        boolean wildernessHold = step != null && step.wilderness
                 && (!context.allowsWilderness() || hardcore);
         if (wildernessHold)
         {
@@ -123,7 +125,7 @@ class ClueCandidateProvider implements CandidateProvider
                     context.accountMode() == AccountMode.ULTIMATE_IRONMAN
                             ? get(140)
                             : get(141),
-                    supplies(step), step.getLocation(),
+                    supplies(step), step.location,
                     get(133));
             confidence = Confidence.CHECK_NEEDED;
         }
@@ -134,7 +136,7 @@ class ClueCandidateProvider implements CandidateProvider
             candidateId = step.requiresPreparation()
                     ? get(1645) : id;
             guidance = new Guidance(step.getAction(),
-                    supplies(step), step.getLocation(), note(step));
+                    supplies(step), step.location, note(step));
             // RuneLite proves the step, not every quest/access requirement.
             // Beginner steps are the only F2P-safe tier and can lead when no
             // additional setup, combat, light or Wilderness evidence remains.
@@ -152,14 +154,14 @@ class ClueCandidateProvider implements CandidateProvider
                 confidence,
                 guidance,
                 step != null && step.hasEnemy()
-                        ? SafetyEvidence.potentiallyIrreversible(
+                        ? Safety.potentiallyIrreversible(
                                 tier == ClueTier.BEGINNER)
-                        : SafetyEvidence.harmless(
+                        : Safety.harmless(
                                 tier == ClueTier.BEGINNER),
                 StrategicValue.builder()
                         .accountModeFit(context.accountMode()
                                 == AccountMode.ULTIMATE_IRONMAN ? -0.35 : 0.0)
-                        .riskBurden(step != null && (step.isWilderness()
+                        .riskBurden(step != null && (step.wilderness
                                 || step.hasEnemy()) ? 0.8 : 0.0)
                         .opportunityCost(context.intent()
                                 == SessionIntent.AFK ? 0.7 : 0.15)
@@ -174,7 +176,7 @@ class ClueCandidateProvider implements CandidateProvider
     private static String supplies(ClueStepSnapshot step)
     {
         if (step == null) return null;
-        List<String> values = new ArrayList<>(step.getItemRequirements());
+        List<String> values = new ArrayList<>(step.itemRequirements);
         if (step.isRequiresSpade()) values.add("Spade");
         if (step.isRequiresLight()) values.add("Light source");
         if (step.hasEnemy()) values.add(get(1365) + step.getEnemy());
@@ -189,7 +191,7 @@ class ClueCandidateProvider implements CandidateProvider
         if (step.hasStashUnit())
             values.add("STASH: " + display(step.getStashUnit())
                     + get(1366));
-        if (step.isWilderness()) values.add("Wilderness step");
+        if (step.wilderness) values.add("Wilderness step");
         return values.isEmpty() ? null : String.join(". ", values) + ".";
     }
 
@@ -206,7 +208,7 @@ class ClueCandidateProvider implements CandidateProvider
 class CollectionLogCandidateProvider implements CandidateProvider
 {
     @Override
-    public String getId() { return Text.get(1648); }
+    public String getId() { return get(1648); }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -229,7 +231,7 @@ class CollectionLogCandidateProvider implements CandidateProvider
             var id = "collection-log:" + slug(category);
             if (context.preferenceProfile().isOnCooldown(id)) continue;
             var percent = complete * 100.0 / total;
-            var score = 20.0 + Math.min(20.0, percent * 0.20);
+            var score = 20.0 + min(20.0, percent * 0.20);
             if (missing == 1) score += 14.0;
             else if (missing == 2) score += 9.0;
             else if (missing == 3) score += 5.0;
@@ -238,13 +240,13 @@ class CollectionLogCandidateProvider implements CandidateProvider
 
             result.add(new Recommendation(
                     id,
-                    Text.get(1649) + category,
-                    complete + "/" + total + Text.get(1369)
-                            + missing + Text.get(200),
+                    get(1649) + category,
+                    complete + "/" + total + get(1369)
+                            + missing + get(200),
                     score,
                     Confidence.CHECK_NEEDED,
                     null,
-                    SafetyEvidence.unknown()
+                    Safety.unknown()
             ));
         }
 
@@ -268,7 +270,7 @@ class CombatAchievementCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return Text.get(1650);
+        return get(1650);
     }
 
     @Override
@@ -295,10 +297,10 @@ class CombatAchievementCandidateProvider implements CandidateProvider
         var next = snapshot.nextRewardTier();
         if (next == null) return result;
 
-        var id = Text.get(1651) + next.name().toLowerCase();
+        var id = get(1651) + next.name().toLowerCase();
         if (context.preferenceProfile().isOnCooldown(id)) return result;
 
-        var gap = Math.max(0, next.getRewardPoints() - snapshot.getEarnedPoints());
+        var gap = max(0, next.getRewardPoints() - snapshot.getEarnedPoints());
         var score = 26.0;
         if (gap <= 20) score += 17.0;
         else if (gap <= 75) score += 10.0;
@@ -311,14 +313,14 @@ class CombatAchievementCandidateProvider implements CandidateProvider
 
         result.add(new Recommendation(
                 id,
-                Text.get(1367) + pretty(next.name()),
-                Text.get(1368) + gap + " point"
+                get(1367) + pretty(next.name()),
+                get(1368) + gap + " point"
                         + (gap == 1 ? "" : "s")
-                        + Text.get(131),
+                        + get(131),
                 score,
                 Confidence.CHECK_NEEDED,
                 null,
-                SafetyEvidence.potentiallyIrreversible(false)
+                Safety.potentiallyIrreversible(false)
         ));
         return result;
     }
@@ -371,7 +373,7 @@ class DiaryCandidateProvider implements CandidateProvider
             var score = tierScore(next);
             if (context.goal() == GoalType.DIARY_CAPE) score += 20.0;
             var observedTasks = diaries.completedIn(region);
-            score += Math.min(8.0, observedTasks * 0.15);
+            score += min(8.0, observedTasks * 0.15);
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
             var tierTasks = taskCatalog.forTier(region, next);
@@ -397,7 +399,7 @@ class DiaryCandidateProvider implements CandidateProvider
                                 get(207),
                                 get(1360) + region + ".",
                                 get(208)),
-                        SafetyEvidence.harmless(false)
+                        Safety.harmless(false)
                 ));
                 continue;
             }
@@ -416,7 +418,7 @@ class DiaryCandidateProvider implements CandidateProvider
                             requirementSummary(ready),
                             region + get(210),
                             get(211)),
-                    SafetyEvidence.potentiallyIrreversible(false)
+                    Safety.potentiallyIrreversible(false)
             ));
         }
 
@@ -440,7 +442,7 @@ class DiaryCandidateProvider implements CandidateProvider
     {
         var account = context.data().account();
         var quests = context.data().quests();
-        for (DiaryTaskRequirement requirement : task.getRequirements())
+        for (DiaryTaskRequirement requirement : task.requirements)
         {
             switch (requirement.getKind())
             {
@@ -468,7 +470,7 @@ class DiaryCandidateProvider implements CandidateProvider
     private static String requirementSummary(DiaryTaskDefinition task)
     {
         List<String> values = new ArrayList<>();
-        for (DiaryTaskRequirement requirement : task.getRequirements())
+        for (DiaryTaskRequirement requirement : task.requirements)
         {
             if (requirement.getKind() == DiaryTaskRequirement.Kind.SKILL)
                 values.add(requirement.getLevel() + " "
@@ -510,20 +512,13 @@ class DiaryCandidateProvider implements CandidateProvider
 
 /** Surfaces a practical next gear tier without pretending a universal BIS exists. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class GearCandidateProvider implements CandidateProvider
 {
     private final GearProgressionCatalog catalog;
     private final GearAcquisitionCatalog acquisitionCatalog;
     private final ContextualGearDecisionService decisionService =
             new ContextualGearDecisionService();
-
-    @Inject
-    public GearCandidateProvider(GearProgressionCatalog catalog,
-            GearAcquisitionCatalog acquisitionCatalog)
-    {
-        this.catalog = catalog;
-        this.acquisitionCatalog = acquisitionCatalog;
-    }
 
     public GearCandidateProvider(GearProgressionCatalog catalog)
     {
@@ -544,28 +539,28 @@ class GearCandidateProvider implements CandidateProvider
         var mode = context.accountMode();
         ItemIndex items = new ItemIndex(context.data(),
                 context.usesGroupStorage());
-        var f2pSafeOnly = account.membership() != MembershipStatus.P2P;
+        var f2pSafeOnly = account.membership() != Membership.P2P;
         var primaryStyle = primaryStyle(account);
         var targetTier = targetTier(account, f2pSafeOnly);
 
         for (GearProgressionEntry entry : catalog.all())
         {
             if (!ContentAccessRules.isContentAvailable(
-                    account.membership(), entry.isFreeToPlay())) continue;
-            if (!f2pSafeOnly && entry.getTier() == GearBudgetTier.F2P) continue;
+                    account.membership(), entry.freeToPlay)) continue;
+            if (!f2pSafeOnly && entry.tier == GearBudgetTier.F2P) continue;
 
             // A legal item on a Main can still be an account-ending suggestion
             // for a pure. Build policy is checked before style/tier ranking.
             if (!AccountBuildPolicy.allowsGearEntry(account, entry)) continue;
 
-            if (entry.getStyle() != primaryStyle
+            if (entry.style != primaryStyle
                     && !(context.goal() == GoalType.RAID_READY
-                    && entry.getStyle() == CombatStyle.HYBRID)) continue;
-            if (entry.getTier() != targetTier
+                    && entry.style == CombatStyle.HYBRID)) continue;
+            if (entry.tier != targetTier
                     && !(context.goal() == GoalType.RAID_READY
-                    && entry.getStyle() == CombatStyle.HYBRID)) continue;
-            if (mode.isIronLike() && !entry.isSelfSourceFriendly()) continue;
-            if (mode == AccountMode.ULTIMATE_IRONMAN && !entry.isUimFriendly()) continue;
+                    && entry.style == CombatStyle.HYBRID)) continue;
+            if (mode.isIronLike() && !entry.selfSourceFriendly) continue;
+            if (mode == AccountMode.ULTIMATE_IRONMAN && !entry.uimFriendly) continue;
             if ((mode == AccountMode.HARDCORE_IRONMAN
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                     && !entry.isHardcoreSafe()) continue;
@@ -575,26 +570,26 @@ class GearCandidateProvider implements CandidateProvider
             var score = 23.0;
             if (context.goal() == GoalType.GEAR_TARGET) score += 25.0;
             if (context.goal() == GoalType.RAID_READY
-                    && entry.getStyle() == CombatStyle.HYBRID) score += 22.0;
+                    && entry.style == CombatStyle.HYBRID) score += 22.0;
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
             var build = AccountBuildPolicy.effectiveBuild(account);
-            String buildNote = build == RestrictedBuildType.STANDARD
+            String buildNote = build == BuildType.STANDARD
                     ? ""
                     : get(1289) + AccountBuildPolicy.label(account) + ".";
             Guidance guidance = acquisitionGuidance(entry, mode,
                     items, context);
-            ContextualGearAssessment assessment = decisionService.assess(entry,
+            GearAssessment assessment = decisionService.assess(entry,
                     context);
-            ContextualGearDecision practical = assessment.get(
-                    GearDecisionKind.BEST_PRACTICAL_UPGRADE);
-            ContextualGearDecision targetBest = assessment.get(
-                    GearDecisionKind.TARGET_SPECIFIC_BEST);
+            GearDecision practical = assessment.get(
+                    GearAspect.BEST_PRACTICAL_UPGRADE);
+            GearDecision targetBest = assessment.get(
+                    GearAspect.TARGET_SPECIFIC_BEST);
 
             result.add(new Recommendation(
                     id,
-                    "Gear path: " + pretty(entry.getTier()) + " " + pretty(entry.getStyle()),
-                    entry.getWeaponGuidance() + ". " + entry.getNote()
+                    "Gear path: " + pretty(entry.tier) + " " + pretty(entry.style),
+                    entry.getWeaponGuidance() + ". " + entry.note
                             + buildNote
                             + get(1290)
                             + practical.getValue() + get(1291)
@@ -602,7 +597,7 @@ class GearCandidateProvider implements CandidateProvider
                     score,
                     Confidence.CHECK_NEEDED,
                     guidance,
-                    SafetyEvidence.verifiedSafe(entry.isFreeToPlay())
+                    Safety.verifiedSafe(entry.freeToPlay)
             ));
         }
 
@@ -660,15 +655,15 @@ class GearCandidateProvider implements CandidateProvider
                 : get(1295) + route.getSteps().get(0).getTarget()
                         + get(254);
         return new Guidance(action, supplies, location,
-                entry.getNote() + (route == null ? "" : " " + route.getValueRule()));
+                entry.note + (route == null ? "" : " " + route.getValueRule()));
     }
 
     private static GearBudgetTier targetTier(AccountSnapshot account, boolean f2p)
     {
         if (f2p) return GearBudgetTier.F2P;
-        int combatPeak = Math.max(
-                Math.max(account.level(Skill.ATTACK), account.level(Skill.STRENGTH)),
-                Math.max(account.level(Skill.RANGED), account.level(Skill.MAGIC)));
+        int combatPeak = max(
+                max(account.level(ATTACK), account.level(STRENGTH)),
+                max(account.level(Skill.RANGED), account.level(Skill.MAGIC)));
         if (combatPeak >= 95) return GearBudgetTier.BIS;
         if (combatPeak >= 85) return GearBudgetTier.HIGH_END;
         if (combatPeak >= 70) return GearBudgetTier.MIDGAME;
@@ -678,8 +673,8 @@ class GearCandidateProvider implements CandidateProvider
     private static CombatStyle primaryStyle(AccountSnapshot account)
     {
         var build = AccountBuildPolicy.effectiveBuild(account);
-        if (build == RestrictedBuildType.DEFENCE_PURE
-                || build == RestrictedBuildType.RANGE_TANK)
+        if (build == BuildType.DEFENCE_PURE
+                || build == BuildType.RANGE_TANK)
         {
             if (account.level(Skill.RANGED) > 1)
             {
@@ -687,8 +682,8 @@ class GearCandidateProvider implements CandidateProvider
             }
         }
 
-        int melee = Math.max(account.level(Skill.ATTACK),
-                account.level(Skill.STRENGTH));
+        int melee = max(account.level(ATTACK),
+                account.level(STRENGTH));
         var ranged = account.level(Skill.RANGED);
         var magic = account.level(Skill.MAGIC);
         if (ranged >= melee && ranged >= magic) return CombatStyle.RANGED;
@@ -743,7 +738,7 @@ class InfrastructureCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().account() == null) return result;
         var account = context.data().account();
-        if (account.membership() != MembershipStatus.P2P) return result;
+        if (account.membership() != Membership.P2P) return result;
 
         if (context.data().poh() == null)
         {
@@ -756,7 +751,7 @@ class InfrastructureCandidateProvider implements CandidateProvider
 
         for (InfrastructureMilestone definition : catalog.all())
         {
-            InfrastructureValueAssessment assessment = values.assess(
+            InfraAssessment assessment = values.assess(
                     definition.id, context);
             if (!assessment.canRecommendAcquisition()) continue;
             result.add(buildCandidate(definition, assessment, context,
@@ -783,7 +778,7 @@ class InfrastructureCandidateProvider implements CandidateProvider
                         get(310),
                         get(1425),
                         get(311)),
-                SafetyEvidence.harmless(false),
+                Safety.harmless(false),
                 StrategicValue.builder()
                         .infrastructureValue(modeValue)
                         .accountModeFit(modeValue)
@@ -793,12 +788,12 @@ class InfrastructureCandidateProvider implements CandidateProvider
 
     private static Recommendation buildCandidate(
             InfrastructureMilestone definition,
-            InfrastructureValueAssessment assessment,
+            InfraAssessment assessment,
             StrategyContext context,
             UimRecurringPressureAssessment pressure)
     {
-        double utility = assessment.getStrategicValue().ordinal()
-                / (double) StrategicPriority.CRITICAL.ordinal();
+        double utility = assessment.strategicValue.ordinal()
+                / (double) Priority.CRITICAL.ordinal();
         var score = 31.0 + utility * 26.0;
         if (context.accountMode() == AccountMode.ULTIMATE_IRONMAN)
             score += 8.0;
@@ -810,9 +805,9 @@ class InfrastructureCandidateProvider implements CandidateProvider
         if (context.mode() == StrategyMode.EFFICIENT) score += 2.0;
         boolean recurringRelief = pressure != null && pressure.isRepeated()
                 && (definition.getBenefits().containsKey(
-                        InfrastructureBenefit.INVENTORY_RELIEF)
+                        InfraBenefit.INVENTORY_RELIEF)
                 || definition.getBenefits().containsKey(
-                        InfrastructureBenefit.STORAGE));
+                        InfraBenefit.STORAGE));
         if (recurringRelief) score += 12.0;
 
         String modeReason = context.accountMode() == AccountMode.ULTIMATE_IRONMAN
@@ -835,7 +830,7 @@ class InfrastructureCandidateProvider implements CandidateProvider
                         definition.getAction(), materials(definition.id),
                         get(1426),
                         get(303)),
-                SafetyEvidence.skill(false, Skill.CONSTRUCTION),
+                Safety.skill(false, CONSTRUCTION),
                 StrategicValue.builder()
                         .infrastructureValue(utility)
                         .accountModeFit(context.accountMode()
@@ -884,6 +879,7 @@ class InfrastructureCandidateProvider implements CandidateProvider
 
 /** Converts verified minigame unlocks into useful progression candidates. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class MinigameCandidateProvider implements CandidateProvider
 {
     private final MinigameCatalog catalog;
@@ -893,16 +889,6 @@ class MinigameCandidateProvider implements CandidateProvider
     public MinigameCandidateProvider(MinigameCatalog catalog)
     {
         this(catalog, new MinigameSetupCatalog(), new ItemRequirementEvaluator());
-    }
-
-    @Inject
-    public MinigameCandidateProvider(MinigameCatalog catalog,
-            MinigameSetupCatalog setupCatalog,
-            ItemRequirementEvaluator itemEvaluator)
-    {
-        this.catalog = catalog;
-        this.setupCatalog = setupCatalog;
-        this.itemEvaluator = itemEvaluator;
     }
 
     @Override
@@ -925,21 +911,21 @@ class MinigameCandidateProvider implements CandidateProvider
             if (!snapshot.isUnlocked(definition.id)) continue;
             if (!definition.supports(mode)) continue;
             if (!ContentAccessRules.isContentAvailable(
-                    account.membership(), definition.isFreeToPlay())) continue;
-            if (definition.getPrimarySkill() != null
-                    && account.level(definition.getPrimarySkill())
+                    account.membership(), definition.freeToPlay)) continue;
+            if (definition.primarySkill != null
+                    && account.level(definition.primarySkill)
                     < definition.getMinimumLevel()) continue;
             if ((mode == AccountMode.HARDCORE_IRONMAN
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                    && definition.getRiskLevel() == RiskLevel.HIGH) continue;
+                    && definition.riskLevel == RiskLevel.HIGH) continue;
 
             var id = "minigame:" + definition.id;
             if (context.preferenceProfile().isOnCooldown(id)) continue;
             var score = 28.0;
-            if (definition.getRiskLevel() == RiskLevel.NONE) score += 4.0;
+            if (definition.riskLevel == RiskLevel.NONE) score += 4.0;
             if (context.mode() == StrategyMode.RELAXED
-                    && (definition.getAttention() == AttentionLevel.LOW
-                    || definition.getAttention() == AttentionLevel.AFK)) score += 6.0;
+                    && (definition.attention == AttentionLevel.LOW
+                    || definition.attention == AttentionLevel.AFK)) score += 6.0;
             if (context.intent() == SessionIntent.LONG_SESSION) score += 2.0;
             if (context.collectionist()) score += 4.0;
             score += context.preferenceProfile().weightFor(id) * 10.0;
@@ -955,10 +941,10 @@ class MinigameCandidateProvider implements CandidateProvider
                     : "forestry".equals(definition.id)
                             ? forestryGuidance(account, verified, itemResult)
                             : new Guidance(
-                            verified ? setup.getInstructions()
+                            verified ? setup.instructions
                                     : itemResult.getAction() + " before " + definition.getName() + ".",
-                            verified ? setup.getSupplies() : itemResult.getAction(),
-                            setup.getLocation(), definition.getRewardFocus() + ".");
+                            verified ? setup.supplies : itemResult.getAction(),
+                            setup.location, definition.getRewardFocus() + ".");
 
             result.add(new Recommendation(
                     id,
@@ -994,8 +980,8 @@ class MinigameCandidateProvider implements CandidateProvider
             AccountSnapshot account, boolean verified,
             ItemRequirementResult itemResult)
     {
-        var level = account.level(net.runelite.api.Skill.WOODCUTTING);
-        var f2p = account.membership() != MembershipStatus.P2P;
+        var level = account.level(Skill.WOODCUTTING);
+        var f2p = account.membership() != Membership.P2P;
         String tree;
         String location;
         if (level < 30)
@@ -1036,31 +1022,31 @@ class MinigameCandidateProvider implements CandidateProvider
                         + (uim ? get(349) : ""));
     }
 
-    private static SafetyEvidence safetyFor(MinigameDefinition definition)
+    private static Safety safetyFor(MinigameDefinition definition)
     {
-        if (definition.getRiskLevel() == RiskLevel.HIGH
-                || definition.getRiskLevel() == RiskLevel.IRREVERSIBLE)
-            return SafetyEvidence.potentiallyIrreversible(
-                    definition.isFreeToPlay());
+        if (definition.riskLevel == RiskLevel.HIGH
+                || definition.riskLevel == RiskLevel.IRREVERSIBLE)
+            return Safety.potentiallyIrreversible(
+                    definition.freeToPlay);
         if (definition.isCombatActivity())
-            return SafetyEvidence.potentiallyIrreversible(
-                    definition.isFreeToPlay());
-        if (definition.getPrimarySkill() != null)
-            return SafetyEvidence.skill(definition.isFreeToPlay(),
-                    definition.getPrimarySkill());
-        return SafetyEvidence.harmless(definition.isFreeToPlay());
+            return Safety.potentiallyIrreversible(
+                    definition.freeToPlay);
+        if (definition.primarySkill != null)
+            return Safety.skill(definition.freeToPlay,
+                    definition.primarySkill);
+        return Safety.harmless(definition.freeToPlay);
     }
 }
 
 /** Surfaces money/resource work only when cash pressure or a gear goal makes it relevant. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class MoneyMakingCandidateProvider implements CandidateProvider
 {
     private final MoneyMakingCatalog catalog;
 
     @Override
-    public String getId() { return Text.get(1801); }
+    public String getId() { return get(1801); }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -1074,23 +1060,23 @@ class MoneyMakingCandidateProvider implements CandidateProvider
         boolean explicitGearNeed = context.goal() == GoalType.GEAR_TARGET
                 || context.goal() == GoalType.RAID_READY;
         boolean observedCashPressure = economy != null
-                && economy.getConfidence() == Confidence.VERIFIED
-                && economy.getCoins() < 1_000_000L;
+                && economy.confidence == Confidence.VERIFIED
+                && economy.coins < 1_000_000L;
         if (!explicitGearNeed && !observedCashPressure) return result;
 
         var mode = context.accountMode();
         for (MoneyMakingDefinition method : catalog.forAccount(mode))
         {
             if (!ContentAccessRules.isContentAvailable(
-                    account.membership(), method.isFreeToPlay())) continue;
-            if (method.getPrimarySkill() != null
-                    && account.level(method.getPrimarySkill()) < method.getMinimumLevel()) continue;
-            if (method.isWilderness() && !context.allowsWilderness()) continue;
+                    account.membership(), method.freeToPlay)) continue;
+            if (method.primarySkill != null
+                    && account.level(method.primarySkill) < method.getMinimumLevel()) continue;
+            if (method.wilderness && !context.allowsWilderness()) continue;
             if ((mode == AccountMode.HARDCORE_IRONMAN
                     || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
-                    && (method.isWilderness()
-                    || method.getRiskLevel() == RiskLevel.HIGH
-                    || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)) continue;
+                    && (method.wilderness
+                    || method.riskLevel == RiskLevel.HIGH
+                    || method.riskLevel == RiskLevel.IRREVERSIBLE)) continue;
 
             var id = method.id;
             if (context.preferenceProfile().isOnCooldown(id)) continue;
@@ -1102,15 +1088,15 @@ class MoneyMakingCandidateProvider implements CandidateProvider
             var score = 25.0;
             if (observedCashPressure) score += 12.0;
             if (explicitGearNeed) score += 7.0;
-            if (method.getRiskLevel() == RiskLevel.NONE) score += 4.0;
-            if (method.getAttention() == AttentionLevel.AFK
+            if (method.riskLevel == RiskLevel.NONE) score += 4.0;
+            if (method.attention == AttentionLevel.AFK
                     && context.intent() == SessionIntent.AFK) score += 8.0;
-            if (method.getAttention() == AttentionLevel.LOW
+            if (method.attention == AttentionLevel.LOW
                     && context.mode() == StrategyMode.RELAXED) score += 5.0;
             score += context.preferenceProfile().weightFor(id) * 10.0;
 
             String priceNote = method.isRequiresLivePrices()
-                    ? Text.get(378)
+                    ? get(378)
                     : "";
             result.add(new Recommendation(
                     id,
@@ -1133,50 +1119,50 @@ class MoneyMakingCandidateProvider implements CandidateProvider
             MoneyMakingDefinition method, StrategyContext context)
     {
         if (method == null || context == null) return null;
-        if (!Text.get(1802).equals(method.id)) return null;
+        if (!get(1802).equals(method.id)) return null;
         var mode = context.accountMode();
         if (!mode.isIronLike()
                 || mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN
                 || context.data().account().level(
-                        net.runelite.api.Skill.AGILITY) < 60)
+                        Skill.AGILITY) < 60)
         {
             return null;
         }
         return new Guidance(
-                Text.get(379),
-                Text.get(380),
-                Text.get(381),
-                Text.get(382));
+                get(379),
+                get(380),
+                get(381),
+                get(382));
     }
 
     private static StrategicValue strategicValue(
             MoneyMakingDefinition method, AccountMode mode)
     {
-        if (method != null && Text.get(1802).equals(method.id)
+        if (method != null && get(1802).equals(method.id)
                 && mode != null && mode.isIronLike())
         {
             return StrategicValue.builder()
                     .accountModeFit(0.8)
                     .resourceFit(0.75)
                     .riskBurden(0.3)
-                    .evidence(Text.get(1803))
-                    .evidence(Text.get(1804))
+                    .evidence(get(1803))
+                    .evidence(get(1804))
                     .build();
         }
         return StrategicValue.neutral();
     }
 
-    private static SafetyEvidence safetyFor(MoneyMakingDefinition method)
+    private static Safety safetyFor(MoneyMakingDefinition method)
     {
-        if (method.getRiskLevel() == RiskLevel.HIGH
-                || method.getRiskLevel() == RiskLevel.IRREVERSIBLE)
-            return SafetyEvidence.potentiallyIrreversible(
-                    method.isFreeToPlay());
-        if (method.getPrimarySkill() != null)
-            return SafetyEvidence.skill(method.isFreeToPlay(),
-                    method.getPrimarySkill());
-        return SafetyEvidence.harmless(method.isFreeToPlay());
+        if (method.riskLevel == RiskLevel.HIGH
+                || method.riskLevel == RiskLevel.IRREVERSIBLE)
+            return Safety.potentiallyIrreversible(
+                    method.freeToPlay);
+        if (method.primarySkill != null)
+            return Safety.skill(method.freeToPlay,
+                    method.primarySkill);
+        return Safety.harmless(method.freeToPlay);
     }
 }
 
@@ -1196,7 +1182,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
         if (context == null || context.data() == null
                 || context.data().account() == null)
         {
-            return Collections.emptyList();
+            return emptyList();
         }
         return new UpgradeScan(context).run();
     }
@@ -1261,7 +1247,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
         private void add(String id, String title, String reason, double score,
                 Confidence confidence, Guidance guidance,
-                SafetyEvidence safety)
+                Safety safety)
         {
             result.add(new Recommendation(id, title, reason,
                     score + context.preferenceProfile().weightFor(id) * 10.0,
@@ -1305,14 +1291,14 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             supplies + (mode == AccountMode.ULTIMATE_IRONMAN
                                     ? get(454) : ""),
                             get(458), note),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void dragonScimitar()
         {
             var id = get(1836);
-            if (!members() || account.level(Skill.ATTACK) < 60
-                    || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
+            if (!members() || account.level(ATTACK) < 60
+                    || !AccountBuildPolicy.allowsSkill(account, ATTACK)
                     || !eligible(id) || !questComplete(get(1837))
                     || owns("Dragon scimitar", "Abyssal whip",
                             get(1838), get(1395))) return;
@@ -1325,7 +1311,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             setup + (cash ? get(1397) : get(465))
                                     + get(466),
                             get(467), get(468)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void avaDevice()
@@ -1351,23 +1337,23 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             replacement + (ready ? get(476)
                                     : get(477)),
                             get(478), get(479)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void fighterTorso()
         {
             var id = get(1843);
             var build = AccountBuildPolicy.effectiveBuild(account);
-            var defencePure = build == RestrictedBuildType.DEFENCE_PURE;
-            boolean protectedBuild = build == RestrictedBuildType.SKILLER
-                    || build == RestrictedBuildType.F2P_SKILLER
-                    || build == RestrictedBuildType.PRAYER_SKILLER
-                    || build == RestrictedBuildType.TEN_HITPOINTS;
-            if (!members() || account.level(Skill.DEFENCE) < 40
+            var defencePure = build == BuildType.DEFENCE_PURE;
+            boolean protectedBuild = build == BuildType.SKILLER
+                    || build == BuildType.F2P_SKILLER
+                    || build == BuildType.PRAYER_SKILLER
+                    || build == BuildType.TEN_HITPOINTS;
+            if (!members() || account.level(DEFENCE) < 40
                     || protectedBuild
-                    || (!defencePure && Math.max(
-                            account.level(Skill.ATTACK),
-                            account.level(Skill.STRENGTH)) < 40)
+                    || (!defencePure && max(
+                            account.level(ATTACK),
+                            account.level(STRENGTH)) < 40)
                     || !eligible(id)
                     || owns("Fighter torso", get(1844),
                             get(1845), get(1398),
@@ -1380,28 +1366,28 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     new Guidance(get(482), get(483)
                             + (defencePure ? get(480) : get(481)),
                             get(484), get(485)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void abyssalWhip()
         {
             var id = get(1846);
-            var attack = account.level(Skill.ATTACK);
+            var attack = account.level(ATTACK);
             if (!members() || attack < 70
-                    || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
+                    || !AccountBuildPolicy.allowsSkill(account, ATTACK)
                     || !eligible(id)
                     || owns("Abyssal whip", get(1847),
                             get(1848), get(1838),
                             get(1395), "Ghrazi rapier", "Osmumten's fang",
                             "Soulreaper axe", "Scythe of vitur")) return;
-            var slayer = account.level(Skill.SLAYER);
+            var slayer = account.level(SLAYER);
             if (mode.usesGrandExchange())
             {
                 add(id, get(1401), get(488), 41.0,
                         Confidence.CHECK_NEEDED,
                         new Guidance(get(489), get(490),
                                 "Grand Exchange.", get(491)),
-                        SafetyEvidence.verifiedSafe(false));
+                        Safety.verifiedSafe(false));
                 return;
             }
             if (slayer >= 85)
@@ -1410,28 +1396,28 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                         Confidence.CHECK_NEEDED,
                         new Guidance(get(493), get(494),
                                 get(495), get(496)),
-                        SafetyEvidence.verifiedSafe(false));
+                        Safety.verifiedSafe(false));
                 return;
             }
             if (!goalIs(GoalType.MAX, GoalType.SLAYER_85,
                     GoalType.GEAR_TARGET, GoalType.RAID_READY)) return;
             add(id, get(1402), get(498),
-                    Math.max(24.0, 42.0 - (85 - slayer) * 0.8),
+                    max(24.0, 42.0 - (85 - slayer) * 0.8),
                     Confidence.VERIFIED,
                     new Guidance(get(1403) + slayer + get(499),
                             get(500), get(501), get(502)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void dragonDefender()
         {
             var id = get(1849);
-            var attack = account.level(Skill.ATTACK);
-            var strength = account.level(Skill.STRENGTH);
+            var attack = account.level(ATTACK);
+            var strength = account.level(STRENGTH);
             if (!members() || !eligible(id)
-                    || account.level(Skill.DEFENCE) < 60 || attack < 60
-                    || !AccountBuildPolicy.allowsSkill(account, Skill.ATTACK)
-                    || !AccountBuildPolicy.allowsSkill(account, Skill.STRENGTH)
+                    || account.level(DEFENCE) < 60 || attack < 60
+                    || !AccountBuildPolicy.allowsSkill(account, ATTACK)
+                    || !AccountBuildPolicy.allowsSkill(account, STRENGTH)
                     || (attack < 99 && strength < 99 && attack + strength < 130)
                     || owns("Dragon defender", get(1404),
                             get(1850), get(1405))) return;
@@ -1441,7 +1427,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     Confidence.VERIFIED,
                     new Guidance(get(503), get(504),
                             get(505), get(506)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void barrowsGloves()
@@ -1456,14 +1442,14 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
             var price = elite ? 104_000L : 130_000L;
             var economy = data.economy();
             boolean known = economy != null
-                    && economy.getConfidence() == Confidence.VERIFIED;
-            var affordable = known && economy.getCoins() >= price;
+                    && economy.confidence == Confidence.VERIFIED;
+            var affordable = known && economy.coins >= price;
             String supplies = !known
                     ? get(509) + format(price) + " coins."
                     : !affordable
-                    ? "You have " + format(economy.getCoins())
+                    ? "You have " + format(economy.coins)
                             + get(1407) + format(price) + ". You are "
-                            + format(price - economy.getCoins()) + " coins short."
+                            + format(price - economy.coins) + " coins short."
                     : get(1408) + format(price) + get(1854);
             var score = 48.0;
             if (goalIs(GoalType.BARROWS_GLOVES)) score += 35.0;
@@ -1472,7 +1458,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     affordable ? Confidence.VERIFIED : Confidence.CHECK_NEEDED,
                     new Guidance(get(510), supplies, get(511),
                             elite ? get(512) : get(513)),
-                    SafetyEvidence.verifiedSafe(false));
+                    Safety.verifiedSafe(false));
         }
 
         private void bowfa()
@@ -1487,10 +1473,10 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
             var score = goalIs(GoalType.BOWFA) ? 78.0 : 54.0;
             if (seed)
             {
-                boolean selfSing = account.level(Skill.SMITHING) >= 82
-                        && account.level(Skill.CRAFTING) >= 82;
+                boolean selfSing = account.level(SMITHING) >= 82
+                        && account.level(CRAFTING) >= 82;
                 var needed = selfSing ? 100 : 150;
-                var shortfall = Math.max(0, needed - shards);
+                var shortfall = max(0, needed - shards);
                 add(id, get(1411), get(515), score,
                         shortfall == 0 ? Confidence.VERIFIED
                                 : Confidence.CHECK_NEEDED,
@@ -1503,7 +1489,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                                         + (shortfall == 1 ? "" : "s")
                                         + get(1415),
                                 get(522), get(523)),
-                        SafetyEvidence.potentiallyIrreversible(false));
+                        Safety.potentiallyIrreversible(false));
                 return;
             }
             if (mode.usesGrandExchange())
@@ -1512,7 +1498,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                         Confidence.CHECK_NEEDED,
                         new Guidance(get(525), get(526),
                                 get(527), get(528)),
-                        SafetyEvidence.potentiallyIrreversible(false));
+                        Safety.potentiallyIrreversible(false));
                 return;
             }
             boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
@@ -1527,22 +1513,22 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                             hardcore ? get(533)
                                     : deathStorage ? get(534)
                                     : get(535)),
-                    SafetyEvidence.potentiallyIrreversible(false));
+                    Safety.potentiallyIrreversible(false));
         }
 
         private void anglerOutfit()
         {
             var id = get(1855);
-            var fishing = account.level(Skill.FISHING);
+            var fishing = account.level(FISHING);
             if (!members() || fishing < 15 || !eligible(id)) return;
             int pieces = (owns("Angler hat", get(1214)) ? 1 : 0)
                     + (owns("Angler top", get(1856)) ? 1 : 0)
                     + (owns("Angler waders", get(1215)) ? 1 : 0)
                     + (owns("Angler boots", get(1216)) ? 1 : 0);
             if (pieces >= 4) return;
-            var xp = account.xp(Skill.FISHING);
+            var xp = account.xp(FISHING);
             if (xp <= 0) xp = Experience.getXpForLevel(fishing);
-            var remaining = Math.max(0, Experience.getXpForLevel(99) - xp);
+            var remaining = max(0, Experience.getXpForLevel(99) - xp);
             double score = 16.0 + (context.collectionist() ? 30.0 : 0.0)
                     + (fishing >= 82 ? 17.0 : 0.0)
                     + (goalIs(GoalType.MAX) && remaining >= 5_000_000
@@ -1555,7 +1541,7 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
                     Confidence.VERIFIED,
                     new Guidance(get(536), get(537), get(538),
                             get(1419) + pieces + get(539)),
-                    SafetyEvidence.skill(false, Skill.FISHING));
+                    Safety.skill(false, FISHING));
         }
 
         private boolean goalIs(GoalType... goals)
@@ -1571,8 +1557,8 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
         {
             var economy = data.economy();
             return economy != null
-                    && economy.getConfidence() == Confidence.VERIFIED
-                    && economy.getCoins() >= needed;
+                    && economy.confidence == Confidence.VERIFIED
+                    && economy.coins >= needed;
         }
     }
 
@@ -1584,15 +1570,10 @@ class ProgressionUpgradeCandidateProvider implements CandidateProvider
 
 /** Makes explicitly verified/realistic PvM assessments eligible for DO NEXT. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class PvmCandidateProvider implements CandidateProvider
 {
     private final PvmActivityCatalog catalog;
-
-    @Inject
-    public PvmCandidateProvider(PvmActivityCatalog catalog)
-    {
-        this.catalog = catalog;
-    }
 
     public PvmCandidateProvider()
     {
@@ -1617,14 +1598,14 @@ class PvmCandidateProvider implements CandidateProvider
         {
             var readiness = entry.getValue();
             if (readiness == null) continue;
-            if (readiness.getConfidence() == Confidence.BLOCKED) continue;
+            if (readiness.confidence == Confidence.BLOCKED) continue;
 
             var definition = catalog.match(entry.getKey());
             if (definition != null)
             {
                 if (account == null || !ContentAccessRules.isContentAvailable(
-                        account.membership(), definition.isFreeToPlay())) continue;
-                if (definition.isWilderness() && !context.allowsWilderness()) continue;
+                        account.membership(), definition.freeToPlay)) continue;
+                if (definition.wilderness && !context.allowsWilderness()) continue;
                 if ((mode == AccountMode.HARDCORE_IRONMAN
                         || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                         && !definition.isHardcoreSafeByDefault()) continue;
@@ -1649,13 +1630,13 @@ class PvmCandidateProvider implements CandidateProvider
             if (definition != null)
             {
                 if (definition.isRaid()) score += 4.0;
-                if (definition.getRiskLevel() == RiskLevel.HIGH
+                if (definition.riskLevel == RiskLevel.HIGH
                         && AccountModePolicy.isRiskSensitive(mode)) score -= 8.0;
             }
 
             var title = definition == null ? entry.getKey() : definition.getName();
-            String missing = readiness.getMissingRequirements().isEmpty()
-                    ? "" : String.join("; ", readiness.getMissingRequirements());
+            String missing = readiness.missingRequirements.isEmpty()
+                    ? "" : String.join("; ", readiness.missingRequirements);
             if (!ready && missing.trim().isEmpty()) continue;
             Guidance guidance = ready
                     ? readyGuidance(definition, title)
@@ -1674,15 +1655,15 @@ class PvmCandidateProvider implements CandidateProvider
                     ready ? Confidence.VERIFIED
                             : Confidence.CHECK_NEEDED,
                     guidance,
-                    SafetyEvidence.potentiallyIrreversible(
-                            definition.isFreeToPlay())
+                    Safety.potentiallyIrreversible(
+                            definition.freeToPlay)
             ));
         }
         return result;
     }
 
     private static Guidance readyGuidance(
-            PvmActivityDefinition definition, String title)
+            PvmActivity definition, String title)
     {
         if (definition != null && "pvm:tztok_jad".equals(definition.id))
         {
@@ -1722,7 +1703,7 @@ class PvmCandidateProvider implements CandidateProvider
                         + title + get(432));
     }
 
-    private static boolean progressionRelevant(PvmActivityDefinition definition,
+    private static boolean progressionRelevant(PvmActivity definition,
             StrategyContext context)
     {
         if (definition == null || context == null) return false;
@@ -1742,7 +1723,7 @@ class PvmCandidateProvider implements CandidateProvider
         SlayerSnapshot slayer = context.data() == null
                 ? null : context.data().slayer();
         if (slayer == null || !slayer.hasTask()) return false;
-        var task = Names.words(slayer.getTaskName());
+        var task = Names.words(slayer.taskName);
         var boss = Names.words(definition.getName());
         return boss.contains(task) || task.contains(boss)
                 || (id.endsWith("kraken") && task.contains("kraken"))
@@ -1776,13 +1757,6 @@ class QuestCandidateProvider implements CandidateProvider
     private final QuestRequirementResolver requirementResolver;
     private final GoalDependencyProvenanceService goalProvenanceService;
 
-    public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog)
-    {
-        this(priorityCatalog, new QuestKnowledgeCatalog(),
-                new QuestRequirementResolver(),
-                new GoalDependencyProvenanceService());
-    }
-
     @Inject
     public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog,
             QuestKnowledgeCatalog knowledgeCatalog,
@@ -1796,19 +1770,10 @@ class QuestCandidateProvider implements CandidateProvider
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
     }
 
-    /** Compatibility constructor retained for focused tests. */
-    public QuestCandidateProvider(QuestPriorityCatalog priorityCatalog,
-            QuestKnowledgeCatalog knowledgeCatalog,
-            QuestRequirementResolver requirementResolver)
-    {
-        this(priorityCatalog, knowledgeCatalog, requirementResolver,
-                new GoalDependencyProvenanceService());
-    }
-
     @Override
     public String getId()
     {
-        return Text.get(1910);
+        return get(1910);
     }
 
     @Override
@@ -1861,24 +1826,24 @@ class QuestCandidateProvider implements CandidateProvider
             boolean requiredForGoal = goalProvenanceService.isRequiredQuest(
                     context.goal(), questName, context);
             double score = requiredForGoal ? 42.0
-                    : baseScore(context.getQuestTolerance());
+                    : baseScore(context.questTolerance);
             String reason;
 
             if (status == QuestStatus.IN_PROGRESS)
             {
                 score += 12.0;
-                reason = Text.get(546);
+                reason = get(546);
             }
             else
             {
                 score -= 7.0;
-                reason = Text.get(547);
+                reason = get(547);
             }
 
             var build = AccountBuildPolicy.effectiveBuild(account);
-            if (build != RestrictedBuildType.STANDARD)
+            if (build != BuildType.STANDARD)
             {
-                reason += Text.get(548)
+                reason += get(548)
                         + AccountBuildPolicy.label(account) + " build.";
             }
 
@@ -1891,26 +1856,26 @@ class QuestCandidateProvider implements CandidateProvider
             if (neededPrerequisites.contains(Names.words(questName)))
             {
                 score += 24.0;
-                reason += Text.get(549);
+                reason += get(549);
             }
 
             if (requiredForGoal)
-                reason += Text.get(550);
+                reason += get(550);
 
             score += preferences.weightFor(id) * 10.0;
             score += preferences.timedScoreAdjustmentFor(id);
 
             Confidence confidence = resolution == null
                     ? Confidence.CHECK_NEEDED
-                    : resolution.getConfidence();
+                    : resolution.confidence;
             Guidance guidance = resolution == null ? null
-                    : resolution.getGuidance();
-            if (resolution != null) reason += " " + resolution.getReason() + ".";
+                    : resolution.guidance;
+            if (resolution != null) reason += " " + resolution.reason + ".";
 
             String title = (status == QuestStatus.IN_PROGRESS ? "Continue " : "Quest: ")
                     + questName;
             if (resolution != null
-                    && resolution.getConfidence() == Confidence.CHECK_NEEDED
+                    && resolution.confidence == Confidence.CHECK_NEEDED
                     && guidance != null && guidance.getAction() != null
                     && !guidance.getAction().trim().isEmpty())
                 title = "Prepare for " + questName + ": "
@@ -1923,8 +1888,8 @@ class QuestCandidateProvider implements CandidateProvider
                     confidence,
                     guidance,
                     resolution == null
-                            ? SafetyEvidence.unknown()
-                            : resolution.getSafetyEvidence()
+                            ? Safety.unknown()
+                            : resolution.safetyEvidence
             ));
         }
 
@@ -1963,7 +1928,7 @@ class QuestCandidateProvider implements CandidateProvider
             if (entry.getValue() == QuestStatus.COMPLETE) continue;
             var definition = knowledgeCatalog.definitionFor(entry.getKey());
             if (definition == null) continue;
-            for (String prerequisite : definition.getPrerequisites())
+            for (String prerequisite : definition.prerequisites)
                 if (quests.statusOf(prerequisite) != QuestStatus.COMPLETE)
                     result.add(Names.words(prerequisite));
         }
@@ -2028,14 +1993,14 @@ class ResourceDetourCandidateProvider
             List<Recommendation> result)
     {
         if (!constructionRelevant(context.goal())) return;
-        var construction = account.level(Skill.CONSTRUCTION);
+        var construction = account.level(CONSTRUCTION);
         if (construction >= 70) return;
 
         int planks = items.quantity(
                 "Plank", "Oak plank", "Teak plank", "Mahogany plank");
         if (planks >= 150) return;
 
-        var fishing = account.level(Skill.FISHING);
+        var fishing = account.level(FISHING);
         if (fishing >= 35 && fishing < 80)
         {
             var id = get(1957);
@@ -2061,16 +2026,16 @@ class ResourceDetourCandidateProvider
                         score,
                         Confidence.VERIFIED,
                         guidance,
-                        SafetyEvidence.skill(false, Skill.FISHING)));
+                        Safety.skill(false, FISHING)));
             }
         }
 
-        var firemaking = account.level(Skill.FIREMAKING);
+        var firemaking = account.level(FIREMAKING);
         int logs = items.quantity(
                 "Logs", "Oak logs", "Willow logs", "Maple logs",
                 "Yew logs", "Teak logs", "Mahogany logs");
         if (firemaking >= 50 && firemaking < 80 && logs < 100
-                && account.membership() == MembershipStatus.P2P
+                && account.membership() == Membership.P2P
                 && context.accountMode() != AccountMode.HARDCORE_IRONMAN
                 && context.accountMode() != AccountMode.HARDCORE_GROUP_IRONMAN)
         {
@@ -2078,7 +2043,7 @@ class ResourceDetourCandidateProvider
             if (!context.preferenceProfile().isOnCooldown(id))
             {
                 var score = 20.0;
-                if (account.level(Skill.WOODCUTTING) < 60) score += 2.0;
+                if (account.level(WOODCUTTING) < 60) score += 2.0;
                 if (context.intent() == SessionIntent.LONG_SESSION)
                     score += 3.0;
                 score += context.preferenceProfile().weightFor(id) * 10.0;
@@ -2096,7 +2061,7 @@ class ResourceDetourCandidateProvider
                         score,
                         Confidence.VERIFIED,
                         guidance,
-                        SafetyEvidence.skill(false, Skill.FIREMAKING)));
+                        Safety.skill(false, FIREMAKING)));
             }
         }
     }
@@ -2143,21 +2108,21 @@ class SlayerCandidateProvider implements CandidateProvider
     @Override
     public String getId()
     {
-        return Text.get(1969);
+        return get(1969);
     }
 
     @Override
     public Set<String> supersededCandidateIds()
     {
-        return Collections.singleton("skill:slayer");
+        return singleton("skill:slayer");
     }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         var result = strategist.assess(context);
-        if (result == null || result.getGuidance() == null)
-            return Collections.emptyList();
+        if (result == null || result.guidance == null)
+            return emptyList();
 
         var slayer = context.data().slayer();
         String id;
@@ -2167,47 +2132,47 @@ class SlayerCandidateProvider implements CandidateProvider
             id = "slayer:unlock:" + result.getRecommendedReward().id;
             title = "Unlock " + result.getRecommendedReward().getDisplayName();
         }
-        else if (result.getAssignmentState() == SlayerAssignmentState.UNKNOWN)
+        else if (result.getAssignmentState() == SlayerState.UNKNOWN)
         {
-            id = Text.get(1970);
-            title = Text.get(1460);
+            id = get(1970);
+            title = get(1460);
         }
-        else if (result.getAssignmentState() == SlayerAssignmentState.CHOICE_PENDING)
+        else if (result.getAssignmentState() == SlayerState.CHOICE_PENDING)
         {
-            id = Text.get(1971);
+            id = get(1971);
             title = result.getRecommendedOffer() == null
-                    ? Text.get(1461)
-                    : "Choose " + result.getRecommendedOffer().getTaskName()
+                    ? get(1461)
+                    : "Choose " + result.getRecommendedOffer().taskName
                             + " from Mortimer";
         }
-        else if (result.getAssignmentState() == SlayerAssignmentState.NO_TASK)
+        else if (result.getAssignmentState() == SlayerState.NO_TASK)
         {
             id = "slayer:get-task";
-            title = Text.get(1972) + result.getMaster().getDisplayName();
+            title = get(1972) + result.getMaster().getDisplayName();
         }
         else
         {
-            var task = slayer == null ? "Slayer task" : slayer.getTaskName();
+            var task = slayer == null ? "Slayer task" : slayer.taskName;
             var decision = result.getDecision();
             switch (decision)
             {
                 case BLOCK:
-                    id = Text.get(1973);
+                    id = get(1973);
                     title = "Block " + task;
                     break;
                 case SKIP:
-                    id = Text.get(1974);
+                    id = get(1974);
                     title = "Skip " + task;
                     break;
                 case PREP_FIRST:
-                    id = Text.get(1975);
+                    id = get(1975);
                     title = "Prepare for " + task;
                     break;
                 case ALTERNATIVE:
-                    id = Text.get(1976);
+                    id = get(1976);
                     title = result.getSelectedAlternativeName() != null
                             ? "Use " + result.getSelectedAlternativeName()
-                            : Text.get(1462);
+                            : get(1462);
                     break;
                 case DO:
                 default:
@@ -2217,18 +2182,18 @@ class SlayerCandidateProvider implements CandidateProvider
             }
         }
 
-        SafetyEvidence safety = result.getDecision()
-                == SlayerTaskDecision.DO
-                ? SafetyEvidence.skill(false, Skill.SLAYER)
-                : result.getDecision() == SlayerTaskDecision.ALTERNATIVE
+        Safety safety = result.getDecision()
+                == SlayerDecision.DO
+                ? Safety.skill(false, SLAYER)
+                : result.getDecision() == SlayerDecision.ALTERNATIVE
                     && result.getSelectedAlternativeName() != null
-                    ? SafetyEvidence.potentiallyIrreversible(false)
-                    : SafetyEvidence.verifiedSafe(false);
+                    ? Safety.potentiallyIrreversible(false)
+                    : Safety.verifiedSafe(false);
         StrategicValue strategicValue = strategicValue(result,
                 context);
-        return Collections.singletonList(new Recommendation(id, title,
-                result.getReason(), result.getScore(), result.getConfidence(),
-                result.getGuidance(), safety, strategicValue));
+        return singletonList(new Recommendation(id, title,
+                result.reason, result.score, result.confidence,
+                result.guidance, safety, strategicValue));
     }
 
     private static StrategicValue strategicValue(
@@ -2236,23 +2201,23 @@ class SlayerCandidateProvider implements CandidateProvider
     {
         StrategicValue.Builder builder =
                 StrategicValue.builder()
-                        .evidence(Text.get(1977));
+                        .evidence(get(1977));
         var task = result.getTaskProfile();
         if (task != null)
         {
             builder.resourceFit((task.getResourceValue() - 2.5) / 2.5)
-                    .riskBurden(task.getInherentRisk() == RiskLevel.NONE
-                            || task.getInherentRisk() == RiskLevel.LOW ? 0.0
-                            : task.getInherentRisk() == RiskLevel.MEDIUM
+                    .riskBurden(task.inherentRisk == RiskLevel.NONE
+                            || task.inherentRisk == RiskLevel.LOW ? 0.0
+                            : task.inherentRisk == RiskLevel.MEDIUM
                                     ? 0.5 : 1.0)
-                    .setupReuse(Math.max(0.0,
-                            1.0 - task.getSetupBurden() / 5.0));
+                    .setupReuse(max(0.0,
+                            1.0 - task.setupBurden / 5.0));
         }
         if (context != null && context.goal() == GoalType.SLAYER_85)
             builder.unlockValue(1.0);
         if (result.getRecommendedReward() != null)
             builder.unlockValue(1.0).infrastructureValue(0.6)
-                    .evidence(Text.get(1978));
+                    .evidence(get(1978));
         return builder.build();
     }
 }

@@ -71,7 +71,7 @@ public class UimRecurringPressureServiceTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Pressure", 404L, 2,
-                "Ultimate Ironman", MembershipStatus.P2P, 1, 1, 0L,
+                "Ultimate Ironman", Membership.P2P, 1, 1, 0L,
                 levels, xp);
         List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 24; slot++)
@@ -103,7 +103,7 @@ public class UimRecurringPressureServiceTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Pressure", 505L, 2,
-                "Ultimate Ironman", MembershipStatus.P2P, 1, 1, 0L,
+                "Ultimate Ironman", Membership.P2P, 1, 1, 0L,
                 levels, xp);
         List<ItemState> inventory = new ArrayList<>();
         for (int slot = 0; slot < 28; slot++)

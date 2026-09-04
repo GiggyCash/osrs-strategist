@@ -61,14 +61,6 @@ public class StrategyDataBundleTest
             experience.put(skill, 0);
         }
 
-        return new AccountSnapshot(
-                "Test",
-                0,
-                "Main",
-                24,
-                0L,
-                levels,
-                experience
-        );
+        return new AccountSnapshot("Test", 0L, 0, "Main", Membership.UNKNOWN, 0, 24, 0L, levels, experience);
     }
 }

@@ -1,9 +1,9 @@
 package compass;
+import static java.util.Collections.*;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import static compass.Text.get;
+
+import com.google.gson.*;
 import java.util.*;
 
 /** Explicit profile JSON decoding without plugin-side reflection or TypeToken. */
@@ -14,7 +14,7 @@ final class ProfileJsonCodec
     static Map<String, Double> doubles(Gson gson, String json)
     {
         var object = object(gson, json);
-        if (object == null) return Collections.emptyMap();
+        if (object == null) return emptyMap();
         Map<String, Double> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
             if (number(entry.getValue()))
@@ -28,7 +28,7 @@ final class ProfileJsonCodec
     static Map<String, Long> longs(Gson gson, String json)
     {
         var object = object(gson, json);
-        if (object == null) return Collections.emptyMap();
+        if (object == null) return emptyMap();
         Map<String, Long> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
             if (number(entry.getValue()))
@@ -36,28 +36,11 @@ final class ProfileJsonCodec
         return result;
     }
 
-    static Set<Integer> integers(Gson gson, String json)
-    {
-        try
-        {
-            var array = gson.fromJson(json, JsonArray.class);
-            if (array == null) return Collections.emptySet();
-            Set<Integer> result = new LinkedHashSet<>();
-            for (JsonElement value : array)
-                if (number(value)) result.add(value.getAsInt());
-            return result;
-        }
-        catch (RuntimeException ignored)
-        {
-            return Collections.emptySet();
-        }
-    }
-
     static Map<String, TimedScoreAdjustment> timedAdjustments(
             Gson gson, String json)
     {
         var object = object(gson, json);
-        if (object == null) return Collections.emptyMap();
+        if (object == null) return emptyMap();
         Map<String, TimedScoreAdjustment> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
         {
@@ -76,20 +59,20 @@ final class ProfileJsonCodec
             Gson gson, String json)
     {
         var object = object(gson, json);
-        if (object == null) return Collections.emptyMap();
+        if (object == null) return emptyMap();
         Map<String, ObservedFarmingPatchState> result = new LinkedHashMap<>();
         for (Map.Entry<String, JsonElement> entry : object.entrySet())
         {
             var value = asObject(entry.getValue());
             if (value == null || value.get("state") == null
-                    || !number(value.get(Text.get(1909)))) continue;
+                    || !number(value.get(get(1909)))) continue;
             try
             {
-                FarmingPatchCycleState state = FarmingPatchCycleState.valueOf(
+                PatchState state = PatchState.valueOf(
                         value.get("state").getAsString());
-                if (state != FarmingPatchCycleState.UNKNOWN)
+                if (state != PatchState.UNKNOWN)
                     result.put(entry.getKey(), new ObservedFarmingPatchState(
-                            state, value.get(Text.get(1909)).getAsLong()));
+                            state, value.get(get(1909)).getAsLong()));
             }
             catch (IllegalArgumentException ignored)
             {

@@ -14,7 +14,7 @@ public class PvmActivityCatalogTest
     public void runeLiteBossCatalogProvidesBroadCurrentCoverage()
     {
         PvmActivityCatalog catalog = new PvmActivityCatalog();
-        List<PvmActivityDefinition> bosses = catalog.all();
+        List<PvmActivity> bosses = catalog.all();
         assertTrue("Expected broad boss coverage", bosses.size() > 30);
         assertNotNull(catalog.byId("pvm:obor"));
         assertNotNull(catalog.byId("pvm:bryophyta"));
@@ -29,9 +29,9 @@ public class PvmActivityCatalogTest
         assertTrue(catalog.byId("pvm:obor").isFreeToPlay());
         assertTrue(catalog.byId("pvm:bryophyta").isFreeToPlay());
         assertTrue(catalog.byId("pvm:brutus").isFreeToPlay());
-        PvmActivityDefinition scurrius = catalog.byId("pvm:scurrius");
+        PvmActivity scurrius = catalog.byId("pvm:scurrius");
         if (scurrius != null) assertFalse(scurrius.isFreeToPlay());
-        PvmActivityDefinition callisto = catalog.byId("pvm:callisto");
+        PvmActivity callisto = catalog.byId("pvm:callisto");
         if (callisto != null) assertTrue(callisto.isWilderness());
     }
 

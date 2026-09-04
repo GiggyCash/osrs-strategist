@@ -22,7 +22,7 @@ public class ResourceReadinessServiceTest
                 .build();
         ResourceRequirement requirement = new ResourceRequirement(
                 "test", "Alternatives", 3, 100, 101);
-        RequirementCheck check = service.evaluate(data, requirement);
+        EvidenceCheck check = service.evaluate(data, requirement);
         assertEquals(RequirementState.VERIFIED, check.getState());
         assertTrue(check.getEvidence().contains("3"));
     }
@@ -33,7 +33,7 @@ public class ResourceReadinessServiceTest
         GameData data = GameData.builder(null)
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
-        RequirementCheck check = service.evaluate(
+        EvidenceCheck check = service.evaluate(
                 data, new ResourceRequirement("test", "Thing", 1, 100));
         assertEquals(RequirementState.CHECK_NEEDED, check.getState());
         assertTrue(check.getEvidence().contains("bank has not been observed"));
@@ -45,10 +45,10 @@ public class ResourceReadinessServiceTest
         GameData data = GameData.builder(null)
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
-        RequirementCheck check = service.evaluate(
+        EvidenceCheck check = service.evaluate(
                 data,
                 new ResourceRequirement("test", "Rake", 1, 100),
-                CapabilityState.VERIFIED,
+                Capability.VERIFIED,
                 "Stored in Tool Leprechaun");
         assertEquals(RequirementState.VERIFIED, check.getState());
     }

@@ -17,7 +17,7 @@ public class UniversalActionRecipeResolverTest
     {
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.MAGIC, "Wind Strike", 5.5f), 25,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Air rune", 25);
@@ -29,7 +29,7 @@ public class UniversalActionRecipeResolverTest
     {
         UniversalActionRecipe bolt = resolver.resolve(
                 action(Skill.MAGIC, "Fire Bolt", 22.5f), 10,
-                MembershipStatus.F2P);
+                Membership.F2P);
         assertTrue(bolt.hasExactInputs());
         assertInput(bolt, "Air rune", 30);
         assertInput(bolt, "Fire rune", 40);
@@ -37,7 +37,7 @@ public class UniversalActionRecipeResolverTest
 
         UniversalActionRecipe blast = resolver.resolve(
                 action(Skill.MAGIC, "Fire Blast", 34.5f), 10,
-                MembershipStatus.F2P);
+                Membership.F2P);
         assertTrue(blast.hasExactInputs());
         assertInput(blast, "Air rune", 40);
         assertInput(blast, "Fire rune", 50);
@@ -62,7 +62,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.MAGIC, "High Level Alchemy", 65),
                 100,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertEquals(2, recipe.getInputs().size());
@@ -77,7 +77,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.PRAYER, "Big bones", 15),
                 250,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Big bones", 250);
@@ -89,7 +89,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.COOKING, "Meat pizza", 169),
                 50,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertFalse(recipe.hasExactInputs());
         assertTrue(recipe.getInputs().isEmpty());
@@ -101,7 +101,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.HERBLORE, "Prayer potion", 87.5f),
                 40,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Ranarr weed", 40);
@@ -115,7 +115,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.CRAFTING, "Leather body", 25),
                 80,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertEquals(1, recipe.getInputs().size());
@@ -128,7 +128,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.CRAFTING, "Opal ring", 10),
                 25,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Silver bar", 25);
@@ -142,7 +142,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.CRAFTING, "Sapphire ring", 40),
                 25,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Gold bar", 25);
@@ -156,7 +156,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.CRAFTING, "Tiara", 52.5f),
                 30,
-                MembershipStatus.F2P);
+                Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Silver bar", 30);
@@ -169,7 +169,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.FLETCHING, "Arrow shaft", 0.33f),
                 31,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Logs", 3);
@@ -182,7 +182,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.FLETCHING, "Ruby bolts", 6.3f),
                 100,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertFalse(recipe.hasExactInputs());
         assertTrue(recipe.getInputs().isEmpty());
@@ -194,7 +194,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.FIREMAKING, "Wintertodt", 100),
                 50,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertFalse(recipe.hasExactInputs());
         assertTrue(recipe.getInputs().isEmpty());
@@ -206,7 +206,7 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.SMITHING, "Rune platebody", 375),
                 Integer.MAX_VALUE,
-                MembershipStatus.P2P);
+                Membership.P2P);
 
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Runite bar", Integer.MAX_VALUE);
@@ -222,7 +222,7 @@ public class UniversalActionRecipeResolverTest
                 1,
                 xp,
                 "test",
-                MembershipStatus.F2P);
+                Membership.F2P);
     }
 
     private static void assertInput(

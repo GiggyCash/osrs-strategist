@@ -13,9 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class TrainingMethodSelectorTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(
-                    new TrainingMethodDatabase()
-            );
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
 
     @Test
     public void balancedHerbloreReturnsPlan()
@@ -74,15 +72,6 @@ public class TrainingMethodSelectorTest
             levels.put(skill, 60);
             xp.put(skill, Experience.getXpForLevel(60));
         }
-        return GameData.builder(new AccountSnapshot(
-                "Selector Test",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp)).build();
+        return GameData.builder(new AccountSnapshot("Selector Test", 0L, 0, "Main", Membership.P2P, 1, 1500, 0L, levels, xp)).build();
     }
 }

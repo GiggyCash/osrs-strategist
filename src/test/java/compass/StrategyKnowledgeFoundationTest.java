@@ -25,8 +25,8 @@ public class StrategyKnowledgeFoundationTest
     public void sourceRegistryCoversEveryStableSourceIdWithoutRuntimeNetworking()
     {
         StrategySourceRegistry registry = new StrategySourceRegistry();
-        assertEquals(StrategySourceId.values().length, registry.all().size());
-        for (StrategySourceId id : StrategySourceId.values())
+        assertEquals(Source.values().length, registry.all().size());
+        for (Source id : Source.values())
         {
             StrategySourceDefinition source = registry.get(id);
             assertNotNull(id.name(), source);
@@ -38,8 +38,8 @@ public class StrategyKnowledgeFoundationTest
             assertFalse(source.getDerivedStrategyFamilies().isEmpty());
         }
         assertEquals("CC BY-NC-SA 3.0",
-                registry.get(StrategySourceId.UIM_GENERAL).getLicense());
-        assertTrue(registry.get(StrategySourceId.PVM_STRATEGY).getUrl()
+                registry.get(Source.UIM_GENERAL).getLicense());
+        assertTrue(registry.get(Source.PVM_STRATEGY).getUrl()
                 .contains("Guide:Bossing_Ladder"));
     }
 
@@ -56,7 +56,7 @@ public class StrategyKnowledgeFoundationTest
 
         assertTrue(catalog.profileFor(gems.getMethod(), gems.getMetadata(),
                         AccountMode.IRONMAN).getSources()
-                .contains(StrategySourceId.IRONMAN_CRAFTING));
+                .contains(Source.IRONMAN_CRAFTING));
 
         CuratedTrainingMethod charter = new ExpandedTrainingMethodCatalog()
                 .methodsFor(Skill.CRAFTING).stream()
@@ -65,7 +65,7 @@ public class StrategyKnowledgeFoundationTest
                 .findFirst().orElseThrow(AssertionError::new);
         assertTrue(catalog.profileFor(charter.getMethod(),
                         charter.getMetadata(), AccountMode.ULTIMATE_IRONMAN)
-                .getSources().contains(StrategySourceId.UIM_CRAFTING));
+                .getSources().contains(Source.UIM_CRAFTING));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class StrategyKnowledgeFoundationTest
     @Test
     public void uimGeneratesLocalBronzeRouteBeforeRankingBankedBaseline()
     {
-        GameData data = data(2, MembershipStatus.F2P,
+        GameData data = data(2, Membership.F2P,
                 Collections.emptyList());
         TrainingPlan plan = selector.select(data, Skill.SMITHING, 1,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME, false,
@@ -137,7 +137,7 @@ public class StrategyKnowledgeFoundationTest
         assertNotNull(plan);
         assertEquals("smithing_f2p_uim_bronze",
                 plan.getMethod().getId());
-        assertEquals(MethodBankingBehavior.LOCAL_PROCESSING,
+        assertEquals(BankingMode.LOCAL_PROCESSING,
                 plan.getStrategyProfile().getBankingBehavior());
         assertTrue(plan.getWhyThisMethod().contains("without conventional banking"));
     }
@@ -151,11 +151,11 @@ public class StrategyKnowledgeFoundationTest
                     "Observed item " + slot, 1, slot));
 
         TrainingPlan emptyInventory = selector.select(
-                data(2, MembershipStatus.F2P, Collections.emptyList()),
+                data(2, Membership.F2P, Collections.emptyList()),
                 Skill.SMITHING, 1, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, false, false);
         TrainingPlan fullInventory = selector.select(
-                data(2, MembershipStatus.F2P, full), Skill.SMITHING, 1,
+                data(2, Membership.F2P, full), Skill.SMITHING, 1,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME, false,
                 false);
 
@@ -182,10 +182,10 @@ public class StrategyKnowledgeFoundationTest
                 Confidence.VERIFIED, 1, 2,
                 new Guidance("Smith bronze items.",
                         "Hammer and bronze bars.", "Varrock West anvils.",
-                        null, MethodBankingBehavior.CONVENTIONAL_BANK_LOOP),
-                SafetyEvidence.skill(true, Skill.SMITHING));
+                        null, BankingMode.CONVENTIONAL_BANK_LOOP),
+                Safety.skill(true, Skill.SMITHING));
 
-        StrategyContext uim = context(data(2, MembershipStatus.F2P,
+        StrategyContext uim = context(data(2, Membership.F2P,
                 Collections.emptyList()));
         Recommendation validated = new FinalExecutionPlanValidator()
                 .validate(recommendation, uim);
@@ -197,9 +197,9 @@ public class StrategyKnowledgeFoundationTest
     @Test
     public void liveUimSmithingCardHasMethodAndCoherentNoBankGuidance()
     {
-        GameData data = data(2, MembershipStatus.F2P,
+        GameData data = data(2, Membership.F2P,
                 Collections.emptyList());
-        Recommendation smithing = new RecommendationEngine(selector)
+        Recommendation smithing = TestFixtures.recommendationEngine(selector)
                 .recommendAll(data, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, false, false,
                         new PreferenceProfile()).stream()
@@ -235,7 +235,7 @@ public class StrategyKnowledgeFoundationTest
     }
 
     private static GameData data(int type,
-            MembershipStatus membership, List<ItemState> inventory)
+            Membership membership, List<ItemState> inventory)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);

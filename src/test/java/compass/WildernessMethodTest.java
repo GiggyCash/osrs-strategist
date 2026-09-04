@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class WildernessMethodTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(new TrainingMethodDatabase());
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
 
     @Test
     public void wildernessMethodsAreHardFilteredUnlessEnabled()
@@ -37,15 +37,6 @@ public class WildernessMethodTest
             levels.put(skill, 60);
             xp.put(skill, Experience.getXpForLevel(60));
         }
-        return GameData.builder(new AccountSnapshot(
-                "Wild Test",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp)).build();
+        return GameData.builder(new AccountSnapshot("Wild Test", 0L, 0, "Main", Membership.P2P, 1, 1500, 0L, levels, xp)).build();
     }
 }

@@ -103,7 +103,7 @@ public class ProgressAnalyticsServiceTest
         assertEquals(0L, snapshot.getActiveDurationMillis());
         assertTrue(snapshot.getBuckets().isEmpty());
         assertTrue(snapshot.getMilestones().isEmpty());
-        assertEquals(ProgressTargetProjection.State.NO_TARGET,
+        assertEquals(TargetProjection.State.NO_TARGET,
                 snapshot.getTargetProjection().getState());
     }
 
@@ -129,9 +129,9 @@ public class ProgressAnalyticsServiceTest
         service.setTarget(new ProgressTarget("skill:fishing", "fly-fishing",
                 Skill.FISHING, 11));
 
-        ProgressTargetProjection projection = service.snapshot(46_000L)
+        TargetProjection projection = service.snapshot(46_000L)
                 .getTargetProjection();
-        assertEquals(ProgressTargetProjection.State.READY,
+        assertEquals(TargetProjection.State.READY,
                 projection.getState());
         assertEquals(Math.max(0, Experience.getXpForLevel(11) - 1_250),
                 projection.getXpRemaining());
@@ -139,7 +139,7 @@ public class ProgressAnalyticsServiceTest
 
         service.setTarget(new ProgressTarget("skill:fishing", "lobsters",
                 Skill.FISHING, 12));
-        assertEquals(ProgressTargetProjection.State.CALCULATING,
+        assertEquals(TargetProjection.State.CALCULATING,
                 service.snapshot(46_000L).getTargetProjection().getState());
     }
 
@@ -155,7 +155,7 @@ public class ProgressAnalyticsServiceTest
         service.setTarget(new ProgressTarget("skill:mining", "iron-ore",
                 Skill.MINING, 11));
 
-        assertEquals(ProgressTargetProjection.State.CALCULATING,
+        assertEquals(TargetProjection.State.CALCULATING,
                 service.snapshot(82_000L).getTargetProjection().getState());
     }
 
@@ -168,9 +168,9 @@ public class ProgressAnalyticsServiceTest
         service.setTarget(new ProgressTarget("skill:cooking", "fish",
                 Skill.COOKING, 2));
 
-        ProgressTargetProjection projection = service.snapshot(1_000L)
+        TargetProjection projection = service.snapshot(1_000L)
                 .getTargetProjection();
-        assertEquals(ProgressTargetProjection.State.COMPLETE,
+        assertEquals(TargetProjection.State.COMPLETE,
                 projection.getState());
         assertEquals(0L, projection.getEtaMillis());
     }
@@ -221,7 +221,6 @@ public class ProgressAnalyticsServiceTest
         }
         levels.put(changed, level);
         experience.put(changed, xp);
-        return new AccountSnapshot("Tester", 0, "Main", 1, xp,
-                levels, experience);
+        return new AccountSnapshot("Tester", 0L, 0, "Main", Membership.UNKNOWN, 0, 1, xp, levels, experience);
     }
 }

@@ -19,7 +19,7 @@ public class OpportunityRecommendationTest
     public void readyOpportunityCanBeatLowValueXpAndCooldownHidesIt()
     {
         PreferenceProfile preferences = new PreferenceProfile();
-        StrategyContext context = context(account(MembershipStatus.P2P), preferences);
+        StrategyContext context = context(account(Membership.P2P), preferences);
         StrategyEngine engine = engine();
         Opportunity opportunity = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
@@ -28,7 +28,7 @@ public class OpportunityRecommendationTest
         Recommendation lowXp = new Recommendation("skill:mining", "Mine", "test", 1,
                 null, Confidence.VERIFIED, 1, 10,
                 new Guidance("Mine.", "Pickaxe.", "Mine.", "test"),
-                SafetyEvidence.skill(true, Skill.MINING));
+                Safety.skill(true, Skill.MINING));
 
         List<Recommendation> queue = engine.buildPlayerQueue(Arrays.asList(lowXp, promoted), context);
         assertEquals("opportunity:battlestaves", queue.get(0).getId());
@@ -44,7 +44,7 @@ public class OpportunityRecommendationTest
                 OpportunityType.HERB_RUN, "Herb run", false,
                 Confidence.CHECK_NEEDED, Collections.emptyList());
         assertNull(engine().opportunityRecommendation(unresolved,
-                context(account(MembershipStatus.P2P), new PreferenceProfile())));
+                context(account(Membership.P2P), new PreferenceProfile())));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class OpportunityRecommendationTest
                 new Opportunity("opportunity:herb-run", OpportunityType.HERB_RUN,
                         "Herb run", true, Confidence.VERIFIED,
                         Collections.singletonList("Seeds")),
-                context(account(MembershipStatus.P2P), new PreferenceProfile()));
+                context(account(Membership.P2P), new PreferenceProfile()));
         assertNull(preparation);
     }
 
@@ -63,7 +63,7 @@ public class OpportunityRecommendationTest
     public void readyHerbRunNamesTheVerifiedPatchRoute()
     {
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P))
+                        account(Membership.P2P))
                 .farming(new FarmingSnapshot(
                         Collections.singleton("falador"),
                         Collections.emptyMap(), Collections.emptyMap()))
@@ -99,10 +99,10 @@ public class OpportunityRecommendationTest
                 return Collections.singletonList(verified);
             }
         };
-        StrategyEngine engine = new StrategyEngine(null, opportunities, null, null,
+        StrategyEngine engine = TestFixtures.strategyEngine(null, opportunities, null, null,
                 new ActionabilityPolicy());
         GameData data = GameData.builder(
-                account(MembershipStatus.P2P)).build();
+                account(Membership.P2P)).build();
 
         PreferenceProfile preferences = new PreferenceProfile();
         StrategyResult visible = engine.evaluate(data, StrategyMode.BALANCED,
@@ -136,8 +136,9 @@ public class OpportunityRecommendationTest
             @Override public List<Opportunity> evaluate(GameData data)
             { return Collections.singletonList(verified); }
         };
-        RecommendationEngine recommendationEngine = new RecommendationEngine(
-                (TrainingMethodSelector) null)
+        RecommendationEngine recommendationEngine = new RecommendationEngine((TrainingMethodSelector) null,
+                TestFixtures.recommendationGuidanceService(),
+                null, null, null, null, null)
         {
             @Override
             public List<Recommendation> recommendAll(GameData data,
@@ -148,11 +149,11 @@ public class OpportunityRecommendationTest
                         ready("skill:fishing", 90));
             }
         };
-        StrategyEngine engine = new StrategyEngine(recommendationEngine,
+        StrategyEngine engine = TestFixtures.strategyEngine(recommendationEngine,
                 opportunityEngine, null, null,
                 new ActionabilityPolicy());
         StrategyResult result = engine.evaluate(GameData.builder(
-                        account(MembershipStatus.P2P)).build(),
+                        account(Membership.P2P)).build(),
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 new PreferenceProfile());
         assertTrue(result.getRecommendations().stream().anyMatch(value ->
@@ -166,9 +167,9 @@ public class OpportunityRecommendationTest
         Map<String, Long> timers = new java.util.HashMap<>();
         timers.put("opportunity:battlestaves", 0L);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P))
+                        account(Membership.P2P))
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers)).build();
-        StrategyResult result = new StrategyEngine(null, new OpportunityEngine(),
+        StrategyResult result = TestFixtures.strategyEngine(null, new OpportunityEngine(),
                 null, null, new ActionabilityPolicy())
                 .evaluate(data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                         new PreferenceProfile());
@@ -183,13 +184,13 @@ public class OpportunityRecommendationTest
         return new Recommendation(id, id, "test", score, null,
                 Confidence.VERIFIED, 0, 0,
                 new Guidance("Do it.", "Ready.", "Here.", "Test."),
-                SafetyEvidence.skill(true, id.contains("mining")
+                Safety.skill(true, id.contains("mining")
                         ? Skill.MINING : Skill.FISHING));
     }
 
     private static StrategyEngine engine()
     {
-        return new StrategyEngine(null, null, null, null,
+        return TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy());
     }
 
@@ -200,12 +201,11 @@ public class OpportunityRecommendationTest
                 QuestTolerance.NORMAL, GoalType.MAX, false, false, false, preferences);
     }
 
-    private static AccountSnapshot account(MembershipStatus membership)
+    private static AccountSnapshot account(Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 50); xp.put(skill, 0); }
-        return new AccountSnapshot("Opportunity", 0, "Main", membership,
-                1, 1000, 0L, levels, xp);
+        return new AccountSnapshot("Opportunity", 0L, 0, "Main", membership, 1, 1000, 0L, levels, xp);
     }
 }

@@ -36,14 +36,14 @@ public class StrategyEngineActionabilityTest
                 0,
                 null);
 
-        StrategyEngine engine = new StrategyEngine(
+        StrategyEngine engine = TestFixtures.strategyEngine(
                 null,
                 null,
                 null,
                 null,
                 new ActionabilityPolicy());
         List<Recommendation> queue = engine.buildPlayerQueue(
-                Arrays.asList(unresolved, ready));
+                Arrays.asList(unresolved, ready), null);
 
         assertEquals(1, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
@@ -66,11 +66,11 @@ public class StrategyEngineActionabilityTest
                         "Grand Exchange.",
                         "This remains secondary until verified."));
 
-        StrategyEngine engine = new StrategyEngine(
+        StrategyEngine engine = TestFixtures.strategyEngine(
                 null, null, null, null,
                 new ActionabilityPolicy());
         List<Recommendation> queue = engine.buildPlayerQueue(
-                Arrays.asList(unresolved, ready));
+                Arrays.asList(unresolved, ready), null);
 
         assertEquals(1, queue.size());
         assertEquals("skill:defence", queue.get(0).getId());
@@ -89,7 +89,7 @@ public class StrategyEngineActionabilityTest
                 0,
                 0,
                 null);
-        StrategyEngine engine = new StrategyEngine(
+        StrategyEngine engine = TestFixtures.strategyEngine(
                 null,
                 null,
                 null,
@@ -97,6 +97,6 @@ public class StrategyEngineActionabilityTest
                 new ActionabilityPolicy());
 
         assertEquals(0, engine.buildPlayerQueue(
-                java.util.Collections.singletonList(unresolved)).size());
+                java.util.Collections.singletonList(unresolved), null).size());
     }
 }

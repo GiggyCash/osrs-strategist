@@ -1,4 +1,5 @@
 package compass;
+import static net.runelite.api.Skill.*;
 import static compass.Text.get;
 
 import java.util.*;
@@ -18,9 +19,9 @@ public class SlayerRewardAdvisor
             return null;
         List<SlayerRewardAdvice> candidates = new ArrayList<>();
         var account = context.data().account();
-        var slayerLevel = account.level(Skill.SLAYER);
-        var crafting = account.level(Skill.CRAFTING);
-        var fletching = account.level(Skill.FLETCHING);
+        var slayerLevel = account.level(SLAYER);
+        var crafting = account.level(CRAFTING);
+        var fletching = account.level(FLETCHING);
 
         add(candidates, slayer, SlayerReward.BIGGER_AND_BADDER,
                 slayerLevel >= 5, 100.0,
@@ -95,7 +96,7 @@ public class SlayerRewardAdvisor
             double score, String reason)
     {
         if (!eligible
-                || slayer.getRewards().stateOf(reward) != CapabilityState.BLOCKED
+                || slayer.getRewards().stateOf(reward) != Capability.BLOCKED
                 || slayer.getPoints() < reward.getPointCost() + SKIP_RESERVE)
             return;
         candidates.add(new SlayerRewardAdvice(reward, score, reason));

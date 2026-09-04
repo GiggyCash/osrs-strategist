@@ -6,53 +6,53 @@ import java.util.*;
 /** Verified behavior classes for UIM storage; distinct systems never alias. */
 public final class UimStorageMechanics
 {
-    private static final Set<StorageCapability> ITEM_RETRIEVAL_SERVICES =
-            EnumSet.of(StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                    StorageCapability.ZULRAH_ITEM_RETRIEVAL,
-                    StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL);
-    private static final Set<StorageCapability> RESTRICTED_RETRIEVAL =
-            EnumSet.of(StorageCapability.LOOTING_BAG,
-                    StorageCapability.DEATH_STORAGE,
-                    StorageCapability.HESPORI_ITEM_RETRIEVAL,
-                    StorageCapability.ZULRAH_ITEM_RETRIEVAL,
-                    StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
-                    StorageCapability.DEATHPILE);
-    private static final Map<StorageCapability, UimStorageMechanicProfile>
+    private static final Set<StorageKind> ITEM_RETRIEVAL_SERVICES =
+            EnumSet.of(StorageKind.HESPORI_ITEM_RETRIEVAL,
+                    StorageKind.ZULRAH_ITEM_RETRIEVAL,
+                    StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL);
+    private static final Set<StorageKind> RESTRICTED_RETRIEVAL =
+            EnumSet.of(StorageKind.LOOTING_BAG,
+                    StorageKind.DEATH_STORAGE,
+                    StorageKind.HESPORI_ITEM_RETRIEVAL,
+                    StorageKind.ZULRAH_ITEM_RETRIEVAL,
+                    StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL,
+                    StorageKind.DEATHPILE);
+    private static final Map<StorageKind, UimStorageMechanicProfile>
             PROFILES = profiles();
 
     private UimStorageMechanics() {}
 
     public static boolean isExactItemRetrievalService(
-            StorageCapability capability)
+            StorageKind capability)
     {
         return capability != null
                 && ITEM_RETRIEVAL_SERVICES.contains(capability);
     }
 
-    public static boolean isDangerous(StorageCapability capability)
+    public static boolean isDangerous(StorageKind capability)
     {
         return isExactItemRetrievalService(capability)
-                || capability == StorageCapability.DEATHPILE;
+                || capability == StorageKind.DEATHPILE;
     }
 
-    public static boolean isRestrictedRetrieval(StorageCapability capability)
+    public static boolean isRestrictedRetrieval(StorageKind capability)
     {
         return capability != null && RESTRICTED_RETRIEVAL.contains(capability);
     }
 
     /** Generic death storage lacks the location-specific rules needed to act. */
-    public static boolean isTooGenericToRecommend(StorageCapability capability)
+    public static boolean isTooGenericToRecommend(StorageKind capability)
     {
-        return capability == StorageCapability.DEATH_STORAGE;
+        return capability == StorageKind.DEATH_STORAGE;
     }
 
     public static UimStorageMechanicProfile profile(
-            StorageCapability capability)
+            StorageKind capability)
     {
         return capability == null ? null : PROFILES.get(capability);
     }
 
-    public static String displayName(StorageCapability capability)
+    public static String displayName(StorageKind capability)
     {
         if (capability == null) return "unknown storage";
         switch (capability)
@@ -78,11 +78,11 @@ public final class UimStorageMechanics
         }
     }
 
-    private static Map<StorageCapability, UimStorageMechanicProfile> profiles()
+    private static Map<StorageKind, UimStorageMechanicProfile> profiles()
     {
-        EnumMap<StorageCapability, UimStorageMechanicProfile> values =
-                new EnumMap<>(StorageCapability.class);
-        add(values, StorageCapability.LOOTING_BAG,
+        EnumMap<StorageKind, UimStorageMechanicProfile> values =
+                new EnumMap<>(StorageKind.class);
+        add(values, StorageKind.LOOTING_BAG,
                 get(1195),
                 get(1032),
                 get(1043),
@@ -91,8 +91,8 @@ public final class UimStorageMechanics
                 get(1053),
                 get(1054),
                 get(1055),
-                RiskLevel.MEDIUM, StrategySourceId.UIM_ITEM_MANAGEMENT, true);
-        add(values, StorageCapability.HESPORI_ITEM_RETRIEVAL,
+                RiskLevel.MEDIUM, Source.UIM_ITEM_MANAGEMENT, true);
+        add(values, StorageKind.HESPORI_ITEM_RETRIEVAL,
                 get(1056),
                 get(1022),
                 get(1023),
@@ -101,8 +101,8 @@ public final class UimStorageMechanics
                 "25,000 coins.",
                 get(1026),
                 get(1027),
-                RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
-        add(values, StorageCapability.ZULRAH_ITEM_RETRIEVAL,
+                RiskLevel.HIGH, Source.ITEM_RETRIEVAL_SERVICES, true);
+        add(values, StorageKind.ZULRAH_ITEM_RETRIEVAL,
                 get(1196),
                 get(1028),
                 get(1029),
@@ -111,8 +111,8 @@ public final class UimStorageMechanics
                 get(1033),
                 get(1034),
                 get(1035),
-                RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
-        add(values, StorageCapability.VOLCANIC_MINE_ITEM_RETRIEVAL,
+                RiskLevel.HIGH, Source.ITEM_RETRIEVAL_SERVICES, true);
+        add(values, StorageKind.VOLCANIC_MINE_ITEM_RETRIEVAL,
                 get(1036),
                 get(1037),
                 get(1038),
@@ -121,8 +121,8 @@ public final class UimStorageMechanics
                 "150 numulite.",
                 get(1041),
                 get(1042),
-                RiskLevel.HIGH, StrategySourceId.ITEM_RETRIEVAL_SERVICES, true);
-        add(values, StorageCapability.DEATHPILE,
+                RiskLevel.HIGH, Source.ITEM_RETRIEVAL_SERVICES, true);
+        add(values, StorageKind.DEATHPILE,
                 get(1044),
                 get(1045),
                 get(1046),
@@ -131,24 +131,24 @@ public final class UimStorageMechanics
                 "No service fee.",
                 get(1049),
                 get(1050),
-                RiskLevel.IRREVERSIBLE, StrategySourceId.UIM_ITEM_MANAGEMENT,
+                RiskLevel.IRREVERSIBLE, Source.UIM_ITEM_MANAGEMENT,
                 true);
-        values.put(StorageCapability.DEATH_STORAGE,
-                new UimStorageMechanicProfile(StorageCapability.DEATH_STORAGE,
+        values.put(StorageKind.DEATH_STORAGE,
+                new UimStorageMechanicProfile(StorageKind.DEATH_STORAGE,
                         "Unknown", get(1197), "Unknown",
                         "Unknown", "Unknown", "Unknown", "Unknown",
                         "Unknown", RiskLevel.HIGH,
-                        StrategySourceId.ITEM_RETRIEVAL_SERVICES, false));
+                        Source.ITEM_RETRIEVAL_SERVICES, false));
         return Collections.unmodifiableMap(values);
     }
 
     private static void add(
-            Map<StorageCapability, UimStorageMechanicProfile> values,
-            StorageCapability capability, String location,
+            Map<StorageKind, UimStorageMechanicProfile> values,
+            StorageKind capability, String location,
             String accessRequirements, String eligibleItems,
             String insertionRules, String retrievalRules, String cost,
             String expiration, String secondDeathBehavior, RiskLevel risk,
-            StrategySourceId source, boolean recommendationEligible)
+            Source source, boolean recommendationEligible)
     {
         values.put(capability, new UimStorageMechanicProfile(capability,
                 location, accessRequirements, eligibleItems, insertionRules,

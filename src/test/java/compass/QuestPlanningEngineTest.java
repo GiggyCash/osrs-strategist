@@ -15,14 +15,14 @@ import static org.junit.Assert.assertTrue;
 
 public class QuestPlanningEngineTest
 {
-    private final QuestCandidateProvider provider = new QuestCandidateProvider(
+    private final QuestCandidateProvider provider = TestFixtures.questCandidateProvider(
             new QuestPriorityCatalog(), new QuestKnowledgeCatalog(),
-            new QuestRequirementResolver());
+            TestFixtures.questRequirementResolver());
 
     @Test
     public void fullyModeledF2pQuestCanBecomeActionable()
     {
-        Recommendation candidate = only(data(account(MembershipStatus.F2P,
+        Recommendation candidate = only(data(account(Membership.F2P,
                 40, 40, 40), "Rune Mysteries", QuestStatus.NOT_STARTED,
                 Collections.emptyList()));
         assertEquals(Confidence.VERIFIED, candidate.getConfidence());
@@ -37,11 +37,11 @@ public class QuestPlanningEngineTest
         List<ItemState> allMeat = Arrays.asList(
                 item("Raw bear meat"), item("Raw rat meat"),
                 item("Raw beef"), item("Raw chicken"));
-        Recommendation ready = only(data(account(MembershipStatus.P2P,
+        Recommendation ready = only(data(account(Membership.P2P,
                 40, 40, 40), "Druidic Ritual", QuestStatus.NOT_STARTED, allMeat));
         assertEquals(Confidence.VERIFIED, ready.getConfidence());
 
-        Recommendation missing = only(data(account(MembershipStatus.P2P,
+        Recommendation missing = only(data(account(Membership.P2P,
                 40, 40, 40), "Druidic Ritual", QuestStatus.NOT_STARTED,
                 Collections.singletonList(item("Raw chicken"))));
         assertEquals(Confidence.CHECK_NEEDED, missing.getConfidence());
@@ -56,7 +56,7 @@ public class QuestPlanningEngineTest
         quests.put("Bone Voyage", QuestStatus.NOT_STARTED);
         quests.put("The Dig Site", QuestStatus.NOT_STARTED);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 60, 60, 60))
+                        account(Membership.P2P, 60, 60, 60))
                 .quests(new QuestSnapshot(quests))
                 .bank(new ItemsState(Arrays.asList(
                         new ItemState(1, "Vodka", 2),
@@ -72,7 +72,7 @@ public class QuestPlanningEngineTest
     @Test
     public void irreversibleRewardQuestIsExcludedForOneDefencePure()
     {
-        assertTrue(provider.candidates(context(data(account(MembershipStatus.F2P,
+        assertTrue(provider.candidates(context(data(account(Membership.F2P,
                 60, 1, 1), "Dragon Slayer I", QuestStatus.NOT_STARTED,
                 Collections.emptyList()))).isEmpty());
     }
@@ -82,13 +82,9 @@ public class QuestPlanningEngineTest
     {
         Map<Skill, Integer> requirements = new EnumMap<>(Skill.class);
         requirements.put(Skill.DEFENCE, 40);
-        QuestDefinition definition = new QuestDefinition("Safe parent", true,
-                Collections.emptyList(), requirements, Collections.emptyList(),
-                0, Collections.emptyList(), "Varrock",
-                Collections.singletonList("A useful unlock"),
-                Collections.emptyMap());
-        AccountSnapshot pure = account(MembershipStatus.F2P, 60, 60, 1);
-        QuestResolution resolution = new QuestRequirementResolver().resolve(
+        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), requirements, Collections.emptyList(), null, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
+        AccountSnapshot pure = account(Membership.F2P, 60, 60, 1);
+        QuestResolution resolution = TestFixtures.questRequirementResolver().resolve(
                 definition, context(GameData.builder(pure).build()));
 
         assertEquals(Confidence.CHECK_NEEDED,
@@ -103,7 +99,7 @@ public class QuestPlanningEngineTest
     public void observedInventoryDoesNotTurnUnobservedBankIntoMissingItems()
     {
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 40, 40, 40))
+                        account(Membership.P2P, 40, 40, 40))
                 .quests(new QuestSnapshot(Collections.singletonMap(
                         "Druidic Ritual", QuestStatus.NOT_STARTED)))
                 .inventory(new ItemsState(Collections.singletonList(
@@ -116,14 +112,10 @@ public class QuestPlanningEngineTest
     @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
-        QuestDefinition definition = new QuestDefinition("Slot test", false,
-                Collections.emptyList(), Collections.emptyMap(),
-                Collections.emptyList(), ItemRequirementExpression.itemClass(
+        QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
                         ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
-                        ItemRequirementScope.CARRIED), 0,
-                Collections.emptyList(), "Verified start",
-                Collections.emptyList(), Collections.emptyMap());
-        QuestRequirementResolver resolver = new QuestRequirementResolver();
+                        ItemRequirementScope.CARRIED), 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
 
         QuestResolution blocked = resolver.resolve(definition,
                 context(GameData.builder(uimAccount())
@@ -170,7 +162,7 @@ public class QuestPlanningEngineTest
         quests.put("The Grand Tree", QuestStatus.NOT_STARTED);
         quests.put("Tree Gnome Village", QuestStatus.COMPLETE);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 70, 70, 70))
+                        account(Membership.P2P, 70, 70, 70))
                 .quests(new QuestSnapshot(quests))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
@@ -197,7 +189,7 @@ public class QuestPlanningEngineTest
         quests.put("Below Ice Mountain", QuestStatus.COMPLETE);
         quests.put("His Faithful Servants", QuestStatus.COMPLETE);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 90, 90, 90))
+                        account(Membership.P2P, 90, 90, 90))
                 .quests(new QuestSnapshot(quests))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
 
@@ -231,7 +223,7 @@ public class QuestPlanningEngineTest
         quests.put("Biohazard", QuestStatus.COMPLETE);
         quests.put("Plague City", QuestStatus.COMPLETE);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 70, 70, 70))
+                        account(Membership.P2P, 70, 70, 70))
                 .quests(new QuestSnapshot(quests))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
         List<Recommendation> candidates = provider.candidates(context(data));
@@ -275,7 +267,7 @@ public class QuestPlanningEngineTest
         quests.put("Murder Mystery", QuestStatus.COMPLETE);
         quests.put("One Small Favour", QuestStatus.COMPLETE);
         GameData data = GameData.builder(
-                        account(MembershipStatus.P2P, 70, 70, 70))
+                        account(Membership.P2P, 70, 70, 70))
                 .quests(new QuestSnapshot(quests))
                 .bank(new ItemsState(Collections.emptyList(), 1L)).build();
         List<Recommendation> candidates = provider.candidates(context(data));
@@ -289,9 +281,9 @@ public class QuestPlanningEngineTest
 
     private static Recommendation only(GameData data)
     {
-        List<Recommendation> candidates = new QuestCandidateProvider(
+        List<Recommendation> candidates = TestFixtures.questCandidateProvider(
                 new QuestPriorityCatalog(), new QuestKnowledgeCatalog(),
-                new QuestRequirementResolver()).candidates(context(data));
+                TestFixtures.questRequirementResolver()).candidates(context(data));
         assertEquals(1, candidates.size());
         return candidates.get(0);
     }
@@ -330,14 +322,11 @@ public class QuestPlanningEngineTest
 
     private static AccountSnapshot uimAccount()
     {
-        AccountSnapshot base = account(MembershipStatus.P2P, 70, 70, 70);
-        return new AccountSnapshot("Quest UIM", 2, "Ultimate Ironman",
-                MembershipStatus.P2P, 1, base.getTotalLevel(),
-                base.getTotalExperience(), base.getSkillLevels(),
-                base.getSkillExperience());
+        AccountSnapshot base = account(Membership.P2P, 70, 70, 70);
+        return new AccountSnapshot("Quest UIM", 0L, 2, "Ultimate Ironman", Membership.P2P, 1, base.getTotalLevel(), base.getTotalExperience(), base.getSkillLevels(), base.getSkillExperience());
     }
 
-    private static AccountSnapshot account(MembershipStatus membership,
+    private static AccountSnapshot account(Membership membership,
             int attack, int strength, int defence)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -346,7 +335,6 @@ public class QuestPlanningEngineTest
         levels.put(Skill.ATTACK, attack); levels.put(Skill.STRENGTH, strength);
         levels.put(Skill.DEFENCE, defence); levels.put(Skill.RANGED, attack);
         levels.put(Skill.MAGIC, attack); levels.put(Skill.HITPOINTS, 70);
-        return new AccountSnapshot("Quest", 0, "Main", membership,
-                1, 1000, 0L, levels, xp);
+        return new AccountSnapshot("Quest", 0L, 0, "Main", membership, 1, 1000, 0L, levels, xp);
     }
 }

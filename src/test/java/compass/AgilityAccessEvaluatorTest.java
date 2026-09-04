@@ -51,9 +51,7 @@ public class AgilityAccessEvaluatorTest
             xp.put(skill, 0);
         }
         levels.put(Skill.AGILITY, agility);
-        AccountSnapshot account = new AccountSnapshot(
-                "Tester", 0, "Main", MembershipStatus.P2P, 1,
-                agility, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Tester", 0L, 0, "Main", Membership.P2P, 1, agility, 0L, levels, xp);
         return GameData.builder(account)
                 .quests(new QuestSnapshot(quests))
                 .accessMemory(new AccessMemorySnapshot(memory))

@@ -1,8 +1,8 @@
 package compass;
+import static java.util.Collections.*;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.function.Function;
+import java.util.function.*;
 
 /** Shared immutable loading and querying for small bundled definition catalogs. */
 class CatalogStore<T>
@@ -11,7 +11,7 @@ class CatalogStore<T>
 
     CatalogStore(String resource, Class<T[]> type)
     {
-        values = Collections.unmodifiableList(Arrays.asList(
+        values = unmodifiableList(Arrays.asList(
                 BundledCatalogLoader.array(resource, type)));
     }
 
@@ -27,7 +27,7 @@ class CatalogStore<T>
     {
         List<T> result = new ArrayList<>();
         for (T value : values) if (match.test(value)) result.add(value);
-        return Collections.unmodifiableList(result);
+        return unmodifiableList(result);
     }
 }
 
@@ -44,7 +44,7 @@ class IndexedCatalog<T>
     IndexedCatalog(String resource, Class<T[]> type, Function<T, String> key,
             Function<String, String> normalize)
     {
-        values = Collections.unmodifiableList(Arrays.asList(
+        values = unmodifiableList(Arrays.asList(
                 BundledCatalogLoader.array(resource, type)));
         Map<String, T> result = new LinkedHashMap<>();
         for (T value : values)
@@ -54,7 +54,7 @@ class IndexedCatalog<T>
             if (id == null || result.put(id, value) != null)
                 throw new IllegalStateException("Invalid or duplicate catalog key in " + resource);
         }
-        index = Collections.unmodifiableMap(result);
+        index = unmodifiableMap(result);
     }
 
     final T indexed(String key) { return key == null ? null : index.get(key); }

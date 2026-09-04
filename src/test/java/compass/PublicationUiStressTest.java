@@ -76,7 +76,7 @@ public class PublicationUiStressTest
         Recommendation fallback = recommendation("f2p", "Train Woodcutting to 30",
                 "Unlocks willow trees.", null, "6,760 XP remaining — about 181 oak chops to level 30.");
         GoalRecommendationContext context = GoalRecommendationContext.assess(
-                GoalType.BOWFA, fallback, MembershipStatus.F2P);
+                GoalType.BOWFA, fallback, Membership.F2P);
 
         String compact = Presentation.compactText(fallback, context);
         String details = Presentation.detailedText(fallback, context);

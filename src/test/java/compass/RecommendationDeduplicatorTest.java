@@ -38,7 +38,7 @@ public class RecommendationDeduplicatorTest
         Recommendation check = new Recommendation("diary:agility",
                 "Train Agility to 70", "Access unknown.", 100, null,
                 Confidence.CHECK_NEEDED, 60, 70,
-                guidance(), SafetyEvidence.harmless(false));
+                guidance(), Safety.harmless(false));
         assertEquals(2, new RecommendationDeduplicator()
                 .deduplicate(Arrays.asList(verified, check)).size());
     }
@@ -50,13 +50,13 @@ public class RecommendationDeduplicatorTest
                 "One route.", 40);
         Recommendation beta = skill("skill:beta", "Train Fishing to 70",
                 "Another route.", 40);
-        StrategyEngine engine = new StrategyEngine(null, null, null, null,
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         List<Recommendation> first = engine.buildPlayerQueue(
-                Arrays.asList(beta, alpha));
+                Arrays.asList(beta, alpha), null);
         List<Recommendation> second = engine.buildPlayerQueue(
-                Arrays.asList(alpha, beta));
+                Arrays.asList(alpha, beta), null);
         assertEquals(first.get(0).getId(), second.get(0).getId());
     }
 
@@ -69,7 +69,7 @@ public class RecommendationDeduplicatorTest
         Recommendation minigame = new Recommendation("minigame:wintertodt",
                 "Wintertodt", "Pyromancer progression.", 42, null,
                 Confidence.VERIFIED, 0, 0, guidance(),
-                SafetyEvidence.skill(false, Skill.FIREMAKING))
+                Safety.skill(false, Skill.FIREMAKING))
                 .withStrategicValue(StrategicValue.builder()
                         .resourceFit(0.6).evidence("wintertodt-rewards").build());
 
@@ -97,7 +97,7 @@ public class RecommendationDeduplicatorTest
                 new TrainingPlan(method, reason,
                         Confidence.VERIFIED),
                 Confidence.VERIFIED, 60, 70, guidance(),
-                SafetyEvidence.skill(false, skill));
+                Safety.skill(false, skill));
     }
 
     private static Recommendation skillMethod(String id, String title,
@@ -111,7 +111,7 @@ public class RecommendationDeduplicatorTest
                 new TrainingPlan(method, "route",
                         Confidence.VERIFIED),
                 Confidence.VERIFIED, 60, 70, guidance(),
-                SafetyEvidence.skill(false, Skill.FIREMAKING))
+                Safety.skill(false, Skill.FIREMAKING))
                 .withStrategicValue(StrategicValue.builder()
                         .unlockValue(0.5).evidence(evidence).build());
     }

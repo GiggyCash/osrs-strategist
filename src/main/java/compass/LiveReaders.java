@@ -1,42 +1,19 @@
 package compass;
+import lombok.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import java.util.*;
-import java.util.EnumSet;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import net.runelite.api.*;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.Item;
-import net.runelite.api.ItemContainer;
-import net.runelite.api.Prayer;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.gameval.DBTableID;
-import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.gameval.*;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ObjectID;
-import net.runelite.api.gameval.VarPlayerID;
-import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
-import net.runelite.client.plugins.cluescrolls.ClueScrollService;
-import net.runelite.client.plugins.cluescrolls.clues.AnagramClue;
-import net.runelite.client.plugins.cluescrolls.clues.CipherClue;
-import net.runelite.client.plugins.cluescrolls.clues.ClueScroll;
-import net.runelite.client.plugins.cluescrolls.clues.CoordinateClue;
-import net.runelite.client.plugins.cluescrolls.clues.CrypticClue;
-import net.runelite.client.plugins.cluescrolls.clues.EmoteClue;
-import net.runelite.client.plugins.cluescrolls.clues.FairyRingClue;
-import net.runelite.client.plugins.cluescrolls.clues.FaloTheBardClue;
-import net.runelite.client.plugins.cluescrolls.clues.HotColdClue;
-import net.runelite.client.plugins.cluescrolls.clues.LocationClueScroll;
-import net.runelite.client.plugins.cluescrolls.clues.MapClue;
-import net.runelite.client.plugins.cluescrolls.clues.MusicClue;
-import net.runelite.client.plugins.cluescrolls.clues.NpcClueScroll;
-import net.runelite.client.plugins.cluescrolls.clues.SkillChallengeClue;
-import net.runelite.client.plugins.cluescrolls.clues.ThreeStepCrypticClue;
+import net.runelite.client.plugins.cluescrolls.*;
+import net.runelite.client.plugins.cluescrolls.clues.*;
 import net.runelite.client.plugins.cluescrolls.clues.item.ItemRequirement;
 import net.runelite.client.plugins.poh.PohIcons;
 import static compass.Text.get;
@@ -49,26 +26,12 @@ import static compass.Text.get;
  * clue items preserve the previous clue observation rather than resetting it.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveClueStateReader
 {
     private final ClueScrollService clueService;
     private final ClueScrollPlugin cluePlugin;
     private final Client client;
-
-    @Inject
-    public LiveClueStateReader(ClueScrollService clueService,
-            ClueScrollPlugin cluePlugin, Client client)
-    {
-        this.clueService = clueService;
-        this.cluePlugin = cluePlugin;
-        this.client = client;
-    }
-
-    /** Compatibility constructor for evidence-only unit tests. */
-    public LiveClueStateReader()
-    {
-        this(null, null, null);
-    }
 
     public ClueSnapshot read(
             AccountMode mode,
@@ -108,8 +71,8 @@ class LiveClueStateReader
         {
             var firstSeen = System.currentTimeMillis();
             if (previous != null
-                    && previous.isCluePresent()
-                    && ClueTier.fromText(previous.getClueType()) == bestTier)
+                    && previous.cluePresent
+                    && ClueTier.fromText(previous.clueType) == bestTier)
             {
                 firstSeen = previous.getFirstSeenAtMillis();
             }
@@ -122,7 +85,7 @@ class LiveClueStateReader
             );
         }
 
-        if (clueIntermediateObserved && previous != null && previous.isCluePresent())
+        if (clueIntermediateObserved && previous != null && previous.cluePresent)
         {
             return previous;
         }
@@ -132,7 +95,7 @@ class LiveClueStateReader
         if (mode != AccountMode.ULTIMATE_IRONMAN
                 && bank == null
                 && previous != null
-                && previous.isCluePresent())
+                && previous.cluePresent)
         {
             return previous;
         }
@@ -263,7 +226,7 @@ class LiveClueStateReader
             values = ((FaloTheBardClue) clue).getItemRequirements();
         else if (clue instanceof SkillChallengeClue)
             values = ((SkillChallengeClue) clue).getItemRequirements();
-        if (values == null || client == null) return Collections.emptyList();
+        if (values == null || client == null) return emptyList();
         List<String> result = new ArrayList<>();
         for (ItemRequirement value : values)
         {
@@ -366,7 +329,7 @@ class LiveClueStateReader
 
 /** Reads the game's six Combat Achievement reward-tier completion varbits. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveCombatAchievementReader
 {
     private final Client client;
@@ -391,12 +354,12 @@ class LiveCombatAchievementReader
 
         var minimumPoints = 0;
         for (CombatAchievementTier tier : tiers)
-            minimumPoints = Math.max(minimumPoints, tier.getRewardPoints());
+            minimumPoints = max(minimumPoints, tier.getRewardPoints());
         var observedPoints = observed == null ? 0 : observed.getEarnedPoints();
         var observedTasks = observed == null ? 0 : observed.getCompletedTasks();
         return new CombatAchievementSnapshot(
                 observedTasks,
-                Math.max(minimumPoints, observedPoints),
+                max(minimumPoints, observedPoints),
                 tiers
         );
     }
@@ -412,7 +375,7 @@ class LiveCombatAchievementReader
 
 /** Reads only official current RuneLite prayer/spellbook identifiers. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveCombatEvidenceReader
 {
     private final Client client;
@@ -443,7 +406,7 @@ class LiveCombatEvidenceReader
 
 /** Reads all 12 regions x 4 Achievement Diary tier states directly from RuneLite. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveDiaryStateReader
 {
     private static final String[] REGIONS = {
@@ -610,10 +573,11 @@ class LiveDiaryStateReader
         return value == null ? "" : value.trim().replaceAll("\\s+", " ");
     }
 
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+
     private static final class Match
     {
         private final DiaryTaskDefinition task;
-        private Match(DiaryTaskDefinition task) { this.task = task; }
     }
 
     private void add(Map<String, Integer> completed,
@@ -629,7 +593,7 @@ class LiveDiaryStateReader
 
         var done = 0;
         for (int i = 4; i < ids.length; i++)
-            done += Math.max(0, client.getVarbitValue(ids[i]));
+            done += max(0, client.getVarbitValue(ids[i]));
         completed.put(region, done);
         // Per-tier totals are maintained outside RuneLite's public count varbits.
         // Leave this unknown rather than freezing a copied third-party table.
@@ -639,7 +603,7 @@ class LiveDiaryStateReader
 
 /** Builds a live economy snapshot from observed item containers and RuneLite prices. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveEconomyReader
 {
     private final MarketPriceService marketPriceService;
@@ -664,14 +628,14 @@ class LiveEconomyReader
         {
             for (ItemState item : bank.getItems())
             {
-                if (item == null || item.getQuantity() <= 0) continue;
+                if (item == null || item.quantity <= 0) continue;
                 int unitPrice = marketPriceService == null
                         ? 0
-                        : marketPriceService.priceByItemId(item.getItemId());
+                        : marketPriceService.priceByItemId(item.itemId);
                 if (unitPrice <= 0) continue;
                 bankValue = safeAdd(
                         bankValue,
-                        safeMultiply(unitPrice, item.getQuantity()));
+                        safeMultiply(unitPrice, item.quantity));
             }
         }
 
@@ -704,13 +668,13 @@ class LiveEconomyReader
             if (item == null || item.getName() == null) continue;
             if ("Coins".equalsIgnoreCase(item.getName()))
             {
-                total = safeAdd(total, item.getQuantity());
+                total = safeAdd(total, item.quantity);
             }
             else if ("Platinum token".equalsIgnoreCase(item.getName())
                     || "Platinum tokens".equalsIgnoreCase(item.getName()))
             {
                 total = safeAdd(total,
-                        safeMultiply(1000L, item.getQuantity()));
+                        safeMultiply(1000L, item.quantity));
             }
         }
         return total;
@@ -740,7 +704,7 @@ class LiveEconomyReader
  * an unopened bank as an empty bank.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveItemStateReader
 {
     private final Client client;
@@ -860,25 +824,25 @@ class LiveItemStateReader
  * presence and absence, while every other scene returns no observation.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LivePohStateReader
 {
     public static final String ARMOUR_CASE = "poh-armour-case";
-    public static final String COSTUME_ROOM = Text.get(1709);
-    public static final String PERMANENT_PORTAL = Text.get(1710);
-    public static final String PORTAL_NEXUS = Text.get(1711);
-    public static final String RESTORATION_POOL = Text.get(1712);
-    public static final String SUPERIOR_GARDEN = Text.get(1713);
+    public static final String COSTUME_ROOM = get(1709);
+    public static final String PERMANENT_PORTAL = get(1710);
+    public static final String PORTAL_NEXUS = get(1711);
+    public static final String RESTORATION_POOL = get(1712);
+    public static final String SUPERIOR_GARDEN = get(1713);
     public static final String ORNATE_POOL = "poh-ornate-pool";
-    public static final String JEWELLERY_BOX = Text.get(1714);
-    public static final String ORNATE_JEWELLERY_BOX = Text.get(1715);
-    public static final String SPELLBOOK_ALTAR = Text.get(1716);
-    public static final String OCCULT_ALTAR = Text.get(1717);
+    public static final String JEWELLERY_BOX = get(1714);
+    public static final String ORNATE_JEWELLERY_BOX = get(1715);
+    public static final String SPELLBOOK_ALTAR = get(1716);
+    public static final String OCCULT_ALTAR = get(1717);
     public static final String FAIRY_RING = "poh-fairy-ring";
     public static final String SPIRIT_TREE = "poh-spirit-tree";
-    public static final String SPIRITUAL_FAIRY_TREE = Text.get(1718);
-    public static final String MOUNTED_GLORY = Text.get(1719);
-    public static final String ARMOUR_STAND = Text.get(1720);
+    public static final String SPIRITUAL_FAIRY_TREE = get(1718);
+    public static final String MOUNTED_GLORY = get(1719);
+    public static final String ARMOUR_STAND = get(1720);
 
     private static final Set<String> TRACKED = new HashSet<>(Arrays.asList(
             COSTUME_ROOM, ARMOUR_CASE, PERMANENT_PORTAL, PORTAL_NEXUS,
@@ -909,12 +873,12 @@ class LivePohStateReader
 
     static PohSnapshot snapshotForObjectIds(Set<Integer> objectIds)
     {
-        Map<String, CapabilityState> furniture = new LinkedHashMap<>();
-        for (String key : TRACKED) furniture.put(key, CapabilityState.BLOCKED);
+        Map<String, Capability> furniture = new LinkedHashMap<>();
+        for (String key : TRACKED) furniture.put(key, Capability.BLOCKED);
         if (objectIds != null)
             for (Integer id : objectIds)
                 if (id != null) classify(id, furniture);
-        return new PohSnapshot(CapabilityState.VERIFIED, furniture);
+        return new PohSnapshot(Capability.VERIFIED, furniture);
     }
 
     private static void collect(Tile tile, Set<Integer> ids)
@@ -933,7 +897,7 @@ class LivePohStateReader
         if (object != null && object.getId() >= 0) ids.add(object.getId());
     }
 
-    private static void classify(int id, Map<String, CapabilityState> values)
+    private static void classify(int id, Map<String, Capability> values)
     {
         // Only completed armour cases are in this range; the build hotspot is
         // outside it and is deliberately not treated as storage.
@@ -1010,9 +974,9 @@ class LivePohStateReader
             verify(values, OCCULT_ALTAR);
     }
 
-    private static void verify(Map<String, CapabilityState> values, String key)
+    private static void verify(Map<String, Capability> values, String key)
     {
-        values.put(key, CapabilityState.VERIFIED);
+        values.put(key, Capability.VERIFIED);
     }
 }
 
@@ -1024,7 +988,7 @@ class LivePohStateReader
  * repeating the same reads unnecessarily.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveQuestStateReader
 {
     private final Client client;
@@ -1086,7 +1050,7 @@ class LiveQuestStateReader
  * removed while every unrelated storage capability is preserved.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveRunePouchStateReader
 {
     private static final int[] AMOUNT_VARBITS = {
@@ -1125,12 +1089,12 @@ class LiveRunePouchStateReader
     {
         StorageSnapshot source = base == null
                 ? StorageSnapshot.unknown() : base;
-        EnumMap<StorageCapability, CapabilityState> states =
-                new EnumMap<>(StorageCapability.class);
+        EnumMap<StorageKind, Capability> states =
+                new EnumMap<>(StorageKind.class);
         states.putAll(source.getStates());
-        EnumMap<StorageCapability, List<ItemState>> contents =
-                new EnumMap<>(StorageCapability.class);
-        for (Map.Entry<StorageCapability, List<ItemState>> entry
+        EnumMap<StorageKind, List<ItemState>> contents =
+                new EnumMap<>(StorageKind.class);
+        for (Map.Entry<StorageKind, List<ItemState>> entry
                 : source.getObservedContents().entrySet())
         {
             contents.put(entry.getKey(), new ArrayList<>(entry.getValue()));
@@ -1138,13 +1102,13 @@ class LiveRunePouchStateReader
 
         if (!usablePouchObserved)
         {
-            states.remove(StorageCapability.RUNE_POUCH);
-            contents.remove(StorageCapability.RUNE_POUCH);
+            states.remove(StorageKind.RUNE_POUCH);
+            contents.remove(StorageKind.RUNE_POUCH);
             return new StorageSnapshot(states, contents);
         }
 
-        states.put(StorageCapability.RUNE_POUCH, CapabilityState.VERIFIED);
-        contents.put(StorageCapability.RUNE_POUCH,
+        states.put(StorageKind.RUNE_POUCH, Capability.VERIFIED);
+        contents.put(StorageKind.RUNE_POUCH,
                 liveContents == null
                         ? new ArrayList<>()
                         : new ArrayList<>(liveContents));
@@ -1179,7 +1143,7 @@ class LiveRunePouchStateReader
         if (inventory == null || inventory.getItems() == null) return false;
         for (ItemState item : inventory.getItems())
         {
-            if (item == null || item.getQuantity() <= 0 || item.getName() == null)
+            if (item == null || item.quantity <= 0 || item.getName() == null)
                 continue;
             var name = item.getName().trim().toLowerCase(Locale.ROOT);
 
@@ -1187,7 +1151,7 @@ class LiveRunePouchStateReader
             // future note/token/placeholder containing "rune pouch" as an
             // actually usable pouch and leak stale varbit runes into planning.
             if (name.equals("rune pouch")
-                    || name.equals(Text.get(1703)))
+                    || name.equals(get(1703)))
             {
                 return true;
             }
@@ -1198,7 +1162,7 @@ class LiveRunePouchStateReader
 
 /** Reads only Sailing progression that RuneLite exposes as stable live state. */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveSailingStateReader
 {
     private static final int[] PORT_TASK_VARPS = {
@@ -1279,7 +1243,7 @@ class LiveSailingStateReader
  * task. Task count, task row, area, and points all come from live client state.
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class LiveSlayerStateReader
 {
     private static final int BOSS_TASK_ID = 98;
@@ -1326,15 +1290,15 @@ class LiveSlayerStateReader
         }
 
         var amount = client.getVarpValue(VarPlayerID.SLAYER_COUNT);
-        var points = Math.max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
+        var points = max(0, client.getVarbitValue(VarbitID.SLAYER_POINTS));
         var masterId = client.getVarbitValue(VarbitID.SLAYER_MASTER);
         List<SlayerTaskOffer> offers = amount <= 0
-                ? readMortimerOffers() : java.util.Collections.emptyList();
+                ? readMortimerOffers() : emptyList();
         if (!offers.isEmpty()) masterId = MORTIMER_MASTER_ID;
         var masterName = masterName(masterId);
         var rewards = readRewards();
         var streak = streak(masterId);
-        var questPoints = Math.max(0, client.getVarpValue(VarPlayerID.QP));
+        var questPoints = max(0, client.getVarpValue(VarPlayerID.QP));
         boolean lumbridgeElite = client.getVarbitValue(
                 VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) > 0;
         int blockCapacity = masterId == MORTIMER_MASTER_ID ? 2
@@ -1391,7 +1355,7 @@ class LiveSlayerStateReader
                     blockCapacity,
                     occupiedBlockSlots,
                     rewards,
-                    java.util.Collections.emptyList(),
+                    emptyList(),
                     mortimerIntroduced,
                     Confidence.VERIFIED);
             cachedTick = tick;
@@ -1425,7 +1389,7 @@ class LiveSlayerStateReader
                 blockCapacity,
                 null,
                 rewards,
-                java.util.Collections.emptyList(),
+                emptyList(),
                 mortimerIntroduced,
                 Confidence.CHECK_NEEDED);
         cachedTick = tick;
@@ -1440,7 +1404,7 @@ class LiveSlayerStateReader
             // separate completed-task counter. Never substitute normal streak.
             return null;
         }
-        return Math.max(0, client.getVarbitValue(
+        return max(0, client.getVarbitValue(
                 masterId == KRYSTILIA_MASTER_ID
                         ? VarbitID.SLAYER_WILDERNESS_TASKS_COMPLETED
                         : VarbitID.SLAYER_TASKS_COMPLETED));
@@ -1530,11 +1494,11 @@ class LiveSlayerStateReader
 
     private SlayerRewardSnapshot readRewards()
     {
-        Map<SlayerReward, CapabilityState> states =
+        Map<SlayerReward, Capability> states =
                 new EnumMap<>(SlayerReward.class);
         for (SlayerReward reward : SlayerReward.values())
             states.put(reward, client.getVarbitValue(reward.getVarbitId()) > 0
-                    ? CapabilityState.VERIFIED : CapabilityState.BLOCKED);
+                    ? Capability.VERIFIED : Capability.BLOCKED);
         return new SlayerRewardSnapshot(states);
     }
 
@@ -1549,7 +1513,7 @@ class LiveSlayerStateReader
         var slots = blockVarbits(masterId);
         if (slots == null) return null;
         var occupied = 0;
-        var visible = Math.min(capacity, slots.length);
+        var visible = min(capacity, slots.length);
         for (int i = 0; i < visible; i++)
             if (client.getVarbitValue(slots[i]) > 0) occupied++;
         return occupied;

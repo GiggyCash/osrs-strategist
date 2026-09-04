@@ -24,7 +24,7 @@ public class ProgressionProtectedMilestoneTest
                 "skill:agility", "Train Agility to 60", "Graceful",
                 50.0, plan, Confidence.VERIFIED, 59, 60);
 
-        TrackedMilestone tracked = new MilestoneTracker().fromRecommendations(
+        TrackedMilestone tracked = TestFixtures.milestoneTracker().fromRecommendations(
                 Collections.singletonList(recommendation));
         assertTrue(tracked.isProgressionProtected());
     }

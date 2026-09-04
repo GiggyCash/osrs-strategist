@@ -58,7 +58,7 @@ public class CurrentExecutionPlanIntegrityTest
                         item(ItemID.FLY_FISHING_ROD, "Fly fishing rod", 1),
                         item(ItemID.FEATHER, "Feather", 250)));
         AdaptiveMilestoneGuidanceService service =
-                new AdaptiveMilestoneGuidanceService(fishingActions,
+                TestFixtures.adaptiveMilestoneGuidanceService(fishingActions,
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService());
 
@@ -93,7 +93,7 @@ public class CurrentExecutionPlanIntegrityTest
         assertEquals(30, resolver.resolve(fallbackPlan, 20, 53));
 
         Guidance guidance =
-                new AdaptiveMilestoneGuidanceService(fishingActions,
+                TestFixtures.adaptiveMilestoneGuidanceService(fishingActions,
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService())
                         .build(data(20, 2, Arrays.asList(
@@ -116,7 +116,7 @@ public class CurrentExecutionPlanIntegrityTest
                         item(ItemID.FLY_FISHING_ROD, "Fly fishing rod", 1),
                         item(ItemID.FEATHER, "Feather", 250)));
         AdaptiveMilestoneGuidanceService service =
-                new AdaptiveMilestoneGuidanceService(fishingActions,
+                TestFixtures.adaptiveMilestoneGuidanceService(fishingActions,
                         new MethodExecutionProfileCatalog(),
                         new SkillingXpModifierService());
 
@@ -144,7 +144,7 @@ public class CurrentExecutionPlanIntegrityTest
                 new Guidance("Fly-fish trout.",
                         "Bring a fly fishing rod and feathers.",
                         "Barbarian Village fishing spots.", ""),
-                SafetyEvidence.skill(true, Skill.FISHING));
+                Safety.skill(true, Skill.FISHING));
 
         Recommendation validated = new FinalExecutionPlanValidator().validate(
                 recommendation, context(data(18, 2, Collections.emptyList())));
@@ -164,7 +164,7 @@ public class CurrentExecutionPlanIntegrityTest
                 new Guidance("Net shrimp and anchovies.",
                         "Bring a small fishing net.",
                         "Lumbridge Swamp fishing spots.", null),
-                SafetyEvidence.skill(true, Skill.FISHING));
+                Safety.skill(true, Skill.FISHING));
         StrategyContext strategyContext = context(
                 data(18, 2, Collections.emptyList()));
         recommendation = recommendation.withGoalProvenance(
@@ -175,7 +175,7 @@ public class CurrentExecutionPlanIntegrityTest
 
         assertEquals(20, recommendation.getCurrentExecutionTargetLevel());
         GuidanceChecklist checklist = new MethodGuidanceService(
-                new FarmingRunPlanner(new FarmingRunCatalog()))
+                TestFixtures.farmingRunPlanner(new FarmingRunCatalog()))
                 .build(recommendation, null);
         assertEquals("Level 18 → 20", checklist.getProgress());
         StrategicPlan strategicPlan = new StrategicPlanService().build(
@@ -195,7 +195,7 @@ public class CurrentExecutionPlanIntegrityTest
                 Confidence.VERIFIED, 18, 53,
                 new Guidance("Net fish.", "Bring a net.",
                         "Lumbridge Swamp fishing spots.", null),
-                SafetyEvidence.skill(true, Skill.FISHING));
+                Safety.skill(true, Skill.FISHING));
 
         assertEquals(18, recommendation.getCurrentExecutionTargetLevel());
         Recommendation validated = new FinalExecutionPlanValidator().validate(
@@ -235,7 +235,7 @@ public class CurrentExecutionPlanIntegrityTest
     {
         return new ActionDef(Skill.FISHING,
                 "runelite:fishing:" + id, name, level, xp, null,
-                MembershipStatus.F2P, -1);
+                Membership.F2P, -1);
     }
 
     private static TrainingPlan plan(TrainingMethod method)
@@ -269,9 +269,7 @@ public class CurrentExecutionPlanIntegrityTest
             levels.put(skill, level);
             xp.put(skill, level <= 1 ? 0 : Experience.getXpForLevel(level));
         }
-        AccountSnapshot account = new AccountSnapshot("Stage test", accountType,
-                AccountMode.fromTypeCode(accountType).name(),
-                MembershipStatus.F2P, 0, 50, 0L, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Stage test", 0L, accountType, AccountMode.fromTypeCode(accountType).name(), Membership.F2P, 0, 50, 0L, levels, xp);
         return GameData.builder(account)
                 .inventory(new ItemsState(inventory, true))
                 .equipment(new ItemsState(Collections.emptyList()))

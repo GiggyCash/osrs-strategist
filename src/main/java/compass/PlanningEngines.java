@@ -1,14 +1,13 @@
 package compass;
+import lombok.*;
+import static net.runelite.api.gameval.ItemID.*;
+import static net.runelite.api.Skill.*;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.Skill;
-import net.runelite.api.gameval.ItemID;
+import javax.inject.*;
+import net.runelite.api.*;
 import static compass.Text.get;
 
 /**
@@ -19,33 +18,12 @@ import static compass.Text.get;
  * shortfall math instead of each skill reimplementing bank semantics.</p>
  */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class AccountResourcePlanner
 {
     private final PurchaseCostAdvisor purchaseCostAdvisor;
     private final MainEconomyPlanner mainEconomyPlanner;
     private final ResourceSourceCatalog resourceSourceCatalog;
-
-    @Inject
-    public AccountResourcePlanner(PurchaseCostAdvisor purchaseCostAdvisor,
-            MainEconomyPlanner mainEconomyPlanner,
-            ResourceSourceCatalog resourceSourceCatalog)
-    {
-        this.purchaseCostAdvisor = purchaseCostAdvisor;
-        this.mainEconomyPlanner = mainEconomyPlanner;
-        this.resourceSourceCatalog = resourceSourceCatalog;
-    }
-
-    public AccountResourcePlanner(PurchaseCostAdvisor purchaseCostAdvisor)
-    {
-        this(purchaseCostAdvisor, new MainEconomyPlanner(),
-                new ResourceSourceCatalog());
-    }
-
-    /** Test/compatibility constructor that deliberately omits live prices. */
-    public AccountResourcePlanner()
-    {
-        this(null, new MainEconomyPlanner(), new ResourceSourceCatalog());
-    }
 
     public SupplyPlan plan(
             GameData data,
@@ -69,12 +47,12 @@ class AccountResourcePlanner
             var owned = observed.quantity(need.getName());
             var restricted = observed.restrictedQuantity(need.getName());
             int missing = reusable == null
-                    ? Math.max(0, need.getQuantity() - owned)
+                    ? max(0, need.quantity - owned)
                     : 0;
             entries.add(new ResourcePlanEntry(
                     need.getName(),
-                    need.getItemId(),
-                    need.getQuantity(),
+                    need.itemId,
+                    need.quantity,
                     owned,
                     missing,
                     restricted,
@@ -193,7 +171,7 @@ class AccountResourcePlanner
         {
             List<String> routes = sourceRoutes(missingInputs, mode,
                     data == null || data.account() == null
-                            ? MembershipStatus.UNKNOWN
+                            ? Membership.UNKNOWN
                             : data.account().membership(), true);
             text.append(get(1377)).append(shortfall)
                     .append(get(85));
@@ -218,7 +196,7 @@ class AccountResourcePlanner
         {
             List<String> routes = sourceRoutes(missingInputs, mode,
                     data == null || data.account() == null
-                            ? MembershipStatus.UNKNOWN
+                            ? Membership.UNKNOWN
                             : data.account().membership(), false);
             text.append("Self-source ").append(shortfall)
                     .append(get(1378));
@@ -244,7 +222,7 @@ class AccountResourcePlanner
                 : purchaseCostAdvisor.estimate(missingInputs);
         List<String> routes = mainRoutes(missingInputs,
                 data == null || data.account() == null
-                        ? MembershipStatus.UNKNOWN
+                        ? Membership.UNKNOWN
                         : data.account().membership());
         MainPurchaseDecision decision = mainEconomyPlanner == null
                 ? null : mainEconomyPlanner.evaluateUnmeasuredPurchase(
@@ -256,7 +234,7 @@ class AccountResourcePlanner
             text.append("Buy ").append(shortfall)
                     .append(get(1379))
                     .append(get(1380))
-                    .append(format(decision.getTotalCost()))
+                    .append(format(decision.totalCost))
                     .append(get(72))
                     .append(format(decision.getObservedCoins()))
                     .append(get(1381));
@@ -268,7 +246,7 @@ class AccountResourcePlanner
         {
             text.append("Self-source ").append(shortfall).append(". ")
                     .append(get(1382))
-                    .append(format(decision.getTotalCost()))
+                    .append(format(decision.totalCost))
                     .append(" of ")
                     .append(format(decision.getObservedCoins()))
                     .append(get(73))
@@ -280,7 +258,7 @@ class AccountResourcePlanner
                 == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
         {
             text.append(get(74))
-                    .append(format(decision.getTotalCost()))
+                    .append(format(decision.totalCost))
                     .append(get(1590))
                     .append(format(decision.getObservedCoins()))
                     .append(get(1383));
@@ -297,10 +275,10 @@ class AccountResourcePlanner
     }
 
     private List<String> mainRoutes(List<MethodInput> missingInputs,
-            MembershipStatus membership)
+            Membership membership)
     {
         if (resourceSourceCatalog == null || missingInputs == null)
-            return java.util.Collections.emptyList();
+            return emptyList();
         List<String> routes = new ArrayList<>();
         for (MethodInput input : missingInputs)
         {
@@ -314,11 +292,11 @@ class AccountResourcePlanner
     }
 
     private List<String> sourceRoutes(List<MethodInput> missingInputs,
-            AccountMode mode, MembershipStatus membership,
+            AccountMode mode, Membership membership,
             boolean justInTime)
     {
         if (resourceSourceCatalog == null || missingInputs == null)
-            return java.util.Collections.emptyList();
+            return emptyList();
         List<String> routes = new ArrayList<>();
         for (MethodInput input : missingInputs)
             for (String route : resourceSourceCatalog.suggestions(
@@ -405,7 +383,7 @@ class AccountResourcePlanner
         {
             if (input == null || input.getName() == null
                     || input.getName().trim().isEmpty()
-                    || input.getQuantity() <= 0)
+                    || input.quantity <= 0)
             {
                 continue;
             }
@@ -415,13 +393,13 @@ class AccountResourcePlanner
             {
                 merged.put(key, new MutableNeed(
                         input.getName().trim(),
-                        input.getItemId(),
-                        input.getQuantity()));
+                        input.itemId,
+                        input.quantity));
             }
             else
             {
                 existing.quantity = safeAdd(
-                        existing.quantity, input.getQuantity());
+                        existing.quantity, input.quantity);
             }
         }
 
@@ -456,7 +434,7 @@ class AccountResourcePlanner
 
     private static String format(long value)
     {
-        return String.format(Locale.ROOT, "%,d", Math.max(0, value));
+        return String.format(Locale.ROOT, "%,d", max(0, value));
     }
 
 
@@ -470,7 +448,7 @@ class AccountResourcePlanner
         {
             this.name = name;
             this.itemId = itemId;
-            this.quantity = Math.max(0, quantity);
+            this.quantity = max(0, quantity);
         }
     }
 }
@@ -480,7 +458,7 @@ class AccountResourcePlanner
  * direct region observations. Direct observation is the strongest evidence.
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class AgilityAccessEvaluator
 {
     private final AgilityCourseCatalog catalog;
@@ -490,7 +468,7 @@ class AgilityAccessEvaluator
         AgilityCourseDefinition best = null;
         for (AgilityCourseDefinition course : catalog.all())
         {
-            if (course.isWilderness() || !isVerifiedAvailable(data, course))
+            if (course.wilderness || !isVerifiedAvailable(data, course))
             {
                 continue;
             }
@@ -503,13 +481,13 @@ class AgilityAccessEvaluator
         return best;
     }
 
-    public RequirementCheck courseCheck(
+    public EvidenceCheck courseCheck(
             GameData data,
             AgilityCourseDefinition course)
     {
         if (course == null)
         {
-            return new RequirementCheck(
+            return new EvidenceCheck(
                     "agility:course",
                     get(1390),
                     RequirementState.CHECK_NEEDED,
@@ -526,7 +504,7 @@ class AgilityAccessEvaluator
         var level = account.level(Skill.AGILITY);
         if (level < course.getRequiredLevel())
         {
-            return new RequirementCheck(
+            return new EvidenceCheck(
                     "agility:" + course.id,
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
@@ -535,9 +513,9 @@ class AgilityAccessEvaluator
             );
         }
 
-        if (account.membership() != MembershipStatus.P2P)
+        if (account.membership() != Membership.P2P)
         {
-            return new RequirementCheck(
+            return new EvidenceCheck(
                     "agility:" + course.id,
                     course.getDisplayName(),
                     RequirementState.BLOCKED,
@@ -554,7 +532,7 @@ class AgilityAccessEvaluator
             );
         }
 
-        var quest = course.getRequiredQuest();
+        var quest = course.requiredQuest;
         if (quest != null)
         {
             var quests = data.quests();
@@ -572,7 +550,7 @@ class AgilityAccessEvaluator
             if (status == QuestStatus.NOT_STARTED
                     || status == QuestStatus.IN_PROGRESS)
             {
-                return new RequirementCheck(
+                return new EvidenceCheck(
                         "agility:" + course.id,
                         course.getDisplayName(),
                         RequirementState.BLOCKED,
@@ -591,7 +569,7 @@ class AgilityAccessEvaluator
         );
     }
 
-    public RequirementCheck wildernessCourseCheck(GameData data)
+    public EvidenceCheck wildernessCourseCheck(GameData data)
     {
         return courseCheck(data, catalog.wildernessCourse());
     }
@@ -603,11 +581,11 @@ class AgilityAccessEvaluator
         return courseCheck(data, course).getState() == RequirementState.VERIFIED;
     }
 
-    private RequirementCheck verified(
+    private EvidenceCheck verified(
             AgilityCourseDefinition course,
             String evidence)
     {
-        return new RequirementCheck(
+        return new EvidenceCheck(
                 "agility:" + course.id,
                 course.getDisplayName(),
                 RequirementState.VERIFIED,
@@ -615,11 +593,11 @@ class AgilityAccessEvaluator
         );
     }
 
-    private RequirementCheck unknown(
+    private EvidenceCheck unknown(
             AgilityCourseDefinition course,
             String evidence)
     {
-        return new RequirementCheck(
+        return new EvidenceCheck(
                 "agility:" + course.id,
                 course.getDisplayName(),
                 RequirementState.CHECK_NEEDED,
@@ -637,7 +615,7 @@ class AgilityAccessEvaluator
  * follow later: live state first, remembered proof second, safe inference third.</p>
  */
 @Singleton
-@lombok.RequiredArgsConstructor(onConstructor_ = @Inject)
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class FarmingAccessEvaluator
 {
     private final FarmingAccessCatalog catalog;
@@ -649,7 +627,7 @@ class FarmingAccessEvaluator
             FarmingSnapshot existing)
     {
         Set<String> reachable = new HashSet<>();
-        Map<String, CapabilityState> tools = new HashMap<>();
+        Map<String, Capability> tools = new HashMap<>();
         Map<String, Long> readyAt = new HashMap<>();
 
         if (existing != null)
@@ -660,7 +638,7 @@ class FarmingAccessEvaluator
         }
 
         if (account == null
-                || account.membership() != MembershipStatus.P2P)
+                || account.membership() != Membership.P2P)
         {
             return new FarmingSnapshot(reachable, tools, readyAt);
         }
@@ -677,7 +655,7 @@ class FarmingAccessEvaluator
                 continue;
             }
 
-            var requiredQuest = definition.getRequiredQuest();
+            var requiredQuest = definition.requiredQuest;
             if (requiredQuest == null)
             {
                 reachable.add(definition.id);
@@ -732,28 +710,12 @@ class FarmingAccessEvaluator
 
 /** Builds the current herb/tree checklist from verified access and resources. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class FarmingRunPlanner
 {
     private final FarmingRunCatalog catalog;
     private final FarmingSupplyCatalog supplyCatalog;
     private final ResourceReadinessService resources;
-
-    @Inject
-    public FarmingRunPlanner(
-            FarmingRunCatalog catalog,
-            FarmingSupplyCatalog supplyCatalog,
-            ResourceReadinessService resources)
-    {
-        this.catalog = catalog;
-        this.supplyCatalog = supplyCatalog;
-        this.resources = resources;
-    }
-
-    /** Compatibility constructor retained for focused tests. */
-    public FarmingRunPlanner(FarmingRunCatalog catalog)
-    {
-        this(catalog, new FarmingSupplyCatalog(), new ResourceReadinessService());
-    }
 
     public GuidanceChecklist build(GameData data, String activityId)
     {
@@ -766,7 +728,7 @@ class FarmingRunPlanner
 
         var account = data.account();
         var farmingLevel = account.level(Skill.FARMING);
-        if (account.membership() != MembershipStatus.P2P)
+        if (account.membership() != Membership.P2P)
         {
             return new GuidanceChecklist(activityId, "Farming run",
                     get(1464), steps);
@@ -816,23 +778,23 @@ class FarmingRunPlanner
         }
     }
 
-    private CapabilityState toolState(FarmingSnapshot farming, String id)
+    private Capability toolState(FarmingSnapshot farming, String id)
     {
         return farming == null
-                ? CapabilityState.UNKNOWN
+                ? Capability.UNKNOWN
                 : farming.leprechaunToolState(id);
     }
 
     private void appendResource(
             List<GuidanceStep> steps,
-            RequirementCheck check)
+            EvidenceCheck check)
     {
         GuidanceStepState state = check.getState() == RequirementState.VERIFIED
                 ? GuidanceStepState.COMPLETE
                 : GuidanceStepState.CHECK_NEEDED;
         steps.add(new GuidanceStep(
                 check.id, "Prep • " + check.getLabel(),
-                check.getEvidence(), state));
+                check.evidence, state));
     }
 
     private boolean isConfirmedReachable(
@@ -847,7 +809,7 @@ class FarmingRunPlanner
                 if (memory.hasObserved("region." + region)) return true;
             }
         }
-        var quest = patch.getRequiredQuest();
+        var quest = patch.requiredQuest;
         if (quest == null) return true;
         var quests = data.quests();
         return quests != null && quests.statusOf(quest) == QuestStatus.COMPLETE;
@@ -895,7 +857,7 @@ class FarmingRunPlanner
 /** Evaluates ALL/ANY item alternatives without treating unobserved storage as empty. */
 final class ItemRequirementEvaluator
 {
-    public ItemRequirementResult evaluate(ItemRequirementExpression expression,
+    public ItemRequirementResult evaluate(ItemRule expression,
             GameData data, boolean useGroupStorage)
     {
         if (expression == null)
@@ -904,23 +866,23 @@ final class ItemRequirementEvaluator
         return evaluate(expression, data, items, useGroupStorage);
     }
 
-    private ItemRequirementResult evaluate(ItemRequirementExpression expression,
+    private ItemRequirementResult evaluate(ItemRule expression,
             GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
-        if (expression.getKind() == ItemRequirementExpression.Kind.ITEM)
+        if (expression.getKind() == ItemRule.Kind.ITEM)
             return item(expression, data, items, useGroupStorage);
-        if (expression.getKind() == ItemRequirementExpression.Kind.ITEM_CLASS)
+        if (expression.getKind() == ItemRule.Kind.ITEM_CLASS)
             return itemClass(expression, data, items, useGroupStorage);
-        if (expression.getKind() == ItemRequirementExpression.Kind.CHECK_NEEDED)
+        if (expression.getKind() == ItemRule.Kind.CHECK_NEEDED)
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     expression.getCheckAction());
 
         List<ItemRequirementResult> results = new ArrayList<>();
-        for (ItemRequirementExpression child : expression.getChildren())
+        for (ItemRule child : expression.getChildren())
             results.add(evaluate(child, data, items, useGroupStorage));
 
-        if (expression.getKind() == ItemRequirementExpression.Kind.ANY_OF)
+        if (expression.getKind() == ItemRule.Kind.ANY_OF)
         {
             for (ItemRequirementResult result : results)
                 if (result.isSatisfied()) return result;
@@ -933,7 +895,7 @@ final class ItemRequirementEvaluator
             // no proven shortfall to source. Once every branch is proven absent,
             // carry the smallest concrete branch into acquisition guidance.
             List<MethodInput> inputs = needsVerification
-                    ? Collections.emptyList() : bestAlternativeInputs(results);
+                    ? emptyList() : bestAlternativeInputs(results);
             return new ItemRequirementResult(state,
                     (needsVerification
                             ? get(1320) : "Get one of: ")
@@ -947,7 +909,7 @@ final class ItemRequirementEvaluator
         {
             if (!result.isSatisfied() && !result.getAction().isEmpty())
                 actions.add(result.getAction());
-            inputs.addAll(result.getMissingInputs());
+            inputs.addAll(result.missingInputs);
             if (result.getState() == RequirementState.BLOCKED)
                 state = RequirementState.BLOCKED;
             else if (result.getState() == RequirementState.CHECK_NEEDED
@@ -957,7 +919,7 @@ final class ItemRequirementEvaluator
         return new ItemRequirementResult(state, String.join("; ", actions), inputs);
     }
 
-    private ItemRequirementResult item(ItemRequirementExpression expression,
+    private ItemRequirementResult item(ItemRule expression,
             GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
@@ -990,19 +952,19 @@ final class ItemRequirementEvaluator
                 observed = ownershipObserved(data, items, useGroupStorage);
                 break;
         }
-        if (owned >= expression.getQuantity())
+        if (owned >= expression.quantity)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
 
-        var shortfall = Math.max(0, expression.getQuantity() - owned);
+        var shortfall = max(0, expression.quantity - owned);
         var target = String.join(" or ", expression.getItemNames());
         if (expression.getItemNames().size() > 1) target = "(" + target + ")";
         String action = (observed ? "Get " : get(1321))
                 + shortfall + " × " + target;
 
-        List<MethodInput> inputs = Collections.emptyList();
+        List<MethodInput> inputs = emptyList();
         if (observed && expression.getItemNames().size() == 1)
         {
-            inputs = Collections.singletonList(new MethodInput(
+            inputs = singletonList(new MethodInput(
                     expression.getItemNames().get(0), -1, shortfall));
         }
         return new ItemRequirementResult(observed
@@ -1010,7 +972,7 @@ final class ItemRequirementEvaluator
                 action, inputs);
     }
 
-    private ItemRequirementResult itemClass(ItemRequirementExpression expression,
+    private ItemRequirementResult itemClass(ItemRule expression,
             GameData data, ItemIndex items,
             boolean useGroupStorage)
     {
@@ -1061,9 +1023,9 @@ final class ItemRequirementEvaluator
                 observed = ownershipObserved(data, items, useGroupStorage);
                 break;
         }
-        if (owned >= expression.getQuantity())
+        if (owned >= expression.quantity)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
-        var shortfall = Math.max(0, expression.getQuantity() - owned);
+        var shortfall = max(0, expression.quantity - owned);
         var target = itemClass.getLabel();
         if (!expression.getExcludedItemNames().isEmpty())
             target += " (excluding " + String.join(" or ",
@@ -1075,14 +1037,14 @@ final class ItemRequirementEvaluator
     }
 
     private static ItemRequirementResult freeInventorySlots(
-            ItemRequirementExpression expression, GameData data)
+            ItemRule expression, GameData data)
     {
         var inventory = data == null ? null : data.inventory();
         if (inventory == null || !inventory.hasCompleteSlotObservation())
             return new ItemRequirementResult(RequirementState.CHECK_NEEDED,
                     get(332));
-        var required = Math.max(1, expression.getQuantity());
-        int free = Math.max(0, 28
+        var required = max(1, expression.quantity);
+        int free = max(0, 28
                 - UimSetupCostService.occupiedInventorySlots(inventory));
         if (free >= required)
             return new ItemRequirementResult(RequirementState.VERIFIED, "");
@@ -1095,18 +1057,18 @@ final class ItemRequirementEvaluator
     private static List<MethodInput> bestAlternativeInputs(
             List<ItemRequirementResult> results)
     {
-        List<MethodInput> best = Collections.emptyList();
+        List<MethodInput> best = emptyList();
         var bestCost = Long.MAX_VALUE;
         for (ItemRequirementResult result : results)
         {
-            if (result.getMissingInputs().isEmpty()) continue;
+            if (result.missingInputs.isEmpty()) continue;
             var cost = 0L;
-            for (MethodInput input : result.getMissingInputs())
-                cost += Math.max(1, input.getQuantity());
+            for (MethodInput input : result.missingInputs)
+                cost += max(1, input.quantity);
             if (cost < bestCost)
             {
                 bestCost = cost;
-                best = result.getMissingInputs();
+                best = result.missingInputs;
             }
         }
         return best;
@@ -1134,73 +1096,6 @@ class MainEconomyPlanner
 {
     private static final long MINIMUM_LIQUID_BUFFER = 10_000L;
 
-    public MainPurchaseDecision evaluatePurchase(
-            StrategyContext context,
-            MainPurchaseCandidate candidate)
-    {
-        if (context == null || candidate == null)
-        {
-            return decision(MainPurchaseChoice.CHECK_NEEDED, 0L, 0L,
-                    Confidence.CHECK_NEEDED,
-                    get(1389));
-        }
-
-        if (context.accountMode() != AccountMode.MAIN)
-        {
-            return decision(MainPurchaseChoice.NOT_APPLICABLE,
-                    candidate.totalCost(), 0L,
-                    Confidence.VERIFIED,
-                    get(358));
-        }
-
-        var data = context.data();
-        var economy = data == null ? null : data.economy();
-        if (economy == null
-                || economy.getConfidence() != Confidence.VERIFIED)
-        {
-            return decision(MainPurchaseChoice.CHECK_NEEDED,
-                    candidate.totalCost(), economy == null ? 0L : economy.getCoins(),
-                    Confidence.CHECK_NEEDED,
-                    get(363));
-        }
-
-        var cost = candidate.totalCost();
-        var coins = economy.getCoins();
-        if (cost == Long.MAX_VALUE)
-        {
-            return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
-                    Confidence.CHECK_NEEDED,
-                    get(364));
-        }
-
-        if (coins < cost)
-        {
-            return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
-                    cost, coins, Confidence.CHECK_NEEDED,
-                    get(365));
-        }
-
-        if (candidate.getEstimatedSelfSourceMinutes() > 0
-                && candidate.getEstimatedBuyMinutes()
-                >= candidate.getEstimatedSelfSourceMinutes())
-        {
-            return decision(MainPurchaseChoice.SELF_SOURCE,
-                    cost, coins, Confidence.VERIFIED,
-                    get(366));
-        }
-
-        if (candidate.getEstimatedSelfSourceMinutes() <= 0)
-        {
-            return decision(MainPurchaseChoice.CHECK_NEEDED,
-                    cost, coins, Confidence.CHECK_NEEDED,
-                    get(367));
-        }
-
-        return decision(MainPurchaseChoice.BUY,
-                cost, coins, Confidence.VERIFIED,
-                get(368));
-    }
-
     /**
      * Uses deliberately broad liquid-wealth bands when no defensible time
      * estimate exists. This avoids both fake GP/hour precision and the old
@@ -1212,21 +1107,21 @@ class MainEconomyPlanner
             boolean reviewedSelfSourceRoute)
     {
         if (estimate == null || !estimate.isComplete()
-                || estimate.getTotalCost() <= 0)
+                || estimate.totalCost <= 0)
             return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
-                    economy == null ? 0L : economy.getCoins(),
+                    economy == null ? 0L : economy.coins,
                     Confidence.CHECK_NEEDED,
                     get(369));
         if (economy == null
-                || economy.getConfidence() != Confidence.VERIFIED)
+                || economy.confidence != Confidence.VERIFIED)
             return decision(MainPurchaseChoice.CHECK_NEEDED,
-                    estimate.getTotalCost(),
-                    economy == null ? 0L : economy.getCoins(),
+                    estimate.totalCost,
+                    economy == null ? 0L : economy.coins,
                     Confidence.CHECK_NEEDED,
                     get(370));
 
-        var cost = estimate.getTotalCost();
-        var coins = Math.max(0L, economy.getCoins());
+        var cost = estimate.totalCost;
+        var coins = max(0L, economy.coins);
         if (coins < cost)
             return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
                     cost, coins, Confidence.CHECK_NEEDED,
@@ -1249,16 +1144,6 @@ class MainEconomyPlanner
         return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
                 Confidence.CHECK_NEEDED,
                 get(362));
-    }
-
-    public boolean maySuggestSale(
-            int itemId,
-            ProtectedItemProfile playerProtectedItems,
-            boolean builtInProtected)
-    {
-        if (builtInProtected) return false;
-        return playerProtectedItems == null
-                || !playerProtectedItems.isProtected(itemId);
     }
 
     private static MainPurchaseDecision decision(
@@ -1288,12 +1173,12 @@ class MethodInputResolver
             return new ArrayList<>();
         }
 
-        for (MethodInputRule rule : profile.getInputs())
+        for (MethodInputRule rule : profile.inputs)
         {
             var input = resolveOne(rule, action, actions);
-            if (input == null || input.getQuantity() <= 0) continue;
-            String key = input.getItemId() > 0
-                    ? "id:" + input.getItemId()
+            if (input == null || input.quantity <= 0) continue;
+            String key = input.itemId > 0
+                    ? "id:" + input.itemId
                     : "name:" + input.getName().toLowerCase(Locale.ROOT);
             var previous = merged.get(key);
             if (previous == null)
@@ -1304,8 +1189,8 @@ class MethodInputResolver
             {
                 merged.put(key, new MethodInput(
                         previous.getName(),
-                        previous.getItemId(),
-                        previous.getQuantity() + input.getQuantity()));
+                        previous.itemId,
+                        previous.quantity + input.quantity));
             }
         }
         return new ArrayList<>(merged.values());
@@ -1329,7 +1214,7 @@ class MethodInputResolver
         {
             case ACTION_ITEM:
                 name = action.getName();
-                itemId = action.getItemId();
+                itemId = action.itemId;
                 if (perAction <= 0) perAction = 1.0;
                 break;
             case RAW_ACTION_ITEM:
@@ -1381,7 +1266,7 @@ class MethodInputResolver
         return new MethodInput(
                 name,
                 itemId,
-                (int) Math.ceil(actions * perAction));
+                (int) ceil(actions * perAction));
     }
 
     private static String rawName(String actionName)
@@ -1490,7 +1375,7 @@ class OpportunityEngine
 
     public List<Opportunity> evaluate(AccountSnapshot snapshot)
     {
-        if (snapshot == null) return Collections.emptyList();
+        if (snapshot == null) return emptyList();
         return evaluate(GameData.builder(snapshot).build());
     }
 
@@ -1515,34 +1400,34 @@ class OpportunityEngine
 
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1885), OpportunityType.TREE_RUN,
-                    "Tree run", Collections.emptyList());
+                    "Tree run", emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1886), OpportunityType.FARMING_CONTRACT,
-                    get(1887), Collections.emptyList());
+                    get(1887), emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1888), OpportunityType.TEARS_OF_GUTHIX,
-                    "Tears of Guthix", Collections.emptyList());
+                    "Tears of Guthix", emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1889), OpportunityType.KINGDOM,
-                    "Kingdom", Collections.emptyList());
+                    "Kingdom", emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1890), OpportunityType.KINGDOM_APPROVAL,
-                    get(1891), Collections.emptyList());
+                    get(1891), emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1892), OpportunityType.BATTLESTAVES,
-                    get(1522), Collections.emptyList());
+                    get(1522), emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1893), OpportunityType.DYNAMITE,
-                    "Daily dynamite", Collections.emptyList());
+                    "Daily dynamite", emptyList());
             addPreparedTimedOpportunity(opportunities, recurring, now,
                     get(1894), OpportunityType.DAILY_DIARY_REWARD,
-                    get(1523), Collections.emptyList());
+                    get(1523), emptyList());
         }
 
         var clue = data.clue();
-        if (clue != null && clue.isCluePresent())
+        if (clue != null && clue.cluePresent)
         {
-            var tier = ClueTier.fromText(clue.getClueType());
+            var tier = ClueTier.fromText(clue.clueType);
             if (tier.isAvailableFor(membership))
             {
                 var step = clue.getCurrentStep();
@@ -1551,12 +1436,12 @@ class OpportunityEngine
                     preparation.add(get(392));
                 else
                 {
-                    preparation.addAll(step.getItemRequirements());
+                    preparation.addAll(step.itemRequirements);
                     if (step.isRequiresSpade()) preparation.add("Spade");
                     if (step.isRequiresLight()) preparation.add("Light source");
                     if (step.hasEnemy()) preparation.add(
                             get(1524) + step.getEnemy());
-                    if (step.isWilderness()) preparation.add(
+                    if (step.wilderness) preparation.add(
                             get(1525));
                     if (step.hasStashUnit()) preparation.add(
                             "Observe the " + step.getStashUnit()
@@ -1568,8 +1453,8 @@ class OpportunityEngine
                 opportunities.add(new Opportunity(
                         get(1895),
                         OpportunityType.CLUE,
-                        clue.getClueType() == null ? "Pending clue"
-                                : clue.getClueType() + " clue"
+                        clue.clueType == null ? "Pending clue"
+                                : clue.clueType + " clue"
                                 + (step == null ? "" : ": " + step.getKind()),
                         ready,
                         ready ? Confidence.VERIFIED
@@ -1577,9 +1462,9 @@ class OpportunityEngine
                         preparation,
                         false,
                         step != null && step.hasEnemy()
-                                ? SafetyEvidence.potentiallyIrreversible(
+                                ? Safety.potentiallyIrreversible(
                                         tier == ClueTier.BEGINNER)
-                                : SafetyEvidence.harmless(
+                                : Safety.harmless(
                                         tier == ClueTier.BEGINNER)
                 ));
             }
@@ -1631,7 +1516,7 @@ class OpportunityEngine
         var setupVerified = ready && missing.isEmpty();
         result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
                 ready, Confidence.VERIFIED, missing,
-                setupVerified, SafetyEvidence.skill(false,
+                setupVerified, Safety.skill(false,
                 net.runelite.api.Skill.FARMING)));
     }
 
@@ -1665,7 +1550,7 @@ class OpportunityEngine
         result.add(new Opportunity(id, OpportunityType.BIRDHOUSE_RUN,
                 "Birdhouse run", ready, Confidence.VERIFIED,
                 missing, setupVerified,
-                SafetyEvidence.skill(false,
+                Safety.skill(false,
                         net.runelite.api.Skill.HUNTER)));
     }
 
@@ -1708,19 +1593,9 @@ class QuestRequirementResolver
         this.resourceSources = resourceSources == null
                 ? new ResourceSourceCatalog() : resourceSources;
         this.resourcePlanner = resourcePlanner == null
-                ? new ResourceAcquisitionPlanner(this.resourceSources)
+                ? new ResourceAcquisitionPlanner(this.resourceSources,
+                        new ResourceDependencyCatalog())
                 : resourcePlanner;
-    }
-
-    public QuestRequirementResolver(ResourceSourceCatalog resourceSources)
-    {
-        this(resourceSources, new ResourceAcquisitionPlanner(resourceSources));
-    }
-
-    /** Compatibility constructor for focused tests and local tooling. */
-    public QuestRequirementResolver()
-    {
-        this(new ResourceSourceCatalog());
     }
 
     public QuestResolution resolve(QuestDefinition definition, StrategyContext context)
@@ -1733,7 +1608,7 @@ class QuestRequirementResolver
         var quests = data.quests();
         List<Preparation> missing = new ArrayList<>();
 
-        for (String prerequisite : definition.getPrerequisites())
+        for (String prerequisite : definition.prerequisites)
         {
             QuestStatus status = quests == null ? QuestStatus.UNKNOWN
                     : quests.statusOf(prerequisite);
@@ -1742,21 +1617,21 @@ class QuestRequirementResolver
                         ? get(560) + prerequisite
                         : get(1349) + prerequisite,
                         RestrictedQuestPolicy.isSafe(account, prerequisite)
-                                ? SafetyEvidence.verifiedSafe(
-                                definition.isFreeToPlay())
-                                : SafetyEvidence.potentiallyIrreversible(
-                                definition.isFreeToPlay())));
+                                ? Safety.verifiedSafe(
+                                definition.freeToPlay)
+                                : Safety.potentiallyIrreversible(
+                                definition.freeToPlay)));
         }
 
         for (Map.Entry<Skill, Integer> requirement
-                : definition.getSkillRequirements().entrySet())
+                : definition.skillRequirements.entrySet())
         {
             var current = account.level(requirement.getKey());
             if (current < requirement.getValue())
                 missing.add(new Preparation("Train "
                         + requirement.getKey().getName() + " from " + current
                         + " to " + requirement.getValue(),
-                        SafetyEvidence.skill(definition.isFreeToPlay(),
+                        Safety.skill(definition.freeToPlay,
                                 requirement.getKey())));
         }
 
@@ -1765,14 +1640,14 @@ class QuestRequirementResolver
         // An inventory observation does not prove that an unobserved bank is empty.
         var ownershipObserved = items.usableOwnershipObserved();
         for (QuestDefinition.QuestItemRequirement requirement
-                : definition.getItemRequirements())
+                : definition.itemRequirements)
         {
             var owned = items.quantity(requirement.getName());
-            if (owned < requirement.getQuantity())
+            if (owned < requirement.quantity)
                 missing.add(new Preparation((ownershipObserved ? "Obtain " : get(1350))
-                        + Math.max(0, requirement.getQuantity() - owned) + " × "
-                        + requirement.getName(), SafetyEvidence.harmless(
-                        definition.isFreeToPlay())));
+                        + max(0, requirement.quantity - owned) + " × "
+                        + requirement.getName(), Safety.harmless(
+                        definition.freeToPlay)));
         }
 
         ImportedQuestItemRequirementCatalog.Result imported = hasImportedItemEvidence(definition)
@@ -1791,7 +1666,7 @@ class QuestRequirementResolver
         if (definition.getQuestPointsRequired() > 0)
             missing.add(new Preparation(get(1924)
                     + definition.getQuestPointsRequired() + " quest points",
-                    SafetyEvidence.harmless(definition.isFreeToPlay())));
+                    Safety.harmless(definition.freeToPlay)));
         for (String check : definition.getAccessChecks())
         {
             if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
@@ -1799,21 +1674,21 @@ class QuestRequirementResolver
                 if (imported == null)
                 {
                     missing.add(new Preparation(check,
-                            SafetyEvidence.harmless(
-                                    definition.isFreeToPlay())));
+                            Safety.harmless(
+                                    definition.freeToPlay)));
                 }
                 else
                 {
                     for (String unresolved : imported.getUnresolved())
                         missing.add(new Preparation(
                                 get(1351) + unresolved,
-                                SafetyEvidence.harmless(
-                                        definition.isFreeToPlay())));
+                                Safety.harmless(
+                                        definition.freeToPlay)));
                 }
                 continue;
             }
             missing.add(new Preparation(check,
-                    SafetyEvidence.harmless(definition.isFreeToPlay())));
+                    Safety.harmless(definition.freeToPlay)));
         }
 
         String unlocks = definition.getUnlocks().isEmpty() ? ""
@@ -1828,8 +1703,8 @@ class QuestRequirementResolver
                             unlocks.isEmpty() ? get(562)
                                     : get(1352) + unlocks + "."),
                     get(1353),
-                    SafetyEvidence.verifiedSafe(
-                            definition.isFreeToPlay()));
+                    Safety.verifiedSafe(
+                            definition.freeToPlay));
         }
 
         List<String> missingText = new ArrayList<>();
@@ -1847,27 +1722,27 @@ class QuestRequirementResolver
     private Preparation itemPreparation(ItemRequirementResult result,
             QuestDefinition definition, StrategyContext context)
     {
-        SafetyEvidence safety = SafetyEvidence.harmless(
-                definition.isFreeToPlay());
-        if (result.getMissingInputs().isEmpty())
+        Safety safety = Safety.harmless(
+                definition.freeToPlay);
+        if (result.missingInputs.isEmpty())
             return new Preparation(result.getAction(), safety);
 
-        var first = result.getMissingInputs().get(0);
+        var first = result.missingInputs.get(0);
         var dependency = dependencyResolution(context, first);
         var next = dependency == null ? null : dependency.nextAction();
         if (next != null
-                && next.getConfidence() != Confidence.VERIFIED
+                && next.confidence != Confidence.VERIFIED
                 && next.getAction() != null
                 && !next.getAction().trim().isEmpty())
         {
             var action = withoutTerminalPeriod(next.getAction().trim());
             var detail = new StringBuilder(result.getAction());
             detail.append(get(1356))
-                    .append(formatInputs(result.getMissingInputs())).append(".");
+                    .append(formatInputs(result.missingInputs)).append(".");
             detail.append(get(1357))
                     .append(quantity(first)).append(": ")
                     .append(next.getAction().trim());
-            if (result.getMissingInputs().size() > 1)
+            if (result.missingInputs.size() > 1)
                 detail.append(get(564));
             return new Preparation(action, detail.toString(), safety);
         }
@@ -1888,10 +1763,10 @@ class QuestRequirementResolver
 
         var detail = new StringBuilder(result.getAction());
         detail.append(get(1356))
-                .append(formatInputs(result.getMissingInputs())).append(".");
+                .append(formatInputs(result.missingInputs)).append(".");
         if (!routes.isEmpty())
             detail.append(get(1359)).append(routes.get(0));
-        if (result.getMissingInputs().size() > 1)
+        if (result.missingInputs.size() > 1)
             detail.append(get(565));
         return new Preparation(action, detail.toString(), safety);
     }
@@ -1903,14 +1778,14 @@ class QuestRequirementResolver
                 || context.data().account() == null)
             return null;
         return resourcePlanner.resolveKnownShortfall(
-                context, input.getName(), input.getQuantity());
+                context, input.getName(), input.quantity);
     }
 
     private List<String> sourceRoutes(StrategyContext context, String itemName)
     {
         if (context == null || context.data() == null
                 || context.data().account() == null)
-            return java.util.Collections.emptyList();
+            return emptyList();
         return resourceSources.suggestions(itemName, context.accountMode(),
                 context.data().account().membership(),
                 context.allowsWilderness());
@@ -1918,7 +1793,7 @@ class QuestRequirementResolver
 
     private static String quantity(MethodInput input)
     {
-        return Math.max(1, input.getQuantity()) + " × " + input.getName();
+        return max(1, input.quantity) + " × " + input.getName();
     }
 
     private static String formatInputs(List<MethodInput> inputs)
@@ -1948,16 +1823,16 @@ class QuestRequirementResolver
     {
         private final String text;
         private final String detail;
-        private final SafetyEvidence safetyEvidence;
+        private final Safety safetyEvidence;
 
         private Preparation(String text,
-                SafetyEvidence safetyEvidence)
+                Safety safetyEvidence)
         {
             this(text, text, safetyEvidence);
         }
 
         private Preparation(String text, String detail,
-                SafetyEvidence safetyEvidence)
+                Safety safetyEvidence)
         {
             this.text = text;
             this.detail = detail == null ? text : detail;
@@ -1996,24 +1871,6 @@ class RecommendationEngine
                 ? new SkillBreakpointService() : breakpointService;
         this.actionResolver = actionResolver == null
                 ? new AdaptiveActionSelector() : actionResolver;
-    }
-
-    public RecommendationEngine(
-            TrainingMethodSelector trainingMethodSelector,
-            RecommendationGuidanceService guidanceService)
-    {
-        this(trainingMethodSelector, guidanceService,
-                new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService(), new SkillBreakpointService(),
-                new AdaptiveActionSelector());
-    }
-
-    public RecommendationEngine(TrainingMethodSelector trainingMethodSelector)
-    {
-        this(trainingMethodSelector, new RecommendationGuidanceService(),
-                new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService(), new SkillBreakpointService(),
-                new AdaptiveActionSelector());
     }
 
     public List<Recommendation> recommend(
@@ -2129,7 +1986,7 @@ class RecommendationEngine
         for (Skill skill : Skill.values())
         {
             var level = snapshot.level(skill);
-            if (level >= 99 || skill == Skill.HITPOINTS) continue;
+            if (level >= 99 || skill == HITPOINTS) continue;
             if (!ContentAccessRules.isSkillAvailable(skill,
                     snapshot.membership())) continue;
             if (!AccountBuildPolicy.allowsSkill(snapshot, skill)) continue;
@@ -2158,7 +2015,7 @@ class RecommendationEngine
                 {
                     candidateGuidance = candidateGuidance.withBankingBehavior(
                             candidate.getStrategyProfile()
-                                    .getBankingBehavior());
+                                    .bankingBehavior);
                 }
                 // Some activities can only be rendered truthfully once live
                 // resources or state identify a concrete execution loop. A
@@ -2191,13 +2048,13 @@ class RecommendationEngine
                     primaryReason,
                     score,
                     trainingPlan,
-                    trainingPlan.getConfidence(),
+                    trainingPlan.confidence,
                     level,
                     target,
                     guidance,
-                    SafetyEvidence.skill(
+                    Safety.skill(
                             ContentAccessRules.isMethodAvailable(
-                                    trainingPlan.method(), MembershipStatus.F2P),
+                                    trainingPlan.method(), Membership.F2P),
                             skill));
             recommendation = recommendation.withStrategicValue(
                     StrategicValue.builder()
@@ -2226,14 +2083,14 @@ class RecommendationEngine
                         data, skill, level, target, trainingPlan,
                         sessionIntent, useGroupStorage);
 
-        if (guidance == null && skill == Skill.SLAYER
+        if (guidance == null && skill == SLAYER
                 && slayerGuidanceService != null)
         {
             guidance = slayerGuidanceService.build(
                     data, level, target, useGroupStorage);
         }
 
-        if (guidance == null && skill == Skill.SAILING
+        if (guidance == null && skill == SAILING
                 && sailingGuidanceService != null)
         {
             guidance = sailingGuidanceService.build(
@@ -2261,7 +2118,7 @@ class RecommendationEngine
 
     private double baseScore(int level, SkillBreakpoint breakpoint)
     {
-        var distance = Math.max(1, breakpoint.getLevel() - level);
+        var distance = max(1, breakpoint.getLevel() - level);
         double proximity = distance <= 1 ? 12.0
                 : distance <= 3 ? 7.0 : distance <= 7 ? 3.0 : 0.0;
         return 24.0 + proximity + breakpoint.strategicValue() * 20.0;
@@ -2279,43 +2136,19 @@ class RecommendationEngine
 
 /** Resolves method requirements from live access, account and item evidence. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class RequirementEvidenceEngine
 {
     private final FarmingAccessEvaluator farmingAccess;
     private final AgilityAccessEvaluator agilityAccess;
     private final FarmingSupplyCatalog farmingSupplies;
     private final RunecraftSupplyCatalog runecraftSupplies;
-
-    @Inject
-    public RequirementEvidenceEngine(FarmingAccessEvaluator farmingAccess,
-            AgilityAccessEvaluator agilityAccess,
-            FarmingSupplyCatalog farmingSupplies,
-            RunecraftSupplyCatalog runecraftSupplies)
-    {
-        this.farmingAccess = farmingAccess;
-        this.agilityAccess = agilityAccess;
-        this.farmingSupplies = farmingSupplies;
-        this.runecraftSupplies = runecraftSupplies;
-    }
-
-    public RequirementEvidenceEngine(FarmingAccessEvaluator farming,
-            AgilityAccessEvaluator agility)
-    {
-        this(farming, agility, new FarmingSupplyCatalog(),
-                new RunecraftSupplyCatalog());
-    }
-
-    public RequirementEvidenceEngine(FarmingAccessEvaluator farming)
-    {
-        this(farming, null);
-    }
-
-    public List<RequirementCheck> evaluate(GameData data, TrainingMethod method)
+   public List<EvidenceCheck> evaluate(GameData data, TrainingMethod method)
     {
         return evaluate(data, method, false);
     }
 
-    public List<RequirementCheck> evaluate(GameData data, TrainingMethod method,
+    public List<EvidenceCheck> evaluate(GameData data, TrainingMethod method,
             boolean group)
     {
         if (method == null) return new ArrayList<>();
@@ -2325,7 +2158,7 @@ class RequirementEvidenceEngine
         if (skill == Skill.FARMING) return farming(data, method, items);
         if (skill == Skill.AGILITY && agilityAccess != null)
             return agility(data, id);
-        if (skill == Skill.SAILING) return sailing(data, id, items);
+        if (skill == SAILING) return sailing(data, id, items);
         if (skill == Skill.RUNECRAFT && runecraftSupplies.supports(id))
             return runecraft(id, items);
         if (skill == Skill.MAGIC && (id.equals(get(1625))
@@ -2349,17 +2182,17 @@ class RequirementEvidenceEngine
         }
         if (id.equals("runecraft_gotr"))
         {
-            List<RequirementCheck> result = quest(data, get(1736),
+            List<EvidenceCheck> result = quest(data, get(1736),
                     get(1737));
             result.add(tool(items, ItemRequirementClass.PICKAXE,
                     get(1738), "Usable pickaxe"));
             result.add(item(items, get(1739), "Chisel", 1,
-                    ItemID.CHISEL));
+                    CHISEL));
             return result;
         }
         if (id.equals("runecraft_zmi")) return list(item(items,
                 get(1740), "Pure essence", 1,
-                ItemID.BLANKRUNE_HIGH));
+                BLANKRUNE_HIGH));
         if (id.equals(get(1629)))
             return construction(data, items, false);
         if (id.equals(get(1630)))
@@ -2368,24 +2201,24 @@ class RequirementEvidenceEngine
         {
             ItemRequirementClass type = skill == Skill.MINING
                     ? ItemRequirementClass.PICKAXE : ItemRequirementClass.AXE;
-            List<RequirementCheck> result = list(tool(items, type,
+            List<EvidenceCheck> result = list(tool(items, type,
                     skill == Skill.MINING ? get(1741)
                             : get(1742),
                     skill == Skill.MINING ? "Usable pickaxe" : "Usable axe"));
             addGeneric(result, method);
             return result;
         }
-        List<RequirementCheck> result = new ArrayList<>();
+        List<EvidenceCheck> result = new ArrayList<>();
         addGeneric(result, method);
         return result;
     }
 
-    private static List<RequirementCheck> magic(GameData data, String id,
+    private static List<EvidenceCheck> magic(GameData data, String id,
             ItemIndex items)
     {
         var combat = data == null ? null : data.combatEvidence();
         var observed = combat != null;
-        List<RequirementCheck> result = list(new RequirementCheck(
+        List<EvidenceCheck> result = list(new EvidenceCheck(
                 get(1743), get(1534), observed
                         ? combat.getSpellbookSelector() == 0
                         ? RequirementState.VERIFIED : RequirementState.BLOCKED
@@ -2395,11 +2228,11 @@ class RequirementEvidenceEngine
         if (id.equals("magic_f2p_curse"))
         {
             result.add(item(items, get(1744), "Body rune", 1,
-                    ItemID.BODYRUNE));
+                    BODYRUNE));
             result.add(item(items, get(1745), "Earth runes", 3,
-                    ItemID.EARTHRUNE));
+                    EARTHRUNE));
             result.add(item(items, get(1746), "Water runes", 2,
-                    ItemID.WATERRUNE));
+                    WATERRUNE));
             result.add(splashing(data));
             return result;
         }
@@ -2407,13 +2240,13 @@ class RequirementEvidenceEngine
         int air = id.equals(get(1627)) ? 4
                 : id.equals(get(1626)) ? 3 : splash ? 2 : 1;
         result.add(item(items, get(1747), get(1536),
-                air, ItemID.AIRRUNE));
+                air, AIRRUNE));
         if (splash)
         {
             result.add(item(items, get(1748), "Fire runes", 3,
-                    ItemID.FIRERUNE));
+                    FIRERUNE));
             result.add(item(items, get(1749), "Mind rune", 1,
-                    ItemID.MINDRUNE));
+                    MINDRUNE));
             result.add(splashing(data));
         }
         else if (id.equals(get(1626))
@@ -2421,23 +2254,23 @@ class RequirementEvidenceEngine
         {
             var blast = id.endsWith("blast");
             result.add(item(items, get(1750), get(1537),
-                    blast ? 5 : 4, ItemID.FIRERUNE));
+                    blast ? 5 : 4, FIRERUNE));
             result.add(item(items, get(1751),
-                    get(1538), 1, blast ? ItemID.DEATHRUNE : ItemID.CHAOSRUNE));
+                    get(1538), 1, blast ? DEATHRUNE : CHAOSRUNE));
         }
         else result.add(item(items, get(1752), "Mind rune",
-                1, ItemID.MINDRUNE));
+                1, MINDRUNE));
         return result;
     }
 
-    private static RequirementCheck splashing(GameData data)
+    private static EvidenceCheck splashing(GameData data)
     {
         var equipment = data == null ? null : data.equipment();
         boolean helm = false, body = false, legs = false, shield = false,
                 boots = false, staff = false;
         if (equipment != null) for (ItemState item : equipment.getEquippedItems())
         {
-            if (item == null || item.getName() == null || item.getQuantity() <= 0)
+            if (item == null || item.getName() == null || item.quantity <= 0)
                 continue;
             var name = item.getName().toLowerCase(Locale.ROOT);
             helm |= metal(name, "full helm");
@@ -2449,7 +2282,7 @@ class RequirementEvidenceEngine
             staff |= name.equals(get(1542));
         }
         var ready = helm && body && legs && shield && boots && staff;
-        return new RequirementCheck(get(1754), get(661),
+        return new EvidenceCheck(get(1754), get(661),
                 ready ? RequirementState.VERIFIED : RequirementState.CHECK_NEEDED,
                 get(ready ? 614 : 615));
     }
@@ -2463,10 +2296,10 @@ class RequirementEvidenceEngine
         return false;
     }
 
-    private static List<RequirementCheck> sailing(GameData data, String id,
+    private static List<EvidenceCheck> sailing(GameData data, String id,
             ItemIndex items)
     {
-        List<RequirementCheck> result = quest(data, "Pandemonium",
+        List<EvidenceCheck> result = quest(data, "Pandemonium",
                 get(1755));
         if (id.equals("sailing_courier"))
         {
@@ -2478,9 +2311,9 @@ class RequirementEvidenceEngine
             result.add(state(get(1756), get(1539), route,
                     get(635), get(646)));
             result.add(item(items, get(1757), "Captain's log", 1,
-                    ItemID.SAILING_LOG_INITIAL, ItemID.SAILING_LOG));
+                    SAILING_LOG_INITIAL, SAILING_LOG));
         }
-        else if (id.equals(get(1758))) result.add(new RequirementCheck(
+        else if (id.equals(get(1758))) result.add(new EvidenceCheck(
                 get(1759), get(1540),
                 RequirementState.CHECK_NEEDED, get(657)));
         else if (id.startsWith(get(1760)))
@@ -2489,23 +2322,23 @@ class RequirementEvidenceEngine
                     get(1761)));
             if (id.contains("gwenith")) result.addAll(quest(data, "Regicide",
                     "quest:regicide"));
-            result.add(new RequirementCheck(get(1762),
+            result.add(new EvidenceCheck(get(1762),
                     get(1763), RequirementState.CHECK_NEEDED,
                     get(658)));
         }
-        else result.add(new RequirementCheck(get(1764), get(659),
+        else result.add(new EvidenceCheck(get(1764), get(659),
                     RequirementState.CHECK_NEEDED, get(660)));
         return result;
     }
 
-    private static List<RequirementCheck> cookedFish(GameData data,
+    private static List<EvidenceCheck> cookedFish(GameData data,
             ItemIndex items)
     {
         int level = data == null || data.account() == null ? 1
                 : data.account().level(Skill.COOKING);
-        int[] ids = {ItemID.RAW_SHRIMP, ItemID.RAW_SARDINE, ItemID.RAW_HERRING,
-                ItemID.RAW_TROUT, ItemID.RAW_PIKE, ItemID.RAW_SALMON,
-                ItemID.RAW_TUNA, ItemID.RAW_LOBSTER, ItemID.RAW_SWORDFISH};
+        int[] ids = {RAW_SHRIMP, RAW_SARDINE, RAW_HERRING,
+                RAW_TROUT, RAW_PIKE, RAW_SALMON,
+                RAW_TUNA, RAW_LOBSTER, RAW_SWORDFISH};
         int[] levels = {1, 1, 5, 15, 20, 25, 30, 40, 45};
         var count = 0;
         for (int required : levels) if (level >= required) count++;
@@ -2513,13 +2346,13 @@ class RequirementEvidenceEngine
                 Arrays.copyOf(ids, count)));
     }
 
-    private static List<RequirementCheck> cooking(GameData data, String id,
+    private static List<EvidenceCheck> cooking(GameData data, String id,
             ItemIndex items)
     {
         if (id.equals("cooking_wines")) return list(
-                item(items, get(1766), "Grapes", 1, ItemID.GRAPES),
+                item(items, get(1766), "Grapes", 1, GRAPES),
                 item(items, get(1767), "Jug of water", 1,
-                        ItemID.JUG_WATER));
+                        JUG_WATER));
         var result = cookedFish(data, items);
         var diaries = data == null ? null : data.diaries();
         boolean ready = diaries != null
@@ -2529,16 +2362,16 @@ class RequirementEvidenceEngine
         return result;
     }
 
-    private static List<RequirementCheck> fishing(GameData data, String id,
+    private static List<EvidenceCheck> fishing(GameData data, String id,
             ItemIndex items)
     {
         if (id.equals(get(1639))
                 || id.equals(get(1673))) return new ArrayList<>();
         if (id.equals("fishing_f2p_fly")) return list(
                 item(items, get(1769), "Fly fishing rod", 1,
-                        ItemID.FLY_FISHING_ROD),
+                        FLY_FISHING_ROD),
                 item(items, get(1770), "Feathers", 1,
-                        ItemID.FEATHER));
+                        FEATHER));
         if (!id.equals(get(1771))) return null;
         var quests = data == null ? null : data.quests();
         var trio = complete(quests, get(1545));
@@ -2550,7 +2383,7 @@ class RequirementEvidenceEngine
         boolean staffless = diaries != null && diaries.isTierComplete(
                 get(1152), DiaryTier.ELITE);
         boolean staff = observedRoute || staffless || items.quantity(
-                ItemID.DRAMEN_STAFF, ItemID.LUNAR_MOONCLAN_LIMINAL_STAFF) > 0;
+                DRAMEN_STAFF, LUNAR_MOONCLAN_LIMINAL_STAFF) > 0;
         return list(state(get(1772), get(1546), trio,
                         get(618), get(619)),
                 state(get(1773), get(1548), fairy,
@@ -2558,40 +2391,40 @@ class RequirementEvidenceEngine
                 state(get(1774), get(622), staff,
                         get(623), get(625)),
                 item(items, get(1775), get(1776), 1,
-                        ItemID.TBWT_KARAMBWAN_VESSEL,
-                        ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
+                        TBWT_KARAMBWAN_VESSEL,
+                        TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI),
                 item(items, get(1777), get(1549), 1,
-                        ItemID.TBWT_RAW_KARAMBWANJI,
-                        ItemID.TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI));
+                        TBWT_RAW_KARAMBWANJI,
+                        TBWT_KARAMBWAN_VESSEL_LOADED_WITH_KARAMBWANJI));
     }
 
-    private static List<RequirementCheck> hunter(GameData data, String id,
+    private static List<EvidenceCheck> hunter(GameData data, String id,
             ItemIndex items)
     {
         if (id.equals("hunter_falconry")) return list(item(items,
-                get(1778), get(1550), 500, ItemID.COINS));
+                get(1778), get(1550), 500, COINS));
         if (id.equals(get(1623))) return list(item(items,
-                get(1779), "Bird snare", 1, ItemID.HUNTING_SNARE));
+                get(1779), "Bird snare", 1, HUNTING_SNARE));
         if (!id.equals(get(1678))) return null;
         int herblore = data == null || data.account() == null ? 1
                 : data.account().level(Skill.HERBLORE);
         var voyage = complete(data == null ? null : data.quests(), "Bone Voyage");
-        return list(new RequirementCheck(get(1780),
+        return list(new EvidenceCheck(get(1780),
                         "31 Herblore", herblore >= 31 ? RequirementState.VERIFIED
                         : RequirementState.BLOCKED, get(1551) + herblore + "."),
                 state(get(1781), get(1552), voyage,
                         get(626), get(627)));
     }
 
-    private static List<RequirementCheck> construction(GameData data,
+    private static List<EvidenceCheck> construction(GameData data,
             ItemIndex items, boolean oak)
     {
         var poh = data == null ? null : data.poh();
-        CapabilityState house = poh == null ? CapabilityState.UNKNOWN
+        Capability house = poh == null ? Capability.UNKNOWN
                 : poh.getHouseAccess();
-        CapabilityState room = poh == null ? CapabilityState.UNKNOWN
+        Capability room = poh == null ? Capability.UNKNOWN
                 : poh.furnitureState(oak ? "room:kitchen" : "room:parlour");
-        List<RequirementCheck> result = list(
+        List<EvidenceCheck> result = list(
                 capability(get(1782), get(1554), house,
                         get(oak ? 631 : 629)),
                 capability(oak ? get(1783) : get(1784),
@@ -2600,38 +2433,38 @@ class RequirementEvidenceEngine
                 item(items, oak ? get(1785)
                         : get(1786),
                         oak ? "Oak planks" : "Planks", oak ? 8 : 2,
-                        oak ? ItemID.PLANK_OAK : ItemID.WOODPLANK));
+                        oak ? PLANK_OAK : WOODPLANK));
         if (!oak) result.add(item(items, get(1787), "Nails",
-                2, ItemID.NAILS_BRONZE, ItemID.NAILS_IRON, ItemID.NAILS,
-                ItemID.NAILS_BLACK, ItemID.NAILS_MITHRIL, ItemID.NAILS_ADAMANT,
-                ItemID.NAILS_RUNE));
+                2, NAILS_BRONZE, NAILS_IRON, NAILS,
+                NAILS_BLACK, NAILS_MITHRIL, NAILS_ADAMANT,
+                NAILS_RUNE));
         result.add(item(items, get(1788), "Hammer", 1,
-                ItemID.HAMMER));
+                HAMMER));
         result.add(item(items, get(1789), "Saw", 1,
-                ItemID.POH_SAW, ItemID.EYEGLO_CRYSTAL_SAW, ItemID.WEARABLE_SAW));
+                POH_SAW, EYEGLO_CRYSTAL_SAW, WEARABLE_SAW));
         return result;
     }
 
-    private List<RequirementCheck> runecraft(String id, ItemIndex items)
+    private List<EvidenceCheck> runecraft(String id, ItemIndex items)
     {
-        List<RequirementCheck> result = list(items.check(
+        List<EvidenceCheck> result = list(items.check(
                 runecraftSupplies.runeEssence()));
         var entry = runecraftSupplies.altarEntryFor(id);
         if (entry != null) result.add(items.check(entry));
         return result;
     }
 
-    private List<RequirementCheck> agility(GameData data, String id)
+    private List<EvidenceCheck> agility(GameData data, String id)
     {
         if (id.equals(get(1790))) return list(
-                agilityAccess.wildernessCourseCheck(data), new RequirementCheck(
+                agilityAccess.wildernessCourseCheck(data), new EvidenceCheck(
                         get(1791), get(1556),
                         RequirementState.VERIFIED, get(636)));
         return list(agilityAccess.courseCheck(data,
                 agilityAccess.bestStandardCourse(data)));
     }
 
-    private List<RequirementCheck> farming(GameData data, TrainingMethod method,
+    private List<EvidenceCheck> farming(GameData data, TrainingMethod method,
             ItemIndex items)
     {
         var id = method.id;
@@ -2641,10 +2474,10 @@ class RequirementEvidenceEngine
         if (id.equals("farming_early"))
         {
             var patch = farmingAccess.firstReachablePatchName(farming);
-            return list(new RequirementCheck(get(1792),
+            return list(new EvidenceCheck(get(1792),
                     get(1557), patch == null ? RequirementState.CHECK_NEEDED
                     : RequirementState.VERIFIED, patch == null ? get(637)
-                    : patch + get(638)), new RequirementCheck(
+                    : patch + get(638)), new EvidenceCheck(
                     get(1793), get(1558),
                     RequirementState.CHECK_NEEDED, get(639)));
         }
@@ -2653,14 +2486,14 @@ class RequirementEvidenceEngine
         {
             var watermelon = id.endsWith("watermelons");
             var reachable = farming != null && farming.isPatchReachable("falador");
-            RequirementCheck seeds = items.check(watermelon
+            EvidenceCheck seeds = items.check(watermelon
                     ? farmingSupplies.watermelonSeeds()
                     : farmingSupplies.potatoSeeds());
-            List<RequirementCheck> result = list(state(get(1796),
+            List<EvidenceCheck> result = list(state(get(1796),
                     get(1559), reachable, get(640), get(641)), seeds);
             if (watermelon && seeds.getState() != RequirementState.VERIFIED
                     && (account == null || account.level(Skill.THIEVING) < 38))
-                result.add(new RequirementCheck(get(1797),
+                result.add(new EvidenceCheck(get(1797),
                         get(642), RequirementState.BLOCKED, get(643)));
             result.add(farmingTool(items, farming, farmingSupplies.rake(),
                     "rake", get(644)));
@@ -2672,11 +2505,11 @@ class RequirementEvidenceEngine
         }
         if (id.equals("farming_tithe"))
         {
-            int cans = items.quantity(ItemID.WATERING_CAN_1, ItemID.WATERING_CAN_2,
-                    ItemID.WATERING_CAN_3, ItemID.WATERING_CAN_4,
-                    ItemID.WATERING_CAN_5, ItemID.WATERING_CAN_6,
-                    ItemID.WATERING_CAN_7, ItemID.WATERING_CAN_8);
-            var water = cans >= 8 || items.quantity(ItemID.ZEAH_WATERINGCAN) > 0;
+            int cans = items.quantity(WATERING_CAN_1, WATERING_CAN_2,
+                    WATERING_CAN_3, WATERING_CAN_4,
+                    WATERING_CAN_5, WATERING_CAN_6,
+                    WATERING_CAN_7, WATERING_CAN_8);
+            var water = cans >= 8 || items.quantity(ZEAH_WATERINGCAN) > 0;
             return list(items.check(farmingSupplies.spade()),
                     items.check(farmingSupplies.dibber()),
                     state(get(1798), get(648), water,
@@ -2685,10 +2518,10 @@ class RequirementEvidenceEngine
         if (id.equals("farming_herbs") || id.equals(get(1799)))
         {
             var patch = farmingAccess.firstReachableHerbPatchName(farming);
-            return list(new RequirementCheck("farming:level_9", "9 Farming",
+            return list(new EvidenceCheck("farming:level_9", "9 Farming",
                             level >= 9 ? RequirementState.VERIFIED
                             : RequirementState.BLOCKED, get(1560) + level + "."),
-                    new RequirementCheck(get(1800), get(1561),
+                    new EvidenceCheck(get(1800), get(1561),
                             patch == null ? RequirementState.CHECK_NEEDED
                             : RequirementState.VERIFIED, patch == null
                             ? get(651) : patch + get(652)),
@@ -2700,53 +2533,53 @@ class RequirementEvidenceEngine
                     farmingTool(items, farming, farmingSupplies.spade(), "spade",
                             get(655)));
         }
-        List<RequirementCheck> result = new ArrayList<>();
+        List<EvidenceCheck> result = new ArrayList<>();
         addGeneric(result, method);
         return result;
     }
 
-    private static RequirementCheck farmingTool(ItemIndex items,
+    private static EvidenceCheck farmingTool(ItemIndex items,
             FarmingSnapshot farming, ResourceRequirement need, String tool,
             String evidence)
     {
         if (farming != null
-                && farming.leprechaunToolState(tool) == CapabilityState.VERIFIED)
-            return new RequirementCheck(need.id, need.getLabel(),
+                && farming.leprechaunToolState(tool) == Capability.VERIFIED)
+            return new EvidenceCheck(need.id, need.getLabel(),
                     RequirementState.VERIFIED, evidence == null
                     ? get(1569) : evidence);
         return items.check(need);
     }
 
-    private static RequirementCheck item(ItemIndex items, String id,
+    private static EvidenceCheck item(ItemIndex items, String id,
             String label, int quantity, int... itemIds)
     {
         return items.check(new ResourceRequirement(id, label, quantity, itemIds));
     }
 
-    private static RequirementCheck tool(ItemIndex items,
+    private static EvidenceCheck tool(ItemIndex items,
             ItemRequirementClass type, String id, String label)
     {
-        var ready = items.quantityMatching(type, Collections.emptyList()) > 0;
-        return new RequirementCheck(id, label, ready ? RequirementState.VERIFIED
+        var ready = items.quantityMatching(type, emptyList()) > 0;
+        return new EvidenceCheck(id, label, ready ? RequirementState.VERIFIED
                 : RequirementState.CHECK_NEEDED, ready ? label + get(633)
                 : "No " + label.toLowerCase() + get(634));
     }
 
-    private static RequirementCheck state(String id, String label,
+    private static EvidenceCheck state(String id, String label,
             boolean ready, String yes, String no)
     {
-        return new RequirementCheck(id, label, ready ? RequirementState.VERIFIED
+        return new EvidenceCheck(id, label, ready ? RequirementState.VERIFIED
                 : RequirementState.CHECK_NEEDED, ready ? yes : no);
     }
 
-    private static RequirementCheck capability(String id, String label,
-            CapabilityState value, String unknown)
+    private static EvidenceCheck capability(String id, String label,
+            Capability value, String unknown)
     {
-        var ready = value == CapabilityState.VERIFIED;
+        var ready = value == Capability.VERIFIED;
         return state(id, label, ready, label + get(1555), unknown);
     }
 
-    private static List<RequirementCheck> quest(GameData data, String name,
+    private static List<EvidenceCheck> quest(GameData data, String name,
             String id)
     {
         var ready = complete(data == null ? null : data.quests(), name);
@@ -2765,40 +2598,22 @@ class RequirementEvidenceEngine
         return new ArrayList<>(Arrays.asList(values));
     }
 
-    private static void addGeneric(List<RequirementCheck> result,
+    private static void addGeneric(List<EvidenceCheck> result,
             TrainingMethod method)
     {
-        for (String value : method.getRequirements()) result.add(
-                new RequirementCheck("generic:" + value, value,
+        for (String value : method.requirements) result.add(
+                new EvidenceCheck("generic:" + value, value,
                         RequirementState.CHECK_NEEDED, get(656)));
     }
 }
 
 /** Account-mode-aware sourcing planner for a required item. */
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 class ResourceAcquisitionPlanner
 {
     private final ResourceSourceCatalog sourceCatalog;
     private final ResourceDependencyCatalog dependencyCatalog;
-
-    @Inject
-    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog,
-            ResourceDependencyCatalog dependencyCatalog)
-    {
-        this.sourceCatalog = sourceCatalog;
-        this.dependencyCatalog = dependencyCatalog;
-    }
-
-    public ResourceAcquisitionPlanner(ResourceSourceCatalog sourceCatalog)
-    {
-        this(sourceCatalog, new ResourceDependencyCatalog());
-    }
-
-    /** Compatibility constructor for existing focused tests. */
-    public ResourceAcquisitionPlanner()
-    {
-        this(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
-    }
 
     public AcquisitionPlan plan(
             StrategyContext context,
@@ -2811,10 +2626,10 @@ class ResourceAcquisitionPlanner
 
         var data = context.data();
         var mode = context.accountMode();
-        var inventoryQuantity = quantityIn(data.inventory(), need.getItemId());
+        var inventoryQuantity = quantityIn(data.inventory(), need.itemId);
         var confirmedQuantity = inventoryQuantity;
 
-        if (inventoryQuantity >= need.getQuantity())
+        if (inventoryQuantity >= need.quantity)
         {
             return new AcquisitionPlan(
                     need, AcquisitionSource.INVENTORY, inventoryQuantity,
@@ -2825,9 +2640,9 @@ class ResourceAcquisitionPlanner
 
         if (mode == AccountMode.ULTIMATE_IRONMAN)
         {
-            var remaining = Math.max(0, need.getQuantity() - inventoryQuantity);
+            var remaining = max(0, need.quantity - inventoryQuantity);
             StoredResource stored = findVerifiedStoredResource(
-                    data.storage(), need.getItemId(), remaining);
+                    data.storage(), need.itemId, remaining);
             if (stored != null)
             {
                 var needsAccessCheck = stored.requiresAccessCheck();
@@ -2850,10 +2665,10 @@ class ResourceAcquisitionPlanner
         }
         else
         {
-            var bankQuantity = quantityIn(data.bank(), need.getItemId());
+            var bankQuantity = quantityIn(data.bank(), need.itemId);
             var ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
             confirmedQuantity = ordinaryQuantity;
-            if (ordinaryQuantity >= need.getQuantity())
+            if (ordinaryQuantity >= need.quantity)
             {
                 return new AcquisitionPlan(
                         need, AcquisitionSource.BANK, ordinaryQuantity,
@@ -2868,11 +2683,11 @@ class ResourceAcquisitionPlanner
                 var groupStorage = data.groupStorage();
                 int groupQuantity = groupStorage != null
                         && groupStorage.isObserved()
-                        ? quantityIn(groupStorage, need.getItemId()) : 0;
+                        ? quantityIn(groupStorage, need.itemId) : 0;
                 if (groupStorage != null && groupStorage.isObserved())
                 {
                     confirmedQuantity = safeAdd(ordinaryQuantity, groupQuantity);
-                    if (confirmedQuantity >= need.getQuantity())
+                    if (confirmedQuantity >= need.quantity)
                     {
                         return new AcquisitionPlan(
                                 need, AcquisitionSource.GROUP_STORAGE,
@@ -2945,8 +2760,8 @@ class ResourceAcquisitionPlanner
 
         var mode = context.accountMode();
         var sourceNote = sourceSuggestions(shortfall, context);
-        String prefix = get(1431) + shortfall.getQuantity()
-                + " × " + shortfall.getItemName() + ". ";
+        String prefix = get(1431) + shortfall.quantity
+                + " × " + shortfall.itemName + ". ";
 
         if (AccountModePolicy.mayUseGrandExchange(mode))
         {
@@ -2973,49 +2788,6 @@ class ResourceAcquisitionPlanner
                         + sourceNote);
     }
 
-    /** Builds an ordered chain without pretending prose source hints are verified unlocks. */
-    public ResourceAcquisitionChain planChain(StrategyContext context,
-            ResourceNeed need)
-    {
-        var ownership = plan(context, need);
-        List<ResourceAcquisitionStep> steps = new ArrayList<>();
-        int shortfall = ownership == null || need == null ? 0
-                : Math.max(0, need.getQuantity() - ownership.getConfirmedQuantity());
-        if (ownership == null || need == null)
-            return new ResourceAcquisitionChain(need, shortfall, steps);
-
-        if (ownership.hasEnoughConfirmed())
-        {
-            steps.add(new ResourceAcquisitionStep(ownership.getSource(),
-                    ownership.getNote(), ownership.getConfidence()));
-            return new ResourceAcquisitionChain(need, 0, steps);
-        }
-
-        steps.add(new ResourceAcquisitionStep(ownership.getSource(),
-                ownership.getNote(), ownership.getConfidence()));
-        if (sourceCatalog != null && context != null)
-        {
-            List<String> routes = sourceCatalog.suggestions(need.getItemName(),
-                    context.accountMode(), membership(context),
-                    context.allowsWilderness());
-            for (String route : routes)
-                steps.add(new ResourceAcquisitionStep(
-                        context.accountMode().usesGrandExchange()
-                                ? AcquisitionSource.GRAND_EXCHANGE
-                                : AcquisitionSource.SELF_SOURCE,
-                        route, Confidence.CHECK_NEEDED));
-        }
-        return new ResourceAcquisitionChain(need, shortfall, steps);
-    }
-
-    /** Resolves acquisition prerequisites recursively with bounded, cycle-safe traversal. */
-    public DependencyResolution resolveDependencies(
-            StrategyContext context, ResourceNeed need)
-    {
-        return new ResourceDependencyResolver(this, dependencyCatalog)
-                .resolve(context, need);
-    }
-
     /**
      * Resolves a proven shortfall by canonical dependency output name. Unknown
      * names deliberately remain with the caller's conservative source guidance.
@@ -3026,9 +2798,9 @@ class ResourceAcquisitionPlanner
         if (dependencyCatalog == null) return null;
         var definition = dependencyCatalog.forItemName(itemName);
         if (definition == null) return null;
-        String canonical = definition.getItemName() == null
-                ? itemName : definition.getItemName();
-        var need = new ResourceNeed(definition.getItemId(), canonical, quantity);
+        String canonical = definition.itemName == null
+                ? itemName : definition.itemName;
+        var need = new ResourceNeed(definition.itemId, canonical, quantity);
         return new ResourceDependencyResolver(this, dependencyCatalog)
                 .resolveKnownShortfall(context, need);
     }
@@ -3037,7 +2809,7 @@ class ResourceAcquisitionPlanner
     {
         if (sourceCatalog == null || need == null) return "";
         List<String> suggestions = sourceCatalog.suggestions(
-                need.getItemName(), context == null ? AccountMode.UNKNOWN
+                need.itemName, context == null ? AccountMode.UNKNOWN
                         : context.accountMode(), membership(context),
                 context != null && context.allowsWilderness());
         if (suggestions.isEmpty())
@@ -3056,11 +2828,11 @@ class ResourceAcquisitionPlanner
         return note.toString();
     }
 
-    private static MembershipStatus membership(StrategyContext context)
+    private static Membership membership(StrategyContext context)
     {
         return context == null || context.data() == null
                 || context.data().account() == null
-                ? MembershipStatus.UNKNOWN
+                ? Membership.UNKNOWN
                 : context.data().account().membership();
     }
 
@@ -3070,11 +2842,11 @@ class ResourceAcquisitionPlanner
             int needed)
     {
         if (storage == null) return null;
-        List<StorageCapability> safeCapabilities = new ArrayList<>();
-        List<StorageCapability> restrictedCapabilities = new ArrayList<>();
+        List<StorageKind> safeCapabilities = new ArrayList<>();
+        List<StorageKind> restrictedCapabilities = new ArrayList<>();
         var safeQuantity = 0;
         var restrictedQuantity = 0;
-        for (Map.Entry<StorageCapability, java.util.List<ItemState>> entry
+        for (Map.Entry<StorageKind, java.util.List<ItemState>> entry
                 : storage.getObservedContents().entrySet())
         {
             var capability = entry.getKey();
@@ -3082,7 +2854,7 @@ class ResourceAcquisitionPlanner
             var quantity = 0;
             for (ItemState item : entry.getValue())
             {
-                if (item.getItemId() == itemId) quantity += item.getQuantity();
+                if (item.itemId == itemId) quantity += item.quantity;
             }
             if (quantity <= 0) continue;
             if (requiresAdditionalAccessCheck(capability))
@@ -3108,7 +2880,7 @@ class ResourceAcquisitionPlanner
     }
 
     private static boolean requiresAdditionalAccessCheck(
-            StorageCapability capability)
+            StorageKind capability)
     {
         return UimStorageMechanics.isRestrictedRetrieval(capability);
     }
@@ -3133,29 +2905,29 @@ class ResourceAcquisitionPlanner
         var total = 0;
         for (ItemState item : items)
         {
-            if (item.getItemId() == itemId) total = safeAdd(total, item.getQuantity());
+            if (item.itemId == itemId) total = safeAdd(total, item.quantity);
         }
         return total;
     }
 
     private static int safeAdd(int left, int right)
     {
-        var safeRight = Math.max(0, right);
+        var safeRight = max(0, right);
         if (left > Integer.MAX_VALUE - safeRight) return Integer.MAX_VALUE;
         return left + safeRight;
     }
 
-    private static String pretty(StorageCapability capability)
+    private static String pretty(StorageKind capability)
     {
         return capability.name().toLowerCase().replace('_', ' ');
     }
 
-    private static String pretty(List<StorageCapability> capabilities)
+    private static String pretty(List<StorageKind> capabilities)
     {
         if (capabilities == null || capabilities.isEmpty())
             return get(1955);
         List<String> names = new ArrayList<>();
-        for (StorageCapability capability : capabilities)
+        for (StorageKind capability : capabilities)
             names.add(pretty(capability));
         if (names.size() == 1) return names.get(0);
         return String.join(", ", names.subList(0, names.size() - 1))
@@ -3164,10 +2936,10 @@ class ResourceAcquisitionPlanner
 
     private static final class StoredResource
     {
-        private final List<StorageCapability> capabilities;
+        private final List<StorageKind> capabilities;
         private final int quantity;
 
-        private StoredResource(List<StorageCapability> capabilities,
+        private StoredResource(List<StorageKind> capabilities,
                 int quantity)
         {
             this.capabilities = new ArrayList<>(capabilities);
@@ -3176,7 +2948,7 @@ class ResourceAcquisitionPlanner
 
         private boolean requiresAccessCheck()
         {
-            for (StorageCapability capability : capabilities)
+            for (StorageKind capability : capabilities)
                 if (requiresAdditionalAccessCheck(capability)) return true;
             return false;
         }
@@ -3212,8 +2984,8 @@ class ResourceDependencyResolver
     {
         this.ownershipPlanner = ownershipPlanner;
         this.catalog = catalog;
-        this.maxDepth = Math.max(1, maxDepth);
-        this.maxNodes = Math.max(1, maxNodes);
+        this.maxDepth = max(1, maxDepth);
+        this.maxNodes = max(1, maxNodes);
     }
 
     public DependencyResolution resolve(StrategyContext context,
@@ -3251,26 +3023,26 @@ class ResourceDependencyResolver
             state.nodeLimit = true;
             return;
         }
-        var id = "resource:" + need.getItemId();
+        var id = "resource:" + need.itemId;
         if (active.contains(id))
         {
             state.cycle = true;
-            addResource(state, id + ":cycle", Text.get(610),
-                    Confidence.CHECK_NEEDED, depth, need.getQuantity());
+            addResource(state, id + ":cycle", get(610),
+                    Confidence.CHECK_NEEDED, depth, need.quantity);
             return;
         }
-        var previousRequested = state.requested.getOrDefault(need.getItemId(), 0);
-        var totalRequested = safeAdd(previousRequested, need.getQuantity());
-        state.requested.put(need.getItemId(), totalRequested);
-        var previousProcessed = state.processed.getOrDefault(need.getItemId(), 0);
+        var previousRequested = state.requested.getOrDefault(need.itemId, 0);
+        var totalRequested = safeAdd(previousRequested, need.quantity);
+        state.requested.put(need.itemId, totalRequested);
+        var previousProcessed = state.processed.getOrDefault(need.itemId, 0);
         if (totalRequested <= previousProcessed) return;
-        state.processed.put(need.getItemId(), totalRequested);
-        ResourceNeed totalNeed = new ResourceNeed(need.getItemId(),
-                need.getItemName(), totalRequested);
+        state.processed.put(need.itemId, totalRequested);
+        ResourceNeed totalNeed = new ResourceNeed(need.itemId,
+                need.itemName, totalRequested);
         if (depth > maxDepth)
         {
             state.depth = true;
-            addResource(state, id + ":depth", Text.get(611),
+            addResource(state, id + ":depth", get(611),
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
@@ -3282,36 +3054,36 @@ class ResourceDependencyResolver
         {
             // Retrieval-only UIM storage can prove quantity without proving that
             // the item is immediately usable. Preserve that preparation state.
-            addResource(state, id, ownership.getNote(), ownership.getConfidence(),
+            addResource(state, id, ownership.note, ownership.confidence,
                     depth, totalRequested);
             return;
         }
         var mode = context == null ? AccountMode.UNKNOWN : context.accountMode();
         if (mode.usesGrandExchange())
         {
-            addResource(state, id, ownership == null ? Text.get(1330) : ownership.getNote(),
+            addResource(state, id, ownership == null ? get(1330) : ownership.note,
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
         int confirmedOwned = knownShortfall || ownership == null
-                ? 0 : Math.min(totalRequested, ownership.getConfirmedQuantity());
-        var unresolvedRequested = Math.max(0, totalRequested - confirmedOwned);
+                ? 0 : min(totalRequested, ownership.getConfirmedQuantity());
+        var unresolvedRequested = max(0, totalRequested - confirmedOwned);
         int previousUnresolved = knownShortfall
                 ? previousProcessed
-                : Math.max(0, previousProcessed - confirmedOwned);
+                : max(0, previousProcessed - confirmedOwned);
 
-        var definition = catalog.forItem(need.getItemId());
+        var definition = catalog.forItem(need.itemId);
         if (definition == null)
         {
-            addResource(state, id, ownership == null ? Text.get(1331) : ownership.getNote(),
+            addResource(state, id, ownership == null ? get(1331) : ownership.note,
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
         if (rejectForOpportunityCost(context, definition.getOpportunityCost()))
         {
             state.cost = true;
-            addResource(state, id, Text.get(612),
+            addResource(state, id, get(612),
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
@@ -3320,7 +3092,7 @@ class ResourceDependencyResolver
         int batches = ceilDiv(unresolvedRequested, definition.getOutputQuantity())
                 - ceilDiv(previousUnresolved, definition.getOutputQuantity());
         Map<Integer, ResourceNeed> resourceNeeds = new LinkedHashMap<>();
-        for (DependencyRequirement requirement : definition.getPrerequisites())
+        for (DependencyRequirement requirement : definition.prerequisites)
         {
             if (requirement.getKind() != DependencyRequirement.Kind.RESOURCE)
             {
@@ -3329,12 +3101,12 @@ class ResourceDependencyResolver
             }
             if (batches <= 0) continue;
             var child = requirement.getResource();
-            var required = safeMultiply(child.getQuantity(), batches);
-            var prior = resourceNeeds.get(child.getItemId());
+            var required = safeMultiply(child.quantity, batches);
+            var prior = resourceNeeds.get(child.itemId);
             int combined = prior == null ? required
-                    : safeAdd(prior.getQuantity(), required);
-            resourceNeeds.put(child.getItemId(), new ResourceNeed(
-                    child.getItemId(), child.getItemName(), combined));
+                    : safeAdd(prior.quantity, required);
+            resourceNeeds.put(child.itemId, new ResourceNeed(
+                    child.itemId, child.itemName, combined));
         }
         for (ResourceNeed child : resourceNeeds.values())
             visit(context, child, depth + 1, active, state, false);
@@ -3385,8 +3157,8 @@ class ResourceDependencyResolver
         else if (requirement.getKind() == DependencyRequirement.Kind.QUEST)
             action = "Complete " + requirement.getLabel() + ".";
         else if (requirement.getKind() == DependencyRequirement.Kind.SKILL)
-            action = "Train " + requirement.getLabel() + Text.get(1332);
-        else action = Text.get(1925) + requirement.getLabel() + ".";
+            action = "Train " + requirement.getLabel() + get(1332);
+        else action = get(1925) + requirement.getLabel() + ".";
         add(state, requirement.id, action, verified
                 ? Confidence.VERIFIED
                 : Confidence.CHECK_NEEDED, depth);
@@ -3431,7 +3203,7 @@ class ResourceDependencyResolver
 
     private static int safeMultiply(int left, int right)
     {
-        if (left > Integer.MAX_VALUE / Math.max(1, right)) return Integer.MAX_VALUE;
+        if (left > Integer.MAX_VALUE / max(1, right)) return Integer.MAX_VALUE;
         return left * right;
     }
 
@@ -3440,6 +3212,8 @@ class ResourceDependencyResolver
         if (left > Integer.MAX_VALUE - right) return Integer.MAX_VALUE;
         return left + right;
     }
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 
     private static final class State
     {
@@ -3451,11 +3225,6 @@ class ResourceDependencyResolver
         private boolean depth;
         private boolean cost;
         private boolean nodeLimit;
-
-        private State(int maxNodes)
-        {
-            this.maxNodes = maxNodes;
-        }
     }
 }
 
@@ -3480,8 +3249,7 @@ class StrategyEngine
     private final FinalExecutionPlanValidator finalExecutionValidator;
     private final ActivityStrategyKnowledgeService activityStrategyKnowledge =
             new ActivityStrategyKnowledgeService();
-    private final QuestRecommendationValueService questValue =
-            new QuestRecommendationValueService();
+    private final QuestRecommendationValueService questValue;
     private static final FarmingAccessCatalog FARMING_ACCESS_CATALOG =
             new FarmingAccessCatalog();
 
@@ -3495,6 +3263,7 @@ class StrategyEngine
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService,
             MethodRecommendationValueService methodValue,
+            QuestRecommendationValueService questValue,
             FinalExecutionPlanValidator finalExecutionValidator)
     {
         this.recommendationEngine = recommendationEngine;
@@ -3512,58 +3281,9 @@ class StrategyEngine
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
         this.methodValue = methodValue == null
                 ? new MethodRecommendationValueService() : methodValue;
+        this.questValue = questValue;
         this.finalExecutionValidator = finalExecutionValidator == null
                 ? new FinalExecutionPlanValidator() : finalExecutionValidator;
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            Object unusedModules,
-            StrategyCandidateRegistry candidateRegistry,
-            ActionabilityPolicy actionabilityPolicy,
-            RecommendationIntelligenceService intelligenceService,
-            CandidateSafetyPolicy candidateSafetyPolicy,
-            GoalDependencyProvenanceService goalProvenanceService)
-    {
-        this(recommendationEngine, opportunityEngine,
-                candidateRegistry, actionabilityPolicy, intelligenceService,
-                candidateSafetyPolicy, goalProvenanceService,
-                new MethodRecommendationValueService(),
-                new FinalExecutionPlanValidator());
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            Object unusedModules,
-            StrategyCandidateRegistry candidateRegistry,
-            ActionabilityPolicy actionabilityPolicy,
-            RecommendationIntelligenceService intelligenceService)
-    {
-        this(recommendationEngine, opportunityEngine,
-                candidateRegistry, actionabilityPolicy, intelligenceService,
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService(),
-                new MethodRecommendationValueService(),
-                new FinalExecutionPlanValidator());
-    }
-
-    /** Compatibility constructor retained for focused tests/older callers. */
-    public StrategyEngine(
-            RecommendationEngine recommendationEngine,
-            OpportunityEngine opportunityEngine,
-            Object unusedModules,
-            StrategyCandidateRegistry candidateRegistry,
-            ActionabilityPolicy actionabilityPolicy)
-    {
-        this(recommendationEngine, opportunityEngine,
-                candidateRegistry, actionabilityPolicy,
-                new RecommendationIntelligenceService(),
-                new CandidateSafetyPolicy(), new GoalDependencyProvenanceService(),
-                new MethodRecommendationValueService(),
-                new FinalExecutionPlanValidator());
     }
 
     public StrategyResult evaluate(
@@ -3606,9 +3326,9 @@ class StrategyEngine
         if (data == null || data.account() == null)
         {
             return new StrategyResult(
-                    Collections.singletonList(
+                    singletonList(
                             FallbackRecommendationFactory.forState(data)),
-                    Collections.emptyList());
+                    emptyList());
         }
 
         StrategyContext context = new StrategyContext(
@@ -3618,11 +3338,11 @@ class StrategyEngine
 
         List<Opportunity> opportunities = new ArrayList<>();
         List<Opportunity> evaluatedOpportunities = opportunityEngine == null
-                ? Collections.emptyList() : opportunityEngine.evaluate(data);
+                ? emptyList() : opportunityEngine.evaluate(data);
         for (Opportunity opportunity : evaluatedOpportunities)
         {
             if (opportunity == null
-                    || opportunity.getConfidence() == Confidence.BLOCKED
+                    || opportunity.confidence == Confidence.BLOCKED
                     || context.preferenceProfile().isOnCooldown(
                     opportunity.id)
                     || !candidateSafetyPolicy.isAllowed(
@@ -3634,7 +3354,7 @@ class StrategyEngine
         // three inside RecommendationEngine can hide a lower-scoring executable
         // action behind three unresolved skills before actionability is checked.
         List<Recommendation> pool = new ArrayList<>(
-                recommendationEngine == null ? Collections.emptyList()
+                recommendationEngine == null ? emptyList()
                 : recommendationEngine.recommendAll(
                         data,
                         context.mode(),
@@ -3657,7 +3377,7 @@ class StrategyEngine
                 for (Recommendation candidate : candidates)
                 {
                     if (candidate == null
-                            || candidate.getConfidence() == Confidence.BLOCKED)
+                            || candidate.confidence == Confidence.BLOCKED)
                     {
                         continue;
                     }
@@ -3687,7 +3407,7 @@ class StrategyEngine
         var recommendations = buildPlayerQueue(pool, context);
         if (recommendations.isEmpty())
         {
-            recommendations = Collections.singletonList(
+            recommendations = singletonList(
                     FallbackRecommendationFactory.forState(data));
         }
         if (!recommendations.isEmpty())
@@ -3708,7 +3428,7 @@ class StrategyEngine
             StrategyContext context)
     {
         if (opportunity == null || !opportunity.isReady()
-                || opportunity.getConfidence() != Confidence.VERIFIED)
+                || opportunity.confidence != Confidence.VERIFIED)
         {
             return null;
         }
@@ -3717,14 +3437,14 @@ class StrategyEngine
         if (preferences.isOnCooldown(id)) return null;
 
         var setupVerified = opportunity.isSetupVerified();
-        if (!setupVerified && opportunity.getPreparation().isEmpty()) return null;
+        if (!setupVerified && opportunity.preparation.isEmpty()) return null;
         var location = opportunityLocation(opportunity.getType(), context);
         String action = opportunityAction(opportunity.getType(),
-                opportunity.getTitle());
+                opportunity.title);
         if (location == null || action == null) return null;
         String supplies = setupVerified
                 ? get(720)
-                : get(1490) + String.join(", ", opportunity.getPreparation()) + ".";
+                : get(1490) + String.join(", ", opportunity.preparation) + ".";
         double score = 46.0 + preferences.weightFor(id) * 10.0
                 + preferences.timedScoreAdjustmentFor(id);
         if (opportunity.getType() == OpportunityType.HERB_RUN
@@ -3736,7 +3456,7 @@ class StrategyEngine
         Guidance guidance = new Guidance(
                 setupVerified
                         ? action
-                        : get(722) + opportunity.getTitle()
+                        : get(722) + opportunity.title
                                 + get(1491),
                 supplies,
                 location,
@@ -3744,7 +3464,7 @@ class StrategyEngine
                         ? get(723)
                         : get(724));
         return new Recommendation(
-                id, opportunity.getTitle(),
+                id, opportunity.title,
                 get(725),
                 score, null, setupVerified
                         ? Confidence.VERIFIED
@@ -3805,35 +3525,29 @@ class StrategyEngine
         return String.join(" -> ", names) + ".";
     }
 
-    private static SafetyEvidence opportunitySafety(Opportunity opportunity)
+    private static Safety opportunitySafety(Opportunity opportunity)
     {
         switch (opportunity.getType())
         {
             case BIRDHOUSE_RUN:
-                return SafetyEvidence.skill(false, net.runelite.api.Skill.HUNTER);
+                return Safety.skill(false, net.runelite.api.Skill.HUNTER);
             case HERB_RUN:
             case TREE_RUN:
             case FARMING_CONTRACT:
-                return SafetyEvidence.skill(false, net.runelite.api.Skill.FARMING);
+                return Safety.skill(false, net.runelite.api.Skill.FARMING);
             case KINGDOM:
             case KINGDOM_APPROVAL:
             case BATTLESTAVES:
             case DYNAMITE:
-                return SafetyEvidence.harmless(false);
+                return Safety.harmless(false);
             case TEARS_OF_GUTHIX:
             case DAILY_DIARY_REWARD:
-                return SafetyEvidence.potentiallyIrreversible(false);
+                return Safety.potentiallyIrreversible(false);
             case CLUE:
-                return opportunity.getSafetyEvidence();
+                return opportunity.safetyEvidence;
             default:
-                return SafetyEvidence.potentiallyIrreversible(false);
+                return Safety.potentiallyIrreversible(false);
         }
-    }
-
-    /** Compatibility entry used by focused queue/actionability tests. */
-    List<Recommendation> buildPlayerQueue(List<Recommendation> pool)
-    {
-        return buildPlayerQueue(pool, null);
     }
 
     /**
@@ -3846,7 +3560,7 @@ class StrategyEngine
             List<Recommendation> pool,
             StrategyContext context)
     {
-        if (pool == null || pool.isEmpty()) return Collections.emptyList();
+        if (pool == null || pool.isEmpty()) return emptyList();
 
         List<Recommendation> ready = new ArrayList<>();
         List<Recommendation> secondary = new ArrayList<>();
@@ -3878,7 +3592,7 @@ class StrategyEngine
 
         // Never put a Needs Info recommendation in the primary slot merely to
         // avoid an empty card. No recommendation is safer than false certainty.
-        if (ready.isEmpty()) return Collections.emptyList();
+        if (ready.isEmpty()) return emptyList();
 
         List<Recommendation> result = new ArrayList<>(3);
         Set<String> representedDimensions = new HashSet<>();
@@ -3938,7 +3652,7 @@ class UniversalActionRecipeResolver
             get(1582), Recipe[].class);
 
     public UniversalActionRecipe resolve(ActionDef action, int count,
-            MembershipStatus membership)
+            Membership membership)
     {
         if (action == null || action.getSkill() == null || count <= 0)
             return unknown(get(1259));
@@ -3962,7 +3676,7 @@ class UniversalActionRecipeResolver
                     ? recipe(get(939), count, name, 1)
                     : unknown(get(900));
             case RUNECRAFT: return recipe(get(901), count,
-                    membership == MembershipStatus.P2P
+                    membership == Membership.P2P
                             ? "Pure essence" : "Rune essence", 1);
             case CRAFTING: return crafting(name, lower, count);
             case FLETCHING: return fletching(name, lower, count);

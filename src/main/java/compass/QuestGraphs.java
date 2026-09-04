@@ -32,7 +32,7 @@ final class QuestGraphs
         var key = Names.words(current);
         if (!active.add(key)) return null;
         var definition = catalog.definitionFor(current);
-        if (definition != null) for (String prerequisite : definition.getPrerequisites())
+        if (definition != null) for (String prerequisite : definition.prerequisites)
         {
             List<String> child = path(catalog, prerequisite, target, active);
             if (child != null)
@@ -54,7 +54,7 @@ final class QuestGraphs
         result.add(quest);
         var definition = catalog.definitionFor(quest);
         if (definition != null)
-            for (String prerequisite : definition.getPrerequisites())
+            for (String prerequisite : definition.prerequisites)
                 collect(catalog, prerequisite, result);
     }
 }

@@ -1,4 +1,5 @@
 package compass;
+import lombok.*;
 
 import javax.inject.Singleton;
 import net.runelite.api.Skill;
@@ -94,10 +95,6 @@ public class TrainingFatigueTracker
         lastGainAtMillis = 0L;
         gainedXp = 0L;
     }
-
-    public Skill getActiveSkill() { return activeSkill; }
-    public long getGainedXp() { return gainedXp; }
-
     private void begin(Skill skill, int xp, long now)
     {
         activeSkill = skill;
@@ -107,37 +104,19 @@ public class TrainingFatigueTracker
         gainedXp = 0L;
     }
 
+    @Getter
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class FatigueSignal
     {
         private static final FatigueSignal NONE = new FatigueSignal(
                 null, 0.0, 0L, 0L, 0L);
 
-        private final String activityId;
+        final String activityId;
         private final double scoreDelta;
         private final long durationMillis;
         private final long activeDurationMillis;
         private final long gainedXp;
-
-        private FatigueSignal(
-                String activityId,
-                double scoreDelta,
-                long durationMillis,
-                long activeDurationMillis,
-                long gainedXp)
-        {
-            this.activityId = activityId;
-            this.scoreDelta = scoreDelta;
-            this.durationMillis = durationMillis;
-            this.activeDurationMillis = activeDurationMillis;
-            this.gainedXp = gainedXp;
-        }
-
         public static FatigueSignal none() { return NONE; }
         public boolean isPresent() { return activityId != null; }
-        public String getActivityId() { return activityId; }
-        public double getScoreDelta() { return scoreDelta; }
-        public long getDurationMillis() { return durationMillis; }
-        public long getActiveDurationMillis() { return activeDurationMillis; }
-        public long getGainedXp() { return gainedXp; }
     }
 }

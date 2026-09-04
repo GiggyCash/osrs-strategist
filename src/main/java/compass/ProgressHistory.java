@@ -1,4 +1,6 @@
 package compass;
+import static java.lang.Math.*;
+import static java.util.Collections.*;
 
 import java.util.*;
 import net.runelite.api.Skill;
@@ -10,17 +12,17 @@ public final class ProgressHistory
     static final int MAX_MILESTONES = 100;
     static final int MAX_BUCKETS = 288;
 
-    private final List<ProgressSessionSummary> sessions = new ArrayList<>();
-    private final List<ProgressMilestone> milestones = new ArrayList<>();
-    private final List<ProgressTimeBucket> buckets = new ArrayList<>();
+    final List<ProgressSessionSummary> sessions = new ArrayList<>();
+    final List<ProgressMilestone> milestones = new ArrayList<>();
+    final List<ProgressTimeBucket> buckets = new ArrayList<>();
 
     public void archive(ProgressSessionSnapshot snapshot)
     {
         if (snapshot == null) return;
         if (snapshot.getTotalXpGained() > 0 || snapshot.getLevelsGained() > 0
-                || !snapshot.getMilestones().isEmpty())
+                || !snapshot.milestones.isEmpty())
             sessions.add(new ProgressSessionSummary(snapshot));
-        milestones.addAll(snapshot.getMilestones());
+        milestones.addAll(snapshot.milestones);
         buckets.addAll(snapshot.getBuckets());
         normalizeAndTrim();
     }
@@ -50,17 +52,17 @@ public final class ProgressHistory
 
     public List<ProgressSessionSummary> getSessions()
     {
-        return Collections.unmodifiableList(new ArrayList<>(sessions));
+        return unmodifiableList(new ArrayList<>(sessions));
     }
 
     public List<ProgressMilestone> getMilestones()
     {
-        return Collections.unmodifiableList(new ArrayList<>(milestones));
+        return unmodifiableList(new ArrayList<>(milestones));
     }
 
     public List<ProgressTimeBucket> getBuckets()
     {
-        return Collections.unmodifiableList(new ArrayList<>(buckets));
+        return unmodifiableList(new ArrayList<>(buckets));
     }
 
     public void clear()
@@ -70,7 +72,7 @@ public final class ProgressHistory
         buckets.clear();
     }
 
-    private void normalizeAndTrim()
+    void normalizeAndTrim()
     {
         sessions.sort(Comparator.comparingLong(
                 ProgressSessionSummary::getStartedAtMillis).thenComparingLong(
@@ -94,11 +96,11 @@ public final class ProgressHistory
         for (ProgressTimeBucket bucket : buckets)
         {
             EnumMap<Skill, Integer> merged = mergedBuckets.computeIfAbsent(
-                    bucket.getStartedAtMillis(), ignored ->
+                    bucket.startedAtMillis, ignored ->
                             new EnumMap<>(Skill.class));
             for (Map.Entry<Skill, Integer> entry
                     : bucket.getXpBySkill().entrySet())
-                merged.merge(entry.getKey(), Math.max(0, entry.getValue()),
+                merged.merge(entry.getKey(), max(0, entry.getValue()),
                         ProgressHistory::saturatingAdd);
         }
         buckets.clear();
@@ -111,29 +113,29 @@ public final class ProgressHistory
         trimOldest(buckets, MAX_BUCKETS);
     }
 
-    private static String sessionKey(ProgressSessionSummary value)
+    static String sessionKey(ProgressSessionSummary value)
     {
-        return value.getStartedAtMillis() + ":" + value.getEndedAtMillis()
-                + ":" + value.getActiveDurationMillis() + ":"
+        return value.startedAtMillis + ":" + value.getEndedAtMillis()
+                + ":" + value.activeDurationMillis + ":"
                 + value.getTotalXpGained() + ":" + value.getLevelsGained()
                 + ":" + value.getXpBySkill() + ":" + milestoneIds(value);
     }
 
-    private static String milestoneIds(ProgressSessionSummary value)
+    static String milestoneIds(ProgressSessionSummary value)
     {
         var result = new StringBuilder();
-        for (ProgressMilestone milestone : value.getMilestones())
+        for (ProgressMilestone milestone : value.milestones)
             result.append(milestone.id).append('|');
         return result.toString();
     }
 
-    private static int saturatingAdd(int first, int second)
+    static int saturatingAdd(int first, int second)
     {
         var result = (long) first + second;
-        return (int) Math.min(Integer.MAX_VALUE, Math.max(0L, result));
+        return (int) min(Integer.MAX_VALUE, max(0L, result));
     }
 
-    private static void trimOldest(List<?> values, int limit)
+    static void trimOldest(List<?> values, int limit)
     {
         while (values.size() > limit) values.remove(0);
     }

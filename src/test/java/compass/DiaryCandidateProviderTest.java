@@ -60,7 +60,7 @@ public class DiaryCandidateProviderTest
             xp.put(skill, 13_034_431);
         }
         AccountSnapshot account = new AccountSnapshot("Diary", 1L, 0,
-                "NORMAL", MembershipStatus.P2P, 1, 2277, 0L, levels, xp);
+                "NORMAL", Membership.P2P, 1, 2277, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .diaries(snapshot)
                 .quests(new QuestSnapshot(Collections.emptyMap()))

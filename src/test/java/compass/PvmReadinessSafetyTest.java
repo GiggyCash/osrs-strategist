@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class PvmReadinessSafetyTest
 {
     private final PvmReadinessAnalyzer analyzer =
-            new PvmReadinessAnalyzer(new PvmActivityCatalog());
+            new PvmReadinessAnalyzer(new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(), new PvmPreparationProfileCatalog());
 
     @Test
     public void bankedWeaponAndOneFoodDoNotProveReadyCarriedSetup()
@@ -170,7 +170,6 @@ public class PvmReadinessSafetyTest
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values()) { levels.put(skill, 80); xp.put(skill, 0); }
-        return new AccountSnapshot("PvM", 0, "Main", MembershipStatus.P2P,
-                1, 1600, 0L, levels, xp);
+        return new AccountSnapshot("PvM", 0L, 0, "Main", Membership.P2P, 1, 1600, 0L, levels, xp);
     }
 }

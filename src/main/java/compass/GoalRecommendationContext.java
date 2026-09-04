@@ -1,71 +1,71 @@
 package compass;
+import lombok.*;
 import static compass.Text.get;
 
-import lombok.Getter;
 
 /** Short, player-facing explanation of a recommendation's goal relationship. */
 @Getter
 public final class GoalRecommendationContext
 {
-    private final GoalType goal;
-    private final GoalRecommendationRelationship relationship;
-    private final String status;
-    private final GoalProvenance provenance;
+    final GoalType goal;
+    final GoalRelation relationship;
+    final String status;
+    final GoalProvenance provenance;
 
-    private GoalRecommendationContext(GoalType goal,
-            GoalRecommendationRelationship relationship, String status,
+    GoalRecommendationContext(GoalType goal,
+            GoalRelation relationship, String status,
             GoalProvenance provenance)
     {
         this.goal = goal == null ? GoalType.AUTOMATIC : goal;
         this.relationship = relationship == null
-                ? GoalRecommendationRelationship.AUTOMATIC : relationship;
+                ? GoalRelation.AUTOMATIC : relationship;
         this.status = status == null ? "" : status;
         this.provenance = provenance;
     }
 
     public static GoalRecommendationContext assess(GoalType goal,
-            Recommendation recommendation, MembershipStatus membership)
+            Recommendation recommendation, Membership membership)
     {
         var safeGoal = goal == null ? GoalType.AUTOMATIC : goal;
         if (safeGoal == GoalType.AUTOMATIC || safeGoal == GoalType.CUSTOM)
             return new GoalRecommendationContext(safeGoal,
-                    GoalRecommendationRelationship.AUTOMATIC,
+                    GoalRelation.AUTOMATIC,
                     get(296), null);
 
         var name = displayName(safeGoal);
-        if (requiresMembers(safeGoal) && membership != MembershipStatus.P2P)
+        if (requiresMembers(safeGoal) && membership != Membership.P2P)
             return new GoalRecommendationContext(safeGoal,
-                    membership == MembershipStatus.UNKNOWN
-                            ? GoalRecommendationRelationship.CHECK_NEEDED
-                            : GoalRecommendationRelationship.FALLBACK,
-                    membership == MembershipStatus.UNKNOWN
+                    membership == Membership.UNKNOWN
+                            ? GoalRelation.CHECK_NEEDED
+                            : GoalRelation.FALLBACK,
+                    membership == Membership.UNKNOWN
                             ? get(1229) + name + "."
                             : name + get(297),
                     null);
 
         if (recommendation == null)
             return new GoalRecommendationContext(safeGoal,
-                    GoalRecommendationRelationship.CHECK_NEEDED,
+                    GoalRelation.CHECK_NEEDED,
                     get(298) + name + ".",
                     null);
-        if (recommendation.getConfidence() == Confidence.BLOCKED)
+        if (recommendation.confidence == Confidence.BLOCKED)
             return new GoalRecommendationContext(safeGoal,
-                    GoalRecommendationRelationship.BLOCKED,
+                    GoalRelation.BLOCKED,
                     get(1230) + name + " yet.",
                     null);
 
-        var provenance = recommendation.getGoalProvenance();
+        var provenance = recommendation.goalProvenance;
         if (provenance != null
                 && provenance.proves(safeGoal, recommendation.id))
         {
-            if (recommendation.getConfidence()
+            if (recommendation.confidence
                     == Confidence.CHECK_NEEDED)
                 return new GoalRecommendationContext(safeGoal,
-                        GoalRecommendationRelationship.CHECK_NEEDED,
+                        GoalRelation.CHECK_NEEDED,
                         get(1231) + name + ".",
                         provenance);
             boolean direct = provenance.getRelationship()
-                    == GoalRecommendationRelationship.DIRECT;
+                    == GoalRelation.DIRECT;
             return new GoalRecommendationContext(safeGoal,
                     provenance.getRelationship(),
                     direct ? get(1232) + name + "."
@@ -73,16 +73,11 @@ public final class GoalRecommendationContext
                     provenance);
         }
         return new GoalRecommendationContext(safeGoal,
-                GoalRecommendationRelationship.FALLBACK,
+                GoalRelation.FALLBACK,
                 "", null);
     }
 
     public boolean hasProvenRelationship() { return provenance != null; }
-    public boolean isAutomatic()
-    {
-        return relationship == GoalRecommendationRelationship.AUTOMATIC;
-    }
-
     public String getGoalName() { return displayName(goal); }
 
     static String displayName(GoalType goal)
@@ -91,7 +86,7 @@ public final class GoalRecommendationContext
         return goal.toString();
     }
 
-    private static boolean requiresMembers(GoalType goal)
+    static boolean requiresMembers(GoalType goal)
     {
         switch (goal)
         {

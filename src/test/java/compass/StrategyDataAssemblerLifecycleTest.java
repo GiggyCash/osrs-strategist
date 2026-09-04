@@ -17,10 +17,10 @@ public class StrategyDataAssemblerLifecycleTest
     @Test
     public void stableIdentitySurvivesRenameMembershipAndModeTransitions()
     {
-        AccountSnapshot mainF2p = account("Alice", 17L, 0, MembershipStatus.F2P);
-        AccountSnapshot renamed = account("New Alice", 17L, 0, MembershipStatus.P2P);
-        AccountSnapshot iron = account("New Alice", 17L, 1, MembershipStatus.P2P);
-        AccountSnapshot sameNameOther = account("New Alice", 99L, 0, MembershipStatus.P2P);
+        AccountSnapshot mainF2p = account("Alice", 17L, 0, Membership.F2P);
+        AccountSnapshot renamed = account("New Alice", 17L, 0, Membership.P2P);
+        AccountSnapshot iron = account("New Alice", 17L, 1, Membership.P2P);
+        AccountSnapshot sameNameOther = account("New Alice", 99L, 0, Membership.P2P);
 
         assertEquals(StrategyDataAssembler.accountIdentity(mainF2p),
                 StrategyDataAssembler.accountIdentity(renamed));
@@ -34,20 +34,20 @@ public class StrategyDataAssemblerLifecycleTest
     public void unavailableStableIdentityCannotFormAnAccountKey()
     {
         assertEquals("", StrategyDataAssembler.accountIdentity(
-                account("Loading", 0L, 0, MembershipStatus.UNKNOWN)));
+                account("Loading", 0L, 0, Membership.UNKNOWN)));
     }
 
     @Test
     public void renamePreservesObservedBankSlayerOpportunityAndUimGimState()
     {
         MutableAccountReader accounts = new MutableAccountReader(
-                account("Old name", 44L, 4, MembershipStatus.P2P));
+                account("Old name", 44L, 4, Membership.P2P));
         FakeItems items = new FakeItems();
         ObservedStateStore observed = populatedObservedState();
         StrategyDataAssembler assembler = assembler(accounts, items, observed);
 
         GameData before = assembler.read();
-        accounts.account = account("New name", 44L, 4, MembershipStatus.P2P);
+        accounts.account = account("New name", 44L, 4, Membership.P2P);
         GameData after = assembler.read();
 
         assertSame(before.bank(), after.bank());
@@ -62,18 +62,18 @@ public class StrategyDataAssemblerLifecycleTest
     public void differentHashClearsEvenWhenNameMatchesAndLoadingCannotLeak()
     {
         MutableAccountReader accounts = new MutableAccountReader(
-                account("Same name", 44L, 0, MembershipStatus.P2P));
+                account("Same name", 44L, 0, Membership.P2P));
         FakeItems items = new FakeItems();
         ObservedStateStore observed = populatedObservedState();
         StrategyDataAssembler assembler = assembler(accounts, items, observed);
         assembler.read();
         SlayerSnapshot priorSlayer = observed.slayer();
 
-        accounts.account = account("Same name", 0L, 0, MembershipStatus.UNKNOWN);
+        accounts.account = account("Same name", 0L, 0, Membership.UNKNOWN);
         assertNull(assembler.read());
         assertSame(priorSlayer, observed.slayer());
 
-        accounts.account = account("Same name", 55L, 0, MembershipStatus.P2P);
+        accounts.account = account("Same name", 55L, 0, Membership.P2P);
         GameData switched = assembler.read();
         assertNull(switched.slayer());
         assertNull(switched.recurringOpportunities());
@@ -86,13 +86,13 @@ public class StrategyDataAssemblerLifecycleTest
     public void modeTransitionKeepsCharacterIdentityButInvalidatesModeSensitiveState()
     {
         MutableAccountReader accounts = new MutableAccountReader(
-                account("Mode", 71L, 4, MembershipStatus.P2P));
+                account("Mode", 71L, 4, Membership.P2P));
         FakeItems items = new FakeItems();
         ObservedStateStore observed = populatedObservedState();
         StrategyDataAssembler assembler = assembler(accounts, items, observed);
         assembler.read();
 
-        accounts.account = account("Mode", 71L, 2, MembershipStatus.P2P);
+        accounts.account = account("Mode", 71L, 2, Membership.P2P);
         GameData transitioned = assembler.read();
         assertNull(transitioned.groupStorage());
         assertNull(transitioned.storage());
@@ -104,7 +104,7 @@ public class StrategyDataAssemblerLifecycleTest
     public void liveGroupStorageObservationIsUsedOnlyForCurrentGim()
     {
         MutableAccountReader accounts = new MutableAccountReader(
-                account("GIM A", 81L, 4, MembershipStatus.P2P));
+                account("GIM A", 81L, 4, Membership.P2P));
         FakeItems items = new FakeItems();
         items.group = new ItemsState(true,
                 Collections.singletonList(new ItemState(
@@ -116,7 +116,7 @@ public class StrategyDataAssemblerLifecycleTest
         assertSame(items.group, first.groupStorage());
         assertEquals(12, first.groupStorage().getItems().get(0).getQuantity());
 
-        accounts.account = account("Main B", 82L, 0, MembershipStatus.P2P);
+        accounts.account = account("Main B", 82L, 0, Membership.P2P);
         GameData switched = assembler.read();
         assertNull(switched.groupStorage());
     }
@@ -124,7 +124,7 @@ public class StrategyDataAssemblerLifecycleTest
     private static StrategyDataAssembler assembler(MutableAccountReader accounts,
             FakeItems items, ObservedStateStore observed)
     {
-        return new StrategyDataAssembler(accounts, items, new EmptyQuests(),
+        return TestFixtures.strategyDataAssembler(accounts, items, new EmptyQuests(),
                 new EmptyAccessStore(), new EmptyFarmingRuns(),
                 new PassthroughFarming(), observed);
     }
@@ -132,7 +132,7 @@ public class StrategyDataAssemblerLifecycleTest
     private static ObservedStateStore populatedObservedState()
     {
         ObservedStateStore observed = new ObservedStateStore();
-        observed.setSlayer(new SlayerSnapshot("Goblins", 12, "Turael", 0,
+        observed.setSlayer(TestFixtures.slayerSnapshot("Goblins", 12, "Turael", 0,
                 Confidence.VERIFIED));
         Map<String, Long> ready = new HashMap<>();
         ready.put("herb-run", 1L);
@@ -190,7 +190,7 @@ public class StrategyDataAssemblerLifecycleTest
     }
 
     private static AccountSnapshot account(String name, long hash, int type,
-            MembershipStatus membership)
+            Membership membership)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);

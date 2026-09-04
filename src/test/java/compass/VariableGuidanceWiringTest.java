@@ -89,16 +89,7 @@ public class VariableGuidanceWiringTest
         }
         levels.put(skill, level);
         xp.put(skill, Experience.getXpForLevel(level));
-        AccountSnapshot account = new AccountSnapshot(
-                "Variable Wiring",
-                0,
-                "Main",
-                MembershipStatus.P2P,
-                1,
-                1500,
-                0L,
-                levels,
-                xp);
+        AccountSnapshot account = new AccountSnapshot("Variable Wiring", 0L, 0, "Main", Membership.P2P, 1, 1500, 0L, levels, xp);
         return GameData.builder(account)
                 .bank(new ItemsState(Arrays.asList(items), 1L))
                 .inventory(new ItemsState(Collections.emptyList()))

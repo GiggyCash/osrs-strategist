@@ -43,7 +43,7 @@ public class P2pCoverageMatrixTest
                     {
                         if (method.supportsLevel(level)
                                 && ContentAccessRules.isMethodAvailable(
-                                        method, MembershipStatus.P2P))
+                                        method, Membership.P2P))
                         {
                             found = true;
                             break;
@@ -65,7 +65,7 @@ public class P2pCoverageMatrixTest
             for (CuratedTrainingMethod candidate : baseline.methodsFor(skill))
             {
                 assertTrue(ContentAccessRules.isMethodAvailable(
-                        candidate.getMethod(), MembershipStatus.P2P));
+                        candidate.getMethod(), Membership.P2P));
             }
         }
     }
@@ -80,7 +80,7 @@ public class P2pCoverageMatrixTest
             TrainingMethod method = candidate.getMethod();
             if (method.supportsLevel(level)
                     && ContentAccessRules.isMethodAvailable(
-                            method, MembershipStatus.P2P))
+                            method, Membership.P2P))
             {
                 return true;
             }

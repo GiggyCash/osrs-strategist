@@ -131,7 +131,7 @@ public class RecommendationPresentationCompactTest
                 10, 10, 10, AttentionLevel.MODERATE,
                 20, 2, Collections.emptyList(),
                 Confidence.CHECK_NEEDED);
-        RequirementCheck check = new RequirementCheck(
+        EvidenceCheck check = new EvidenceCheck(
                 "access:range", "Verify range access",
                 RequirementState.CHECK_NEEDED, "No range access observation yet.");
         TrainingPlan plan = new TrainingPlan(method, "test",

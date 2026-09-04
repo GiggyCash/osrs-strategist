@@ -1,4 +1,7 @@
 package compass;
+import static java.util.Collections.*;
+import lombok.Getter;
+import static java.lang.Math.*;
 import static compass.Text.get;
 
 import java.util.*;
@@ -25,7 +28,7 @@ public final class Presentation
         var plan = recommendation.plan();
 
         appendGoalStatus(text, goalContext);
-        appendRiskDisclosure(text, recommendation.getGuidance());
+        appendRiskDisclosure(text, recommendation.guidance);
 
         if (plan == null || plan.method() == null)
         {
@@ -36,7 +39,7 @@ public final class Presentation
         var method = plan.method();
         appendMethodHeader(text, recommendation, method);
 
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         if (guidance != null)
         {
             appendCompactGuidance(text, guidance);
@@ -47,7 +50,7 @@ public final class Presentation
         {
             appendBreak(text, 2);
             text.append(get(1911));
-            var shown = Math.min(2, unresolved.size());
+            var shown = min(2, unresolved.size());
             for (int i = 0; i < shown; i++)
             {
                 if (i > 0) text.append("<br>");
@@ -78,7 +81,7 @@ public final class Presentation
         for (Section section : detailsSections(recommendation, goalContext))
         {
             if (text.length() > 0) appendBreak(text, 2);
-            text.append("<b>").append(escape(section.getHeading()))
+            text.append("<b>").append(escape(section.heading))
                     .append("</b><br>").append(escape(section.getValue()));
         }
         return text.toString();
@@ -110,17 +113,17 @@ public final class Presentation
     public static List<Section> detailsSections(Recommendation recommendation,
             GoalRecommendationContext goalContext)
     {
-        if (recommendation == null) return Collections.emptyList();
+        if (recommendation == null) return emptyList();
         List<Section> sections = new ArrayList<>();
-        var guidance = recommendation.getGuidance();
+        var guidance = recommendation.guidance;
         if (guidance != null && guidance.getRiskDisclosure() != null)
             sections.add(new Section(
-                    guidance.getRiskDisclosure().getHeading(),
+                    guidance.getRiskDisclosure().heading,
                     guidance.getRiskDisclosure().getMessage()));
         if (goalContext != null && goalContext.hasProvenRelationship()
-                && hasText(goalContext.getStatus()))
+                && hasText(goalContext.status))
             sections.add(new Section("GOAL",
-                    compactSentence(goalContext.getStatus(), 160)));
+                    compactSentence(goalContext.status, 160)));
 
         var why = playerWhy(recommendation);
         if (hasText(why))
@@ -129,53 +132,53 @@ public final class Presentation
         var needed = firstNeeded(recommendation);
         if (hasText(needed))
             sections.add(new Section(
-                    recommendation.getConfidence() == Confidence.BLOCKED
+                    recommendation.confidence == Confidence.BLOCKED
                             ? "BLOCKED BY" : "NEEDED",
                     compactSentence(needed, 140)));
 
         // Reserve the fourth compact slot for the executable current step.
         if (sections.size() < 3 && guidance != null
-                && hasText(guidance.getLocation()))
+                && hasText(guidance.location))
             sections.add(new Section("WHERE",
-                    compactSentence(guidance.getLocation(), 140)));
+                    compactSentence(guidance.location, 140)));
 
         String current = guidance != null
-                ? guidance.getAction() : recommendation.getTitle();
+                ? guidance.getAction() : recommendation.title;
         if (hasText(current))
             sections.add(new Section("CURRENT STEP",
                     compactSentence(current, 150)));
 
-        if (sections.size() < 4 && hasText(recommendation.getReason())
-                && recommendation.getGoalProvenance() == null
-                && !sameSentence(why, recommendation.getReason()))
+        if (sections.size() < 4 && hasText(recommendation.reason)
+                && recommendation.goalProvenance == null
+                && !sameSentence(why, recommendation.reason))
             sections.add(new Section("NEXT",
-                    compactSentence(recommendation.getReason(), 130)));
-        return Collections.unmodifiableList(sections.subList(0,
-                Math.min(4, sections.size())));
+                    compactSentence(recommendation.reason, 130)));
+        return unmodifiableList(sections.subList(0,
+                min(4, sections.size())));
     }
 
     private static String playerWhy(Recommendation recommendation)
     {
         if (recommendation != null
-                && recommendation.getGoalProvenance() != null)
-            return recommendation.getGoalProvenance().playerReason();
-        return recommendation == null ? null : recommendation.getReason();
+                && recommendation.goalProvenance != null)
+            return recommendation.goalProvenance.playerReason();
+        return recommendation == null ? null : recommendation.reason;
     }
 
     private static void appendNonSkillCompact(
             StringBuilder text,
             Recommendation recommendation)
     {
-        var guidance = recommendation.getGuidance();
-        if (recommendation.getConfidence() == Confidence.BLOCKED)
+        var guidance = recommendation.guidance;
+        if (recommendation.confidence == Confidence.BLOCKED)
         {
             text.append(get(1913))
                     .append(get(692));
             return;
         }
         text.append(get(1914))
-                .append(escape(compactSentence(recommendation.getTitle(), 110)));
-        if (recommendation.getConfidence() != Confidence.VERIFIED)
+                .append(escape(compactSentence(recommendation.title, 110)));
+        if (recommendation.confidence != Confidence.VERIFIED)
         {
             if (guidance != null && hasText(guidance.getAction()))
                 appendCompactGuidance(text, guidance);
@@ -192,7 +195,7 @@ public final class Presentation
         {
             appendCompactGuidance(text, guidance);
         }
-        else if (hasText(recommendation.getReason()))
+        else if (hasText(recommendation.reason))
         {
             appendBreak(text, 2);
             text.append(get(694));
@@ -204,7 +207,7 @@ public final class Presentation
     {
         if (guidance == null || guidance.getRiskDisclosure() == null) return;
         var disclosure = guidance.getRiskDisclosure();
-        text.append("<b>").append(escape(disclosure.getHeading()))
+        text.append("<b>").append(escape(disclosure.heading))
                 .append("</b><br>")
                 .append(escape(compactSentence(disclosure.getMessage(), 180)));
         if (disclosure.isAcknowledgementRequired())
@@ -217,18 +220,18 @@ public final class Presentation
             StringBuilder text, Guidance guidance)
     {
         if (guidance == null) return;
-        if (meaningfulSupplies(guidance.getSupplies()))
+        if (meaningfulSupplies(guidance.supplies))
         {
             appendBreak(text, 2);
             text.append(get(1915))
-                    .append(escape(compactSentence(guidance.getSupplies(),
+                    .append(escape(compactSentence(guidance.supplies,
                             COMPACT_SUPPLIES_CHARS)));
         }
-        if (hasText(guidance.getLocation()))
+        if (hasText(guidance.location))
         {
             appendBreak(text, 2);
             text.append(get(1916))
-                    .append(escape(compactSentence(guidance.getLocation(),
+                    .append(escape(compactSentence(guidance.location,
                             COMPACT_LOCATION_CHARS)));
         }
         if (hasText(guidance.getAction()))
@@ -268,9 +271,9 @@ public final class Presentation
         }
         if (normalized.length() <= maxChars) return normalized;
 
-        var cut = Math.min(maxChars, normalized.length());
+        var cut = min(maxChars, normalized.length());
         var word = normalized.lastIndexOf(' ', cut);
-        if (word >= Math.max(20, maxChars / 2)) cut = word;
+        if (word >= max(20, maxChars / 2)) cut = word;
         return normalized.substring(0, cut).trim() + "…";
     }
 
@@ -283,9 +286,9 @@ public final class Presentation
             GoalRecommendationContext context)
     {
         if (context == null || !context.hasProvenRelationship()
-                || !hasText(context.getStatus())) return;
+                || !hasText(context.status)) return;
         text.append("<b>GOAL</b><br>")
-                .append(escape(compactSentence(context.getStatus(), 125)));
+                .append(escape(compactSentence(context.status, 125)));
         appendBreak(text, 2);
     }
 
@@ -293,17 +296,17 @@ public final class Presentation
     {
         var plan = recommendation.plan();
         if (plan != null)
-            for (RequirementCheck check : hardUnresolved(plan))
+            for (EvidenceCheck check : hardUnresolved(plan))
                 if (check != null && hasText(check.getLabel()))
                     return check.getLabel();
-        var guidance = recommendation.getGuidance();
-        if (recommendation.getConfidence()
+        var guidance = recommendation.guidance;
+        if (recommendation.confidence
                     == Confidence.CHECK_NEEDED
-                && guidance != null && hasText(guidance.getSupplies()))
-            return guidance.getSupplies();
-        if (recommendation.getConfidence() == Confidence.CHECK_NEEDED)
+                && guidance != null && hasText(guidance.supplies))
+            return guidance.supplies;
+        if (recommendation.confidence == Confidence.CHECK_NEEDED)
             return get(696);
-        if (recommendation.getConfidence() == Confidence.BLOCKED)
+        if (recommendation.confidence == Confidence.BLOCKED)
             return get(697);
         return "";
     }
@@ -314,11 +317,11 @@ public final class Presentation
         return compactSentence(left, 140).equals(compactSentence(right, 140));
     }
 
-    private static List<RequirementCheck> hardUnresolved(TrainingPlan plan)
+    private static List<EvidenceCheck> hardUnresolved(TrainingPlan plan)
     {
-        List<RequirementCheck> unresolved = new ArrayList<>();
-        if (plan == null || plan.getRequirementChecks() == null) return unresolved;
-        for (RequirementCheck check : plan.getRequirementChecks())
+        List<EvidenceCheck> unresolved = new ArrayList<>();
+        if (plan == null || plan.requirementChecks == null) return unresolved;
+        for (EvidenceCheck check : plan.requirementChecks)
         {
             if (check == null || check.getState() == RequirementState.VERIFIED) continue;
             if (RequirementActionability.isPreparationRequirement(check)) continue;
@@ -369,9 +372,10 @@ public final class Presentation
                 .replace("'", "&#39;");
     }
 
+    @Getter
     public static final class Section
     {
-        private final String heading;
+        final String heading;
         private final String value;
 
         Section(String heading, String value)
@@ -380,7 +384,5 @@ public final class Presentation
             this.value = value == null ? "" : value;
         }
 
-        public String getHeading() { return heading; }
-        public String getValue() { return value; }
     }
 }

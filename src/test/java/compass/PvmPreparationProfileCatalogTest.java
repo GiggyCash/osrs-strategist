@@ -25,7 +25,7 @@ public class PvmPreparationProfileCatalogTest
             assertFalse(profile.getStyle().trim().isEmpty());
             assertFalse(profile.getActivityId(), !ids.add(profile.getActivityId()));
         }
-        for (PvmActivityDefinition activity : new PvmActivityCatalog().all())
+        for (PvmActivity activity : new PvmActivityCatalog().all())
             assertNotNull(activity.getId(), catalog.forActivity(activity.getId()));
     }
 }

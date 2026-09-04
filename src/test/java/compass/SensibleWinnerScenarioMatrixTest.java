@@ -46,12 +46,12 @@ public class SensibleWinnerScenarioMatrixTest
         expected.put(GoalType.INFERNAL_CAPE, "pvm:inferno");
         expected.put(GoalType.MAX, "skill:mining");
 
-        StrategyEngine engine = new StrategyEngine(null, null, null, null,
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         for (Map.Entry<GoalType, String> entry : expected.entrySet())
         {
-            StrategyContext context = context(0, MembershipStatus.P2P,
+            StrategyContext context = context(0, Membership.P2P,
                     StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                     entry.getKey(), standard(70), false);
             String winner = engine.buildPlayerQueue(candidates, context)
@@ -68,7 +68,7 @@ public class SensibleWinnerScenarioMatrixTest
     {
         List<Scenario> cases = scenarios();
         assertTrue(cases.size() >= 50);
-        StrategyEngine engine = new StrategyEngine(null, null, null, null,
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null, null,
                 new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
         StringBuilder failures = new StringBuilder();
@@ -89,7 +89,7 @@ public class SensibleWinnerScenarioMatrixTest
     private static List<Scenario> scenarios()
     {
         List<Scenario> values = new ArrayList<>();
-        StrategyContext max = context(0, MembershipStatus.P2P,
+        StrategyContext max = context(0, Membership.P2P,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 GoalType.MAX, standard(70), false);
 
@@ -167,7 +167,7 @@ public class SensibleWinnerScenarioMatrixTest
 
         // Strategy modes affect non-training families and method attention.
         values.add(scenario("20 efficient chooses shared unlock",
-                context(0, MembershipStatus.P2P, StrategyMode.EFFICIENT,
+                context(0, Membership.P2P, StrategyMode.EFFICIENT,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(70), false), "quest:",
                 shared(ready("quest:shared-unlock", 45, "Shared prerequisite saves future time.")),
                 ready("money:generic", 44, "Earn GP.")));
@@ -175,12 +175,12 @@ public class SensibleWinnerScenarioMatrixTest
                 shared(ready("detour:shared", 45, "Also advances multiple goals.")),
                 ready("money:generic", 44, "Earn GP.")));
         values.add(scenario("22 relaxed chooses low-fatigue method",
-                context(0, MembershipStatus.P2P, StrategyMode.RELAXED,
+                context(0, Membership.P2P, StrategyMode.RELAXED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(70), false), "skill:relaxed",
                 skill("skill:relaxed", Skill.FISHING, 39, AttentionLevel.AFK, 2, 30, 70, 71),
                 skill("skill:sweaty", Skill.MINING, 46, AttentionLevel.ACTIVE, 2, 30, 70, 71)));
         values.add(scenario("23 relaxed avoids encounter grind",
-                context(0, MembershipStatus.P2P, StrategyMode.RELAXED,
+                context(0, Membership.P2P, StrategyMode.RELAXED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(70), false), "skill:",
                 skill("skill:woodcutting", Skill.WOODCUTTING, 40, AttentionLevel.LOW, 2, 30, 70, 71),
                 ready("pvm:grind", 49, "Repeated active encounter.")));
@@ -215,30 +215,30 @@ public class SensibleWinnerScenarioMatrixTest
 
         // Membership and restricted-build final safety boundaries.
         values.add(scenario("32 unknown membership fails closed to F2P-safe action",
-                context(0, MembershipStatus.UNKNOWN, StrategyMode.BALANCED,
+                context(0, Membership.UNKNOWN, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, standard(45), false), "skill:f2p",
                 skillF2p("skill:f2p", Skill.MINING, 35), membersReady("quest:members", 200, "Members quest.")));
         values.add(scenario("33 F2P blocks members upgrade",
-                context(0, MembershipStatus.F2P, StrategyMode.BALANCED,
+                context(0, Membership.F2P, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, GoalType.GEAR_TARGET, standard(45), false), "skill:f2p",
                 skillF2p("skill:f2p", Skill.FISHING, 35), membersReady("upgrade:members", 200, "Members upgrade.")));
         values.add(scenario("34 one Defence pure blocks Defence XP",
-                context(0, MembershipStatus.P2P, StrategyMode.EFFICIENT,
+                context(0, Membership.P2P, StrategyMode.EFFICIENT,
                         SessionIntent.LONG_SESSION, GoalType.MAX, oneDefence(), false), "skill:agility",
                 skill("skill:defence", Skill.DEFENCE, 200, AttentionLevel.ACTIVE, 2, 30, 1, 2),
                 skill("skill:agility", Skill.AGILITY, 30, AttentionLevel.ACTIVE, 2, 30, 70, 71)));
         values.add(scenario("35 level three skiller blocks combat XP",
-                context(0, MembershipStatus.P2P, StrategyMode.BALANCED,
+                context(0, Membership.P2P, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, skiller(), false), "skill:mining",
                 skill("skill:attack", Skill.ATTACK, 200, AttentionLevel.ACTIVE, 2, 30, 1, 2),
                 skill("skill:mining", Skill.MINING, 30, AttentionLevel.LOW, 2, 30, 50, 51)));
         values.add(scenario("36 Defence pure keeps Defence route",
-                context(0, MembershipStatus.P2P, StrategyMode.BALANCED,
+                context(0, Membership.P2P, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, defencePure(), false), "skill:defence",
                 skill("skill:attack", Skill.ATTACK, 200, AttentionLevel.ACTIVE, 2, 30, 1, 2),
                 skill("skill:defence", Skill.DEFENCE, 30, AttentionLevel.LOW, 2, 30, 75, 76)));
         values.add(scenario("37 ten HP build chooses noncombat",
-                context(0, MembershipStatus.P2P, StrategyMode.BALANCED,
+                context(0, Membership.P2P, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, GoalType.MAX, tenHp(), false), "skill:crafting",
                 skill("skill:ranged", Skill.RANGED, 200, AttentionLevel.ACTIVE, 2, 30, 60, 61),
                 skill("skill:crafting", Skill.CRAFTING, 30, AttentionLevel.LOW, 2, 30, 60, 61)));
@@ -297,7 +297,7 @@ public class SensibleWinnerScenarioMatrixTest
     private static Scenario goal(String name, GoalType goal, String expected,
             Recommendation... candidates)
     {
-        return scenario(name, context(0, MembershipStatus.P2P,
+        return scenario(name, context(0, Membership.P2P,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME, goal,
                 standard(70), false), expected, candidates);
     }
@@ -310,7 +310,7 @@ public class SensibleWinnerScenarioMatrixTest
 
     private static StrategyContext accountContext(int accountType)
     {
-        return context(accountType, MembershipStatus.P2P,
+        return context(accountType, Membership.P2P,
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 GoalType.MAX, standard(70), false);
     }
@@ -331,7 +331,7 @@ public class SensibleWinnerScenarioMatrixTest
                 source.getActiveGoal(), false, false, false, preferences);
     }
 
-    private static StrategyContext context(int type, MembershipStatus membership,
+    private static StrategyContext context(int type, Membership membership,
             StrategyMode strategy, SessionIntent session, GoalType goal,
             Map<Skill, Integer> levels, boolean wilderness)
     {
@@ -347,7 +347,7 @@ public class SensibleWinnerScenarioMatrixTest
         }
         AccountSnapshot account = new AccountSnapshot("Scenario", 100L + type,
                 type, AccountMode.fromTypeCode(type).name(), membership,
-                membership == MembershipStatus.P2P ? 1 : 0, total, totalXp,
+                membership == Membership.P2P ? 1 : 0, total, totalXp,
                 levels, xp);
         GameData data = GameData.builder(account)
                 .inventory(new ItemsState(Collections.emptyList()))
@@ -385,14 +385,14 @@ public class SensibleWinnerScenarioMatrixTest
                 new TrainingPlan(method, "Scenario method",
                         Confidence.VERIFIED),
                 Confidence.VERIFIED, current, target, guidance(),
-                SafetyEvidence.skill(freeToPlay, skill));
+                Safety.skill(freeToPlay, skill));
     }
 
     private static Recommendation ready(String id, double score, String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
                 Confidence.VERIFIED, 0, 0, guidance(),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 
     private static Recommendation unlock(Recommendation recommendation)
@@ -467,7 +467,7 @@ public class SensibleWinnerScenarioMatrixTest
     {
         return new Recommendation(id, title(id), reason, score, null,
                 Confidence.VERIFIED, 0, 0, guidance(),
-                SafetyEvidence.harmless(false));
+                Safety.harmless(false));
     }
 
     private static Recommendation irreversible(String id, double score,
@@ -475,14 +475,14 @@ public class SensibleWinnerScenarioMatrixTest
     {
         return new Recommendation(id, title(id), reason, score, null,
                 Confidence.VERIFIED, 0, 0, guidance(),
-                SafetyEvidence.potentiallyIrreversible(false));
+                Safety.potentiallyIrreversible(false));
     }
 
     private static Recommendation check(String id, double score, String reason)
     {
         return new Recommendation(id, title(id), reason, score, null,
                 Confidence.CHECK_NEEDED, 0, 0, guidance(),
-                SafetyEvidence.harmless(true));
+                Safety.harmless(true));
     }
 
     private static String title(String id)

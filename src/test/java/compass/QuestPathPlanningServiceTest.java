@@ -17,14 +17,14 @@ import static org.junit.Assert.assertTrue;
 public class QuestPathPlanningServiceTest
 {
     private final QuestPathPlanningService service =
-            new QuestPathPlanningService();
+            TestFixtures.questPathPlanningService();
 
     @Test
     public void sameQuestOnTwoGoalPathsIsOneStepWithBothProvenances()
     {
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Song of the Elves", QuestStatus.NOT_STARTED);
-        StrategyContext context = context(statuses, MembershipStatus.P2P,
+        StrategyContext context = context(statuses, Membership.P2P,
                 QuestTolerance.LOW);
 
         QuestPathPlan plan = service.plan(context, Arrays.asList(
@@ -50,7 +50,7 @@ public class QuestPathPlanningServiceTest
         statuses.put("Nature Spirit", QuestStatus.COMPLETE);
 
         QuestPathPlan plan = service.plan(context(statuses,
-                MembershipStatus.P2P, QuestTolerance.LOW),
+                Membership.P2P, QuestTolerance.LOW),
                 java.util.Collections.singleton(GoalType.QUEST_CAPE));
         QuestPathStep lostCity = named(plan, "Lost City");
         QuestPathStep fairy = named(plan, "Fairytale I - Growing Pains");
@@ -73,10 +73,10 @@ public class QuestPathPlanningServiceTest
         statuses.put("Nature Spirit", QuestStatus.COMPLETE);
 
         QuestPathPlan low = service.plan(context(statuses,
-                MembershipStatus.P2P, QuestTolerance.LOW),
+                Membership.P2P, QuestTolerance.LOW),
                 java.util.Collections.singleton(GoalType.QUEST_CAPE));
         QuestPathPlan high = service.plan(context(statuses,
-                MembershipStatus.P2P, QuestTolerance.HIGH),
+                Membership.P2P, QuestTolerance.HIGH),
                 java.util.Collections.singleton(GoalType.QUEST_CAPE));
 
         assertEquals(low.getSteps().stream().map(QuestPathStep::getQuestName)
@@ -91,7 +91,7 @@ public class QuestPathPlanningServiceTest
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Song of the Elves", QuestStatus.NOT_STARTED);
         QuestPathPlan plan = service.plan(context(statuses,
-                MembershipStatus.F2P, QuestTolerance.NORMAL),
+                Membership.F2P, QuestTolerance.NORMAL),
                 java.util.Collections.singleton(GoalType.PRIFDDINAS));
 
         assertTrue(plan.isEmpty());
@@ -105,7 +105,7 @@ public class QuestPathPlanningServiceTest
         statuses.put("Recipe for Disaster - Wartface & Bentnoze",
                 QuestStatus.NOT_STARTED);
         QuestPathPlan plan = service.plan(context(statuses,
-                MembershipStatus.P2P, QuestTolerance.LOW, 1),
+                Membership.P2P, QuestTolerance.LOW, 1),
                 java.util.Collections.singleton(GoalType.BARROWS_GLOVES));
         QuestPathStep goblins = named(plan,
                 "Recipe for Disaster - Wartface & Bentnoze");
@@ -124,13 +124,13 @@ public class QuestPathPlanningServiceTest
     }
 
     private static StrategyContext context(Map<String, QuestStatus> statuses,
-            MembershipStatus membership, QuestTolerance tolerance)
+            Membership membership, QuestTolerance tolerance)
     {
         return context(statuses, membership, tolerance, 99);
     }
 
     private static StrategyContext context(Map<String, QuestStatus> statuses,
-            MembershipStatus membership, QuestTolerance tolerance,
+            Membership membership, QuestTolerance tolerance,
             int farmingLevel)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -142,7 +142,7 @@ public class QuestPathPlanningServiceTest
         }
         AccountSnapshot account = new AccountSnapshot("Quest planner", 31L,
                 0, "MAIN", membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
+                membership == Membership.P2P ? 1 : 0,
                 levels.size() * 99, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(statuses)).build();

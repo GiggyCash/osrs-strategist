@@ -14,24 +14,24 @@ public class ContentAccessRulesTest
     {
         assertTrue(ContentAccessRules.isSkillAvailable(
                 Skill.MINING,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertTrue(ContentAccessRules.isSkillAvailable(
                 Skill.RUNECRAFT,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
 
         assertFalse(ContentAccessRules.isSkillAvailable(
                 Skill.FARMING,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertFalse(ContentAccessRules.isSkillAvailable(
                 Skill.HERBLORE,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertFalse(ContentAccessRules.isSkillAvailable(
                 Skill.SAILING,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
     }
 
@@ -40,11 +40,11 @@ public class ContentAccessRulesTest
     {
         assertTrue(ContentAccessRules.isSkillAvailable(
                 Skill.FARMING,
-                MembershipStatus.P2P
+                Membership.P2P
         ));
         assertTrue(ContentAccessRules.isSkillAvailable(
                 Skill.SAILING,
-                MembershipStatus.P2P
+                Membership.P2P
         ));
     }
 
@@ -64,15 +64,15 @@ public class ContentAccessRulesTest
 
         assertFalse(ContentAccessRules.isMethodAvailable(
                 motherlode,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertTrue(ContentAccessRules.isMethodAvailable(
                 normalOre,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertTrue(ContentAccessRules.isMethodAvailable(
                 motherlode,
-                MembershipStatus.P2P
+                Membership.P2P
         ));
     }
 
@@ -87,11 +87,11 @@ public class ContentAccessRulesTest
 
         assertFalse(ContentAccessRules.isMethodAvailable(
                 futureMembersMethod,
-                MembershipStatus.F2P
+                Membership.F2P
         ));
         assertTrue(ContentAccessRules.isMethodAvailable(
                 futureMembersMethod,
-                MembershipStatus.P2P
+                Membership.P2P
         ));
     }
 

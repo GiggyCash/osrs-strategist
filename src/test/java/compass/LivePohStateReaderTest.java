@@ -16,10 +16,10 @@ public class LivePohStateReaderTest
         PohSnapshot snapshot = LivePohStateReader.snapshotForObjectIds(
                 Collections.emptySet());
 
-        assertEquals(CapabilityState.VERIFIED, snapshot.getHouseAccess());
-        assertEquals(CapabilityState.BLOCKED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.getHouseAccess());
+        assertEquals(Capability.BLOCKED, snapshot.furnitureState(
                 LivePohStateReader.ARMOUR_CASE));
-        assertEquals(CapabilityState.BLOCKED, snapshot.furnitureState(
+        assertEquals(Capability.BLOCKED, snapshot.furnitureState(
                 LivePohStateReader.ORNATE_POOL));
     }
 
@@ -30,9 +30,9 @@ public class LivePohStateReaderTest
                 Collections.singleton(
                         ObjectID.POH_COS_ROOM_ARMOUR_CASE_HOTSPOT));
 
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.COSTUME_ROOM));
-        assertEquals(CapabilityState.BLOCKED, snapshot.furnitureState(
+        assertEquals(Capability.BLOCKED, snapshot.furnitureState(
                 LivePohStateReader.ARMOUR_CASE));
     }
 
@@ -48,25 +48,25 @@ public class LivePohStateReaderTest
                         ObjectID.POH_ALTAR_OCCULT_ANCIENT,
                         ObjectID.POH_SPIRIT_RING)));
 
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.ARMOUR_CASE));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.PERMANENT_PORTAL));
-        assertEquals(CapabilityState.BLOCKED, snapshot.furnitureState(
+        assertEquals(Capability.BLOCKED, snapshot.furnitureState(
                 LivePohStateReader.PORTAL_NEXUS));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.RESTORATION_POOL));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.ORNATE_POOL));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.ORNATE_JEWELLERY_BOX));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.OCCULT_ALTAR));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.FAIRY_RING));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.SPIRIT_TREE));
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.SPIRITUAL_FAIRY_TREE));
     }
 
@@ -76,9 +76,9 @@ public class LivePohStateReaderTest
         PohSnapshot snapshot = LivePohStateReader.snapshotForObjectIds(
                 Collections.singleton(ObjectID.POH_NEXUS_PORTAL_1));
 
-        assertEquals(CapabilityState.VERIFIED, snapshot.furnitureState(
+        assertEquals(Capability.VERIFIED, snapshot.furnitureState(
                 LivePohStateReader.PORTAL_NEXUS));
-        assertEquals(CapabilityState.BLOCKED, snapshot.furnitureState(
+        assertEquals(Capability.BLOCKED, snapshot.furnitureState(
                 LivePohStateReader.PERMANENT_PORTAL));
     }
 }

@@ -182,9 +182,7 @@ public class MinigamePlanningDepthTest
                     levels.put(skill, 50);
             levels.put(Skill.HITPOINTS, 10);
         }
-        AccountSnapshot account = new AccountSnapshot("Player", type,
-                AccountMode.fromTypeCode(type).name(), MembershipStatus.P2P,
-                1, level * Skill.values().length, 0, levels, xp);
+        AccountSnapshot account = new AccountSnapshot("Player", 0L, type, AccountMode.fromTypeCode(type).name(), Membership.P2P, 1, level * Skill.values().length, 0, levels, xp);
         GameData data = GameData.builder(account)
                 .bank(new ItemsState(bank, 1L))
                 .inventory(new ItemsState(Collections.emptyList()))

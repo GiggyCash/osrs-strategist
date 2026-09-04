@@ -32,13 +32,13 @@ public class BetaAccountSimulationTest
             new ExpandedTrainingMethodCatalog(),
             new F2pBaselineMethodCatalog(),
             new TrainingMethodPolicy());
-    private final RecommendationEngine engine = new RecommendationEngine(selector);
+    private final RecommendationEngine engine = TestFixtures.recommendationEngine(selector);
 
     @Test
     public void f2pMainNeverReceivesMembersSkillOrMethod()
     {
         GameData data = data(account(
-                MembershipStatus.F2P, 0, standardLevels(45)));
+                Membership.F2P, 0, standardLevels(45)));
 
         List<Recommendation> recommendations = engine.recommendAll(
                 data,
@@ -54,10 +54,10 @@ public class BetaAccountSimulationTest
             TrainingMethod method = requireMethod(recommendation);
             assertTrue("F2P skill leak: " + method.getSkill(),
                     ContentAccessRules.isSkillAvailable(
-                            method.getSkill(), MembershipStatus.F2P));
+                            method.getSkill(), Membership.F2P));
             assertTrue("F2P method leak: " + method.getId(),
                     ContentAccessRules.isMethodAvailable(
-                            method, MembershipStatus.F2P));
+                            method, Membership.F2P));
             assertFalse("Members-only method leaked: " + method.getId(),
                     method.isMembersOnly());
         }
@@ -67,7 +67,7 @@ public class BetaAccountSimulationTest
     public void unknownMembershipFailsClosedLikeF2p()
     {
         GameData data = data(account(
-                MembershipStatus.UNKNOWN, 0, standardLevels(45)));
+                Membership.UNKNOWN, 0, standardLevels(45)));
         List<Recommendation> recommendations = engine.recommendAll(
                 data,
                 StrategyMode.BALANCED,
@@ -81,10 +81,10 @@ public class BetaAccountSimulationTest
             TrainingMethod method = requireMethod(recommendation);
             assertTrue("Unknown access leaked a members skill: " + method.getSkill(),
                     ContentAccessRules.isSkillAvailable(
-                            method.getSkill(), MembershipStatus.UNKNOWN));
+                            method.getSkill(), Membership.UNKNOWN));
             assertTrue("Unknown access leaked a members method: " + method.getId(),
                     ContentAccessRules.isMethodAvailable(
-                            method, MembershipStatus.UNKNOWN));
+                            method, Membership.UNKNOWN));
         }
     }
 
@@ -93,9 +93,9 @@ public class BetaAccountSimulationTest
     {
         Map<Skill, Integer> levels = standardLevels(60);
         GameData f2p = data(account(
-                MembershipStatus.F2P, 0, levels));
+                Membership.F2P, 0, levels));
         GameData p2p = data(account(
-                MembershipStatus.P2P, 0, levels));
+                Membership.P2P, 0, levels));
 
         assertNullPlan(selector.select(
                 f2p, Skill.SLAYER, 60,
@@ -124,8 +124,8 @@ public class BetaAccountSimulationTest
         levels.put(Skill.PRAYER, 43);
         levels.put(Skill.HITPOINTS, 63);
 
-        AccountSnapshot account = account(MembershipStatus.F2P, 0, levels);
-        assertEquals(RestrictedBuildType.DEFENCE_PURE,
+        AccountSnapshot account = account(Membership.F2P, 0, levels);
+        assertEquals(BuildType.DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
         GameData data = data(account);
 
@@ -168,8 +168,8 @@ public class BetaAccountSimulationTest
         levels.put(Skill.MAGIC, 70);
         levels.put(Skill.HITPOINTS, 75);
 
-        AccountSnapshot account = account(MembershipStatus.P2P, 0, levels);
-        assertEquals(RestrictedBuildType.ONE_DEFENCE_PURE,
+        AccountSnapshot account = account(Membership.P2P, 0, levels);
+        assertEquals(BuildType.ONE_DEFENCE_PURE,
                 AccountBuildPolicy.effectiveBuild(account));
         GameData data = data(account);
 
@@ -199,8 +199,8 @@ public class BetaAccountSimulationTest
         levels.put(Skill.HITPOINTS, 10);
         levels.put(Skill.SLAYER, 1);
 
-        AccountSnapshot account = account(MembershipStatus.P2P, 0, levels);
-        assertEquals(RestrictedBuildType.SKILLER,
+        AccountSnapshot account = account(Membership.P2P, 0, levels);
+        assertEquals(BuildType.SKILLER,
                 AccountBuildPolicy.effectiveBuild(account));
         GameData data = data(account);
 
@@ -220,7 +220,7 @@ public class BetaAccountSimulationTest
     public void hardcoreCannotSelectWildernessEvenWhenGlobalToggleIsOn()
     {
         GameData data = data(account(
-                MembershipStatus.P2P, 3, standardLevels(70)));
+                Membership.P2P, 3, standardLevels(70)));
 
         TrainingPlan plan = selector.select(
                 data,
@@ -241,7 +241,7 @@ public class BetaAccountSimulationTest
         for (int accountType : accountTypes)
         {
             GameData data = data(account(
-                    MembershipStatus.P2P,
+                    Membership.P2P,
                     accountType,
                     standardLevels(60)));
             List<Recommendation> recommendations = engine.recommendAll(
@@ -272,7 +272,7 @@ public class BetaAccountSimulationTest
     public void recommendationEngineKeepsFullPoolForFinalActionabilityPass()
     {
         GameData data = data(account(
-                MembershipStatus.P2P, 0, standardLevels(60)));
+                Membership.P2P, 0, standardLevels(60)));
 
         List<Recommendation> full = engine.recommendAll(
                 data,
@@ -310,7 +310,7 @@ public class BetaAccountSimulationTest
         for (int accountType : accountTypes)
         {
             AccountSnapshot account = account(
-                    MembershipStatus.P2P,
+                    Membership.P2P,
                     accountType,
                     standardLevels(70));
             GameData data = data(account);
@@ -335,7 +335,7 @@ public class BetaAccountSimulationTest
                                 AccountBuildPolicy.allowsMethod(account, method));
                         assertTrue("Membership-illegal method " + method.getId(),
                                 ContentAccessRules.isMethodAvailable(
-                                        method, MembershipStatus.P2P));
+                                        method, Membership.P2P));
                         assertFalse("Wilderness method leaked with risk disabled: "
                                         + method.getId(),
                                 method.isWilderness());
@@ -348,14 +348,14 @@ public class BetaAccountSimulationTest
     @Test
     public void strategyEngineRunsMajorAccountStageMatrixEndToEnd()
     {
-        StrategyEngine strategyEngine = new StrategyEngine(engine, null, null,
+        StrategyEngine strategyEngine = TestFixtures.strategyEngine(engine, null, null,
                 null, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());
-        MembershipStatus[] memberships = {
-                MembershipStatus.F2P, MembershipStatus.UNKNOWN,
-                MembershipStatus.P2P};
+        Membership[] memberships = {
+                Membership.F2P, Membership.UNKNOWN,
+                Membership.P2P};
         int[] stages = {1, 35, 65, 90, 98, 99};
-        for (MembershipStatus membership : memberships)
+        for (Membership membership : memberships)
         {
             for (int accountType = 0; accountType <= 6; accountType++)
             {
@@ -405,7 +405,7 @@ public class BetaAccountSimulationTest
     }
 
     private static AccountSnapshot account(
-            MembershipStatus membership,
+            Membership membership,
             int typeCode,
             Map<Skill, Integer> levels)
     {
@@ -420,16 +420,7 @@ public class BetaAccountSimulationTest
             total += level;
             totalXp += skillXp;
         }
-        return new AccountSnapshot(
-                "Simulation",
-                typeCode,
-                AccountMode.fromTypeCode(typeCode).name(),
-                membership,
-                membership == MembershipStatus.P2P ? 1 : 0,
-                total,
-                totalXp,
-                levels,
-                xp);
+        return new AccountSnapshot("Simulation", 0L, typeCode, AccountMode.fromTypeCode(typeCode).name(), membership, membership == Membership.P2P ? 1 : 0, total, totalXp, levels, xp);
     }
 
     private static Map<Skill, Integer> standardLevels(int level)
