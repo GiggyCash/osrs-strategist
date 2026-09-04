@@ -17,9 +17,9 @@ import static org.junit.Assert.assertTrue;
 public class StrategyKnowledgeFoundationTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
-            new TrainingMethodDatabase(), null,
-            new ExpandedTrainingMethodCatalog(),
-            new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+            new TrainingMethodCatalog(), null,
+            new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+            new UimInventoryResolutionService());
 
     @Test
     public void sourceRegistryCoversEveryStableSourceIdWithoutRuntimeNetworking()
@@ -187,11 +187,7 @@ public class StrategyKnowledgeFoundationTest
 
         StrategyContext uim = context(data(2, Membership.F2P,
                 Collections.emptyList()));
-        Recommendation validated = new FinalExecutionPlanValidator()
-                .validate(recommendation, uim);
-        assertTrue(validated.getSafetyEvidence()
-                .isConventionalBankRequired());
-        assertFalse(new CandidateSafetyPolicy().isAllowed(validated, uim));
+        assertFalse(new CandidateSafetyPolicy().isAllowed(recommendation, uim));
     }
 
     @Test
@@ -202,7 +198,7 @@ public class StrategyKnowledgeFoundationTest
         Recommendation smithing = TestFixtures.recommendationEngine(selector)
                 .recommendAll(data, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME, false, false,
-                        new PreferenceProfile()).stream()
+                        GoalType.AUTOMATIC, new PreferenceProfile()).stream()
                 .filter(value -> "skill:smithing".equals(value.getId()))
                 .findFirst().orElseThrow(AssertionError::new);
 

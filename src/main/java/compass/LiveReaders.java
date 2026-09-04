@@ -242,7 +242,7 @@ class LiveClueStateReader
 
     private String currentThreeStepAction(ThreeStepCrypticClue clue)
     {
-        for (java.util.Map.Entry<CrypticClue, Boolean> step
+        for (Map.Entry<CrypticClue, Boolean> step
                 : clue.getClueSteps())
             if (!Boolean.TRUE.equals(step.getValue()))
             {

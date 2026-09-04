@@ -42,7 +42,7 @@ public class ResourceDependencyResolverTest
     public void branchingAndRepeatedDependenciesAreDeduplicated()
     {
         int root = 900001, leaf = 900002;
-        ResourceDependency definition = new ResourceDependency(
+        ResourceDependency definition = dependency(
                 root, "Make root.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 1)),
@@ -67,7 +67,7 @@ public class ResourceDependencyResolverTest
         assertTrue(cycle.getNodes().size() <= 4);
 
         DependencyResolution depth = new ResourceDependencyResolver(
-                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
+                new ResourceSourceCatalog(),
                 new ResourceDependencyCatalog(Arrays.asList(first, second)), 1)
                 .resolve(context(1, false, null, null, null),
                         new ResourceNeed(a, "A", 1));
@@ -87,15 +87,15 @@ public class ResourceDependencyResolverTest
             int child = root + i;
             children.add(DependencyRequirement.resource(
                     new ResourceNeed(child, "Child " + i, 1)));
-            definitions.add(new ResourceDependency(child,
+            definitions.add(dependency(child,
                     "Resolve child " + i + ".", 1,
                     Collections.emptyList()));
         }
-        definitions.add(new ResourceDependency(root,
+        definitions.add(dependency(root,
                 "Resolve root.", 1, children));
 
         DependencyResolution result = new ResourceDependencyResolver(
-                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
+                new ResourceSourceCatalog(),
                 new ResourceDependencyCatalog(definitions), 8, 12)
                 .resolve(context(1, false, null, null, null),
                         new ResourceNeed(root, "Root", 1));
@@ -171,7 +171,7 @@ public class ResourceDependencyResolverTest
     public void expensiveDetourIsRejectedForShortSession()
     {
         int root = 950001;
-        ResourceDependency expensive = new ResourceDependency(
+        ResourceDependency expensive = dependency(
                 root, "Long detour", 90, Collections.emptyList());
         DependencyResolution result = resolver(expensive).resolve(
                 context(1, false, null, null, null),
@@ -232,7 +232,7 @@ public class ResourceDependencyResolverTest
     public void repeatedChildRequirementsAreSummedBeforeTraversal()
     {
         int root = 960001, leaf = 960002;
-        ResourceDependency combined = new ResourceDependency(
+        ResourceDependency combined = dependency(
                 root, "Combine leaf parts.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2)),
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 3))));
@@ -251,12 +251,12 @@ public class ResourceDependencyResolverTest
     public void sharedLeafAcrossBranchesIsDeduplicatedAndSummed()
     {
         int root = 970001, left = 970002, right = 970003, leaf = 970004;
-        ResourceDependency rootDefinition = new ResourceDependency(
+        ResourceDependency rootDefinition = dependency(
                 root, "Assemble root.", 1, Arrays.asList(
                 DependencyRequirement.resource(new ResourceNeed(left, "Left", 1)),
                 DependencyRequirement.resource(new ResourceNeed(right, "Right", 1))));
         ResourceDependency leftDefinition = definition(left, leaf, 1);
-        ResourceDependency rightDefinition = new ResourceDependency(
+        ResourceDependency rightDefinition = dependency(
                 right, "Make right.", 1, Collections.singletonList(
                 DependencyRequirement.resource(new ResourceNeed(leaf, "Leaf", 2))));
         DependencyResolution result = resolver(rootDefinition,
@@ -273,9 +273,21 @@ public class ResourceDependencyResolverTest
     private static ResourceDependency definition(int item, int child,
             int cost)
     {
-        return new ResourceDependency(item, "Make " + item, cost,
+        return dependency(item, "Make " + item, cost,
                 Collections.singletonList(DependencyRequirement.resource(
                         new ResourceNeed(child, "Child", 1))));
+    }
+
+    private static ResourceDependency dependency(int itemId, String action,
+            int cost, java.util.List<DependencyRequirement> prerequisites)
+    {
+        ResourceDependency value = new ResourceDependency();
+        value.itemId = itemId;
+        value.action = action;
+        value.opportunityCost = cost;
+        value.outputQuantity = 1;
+        value.prerequisites = prerequisites;
+        return value;
     }
 
     private static ResourceDependencyResolver resolver(
@@ -284,7 +296,7 @@ public class ResourceDependencyResolverTest
         ResourceDependencyCatalog catalog = definitions.length == 0
                 ? new ResourceDependencyCatalog()
                 : new ResourceDependencyCatalog(Arrays.asList(definitions));
-        return new ResourceDependencyResolver(new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
+        return new ResourceDependencyResolver(new ResourceSourceCatalog(),
                 catalog, 8);
     }
 

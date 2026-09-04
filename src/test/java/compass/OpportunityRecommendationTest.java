@@ -23,7 +23,8 @@ public class OpportunityRecommendationTest
         StrategyEngine engine = engine();
         Opportunity opportunity = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                Confidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true,
+                Safety.unknown());
         Recommendation promoted = engine.opportunityRecommendation(opportunity, context);
         Recommendation lowXp = new Recommendation("skill:mining", "Mine", "test", 1,
                 null, Confidence.VERIFIED, 1, 10,
@@ -42,7 +43,8 @@ public class OpportunityRecommendationTest
     {
         Opportunity unresolved = new Opportunity("opportunity:herb-run",
                 OpportunityType.HERB_RUN, "Herb run", false,
-                Confidence.CHECK_NEEDED, Collections.emptyList());
+                Confidence.CHECK_NEEDED, Collections.emptyList(), false,
+                Safety.unknown());
         assertNull(engine().opportunityRecommendation(unresolved,
                 context(account(Membership.P2P), new PreferenceProfile())));
     }
@@ -54,7 +56,8 @@ public class OpportunityRecommendationTest
         Recommendation preparation = engine.opportunityRecommendation(
                 new Opportunity("opportunity:herb-run", OpportunityType.HERB_RUN,
                         "Herb run", true, Confidence.VERIFIED,
-                        Collections.singletonList("Seeds")),
+                        Collections.singletonList("Seeds"), false,
+                        Safety.unknown()),
                 context(account(Membership.P2P), new PreferenceProfile()));
         assertNull(preparation);
     }
@@ -76,7 +79,7 @@ public class OpportunityRecommendationTest
                 new Opportunity("opportunity:herb-run",
                         OpportunityType.HERB_RUN, "Herb run", true,
                         Confidence.VERIFIED,
-                        Collections.emptyList(), true), context);
+                        Collections.emptyList(), true, Safety.unknown()), context);
 
         assertNotNull(recommendation);
         assertEquals("Falador patches.",
@@ -90,7 +93,8 @@ public class OpportunityRecommendationTest
     {
         Opportunity verified = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                Confidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true,
+                Safety.unknown());
         OpportunityEngine opportunities = new OpportunityEngine()
         {
             @Override
@@ -130,7 +134,8 @@ public class OpportunityRecommendationTest
     {
         Opportunity verified = new Opportunity("opportunity:battlestaves",
                 OpportunityType.BATTLESTAVES, "Daily battlestaves", true,
-                Confidence.VERIFIED, Collections.emptyList(), true);
+                Confidence.VERIFIED, Collections.emptyList(), true,
+                Safety.unknown());
         OpportunityEngine opportunityEngine = new OpportunityEngine()
         {
             @Override public List<Opportunity> evaluate(GameData data)
@@ -143,7 +148,8 @@ public class OpportunityRecommendationTest
             @Override
             public List<Recommendation> recommendAll(GameData data,
                     StrategyMode mode, SessionIntent intent, boolean groupStorage,
-                    boolean wilderness, PreferenceProfile preferences)
+                    boolean wilderness, GoalType activeGoal,
+                    PreferenceProfile preferences)
             {
                 return Arrays.asList(ready("skill:mining", 100),
                         ready("skill:fishing", 90));

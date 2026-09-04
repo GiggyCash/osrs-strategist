@@ -33,13 +33,9 @@ public class QuestResourceDependencyIntegrationTest
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(ItemID.STEEL_BAR, "Steel bar", 2)), 1L);
 
-        AcquisitionPlan result = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()).plan(
-                context(bank, inventory),
-                new ResourceNeed(ItemID.STEEL_BAR, "Steel bar", 3));
-
-        assertEquals(Confidence.VERIFIED, result.getConfidence());
-        assertEquals(4, result.getConfirmedQuantity());
-        assertEquals(AcquisitionSource.BANK, result.getSource());
+        ItemIndex result = new ItemIndex(context(bank, inventory).data(), false);
+        assertTrue(result.usableOwnershipObserved());
+        assertEquals(4, result.quantity(ItemID.STEEL_BAR));
     }
 
     @Test
@@ -49,7 +45,7 @@ public class QuestResourceDependencyIntegrationTest
                 new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
         StrategyContext context = context(bank);
 
-        DependencyResolution result = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog())
+        DependencyResolution result = new ResourceDependencyResolver(new ResourceSourceCatalog(), new ResourceDependencyCatalog())
                 .resolveKnownShortfall(context, "Molten glass", 3);
 
         assertNotNull(result);
@@ -69,7 +65,7 @@ public class QuestResourceDependencyIntegrationTest
                 new ItemState(ItemID.STEEL_BAR, "Steel bar", 24)), 1L);
 
         DependencyResolution result = new ResourceDependencyResolver(
-                new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()),
+                new ResourceSourceCatalog(),
                 new ResourceDependencyCatalog())
                 .resolve(context(bank),
                         new ResourceNeed(ItemID.MCANNONBALL, "Cannonball", 100));

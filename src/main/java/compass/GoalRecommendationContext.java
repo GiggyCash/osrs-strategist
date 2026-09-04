@@ -78,7 +78,6 @@ public final class GoalRecommendationContext
     }
 
     public boolean hasProvenRelationship() { return provenance != null; }
-    public String getGoalName() { return displayName(goal); }
 
     static String displayName(GoalType goal)
     {

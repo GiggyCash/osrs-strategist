@@ -68,7 +68,6 @@ public final class ItemsState
     }
 
     public List<ItemState> getEquippedItems() { return items; }
-    public long getObservedAtMillis() { return capturedAtMillis; }
     public boolean hasCompleteSlotObservation() { return completeSlotObservation; }
 
     public boolean isObserved()

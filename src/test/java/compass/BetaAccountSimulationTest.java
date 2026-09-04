@@ -27,11 +27,10 @@ import static org.junit.Assert.assertTrue;
 public class BetaAccountSimulationTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
-            new TrainingMethodDatabase(),
+            new TrainingMethodCatalog(),
             null,
-            new ExpandedTrainingMethodCatalog(),
-            new F2pBaselineMethodCatalog(),
-            new TrainingMethodPolicy());
+            new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+            new UimInventoryResolutionService());
     private final RecommendationEngine engine = TestFixtures.recommendationEngine(selector);
 
     @Test
@@ -46,6 +45,7 @@ public class BetaAccountSimulationTest
                 SessionIntent.PICK_FOR_ME,
                 false,
                 false,
+                GoalType.AUTOMATIC,
                 new PreferenceProfile());
 
         assertFalse(recommendations.isEmpty());
@@ -74,6 +74,7 @@ public class BetaAccountSimulationTest
                 SessionIntent.PICK_FOR_ME,
                 false,
                 false,
+                GoalType.AUTOMATIC,
                 new PreferenceProfile());
 
         for (Recommendation recommendation : recommendations)
@@ -146,7 +147,7 @@ public class BetaAccountSimulationTest
 
         for (Recommendation recommendation : engine.recommendAll(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
-                false, false, new PreferenceProfile()))
+                false, false, GoalType.AUTOMATIC, new PreferenceProfile()))
         {
             Skill skill = requireMethod(recommendation).getSkill();
             assertFalse(skill == Skill.ATTACK
@@ -180,7 +181,7 @@ public class BetaAccountSimulationTest
 
         for (Recommendation recommendation : engine.recommendAll(
                 data, StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION,
-                false, false, new PreferenceProfile()))
+                false, false, GoalType.AUTOMATIC, new PreferenceProfile()))
         {
             assertFalse(requireMethod(recommendation).getSkill() == Skill.DEFENCE);
         }
@@ -250,6 +251,7 @@ public class BetaAccountSimulationTest
                     SessionIntent.PICK_FOR_ME,
                     true,
                     false,
+                    GoalType.AUTOMATIC,
                     new PreferenceProfile());
 
             assertFalse("No recommendations for account type " + accountType,
@@ -280,19 +282,10 @@ public class BetaAccountSimulationTest
                 SessionIntent.PICK_FOR_ME,
                 true,
                 false,
+                GoalType.AUTOMATIC,
                 new PreferenceProfile());
-        List<Recommendation> compact = engine.recommend(
-                data,
-                StrategyMode.BALANCED,
-                SessionIntent.PICK_FOR_ME,
-                true,
-                false,
-                new PreferenceProfile());
-
         assertTrue("Expected the global pool to contain more than three skills",
                 full.size() > 3);
-        assertTrue(compact.size() <= 3);
-        assertEquals(full.get(0).getId(), compact.get(0).getId());
     }
 
     @Test

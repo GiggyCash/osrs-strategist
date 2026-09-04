@@ -105,7 +105,8 @@ public class RecommendationPresentationTest
                 plan,
                 Confidence.CHECK_NEEDED,
                 1,
-                10
+                10,
+                null
         );
     }
 }

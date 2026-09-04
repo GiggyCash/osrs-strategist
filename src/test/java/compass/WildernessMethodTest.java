@@ -11,18 +11,18 @@ import static org.junit.Assert.assertEquals;
 public class WildernessMethodTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService());
 
     @Test
     public void wildernessMethodsAreHardFilteredUnlessEnabled()
     {
         GameData data = p2pData();
-        TrainingPlan disabled = selector.select(
+        TrainingPlan disabled = TestFixtures.select(selector,
                 data, Skill.AGILITY, 52, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, false);
         assertEquals("agility_rooftop", disabled.getMethod().getId());
 
-        TrainingPlan enabled = selector.select(
+        TrainingPlan enabled = TestFixtures.select(selector,
                 data, Skill.AGILITY, 52, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, true);
         assertEquals("agility_wilderness", enabled.getMethod().getId());

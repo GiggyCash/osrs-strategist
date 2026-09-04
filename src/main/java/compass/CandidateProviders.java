@@ -12,7 +12,6 @@ import static compass.Text.get;
 /** Provider of verified non-skill work that may compete with skill training. */
 interface CandidateProvider
 {
-    String getId();
     List<Recommendation> candidates(StrategyContext context);
 
     /**
@@ -30,12 +29,6 @@ interface CandidateProvider
 @Singleton
 class ClueCandidateProvider implements CandidateProvider
 {
-    @Override
-    public String getId()
-    {
-        return "clue-candidates";
-    }
-
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
@@ -208,9 +201,6 @@ class ClueCandidateProvider implements CandidateProvider
 class CollectionLogCandidateProvider implements CandidateProvider
 {
     @Override
-    public String getId() { return get(1648); }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -267,12 +257,6 @@ class CollectionLogCandidateProvider implements CandidateProvider
 @Singleton
 class CombatAchievementCandidateProvider implements CandidateProvider
 {
-    @Override
-    public String getId()
-    {
-        return get(1650);
-    }
-
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
@@ -337,12 +321,6 @@ class CombatAchievementCandidateProvider implements CandidateProvider
 class DiaryCandidateProvider implements CandidateProvider
 {
     private final DiaryTaskCatalog taskCatalog = new DiaryTaskCatalog();
-    @Override
-    public String getId()
-    {
-        return get(1642);
-    }
-
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
@@ -517,16 +495,11 @@ class GearCandidateProvider implements CandidateProvider
 {
     private final GearProgressionCatalog catalog;
     private final GearAcquisitionCatalog acquisitionCatalog;
-    private final ContextualGearDecisionService decisionService =
-            new ContextualGearDecisionService();
 
     public GearCandidateProvider(GearProgressionCatalog catalog)
     {
         this(catalog, new GearAcquisitionCatalog());
     }
-
-    @Override
-    public String getId() { return "gear-candidates"; }
 
     @Override
     public List<Recommendation> candidates(StrategyContext context)
@@ -579,12 +552,7 @@ class GearCandidateProvider implements CandidateProvider
                     : get(1289) + AccountBuildPolicy.label(account) + ".";
             Guidance guidance = acquisitionGuidance(entry, mode,
                     items, context);
-            GearAssessment assessment = decisionService.assess(entry,
-                    context);
-            GearDecision practical = assessment.get(
-                    GearAspect.BEST_PRACTICAL_UPGRADE);
-            GearDecision targetBest = assessment.get(
-                    GearAspect.TARGET_SPECIFIC_BEST);
+            String practical = practicalUpgrade(entry, items);
 
             result.add(new Recommendation(
                     id,
@@ -592,8 +560,8 @@ class GearCandidateProvider implements CandidateProvider
                     entry.getWeaponGuidance() + ". " + entry.note
                             + buildNote
                             + get(1290)
-                            + practical.getValue() + get(1291)
-                            + targetBest.getValue(),
+                            + practical + get(1291)
+                            + entry.note,
                     score,
                     Confidence.CHECK_NEEDED,
                     guidance,
@@ -623,8 +591,7 @@ class GearCandidateProvider implements CandidateProvider
         List<String> unresolved = new ArrayList<>();
         for (String target : entry.getRecommendedItems())
         {
-            if (!ContextualGearDecisionService
-                    .isExactOwnershipTarget(target)) continue;
+            if (!isExactOwnershipTarget(target)) continue;
             if (items.has(target)) owned.add(target);
             else unresolved.add(target);
         }
@@ -668,6 +635,28 @@ class GearCandidateProvider implements CandidateProvider
         if (combatPeak >= 85) return GearBudgetTier.HIGH_END;
         if (combatPeak >= 70) return GearBudgetTier.MIDGAME;
         return GearBudgetTier.BUDGET;
+    }
+
+    private String practicalUpgrade(GearProgressionEntry entry,
+            ItemIndex items)
+    {
+        for (String target : entry.getRecommendedItems())
+            if (isExactOwnershipTarget(target) && !items.has(target)
+                    && acquisitionCatalog.forItem(target) != null)
+                return target + get(150);
+        return entry.getWeaponGuidance();
+    }
+
+    static boolean isExactOwnershipTarget(String target)
+    {
+        if (target == null || target.trim().isEmpty()) return false;
+        String value = target.toLowerCase(Locale.ROOT);
+        return !value.contains(" or ") && !value.contains("/")
+                && !value.contains("depending") && !value.contains("target-")
+                && !value.contains(" mix") && !value.contains(" pieces")
+                && !value.contains(" switch") && !value.contains(" as ")
+                && !value.contains(" progression")
+                && !value.contains("applicable");
     }
 
     private static CombatStyle primaryStyle(AccountSnapshot account)
@@ -723,12 +712,6 @@ class InfrastructureCandidateProvider implements CandidateProvider
             InfrastructureUnlockValueService values)
     {
         this(catalog, values, new UimRecurringPressureService());
-    }
-
-    @Override
-    public String getId()
-    {
-        return get(1726);
     }
 
     @Override
@@ -892,9 +875,6 @@ class MinigameCandidateProvider implements CandidateProvider
     }
 
     @Override
-    public String getId() { return get(1813); }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -1046,9 +1026,6 @@ class MoneyMakingCandidateProvider implements CandidateProvider
     private final MoneyMakingCatalog catalog;
 
     @Override
-    public String getId() { return get(1801); }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -1170,12 +1147,6 @@ class MoneyMakingCandidateProvider implements CandidateProvider
 @Singleton
 class ProgressionUpgradeCandidateProvider implements CandidateProvider
 {
-    @Override
-    public String getId()
-    {
-        return get(1832);
-    }
-
     @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
@@ -1581,9 +1552,6 @@ class PvmCandidateProvider implements CandidateProvider
     }
 
     @Override
-    public String getId() { return "pvm-candidates"; }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -1771,12 +1739,6 @@ class QuestCandidateProvider implements CandidateProvider
     }
 
     @Override
-    public String getId()
-    {
-        return get(1910);
-    }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -1952,12 +1914,6 @@ class ResourceDetourCandidateProvider
         implements CandidateProvider
 {
     @Override
-    public String getId()
-    {
-        return get(1956);
-    }
-
-    @Override
     public List<Recommendation> candidates(StrategyContext context)
     {
         List<Recommendation> result = new ArrayList<>();
@@ -2103,12 +2059,6 @@ class SlayerCandidateProvider implements CandidateProvider
     public SlayerCandidateProvider()
     {
         this(new SlayerStrategist());
-    }
-
-    @Override
-    public String getId()
-    {
-        return get(1969);
     }
 
     @Override

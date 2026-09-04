@@ -8,79 +8,6 @@ import java.util.*;
 import lombok.*;
 import net.runelite.api.*;
 
-/**
- * Safe acquisition recommendation for one resource requirement.
- *
- * <p>This never performs a purchase, sale, drop, withdrawal, or other gameplay
- * action. It only tells the strategy engine where a resource appears to be or
- * which sourcing family should be evaluated next.</p>
- */
-@Getter
-final class AcquisitionPlan
-{
-    final ResourceNeed need;
-    final AcquisitionSource source;
-    final int confirmedQuantity;
-    final Confidence confidence;
-    final String note;
-
-    public AcquisitionPlan(
-            ResourceNeed need,
-            AcquisitionSource source,
-            int confirmedQuantity,
-            Confidence confidence,
-            String note)
-    {
-        this.need = need;
-        this.source = source;
-        this.confirmedQuantity = max(0, confirmedQuantity);
-        this.confidence = confidence == null
-                ? Confidence.CHECK_NEEDED
-                : confidence;
-        this.note = note;
-    }
-
-
-    public boolean hasEnoughConfirmed()
-    {
-        return need != null
-                && confirmedQuantity >= need.quantity;
-    }
-}
-
-final class GearAssessment
-{
-    final Map<GearAspect, GearDecision> decisions;
-
-    GearAssessment(
-            Map<GearAspect, GearDecision> decisions)
-    {
-        this.decisions = unmodifiableMap(
-                new EnumMap<>(decisions));
-    }
-
-    public GearDecision get(GearAspect kind)
-    {
-        return decisions.get(kind);
-    }
-
-    public Map<GearAspect, GearDecision> all()
-    {
-        return decisions;
-    }
-}
-
-@Getter
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class GearDecision
-{
-    final GearAspect kind;
-    final String value;
-    final Confidence confidence;
-
-
-}
-
 /** Typed prerequisite in a resource acquisition route. */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -137,13 +64,6 @@ final class DependencyResolution
     final boolean depthLimited;
     final boolean opportunityCostRejected;
     final boolean nodeLimited;
-
-    public DependencyResolution(List<ResolvedDependencyNode> nodes,
-            boolean cycleDetected, boolean depthLimited,
-            boolean opportunityCostRejected)
-    {
-        this(nodes, cycleDetected, depthLimited, opportunityCostRejected, false);
-    }
 
     public DependencyResolution(List<ResolvedDependencyNode> nodes,
             boolean cycleDetected, boolean depthLimited,
@@ -233,48 +153,6 @@ final class GearAcquisitionStep
 
 }
 
-/** Bounded GIM resource value derived from one fresh storage observation. */
-@Getter
-final class GroupResourceAssessment
-{
-    final GroupResourceState state;
-    final Confidence confidence;
-    final int observedSharedQuantity;
-    final int requiredQuantity;
-    final double duplicateGrindAvoidance;
-    final String reason;
-
-    GroupResourceAssessment(GroupResourceState state,
-            Confidence confidence, int observedSharedQuantity,
-            int requiredQuantity, double duplicateGrindAvoidance, String reason)
-    {
-        this.state = state;
-        this.confidence = confidence;
-        this.observedSharedQuantity = max(0, observedSharedQuantity);
-        this.requiredQuantity = max(1, requiredQuantity);
-        this.duplicateGrindAvoidance = max(0.0,
-                min(1.0, duplicateGrindAvoidance));
-        this.reason = reason == null ? "" : reason;
-    }
-
-    public boolean satisfiesNeed()
-    {
-        return state == GroupResourceState.SHARED_STOCK_SATISFIES_NEED;
-    }
-
-    public StrategicValue strategicValue(String evidenceId)
-    {
-        if (confidence != Confidence.VERIFIED
-                || duplicateGrindAvoidance <= 0.0)
-            return StrategicValue.neutral();
-        return StrategicValue.builder()
-                .accountModeFit(duplicateGrindAvoidance * 0.6)
-                .resourceFit(duplicateGrindAvoidance)
-                .evidence(evidenceId)
-                .build();
-    }
-}
-
 @Getter
 final class GuidanceStep
 {
@@ -306,22 +184,18 @@ final class InfraAssessment
     final InfrastructureMilestoneState state;
     final Confidence confidence;
     final Priority strategicValue;
-    final List<InfraContribution> contributions;
     final String reason;
 
     InfraAssessment(InfrastructureMilestone milestone,
             InfrastructureMilestoneState state,
             Confidence confidence,
             Priority strategicValue,
-            List<InfraContribution> contributions,
             String reason)
     {
         this.milestone = milestone;
         this.state = state;
         this.confidence = confidence;
         this.strategicValue = strategicValue;
-        this.contributions = unmodifiableList(
-                new ArrayList<>(contributions));
         this.reason = reason == null ? "" : reason;
     }
 
@@ -333,13 +207,11 @@ final class InfraAssessment
 }
 
 /** Result of evaluating a composable item requirement against observed state. */
+@Getter
 final class ItemRequirementResult
 {
-    @Getter
     final RequirementState state;
-    @Getter
     final String action;
-    @Getter
     final List<MethodInput> missingInputs;
 
     public ItemRequirementResult(RequirementState state, String action)
@@ -358,45 +230,6 @@ final class ItemRequirementResult
 
     /** Exact, evidence-backed shortfalls only. Unknown storage never appears here. */
     public boolean isSatisfied() { return state == RequirementState.VERIFIED; }
-}
-
-@Getter
-final class MainPurchaseDecision
-{
-    final MainPurchaseChoice choice;
-    final long totalCost;
-    final long observedCoins;
-    final Confidence confidence;
-    final String explanation;
-
-    public MainPurchaseDecision(
-            MainPurchaseChoice choice,
-            long totalCost,
-            long observedCoins,
-            Confidence confidence,
-            String explanation)
-    {
-        this.choice = choice;
-        this.totalCost = max(0L, totalCost);
-        this.observedCoins = max(0L, observedCoins);
-        this.confidence = confidence == null
-                ? Confidence.CHECK_NEEDED
-                : confidence;
-        this.explanation = explanation;
-    }
-
-}
-
-/** Live account assessment of one sourced method profile. */
-@Getter
-@RequiredArgsConstructor
-final class MethodStrategyAssessment
-{
-    final boolean viable;
-    final double scoreAdjustment;
-    final String explanation;
-
-
 }
 
 /** One meaningful account progression event suitable for a session recap. */
@@ -517,108 +350,6 @@ final class TargetProjection
 
 }
 
-/** Ordered unfinished quest work derived only from verified dependency edges. */
-final class QuestPathPlan
-{
-    @Getter
-    final List<QuestPathStep> steps;
-
-    QuestPathPlan(List<QuestPathStep> steps)
-    {
-        this.steps = unmodifiableList(new ArrayList<>(steps));
-    }
-
-
-    public QuestPathStep nextEligibleStep()
-    {
-        for (QuestPathStep step : steps)
-            if (step.isEligibleNow()) return step;
-        return null;
-    }
-
-    public QuestPathStep stepForQuest(String questName)
-    {
-        var expected = Names.words(questName);
-        for (QuestPathStep step : steps)
-            if (Names.words(step.getQuestName()).equals(expected)) return step;
-        return null;
-    }
-
-    public boolean isEmpty() { return steps.isEmpty(); }
-
-}
-
-/** One unfinished quest shared by one or more proven selected-goal paths. */
-@Getter
-final class QuestPathStep
-{
-    final String questName;
-    final QuestStatus status;
-    final Map<GoalType, List<String>> provenancePaths;
-    final List<String> unfinishedDependents;
-    final Confidence readiness;
-    final boolean eligibleNow;
-    final int depth;
-    final Map<Skill, Integer> guaranteedRewardXp;
-    final double goalPathRewardValue;
-
-    QuestPathStep(String questName, QuestStatus status,
-            Map<GoalType, List<String>> provenancePaths,
-            List<String> unfinishedDependents,
-            Confidence readiness,
-            boolean eligibleNow, int depth,
-            Map<Skill, Integer> guaranteedRewardXp,
-            double goalPathRewardValue)
-    {
-        this.questName = questName;
-        this.status = status == null ? QuestStatus.UNKNOWN : status;
-        EnumMap<GoalType, List<String>> paths = new EnumMap<>(GoalType.class);
-        if (provenancePaths != null)
-        {
-            for (Map.Entry<GoalType, List<String>> entry
-                    : provenancePaths.entrySet())
-                paths.put(entry.getKey(), unmodifiableList(
-                        new ArrayList<>(entry.getValue())));
-        }
-        this.provenancePaths = unmodifiableMap(paths);
-        this.unfinishedDependents = unmodifiableList(
-                new ArrayList<>(unfinishedDependents == null
-                        ? emptyList() : unfinishedDependents));
-        this.readiness = readiness == null
-                ? Confidence.CHECK_NEEDED : readiness;
-        this.eligibleNow = eligibleNow;
-        this.depth = max(0, depth);
-        EnumMap<Skill, Integer> rewards = new EnumMap<>(Skill.class);
-        if (guaranteedRewardXp != null)
-            rewards.putAll(guaranteedRewardXp);
-        this.guaranteedRewardXp = unmodifiableMap(rewards);
-        this.goalPathRewardValue = max(0.0,
-                min(1.0, goalPathRewardValue));
-    }
-
-    public int getGoalCount() { return provenancePaths.size(); }
-
-    /** Bounded property value for the common recommendation decision layer. */
-    public double sharedDependencyValue()
-    {
-        var goals = max(0, getGoalCount() - 1) * 0.35;
-        var dependents = unfinishedDependents.size() * 0.12;
-        return min(1.0, goals + dependents);
-    }
-
-    public StrategicValue strategicValue()
-    {
-        var shared = sharedDependencyValue();
-        if (shared <= 0.0 && goalPathRewardValue <= 0.0)
-            return StrategicValue.neutral();
-        return StrategicValue.builder()
-                .sharedDependencyValue(shared)
-                .unlockValue(goalPathRewardValue)
-                .evidence("quest-path:" + questName)
-                .build();
-    }
-}
-
 /** Actionability result for one fully identified quest. */
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
@@ -629,24 +360,17 @@ final class QuestResolution
     final String reason;
     final Safety safetyEvidence;
 
-    public QuestResolution(Confidence confidence,
-            Guidance guidance, String reason)
-    {
-        this(confidence, guidance, reason, Safety.unknown());
-    }
 }
 
 /**
  * A reusable observed-resource requirement. itemIds are alternatives: quantities
  * across every listed ID are summed toward the requirement.
  */
+@Getter
 final class ResourceRequirement
 {
-    @Getter
     final String id;
-    @Getter
     final String label;
-    @Getter
     final int requiredQuantity;
     final int[] itemIds;
 
@@ -667,6 +391,7 @@ final class ResourceRequirement
 
 /** Structured access/build evidence consumed by the final recommendation gate. */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 final class Safety
 {
     public enum Access
@@ -685,65 +410,45 @@ final class Safety
         UNKNOWN
     }
 
-    @Getter
     final Access access;
-    @Getter
     final BuildEffect buildEffect;
-    @Getter
     final Skill affectedSkill;
-    @Getter
     final boolean conventionalBankRequired;
-    final boolean unverifiedDangerousStorage;
-    final boolean invalidCurrentExecution;
 
     public static Safety unknown()
     {
         return new Safety(Access.UNKNOWN, BuildEffect.UNKNOWN,
-                null, false, false, false);
+                null, false);
     }
 
     public static Safety harmless(boolean freeToPlay)
     {
         return new Safety(access(freeToPlay),
-                BuildEffect.HARMLESS, null, false, false, false);
+                BuildEffect.HARMLESS, null, false);
     }
 
     public static Safety skill(boolean freeToPlay, Skill skill)
     {
         return new Safety(access(freeToPlay),
-                BuildEffect.SKILL_XP, skill, false, false, false);
+                BuildEffect.SKILL_XP, skill, false);
     }
 
     public static Safety verifiedSafe(boolean freeToPlay)
     {
         return new Safety(access(freeToPlay),
-                BuildEffect.VERIFIED_SAFE, null, false, false, false);
+                BuildEffect.VERIFIED_SAFE, null, false);
     }
 
     public static Safety potentiallyIrreversible(boolean freeToPlay)
     {
         return new Safety(access(freeToPlay),
-                BuildEffect.POTENTIALLY_IRREVERSIBLE, null, false, false, false);
+                BuildEffect.POTENTIALLY_IRREVERSIBLE, null, false);
     }
 
     public Safety requiringConventionalBank()
     {
         return new Safety(access, buildEffect,
-                affectedSkill, true, unverifiedDangerousStorage,
-                invalidCurrentExecution);
-    }
-
-    public Safety withUnverifiedDangerousStorage()
-    {
-        return new Safety(access, buildEffect,
-                affectedSkill, conventionalBankRequired, true,
-                invalidCurrentExecution);
-    }
-
-    public Safety withInvalidCurrentExecution()
-    {
-        return new Safety(access, buildEffect, affectedSkill,
-                conventionalBankRequired, unverifiedDangerousStorage, true);
+                affectedSkill, true);
     }
 
     private static Access access(boolean freeToPlay)
@@ -751,14 +456,6 @@ final class Safety
         return freeToPlay ? Access.F2P_SAFE : Access.MEMBERS_ONLY;
     }
 
-    public boolean hasUnverifiedDangerousStorage()
-    {
-        return unverifiedDangerousStorage;
-    }
-    public boolean hasInvalidCurrentExecution()
-    {
-        return invalidCurrentExecution;
-    }
 }
 
 /** Immutable explanation and execution payload from the Slayer strategist. */
@@ -776,38 +473,6 @@ final class SlayerDecisionResult
     final String selectedAlternativeName;
     final SlayerReward recommendedReward;
     final SlayerTaskOffer recommendedOffer;
-
-    public SlayerDecisionResult(SlayerState assignmentState,
-            SlayerDecision decision, SlayerMasterProfile master,
-            SlayerStrategy taskProfile, double score,
-            Confidence confidence, String reason,
-            Guidance guidance)
-    {
-        this(assignmentState, decision, master, taskProfile, score,
-                confidence, reason, guidance, null, null, null);
-    }
-
-    public SlayerDecisionResult(SlayerState assignmentState,
-            SlayerDecision decision, SlayerMasterProfile master,
-            SlayerStrategy taskProfile, double score,
-            Confidence confidence, String reason,
-            Guidance guidance, String selectedAlternativeName)
-    {
-        this(assignmentState, decision, master, taskProfile, score, confidence,
-                reason, guidance, selectedAlternativeName, null, null);
-    }
-
-    public SlayerDecisionResult(SlayerState assignmentState,
-            SlayerDecision decision, SlayerMasterProfile master,
-            SlayerStrategy taskProfile, double score,
-            Confidence confidence, String reason,
-            Guidance guidance, String selectedAlternativeName,
-            SlayerReward recommendedReward)
-    {
-        this(assignmentState, decision, master, taskProfile, score, confidence,
-                reason, guidance, selectedAlternativeName, recommendedReward,
-                null);
-    }
 
     public SlayerDecisionResult(SlayerState assignmentState,
             SlayerDecision decision, SlayerMasterProfile master,
@@ -933,6 +598,7 @@ final class StrategicPlan
 
 /** One ordered, evidence-backed transition in the active goal plan. */
 @Getter
+@EqualsAndHashCode
 final class StrategicPlanStep
 {
     final String id;
@@ -967,26 +633,6 @@ final class StrategicPlanStep
         return completion.isComplete(data);
     }
 
-
-    @Override
-    public boolean equals(Object other)
-    {
-        if (this == other) return true;
-        if (!(other instanceof StrategicPlanStep)) return false;
-        var that = (StrategicPlanStep) other;
-        return id.equals(that.id) && kind == that.kind
-                && objective.equals(that.objective)
-                && reason.equals(that.reason)
-                && completion.equals(that.completion)
-                && Objects.equals(recommendationId, that.recommendationId);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id, kind, objective, reason, completion,
-                recommendationId);
-    }
 }
 
 /**
@@ -1003,17 +649,6 @@ final class StrategyResult
     final List<Recommendation> recommendations;
     final List<Opportunity> opportunities;
     final StrategicPlan plan;
-
-    public StrategyResult(
-            List<Recommendation> recommendations,
-            List<Opportunity> opportunities)
-    {
-        this(
-                recommendations,
-                opportunities,
-                null
-        );
-    }
 
     public StrategyResult(
             List<Recommendation> recommendations,
@@ -1046,7 +681,7 @@ final class SupplyPlan
     final boolean primaryStorageObserved;
     final boolean groupStorageIncluded;
     final boolean groupStorageObserved;
-    final List<ResourcePlanEntry> entries;
+    final List<MethodInput> missingInputs;
     final String guidance;
 
     public SupplyPlan(
@@ -1054,15 +689,15 @@ final class SupplyPlan
             boolean primaryStorageObserved,
             boolean groupStorageIncluded,
             boolean groupStorageObserved,
-            List<ResourcePlanEntry> entries,
+            List<MethodInput> missingInputs,
             String guidance)
     {
         this.accountMode = accountMode == null ? AccountMode.UNKNOWN : accountMode;
         this.primaryStorageObserved = primaryStorageObserved;
         this.groupStorageIncluded = groupStorageIncluded;
         this.groupStorageObserved = groupStorageObserved;
-        this.entries = unmodifiableList(entries == null
-                ? new ArrayList<>() : new ArrayList<>(entries));
+        this.missingInputs = unmodifiableList(missingInputs == null
+                ? new ArrayList<>() : new ArrayList<>(missingInputs));
         this.guidance = guidance;
     }
 
@@ -1072,23 +707,14 @@ final class SupplyPlan
     public int getTotalMissingUnits()
     {
         var total = 0L;
-        for (ResourcePlanEntry entry : entries)
+        for (MethodInput input : missingInputs)
         {
-            total += entry.getMissing();
+            total += input.quantity;
             if (total >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
         }
         return (int) total;
     }
 
-    public List<MethodInput> getMissingInputs()
-    {
-        List<MethodInput> result = new ArrayList<>();
-        for (ResourcePlanEntry entry : entries)
-        {
-            if (entry.getMissing() > 0) result.add(entry.missingInput());
-        }
-        return unmodifiableList(result);
-    }
 }
 
 /** The recommendation Compass is currently watching for natural completion. */
@@ -1102,17 +728,6 @@ final class TrackedMilestone
     final int startedAtLevel;
     final int targetLevel;
     final boolean progressionProtected;
-
-    public TrackedMilestone(
-            String activityId,
-            String title,
-            String skillName,
-            int startedAtLevel,
-            int targetLevel)
-    {
-        this(activityId, title, skillName, startedAtLevel,
-                targetLevel, false);
-    }
 
     public Skill getSkill()
     {
@@ -1135,51 +750,17 @@ final class TrackedMilestone
  * this object describes whether that method is actually verified for this
  * character's current state and why.</p>
  */
+@Getter
 final class TrainingPlan
 {
-    @Getter
     final TrainingMethod method;
-    @Getter
     final String whyThisMethod;
-    @Getter
     final Confidence confidence;
-    @Getter
     final List<EvidenceCheck> requirementChecks;
-    @Getter
     final MethodStrategyProfile strategyProfile;
-    @Getter
     final int currentStageTargetLevel;
 
     TrainingMethod method() { return method; }
-
-    public TrainingPlan(
-            TrainingMethod method,
-            String whyThisMethod)
-    {
-        this(
-                method,
-                whyThisMethod,
-                method == null
-                        ? Confidence.CHECK_NEEDED
-                        : method.confidence,
-                emptyList(),
-                null
-        );
-    }
-
-    public TrainingPlan(
-            TrainingMethod method,
-            String whyThisMethod,
-            Confidence confidence)
-    {
-        this(
-                method,
-                whyThisMethod,
-                confidence,
-                emptyList(),
-                null
-        );
-    }
 
     public TrainingPlan(
             TrainingMethod method,

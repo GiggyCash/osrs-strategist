@@ -23,11 +23,7 @@ final class AccessMemorySnapshot
 
     public AccessMemorySnapshot(Map<String, Long> values)
     {
-        this.lastObservedAtMillis = unmodifiableMap(
-                values == null
-                        ? new HashMap<>()
-                        : new HashMap<>(values)
-        );
+        this.lastObservedAtMillis = SnapshotCollections.map(values);
     }
 
     public static AccessMemorySnapshot empty()
@@ -51,28 +47,19 @@ final class AccountEconomySnapshot
 
 }
 
+@Getter
 final class AccountSnapshot
 {
-    @Getter
     final String playerName;
-    @Getter
     final long accountHash;
-    @Getter
     final int accountTypeCode;
-    @Getter
     final String accountTypeName;
-    @Getter
     final Membership membershipStatus;
-    @Getter
     final int membershipCredit;
-    @Getter
     final int totalLevel;
-    @Getter
     final long totalExperience;
 
-    @Getter
     final Map<Skill, Integer> skillLevels;
-    @Getter
     final Map<Skill, Integer> skillExperience;
 
        public AccountSnapshot(
@@ -98,13 +85,8 @@ final class AccountSnapshot
         this.totalLevel = totalLevel;
         this.totalExperience = totalExperience;
 
-        this.skillLevels = unmodifiableMap(
-                new EnumMap<>(skillLevels)
-        );
-
-        this.skillExperience = unmodifiableMap(
-                new EnumMap<>(skillExperience)
-        );
+        this.skillLevels = SnapshotCollections.map(skillLevels);
+        this.skillExperience = SnapshotCollections.map(skillExperience);
     }
 
 
@@ -141,16 +123,6 @@ final class ClueSnapshot
     final Confidence confidence;
     final ClueStepSnapshot currentStep;
 
-    public ClueSnapshot(
-            boolean cluePresent,
-            String clueType,
-            long firstSeenAtMillis,
-            Confidence confidence)
-    {
-        this(cluePresent, clueType, firstSeenAtMillis, confidence, null);
-    }
-
-    public boolean hasObservedCurrentStep() { return currentStep != null; }
 }
 
 /** Exact current-step evidence supplied by RuneLite's Clue Scroll plugin. */
@@ -175,9 +147,7 @@ final class ClueStepSnapshot
         this.kind = clean(kind);
         this.action = clean(action);
         this.location = clean(location);
-        this.itemRequirements = unmodifiableList(new ArrayList<>(
-                itemRequirements == null
-                        ? emptyList() : itemRequirements));
+        this.itemRequirements = SnapshotCollections.list(itemRequirements);
         this.requiresSpade = requiresSpade;
         this.requiresLight = requiresLight;
         this.enemy = clean(enemy);
@@ -216,46 +186,16 @@ final class CollectionLogSnapshot
     final Map<String, Integer> categoryCompleted;
     final Map<String, Integer> categoryTotals;
 
-    public CollectionLogSnapshot(Set<Integer> obtainedItemIds)
-    {
-        this(obtainedItemIds, emptySet(),
-                emptyMap(), emptyMap());
-    }
-
-    public CollectionLogSnapshot(
-            Set<Integer> obtainedItemIds,
-            Set<String> completedObjectiveIds)
-    {
-        this(obtainedItemIds, completedObjectiveIds,
-                emptyMap(), emptyMap());
-    }
-
     public CollectionLogSnapshot(
             Set<Integer> obtainedItemIds,
             Set<String> completedObjectiveIds,
             Map<String, Integer> categoryCompleted,
             Map<String, Integer> categoryTotals)
     {
-        this.obtainedItemIds = unmodifiableSet(
-                obtainedItemIds == null
-                        ? new HashSet<>()
-                        : new HashSet<>(obtainedItemIds)
-        );
-        this.completedObjectiveIds = unmodifiableSet(
-                completedObjectiveIds == null
-                        ? new HashSet<>()
-                        : new HashSet<>(completedObjectiveIds)
-        );
-        this.categoryCompleted = unmodifiableMap(
-                categoryCompleted == null
-                        ? new HashMap<>()
-                        : new HashMap<>(categoryCompleted)
-        );
-        this.categoryTotals = unmodifiableMap(
-                categoryTotals == null
-                        ? new HashMap<>()
-                        : new HashMap<>(categoryTotals)
-        );
+        this.obtainedItemIds = SnapshotCollections.set(obtainedItemIds);
+        this.completedObjectiveIds = SnapshotCollections.set(completedObjectiveIds);
+        this.categoryCompleted = SnapshotCollections.map(categoryCompleted);
+        this.categoryTotals = SnapshotCollections.map(categoryTotals);
     }
     public boolean isObjectiveComplete(String objectiveId)
     {
@@ -283,22 +223,12 @@ final class CombatAchievementSnapshot
 
     public CombatAchievementSnapshot(
             int completedTasks,
-            int earnedPoints)
-    {
-        this(completedTasks, earnedPoints,
-                emptySet());
-    }
-
-    public CombatAchievementSnapshot(
-            int completedTasks,
             int earnedPoints,
             Set<CombatAchievementTier> completedRewardTiers)
     {
         this.completedTasks = max(0, completedTasks);
         this.earnedPoints = max(0, earnedPoints);
-        var tiers = EnumSet.noneOf(CombatAchievementTier.class);
-        if (completedRewardTiers != null) tiers.addAll(completedRewardTiers);
-        this.completedRewardTiers = unmodifiableSet(tiers);
+        this.completedRewardTiers = SnapshotCollections.set(completedRewardTiers);
     }
     public CombatAchievementTier nextRewardTier()
     {
@@ -323,9 +253,7 @@ final class CombatEvidenceSnapshot
             boolean auguryUnlocked, boolean preserveUnlocked)
     {
         this.spellbookSelector = spellbookSelector;
-        this.activePrayers = unmodifiableSet(activePrayers == null
-                || activePrayers.isEmpty() ? EnumSet.noneOf(Prayer.class)
-                : EnumSet.copyOf(activePrayers));
+        this.activePrayers = SnapshotCollections.set(activePrayers);
         this.rigourUnlocked = rigourUnlocked;
         this.auguryUnlocked = auguryUnlocked;
         this.preserveUnlocked = preserveUnlocked;
@@ -344,53 +272,14 @@ final class DiarySnapshot
 
     public DiarySnapshot(
             Map<String, Integer> completedTasksByRegion,
-            Map<String, Integer> totalTasksByRegion)
-    {
-        this(completedTasksByRegion, totalTasksByRegion,
-                emptyMap(), emptyMap());
-    }
-
-    public DiarySnapshot(
-            Map<String, Integer> completedTasksByRegion,
-            Map<String, Integer> totalTasksByRegion,
-            Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion)
-    {
-        this(completedTasksByRegion, totalTasksByRegion,
-                completedTiersByRegion, emptyMap());
-    }
-
-    public DiarySnapshot(
-            Map<String, Integer> completedTasksByRegion,
             Map<String, Integer> totalTasksByRegion,
             Map<String, Map<DiaryTier, Boolean>> completedTiersByRegion,
             Map<String, Boolean> observedTaskCompletion)
     {
-        this.completedTasksByRegion = unmodifiableMap(
-                completedTasksByRegion == null
-                        ? new HashMap<>()
-                        : new HashMap<>(completedTasksByRegion)
-        );
-        this.totalTasksByRegion = unmodifiableMap(
-                totalTasksByRegion == null
-                        ? new HashMap<>()
-                        : new HashMap<>(totalTasksByRegion)
-        );
-        Map<String, Map<DiaryTier, Boolean>> tiers = new HashMap<>();
-        if (completedTiersByRegion != null)
-        {
-            for (Map.Entry<String, Map<DiaryTier, Boolean>> entry
-                    : completedTiersByRegion.entrySet())
-            {
-                EnumMap<DiaryTier, Boolean> copy = new EnumMap<>(DiaryTier.class);
-                if (entry.getValue() != null) copy.putAll(entry.getValue());
-                tiers.put(entry.getKey(), unmodifiableMap(copy));
-            }
-        }
-        this.completedTiersByRegion = unmodifiableMap(tiers);
-        this.observedTaskCompletion = unmodifiableMap(
-                observedTaskCompletion == null
-                        ? new HashMap<>()
-                        : new HashMap<>(observedTaskCompletion));
+        this.completedTasksByRegion = SnapshotCollections.map(completedTasksByRegion);
+        this.totalTasksByRegion = SnapshotCollections.map(totalTasksByRegion);
+        this.completedTiersByRegion = SnapshotCollections.maps(completedTiersByRegion);
+        this.observedTaskCompletion = SnapshotCollections.map(observedTaskCompletion);
     }
 
     public int completedIn(String region)
@@ -426,8 +315,7 @@ final class FarmingRunSnapshot
 
     public FarmingRunSnapshot(Map<String, ObservedFarmingPatchState> states)
     {
-        this.states = unmodifiableMap(
-                states == null ? new HashMap<>() : new HashMap<>(states));
+        this.states = SnapshotCollections.map(states);
     }
 
     public static FarmingRunSnapshot empty()
@@ -461,21 +349,9 @@ final class FarmingSnapshot
             Map<String, Capability> leprechaunTools,
             Map<String, Long> patchReadyAtMillis)
     {
-        this.reachablePatchIds = unmodifiableSet(
-                reachablePatchIds == null
-                        ? new HashSet<>()
-                        : new HashSet<>(reachablePatchIds)
-        );
-        this.leprechaunTools = unmodifiableMap(
-                leprechaunTools == null
-                        ? new HashMap<>()
-                        : new HashMap<>(leprechaunTools)
-        );
-        this.patchReadyAtMillis = unmodifiableMap(
-                patchReadyAtMillis == null
-                        ? new HashMap<>()
-                        : new HashMap<>(patchReadyAtMillis)
-        );
+        this.reachablePatchIds = SnapshotCollections.set(reachablePatchIds);
+        this.leprechaunTools = SnapshotCollections.map(leprechaunTools);
+        this.patchReadyAtMillis = SnapshotCollections.map(patchReadyAtMillis);
     }
 
     public static FarmingSnapshot unknown()
@@ -525,16 +401,8 @@ final class MinigameSnapshot
             Set<String> unlocked,
             Map<String, Integer> currencies)
     {
-        this.unlocked = unmodifiableSet(
-                unlocked == null
-                        ? new HashSet<>()
-                        : new HashSet<>(unlocked)
-        );
-        this.currencies = unmodifiableMap(
-                currencies == null
-                        ? new HashMap<>()
-                        : new HashMap<>(currencies)
-        );
+        this.unlocked = SnapshotCollections.set(unlocked);
+        this.currencies = SnapshotCollections.map(currencies);
     }
 
     public static MinigameSnapshot unknown()
@@ -560,6 +428,7 @@ final class MinigameSnapshot
  * rewrite of the strategy engine.</p>
  */
 @Getter
+@EqualsAndHashCode
 final class PohSnapshot
 {
     final Capability houseAccess;
@@ -572,11 +441,7 @@ final class PohSnapshot
         this.houseAccess = houseAccess == null
                 ? Capability.UNKNOWN
                 : houseAccess;
-        this.furniture = unmodifiableMap(
-                furniture == null
-                        ? new HashMap<>()
-                        : new HashMap<>(furniture)
-        );
+        this.furniture = SnapshotCollections.map(furniture);
     }
 
     public static PohSnapshot unknown()
@@ -596,22 +461,6 @@ final class PohSnapshot
         );
     }
 
-
-    @Override
-    public boolean equals(Object other)
-    {
-        if (this == other) return true;
-        if (!(other instanceof PohSnapshot)) return false;
-        var that = (PohSnapshot) other;
-        return houseAccess == that.houseAccess
-                && furniture.equals(that.furniture);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(houseAccess, furniture);
-    }
 }
 
 /** Immutable render-safe view of the current local progress session. */
@@ -638,13 +487,9 @@ final class ProgressSessionSnapshot
         this.startedAtMillis = startedAtMillis;
         this.updatedAtMillis = updatedAtMillis;
         this.activeDurationMillis = max(0L, activeDurationMillis);
-        EnumMap<Skill, SkillSessionProgress> skillCopy =
-                new EnumMap<>(Skill.class);
-        if (skills != null) skillCopy.putAll(skills);
-        this.skills = unmodifiableMap(skillCopy);
-        this.buckets = unmodifiableList(new ArrayList<>(buckets));
-        this.milestones = unmodifiableList(
-                new ArrayList<>(milestones));
+        this.skills = SnapshotCollections.map(skills);
+        this.buckets = SnapshotCollections.list(buckets);
+        this.milestones = SnapshotCollections.list(milestones);
         this.targetProjection = targetProjection;
     }
     public long getTotalXpGained()
@@ -679,11 +524,7 @@ final class PvmSnapshot
 
     public PvmSnapshot(Map<String, PvmReadiness> readinessByActivity)
     {
-        this.readinessByActivity = unmodifiableMap(
-                readinessByActivity == null
-                        ? new HashMap<>()
-                        : new HashMap<>(readinessByActivity)
-        );
+        this.readinessByActivity = SnapshotCollections.map(readinessByActivity);
     }
 
     public static PvmSnapshot unknown()
@@ -706,9 +547,7 @@ final class QuestSnapshot
 
     public QuestSnapshot(Map<String, QuestStatus> quests)
     {
-        this.quests = unmodifiableMap(
-                new HashMap<>(quests)
-        );
+        this.quests = SnapshotCollections.map(quests);
     }
 
     public QuestStatus statusOf(String questName)
@@ -735,11 +574,7 @@ final class RecurringOpportunitySnapshot
 
     public RecurringOpportunitySnapshot(Map<String, Long> readyAtMillis)
     {
-        this.readyAtMillis = unmodifiableMap(
-                readyAtMillis == null
-                        ? new HashMap<>()
-                        : new HashMap<>(readyAtMillis)
-        );
+        this.readyAtMillis = SnapshotCollections.map(readyAtMillis);
     }
 
     public static RecurringOpportunitySnapshot unknown()
@@ -789,16 +624,8 @@ final class SailingSnapshot
             Set<String> verifiedActivities,
             Confidence confidence)
     {
-        this.verifiedPorts = unmodifiableSet(
-                verifiedPorts == null
-                        ? new HashSet<>()
-                        : new HashSet<>(verifiedPorts)
-        );
-        this.verifiedActivities = unmodifiableSet(
-                verifiedActivities == null
-                        ? new HashSet<>()
-                        : new HashSet<>(verifiedActivities)
-        );
+        this.verifiedPorts = SnapshotCollections.set(verifiedPorts);
+        this.verifiedActivities = SnapshotCollections.set(verifiedActivities);
         this.confidence = confidence == null
                 ? Confidence.CHECK_NEEDED
                 : confidence;
@@ -833,10 +660,7 @@ final class SlayerRewardSnapshot
 
     public SlayerRewardSnapshot(Map<SlayerReward, Capability> states)
     {
-        EnumMap<SlayerReward, Capability> copy =
-                new EnumMap<>(SlayerReward.class);
-        if (states != null) copy.putAll(states);
-        this.states = unmodifiableMap(copy);
+        this.states = SnapshotCollections.map(states);
     }
 
     public static SlayerRewardSnapshot unknown()
@@ -870,40 +694,17 @@ final class StorageSnapshot
     final Map<StorageKind, Capability> states;
     final Map<StorageKind, List<ItemState>> contents;
 
-    public StorageSnapshot(Map<StorageKind, Capability> states)
-    {
-        this(states, emptyMap());
-    }
-
     public StorageSnapshot(
             Map<StorageKind, Capability> states,
             Map<StorageKind, List<ItemState>> contents)
     {
-        EnumMap<StorageKind, Capability> stateCopy =
-                new EnumMap<>(StorageKind.class);
-        if (states != null) stateCopy.putAll(states);
-        this.states = unmodifiableMap(stateCopy);
-
-        EnumMap<StorageKind, List<ItemState>> contentCopy =
-                new EnumMap<>(StorageKind.class);
-        if (contents != null)
-        {
-            for (Map.Entry<StorageKind, List<ItemState>> entry
-                    : contents.entrySet())
-            {
-                contentCopy.put(entry.getKey(), unmodifiableList(
-                        entry.getValue() == null
-                                ? new ArrayList<>()
-                                : new ArrayList<>(entry.getValue())
-                ));
-            }
-        }
-        this.contents = unmodifiableMap(contentCopy);
+        this.states = SnapshotCollections.map(states);
+        this.contents = SnapshotCollections.lists(contents);
     }
 
     public static StorageSnapshot unknown()
     {
-        return new StorageSnapshot(emptyMap());
+        return new StorageSnapshot(emptyMap(), emptyMap());
     }
 
     public Capability stateOf(StorageKind capability)
@@ -975,11 +776,7 @@ final class TransportSnapshot
 
     public TransportSnapshot(Set<String> verifiedRoutes)
     {
-        this.verifiedRoutes = unmodifiableSet(
-                verifiedRoutes == null
-                        ? new HashSet<>()
-                        : new HashSet<>(verifiedRoutes)
-        );
+        this.verifiedRoutes = SnapshotCollections.set(verifiedRoutes);
     }
 
     public static TransportSnapshot unknown()
@@ -992,4 +789,45 @@ final class TransportSnapshot
         return routeId != null && verifiedRoutes.contains(routeId);
     }
 
+}
+
+/** One defensive-copy policy for every immutable live-state collection. */
+final class SnapshotCollections
+{
+    private SnapshotCollections() { }
+
+    static <K, V> Map<K, V> map(Map<K, V> values)
+    {
+        return unmodifiableMap(values == null ? emptyMap()
+                : new HashMap<>(values));
+    }
+
+    static <V> Set<V> set(Set<V> values)
+    {
+        return unmodifiableSet(values == null ? emptySet()
+                : new HashSet<>(values));
+    }
+
+    static <V> List<V> list(List<V> values)
+    {
+        return unmodifiableList(values == null ? emptyList()
+                : new ArrayList<>(values));
+    }
+
+    static <K, V> Map<K, Map<V, Boolean>> maps(
+            Map<K, Map<V, Boolean>> values)
+    {
+        Map<K, Map<V, Boolean>> copy = new HashMap<>();
+        if (values != null) for (Map.Entry<K, Map<V, Boolean>> entry
+                : values.entrySet()) copy.put(entry.getKey(), map(entry.getValue()));
+        return unmodifiableMap(copy);
+    }
+
+    static <K, V> Map<K, List<V>> lists(Map<K, List<V>> values)
+    {
+        Map<K, List<V>> copy = new HashMap<>();
+        if (values != null) for (Map.Entry<K, List<V>> entry
+                : values.entrySet()) copy.put(entry.getKey(), list(entry.getValue()));
+        return unmodifiableMap(copy);
+    }
 }

@@ -15,7 +15,7 @@ public class TrainingMethodSelector
     private final RequirementEvidenceEngine requirementEvidenceEngine;
     private final TrainingMethodPolicy methodPolicy;
     private final MethodStrategyKnowledgeCatalog strategyCatalog;
-    private final MethodStrategyService strategyService;
+    private final UimInventoryResolutionService inventoryResolution;
 
     @Inject
     public TrainingMethodSelector(
@@ -23,51 +23,23 @@ public class TrainingMethodSelector
             RequirementEvidenceEngine requirementEvidenceEngine,
             TrainingMethodPolicy methodPolicy,
             MethodStrategyKnowledgeCatalog strategyCatalog,
-            MethodStrategyService strategyService)
+            UimInventoryResolutionService inventoryResolution)
     {
         this.catalog = catalog;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
         this.methodPolicy = methodPolicy;
         this.strategyCatalog = strategyCatalog == null
                 ? new MethodStrategyKnowledgeCatalog() : strategyCatalog;
-        this.strategyService = strategyService == null
-                ? new MethodStrategyService() : strategyService;
-    }
-   TrainingMethodSelector(TrainingMethodCatalog catalog,
-            RequirementEvidenceEngine evidence, TrainingMethodCatalog ignoredCurated,
-            TrainingMethodCatalog ignoredF2p, TrainingMethodPolicy policy)
-    {
-        this(new TrainingMethodCatalog(), evidence, policy, new MethodStrategyKnowledgeCatalog(),
-                new MethodStrategyService());
-    }
-
-    public TrainingPlan select(Skill skill, int currentLevel,
-            StrategyMode strategyMode, SessionIntent sessionIntent)
-    {
-        return select(null, skill, currentLevel, strategyMode, sessionIntent, false);
+        this.inventoryResolution = inventoryResolution == null
+                ? new UimInventoryResolutionService() : inventoryResolution;
     }
 
     public TrainingPlan select(GameData data, Skill skill, int currentLevel,
-            StrategyMode strategyMode, SessionIntent sessionIntent)
-    {
-        return select(data, skill, currentLevel, strategyMode, sessionIntent, false);
-    }
-
-    public TrainingPlan select(GameData data, Skill skill, int currentLevel,
-            StrategyMode strategyMode, SessionIntent sessionIntent,
-            boolean allowWildernessMethods)
-    {
-        return select(data, skill, currentLevel, strategyMode, sessionIntent,
-                allowWildernessMethods, false);
-    }
-
-    public TrainingPlan select(GameData data, Skill skill, int currentLevel,
-            StrategyMode strategyMode, SessionIntent sessionIntent,
-            boolean allowWildernessMethods, boolean useGroupStorage)
+            StrategyMode mode, SessionIntent intent, boolean... options)
     {
         List<TrainingPlan> ranked = rankedCandidates(data, skill, currentLevel,
-                strategyMode, sessionIntent, allowWildernessMethods,
-                useGroupStorage);
+                mode, intent, options.length > 0 && options[0],
+                options.length > 1 && options[1]);
         return ranked.isEmpty() ? null : ranked.get(0);
     }
 
@@ -90,13 +62,13 @@ public class TrainingMethodSelector
             var metadata = candidate.getMetadata();
             MethodStrategyProfile strategyProfile = strategyCatalog.profileFor(
                     method, metadata, mode);
-            MethodStrategyAssessment strategyAssessment = strategyService.assess(
-                    data, strategyProfile);
+            double strategyAdjustment = strategyAdjustment(data,
+                    strategyProfile);
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
                     || method.confidence == Confidence.BLOCKED
                     || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods)
-                    || !strategyAssessment.isViable())
+                    || Double.isNaN(strategyAdjustment))
             {
                 continue;
             }
@@ -122,7 +94,7 @@ public class TrainingMethodSelector
 
             double score = method.scoreFor(strategyMode, sessionIntent)
                     + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent)
-                    + strategyAssessment.getScoreAdjustment()
+                    + strategyAdjustment
                     + readinessAdjustment(data, checks, sessionIntent);
             // Retain a hard-gated plan as diagnostic/secondary information when
             // every route is unknown, but it must lose to any executable route
@@ -130,7 +102,7 @@ public class TrainingMethodSelector
             if (hardRequirementUnknown) score -= 10_000.0;
             ranked.add(new ScoredPlan(new TrainingPlan(method,
                     buildExplanation(method, metadata, strategyMode,
-                            sessionIntent, data, strategyAssessment), confidence,
+                            sessionIntent, data, strategyProfile), confidence,
                     checks, strategyProfile), score));
         }
 
@@ -263,14 +235,14 @@ public class TrainingMethodSelector
     private String buildExplanation(TrainingMethod method,
             TrainingMethodMetadata metadata, StrategyMode strategyMode,
             SessionIntent sessionIntent, GameData data,
-            MethodStrategyAssessment strategyAssessment)
+            MethodStrategyProfile strategyProfile)
     {
         var reason = new StringBuilder();
-        if (strategyAssessment != null
-                && strategyAssessment.getExplanation() != null
-                && !strategyAssessment.getExplanation().trim().isEmpty())
+        if (strategyProfile != null
+                && strategyProfile.getPlayerReason() != null
+                && !strategyProfile.getPlayerReason().trim().isEmpty())
         {
-            reason.append(strategyAssessment.getExplanation().trim());
+            reason.append(strategyProfile.getPlayerReason().trim());
         }
         else
         {
@@ -283,6 +255,46 @@ public class TrainingMethodSelector
         if (method.wilderness)
             reason.append(get(898));
         return reason.toString();
+    }
+
+    /** NaN means the sourced method is not legal for the live account. */
+    private double strategyAdjustment(GameData data,
+            MethodStrategyProfile profile)
+    {
+        if (data == null || data.account() == null)
+            return profile == null ? Double.NaN : 0.0;
+        if (profile == null) return Double.NaN;
+        AccountMode mode = AccountMode.fromTypeCode(data.account().modeCode());
+        if (!profile.supports(mode)
+                || mode == AccountMode.ULTIMATE_IRONMAN
+                && profile.bankingBehavior == BankingMode.CONVENTIONAL_BANK_LOOP)
+            return Double.NaN;
+
+        InventoryFootprint footprint = profile.inventoryFootprint;
+        ItemsState inventory = data.inventory();
+        if (mode == AccountMode.ULTIMATE_IRONMAN && footprint != null
+                && footprint.minimumPracticalFreeSlots > 0
+                && (inventory == null
+                || !inventory.hasCompleteSlotObservation()))
+            return Double.NaN;
+        int occupied = UimSetupCostService.occupiedInventorySlots(inventory);
+        int free = Math.max(0, 28 - occupied);
+        if (mode == AccountMode.ULTIMATE_IRONMAN && inventory != null
+                && inventory.hasCompleteSlotObservation()
+                && inventoryResolution.resolve(data, footprint, false, false,
+                        emptyList()).getKind() != UimInventoryKind.USE_AS_IS)
+            return Double.NaN;
+
+        double score = profile.getAccountValueFit() * 8.0;
+        if (mode == AccountMode.ULTIMATE_IRONMAN && inventory != null
+                && inventory.hasCompleteSlotObservation())
+        {
+            if (free - footprint.minimumPracticalFreeSlots <= 1) score -= 5.0;
+            if (footprint.tearsDownCurrentSetup()) score -= 8.0;
+            if (footprint.getFlow() == InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS)
+                score -= 3.0;
+        }
+        return score;
     }
 
     private static String pretty(String value)

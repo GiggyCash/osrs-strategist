@@ -11,27 +11,27 @@ public class SustainableResourceValueServiceTest
     @Test
     public void ownedConsumablesHaveDifferentReplacementCostByMode()
     {
-        int main = MethodResourceValueService.resourceAdjustment(
-                context(0, bank("Cannonballs", 500)), "Cannonballs", 100, 1, true);
-        int iron = MethodResourceValueService.resourceAdjustment(
-                context(1, bank("Cannonballs", 500)), "Cannonballs", 100, 1, true);
+        int main = adjustment(context(0, bank("Cannonballs", 500)),
+                "Cannonballs", 100, 1, true);
+        int iron = adjustment(context(1, bank("Cannonballs", 500)),
+                "Cannonballs", 100, 1, true);
         assertTrue(main > iron);
     }
 
     @Test
     public void unopenedBankIsUnknownInsteadOfEmpty()
     {
-        assertEquals(-2, MethodResourceValueService.resourceAdjustment(
-                context(1, null), "Prayer potion", 4, 4, false));
+        assertEquals(-2, adjustment(context(1, null),
+                "Prayer potion", 4, 4, false));
     }
 
     @Test
     public void uimNeverCountsConventionalBankAsReadySupply()
     {
-        int uim = MethodResourceValueService.resourceAdjustment(
-                context(2, bank("Prayer potion", 100)), "Prayer potion", 4, 4, false);
-        int main = MethodResourceValueService.resourceAdjustment(
-                context(0, bank("Prayer potion", 100)), "Prayer potion", 4, 4, false);
+        int uim = adjustment(context(2, bank("Prayer potion", 100)),
+                "Prayer potion", 4, 4, false);
+        int main = adjustment(context(0, bank("Prayer potion", 100)),
+                "Prayer potion", 4, 4, false);
         assertTrue(uim < main);
     }
 
@@ -39,10 +39,16 @@ public class SustainableResourceValueServiceTest
     public void reservedResourceHasHigherOpportunityCost()
     {
         StrategyContext context = context(1, bank("Law rune", 100));
-        assertTrue(MethodResourceValueService.resourceAdjustment(
-                context, "Law rune", 10, 1, false)
-                > MethodResourceValueService.resourceAdjustment(
-                context, "Law rune", 10, 7, false));
+        assertTrue(adjustment(context, "Law rune", 10, 1, false)
+                > adjustment(context, "Law rune", 10, 7, false));
+    }
+
+    private static int adjustment(StrategyContext context, String name,
+            int required, int scarcity, boolean tradeable)
+    {
+        return AdaptiveMilestoneGuidanceService.resourceAdjustment(
+                context.data(), context.usesGroupStorage(), name, required,
+                scarcity, tradeable);
     }
 
     private static ItemsState bank(String name, int quantity)

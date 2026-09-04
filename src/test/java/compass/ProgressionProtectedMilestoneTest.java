@@ -22,7 +22,7 @@ public class ProgressionProtectedMilestoneTest
                 Collections.emptyList());
         Recommendation recommendation = new Recommendation(
                 "skill:agility", "Train Agility to 60", "Graceful",
-                50.0, plan, Confidence.VERIFIED, 59, 60);
+                50.0, plan, Confidence.VERIFIED, 59, 60, null);
 
         TrackedMilestone tracked = TestFixtures.milestoneTracker().fromRecommendations(
                 Collections.singletonList(recommendation));

@@ -19,7 +19,7 @@ public class StrategyCandidateFoundationTest
         GameData data = GameData.builder(account())
                 .clue(new ClueSnapshot(
                         true, "Hard", System.currentTimeMillis(),
-                        Confidence.VERIFIED))
+                        Confidence.VERIFIED, null))
                 .build();
         StrategyContext context = new StrategyContext(
                 data, StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,

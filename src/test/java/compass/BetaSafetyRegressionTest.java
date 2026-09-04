@@ -51,7 +51,8 @@ public class BetaSafetyRegressionTest
         AccountSnapshot account = account(
                 Membership.F2P, 0, 60, 1, 1, 1, 1);
         GameData data = GameData.builder(account)
-                .combatAchievements(new CombatAchievementSnapshot(18, 27))
+                .combatAchievements(new CombatAchievementSnapshot(18, 27,
+                        Collections.emptySet()))
                 .build();
         StrategyContext context = new StrategyContext(
                 data,
@@ -115,7 +116,7 @@ public class BetaSafetyRegressionTest
                 "quest:unknown",
                 "Quest: Unknown",
                 "Requirements are not verified.",
-                500.0);
+                500.0, Confidence.CHECK_NEEDED, null, Safety.unknown());
         List<Recommendation> queue = queue(
                 Collections.singletonList(unresolved),
                 new ActionabilityPolicy());

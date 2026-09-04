@@ -29,10 +29,10 @@ public class GroupStoragePlanningTest
         RecommendationEngine engine = TestFixtures.recommendationEngine(selector());
         Recommendation disabled = find(engine.recommendAll(data,
                 StrategyMode.RELAXED, SessionIntent.AFK, false, false,
-                new PreferenceProfile()), "skill:mining");
+                GoalType.AUTOMATIC, new PreferenceProfile()), "skill:mining");
         Recommendation enabled = find(engine.recommendAll(data,
                 StrategyMode.RELAXED, SessionIntent.AFK, true, false,
-                new PreferenceProfile()), "skill:mining");
+                GoalType.AUTOMATIC, new PreferenceProfile()), "skill:mining");
 
         ActionabilityPolicy policy =
                 new ActionabilityPolicy();
@@ -60,7 +60,8 @@ public class GroupStoragePlanningTest
                 .build();
         Recommendation mining = find(TestFixtures.recommendationEngine(selector())
                 .recommendAll(data, StrategyMode.RELAXED, SessionIntent.AFK,
-                        true, false, new PreferenceProfile()), "skill:mining");
+                        true, false, GoalType.AUTOMATIC,
+                        new PreferenceProfile()), "skill:mining");
 
         assertTrue(new ActionabilityPolicy()
                 .canLeadQueue(mining));
@@ -72,10 +73,10 @@ public class GroupStoragePlanningTest
 
     private static TrainingMethodSelector selector()
     {
-        return new TrainingMethodSelector(new TrainingMethodDatabase(),
+        return new TrainingMethodSelector(new TrainingMethodCatalog(),
                 new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
     }
 
     private static AccountSnapshot account()

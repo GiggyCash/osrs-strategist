@@ -20,11 +20,13 @@ import static compass.Text.get;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 class AdaptiveMilestoneGuidanceService
 {
+    private static final ResourceSourceCatalog SOURCES =
+            new ResourceSourceCatalog();
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final MethodExecutionProfileCatalog profileCatalog;
     private final SkillingXpModifierService xpModifierService;
     private final AdaptiveActionSelector actionSelector;
-    private final MethodInputResolver inputResolver;
+    private final UniversalActionRecipeResolver recipeResolver;
     private final AccountResourcePlanner resourcePlanner;
 
     public Guidance build(
@@ -93,7 +95,7 @@ class AdaptiveMilestoneGuidanceService
                 xpNeeded, minimumActions, maximumActions, targetLevel,
                 variableOutput);
 
-        List<MethodInput> inputs = inputResolver.resolve(
+        List<MethodInput> inputs = recipeResolver.profileInputs(
                 profile, action, maximumActions);
         SupplyPlan resources = resourcePlanner == null
                 ? null
@@ -151,8 +153,90 @@ class AdaptiveMilestoneGuidanceService
                 actionText,
                 supplies,
                 location,
-                note);
+                note).withStrategicValue(resourceValue(data, inputs,
+                        useGroupStorage, plan.method().id));
         return result.withProgress(progressText);
+    }
+
+    private static StrategicValue resourceValue(GameData data,
+            List<MethodInput> inputs, boolean group, String methodId)
+    {
+        int score = 0;
+        boolean known = false;
+        StrategicValue shared = StrategicValue.neutral();
+        for (MethodInput input : inputs)
+        {
+            int[] policy = resourcePolicy(input.getName());
+            if (policy == null) continue;
+            known = true;
+            score += resourceAdjustment(data, group, input.getName(),
+                    input.quantity, policy[0], policy[1] == 1);
+            shared = shared.merge(sharedResourceValue(data, group,
+                    input.getName(), input.quantity, false));
+        }
+        return !known ? StrategicValue.neutral()
+                : StrategicValue.builder()
+                        .resourceFit(max(-16, min(6, score)) / 12.0)
+                        .evidence(get(1881) + methodId).build().merge(shared);
+    }
+
+    static int resourceAdjustment(GameData data, boolean group, String name,
+            int required, int scarcity, boolean tradeable)
+    {
+        if (data == null || name == null) return -4;
+        ItemIndex items = new ItemIndex(data, group);
+        int observed = items.quantity(name);
+        AccountMode mode = data.account() == null ? AccountMode.UNKNOWN
+                : AccountMode.fromTypeCode(data.account().modeCode());
+        int burden = mode.usesGrandExchange() && tradeable ? 1
+                : mode.isIronLike() ? 5 : 4;
+        if (mode.isGroupIronman() && group && items.groupStorageObserved())
+            burden--;
+        if (mode == AccountMode.ULTIMATE_IRONMAN) burden += 2;
+        if (observed >= max(1, required))
+            return max(-10, min(4, 4 - burden - scarcity));
+        if (!items.resourceContainersObserved()) return -2;
+        if (SOURCES.match(name).isEmpty()) return -4;
+        return max(-12, min(3, 2 - burden - scarcity));
+    }
+
+    private static int[] resourcePolicy(String name)
+    {
+        String value = Names.words(name);
+        if (value.equals("spirit seed") || value.equals("crystal acorn"))
+            return new int[]{4, 0};
+        for (String term : new String[]{"rune", "essence", "bar", "plank",
+                "nail", "log", "raw ", "grape", "jug of water", "feather",
+                "arrowhead", "headless arrow", "dart tip", "unfinished bolt",
+                "uncut ", "herb", "weed", "snape grass", "crushed nest",
+                get(1882), "sapling", "seed"})
+            if (value.contains(term)) return new int[]{1, 1};
+        return null;
+    }
+
+    static StrategicValue sharedResourceValue(GameData data, boolean enabled,
+            String itemName, int required, boolean reusable)
+    {
+        AccountMode mode = data == null || data.account() == null
+                ? AccountMode.UNKNOWN
+                : AccountMode.fromTypeCode(data.account().modeCode());
+        ItemsState storage = data == null ? null : data.groupStorage();
+        if (!mode.isGroupIronman() || !enabled || storage == null
+                || !storage.isObserved()) return StrategicValue.neutral();
+        String target = Names.words(itemName);
+        int quantity = 0;
+        for (ItemState item : storage.getItems())
+            if (item != null && item.quantity > 0 && item.itemId > 0
+                    && target.equals(Names.words(item.getName())))
+                quantity = quantity >= Integer.MAX_VALUE - item.quantity
+                        ? Integer.MAX_VALUE : quantity + item.quantity;
+        if (quantity <= 0) return StrategicValue.neutral();
+        double avoidance = quantity < max(1, required)
+                ? min(1.0, quantity / (double) max(1, required)) * 0.45
+                : reusable ? 1.0 : 0.75;
+        return StrategicValue.builder().accountModeFit(avoidance * 0.6)
+                .resourceFit(avoidance).evidence("group-resource:" + target)
+                .build();
     }
 
         private static int divideRoundUp(int numerator, double denominator)
@@ -840,7 +924,7 @@ class CombatGuidanceService
     {
         if (abs(value - rint(value)) < 0.001)
             return Long.toString(round(value));
-        return String.format(java.util.Locale.ROOT, "%.1f", value);
+        return String.format(Locale.ROOT, "%.1f", value);
     }
 
     private static String withoutPeriod(String value)
@@ -948,7 +1032,7 @@ class MethodGuidanceService
     private static String criticalNote(String note)
     {
         if (note == null || note.trim().isEmpty()) return null;
-        var lower = note.toLowerCase(java.util.Locale.ROOT);
+        var lower = note.toLowerCase(Locale.ROOT);
         if (!(lower.contains("wilderness") || lower.contains("hardcore")
                 || lower.contains("uim") || lower.contains("iron")
                 || lower.contains("restricted") || lower.contains("mandatory")
@@ -990,17 +1074,6 @@ class RecommendationGuidanceService
     private final AdaptiveMilestoneGuidanceService adaptiveGuidance;
     private final VariableMethodGuidanceService variableGuidance;
     private final UniversalSkillActionGuidanceService universalGuidance;
-
-    public Guidance build(
-            GameData data,
-            Skill skill,
-            int currentLevel,
-            int targetLevel,
-            TrainingPlan trainingPlan)
-    {
-        return build(data, skill, currentLevel, targetLevel,
-                trainingPlan, true);
-    }
 
     public Guidance build(
             GameData data,
@@ -1611,290 +1684,6 @@ class SailingGuidanceService
         private final int marlinXp;
         private final String requirements;
         private final String location;
-    }
-}
-
-/** Account-aware Slayer task guidance without inventing task-specific DPS. */
-@Singleton
-class SlayerGuidanceService
-{
-    private final SlayerTaskProfileCatalog taskProfiles;
-
-    @Inject
-    public SlayerGuidanceService(SlayerTaskProfileCatalog taskProfiles)
-    {
-        this.taskProfiles = taskProfiles == null
-                ? new SlayerTaskProfileCatalog() : taskProfiles;
-    }
-
-    public SlayerGuidanceService()
-    {
-        this(new SlayerTaskProfileCatalog());
-    }
-
-    public Guidance build(
-            GameData data,
-            int currentLevel,
-            int targetLevel)
-    {
-        return build(data, currentLevel, targetLevel, true);
-    }
-
-    public Guidance build(
-            GameData data,
-            int currentLevel,
-            int targetLevel,
-            boolean useGroupStorage)
-    {
-        if (data == null || data.account() == null) return null;
-        var account = data.account();
-        if (!AccountBuildPolicy.allowsSkill(account, SLAYER)) return null;
-        if (account.membership() != Membership.P2P) return null;
-
-        var currentXp = account.xp(SLAYER);
-        if (currentXp <= 0) currentXp = Experience.getXpForLevel(currentLevel);
-        var targetXp = Experience.getXpForLevel(targetLevel);
-        var xpNeeded = max(0, targetXp - currentXp);
-
-        var slayer = data.slayer();
-        if (slayer != null && slayer.hasTask())
-        {
-            var profile = taskProfiles.profileFor(slayer.taskName);
-            var items = new ItemIndex(data, useGroupStorage);
-            var action = taskAction(slayer, profile, xpNeeded, targetLevel);
-            var supplies = taskSupplies(account, items, profile);
-            var where = taskLocation(slayer, profile);
-            var note = taskNote(account, profile);
-            return new Guidance(action, supplies, where, note);
-        }
-
-        var master = bestMaster(account, data.quests());
-        var action = get(1452) + master.name
-                + ". You need " + format(xpNeeded)
-                + get(1453) + targetLevel + ".";
-        var supplies = get(759);
-        var note = master.reason + get(760);
-        return new Guidance(action, supplies, master.location, note);
-    }
-
-    private static String taskAction(
-            SlayerSnapshot slayer,
-            SlayerTaskProfile profile,
-            int xpNeeded,
-            int targetLevel)
-    {
-        var action = new StringBuilder();
-        action.append(get(1454))
-                .append(slayer.taskName)
-                .append(" assignment: ")
-                .append(slayer.getRemaining())
-                .append(get(1455))
-                .append(format(xpNeeded))
-                .append(get(1453))
-                .append(targetLevel).append(".");
-        if (profile != null && hasText(profile.getStyleGuidance()))
-        {
-            action.append(" ").append(profile.getStyleGuidance());
-        }
-        return action.toString();
-    }
-
-    private static String taskSupplies(
-            AccountSnapshot account,
-            ItemIndex items,
-            SlayerTaskProfile profile)
-    {
-        if (profile == null || profile.requiredProtection.isEmpty())
-        {
-            return get(761);
-        }
-
-        var required = profile.requiredProtection;
-        var owned = firstOwned(items, required);
-        if (owned != null)
-        {
-            return get(1456) + owned
-                    + get(762);
-        }
-
-        var mode = AccountMode.fromTypeCode(account.modeCode());
-        var choices = joinChoices(required);
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            var restricted = restrictedOwned(items, required);
-            if (restricted > 0)
-            {
-                return get(763)
-                        + choices
-                        + get(764);
-            }
-            return get(766)
-                    + choices
-                    + get(767);
-        }
-
-        if (!items.primaryOwnershipObserved())
-        {
-            return get(768)
-                    + choices + ".";
-        }
-
-        if (mode.isIronLike())
-        {
-            return get(769)
-                    + choices + ".";
-        }
-        return get(770)
-                + choices
-                + get(771);
-    }
-
-    private static String taskLocation(
-            SlayerSnapshot slayer,
-            SlayerTaskProfile profile)
-    {
-        if (hasText(slayer.getTaskLocation()))
-        {
-            return get(1457)
-                    + slayer.getTaskLocation()
-                    + get(772);
-        }
-        if (profile != null && hasText(profile.getPreferredLocation()))
-        {
-            return profile.getPreferredLocation();
-        }
-        if (hasText(slayer.getMasterName()))
-        {
-            return get(1458)
-                    + slayer.getMasterName()
-                    + get(773);
-        }
-        return get(774);
-    }
-
-    private static String taskNote(AccountSnapshot account,
-            SlayerTaskProfile profile)
-    {
-        var base = get(775);
-        if (profile == null) return base;
-        var note = new StringBuilder();
-        if (hasText(profile.getMechanicsNote()))
-        {
-            note.append(profile.getMechanicsNote()).append(" ");
-        }
-        if (profile.getMultiTargetMagicEligibility() == Capability.VERIFIED)
-            note.append(get(777));
-        if (profile.getCannonEligibility() == Capability.UNKNOWN)
-            note.append(get(778));
-        if (profile.isWildernessVariantKnown())
-            note.append(get(779));
-        if (AccountMode.fromTypeCode(account.modeCode()).isIronLike()
-                && !profile.getIronObjectives().isEmpty())
-            note.append(get(1953)).append(String.join(", ",
-                    profile.getIronObjectives())).append(". ");
-        if (hasText(profile.getTaskDecisionGuidance()))
-            note.append(profile.getTaskDecisionGuidance()).append(" ");
-        return note.append(base).toString();
-    }
-
-    private static String firstOwned(
-            ItemIndex items,
-            List<String> candidates)
-    {
-        for (String candidate : candidates)
-        {
-            if (items.has(candidate)) return candidate;
-        }
-        return null;
-    }
-
-    private static int restrictedOwned(
-            ItemIndex items,
-            List<String> candidates)
-    {
-        var total = 0;
-        for (String candidate : candidates)
-        {
-            total += items.restrictedQuantity(candidate);
-        }
-        return total;
-    }
-
-    private static String joinChoices(List<String> choices)
-    {
-        var text = new StringBuilder();
-        for (int i = 0; i < choices.size(); i++)
-        {
-            if (i > 0) text.append(i == choices.size() - 1 ? " or " : ", ");
-            text.append(choices.get(i));
-        }
-        return text.toString();
-    }
-
-    private static SlayerMasterChoice bestMaster(
-            AccountSnapshot account,
-            QuestSnapshot quests)
-    {
-        var combat = combatLevel(account);
-        var slayer = account.level(SLAYER);
-
-        if (combat >= 100 && slayer >= 50 && complete(quests, "Shilo Village"))
-            return new SlayerMasterChoice("Duradel/Kuradal", "Shilo Village",
-                    get(780));
-        if (combat >= 85)
-            return new SlayerMasterChoice("Nieve/Steve", get(1459),
-                    get(781));
-        if (combat >= 75)
-            return new SlayerMasterChoice("Konar quo Maten", "Mount Karuulm",
-                    get(782));
-        if (combat >= 70 && complete(quests, "Lost City"))
-            return new SlayerMasterChoice("Chaeldar", "Zanaris",
-                    get(783));
-        if (combat >= 40)
-            return new SlayerMasterChoice("Vannaka", get(1954),
-                    get(784));
-        if (combat >= 20 && complete(quests, "Priest in Peril"))
-            return new SlayerMasterChoice("Mazchna/Achtryn", "Canifis",
-                    get(785));
-        return new SlayerMasterChoice("Turael/Aya", "Burthorpe",
-                get(786));
-    }
-
-    /** Mirrors the standard OSRS combat-level formula closely enough for gates. */
-    static int combatLevel(AccountSnapshot account)
-    {
-        double base = 0.25 * (account.level(Skill.DEFENCE)
-                + account.level(HITPOINTS)
-                + floor(account.level(Skill.PRAYER) / 2.0));
-        double melee = 0.325 * (account.level(Skill.ATTACK)
-                + account.level(Skill.STRENGTH));
-        var ranged = 0.325 * floor(account.level(Skill.RANGED) * 1.5);
-        var magic = 0.325 * floor(account.level(Skill.MAGIC) * 1.5);
-        return (int) floor(base + max(melee, max(ranged, magic)));
-    }
-
-    private static boolean complete(QuestSnapshot quests, String quest)
-    {
-        return quests != null && quests.statusOf(quest) == QuestStatus.COMPLETE;
-    }
-
-    private static boolean hasText(String value)
-    {
-        return value != null && !value.trim().isEmpty();
-    }
-
-    private static String format(long value)
-    {
-        return String.format("%,d", value);
-    }
-
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-
-    private static final class SlayerMasterChoice
-    {
-        private final String name;
-        private final String location;
-        private final String reason;
     }
 }
 

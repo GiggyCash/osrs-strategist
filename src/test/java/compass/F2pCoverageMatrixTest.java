@@ -96,7 +96,8 @@ public class F2pCoverageMatrixTest
                 assertFalse(method.getId() + " is F2P-tagged but members-only",
                         method.isMembersOnly());
                 assertTrue(method.getId() + " is F2P-tagged on a members skill",
-                        ContentAccessRules.isFreeToPlaySkill(method.getSkill()));
+                        ContentAccessRules.isSkillAvailable(
+                                method.getSkill(), Membership.F2P));
                 assertTrue(method.getId() + " is F2P-tagged but access rules reject it",
                         ContentAccessRules.isMethodAvailable(
                                 method, Membership.F2P));

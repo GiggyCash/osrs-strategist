@@ -13,12 +13,12 @@ import static org.junit.Assert.assertTrue;
 public class TrainingMethodSelectorTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService());
 
     @Test
     public void balancedHerbloreReturnsPlan()
     {
-        TrainingPlan plan = selector.select(
+        TrainingPlan plan = TestFixtures.select(selector,
                 p2pData(),
                 Skill.HERBLORE,
                 1,
@@ -48,7 +48,7 @@ public class TrainingMethodSelectorTest
     @Test
     public void afkMiningPrefersLowAttentionMethodAtThirty()
     {
-        TrainingPlan plan = selector.select(
+        TrainingPlan plan = TestFixtures.select(selector,
                 p2pData(),
                 Skill.MINING,
                 30,

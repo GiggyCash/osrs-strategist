@@ -12,12 +12,12 @@ public class GearProgressionCatalogTest
     public void containsF2pBudgetAndContextualBisLadders()
     {
         GearProgressionCatalog catalog = new GearProgressionCatalog();
-        assertTier(catalog.forStyle(CombatStyle.RANGED), GearBudgetTier.F2P);
-        assertTier(catalog.forStyle(CombatStyle.RANGED), GearBudgetTier.BUDGET);
-        assertTier(catalog.forStyle(CombatStyle.RANGED), GearBudgetTier.BIS);
-        assertTier(catalog.forStyle(CombatStyle.MAGIC), GearBudgetTier.BIS);
-        assertTier(catalog.forStyle(CombatStyle.MELEE_SLASH), GearBudgetTier.BIS);
-        assertFalse(catalog.forContext("raids").isEmpty());
+        assertTier(catalog.filter(v -> v.style == CombatStyle.RANGED), GearBudgetTier.F2P);
+        assertTier(catalog.filter(v -> v.style == CombatStyle.RANGED), GearBudgetTier.BUDGET);
+        assertTier(catalog.filter(v -> v.style == CombatStyle.RANGED), GearBudgetTier.BIS);
+        assertTier(catalog.filter(v -> v.style == CombatStyle.MAGIC), GearBudgetTier.BIS);
+        assertTier(catalog.filter(v -> v.style == CombatStyle.MELEE_SLASH), GearBudgetTier.BIS);
+        assertFalse(catalog.filter(v -> "raids".equals(v.contextId)).isEmpty());
     }
 
     @Test

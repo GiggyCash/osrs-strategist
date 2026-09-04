@@ -5,7 +5,6 @@ import static java.util.Collections.*;
 
 import com.google.gson.Gson;
 import java.awt.Color;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.inject.*;
@@ -102,31 +101,6 @@ class AccountAccessMemoryStore
         }
 
         loadedProfileKey = activeKey;
-    }
-}
-
-/**
- * Stores only capabilities the plugin can verify or the player has confirmed.
- * Unknown is a first-class state. The strategist should never assume a storage
- * method or unlock exists just because that method exists in the game.
- */
-final class AccountCapabilities
-{
-    final Map<String, Capability> states = new HashMap<>();
-
-    public Capability get(String key)
-    {
-        return states.getOrDefault(key, Capability.UNKNOWN);
-    }
-
-    public void set(String key, Capability state)
-    {
-        states.put(key, state);
-    }
-
-    public boolean verified(String key)
-    {
-        return get(key) == Capability.VERIFIED;
     }
 }
 
@@ -276,66 +250,6 @@ class AccountReader
                 return "Unknown";
         }
     }
-}
-
-/**
- * Account properties that change the value of an activity or unlock.
- *
- * <p>These are deliberately not method identities. Candidate metadata can be
- * matched to these dimensions without teaching the selector that a named
- * account mode should always choose a named method.</p>
- */
-@RequiredArgsConstructor
-@Getter
-enum AccountDimension
-{
-    INVENTORY_PRESSURE(AccountDimensionRole.BURDEN_WEIGHT),
-    BANK_AVAILABILITY(AccountDimensionRole.CAPABILITY_GATE),
-    GRAND_EXCHANGE_AVAILABILITY(AccountDimensionRole.CAPABILITY_GATE),
-    SELF_SOURCING_BURDEN(AccountDimensionRole.BURDEN_WEIGHT),
-    SHARED_RESOURCE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    SHARED_INFRASTRUCTURE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    STORAGE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    POH_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    TELEPORT_INFRASTRUCTURE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    SETUP_COST_SENSITIVITY(AccountDimensionRole.BURDEN_WEIGHT),
-    DEATH_RISK_SENSITIVITY(AccountDimensionRole.BURDEN_WEIGHT),
-    CONSUMABLE_REPLACEMENT_DIFFICULTY(
-            AccountDimensionRole.BURDEN_WEIGHT),
-    STORABLE_EQUIPMENT_VALUE(AccountDimensionRole.BENEFIT_WEIGHT),
-    DUPLICATE_GRIND_PENALTY(AccountDimensionRole.BURDEN_WEIGHT),
-    GP_LIQUIDITY_STORAGE_VALUE(AccountDimensionRole.BENEFIT_WEIGHT);
-
-    final AccountDimensionRole role;
-}
-
-/** One explainable account-mode/state contribution. */
-@Getter
-final class AccountPriority
-{
-    final AccountDimension dimension;
-    final Priority priority;
-    final Capability capabilityState;
-    final Confidence confidence;
-    final String reason;
-
-    public AccountPriority(
-            AccountDimension dimension,
-            Priority priority,
-            Capability capabilityState,
-            Confidence confidence,
-            String reason)
-    {
-        if (dimension == null) throw new IllegalArgumentException("dimension");
-        this.dimension = dimension;
-        this.priority = priority == null ? Priority.NONE : priority;
-        this.capabilityState = capabilityState == null
-                ? Capability.UNKNOWN : capabilityState;
-        this.confidence = confidence == null
-                ? Confidence.CHECK_NEEDED : confidence;
-        this.reason = reason == null ? "" : reason;
-    }
-
 }
 
 /** One action exposed by RuneLite's maintained skill-calculator data. */
@@ -525,11 +439,6 @@ final class ContentAccessRules
                 && !MEMBERS_ONLY_METHOD_IDS.contains(method.id);
     }
 
-    public static boolean isFreeToPlaySkill(Skill skill)
-    {
-        return skill != null && FREE_TO_PLAY_SKILLS.contains(skill);
-    }
-
     /** UNKNOWN receives only records explicitly marked F2P-safe. */
     public static boolean isContentAvailable(
             Membership membershipStatus,
@@ -558,134 +467,20 @@ final class CuratedTrainingMethod
 }
 
 /**
- * Reviewed, recommendation-relevant live changes that are easy to regress.
- * Announced changes remain separate and must never alter runtime planning.
- */
-final class CurrentLiveContentChanges
-{
-    public enum Status
-    {
-        LIVE_CURRENT,
-        ANNOUNCED_NOT_LIVE,
-        UNKNOWN,
-        REMOVED_SUPERSEDED
-    }
-
-    @Getter
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class Entry
-    {
-        final String id;
-        final LocalDate effectiveDate;
-        final Status status;
-        final String behavior;
-        final String source;
-    }
-
-    private static final String OFFICIAL = get(189);
-    private static final List<Entry> ENTRIES = unmodifiableList(Arrays.asList(
-            new Entry(get(1652), LocalDate.of(2026, 8, 12),
-                    Status.LIVE_CURRENT,
-                    get(192), OFFICIAL),
-            new Entry(get(1653), LocalDate.of(2026, 8, 12),
-                    Status.LIVE_CURRENT,
-                    get(193), OFFICIAL),
-            new Entry(get(1664), LocalDate.of(2026, 8, 12),
-                    Status.LIVE_CURRENT,
-                    get(194), OFFICIAL),
-            new Entry(get(1685), LocalDate.of(2026, 8, 12),
-                    Status.LIVE_CURRENT,
-                    get(195), OFFICIAL),
-            new Entry(get(1686), LocalDate.of(2026, 8, 12),
-                    Status.LIVE_CURRENT,
-                    get(196), OFFICIAL),
-            new Entry(get(1687), LocalDate.of(2026, 8, 19),
-                    Status.LIVE_CURRENT,
-                    get(197), OFFICIAL),
-            new Entry(get(1654), LocalDate.of(2026, 8, 19),
-                    Status.LIVE_CURRENT,
-                    get(198), OFFICIAL),
-            new Entry(get(1665), LocalDate.of(2026, 8, 19),
-                    Status.LIVE_CURRENT,
-                    get(199), OFFICIAL),
-            new Entry(get(1688), LocalDate.of(2026, 8, 19),
-                    Status.LIVE_CURRENT,
-                    get(190), OFFICIAL),
-            new Entry(get(1689), LocalDate.of(2026, 9, 2),
-                    Status.ANNOUNCED_NOT_LIVE,
-                    get(191), OFFICIAL)
-    ));
-
-    private CurrentLiveContentChanges() { }
-
-    public static List<Entry> all() { return ENTRIES; }
-
-    public static boolean mayAffectPlanning(String id, LocalDate validationDate)
-    {
-        for (Entry entry : ENTRIES)
-            if (entry.id.equals(id))
-                return entry.status == Status.LIVE_CURRENT
-                        && !entry.effectiveDate.isAfter(validationDate);
-        return false;
-    }
-}
-
-/**
  * Narrow corrections for verified live changes newer than the pinned RuneLite
  * skill-calculator data. Announced changes never enter this map.
  */
 final class CurrentLiveSkillActionOverrides
 {
-    private static final LocalDate VALIDATION_DATE = LocalDate.of(2026, 8, 25);
-    private static final Map<String, Integer> LEVELS;
-    private static final Map<String, Float> XP;
-    private static final Set<String> UNSAFE_STALE_XP;
-
-    static
-    {
-        Map<String, Integer> levels = new LinkedHashMap<>();
-        if (CurrentLiveContentChanges.mayAffectPlanning(
-                get(1652), VALIDATION_DATE))
-            levels.put(get(201), 77);
-        if (CurrentLiveContentChanges.mayAffectPlanning(
-                get(1653), VALIDATION_DATE))
-            levels.put(get(202), 87);
-        LEVELS = unmodifiableMap(levels);
-
-        Map<String, Float> xp = new LinkedHashMap<>();
-        if (CurrentLiveContentChanges.mayAffectPlanning(
-                get(1654), VALIDATION_DATE))
-        {
-            xp.put(get(1655), 112f);
-            xp.put(get(1656), 168f);
-            xp.put(get(1657), 224f);
-            xp.put(get(1658), 280f);
-            xp.put(get(1659), 369f);
-            xp.put(get(1660), 480f);
-            xp.put(get(1661), 612f);
-            xp.put(get(1662), 969f);
-            xp.put(get(1663), 1200f);
-        }
-        XP = unmodifiableMap(xp);
-
-        Set<String> stale = new LinkedHashSet<>();
-        if (CurrentLiveContentChanges.mayAffectPlanning(
-                get(1664), VALIDATION_DATE))
-        {
-            stale.add(get(203));
-            stale.add(get(204));
-        }
-        if (CurrentLiveContentChanges.mayAffectPlanning(
-                get(1665), VALIDATION_DATE))
-        {
-            stale.add(get(1666));
-            stale.add(get(1667));
-            stale.add(get(1668));
-            stale.add(get(1669));
-            stale.add(get(1670));
-        }
-        UNSAFE_STALE_XP = unmodifiableSet(stale);
-    }
+    private static final Map<String, Integer> LEVELS = Map.of(
+            get(201), 77, get(202), 87);
+    private static final Map<String, Float> XP = Map.of(
+            get(1655), 112f, get(1656), 168f, get(1657), 224f,
+            get(1658), 280f, get(1659), 369f, get(1660), 480f,
+            get(1661), 612f, get(1662), 969f, get(1663), 1200f);
+    private static final Set<String> UNSAFE_STALE_XP = Set.of(
+            get(203), get(204), get(1666), get(1667), get(1668),
+            get(1669), get(1670));
 
     private CurrentLiveSkillActionOverrides() { }
 
@@ -694,19 +489,12 @@ final class CurrentLiveSkillActionOverrides
         return LEVELS.getOrDefault(actionId, upstreamLevel);
     }
 
-    public static Map<String, Integer> levelOverrides()
-    {
-        return LEVELS;
-    }
-
     public static float xp(String actionId, float upstreamXp)
     {
         if (UNSAFE_STALE_XP.contains(actionId)) return 0f;
         return XP.getOrDefault(actionId, upstreamXp);
     }
 
-    public static Map<String, Float> xpOverrides() { return XP; }
-    public static Set<String> suppressedStaleXp() { return UNSAFE_STALE_XP; }
 }
 
 enum DiaryTier
@@ -805,79 +593,6 @@ enum FeedbackAction
     DISLIKE
 }
 
-/**
- * Defense-in-depth validation after method, resources, inventory, location and
- * guidance have all been resolved.
- */
-@Singleton
-final class FinalExecutionPlanValidator
-{
-    public Recommendation validate(Recommendation recommendation,
-            StrategyContext context)
-    {
-        if (recommendation == null) return null;
-        var plan = recommendation.plan();
-        MethodStrategyProfile profile = plan == null
-                ? null : plan.getStrategyProfile();
-
-        var evidence = recommendation.safetyEvidence;
-        var guidance = recommendation.guidance;
-        if (plan != null)
-        {
-            var method = plan.method();
-            var current = recommendation.currentLevel;
-            var stageTarget = recommendation.getCurrentExecutionTargetLevel();
-            boolean invalid = method == null
-                    || blank(method.getName())
-                    || current <= 0
-                    || !method.supportsLevel(current)
-                    || stageTarget <= current
-                    || recommendation.targetLevel > 0
-                        && stageTarget > recommendation.targetLevel
-                    || context != null && context.data() != null
-                        && context.data().account() != null
-                        && !ContentAccessRules.isMethodAvailable(method,
-                                context.data().account()
-                                        .membership())
-                    || guidance == null
-                    || blank(guidance.getAction())
-                    || blank(guidance.location);
-            if (invalid) evidence = evidence.withInvalidCurrentExecution();
-        }
-        if (profile != null && profile.bankingBehavior
-                        == BankingMode.CONVENTIONAL_BANK_LOOP
-                || guidance != null && guidance.bankingBehavior
-                        == BankingMode.CONVENTIONAL_BANK_LOOP)
-        {
-            evidence = evidence.requiringConventionalBank();
-        }
-        if (guidance != null && guidance.getStorageCapability() != null)
-        {
-            var capability = guidance.getStorageCapability();
-            var decision = guidance.getStorageDecision();
-            boolean storageUnverified = decision == null
-                    || !decision.isAllowed()
-                    || decision.confidence
-                            != Confidence.VERIFIED;
-            boolean incompleteDangerDisclosure =
-                    UimStorageMechanics.isDangerous(capability)
-                    && (guidance.getRiskDisclosure() == null
-                    || !guidance.getRiskDisclosure()
-                            .isAcknowledgementRequired());
-            if (storageUnverified
-                    || UimStorageMechanics.isTooGenericToRecommend(capability)
-                    || incompleteDangerDisclosure)
-                evidence = evidence.withUnverifiedDangerousStorage();
-        }
-        return recommendation.withSafetyEvidence(evidence);
-    }
-
-    private static boolean blank(String value)
-    {
-        return value == null || value.trim().isEmpty();
-    }
-}
-
 /** Immutable bundle containing everything Compass currently knows. */
 @Getter
 @Accessors(fluent = true)
@@ -895,7 +610,6 @@ final class GameData
     final CombatAchievementSnapshot combatAchievements;
     final CollectionLogSnapshot collectionLog;
     final AccountEconomySnapshot economy;
-    final AccountCapabilities capabilities;
     final AccessMemorySnapshot accessMemory;
     final FarmingRunSnapshot farmingRuns;
     final StorageSnapshot storage;
@@ -909,25 +623,6 @@ final class GameData
     final PvmSnapshot pvm;
     final RecurringOpportunitySnapshot recurringOpportunities;
     final CombatEvidenceSnapshot combatEvidence;
-
-    public GameData(
-            AccountSnapshot account,
-            ItemsState inventory,
-            ItemsState bank,
-            ItemsState equipment,
-            QuestSnapshot quests,
-            DiarySnapshot diaries,
-            ClueSnapshot clue,
-            CombatAchievementSnapshot combatAchievements,
-            CollectionLogSnapshot collectionLog,
-            AccountEconomySnapshot economy,
-            AccountCapabilities capabilities)
-    {
-        this(account, inventory, bank, equipment, quests, diaries, clue,
-                combatAchievements, collectionLog, economy, capabilities,
-                null, null, null, null, null, null, null, null, null, null, null,
-                null, null);
-    }
 
     public static Builder builder(AccountSnapshot account)
     {
@@ -957,11 +652,6 @@ final class GoalGraph
         return QUEST_ROOTS.getOrDefault(goal, emptyList());
     }
 
-    public boolean hasPlanningPath(GoalType goal)
-    {
-        return goal != null && goal != GoalType.AUTOMATIC
-                && goal != GoalType.CUSTOM;
-    }
 }
 
 /** A validated dependency path connecting one recommendation to one selected goal. */
@@ -1087,35 +777,6 @@ enum GoalType
     }
 }
 
-/** An exact item-ID requirement that fresh Group Storage may satisfy. */
-@Getter
-final class GroupResourceNeed
-{
-    final String label;
-    final Set<Integer> acceptableItemIds;
-    final int quantity;
-    final boolean reusable;
-
-    public GroupResourceNeed(String label, Set<Integer> acceptableItemIds,
-            int quantity, boolean reusable)
-    {
-        if (acceptableItemIds == null || acceptableItemIds.isEmpty())
-            throw new IllegalArgumentException(
-                    get(299));
-        this.label = label == null ? "Required item" : label;
-        LinkedHashSet<Integer> ids = new LinkedHashSet<>();
-        for (Integer itemId : acceptableItemIds)
-            if (itemId != null && itemId > 0) ids.add(itemId);
-        if (ids.isEmpty())
-            throw new IllegalArgumentException(
-                    get(300));
-        this.acceptableItemIds = unmodifiableSet(ids);
-        this.quantity = max(1, quantity);
-        this.reusable = reusable;
-    }
-
-}
-
 /**
  * Account-specific instructions attached to a ranked recommendation.
  *
@@ -1135,6 +796,7 @@ final class Guidance
     final BankingMode bankingBehavior;
     final UimStorageDecision storageDecision;
     final RecommendationRiskDisclosure riskDisclosure;
+    final StrategicValue strategicValue;
 
     public Guidance(
             String action,
@@ -1143,7 +805,7 @@ final class Guidance
             String note)
     {
         this(action, supplies, location, null, note,
-                BankingMode.UNKNOWN, null, null);
+                BankingMode.UNKNOWN, null, null, StrategicValue.neutral());
     }
 
     public Guidance(
@@ -1153,7 +815,8 @@ final class Guidance
             String note,
             BankingMode bankingBehavior)
     {
-        this(action, supplies, location, null, note, bankingBehavior, null, null);
+        this(action, supplies, location, null, note, bankingBehavior, null, null,
+                StrategicValue.neutral());
     }
 
     public Guidance(
@@ -1166,7 +829,7 @@ final class Guidance
             RecommendationRiskDisclosure riskDisclosure)
     {
         this(action, supplies, location, null, note, bankingBehavior,
-                storageDecision, riskDisclosure);
+                storageDecision, riskDisclosure, StrategicValue.neutral());
     }
 
     public BankingMode getBankingBehavior()
@@ -1185,13 +848,20 @@ final class Guidance
     {
         return new Guidance(action, supplies, location, progress,
                 note,
-                value, storageDecision, riskDisclosure);
+                value, storageDecision, riskDisclosure, strategicValue);
     }
 
     public Guidance withProgress(String value)
     {
         return new Guidance(action, supplies, location, value,
-                note, bankingBehavior, storageDecision, riskDisclosure);
+                note, bankingBehavior, storageDecision, riskDisclosure,
+                strategicValue);
+    }
+
+    public Guidance withStrategicValue(StrategicValue value)
+    {
+        return new Guidance(action, supplies, location, progress, note,
+                bankingBehavior, storageDecision, riskDisclosure, value);
     }
 }
 
@@ -1244,48 +914,11 @@ final class GuidanceChecklist
 }
 
 /** A reusable property supplied by an account infrastructure milestone. */
-@RequiredArgsConstructor
-@Getter
 enum InfraBenefit
 {
-    INVENTORY_RELIEF(AccountDimension.INVENTORY_PRESSURE),
-    POH_PLATFORM(AccountDimension.POH_VALUE),
-    STORAGE(AccountDimension.STORAGE_VALUE),
-    TRAVEL_NETWORK(AccountDimension.TELEPORT_INFRASTRUCTURE_VALUE),
-    SETUP_REUSE(AccountDimension.SETUP_COST_SENSITIVITY),
-    SELF_SUFFICIENCY(AccountDimension.SELF_SOURCING_BURDEN),
-    SHARED_UTILITY(AccountDimension.SHARED_INFRASTRUCTURE_VALUE),
-    RISK_REDUCTION(AccountDimension.DEATH_RISK_SENSITIVITY),
-    RESOURCE_SUSTAINABILITY(
-            AccountDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY),
-    STORABLE_EQUIPMENT(AccountDimension.STORABLE_EQUIPMENT_VALUE),
-    GP_LIQUIDITY(AccountDimension.GP_LIQUIDITY_STORAGE_VALUE);
-
-    final AccountDimension dimension;
-}
-
-/** Property-level explanation of an infrastructure value assessment. */
-@Getter
-final class InfraContribution
-{
-    final InfraBenefit benefit;
-    final AccountDimension dimension;
-    final Priority accountPriority;
-    final Priority milestoneUtility;
-    final Priority effectivePriority;
-
-    InfraContribution(InfraBenefit benefit,
-            Priority accountPriority,
-            Priority milestoneUtility)
-    {
-        this.benefit = benefit;
-        this.dimension = benefit.getDimension();
-        this.accountPriority = accountPriority;
-        this.milestoneUtility = milestoneUtility;
-        this.effectivePriority = Priority.lowerOf(accountPriority,
-                milestoneUtility);
-    }
-
+    INVENTORY_RELIEF, POH_PLATFORM, STORAGE, TRAVEL_NETWORK, SETUP_REUSE,
+    SELF_SUFFICIENCY, SHARED_UTILITY, RISK_REDUCTION,
+    RESOURCE_SUSTAINABILITY, STORABLE_EQUIPMENT, GP_LIQUIDITY
 }
 
 /** Qualitative inventory change over one repeatable method loop. */
@@ -1425,15 +1058,6 @@ enum Membership
 
     final String displayName;
 
-    public boolean isFreeToPlay()
-    {
-        return this == F2P;
-    }
-
-    public boolean isMembers()
-    {
-        return this == P2P;
-    }
 }
 
 /** Exact material quantity resolved for one planned training segment. */
@@ -1558,27 +1182,6 @@ final class Opportunity
     final Safety safetyEvidence;
 
     public Opportunity(
-            String id,
-            OpportunityType type,
-            String title,
-            boolean ready,
-            Confidence confidence,
-            List<String> preparation)
-    {
-        this(id, type, title, ready, confidence, preparation, false,
-                Safety.unknown());
-    }
-
-    public Opportunity(
-            String id, OpportunityType type, String title, boolean ready,
-            Confidence confidence, List<String> preparation,
-            boolean setupVerified)
-    {
-        this(id, type, title, ready, confidence, preparation, setupVerified,
-                Safety.unknown());
-    }
-
-    public Opportunity(
             String id, OpportunityType type, String title, boolean ready,
             Confidence confidence, List<String> preparation,
             boolean setupVerified, Safety safetyEvidence)
@@ -1660,6 +1263,7 @@ final class OverlayLifecycleGuard
 
 /** Observable completion rule for a strategic plan step. */
 @Getter
+@EqualsAndHashCode
 final class CompletionRule
 {
     public enum Kind
@@ -1716,22 +1320,6 @@ final class CompletionRule
         return false;
     }
 
-
-    @Override
-    public boolean equals(Object other)
-    {
-        if (this == other) return true;
-        if (!(other instanceof CompletionRule)) return false;
-        var that = (CompletionRule) other;
-        return level == that.level && kind == that.kind
-                && skill == that.skill && Objects.equals(quest, that.quest);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(kind, skill, level, quest);
-    }
 }
 
 /**
@@ -1909,122 +1497,6 @@ final class ProgressTimeBucket
         for (Integer value : xpBySkill.values())
             total += value == null ? 0 : max(0, value);
         return (int) min(Integer.MAX_VALUE, total);
-    }
-}
-
-/** Converts an exact Main-account material shortfall into live GE cost advice. */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-class PurchaseCostAdvisor
-{
-    final MarketPriceService marketPriceService;
-    /**
-     * Returns an optional cost sentence. If any item price is unresolved, the
-     * caller should still show exact quantities but omit a fake total GP value.
-     */
-    public String advice(
-            AccountEconomySnapshot economy,
-            List<MethodInput> missing)
-    {
-        var estimate = estimate(missing);
-        if (!estimate.isComplete() || estimate.totalCost <= 0) return null;
-        var total = estimate.totalCost;
-
-        var text = new StringBuilder();
-        text.append(get(412))
-                .append(format(total))
-                .append(" coins total.");
-
-        if (economy != null
-                && economy.confidence == Confidence.VERIFIED)
-        {
-            var cash = economy.coins;
-            if (cash >= total)
-            {
-                text.append(" You have ")
-                        .append(format(cash))
-                        .append(get(413))
-                        .append(format(cash - total))
-                        .append(" after the buy.");
-            }
-            else
-            {
-                text.append(" You have ")
-                        .append(format(cash))
-                        .append(get(414))
-                        .append(format(total - cash))
-                        .append(get(415));
-            }
-        }
-        else
-        {
-            text.append(get(416));
-        }
-        return text.toString();
-    }
-
-    /**
-     * Resolves every exact-name quote or fails the aggregate closed. A partial
-     * price list must never make an entire method appear cheaper than it is.
-     */
-    public PurchaseCostEstimate estimate(List<MethodInput> missing)
-    {
-        if (marketPriceService == null || missing == null || missing.isEmpty())
-            return PurchaseCostEstimate.unknown();
-
-        var total = 0L;
-        var sawInput = false;
-        for (MethodInput input : missing)
-        {
-            if (input == null || input.quantity <= 0) continue;
-            sawInput = true;
-            var quote = marketPriceService.quote(input.getName());
-            if (quote == null || !quote.hasPrice())
-                return PurchaseCostEstimate.unknown();
-            total = safeAdd(total, safeMultiply(
-                    quote.getUnitPrice(), input.quantity));
-        }
-        return sawInput && total > 0
-                ? new PurchaseCostEstimate(true, total)
-                : PurchaseCostEstimate.unknown();
-    }
-
-    private static long safeMultiply(long a, long b)
-    {
-        if (a <= 0 || b <= 0) return 0L;
-        if (a > Long.MAX_VALUE / b) return Long.MAX_VALUE;
-        return a * b;
-    }
-
-    private static long safeAdd(long a, long b)
-    {
-        if (b > 0 && a > Long.MAX_VALUE - b) return Long.MAX_VALUE;
-        return a + b;
-    }
-
-    private static String format(long value)
-    {
-        return String.format("%,d", value);
-    }
-}
-
-/** Exact aggregate market-price evidence for a deterministic material list. */
-@Getter
-final class PurchaseCostEstimate
-{
-    final boolean complete;
-    final long totalCost;
-
-    public PurchaseCostEstimate(boolean complete, long totalCost)
-    {
-        this.complete = complete;
-        this.totalCost = max(0L, totalCost);
-    }
-
-
-    public static PurchaseCostEstimate unknown()
-    {
-        return new PurchaseCostEstimate(false, 0L);
     }
 }
 
@@ -2260,12 +1732,6 @@ final class ResolvedDependencyNode
     final Confidence confidence;
     final int depth;
     final int requiredQuantity;
-
-    public ResolvedDependencyNode(String id, String action,
-            Confidence confidence, int depth)
-    {
-        this(id, action, confidence, depth, 0);
-    }
 
     public ResolvedDependencyNode(String id, String action,
             Confidence confidence, int depth,
@@ -2636,11 +2102,6 @@ enum Priority
     MODERATE,
     HIGH,
     CRITICAL;
-
-    public boolean isAtLeast(Priority other)
-    {
-        return other != null && ordinal() >= other.ordinal();
-    }
 
     public static Priority higherOf(
             Priority left,

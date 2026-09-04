@@ -1,6 +1,5 @@
 package compass;
 
-import java.time.LocalDate;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
@@ -52,12 +51,6 @@ public class TrainingMethodCensusTest
                 "runelite:agility:hallowed_sepulchre_floor_4"));
         assertEquals(87, level(catalog,
                 "runelite:agility:hallowed_sepulchre_floor_5"));
-        assertEquals(2,
-                CurrentLiveSkillActionOverrides.levelOverrides().size());
-        assertEquals(9,
-                CurrentLiveSkillActionOverrides.xpOverrides().size());
-        assertEquals(7,
-                CurrentLiveSkillActionOverrides.suppressedStaleXp().size());
         assertEquals(112.0f, xp(catalog,
                 "runelite:hunter:regular_bird_house"), 0.0f);
         assertEquals(969.0f, xp(catalog,
@@ -66,9 +59,6 @@ public class TrainingMethodCensusTest
                 "runelite:hunter:pyre_fox"), 0.0f);
         assertEquals(0.0f, xp(catalog,
                 "runelite:agility:colossal_wyrm_basic_course"), 0.0f);
-        assertFalse(CurrentLiveContentChanges.mayAffectPlanning(
-                "2026-09-02-sweep-up-follow-up",
-                LocalDate.of(2026, 8, 25)));
     }
 
     private static int level(RuneLiteSkillActionCatalog catalog, String id)

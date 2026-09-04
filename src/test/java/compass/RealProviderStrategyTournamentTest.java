@@ -171,10 +171,10 @@ public class RealProviderStrategyTournamentTest
     private static StrategyEngine engine()
     {
         TrainingMethodSelector selector = new TrainingMethodSelector(
-                new TrainingMethodDatabase(),
+                new TrainingMethodCatalog(),
                 new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
         StrategyCandidateRegistry registry = new StrategyCandidateRegistry(
                 Arrays.asList(
                         new ClueCandidateProvider(),

@@ -32,7 +32,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 17,
                 20,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getAction().contains("20 successful cooks"));
@@ -57,7 +57,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 17,
                 20,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getSupplies().contains("already have enough"));
@@ -77,7 +77,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 17,
                 20,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getSupplies().contains("Open your bank once"));
@@ -98,7 +98,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 17,
                 20,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getSupplies().toLowerCase()
@@ -121,7 +121,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 19,
                 20,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getAction().contains("7 successful cooks"));
@@ -146,7 +146,7 @@ public class RecommendationGuidanceServiceTest
                 Skill.COOKING,
                 20,
                 30,
-                fishPlan()
+                fishPlan(), true
         );
 
         assertTrue(guidance.getAction().contains("pike to level 25"));

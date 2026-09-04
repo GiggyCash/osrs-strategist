@@ -9,7 +9,7 @@ import net.runelite.api.Skill;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class MilestoneTracker
 {
-    private final ProgressionObjectiveService progressionObjectiveService;
+    private final ProgressionObjectiveCatalog progressionObjectives;
 
     public MilestoneCompletion detectCompletion(
             TrackedMilestone tracked,
@@ -47,25 +47,24 @@ public class MilestoneTracker
         }
 
         var plan = best.plan();
-        boolean progressionProtected;
-        if (progressionObjectiveService != null)
-        {
-            progressionProtected = progressionObjectiveService.shouldProtect(
-                    plan, collectionLog
-            );
-        }
-        else
-        {
-            progressionProtected = plan != null
-                    && plan.method() != null
-                    && plan.method().progressionProtected;
-        }
+        boolean progressionProtected = plan != null && plan.method() != null
+                && protect(plan.method(), collectionLog);
 
         return new TrackedMilestone(
                 best.id, best.title, skill.name(),
                 best.currentLevel, best.targetLevel,
                 progressionProtected
         );
+    }
+
+    boolean protect(TrainingMethod method,
+            CollectionLogSnapshot collectionLog)
+    {
+        ProgressionObjectiveDefinition objective = progressionObjectives == null
+                ? null : progressionObjectives.forMethod(method.id);
+        return objective == null ? method.progressionProtected
+                : collectionLog == null
+                        || !collectionLog.isObjectiveComplete(objective.id);
     }
 
     public boolean sameCheckpoint(TrackedMilestone first, TrackedMilestone second)

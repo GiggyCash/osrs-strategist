@@ -20,8 +20,8 @@ public class UimResourceRoutingTest
                 .storage(storage(StorageKind.STASH, 2))
                 .build();
 
-        EvidenceCheck check = new ResourceReadinessService().evaluate(
-                data, new ResourceRequirement("thing", "Thing", 2, 100));
+        EvidenceCheck check = new ItemIndex(data, false).check(
+                new ResourceRequirement("thing", "Thing", 2, 100));
         assertEquals(RequirementState.VERIFIED, check.getState());
     }
 
@@ -37,40 +37,10 @@ public class UimResourceRoutingTest
                     .inventory(new ItemsState(Collections.emptyList()))
                     .storage(storage(capability, 2))
                     .build();
-            EvidenceCheck check = new ResourceReadinessService().evaluate(
-                    data, new ResourceRequirement("thing", "Thing", 2, 100));
+            EvidenceCheck check = new ItemIndex(data, false).check(
+                    new ResourceRequirement("thing", "Thing", 2, 100));
             assertEquals(capability.name(), RequirementState.CHECK_NEEDED,
                     check.getState());
-        }
-    }
-
-    @Test
-    public void uimAcquisitionCanUseObservedSafeStorageButNotAssumedStorage()
-    {
-        AcquisitionPlan plan = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()).plan(
-                context(storage(StorageKind.STASH, 2)),
-                new ResourceNeed(100, "Thing", 2));
-
-        assertEquals(AcquisitionSource.VERIFIED_STORAGE, plan.getSource());
-        assertEquals(Confidence.VERIFIED, plan.getConfidence());
-    }
-
-    @Test
-    public void restrictedStorageResourceStillRequiresPreconditionCheck()
-    {
-        for (StorageKind capability : new StorageKind[] {
-                StorageKind.LOOTING_BAG,
-                StorageKind.DEATH_STORAGE,
-                StorageKind.DEATHPILE})
-        {
-            AcquisitionPlan plan = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog()).plan(
-                    context(storage(capability, 2)),
-                    new ResourceNeed(100, "Thing", 2));
-            assertEquals(capability.name(), AcquisitionSource.VERIFIED_STORAGE,
-                    plan.getSource());
-            assertEquals(capability.name(),
-                    Confidence.CHECK_NEEDED,
-                    plan.getConfidence());
         }
     }
 

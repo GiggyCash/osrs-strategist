@@ -90,7 +90,8 @@ public class F2pSmithingGuidanceTest
                 Skill.SMITHING,
                 29,
                 30,
-                new TrainingPlan(method, "Regression test"),
+                new TrainingPlan(method, "Regression test",
+                        method.confidence, Collections.emptyList()),
                 false);
 
         assertNotNull(guidance);

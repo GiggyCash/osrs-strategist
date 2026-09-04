@@ -25,11 +25,10 @@ import static org.junit.Assert.assertTrue;
 public class StrategyQualityTournamentTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
-            new TrainingMethodDatabase(),
+            new TrainingMethodCatalog(),
             new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-            new ExpandedTrainingMethodCatalog(),
-            new F2pBaselineMethodCatalog(),
-            new TrainingMethodPolicy());
+            new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+            new UimInventoryResolutionService());
 
     @Test
     public void cookingStyleAndOwnedSuppliesChangeThePracticalWinner()
@@ -485,7 +484,7 @@ public class StrategyQualityTournamentTest
                 .bank(new ItemsState(Collections.emptyList(), 1L))
                 .quests(new QuestSnapshot(quests))
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
-                        Collections.emptyMap(), tiers))
+                        Collections.emptyMap(), tiers, Collections.emptyMap()))
                 .minigames(minigames)
                 .transport(new TransportSnapshot(
                         Collections.singleton("fairy-rings")))

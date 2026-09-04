@@ -133,11 +133,12 @@ public class F2pRunecraftRecommendationTest
         GameData data = GameData.builder(f2pAccount()).build();
         RecommendationEngine engine = TestFixtures.recommendationEngine(selector());
 
-        java.util.List<Recommendation> recommendations = engine.recommend(
+        java.util.List<Recommendation> recommendations = engine.recommendAll(
                 data,
                 StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME,
-                false,
+                true, false,
+                GoalType.AUTOMATIC,
                 new PreferenceProfile()
         );
 
@@ -171,7 +172,8 @@ public class F2pRunecraftRecommendationTest
                 plan,
                 plan.getConfidence(),
                 1,
-                10
+                10,
+                null
         );
 
         assertEquals("Craft air runes", plan.getMethod().getName());
@@ -234,11 +236,10 @@ public class F2pRunecraftRecommendationTest
     private static TrainingMethodSelector selector()
     {
         return new TrainingMethodSelector(
-                new TrainingMethodDatabase(),
+                new TrainingMethodCatalog(),
                 new RequirementEvidenceEngine((FarmingAccessEvaluator) null, null, new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(),
-                new TrainingMethodPolicy()
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService()
         );
     }
 

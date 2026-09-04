@@ -1,6 +1,7 @@
 package compass;
 
 import java.util.EnumMap;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class F2pCandidateIsolationTest
     public void combatAchievementRewardTierDoesNotAppearForF2p()
     {
         GameData data = GameData.builder(account(Membership.F2P))
-                .combatAchievements(new CombatAchievementSnapshot(10, 20))
+                .combatAchievements(new CombatAchievementSnapshot(10, 20,
+                        Collections.emptySet()))
                 .build();
 
         assertTrue(new CombatAchievementCandidateProvider()
@@ -46,7 +48,8 @@ public class F2pCandidateIsolationTest
     public void combatAchievementTierCanRemainP2pAlternative()
     {
         GameData data = GameData.builder(account(Membership.P2P))
-                .combatAchievements(new CombatAchievementSnapshot(10, 20))
+                .combatAchievements(new CombatAchievementSnapshot(10, 20,
+                        Collections.emptySet()))
                 .build();
 
         assertFalse(new CombatAchievementCandidateProvider()

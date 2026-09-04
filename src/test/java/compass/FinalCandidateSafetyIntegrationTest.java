@@ -107,7 +107,6 @@ public class FinalCandidateSafetyIntegrationTest
     {
         CandidateProvider provider = new CandidateProvider()
         {
-            @Override public String getId() { return "test-provider"; }
             @Override public List<Recommendation> candidates(StrategyContext context)
             { return Collections.singletonList(candidate); }
         };

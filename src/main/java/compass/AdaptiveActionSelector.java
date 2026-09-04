@@ -17,20 +17,20 @@ import javax.inject.*;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class AdaptiveActionSelector
 {
-    private final MethodInputResolver inputResolver;
+    private final UniversalActionRecipeResolver recipeResolver;
     private final RuneLiteSkillActionCatalog actionCatalog;
     private final MethodExecutionProfileCatalog profiles;
 
     public AdaptiveActionSelector()
     {
-        this(new MethodInputResolver(), new RuneLiteSkillActionCatalog(),
+        this(new UniversalActionRecipeResolver(), new RuneLiteSkillActionCatalog(),
                 new MethodExecutionProfileCatalog());
     }
 
     AdaptiveActionSelector(RuneLiteSkillActionCatalog actionCatalog,
             MethodExecutionProfileCatalog profiles)
     {
-        this(new MethodInputResolver(), actionCatalog, profiles);
+        this(new UniversalActionRecipeResolver(), actionCatalog, profiles);
     }
 
     /** Stops at the next output/input boundary inside the selected route. */
@@ -86,7 +86,7 @@ public class AdaptiveActionSelector
             var xpPerAction = action.xp * max(1.0, xpMultiplier);
             int actionsNeeded = divideRoundUp(
                     max(0, targetXp - currentXp), xpPerAction);
-            List<MethodInput> needs = inputResolver.resolve(
+            List<MethodInput> needs = recipeResolver.profileInputs(
                     profile, action, actionsNeeded);
 
             // Base ranking remains tied to the actual action inside the already

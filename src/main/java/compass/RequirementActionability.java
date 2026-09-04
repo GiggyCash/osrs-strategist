@@ -83,7 +83,7 @@ public final class RequirementActionability
                     && !evidence.contains(get(1203));
         }
 
-        // ResourceReadinessService uses typed resource:* checks. A known tool
+        // ItemIndex uses typed resource:* checks. A known tool
         // or material shortfall is ordinary preparation, not uncertainty about
         // whether a quest, region, spellbook, or activity is available.
         if (id.startsWith("resource:"))

@@ -2,12 +2,15 @@ package compass;
 import lombok.*;
 
 import javax.inject.*;
+import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 
 /** Builds one immutable GameData from live and remembered evidence. */
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 public class StrategyDataAssembler
 {
+    private final Client client;
     private final AccountReader accountReader;
     private final LiveItemStateReader itemStateReader;
     private final LiveRunePouchStateReader runePouchStateReader;
@@ -24,9 +27,13 @@ public class StrategyDataAssembler
     private final AccountAccessMemoryStore accessMemoryStore;
     private final FarmingRunStateStore farmingRunStateStore;
     private final FarmingAccessEvaluator farmingAccessEvaluator;
+    private final FarmingAccessCatalog farmingAccessCatalog;
+    private final FarmingRunCatalog farmingRunCatalog;
+    private final FarmingPatchStateDecoder farmingPatchDecoder;
     private final ObservedStateStore observedStateStore;
     private String lastAccountIdentity;
     private Integer lastAccountTypeCode;
+    private int lastRegionId = -1;
 
     public synchronized GameData read()
     {
@@ -128,7 +135,6 @@ public class StrategyDataAssembler
                 .combatAchievements(combatAchievements)
                 .collectionLog(observedStateStore.collectionLog())
                 .economy(economy)
-                .capabilities(observedStateStore.capabilities())
                 .accessMemory(accessMemory)
                 .farmingRuns(farmingRunStateStore.snapshot())
                 .storage(storage)
@@ -168,10 +174,51 @@ public class StrategyDataAssembler
         return diaryStateReader != null && diaryStateReader.observeOpenDiary();
     }
 
+    /** Remembers directly observed access without rebuilding the account. */
+    public synchronized boolean observeAccess()
+    {
+        var location = location();
+        if (location == null || location.getRegionID() == lastRegionId)
+            return false;
+        lastRegionId = location.getRegionID();
+        accessMemoryStore.remember("region." + lastRegionId);
+        FarmingAccessDefinition farming = farmingAccessCatalog == null
+                ? null : farmingAccessCatalog.forRegion(lastRegionId);
+        return farming != null
+                && accessMemoryStore.remember(farming.observationKey());
+    }
+
+    /** Reads patch varbits only while the player is in a known Farming region. */
+    public synchronized boolean observeFarmingPatches()
+    {
+        var location = location();
+        if (location == null || farmingRunCatalog == null
+                || farmingPatchDecoder == null) return false;
+        boolean changed = false;
+        for (FarmingRunPatchDefinition patch
+                : farmingRunCatalog.forRegion(location.getRegionID()))
+        {
+            PatchState state = farmingPatchDecoder.decode(patch.getKind(),
+                    client.getVarbitValue(patch.getVarbitId()));
+            if (state != PatchState.UNKNOWN)
+                changed |= farmingRunStateStore.remember(patch.id, state);
+        }
+        return changed;
+    }
+
+    private WorldPoint location()
+    {
+        if (client == null || client.getGameState()
+                != GameState.LOGGED_IN
+                || client.getLocalPlayer() == null) return null;
+        return client.getLocalPlayer().getWorldLocation();
+    }
+
     public synchronized void clearForAccountChange()
     {
         lastAccountIdentity = null;
         lastAccountTypeCode = null;
+        lastRegionId = -1;
         clearAccountScopedCaches();
     }
 

@@ -31,7 +31,7 @@ public class ProgressViewPanelTest
         assertEquals("1,500 XP", panel.sessionXp.getText());
         assertTrue(panel.target.getText().contains("Agility to 20"));
         assertTrue(panel.target.getText().contains("calculating ETA"));
-        assertEquals(1, panel.chart.getRenderedBucketCount());
+        assertEquals(1, panel.chart.buckets.size());
     }
 
     @Test

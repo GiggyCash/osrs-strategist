@@ -1,136 +1,98 @@
 package compass;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import static org.junit.Assert.*;
+
+import java.util.*;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
+/** Regression coverage for quest-path value now owned by goal provenance. */
 public class QuestPathPlanningServiceTest
 {
-    private final QuestPathPlanningService service =
-            TestFixtures.questPathPlanningService();
+    private final GoalDependencyProvenanceService service =
+            new GoalDependencyProvenanceService();
 
     @Test
-    public void sameQuestOnTwoGoalPathsIsOneStepWithBothProvenances()
-    {
-        Map<String, QuestStatus> statuses = new LinkedHashMap<>();
-        statuses.put("Song of the Elves", QuestStatus.NOT_STARTED);
-        StrategyContext context = context(statuses, Membership.P2P,
-                QuestTolerance.LOW);
-
-        QuestPathPlan plan = service.plan(context, Arrays.asList(
-                GoalType.PRIFDDINAS, GoalType.BOWFA));
-        QuestPathStep song = named(plan, "Song of the Elves");
-
-        assertNotNull(song);
-        assertEquals(2, song.getGoalCount());
-        assertTrue(song.getProvenancePaths().containsKey(GoalType.PRIFDDINAS));
-        assertTrue(song.getProvenancePaths().containsKey(GoalType.BOWFA));
-        assertTrue(song.sharedDependencyValue() > 0.0);
-        assertEquals(1, plan.getSteps().stream()
-                .filter(step -> step.getQuestName()
-                        .equals("Song of the Elves")).count());
-    }
-
-    @Test
-    public void unfinishedPrerequisiteOrdersBeforeItsBlockedDependent()
+    public void unfinishedPrerequisiteReceivesDependencyValue()
     {
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Lost City", QuestStatus.NOT_STARTED);
         statuses.put("Fairytale I - Growing Pains", QuestStatus.NOT_STARTED);
         statuses.put("Nature Spirit", QuestStatus.COMPLETE);
+        Recommendation value = service.attach(quest("Lost City"),
+                context(statuses, Membership.P2P, QuestTolerance.LOW,
+                        GoalType.QUEST_CAPE, 99));
 
-        QuestPathPlan plan = service.plan(context(statuses,
-                Membership.P2P, QuestTolerance.LOW),
-                java.util.Collections.singleton(GoalType.QUEST_CAPE));
-        QuestPathStep lostCity = named(plan, "Lost City");
-        QuestPathStep fairy = named(plan, "Fairytale I - Growing Pains");
-
-        assertNotNull(lostCity);
-        assertNotNull(fairy);
-        assertTrue(lostCity.isEligibleNow());
-        assertFalse(fairy.isEligibleNow());
-        assertEquals("Lost City", plan.nextEligibleStep().getQuestName());
-        assertTrue(lostCity.getUnfinishedDependents()
-                .contains("Fairytale I - Growing Pains"));
+        assertNotNull(value.getGoalProvenance());
+        assertTrue(value.getStrategicValue().getSharedDependencyValue() > 0.0);
+        assertTrue(value.getStrategicValue().getEvidenceIds()
+                .contains("quest-path:Lost City"));
     }
 
     @Test
-    public void optionalQuestToleranceDoesNotReorderRequiredPathWork()
+    public void optionalQuestToleranceDoesNotChangeRequiredPathValue()
     {
         Map<String, QuestStatus> statuses = new LinkedHashMap<>();
         statuses.put("Lost City", QuestStatus.NOT_STARTED);
         statuses.put("Fairytale I - Growing Pains", QuestStatus.NOT_STARTED);
         statuses.put("Nature Spirit", QuestStatus.COMPLETE);
-
-        QuestPathPlan low = service.plan(context(statuses,
-                Membership.P2P, QuestTolerance.LOW),
-                java.util.Collections.singleton(GoalType.QUEST_CAPE));
-        QuestPathPlan high = service.plan(context(statuses,
-                Membership.P2P, QuestTolerance.HIGH),
-                java.util.Collections.singleton(GoalType.QUEST_CAPE));
-
-        assertEquals(low.getSteps().stream().map(QuestPathStep::getQuestName)
-                        .collect(Collectors.toList()),
-                high.getSteps().stream().map(QuestPathStep::getQuestName)
-                        .collect(Collectors.toList()));
+        double low = service.attach(quest("Lost City"), context(statuses,
+                Membership.P2P, QuestTolerance.LOW, GoalType.QUEST_CAPE, 99))
+                .getStrategicValue().getSharedDependencyValue();
+        double high = service.attach(quest("Lost City"), context(statuses,
+                Membership.P2P, QuestTolerance.HIGH, GoalType.QUEST_CAPE, 99))
+                .getStrategicValue().getSharedDependencyValue();
+        assertEquals(low, high, 0.0);
     }
 
     @Test
-    public void membersGoalDoesNotCreateExecutableF2pQuestPath()
+    public void membersGoalDoesNotCreateF2pQuestProvenance()
     {
-        Map<String, QuestStatus> statuses = new LinkedHashMap<>();
-        statuses.put("Song of the Elves", QuestStatus.NOT_STARTED);
-        QuestPathPlan plan = service.plan(context(statuses,
-                Membership.F2P, QuestTolerance.NORMAL),
-                java.util.Collections.singleton(GoalType.PRIFDDINAS));
-
-        assertTrue(plan.isEmpty());
-        assertNull(plan.nextEligibleStep());
+        Map<String, QuestStatus> statuses = Collections.singletonMap(
+                "Song of the Elves", QuestStatus.NOT_STARTED);
+        Recommendation value = service.attach(quest("Song of the Elves"),
+                context(statuses, Membership.F2P, QuestTolerance.NORMAL,
+                        GoalType.PRIFDDINAS, 99));
+        assertNotNull(value.getGoalProvenance());
+        assertFalse(value.getStrategicValue().hasTypedEvidence());
     }
 
     @Test
-    public void unrelatedQuestRewardDoesNotBecomeAPathRequirement()
+    public void unrelatedRewardDoesNotCreateUnlockValue()
     {
-        Map<String, QuestStatus> statuses = new LinkedHashMap<>();
-        statuses.put("Recipe for Disaster - Wartface & Bentnoze",
+        Map<String, QuestStatus> statuses = Collections.singletonMap(
+                "Recipe for Disaster - Wartface & Bentnoze",
                 QuestStatus.NOT_STARTED);
-        QuestPathPlan plan = service.plan(context(statuses,
-                Membership.P2P, QuestTolerance.LOW, 1),
-                java.util.Collections.singleton(GoalType.BARROWS_GLOVES));
-        QuestPathStep goblins = named(plan,
-                "Recipe for Disaster - Wartface & Bentnoze");
-
-        assertNotNull(goblins);
-        assertEquals(Integer.valueOf(1_000),
-                goblins.getGuaranteedRewardXp().get(Skill.FARMING));
-        assertEquals(0.0, goblins.getGoalPathRewardValue(), 0.0);
+        Recommendation value = service.attach(
+                quest("Recipe for Disaster - Wartface & Bentnoze"),
+                context(statuses, Membership.P2P, QuestTolerance.LOW,
+                        GoalType.BARROWS_GLOVES, 1));
+        assertEquals(0.0, value.getStrategicValue().getUnlockValue(), 0.0);
     }
 
-    private static QuestPathStep named(QuestPathPlan plan, String name)
+    @Test
+    public void directQuestCapeWorkRetainsTypedPath()
     {
-        for (QuestPathStep step : plan.getSteps())
-            if (name.equals(step.getQuestName())) return step;
-        return null;
+        Map<String, QuestStatus> statuses = Collections.singletonMap(
+                "Lost City", QuestStatus.NOT_STARTED);
+        Recommendation value = service.attach(quest("Lost City"),
+                context(statuses, Membership.P2P, QuestTolerance.NORMAL,
+                        GoalType.QUEST_CAPE, 99));
+        assertEquals(GoalRelation.DIRECT,
+                value.getGoalProvenance().getRelationship());
+        assertEquals(Arrays.asList("Quest cape", "Lost City"),
+                value.getGoalProvenance().getPath());
+    }
+
+    private static Recommendation quest(String name)
+    {
+        return new Recommendation("quest:" + Names.slug(name), name,
+                "test", 1.0, Confidence.CHECK_NEEDED, null,
+                Safety.unknown());
     }
 
     private static StrategyContext context(Map<String, QuestStatus> statuses,
-            Membership membership, QuestTolerance tolerance)
-    {
-        return context(statuses, membership, tolerance, 99);
-    }
-
-    private static StrategyContext context(Map<String, QuestStatus> statuses,
-            Membership membership, QuestTolerance tolerance,
+            Membership membership, QuestTolerance tolerance, GoalType goal,
             int farmingLevel)
     {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
@@ -141,13 +103,12 @@ public class QuestPathPlanningServiceTest
             xp.put(skill, 0);
         }
         AccountSnapshot account = new AccountSnapshot("Quest planner", 31L,
-                0, "MAIN", membership,
-                membership == Membership.P2P ? 1 : 0,
+                0, "MAIN", membership, membership == Membership.P2P ? 1 : 0,
                 levels.size() * 99, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .quests(new QuestSnapshot(statuses)).build();
         return new StrategyContext(data, StrategyMode.EFFICIENT,
-                SessionIntent.PICK_FOR_ME, tolerance, GoalType.QUEST_CAPE,
+                SessionIntent.PICK_FOR_ME, tolerance, goal,
                 false, false, false, new PreferenceProfile());
     }
 }

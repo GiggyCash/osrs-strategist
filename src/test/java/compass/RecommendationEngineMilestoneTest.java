@@ -17,7 +17,7 @@ public class RecommendationEngineMilestoneTest
     @Test
     public void completedSkillRemainsEligibleDespiteLargeSoftPenalty()
     {
-        TrainingMethodSelector selector = new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+        TrainingMethodSelector selector = new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService());
         RecommendationEngine engine = TestFixtures.recommendationEngine(selector);
         PreferenceProfile profile = new PreferenceProfile();
 
@@ -30,10 +30,12 @@ public class RecommendationEngineMilestoneTest
         // A completion adjustment is deliberately not a cooldown.
         assertFalse(profile.isOnCooldown("skill:farming"));
 
-        List<Recommendation> recommendations = engine.recommend(
-                farmingOnlyAccount(),
+        List<Recommendation> recommendations = engine.recommendAll(
+                GameData.builder(farmingOnlyAccount()).build(),
                 StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME,
+                true, false,
+                GoalType.AUTOMATIC,
                 profile
         );
 

@@ -87,122 +87,6 @@ public class SlayerTaskGuidanceTest
         assertEquals(Integer.valueOf(7),
                 catalog.profileFor("Gryphons").weightFor("nieve"));
     }
-    private final SlayerGuidanceService service = new SlayerGuidanceService();
-
-    @Test
-    public void dustDevilsUseVerifiedProtectionAndSafeDefaultLocation()
-    {
-        GameData data = data(
-                account(0),
-                TestFixtures.slayerSnapshot("Dust devils", 143, "Duradel", 500,
-                        Confidence.VERIFIED),
-                Arrays.asList(new ItemState(4164, "Facemask", 1)));
-
-        Guidance guidance = service.build(data, 80, 90, true);
-
-        assertNotNull(guidance);
-        assertTrue(guidance.getSupplies().contains("Verified"));
-        assertTrue(guidance.getSupplies().contains("Facemask"));
-        assertTrue(guidance.getAction().contains("bursting/barraging"));
-        assertTrue(guidance.getLocation().contains("Catacombs of Kourend"));
-        assertTrue(guidance.getNote().contains("must be worn"));
-        assertTrue(guidance.getNote().contains("Multitarget Magic is supported"));
-        assertTrue(guidance.getNote().contains("Cannon use is not confirmed"));
-        assertTrue(guidance.getNote().contains("Wilderness variant"));
-    }
-
-    @Test
-    public void liveKonarLocationOverridesCatalogDefault()
-    {
-        GameData data = data(
-                account(0),
-                TestFixtures.slayerSnapshot("Dust devils", 90, "Konar quo Maten",
-                        "Smoke Dungeon", 200,
-                        Confidence.VERIFIED),
-                Arrays.asList(new ItemState(4164, "Facemask", 1)));
-
-        Guidance guidance = service.build(data, 75, 80, true);
-        assertTrue(guidance.getLocation().contains("Smoke Dungeon"));
-        assertFalse(guidance.getLocation().contains("Catacombs of Kourend"));
-    }
-
-    @Test
-    public void ironKuraskWithoutLegalWeaponGetsSelfSourceInstruction()
-    {
-        GameData data = data(
-                account(1),
-                TestFixtures.slayerSnapshot("Kurasks", 120, "Nieve", 200,
-                        Confidence.VERIFIED),
-                Collections.emptyList());
-
-        Guidance guidance = service.build(data, 75, 80, true);
-        assertTrue(guidance.getSupplies().contains("Self-source"));
-        assertTrue(guidance.getSupplies().contains("Leaf-bladed"));
-        assertTrue(guidance.getAction().contains("Ordinary weapons cannot damage"));
-    }
-
-    @Test
-    public void uimDoesNotCountNormalBankedTaskProtection()
-    {
-        GameData data = data(
-                account(2),
-                TestFixtures.slayerSnapshot("Aberrant spectres", 80, "Nieve", 200,
-                        Confidence.VERIFIED),
-                Arrays.asList(new ItemState(4168, "Nose peg", 1)));
-
-        Guidance guidance = service.build(data, 70, 80, true);
-        assertTrue(guidance.getSupplies().contains("Normal bank state is ignored for UIM"));
-        assertFalse(guidance.getSupplies().startsWith("Verified:"));
-    }
-
-    @Test
-    public void unknownTaskKeepsConservativeFallback()
-    {
-        GameData data = data(
-                account(0),
-                TestFixtures.slayerSnapshot("Future monster", 50, "Nieve", 0,
-                        Confidence.VERIFIED),
-                Collections.emptyList());
-
-        Guidance guidance = service.build(data, 75, 80, true);
-        assertTrue(guidance.getSupplies().contains("No catalogued mandatory Slayer item"));
-        assertTrue(guidance.getNote().contains("no fixed kills-to-level"));
-    }
-
-    @Test
-    public void unknownMembershipCannotReceiveSlayerGuidanceDirectly()
-    {
-        AccountSnapshot p2p = account(0);
-        AccountSnapshot unknown = new AccountSnapshot(p2p.getPlayerName(), 0L, p2p.getAccountTypeCode(), p2p.getAccountTypeName(), Membership.UNKNOWN, 0, p2p.getTotalLevel(), p2p.getTotalExperience(), p2p.getSkillLevels(), p2p.getSkillExperience());
-        assertTrue(service.build(data(unknown,
-                TestFixtures.slayerSnapshot("Future monster", 10, "Unknown", 0,
-                        Confidence.VERIFIED),
-                Collections.emptyList()), 80, 81, true) == null);
-    }
-
-    @Test
-    public void currentTaskCannotLeadUntilItsLoadoutIsConcrete()
-    {
-        GameData assigned = data(
-                account(0),
-                TestFixtures.slayerSnapshot("Dust devils", 143, "Duradel", 500,
-                        Confidence.VERIFIED),
-                Collections.singletonList(
-                        new ItemState(4164, "Facemask", 1)));
-        Recommendation assignedRecommendation = recommendation(
-                service.build(assigned, 80, 81, true));
-
-        assertFalse(new ActionabilityPolicy()
-                .canLeadQueue(assignedRecommendation));
-
-        GameData unassigned = data(account(0), null,
-                Collections.emptyList());
-        Recommendation getTask = recommendation(
-                service.build(unassigned, 80, 81, true));
-        assertTrue(new ActionabilityPolicy()
-                .canLeadQueue(getTask));
-    }
-
     @Test
     public void corpusCoversEarlyMidAndLateTasksWithoutDemonAliasCollision()
     {
@@ -292,7 +176,7 @@ public class SlayerTaskGuidanceTest
         return new Recommendation("skill:slayer", "Train Slayer to 81",
                 "Advance Slayer.", 10,
                 new TrainingPlan(method, "Live task",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 80, 81, guidance,
                 Safety.skill(false, Skill.SLAYER));
     }

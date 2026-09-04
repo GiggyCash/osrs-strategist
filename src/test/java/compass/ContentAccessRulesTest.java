@@ -115,7 +115,7 @@ public class ContentAccessRulesTest
                 1,
                 Collections.emptyList(),
                 Confidence.VERIFIED,
-                membersOnly
+                membersOnly, false, false
         );
     }
 }

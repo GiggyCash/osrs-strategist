@@ -7,16 +7,31 @@ final class TestFixtures
 {
     private TestFixtures() { }
 
+    static TrainingPlan select(TrainingMethodSelector selector, GameData data,
+            net.runelite.api.Skill skill, int level, StrategyMode mode,
+            SessionIntent intent)
+    {
+        return select(selector, data, skill, level, mode, intent, false);
+    }
+
+    static TrainingPlan select(TrainingMethodSelector selector, GameData data,
+            net.runelite.api.Skill skill, int level, StrategyMode mode,
+            SessionIntent intent, boolean wilderness)
+    {
+        List<TrainingPlan> ranked = selector.rankedCandidates(data, skill, level,
+                mode, intent, wilderness, false);
+        return ranked.isEmpty() ? null : ranked.get(0);
+    }
+
     static AccountResourcePlanner accountResourcePlanner()
     {
         return new AccountResourcePlanner(
-                null, new MainEconomyPlanner(), new ResourceSourceCatalog());
+                null, new ResourceSourceCatalog());
     }
 
     static FarmingRunPlanner farmingRunPlanner(FarmingRunCatalog catalog)
     {
-        return new FarmingRunPlanner(catalog,
-                new FarmingSupplyCatalog(), new ResourceReadinessService());
+        return new FarmingRunPlanner(catalog, new FarmingSupplyCatalog());
     }
 
     static AdaptiveMilestoneGuidanceService adaptiveMilestoneGuidanceService(
@@ -34,7 +49,7 @@ final class TestFixtures
     {
         return new AdaptiveMilestoneGuidanceService(
                 actions, profiles, modifiers,
-                new AdaptiveActionSelector(), new MethodInputResolver(),
+                new AdaptiveActionSelector(), new UniversalActionRecipeResolver(),
                 accountResourcePlanner());
     }
 
@@ -62,9 +77,9 @@ final class TestFixtures
     {
         return new RecommendationEngine(selector,
                 recommendationGuidanceService(),
-                new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService(), new SkillBreakpointService(),
-                new AdaptiveActionSelector());
+                new CombatGuidanceService(), new SailingGuidanceService(),
+                new SkillBreakpointService(),
+                new AdaptiveActionSelector(), new SlayerStrategist());
     }
 
     static RecommendationEngine recommendationEngine(
@@ -72,14 +87,9 @@ final class TestFixtures
             RecommendationGuidanceService guidance)
     {
         return new RecommendationEngine(selector, guidance,
-                new CombatGuidanceService(), new SlayerGuidanceService(),
-                new SailingGuidanceService(), new SkillBreakpointService(),
-                new AdaptiveActionSelector());
-    }
-
-    private static QuestRecommendationValueService questValue()
-    {
-        return new QuestRecommendationValueService(questPathPlanningService());
+                new CombatGuidanceService(), new SailingGuidanceService(),
+                new SkillBreakpointService(),
+                new AdaptiveActionSelector(), new SlayerStrategist());
     }
 
     static StrategyEngine strategyEngine(
@@ -90,7 +100,7 @@ final class TestFixtures
             ActionabilityPolicy actionability)
     {
         return new StrategyEngine(recommendations, opportunities, registry,
-                actionability, null, null, null, null, questValue(), null);
+                actionability, null, null, null, null);
     }
 
     static StrategyEngine strategyEngine(
@@ -102,7 +112,7 @@ final class TestFixtures
             RecommendationIntelligenceService intelligence)
     {
         return new StrategyEngine(recommendations, opportunities, registry,
-                actionability, intelligence, null, null, null, questValue(), null);
+                actionability, intelligence, null, null, null);
     }
 
     static StrategyEngine strategyEngine(
@@ -117,7 +127,7 @@ final class TestFixtures
     {
         return new StrategyEngine(recommendations, opportunities, registry,
                 actionability, intelligence, safety, provenance,
-                null, questValue(), null);
+                null);
     }
 
     static QuestRequirementResolver questRequirementResolver()
@@ -142,16 +152,9 @@ final class TestFixtures
                 new GoalDependencyProvenanceService());
     }
 
-    static QuestPathPlanningService questPathPlanningService()
-    {
-        return new QuestPathPlanningService(new GoalGraph(),
-                new QuestKnowledgeCatalog(), questRequirementResolver());
-    }
-
     static MilestoneTracker milestoneTracker()
     {
-        return new MilestoneTracker(new ProgressionObjectiveService(
-                new ProgressionObjectiveCatalog()));
+        return new MilestoneTracker(new ProgressionObjectiveCatalog());
     }
 
     static LiveClueStateReader liveClueStateReader()
@@ -168,9 +171,9 @@ final class TestFixtures
             FarmingAccessEvaluator farming,
             ObservedStateStore observed)
     {
-        return new StrategyDataAssembler(accounts, items, null, quests,
+        return new StrategyDataAssembler(null, accounts, items, null, quests,
                 null, null, null, null, null, null, null, null, null,
-                access, farmingRuns, farming, observed);
+                access, farmingRuns, farming, null, null, null, observed);
     }
 
     static SlayerSnapshot slayerSnapshot(

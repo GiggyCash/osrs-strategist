@@ -383,7 +383,7 @@ public class SensibleWinnerScenarioMatrixTest
         return new Recommendation(id, "Train " + skill.getName() + " to " + target,
                 "Useful account progress.", score,
                 new TrainingPlan(method, "Scenario method",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, current, target, guidance(),
                 Safety.skill(freeToPlay, skill));
     }

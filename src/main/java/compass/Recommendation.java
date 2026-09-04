@@ -28,43 +28,6 @@ public final class Recommendation
 
     TrainingPlan plan() { return trainingPlan; }
 
-    public Recommendation(
-            String id,
-            String title,
-            String reason,
-            double score)
-    {
-        this(
-                id,
-                title,
-                reason,
-                score,
-                null,
-                Confidence.CHECK_NEEDED,
-                0,
-                0,
-                null,
-                Safety.unknown()
-        );
-    }
-
-    /** Non-skill candidate form used by activity providers. */
-    public Recommendation(String id, String title, String reason, double score,
-            Confidence confidence)
-    {
-        this(id, title, reason, score, confidence, null,
-                Safety.unknown(),
-                StrategicValue.neutral());
-    }
-
-    public Recommendation(String id, String title, String reason, double score,
-            Confidence confidence, Guidance guidance)
-    {
-        this(id, title, reason, score, confidence, guidance,
-                Safety.unknown(),
-                StrategicValue.neutral());
-    }
-
     public Recommendation(String id, String title, String reason, double score,
             Confidence confidence, Guidance guidance,
             Safety safetyEvidence)
@@ -83,67 +46,6 @@ public final class Recommendation
     }
 
     public Recommendation(
-            String id,
-            String title,
-            String reason,
-            double score,
-            TrainingPlan trainingPlan,
-            Confidence confidence)
-    {
-        this(
-                id,
-                title,
-                reason,
-                score,
-                trainingPlan,
-                confidence,
-                0,
-                0,
-                null,
-                Safety.unknown()
-        );
-    }
-
-    public Recommendation(
-            String id,
-            String title,
-            String reason,
-            double score,
-            TrainingPlan trainingPlan,
-            Confidence confidence,
-            int currentLevel,
-            int targetLevel)
-    {
-        this(
-                id,
-                title,
-                reason,
-                score,
-                trainingPlan,
-                confidence,
-                currentLevel,
-                targetLevel,
-                null,
-                Safety.unknown()
-        );
-    }
-
-    public Recommendation(
-            String id,
-            String title,
-            String reason,
-            double score,
-            TrainingPlan trainingPlan,
-            Confidence confidence,
-            int currentLevel,
-            int targetLevel,
-            Guidance guidance)
-    {
-        this(id, title, reason, score, trainingPlan, confidence, currentLevel,
-                targetLevel, guidance, Safety.unknown());
-    }
-
-    public Recommendation(
             String id, String title, String reason, double score,
             TrainingPlan trainingPlan, Confidence confidence,
             int currentLevel, int targetLevel, Guidance guidance,
@@ -152,6 +54,14 @@ public final class Recommendation
         this(id, title, reason, score, trainingPlan, confidence, currentLevel,
                 targetLevel, guidance, safetyEvidence, null,
                 StrategicValue.neutral());
+    }
+
+    public Recommendation(String id, String title, String reason, double score,
+            TrainingPlan trainingPlan, Confidence confidence,
+            int currentLevel, int targetLevel, Guidance guidance)
+    {
+        this(id, title, reason, score, trainingPlan, confidence, currentLevel,
+                targetLevel, guidance, Safety.unknown());
     }
 
     private Recommendation(
@@ -217,4 +127,5 @@ public final class Recommendation
                 confidence, currentLevel, targetLevel, guidance, value,
                 goalProvenance, strategicValue);
     }
+
 }

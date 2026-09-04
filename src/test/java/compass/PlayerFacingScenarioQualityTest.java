@@ -64,11 +64,10 @@ public class PlayerFacingScenarioQualityTest
     private static StrategyEngine engine()
     {
         TrainingMethodSelector selector = new TrainingMethodSelector(
-                new TrainingMethodDatabase(),
+                new TrainingMethodCatalog(),
                 new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(),
-                new TrainingMethodPolicy());
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
         return TestFixtures.strategyEngine(TestFixtures.recommendationEngine(selector), null,
                 null, null, new ActionabilityPolicy(),
                 new RecommendationIntelligenceService());

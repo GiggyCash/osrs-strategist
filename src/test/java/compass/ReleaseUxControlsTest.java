@@ -181,7 +181,7 @@ public class ReleaseUxControlsTest
                 Confidence.VERIFIED);
         return new Recommendation(id, title, "Reason", 1,
                 new TrainingPlan(method, "Reason",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 30, 40,
                 new Guidance("Repeat the exact loop.",
                         "Required tool.", "Named location.", null));

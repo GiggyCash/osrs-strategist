@@ -33,7 +33,6 @@ public class ObservedStateStore
     private MinigameSnapshot minigames;
     private PvmSnapshot pvm;
     private RecurringOpportunitySnapshot recurringOpportunities;
-    private AccountCapabilities capabilities = new AccountCapabilities();
 
     public synchronized void clearForAccountChange()
     {
@@ -53,7 +52,6 @@ public class ObservedStateStore
         minigames = null;
         pvm = null;
         recurringOpportunities = null;
-        capabilities = new AccountCapabilities();
     }
 
     public synchronized QuestSnapshot quests() { return quests; }
@@ -88,5 +86,4 @@ public class ObservedStateStore
     public synchronized void setPvm(PvmSnapshot value) { pvm = value; }
     public synchronized RecurringOpportunitySnapshot recurringOpportunities() { return recurringOpportunities; }
     public synchronized void setRecurringOpportunities(RecurringOpportunitySnapshot value) { recurringOpportunities = value; }
-    public synchronized AccountCapabilities capabilities() { return capabilities; }
 }

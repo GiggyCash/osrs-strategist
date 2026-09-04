@@ -32,8 +32,6 @@ public class ObservedStateStoreLifecycleTest
         assertNull(store.pvm());
         assertNull(store.recurringOpportunities());
         assertNull(store.storage());
-        assertEquals(Capability.UNKNOWN,
-                store.capabilities().get("bank-observed"));
     }
 
     @Test

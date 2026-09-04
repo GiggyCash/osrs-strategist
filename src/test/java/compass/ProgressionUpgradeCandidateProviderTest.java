@@ -166,7 +166,8 @@ public class ProgressionUpgradeCandidateProviderTest
         GameData data = builder(account)
                 .quests(questsComplete("Recipe for Disaster"))
                 .diaries(new DiarySnapshot(
-                        Collections.emptyMap(), Collections.emptyMap(), completed))
+                        Collections.emptyMap(), Collections.emptyMap(), completed,
+                        Collections.emptyMap()))
                 .economy(new AccountEconomySnapshot(
                         110_000L, 10_000_000L,
                         Confidence.VERIFIED))

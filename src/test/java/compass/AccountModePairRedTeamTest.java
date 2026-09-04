@@ -26,10 +26,10 @@ public class AccountModePairRedTeamTest
             Skill.CONSTRUCTION, Skill.RUNECRAFT, Skill.PRAYER,
             Skill.FISHING, Skill.SLAYER);
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
-            new TrainingMethodDatabase(),
+            new TrainingMethodCatalog(),
             new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-            new ExpandedTrainingMethodCatalog(),
-            new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+            new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+            new UimInventoryResolutionService());
 
     @Test
     public void mainIronAndUimGeneratePracticalSkillFamilies()
@@ -134,47 +134,6 @@ public class AccountModePairRedTeamTest
                     KnowledgeTier.VERIFIED_ACCOUNT_SPECIFIC,
                     uim.getTier());
         }
-    }
-
-    @Test
-    public void mainIronGimAndUimResourceRoutesUseModeEvidence()
-    {
-        ResourceNeed need = new ResourceNeed(5000, "Steel bar", 10);
-        ResourceAcquisitionPlanner planner = new ResourceAcquisitionPlanner(new ResourceSourceCatalog(), new ResourceDependencyCatalog());
-
-        assertEquals(AcquisitionSource.GRAND_EXCHANGE,
-                planner.plan(context(data(AccountMode.MAIN,
-                        Membership.P2P, carriedSetup(), null), false),
-                        need).getSource());
-        assertEquals(AcquisitionSource.SELF_SOURCE,
-                planner.plan(context(data(AccountMode.IRONMAN,
-                        Membership.P2P, carriedSetup(), null), false),
-                        need).getSource());
-
-        ItemsState group = new ItemsState(true,
-                Collections.singletonList(new ItemState(
-                        5000, "Steel bar", 10)));
-        for (AccountMode groupMode : Arrays.asList(AccountMode.GROUP_IRONMAN,
-                AccountMode.UNRANKED_GROUP_IRONMAN))
-            assertEquals(groupMode.name(), AcquisitionSource.GROUP_STORAGE,
-                    planner.plan(context(data(groupMode,
-                            Membership.P2P, carriedSetup(), group), true),
-                            need).getSource());
-
-        GameData uimBase = data(
-                AccountMode.ULTIMATE_IRONMAN, Membership.P2P,
-                carriedSetup(), null);
-        GameData uimWithIllegalBank = GameData.builder(
-                uimBase.account())
-                .inventory(uimBase.inventory())
-                .equipment(uimBase.equipment())
-                .quests(uimBase.quests())
-                .bank(new ItemsState(Collections.singletonList(
-                        new ItemState(5000, "Steel bar", 10)), 1L))
-                .build();
-        assertEquals(AcquisitionSource.SELF_SOURCE,
-                planner.plan(context(uimWithIllegalBank, false), need)
-                        .getSource());
     }
 
     @Test

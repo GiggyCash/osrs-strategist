@@ -1,6 +1,5 @@
 package compass;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,71 +10,51 @@ import java.util.Map;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
+/** Regression coverage for the contextual choices now owned by the provider. */
 public class ContextualGearDecisionServiceTest
 {
     @Test
-    public void assessmentAnswersAllSevenQuestionsWithoutUniversalBisClaim()
+    public void recommendationUsesObservedOwnershipAndEncounterContext()
     {
-        GearProgressionEntry entry = new GearProgressionCatalog()
-                .forStyle(CombatStyle.RANGED).stream()
-                .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
-                .findFirst().orElseThrow(AssertionError::new);
-        StrategyContext context = context(1,
+        Recommendation recommendation = candidate(context(1,
                 new ItemsState(Arrays.asList(
-                        new ItemState(1, "Crystal body", 1)), 1L));
+                        new ItemState(1, "Crystal body", 1)), 1L)));
 
-        GearAssessment assessment =
-                new ContextualGearDecisionService().assess(entry, context);
-
-        assertEquals(GearAspect.values().length, assessment.all().size());
-        assertEquals(Confidence.VERIFIED,
-                assessment.get(GearAspect.BEST_OWNED).getConfidence());
-        assertEquals("Crystal body",
-                assessment.get(GearAspect.BEST_OWNED).getValue());
-        assertTrue(assessment.get(GearAspect.TARGET_SPECIFIC_BEST)
-                .getValue().contains("Bowfa"));
-        for (GearDecision decision : assessment.all().values())
-            assertFalse(decision.getValue().trim().isEmpty());
+        assertTrue(recommendation.getReason().contains("Bowfa"));
+        assertFalse(recommendation.getReason().contains("universal BIS"));
+        assertTrue(recommendation.getGuidance().getSupplies()
+                .contains("Crystal body"));
     }
 
     @Test
     public void unopenedBankDoesNotTurnCompoundSlotProseIntoMissingItems()
     {
-        GearProgressionEntry entry = new GearProgressionCatalog()
-                .forStyle(CombatStyle.MELEE_SLASH).stream()
-                .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
-                .findFirst().orElseThrow(AssertionError::new);
-        GearAssessment assessment =
-                new ContextualGearDecisionService().assess(entry,
-                        context(0, null));
+        Recommendation recommendation = candidate(context(0, null));
 
-        assertTrue(assessment.get(GearAspect.BEST_OWNED).getValue()
+        assertTrue(recommendation.getGuidance().getAction()
                 .contains("Open the bank"));
-        assertEquals(Confidence.CHECK_NEEDED,
-                assessment.get(GearAspect.BEST_OWNED).getConfidence());
-        assertFalse(ContextualGearDecisionService.isExactOwnershipTarget(
+        assertFalse(GearCandidateProvider.isExactOwnershipTarget(
                 "Dragon/Avernic defender"));
-        assertFalse(ContextualGearDecisionService.isExactOwnershipTarget(
+        assertFalse(GearCandidateProvider.isExactOwnershipTarget(
                 "Amulet of torture or rancour"));
     }
 
     @Test
     public void ironAvailableNowUsesSelfSourceAndMainRequiresEconomics()
     {
-        GearProgressionEntry entry = new GearProgressionCatalog()
-                .forStyle(CombatStyle.MELEE_SLASH).stream()
-                .filter(value -> value.getTier() == GearBudgetTier.MIDGAME)
-                .findFirst().orElseThrow(AssertionError::new);
         ItemsState observed = new ItemsState(Collections.emptyList(), 1L);
-        ContextualGearDecisionService service =
-                new ContextualGearDecisionService();
 
-        String iron = service.assess(entry, context(1, observed))
-                .get(GearAspect.BEST_AVAILABLE_NOW).getValue();
-        String main = service.assess(entry, context(0, observed))
-                .get(GearAspect.BEST_AVAILABLE_NOW).getValue();
+        String iron = candidate(context(1, observed)).getGuidance().getAction();
+        String main = candidate(context(0, observed)).getGuidance().getAction();
         assertTrue(iron, iron.contains("self-source"));
         assertTrue(main, main.contains("live price"));
+    }
+
+    private static Recommendation candidate(StrategyContext context)
+    {
+        return new GearCandidateProvider(new GearProgressionCatalog())
+                .candidates(context).stream().findFirst()
+                .orElseThrow(AssertionError::new);
     }
 
     private static StrategyContext context(int type, ItemsState bank)

@@ -6,32 +6,22 @@ import java.util.*;
 
 
 /** Current Slayer task and point-economy evidence observed from RuneLite. */
+@Getter
 public final class SlayerSnapshot
 {
-    @Getter
     final String taskName;
-    @Getter
     final int remaining;
-    @Getter
     final String masterName;
-    @Getter
     final String taskLocation;
-    @Getter
     final int points;
-    @Getter
     final Integer taskStreak;
-    @Getter
     final Integer questPoints;
-    @Getter
     final Integer blockSlotCapacity;
-    @Getter
     final Integer occupiedBlockSlots;
-    @Getter
     final SlayerRewardSnapshot rewards;
-    @Getter
     final List<SlayerTaskOffer> taskOffers;
+    @Getter(AccessLevel.NONE)
     final Boolean mortimerIntroduced;
-    @Getter
     final Confidence confidence;
 
     public SlayerSnapshot(

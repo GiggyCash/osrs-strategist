@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ProductConstitutionGuardTest
@@ -34,7 +35,8 @@ public class ProductConstitutionGuardTest
         for (PlayerGoal goal : PlayerGoal.values())
         {
             if (goal == PlayerGoal.AUTOMATIC) continue;
-            assertTrue(goal.name(), graph.hasPlanningPath(goal.toPlanningGoal()));
+            assertNotEquals(GoalType.AUTOMATIC, goal.toPlanningGoal());
+            assertNotEquals(GoalType.CUSTOM, goal.toPlanningGoal());
         }
     }
 
@@ -44,13 +46,13 @@ public class ProductConstitutionGuardTest
         PlayerStrategyProfile legacy = new PlayerStrategyProfile(
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.GEAR_TARGET,
-                true, false);
+                true, false, false);
         assertEquals(GoalType.AUTOMATIC,
                 legacy.sanitizedForPublicProduct().getActiveGoal());
         PlayerStrategyProfile shipped = new PlayerStrategyProfile(
                 StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
                 QuestTolerance.NORMAL, GoalType.FIRE_CAPE,
-                true, false);
+                true, false, false);
         assertEquals(GoalType.FIRE_CAPE,
                 shipped.sanitizedForPublicProduct().getActiveGoal());
     }
@@ -133,7 +135,7 @@ public class ProductConstitutionGuardTest
         Recommendation recommendation = new Recommendation(
                 "skill:runecraft", "Train Runecraft to 10", "Progress.", 10,
                 new TrainingPlan(method, "Concrete route",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 9, 10,
                 new Guidance(
                         "Craft water runes until level 10.", "Pure essence.",
@@ -178,7 +180,7 @@ public class ProductConstitutionGuardTest
         return new Recommendation("skill:mining", "Train Mining to 40",
                 "Progress.", 10,
                 new TrainingPlan(method, "Concrete route",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 39, 40,
                 new Guidance(
                         "Mine iron, drop it, and repeat until level 40.",

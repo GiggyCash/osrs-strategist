@@ -91,8 +91,12 @@ public class StrategyValueIntegrationTest
                                         Membership.F2P, ItemID.LOGS));
                     }
                 };
-        Recommendation valued = new MethodResourceValueService(liveActions)
-                .attach(recommendation, context);
+        Guidance guidance = TestFixtures.adaptiveMilestoneGuidanceService(
+                liveActions, new MethodExecutionProfileCatalog()).build(
+                        data, Skill.FIREMAKING, 1, 2,
+                        recommendation.plan(), true);
+        Recommendation valued = recommendation.withStrategicValue(
+                guidance.getStrategicValue());
 
         assertTrue(valued.getStrategicValue().getEvidenceIds().toString(),
                 valued.getStrategicValue().getEvidenceIds().stream()
@@ -150,7 +154,6 @@ public class StrategyValueIntegrationTest
     {
         return new CandidateProvider()
         {
-            @Override public String getId() { return "test-owner"; }
             @Override public List<Recommendation> candidates(
                     StrategyContext context) { return candidates; }
             @Override public Set<String> supersededCandidateIds()
@@ -170,6 +173,7 @@ public class StrategyValueIntegrationTest
                     GameData data, StrategyMode strategyMode,
                     SessionIntent sessionIntent, boolean useGroupStorage,
                     boolean allowWildernessMethods,
+                    GoalType activeGoal,
                     PreferenceProfile preferences)
             {
                 return Collections.singletonList(recommendation);
@@ -210,7 +214,7 @@ public class StrategyValueIntegrationTest
         return new TrainingMethod(id, skill, 1, 99, id, "Do it.",
                 10, 10, 10, AttentionLevel.MODERATE, 20, 2,
                 Collections.emptyList(), Confidence.VERIFIED,
-                true);
+                true, false, false);
     }
 
     private static StrategyContext context(AccountSnapshot account,

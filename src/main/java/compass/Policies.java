@@ -345,28 +345,9 @@ final class AccountModePolicy
     {
     }
 
-    public static boolean mayUseGrandExchange(AccountMode mode)
-    {
-        return mode == AccountMode.MAIN;
-    }
-
-    public static boolean mayUseGroupStorage(
-            AccountMode mode,
-            boolean userEnabled)
-    {
-        return userEnabled
-                && mode != null
-                && mode.isGroupIronman();
-    }
-
     public static boolean requiresSelfSourcing(AccountMode mode)
     {
         return mode != null && mode.isIronLike();
-    }
-
-    public static boolean requiresCapabilityCheckedStorage(AccountMode mode)
-    {
-        return mode == AccountMode.ULTIMATE_IRONMAN;
     }
 
     public static boolean isRiskSensitive(AccountMode mode)
@@ -464,13 +445,6 @@ class ActionabilityPolicy
                 && !RequirementActionability.hasHardUnresolvedRequirement(plan);
     }
 
-    public int queuePriority(Recommendation recommendation)
-    {
-        if (canLeadQueue(recommendation)) return 2;
-        if (mayAppearAsAlternative(recommendation)) return 1;
-        return 0;
-    }
-
     private static boolean hasText(String value)
     {
         return value != null && !value.trim().isEmpty();
@@ -480,7 +454,7 @@ class ActionabilityPolicy
     {
         String id = recommendation == null || recommendation.id == null
                 ? "" : recommendation.id.toLowerCase(
-                        java.util.Locale.ROOT);
+                        Locale.ROOT);
         return id.startsWith("prepare:")
                 || id.startsWith("preparation:")
                 || id.startsWith("verify:");
@@ -493,10 +467,13 @@ class CandidateSafetyPolicy
 {
     public boolean isAllowed(Recommendation recommendation, StrategyContext context)
     {
+        if (recommendation == null || !hasValidExecution(recommendation, context)
+                || !hasSafeStorageGuidance(recommendation.guidance))
+            return false;
         if (recommendation == null || context == null || context.data() == null
                 || context.data().account() == null)
         {
-            return recommendation != null;
+            return true;
         }
 
         var account = context.data().account();
@@ -504,13 +481,14 @@ class CandidateSafetyPolicy
                     == AccountMode.ULTIMATE_IRONMAN
                 && (recommendation.safetyEvidence
                         .isConventionalBankRequired()
-                    || recommendation.safetyEvidence
-                        .hasUnverifiedDangerousStorage()
+                    || recommendation.plan() != null
+                        && recommendation.plan().getStrategyProfile() != null
+                        && recommendation.plan().getStrategyProfile()
+                            .bankingBehavior
+                            == BankingMode.CONVENTIONAL_BANK_LOOP
                     || recommendation.guidance != null
                         && recommendation.guidance.bankingBehavior
                             == BankingMode.CONVENTIONAL_BANK_LOOP))
-            return false;
-        if (recommendation.safetyEvidence.hasInvalidCurrentExecution())
             return false;
         return isAllowed(recommendation.safetyEvidence, account);
     }
@@ -526,8 +504,6 @@ class CandidateSafetyPolicy
     private static boolean isAllowed(Safety evidence,
             AccountSnapshot account)
     {
-
-        if (evidence.hasInvalidCurrentExecution()) return false;
 
         // Unannotated content is never assumed F2P-safe. This is the final
         // protection against a new provider forgetting its early access filter.
@@ -575,6 +551,47 @@ class CandidateSafetyPolicy
         }
     }
 
+    private static boolean hasValidExecution(Recommendation recommendation,
+            StrategyContext context)
+    {
+        var plan = recommendation.plan();
+        if (plan == null) return true;
+        var method = plan.method();
+        int current = recommendation.currentLevel;
+        int stageTarget = recommendation.getCurrentExecutionTargetLevel();
+        return method != null && hasText(method.getName()) && current > 0
+                && method.supportsLevel(current) && stageTarget > current
+                && (recommendation.targetLevel <= 0
+                    || stageTarget <= recommendation.targetLevel)
+                && (context == null || context.data() == null
+                    || context.data().account() == null
+                    || ContentAccessRules.isMethodAvailable(method,
+                        context.data().account().membership()))
+                && recommendation.guidance != null
+                && hasText(recommendation.guidance.getAction())
+                && hasText(recommendation.guidance.location);
+    }
+
+    private static boolean hasSafeStorageGuidance(Guidance guidance)
+    {
+        if (guidance == null || guidance.getStorageCapability() == null)
+            return true;
+        var capability = guidance.getStorageCapability();
+        var decision = guidance.getStorageDecision();
+        return decision != null && decision.isAllowed()
+                && decision.confidence == Confidence.VERIFIED
+                && !UimStorageMechanics.isTooGenericToRecommend(capability)
+                && (!UimStorageMechanics.isDangerous(capability)
+                    || guidance.getRiskDisclosure() != null
+                    && guidance.getRiskDisclosure()
+                        .isAcknowledgementRequired());
+    }
+
+    private static boolean hasText(String value)
+    {
+        return value != null && !value.trim().isEmpty();
+    }
+
 }
 
 /**
@@ -599,16 +616,6 @@ final class QuestMembershipPolicy
         if (questName == null || questName.trim().isEmpty()) return false;
         if (membership == Membership.P2P) return true;
         return FREE_TO_PLAY_QUESTS.contains(normalize(questName));
-    }
-
-    public static boolean isFreeToPlayQuest(String questName)
-    {
-        return questName != null && FREE_TO_PLAY_QUESTS.contains(normalize(questName));
-    }
-
-    public static Set<String> freeToPlayQuestNames()
-    {
-        return FREE_TO_PLAY_QUESTS;
     }
 
     private static String normalize(String value)
@@ -659,7 +666,7 @@ final class RecommendationQualityPolicy
             TrainingPlan plan, Guidance guidance)
     {
         if (plan == null || plan.method() == null
-                || plan.method().getSkill() != net.runelite.api.Skill.RUNECRAFT)
+                || plan.method().getSkill() != Skill.RUNECRAFT)
         {
             return true;
         }

@@ -20,7 +20,7 @@ public class ClueMembershipTest
     {
         GameData data = GameData.builder(account(Membership.F2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
-                        Confidence.VERIFIED))
+                        Confidence.VERIFIED, null))
                 .build();
 
         assertFalse(new OpportunityEngine().evaluate(data).stream()
@@ -32,7 +32,7 @@ public class ClueMembershipTest
     {
         GameData data = GameData.builder(account(Membership.F2P))
                 .clue(new ClueSnapshot(true, "beginner", System.currentTimeMillis(),
-                        Confidence.VERIFIED))
+                        Confidence.VERIFIED, null))
                 .build();
 
         assertTrue(new OpportunityEngine().evaluate(data).stream()
@@ -44,7 +44,7 @@ public class ClueMembershipTest
     {
         GameData data = GameData.builder(account(Membership.P2P))
                 .clue(new ClueSnapshot(true, "hard", System.currentTimeMillis(),
-                        Confidence.VERIFIED))
+                        Confidence.VERIFIED, null))
                 .build();
 
         assertTrue(new OpportunityEngine().evaluate(data).stream()
@@ -57,7 +57,7 @@ public class ClueMembershipTest
         GameData data = GameData.builder(
                 account(Membership.P2P))
                 .clue(new ClueSnapshot(true, "hard", 1L,
-                        Confidence.VERIFIED)).build();
+                        Confidence.VERIFIED, null)).build();
 
         Opportunity clue = new OpportunityEngine().evaluate(data).stream()
                 .filter(value -> value.getType() == OpportunityType.CLUE)

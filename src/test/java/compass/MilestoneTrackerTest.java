@@ -22,7 +22,8 @@ public class MilestoneTrackerTest
                 "Train Farming to 10",
                 Skill.FARMING.name(),
                 1,
-                10
+                10,
+                false
         );
 
         assertNull(
@@ -41,7 +42,8 @@ public class MilestoneTrackerTest
                 "Train Farming to 10",
                 Skill.FARMING.name(),
                 1,
-                10
+                10,
+                false
         );
 
         MilestoneCompletion completion = tracker.detectCompletion(
@@ -66,7 +68,8 @@ public class MilestoneTrackerTest
                 null,
                 Confidence.CHECK_NEEDED,
                 1,
-                10
+                10,
+                null
         );
 
         TrackedMilestone tracked = tracker.fromRecommendations(

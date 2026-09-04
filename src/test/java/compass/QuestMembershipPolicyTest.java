@@ -1,6 +1,7 @@
 package compass;
 
 import org.junit.Test;
+import net.runelite.api.Quest;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,6 +35,9 @@ public class QuestMembershipPolicyTest
     @Test
     public void f2pListTracksTwentyFourQuests()
     {
-        assertTrue(QuestMembershipPolicy.freeToPlayQuestNames().size() >= 24);
+        long count = java.util.Arrays.stream(Quest.values())
+                .filter(quest -> QuestMembershipPolicy.isAvailable(
+                        quest.getName(), Membership.F2P)).count();
+        assertTrue(count >= 24);
     }
 }

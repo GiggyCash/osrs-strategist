@@ -110,7 +110,7 @@ public class RecommendationCoverageCensusTest
                         }
                         for (Recommendation recommendation : engine.recommendAll(
                                 data, mode, session, true, false,
-                                new PreferenceProfile()))
+                                GoalType.AUTOMATIC, new PreferenceProfile()))
                         {
                             if (recommendation.getTrainingPlan() == null
                                     || recommendation.getTrainingPlan()
@@ -192,7 +192,7 @@ public class RecommendationCoverageCensusTest
                         }
                         for (Recommendation recommendation : engine.recommendAll(
                                 data, mode, session, true, false,
-                                new PreferenceProfile()))
+                                GoalType.AUTOMATIC, new PreferenceProfile()))
                         {
                             if (!policy.canLeadQueue(recommendation)
                                     || recommendation.getTrainingPlan() == null
@@ -289,7 +289,7 @@ public class RecommendationCoverageCensusTest
                                     account, level, prepared);
                             List<Recommendation> candidates = engine.recommendAll(
                                     data, mode, session, true, false,
-                                    new PreferenceProfile());
+                                    GoalType.AUTOMATIC, new PreferenceProfile());
                             Recommendation recovery = strategy.evaluate(
                                     data, mode, session,
                                     new PreferenceProfile())
@@ -343,7 +343,7 @@ public class RecommendationCoverageCensusTest
                 List<Recommendation> candidates = engine.recommendAll(
                         data(account, level), StrategyMode.BALANCED,
                         SessionIntent.ONE_HOUR, true, false,
-                        new PreferenceProfile());
+                        GoalType.AUTOMATIC, new PreferenceProfile());
                 for (Skill skill : priority)
                 {
                     if (!ContentAccessRules.isSkillAvailable(
@@ -397,7 +397,7 @@ public class RecommendationCoverageCensusTest
                         {
                             List<Recommendation> candidates = engine.recommendAll(
                                     data, mode, session, true, false,
-                                    new PreferenceProfile());
+                                    GoalType.AUTOMATIC, new PreferenceProfile());
                             Recommendation recovery = strategy.evaluate(
                                     data, mode, session,
                                     new PreferenceProfile())
@@ -468,7 +468,7 @@ public class RecommendationCoverageCensusTest
         Recommendation candidate = candidateFor(engine.recommendAll(
                 data(scenario, level, true), StrategyMode.BALANCED,
                 SessionIntent.ONE_HOUR, true, false,
-                new PreferenceProfile()), skill);
+                GoalType.AUTOMATIC, new PreferenceProfile()), skill);
         assertTrue(skill.getName() + " candidate missing", candidate != null);
         return candidate.getTrainingPlan().getMethod().getId();
     }
@@ -497,6 +497,7 @@ public class RecommendationCoverageCensusTest
                         List<Recommendation> skillCandidates =
                                 recommendationEngine.recommendAll(
                                         data, mode, session, true, false,
+                                        GoalType.AUTOMATIC,
                                         new PreferenceProfile());
                         StrategyResult global = strategyEngine.evaluate(
                                 data, mode, session, new PreferenceProfile());
@@ -666,11 +667,10 @@ public class RecommendationCoverageCensusTest
                                 new SkillingXpModifierService(),
                                 TestFixtures.accountResourcePlanner()));
         return TestFixtures.recommendationEngine(new TrainingMethodSelector(
-                new TrainingMethodDatabase(),
+                new TrainingMethodCatalog(),
                 new RequirementEvidenceEngine(new FarmingAccessEvaluator(new FarmingAccessCatalog()), new AgilityAccessEvaluator(new AgilityCourseCatalog()), new FarmingSupplyCatalog(), new RunecraftSupplyCatalog()),
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(),
-                new TrainingMethodPolicy()), guidance);
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService()), guidance);
     }
 
     private static StrategyEngine strategyEngine(Membership membership)

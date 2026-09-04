@@ -20,14 +20,12 @@ public class SlayerStrategist
     private final SlayerMasterCatalog masters;
     private final SlayerTaskProfileCatalog mechanics;
     private final SlayerTaskStrategicCatalog strategy;
-    private final SlayerGuidanceService guidanceService;
     private final SlayerRewardAdvisor rewardAdvisor;
 
     @Inject
     public SlayerStrategist(SlayerMasterCatalog masters,
             SlayerTaskProfileCatalog mechanics,
             SlayerTaskStrategicCatalog strategy,
-            SlayerGuidanceService guidanceService,
             SlayerRewardAdvisor rewardAdvisor)
     {
         this.masters = masters == null ? new SlayerMasterCatalog() : masters;
@@ -35,8 +33,6 @@ public class SlayerStrategist
                 ? new SlayerTaskProfileCatalog() : mechanics;
         this.strategy = strategy == null
                 ? new SlayerTaskStrategicCatalog(this.mechanics) : strategy;
-        this.guidanceService = guidanceService == null
-                ? new SlayerGuidanceService(this.mechanics) : guidanceService;
         this.rewardAdvisor = rewardAdvisor == null
                 ? new SlayerRewardAdvisor() : rewardAdvisor;
     }
@@ -44,7 +40,7 @@ public class SlayerStrategist
     public SlayerStrategist()
     {
         this(new SlayerMasterCatalog(), new SlayerTaskProfileCatalog(),
-                null, null, null);
+                null, null);
     }
 
     public SlayerDecisionResult assess(StrategyContext context)
@@ -110,7 +106,7 @@ public class SlayerStrategist
                         get(881),
                         get(889),
                         get(890),
-                        reason));
+                        reason), null, null, null);
     }
 
     private double offerValue(SlayerTaskOffer offer, StrategyContext context)
@@ -196,7 +192,7 @@ public class SlayerStrategist
                         : ""));
         return new SlayerDecisionResult(SlayerState.NO_TASK, null,
                 choice, null, score, Confidence.VERIFIED,
-                reason, guidance);
+                reason, guidance, null, null, null);
     }
 
     private static SlayerDecisionResult rewardPurchase(
@@ -216,7 +212,7 @@ public class SlayerStrategist
                 reason);
         return new SlayerDecisionResult(SlayerState.NO_TASK, null,
                 null, null, advice.score, Confidence.VERIFIED,
-                reason, guidance, null, reward);
+                reason, guidance, null, reward, null);
     }
 
     private SlayerDecisionResult evaluateTask(StrategyContext context,
@@ -232,9 +228,7 @@ public class SlayerStrategist
                 strategy.isWildernessBound(slayer.taskName)))
             return wildernessAlternative(slayer, taskStrategy, master);
 
-        Guidance base = guidanceService.build(data,
-                data.account().level(SLAYER),
-                min(99, data.account().level(SLAYER) + 1),
+        Guidance base = taskGuidance(data, taskMechanics,
                 context.usesGroupStorage());
         if (taskMechanics == null || taskStrategy == null || base == null)
             return unreviewedTask(slayer, master, taskStrategy, base);
@@ -309,7 +303,7 @@ public class SlayerStrategist
                 : get(833);
         return new SlayerDecisionResult(SlayerState.ASSIGNED,
                 SlayerDecision.DO, master, taskStrategy, 58.0 + value,
-                Confidence.VERIFIED, reason, base);
+                Confidence.VERIFIED, reason, base, null, null, null);
     }
 
     private double masterScore(SlayerMasterProfile master,
@@ -443,7 +437,7 @@ public class SlayerStrategist
                     SlayerDecision.PREP_FIRST, master, task, 48.0,
                     Confidence.CHECK_NEEDED,
                     get(838),
-                    guidance);
+                    guidance, null, null, null);
         }
         Guidance guidance = new Guidance(
                 get(839),
@@ -455,7 +449,7 @@ public class SlayerStrategist
                 SlayerDecision.ALTERNATIVE, master, task, 60.0,
                 Confidence.VERIFIED,
                 get(843),
-                guidance);
+                guidance, null, null, null);
     }
 
     private static SlayerDecisionResult unreviewedTask(SlayerSnapshot slayer,
@@ -476,7 +470,7 @@ public class SlayerStrategist
                 SlayerDecision.PREP_FIRST, master, task, 40.0,
                 Confidence.CHECK_NEEDED,
                 get(851),
-                guidance);
+                guidance, null, null, null);
     }
 
     private static SlayerDecisionResult preparation(SlayerSnapshot slayer,
@@ -489,7 +483,7 @@ public class SlayerStrategist
                 base.supplies, base.location, base.note);
         return new SlayerDecisionResult(SlayerState.ASSIGNED,
                 SlayerDecision.PREP_FIRST, master, task, 48.0,
-                Confidence.CHECK_NEEDED, reason, guidance);
+                Confidence.CHECK_NEEDED, reason, guidance, null, null, null);
     }
 
     private static SlayerDecisionResult supplyPreparation(
@@ -529,7 +523,7 @@ public class SlayerStrategist
                 Confidence.CHECK_NEEDED,
                 get(860),
                 new Guidance(action, supplies,
-                        base.location, base.note));
+                        base.location, base.note), null, null, null);
     }
 
     private static SlayerDecisionResult bossAlternative(SlayerSnapshot slayer,
@@ -546,7 +540,7 @@ public class SlayerStrategist
                 SlayerDecision.ALTERNATIVE, master, task, 64.0,
                 Confidence.VERIFIED,
                 get(864),
-                guidance, task.getAlternativeName());
+                guidance, task.getAlternativeName(), null, null);
     }
 
     private static SlayerDecisionResult encounterPreparation(
@@ -566,7 +560,7 @@ public class SlayerStrategist
                 SlayerDecision.PREP_FIRST, master, task, 49.0,
                 Confidence.CHECK_NEEDED,
                 get(869),
-                guidance);
+                guidance, null, null, null);
     }
 
     private static SlayerDecisionResult block(SlayerSnapshot slayer,
@@ -584,7 +578,7 @@ public class SlayerStrategist
                 SlayerDecision.BLOCK, master, task, 59.0 - value,
                 Confidence.VERIFIED,
                 get(874),
-                guidance);
+                guidance, null, null, null);
     }
 
     private static SlayerDecisionResult skip(SlayerSnapshot slayer,
@@ -607,7 +601,7 @@ public class SlayerStrategist
                 SlayerDecision.SKIP, master, task, 56.0 - value,
                 Confidence.VERIFIED,
                 get(876),
-                guidance);
+                guidance, null, null, null);
     }
 
     private static SlayerDecisionResult unknownAssignment()
@@ -620,7 +614,7 @@ public class SlayerStrategist
                         get(878),
                         get(879),
                         get(880),
-                        get(882)));
+                        get(882)), null, null, null);
     }
 
     private static PvmReadiness alternativeReadiness(GameData data,
@@ -676,6 +670,66 @@ public class SlayerStrategist
         if (!technique.isEmpty()) action += " " + technique;
         return new Guidance(action, supplies.toString(),
                 base.location, base.note);
+    }
+
+    /** Shared preparation view used by every current-task decision. */
+    private static Guidance taskGuidance(GameData data,
+            SlayerTaskProfile profile, boolean useGroupStorage)
+    {
+        if (profile == null) return null;
+        var account = data.account();
+        var items = new ItemIndex(data, useGroupStorage);
+        String supplies = get(761);
+        if (!profile.requiredProtection.isEmpty())
+        {
+            String owned = null;
+            for (String candidate : profile.requiredProtection)
+                if (items.has(candidate)) { owned = candidate; break; }
+            String choices = String.join(" or ", profile.requiredProtection);
+            if (owned != null) supplies = get(1456) + owned + get(762);
+            else if (AccountMode.fromTypeCode(account.modeCode())
+                    == AccountMode.ULTIMATE_IRONMAN)
+            {
+                var restricted = 0;
+                for (String candidate : profile.requiredProtection)
+                    restricted += items.restrictedQuantity(candidate);
+                supplies = restricted > 0
+                        ? get(763) + choices + get(764)
+                        : get(766) + choices + get(767);
+            }
+            else if (!items.primaryOwnershipObserved())
+                supplies = get(768) + choices + ".";
+            else if (AccountMode.fromTypeCode(account.modeCode()).isIronLike())
+                supplies = get(769) + choices + ".";
+            else supplies = get(770) + choices + get(771);
+        }
+
+        var slayer = data.slayer();
+        String location = slayer != null
+                && !Names.lower(slayer.getTaskLocation()).isEmpty()
+                ? get(1457) + slayer.getTaskLocation() + get(772)
+                : !Names.lower(profile.getPreferredLocation()).isEmpty()
+                        ? profile.getPreferredLocation()
+                        : slayer != null
+                                && !Names.lower(slayer.getMasterName()).isEmpty()
+                                ? get(1458) + slayer.getMasterName() + get(773)
+                                : get(774);
+        var note = new StringBuilder();
+        if (!Names.lower(profile.getMechanicsNote()).isEmpty())
+            note.append(profile.getMechanicsNote()).append(' ');
+        if (profile.getMultiTargetMagicEligibility() == Capability.VERIFIED)
+            note.append(get(777));
+        if (profile.getCannonEligibility() == Capability.UNKNOWN)
+            note.append(get(778));
+        if (profile.isWildernessVariantKnown()) note.append(get(779));
+        if (AccountMode.fromTypeCode(account.modeCode()).isIronLike()
+                && !profile.getIronObjectives().isEmpty())
+            note.append(get(1953)).append(String.join(", ",
+                    profile.getIronObjectives())).append(". ");
+        if (!Names.lower(profile.getTaskDecisionGuidance()).isEmpty())
+            note.append(profile.getTaskDecisionGuidance()).append(' ');
+        note.append(get(775));
+        return new Guidance(null, supplies, location, note.toString());
     }
 
     /**

@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.*;
@@ -46,8 +47,6 @@ public class OsrsStrategistPlugin extends Plugin
     @Inject private AccountProfileStore accountProfileStore;
     @Inject private MilestoneTracker milestoneTracker;
     @Inject private SkillIconLoader skillIconLoader;
-    @Inject private AccessObservationService accessObservationService;
-    @Inject private FarmingRunObservationService farmingRunObservationService;
     @Inject private TrainingFatigueTracker trainingFatigueTracker;
     @Inject private MilestoneRewardOverlay milestoneRewardOverlay;
     @Inject private MethodGuidanceOverlay methodGuidanceOverlay;
@@ -139,8 +138,6 @@ public class OsrsStrategistPlugin extends Plugin
         progressMilestoneDetector.clear();
         trainingFatigueTracker.clear();
         strategyDataAssembler.clearForAccountChange();
-        accessObservationService.clearForAccountChange();
-        farmingRunObservationService.clearForAccountChange();
         loadedProfileKey = null;
         loadedProgressProfileKey = null;
         savingProfileConfiguration = false;
@@ -186,9 +183,9 @@ public class OsrsStrategistPlugin extends Plugin
     public void onGameTick(GameTick event)
     {
         var now = System.currentTimeMillis();
-        var accessChanged = accessObservationService.observeCurrentLocation();
+        var accessChanged = strategyDataAssembler.observeAccess();
         boolean farmChanged = consumeFarmingObservation(now)
-                && farmingRunObservationService.observeCurrentPatches();
+                && strategyDataAssembler.observeFarmingPatches();
         boolean pohChanged = consumePohRefreshPending(now)
                 && strategyDataAssembler.observePoh();
         boolean diaryChanged = consumeDiaryRefreshPending()
@@ -313,7 +310,7 @@ public class OsrsStrategistPlugin extends Plugin
     {
         if (event == null || !isStrategicContainer(event.getContainerId())) return;
         if (event.getContainerId()
-                        == net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP
+                        == InventoryID.INV_GROUP_TEMP
                 && liveItemStateReader != null)
         {
             liveItemStateReader.observeGroupStorage(event.getItemContainer());
@@ -323,11 +320,11 @@ public class OsrsStrategistPlugin extends Plugin
 
     static boolean isStrategicContainer(int containerId)
     {
-        return containerId == net.runelite.api.gameval.InventoryID.INV
-                || containerId == net.runelite.api.gameval.InventoryID.WORN
-                || containerId == net.runelite.api.gameval.InventoryID.BANK
+        return containerId == InventoryID.INV
+                || containerId == InventoryID.WORN
+                || containerId == InventoryID.BANK
                 || containerId
-                        == net.runelite.api.gameval.InventoryID.INV_GROUP_TEMP;
+                        == InventoryID.INV_GROUP_TEMP;
     }
 
     @Subscribe
@@ -360,8 +357,6 @@ public class OsrsStrategistPlugin extends Plugin
         progressMilestoneDetector.clear();
         trainingFatigueTracker.clear();
         strategyDataAssembler.clearForAccountChange();
-        accessObservationService.clearForAccountChange();
-        farmingRunObservationService.clearForAccountChange();
         varbitRefreshPending = false;
         accountRefreshPending = false;
         methodGuidanceOverlay.clear();
@@ -515,7 +510,7 @@ public class OsrsStrategistPlugin extends Plugin
         final long generation = uiGeneration.next();
         var profile = effectiveStrategyProfile();
         var result = evaluateAndStabilize(latestData, profile);
-        latestRecommendations = new java.util.ArrayList<>(
+        latestRecommendations = new ArrayList<>(
                 result.recommendations);
         updateTrackedMilestone(
                 result.recommendations,
@@ -781,7 +776,7 @@ public class OsrsStrategistPlugin extends Plugin
                     .recordMilestone(new ProgressMilestone(
                             "skill-checkpoint:" + completion.activityId
                                     + ":" + completion.getSkill().name()
-                                    .toLowerCase(java.util.Locale.ROOT) + ":"
+                                    .toLowerCase(Locale.ROOT) + ":"
                                     + completion.targetLevel,
                             ProgressMilestoneType.SKILL_LEVEL,
                             completion.title,
@@ -792,7 +787,7 @@ public class OsrsStrategistPlugin extends Plugin
 
         var profile = effectiveStrategyProfile();
         var result = evaluateAndStabilize(data, profile);
-        latestRecommendations = new java.util.ArrayList<>(
+        latestRecommendations = new ArrayList<>(
                 result.recommendations);
         updateTrackedMilestone(
                 result.recommendations,

@@ -1,5 +1,4 @@
 package compass;
-import static java.util.Collections.*;
 import lombok.*;
 
 import java.util.*;
@@ -41,50 +40,14 @@ public final class MethodProfile
         FIXED
     }
 
-    final String methodId;
-    final List<String> actionTerms;
-    final String unitSingular;
-    final String unitPlural;
-    final double xpMultiplier;
-    final List<MethodInputRule> inputs;
-    final String note;
-    final ProgressEstimateMode progressEstimateMode;
-
-    public MethodProfile(
-            String methodId,
-            String unitSingular,
-            String unitPlural,
-            double xpMultiplier,
-            List<MethodInputRule> inputs,
-            String note,
-            String... actionTerms)
-    {
-        this(methodId, unitSingular, unitPlural, xpMultiplier, inputs, note,
-                ProgressEstimateMode.EXACT_ACTIONS, actionTerms);
-    }
-
-    public MethodProfile(
-            String methodId,
-            String unitSingular,
-            String unitPlural,
-            double xpMultiplier,
-            List<MethodInputRule> inputs,
-            String note,
-            ProgressEstimateMode progressEstimateMode,
-            String... actionTerms)
-    {
-        this.methodId = methodId;
-        this.actionTerms = unmodifiableList(
-                new ArrayList<>(Arrays.asList(actionTerms)));
-        this.unitSingular = unitSingular;
-        this.unitPlural = unitPlural;
-        this.xpMultiplier = xpMultiplier <= 0 ? 1.0 : xpMultiplier;
-        this.inputs = unmodifiableList(
-                inputs == null ? new ArrayList<>() : new ArrayList<>(inputs));
-        this.note = note;
-        this.progressEstimateMode = progressEstimateMode == null
-                ? ProgressEstimateMode.XP_ONLY : progressEstimateMode;
-    }
+    String methodId;
+    List<String> actionTerms;
+    String unitSingular;
+    String unitPlural;
+    double xpMultiplier;
+    List<MethodInputRule> inputs;
+    String note;
+    ProgressEstimateMode progressEstimateMode;
 
     public String unit(int count)
     {

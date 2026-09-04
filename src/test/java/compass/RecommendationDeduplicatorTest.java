@@ -95,7 +95,7 @@ public class RecommendationDeduplicatorTest
                 Confidence.VERIFIED);
         return new Recommendation(id, title, reason, score,
                 new TrainingPlan(method, reason,
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 60, 70, guidance(),
                 Safety.skill(false, skill));
     }
@@ -109,7 +109,7 @@ public class RecommendationDeduplicatorTest
                 Confidence.VERIFIED);
         return new Recommendation(id, title, "Firemaking breakpoint.", score,
                 new TrainingPlan(method, "route",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 60, 70, guidance(),
                 Safety.skill(false, Skill.FIREMAKING))
                 .withStrategicValue(StrategicValue.builder()

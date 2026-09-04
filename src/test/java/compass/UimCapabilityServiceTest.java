@@ -39,7 +39,7 @@ public class UimCapabilityServiceTest
                 new EnumMap<>(StorageKind.class);
         states.put(StorageKind.POH_STORAGE, Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
-                .storage(new StorageSnapshot(states))
+                .storage(new StorageSnapshot(states, Collections.emptyMap()))
                 .build();
 
         assertFalse(service.evaluateStorage(
@@ -72,7 +72,7 @@ public class UimCapabilityServiceTest
         states.put(StorageKind.DEATH_STORAGE,
                 Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
-                .storage(new StorageSnapshot(states))
+                .storage(new StorageSnapshot(states, Collections.emptyMap()))
                 .build();
 
         UimStorageDecision decision = service.evaluateStorage(data,
@@ -90,7 +90,7 @@ public class UimCapabilityServiceTest
         states.put(StorageKind.HESPORI_ITEM_RETRIEVAL,
                 Capability.VERIFIED);
         GameData data = GameData.builder(account(2))
-                .storage(new StorageSnapshot(states))
+                .storage(new StorageSnapshot(states, Collections.emptyMap()))
                 .build();
 
         assertFalse(service.evaluateStorage(data,

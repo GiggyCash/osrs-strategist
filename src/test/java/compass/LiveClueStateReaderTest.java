@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 public class LiveClueStateReaderTest
 {
@@ -46,7 +47,7 @@ public class LiveClueStateReaderTest
     public void unobservedBankDoesNotEraseRememberedClue()
     {
         ClueSnapshot previous = new ClueSnapshot(true, "medium", 1234L,
-                Confidence.VERIFIED);
+                Confidence.VERIFIED, null);
         ItemsState inventory = new ItemsState(Collections.emptyList());
 
         assertSame(previous, reader.read(AccountMode.MAIN,
@@ -57,7 +58,7 @@ public class LiveClueStateReaderTest
     public void observedEmptyBankCanClearCompletedMainClue()
     {
         ClueSnapshot previous = new ClueSnapshot(true, "medium", 1234L,
-                Confidence.VERIFIED);
+                Confidence.VERIFIED, null);
         ItemsState inventory = new ItemsState(Collections.emptyList());
         ItemsState bank = new ItemsState(Collections.emptyList(), 1L);
 
@@ -68,7 +69,7 @@ public class LiveClueStateReaderTest
     public void intermediateClueItemPreservesPreviousTierAndAge()
     {
         ClueSnapshot previous = new ClueSnapshot(true, "elite", 1234L,
-                Confidence.VERIFIED);
+                Confidence.VERIFIED, null);
         ItemsState inventory = new ItemsState(Arrays.asList(
                 new ItemState(3, "Challenge scroll", 1)));
 
@@ -88,7 +89,7 @@ public class LiveClueStateReaderTest
         ClueSnapshot clue = serviceReader.read(AccountMode.MAIN,
                 inventory, null, null);
 
-        assertTrue(clue.hasObservedCurrentStep());
+        assertNotNull(clue.getCurrentStep());
         assertEquals("test step", clue.getCurrentStep().getKind());
         assertTrue(clue.getCurrentStep().isRequiresSpade());
         assertEquals("Zamorak Wizard", clue.getCurrentStep().getEnemy());

@@ -159,7 +159,7 @@ public class RecommendationStabilizerTest
     private static StrategyResult result(Recommendation... recommendations)
     {
         return new StrategyResult(Arrays.asList(recommendations),
-                Collections.emptyList());
+                Collections.emptyList(), null);
     }
 
     private static Recommendation ready(String id, String title, double score)

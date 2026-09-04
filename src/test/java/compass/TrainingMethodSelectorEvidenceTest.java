@@ -56,7 +56,7 @@ public class TrainingMethodSelectorEvidenceTest
         };
 
         TrainingMethodSelector selector =
-                new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+                new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService());
 
         TrainingPlan plan = selector.select(
                 null,
@@ -106,7 +106,7 @@ public class TrainingMethodSelectorEvidenceTest
             }
         };
 
-        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService())
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService())
                 .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME);
 
@@ -141,7 +141,7 @@ public class TrainingMethodSelectorEvidenceTest
             }
         };
 
-        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService())
+        TrainingPlan plan = new TrainingMethodSelector(database, evidence, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService())
                 .select(null, Skill.MINING, 50, StrategyMode.BALANCED,
                         SessionIntent.PICK_FOR_ME);
 

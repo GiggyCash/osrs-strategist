@@ -209,7 +209,8 @@ public class DoNextInvariantTest
             @Override
             public List<Recommendation> recommendAll(GameData data,
                     StrategyMode mode, SessionIntent intent, boolean groupStorage,
-                    boolean wilderness, PreferenceProfile preferences)
+                    boolean wilderness, GoalType activeGoal,
+                    PreferenceProfile preferences)
             {
                 List<Recommendation> visible = new ArrayList<>();
                 for (Recommendation candidate : candidates)

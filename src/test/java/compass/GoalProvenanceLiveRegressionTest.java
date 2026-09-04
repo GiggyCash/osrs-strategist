@@ -73,8 +73,8 @@ public class GoalProvenanceLiveRegressionTest
 
         Recommendation unrelatedQuest = new Recommendation(
                 "quest:x-marks-the-spot", "Quest: X Marks the Spot",
-                "Optional quest.", 20, null,
-                Confidence.VERIFIED);
+                "Optional quest.", 20, Confidence.VERIFIED, null,
+                Safety.unknown());
         assertNull(provenance.attach(unrelatedQuest,
                 context(GoalType.MAX, QuestTolerance.NORMAL,
                         Collections.singletonMap("X Marks the Spot",
@@ -178,9 +178,9 @@ public class GoalProvenanceLiveRegressionTest
                 new FarmingAccessEvaluator(new FarmingAccessCatalog()), null,
                 new FarmingSupplyCatalog(), new RunecraftSupplyCatalog());
         TrainingMethodSelector selector = new TrainingMethodSelector(
-                new TrainingMethodDatabase(), evidence,
-                new ExpandedTrainingMethodCatalog(),
-                new F2pBaselineMethodCatalog(), new TrainingMethodPolicy());
+                new TrainingMethodCatalog(), evidence,
+                new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
         GameData data = readyFarmingData();
         TrainingPlan plan = selector.select(data, Skill.FARMING, 1,
                 StrategyMode.EFFICIENT, SessionIntent.PICK_FOR_ME,

@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ResourceReadinessServiceTest
 {
-    private final ResourceReadinessService service = new ResourceReadinessService();
 
     @Test
     public void combinesInventoryAndKnownBankAcrossAlternativeIds()
@@ -22,7 +21,7 @@ public class ResourceReadinessServiceTest
                 .build();
         ResourceRequirement requirement = new ResourceRequirement(
                 "test", "Alternatives", 3, 100, 101);
-        EvidenceCheck check = service.evaluate(data, requirement);
+        EvidenceCheck check = new ItemIndex(data, false).check(requirement);
         assertEquals(RequirementState.VERIFIED, check.getState());
         assertTrue(check.getEvidence().contains("3"));
     }
@@ -33,8 +32,8 @@ public class ResourceReadinessServiceTest
         GameData data = GameData.builder(null)
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
-        EvidenceCheck check = service.evaluate(
-                data, new ResourceRequirement("test", "Thing", 1, 100));
+        EvidenceCheck check = new ItemIndex(data, false).check(
+                new ResourceRequirement("test", "Thing", 1, 100));
         assertEquals(RequirementState.CHECK_NEEDED, check.getState());
         assertTrue(check.getEvidence().contains("bank has not been observed"));
     }
@@ -45,11 +44,8 @@ public class ResourceReadinessServiceTest
         GameData data = GameData.builder(null)
                 .inventory(new ItemsState(Collections.emptyList()))
                 .build();
-        EvidenceCheck check = service.evaluate(
-                data,
-                new ResourceRequirement("test", "Rake", 1, 100),
-                Capability.VERIFIED,
-                "Stored in Tool Leprechaun");
+        EvidenceCheck check = new EvidenceCheck("test", "Rake",
+                RequirementState.VERIFIED, "Stored in Tool Leprechaun");
         assertEquals(RequirementState.VERIFIED, check.getState());
     }
 }

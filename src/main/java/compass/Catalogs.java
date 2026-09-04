@@ -72,179 +72,6 @@ class AgilityCourseCatalog extends CatalogStore<AgilityCourseDefinition>
 
 }
 
-/** Pinned Wiki quest-detail evidence. Runtime access is strictly local. */
-final class AuthoritativeQuestEnrichmentCatalog
-{
-    public static final String PROVENANCE = Text.get(39);
-    private static final String RESOURCE = Text.get(1586);
-    private final Map<String, Record> records;
-
-    public AuthoritativeQuestEnrichmentCatalog()
-    {
-        Map<String, Record> values = new LinkedHashMap<>();
-        for (Record record : BundledCatalogLoader.array(RESOURCE, Record[].class))
-        {
-            record.validate();
-            if (values.put(Names.words(record.name), record) != null)
-                throw new IllegalStateException(Text.get(1111) + record.name);
-        }
-        records = unmodifiableMap(values);
-    }
-
-    public Record recordFor(String name)
-    {
-        var wikiName = aliases().get(Names.words(name));
-        return records.get(Names.words(wikiName == null ? name : wikiName));
-    }
-    public Map<String, Record> all() { return records; }
-    public boolean hasStrictFieldEvidence()
-    {
-        for (Record record : records.values())
-            if (record.hasLegacyEvidence()) return false;
-        return true;
-    }
-
-    private static Map<String, String> aliases()
-    {
-        Map<String, String> result = new HashMap<>();
-        String[][] values = {
-                {Text.get(51), Text.get(52)},
-                {Text.get(1112), Text.get(53)},
-                {Text.get(54), Text.get(40)},
-                {Text.get(1113), Text.get(41)},
-                {Text.get(1114), Text.get(42)},
-                {Text.get(1115), Text.get(1116)},
-                {Text.get(1117), Text.get(43)},
-                {Text.get(1118), Text.get(44)},
-                {Text.get(1119), Text.get(45)},
-                {Text.get(1120), Text.get(46)},
-                {"Vale Totems", Text.get(1121)}
-        };
-        for (String[] alias : values) result.put(Names.words(alias[0]), alias[1]);
-        return result;
-    }
-
-    public enum EvidenceState
-    {
-        VALUE, NONE, NOT_APPLICABLE, SOURCE_MISSING, MISSING, PARSE_FAILURE,
-        UNSUPPORTED_STRUCTURE, UNKNOWN, LEGACY_NONE;
-        public boolean isEvidence()
-        {
-            return this == VALUE || this == NONE || this == NOT_APPLICABLE
-                    || this == LEGACY_NONE;
-        }
-        public boolean isStrictEvidence()
-        {
-            return this == VALUE || this == NONE || this == NOT_APPLICABLE;
-        }
-    }
-
-    @Getter
-    public static final class Record
-    {
-        private String name;
-        private String start;
-        private EvidenceState startState;
-        private String requirements;
-        private EvidenceState requirementsState;
-        private String items;
-        private EvidenceState itemsState;
-        private String enemies;
-        private EvidenceState combatState;
-        private String rewards;
-        private EvidenceState rewardsState;
-
-        public EvidenceState getRequirementState() { return requirementsState; }
-        public EvidenceState getItemState() { return itemsState; }
-        public EvidenceState getRewardState() { return rewardsState; }
-        public boolean hasStartEvidence() { return startState.isEvidence(); }
-        public boolean hasRequirementEvidence() { return requirementsState.isEvidence(); }
-        public boolean hasItemEvidence() { return itemsState.isEvidence(); }
-        public boolean hasCombatEvidence() { return combatState.isEvidence(); }
-        public boolean hasRewardEvidence() { return rewardsState.isEvidence(); }
-        public boolean hasStrictItemEvidence() { return itemsState.isStrictEvidence(); }
-        public boolean hasStrictRewardEvidence() { return rewardsState.isStrictEvidence(); }
-        public boolean hasLegacyEvidence()
-        {
-            return startState == EvidenceState.LEGACY_NONE
-                    || requirementsState == EvidenceState.LEGACY_NONE
-                    || itemsState == EvidenceState.LEGACY_NONE
-                    || combatState == EvidenceState.LEGACY_NONE
-                    || rewardsState == EvidenceState.LEGACY_NONE;
-        }
-        private void validate()
-        {
-            if (name == null || name.trim().isEmpty())
-                throw new IllegalStateException(Text.get(1122));
-            validate(start, startState, "start");
-            validate(requirements, requirementsState, "requirements");
-            validate(items, itemsState, "items");
-            validate(enemies, combatState, "combat");
-            validate(rewards, rewardsState, "rewards");
-        }
-        private static void validate(String value, EvidenceState state, String field)
-        {
-            if (state == null || state == EvidenceState.LEGACY_NONE)
-                throw new IllegalStateException("Invalid " + field + " evidence state");
-            var blank = value == null || value.trim().isEmpty();
-            if ((state == EvidenceState.VALUE) == blank
-                    || ((state == EvidenceState.NONE || state == EvidenceState.NOT_APPLICABLE
-                    || state == EvidenceState.SOURCE_MISSING || state == EvidenceState.PARSE_FAILURE
-                    || state == EvidenceState.UNSUPPORTED_STRUCTURE) && !blank))
-                throw new IllegalStateException(Text.get(1123) + field);
-        }
-    }
-}
-
-/** Canonical direct quest and skill requirements from the pinned Wiki import. */
-final class AuthoritativeQuestRequirementCatalog
-{
-    public static final String PROVENANCE = Text.get(55);
-    private static final String RESOURCE = Text.get(1641);
-    private final Map<String, Record> records;
-
-    public AuthoritativeQuestRequirementCatalog()
-    {
-        Map<String, Record> values = new LinkedHashMap<>();
-        for (Record record : BundledCatalogLoader.array(RESOURCE, Record[].class))
-        {
-            record.freeze();
-            var key = Names.words(record.name);
-            if (key.isEmpty() || values.put(key, record) != null)
-                throw new IllegalStateException(Text.get(1124) + record.name);
-        }
-        records = unmodifiableMap(values);
-    }
-
-    public Map<String, Record> all() { return records; }
-
-    @Getter
-    public static final class Record
-    {
-        private String name;
-        private List<String> prerequisites;
-        private Map<Skill, Integer> skills;
-        private int questPoints;
-        private List<String> otherChecks;
-        private String startLocation;
-
-        private void freeze()
-        {
-            prerequisites = immutable(prerequisites);
-            otherChecks = immutable(otherChecks);
-            EnumMap<Skill, Integer> skillCopy = new EnumMap<>(Skill.class);
-            if (skills != null) skillCopy.putAll(skills);
-            skills = unmodifiableMap(skillCopy);
-            startLocation = startLocation == null ? "" : startLocation;
-        }
-        private static List<String> immutable(List<String> values)
-        {
-            return values == null ? emptyList()
-                    : unmodifiableList(new ArrayList<>(values));
-        }
-    }
-}
-
 /** Complete pinned RuneLite diary task/prerequisite catalogue. */
 @Singleton
 final class DiaryTaskCatalog
@@ -488,14 +315,6 @@ class GearAcquisitionCatalog extends IndexedCatalog<GearAcquisitionRoute>
 class GearProgressionCatalog extends CatalogStore<GearProgressionEntry>
 {
     public GearProgressionCatalog() { super(Text.get(295), GearProgressionEntry[].class); }
-    public List<GearProgressionEntry> forStyle(CombatStyle style)
-    {
-        return filter(entry -> entry.style == style);
-    }
-    public List<GearProgressionEntry> forContext(String contextId)
-    {
-        return filter(entry -> entry.getContextId().equals(contextId));
-    }
 }
 
 /**
@@ -537,7 +356,6 @@ final class ImportedQuestItemRequirementCatalog
     {
         @Getter private ItemRule expression;
         @Getter private List<String> unresolved;
-        private int parsedLineCount;
 
         private void freeze()
         {
@@ -546,20 +364,6 @@ final class ImportedQuestItemRequirementCatalog
                     : unmodifiableList(new ArrayList<>(unresolved));
         }
 
-        public boolean isFullyExecutable() { return unresolved.isEmpty(); }
-        public boolean isDeterministicallyExecutable()
-        {
-            return unresolved.isEmpty() && countChecks(expression) == 0;
-        }
-        public int getCheckNeededExpressionCount() { return countChecks(expression); }
-        private static int countChecks(ItemRule value)
-        {
-            if (value == null) return 0;
-            var count = value.getKind() == ItemRule.Kind.CHECK_NEEDED ? 1 : 0;
-            for (ItemRule child : value.getChildren())
-                count += countChecks(child);
-            return count;
-        }
     }
 }
 
@@ -668,7 +472,7 @@ final class MethodStrategyKnowledgeCatalog
                     Text.get(1880), Text.get(1633),
                     Text.get(1634), "thieving_vyres")));
 
-    private final Map<String, java.util.List<MethodStrategyProfile>> exact =
+    private final Map<String, List<MethodStrategyProfile>> exact =
             new HashMap<>();
     private final Map<String, MethodStrategyProfile> generated =
             new ConcurrentHashMap<>();
@@ -691,7 +495,7 @@ final class MethodStrategyKnowledgeCatalog
             TrainingMethodMetadata metadata, AccountMode mode)
     {
         if (method == null || metadata == null || mode == null) return null;
-        java.util.List<MethodStrategyProfile> specific = exact.get(
+        List<MethodStrategyProfile> specific = exact.get(
                 method.id);
         if (specific != null)
         {
@@ -783,7 +587,7 @@ final class MethodStrategyKnowledgeCatalog
     }
 
     private static Source accountSkillSource(
-            net.runelite.api.Skill skill, AccountMode mode, boolean f2p)
+            Skill skill, AccountMode mode, boolean f2p)
     {
         if (skill == Skill.SAILING)
             return Source.SAILING_TRAINING;
@@ -807,7 +611,7 @@ final class MethodStrategyKnowledgeCatalog
     private void addExact(MethodStrategyProfile profile)
     {
         exact.computeIfAbsent(profile.methodId,
-                ignored -> new java.util.ArrayList<>()).add(profile);
+                ignored -> new ArrayList<>()).add(profile);
     }
 }
 
@@ -980,8 +784,6 @@ class PvmPreparationProfileCatalog extends IndexedCatalog<PvmPreparationProfile>
 class QuestKnowledgeCatalog
 {
     private static final String RESOURCE = Text.get(558);
-    private static final Pattern REWARD_XP = Pattern.compile(
-            Text.get(1919), Pattern.CASE_INSENSITIVE);
     private final Map<String, QuestDefinition> definitions = new LinkedHashMap<>();
 
     public QuestKnowledgeCatalog()
@@ -989,104 +791,6 @@ class QuestKnowledgeCatalog
         for (QuestDefinition definition
                 : BundledCatalogLoader.array(RESOURCE, QuestDefinition[].class))
             add(definition);
-        seedImportedRequirements();
-    }
-
-    private void seedImportedRequirements()
-    {
-        AuthoritativeQuestEnrichmentCatalog enrichment =
-                new AuthoritativeQuestEnrichmentCatalog();
-        for (AuthoritativeQuestRequirementCatalog.Record record
-                : new AuthoritativeQuestRequirementCatalog().all().values())
-        {
-            if (definitionFor(record.getName()) != null) continue;
-            AuthoritativeQuestEnrichmentCatalog.Record details =
-                    enrichment.recordFor(record.getName());
-            List<String> checks = new ArrayList<>(record.getOtherChecks());
-            List<String> uncertainties = new ArrayList<>();
-            if (details == null)
-                uncertainties.addAll(Arrays.asList("items", "access/combat",
-                        "rewards/unlocks", "start location"));
-            else
-            {
-                addEvidenceCheck(checks, "Required items", details.getItems());
-                addEvidenceCheck(checks, Text.get(1166), details.getRequirements());
-                addEvidenceCheck(checks, Text.get(1920), details.getEnemies());
-                if (!details.hasItemEvidence()) uncertainties.add("items");
-                if (!details.hasRequirementEvidence() || !details.hasCombatEvidence())
-                    uncertainties.add("access/combat");
-                if (!details.hasRewardEvidence()) uncertainties.add("rewards/unlocks");
-                else if (hasUnparsedCombatXp(details.getRewards(), rewardXp(details.getRewards())))
-                    uncertainties.add("irreversible xp");
-            }
-            var start = record.getStartLocation();
-            if (start.trim().isEmpty() && details != null && details.hasStartEvidence())
-                start = plain(details.getStart());
-            if (start.trim().isEmpty() && !uncertainties.contains("start location"))
-                uncertainties.add("start location");
-            List<String> unlocks = details != null && details.hasRewardEvidence()
-                    ? singletonList("Quest rewards: "
-                            + abbreviate(plain(details.getRewards()), 500))
-                    : emptyList();
-            add(new QuestDefinition(record.getName(),
-                    QuestMembershipPolicy.isFreeToPlayQuest(record.getName()),
-                    record.getPrerequisites(), record.getSkills(), emptyList(), null,
-                    record.getQuestPoints(), checks, start, unlocks,
-                    details == null ? emptyMap() : rewardXp(details.getRewards()),
-                    uncertainties));
-        }
-    }
-
-    private static void addEvidenceCheck(List<String> checks, String label, String value)
-    {
-        if (value == null || value.trim().isEmpty() || "none".equalsIgnoreCase(value.trim()))
-            return;
-        checks.add(label + ": " + abbreviate(plain(value), 500));
-    }
-
-    private static Map<Skill, Integer> rewardXp(String rewards)
-    {
-        EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
-        var matcher = REWARD_XP.matcher(rewards == null ? "" : rewards);
-        while (matcher.find())
-        {
-            Skill skill;
-            try
-            {
-                skill = Skill.valueOf(matcher.group(1).trim()
-                        .toUpperCase(Locale.ROOT).replace(' ', '_'));
-            }
-            catch (IllegalArgumentException ex) { continue; }
-            result.merge(skill, Integer.parseInt(matcher.group(2).replace(",", "")), Integer::sum);
-        }
-        return result;
-    }
-
-    private static boolean hasUnparsedCombatXp(String rewards, Map<Skill, Integer> parsed)
-    {
-        var text = plain(rewards).toLowerCase(Locale.ROOT);
-        for (Skill skill : Arrays.asList(Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE,
-                Skill.HITPOINTS, PRAYER, Skill.RANGED, Skill.MAGIC))
-            if (text.matches("(?s).*\\b" + skill.getName().toLowerCase(Locale.ROOT)
-                    + Text.get(1921)) && !parsed.containsKey(skill))
-                return true;
-        return false;
-    }
-
-    private static String plain(String wiki)
-    {
-        if (wiki == null) return "";
-        return wiki.replaceAll("(?s)<!--.*?-->", " ")
-                .replaceAll(Text.get(1922), "$1")
-                .replaceAll(Text.get(1923), "$2 $1")
-                .replaceAll("\\{\\{[^}]+}}", " ").replaceAll("'{2,}", "")
-                .replaceAll("[\\r\\n*#]+", " ").replaceAll("<[^>]+>", " ")
-                .replaceAll("\\s+", " ").trim();
-    }
-
-    private static String abbreviate(String value, int length)
-    {
-        return value.length() <= length ? value : value.substring(0, length - 1).trim() + "…";
     }
 
     public QuestDefinition definitionFor(String name) { return definitions.get(Names.words(name)); }
@@ -1139,7 +843,7 @@ class ResourceDependencyCatalog
 
     public ResourceDependencyCatalog()
     {
-        this(java.util.Arrays.asList(BundledCatalogLoader.array(
+        this(Arrays.asList(BundledCatalogLoader.array(
                 Text.get(598),
                 ResourceDependency[].class)));
     }
@@ -1463,8 +1167,8 @@ class SlayerMasterCatalog
         var account = context.data().account();
         if (account.membership() != Membership.P2P)
             return emptyList();
-        var combat = SlayerGuidanceService.combatLevel(account);
-        var slayer = account.level(net.runelite.api.Skill.SLAYER);
+        var combat = combatLevel(account);
+        var slayer = account.level(SLAYER);
         var quests = context.data().quests();
         List<SlayerMasterProfile> result = new ArrayList<>();
         for (SlayerMasterProfile profile : profiles)
@@ -1499,6 +1203,16 @@ class SlayerMasterCatalog
         return status == QuestStatus.COMPLETE
                 || profile.isQuestStartSufficient()
                 && status == QuestStatus.IN_PROGRESS;
+    }
+
+    private static int combatLevel(AccountSnapshot account)
+    {
+        double base = .25 * (account.level(DEFENCE) + account.level(HITPOINTS)
+                + Math.floor(account.level(PRAYER) / 2.0));
+        double melee = .325 * (account.level(ATTACK) + account.level(STRENGTH));
+        double ranged = .325 * Math.floor(account.level(RANGED) * 1.5);
+        double magic = .325 * Math.floor(account.level(MAGIC) * 1.5);
+        return (int) Math.floor(base + Math.max(melee, Math.max(ranged, magic)));
     }
 
 }

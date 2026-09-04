@@ -14,281 +14,9 @@ import net.runelite.http.api.item.ItemPrice;
 import static compass.Text.get;
 
 /**
- * Learns positive access facts from normal gameplay without user prompts.
- *
- * <p>Walking into a known Farming region is proof that this character can reach
- * it. That proof is remembered per character and can satisfy future readiness
- * checks even after RuneLite is restarted.</p>
- */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-class AccessObservationService
-{
-    private final Client client;
-    private final AccountAccessMemoryStore memoryStore;
-    private final FarmingAccessCatalog farmingAccessCatalog;
-    private int lastRegionId = -1;
-
-    /**
-     * @return true only when newly learned evidence can affect current strategy.
-     */
-    public boolean observeCurrentLocation()
-    {
-        if (client.getGameState() != GameState.LOGGED_IN)
-        {
-            return false;
-        }
-
-        var player = client.getLocalPlayer();
-        if (player == null)
-        {
-            return false;
-        }
-
-        var location = player.getWorldLocation();
-        if (location == null)
-        {
-            return false;
-        }
-
-        var regionId = location.getRegionID();
-        if (regionId == lastRegionId)
-        {
-            return false;
-        }
-
-        lastRegionId = regionId;
-
-        // Generic region memory is useful later for transport/content discovery,
-        // but it does not currently require an immediate recommendation rerank.
-        memoryStore.remember("region." + regionId);
-
-        FarmingAccessDefinition farming =
-                farmingAccessCatalog.forRegion(regionId);
-        return farming != null
-                && memoryStore.remember(farming.observationKey());
-    }
-
-    public void clearForAccountChange()
-    {
-        lastRegionId = -1;
-        memoryStore.clearCacheForAccountChange();
-    }
-}
-
-/**
  * Derives property-first strategy priorities from mode mechanics and observed
  * account state. It does not name or select training methods.
  */
-@Singleton
-final class AccountStrategicPriorityService
-{
-    public AccountPriorities assess(StrategyContext context)
-    {
-        if (context == null)
-            return assess(AccountMode.UNKNOWN, null, false);
-        return assess(context.accountMode(), context.data(),
-                context.usesGroupStorage());
-    }
-
-    public AccountPriorities assess(AccountMode requestedMode,
-            GameData data, boolean useGroupStorage)
-    {
-        AccountMode mode = requestedMode == null
-                ? AccountMode.UNKNOWN : requestedMode;
-        EnumMap<AccountDimension, AccountPriority> result =
-                new EnumMap<>(AccountDimension.class);
-
-        if (mode == AccountMode.UNKNOWN)
-        {
-            unknown(result);
-            return new AccountPriorities(mode, result);
-        }
-
-        var ge = AccountModePolicy.mayUseGrandExchange(mode);
-        var selfSource = AccountModePolicy.requiresSelfSourcing(mode);
-        var uim = AccountModePolicy.requiresCapabilityCheckedStorage(mode);
-        var group = mode.isGroupIronman();
-        boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
-                || mode == AccountMode.HARDCORE_GROUP_IRONMAN;
-
-        var inventory = data == null ? null : data.inventory();
-        int occupied = inventory == null
-                || !inventory.hasCompleteSlotObservation() ? -1
-                : UimSetupCostService.occupiedInventorySlots(inventory);
-        put(result, AccountDimension.INVENTORY_PRESSURE,
-                uim ? occupied >= 24 ? Priority.CRITICAL
-                        : Priority.HIGH : Priority.LOW,
-                occupied < 0 ? Confidence.CHECK_NEEDED
-                        : Confidence.VERIFIED,
-                uim ? occupied < 0
-                        ? get(89)
-                        : get(1434) + occupied
-                                + get(100)
-                        : get(111));
-        put(result, AccountDimension.BANK_AVAILABILITY,
-                uim ? Priority.CRITICAL : Priority.LOW,
-                uim ? Capability.BLOCKED : Capability.VERIFIED,
-                Confidence.VERIFIED,
-                uim ? get(122)
-                        : get(124));
-        put(result, AccountDimension.GRAND_EXCHANGE_AVAILABILITY,
-                ge || selfSource ? Priority.HIGH : Priority.LOW,
-                ge ? Capability.VERIFIED : Capability.BLOCKED,
-                Confidence.VERIFIED,
-                ge ? get(125)
-                        : get(126));
-        put(result, AccountDimension.SELF_SOURCING_BURDEN,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.HIGH
-                        : Priority.LOW,
-                Confidence.VERIFIED,
-                selfSource ? get(127)
-                        : get(128));
-
-        ItemsState groupStorage = data == null
-                ? null : data.groupStorage();
-        boolean freshGroupStorage = group && useGroupStorage
-                && groupStorage != null && groupStorage.isObserved();
-        Confidence groupConfidence = freshGroupStorage
-                ? Confidence.VERIFIED
-                : Confidence.CHECK_NEEDED;
-        put(result, AccountDimension.SHARED_RESOURCE_VALUE,
-                freshGroupStorage ? Priority.HIGH
-                        : Priority.NONE,
-                freshGroupStorage ? Capability.VERIFIED
-                        : group ? Capability.UNKNOWN
-                        : Capability.BLOCKED,
-                group ? groupConfidence : Confidence.VERIFIED,
-                freshGroupStorage
-                        ? get(90)
-                        : group ? get(91)
-                        : get(92));
-        put(result, AccountDimension.SHARED_INFRASTRUCTURE_VALUE,
-                Priority.NONE,
-                group ? Capability.UNKNOWN : Capability.BLOCKED,
-                group ? Confidence.CHECK_NEEDED
-                        : Confidence.VERIFIED,
-                group ? get(93)
-                        : get(94));
-        put(result, AccountDimension.STORAGE_VALUE,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.MODERATE
-                        : Priority.LOW,
-                Confidence.VERIFIED,
-                uim ? get(95)
-                        : selfSource ? get(96)
-                        : get(97));
-        put(result, AccountDimension.POH_VALUE,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.HIGH
-                        : Priority.MODERATE,
-                Confidence.VERIFIED,
-                uim ? get(98)
-                        : selfSource ? get(99)
-                        : get(101));
-        put(result, AccountDimension.TELEPORT_INFRASTRUCTURE_VALUE,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.HIGH
-                        : Priority.MODERATE,
-                Confidence.VERIFIED,
-                uim ? get(102)
-                        : selfSource ? get(103)
-                        : get(104));
-        put(result, AccountDimension.SETUP_COST_SENSITIVITY,
-                uim ? Priority.CRITICAL
-                        : hardcore ? Priority.HIGH
-                        : Priority.MODERATE,
-                Confidence.VERIFIED,
-                uim ? get(105)
-                        : hardcore ? get(106)
-                        : get(107));
-        put(result, AccountDimension.DEATH_RISK_SENSITIVITY,
-                hardcore ? Priority.CRITICAL
-                        : uim ? Priority.HIGH
-                        : Priority.MODERATE,
-                Confidence.VERIFIED,
-                hardcore ? get(108)
-                        : uim ? get(109)
-                        : get(110));
-        put(result, AccountDimension.CONSUMABLE_REPLACEMENT_DIFFICULTY,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.HIGH
-                        : Priority.LOW,
-                Confidence.VERIFIED,
-                selfSource ? get(112)
-                        : get(113));
-        put(result, AccountDimension.STORABLE_EQUIPMENT_VALUE,
-                uim ? Priority.CRITICAL
-                        : selfSource ? Priority.MODERATE
-                        : Priority.LOW,
-                Confidence.VERIFIED,
-                uim ? get(114)
-                        : get(115));
-        put(result, AccountDimension.DUPLICATE_GRIND_PENALTY,
-                freshGroupStorage ? Priority.HIGH
-                        : Priority.NONE,
-                group ? groupConfidence : Confidence.VERIFIED,
-                freshGroupStorage
-                        ? get(116)
-                        : group ? get(117)
-                        : get(118));
-        put(result, AccountDimension.GP_LIQUIDITY_STORAGE_VALUE,
-                uim ? Priority.HIGH
-                        : selfSource ? Priority.MODERATE
-                        : Priority.LOW,
-                Confidence.VERIFIED,
-                uim ? get(119)
-                        : selfSource ? get(120)
-                        : get(121));
-
-        return new AccountPriorities(mode, result);
-    }
-
-    private static void unknown(
-            Map<AccountDimension, AccountPriority> values)
-    {
-        for (AccountDimension dimension
-                : AccountDimension.values())
-        {
-            Priority priority = dimension
-                    == AccountDimension.BANK_AVAILABILITY
-                    || dimension
-                    == AccountDimension.GRAND_EXCHANGE_AVAILABILITY
-                    || dimension
-                    == AccountDimension.SELF_SOURCING_BURDEN
-                    ? Priority.CRITICAL : Priority.NONE;
-            put(values, dimension, priority,
-                    Capability.UNKNOWN,
-                    Confidence.CHECK_NEEDED,
-                    get(123));
-        }
-    }
-
-    private static void put(
-            Map<AccountDimension, AccountPriority> values,
-            AccountDimension dimension,
-            Priority priority,
-            Confidence confidence,
-            String reason)
-    {
-        put(values, dimension, priority, Capability.VERIFIED, confidence,
-                reason);
-    }
-
-    private static void put(
-            Map<AccountDimension, AccountPriority> values,
-            AccountDimension dimension,
-            Priority priority,
-            Capability capabilityState,
-            Confidence confidence,
-            String reason)
-    {
-        values.put(dimension, new AccountPriority(dimension,
-                priority, capabilityState, confidence, reason));
-    }
-}
-
 /** Applies cross-domain sourced strategy and plan-relative UIM inventory fit. */
 @Singleton
 final class ActivityStrategyKnowledgeService
@@ -306,14 +34,10 @@ final class ActivityStrategyKnowledgeService
                 ? new UimInventoryResolutionService() : inventoryResolution;
     }
 
-    public ActivityStrategyKnowledgeService(ActivityStrategyKnowledgeCatalog catalog)
-    {
-        this(catalog, new UimInventoryResolutionService());
-    }
-
     public ActivityStrategyKnowledgeService()
     {
-        this(new ActivityStrategyKnowledgeCatalog());
+        this(new ActivityStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
     }
 
     /** Returns null when exact live inventory proves the plan cannot fit. */
@@ -354,201 +78,6 @@ final class ActivityStrategyKnowledgeService
     }
 }
 
-/** Produces seven evidence-separated gear answers for one encounter context. */
-@Singleton
-final class ContextualGearDecisionService
-{
-    private final GearAcquisitionCatalog acquisition =
-            new GearAcquisitionCatalog();
-
-    public GearAssessment assess(GearProgressionEntry entry,
-            StrategyContext context)
-    {
-        Map<GearAspect, GearDecision> result =
-                new EnumMap<>(GearAspect.class);
-        ItemIndex items = new ItemIndex(
-                context == null ? null : context.data(),
-                context != null && context.usesGroupStorage());
-        var ownershipObserved = items.usableOwnershipObserved();
-        List<String> owned = new ArrayList<>();
-        List<String> unresolvedRoutes = new ArrayList<>();
-        for (String target : entry.getRecommendedItems())
-        {
-            if (!isExactOwnershipTarget(target)) continue;
-            if (items.has(target)) owned.add(target);
-            else if (acquisition.forItem(target) != null)
-                unresolvedRoutes.add(target);
-        }
-        String ownedValue = !ownershipObserved
-                ? get(142)
-                : owned.isEmpty()
-                ? get(143)
-                : owned.get(0);
-        put(result, GearAspect.BEST_OWNED, ownedValue,
-                ownershipObserved && !owned.isEmpty()
-                        ? Confidence.VERIFIED
-                        : Confidence.CHECK_NEEDED);
-        put(result, GearAspect.BEST_USABLE,
-                owned.isEmpty()
-                        ? get(144)
-                        : owned.get(0) + get(145),
-                Confidence.CHECK_NEEDED);
-
-        String routed = unresolvedRoutes.isEmpty() ? null
-                : unresolvedRoutes.get(0);
-        AccountMode mode = context == null ? AccountMode.UNKNOWN
-                : context.accountMode();
-        String available = routed == null
-                ? get(146)
-                : mode.usesGrandExchange()
-                ? get(147) + routed
-                : get(148) + routed;
-        put(result, GearAspect.BEST_AVAILABLE_NOW, available,
-                Confidence.CHECK_NEEDED);
-        put(result, GearAspect.BEST_VALUE_UPGRADE,
-                get(149),
-                Confidence.CHECK_NEEDED);
-        put(result, GearAspect.BEST_PRACTICAL_UPGRADE,
-                routed == null ? entry.getWeaponGuidance()
-                        : routed + get(150),
-                Confidence.CHECK_NEEDED);
-        put(result, GearAspect.LONG_TERM_TARGET,
-                entry.getWeaponGuidance(), Confidence.CHECK_NEEDED);
-        put(result, GearAspect.TARGET_SPECIFIC_BEST,
-                entry.note, Confidence.CHECK_NEEDED);
-        return new GearAssessment(result);
-    }
-
-    /** Compound slot prose must never be treated as proof that one exact item is missing. */
-    static boolean isExactOwnershipTarget(String target)
-    {
-        if (target == null || target.trim().isEmpty()) return false;
-        var value = target.toLowerCase(Locale.ROOT);
-        return !value.contains(" or ") && !value.contains("/")
-                && !value.contains("depending") && !value.contains("target-")
-                && !value.contains(" mix") && !value.contains(" pieces")
-                && !value.contains(" switch") && !value.contains(" as ")
-                && !value.contains(" progression") && !value.contains("applicable");
-    }
-
-    private static void put(
-            Map<GearAspect, GearDecision> decisions,
-            GearAspect kind, String value,
-            Confidence confidence)
-    {
-        decisions.put(kind, new GearDecision(kind, value, confidence));
-    }
-}
-
-/** Reads patch varbits only while the player is in a known Farming region. */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-class FarmingRunObservationService
-{
-    private final Client client;
-    private final FarmingRunCatalog catalog;
-    private final FarmingPatchStateDecoder decoder;
-    private final FarmingRunStateStore store;
-
-    public boolean observeCurrentPatches()
-    {
-        if (client.getGameState() != GameState.LOGGED_IN) return false;
-        var player = client.getLocalPlayer();
-        if (player == null) return false;
-        var location = player.getWorldLocation();
-        if (location == null) return false;
-
-        var changed = false;
-        List<FarmingRunPatchDefinition> patches =
-                catalog.forRegion(location.getRegionID());
-        for (FarmingRunPatchDefinition patch : patches)
-        {
-            var raw = client.getVarbitValue(patch.getVarbitId());
-            var state = decoder.decode(patch.getKind(), raw);
-            if (state != PatchState.UNKNOWN)
-            {
-                changed |= store.remember(patch.id, state);
-            }
-        }
-        return changed;
-    }
-
-    public void clearForAccountChange()
-    {
-        store.clearCacheForAccountChange();
-    }
-}
-
-/**
- * GIM strategy grounded only in enabled, fresh Group Storage item evidence.
- * It never infers teammate levels, roles, POH rooms, or other capabilities.
- */
-@Singleton
-final class GimGroupStrategyService
-{
-    public GroupResourceAssessment assess(
-            StrategyContext context, GroupResourceNeed need)
-    {
-        if (need == null)
-            throw new IllegalArgumentException(get(1429));
-        AccountMode mode = context == null
-                ? AccountMode.UNKNOWN : context.accountMode();
-        if (!mode.isGroupIronman())
-            return result(GroupResourceState.NOT_A_GROUP_ACCOUNT,
-                    Confidence.VERIFIED, 0, need, 0.0,
-                    get(287));
-        if (!context.usesGroupStorage())
-            return result(GroupResourceState.GROUP_STORAGE_DISABLED,
-                    Confidence.VERIFIED, 0, need, 0.0,
-                    get(288));
-        var data = context.data();
-        ItemsState storage = data == null
-                ? null : data.groupStorage();
-        if (storage == null || !storage.isObserved())
-            return result(GroupResourceState.GROUP_STORAGE_UNKNOWN,
-                    Confidence.CHECK_NEEDED, 0, need, 0.0,
-                    get(289));
-
-        var quantity = quantity(storage, need.getAcceptableItemIds());
-        if (quantity <= 0)
-            return result(GroupResourceState.SHARED_STOCK_NONE,
-                    Confidence.VERIFIED, 0, need, 0.0,
-                    get(290));
-        double fraction = min(1.0, quantity
-                / (double) need.quantity);
-        if (quantity < need.quantity)
-            return result(GroupResourceState.SHARED_STOCK_PARTIAL,
-                    Confidence.VERIFIED, quantity, need,
-                    fraction * 0.45,
-                    get(291));
-        var avoidance = need.isReusable() ? 1.0 : 0.75;
-        return result(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
-                Confidence.VERIFIED, quantity, need, avoidance,
-                get(292));
-    }
-
-    private static GroupResourceAssessment result(GroupResourceState state,
-            Confidence confidence, int quantity,
-            GroupResourceNeed need, double avoidance, String reason)
-    {
-        return new GroupResourceAssessment(state, confidence, quantity,
-                need.quantity, avoidance, reason);
-    }
-
-    private static int quantity(ItemsState storage, Set<Integer> ids)
-    {
-        var total = 0;
-        for (ItemState item : storage.getItems())
-        {
-            if (item == null || !ids.contains(item.itemId)) continue;
-            var amount = max(0, item.quantity);
-            if (total >= Integer.MAX_VALUE - amount) return Integer.MAX_VALUE;
-            total += amount;
-        }
-        return total;
-    }
-}
-
 /** Resolves recommendation relationships from actual typed goal dependencies. */
 @Singleton
 class GoalDependencyProvenanceService
@@ -579,7 +108,12 @@ class GoalDependencyProvenanceService
                         recommendation.id))
             return recommendation;
         var provenance = resolve(recommendation, context);
-        return recommendation.withGoalProvenance(provenance);
+        Recommendation result = recommendation.withGoalProvenance(provenance);
+        StrategicValue questValue = questValue(recommendation, context);
+        return questValue.hasTypedEvidence()
+                ? result.withStrategicValue(
+                        result.strategicValue.merge(questValue))
+                : result;
     }
 
     public GoalProvenance resolve(
@@ -871,6 +405,75 @@ class GoalDependencyProvenanceService
         return result;
     }
 
+    /** Values a quest directly from the same proven graph used for provenance. */
+    private StrategicValue questValue(Recommendation recommendation,
+            StrategyContext context)
+    {
+        String quest = recommendationQuest(recommendation, context);
+        if (quest == null || questPath(context.goal(), quest, context) == null)
+            return StrategicValue.neutral();
+        QuestDefinition definition = quests.definitionFor(quest);
+        AccountSnapshot account = context.data().account();
+        if (definition == null
+                || !QuestMembershipPolicy.isAvailable(quest,
+                        account.membership())
+                || !RestrictedQuestPolicy.isSafe(account, quest))
+            return StrategicValue.neutral();
+        Set<String> required = requiredQuestNames(context.goal(), context);
+        int dependents = 0;
+        EnumMap<Skill, Integer> targets = new EnumMap<>(Skill.class);
+        for (String name : required)
+        {
+            QuestDefinition pathQuest = quests.definitionFor(name);
+            if (pathQuest == null) continue;
+            for (String prerequisite : pathQuest.prerequisites)
+                if (Names.words(prerequisite).equals(Names.words(quest))
+                        && statusOf(context, name) != QuestStatus.COMPLETE)
+                    dependents++;
+            for (Map.Entry<Skill, Integer> entry
+                    : pathQuest.skillRequirements.entrySet())
+                if (entry.getValue() > context.data().account()
+                        .level(entry.getKey()))
+                    targets.merge(entry.getKey(), entry.getValue(), Math::max);
+        }
+        double rewardValue = rewardValue(definition, targets,
+                account);
+        double sharedValue = min(1.0, dependents * 0.12);
+        if (sharedValue <= 0.0 && rewardValue <= 0.0)
+            return StrategicValue.neutral();
+        return StrategicValue.builder()
+                .sharedDependencyValue(sharedValue)
+                .unlockValue(rewardValue)
+                .evidence("quest-path:" + quest)
+                .build();
+    }
+
+    private static double rewardValue(QuestDefinition definition,
+            Map<Skill, Integer> targets, AccountSnapshot account)
+    {
+        if (definition == null) return 0.0;
+        for (String uncertainty : definition.getFieldUncertainties())
+        {
+            String value = Names.words(uncertainty);
+            if (value.contains("reward")
+                    || value.contains("irreversible xp")) return 0.0;
+        }
+        double result = 0.0;
+        for (Map.Entry<Skill, Integer> reward
+                : definition.getRewardXp().entrySet())
+        {
+            Integer target = targets.get(reward.getKey());
+            if (target == null || reward.getValue() <= 0
+                    || account.level(reward.getKey()) >= target) continue;
+            int currentXp = max(account.xp(reward.getKey()),
+                    Experience.getXpForLevel(max(1,
+                            account.level(reward.getKey()))));
+            int gap = max(1, Experience.getXpForLevel(target) - currentXp);
+            result += min(1.0, reward.getValue() / (double) gap);
+        }
+        return min(1.0, result);
+    }
+
     private static boolean isDirectSkillGoal(GoalType goal, Skill skill)
     {
         if (skill == null) return false;
@@ -914,7 +517,8 @@ class GoalDependencyProvenanceService
             Recommendation recommendation, StrategyContext context)
     {
         var id = recommendation.id;
-        if (id == null || !id.startsWith("quest:") || context.data() == null
+        if (context == null || id == null || !id.startsWith("quest:")
+                || context.data() == null
                 || context.data().quests() == null) return null;
         var slug = id.substring("quest:".length());
         for (String quest : context.data().quests().quests().keySet())
@@ -956,91 +560,21 @@ class GoalDependencyProvenanceService
     }
 }
 
-/** Attaches infrastructure utility to its actual typed prerequisite actions. */
-@Singleton
-@RequiredArgsConstructor
-final class InfrastructureRecommendationValueService
-{
-    private final InfrastructureMilestoneCatalog catalog;
-    private final InfrastructureUnlockValueService values;
-
-    public InfrastructureRecommendationValueService()
-    {
-        this(new InfrastructureMilestoneCatalog(),
-                new InfrastructureUnlockValueService());
-    }
-    public Recommendation attach(
-            Recommendation recommendation, StrategyContext context)
-    {
-        if (recommendation == null || context == null
-                || context.data() == null
-                || context.data().account() == null) return recommendation;
-        var merged = recommendation.strategicValue;
-        for (InfrastructureMilestone definition : catalog.all())
-        {
-            InfraAssessment assessment = values.assess(
-                    definition.id, context);
-            if (assessment.getState() == InfrastructureMilestoneState.COMPLETE
-                    || assessment.getState()
-                            == InfrastructureMilestoneState.NOT_APPLICABLE)
-                continue;
-            if (!matches(recommendation, definition, context)) continue;
-            double utility = assessment.strategicValue.ordinal()
-                    / (double) Priority.CRITICAL.ordinal();
-            merged = merged.merge(StrategicValue.builder()
-                    .infrastructureValue(utility)
-                    .accountModeFit(utility * 0.6)
-                    .unlockValue(utility * 0.5)
-                    .evidence("infrastructure:" + definition.id)
-                    .build());
-        }
-        return recommendation.withStrategicValue(merged);
-    }
-
-    private static boolean matches(Recommendation recommendation,
-            InfrastructureMilestone definition,
-            StrategyContext context)
-    {
-        var training = recommendation.plan();
-        Skill skill = training == null || training.method() == null
-                ? null : training.method().getSkill();
-        int current = skill == null ? 0 : context.data().account()
-                .level(skill);
-        var required = definition.requiredSkills.getOrDefault(skill, 0);
-        if (skill != null && required > 0
-                && current < required
-                && recommendation.targetLevel
-                        >= required) return true;
-
-        for (String quest : definition.getRequiredQuests().keySet())
-            if (recommendation.id != null
-                    && recommendation.id.equals("quest:" + slug(quest)))
-                return true;
-        return recommendation.id != null
-                && recommendation.id.equals(
-                        "infrastructure:" + definition.id);
-    }
-
-    private static String slug(String value)
-    {
-        return value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", "-")
-                .replaceAll("^-|-$", "");
-    }
-}
-
 /** Assesses infrastructure through typed utility and observed provenance. */
 @Singleton
-@RequiredArgsConstructor
 final class InfrastructureUnlockValueService
 {
     private final InfrastructureMilestoneCatalog catalog;
-    private final AccountStrategicPriorityService priorityService;
 
-    public InfrastructureUnlockValueService()
+    @Inject
+    InfrastructureUnlockValueService(InfrastructureMilestoneCatalog catalog)
     {
-        this(new InfrastructureMilestoneCatalog(),
-                new AccountStrategicPriorityService());
+        this.catalog = catalog;
+    }
+
+    InfrastructureUnlockValueService()
+    {
+        this(new InfrastructureMilestoneCatalog());
     }
     public InfraAssessment assess(String milestoneId,
             StrategyContext context)
@@ -1049,33 +583,23 @@ final class InfrastructureUnlockValueService
         if (definition == null)
             throw new IllegalArgumentException(
                     get(1422) + milestoneId);
-        AccountPriorities priorities =
-                priorityService.assess(context);
         var data = context == null ? null : context.data();
-        return assess(definition, priorities, data);
+        return assess(definition, context, data);
     }
 
-    public InfraAssessment assess(
+    InfraAssessment assess(
             InfrastructureMilestone definition,
-            AccountPriorities priorities,
+            StrategyContext context,
             GameData data)
     {
         if (definition == null) throw new IllegalArgumentException("definition");
-        if (priorities == null) throw new IllegalArgumentException("priorities");
-
-        List<InfraContribution> contributions = new ArrayList<>();
         var overall = Priority.NONE;
         for (Map.Entry<InfraBenefit, Priority> entry
                 : definition.getBenefits().entrySet())
         {
-            Priority account = priorities.priorityOf(
-                    entry.getKey().getDimension());
-            InfraContribution contribution =
-                    new InfraContribution(entry.getKey(),
-                            account, entry.getValue());
-            contributions.add(contribution);
+            Priority account = priorityOf(context, entry.getKey());
             overall = Priority.higherOf(overall,
-                    contribution.getEffectivePriority());
+                    Priority.lowerOf(account, entry.getValue()));
         }
 
         var account = data == null ? null : data.account();
@@ -1086,39 +610,121 @@ final class InfrastructureUnlockValueService
             if (membership == Membership.F2P)
                 return result(definition,
                         InfrastructureMilestoneState.NOT_APPLICABLE,
-                        Confidence.BLOCKED, overall,
-                        contributions, get(1423));
+                        Confidence.BLOCKED, overall, get(1423));
             if (membership == Membership.UNKNOWN)
                 return result(definition,
                         InfrastructureMilestoneState.CHECK_NEEDED,
                         Confidence.CHECK_NEEDED, overall,
-                        contributions,
                         get(334));
         }
 
         var completion = completionState(definition, data);
         if (completion == Capability.VERIFIED)
             return result(definition, InfrastructureMilestoneState.COMPLETE,
-                    Confidence.VERIFIED, overall, contributions,
+                    Confidence.VERIFIED, overall,
                     get(335));
 
         var requirements = requirements(definition, data);
         if (requirements == RequirementState.BLOCKED)
             return result(definition,
                     InfrastructureMilestoneState.REQUIREMENTS_MISSING,
-                    Confidence.BLOCKED, overall, contributions,
+                    Confidence.BLOCKED, overall,
                     get(336));
         if (requirements == RequirementState.CHECK_NEEDED
                 || completion == Capability.UNKNOWN)
             return result(definition,
                     InfrastructureMilestoneState.CHECK_NEEDED,
                     Confidence.CHECK_NEEDED, overall,
-                    contributions,
                     get(337));
 
         return result(definition, InfrastructureMilestoneState.ACTIONABLE,
-                Confidence.VERIFIED, overall, contributions,
+                Confidence.VERIFIED, overall,
                 get(338));
+    }
+
+    Recommendation attach(Recommendation recommendation,
+            StrategyContext context)
+    {
+        if (recommendation == null || context == null
+                || context.data() == null
+                || context.data().account() == null) return recommendation;
+        var merged = recommendation.strategicValue;
+        for (InfrastructureMilestone definition : catalog.all())
+        {
+            InfraAssessment assessment = assess(definition, context,
+                    context.data());
+            if (assessment.getState() == InfrastructureMilestoneState.COMPLETE
+                    || assessment.getState()
+                            == InfrastructureMilestoneState.NOT_APPLICABLE
+                    || !matches(recommendation, definition, context)) continue;
+            double utility = assessment.strategicValue.ordinal()
+                    / (double) Priority.CRITICAL.ordinal();
+            merged = merged.merge(StrategicValue.builder()
+                    .infrastructureValue(utility)
+                    .accountModeFit(utility * 0.6)
+                    .unlockValue(utility * 0.5)
+                    .evidence("infrastructure:" + definition.id).build());
+        }
+        return recommendation.withStrategicValue(merged);
+    }
+
+    static Priority priorityOf(StrategyContext context, InfraBenefit benefit)
+    {
+        AccountMode mode = context == null ? AccountMode.UNKNOWN
+                : context.accountMode();
+        if (mode == AccountMode.UNKNOWN)
+            return benefit == InfraBenefit.SELF_SUFFICIENCY
+                    ? Priority.CRITICAL : Priority.NONE;
+        boolean uim = mode == AccountMode.ULTIMATE_IRONMAN;
+        boolean iron = mode.isIronLike();
+        boolean hardcore = mode == AccountMode.HARDCORE_IRONMAN
+                || mode == AccountMode.HARDCORE_GROUP_IRONMAN;
+        switch (benefit)
+        {
+            case INVENTORY_RELIEF:
+                if (!uim) return Priority.LOW;
+                ItemsState inventory = context == null || context.data() == null
+                        ? null : context.data().inventory();
+                return inventory != null
+                        && inventory.hasCompleteSlotObservation()
+                        && UimSetupCostService.occupiedInventorySlots(inventory) >= 24
+                        ? Priority.CRITICAL : Priority.HIGH;
+            case STORAGE: return uim ? Priority.CRITICAL
+                    : iron ? Priority.MODERATE : Priority.LOW;
+            case POH_PLATFORM:
+            case TRAVEL_NETWORK: return uim ? Priority.CRITICAL
+                    : iron ? Priority.HIGH : Priority.MODERATE;
+            case SETUP_REUSE: return uim ? Priority.CRITICAL
+                    : hardcore ? Priority.HIGH : Priority.MODERATE;
+            case RISK_REDUCTION: return hardcore ? Priority.CRITICAL
+                    : uim ? Priority.HIGH : Priority.MODERATE;
+            case RESOURCE_SUSTAINABILITY: return uim ? Priority.CRITICAL
+                    : iron ? Priority.HIGH : Priority.LOW;
+            case STORABLE_EQUIPMENT: return uim ? Priority.CRITICAL
+                    : iron ? Priority.MODERATE : Priority.LOW;
+            case GP_LIQUIDITY: return uim ? Priority.HIGH
+                    : iron ? Priority.MODERATE : Priority.LOW;
+            case SELF_SUFFICIENCY: return uim ? Priority.CRITICAL
+                    : iron ? Priority.HIGH : Priority.LOW;
+            default: return Priority.NONE;
+        }
+    }
+
+    private static boolean matches(Recommendation recommendation,
+            InfrastructureMilestone definition, StrategyContext context)
+    {
+        var training = recommendation.plan();
+        Skill skill = training == null || training.method() == null
+                ? null : training.method().getSkill();
+        int current = skill == null ? 0 : context.data().account().level(skill);
+        var required = definition.requiredSkills.getOrDefault(skill, 0);
+        if (skill != null && required > 0 && current < required
+                && recommendation.targetLevel >= required) return true;
+        for (String quest : definition.getRequiredQuests().keySet())
+            if (recommendation.id != null && recommendation.id.equals(
+                    "quest:" + Names.slug(quest))) return true;
+        return recommendation.id != null && recommendation.id.equals(
+                "infrastructure:" + definition.id);
     }
 
     private RequirementState requirements(
@@ -1127,7 +733,7 @@ final class InfrastructureUnlockValueService
     {
         var account = data == null ? null : data.account();
         if (account == null) return RequirementState.CHECK_NEEDED;
-        for (Map.Entry<net.runelite.api.Skill, Integer> skill
+        for (Map.Entry<Skill, Integer> skill
                 : definition.requiredSkills.entrySet())
             if (account.level(skill.getKey()) < skill.getValue())
                 return RequirementState.BLOCKED;
@@ -1193,11 +799,9 @@ final class InfrastructureUnlockValueService
             InfrastructureMilestoneState state,
             Confidence confidence,
             Priority value,
-            List<InfraContribution> contributions,
             String reason)
     {
-        return new InfraAssessment(definition, state, confidence,
-                value, contributions, reason);
+        return new InfraAssessment(definition, state, confidence, value, reason);
     }
 }
 
@@ -1273,12 +877,10 @@ final class MethodRecommendationValueService
 {
     private final MethodLocationCatalog locations;
     private final TravelRouteEvidenceCatalog routes;
-    private final MethodResourceValueService resources;
 
     MethodRecommendationValueService()
     {
-        this(new MethodLocationCatalog(), new TravelRouteEvidenceCatalog(),
-                new MethodResourceValueService(null));
+        this(new MethodLocationCatalog(), new TravelRouteEvidenceCatalog());
     }
 
     public Recommendation attach(
@@ -1288,7 +890,6 @@ final class MethodRecommendationValueService
                 ? null : recommendation.plan();
         var method = plan == null ? null : plan.method();
         if (method == null || context == null) return recommendation;
-        recommendation = resources.attach(recommendation, context);
         MethodLocationProfile profile = locations.forMethod(method.id);
         if (profile == null || context.data() == null
                 || context.data().account() == null) return recommendation;
@@ -1351,212 +952,6 @@ final class MethodRecommendationValueService
         if (first == null || first.trim().isEmpty()) return second;
         if (second == null || second.trim().isEmpty()) return first;
         return first + " " + second;
-    }
-}
-
-/** Values deterministic method inputs without an intermediate resource DTO pipeline. */
-@Singleton
-final class MethodResourceValueService
-{
-    private static final ResourceSourceCatalog SOURCES = new ResourceSourceCatalog();
-    private final RuneLiteSkillActionCatalog actions;
-    private final MethodExecutionProfileCatalog profiles =
-            new MethodExecutionProfileCatalog();
-    private final SkillingXpModifierService modifiers =
-            new SkillingXpModifierService();
-    private final AdaptiveActionSelector selector = new AdaptiveActionSelector();
-    private final MethodInputResolver inputs = new MethodInputResolver();
-    private final GimGroupStrategyService groupStrategy =
-            new GimGroupStrategyService();
-
-    @Inject
-    public MethodResourceValueService(RuneLiteSkillActionCatalog actions)
-    {
-        this.actions = actions == null ? new RuneLiteSkillActionCatalog() : actions;
-    }
-    public Recommendation attach(Recommendation recommendation,
-            StrategyContext context)
-    {
-        TrainingPlan plan = recommendation == null ? null
-                : recommendation.plan();
-        var method = plan == null ? null : plan.method();
-        if (method == null || method.getSkill() == null || context == null
-                || context.data() == null || context.data().account() == null
-                || recommendation.targetLevel <= 0) return recommendation;
-        var profile = profiles.forMethod(method.id);
-        if (profile == null) return recommendation;
-
-        var account = context.data().account();
-        var skill = method.getSkill();
-        var currentXp = account.xp(skill);
-        if (currentXp <= 0)
-            currentXp = Experience.getXpForLevel(account.level(skill));
-        var targetXp = Experience.getXpForLevel(recommendation.targetLevel);
-        double multiplier = profile.getXpMultiplier() * modifiers.modifier(
-                context.data(), skill, context.usesGroupStorage()).multiplier;
-        ActionDef action = selector.select(context.data(), profile,
-                actions.actionsFor(skill), account.level(skill),
-                account.membership(), currentXp, targetXp, multiplier,
-                context.usesGroupStorage());
-        if (action == null || action.xp <= 0) return recommendation;
-        int count = (int) ceil(max(0, targetXp - currentXp)
-                / (action.xp * multiplier));
-
-        var score = 0;
-        var known = false;
-        var shared = StrategicValue.neutral();
-        for (MethodInput input : inputs.resolve(profile, action, count))
-        {
-            var policy = policy(input.getName());
-            if (policy == null) continue;
-            known = true;
-            score += resourceAdjustment(context, input.getName(),
-                    input.quantity, policy[0], policy[1] == 1);
-            var sharedIds = observedGroupItemIds(context, input.getName());
-            if (!sharedIds.isEmpty())
-                shared = shared.merge(groupStrategy.assess(context,
-                        new GroupResourceNeed(input.getName(), sharedIds,
-                                input.quantity, false)).strategicValue(
-                        "group-resource:" + input.getName().toLowerCase(Locale.ROOT)));
-        }
-        if (!known) return recommendation;
-        StrategicValue value = StrategicValue.builder()
-                .resourceFit(max(-16, min(6, score)) / 12.0)
-                .evidence(get(1881) + method.id).build()
-                .merge(shared);
-        return recommendation.withStrategicValue(
-                recommendation.strategicValue.merge(value));
-    }
-
-    /** Shared scoring primitive retained for regression coverage of mode safety. */
-    static int resourceAdjustment(StrategyContext context, String name,
-            int required, int scarcity, boolean tradeable)
-    {
-        if (context == null || context.data() == null || name == null) return -4;
-        ItemIndex items = new ItemIndex(context.data(),
-                context.usesGroupStorage());
-        var observed = items.quantity(name);
-        var mode = context.accountMode();
-        int burden = mode.usesGrandExchange() && tradeable ? 1
-                : mode.isIronLike() ? 5 : 4;
-        if (mode.isGroupIronman() && context.usesGroupStorage()
-                && items.groupStorageObserved()) burden--;
-        if (mode == AccountMode.ULTIMATE_IRONMAN) burden += 2;
-        if (observed >= max(1, required))
-            return max(-10, min(4, 4 - burden - scarcity));
-        if (!items.resourceContainersObserved()) return -2;
-        if (SOURCES.match(name).isEmpty()) return -4;
-        return max(-12, min(3, 2 - burden - scarcity));
-    }
-
-    private static int[] policy(String name)
-    {
-        var value = Names.words(name);
-        if (value.equals("spirit seed") || value.equals("crystal acorn"))
-            return new int[]{4, 0};
-        for (String term : new String[]{"rune", "essence", "bar", "plank",
-                "nail", "log", "raw ", "grape", "jug of water", "feather",
-                "arrowhead", "headless arrow", "dart tip", "unfinished bolt",
-                "uncut ", "herb", "weed", "snape grass", "crushed nest",
-                get(1882), "sapling", "seed"})
-            if (value.contains(term)) return new int[]{1, 1};
-        return null;
-    }
-
-    private static Set<Integer> observedGroupItemIds(StrategyContext context,
-            String itemName)
-    {
-        if (context == null || !context.accountMode().isGroupIronman()
-                || !context.usesGroupStorage() || context.data() == null
-                || context.data().groupStorage() == null
-                || !context.data().groupStorage().isObserved())
-            return emptySet();
-        var target = Names.words(itemName);
-        Set<Integer> ids = new LinkedHashSet<>();
-        for (ItemState item : context.data().groupStorage().getItems())
-            if (item != null && item.quantity > 0 && item.itemId > 0
-                    && target.equals(Names.words(item.getName())))
-                ids.add(item.itemId);
-        return ids;
-    }
-
-}
-
-/** Applies live account and plan-relative inventory evidence before ranking. */
-@Singleton
-final class MethodStrategyService
-{
-    private final UimInventoryResolutionService inventoryResolution;
-
-    @Inject
-    public MethodStrategyService(
-            UimInventoryResolutionService inventoryResolution)
-    {
-        this.inventoryResolution = inventoryResolution == null
-                ? new UimInventoryResolutionService() : inventoryResolution;
-    }
-
-    public MethodStrategyService()
-    {
-        this(new UimInventoryResolutionService());
-    }
-
-    public MethodStrategyAssessment assess(GameData data,
-            MethodStrategyProfile profile)
-    {
-        if (data == null || data.account() == null)
-            return new MethodStrategyAssessment(profile != null, 0.0,
-                    profile == null ? get(1304)
-                            : profile.getPlayerReason());
-        if (profile == null)
-            return new MethodStrategyAssessment(false, 0.0,
-                    get(388));
-        AccountMode mode = AccountMode.fromTypeCode(
-                data.account().modeCode());
-        if (!profile.supports(mode))
-            return new MethodStrategyAssessment(false, 0.0,
-                    get(389));
-        if (mode == AccountMode.ULTIMATE_IRONMAN
-                && profile.bankingBehavior
-                        == BankingMode.CONVENTIONAL_BANK_LOOP)
-            return new MethodStrategyAssessment(false, 0.0,
-                    get(390));
-
-        var footprint = profile.inventoryFootprint;
-        var inventory = data.inventory();
-        if (mode == AccountMode.ULTIMATE_IRONMAN
-                && footprint != null
-                && footprint.minimumPracticalFreeSlots > 0
-                && (inventory == null
-                || !inventory.hasCompleteSlotObservation()))
-            return new MethodStrategyAssessment(false, 0.0,
-                    get(391));
-        var occupied = UimSetupCostService.occupiedInventorySlots(inventory);
-        var free = max(0, 28 - occupied);
-        if (mode == AccountMode.ULTIMATE_IRONMAN
-                && inventory != null
-                && inventory.hasCompleteSlotObservation())
-        {
-            UimInventoryResolution resolution = inventoryResolution.resolve(
-                    data, footprint, false, false,
-                    emptyList());
-            if (resolution.getKind() != UimInventoryKind.USE_AS_IS)
-                return new MethodStrategyAssessment(false, 0.0,
-                        resolution.reason);
-        }
-
-        var score = profile.getAccountValueFit() * 8.0;
-        if (mode == AccountMode.ULTIMATE_IRONMAN && inventory != null
-                && inventory.hasCompleteSlotObservation())
-        {
-            var margin = free - footprint.minimumPracticalFreeSlots;
-            if (margin <= 1) score -= 5.0;
-            if (footprint.tearsDownCurrentSetup()) score -= 8.0;
-            if (footprint.getFlow()
-                    == InventoryFlow.GROWS_NONSTACKABLE_OUTPUTS) score -= 3.0;
-        }
-        return new MethodStrategyAssessment(true, score,
-                profile.getPlayerReason());
     }
 }
 
@@ -1974,323 +1369,6 @@ class ProgressAnalyticsService
     }
 }
 
-/** Decides whether a method is still serving a larger reward objective. */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-class ProgressionObjectiveService
-{
-    private final ProgressionObjectiveCatalog catalog;
-
-    public ProgressionObjectiveDefinition activeObjective(
-            TrainingPlan plan,
-            CollectionLogSnapshot collectionLog)
-    {
-        if (plan == null || plan.method() == null)
-        {
-            return null;
-        }
-
-        ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.method().id);
-        if (objective == null)
-        {
-            return null;
-        }
-
-        if (collectionLog != null
-                && collectionLog.isObjectiveComplete(objective.id))
-        {
-            return null;
-        }
-
-        return objective;
-    }
-
-    public boolean shouldProtect(
-            TrainingPlan plan,
-            CollectionLogSnapshot collectionLog)
-    {
-        if (plan == null || plan.method() == null)
-        {
-            return false;
-        }
-
-        // Explicit catalog objectives take precedence. The method flag remains
-        // a conservative fallback while collection-log readers are incomplete.
-        ProgressionObjectiveDefinition objective =
-                catalog.forMethod(plan.method().id);
-        if (objective != null)
-        {
-            return collectionLog == null
-                    || !collectionLog.isObjectiveComplete(objective.id);
-        }
-
-        return plan.method().progressionProtected;
-    }
-}
-
-/**
- * Orders quest work from typed dependency edges and compresses shared paths.
- * Optional-quest preference is deliberately absent: every returned quest is a
- * proven dependency of one of the supplied goals.
- */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-final class QuestPathPlanningService
-{
-    private final GoalGraph goalGraph;
-    private final QuestKnowledgeCatalog quests;
-    private final QuestRequirementResolver resolver;
-
-    public QuestPathPlan plan(StrategyContext context)
-    {
-        return plan(context, singleton(
-                context == null ? GoalType.AUTOMATIC
-                        : context.goal()));
-    }
-
-    public QuestPathPlan plan(StrategyContext context,
-            Collection<GoalType> selectedGoals)
-    {
-        if (context == null || context.data() == null
-                || context.data().account() == null
-                || context.data().quests() == null
-                || selectedGoals == null)
-            return new QuestPathPlan(emptyList());
-
-        Map<String, MutableNode> nodes = new LinkedHashMap<>();
-        for (GoalType goal : selectedGoals)
-        {
-            if (goal == null || goal == GoalType.AUTOMATIC
-                    || goal == GoalType.CUSTOM) continue;
-            if (goal == GoalType.QUEST_CAPE)
-                addQuestCapeRoots(goal, context, nodes);
-            else
-                for (String root : goalGraph.questRootsFor(goal))
-                    traverse(goal, root, context, nodes,
-                            new ArrayList<>(), new HashSet<>());
-        }
-
-        Map<Skill, Integer> unmetSkillTargets = unmetSkillTargets(
-                nodes, context);
-        List<QuestPathStep> result = new ArrayList<>();
-        for (MutableNode node : nodes.values())
-        {
-            var status = statusOf(context, node.questName);
-            if (status == QuestStatus.COMPLETE
-                    || status == QuestStatus.UNKNOWN) continue;
-            var definition = quests.definitionFor(node.questName);
-            var account = context.data().account();
-            if (definition == null
-                    || !QuestMembershipPolicy.isAvailable(
-                            definition.getName(),
-                            account.membership())
-                    || !RestrictedQuestPolicy.isSafe(account,
-                            definition.getName()))
-                continue;
-            QuestResolution resolution = definition == null ? null
-                    : resolver.resolve(definition, context);
-            Confidence readiness = resolution == null
-                    ? Confidence.CHECK_NEEDED
-                    : resolution.confidence;
-            var prerequisitesComplete = definition != null;
-            if (definition != null)
-                for (String prerequisite : definition.prerequisites)
-                    if (statusOf(context, prerequisite)
-                            != QuestStatus.COMPLETE)
-                        prerequisitesComplete = false;
-            boolean eligible = prerequisitesComplete
-                    && readiness != Confidence.BLOCKED;
-            var rewards = guaranteedRewards(definition);
-            result.add(new QuestPathStep(node.questName, status,
-                    node.paths, node.unfinishedDependents,
-                    readiness, eligible, node.depth, rewards,
-                    rewardValue(rewards, unmetSkillTargets,
-                            context.data().account())));
-        }
-        result.sort(Comparator
-                .comparing(QuestPathStep::isEligibleNow).reversed()
-                .thenComparing(step -> step.status
-                        == QuestStatus.IN_PROGRESS, Comparator.reverseOrder())
-                .thenComparing(step -> step.getReadiness()
-                        == Confidence.VERIFIED,
-                        Comparator.reverseOrder())
-                .thenComparing(Comparator.comparingInt(
-                        QuestPathStep::getGoalCount).reversed())
-                .thenComparing(Comparator.comparingInt(
-                        (QuestPathStep step) -> step
-                                .getUnfinishedDependents().size()).reversed())
-                .thenComparing(Comparator.comparingDouble(
-                        QuestPathStep::getGoalPathRewardValue).reversed())
-                .thenComparing(Comparator.comparingInt(
-                        QuestPathStep::getDepth).reversed())
-                .thenComparing(QuestPathStep::getQuestName));
-        return new QuestPathPlan(result);
-    }
-
-    private void addQuestCapeRoots(GoalType goal, StrategyContext context,
-            Map<String, MutableNode> nodes)
-    {
-        for (Map.Entry<String, QuestStatus> entry
-                : context.data().quests().quests().entrySet())
-            if (entry.getValue() == QuestStatus.NOT_STARTED
-                    || entry.getValue() == QuestStatus.IN_PROGRESS)
-                traverse(goal, entry.getKey(), context, nodes,
-                        new ArrayList<>(), new HashSet<>());
-    }
-
-    private void traverse(GoalType goal, String questName,
-            StrategyContext context, Map<String, MutableNode> nodes,
-            List<String> ancestors, Set<String> active)
-    {
-        var key = Names.words(questName);
-        if (!active.add(key)) return;
-        var definition = quests.definitionFor(questName);
-        if (definition == null)
-        {
-            active.remove(key);
-            return;
-        }
-        var account = context.data().account();
-        if (!QuestMembershipPolicy.isAvailable(definition.getName(),
-                account.membership())
-                || !RestrictedQuestPolicy.isSafe(account,
-                        definition.getName()))
-        {
-            active.remove(key);
-            return;
-        }
-        List<String> path = new ArrayList<>();
-        path.add(goal.toString());
-        path.addAll(ancestors);
-        path.add(definition.getName());
-        MutableNode node = nodes.computeIfAbsent(key,
-                ignored -> new MutableNode(definition.getName()));
-        node.paths.put(goal, shortest(node.paths.get(goal), path));
-        node.depth = max(node.depth, ancestors.size());
-
-        List<String> childAncestors = new ArrayList<>(ancestors);
-        childAncestors.add(definition.getName());
-        for (String prerequisite : definition.prerequisites)
-        {
-            var status = statusOf(context, prerequisite);
-            if (status != QuestStatus.COMPLETE
-                    && status != QuestStatus.UNKNOWN)
-            {
-                MutableNode child = nodes.computeIfAbsent(
-                        Names.words(prerequisite),
-                        ignored -> new MutableNode(prerequisite));
-                if (!child.unfinishedDependents.contains(definition.getName()))
-                    child.unfinishedDependents.add(definition.getName());
-            }
-            traverse(goal, prerequisite, context, nodes,
-                    childAncestors, active);
-        }
-        active.remove(key);
-    }
-
-    private static List<String> shortest(
-            List<String> current, List<String> candidate)
-    {
-        if (current == null || candidate.size() < current.size())
-            return candidate;
-        return current;
-    }
-
-    private Map<Skill, Integer> unmetSkillTargets(
-            Map<String, MutableNode> nodes, StrategyContext context)
-    {
-        EnumMap<Skill, Integer> result = new EnumMap<>(Skill.class);
-        var account = context.data().account();
-        for (MutableNode node : nodes.values())
-        {
-            var definition = quests.definitionFor(node.questName);
-            if (definition == null) continue;
-            for (Map.Entry<Skill, Integer> requirement
-                    : definition.skillRequirements.entrySet())
-                if (requirement.getValue()
-                        > account.level(requirement.getKey()))
-                    result.merge(requirement.getKey(), requirement.getValue(),
-                            Math::max);
-        }
-        return result;
-    }
-
-    private static Map<Skill, Integer> guaranteedRewards(
-            QuestDefinition definition)
-    {
-        if (definition == null) return emptyMap();
-        for (String uncertainty : definition.getFieldUncertainties())
-        {
-            var value = Names.words(uncertainty);
-            if (value.contains("reward") || value.contains("irreversible xp"))
-                return emptyMap();
-        }
-        return definition.getRewardXp();
-    }
-
-    private static double rewardValue(Map<Skill, Integer> rewards,
-            Map<Skill, Integer> targets, AccountSnapshot account)
-    {
-        var value = 0.0;
-        for (Map.Entry<Skill, Integer> reward : rewards.entrySet())
-        {
-            var target = targets.get(reward.getKey());
-            if (target == null || reward.getValue() <= 0) continue;
-            var currentLevel = account.level(reward.getKey());
-            if (currentLevel >= target) continue;
-            int currentXp = max(account.xp(reward.getKey()),
-                    Experience.getXpForLevel(max(1, currentLevel)));
-            var targetXp = Experience.getXpForLevel(target);
-            var gap = max(1, targetXp - currentXp);
-            value += min(1.0, reward.getValue() / (double) gap);
-        }
-        return min(1.0, value);
-    }
-
-    private static QuestStatus statusOf(
-            StrategyContext context, String questName)
-    {
-        return QuestGraphs.status(context, questName);
-    }
-
-
-    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-
-
-    private static final class MutableNode
-    {
-        private final String questName;
-        private final Map<GoalType, List<String>> paths =
-                new EnumMap<>(GoalType.class);
-        private final List<String> unfinishedDependents = new ArrayList<>();
-        private int depth;
-    }
-}
-
-/** Adds dependency fan-out value from the typed selected-goal quest plan. */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-final class QuestRecommendationValueService
-{
-    private final QuestPathPlanningService planner;
-
-    public Recommendation attach(
-            Recommendation recommendation, StrategyContext context)
-    {
-        if (recommendation == null || recommendation.id == null
-                || !recommendation.id.startsWith("quest:")
-                || context == null) return recommendation;
-        var plan = planner.plan(context);
-        var quest = recommendation.id.substring("quest:".length());
-        var step = plan.stepForQuest(quest.replace('-', ' '));
-        return step == null ? recommendation
-                : recommendation.withStrategicValue(
-                        recommendation.strategicValue.merge(
-                                step.strategicValue()));
-    }
-}
-
 /** Global account-value ranking after all legal candidates enter one pool. */
 @Singleton
 class RecommendationIntelligenceService
@@ -2308,14 +1386,10 @@ class RecommendationIntelligenceService
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
     }
 
-    public RecommendationIntelligenceService(UimSetupCostService uimSetupCostService)
-    {
-        this(uimSetupCostService, new GoalDependencyProvenanceService());
-    }
-
     public RecommendationIntelligenceService()
     {
-        this(new UimSetupCostService());
+        this(new UimSetupCostService(),
+                new GoalDependencyProvenanceService());
     }
 
     public double rankScore(Recommendation recommendation, StrategyContext context)
@@ -2478,42 +1552,6 @@ class RecommendationIntelligenceService
     }
 }
 
-/** Compatibility facade; item evidence is now resolved by the shared index. */
-@Singleton
-class ResourceReadinessService
-{
-    public EvidenceCheck evaluate(GameData data, ResourceRequirement need)
-    {
-        return evaluate(data, need, false);
-    }
-
-    public EvidenceCheck evaluate(GameData data, ResourceRequirement need,
-            boolean useGroupStorage)
-    {
-        return new ItemIndex(data, useGroupStorage).check(need);
-    }
-
-    public EvidenceCheck evaluate(GameData data, ResourceRequirement need,
-            Capability alternate, String evidence)
-    {
-        return alternate == Capability.VERIFIED
-                ? new EvidenceCheck(need.id, need.getLabel(),
-                        RequirementState.VERIFIED, evidence == null
-                        ? get(1569) : evidence)
-                : evaluate(data, need);
-    }
-
-    public int observedQuantity(GameData data, int... itemIds)
-    {
-        return new ItemIndex(data, false).quantity(itemIds);
-    }
-
-    public int observedQuantity(GameData data, boolean group, int... itemIds)
-    {
-        return new ItemIndex(data, group).quantity(itemIds);
-    }
-}
-
 /** Chooses actual unlock/requirement levels before generic level checkpoints. */
 @Singleton
 final class SkillBreakpointService
@@ -2638,7 +1676,7 @@ final class SkillBreakpointService
     {
         Skill next = null;
         var smallestGap = Integer.MAX_VALUE;
-        for (java.util.Map.Entry<Skill, Integer> requirement
+        for (Map.Entry<Skill, Integer> requirement
                 : definition.requiredSkills.entrySet())
         {
             int gap = requirement.getValue()

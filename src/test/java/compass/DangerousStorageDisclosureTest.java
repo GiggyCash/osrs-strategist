@@ -13,8 +13,6 @@ public class DangerousStorageDisclosureTest
 {
     private final UimCapabilityService capabilityService =
             new UimCapabilityService();
-    private final FinalExecutionPlanValidator validator =
-            new FinalExecutionPlanValidator();
     private final CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
 
     @Test
@@ -27,13 +25,11 @@ public class DangerousStorageDisclosureTest
         Recommendation withoutWarning = recommendation(
                 guidance(decision, null));
 
-        assertFalse(safety.isAllowed(
-                validator.validate(withoutWarning, context), context));
+        assertFalse(safety.isAllowed(withoutWarning, context));
 
         RecommendationRiskDisclosure disclosure =
                 RecommendationRiskDisclosure.deathStorage();
-        Recommendation warned = validator.validate(recommendation(
-                guidance(decision, disclosure)), context);
+        Recommendation warned = recommendation(guidance(decision, disclosure));
         assertTrue(safety.isAllowed(warned, context));
         assertTrue(Presentation.compactText(warned)
                 .contains("HIGH RISK"));
@@ -49,9 +45,8 @@ public class DangerousStorageDisclosureTest
                 StorageKind.DEATH_STORAGE, true,
                 Confidence.VERIFIED, RiskLevel.HIGH,
                 "Synthetic generic evidence");
-        Recommendation result = validator.validate(recommendation(
-                guidance(generic,
-                        RecommendationRiskDisclosure.deathStorage())), context);
+        Recommendation result = recommendation(guidance(generic,
+                RecommendationRiskDisclosure.deathStorage()));
         assertFalse(safety.isAllowed(result, context));
     }
 
@@ -81,7 +76,7 @@ public class DangerousStorageDisclosureTest
                 Capability.VERIFIED);
         GameData data = GameData.builder(uim())
                 .inventory(new ItemsState(Collections.emptyList()))
-                .storage(new StorageSnapshot(states))
+                .storage(new StorageSnapshot(states, Collections.emptyMap()))
                 .build();
         return new StrategyContext(data, StrategyMode.BALANCED,
                 SessionIntent.PICK_FOR_ME, QuestTolerance.NORMAL,

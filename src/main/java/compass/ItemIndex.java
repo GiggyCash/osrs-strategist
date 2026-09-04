@@ -4,6 +4,7 @@ import static java.lang.Math.*;
 import static compass.Text.get;
 
 import java.util.*;
+import java.util.function.*;
 
 
 /**
@@ -144,18 +145,18 @@ public final class ItemIndex
     }
 
     /** Highest-ranked observed usable item name, or null when none match. */
-    public String bestName(java.util.function.ToIntFunction<String> rank)
+    public String bestName(ToIntFunction<String> rank)
     {
         return bestName(rank, usableItems());
     }
 
-    public String bestInventoryName(java.util.function.ToIntFunction<String> rank)
+    public String bestInventoryName(ToIntFunction<String> rank)
     {
         return data == null || data.inventory() == null ? null
                 : bestName(rank, Collections.singletonList(data.inventory().getItems()));
     }
 
-    private static String bestName(java.util.function.ToIntFunction<String> rank,
+    private static String bestName(ToIntFunction<String> rank,
             List<Iterable<ItemState>> sources)
     {
         String best = null;

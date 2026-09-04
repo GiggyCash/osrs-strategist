@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public final class ProgressChartPanel extends JPanel
 {
     private static final int DEFAULT_HEIGHT = 112;
-    private List<ProgressTimeBucket> buckets = emptyList();
+    List<ProgressTimeBucket> buckets = emptyList();
 
     public ProgressChartPanel()
     {
@@ -29,11 +29,6 @@ public final class ProgressChartPanel extends JPanel
         buckets = values == null ? emptyList()
                 : unmodifiableList(new ArrayList<>(values));
         repaint();
-    }
-
-    public int getRenderedBucketCount()
-    {
-        return buckets.size();
     }
 
     @Override

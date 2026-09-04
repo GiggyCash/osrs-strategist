@@ -51,8 +51,10 @@ public class UnknownMembershipCandidateIsolationTest
                 .economy(new AccountEconomySnapshot(0, 0,
                         Confidence.VERIFIED))
                 .diaries(new DiarySnapshot(Collections.singletonMap("Varrock", 0),
-                        Collections.singletonMap("Varrock", 10)))
-                .combatAchievements(new CombatAchievementSnapshot(0, 0))
+                        Collections.singletonMap("Varrock", 10),
+                        Collections.emptyMap(), Collections.emptyMap()))
+                .combatAchievements(new CombatAchievementSnapshot(0, 0,
+                        Collections.emptySet()))
                 .build());
         assertTrue(new DiaryCandidateProvider().candidates(broad).isEmpty());
         assertTrue(new CombatAchievementCandidateProvider().candidates(broad).isEmpty());
@@ -89,7 +91,7 @@ public class UnknownMembershipCandidateIsolationTest
     public void unknownCluesUseF2pBoundaryInProviderAndOpportunityEngine()
     {
         ClueSnapshot medium = new ClueSnapshot(true, "medium", 0L,
-                Confidence.VERIFIED);
+                Confidence.VERIFIED, null);
         GameData unknown = GameData.builder(account(0))
                 .clue(medium).build();
         assertTrue(new ClueCandidateProvider().candidates(context(unknown)).isEmpty());
@@ -104,7 +106,7 @@ public class UnknownMembershipCandidateIsolationTest
 
         GameData beginnerUnknown = GameData.builder(account(0))
                 .clue(new ClueSnapshot(true, "beginner", 0L,
-                        Confidence.VERIFIED)).build();
+                        Confidence.VERIFIED, null)).build();
         assertFalse(new ClueCandidateProvider().candidates(
                 context(beginnerUnknown)).isEmpty());
         assertTrue(new OpportunityEngine().evaluate(beginnerUnknown).stream()

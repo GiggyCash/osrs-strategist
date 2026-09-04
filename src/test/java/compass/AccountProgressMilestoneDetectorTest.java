@@ -96,7 +96,7 @@ public class AccountProgressMilestoneDetectorTest
                 .transport(new TransportSnapshot(unlocked
                         ? Collections.singleton("spirit-trees")
                         : Collections.emptySet()))
-                .storage(new StorageSnapshot(storage))
+                .storage(new StorageSnapshot(storage, Collections.emptyMap()))
                 .build();
     }
 
@@ -113,7 +113,7 @@ public class AccountProgressMilestoneDetectorTest
                 ? Capability.VERIFIED : Capability.BLOCKED);
         return GameData.builder(base.account())
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
-                        Collections.emptyMap(), regions))
+                        Collections.emptyMap(), regions, Collections.emptyMap()))
                 .slayer(TestFixtures.slayerSnapshot(null, 0, "Nieve", null, 0,
                         10, 100, 2, 0,
                         new SlayerRewardSnapshot(rewards),

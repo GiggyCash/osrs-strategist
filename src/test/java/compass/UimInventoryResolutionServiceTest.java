@@ -134,7 +134,7 @@ public class UimInventoryResolutionServiceTest
             states.put(capability, Capability.VERIFIED);
         return GameData.builder(uim())
                 .inventory(new ItemsState(items, true))
-                .storage(new StorageSnapshot(states))
+                .storage(new StorageSnapshot(states, Collections.emptyMap()))
                 .build();
     }
 

@@ -156,8 +156,6 @@ public final class ContentCensusReporter
                 .append(new GearAcquisitionCatalog().all().size())
                 .append(",\n    \"gearContextLadders\": ")
                 .append(new GearProgressionCatalog().all().size())
-                .append(",\n    \"gearDecisionKinds\": ")
-                .append(GearAspect.values().length)
                 .append(",\n    \"deterministicResourceDefinitions\": ")
                 .append(new ResourceDependencyCatalog().size())
                 .append(",\n    \"accountAwareResourceSourceFamilies\": ")

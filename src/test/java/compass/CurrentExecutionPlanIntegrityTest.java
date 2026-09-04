@@ -146,10 +146,7 @@ public class CurrentExecutionPlanIntegrityTest
                         "Barbarian Village fishing spots.", ""),
                 Safety.skill(true, Skill.FISHING));
 
-        Recommendation validated = new FinalExecutionPlanValidator().validate(
-                recommendation, context(data(18, 2, Collections.emptyList())));
-        assertTrue(validated.getSafetyEvidence().hasInvalidCurrentExecution());
-        assertFalse(new CandidateSafetyPolicy().isAllowed(validated,
+        assertFalse(new CandidateSafetyPolicy().isAllowed(recommendation,
                 context(data(18, 2, Collections.emptyList()))));
     }
 
@@ -198,9 +195,8 @@ public class CurrentExecutionPlanIntegrityTest
                 Safety.skill(true, Skill.FISHING));
 
         assertEquals(18, recommendation.getCurrentExecutionTargetLevel());
-        Recommendation validated = new FinalExecutionPlanValidator().validate(
-                recommendation, context(data(18, 2, Collections.emptyList())));
-        assertTrue(validated.getSafetyEvidence().hasInvalidCurrentExecution());
+        assertFalse(new CandidateSafetyPolicy().isAllowed(recommendation,
+                context(data(18, 2, Collections.emptyList()))));
     }
 
     @Test

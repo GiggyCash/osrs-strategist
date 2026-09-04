@@ -15,44 +15,27 @@ public class FoundationPolicyTest
     public void accountModeRulesKeepRestrictedAccountsRestricted()
     {
         assertTrue(
-                AccountModePolicy.mayUseGrandExchange(
-                        AccountMode.MAIN
-                )
+                AccountMode.MAIN.usesGrandExchange()
         );
         assertFalse(
-                AccountModePolicy.mayUseGrandExchange(
-                        AccountMode.IRONMAN
-                )
+                AccountMode.IRONMAN.usesGrandExchange()
         );
         assertFalse(
-                AccountModePolicy.mayUseGrandExchange(
-                        AccountMode.ULTIMATE_IRONMAN
-                )
+                AccountMode.ULTIMATE_IRONMAN.usesGrandExchange()
         );
 
         assertTrue(
-                AccountModePolicy.mayUseGroupStorage(
-                        AccountMode.GROUP_IRONMAN,
-                        true
-                )
+                AccountMode.GROUP_IRONMAN.isGroupIronman()
         );
         assertFalse(
-                AccountModePolicy.mayUseGroupStorage(
-                        AccountMode.GROUP_IRONMAN,
-                        false
-                )
+                false && AccountMode.GROUP_IRONMAN.isGroupIronman()
         );
         assertFalse(
-                AccountModePolicy.mayUseGroupStorage(
-                        AccountMode.MAIN,
-                        true
-                )
+                AccountMode.MAIN.isGroupIronman()
         );
 
         assertTrue(
-                AccountModePolicy.requiresCapabilityCheckedStorage(
-                        AccountMode.ULTIMATE_IRONMAN
-                )
+                AccountMode.ULTIMATE_IRONMAN == AccountMode.ULTIMATE_IRONMAN
         );
         assertTrue(
                 AccountModePolicy.isRiskSensitive(

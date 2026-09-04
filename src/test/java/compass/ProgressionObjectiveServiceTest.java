@@ -9,25 +9,28 @@ import static org.junit.Assert.assertTrue;
 
 public class ProgressionObjectiveServiceTest
 {
-    private final ProgressionObjectiveService service =
-            new ProgressionObjectiveService(new ProgressionObjectiveCatalog());
+    private final MilestoneTracker service =
+            new MilestoneTracker(new ProgressionObjectiveCatalog());
 
     @Test
     public void unknownCollectionStateConservativelyProtectsGracefulGrind()
     {
-        TrainingPlan plan = new TrainingPlan(method("agility_rooftop"), "test");
-        assertTrue(service.shouldProtect(plan, null));
+        TrainingPlan plan = new TrainingPlan(method("agility_rooftop"), "test",
+                Confidence.VERIFIED, Collections.emptyList());
+        assertTrue(service.protect(plan.method(), null));
     }
 
     @Test
     public void explicitlyCompletedObjectiveStopsProtection()
     {
-        TrainingPlan plan = new TrainingPlan(method("agility_rooftop"), "test");
+        TrainingPlan plan = new TrainingPlan(method("agility_rooftop"), "test",
+                Confidence.VERIFIED, Collections.emptyList());
         CollectionLogSnapshot log = new CollectionLogSnapshot(
                 Collections.emptySet(),
-                Collections.singleton("objective:graceful")
+                Collections.singleton("objective:graceful"),
+                Collections.emptyMap(), Collections.emptyMap()
         );
-        assertFalse(service.shouldProtect(plan, log));
+        assertFalse(service.protect(plan.method(), log));
     }
 
     private static TrainingMethod method(String id)

@@ -146,9 +146,7 @@ public class AccountResourcePlannerTest
                 false);
 
         assertEquals(80, plan.getTotalMissingUnits());
-        ResourcePlanEntry entry = plan.getEntries().get(0);
-        assertEquals(20, entry.getUsableOwned());
-        assertEquals(250, entry.getRestrictedOwned());
+        assertEquals(80, plan.getMissingInputs().get(0).getQuantity());
         assertTrue(plan.getGuidance().contains("resupply only"));
         assertTrue(plan.getGuidance().contains("retrieval-only UIM storage"));
         assertFalse(plan.getGuidance().contains("5,020"));
@@ -187,7 +185,8 @@ public class AccountResourcePlannerTest
                 false);
 
         assertEquals(100, plan.getTotalMissingUnits());
-        assertEquals(0, plan.getEntries().get(1).getMissing());
+        assertEquals(1, plan.getMissingInputs().size());
+        assertEquals("Nature rune", plan.getMissingInputs().get(0).getName());
         assertTrue(plan.getGuidance().contains("Fire rune supplied by Staff of fire"));
         assertTrue(plan.getGuidance().contains("Do not assume the shortfall should be bought"));
     }
@@ -196,8 +195,8 @@ public class AccountResourcePlannerTest
     public void lowBurdenExactMainPurchaseUsesLivePriceAndLiquidCash()
     {
         AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
-                new PurchaseCostAdvisor(new FixedPriceService(20)),
-                new MainEconomyPlanner(), new ResourceSourceCatalog());
+                new FixedPriceService(20),
+                new ResourceSourceCatalog());
         GameData data = GameData.builder(account(0))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
@@ -218,8 +217,8 @@ public class AccountResourcePlannerTest
     public void wealthBurdenCanMakeMainUseReviewedSelfSourceRoute()
     {
         AccountResourcePlanner pricedPlanner = new AccountResourcePlanner(
-                new PurchaseCostAdvisor(new FixedPriceService(500)),
-                new MainEconomyPlanner(), new ResourceSourceCatalog());
+                new FixedPriceService(500),
+                new ResourceSourceCatalog());
         GameData data = GameData.builder(account(0))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
@@ -266,9 +265,9 @@ public class AccountResourcePlannerTest
                 Arrays.asList(need("Feather", 10), need("feather", 20)),
                 false);
 
-        assertEquals(1, plan.getEntries().size());
-        assertEquals(30, plan.getEntries().get(0).getRequired());
-        assertEquals(15, plan.getEntries().get(0).getMissing());
+        assertEquals(1, plan.getMissingInputs().size());
+        assertEquals(15, plan.getMissingInputs().get(0).getQuantity());
+        assertTrue(plan.getGuidance().contains("Need 30 Feather"));
     }
 
     private static MethodInput need(String name, int quantity)

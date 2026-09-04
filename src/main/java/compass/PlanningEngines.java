@@ -21,8 +21,7 @@ import static compass.Text.get;
 @RequiredArgsConstructor(onConstructor_ = @Inject)
 class AccountResourcePlanner
 {
-    private final PurchaseCostAdvisor purchaseCostAdvisor;
-    private final MainEconomyPlanner mainEconomyPlanner;
+    private final MarketPriceService marketPriceService;
     private final ResourceSourceCatalog resourceSourceCatalog;
 
     public SupplyPlan plan(
@@ -40,23 +39,33 @@ class AccountResourcePlanner
         var groupObserved = observed.groupStorageObserved();
 
         var needs = merge(rawNeeds);
-        List<ResourcePlanEntry> entries = new ArrayList<>();
+        List<String> required = new ArrayList<>();
+        List<String> verified = new ArrayList<>();
+        List<String> missing = new ArrayList<>();
+        List<String> reusable = new ArrayList<>();
+        List<String> restrictedItems = new ArrayList<>();
+        List<MethodInput> missingInputs = new ArrayList<>();
         for (MethodInput need : needs)
         {
-            var reusable = reusableSourceFor(observed, need.getName());
+            var reusableSource = reusableSourceFor(observed, need.getName());
             var owned = observed.quantity(need.getName());
             var restricted = observed.restrictedQuantity(need.getName());
-            int missing = reusable == null
+            int shortfall = reusableSource == null
                     ? max(0, need.quantity - owned)
                     : 0;
-            entries.add(new ResourcePlanEntry(
-                    need.getName(),
-                    need.itemId,
-                    need.quantity,
-                    owned,
-                    missing,
-                    restricted,
-                    reusable));
+            required.add(format(need.quantity) + " " + need.getName());
+            if (reusableSource == null)
+                verified.add(format(owned) + " " + need.getName());
+            else
+                reusable.add(need.getName() + " supplied by " + reusableSource);
+            if (shortfall > 0)
+            {
+                missing.add(format(shortfall) + " " + need.getName());
+                missingInputs.add(new MethodInput(
+                        need.getName(), need.itemId, shortfall));
+            }
+            if (restricted > 0)
+                restrictedItems.add(format(restricted) + " " + need.getName());
         }
 
         String guidance = buildGuidance(
@@ -65,13 +74,14 @@ class AccountResourcePlanner
                 primaryObserved,
                 groupIncluded,
                 groupObserved,
-                entries);
+                required, verified, missing, reusable, restrictedItems,
+                missingInputs);
         return new SupplyPlan(
                 mode,
                 primaryObserved,
                 groupIncluded,
                 groupObserved,
-                entries,
+                missingInputs,
                 guidance);
     }
 
@@ -80,45 +90,14 @@ class AccountResourcePlanner
             AccountMode mode,
             boolean primaryObserved,
             boolean groupIncluded,
-            boolean groupObserved,
-            List<ResourcePlanEntry> entries)
+            boolean groupObserved, List<String> required,
+            List<String> verified, List<String> missing,
+            List<String> reusable, List<String> restricted,
+            List<MethodInput> missingInputs)
     {
-        if (entries.isEmpty())
+        if (required.isEmpty())
         {
             return get(69);
-        }
-
-        List<String> required = new ArrayList<>();
-        List<String> verified = new ArrayList<>();
-        List<String> missing = new ArrayList<>();
-        List<String> reusable = new ArrayList<>();
-        List<String> restricted = new ArrayList<>();
-        List<MethodInput> missingInputs = new ArrayList<>();
-
-        for (ResourcePlanEntry entry : entries)
-        {
-            required.add(format(entry.getRequired()) + " " + entry.getName());
-            if (entry.isSatisfiedByReusableSource())
-            {
-                reusable.add(entry.getName() + " supplied by "
-                        + entry.getReusableSource());
-            }
-            else
-            {
-                verified.add(format(entry.getUsableOwned()) + " "
-                        + entry.getName());
-            }
-
-            if (entry.getMissing() > 0)
-            {
-                missing.add(format(entry.getMissing()) + " " + entry.getName());
-                missingInputs.add(entry.missingInput());
-            }
-            if (entry.getRestrictedOwned() > 0)
-            {
-                restricted.add(format(entry.getRestrictedOwned()) + " "
-                        + entry.getName());
-            }
         }
 
         var text = new StringBuilder();
@@ -217,50 +196,46 @@ class AccountResourcePlanner
             GameData data, String shortfall,
             List<MethodInput> missingInputs)
     {
-        PurchaseCostEstimate estimate = purchaseCostAdvisor == null
-                ? PurchaseCostEstimate.unknown()
-                : purchaseCostAdvisor.estimate(missingInputs);
+        Long cost = exactCost(missingInputs);
         List<String> routes = mainRoutes(missingInputs,
                 data == null || data.account() == null
                         ? Membership.UNKNOWN
                         : data.account().membership());
-        MainPurchaseDecision decision = mainEconomyPlanner == null
-                ? null : mainEconomyPlanner.evaluateUnmeasuredPurchase(
-                        data == null ? null : data.economy(), estimate,
-                        !routes.isEmpty());
-
-        if (decision != null && decision.getChoice() == MainPurchaseChoice.BUY)
+        AccountEconomySnapshot economy = data == null ? null : data.economy();
+        long coins = economy == null ? 0 : max(0, economy.coins);
+        boolean priced = cost != null && cost > 0 && economy != null
+                && economy.confidence == Confidence.VERIFIED;
+        boolean affordable = priced && coins >= cost;
+        boolean buy = affordable && (cost <= 1_000L && coins >= 5_000L
+                || cost <= coins / 10L && coins - cost >= 10_000L);
+        if (buy)
         {
             text.append("Buy ").append(shortfall)
                     .append(get(1379))
                     .append(get(1380))
-                    .append(format(decision.totalCost))
+                    .append(format(cost))
                     .append(get(72))
-                    .append(format(decision.getObservedCoins()))
+                    .append(format(coins))
                     .append(get(1381));
             return;
         }
-
-        if (decision != null
-                && decision.getChoice() == MainPurchaseChoice.SELF_SOURCE)
+        if (affordable && !routes.isEmpty())
         {
             text.append("Self-source ").append(shortfall).append(". ")
                     .append(get(1382))
-                    .append(format(decision.totalCost))
+                    .append(format(cost))
                     .append(" of ")
-                    .append(format(decision.getObservedCoins()))
+                    .append(format(coins))
                     .append(get(73))
                     .append(routes.get(0));
             return;
         }
-
-        if (decision != null && decision.getChoice()
-                == MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES)
+        if (priced && !affordable)
         {
             text.append(get(74))
-                    .append(format(decision.totalCost))
+                    .append(format(cost))
                     .append(get(1590))
-                    .append(format(decision.getObservedCoins()))
+                    .append(format(coins))
                     .append(get(1383));
             if (!routes.isEmpty())
                 text.append(get(75))
@@ -272,6 +247,25 @@ class AccountResourcePlanner
                 .append(get(77));
         if (!routes.isEmpty())
             text.append(get(1384)).append(routes.get(0));
+    }
+
+    private Long exactCost(List<MethodInput> missing)
+    {
+        if (marketPriceService == null || missing == null || missing.isEmpty())
+            return null;
+        long total = 0;
+        for (MethodInput input : missing)
+        {
+            if (input == null || input.quantity <= 0) continue;
+            MarketPriceQuote quote = marketPriceService.quote(input.getName());
+            if (quote == null || !quote.hasPrice()) return null;
+            if (quote.getUnitPrice() > Long.MAX_VALUE / input.quantity
+                    || total > Long.MAX_VALUE
+                            - quote.getUnitPrice() * input.quantity)
+                return Long.MAX_VALUE;
+            total += quote.getUnitPrice() * input.quantity;
+        }
+        return total > 0 ? total : null;
     }
 
     private List<String> mainRoutes(List<MethodInput> missingInputs,
@@ -715,7 +709,6 @@ class FarmingRunPlanner
 {
     private final FarmingRunCatalog catalog;
     private final FarmingSupplyCatalog supplyCatalog;
-    private final ResourceReadinessService resources;
 
     public GuidanceChecklist build(GameData data, String activityId)
     {
@@ -756,26 +749,41 @@ class FarmingRunPlanner
             int farmingLevel)
     {
         var farming = data.farming();
-        appendResource(steps, resources.evaluate(
+        appendResource(steps, resource(
                 data, supplyCatalog.rake(), toolState(farming, "rake"),
                 get(245)));
-        appendResource(steps, resources.evaluate(
+        appendResource(steps, resource(
                 data, supplyCatalog.dibber(), toolState(farming, "dibber"),
                 get(246)));
-        appendResource(steps, resources.evaluate(
+        appendResource(steps, resource(
                 data, supplyCatalog.spade(), toolState(farming, "spade"),
                 get(247)));
 
         if (farmingLevel >= 9)
         {
-            appendResource(steps, resources.evaluate(
+            appendResource(steps, resource(
                     data, supplyCatalog.herbSeedsForLevel(farmingLevel)));
         }
         if (farmingLevel >= 15)
         {
-            appendResource(steps, resources.evaluate(
+            appendResource(steps, resource(
                     data, supplyCatalog.treeSaplingsForLevel(farmingLevel)));
         }
+    }
+
+    private static EvidenceCheck resource(GameData data,
+            ResourceRequirement need)
+    {
+        return new ItemIndex(data, false).check(need);
+    }
+
+    private static EvidenceCheck resource(GameData data,
+            ResourceRequirement need, Capability alternate, String evidence)
+    {
+        if (alternate == Capability.VERIFIED)
+            return new EvidenceCheck(need.id, need.getLabel(),
+                    RequirementState.VERIFIED, evidence);
+        return resource(data, need);
     }
 
     private Capability toolState(FarmingSnapshot farming, String id)
@@ -1090,265 +1098,6 @@ final class ItemRequirementEvaluator
 
 }
 
-/** Conservative Main-account buy-vs-gather decision layer. */
-@Singleton
-class MainEconomyPlanner
-{
-    private static final long MINIMUM_LIQUID_BUFFER = 10_000L;
-
-    /**
-     * Uses deliberately broad liquid-wealth bands when no defensible time
-     * estimate exists. This avoids both fake GP/hour precision and the old
-     * rule that every observed Main shortfall should simply be bought.
-     */
-    public MainPurchaseDecision evaluateUnmeasuredPurchase(
-            AccountEconomySnapshot economy,
-            PurchaseCostEstimate estimate,
-            boolean reviewedSelfSourceRoute)
-    {
-        if (estimate == null || !estimate.isComplete()
-                || estimate.totalCost <= 0)
-            return decision(MainPurchaseChoice.CHECK_NEEDED, 0L,
-                    economy == null ? 0L : economy.coins,
-                    Confidence.CHECK_NEEDED,
-                    get(369));
-        if (economy == null
-                || economy.confidence != Confidence.VERIFIED)
-            return decision(MainPurchaseChoice.CHECK_NEEDED,
-                    estimate.totalCost,
-                    economy == null ? 0L : economy.coins,
-                    Confidence.CHECK_NEEDED,
-                    get(370));
-
-        var cost = estimate.totalCost;
-        var coins = max(0L, economy.coins);
-        if (coins < cost)
-            return decision(MainPurchaseChoice.EARN_GP_OR_REVIEW_RESOURCES,
-                    cost, coins, Confidence.CHECK_NEEDED,
-                    get(359));
-
-        var remaining = coins - cost;
-        var trivialSpend = cost <= 1_000L && coins >= 5_000L;
-        boolean lowBurden = cost <= coins / 10L
-                && remaining >= MINIMUM_LIQUID_BUFFER;
-        if (trivialSpend || lowBurden)
-            return decision(MainPurchaseChoice.BUY, cost, coins,
-                    Confidence.VERIFIED,
-                    get(360));
-
-        if (reviewedSelfSourceRoute)
-            return decision(MainPurchaseChoice.SELF_SOURCE, cost, coins,
-                    Confidence.VERIFIED,
-                    get(361));
-
-        return decision(MainPurchaseChoice.CHECK_NEEDED, cost, coins,
-                Confidence.CHECK_NEEDED,
-                get(362));
-    }
-
-    private static MainPurchaseDecision decision(
-            MainPurchaseChoice choice,
-            long totalCost,
-            long coins,
-            Confidence confidence,
-            String explanation)
-    {
-        return new MainPurchaseDecision(
-                choice, totalCost, coins, confidence, explanation);
-    }
-}
-
-/** Resolves profile input rules against a concrete RuneLite action. */
-@Singleton
-class MethodInputResolver
-{
-    public List<MethodInput> resolve(
-            MethodProfile profile,
-            ActionDef action,
-            int actions)
-    {
-        Map<String, MethodInput> merged = new LinkedHashMap<>();
-        if (profile == null || action == null || actions <= 0)
-        {
-            return new ArrayList<>();
-        }
-
-        for (MethodInputRule rule : profile.inputs)
-        {
-            var input = resolveOne(rule, action, actions);
-            if (input == null || input.quantity <= 0) continue;
-            String key = input.itemId > 0
-                    ? "id:" + input.itemId
-                    : "name:" + input.getName().toLowerCase(Locale.ROOT);
-            var previous = merged.get(key);
-            if (previous == null)
-            {
-                merged.put(key, input);
-            }
-            else
-            {
-                merged.put(key, new MethodInput(
-                        previous.getName(),
-                        previous.itemId,
-                        previous.quantity + input.quantity));
-            }
-        }
-        return new ArrayList<>(merged.values());
-    }
-
-    private static MethodInput resolveOne(
-            MethodInputRule rule,
-            ActionDef action,
-            int actions)
-    {
-        if (rule == null
-                || rule.getMode() == MethodProfile.InputMode.NONE)
-        {
-            return null;
-        }
-
-        String name;
-        var itemId = -1;
-        var perAction = rule.getQuantityPerAction();
-        switch (rule.getMode())
-        {
-            case ACTION_ITEM:
-                name = action.getName();
-                itemId = action.itemId;
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case RAW_ACTION_ITEM:
-                name = rawName(action.getName());
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case LOG_FOR_BOW:
-                name = logForBow(action.getName());
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case BAR_FOR_SMITHED_ITEM:
-                name = barForSmithing(action.getName());
-                if (name == null) return null;
-                if (perAction <= 0)
-                {
-                    perAction = Names.actionKey(action.getName()).contains("platebody")
-                            ? 5.0 : 1.0;
-                }
-                break;
-            case UNCUT_GEM:
-                name = uncutGem(action.getName());
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case SAPLING_FOR_TREE:
-                name = saplingForTree(action.getName());
-                if (name == null) return null;
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case DART_TIP_FOR_DART:
-                name = dartTipForDart(action.getName());
-                if (name == null) return null;
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case UNFINISHED_BOLT:
-                name = unfinishedBolt(action.getName());
-                if (name == null) return null;
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case FIXED:
-                name = rule.getFixedName();
-                if (name == null || name.trim().isEmpty()) return null;
-                if (perAction <= 0) perAction = 1.0;
-                break;
-            case NONE:
-            default:
-                return null;
-        }
-
-        return new MethodInput(
-                name,
-                itemId,
-                (int) ceil(actions * perAction));
-    }
-
-    private static String rawName(String actionName)
-    {
-        var clean = actionName == null ? "" : actionName.trim();
-        if (clean.toLowerCase(Locale.ROOT).startsWith("cooked "))
-            clean = clean.substring(7);
-        return "Raw " + clean;
-    }
-
-    private static String logForBow(String actionName)
-    {
-        String clean = actionName == null ? "" : actionName
-                .replace("(u)", "").trim();
-        var lower = clean.toLowerCase(Locale.ROOT);
-        String[] woods = {"oak", "willow", "maple", "yew", "magic", "redwood"};
-        for (String wood : woods)
-        {
-            if (lower.startsWith(wood + " "))
-                return capitalize(wood) + " logs";
-        }
-        return "Logs";
-    }
-
-    private static String barForSmithing(String actionName)
-    {
-        var lower = Names.actionKey(actionName);
-        if (lower.contains("bronze")) return "Bronze bar";
-        if (lower.contains("iron")) return "Iron bar";
-        if (lower.contains("steel")) return "Steel bar";
-        if (lower.contains("mithril")) return "Mithril bar";
-        if (lower.contains("adamant")) return "Adamantite bar";
-        if (lower.contains("rune")) return "Runite bar";
-        return null;
-    }
-
-    private static String uncutGem(String actionName)
-    {
-        var clean = actionName == null ? "gem" : actionName.trim();
-        if (clean.toLowerCase(Locale.ROOT).startsWith("uncut ")) return clean;
-        return "Uncut " + clean.toLowerCase(Locale.ROOT);
-    }
-
-    private static String saplingForTree(String actionName)
-    {
-        if (actionName == null) return null;
-        var clean = actionName.trim();
-        var lower = clean.toLowerCase(Locale.ROOT);
-        if (lower.equals("spirit tree")) return "Spirit seed";
-        if (lower.equals("crystal tree")) return "Crystal acorn";
-        if (!lower.endsWith(" tree")) return null;
-        var tree = clean.substring(0, clean.length() - 5).trim();
-        if (tree.isEmpty()) return null;
-        return tree + " sapling";
-    }
-
-    private static String dartTipForDart(String actionName)
-    {
-        if (actionName == null) return null;
-        var clean = actionName.trim();
-        var lower = clean.toLowerCase(Locale.ROOT);
-        if (!lower.endsWith(" dart")) return null;
-        return clean.substring(0, clean.length() - 5).trim() + " dart tip";
-    }
-
-    private static String unfinishedBolt(String actionName)
-    {
-        if (actionName == null) return null;
-        var clean = actionName.trim();
-        var lower = clean.toLowerCase(Locale.ROOT);
-        if (!lower.endsWith(" bolts")) return null;
-        return clean + " (unf)";
-    }
-
-
-    private static String capitalize(String value)
-    {
-        if (value == null || value.isEmpty()) return "";
-        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
-    }
-}
-
 /**
  * One engine for recurring and interrupt-driven opportunities.
  *
@@ -1486,7 +1235,7 @@ class OpportunityEngine
         var ready = recurring.isReadyNow(id, now);
         result.add(new Opportunity(
                 id, type, title, ready,
-                Confidence.VERIFIED, preparation));
+                Confidence.VERIFIED, preparation, false, Safety.unknown()));
     }
 
     private static void addHerbRunOpportunity(List<Opportunity> result,
@@ -1501,7 +1250,7 @@ class OpportunityEngine
         var inventory = data.inventory();
         if (quantity(inventory, "spade") == 0) missing.add("Carry a spade");
         if (quantity(inventory, "seed dibber") == 0) missing.add(get(1527));
-        var farmingLevel = data.account().level(net.runelite.api.Skill.FARMING);
+        var farmingLevel = data.account().level(FARMING);
         ResourceRequirement herbSeeds = supplyCatalog.herbSeedsForLevel(
                 farmingLevel);
         if (inventory == null || inventory.quantityOf(herbSeeds.getItemIds()) == 0)
@@ -1517,7 +1266,7 @@ class OpportunityEngine
         result.add(new Opportunity(id, OpportunityType.HERB_RUN, "Herb run",
                 ready, Confidence.VERIFIED, missing,
                 setupVerified, Safety.skill(false,
-                net.runelite.api.Skill.FARMING)));
+                FARMING)));
     }
 
     private static void addBirdhouseOpportunity(List<Opportunity> result,
@@ -1541,9 +1290,9 @@ class OpportunityEngine
             missing.add(get(1530));
         if (birdhouseSeedQuantity(inventory) < 40)
             missing.add(get(1531));
-        if (data.account().level(net.runelite.api.Skill.HUNTER) < 5)
+        if (data.account().level(HUNTER) < 5)
             missing.add(get(1532));
-        if (data.account().level(net.runelite.api.Skill.CRAFTING) < 5)
+        if (data.account().level(CRAFTING) < 5)
             missing.add(get(1533));
         var ready = recurring.isReadyNow(id, now);
         var setupVerified = ready && missing.isEmpty();
@@ -1551,7 +1300,7 @@ class OpportunityEngine
                 "Birdhouse run", ready, Confidence.VERIFIED,
                 missing, setupVerified,
                 Safety.skill(false,
-                        net.runelite.api.Skill.HUNTER)));
+                        HUNTER)));
     }
 
     private static int quantity(ItemsState inventory, String name)
@@ -1583,17 +1332,17 @@ class QuestRequirementResolver
     private static final String IMPORTED_ITEM_PREFIX = "Required items:";
     private final ImportedQuestItemRequirementCatalog importedItems;
     private final ResourceSourceCatalog resourceSources;
-    private final ResourceAcquisitionPlanner resourcePlanner;
+    private final ResourceDependencyResolver resourcePlanner;
 
     @Inject
     public QuestRequirementResolver(ResourceSourceCatalog resourceSources,
-            ResourceAcquisitionPlanner resourcePlanner)
+            ResourceDependencyResolver resourcePlanner)
     {
         this.importedItems = new ImportedQuestItemRequirementCatalog();
         this.resourceSources = resourceSources == null
                 ? new ResourceSourceCatalog() : resourceSources;
         this.resourcePlanner = resourcePlanner == null
-                ? new ResourceAcquisitionPlanner(this.resourceSources,
+                ? new ResourceDependencyResolver(this.resourceSources,
                         new ResourceDependencyCatalog())
                 : resourcePlanner;
     }
@@ -1847,84 +1596,31 @@ class RecommendationEngine
     private final TrainingMethodSelector trainingMethodSelector;
     private final RecommendationGuidanceService guidanceService;
     private final CombatGuidanceService combatGuidanceService;
-    private final SlayerGuidanceService slayerGuidanceService;
     private final SailingGuidanceService sailingGuidanceService;
     private final SkillBreakpointService breakpointService;
     private final AdaptiveActionSelector actionResolver;
+    private final SlayerStrategist slayerStrategist;
 
     @Inject
     public RecommendationEngine(
             TrainingMethodSelector trainingMethodSelector,
             RecommendationGuidanceService guidanceService,
             CombatGuidanceService combatGuidanceService,
-            SlayerGuidanceService slayerGuidanceService,
             SailingGuidanceService sailingGuidanceService,
             SkillBreakpointService breakpointService,
-            AdaptiveActionSelector actionResolver)
+            AdaptiveActionSelector actionResolver,
+            SlayerStrategist slayerStrategist)
     {
         this.trainingMethodSelector = trainingMethodSelector;
         this.guidanceService = guidanceService;
         this.combatGuidanceService = combatGuidanceService;
-        this.slayerGuidanceService = slayerGuidanceService;
         this.sailingGuidanceService = sailingGuidanceService;
         this.breakpointService = breakpointService == null
                 ? new SkillBreakpointService() : breakpointService;
         this.actionResolver = actionResolver == null
                 ? new AdaptiveActionSelector() : actionResolver;
-    }
-
-    public List<Recommendation> recommend(
-            AccountSnapshot snapshot,
-            StrategyMode strategyMode,
-            PreferenceProfile preferenceProfile)
-    {
-        return recommend(GameData.builder(snapshot).build(),
-                strategyMode, SessionIntent.PICK_FOR_ME, true, false,
-                preferenceProfile);
-    }
-
-    public List<Recommendation> recommend(
-            AccountSnapshot snapshot,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            PreferenceProfile preferenceProfile)
-    {
-        return recommend(GameData.builder(snapshot).build(),
-                strategyMode, sessionIntent, true, false, preferenceProfile);
-    }
-
-    public List<Recommendation> recommend(
-            GameData data,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            PreferenceProfile preferenceProfile)
-    {
-        return recommend(data, strategyMode, sessionIntent, true, false,
-                preferenceProfile);
-    }
-
-    public List<Recommendation> recommend(
-            GameData data,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            boolean allowWildernessMethods,
-            PreferenceProfile preferenceProfile)
-    {
-        return recommend(data, strategyMode, sessionIntent, true,
-                allowWildernessMethods, preferenceProfile);
-    }
-
-    public List<Recommendation> recommend(
-            GameData data,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            boolean useGroupStorage,
-            boolean allowWildernessMethods,
-            PreferenceProfile preferenceProfile)
-    {
-        return topThree(recommendAll(data, strategyMode, sessionIntent,
-                useGroupStorage, allowWildernessMethods, GoalType.AUTOMATIC,
-                preferenceProfile));
+        this.slayerStrategist = slayerStrategist == null
+                ? new SlayerStrategist() : slayerStrategist;
     }
 
     /** Full skill candidate pool for the global strategy queue. Do not trim here. */
@@ -1934,30 +1630,9 @@ class RecommendationEngine
             SessionIntent sessionIntent,
             boolean useGroupStorage,
             boolean allowWildernessMethods,
-            PreferenceProfile preferenceProfile)
-    {
-        return recommendAllInternal(data, strategyMode, sessionIntent,
-                useGroupStorage, allowWildernessMethods, GoalType.AUTOMATIC,
-                preferenceProfile);
-    }
-
-    public List<Recommendation> recommendAll(
-            GameData data,
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            boolean useGroupStorage,
-            boolean allowWildernessMethods,
             GoalType activeGoal,
             PreferenceProfile preferenceProfile)
     {
-        // Focused queue tests historically override the public six-argument
-        // method with a synthetic pool. Preserve that extension seam when no
-        // production selector exists instead of entering the concrete skill
-        // generator with a null dependency.
-        if (trainingMethodSelector == null)
-            return recommendAll(data, strategyMode, sessionIntent,
-                    useGroupStorage, allowWildernessMethods,
-                    preferenceProfile);
         return recommendAllInternal(data, strategyMode, sessionIntent,
                 useGroupStorage, allowWildernessMethods, activeGoal,
                 preferenceProfile);
@@ -2006,10 +1681,9 @@ class RecommendationEngine
             {
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
                 Guidance candidateGuidance = buildGuidance(
-                        data, skill, level,
+                        context, skill, level,
                         actionResolver.resolve(candidate, level, target),
-                        candidate, sessionIntent,
-                        useGroupStorage);
+                        candidate);
                 if (candidateGuidance != null
                         && candidate.getStrategyProfile() != null)
                 {
@@ -2060,7 +1734,9 @@ class RecommendationEngine
                     StrategicValue.builder()
                             .unlockValue(breakpoint.strategicValue())
                             .evidence(breakpoint.getEvidenceId())
-                            .build());
+                            .build().merge(guidance == null
+                                    ? StrategicValue.neutral()
+                                    : guidance.getStrategicValue()));
             recommendations.add(recommendation);
         }
 
@@ -2070,24 +1746,22 @@ class RecommendationEngine
     }
 
     private Guidance buildGuidance(
-            GameData data,
+            StrategyContext context,
             Skill skill,
             int level,
             int target,
-            TrainingPlan trainingPlan,
-            SessionIntent sessionIntent,
-            boolean useGroupStorage)
+            TrainingPlan trainingPlan)
     {
+        var data = context.data();
         Guidance guidance = combatGuidanceService == null
                 ? null : combatGuidanceService.build(
                         data, skill, level, target, trainingPlan,
-                        sessionIntent, useGroupStorage);
+                        context.intent(), context.usesGroupStorage());
 
-        if (guidance == null && skill == SLAYER
-                && slayerGuidanceService != null)
+        if (guidance == null && skill == SLAYER)
         {
-            guidance = slayerGuidanceService.build(
-                    data, level, target, useGroupStorage);
+            var decision = slayerStrategist.assess(context);
+            guidance = decision == null ? null : decision.guidance;
         }
 
         if (guidance == null && skill == SAILING
@@ -2101,19 +1775,9 @@ class RecommendationEngine
         {
             guidance = guidanceService.build(
                     data, skill, level, target, trainingPlan,
-                    useGroupStorage);
+                    context.usesGroupStorage());
         }
         return guidance;
-    }
-
-    private static List<Recommendation> topThree(
-            List<Recommendation> recommendations)
-    {
-        if (recommendations == null || recommendations.isEmpty())
-            return new ArrayList<>();
-        if (recommendations.size() <= 3)
-            return new ArrayList<>(recommendations);
-        return new ArrayList<>(recommendations.subList(0, 3));
     }
 
     private double baseScore(int level, SkillBreakpoint breakpoint)
@@ -2607,382 +2271,34 @@ class RequirementEvidenceEngine
     }
 }
 
-/** Account-mode-aware sourcing planner for a required item. */
-@Singleton
-@RequiredArgsConstructor(onConstructor_ = @Inject)
-class ResourceAcquisitionPlanner
-{
-    private final ResourceSourceCatalog sourceCatalog;
-    private final ResourceDependencyCatalog dependencyCatalog;
-
-    public AcquisitionPlan plan(
-            StrategyContext context,
-            ResourceNeed need)
-    {
-        if (context == null || need == null || context.data() == null)
-        {
-            return checkNeeded(need, get(1430));
-        }
-
-        var data = context.data();
-        var mode = context.accountMode();
-        var inventoryQuantity = quantityIn(data.inventory(), need.itemId);
-        var confirmedQuantity = inventoryQuantity;
-
-        if (inventoryQuantity >= need.quantity)
-        {
-            return new AcquisitionPlan(
-                    need, AcquisitionSource.INVENTORY, inventoryQuantity,
-                    Confidence.VERIFIED,
-                    get(566)
-            );
-        }
-
-        if (mode == AccountMode.ULTIMATE_IRONMAN)
-        {
-            var remaining = max(0, need.quantity - inventoryQuantity);
-            StoredResource stored = findVerifiedStoredResource(
-                    data.storage(), need.itemId, remaining);
-            if (stored != null)
-            {
-                var needsAccessCheck = stored.requiresAccessCheck();
-                confirmedQuantity = safeAdd(inventoryQuantity, stored.quantity);
-                return new AcquisitionPlan(
-                        need,
-                        AcquisitionSource.VERIFIED_STORAGE,
-                        confirmedQuantity,
-                        needsAccessCheck
-                                ? Confidence.CHECK_NEEDED
-                                : Confidence.VERIFIED,
-                        needsAccessCheck
-                                ? get(575)
-                                        + pretty(stored.capabilities)
-                                        + get(576)
-                                : get(577)
-                                        + pretty(stored.capabilities) + "."
-                );
-            }
-        }
-        else
-        {
-            var bankQuantity = quantityIn(data.bank(), need.itemId);
-            var ordinaryQuantity = safeAdd(inventoryQuantity, bankQuantity);
-            confirmedQuantity = ordinaryQuantity;
-            if (ordinaryQuantity >= need.quantity)
-            {
-                return new AcquisitionPlan(
-                        need, AcquisitionSource.BANK, ordinaryQuantity,
-                        Confidence.VERIFIED,
-                        get(578)
-                );
-            }
-
-            if (AccountModePolicy.mayUseGroupStorage(
-                    mode, context.usesGroupStorage()))
-            {
-                var groupStorage = data.groupStorage();
-                int groupQuantity = groupStorage != null
-                        && groupStorage.isObserved()
-                        ? quantityIn(groupStorage, need.itemId) : 0;
-                if (groupStorage != null && groupStorage.isObserved())
-                {
-                    confirmedQuantity = safeAdd(ordinaryQuantity, groupQuantity);
-                    if (confirmedQuantity >= need.quantity)
-                    {
-                        return new AcquisitionPlan(
-                                need, AcquisitionSource.GROUP_STORAGE,
-                                confirmedQuantity,
-                                Confidence.VERIFIED,
-                                get(579)
-                        );
-                    }
-                }
-            }
-        }
-
-        var sourceNote = sourceSuggestions(need, context);
-
-        // Do not turn an unobserved container into a proven shortfall. An
-        // inventory read is required for every mode; ordinary accounts also
-        // require the bank, and opted-in GIM requires fresh Group Storage.
-        if (data.inventory() == null)
-            return checkNeeded(need,
-                    get(580));
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() == null)
-            return checkNeeded(need,
-                    get(581));
-        if (AccountModePolicy.mayUseGroupStorage(mode,
-                context.usesGroupStorage())
-                && (data.groupStorage() == null
-                || !data.groupStorage().isObserved()))
-            return checkNeeded(need,
-                    get(582));
-
-        if (AccountModePolicy.mayUseGrandExchange(mode))
-        {
-            return new AcquisitionPlan(
-                    need, AcquisitionSource.GRAND_EXCHANGE, confirmedQuantity,
-                    Confidence.CHECK_NEEDED,
-                    get(567)
-                            + sourceNote
-            );
-        }
-
-        if (AccountModePolicy.requiresSelfSourcing(mode))
-        {
-            return new AcquisitionPlan(
-                    need, AcquisitionSource.SELF_SOURCE, confirmedQuantity,
-                    Confidence.CHECK_NEEDED,
-                    (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? get(568)
-                            : get(569))
-                            + sourceNote
-            );
-        }
-
-        return checkNeeded(need,
-                get(570) + sourceNote);
-    }
-
-    /**
-     * Plans a shortfall already proven by another evidence-aware evaluator.
-     * The root quantity is the missing quantity, so owned state must not be
-     * subtracted a second time here.
-     */
-    public AcquisitionPlan planKnownShortfall(
-            StrategyContext context,
-            ResourceNeed shortfall)
-    {
-        if (context == null || shortfall == null || context.data() == null)
-        {
-            return checkNeeded(shortfall, get(1430));
-        }
-
-        var mode = context.accountMode();
-        var sourceNote = sourceSuggestions(shortfall, context);
-        String prefix = get(1431) + shortfall.quantity
-                + " × " + shortfall.itemName + ". ";
-
-        if (AccountModePolicy.mayUseGrandExchange(mode))
-        {
-            return new AcquisitionPlan(
-                    shortfall, AcquisitionSource.GRAND_EXCHANGE, 0,
-                    Confidence.CHECK_NEEDED,
-                    prefix + get(571)
-                            + sourceNote);
-        }
-
-        if (AccountModePolicy.requiresSelfSourcing(mode))
-        {
-            return new AcquisitionPlan(
-                    shortfall, AcquisitionSource.SELF_SOURCE, 0,
-                    Confidence.CHECK_NEEDED,
-                    prefix + (mode == AccountMode.ULTIMATE_IRONMAN
-                            ? get(572)
-                            : get(1432))
-                            + sourceNote);
-        }
-
-        return checkNeeded(shortfall,
-                prefix + get(573)
-                        + sourceNote);
-    }
-
-    /**
-     * Resolves a proven shortfall by canonical dependency output name. Unknown
-     * names deliberately remain with the caller's conservative source guidance.
-     */
-    public DependencyResolution resolveKnownShortfall(
-            StrategyContext context, String itemName, int quantity)
-    {
-        if (dependencyCatalog == null) return null;
-        var definition = dependencyCatalog.forItemName(itemName);
-        if (definition == null) return null;
-        String canonical = definition.itemName == null
-                ? itemName : definition.itemName;
-        var need = new ResourceNeed(definition.itemId, canonical, quantity);
-        return new ResourceDependencyResolver(this, dependencyCatalog)
-                .resolveKnownShortfall(context, need);
-    }
-
-    private String sourceSuggestions(ResourceNeed need, StrategyContext context)
-    {
-        if (sourceCatalog == null || need == null) return "";
-        List<String> suggestions = sourceCatalog.suggestions(
-                need.itemName, context == null ? AccountMode.UNKNOWN
-                        : context.accountMode(), membership(context),
-                context != null && context.allowsWilderness());
-        if (suggestions.isEmpty())
-        {
-            return get(574);
-        }
-
-        var note = new StringBuilder(" Useful route");
-        if (suggestions.size() > 1) note.append("s");
-        note.append(": ");
-        for (int i = 0; i < suggestions.size(); i++)
-        {
-            if (i > 0) note.append(" | ");
-            note.append(suggestions.get(i));
-        }
-        return note.toString();
-    }
-
-    private static Membership membership(StrategyContext context)
-    {
-        return context == null || context.data() == null
-                || context.data().account() == null
-                ? Membership.UNKNOWN
-                : context.data().account().membership();
-    }
-
-    private static StoredResource findVerifiedStoredResource(
-            StorageSnapshot storage,
-            int itemId,
-            int needed)
-    {
-        if (storage == null) return null;
-        List<StorageKind> safeCapabilities = new ArrayList<>();
-        List<StorageKind> restrictedCapabilities = new ArrayList<>();
-        var safeQuantity = 0;
-        var restrictedQuantity = 0;
-        for (Map.Entry<StorageKind, java.util.List<ItemState>> entry
-                : storage.getObservedContents().entrySet())
-        {
-            var capability = entry.getKey();
-            if (!storage.verified(capability)) continue;
-            var quantity = 0;
-            for (ItemState item : entry.getValue())
-            {
-                if (item.itemId == itemId) quantity += item.quantity;
-            }
-            if (quantity <= 0) continue;
-            if (requiresAdditionalAccessCheck(capability))
-            {
-                restrictedCapabilities.add(capability);
-                restrictedQuantity = safeAdd(restrictedQuantity, quantity);
-            }
-            else
-            {
-                safeCapabilities.add(capability);
-                safeQuantity = safeAdd(safeQuantity, quantity);
-            }
-        }
-        if (safeQuantity >= needed)
-            return new StoredResource(safeCapabilities, safeQuantity);
-        if (safeAdd(safeQuantity, restrictedQuantity) >= needed)
-        {
-            safeCapabilities.addAll(restrictedCapabilities);
-            return new StoredResource(safeCapabilities,
-                    safeAdd(safeQuantity, restrictedQuantity));
-        }
-        return null;
-    }
-
-    private static boolean requiresAdditionalAccessCheck(
-            StorageKind capability)
-    {
-        return UimStorageMechanics.isRestrictedRetrieval(capability);
-    }
-
-    private static AcquisitionPlan checkNeeded(
-            ResourceNeed need,
-            String note)
-    {
-        return new AcquisitionPlan(
-                need, AcquisitionSource.CHECK_NEEDED, 0,
-                Confidence.CHECK_NEEDED, note
-        );
-    }
-
-    private static int quantityIn(ItemsState items, int itemId)
-    {
-        return items == null ? 0 : quantityInItems(items.getItems(), itemId);
-    }
-
-    private static int quantityInItems(Iterable<ItemState> items, int itemId)
-    {
-        var total = 0;
-        for (ItemState item : items)
-        {
-            if (item.itemId == itemId) total = safeAdd(total, item.quantity);
-        }
-        return total;
-    }
-
-    private static int safeAdd(int left, int right)
-    {
-        var safeRight = max(0, right);
-        if (left > Integer.MAX_VALUE - safeRight) return Integer.MAX_VALUE;
-        return left + safeRight;
-    }
-
-    private static String pretty(StorageKind capability)
-    {
-        return capability.name().toLowerCase().replace('_', ' ');
-    }
-
-    private static String pretty(List<StorageKind> capabilities)
-    {
-        if (capabilities == null || capabilities.isEmpty())
-            return get(1955);
-        List<String> names = new ArrayList<>();
-        for (StorageKind capability : capabilities)
-            names.add(pretty(capability));
-        if (names.size() == 1) return names.get(0);
-        return String.join(", ", names.subList(0, names.size() - 1))
-                + " and " + names.get(names.size() - 1);
-    }
-
-    private static final class StoredResource
-    {
-        private final List<StorageKind> capabilities;
-        private final int quantity;
-
-        private StoredResource(List<StorageKind> capabilities,
-                int quantity)
-        {
-            this.capabilities = new ArrayList<>(capabilities);
-            this.quantity = quantity;
-        }
-
-        private boolean requiresAccessCheck()
-        {
-            for (StorageKind capability : capabilities)
-                if (requiresAdditionalAccessCheck(capability)) return true;
-            return false;
-        }
-    }
-}
-
 /** Recursively resolves verified resource recipes with strict termination. */
 @Singleton
 class ResourceDependencyResolver
 {
     public static final int DEFAULT_MAX_DEPTH = 8;
     public static final int DEFAULT_MAX_NODES = 128;
-    private final ResourceAcquisitionPlanner ownershipPlanner;
+    private final ResourceSourceCatalog sources;
     private final ResourceDependencyCatalog catalog;
     private final int maxDepth;
     private final int maxNodes;
 
     @Inject
-    public ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
+    public ResourceDependencyResolver(ResourceSourceCatalog sources,
             ResourceDependencyCatalog catalog)
     {
-        this(ownershipPlanner, catalog, DEFAULT_MAX_DEPTH, DEFAULT_MAX_NODES);
+        this(sources, catalog, DEFAULT_MAX_DEPTH, DEFAULT_MAX_NODES);
     }
 
-    ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
+    ResourceDependencyResolver(ResourceSourceCatalog sources,
             ResourceDependencyCatalog catalog, int maxDepth)
     {
-        this(ownershipPlanner, catalog, maxDepth, DEFAULT_MAX_NODES);
+        this(sources, catalog, maxDepth, DEFAULT_MAX_NODES);
     }
 
-    ResourceDependencyResolver(ResourceAcquisitionPlanner ownershipPlanner,
+    ResourceDependencyResolver(ResourceSourceCatalog sources,
             ResourceDependencyCatalog catalog, int maxDepth, int maxNodes)
     {
-        this.ownershipPlanner = ownershipPlanner;
+        this.sources = sources;
         this.catalog = catalog;
         this.maxDepth = max(1, maxDepth);
         this.maxNodes = max(1, maxNodes);
@@ -3006,6 +2322,16 @@ class ResourceDependencyResolver
         var state = new State(maxNodes);
         visit(context, root, 0, new HashSet<>(), state, true);
         return result(state);
+    }
+
+    public DependencyResolution resolveKnownShortfall(
+            StrategyContext context, String itemName, int quantity)
+    {
+        var definition = catalog.forItemName(itemName);
+        if (definition == null) return null;
+        return resolveKnownShortfall(context, new ResourceNeed(
+                definition.itemId, definition.itemName == null
+                        ? itemName : definition.itemName, quantity));
     }
 
     private static DependencyResolution result(State state)
@@ -3047,10 +2373,8 @@ class ResourceDependencyResolver
             return;
         }
 
-        AcquisitionPlan ownership = knownShortfall
-                ? ownershipPlanner.planKnownShortfall(context, totalNeed)
-                : ownershipPlanner.plan(context, totalNeed);
-        if (ownership != null && ownership.hasEnoughConfirmed())
+        Ownership ownership = ownership(context, totalNeed, knownShortfall);
+        if (ownership.enough(totalRequested))
         {
             // Retrieval-only UIM storage can prove quantity without proving that
             // the item is immediately usable. Preserve that preparation state.
@@ -3061,13 +2385,13 @@ class ResourceDependencyResolver
         var mode = context == null ? AccountMode.UNKNOWN : context.accountMode();
         if (mode.usesGrandExchange())
         {
-            addResource(state, id, ownership == null ? get(1330) : ownership.note,
+            addResource(state, id, ownership.note,
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
 
-        int confirmedOwned = knownShortfall || ownership == null
-                ? 0 : min(totalRequested, ownership.getConfirmedQuantity());
+        int confirmedOwned = knownShortfall
+                ? 0 : min(totalRequested, ownership.confirmed);
         var unresolvedRequested = max(0, totalRequested - confirmedOwned);
         int previousUnresolved = knownShortfall
                 ? previousProcessed
@@ -3076,7 +2400,7 @@ class ResourceDependencyResolver
         var definition = catalog.forItem(need.itemId);
         if (definition == null)
         {
-            addResource(state, id, ownership == null ? get(1331) : ownership.note,
+            addResource(state, id, ownership.note,
                     Confidence.CHECK_NEEDED, depth, totalRequested);
             return;
         }
@@ -3113,6 +2437,47 @@ class ResourceDependencyResolver
         active.remove(id);
         addResource(state, id, definition.getAction(),
                 Confidence.CHECK_NEEDED, depth, totalRequested);
+    }
+
+    private Ownership ownership(StrategyContext context, ResourceNeed need,
+            boolean knownShortfall)
+    {
+        if (context == null || context.data() == null || need == null)
+            return new Ownership(0, Confidence.CHECK_NEEDED, get(1430));
+        var mode = context.accountMode();
+        if (knownShortfall) return new Ownership(0,
+                Confidence.CHECK_NEEDED, sourceNote(need, context));
+        var items = new ItemIndex(context.data(), context.usesGroupStorage());
+        int usable = items.quantity(need.itemId);
+        int restricted = items.restrictedQuantity(need.itemId);
+        if (usable >= need.quantity)
+            return new Ownership(usable, Confidence.VERIFIED, get(566));
+        if (safeAdd(usable, restricted) >= need.quantity)
+            return new Ownership(safeAdd(usable, restricted),
+                    Confidence.CHECK_NEEDED,
+                    get(575) + "restricted storage" + get(576));
+        if (!items.resourceContainersObserved())
+            return new Ownership(usable, Confidence.CHECK_NEEDED,
+                    mode == AccountMode.ULTIMATE_IRONMAN
+                            ? get(580) : get(581));
+        return new Ownership(usable, Confidence.CHECK_NEEDED,
+                sourceNote(need, context));
+    }
+
+    private String sourceNote(ResourceNeed need, StrategyContext context)
+    {
+        var mode = context.accountMode();
+        String action = mode.usesGrandExchange() ? get(567)
+                : mode == AccountMode.ULTIMATE_IRONMAN ? get(568)
+                : mode.isIronLike() ? get(569) : get(570);
+        if (sources == null) return action;
+        var membership = context.data().account() == null
+                ? Membership.UNKNOWN : context.data().account().membership();
+        List<String> routes = sources.suggestions(need.itemName, mode,
+                membership, context.allowsWilderness());
+        return routes.isEmpty() ? action + get(574)
+                : action + " Useful route" + (routes.size() > 1 ? "s: " : ": ")
+                        + String.join(" | ", routes);
     }
 
     private void visitRequirement(StrategyContext context,
@@ -3181,7 +2546,7 @@ class ResourceDependencyResolver
             return;
         }
         state.nodes.putIfAbsent(id,
-                new ResolvedDependencyNode(id, action, confidence, depth));
+                new ResolvedDependencyNode(id, action, confidence, depth, 0));
     }
 
     private static void addResource(State state, String id, String action,
@@ -3214,6 +2579,15 @@ class ResourceDependencyResolver
     }
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class Ownership
+    {
+        private final int confirmed;
+        private final Confidence confidence;
+        private final String note;
+        private boolean enough(int quantity) { return confirmed >= quantity; }
+    }
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 
     private static final class State
     {
@@ -3243,13 +2617,11 @@ class StrategyEngine
             new RecommendationDeduplicator();
     private final StrategicPlanService strategicPlanService =
             new StrategicPlanService();
-    private final InfrastructureRecommendationValueService infrastructureValue =
-            new InfrastructureRecommendationValueService();
+    private final InfrastructureUnlockValueService infrastructureValue =
+            new InfrastructureUnlockValueService();
     private final MethodRecommendationValueService methodValue;
-    private final FinalExecutionPlanValidator finalExecutionValidator;
     private final ActivityStrategyKnowledgeService activityStrategyKnowledge =
             new ActivityStrategyKnowledgeService();
-    private final QuestRecommendationValueService questValue;
     private static final FarmingAccessCatalog FARMING_ACCESS_CATALOG =
             new FarmingAccessCatalog();
 
@@ -3262,9 +2634,7 @@ class StrategyEngine
             RecommendationIntelligenceService intelligenceService,
             CandidateSafetyPolicy candidateSafetyPolicy,
             GoalDependencyProvenanceService goalProvenanceService,
-            MethodRecommendationValueService methodValue,
-            QuestRecommendationValueService questValue,
-            FinalExecutionPlanValidator finalExecutionValidator)
+            MethodRecommendationValueService methodValue)
     {
         this.recommendationEngine = recommendationEngine;
         this.opportunityEngine = opportunityEngine;
@@ -3281,9 +2651,6 @@ class StrategyEngine
                 ? new GoalDependencyProvenanceService() : goalProvenanceService;
         this.methodValue = methodValue == null
                 ? new MethodRecommendationValueService() : methodValue;
-        this.questValue = questValue;
-        this.finalExecutionValidator = finalExecutionValidator == null
-                ? new FinalExecutionPlanValidator() : finalExecutionValidator;
     }
 
     public StrategyResult evaluate(
@@ -3328,7 +2695,7 @@ class StrategyEngine
             return new StrategyResult(
                     singletonList(
                             FallbackRecommendationFactory.forState(data)),
-                    emptyList());
+                    emptyList(), null);
         }
 
         StrategyContext context = new StrategyContext(
@@ -3396,10 +2763,10 @@ class StrategyEngine
 
         List<Recommendation> attributed = new ArrayList<>(pool.size());
         for (Recommendation recommendation : pool)
-            attributed.add(finalExecutionValidator.validate(methodValue.attach(questValue.attach(
+            attributed.add(methodValue.attach(
                     infrastructureValue.attach(
                             goalProvenanceService.attach(recommendation,
-                                    context), context), context), context), context));
+                                    context), context), context));
         pool = attributed;
 
         // Only after legality/actionability is known do we compare account value
@@ -3412,7 +2779,7 @@ class StrategyEngine
         }
         if (!recommendations.isEmpty())
         {
-            java.util.Set<String> promotedIds = new java.util.HashSet<>();
+            Set<String> promotedIds = new HashSet<>();
             for (Recommendation recommendation : recommendations)
                 if (recommendation.id.startsWith("opportunity:"))
                     promotedIds.add(recommendation.id);
@@ -3530,11 +2897,11 @@ class StrategyEngine
         switch (opportunity.getType())
         {
             case BIRDHOUSE_RUN:
-                return Safety.skill(false, net.runelite.api.Skill.HUNTER);
+                return Safety.skill(false, HUNTER);
             case HERB_RUN:
             case TREE_RUN:
             case FARMING_CONTRACT:
-                return Safety.skill(false, net.runelite.api.Skill.FARMING);
+                return Safety.skill(false, FARMING);
             case KINGDOM:
             case KINGDOM_APPROVAL:
             case BATTLESTAVES:
@@ -3693,6 +3060,89 @@ class UniversalActionRecipeResolver
             case CONSTRUCTION: return unknown(get(928));
             default: return unknown(get(902));
         }
+    }
+
+    List<MethodInput> profileInputs(MethodProfile profile, ActionDef action,
+            int count)
+    {
+        if (profile == null || action == null || count <= 0) return emptyList();
+        Map<String, MethodInput> merged = new LinkedHashMap<>();
+        for (MethodInputRule rule : profile.inputs)
+        {
+            MethodInput input = profileInput(rule, action, count);
+            if (input == null) continue;
+            String key = input.itemId > 0 ? "id:" + input.itemId
+                    : "name:" + Names.lower(input.getName());
+            MethodInput old = merged.get(key);
+            merged.put(key, old == null ? input : new MethodInput(
+                    old.getName(), old.itemId,
+                    old.quantity + input.quantity));
+        }
+        return new ArrayList<>(merged.values());
+    }
+
+    private static MethodInput profileInput(MethodInputRule rule,
+            ActionDef action, int count)
+    {
+        if (rule == null || rule.getMode() == MethodProfile.InputMode.NONE)
+            return null;
+        String value = action.getName() == null ? "" : action.getName().trim();
+        String lower = value.toLowerCase(Locale.ROOT);
+        String name;
+        int itemId = -1;
+        switch (rule.getMode())
+        {
+            case ACTION_ITEM:
+                name = value;
+                itemId = action.itemId;
+                break;
+            case RAW_ACTION_ITEM:
+                name = "Raw " + (lower.startsWith("cooked ")
+                        ? value.substring(7) : value);
+                break;
+            case LOG_FOR_BOW:
+                name = wood(value, "Logs");
+                break;
+            case BAR_FOR_SMITHED_ITEM:
+                String metal = first(lower, "bronze", "iron", "steel",
+                        "mithril", "adamant", "rune");
+                if (metal == null) return null;
+                name = metal.equals("adamant") ? "Adamantite bar"
+                        : metal.equals("rune") ? "Runite bar"
+                        : capitalize(metal) + " bar";
+                break;
+            case UNCUT_GEM:
+                name = lower.startsWith("uncut ") ? value : "Uncut " + lower;
+                break;
+            case SAPLING_FOR_TREE:
+                if (lower.equals("spirit tree")) name = "Spirit seed";
+                else if (lower.equals("crystal tree")) name = "Crystal acorn";
+                else if (lower.endsWith(" tree"))
+                    name = value.substring(0, value.length() - 5).trim()
+                            + " sapling";
+                else return null;
+                break;
+            case DART_TIP_FOR_DART:
+                if (!lower.endsWith(" dart")) return null;
+                name = value.substring(0, value.length() - 5).trim()
+                        + " dart tip";
+                break;
+            case UNFINISHED_BOLT:
+                if (!lower.endsWith(" bolts")) return null;
+                name = value + " (unf)";
+                break;
+            case FIXED:
+                name = rule.getFixedName();
+                if (name == null || name.trim().isEmpty()) return null;
+                break;
+            default:
+                return null;
+        }
+        double units = rule.getQuantityPerAction();
+        if (units <= 0) units = rule.getMode()
+                == MethodProfile.InputMode.BAR_FOR_SMITHED_ITEM
+                && lower.contains("platebody") ? 5 : 1;
+        return new MethodInput(name, itemId, (int) Math.ceil(count * units));
     }
 
     private static Recipe exact(Skill skill, String name)

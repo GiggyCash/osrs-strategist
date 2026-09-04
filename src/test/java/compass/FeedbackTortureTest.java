@@ -106,7 +106,7 @@ public class FeedbackTortureTest
                 Confidence.VERIFIED);
         return new Recommendation(id, title, "Useful account progress.", score,
                 new TrainingPlan(method, "Useful account progress.",
-                        Confidence.VERIFIED),
+                        Confidence.VERIFIED, Collections.emptyList()),
                 Confidence.VERIFIED, 70, 71,
                 new Guidance("Do it now.",
                         "Setup verified.", "Safe location.", "Useful."),

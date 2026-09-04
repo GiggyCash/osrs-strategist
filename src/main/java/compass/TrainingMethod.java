@@ -6,39 +6,31 @@ import java.util.*;
 
 import net.runelite.api.Skill;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public final class TrainingMethod
 {
-    @Getter
     final String id;
-    @Getter
     final Skill skill;
-    @Getter
     final int minLevel;
-    @Getter
     final int maxLevel;
-    @Getter
     final String name;
-    @Getter
     final String instructions;
+    @Getter(AccessLevel.NONE)
     final double efficientScore;
+    @Getter(AccessLevel.NONE)
     final double balancedScore;
+    @Getter(AccessLevel.NONE)
     final double relaxedScore;
-    @Getter
     final AttentionLevel attentionLevel;
-    @Getter
     final int minimumSessionMinutes;
-    @Getter
     final int setupMinutes;
-    @Getter
     final List<String> requirements;
-    @Getter
     final Confidence confidence;
-    @Getter
     final boolean membersOnly;
-    @Getter
     final boolean wilderness;
-    @Getter
     final boolean progressionProtected;
+    @Getter(AccessLevel.NONE)
     final boolean delegatesMethodChoice;
 
     public TrainingMethod(
@@ -78,79 +70,16 @@ public final class TrainingMethod
             int setupMinutes,
             List<String> requirements,
             Confidence confidence,
-            boolean membersOnly)
-    {
-        this(id, skill, minLevel, maxLevel, name, instructions,
-                efficientScore, balancedScore, relaxedScore, attentionLevel,
-                minimumSessionMinutes, setupMinutes, requirements, confidence,
-                membersOnly, false, false);
-    }
-
-    public TrainingMethod(
-            String id,
-            Skill skill,
-            int minLevel,
-            int maxLevel,
-            String name,
-            String instructions,
-            double efficientScore,
-            double balancedScore,
-            double relaxedScore,
-            AttentionLevel attentionLevel,
-            int minimumSessionMinutes,
-            int setupMinutes,
-            List<String> requirements,
-            Confidence confidence,
             boolean membersOnly,
             boolean wilderness,
             boolean progressionProtected)
     {
         this(id, skill, minLevel, maxLevel, name, instructions,
                 efficientScore, balancedScore, relaxedScore, attentionLevel,
-                minimumSessionMinutes, setupMinutes, requirements, confidence,
-                membersOnly, wilderness, progressionProtected, false);
-    }
-
-    public TrainingMethod(
-            String id,
-            Skill skill,
-            int minLevel,
-            int maxLevel,
-            String name,
-            String instructions,
-            double efficientScore,
-            double balancedScore,
-            double relaxedScore,
-            AttentionLevel attentionLevel,
-            int minimumSessionMinutes,
-            int setupMinutes,
-            List<String> requirements,
-            Confidence confidence,
-            boolean membersOnly,
-            boolean wilderness,
-            boolean progressionProtected,
-            boolean delegatesMethodChoice)
-    {
-        this.id = id;
-        this.skill = skill;
-        this.minLevel = minLevel;
-        this.maxLevel = maxLevel;
-        this.name = name;
-        this.instructions = instructions;
-        this.efficientScore = efficientScore;
-        this.balancedScore = balancedScore;
-        this.relaxedScore = relaxedScore;
-        this.attentionLevel = attentionLevel;
-        this.minimumSessionMinutes = minimumSessionMinutes;
-        this.setupMinutes = setupMinutes;
-        this.requirements = Collections.unmodifiableList(
-                new ArrayList<>(requirements)
-        );
-        this.confidence = confidence;
-        this.membersOnly = membersOnly;
-        this.wilderness = wilderness;
-        this.progressionProtected = progressionProtected;
-        this.delegatesMethodChoice = delegatesMethodChoice;
+                minimumSessionMinutes, setupMinutes,
+                Collections.unmodifiableList(new ArrayList<>(requirements)),
+                confidence, membersOnly, wilderness, progressionProtected,
+                false);
     }
 
     public boolean delegatesMethodChoice() { return delegatesMethodChoice; }

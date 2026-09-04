@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 public class MembershipRecommendationTest
 {
     private final TrainingMethodSelector selector =
-            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new MethodStrategyService());
+            new TrainingMethodSelector(new TrainingMethodDatabase(), null, new TrainingMethodPolicy(), new MethodStrategyKnowledgeCatalog(), new UimInventoryResolutionService());
 
     private final RecommendationEngine engine =
             TestFixtures.recommendationEngine(selector);
@@ -26,10 +26,12 @@ public class MembershipRecommendationTest
                 30
         );
 
-        List<Recommendation> recommendations = engine.recommend(
-                account,
+        List<Recommendation> recommendations = engine.recommendAll(
+                GameData.builder(account).build(),
                 StrategyMode.RELAXED,
                 SessionIntent.AFK,
+                true, false,
+                GoalType.AUTOMATIC,
                 new PreferenceProfile()
         );
 
@@ -54,7 +56,7 @@ public class MembershipRecommendationTest
                 30
         );
 
-        TrainingPlan plan = selector.select(
+        TrainingPlan plan = TestFixtures.select(selector,
                 GameData.builder(account).build(),
                 Skill.MINING,
                 30,
@@ -74,7 +76,7 @@ public class MembershipRecommendationTest
                 30
         );
 
-        TrainingPlan plan = selector.select(
+        TrainingPlan plan = TestFixtures.select(selector,
                 GameData.builder(account).build(),
                 Skill.MINING,
                 30,

@@ -44,15 +44,13 @@ public final class QuestRequirementCensus
 
     public QuestRequirementCensus()
     {
-        AuthoritativeQuestEnrichmentCatalog catalog =
-                new AuthoritativeQuestEnrichmentCatalog();
+        QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
         ImportedQuestItemRequirementCatalog imported =
                 new ImportedQuestItemRequirementCatalog();
         totalQuests = Quest.values().length;
         for (Quest quest : Quest.values())
         {
-            AuthoritativeQuestEnrichmentCatalog.Record record =
-                    catalog.recordFor(quest.getName());
+            QuestDefinition record = catalog.definitionFor(quest.getName());
             if (record == null)
             {
                 sourceMissingFields += 5;
@@ -60,26 +58,13 @@ public final class QuestRequirementCensus
                         "", "No matching authoritative quest bucket record."));
                 continue;
             }
-            auditField(quest.getName(), "start", record.getStart(),
-                    record.getStartState());
-            auditField(quest.getName(), "requirements", record.getRequirements(),
-                    record.getRequirementState());
-            auditField(quest.getName(), "combat", record.getEnemies(),
-                    record.getCombatState());
-            auditField(quest.getName(), "rewards", record.getRewards(),
-                    record.getRewardState());
-
-            AuthoritativeQuestEnrichmentCatalog.EvidenceState itemState =
-                    record.getItemState();
-            auditField(quest.getName(), "items", record.getItems(), itemState);
-            if (itemState == AuthoritativeQuestEnrichmentCatalog.EvidenceState.NONE
-                    || itemState == AuthoritativeQuestEnrichmentCatalog.EvidenceState.NOT_APPLICABLE)
+            for (String uncertainty : record.getFieldUncertainties())
+                auditUncertainty(quest.getName(), uncertainty);
+            if (record.getItemRequirements().isEmpty())
             {
                 fullyExecutable++;
                 continue;
             }
-            if (itemState != AuthoritativeQuestEnrichmentCatalog.EvidenceState.VALUE)
-                continue;
             questsWithItemRequirements++;
             ImportedQuestItemRequirementCatalog.Result result =
                     imported.resultFor(quest.getName());
@@ -87,16 +72,21 @@ public final class QuestRequirementCensus
             {
                 unsupportedExpressions++;
                 unresolved.add(new Unresolved(quest.getName(), "items",
-                        record.getItems(), "No executable expression is bundled for this enrichment-only identity."));
+                        record.getItemRequirements().stream()
+                                .map(QuestDefinition.QuestItemRequirement::getName)
+                                .collect(java.util.stream.Collectors.joining("; ")),
+                        "No executable expression is bundled for this quest."));
                 continue;
             }
             // A VALUE field may contain only explicitly optional preparation.
             // Once the parser proves every line non-mandatory, that is the same
             // executable outcome as source NONE: there is no ownership gate.
-            explicitCheckExpressions += result.getCheckNeededExpressionCount();
-            if (result.isDeterministicallyExecutable())
+            int checks = countChecks(result.getExpression());
+            explicitCheckExpressions += checks;
+            if (result.getUnresolved().isEmpty() && checks == 0)
                 fullyExecutable++;
-            else if (result.getExpression() != null || result.isFullyExecutable())
+            else if (result.getExpression() != null
+                    || result.getUnresolved().isEmpty())
                 partiallyExecutable++;
             else
             {
@@ -112,28 +102,21 @@ public final class QuestRequirementCensus
         }
     }
 
-    private void auditField(String quest, String field, String raw,
-            AuthoritativeQuestEnrichmentCatalog.EvidenceState state)
+    private static int countChecks(ItemRule value)
     {
-        if (state == AuthoritativeQuestEnrichmentCatalog.EvidenceState.SOURCE_MISSING
-                || state == AuthoritativeQuestEnrichmentCatalog.EvidenceState.MISSING)
-        {
-            sourceMissingFields++;
-            unresolved.add(new Unresolved(quest, field, raw,
-                    "Authoritative source field is missing."));
-        }
-        else if (state == AuthoritativeQuestEnrichmentCatalog.EvidenceState.PARSE_FAILURE)
-        {
-            parseFailures++;
-            unresolved.add(new Unresolved(quest, field, raw,
-                    "Authoritative source parsing failed."));
-        }
-        else if (state == AuthoritativeQuestEnrichmentCatalog.EvidenceState.UNSUPPORTED_STRUCTURE)
-            unresolved.add(new Unresolved(quest, field, raw,
-                    "Authoritative page structure is not supported; no NONE inference was made."));
-        else if (state == AuthoritativeQuestEnrichmentCatalog.EvidenceState.UNKNOWN)
-            unresolved.add(new Unresolved(quest, field, raw,
-                    "Evidence remains explicitly unknown."));
+        if (value == null) return 0;
+        int count = value.getKind() == ItemRule.Kind.CHECK_NEEDED ? 1 : 0;
+        for (ItemRule child : value.getChildren()) count += countChecks(child);
+        return count;
+    }
+
+    private void auditUncertainty(String quest, String field)
+    {
+        if (field == null || field.trim().isEmpty()) return;
+        if (field.toLowerCase().contains("parse")) parseFailures++;
+        if (field.toLowerCase().contains("missing")) sourceMissingFields++;
+        unresolved.add(new Unresolved(quest, field, "",
+                "The consolidated quest record keeps this field explicitly uncertain."));
     }
 
     public int getTotalQuests() { return totalQuests; }

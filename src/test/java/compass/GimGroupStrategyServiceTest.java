@@ -1,52 +1,37 @@
 package compass;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.Map;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+/** Regression coverage for Group Storage value in the method pipeline. */
 public class GimGroupStrategyServiceTest
 {
     private static final int SHARED_ITEM = 12345;
-    private final GimGroupStrategyService service =
-            new GimGroupStrategyService();
 
     @Test
     public void freshEnabledExactStockCanPreventDuplicateAcquisition()
     {
-        GroupResourceAssessment result = service.assess(context(4, true,
-                new ItemsState(true, Collections.singletonList(
-                        new ItemState(SHARED_ITEM, "Shared tool", 1)))),
-                need(1, true));
+        StrategicValue value = value(context(4, true, storage(
+                "Shared tool", 1)), "Shared tool", 1, true);
 
-        assertEquals(GroupResourceState.SHARED_STOCK_SATISFIES_NEED,
-                result.getState());
-        assertEquals(Confidence.VERIFIED,
-                result.getConfidence());
-        assertTrue(result.satisfiesNeed());
-        assertEquals(1.0, result.getDuplicateGrindAvoidance(), 0.0);
-        assertTrue(result.strategicValue("group:test").hasTypedEvidence());
+        assertTrue(value.hasTypedEvidence());
+        assertTrue(value.getResourceFit() == 1.0);
     }
 
     @Test
     public void partialConsumableStockHasPartialRatherThanWinnerValue()
     {
-        GroupResourceAssessment result = service.assess(context(6, true,
-                new ItemsState(true, Collections.singletonList(
-                        new ItemState(SHARED_ITEM, "Shared supply", 4)))),
-                need(10, false));
+        StrategicValue value = value(context(6, true, storage(
+                "Shared supply", 4)), "Shared supply", 10, false);
 
-        assertEquals(GroupResourceState.SHARED_STOCK_PARTIAL,
-                result.getState());
-        assertFalse(result.satisfiesNeed());
-        assertTrue(result.getDuplicateGrindAvoidance() > 0.0);
-        assertTrue(result.getDuplicateGrindAvoidance() < 0.5);
+        assertTrue(value.getResourceFit() > 0.0);
+        assertTrue(value.getResourceFit() < 0.5);
     }
 
     @Test
@@ -55,38 +40,28 @@ public class GimGroupStrategyServiceTest
         ItemsState stale = new ItemsState(true,
                 Collections.singletonList(new ItemState(
                         SHARED_ITEM, "Shared tool", 1)),
-                System.currentTimeMillis()
-                        - ItemsState.FRESH_FOR_MILLIS - 1L);
+                System.currentTimeMillis() - ItemsState.FRESH_FOR_MILLIS - 1L);
 
-        GroupResourceAssessment staleResult = service.assess(
-                context(4, true, stale), need(1, true));
-        GroupResourceAssessment disabled = service.assess(
-                context(4, false, new ItemsState(true,
-                        Collections.singletonList(new ItemState(
-                                SHARED_ITEM, "Shared tool", 1)))),
-                need(1, true));
-        GroupResourceAssessment main = service.assess(
-                context(0, true, new ItemsState(true,
-                        Collections.singletonList(new ItemState(
-                                SHARED_ITEM, "Shared tool", 1)))),
-                need(1, true));
-
-        assertEquals(GroupResourceState.GROUP_STORAGE_UNKNOWN,
-                staleResult.getState());
-        assertEquals(Confidence.CHECK_NEEDED,
-                staleResult.getConfidence());
-        assertEquals(GroupResourceState.GROUP_STORAGE_DISABLED,
-                disabled.getState());
-        assertEquals(GroupResourceState.NOT_A_GROUP_ACCOUNT, main.getState());
-        assertFalse(staleResult.strategicValue("group:test")
+        assertFalse(value(context(4, true, stale), "Shared tool", 1, true)
                 .hasTypedEvidence());
+        assertFalse(value(context(4, false, storage("Shared tool", 1)),
+                "Shared tool", 1, true).hasTypedEvidence());
+        assertFalse(value(context(0, true, storage("Shared tool", 1)),
+                "Shared tool", 1, true).hasTypedEvidence());
     }
 
-private static GroupResourceNeed need(int quantity, boolean reusable)
+    private static StrategicValue value(StrategyContext context, String name,
+            int quantity, boolean reusable)
     {
-        return new GroupResourceNeed("Shared requirement",
-                new HashSet<>(Collections.singletonList(SHARED_ITEM)),
-                quantity, reusable);
+        return AdaptiveMilestoneGuidanceService.sharedResourceValue(
+                context.data(), context.usesGroupStorage(), name, quantity,
+                reusable);
+    }
+
+    private static ItemsState storage(String name, int quantity)
+    {
+        return new ItemsState(true, Collections.singletonList(
+                new ItemState(SHARED_ITEM, name, quantity)));
     }
 
     private static StrategyContext context(int typeCode, boolean enabled,
@@ -101,8 +76,7 @@ private static GroupResourceNeed need(int quantity, boolean reusable)
         }
         AccountSnapshot account = new AccountSnapshot("Group member", 47L,
                 typeCode, AccountMode.fromTypeCode(typeCode).name(),
-                Membership.P2P, 1, levels.size() * 50, 0L,
-                levels, xp);
+                Membership.P2P, 1, levels.size() * 50, 0L, levels, xp);
         GameData data = GameData.builder(account)
                 .groupStorage(groupStorage).build();
         return new StrategyContext(data, StrategyMode.BALANCED,

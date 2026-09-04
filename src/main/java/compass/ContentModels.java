@@ -28,60 +28,17 @@ final class AbilityUnlockDefinition
 
 }
 
-/** Immutable, exhaustive account strategic-priority profile. */
-final class AccountPriorities
-{
-    @Getter
-    final AccountMode accountMode;
-    @Getter
-    final Map<AccountDimension, AccountPriority>
-            priorities;
-
-    AccountPriorities(AccountMode accountMode,
-            Map<AccountDimension, AccountPriority> values)
-    {
-        this.accountMode = accountMode == null ? AccountMode.UNKNOWN : accountMode;
-        EnumMap<AccountDimension, AccountPriority> copy =
-                new EnumMap<>(AccountDimension.class);
-        if (values != null) copy.putAll(values);
-        for (AccountDimension dimension
-                : AccountDimension.values())
-        {
-            if (!copy.containsKey(dimension))
-                throw new IllegalArgumentException(
-                        Text.get(1110) + dimension);
-        }
-        this.priorities = unmodifiableMap(copy);
-    }
-
-
-    public AccountPriority get(AccountDimension dimension)
-    {
-        return priorities.get(dimension);
-    }
-
-    public Priority priorityOf(AccountDimension dimension)
-    {
-        var value = get(dimension);
-        return value == null ? Priority.NONE : value.getPriority();
-    }
-
-}
-
 /** Sourced strategic properties shared by non-skill candidate families. */
 @RequiredArgsConstructor
+@Getter
 final class ActivityStrategyProfile
 {
-    @Getter
     final String candidatePrefix;
+    @Getter(AccessLevel.NONE)
     final Set<AccountMode> accountModes;
-    @Getter
     final InventoryFootprint inventoryFootprint;
-    @Getter
     final double setupReuse;
-    @Getter
     final String strategicReason;
-    @Getter
     final List<Source> sources;
 
 
@@ -294,44 +251,16 @@ final class MethodStrategyProfile
 @Getter
 final class MinigameDefinition
 {
-    final String id;
-    final String name;
-    final Skill primarySkill;
-    final int minimumLevel;
-    final boolean freeToPlay;
-    final RiskLevel riskLevel;
-    final AttentionLevel attention;
-    final Set<AccountMode> supportedModes;
-    final String rewardFocus;
-    final boolean combatActivity;
-
-    public MinigameDefinition(String id, String name, Skill primarySkill,
-            int minimumLevel, boolean freeToPlay, RiskLevel riskLevel,
-            AttentionLevel attention, Set<AccountMode> supportedModes,
-            String rewardFocus)
-    {
-        this(id, name, primarySkill, minimumLevel, freeToPlay, riskLevel,
-                attention, supportedModes, rewardFocus, false);
-    }
-
-    public MinigameDefinition(String id, String name, Skill primarySkill,
-            int minimumLevel, boolean freeToPlay, RiskLevel riskLevel,
-            AttentionLevel attention, Set<AccountMode> supportedModes,
-            String rewardFocus, boolean combatActivity)
-    {
-        this.id = id;
-        this.name = name;
-        this.primarySkill = primarySkill;
-        this.minimumLevel = max(1, minimumLevel);
-        this.freeToPlay = freeToPlay;
-        this.riskLevel = riskLevel == null ? RiskLevel.NONE : riskLevel;
-        this.attention = attention == null ? AttentionLevel.MODERATE : attention;
-        this.supportedModes = supportedModes == null || supportedModes.isEmpty()
-                ? emptySet()
-                : unmodifiableSet(EnumSet.copyOf(supportedModes));
-        this.rewardFocus = rewardFocus;
-        this.combatActivity = combatActivity;
-    }
+    String id;
+    String name;
+    Skill primarySkill;
+    int minimumLevel;
+    boolean freeToPlay;
+    RiskLevel riskLevel;
+    AttentionLevel attention;
+    Set<AccountMode> supportedModes;
+    String rewardFocus;
+    boolean combatActivity;
 
     public boolean supports(AccountMode mode) { return supportedModes.contains(mode); }
 }
@@ -384,18 +313,6 @@ class PlayerStrategyProfile
     final boolean useGroupStorage;
     final boolean collectionistMode;
     final boolean allowWildernessMethods;
-
-    public PlayerStrategyProfile(
-            StrategyMode strategyMode,
-            SessionIntent sessionIntent,
-            QuestTolerance questTolerance,
-            GoalType activeGoal,
-            boolean useGroupStorage,
-            boolean collectionistMode)
-    {
-        this(strategyMode, sessionIntent, questTolerance, activeGoal,
-                useGroupStorage, collectionistMode, false);
-    }
 
     public PlayerStrategyProfile(
             StrategyMode strategyMode,
@@ -524,192 +441,54 @@ final class RecommendationHistoryEntry
 @Getter
 final class ResourceDependency
 {
-    final int itemId;
-    final String itemName;
-    final String action;
-    final int opportunityCost;
-    final int outputQuantity;
-    final List<DependencyRequirement> prerequisites;
+    int itemId;
+    String itemName;
+    String action;
+    int opportunityCost;
+    int outputQuantity;
+    List<DependencyRequirement> prerequisites;
 
-    public ResourceDependency(int itemId, String action,
-            int opportunityCost, List<DependencyRequirement> prerequisites)
-    {
-        this(itemId, null, action, opportunityCost, 1, prerequisites);
-    }
-
-    public ResourceDependency(int itemId, String action,
-            int opportunityCost, int outputQuantity,
-            List<DependencyRequirement> prerequisites)
-    {
-        this(itemId, null, action, opportunityCost, outputQuantity, prerequisites);
-    }
-
-    public ResourceDependency(int itemId, String itemName, String action,
-            int opportunityCost, List<DependencyRequirement> prerequisites)
-    {
-        this(itemId, itemName, action, opportunityCost, 1, prerequisites);
-    }
-
-    public ResourceDependency(int itemId, String itemName, String action,
-            int opportunityCost, int outputQuantity,
-            List<DependencyRequirement> prerequisites)
-    {
-        this.itemId = itemId;
-        this.itemName = itemName == null ? null : itemName.trim();
-        this.action = action;
-        this.opportunityCost = max(0, opportunityCost);
-        this.outputQuantity = max(1, outputQuantity);
-        this.prerequisites = unmodifiableList(prerequisites == null
-                ? new ArrayList<>() : new ArrayList<>(prerequisites));
-    }
-
-}
-
-/**
- * One exact consumed-input requirement after Compass has compared the plan
- * with usable account storage.
- *
- * <p>A reusable source is deliberately represented separately from owned
- * quantity. For example, an equipped elemental staff can satisfy an elemental
- * rune requirement without pretending the account owns millions of runes.</p>
- */
-@Getter
-final class ResourcePlanEntry
-{
-    final String name;
-    final int itemId;
-    final int required;
-    final int usableOwned;
-    final int missing;
-    final int restrictedOwned;
-    final String reusableSource;
-
-    public ResourcePlanEntry(
-            String name,
-            int itemId,
-            int required,
-            int usableOwned,
-            int missing,
-            int restrictedOwned,
-            String reusableSource)
-    {
-        this.name = name;
-        this.itemId = itemId;
-        this.required = max(0, required);
-        this.usableOwned = max(0, usableOwned);
-        this.missing = max(0, missing);
-        this.restrictedOwned = max(0, restrictedOwned);
-        this.reusableSource = reusableSource;
-    }
-
-
-    public boolean isSatisfied()
-    {
-        return missing <= 0;
-    }
-
-    public boolean isSatisfiedByReusableSource()
-    {
-        return reusableSource != null && !reusableSource.trim().isEmpty();
-    }
-
-    public MethodInput missingInput()
-    {
-        return new MethodInput(name, itemId, missing);
-    }
 }
 
 /** A stable, human-readable acquisition family for common progression resources. */
 @Getter
 final class ResourceSource
 {
-    final String id;
-    final List<String> nameTokens;
-    final String mainRoute;
-    final String ironRoute;
-    final String uimRoute;
-    final List<String> freeToPlayItemNames;
-    final String freeToPlayMainRoute;
-    final String freeToPlayIronRoute;
-    final String freeToPlayUimRoute;
-    final List<Source> sourceIds;
-    final boolean wilderness;
-    final RiskLevel riskLevel;
-
-    public ResourceSource(String id, List<String> nameTokens,
-            String mainRoute, String ironRoute, String uimRoute,
-            boolean wilderness, RiskLevel riskLevel)
-    {
-        this(id, nameTokens, mainRoute, ironRoute, uimRoute,
-                emptyList(), null, null, null,
-                wilderness, riskLevel);
-    }
-
-    public ResourceSource(String id, List<String> nameTokens,
-            String mainRoute, String ironRoute, String uimRoute,
-            List<String> freeToPlayItemNames, String freeToPlayMainRoute,
-            String freeToPlayIronRoute, String freeToPlayUimRoute,
-            boolean wilderness, RiskLevel riskLevel)
-    {
-        this.id = id;
-        this.nameTokens = unmodifiableList(nameTokens == null
-                ? new ArrayList<>() : new ArrayList<>(nameTokens));
-        this.mainRoute = mainRoute;
-        this.ironRoute = ironRoute;
-        this.uimRoute = uimRoute;
-        this.freeToPlayItemNames = unmodifiableList(
-                freeToPlayItemNames == null ? new ArrayList<>()
-                        : new ArrayList<>(freeToPlayItemNames));
-        this.freeToPlayMainRoute = freeToPlayMainRoute;
-        this.freeToPlayIronRoute = freeToPlayIronRoute;
-        this.freeToPlayUimRoute = freeToPlayUimRoute;
-        this.sourceIds = unmodifiableList(
-                freeToPlayItemNames == null || freeToPlayItemNames.isEmpty()
-                        ? Arrays.asList(Source.GENERAL_SKILL_TRAINING,
-                                Source.IRONMAN_GENERAL,
-                                Source.UIM_GENERAL)
-                        : Arrays.asList(Source.GENERAL_SKILL_TRAINING,
-                                Source.IRONMAN_GENERAL,
-                                Source.F2P_IRONMAN_GENERAL,
-                                Source.UIM_GENERAL));
-        this.wilderness = wilderness;
-        this.riskLevel = riskLevel == null ? RiskLevel.NONE : riskLevel;
-    }
+    String id;
+    List<String> nameTokens;
+    String mainRoute;
+    String ironRoute;
+    String uimRoute;
+    List<String> freeToPlayItemNames;
+    String freeToPlayMainRoute;
+    String freeToPlayIronRoute;
+    String freeToPlayUimRoute;
+    List<Source> sourceIds;
+    boolean wilderness;
+    RiskLevel riskLevel;
 
 }
 
 /** Verified Slayer-master mechanics plus property-driven strategic qualities. */
 @RequiredArgsConstructor
+@Getter
 final class SlayerMasterProfile
 {
-    @Getter
     final String id;
-    @Getter
     final List<String> names;
-    @Getter
     final String location;
-    @Getter
     final int minimumCombat;
-    @Getter
     final int minimumSlayer;
-    @Getter
     final String requiredQuest;
+    @Getter(AccessLevel.NONE)
     final boolean questStartSuffices;
-    @Getter
     final int normalPoints;
-    @Getter
     final int cancelCost;
-    @Getter
     final int blockCost;
-    @Getter
     final double experiencePotential;
-    @Getter
     final double supplyValue;
-    @Getter
     final double setupBurden;
-    @Getter
     final double locationConstraint;
-    @Getter
     final boolean wilderness;
 
 
@@ -727,162 +506,43 @@ final class SlayerMasterProfile
 @Getter
 final class SlayerTaskProfile
 {
-    final String id;
-    final List<String> aliases;
-    final List<String> requiredProtection;
-    final String preferredLocation;
-    final String styleGuidance;
-    final String mechanicsNote;
-    final Capability cannonEligibility;
-    final Capability multiTargetMagicEligibility;
-    final boolean wildernessVariantKnown;
-    final List<String> ironObjectives;
-    final String taskDecisionGuidance;
-
-    public SlayerTaskProfile(
-            String id,
-            List<String> aliases,
-            List<String> requiredProtection,
-            String preferredLocation,
-            String styleGuidance,
-            String mechanicsNote)
-    {
-        this(id, aliases, requiredProtection, preferredLocation, styleGuidance,
-                mechanicsNote, Capability.UNKNOWN, Capability.UNKNOWN,
-                false, emptyList(), null);
-    }
-
-    public SlayerTaskProfile(String id, List<String> aliases,
-            List<String> requiredProtection, String preferredLocation,
-            String styleGuidance, String mechanicsNote,
-            Capability cannonEligibility,
-            Capability multiTargetMagicEligibility,
-            boolean wildernessVariantKnown, List<String> ironObjectives,
-            String taskDecisionGuidance)
-    {
-        this.id = id;
-        this.aliases = immutable(aliases);
-        this.requiredProtection = immutable(requiredProtection);
-        this.preferredLocation = preferredLocation;
-        this.styleGuidance = styleGuidance;
-        this.mechanicsNote = mechanicsNote;
-        this.cannonEligibility = cannonEligibility == null
-                ? Capability.UNKNOWN : cannonEligibility;
-        this.multiTargetMagicEligibility = multiTargetMagicEligibility == null
-                ? Capability.UNKNOWN : multiTargetMagicEligibility;
-        this.wildernessVariantKnown = wildernessVariantKnown;
-        this.ironObjectives = immutable(ironObjectives);
-        this.taskDecisionGuidance = taskDecisionGuidance == null
-                ? Text.get(891)
-                : taskDecisionGuidance;
-    }
-
-
-    private static List<String> immutable(List<String> values)
-    {
-        return values == null
-                ? emptyList()
-                : unmodifiableList(new ArrayList<>(values));
-    }
+    String id;
+    List<String> aliases;
+    List<String> requiredProtection;
+    String preferredLocation;
+    String styleGuidance;
+    String mechanicsNote;
+    Capability cannonEligibility;
+    Capability multiTargetMagicEligibility;
+    boolean wildernessVariantKnown;
+    List<String> ironObjectives;
+    String taskDecisionGuidance;
 }
 
 /** Strategic task properties; decisions score these rather than task identities. */
+@Getter
 final class SlayerStrategy
 {
-    @Getter
-    final String taskProfileId;
-    @Getter
-    final int xpQuality;
-    @Getter
-    final int resourceValue;
-    @Getter
-    final int completionBurden;
-    @Getter
-    final int setupBurden;
-    @Getter
-    final AttentionLevel attention;
-    @Getter
-    final RiskLevel inherentRisk;
-    @Getter
-    final SlayerRequiredItemUse requiredItemUse;
-    @Getter
-    final CombatStyle requiredCombatStyle;
-    final Map<String, Integer> assignmentWeights;
-    @Getter
-    final String alternativeActivityId;
-    @Getter
-    final String alternativeName;
-    @Getter
-    final String alternativeLocation;
-    @Getter
-    final boolean directEncounter;
-
-    public SlayerStrategy(String taskProfileId, int xpQuality,
-            int resourceValue, int completionBurden, int setupBurden,
-            AttentionLevel attention, RiskLevel inherentRisk,
-            SlayerRequiredItemUse requiredItemUse,
-            Map<String, Integer> assignmentWeights,
-            String alternativeActivityId, String alternativeName,
-            String alternativeLocation)
-    {
-        this(taskProfileId, xpQuality, resourceValue, completionBurden,
-                setupBurden, attention, inherentRisk, requiredItemUse, null,
-                assignmentWeights, alternativeActivityId, alternativeName,
-                alternativeLocation, false);
-    }
-
-    public SlayerStrategy(String taskProfileId, int xpQuality,
-            int resourceValue, int completionBurden, int setupBurden,
-            AttentionLevel attention, RiskLevel inherentRisk,
-            SlayerRequiredItemUse requiredItemUse,
-            CombatStyle requiredCombatStyle,
-            Map<String, Integer> assignmentWeights,
-            String alternativeActivityId, String alternativeName,
-            String alternativeLocation)
-    {
-        this(taskProfileId, xpQuality, resourceValue, completionBurden,
-                setupBurden, attention, inherentRisk, requiredItemUse,
-                requiredCombatStyle, assignmentWeights, alternativeActivityId,
-                alternativeName, alternativeLocation, false);
-    }
-
-    public SlayerStrategy(String taskProfileId, int xpQuality,
-            int resourceValue, int completionBurden, int setupBurden,
-            AttentionLevel attention, RiskLevel inherentRisk,
-            SlayerRequiredItemUse requiredItemUse,
-            CombatStyle requiredCombatStyle,
-            Map<String, Integer> assignmentWeights,
-            String alternativeActivityId, String alternativeName,
-            String alternativeLocation, boolean directEncounter)
-    {
-        this.taskProfileId = taskProfileId;
-        this.xpQuality = scale(xpQuality);
-        this.resourceValue = scale(resourceValue);
-        this.completionBurden = scale(completionBurden);
-        this.setupBurden = scale(setupBurden);
-        this.attention = attention == null ? AttentionLevel.MODERATE : attention;
-        this.inherentRisk = inherentRisk == null ? RiskLevel.LOW : inherentRisk;
-        this.requiredItemUse = requiredItemUse == null
-                ? SlayerRequiredItemUse.CARRIED_OR_EQUIPPED : requiredItemUse;
-        this.requiredCombatStyle = requiredCombatStyle;
-        this.assignmentWeights = unmodifiableMap(
-                assignmentWeights == null ? emptyMap()
-                        : new HashMap<>(assignmentWeights));
-        this.alternativeActivityId = alternativeActivityId;
-        this.alternativeName = alternativeName;
-        this.alternativeLocation = alternativeLocation;
-        this.directEncounter = directEncounter;
-    }
+    String taskProfileId;
+    int xpQuality;
+    int resourceValue;
+    int completionBurden;
+    int setupBurden;
+    AttentionLevel attention;
+    RiskLevel inherentRisk;
+    SlayerRequiredItemUse requiredItemUse;
+    CombatStyle requiredCombatStyle;
+    @Getter(AccessLevel.NONE)
+    Map<String, Integer> assignmentWeights;
+    String alternativeActivityId;
+    String alternativeName;
+    String alternativeLocation;
+    boolean directEncounter;
 
 
     public Integer weightFor(String masterId)
     {
         return assignmentWeights.get(Names.slug(masterId));
-    }
-
-    private static int scale(int value)
-    {
-        return max(1, min(5, value));
     }
 
 }
