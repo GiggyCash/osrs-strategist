@@ -18,7 +18,6 @@ public class PvmReadinessAnalyzer
     private final PvmActivityCatalog catalog;
     private final PvmEvidenceProfileCatalog evidenceProfiles;
     private final PvmPreparationProfileCatalog preparationProfiles;
-    @Inject
     public PvmSnapshot analyze(
             AccountSnapshot account,
             QuestSnapshot quests,

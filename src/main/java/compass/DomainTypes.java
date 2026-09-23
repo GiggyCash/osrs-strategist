@@ -1322,47 +1322,6 @@ final class CompletionRule
 
 }
 
-/**
- * Goals that are complete enough to expose in RuneLite configuration.
- *
- * <p>Internal planning goals remain in {@link GoalType}; keeping this list
- * separate prevents experimental enum values from silently becoming public
- * controls.</p>
- */
-@RequiredArgsConstructor
-enum PlayerGoal
-{
-    AUTOMATIC(GoalType.AUTOMATIC, "Automatic"),
-    BARROWS_GLOVES(GoalType.BARROWS_GLOVES, "Barrows gloves"),
-    FIRE_CAPE(GoalType.FIRE_CAPE, "Fire cape"),
-    QUEST_CAPE(GoalType.QUEST_CAPE, "Quest cape"),
-    PRIFDDINAS(GoalType.PRIFDDINAS, "Prifddinas"),
-    BOWFA(GoalType.BOWFA, "Bowfa"),
-    INFERNAL_CAPE(GoalType.INFERNAL_CAPE, "Infernal cape"),
-    MAX(GoalType.MAX, "Max cape");
-
-    final GoalType planningGoal;
-    final String displayName;
-    public GoalType toPlanningGoal()
-    {
-        return planningGoal;
-    }
-
-    public static boolean isPlayerFacing(GoalType goal)
-    {
-        if (goal == null) return false;
-        for (PlayerGoal candidate : values())
-            if (candidate.planningGoal == goal) return true;
-        return false;
-    }
-
-    @Override
-    public String toString()
-    {
-        return displayName;
-    }
-}
-
 /** Static safety and presentation allow/deny lists bundled for review. */
 final class PolicyLists
 {
@@ -1537,13 +1496,6 @@ enum QuestStatus
     IN_PROGRESS,
     COMPLETE,
     UNKNOWN
-}
-
-enum QuestTolerance
-{
-    LOW,
-    NORMAL,
-    HIGH
 }
 
 /** Bounded local history so learning cannot grow profile config forever. */
@@ -1815,39 +1767,6 @@ enum RiskLevel
     MEDIUM,
     HIGH,
     IRREVERSIBLE
-}
-
-@RequiredArgsConstructor
-enum SessionIntent
-{
-    QUICK_20_MIN("Quick session"),
-    ONE_HOUR("~1 hour"),
-    LONG_SESSION("Long session"),
-    AFK("AFK"),
-    PICK_FOR_ME("Pick for me");
-
-    final String displayName;
-    @Override
-    public String toString()
-    {
-        return displayName;
-    }
-}
-
-/** User-selectable scaling limited to the Compass sidebar. */
-@RequiredArgsConstructor
-@Getter
-enum SidebarTextSize
-{
-    STANDARD("Standard", 1.00f),
-    LARGE("Large", 1.12f),
-    EXTRA_LARGE("Extra large", 1.24f);
-
-    final String displayName;
-    final float scale;
-
-    @Override
-    public String toString() { return displayName; }
 }
 
 /** One actual level target and the typed reason it matters. */
@@ -2369,13 +2288,6 @@ enum KnowledgeTier
     VERIFIED_SHARED,
     MECHANICALLY_VERIFIED_FALLBACK,
     SAFE_RECOVERY
-}
-
-enum StrategyMode
-{
-    EFFICIENT,
-    BALANCED,
-    RELAXED
 }
 
 /** Stable keys for development-time strategy sources. */

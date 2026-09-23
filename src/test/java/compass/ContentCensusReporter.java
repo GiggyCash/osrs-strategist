@@ -2,7 +2,6 @@ package compass;
 
 import java.util.Map;
 import net.runelite.api.Skill;
-import net.runelite.http.api.RuneLiteAPI;
 
 /** Development-time machine-readable census entry point. */
 public final class ContentCensusReporter
@@ -11,7 +10,6 @@ public final class ContentCensusReporter
 
     public static void main(String[] args)
     {
-        BundledCatalogLoader.injectGson(RuneLiteAPI.GSON);
         QuestRequirementCensus quests = new QuestRequirementCensus();
         TrainingMethodCensus training = new TrainingMethodCensus();
         StashUnitCensus stash = new StashUnitCensus();

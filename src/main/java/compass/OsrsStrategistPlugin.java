@@ -3,7 +3,6 @@ import static java.util.Collections.*;
 
 import static compass.Text.get;
 
-import com.google.inject.Binder;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -86,12 +85,6 @@ public class OsrsStrategistPlugin extends Plugin
             new OverlayLifecycleGuard();
     private final RecommendationStabilizer recommendationStabilizer =
             new RecommendationStabilizer();
-
-    @Override
-    public void configure(Binder binder)
-    {
-        binder.requestStaticInjection(BundledCatalogLoader.class);
-    }
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
