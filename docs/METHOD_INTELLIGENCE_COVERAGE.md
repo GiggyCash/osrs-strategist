@@ -62,3 +62,16 @@ The isolated release restoration remains a separate approval-boundary task.
 It must not be inferred released from development branch pushes. The older
 product implementation map describes historical checkpoints rather than the
 completion status of this broader mission.
+
+## Bow-cutting migration update
+
+The proposed existing bow-cutting route now has a full contract. This adds one
+method record/ID and twelve flow recipes: totals are eight method records, nine
+IDs and 24 flow recipes (ten Cooking, fourteen Fletching). Two unresolved method
+records remain. The 125 reviewed ingredient records and 74 execution profiles
+are unchanged. No new training method or production Java was added.
+
+Tests exercise retained output capacity, knife space, Main purchase affordability,
+Iron purchase exclusion, UIM bank exclusion, membership fail-closed behavior and
+recipe changes with carried log types. This is evidence for this route only;
+the broader domain gaps above remain open.

@@ -186,6 +186,282 @@
         "outputDescription": "the arrow shaft stack and reusable knife",
         "action": "Use a knife on oak logs and select arrow shafts.",
         "inputRecipe": "arrow shafts from oak logs"
+      },
+      {
+        "id": "shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 5,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 50,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Shortbow (u).",
+        "inputRecipe": "shortbow (u)"
+      },
+      {
+        "id": "longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 10,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 48,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Longbow (u).",
+        "inputRecipe": "longbow (u)"
+      },
+      {
+        "id": "oak_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 20,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 54,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Oak shortbow (u).",
+        "inputRecipe": "oak shortbow (u)"
+      },
+      {
+        "id": "oak_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 25,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 56,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Oak longbow (u).",
+        "inputRecipe": "oak longbow (u)"
+      },
+      {
+        "id": "willow_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 35,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 60,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Willow shortbow (u).",
+        "inputRecipe": "willow shortbow (u)"
+      },
+      {
+        "id": "willow_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 40,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 58,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Willow longbow (u).",
+        "inputRecipe": "willow longbow (u)"
+      },
+      {
+        "id": "maple_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 50,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 64,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Maple shortbow (u).",
+        "inputRecipe": "maple shortbow (u)"
+      },
+      {
+        "id": "maple_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 55,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 62,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Maple longbow (u).",
+        "inputRecipe": "maple longbow (u)"
+      },
+      {
+        "id": "yew_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 65,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 68,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Yew shortbow (u).",
+        "inputRecipe": "yew shortbow (u)"
+      },
+      {
+        "id": "yew_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 70,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 66,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Yew longbow (u).",
+        "inputRecipe": "yew longbow (u)"
+      },
+      {
+        "id": "magic_shortbow_cutting",
+        "skill": "FLETCHING",
+        "level": 80,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 72,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Magic shortbow (u).",
+        "inputRecipe": "magic shortbow (u)"
+      },
+      {
+        "id": "magic_longbow_cutting",
+        "skill": "FLETCHING",
+        "level": 85,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 70,
+        "outputDescription": "the unstrung bows and reusable knife",
+        "action": "Use a knife on the prepared logs and select Magic longbow (u).",
+        "inputRecipe": "magic longbow (u)"
       }
     ],
     "methods": [
@@ -321,6 +597,33 @@
         "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
         "reviewed": "2026-09-30",
         "sourceRevision": 15332152
+      },
+      {
+        "ids": [
+          "fletching_bows"
+        ],
+        "recipes": [
+          "shortbow_cutting",
+          "longbow_cutting",
+          "oak_shortbow_cutting",
+          "oak_longbow_cutting",
+          "willow_shortbow_cutting",
+          "willow_longbow_cutting",
+          "maple_shortbow_cutting",
+          "maple_longbow_cutting",
+          "yew_shortbow_cutting",
+          "yew_longbow_cutting",
+          "magic_shortbow_cutting",
+          "magic_longbow_cutting"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "location": "Fletch where you collected or retrieved the logs. Keep the knife and unstrung bows; review supplies and occupied inventory before the next batch.",
+        "source": "https://oldschool.runescape.wiki/w/Shortbow_(u)",
+        "sourceRevision": 15184949,
+        "reviewed": "2026-09-30"
       }
     ]
   }

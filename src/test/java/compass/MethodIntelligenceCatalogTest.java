@@ -11,7 +11,7 @@ public class MethodIntelligenceCatalogTest
     @Test
     public void productionContractsValidate()
     {
-        assertEquals(8, new MethodIntelligenceCatalog().methodIds().size());
+        assertEquals(9, new MethodIntelligenceCatalog().methodIds().size());
     }
 
     @Test

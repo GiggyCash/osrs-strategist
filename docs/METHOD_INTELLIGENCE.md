@@ -368,3 +368,24 @@ Conflicting names for the same ID inside a requirement list remain ambiguous and
 fail closed, matching preparation and recipe validation. A different live item
 display label still resolves by reviewed ID. Requirements without IDs retain
 normalized-name grouping.
+
+## Existing bow-cutting route migration
+
+fletching_bows now has a full method contract using its twelve reviewed cutting
+recipes, from shortbow through magic longbow. Every action consumes one log and
+retains one nonstackable unstrung bow; the reusable knife occupies a slot. The
+maximum/efficient capacity target is 27 actions with a knife, while four is the
+working-batch target (a planning choice, not an OSRS minimum or XP-rate claim).
+Existing occupied slots can reduce feasibility; no output disposal is assumed.
+
+The route is local processing with optional observed bank retrieval, not an
+obligatory bank loop. UIM may use carried inputs or proven self-sourcing steps;
+conventional bank stock cannot satisfy preparation. Main purchases still need
+observed prices and affordable totals; an unaffordable purchase may be replaced
+by independently verified self-sourcing. F2P and unknown membership fail closed.
+
+Current Wiki unstrung-bow pages were rechecked for output IDs, Fletching levels,
+knife use, membership and nonstackability; revisions match the twelve shared
+input records. Recipe output identities are 50/48,54/56,60/58,64/62,68/66,72/70
+(shortbow/longbow pairs, ordinary through magic). Stringing and crossbows are not
+part of this contract. No production Java or schema extension was needed.
