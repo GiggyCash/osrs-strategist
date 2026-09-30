@@ -8,8 +8,19 @@ final class MethodPreparationService
 {
     private final AccountResourcePlanner resources;
 
+    private final MethodAcquisitionCatalog acquisition;
+
+    MethodPreparationService(AccountResourcePlanner resources)
+    {
+        this(resources, new MethodAcquisitionCatalog());
+    }
+
     @Inject
-    MethodPreparationService(AccountResourcePlanner resources) { this.resources = resources; }
+    MethodPreparationService(AccountResourcePlanner resources, MethodAcquisitionCatalog acquisition)
+    {
+        this.resources = resources;
+        this.acquisition = acquisition;
+    }
 
     MethodPreparation evaluate(GameData data, List<MethodInput> needs, boolean group,
             boolean bankRoute, boolean purchaseAllowed)
@@ -71,25 +82,51 @@ final class MethodPreparationService
         }
         if (missing.isEmpty()) return new MethodPreparation(preparation
                 ? MethodPreparation.State.VERIFIED : MethodPreparation.State.READY, steps, 0);
+        MethodPreparation purchasePlan = null;
         if (purchaseAllowed && mode.usesGrandExchange() && resources != null
                 && observed(data.inventory()) && observed(data.equipment())
                 && observed(data.bank()))
         {
             AccountResourcePlanner.Purchase purchase = resources.purchase(data, missing);
+            List<MethodPreparation.Step> purchaseSteps = new ArrayList<>(steps);
             for (MethodInput need : missing)
-                steps.add(new MethodPreparation.Step(MethodPreparation.Kind.BUY, need, purchase.state,
+                purchaseSteps.add(new MethodPreparation.Step(MethodPreparation.Kind.BUY, need, purchase.state,
                         (purchase.state == RequirementState.VERIFIED ? "Buy " : "Missing ")
                                 + need.quantity + " " + need.name + ". " + purchase.reason));
-            return new MethodPreparation(purchase.state == RequirementState.VERIFIED
+            purchasePlan = new MethodPreparation(purchase.state == RequirementState.VERIFIED
                     ? MethodPreparation.State.VERIFIED : purchase.state == RequirementState.BLOCKED
-                    ? MethodPreparation.State.BLOCKED : MethodPreparation.State.UNRESOLVED, steps, purchase.cost);
+                    ? MethodPreparation.State.BLOCKED : MethodPreparation.State.UNRESOLVED, purchaseSteps, purchase.cost);
+            if (purchasePlan.feasible()) return purchasePlan;
         }
+        // Prove every remaining source before exposing any acquisition plan. Unknown
+        // ownership must not be turned into a fabricated shortfall or repeated detour.
+        if (acquisition != null && ownershipObserved(data, mode, group))
+        {
+            List<MethodPreparation.Step> sourced = new ArrayList<>(steps);
+            boolean complete = true;
+            for (MethodInput need : missing)
+            {
+                MethodPreparation.Step step = acquisition.step(need, data.account().membership());
+                if (step == null) { complete = false; break; }
+                sourced.add(step);
+            }
+            if (complete) return new MethodPreparation(MethodPreparation.State.VERIFIED, sourced, 0);
+        }
+        if (purchasePlan != null) return purchasePlan;
         for (MethodInput need : missing)
             steps.add(new MethodPreparation.Step(MethodPreparation.Kind.UNSUPPORTED, need,
                     RequirementState.CHECK_NEEDED, "Acquisition unresolved for " + need.quantity + " " + need.name
                             + "; no verified source/retrieval plan."
                             + (mode == AccountMode.ULTIMATE_IRONMAN ? " UIM bank or restricted storage is not assumed." : "")));
         return new MethodPreparation(MethodPreparation.State.UNRESOLVED, steps, 0);
+    }
+
+    private static boolean ownershipObserved(GameData data, AccountMode mode, boolean group)
+    {
+        return data != null && mode != AccountMode.UNKNOWN
+                && observed(data.inventory()) && observed(data.equipment())
+                && (mode == AccountMode.ULTIMATE_IRONMAN || observed(data.bank()))
+                && (!group || !mode.isGroupIronman() || observed(data.groupStorage()));
     }
 
     private static boolean observed(ItemsState items)

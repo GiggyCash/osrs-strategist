@@ -6,7 +6,7 @@ import java.util.*;
 final class MethodPreparation
 {
     enum State { READY, VERIFIED, UNRESOLVED, BLOCKED }
-    enum Kind { CARRIED, EQUIPPED, RETRIEVE, BUY, UNSUPPORTED }
+    enum Kind { CARRIED, EQUIPPED, RETRIEVE, BUY, ACQUIRE, UNSUPPORTED }
 
     static final class Step
     {

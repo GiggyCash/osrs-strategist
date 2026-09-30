@@ -74,3 +74,25 @@ Logs 15322883, Oak logs 15182629 and Knife 15350068. The 27-log threshold is
 inventory batch capacity with a knife, not a throughput claim. An existing output
 stack or retained setup can reduce it. Java contains no Fletching recipe IDs or
 special cases.
+
+## Verified pickup preparation
+
+`MethodAcquisitionCatalog` currently supports only reviewed ground-item pickups
+with explicitly unrestricted access, no risk, and no skill XP. It does not turn
+the descriptive resource-source catalog into evidence. The initial contracts are
+a knife in Lumbridge Castle's kitchen and logs on the castle bank floor, reviewed
+against the Knife and Logs revisions above. Other source types require explicit
+access, build, input and outcome evaluation before they can be added.
+
+Preparation first uses observed usable stock, then a verified affordable purchase
+when allowed. If purchasing is unavailable or unproved, every missing item must
+have a reviewed pickup route before a self-source plan becomes actionable. Unknown
+ordinary ownership or opted-in unobserved Group Storage still blocks that proof.
+UIM bank and retrieval-only storage are not counted. Pickups remain acquisition
+steps until live inventory confirms possession; guidance leads with the pickup
+instructions and handles absent spawns without promising a respawn time.
+
+Pickup preparation carries a higher ranking burden than observed retrieval and
+increases with requested quantity. This is a planner preference, not a measured
+travel time. The method capacity check reserves all resulting inputs and tools
+before any processing or disposal can be assumed.

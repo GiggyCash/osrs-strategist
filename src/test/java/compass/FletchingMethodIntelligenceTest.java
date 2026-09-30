@@ -41,9 +41,15 @@ public class FletchingMethodIntelligenceTest
     public void uimCannotRetrieveTheSameSuppliesFromAConventionalBank()
     {
         List<ItemState> stock = Arrays.asList(new ItemState(1511, "Logs", 100), new ItemState(946, "Knife", 1));
-        assertFalse(evaluate(data(2, Membership.P2P, 1, empty(), stock)).actionable());
-        assertFalse(evaluate(data(2, Membership.P2P, 1,
-                MethodIntelligenceTest.carried(1511, "Logs", 4), stock)).actionable());
+        for (List<ItemState> carried : Arrays.asList(empty(), MethodIntelligenceTest.carried(1511, "Logs", 4)))
+        {
+            MethodReadiness result = evaluate(data(2, Membership.P2P, 1, carried, stock));
+            assertTrue(result.actionable());
+            assertEquals(MethodPreparation.State.VERIFIED, result.preparation.state);
+            assertFalse(result.preparation.steps.stream().anyMatch(step -> step.kind == MethodPreparation.Kind.RETRIEVE));
+            assertTrue(result.preparation.steps.stream().anyMatch(step -> step.kind == MethodPreparation.Kind.ACQUIRE));
+            assertTrue(result.guidance(15).getAction().startsWith("First, Collect"));
+        }
     }
 
     @Test
@@ -58,7 +64,10 @@ public class FletchingMethodIntelligenceTest
     public void oakUnlockChangesRecipeWithoutAssumingFutureLevels()
     {
         List<ItemState> stock = logsWithKnife(1521, 4);
-        assertFalse(evaluate(data(1, Membership.P2P, 14, stock, empty())).actionable());
+        MethodReadiness lockedOak = evaluate(data(1, Membership.P2P, 14, stock, empty()));
+        assertTrue(lockedOak.actionable());
+        assertEquals("regular_arrow_shafts", lockedOak.recipe.id);
+        assertTrue(lockedOak.preparation.steps.stream().anyMatch(step -> step.kind == MethodPreparation.Kind.ACQUIRE));
         MethodReadiness result = evaluate(data(1, Membership.P2P, 15, stock, empty()));
         assertTrue(result.actionable());
         assertEquals("oak_arrow_shafts", result.recipe.id);
@@ -96,6 +105,18 @@ public class FletchingMethodIntelligenceTest
                 "Prepared arrow shafts", 100, plan, plan.confidence, 1, 15,
                 plan.readiness.guidance(15), Safety.skill(true, Skill.FLETCHING));
         assertTrue(new ActionabilityPolicy().canLeadQueue(recommendation));
+    }
+
+    @Test
+    public void pickupPreparationCannotOverrideAFullProtectedInventory()
+    {
+        List<ItemState> items = MethodIntelligenceTest.carried(9001, "Retained setup", 28);
+        MethodReadiness result = evaluate(data(2, Membership.P2P, 1, items, empty()));
+        assertEquals(MethodPreparation.State.VERIFIED, result.preparation.state);
+        assertTrue(result.preparation.steps.stream().anyMatch(step -> step.kind == MethodPreparation.Kind.ACQUIRE));
+        assertEquals(RequirementState.BLOCKED, result.capacity.hard);
+        assertFalse(result.actionable());
+        assertNull(result.guidance(15));
     }
 
     private MethodReadiness evaluate(GameData data)

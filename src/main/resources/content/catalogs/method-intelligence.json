@@ -407,7 +407,7 @@
         "bankSupplies": true,
         "purchaseAllowed": true,
         "membersOnly": true,
-        "location": "Grand Exchange bank area: use the knife on logs and retain the resulting arrow shafts. Withdraw stock only when preparation lists an observed bank supply.",
+        "location": "Use the knife on logs where you collected or withdrew them; no special facility is needed. Retain the arrow shafts.",
         "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
         "reviewed": "2026-09-30",
         "sourceRevision": 15332152

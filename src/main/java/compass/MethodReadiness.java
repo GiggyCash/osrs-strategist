@@ -56,6 +56,7 @@ final class MethodReadiness
         double burden = 0;
         for (MethodPreparation.Step step : preparation.steps)
             if (step.kind == MethodPreparation.Kind.BUY) burden += 12;
+            else if (step.kind == MethodPreparation.Kind.ACQUIRE) burden += 15 + step.input.quantity;
             else if (step.kind != MethodPreparation.Kind.CARRIED) burden += 3;
         return (preparation.state == MethodPreparation.State.READY ? 10 : 0) - burden;
     }
@@ -65,7 +66,11 @@ final class MethodReadiness
         if (!actionable()) return null;
         target = Math.min(target, reviewLevel);
         int remaining = Math.max(0, net.runelite.api.Experience.getXpForLevel(target) - currentXp);
-        String action = recipe.action + " Process at most " + batch + " actions in this batch. "
+        List<String> acquisition = new ArrayList<>();
+        for (MethodPreparation.Step step : preparation.steps)
+            if (step.kind == MethodPreparation.Kind.ACQUIRE) acquisition.add(step.reason);
+        String first = acquisition.isEmpty() ? "" : "First, " + String.join(" ", acquisition) + " Then ";
+        String action = first + recipe.action + " Process at most " + batch + " actions in this batch. "
                 + "Stop at level " + target + " or when this batch is used, whichever comes first; "
                 + "review supplies and capacity before repeating. " + remaining + " "
                 + recipe.skill.getName() + " XP remaining to this checkpoint.";
