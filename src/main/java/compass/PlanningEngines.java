@@ -2899,6 +2899,7 @@ class StrategyEngine
     {
         if (pool == null || pool.isEmpty()) return emptyList();
 
+        Map<Recommendation, Double> scores = new IdentityHashMap<>();
         List<Recommendation> ready = new ArrayList<>();
         List<Recommendation> secondary = new ArrayList<>();
         for (Recommendation recommendation : deduplicator.deduplicate(pool))
@@ -2912,15 +2913,16 @@ class StrategyEngine
                     .isSemanticOnCooldown(semanticKey))) continue;
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
             if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
+            double score = intelligenceService.rankScore(recommendation, context)
+                    + semanticPreferenceScore(recommendation, context);
+            if (!Double.isFinite(score)) continue;
+            scores.put(recommendation, score);
             if (actionabilityPolicy.canLeadQueue(recommendation)) ready.add(recommendation);
             else secondary.add(recommendation);
         }
 
         Comparator<Recommendation> byAccountValue = Comparator
-                .comparingDouble((Recommendation recommendation) ->
-                        intelligenceService.rankScore(recommendation, context)
-                                + semanticPreferenceScore(recommendation,
-                                        context))
+                .comparingDouble((Recommendation recommendation) -> scores.get(recommendation))
                 .reversed()
                 .thenComparing(Recommendation::getId,
                         Comparator.nullsLast(String::compareTo));

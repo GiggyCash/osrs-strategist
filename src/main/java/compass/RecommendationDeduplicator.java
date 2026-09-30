@@ -17,7 +17,8 @@ public final class RecommendationDeduplicator
         if (candidates == null) return new ArrayList<>();
         for (Recommendation candidate : candidates)
         {
-            if (candidate == null) continue;
+            if (candidate == null || !Double.isFinite(candidate.score)
+                    || !Double.isFinite(candidate.strategicValue.scoreDelta())) continue;
             // Do not allow weaker evidence to borrow VERIFIED status from an
             // equivalent-looking action emitted by another provider.
             var key = semanticKey(candidate) + "|" + candidate.confidence;

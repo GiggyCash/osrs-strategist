@@ -20,6 +20,26 @@ import org.junit.Test;
 public class StrategyValueIntegrationTest
 {
     @Test
+    public void nonFiniteScoresCannotPoisonDuplicatesOrLeadTheFinalQueue()
+    {
+        Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());
+        StrategyContext context = context(account("MAIN"), GameData.builder(account("MAIN")).build());
+        for (double score : new double[] {Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY})
+        {
+            Recommendation duplicate = new Recommendation("candidate:invalid", valid.title, "Invalid score", score,
+                    Confidence.VERIFIED, guidance(), Safety.verifiedSafe(false));
+            List<Recommendation> queue = engine(null, null).buildPlayerQueue(Arrays.asList(duplicate, valid), context);
+            assertEquals(1, queue.size());
+            assertEquals(valid.id, queue.get(0).id);
+            assertTrue(Double.isFinite(queue.get(0).score));
+        }
+        Recommendation invalidValue = ready("candidate:invalid-value", 100,
+                StrategicValue.builder().resourceFit(Double.NaN).evidence("test:invalid").build());
+        assertEquals(valid.id, engine(null, null).buildPlayerQueue(Arrays.asList(invalidValue, valid), context).get(0).id);
+        assertTrue(engine(null, null).buildPlayerQueue(Collections.singletonList(invalidValue), context).isEmpty());
+    }
+
+    @Test
     public void travelAttachmentPreservesProgressStorageRiskAndGuidanceValue()
     {
         UimStorageDecision storage = new UimStorageDecision(StorageKind.DEATH_STORAGE,
