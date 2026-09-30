@@ -3,6 +3,7 @@ package compass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +19,29 @@ import org.junit.Test;
 /** Cross-seam tests for typed value attachment and provider ownership. */
 public class StrategyValueIntegrationTest
 {
+    @Test
+    public void travelAttachmentPreservesProgressStorageRiskAndGuidanceValue()
+    {
+        UimStorageDecision storage = new UimStorageDecision(StorageKind.DEATH_STORAGE,
+                false, Confidence.CHECK_NEEDED, RiskLevel.HIGH, "Unresolved retrieval");
+        RecommendationRiskDisclosure risk = RecommendationRiskDisclosure.deathStorage();
+        StrategicValue value = StrategicValue.builder().resourceFit(0.5).evidence("test:resource").build();
+        Guidance guidance = new Guidance("Prepare safely", "Observed supplies", "Original location", "Keep this note",
+                BankingMode.UNKNOWN, storage, risk).withProgress("Level 27 to 33").withStrategicValue(value);
+        Recommendation original = recommendation("skill:farming", method("farming_fruit_trees", Skill.FARMING), 27, 33)
+                .withGuidance(guidance);
+        GameData data = GameData.builder(account("MAIN")).build();
+        Guidance attached = new MethodRecommendationValueService().attach(original, context(data.account(), data)).guidance;
+        assertEquals(guidance.progress, attached.progress);
+        assertEquals(guidance.action, attached.action);
+        assertEquals(guidance.supplies, attached.supplies);
+        assertSame(storage, attached.storageDecision);
+        assertSame(risk, attached.riskDisclosure);
+        assertSame(value, attached.strategicValue);
+        assertTrue(attached.note.startsWith("Keep this note"));
+        assertFalse(attached.location.equals(guidance.location));
+    }
+
     @Test
     public void methodTravelEvidenceChangesRenderedLocationAndTypedValue()
     {

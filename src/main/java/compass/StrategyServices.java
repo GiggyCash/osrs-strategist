@@ -927,11 +927,8 @@ final class MethodRecommendationValueService
         var result = recommendation.withStrategicValue(value);
         var guidance = result.guidance;
         if (guidance == null) return result;
-        return result.withGuidance(new Guidance(
-                guidance.getAction(), guidance.supplies,
-                location.getName() + ".",
-                append(guidance.note, evidence),
-                guidance.bankingBehavior));
+        return result.withGuidance(guidance.withLocationAndNote(
+                location.getName() + ".", append(guidance.note, evidence)));
     }
 
     private boolean routeVerified(String routeId, StrategyContext context)

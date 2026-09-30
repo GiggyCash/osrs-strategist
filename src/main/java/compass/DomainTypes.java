@@ -851,6 +851,12 @@ final class Guidance
                 value, storageDecision, riskDisclosure, strategicValue);
     }
 
+    public Guidance withLocationAndNote(String value, String explanation)
+    {
+        return new Guidance(action, supplies, value, progress, explanation,
+                bankingBehavior, storageDecision, riskDisclosure, strategicValue);
+    }
+
     public Guidance withProgress(String value)
     {
         return new Guidance(action, supplies, location, value,
