@@ -318,3 +318,13 @@ remain P2P and explicitly mention The Tourist Trap; ingredient resolution does
 not prove that unlock. Existing method requirements still control access.
 The separate universal Smithing fallback remains for unreviewed rows and needs
 its own migration; this checkpoint does not claim it is removed or verified.
+
+## Universal Smithing identity boundary
+
+The universal resolver now shares the reviewed anvil identities without a
+metal/item substring fallback. Unsupported and invented names yield unresolved
+inputs instead of fabricated bar totals. The 28 reviewed rows remain available;
+one reviewed iron 2h sword row preserves the existing F2P level-29 route.
+Other anvil actions require evidence-backed migration before exact planning.
+Legacy exact furnace records remain separate and are not certified by this
+change; furnace success conditions and action-unit semantics need a later audit.

@@ -45,15 +45,23 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void smithingBarCountsMatchStandardAnvilFamilies()
+    public void smithingRequiresReviewedIdentityRatherThanMetalAndItemFragments()
     {
-        assertEquals(5, UniversalActionRecipeResolver.smithingBarsFor("rune platebody"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune platelegs"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune 2h sword"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune battleaxe"));
-        assertEquals(2, UniversalActionRecipeResolver.smithingBarsFor("rune claws"));
-        assertEquals(2, UniversalActionRecipeResolver.smithingBarsFor("rune scimitar"));
-        assertEquals(1, UniversalActionRecipeResolver.smithingBarsFor("rune dagger"));
+        for (Membership membership : Membership.values())
+        {
+            for (String name : new String[] {"Future rune platebody", "Bronze ceremonial sword",
+                    "Rune claws", "Steel wire", "Adamant knife"})
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.SMITHING, name, 1), 10, membership);
+                assertFalse(name, recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+            UniversalActionRecipe reviewed = resolver.resolve(
+                    action(Skill.SMITHING, "Bronze scimitar", 25), 10, membership);
+            assertTrue(reviewed.hasExactInputs());
+            assertInput(reviewed, "Bronze bar", 20);
+        }
     }
 
     @Test

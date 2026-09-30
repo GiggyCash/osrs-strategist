@@ -3076,7 +3076,7 @@ class UniversalActionRecipeResolver
                             ? "Pure essence" : "Rune essence", 1);
             case CRAFTING: return crafting(name, lower, count);
             case FLETCHING: return fletching(name, lower, count);
-            case SMITHING: return smithing(lower, count);
+            case SMITHING: return unknown(get(924));
             case FARMING: return lower.endsWith(" tree")
                     ? recipe(get(930), count,
                     name.substring(0, name.length() - 5).trim() + " sapling", 1)
@@ -3208,30 +3208,6 @@ class UniversalActionRecipeResolver
         if (projectile(lower, "javelin")) return recipe(get(919), n,
                 "Javelin shaft", 1, metal + " javelin head", 1);
         return unknown(get(922));
-    }
-
-    private static UniversalActionRecipe smithing(String lower, int n)
-    {
-        var bars = smithingBarsFor(lower);
-        String metal = first(lower, "bronze", "iron", "steel", "mithril",
-                "adamant", "rune");
-        if (bars <= 0 || metal == null) return unknown(get(924));
-        String bar = metal.equals("adamant") ? "Adamantite bar"
-                : metal.equals("rune") ? "Runite bar" : capitalize(metal) + " bar";
-        return recipe(get(923), n, bar, bars);
-    }
-
-    static int smithingBarsFor(String value)
-    {
-        var lower = value == null ? "" : value;
-        if (lower.contains("platebody")) return 5;
-        if (contains(lower, "plateskirt", "platelegs", "2h sword", "kiteshield",
-                "chainbody", "battleaxe", "warhammer")) return 3;
-        if (contains(lower, "claws", "full helm", "sq shield", "longsword",
-                "scimitar")) return 2;
-        return contains(lower, "mace", "sword", "dagger", " axe", "med helm",
-                "dart tip", "knife", "arrowtip", "nails", "wire",
-                "unfinished bolt") ? 1 : 0;
     }
 
     private static UniversalActionRecipe recipe(String setup, int count,

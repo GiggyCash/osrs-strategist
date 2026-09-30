@@ -2704,5 +2704,27 @@
     "sourceRevision": 15317693,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron 2h sword",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_2h_sword",
+    "sourceRevision": 15320140,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

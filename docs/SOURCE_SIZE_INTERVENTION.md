@@ -355,3 +355,14 @@ Net production change: -11 Java lines / -580 characters / -145 estimated tokens.
 Twenty-eight verified recipe rows replace the profile heuristic; shared universal
 lookup also reuses those rows. Source XP/action units were cross-checked against
 current RuneLite, including the ten-tip batch represented by one Smithing action.
+
+## Universal Smithing inference retired
+
+Removed the remaining Smithing metal-name recipe constructor and smithingBarsFor
+quantity classifier. Reviewed anvil records are now the sole anvil recipe source;
+unsupported names fail closed. Existing exact furnace records remain unchanged.
+Production reduction: 24 lines / 1,110 characters / 277 estimated tokens, with no
+new production file. One reviewed iron 2h sword row preserves an existing F2P
+route (Wiki revision 15320140, three iron bars, XP agrees with RuneLite).
+Regression coverage exercises invented and unreviewed names across membership
+states, plus retained reviewed quantities.
