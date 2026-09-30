@@ -96,3 +96,38 @@ Pickup preparation carries a higher ranking burden than observed retrieval and
 increases with requested quantity. This is a planner preference, not a measured
 travel time. The method capacity check reserves all resulting inputs and tools
 before any processing or disposal can be assumed.
+
+## Reviewed legacy action inputs
+
+`reviewed-action-recipes.json` replaces Cooking's legacy name-derived input
+fallback. It currently contains 29 ordinary fish recipes and jug of wine. Each
+row records exact consumed item IDs and quantities per attempt, explicit
+membership, setup assumptions, a Wiki page/revision and review date. Runtime
+validation rejects incomplete provenance, substring matching, duplicate keys,
+missing membership and invalid ingredient identities/quantities. The installed
+plugin reads bundled data only.
+
+This table is an ingredient contract for the existing universal guidance path,
+not a replacement readiness engine. It does not prove level, access, usable
+ownership, purchase affordability, inventory capacity, burn rates or successful
+outputs. Those remain separate planning responsibilities. Unknown membership can
+use only explicitly F2P rows. Supported fish are cooked on a range/fire; wine
+uses grapes and water and requires fermentation. Quantities describe attempts,
+not a promise that every output succeeds.
+
+The 30 normalized output names were checked against all 148 Cooking actions in
+the current public RuneLite CookingAction source on 2026-09-30. The remaining
+118 actions are not covered by this ingredient table. Previous Java guesses for
+composite, alternative-input, local and quest-dependent foods are deliberately
+removed rather than certified by migration. This includes cooked meat, sinew,
+karambwan and unknown future foods. Unsupported names return unresolved inputs
+and cannot win universal Cooking action selection. They need reviewed explicit
+recipes and any special access/setup model before becoming supported.
+
+The existing `action-recipes.json` table remains a legacy contract for other
+skills. New reviewed rows are checked first and retain item IDs; legacy rows do
+not silently acquire provenance. Method readiness continues to use
+`method-intelligence.json`; adding a reviewed ingredient row alone does not add a
+new actionable training method. Shared recipe normalization between these two
+contracts is follow-up work once their differing batch/output and guidance
+responsibilities can be preserved.

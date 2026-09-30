@@ -1,0 +1,545 @@
+[
+  {
+    "skill": "COOKING",
+    "match": "anchovies",
+    "inputs": [
+      "Raw anchovies"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      321
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_anchovies",
+    "sourceRevision": 15331266,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "anglerfish",
+    "inputs": [
+      "Raw anglerfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      13439
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_anglerfish",
+    "sourceRevision": 15357467,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "bass",
+    "inputs": [
+      "Raw bass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      363
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_bass",
+    "sourceRevision": 15331273,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "bluefin",
+    "inputs": [
+      "Raw bluefin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32341
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_bluefin",
+    "sourceRevision": 15327739,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "cave eel",
+    "inputs": [
+      "Raw cave eel"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      5001
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_cave_eel",
+    "sourceRevision": 15326686,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "cod",
+    "inputs": [
+      "Raw cod"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      341
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_cod",
+    "sourceRevision": 15342741,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "dark crab",
+    "inputs": [
+      "Raw dark crab"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      11934
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_dark_crab",
+    "sourceRevision": 15296400,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "giant krill",
+    "inputs": [
+      "Raw giant krill"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32309
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_giant_krill",
+    "sourceRevision": 15262014,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "haddock",
+    "inputs": [
+      "Raw haddock"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32317
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_haddock",
+    "sourceRevision": 15327735,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "halibut",
+    "inputs": [
+      "Raw halibut"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32333
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_halibut",
+    "sourceRevision": 15327738,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "herring",
+    "inputs": [
+      "Raw herring"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      345
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_herring",
+    "sourceRevision": 15331274,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "jug of wine",
+    "inputs": [
+      "Grapes",
+      "Jug of water"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1987,
+      1937
+    ],
+    "membersOnly": false,
+    "setup": "Use grapes on jugs of water and allow fermentation. Inputs are per attempt; successful fermentation is not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Jug_of_wine",
+    "sourceRevision": 15333576,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "jumbo squid",
+    "inputs": [
+      "Raw jumbo squid"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      31561
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_jumbo_squid",
+    "sourceRevision": 15327691,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "lobster",
+    "inputs": [
+      "Raw lobster"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      377
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_lobster",
+    "sourceRevision": 15331269,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "mackerel",
+    "inputs": [
+      "Raw mackerel"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      353
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_mackerel",
+    "sourceRevision": 15331272,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "manta ray",
+    "inputs": [
+      "Raw manta ray"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      389
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_manta_ray",
+    "sourceRevision": 15213248,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "marlin",
+    "inputs": [
+      "Raw marlin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32349
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_marlin",
+    "sourceRevision": 15327740,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "monkfish",
+    "inputs": [
+      "Raw monkfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      7944
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_monkfish",
+    "sourceRevision": 15331275,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "pike",
+    "inputs": [
+      "Raw pike"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      349
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_pike",
+    "sourceRevision": 15331271,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "rainbow fish",
+    "inputs": [
+      "Raw rainbow fish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      10138
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_rainbow_fish",
+    "sourceRevision": 15183823,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "salmon",
+    "inputs": [
+      "Raw salmon"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      331
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_salmon",
+    "sourceRevision": 15331268,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "sardine",
+    "inputs": [
+      "Raw sardine"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      327
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_sardine",
+    "sourceRevision": 15331276,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "sea turtle",
+    "inputs": [
+      "Raw sea turtle"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      395
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_sea_turtle",
+    "sourceRevision": 15185410,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "shark",
+    "inputs": [
+      "Raw shark"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      383
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_shark",
+    "sourceRevision": 15352513,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "shrimps",
+    "inputs": [
+      "Raw shrimps"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      317
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_shrimps",
+    "sourceRevision": 15331265,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "swordfish",
+    "inputs": [
+      "Raw swordfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      371
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_swordfish",
+    "sourceRevision": 15337086,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "swordtip squid",
+    "inputs": [
+      "Raw swordtip squid"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      31553
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_swordtip_squid",
+    "sourceRevision": 15327692,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "trout",
+    "inputs": [
+      "Raw trout"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      335
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_trout",
+    "sourceRevision": 15331267,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "tuna",
+    "inputs": [
+      "Raw tuna"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      359
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_tuna",
+    "sourceRevision": 15331278,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "skill": "COOKING",
+    "match": "yellowfin",
+    "inputs": [
+      "Raw yellowfin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32325
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_yellowfin",
+    "sourceRevision": 15327736,
+    "reviewed": "2026-09-30"
+  }
+]

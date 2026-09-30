@@ -109,3 +109,18 @@ separately; they are not permission to introduce new failures. Architecture-only
 reports can reuse the unchanged source checkpoint's test evidence if clearly
 identified as such. Reverify actual current Plugin Hub constraints before any
 release/submission; this report does not authorize publication.
+
+## Second intervention: remove Cooking name inference
+
+Cooking's raw-name fabrication and special-case wine inference were replaced by
+30 exact-match reviewed ingredient rows (29 ordinary fish plus wine). One generic
+validated dataset extends the existing resolver; no per-food Java branches were
+added. Runtime validation and membership gating add a net 20 Java lines / 393
+estimated tokens while normalized data adds 13,176 bytes. This is a safety and
+knowledge-boundary improvement, not a claim of total source-size reduction.
+
+The next consolidation should reconcile overlapping legacy action inputs and
+method-intelligence recipes without losing their distinct readiness/output
+contracts. Other skill fallbacks remain unreviewed; do not mass-import them as
+trusted records. Coverage and intentional unresolved foods are documented in
+METHOD_INTELLIGENCE.md.
