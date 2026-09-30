@@ -124,3 +124,21 @@ method-intelligence recipes without losing their distinct readiness/output
 contracts. Other skill fallbacks remain unreviewed; do not mass-import them as
 trusted records. Coverage and intentional unresolved foods are documented in
 METHOD_INTELLIGENCE.md.
+
+
+## Third intervention: one source for shared ingredients
+
+Extracted reviewed recipe loading/validation from the legacy resolver into
+`ReviewedActionRecipeCatalog`, a shared knowledge component. Ten method recipes
+now reference its ingredients instead of repeating item IDs, names, quantities
+and stackability. Referenced membership is enforced at the method boundary;
+method capacity, output, equipment and access contracts stay separate. Inline
+Fletching recipes are unchanged.
+
+The extraction removes 31 lines from PlanningEngines but adds a net 61 production
+lines / 659 estimated tokens across the project (71 files, 28,701 lines, 264,437
+estimated tokens). This is a consolidation of fact ownership, not a net source
+reduction. The single new catalog is a reusable domain boundary, not a subsystem
+per skill. No additional training method is enabled by this change. Future
+reviewed ingredient families should reuse this boundary; do not repeat its
+validator or create another recipe catalog.

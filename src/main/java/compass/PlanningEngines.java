@@ -3043,8 +3043,7 @@ class UniversalActionRecipeResolver
 {
     private static final Recipe[] EXACT = BundledCatalogLoader.array(
             get(1582), Recipe[].class);
-    private static final Recipe[] REVIEWED = validateReviewed(BundledCatalogLoader.array(
-            "/content/catalogs/reviewed-action-recipes.json", Recipe[].class));
+    private static final ReviewedActionRecipeCatalog REVIEWED = new ReviewedActionRecipeCatalog();
 
     public UniversalActionRecipe resolve(ActionDef action, int count,
             Membership membership)
@@ -3053,9 +3052,10 @@ class UniversalActionRecipeResolver
             return unknown(get(1259));
         var name = action.getName() == null ? "" : action.getName().trim();
         var lower = name.toLowerCase(Locale.ROOT);
+        var reviewed = REVIEWED.recipe(action.getSkill(), lower);
+        if (reviewed != null) return reviewed.build(count, membership);
         var exact = exact(action.getSkill(), lower);
-        if (exact != null) return Boolean.TRUE.equals(exact.membersOnly) && membership != Membership.P2P
-                ? unknown("This recipe requires known members access.") : exact.build(count);
+        if (exact != null) return exact.build(count);
         switch (action.getSkill())
         {
             case AGILITY: return none(get(899));
@@ -3177,8 +3177,6 @@ class UniversalActionRecipeResolver
 
     private static Recipe exact(Skill skill, String name)
     {
-        for (Recipe recipe : REVIEWED)
-            if (skill.name().equals(recipe.skill) && name.equals(recipe.match)) return recipe;
         for (Recipe recipe : EXACT)
             if (skill.name().equals(recipe.skill)
                     && (recipe.contains ? name.contains(recipe.match)
@@ -3357,47 +3355,18 @@ class UniversalActionRecipeResolver
         return space < 0 ? value : value.substring(0, space);
     }
 
-    static Recipe[] validateReviewed(Recipe[] recipes)
+    private static final class Recipe
     {
-        Set<String> keys = new HashSet<>();
-        for (Recipe recipe : recipes)
-        {
-            if (recipe == null || recipe.skill == null || recipe.match == null || recipe.match.isEmpty()
-                    || !recipe.match.equals(recipe.match.toLowerCase(Locale.ROOT)) || recipe.contains
-                    || !keys.add(recipe.skill + ":" + recipe.match) || recipe.membersOnly == null
-                    || recipe.setup == null || recipe.setup.trim().isEmpty()
-                    || recipe.source == null || !recipe.source.startsWith("https://oldschool.runescape.wiki/w/")
-                    || recipe.sourceRevision <= 0 || recipe.reviewed == null
-                    || java.time.LocalDate.parse(recipe.reviewed).isAfter(java.time.LocalDate.now())
-                    || recipe.inputs == null || recipe.inputs.length == 0 || recipe.units == null
-                    || recipe.itemIds == null || recipe.inputs.length != recipe.units.length
-                    || recipe.inputs.length != recipe.itemIds.length)
-                throw new IllegalStateException("Invalid reviewed action recipe");
-            Skill.valueOf(recipe.skill);
-            Set<Integer> ids = new HashSet<>();
-            for (int i = 0; i < recipe.inputs.length; i++)
-                if (recipe.inputs[i] == null || recipe.inputs[i].trim().isEmpty() || recipe.units[i] <= 0
-                        || recipe.itemIds[i] <= 0 || !ids.add(recipe.itemIds[i]))
-                    throw new IllegalStateException("Invalid reviewed recipe ingredient");
-        }
-        return recipes;
-    }
-
-    static final class Recipe
-    {
-        String skill, match, setup, source, reviewed;
-        String[] inputs;
-        int[] units, itemIds;
-        boolean contains;
-        Boolean membersOnly;
-        long sourceRevision;
+        private String skill, match, setup;
+        private String[] inputs;
+        private int[] units;
+        private boolean contains;
 
         private UniversalActionRecipe build(int count)
         {
             List<MethodInput> result = new ArrayList<>();
             for (int i = 0; i < inputs.length; i++)
-                result.add(new MethodInput(inputs[i], itemIds == null ? -1 : itemIds[i],
-                        multiply(count, units[i])));
+                result.add(new MethodInput(inputs[i], -1, multiply(count, units[i])));
             return new UniversalActionRecipe(result, setup, true);
         }
     }

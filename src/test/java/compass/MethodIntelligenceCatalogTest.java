@@ -84,6 +84,10 @@ public class MethodIntelligenceCatalogTest
     {
         MethodIntelligenceCatalog.Bundle bundle = BundledCatalogLoader.array(
                 "/content/catalogs/method-intelligence.json", MethodIntelligenceCatalog.Bundle[].class)[0];
+        // Keep inline-input validator coverage independent of reference resolution.
+        MethodIntelligenceCatalog.Recipe inline = new MethodIntelligenceCatalog().recipe("shrimp");
+        inline.inputRecipe = null;
+        bundle.recipes.set(0, inline);
         mutation.accept(bundle);
         assertThrows(IllegalStateException.class, () -> new MethodIntelligenceCatalog(bundle));
     }

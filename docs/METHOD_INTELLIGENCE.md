@@ -103,8 +103,9 @@ before any processing or disposal can be assumed.
 fallback. It currently contains 29 ordinary fish recipes and jug of wine. Each
 row records exact consumed item IDs and quantities per attempt, explicit
 membership, setup assumptions, a Wiki page/revision and review date. Runtime
-validation rejects incomplete provenance, substring matching, duplicate keys,
-missing membership and invalid ingredient identities/quantities. The installed
+validation in `ReviewedActionRecipeCatalog` rejects incomplete provenance,
+substring matching, duplicate keys, missing membership or stackability, and
+invalid ingredient identities/quantities. The installed
 plugin reads bundled data only.
 
 This table is an ingredient contract for the existing universal guidance path,
@@ -128,6 +129,19 @@ The existing `action-recipes.json` table remains a legacy contract for other
 skills. New reviewed rows are checked first and retain item IDs; legacy rows do
 not silently acquire provenance. Method readiness continues to use
 `method-intelligence.json`; adding a reviewed ingredient row alone does not add a
-new actionable training method. Shared recipe normalization between these two
-contracts is follow-up work once their differing batch/output and guidance
-responsibilities can be preserved.
+new actionable training method.
+
+Ten Cooking method recipes now use `inputRecipe` to reference the shared reviewed
+row by exact output name within their skill. Their repeated ingredient IDs,
+names, quantities and stackability have been removed from method data. Inline
+inputs and a reference cannot coexist. Missing references fail catalog loading,
+and a method marked F2P cannot reference a members-only input recipe. Referenced
+ingredients are copied into the evaluated method contract; batch limits, reusable
+tools, retained outputs and access requirements remain method-specific.
+
+Stackability is explicitly recorded per shared ingredient (verified against the
+same individual Wiki pages/revisions as the input IDs). It cannot default from a
+missing field. Action quantity multiplication also fails unresolved if its total
+cannot be represented, rather than saturating a supposedly exact requirement.
+Fletching's method-only recipes remain inline; they need a reviewed action-input
+contract before they can use this reference mechanism.

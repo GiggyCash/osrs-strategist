@@ -15,7 +15,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_anchovies",
     "sourceRevision": 15331266,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -33,7 +36,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_anglerfish",
     "sourceRevision": 15357467,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -51,7 +57,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_bass",
     "sourceRevision": 15331273,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -69,7 +78,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_bluefin",
     "sourceRevision": 15327739,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -87,7 +99,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_cave_eel",
     "sourceRevision": 15326686,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -105,7 +120,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_cod",
     "sourceRevision": 15342741,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -123,7 +141,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_dark_crab",
     "sourceRevision": 15296400,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -141,7 +162,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_giant_krill",
     "sourceRevision": 15262014,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -159,7 +183,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_haddock",
     "sourceRevision": 15327735,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -177,7 +204,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_halibut",
     "sourceRevision": 15327738,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -195,7 +225,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_herring",
     "sourceRevision": 15331274,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -216,7 +249,11 @@
     "setup": "Use grapes on jugs of water and allow fermentation. Inputs are per attempt; successful fermentation is not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Jug_of_wine",
     "sourceRevision": 15333576,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false,
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -234,7 +271,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_jumbo_squid",
     "sourceRevision": 15327691,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -252,7 +292,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_lobster",
     "sourceRevision": 15331269,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -270,7 +313,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_mackerel",
     "sourceRevision": 15331272,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -288,7 +334,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_manta_ray",
     "sourceRevision": 15213248,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -306,7 +355,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_marlin",
     "sourceRevision": 15327740,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -324,7 +376,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_monkfish",
     "sourceRevision": 15331275,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -342,7 +397,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_pike",
     "sourceRevision": 15331271,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -360,7 +418,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_rainbow_fish",
     "sourceRevision": 15183823,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -378,7 +439,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_salmon",
     "sourceRevision": 15331268,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -396,7 +460,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_sardine",
     "sourceRevision": 15331276,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -414,7 +481,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_sea_turtle",
     "sourceRevision": 15185410,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -432,7 +502,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_shark",
     "sourceRevision": 15352513,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -450,7 +523,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_shrimps",
     "sourceRevision": 15331265,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -468,7 +544,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_swordfish",
     "sourceRevision": 15337086,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -486,7 +565,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_swordtip_squid",
     "sourceRevision": 15327692,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -504,7 +586,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_trout",
     "sourceRevision": 15331267,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -522,7 +607,10 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_tuna",
     "sourceRevision": 15331278,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   },
   {
     "skill": "COOKING",
@@ -540,6 +628,9 @@
     "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
     "source": "https://oldschool.runescape.wiki/w/Raw_yellowfin",
     "sourceRevision": 15327736,
-    "reviewed": "2026-09-30"
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ]
   }
 ]

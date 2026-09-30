@@ -16,7 +16,8 @@ final class MethodIntelligenceCatalog
 
     static final class Recipe
     {
-        String id, action, outputDescription;
+        String id, action, outputDescription, inputRecipe;
+        transient boolean membersOnlyInputs;
         Skill skill;
         int level, workingBatch, maximumBatch, efficientBatch;
         List<Ingredient> inputs;
@@ -64,9 +65,27 @@ final class MethodIntelligenceCatalog
     {
         if (bundle == null || bundle.recipes == null || bundle.methods == null)
             throw new IllegalStateException("Missing method intelligence records");
+        ReviewedActionRecipeCatalog shared = new ReviewedActionRecipeCatalog();
         for (Recipe recipe : bundle.recipes)
         {
             if (recipe == null) throw new IllegalStateException("Null method recipe");
+            if (recipe.inputRecipe != null)
+            {
+                ReviewedActionRecipeCatalog.Recipe source = shared.recipe(recipe.skill, recipe.inputRecipe);
+                if (source == null || recipe.inputs != null)
+                    throw new IllegalStateException("Missing or overridden shared recipe: " + recipe.inputRecipe);
+                recipe.membersOnlyInputs = source.membersOnly;
+                recipe.inputs = new ArrayList<>();
+                for (int i = 0; i < source.inputs.length; i++)
+                {
+                    Ingredient input = new Ingredient();
+                    input.itemId = source.itemIds[i];
+                    input.name = source.inputs[i];
+                    input.quantity = source.units[i];
+                    input.stackable = source.stackable[i];
+                    recipe.inputs.add(input);
+                }
+            }
             if (!text(recipe.id) || recipe.skill == null || recipe.level < 1 || recipe.level > 99
                     || recipe.workingBatch < 1 || recipe.maximumBatch < recipe.workingBatch
                     || recipe.maximumBatch > 28 || recipe.efficientBatch < 0
@@ -117,6 +136,8 @@ final class MethodIntelligenceCatalog
                     throw new IllegalStateException("Unknown or repeated recipe: " + id);
                 if (skill != null && skill != recipe.skill)
                     throw new IllegalStateException("Method recipes must use the same skill");
+                if (recipe.membersOnlyInputs && !method.membersOnly)
+                    throw new IllegalStateException("Free method cannot consume a members recipe");
                 skill = recipe.skill;
             }
             for (String id : method.ids)

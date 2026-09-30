@@ -51,10 +51,10 @@ public class ReviewedActionRecipeTest
     @Test
     public void allReviewedRowsHaveUsableProductionMappings()
     {
-        UniversalActionRecipeResolver.Recipe[] recipes = definitions();
+        ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
         assertEquals(30, recipes.length);
-        UniversalActionRecipeResolver.validateReviewed(recipes);
-        for (UniversalActionRecipeResolver.Recipe recipe : recipes)
+        ReviewedActionRecipeCatalog.validate(recipes);
+        for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
             UniversalActionRecipe resolved = resolve(recipe.match, Membership.P2P);
             assertTrue(recipe.match, resolved.hasExactInputs());
@@ -70,11 +70,13 @@ public class ReviewedActionRecipeTest
         rejects(recipe -> recipe.sourceRevision = 0);
         rejects(recipe -> recipe.reviewed = null);
         rejects(recipe -> recipe.itemIds = new int[0]);
+        rejects(recipe -> recipe.stackable = null);
+        rejects(recipe -> recipe.stackable[0] = null);
         rejects(recipe -> recipe.units[0] = 0);
         rejects(recipe -> recipe.source = "https://example.com/unreviewed");
-        UniversalActionRecipeResolver.Recipe recipe = definitions()[0];
-        assertThrows(IllegalStateException.class, () -> UniversalActionRecipeResolver.validateReviewed(
-                new UniversalActionRecipeResolver.Recipe[] {recipe, recipe}));
+        ReviewedActionRecipeCatalog.Recipe recipe = definitions()[0];
+        assertThrows(IllegalStateException.class, () -> ReviewedActionRecipeCatalog.validate(
+                new ReviewedActionRecipeCatalog.Recipe[] {recipe, recipe}));
     }
 
     @Test
@@ -115,16 +117,16 @@ public class ReviewedActionRecipeTest
                 1, 1, "test", Membership.F2P), 7, membership);
     }
 
-    private static UniversalActionRecipeResolver.Recipe[] definitions()
+    private static ReviewedActionRecipeCatalog.Recipe[] definitions()
     {
         return BundledCatalogLoader.array("/content/catalogs/reviewed-action-recipes.json",
-                UniversalActionRecipeResolver.Recipe[].class);
+                ReviewedActionRecipeCatalog.Recipe[].class);
     }
 
-    private static void rejects(Consumer<UniversalActionRecipeResolver.Recipe> mutation)
+    private static void rejects(Consumer<ReviewedActionRecipeCatalog.Recipe> mutation)
     {
-        UniversalActionRecipeResolver.Recipe[] recipes = definitions();
+        ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
         mutation.accept(recipes[0]);
-        assertThrows(IllegalStateException.class, () -> UniversalActionRecipeResolver.validateReviewed(recipes));
+        assertThrows(IllegalStateException.class, () -> ReviewedActionRecipeCatalog.validate(recipes));
     }
 }

@@ -7,20 +7,13 @@
         "level": 1,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 317,
-            "name": "Raw shrimps",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw shrimps on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "shrimps"
       },
       {
         "id": "sardine",
@@ -28,20 +21,13 @@
         "level": 1,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 327,
-            "name": "Raw sardine",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw sardine on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "sardine"
       },
       {
         "id": "herring",
@@ -49,20 +35,13 @@
         "level": 5,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 345,
-            "name": "Raw herring",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw herring on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "herring"
       },
       {
         "id": "trout",
@@ -70,20 +49,13 @@
         "level": 15,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 335,
-            "name": "Raw trout",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw trout on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "trout"
       },
       {
         "id": "pike",
@@ -91,20 +63,13 @@
         "level": 20,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 349,
-            "name": "Raw pike",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw pike on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "pike"
       },
       {
         "id": "salmon",
@@ -112,20 +77,13 @@
         "level": 25,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 331,
-            "name": "Raw salmon",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw salmon on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "salmon"
       },
       {
         "id": "tuna",
@@ -133,20 +91,13 @@
         "level": 30,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 359,
-            "name": "Raw tuna",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw tuna on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "tuna"
       },
       {
         "id": "lobster",
@@ -154,20 +105,13 @@
         "level": 40,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 377,
-            "name": "Raw lobster",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw lobster on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "lobster"
       },
       {
         "id": "swordfish",
@@ -175,20 +119,13 @@
         "level": 45,
         "workingBatch": 4,
         "maximumBatch": 28,
-        "inputs": [
-          {
-            "itemId": 371,
-            "name": "Raw swordfish",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "the cooked or burnt fish in the consumed input slots",
         "action": "Cook Raw swordfish on the named range.",
-        "efficientBatch": 28
+        "efficientBatch": 28,
+        "inputRecipe": "swordfish"
       },
       {
         "id": "wine",
@@ -196,26 +133,13 @@
         "level": 35,
         "workingBatch": 4,
         "maximumBatch": 14,
-        "inputs": [
-          {
-            "itemId": 1987,
-            "name": "Grapes",
-            "quantity": 1,
-            "stackable": false
-          },
-          {
-            "itemId": 1937,
-            "name": "Jug of water",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "outputsPerAction": 1,
         "outputStackable": false,
         "outputItemId": 0,
         "outputDescription": "each unfermented jug, including any bad wine after fermentation",
         "action": "Use grapes on jugs of water; wait for fermentation before reviewing the batch.",
-        "efficientBatch": 14
+        "efficientBatch": 14,
+        "inputRecipe": "jug of wine"
       },
       {
         "id": "regular_arrow_shafts",
