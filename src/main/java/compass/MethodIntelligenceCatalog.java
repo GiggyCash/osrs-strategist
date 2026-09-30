@@ -22,7 +22,7 @@ final class MethodIntelligenceCatalog
         List<Ingredient> inputs;
         List<Ingredient> tools = new ArrayList<>();
         // Worst-case retained outputs, including failed processing. No auto-disposal.
-        int outputsPerAction;
+        Integer outputsPerAction;
         boolean outputStackable;
         int outputItemId;
     }
@@ -35,7 +35,7 @@ final class MethodIntelligenceCatalog
         String requiredQuest, observedAccess;
         String diaryRegion;
         DiaryTier diaryTier;
-        boolean bankLoop, purchaseAllowed, membersOnly;
+        Boolean bankLoop, purchaseAllowed, membersOnly;
     }
 
     static final class Bundle
@@ -49,8 +49,14 @@ final class MethodIntelligenceCatalog
 
     MethodIntelligenceCatalog()
     {
-        this(BundledCatalogLoader.array("/content/catalogs/method-intelligence.json",
-                Bundle[].class)[0]);
+        this(load());
+    }
+
+    private static Bundle load()
+    {
+        Bundle[] bundles = BundledCatalogLoader.array("/content/catalogs/method-intelligence.json", Bundle[].class);
+        if (bundles.length != 1) throw new IllegalStateException("Expected one method intelligence bundle");
+        return bundles[0];
     }
 
     MethodIntelligenceCatalog(Bundle bundle)
@@ -60,25 +66,27 @@ final class MethodIntelligenceCatalog
         for (Recipe recipe : bundle.recipes)
         {
             if (recipe == null) throw new IllegalStateException("Null method recipe");
-            if (recipe.id == null || recipe.skill == null || recipe.level < 1
+            if (!text(recipe.id) || recipe.skill == null || recipe.level < 1 || recipe.level > 99
                     || recipe.workingBatch < 1 || recipe.maximumBatch < recipe.workingBatch
                     || recipe.maximumBatch > 28 || recipe.efficientBatch < 0
                     || recipe.efficientBatch > recipe.maximumBatch
+                    || recipe.efficientBatch > 0 && recipe.efficientBatch < recipe.workingBatch
                     || recipe.inputs == null || recipe.inputs.isEmpty() || recipe.tools == null
-                    || recipe.outputsPerAction < 0 || recipe.outputsPerAction > 28 || recipe.action == null
-                    || recipe.outputDescription == null
+                    || recipe.outputsPerAction == null || recipe.outputsPerAction < 0
+                    || recipe.outputsPerAction > 28 || !text(recipe.action)
+                    || !text(recipe.outputDescription)
                     || recipe.outputStackable && recipe.outputItemId <= 0)
                 throw new IllegalStateException("Invalid method recipe");
             Set<Integer> ids = new HashSet<>();
             for (Ingredient input : recipe.inputs)
                 if (input == null || input.itemId <= 0 || input.quantity < 1 || input.quantity > 28
-                        || input.name == null || !ids.add(input.itemId))
+                        || !text(input.name) || input.equippedAllowed || !ids.add(input.itemId))
                     throw new IllegalStateException("Invalid or duplicate recipe input: " + recipe.id);
             for (Ingredient tool : recipe.tools)
                 if (tool == null || tool.itemId <= 0 || tool.quantity < 1 || tool.quantity > 28
-                        || tool.name == null || !ids.add(tool.itemId))
+                        || !text(tool.name) || !ids.add(tool.itemId))
                     throw new IllegalStateException("Invalid or overlapping reusable tool: " + recipe.id);
-            if (recipe.outputStackable && ids.contains(recipe.outputItemId))
+            if (ids.contains(recipe.outputItemId))
                 throw new IllegalStateException("Output recycling requires a separate flow contract: " + recipe.id);
             if (recipes.put(recipe.id, recipe) != null)
                 throw new IllegalStateException("Duplicate recipe: " + recipe.id);
@@ -87,19 +95,36 @@ final class MethodIntelligenceCatalog
         {
             if (method == null) throw new IllegalStateException("Null method contract");
             if (method.ids == null || method.ids.isEmpty() || method.recipes == null
-                    || method.location == null || method.source == null || method.reviewed == null
+                    || !text(method.location) || method.source == null || method.reviewed == null
+                    || method.bankLoop == null || method.purchaseAllowed == null || method.membersOnly == null
+                    || (method.diaryRegion == null) != (method.diaryTier == null)
+                    || method.diaryRegion != null && !text(method.diaryRegion)
+                    || method.requiredQuest != null && !text(method.requiredQuest)
+                    || method.observedAccess != null && !text(method.observedAccess)
                     || !method.source.startsWith("https://oldschool.runescape.wiki/w/")
                     || method.sourceRevision <= 0
-                    || method.recipes.isEmpty() && method.unresolved == null)
+                    || method.recipes.isEmpty() && !text(method.unresolved))
                 throw new IllegalStateException("Incomplete method contract");
-            LocalDate.parse(method.reviewed);
+            if (LocalDate.parse(method.reviewed).isAfter(LocalDate.now()))
+                throw new IllegalStateException("Method review date is in the future");
+            Set<String> references = new HashSet<>();
+            Skill skill = null;
             for (String id : method.recipes)
-                if (!recipes.containsKey(id)) throw new IllegalStateException("Unknown recipe: " + id);
+            {
+                Recipe recipe = recipes.get(id);
+                if (recipe == null || !references.add(id))
+                    throw new IllegalStateException("Unknown or repeated recipe: " + id);
+                if (skill != null && skill != recipe.skill)
+                    throw new IllegalStateException("Method recipes must use the same skill");
+                skill = recipe.skill;
+            }
             for (String id : method.ids)
-                if (id == null || methods.put(id, method) != null)
+                if (!text(id) || methods.put(id, method) != null)
                     throw new IllegalStateException("Duplicate method contract: " + id);
         }
     }
+
+    private static boolean text(String value) { return value != null && !value.trim().isEmpty(); }
 
     Method method(String id) { return methods.get(id); }
     Recipe recipe(String id) { return recipes.get(id); }
