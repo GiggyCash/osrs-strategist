@@ -97,6 +97,7 @@ class AdaptiveMilestoneGuidanceService
 
         List<MethodInput> inputs = recipeResolver.profileInputs(
                 profile, action, maximumActions);
+        if (inputs == null) return null;
         SupplyPlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, inputs, useGroupStorage);

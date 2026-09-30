@@ -36,7 +36,7 @@ final class MethodPreparationService
         AccountMode mode = data == null || data.account() == null ? AccountMode.UNKNOWN
                 : AccountMode.fromTypeCode(data.account().modeCode());
         // Merge before subtracting ownership, otherwise duplicate rows reuse the same stock.
-        List<MethodInput> merged = merge(needs);
+        List<MethodInput> merged = MethodInput.mergeExact(needs, true);
         if (merged == null || merged.isEmpty())
             return new MethodPreparation(MethodPreparation.State.UNRESOLVED, steps, 0);
         boolean preparation = false;
@@ -132,23 +132,6 @@ final class MethodPreparationService
     private static boolean observed(ItemsState items)
     {
         return items != null && items.isObserved();
-    }
-
-    private static List<MethodInput> merge(List<MethodInput> needs)
-    {
-        if (needs == null) return null;
-        Map<Integer, MethodInput> merged = new LinkedHashMap<>();
-        for (MethodInput need : needs)
-        {
-            if (need == null || need.itemId <= 0 || need.quantity <= 0
-                    || need.name == null || need.name.trim().isEmpty()) return null;
-            MethodInput previous = merged.get(need.itemId);
-            long quantity = (long) need.quantity + (previous == null ? 0 : previous.quantity);
-            if (quantity > Integer.MAX_VALUE || previous != null
-                    && !previous.name.equalsIgnoreCase(need.name)) return null;
-            merged.put(need.itemId, new MethodInput(need.name, need.itemId, (int) quantity));
-        }
-        return new ArrayList<>(merged.values());
     }
 
     private static int quantity(ItemsState items, int id)

@@ -88,6 +88,7 @@ public class AdaptiveActionSelector
                     max(0, targetXp - currentXp), xpPerAction);
             List<MethodInput> needs = recipeResolver.profileInputs(
                     profile, action, actionsNeeded);
+            if (needs == null) continue;
 
             // Base ranking remains tied to the actual action inside the already
             // selected strategic method. Logarithmic XP weighting prevents a

@@ -3092,19 +3092,17 @@ class UniversalActionRecipeResolver
             int count)
     {
         if (profile == null || action == null || count <= 0) return emptyList();
-        Map<String, MethodInput> merged = new LinkedHashMap<>();
+        if (profile.inputs == null) return null;
+        List<MethodInput> inputs = new ArrayList<>();
         for (MethodInputRule rule : profile.inputs)
         {
+            if (rule == null || rule.getMode() == null) return null;
+            if (rule.getMode() == MethodProfile.InputMode.NONE) continue;
             MethodInput input = profileInput(rule, action, count);
-            if (input == null) continue;
-            String key = input.itemId > 0 ? "id:" + input.itemId
-                    : "name:" + Names.lower(input.getName());
-            MethodInput old = merged.get(key);
-            merged.put(key, old == null ? input : new MethodInput(
-                    old.getName(), old.itemId,
-                    old.quantity + input.quantity));
+            if (input == null) return null;
+            inputs.add(input);
         }
-        return new ArrayList<>(merged.values());
+        return MethodInput.mergeExact(inputs, false);
     }
 
     private static MethodInput profileInput(MethodInputRule rule,
@@ -3165,10 +3163,13 @@ class UniversalActionRecipeResolver
                 return null;
         }
         double units = rule.getQuantityPerAction();
+        if (!Double.isFinite(units)) return null;
         if (units <= 0) units = rule.getMode()
                 == MethodProfile.InputMode.BAR_FOR_SMITHED_ITEM
                 && lower.contains("platebody") ? 5 : 1;
-        return new MethodInput(name, itemId, (int) Math.ceil(count * units));
+        double quantity = Math.ceil(count * units);
+        return !Double.isFinite(quantity) || quantity <= 0 || quantity > Integer.MAX_VALUE
+                ? null : new MethodInput(name, itemId, (int) quantity);
     }
 
     private static Recipe exact(Skill skill, String name)

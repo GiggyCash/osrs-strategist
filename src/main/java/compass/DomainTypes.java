@@ -1084,6 +1084,25 @@ final class MethodInput
         this.quantity = max(0, quantity);
     }
 
+    /** Null means unresolved, never no supplies. Strict preparation requires positive IDs. */
+    static List<MethodInput> mergeExact(List<MethodInput> needs, boolean requireItemIds)
+    {
+        if (needs == null) return null;
+        Map<String, MethodInput> merged = new LinkedHashMap<>();
+        for (MethodInput need : needs)
+        {
+            if (need == null || requireItemIds && need.itemId <= 0 || need.quantity <= 0
+                    || need.name == null || need.name.trim().isEmpty()) return null;
+            String key = need.itemId > 0 ? "id:" + need.itemId : "name:" + Names.lower(need.name);
+            MethodInput previous = merged.get(key);
+            long quantity = (long) need.quantity + (previous == null ? 0 : previous.quantity);
+            if (quantity > Integer.MAX_VALUE || previous != null
+                    && !previous.name.equalsIgnoreCase(need.name)) return null;
+            merged.put(key, new MethodInput(need.name, need.itemId, (int) quantity));
+        }
+        return new ArrayList<>(merged.values());
+    }
+
 }
 
 /** Plan-relative inventory requirements; deliberately avoids fake precision. */
