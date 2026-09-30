@@ -142,3 +142,18 @@ reduction. The single new catalog is a reusable domain boundary, not a subsystem
 per skill. No additional training method is enabled by this change. Future
 reviewed ingredient families should reuse this boundary; do not repeat its
 validator or create another recipe catalog.
+
+
+## Fletching proof of the shared contract
+
+The existing regular/oak arrow-shaft methods now reference reviewed ingredients.
+A generic calculator-units-per-batch field preserves their different counting
+semantics; the oak record remains method-only when calculator units are unknown.
+Removed one hard-coded arrow-shaft inference branch and the now-unused integer
+ceiling helper (six Java lines). Generic conversion adds four lines: net -2
+production lines, +73 characters / +19 estimated tokens, no new Java files.
+Cooking/Fletching capacity, membership, preparation and selection scenarios
+remain the behavioral gates. The next embedded-knowledge seam is the remaining
+Crafting/Fletching inference in UniversalActionRecipeResolver: suffix-based wood,
+metal and composite input guesses must be replaced only with reviewed facts,
+not transcribed into trusted data indiscriminately.

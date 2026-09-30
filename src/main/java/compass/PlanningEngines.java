@@ -3227,8 +3227,6 @@ class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe fletching(String name, String lower, int n)
     {
-        if (lower.equals("arrow shaft") || lower.equals("arrow shafts"))
-            return recipe(get(914), 1, "Logs", ceil(n, 15));
         if (lower.equals("headless arrow") || lower.equals("headless arrows"))
             return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
         if (lower.endsWith("bow (u)"))
@@ -3339,10 +3337,6 @@ class UniversalActionRecipeResolver
     private static int multiply(int a, int b)
     {
         return a > Integer.MAX_VALUE / b ? Integer.MAX_VALUE : a * b;
-    }
-    private static int ceil(int value, int divisor)
-    {
-        return (value + divisor - 1) / divisor;
     }
     private static String capitalize(String value)
     {

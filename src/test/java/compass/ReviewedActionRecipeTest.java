@@ -52,10 +52,11 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(30, recipes.length);
+        assertEquals(32, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
+            if (!recipe.skill.equals("COOKING")) continue;
             UniversalActionRecipe resolved = resolve(recipe.match, Membership.P2P);
             assertTrue(recipe.match, resolved.hasExactInputs());
             assertTrue(resolved.inputs.stream().allMatch(input -> input.itemId > 0 && input.quantity > 0));

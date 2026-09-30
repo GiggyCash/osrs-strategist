@@ -148,14 +148,6 @@
         "workingBatch": 4,
         "maximumBatch": 27,
         "efficientBatch": 27,
-        "inputs": [
-          {
-            "itemId": 1511,
-            "name": "Logs",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "tools": [
           {
             "itemId": 946,
@@ -169,7 +161,8 @@
         "outputStackable": true,
         "outputItemId": 52,
         "outputDescription": "the arrow shaft stack and reusable knife",
-        "action": "Use a knife on logs and select arrow shafts."
+        "action": "Use a knife on logs and select arrow shafts.",
+        "inputRecipe": "arrow shaft"
       },
       {
         "id": "oak_arrow_shafts",
@@ -178,14 +171,6 @@
         "workingBatch": 4,
         "maximumBatch": 27,
         "efficientBatch": 27,
-        "inputs": [
-          {
-            "itemId": 1521,
-            "name": "Oak logs",
-            "quantity": 1,
-            "stackable": false
-          }
-        ],
         "tools": [
           {
             "itemId": 946,
@@ -199,7 +184,8 @@
         "outputStackable": true,
         "outputItemId": 52,
         "outputDescription": "the arrow shaft stack and reusable knife",
-        "action": "Use a knife on oak logs and select arrow shafts."
+        "action": "Use a knife on oak logs and select arrow shafts.",
+        "inputRecipe": "arrow shafts from oak logs"
       }
     ],
     "methods": [

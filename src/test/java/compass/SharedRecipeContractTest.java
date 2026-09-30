@@ -20,7 +20,13 @@ public class SharedRecipeContractTest
             assertNull("No duplicated inline facts", definition.inputs);
             MethodIntelligenceCatalog.Recipe method = methods.recipe(definition.id);
             ReviewedActionRecipeCatalog.Recipe source = reviewed.recipe(method.skill, method.inputRecipe);
-            UniversalActionRecipe action = source.build(4, Membership.P2P);
+            if (source.actionUnitsPerBatch == null)
+            {
+                assertEquals(source.itemIds[0], method.inputs.get(0).itemId);
+                assertFalse(source.build(4, Membership.P2P).hasExactInputs());
+                continue;
+            }
+            UniversalActionRecipe action = source.build(4 * source.actionUnitsPerBatch, Membership.P2P);
             assertEquals(method.inputs.size(), action.inputs.size());
             for (int i = 0; i < method.inputs.size(); i++)
             {
@@ -30,7 +36,7 @@ public class SharedRecipeContractTest
                 assertEquals(source.stackable[i].booleanValue(), method.inputs.get(i).stackable);
             }
         }
-        assertEquals(10, references);
+        assertEquals(12, references);
     }
 
     @Test
@@ -76,6 +82,20 @@ public class SharedRecipeContractTest
         assertFalse(source.build(Integer.MAX_VALUE, Membership.P2P).hasExactInputs());
         assertFalse(source.build(0, Membership.P2P).hasExactInputs());
         assertTrue(source.build(Integer.MAX_VALUE / 2, Membership.P2P).hasExactInputs());
+    }
+
+    @Test
+    public void shaftCalculatorUnitsRoundUpWithoutChangingMethodBatchUnits()
+    {
+        ReviewedActionRecipeCatalog.Recipe source = new ReviewedActionRecipeCatalog().recipe(Skill.FLETCHING, "arrow shaft");
+        for (int count : new int[] {1, 15, 16, Integer.MAX_VALUE})
+            assertEquals((count - 1) / 15 + 1, source.build(count, Membership.P2P).inputs.get(0).quantity);
+        assertFalse(source.build(15, Membership.F2P).hasExactInputs());
+        assertFalse(source.build(15, Membership.UNKNOWN).hasExactInputs());
+        MethodIntelligenceCatalog methods = new MethodIntelligenceCatalog();
+        assertEquals(1, methods.recipe("regular_arrow_shafts").inputs.get(0).quantity);
+        assertEquals(1, methods.recipe("oak_arrow_shafts").inputs.get(0).quantity);
+        assertEquals(30, methods.recipe("oak_arrow_shafts").outputsPerAction.intValue());
     }
 
     private static MethodIntelligenceCatalog.Bundle definitions()

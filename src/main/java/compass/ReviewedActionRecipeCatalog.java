@@ -25,6 +25,7 @@ final class ReviewedActionRecipeCatalog
             if (recipe == null || recipe.skill == null || recipe.match == null || recipe.match.isEmpty()
                     || !recipe.match.equals(recipe.match.toLowerCase(Locale.ROOT)) || recipe.contains
                     || !keys.add(recipe.skill + ":" + recipe.match) || recipe.membersOnly == null
+                    || recipe.actionUnitsPerBatch != null && recipe.actionUnitsPerBatch < 1
                     || recipe.setup == null || recipe.setup.trim().isEmpty()
                     || recipe.source == null || !recipe.source.startsWith("https://oldschool.runescape.wiki/w/")
                     || recipe.sourceRevision <= 0 || recipe.reviewed == null
@@ -52,18 +53,21 @@ final class ReviewedActionRecipeCatalog
         Boolean[] stackable;
         boolean contains;
         Boolean membersOnly;
+        // Null supports method batches only; it cannot resolve calculator action counts.
+        Integer actionUnitsPerBatch;
         long sourceRevision;
 
         UniversalActionRecipe build(int count, Membership membership)
         {
-            if (count <= 0 || membersOnly && membership != Membership.P2P)
+            if (actionUnitsPerBatch == null || count <= 0 || membersOnly && membership != Membership.P2P)
                 return UniversalActionRecipe.unknown("Recipe quantity or members access is unresolved.");
+            int batches = (count - 1) / actionUnitsPerBatch + 1;
             List<MethodInput> result = new ArrayList<>();
             for (int i = 0; i < inputs.length; i++)
             {
-                if (count > Integer.MAX_VALUE / units[i])
+                if (batches > Integer.MAX_VALUE / units[i])
                     return UniversalActionRecipe.unknown("Recipe quantity exceeds supported planning capacity.");
-                result.add(new MethodInput(inputs[i], itemIds[i], count * units[i]));
+                result.add(new MethodInput(inputs[i], itemIds[i], batches * units[i]));
             }
             return new UniversalActionRecipe(result, setup, true);
         }

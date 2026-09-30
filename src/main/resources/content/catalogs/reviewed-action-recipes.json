@@ -18,7 +18,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -39,7 +40,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -60,7 +62,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -81,7 +84,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -102,7 +106,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -123,7 +128,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -144,7 +150,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -165,7 +172,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -186,7 +194,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -207,7 +216,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -228,7 +238,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -253,7 +264,8 @@
     "stackable": [
       false,
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -274,7 +286,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -295,7 +308,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -316,7 +330,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -337,7 +352,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -358,7 +374,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -379,7 +396,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -400,7 +418,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -421,7 +440,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -442,7 +462,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -463,7 +484,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -484,7 +506,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -505,7 +528,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -526,7 +550,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -547,7 +572,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -568,7 +594,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -589,7 +616,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -610,7 +638,8 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
   },
   {
     "skill": "COOKING",
@@ -631,6 +660,51 @@
     "reviewed": "2026-09-30",
     "stackable": [
       false
-    ]
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "arrow shaft",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a knife. 15 shafts per log using regular logs; retain the shafts.",
+    "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+    "sourceRevision": 15332152,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 15
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "arrow shafts from oak logs",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a knife; process oak logs and retain the shafts. Use the method batch contract.",
+    "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+    "sourceRevision": 15332152,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": null
   }
 ]

@@ -100,7 +100,8 @@ before any processing or disposal can be assumed.
 ## Reviewed legacy action inputs
 
 `reviewed-action-recipes.json` replaces Cooking's legacy name-derived input
-fallback. It currently contains 29 ordinary fish recipes and jug of wine. Each
+fallback. It contains 29 ordinary fish recipes, jug of wine, and the two existing
+arrow-shaft ingredient contracts. Each
 row records exact consumed item IDs and quantities per attempt, explicit
 membership, setup assumptions, a Wiki page/revision and review date. Runtime
 validation in `ReviewedActionRecipeCatalog` rejects incomplete provenance,
@@ -131,7 +132,7 @@ not silently acquire provenance. Method readiness continues to use
 `method-intelligence.json`; adding a reviewed ingredient row alone does not add a
 new actionable training method.
 
-Ten Cooking method recipes now use `inputRecipe` to reference the shared reviewed
+Twelve method recipes (ten Cooking and two Fletching) now use `inputRecipe` to reference the shared reviewed
 row by exact output name within their skill. Their repeated ingredient IDs,
 names, quantities and stackability have been removed from method data. Inline
 inputs and a reference cannot coexist. Missing references fail catalog loading,
@@ -143,5 +144,19 @@ Stackability is explicitly recorded per shared ingredient (verified against the
 same individual Wiki pages/revisions as the input IDs). It cannot default from a
 missing field. Action quantity multiplication also fails unresolved if its total
 cannot be represented, rather than saturating a supposedly exact requirement.
-Fletching's method-only recipes remain inline; they need a reviewed action-input
-contract before they can use this reference mechanism.
+The existing regular-log and oak-log arrow-shaft methods now use shared inputs.
+`actionUnitsPerBatch` separates calculator counts from processing batches: regular
+logs produce 15 calculator shaft units per log, while readiness still consumes
+one log per processing action. A null conversion explicitly leaves a recipe
+available only to method batch planning. The oak recipe uses that state because
+RuneLite's generic Arrow shaft action does not identify its log tier. Its existing
+method contract retains the 30-shaft output and level gate. Neither recipe is
+available to F2P/unknown membership. Knife tools remain in the method contract.
+
+The arrow-shaft Java special case and its integer ceiling helper have been
+removed. Generic conversion rounds positive counts up without addition overflow.
+The existing Arrow shaft Wiki revision 15332152 provides the batch yields; Logs
+15322883 and Oak logs 15182629 supply item/stackability facts. The current public
+RuneLite FletchingAction source was checked on 2026-09-30 for its individual-shaft
+calculator unit. Other Fletching name-inference branches remain separate audit
+work; this change does not broaden method coverage.
