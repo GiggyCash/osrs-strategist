@@ -984,13 +984,21 @@ class MethodGuidanceService
             return farmingRunPlanner.build(data, recommendation.id);
         }
 
+        boolean completePreparation = plan.readiness != null && plan.readiness.actionable();
         List<GuidanceStep> steps = new ArrayList<>();
         for (EvidenceCheck check : plan.requirementChecks)
         {
+            if (completePreparation && "method:preparation".equals(check.id)) continue;
             steps.add(new GuidanceStep(
                     check.id, check.getLabel(), check.evidence,
                     convert(check.getState())));
         }
+
+        if (completePreparation)
+            for (MethodPreparation.Step step : plan.readiness.preparation.steps)
+                steps.add(new GuidanceStep("method:preparation:" + steps.size(), step.input.name,
+                        step.reason, step.action == null || step.action.trim().isEmpty()
+                                ? GuidanceStepState.COMPLETE : GuidanceStepState.ACTION));
 
         if (steps.isEmpty())
         {
@@ -1000,7 +1008,6 @@ class MethodGuidanceService
                     GuidanceStepState.COMPLETE));
         }
 
-        boolean completePreparation = plan.readiness != null && plan.readiness.actionable();
         String bring = guidance == null ? null
                 : completePreparation ? guidance.supplies : Presentation.compactSentence(
                         guidance.supplies, 120);

@@ -398,3 +398,9 @@ Previously only acquisition appeared before processing in this text, although th
 sidebar already selected the next preparation step. Ready carried inputs add no
 prefix. The Method Guidance checklist consumes this shared action text, so it no
 longer starts processing while an ordinary preparation step is still pending.
+
+Method Guidance also renders the typed preparation steps as checklist rows.
+For an actionable contract, carried/equipped reusable supplies are complete;
+steps with pending actions remain ACTION. The aggregate preparation-proof row
+is replaced by those details so a verified plan is not shown as completed work.
+Access and capacity evidence remain separate checklist rows.

@@ -147,6 +147,33 @@ public class BowMethodIntelligenceTest
         assertFalse(ready.guidance(85).getAction().contains("First,"));
     }
 
+    @Test
+    public void executionChecklistDistinguishesPendingPreparationFromCarriedInputs()
+    {
+        MethodReadiness purchase = evaluate(MethodIntelligenceTest.data(0, 500,
+                Collections.emptyList(), Collections.emptyList()), 100);
+        GuidanceChecklist pending = checklist(purchase);
+        assertTrue(pending.getSteps().stream().anyMatch(s -> s.state == GuidanceStepState.ACTION
+                && s.detail.startsWith("Buy ")));
+        assertFalse(pending.getSteps().stream().anyMatch(s -> s.id.equals("method:preparation")));
+        List<ItemState> carried = logs(4);
+        carried.add(new ItemState(946, "Knife", 1));
+        GuidanceChecklist ready = checklist(evaluate(MethodIntelligenceTest.data(1, -1,
+                carried, Collections.emptyList()), 0));
+        assertFalse(ready.getSteps().stream().anyMatch(s -> s.state == GuidanceStepState.ACTION));
+        assertTrue(ready.getSteps().stream().anyMatch(s -> s.label.equals("Knife")
+                && s.state == GuidanceStepState.COMPLETE));
+    }
+
+    private GuidanceChecklist checklist(MethodReadiness readiness)
+    {
+        TrainingPlan plan = new TrainingPlan(method, "Test", Confidence.VERIFIED, readiness.checks())
+                .withReadiness(readiness);
+        Recommendation recommendation = new Recommendation("skill:fletching", "Fletch bows", "Test", 20,
+                plan, Confidence.VERIFIED, 80, 85, readiness.guidance(85));
+        return new MethodGuidanceService(null).build(recommendation, null);
+    }
+
     private MethodReadiness evaluate(GameData data, int price)
     {
         AccountResourcePlanner resources = new AccountResourcePlanner(new MarketPriceService(null)
