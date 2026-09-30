@@ -201,3 +201,14 @@ plus membership plumbing replaces them: net +4 Java lines / +316 characters /
 a separate inference path rather than adding another recipe validator. Regression
 coverage compares both input paths and rejects unknown names that still match
 profile terms. Remaining legacy profile transformations need separate migration.
+
+## Both ordinary bolt inference paths removed
+
+Nine reviewed records replace the universal metal-bolt inference and its
+allowlist/exclusion helper. The existing execution profile uses the same source;
+its UNFINISHED_BOLT enum and suffix-appending switch branch are removed too.
+Net production change is -16 Java lines / -771 characters / -192 estimated
+tokens, with no added schema, validator or production file. Exact IDs also remove
+the fabricated spacing in the old adamant unfinished-item name. The RuneLite
+dragon-bolt icon/label issue is documented separately rather than hidden behind
+a speculative alias. No broad method expansion is implied.

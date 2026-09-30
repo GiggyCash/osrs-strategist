@@ -3157,10 +3157,6 @@ class UniversalActionRecipeResolver
                             + " sapling";
                 else return null;
                 break;
-            case UNFINISHED_BOLT:
-                if (!lower.endsWith(" bolts")) return null;
-                name = value + " (unf)";
-                break;
             case FIXED:
                 name = rule.getFixedName();
                 if (name == null || name.trim().isEmpty()) return null;
@@ -3236,8 +3232,6 @@ class UniversalActionRecipeResolver
                 "Headless arrow", 1, metal + " arrowhead", 1);
         if (projectile(lower, "javelin")) return recipe(get(919), n,
                 "Javelin shaft", 1, metal + " javelin head", 1);
-        if (basicBolt(lower)) return recipe(get(920), n,
-                metal + " bolts (unf)", 1, "Feather", 1);
         return unknown(get(922));
     }
 
@@ -3315,15 +3309,6 @@ class UniversalActionRecipeResolver
         return (lower.endsWith(" " + kind) || lower.endsWith(" " + kind + "s"))
                 && contains(lower, "bronze", "iron", "steel", "mithril",
                 "adamant", "rune", "amethyst", "dragon");
-    }
-    private static boolean basicBolt(String lower)
-    {
-        return (lower.endsWith(" bolt") || lower.endsWith(" bolts"))
-                && contains(lower, "bronze", "blurite", "iron", "silver",
-                "steel", "mithril", "adamant", "runite", "rune", "dragon")
-                && !contains(lower, "opal", "pearl", "barbed", "kebbit",
-                "sapphire", "emerald", "ruby", "diamond", "dragonstone",
-                "onyx", "amethyst", "broad");
     }
     private static int multiply(int a, int b)
     {

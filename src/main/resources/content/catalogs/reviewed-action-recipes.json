@@ -1172,5 +1172,239 @@
     "sourceRevision": 15301677,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze bolts",
+    "inputs": [
+      "Bronze bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9375,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_bolts",
+    "sourceRevision": 15301699,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "blurite bolts",
+    "inputs": [
+      "Blurite bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9376,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Blurite_bolts",
+    "sourceRevision": 15301667,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron bolts",
+    "inputs": [
+      "Iron bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9377,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_bolts",
+    "sourceRevision": 15301681,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "silver bolts",
+    "inputs": [
+      "Silver bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9382,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Silver_bolts",
+    "sourceRevision": 15301703,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel bolts",
+    "inputs": [
+      "Steel bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9378,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_bolts",
+    "sourceRevision": 15301692,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril bolts",
+    "inputs": [
+      "Mithril bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9379,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_bolts",
+    "sourceRevision": 15301684,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant bolts",
+    "inputs": [
+      "Adamant bolts(unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9380,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_bolts",
+    "sourceRevision": 15301669,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "runite bolts",
+    "inputs": [
+      "Runite bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9381,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Runite_bolts",
+    "sourceRevision": 15301687,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon bolts",
+    "inputs": [
+      "Dragon bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      21930,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_bolts",
+    "sourceRevision": 15301675,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

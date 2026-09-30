@@ -35,7 +35,6 @@ public final class MethodProfile
         BAR_FOR_SMITHED_ITEM,
         UNCUT_GEM,
         SAPLING_FOR_TREE,
-        UNFINISHED_BOLT,
         FIXED
     }
 

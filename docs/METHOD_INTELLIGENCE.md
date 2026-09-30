@@ -225,3 +225,25 @@ Other execution profiles retain their existing rules until separately reviewed.
 This change does not broaden method coverage, certify an unknown recipe, or
 replace the independent account/build/access/capacity checks. Existing Cooking
 and Fletching preparation contracts continue to control actual readiness.
+
+## Existing ordinary bolt feathering
+
+Nine previously inferred ordinary bolt recipes (bronze, blurite, iron, silver,
+steel, mithril, adamant, runite and dragon) now use reviewed unfinished-item IDs
+and ordinary feathers. Recipes normalize ten inputs of each kind producing ten
+bolts to one of each per calculator bolt. Membership comes from creation rules;
+bronze bolts being a free item does not make feathering F2P. Actual item spelling
+is preserved, including `Adamant bolts(unf)` without a space.
+
+The existing bolt execution profile now shares these records. The metal-name
+heuristic, specialty-gem exclusion list, and profile suffix-appending rule have
+been deleted. Specialty, poisoned and invented names remain unresolved. This
+adds no method or access/acquisition proof; colored feathers and gem tipping
+remain separate routes.
+
+The inspected public RuneLite DRAGON_BOLTS calculator entry uses the
+DRAGON_BOLTS_UNFEATHERED icon. An unfinished-item action label is deliberately
+not accepted as a finished-bolt recipe alias: the label/identity mismatch needs
+separate normalization and guidance review. The canonical Dragon bolts recipe
+is recorded, but `Dragon bolts (unf)` cannot silently become a finished-output
+instruction. Per-output Wiki revisions and reviewed dates are stored in data.
