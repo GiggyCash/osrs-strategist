@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /** Behavioral coverage for resource scoring after the DTO pipeline was collapsed. */
-public class SustainableResourceValueServiceTest
+public class SustainableResourceValueServiceTest extends CatalogHostTest
 {
     @Test
     public void ownedConsumablesHaveDifferentReplacementCostByMode()

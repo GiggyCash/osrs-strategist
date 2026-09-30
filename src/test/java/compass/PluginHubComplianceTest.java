@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Repository-backed checks for current RuneLite Plugin Hub blockers. */
-public class PluginHubComplianceTest
+public class PluginHubComplianceTest extends CatalogHostTest
 {
     private static final List<String> FORBIDDEN_PRODUCTION_TOKENS = Arrays.asList(
             "import java.lang.reflect",

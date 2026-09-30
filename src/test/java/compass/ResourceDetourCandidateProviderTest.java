@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class ResourceDetourCandidateProviderTest
+public class ResourceDetourCandidateProviderTest extends CatalogHostTest
 {
     private final ResourceDetourCandidateProvider provider = new ResourceDetourCandidateProvider();
 

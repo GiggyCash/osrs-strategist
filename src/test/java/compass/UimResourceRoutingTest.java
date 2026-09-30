@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UimResourceRoutingTest
+public class UimResourceRoutingTest extends CatalogHostTest
 {
     @Test
     public void uimReadinessIgnoresNormalBankAndUsesVerifiedSafeStorageContents()

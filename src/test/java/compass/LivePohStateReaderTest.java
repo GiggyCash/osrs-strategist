@@ -8,7 +8,7 @@ import java.util.HashSet;
 import net.runelite.api.gameval.ObjectID;
 import org.junit.Test;
 
-public class LivePohStateReaderTest
+public class LivePohStateReaderTest extends CatalogHostTest
 {
     @Test
     public void completeOwnHouseScanProvesTrackedAbsence()

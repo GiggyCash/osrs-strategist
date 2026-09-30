@@ -10,7 +10,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 /** Regression coverage for Group Storage value in the method pipeline. */
-public class GimGroupStrategyServiceTest
+public class GimGroupStrategyServiceTest extends CatalogHostTest
 {
     private static final int SHARED_ITEM = 12345;
 

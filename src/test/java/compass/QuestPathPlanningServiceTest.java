@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 /** Regression coverage for quest-path value now owned by goal provenance. */
-public class QuestPathPlanningServiceTest
+public class QuestPathPlanningServiceTest extends CatalogHostTest
 {
     private final GoalDependencyProvenanceService service =
             new GoalDependencyProvenanceService();

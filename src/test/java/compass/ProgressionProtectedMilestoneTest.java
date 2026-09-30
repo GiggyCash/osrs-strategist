@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class ProgressionProtectedMilestoneTest
+public class ProgressionProtectedMilestoneTest extends CatalogHostTest
 {
     @Test
     public void gracefulStyleMethodProtectsTrackedCheckpointFromVarietyRotation()

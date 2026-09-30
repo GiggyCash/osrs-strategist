@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 /** Event-sequence regression coverage for account-scoped observations. */
-public class ObservedStateStoreLifecycleTest
+public class ObservedStateStoreLifecycleTest extends CatalogHostTest
 {
     @Test
     public void accountSwitchClearsEveryHighValueObservation()

@@ -8,7 +8,7 @@ import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
-import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.cluescrolls.ClueScrollService;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class PluginInjectionTest
+public class PluginInjectionTest extends CatalogHostTest
 {
     @Test
     public void pluginDependencyGraphValidatesAfterConstruction()
@@ -34,7 +34,7 @@ public class PluginInjectionTest
                 hostService(ConfigManager.class);
                 hostService(ItemManager.class);
                 hostService(SpriteManager.class);
-                hostService(ClueScrollPlugin.class);
+                hostService(PluginManager.class);
                 hostService(ClueScrollService.class);
                 hostService(ClientToolbar.class);
                 hostService(OverlayManager.class);

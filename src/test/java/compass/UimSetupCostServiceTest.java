@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class UimSetupCostServiceTest
+public class UimSetupCostServiceTest extends CatalogHostTest
 {
     private final UimSetupCostService service = new UimSetupCostService();
 

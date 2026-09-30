@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class OpportunityRecommendationTest
+public class OpportunityRecommendationTest extends CatalogHostTest
 {
     @Test
     public void readyOpportunityCanBeatLowValueXpAndCooldownHidesIt()

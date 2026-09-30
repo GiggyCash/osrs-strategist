@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class RequirementActionabilityTest
+public class RequirementActionabilityTest extends CatalogHostTest
 {
     @Test
     public void knownSupplyShortfallCanStillBeDoNext()

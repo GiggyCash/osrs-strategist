@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PublicReleasePresentationTest
+public class PublicReleasePresentationTest extends CatalogHostTest
 {
     @Test
     public void readmeLeadsWithPlayerValuePrivacyAndLimitations()

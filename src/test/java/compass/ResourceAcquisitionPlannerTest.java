@@ -6,7 +6,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class ResourceAcquisitionPlannerTest
+public class ResourceAcquisitionPlannerTest extends CatalogHostTest
 {
     @Test
     public void sharedOwnershipIndexCombinesObservedContainers()

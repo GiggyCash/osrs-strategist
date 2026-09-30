@@ -14,7 +14,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.gameval.ObjectID;
 import org.junit.Test;
 
-public class InfrastructureCandidateProviderTest
+public class InfrastructureCandidateProviderTest extends CatalogHostTest
 {
     private final InfrastructureMilestoneCatalog catalog =
             new InfrastructureMilestoneCatalog();

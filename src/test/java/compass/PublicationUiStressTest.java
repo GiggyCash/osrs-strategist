@@ -8,7 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Release-facing copy checks across the recommendation families players see. */
-public class PublicationUiStressTest
+public class PublicationUiStressTest extends CatalogHostTest
 {
     @Test
     public void representativePlayerStatesStayCompactActionableAndClean()

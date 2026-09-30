@@ -16,7 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class OsrsStrategistPluginTest
+public class OsrsStrategistPluginTest extends CatalogHostTest
 {
     @Test
     public void varbitBackedProgressionChangesAreSubscribed()

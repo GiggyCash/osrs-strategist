@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /** Fifty defensible winner assertions across the shared final decision layer. */
-public class SensibleWinnerScenarioMatrixTest
+public class SensibleWinnerScenarioMatrixTest extends CatalogHostTest
 {
     @Test
     public void everyPublicGoalReshapesOneIdenticalCandidatePool()

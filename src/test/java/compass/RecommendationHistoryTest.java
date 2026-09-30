@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class RecommendationHistoryTest
+public class RecommendationHistoryTest extends CatalogHostTest
 {
     @Test
     public void historyIsBoundedAndKeepsNewestEvents()

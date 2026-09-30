@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNull;
 
-public class UniversalGuidanceCoherenceTest
+public class UniversalGuidanceCoherenceTest extends CatalogHostTest
 {
     @Test
     public void skillNameAloneCannotTurnSlayerMagicIntoHighAlchemy()

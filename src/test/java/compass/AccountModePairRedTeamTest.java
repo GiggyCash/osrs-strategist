@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /** One-variable account-mode comparisons over real strategy seams. */
-public class AccountModePairRedTeamTest
+public class AccountModePairRedTeamTest extends CatalogHostTest
 {
     private static final List<Skill> HIGH_IMPACT_SKILLS = Arrays.asList(
             Skill.SMITHING, Skill.CRAFTING, Skill.HERBLORE,

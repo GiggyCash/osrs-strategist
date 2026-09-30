@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ItemRequirementEvaluatorTest
+public class ItemRequirementEvaluatorTest extends CatalogHostTest
 {
     private final ItemRequirementEvaluator evaluator = new ItemRequirementEvaluator();
 

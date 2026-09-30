@@ -11,7 +11,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 /** Regression coverage for the contextual choices now owned by the provider. */
-public class ContextualGearDecisionServiceTest
+public class ContextualGearDecisionServiceTest extends CatalogHostTest
 {
     @Test
     public void recommendationUsesObservedOwnershipAndEncounterContext()

@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PvmReadinessSafetyTest
+public class PvmReadinessSafetyTest extends CatalogHostTest
 {
     private final PvmReadinessAnalyzer analyzer =
             new PvmReadinessAnalyzer(new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(), new PvmPreparationProfileCatalog());

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /** Paired method tournaments: one account variable changes at a time. */
-public class StrategyQualityTournamentTest
+public class StrategyQualityTournamentTest extends CatalogHostTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
             new TrainingMethodCatalog(),

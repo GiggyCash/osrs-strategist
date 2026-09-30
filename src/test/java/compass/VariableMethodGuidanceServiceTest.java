@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class VariableMethodGuidanceServiceTest
+public class VariableMethodGuidanceServiceTest extends CatalogHostTest
 {
     private final VariableMethodGuidanceService service =
             new VariableMethodGuidanceService();

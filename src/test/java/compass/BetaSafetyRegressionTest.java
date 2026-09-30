@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * membership isolation, primary-queue actionability, restricted builds, and
  * account-mode storage semantics.</p>
  */
-public class BetaSafetyRegressionTest
+public class BetaSafetyRegressionTest extends CatalogHostTest
 {
     @Test
     public void unknownMembershipFailsClosedToF2pContent()

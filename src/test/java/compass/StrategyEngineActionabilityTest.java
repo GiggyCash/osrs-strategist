@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StrategyEngineActionabilityTest
+public class StrategyEngineActionabilityTest extends CatalogHostTest
 {
     @Test
     public void highScoreNeedsInfoCannotBeatReadyActionAndEmptyPlaceholderIsHidden()

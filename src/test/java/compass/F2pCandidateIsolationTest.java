@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class F2pCandidateIsolationTest
+public class F2pCandidateIsolationTest extends CatalogHostTest
 {
     @Test
     public void membersQuestNeverAppearsForF2pAccount()

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class PvmActivityCatalogTest
+public class PvmActivityCatalogTest extends CatalogHostTest
 {
     @Test
     public void runeLiteBossCatalogProvidesBroadCurrentCoverage()

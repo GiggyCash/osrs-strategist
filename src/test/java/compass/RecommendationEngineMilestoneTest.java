@@ -12,7 +12,7 @@ import static org.junit.Assert.assertFalse;
 /**
  * Guards the distinction between milestone variety and explicit snoozing.
  */
-public class RecommendationEngineMilestoneTest
+public class RecommendationEngineMilestoneTest extends CatalogHostTest
 {
     @Test
     public void completedSkillRemainsEligibleDespiteLargeSoftPenalty()

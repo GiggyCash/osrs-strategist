@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class FarmingPatchStateDecoderTest
+public class FarmingPatchStateDecoderTest extends CatalogHostTest
 {
     private final FarmingPatchStateDecoder decoder = new FarmingPatchStateDecoder();
 

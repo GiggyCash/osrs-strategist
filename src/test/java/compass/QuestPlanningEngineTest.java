@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class QuestPlanningEngineTest
+public class QuestPlanningEngineTest extends CatalogHostTest
 {
     private final QuestCandidateProvider provider = TestFixtures.questCandidateProvider(
             new QuestPriorityCatalog(), new QuestKnowledgeCatalog(),

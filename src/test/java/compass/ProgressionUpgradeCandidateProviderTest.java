@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class ProgressionUpgradeCandidateProviderTest
+public class ProgressionUpgradeCandidateProviderTest extends CatalogHostTest
 {
     private final ProgressionUpgradeCandidateProvider provider =
             new ProgressionUpgradeCandidateProvider();

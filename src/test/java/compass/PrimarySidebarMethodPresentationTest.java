@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Regression coverage for the production primary-sidebar presentation path. */
-public class PrimarySidebarMethodPresentationTest
+public class PrimarySidebarMethodPresentationTest extends CatalogHostTest
 {
     private static final String METHOD = "Cook carried fish without banking";
 

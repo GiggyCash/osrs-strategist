@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class GroupStoragePlanningTest
+public class GroupStoragePlanningTest extends CatalogHostTest
 {
     @Test
     public void recentSharedPickaxeChangesSetupGuidanceOnlyWhenEnabled()

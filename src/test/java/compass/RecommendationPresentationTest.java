@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
  * Protects the compact-sidebar UX from accidentally becoming a wall of text
  * while also ensuring Needs Info always tells the player what is unresolved.
  */
-public class RecommendationPresentationTest
+public class RecommendationPresentationTest extends CatalogHostTest
 {
     @Test
     public void compactViewHidesDeepExplanation()

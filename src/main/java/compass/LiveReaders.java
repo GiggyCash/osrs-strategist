@@ -30,7 +30,7 @@ import static compass.Text.get;
 class LiveClueStateReader
 {
     private final ClueScrollService clueService;
-    private final ClueScrollPlugin cluePlugin;
+    private final net.runelite.client.plugins.PluginManager pluginManager;
     private final Client client;
 
     public ClueSnapshot read(
@@ -106,6 +106,15 @@ class LiveClueStateReader
         return null;
     }
 
+    private ClueScrollPlugin cluePlugin()
+    {
+        // Dependency modules export ClueScrollService, not the plugin's private injector.
+        if (pluginManager == null) return null;
+        for (net.runelite.client.plugins.Plugin plugin : pluginManager.getPlugins())
+            if (plugin instanceof ClueScrollPlugin) return (ClueScrollPlugin) plugin;
+        return null;
+    }
+
     private ClueStepSnapshot readCurrentStep()
     {
         if (clueService == null) return null;
@@ -149,11 +158,11 @@ class LiveClueStateReader
         if (clue instanceof EmoteClue)
             return ((EmoteClue) clue).getText();
         if (clue instanceof CrypticClue)
-            return ((CrypticClue) clue).getSolution(cluePlugin);
+            return ((CrypticClue) clue).getSolution(cluePlugin());
         if (clue instanceof AnagramClue)
-            return talkTo(((AnagramClue) clue).getNpcs(cluePlugin));
+            return talkTo(((AnagramClue) clue).getNpcs(cluePlugin()));
         if (clue instanceof CipherClue)
-            return talkTo(((CipherClue) clue).getNpcs(cluePlugin));
+            return talkTo(((CipherClue) clue).getNpcs(cluePlugin()));
         if (clue instanceof CoordinateClue)
             return get(339);
         if (clue instanceof MapClue)
@@ -203,11 +212,11 @@ class LiveClueStateReader
 
     private WorldPoint worldPointOf(ClueScroll clue)
     {
-        if (!(clue instanceof LocationClueScroll) || cluePlugin == null)
+        if (!(clue instanceof LocationClueScroll) || cluePlugin() == null)
             return null;
         try
         {
-            return ((LocationClueScroll) clue).getLocation(cluePlugin);
+            return ((LocationClueScroll) clue).getLocation(cluePlugin());
         }
         catch (RuntimeException ex)
         {
@@ -246,7 +255,7 @@ class LiveClueStateReader
                 : clue.getClueSteps())
             if (!Boolean.TRUE.equals(step.getValue()))
             {
-                var solution = step.getKey().getSolution(cluePlugin);
+                var solution = step.getKey().getSolution(cluePlugin());
                 if (solution != null && !solution.trim().isEmpty())
                     return solution;
             }
@@ -263,9 +272,9 @@ class LiveClueStateReader
 
     private String firstNpc(NpcClueScroll clue)
     {
-        if (clue == null || cluePlugin == null) return null;
+        if (clue == null || cluePlugin() == null) return null;
         String[] values;
-        try { values = clue.getNpcs(cluePlugin); }
+        try { values = clue.getNpcs(cluePlugin()); }
         catch (RuntimeException ex) { return null; }
         return values == null || values.length == 0 ? null : values[0];
     }

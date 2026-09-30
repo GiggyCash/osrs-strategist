@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-public class RecommendationStabilizerTest
+public class RecommendationStabilizerTest extends CatalogHostTest
 {
     @Test
     public void minorRerankKeepsTheCurrentCheckpointSteady()

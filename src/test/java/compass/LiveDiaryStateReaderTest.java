@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class LiveDiaryStateReaderTest
+public class LiveDiaryStateReaderTest extends CatalogHostTest
 {
     private final DiaryTaskCatalog catalog = new DiaryTaskCatalog();
 

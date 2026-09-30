@@ -4,7 +4,7 @@ import java.util.Map;
 import net.runelite.api.Skill;
 
 /** Development-time machine-readable census entry point. */
-public final class ContentCensusReporter
+public final class ContentCensusReporter extends CatalogHostTest
 {
     private ContentCensusReporter() { }
 

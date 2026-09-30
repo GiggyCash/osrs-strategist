@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TrainingMethodPolicyAccountModeTest
+public class TrainingMethodPolicyAccountModeTest extends CatalogHostTest
 {
     private final TrainingMethodPolicy policy = new TrainingMethodPolicy();
 

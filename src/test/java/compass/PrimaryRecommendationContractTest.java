@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PrimaryRecommendationContractTest
+public class PrimaryRecommendationContractTest extends CatalogHostTest
 {
     private final ActionabilityPolicy policy =
             new ActionabilityPolicy();

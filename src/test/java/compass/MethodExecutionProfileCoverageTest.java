@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /** Prevents silent exact-planner coverage loss from method-id drift. */
-public class MethodExecutionProfileCoverageTest
+public class MethodExecutionProfileCoverageTest extends CatalogHostTest
 {
     @Test
     public void everyExecutionProfileMapsToARealTrainingMethod()

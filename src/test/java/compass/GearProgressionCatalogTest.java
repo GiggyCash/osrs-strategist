@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class GearProgressionCatalogTest
+public class GearProgressionCatalogTest extends CatalogHostTest
 {
     @Test
     public void containsF2pBudgetAndContextualBisLadders()

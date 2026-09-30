@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-public class StrategyDataAssemblerLifecycleTest
+public class StrategyDataAssemblerLifecycleTest extends CatalogHostTest
 {
     @Test
     public void stableIdentitySurvivesRenameMembershipAndModeTransitions()

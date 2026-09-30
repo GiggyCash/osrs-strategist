@@ -10,7 +10,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Ensures F2P remains complete and isolated across normal milestone bands. */
-public class F2pCoverageMatrixTest
+public class F2pCoverageMatrixTest extends CatalogHostTest
 {
     private static final List<Skill> RECOMMENDED_F2P_SKILLS = Arrays.asList(
             Skill.ATTACK,

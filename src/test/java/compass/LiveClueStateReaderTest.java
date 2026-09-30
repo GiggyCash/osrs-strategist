@@ -14,7 +14,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
-public class LiveClueStateReaderTest
+public class LiveClueStateReaderTest extends CatalogHostTest
 {
     private final LiveClueStateReader reader = TestFixtures.liveClueStateReader();
 

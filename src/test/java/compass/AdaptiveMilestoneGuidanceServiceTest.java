@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class AdaptiveMilestoneGuidanceServiceTest
+public class AdaptiveMilestoneGuidanceServiceTest extends CatalogHostTest
 {
     @Test
     public void highAlchemyCountsEveryModeledRuneAndMainShortfall()

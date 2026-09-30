@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-public class PvmPreparationProfileCatalogTest
+public class PvmPreparationProfileCatalogTest extends CatalogHostTest
 {
     @Test
     public void bulkProfilesAreUniqueReviewableAndCannotClaimReady()

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class CombatGuidanceServiceTest
+public class CombatGuidanceServiceTest extends CatalogHostTest
 {
     private final CombatGuidanceService service = new CombatGuidanceService();
 

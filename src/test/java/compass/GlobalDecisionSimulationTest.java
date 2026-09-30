@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** End-to-end ranking simulations for the final three-card player queue. */
-public class GlobalDecisionSimulationTest
+public class GlobalDecisionSimulationTest extends CatalogHostTest
 {
     @Test
     public void unresolvedUpgradeCannotBuyPrimarySlotWithHugeScore()

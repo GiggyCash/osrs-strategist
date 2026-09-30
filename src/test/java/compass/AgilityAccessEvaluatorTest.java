@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AgilityAccessEvaluatorTest
+public class AgilityAccessEvaluatorTest extends CatalogHostTest
 {
     private final AgilityAccessEvaluator evaluator =
             new AgilityAccessEvaluator(new AgilityCourseCatalog());

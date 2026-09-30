@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class ActivityStrategyKnowledgeServiceTest
+public class ActivityStrategyKnowledgeServiceTest extends CatalogHostTest
 {
     private final ActivityStrategyKnowledgeService service =
             new ActivityStrategyKnowledgeService();

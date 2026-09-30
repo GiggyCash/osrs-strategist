@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class PluginConstructionTest
+public class PluginConstructionTest extends CatalogHostTest
 {
     @Test
     public void constructsBeforeGuiceConfigurationOrInjection() throws Exception

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  * Catalog presence alone is insufficient: guidance and unresolved requirements
  * can still make a selected route ineligible for the player-facing queue.
  */
-public class RecommendationCoverageCensusTest
+public class RecommendationCoverageCensusTest extends CatalogHostTest
 {
     private static final int[] LEVELS = {5, 50, 85};
     private static final StrategyMode[] MODES = StrategyMode.values();

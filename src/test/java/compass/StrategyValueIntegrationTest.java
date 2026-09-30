@@ -16,7 +16,7 @@ import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 /** Cross-seam tests for typed value attachment and provider ownership. */
-public class StrategyValueIntegrationTest
+public class StrategyValueIntegrationTest extends CatalogHostTest
 {
     @Test
     public void methodTravelEvidenceChangesRenderedLocationAndTypedValue()

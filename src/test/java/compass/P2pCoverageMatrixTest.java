@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  * test, not an XP-rate claim: every normal trainable skill should have at least
  * one curated method at representative progression bands.
  */
-public class P2pCoverageMatrixTest
+public class P2pCoverageMatrixTest extends CatalogHostTest
 {
     private static final int[] LEVELS = {
             1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 98

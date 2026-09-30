@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ExpandedOpportunityEngineTest
+public class ExpandedOpportunityEngineTest extends CatalogHostTest
 {
     @Test
     public void extraDailyContentOnlyAppearsAfterItsTimerWasObserved()

@@ -6,7 +6,7 @@ import net.runelite.api.Quest;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class QuestMembershipPolicyTest
+public class QuestMembershipPolicyTest extends CatalogHostTest
 {
     @Test
     public void f2pAllowsCurrentFreeQuestsAndRejectsMembersQuests()

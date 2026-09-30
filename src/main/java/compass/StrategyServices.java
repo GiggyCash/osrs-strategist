@@ -840,7 +840,7 @@ class MarketPriceService
                 {
                     continue;
                 }
-                var price = itemManager.getItemPrice(itemId);
+                var price = supportedPrice(itemManager.getItemPrice(itemId));
                 if (price <= 0) return null;
                 return new MarketPriceQuote(
                         itemId,
@@ -855,12 +855,19 @@ class MarketPriceService
         return null;
     }
 
+    // RuneLite prices are long. Until planner amounts support that range, an
+    // unrepresentable quote is unknown, never a truncated or artificially cheap price.
+    static int supportedPrice(long price)
+    {
+        return price > 0 && price <= Integer.MAX_VALUE ? (int) price : 0;
+    }
+
     public int priceByItemId(int itemId)
     {
         if (itemManager == null || itemId <= 0) return 0;
         try
         {
-            return max(0, itemManager.getItemPrice(itemId));
+            return supportedPrice(itemManager.getItemPrice(itemId));
         }
         catch (RuntimeException ex)
         {

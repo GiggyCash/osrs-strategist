@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class FeedbackRecoveryTest
+public class FeedbackRecoveryTest extends CatalogHostTest
 {
     @Test
     public void resetActionIsSecondaryExplainedAndConfirmed() throws Exception

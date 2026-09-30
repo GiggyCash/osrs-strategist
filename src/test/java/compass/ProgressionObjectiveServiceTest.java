@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ProgressionObjectiveServiceTest
+public class ProgressionObjectiveServiceTest extends CatalogHostTest
 {
     private final MilestoneTracker service =
             new MilestoneTracker(new ProgressionObjectiveCatalog());

@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Protects the display rename without invalidating existing local profiles. */
-public class BrandingCompatibilityTest
+public class BrandingCompatibilityTest extends CatalogHostTest
 {
     @Test
     public void pluginAndSidebarUseGielinorCompassBrand() throws Exception

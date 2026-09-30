@@ -12,7 +12,7 @@ import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
-public class ConfigProxyTest
+public class ConfigProxyTest extends CatalogHostTest
 {
     @Rule public TemporaryFolder temporary = new TemporaryFolder();
 

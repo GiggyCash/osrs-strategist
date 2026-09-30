@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /** Membership regressions for clues and stale recurring observations. */
-public class ClueMembershipTest
+public class ClueMembershipTest extends CatalogHostTest
 {
     @Test
     public void f2pHidesHardClueOpportunity()

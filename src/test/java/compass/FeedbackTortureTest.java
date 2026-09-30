@@ -12,7 +12,7 @@ import java.util.Map;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
-public class FeedbackTortureTest
+public class FeedbackTortureTest extends CatalogHostTest
 {
     private final RecommendationDeduplicator deduplicator =
             new RecommendationDeduplicator();

@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PvmReadyGuidanceTest
+public class PvmReadyGuidanceTest extends CatalogHostTest
 {
     @Test
     public void locallyVerifiedEncountersNameTheirActualEntrance()

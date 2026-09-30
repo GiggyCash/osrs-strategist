@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Recurring reminders must not activate from a skill level alone.
  */
-public class OpportunityEngineTest
+public class OpportunityEngineTest extends CatalogHostTest
 {
     private final OpportunityEngine engine = new OpportunityEngine();
 

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /** Adversarial matrix through the actual multi-domain provider registry. */
-public class RealProviderStrategyTournamentTest
+public class RealProviderStrategyTournamentTest extends CatalogHostTest
 {
     private static final GoalType[] PUBLIC_GOALS = {
             GoalType.AUTOMATIC, GoalType.BARROWS_GLOVES,

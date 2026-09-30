@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class LiveRunePouchStateReaderTest
+public class LiveRunePouchStateReaderTest extends CatalogHostTest
 {
     @Test
     public void detectsOnlyKnownUsablePouchNames()

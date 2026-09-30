@@ -13,7 +13,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class F2pRunecraftRecommendationTest
+public class F2pRunecraftRecommendationTest extends CatalogHostTest
 {
     @Test
     public void levelOneF2pRunecraftGetsConcreteAirRuneMethod()

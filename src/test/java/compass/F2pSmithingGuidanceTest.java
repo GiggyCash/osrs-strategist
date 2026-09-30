@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /** Regression coverage for banked F2P anvil guidance. */
-public class F2pSmithingGuidanceTest
+public class F2pSmithingGuidanceTest extends CatalogHostTest
 {
     @Test
     public void ironAnvilRouteUsesBarsAndNamesVarrockWestBank()

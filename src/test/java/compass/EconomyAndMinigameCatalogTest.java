@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class EconomyAndMinigameCatalogTest
+public class EconomyAndMinigameCatalogTest extends CatalogHostTest
 {
     @Test
     public void moneyCatalogHasF2pIronUimAndHighLevelOptions()

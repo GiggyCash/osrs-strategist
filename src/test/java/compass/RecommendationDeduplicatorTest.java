@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class RecommendationDeduplicatorTest
+public class RecommendationDeduplicatorTest extends CatalogHostTest
 {
     @Test
     public void sharedSkillPrerequisiteBecomesOneActionWithMultipleReasons()

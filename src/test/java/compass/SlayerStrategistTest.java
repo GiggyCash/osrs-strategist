@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class SlayerStrategistTest
+public class SlayerStrategistTest extends CatalogHostTest
 {
     private final SlayerStrategist strategist = new SlayerStrategist();
 

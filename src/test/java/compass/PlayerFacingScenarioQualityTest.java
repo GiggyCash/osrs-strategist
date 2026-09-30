@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /** Red-team representative accounts through the real skill planning stack. */
-public class PlayerFacingScenarioQualityTest
+public class PlayerFacingScenarioQualityTest extends CatalogHostTest
 {
     @Test
     public void representativeAccountsAlwaysReceiveAConcreteDoNext()

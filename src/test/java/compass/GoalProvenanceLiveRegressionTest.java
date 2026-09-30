@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class GoalProvenanceLiveRegressionTest
+public class GoalProvenanceLiveRegressionTest extends CatalogHostTest
 {
     private final GoalDependencyProvenanceService provenance =
             new GoalDependencyProvenanceService();

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertSame;
 /**
  * Ensures unobserved data never gets converted into fake empty snapshots.
  */
-public class StrategyDataBundleTest
+public class StrategyDataBundleTest extends CatalogHostTest
 {
     @Test
     public void builderKeepsUnknownSourcesNull()

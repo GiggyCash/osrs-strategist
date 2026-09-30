@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNull;
 
-public class SkillIconLoaderTest
+public class SkillIconLoaderTest extends CatalogHostTest
 {
     @Test
     public void callbackFromPriorRecommendationCannotOverwriteClearedIcon()

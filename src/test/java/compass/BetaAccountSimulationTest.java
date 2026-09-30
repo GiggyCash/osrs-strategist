@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
  * modes do not receive impossible sourcing advice, and the global strategy
  * queue has access to more than the legacy top-three skill slice.</p>
  */
-public class BetaAccountSimulationTest
+public class BetaAccountSimulationTest extends CatalogHostTest
 {
     private final TrainingMethodSelector selector = new TrainingMethodSelector(
             new TrainingMethodCatalog(),

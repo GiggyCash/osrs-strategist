@@ -7,7 +7,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /** Guards the official gameval replacements used by the live readers. */
-public class RuneLiteVarbitMigrationTest
+public class RuneLiteVarbitMigrationTest extends CatalogHostTest
 {
     @Test
     public void accountAndCombatAchievementMappingsPreserveLiveSemantics()

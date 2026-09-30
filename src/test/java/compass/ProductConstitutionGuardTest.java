@@ -10,7 +10,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ProductConstitutionGuardTest
+public class ProductConstitutionGuardTest extends CatalogHostTest
 {
     @Test
     public void publicGoalListContainsOnlyShippedMilestones()

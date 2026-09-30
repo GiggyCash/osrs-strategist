@@ -7,7 +7,7 @@ import net.runelite.api.Skill;
 import org.junit.Test;
 
 /** Covers the focused account policy consumed by infrastructure planning. */
-public class AccountStrategicPriorityServiceTest
+public class AccountStrategicPriorityServiceTest extends CatalogHostTest
 {
     private Priority priority(StrategyContext context, InfraBenefit benefit)
     {

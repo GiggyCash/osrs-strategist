@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class UniversalActionRecipeResolverTest
+public class UniversalActionRecipeResolverTest extends CatalogHostTest
 {
     private final UniversalActionRecipeResolver resolver =
             new UniversalActionRecipeResolver();

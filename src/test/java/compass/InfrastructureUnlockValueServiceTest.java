@@ -12,7 +12,7 @@ import java.util.Map;
 import net.runelite.api.Skill;
 import org.junit.Test;
 
-public class InfrastructureUnlockValueServiceTest
+public class InfrastructureUnlockValueServiceTest extends CatalogHostTest
 {
     private final InfrastructureMilestoneCatalog catalog =
             new InfrastructureMilestoneCatalog();
