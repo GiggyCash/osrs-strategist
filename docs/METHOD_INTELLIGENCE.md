@@ -247,3 +247,13 @@ not accepted as a finished-bolt recipe alias: the label/identity mismatch needs
 separate normalization and guidance review. The canonical Dragon bolts recipe
 is recorded, but `Dragon bolts (unf)` cannot silently become a finished-output
 instruction. Per-output Wiki revisions and reviewed dates are stored in data.
+
+## Unresolved karambwan execution profile
+
+The karambwan profile now uses the shared reviewed-input lookup. It has no
+reviewed recipe, matching the existing unresolved readiness contract for the
+post-quest cooking lesson and one-tick setup. It therefore cannot synthesize raw
+ingredients or win adaptive selection merely because an action label matches.
+This removes the final RAW_ACTION_ITEM transformation without claiming that
+owning raw fish proves the route is available. Adding support requires reviewing
+the unlock and execution contract, not restoring the string heuristic.

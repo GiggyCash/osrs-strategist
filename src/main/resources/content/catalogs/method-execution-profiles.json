@@ -486,14 +486,10 @@
     "unitSingular": "karambwan cooked",
     "unitPlural": "karambwans cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
-    "note": "Raw quantity should include a burn allowance appropriate to current Cooking level/location; a dedicated high-level burn model remains preferable.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "inputs": [],
+    "note": "Cooking lesson and execution setup must be verified before this route can provide ingredient guidance; raw stock alone does not prove readiness.",
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "mining_f2p_iron",

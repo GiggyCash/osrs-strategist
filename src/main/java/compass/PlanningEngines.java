@@ -3131,10 +3131,6 @@ class UniversalActionRecipeResolver
                 name = value;
                 itemId = action.itemId;
                 break;
-            case RAW_ACTION_ITEM:
-                name = "Raw " + (lower.startsWith("cooked ")
-                        ? value.substring(7) : value);
-                break;
             case LOG_FOR_BOW:
                 name = wood(value, "Logs");
                 break;

@@ -62,6 +62,26 @@ public class ReviewedExecutionProfileTest
         }
     }
 
+    @Test
+    public void unresolvedKarambwanProfileCannotInventIngredientsOrWinSelection()
+    {
+        MethodProfile profile = profiles.forMethod("cooking_karambwan_1t");
+        assertTrue(profile.reviewedInputs);
+        assertTrue(profile.inputs.isEmpty());
+        for (String name : Arrays.asList("Cooked karambwan", "Poison karambwan", "Future cooked karambwan"))
+        {
+            ActionDef action = action(Skill.COOKING, name, 190);
+            for (Membership membership : Membership.values())
+                assertNull(resolver.profileInputs(profile, action, 10, membership));
+            for (int mode : new int[] {0, 1, 2})
+            {
+                GameData data = MethodIntelligenceTest.data(mode, -1, Collections.emptyList(), Collections.emptyList());
+                assertNull(new AdaptiveActionSelector().select(data, profile,
+                        Collections.singletonList(action), 80, Membership.P2P, 0, 10000, 1, false));
+            }
+        }
+    }
+
     private static ActionDef action(Skill skill, String name, float xp)
     {
         return new ActionDef(skill, "test:" + name.toLowerCase(Locale.ROOT).replace(' ', '_'),

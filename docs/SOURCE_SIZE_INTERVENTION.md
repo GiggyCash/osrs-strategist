@@ -212,3 +212,12 @@ tokens, with no added schema, validator or production file. Exact IDs also remov
 the fabricated spacing in the old adamant unfinished-item name. The RuneLite
 dragon-bolt icon/label issue is documented separately rather than hidden behind
 a speculative alias. No broad method expansion is implied.
+
+## Final raw-name transformation removed
+
+RAW_ACTION_ITEM and its prefix/suffix logic are deleted. The unresolved karambwan
+profile now uses the reviewed-input boundary and cannot manufacture an ingredient
+list while its cooking lesson and execution setup remain unobserved. Net change:
+-5 production Java lines / -198 characters / -50 estimated tokens; no new
+production file, schema, validator or recipe record. This deliberately preserves
+the unresolved route instead of expanding support without an access contract.
