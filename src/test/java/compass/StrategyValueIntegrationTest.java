@@ -20,6 +20,29 @@ import org.junit.Test;
 public class StrategyValueIntegrationTest
 {
     @Test
+    public void differentRoutesToSameLevelCompeteWithoutBorrowingValueOrGuidance()
+    {
+        Recommendation ordinary = recommendation("skill:ordinary", method("route:ordinary", Skill.FARMING), 70, 75);
+        Guidance chosenGuidance = new Guidance("Use the valuable route", "Its own supplies", "Its own location", "Verified");
+        Recommendation valuable = recommendation("skill:valuable", method("route:valuable", Skill.FARMING), 70, 75)
+                .withGuidance(chosenGuidance)
+                .withStrategicValue(StrategicValue.builder().unlockValue(1).evidence("route:valuable").build());
+        RecommendationDeduplicator deduplicator = new RecommendationDeduplicator();
+        assertEquals(deduplicator.semanticKey(ordinary), deduplicator.semanticKey(valuable));
+        assertEquals(2, deduplicator.deduplicate(Arrays.asList(ordinary, valuable)).size());
+        StrategyContext context = context(account("MAIN"), GameData.builder(account("MAIN")).build());
+        for (List<Recommendation> pool : Arrays.asList(Arrays.asList(ordinary, valuable), Arrays.asList(valuable, ordinary)))
+        {
+            List<Recommendation> queue = engine(null, null).buildPlayerQueue(pool, context);
+            assertEquals(1, queue.size());
+            assertEquals(valuable.id, queue.get(0).id);
+            assertSame(chosenGuidance, queue.get(0).guidance);
+            assertSame(valuable.plan(), queue.get(0).plan());
+            assertEquals(valuable.score, queue.get(0).score, 0);
+        }
+    }
+
+    @Test
     public void unsafeDuplicateCannotEraseASafeExecutableCandidate()
     {
         Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());
@@ -244,7 +267,7 @@ public class StrategyValueIntegrationTest
         TrainingPlan plan = new TrainingPlan(method, "test",
                 Confidence.VERIFIED,
                 Collections.emptyList());
-        return new Recommendation(id, "Train Farming", "Test.", 40.0,
+        return new Recommendation(id, "Train Farming to " + target, "Test.", 40.0,
                 plan, Confidence.VERIFIED, current, target,
                 guidance(), Safety.skill(false,
                         method.getSkill()));

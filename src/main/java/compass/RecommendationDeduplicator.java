@@ -21,11 +21,22 @@ public final class RecommendationDeduplicator
                     || !Double.isFinite(candidate.strategicValue.scoreDelta())) continue;
             // Do not allow weaker evidence to borrow VERIFIED status from an
             // equivalent-looking action emitted by another provider.
-            var key = semanticKey(candidate) + "|" + candidate.confidence;
+            var key = semanticKey(candidate) + "|" + candidate.confidence + executionKey(candidate);
             var previous = merged.get(key);
             merged.put(key, previous == null ? candidate : merge(previous, candidate));
         }
         return new ArrayList<>(merged.values());
+    }
+
+    private static String executionKey(Recommendation candidate)
+    {
+        TrainingPlan plan = candidate.plan();
+        if (plan == null || plan.method() == null) return "";
+        // A shared skill target is a feedback identity, not proof of equivalent
+        // setup or outputs. Keep route-specific value attached to its own plan.
+        String route = canonicalActivity(candidate, plan) == null ? "|method:" + plan.method().id : "";
+        return route + (plan.readiness == null || plan.readiness.recipe == null
+                ? "" : "|recipe:" + plan.readiness.recipe.id);
     }
 
     String semanticKey(Recommendation candidate)

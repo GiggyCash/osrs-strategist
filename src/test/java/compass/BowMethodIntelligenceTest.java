@@ -174,6 +174,29 @@ public class BowMethodIntelligenceTest
         return new MethodGuidanceService(null).build(recommendation, null);
     }
 
+    @Test
+    public void distinctRecipesOfTheSameMethodKeepTheirOwnExecutionEvidence()
+    {
+        List<Recommendation> candidates = new ArrayList<>();
+        for (int logId : new int[] {1511, 1515})
+        {
+            List<ItemState> carried = MethodIntelligenceTest.carried(logId, logId == 1511 ? "Logs" : "Yew logs", 4);
+            carried.add(new ItemState(946, "Knife", 1));
+            MethodReadiness readiness = evaluate(MethodIntelligenceTest.data(2, -1, carried, Collections.emptyList()), 0);
+            assertTrue(readiness.actionable());
+            TrainingPlan plan = new TrainingPlan(method, "Test", Confidence.VERIFIED, readiness.checks()).withReadiness(readiness);
+            candidates.add(new Recommendation("skill:fletching:" + logId, "Train Fletching to 85", "Test", 20,
+                    plan, Confidence.VERIFIED, 80, 85, readiness.guidance(85)));
+        }
+        List<Recommendation> distinct = new RecommendationDeduplicator().deduplicate(candidates);
+        assertEquals(2, distinct.size());
+        assertSame(candidates.get(0), distinct.get(0));
+        assertSame(candidates.get(1), distinct.get(1));
+        assertEquals("longbow_cutting", distinct.get(0).plan().readiness.recipe.id);
+        assertEquals("yew_longbow_cutting", distinct.get(1).plan().readiness.recipe.id);
+        assertEquals(1, new RecommendationDeduplicator().deduplicate(Arrays.asList(candidates.get(0), candidates.get(0))).size());
+    }
+
     private MethodReadiness evaluate(GameData data, int price)
     {
         AccountResourcePlanner resources = new AccountResourcePlanner(new MarketPriceService(null)
