@@ -389,3 +389,12 @@ knife use, membership and nonstackability; revisions match the twelve shared
 input records. Recipe output identities are 50/48,54/56,60/58,64/62,68/66,72/70
 (shortbow/longbow pairs, ordinary through magic). Stringing and crossbows are not
 part of this contract. No production Java or schema extension was needed.
+
+## Preparation order across guidance surfaces
+
+Shared method guidance now prefixes processing with every pending preparation
+step action, including purchase, retrieval and unequipping, as well as acquisition.
+Previously only acquisition appeared before processing in this text, although the
+sidebar already selected the next preparation step. Ready carried inputs add no
+prefix. The Method Guidance checklist consumes this shared action text, so it no
+longer starts processing while an ordinary preparation step is still pending.

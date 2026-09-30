@@ -74,10 +74,10 @@ final class MethodReadiness
     Guidance guidance(int target)
     {
         if (!actionable()) return null;
-        List<String> acquisition = new ArrayList<>();
+        List<String> pending = new ArrayList<>();
         for (MethodPreparation.Step step : preparation.steps)
-            if (step.kind == MethodPreparation.Kind.ACQUIRE) acquisition.add(step.reason);
-        String first = acquisition.isEmpty() ? "" : "First, " + String.join(" ", acquisition) + " Then ";
+            if (step.action != null && !step.action.trim().isEmpty()) pending.add(step.action);
+        String first = pending.isEmpty() ? "" : "First, " + String.join(" ", pending) + " Then ";
         String action = first + processingAction(target);
         return new Guidance(action, preparation.explanation(), method.location,
                 "Retain " + recipe.outputDescription + ". No disposal is assumed. "

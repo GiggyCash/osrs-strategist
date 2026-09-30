@@ -129,6 +129,24 @@ public class BowMethodIntelligenceTest
                 .bank(bank).build();
     }
 
+    @Test
+    public void sharedGuidancePutsPurchaseAndRetrievalBeforeProcessing()
+    {
+        MethodReadiness purchase = evaluate(MethodIntelligenceTest.data(0, 500,
+                Collections.emptyList(), Collections.emptyList()), 100);
+        assertTrue(purchase.guidance(85).getAction().startsWith("First, Buy "));
+        assertTrue(purchase.guidance(85).getAction().contains(" Then Use a knife"));
+        List<ItemState> stock = logs(4);
+        stock.add(new ItemState(946, "Knife", 1));
+        MethodReadiness retrieval = evaluate(MethodIntelligenceTest.data(1, -1,
+                Collections.emptyList(), stock), 0);
+        assertTrue(retrieval.guidance(85).getAction().startsWith("First, Withdraw observed bank stock:"));
+        MethodReadiness ready = evaluate(MethodIntelligenceTest.data(1, -1,
+                stock, Collections.emptyList()), 0);
+        assertTrue(ready.guidance(85).getAction().startsWith("Use a knife"));
+        assertFalse(ready.guidance(85).getAction().contains("First,"));
+    }
+
     private MethodReadiness evaluate(GameData data, int price)
     {
         AccountResourcePlanner resources = new AccountResourcePlanner(new MarketPriceService(null)
