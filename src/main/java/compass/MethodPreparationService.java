@@ -51,7 +51,7 @@ final class MethodPreparationService
             {
                 boolean retained = equippedReusable.contains(need.itemId);
                 add(steps, MethodPreparation.Kind.EQUIPPED, need, equipped,
-                        retained ? "Use equipped reusable tool: " : "Unequip observed input: ");
+                        retained ? "Use equipped reusable tool: " : "Unequip observed input: ", !retained);
                 remaining -= equipped;
                 preparation |= !retained;
             }
@@ -159,7 +159,14 @@ final class MethodPreparationService
     private static void add(List<MethodPreparation.Step> steps, MethodPreparation.Kind kind,
             MethodInput need, int quantity, String reason)
     {
+        add(steps, kind, need, quantity, reason, kind != MethodPreparation.Kind.CARRIED);
+    }
+
+    private static void add(List<MethodPreparation.Step> steps, MethodPreparation.Kind kind,
+            MethodInput need, int quantity, String reason, boolean actionRequired)
+    {
+        String detail = reason + quantity + " " + need.name + ".";
         steps.add(new MethodPreparation.Step(kind, new MethodInput(need.name, need.itemId, quantity),
-                RequirementState.VERIFIED, reason + quantity + " " + need.name + "."));
+                RequirementState.VERIFIED, detail, actionRequired ? detail : null, null));
     }
 }

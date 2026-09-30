@@ -14,9 +14,18 @@ final class MethodPreparation
         final MethodInput input;
         final RequirementState evidence;
         final String reason;
+        final String action, location;
 
         Step(Kind kind, MethodInput input, RequirementState evidence, String reason)
         {
+            this(kind, input, evidence, reason, kind == Kind.CARRIED ? null : reason, null);
+        }
+
+        Step(Kind kind, MethodInput input, RequirementState evidence, String reason,
+                String action, String location)
+        {
+            this.action = action;
+            this.location = location;
             this.kind = kind;
             this.input = input;
             this.evidence = evidence;
@@ -36,6 +45,23 @@ final class MethodPreparation
     }
 
     boolean feasible() { return state == State.READY || state == State.VERIFIED; }
+
+    Step nextAction()
+    {
+        if (!feasible()) return null;
+        for (Step step : steps)
+            if (step.action != null && !step.action.trim().isEmpty()) return step;
+        return null;
+    }
+
+    String compactSupplies()
+    {
+        List<String> items = new ArrayList<>();
+        for (Step step : steps)
+            items.add(step.input.quantity + " " + step.input.name
+                    + (step.action == null ? " (ready)" : " (prepare)"));
+        return String.join("; ", items);
+    }
 
     String explanation()
     {

@@ -57,7 +57,8 @@ final class MethodAcquisitionCatalog
         return new MethodPreparation.Step(MethodPreparation.Kind.ACQUIRE, need, RequirementState.VERIFIED,
                 "Collect " + need.quantity + " " + need.name + " at " + source.location + ". "
                         + source.action + " If the spawn is absent, wait for it to reappear; "
-                        + "recheck your carried quantity after each pickup. No spawn timing is assumed.");
+                        + "recheck your carried quantity after each pickup. No spawn timing is assumed.",
+                "Collect " + need.quantity + " " + need.name + ".", source.location);
     }
 
     private static boolean text(String value) { return value != null && !value.trim().isEmpty(); }

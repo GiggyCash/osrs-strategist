@@ -42,7 +42,17 @@ public final class Presentation
         var guidance = recommendation.guidance;
         if (guidance != null)
         {
-            appendCompactGuidance(text, guidance);
+            MethodReadiness readiness = plan.readiness;
+            if (readiness != null && readiness.actionable())
+            {
+                MethodPreparation.Step next = readiness.preparation.nextAction();
+                appendCompactGuidance(text, new Guidance(
+                        next == null ? guidance.getAction() : next.action,
+                        readiness.preparation.compactSupplies(),
+                        next != null && hasText(next.location) ? next.location : guidance.location,
+                        guidance.note));
+            }
+            else appendCompactGuidance(text, guidance);
         }
 
         var unresolved = hardUnresolved(plan);
@@ -109,7 +119,7 @@ public final class Presentation
         return toPlainText(detailedHtml(recommendation, goalContext));
     }
 
-    /** Four compact sections retain the useful decision without graph dumps. */
+    /** Compact decision sections, with complete typed preparation when setup is pending. */
     public static List<Section> detailsSections(Recommendation recommendation,
             GoalRecommendationContext goalContext)
     {
@@ -128,6 +138,20 @@ public final class Presentation
         var why = playerWhy(recommendation);
         if (hasText(why))
             sections.add(new Section("WHY", compactSentence(why, 140)));
+
+        var plan = recommendation.plan();
+        if (plan != null && plan.readiness != null && plan.readiness.actionable()
+                && plan.readiness.preparation.nextAction() != null)
+        {
+            // Setup can contain several necessary actions. Keep every step in the
+            // fuller view instead of losing later items to prose/section truncation.
+            sections.add(new Section("SETUP", plan.readiness.preparation.explanation()));
+            if (guidance != null && hasText(guidance.location))
+                sections.add(new Section("WHERE", guidance.location));
+            sections.add(new Section("AFTER SETUP",
+                    plan.readiness.processingAction(recommendation.targetLevel)));
+            return unmodifiableList(sections);
+        }
 
         var needed = firstNeeded(recommendation);
         if (hasText(needed))

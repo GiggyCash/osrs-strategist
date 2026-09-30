@@ -61,19 +61,24 @@ final class MethodReadiness
         return (preparation.state == MethodPreparation.State.READY ? 10 : 0) - burden;
     }
 
+    String processingAction(int target)
+    {
+        target = Math.min(target, reviewLevel);
+        int remaining = Math.max(0, net.runelite.api.Experience.getXpForLevel(target) - currentXp);
+        return recipe.action + " Process at most " + batch + " actions in this batch. "
+                + "Stop at level " + target + " or when this batch is used, whichever comes first; "
+                + "review supplies and capacity before repeating. " + remaining + " "
+                + recipe.skill.getName() + " XP remaining to this checkpoint.";
+    }
+
     Guidance guidance(int target)
     {
         if (!actionable()) return null;
-        target = Math.min(target, reviewLevel);
-        int remaining = Math.max(0, net.runelite.api.Experience.getXpForLevel(target) - currentXp);
         List<String> acquisition = new ArrayList<>();
         for (MethodPreparation.Step step : preparation.steps)
             if (step.kind == MethodPreparation.Kind.ACQUIRE) acquisition.add(step.reason);
         String first = acquisition.isEmpty() ? "" : "First, " + String.join(" ", acquisition) + " Then ";
-        String action = first + recipe.action + " Process at most " + batch + " actions in this batch. "
-                + "Stop at level " + target + " or when this batch is used, whichever comes first; "
-                + "review supplies and capacity before repeating. " + remaining + " "
-                + recipe.skill.getName() + " XP remaining to this checkpoint.";
+        String action = first + processingAction(target);
         return new Guidance(action, preparation.explanation(), method.location,
                 "Retain " + recipe.outputDescription + ". No disposal is assumed. "
                         + "A working batch is verified; processing outcomes and sustained efficiency are not inferred from available space.",

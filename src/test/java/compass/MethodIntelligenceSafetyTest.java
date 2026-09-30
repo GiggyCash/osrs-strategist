@@ -139,6 +139,7 @@ public class MethodIntelligenceSafetyTest
         assertEquals(MethodPreparation.State.READY, prep.state);
         assertTrue(prep.explanation().contains("equipped reusable tool"));
         assertFalse(prep.explanation().contains("Unequip"));
+        assertNull(prep.nextAction());
     }
 
     private static MethodReadiness readiness(GameData data)

@@ -998,16 +998,17 @@ class MethodGuidanceService
                     GuidanceStepState.COMPLETE));
         }
 
+        boolean completePreparation = plan.readiness != null && plan.readiness.actionable();
         String bring = guidance == null ? null
-                : Presentation.compactSentence(
+                : completePreparation ? guidance.supplies : Presentation.compactSentence(
                         guidance.supplies, 120);
         String where = guidance == null ? null
-                : Presentation.compactSentence(
+                : completePreparation ? guidance.location : Presentation.compactSentence(
                         guidance.location, 110);
         String action = guidance == null
                 ? method.instructions
                 : guidance.getAction();
-        action = Presentation.compactSentence(action, 135);
+        if (!completePreparation) action = Presentation.compactSentence(action, 135);
         String progress = guidance != null
                 && guidance.getProgress() != null
                 && !guidance.getProgress().trim().isEmpty()
