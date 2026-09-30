@@ -328,3 +328,17 @@ one reviewed iron 2h sword row preserves the existing F2P level-29 route.
 Other anvil actions require evidence-backed migration before exact planning.
 Legacy exact furnace records remain separate and are not certified by this
 change; furnace success conditions and action-unit semantics need a later audit.
+
+## Standard furnace recipes and iron uncertainty
+
+Seven ordinary furnace recipes now use reviewed records with concrete ore IDs,
+nonstackable inventory inputs and revision provenance. Their standard base XP
+matches current RuneLite SmithingAction. Blast Furnace, catalysts and boosted XP
+are separate setups, not inferred from these records.
+
+Iron bar was removed from the legacy exact recipe list. The Wiki (Iron bar,
+revision 15315108) documents ore loss without XP in ordinary furnace smelting.
+The context-free resolver cannot prove an equipped/charged ring of forging,
+Superheat Item or Blast Furnace setup, so it cannot promise one ore per successful
+bar. Iron input quantities remain unresolved; no expected RNG count is labelled
+exact. This does not affect consuming iron bars at an anvil.

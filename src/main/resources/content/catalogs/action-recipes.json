@@ -15,14 +15,6 @@
   {"skill":"CRAFTING","match":"tiara","setup":"Bring a tiara mould to the Edgeville furnace, smelt each silver bar, bank, and repeat.","inputs":["Silver bar"],"units":[1]},
   {"skill":"CRAFTING","match":"gold tiara","setup":"Bring a tiara mould to a furnace.","inputs":["Gold bar"],"units":[1]},
 
-  {"skill":"SMITHING","match":"bronze bar","setup":"Standard furnace recipe.","inputs":["Copper ore","Tin ore"],"units":[1,1]},
-  {"skill":"SMITHING","match":"iron bar","setup":"Standard furnace recipe.","inputs":["Iron ore"],"units":[1]},
-  {"skill":"SMITHING","match":"silver bar","setup":"Standard furnace recipe.","inputs":["Silver ore"],"units":[1]},
-  {"skill":"SMITHING","match":"gold bar","setup":"Standard furnace recipe.","inputs":["Gold ore"],"units":[1]},
-  {"skill":"SMITHING","match":"steel bar","setup":"Standard furnace recipe.","inputs":["Iron ore","Coal"],"units":[1,2]},
-  {"skill":"SMITHING","match":"mithril bar","setup":"Standard furnace recipe.","inputs":["Mithril ore","Coal"],"units":[1,4]},
-  {"skill":"SMITHING","match":"adamantite bar","setup":"Standard furnace recipe.","inputs":["Adamantite ore","Coal"],"units":[1,6]},
-  {"skill":"SMITHING","match":"runite bar","setup":"Standard furnace recipe.","inputs":["Runite ore","Coal"],"units":[1,8]},
 
   {"skill":"MAGIC","match":"wind strike","setup":"Full base rune cost.","inputs":["Air rune","Mind rune"],"units":[1,1]},
   {"skill":"MAGIC","match":"fire bolt","setup":"Full base rune cost.","inputs":["Air rune","Fire rune","Chaos rune"],"units":[3,4,1]},

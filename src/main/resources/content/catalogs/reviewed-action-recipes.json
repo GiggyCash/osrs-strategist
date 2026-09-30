@@ -2726,5 +2726,179 @@
     "sourceRevision": 15320140,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Copper ore",
+      "Tin ore"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      436,
+      438
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Bronze_bar",
+    "sourceRevision": 15315107,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "silver bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Silver ore"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      442
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Silver_bar",
+    "sourceRevision": 15315110,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "gold bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Gold ore"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      444
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Gold_bar",
+    "sourceRevision": 15315117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Iron ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      2
+    ],
+    "itemIds": [
+      440,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Steel_bar",
+    "sourceRevision": 15315116,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Mithril ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      4
+    ],
+    "itemIds": [
+      447,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Mithril_bar",
+    "sourceRevision": 15315118,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamantite bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Adamantite ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      6
+    ],
+    "itemIds": [
+      449,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Adamantite_bar",
+    "sourceRevision": 15332236,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "runite bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Runite ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      8
+    ],
+    "itemIds": [
+      451,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Runite_bar",
+    "sourceRevision": 15346872,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

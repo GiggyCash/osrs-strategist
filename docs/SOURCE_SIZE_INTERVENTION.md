@@ -366,3 +366,12 @@ new production file. One reviewed iron 2h sword row preserves an existing F2P
 route (Wiki revision 15320140, three iron bars, XP agrees with RuneLite).
 Regression coverage exercises invented and unreviewed names across membership
 states, plus retained reviewed quantities.
+
+## Furnace recipe consolidation
+
+Moved seven deterministic standard-furnace input records from the legacy recipe
+list into the shared reviewed catalog and removed the unconditional iron ore
+claim. No Java production growth or new schema. This checkpoint consolidates
+existing knowledge and fixes uncertain supply arithmetic rather than adding a
+training route. Regression tests protect iron uncertainty and retained furnace
+input IDs/quantities across membership states.

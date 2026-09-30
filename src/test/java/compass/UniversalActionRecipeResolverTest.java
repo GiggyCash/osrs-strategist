@@ -13,6 +13,37 @@ public class UniversalActionRecipeResolverTest
             new UniversalActionRecipeResolver();
 
     @Test
+    public void ironSmeltingCannotPromiseOrePerSuccessfulBarWithoutSetupEvidence()
+    {
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.SMITHING, "Iron bar", 12.5f), 100, membership);
+            assertFalse(recipe.hasExactInputs());
+            assertTrue(recipe.getInputs().isEmpty());
+        }
+    }
+
+    @Test
+    public void standardFurnaceInputsRetainVerifiedIdentitiesAndQuantities()
+    {
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe bronze = resolver.resolve(
+                    action(Skill.SMITHING, "Bronze bar", 6.2f), 10, membership);
+            assertInput(bronze, "Copper ore", 10);
+            assertInput(bronze, "Tin ore", 10);
+            assertEquals(436, bronze.getInputs().get(0).itemId);
+            UniversalActionRecipe rune = resolver.resolve(
+                    action(Skill.SMITHING, "Runite bar", 50), 10, membership);
+            assertInput(rune, "Runite ore", 10);
+            assertInput(rune, "Coal", 80);
+            assertEquals(451, rune.getInputs().get(0).itemId);
+            assertEquals(453, rune.getInputs().get(1).itemId);
+        }
+    }
+
+    @Test
     public void windStrikeHasExactRuneInputs()
     {
         UniversalActionRecipe recipe = resolver.resolve(
