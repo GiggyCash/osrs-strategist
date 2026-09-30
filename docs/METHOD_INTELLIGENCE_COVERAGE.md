@@ -86,3 +86,10 @@ OsrsStrategistPlugin.onItemContainerChanged marks inventory, equipment, bank and
 Group Storage changes for account refresh; onStatChanged marks level changes.
 Existing plugin tests cover strategic-container filtering and refresh coalescing.
 This establishes snapshot and event-routing coverage, not an in-client playtest.
+
+### Gem migration preflight
+
+[Gem flow research](GEM_METHOD_MIGRATION_REVIEW.md) verifies the six existing
+recipe outputs/tools/levels and identifies an unresolved recipe-value ranking
+issue. Affordability plus a higher level is insufficient to choose expensive
+training inputs. No gem full contract is enabled by that research.
