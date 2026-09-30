@@ -192,3 +192,21 @@ if a caller labels the output item free. Per-output source revisions are stored
 in the data; molten glass identity/non-stackability comes from revision 15288555.
 This removes the Java substring rule and does not add a new training method or
 assert full tool/access/capacity readiness from ingredient resolution alone.
+
+## Existing ordinary dart assembly family
+
+The eight ordinary dart types in RuneLite (bronze, iron, steel, mithril, adamant,
+rune, amethyst and dragon) now resolve to exact reviewed tip IDs plus ordinary
+feathers. Wiki recipes show ten tips and ten feathers producing ten darts;
+normalized calculator quantities are one of each per individual dart. Both
+inputs are stackable. The recipes remain members-only. Colored-feather variants,
+poisoning and tip production are separate routes, not inferred alternatives.
+
+The suffix-based dart-input guess is removed. Unknown dart names and atlatl
+variants now remain unresolved in universal recipe guidance instead of receiving
+invented tip names. This review found that Atlatl dart Wiki revision 15343589
+models 30 Fletching XP per 20 outputs, whereas the inspected public RuneLite
+FletchingAction entry supplies 9.5 per dart. Atlatl assembly also uses headless
+atlatl darts and atlatl dart tips, not the ordinary tip/feather pair. Resolve that
+XP/input discrepancy in a separate reviewed slice before enabling its recipe.
+No new training method or full readiness contract is introduced here.

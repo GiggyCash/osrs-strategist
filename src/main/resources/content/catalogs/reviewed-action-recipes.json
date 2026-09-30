@@ -964,5 +964,213 @@
     "sourceRevision": 15183962,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze dart",
+    "inputs": [
+      "Bronze dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      819,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dart",
+    "sourceRevision": 15301674,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron dart",
+    "inputs": [
+      "Iron dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      820,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_dart",
+    "sourceRevision": 15301682,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel dart",
+    "inputs": [
+      "Steel dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      821,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_dart",
+    "sourceRevision": 15301693,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril dart",
+    "inputs": [
+      "Mithril dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      822,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_dart",
+    "sourceRevision": 15301685,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant dart",
+    "inputs": [
+      "Adamant dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      823,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_dart",
+    "sourceRevision": 15301656,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune dart",
+    "inputs": [
+      "Rune dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      824,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_dart",
+    "sourceRevision": 15355936,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "amethyst dart",
+    "inputs": [
+      "Amethyst dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      25853,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Amethyst_dart",
+    "sourceRevision": 15301666,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon dart",
+    "inputs": [
+      "Dragon dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      11232,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_dart",
+    "sourceRevision": 15301677,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

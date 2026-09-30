@@ -179,3 +179,14 @@ output-item membership from crafting membership and the calculator Fishbowl
 label from the empty bowl produced. Tests preserve canonical input quantities
 and reject filled/unknown products and members crafting on F2P accounts. No
 schema, validator, per-method Java or broad method coverage was added.
+
+## Ordinary dart inference removed
+
+Eight reviewed rows replace the legacy two-line dart-suffix/first-word ingredient
+guess. No replacement Java or schema was added: -2 production lines / -143
+characters / -36 estimated tokens. Exact per-item quantities preserve the
+existing ordinary family; unsupported atlatl and invented variants fail closed.
+The atlatl input/XP discrepancy discovered during research is documented in
+METHOD_INTELLIGENCE.md. Other projectile inference and legacy execution-profile
+input transformations remain separate follow-up work, not certified by this
+migration.

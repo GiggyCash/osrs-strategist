@@ -3227,8 +3227,6 @@ class UniversalActionRecipeResolver
             return recipe("Bring a knife.", n, wood(name, null),
                     lower.endsWith(" shield") ? 2 : 1);
         var metal = firstWord(name);
-        if (lower.endsWith(" dart") || lower.endsWith(" darts"))
-            return recipe(get(916), n, metal + " dart tip", 1, "Feather", 1);
         if (lower.contains("broad arrow")) return recipe(get(917), n,
                 "Headless arrow", 1, "Broad arrowhead", 1);
         if (projectile(lower, "arrow")) return recipe(get(918), n,
