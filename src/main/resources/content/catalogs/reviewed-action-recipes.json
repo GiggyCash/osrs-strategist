@@ -810,5 +810,159 @@
     "sourceRevision": 15320213,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "beer glass",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make beer glass.",
+    "source": "https://oldschool.runescape.wiki/w/Beer_glass",
+    "sourceRevision": 15355509,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty candle lantern",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make empty candle lantern.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_candle_lantern",
+    "sourceRevision": 15188816,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty oil lamp",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make empty oil lamp.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_oil_lamp",
+    "sourceRevision": 15185200,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "vial",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make vial.",
+    "source": "https://oldschool.runescape.wiki/w/Vial",
+    "sourceRevision": 15183725,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "fishbowl",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make an empty fishbowl.",
+    "source": "https://oldschool.runescape.wiki/w/Fishbowl",
+    "sourceRevision": 15286250,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unpowered orb",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make unpowered orb.",
+    "source": "https://oldschool.runescape.wiki/w/Unpowered_orb",
+    "sourceRevision": 15218232,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "lantern lens",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make lantern lens.",
+    "source": "https://oldschool.runescape.wiki/w/Lantern_lens",
+    "sourceRevision": 15183962,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

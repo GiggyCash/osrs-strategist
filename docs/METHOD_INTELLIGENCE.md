@@ -174,3 +174,21 @@ method, orb-charging plan or transmutation route. F2P and unknown membership
 cannot resolve these members recipes, even if an action is mislabeled. Unknown
 staff names remain unresolved instead of acquiring guessed ingredients. Existing
 level/access/resource/readiness checks retain their separate responsibilities.
+
+## Existing glassblowing family
+
+Seven existing RuneLite calculator actions now resolve through reviewed rows:
+beer glass, empty candle lantern, empty oil lamp, vial, fishbowl, unpowered orb
+and lantern lens. Each consumes one molten glass per attempt and retains the
+instruction to use a glassblowing pipe. The calculator's Fishbowl label describes
+making the empty bowl; its setup text says so explicitly. Filled lamps/bowls,
+vials of water and arbitrary names containing those words do not inherit this
+recipe. Light orbs are outside this migration's previously supported family.
+
+Crafting membership is taken from each Wiki creation recipe, not the output
+item's infobox. Beer glass and vial are free items with members-only glassblowing
+recipes. Their reviewed rows therefore reject F2P and unknown membership even
+if a caller labels the output item free. Per-output source revisions are stored
+in the data; molten glass identity/non-stackability comes from revision 15288555.
+This removes the Java substring rule and does not add a new training method or
+assert full tool/access/capacity readiness from ingredient resolution alone.

@@ -3189,10 +3189,6 @@ class UniversalActionRecipeResolver
         if (gemName(lower) != null && !jewellery(lower) && !lower.contains("bolt"))
             return recipe("Bring a chisel.", n,
                     lower.startsWith("uncut ") ? name : "Uncut " + lower, 1);
-        if (contains(lower, "beer glass", "candle lantern", "oil lamp", "vial",
-                "fishbowl", "unpowered orb", "lantern lens")
-                && !lower.contains("molten"))
-            return recipe(get(909), n, "Molten glass", 1);
         if (lower.contains("bird house"))
             return recipe(get(911), n, wood(name, "Logs"), 1);
         if (contains(lower, "d'hide", "dragonhide"))

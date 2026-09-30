@@ -169,3 +169,13 @@ retain the four canonical recipes and reject invented higher-XP staff candidates
 for Main/Iron/UIM; membership is explicit in the reviewed records. Remaining
 Crafting gem, jewellery, leather, glass and bird-house inference still requires
 its own evidence-backed migration. No broad method expansion is implied.
+
+## Glassblowing inference removed
+
+Seven existing calculator actions now reuse the shared reviewed schema. Deleted
+the four-line glass-product substring rule, with no replacement production Java.
+Net delta: -4 lines / -246 characters / -62 estimated tokens. Review distinguished
+output-item membership from crafting membership and the calculator Fishbowl
+label from the empty bowl produced. Tests preserve canonical input quantities
+and reject filled/unknown products and members crafting on F2P accounts. No
+schema, validator, per-method Java or broad method coverage was added.
