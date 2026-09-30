@@ -82,6 +82,53 @@ public class BowMethodIntelligenceTest
         assertEquals(4, ready.batch);
     }
 
+    @Test
+    public void levelBoundariesChangeRecipeWithoutInventingLockedOutputs()
+    {
+        List<ItemState> carried = logs(4);
+        carried.add(new ItemState(946, "Knife", 1));
+        for (int level : new int[] {4, 5, 9, 10})
+        {
+            GameData data = atLevel(level, new ItemsState(carried, true), ItemsState.unknown());
+            MethodReadiness ready = evaluate(data, 0);
+            if (level < 5) assertFalse(ready.actionable());
+            else
+            {
+                assertTrue(ready.actionable());
+                assertEquals(level < 10 ? "shortbow_cutting" : "longbow_cutting", ready.recipe.id);
+                assertTrue(ready.recipe.level <= level);
+            }
+        }
+    }
+
+    @Test
+    public void consumedLogsRetainedOutputsAndMovedKnifeInvalidateReadyState()
+    {
+        List<ItemState> carried = logs(4);
+        carried.add(new ItemState(946, "Knife", 1));
+        assertEquals(MethodPreparation.State.READY,
+                evaluate(atLevel(10, new ItemsState(carried, true), ItemsState.unknown()), 0).preparation.state);
+        List<ItemState> outputs = MethodIntelligenceTest.carried(48, "Longbow (u)", 27);
+        outputs.add(new ItemState(946, "Knife", 1));
+        assertFalse(evaluate(atLevel(10, new ItemsState(outputs, true), ItemsState.unknown()), 0).actionable());
+        MethodReadiness moved = evaluate(atLevel(10, new ItemsState(logs(4), true),
+                new ItemsState(Collections.singletonList(new ItemState(946, "Knife", 1)), true)), 0);
+        assertNotEquals(MethodPreparation.State.READY, moved.preparation.state);
+        for (MethodPreparation.Step step : moved.preparation.steps)
+            assertNotEquals(MethodPreparation.Kind.RETRIEVE, step.kind);
+        assertFalse(evaluate(atLevel(10, ItemsState.unknown(), ItemsState.unknown()), 0).actionable());
+    }
+
+    private static GameData atLevel(int level, ItemsState inventory, ItemsState bank)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        levels.put(Skill.FLETCHING, level);
+        AccountSnapshot account = new AccountSnapshot("test", 1, 2, "ULTIMATE_IRONMAN", Membership.P2P,
+                1, level, 0, levels, Collections.emptyMap());
+        return GameData.builder(account).inventory(inventory).equipment(new ItemsState(Collections.emptyList(), true))
+                .bank(bank).build();
+    }
+
     private MethodReadiness evaluate(GameData data, int price)
     {
         AccountResourcePlanner resources = new AccountResourcePlanner(new MarketPriceService(null)

@@ -75,3 +75,14 @@ Tests exercise retained output capacity, knife space, Main purchase affordabilit
 Iron purchase exclusion, UIM bank exclusion, membership fail-closed behavior and
 recipe changes with carried log types. This is evidence for this route only;
 the broader domain gaps above remain open.
+
+### Bow transition verification
+
+Additional snapshot tests cover levels 4/5/9/10, a full inventory of retained
+unstrung bows, moving the knife into a UIM conventional bank, and unknown
+inventory observation. These transitions invalidate readiness or change the
+selected recipe as appropriate. Production event routing was inspected:
+OsrsStrategistPlugin.onItemContainerChanged marks inventory, equipment, bank and
+Group Storage changes for account refresh; onStatChanged marks level changes.
+Existing plugin tests cover strategic-container filtering and refresh coalescing.
+This establishes snapshot and event-routing coverage, not an in-client playtest.
