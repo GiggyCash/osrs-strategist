@@ -49,7 +49,7 @@ public final class ItemIndex
                             + need.getRequiredQuantity() + "."
                     : get(1437) + observed + get(707));
         }
-        if (data == null || data.bank() == null)
+        if (!bankObserved())
             return checkNeeded(need, get(1437) + observed
                     + get(1438));
         return checkNeeded(need, "Only " + observed + get(1439)
@@ -152,7 +152,7 @@ public final class ItemIndex
 
     public String bestInventoryName(ToIntFunction<String> rank)
     {
-        return data == null || data.inventory() == null ? null
+        return data == null || !observed(data.inventory()) ? null
                 : bestName(rank, Collections.singletonList(data.inventory().getItems()));
     }
 
@@ -174,7 +174,7 @@ public final class ItemIndex
     public int equippedQuantityMatching(ItemRequirementClass itemClass,
             Iterable<String> excludedNames)
     {
-        return data == null || data.equipment() == null ? 0
+        return data == null || !observed(data.equipment()) ? 0
                 : quantityMatching(data.equipment().getEquippedItems(),
                         itemClass, excludedNames);
     }
@@ -188,28 +188,33 @@ public final class ItemIndex
     /** Returns the observed stack quantity in equipped slots. */
     public int equippedQuantity(String... names)
     {
-        return data == null || data.equipment() == null ? 0
+        return data == null || !observed(data.equipment()) ? 0
                 : quantityIn(data.equipment().getEquippedItems(), names);
     }
 
     public int inventoryQuantity(String... names)
     {
-        return data == null || data.inventory() == null ? 0
+        return data == null || !observed(data.inventory()) ? 0
                 : quantityIn(data.inventory().getItems(), names);
     }
 
     public int inventoryQuantityMatching(ItemRequirementClass itemClass,
             Iterable<String> excludedNames)
     {
-        return data == null || data.inventory() == null ? 0
+        return data == null || !observed(data.inventory()) ? 0
                 : quantityMatching(data.inventory().getItems(), itemClass, excludedNames);
+    }
+
+    private static boolean observed(ItemsState items)
+    {
+        return items != null && items.isObserved();
     }
 
     public boolean bankObserved()
     {
         return data != null && data.account() != null
                 && accountMode() != AccountMode.ULTIMATE_IRONMAN
-                && data.bank() != null;
+                && observed(data.bank());
     }
 
     /**
@@ -221,7 +226,7 @@ public final class ItemIndex
     public boolean primaryOwnershipObserved()
     {
         if (data == null || data.account() == null) return false;
-        if (data.inventory() == null || data.equipment() == null)
+        if (!observed(data.inventory()) || !observed(data.equipment()))
             return false;
         if (accountMode() == AccountMode.ULTIMATE_IRONMAN)
             return true;
@@ -244,7 +249,7 @@ public final class ItemIndex
     public boolean resourceContainersObserved()
     {
         if (data == null || data.account() == null
-                || data.inventory() == null) return false;
+                || !observed(data.inventory())) return false;
         var mode = accountMode();
         if (mode == AccountMode.ULTIMATE_IRONMAN) return true;
         if (!bankObserved()) return false;
@@ -269,10 +274,10 @@ public final class ItemIndex
     {
         List<Iterable<ItemState>> result = new ArrayList<>();
         if (data == null) return result;
-        if (data.inventory() != null) result.add(data.inventory().getItems());
-        if (data.equipment() != null) result.add(data.equipment().getEquippedItems());
+        if (observed(data.inventory())) result.add(data.inventory().getItems());
+        if (observed(data.equipment())) result.add(data.equipment().getEquippedItems());
         var mode = accountMode();
-        if (mode != AccountMode.ULTIMATE_IRONMAN && data.bank() != null)
+        if (mode != AccountMode.ULTIMATE_IRONMAN && observed(data.bank()))
             result.add(data.bank().getItems());
         if (usesGroupStorage()) result.add(data.groupStorage().getItems());
         if (data.storage() != null)

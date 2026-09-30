@@ -275,3 +275,17 @@ Net production change: 0 lines / +48 characters / +12 estimated tokens. No new
 production file, catalog data or policy service. Regression scenarios cover all
 six iron modes, UIM bank exclusion and enabled observed group storage; existing
 name-only profile scenarios continue to cover the legacy path.
+
+## Ownership queries respect explicit observation state
+
+ItemIndex now uses ItemsState.isObserved for ordinary inventory, equipment and
+bank evidence, rather than treating a non-null DTO as an observation. One shared
+predicate replaces the parallel null checks across ownership completeness,
+quantity queries and ranked-item queries. Unknown container payloads cannot
+satisfy supplies; independently observed carried stock remains countable even
+when the bank is unknown. A zero lower bound is not proof of an empty container.
+
+Net production change: +5 Java lines / +131 characters / +33 estimated tokens.
+No new production file or catalog data. Regression coverage distinguishes known
+empty and explicitly unknown snapshots across all account modes, rejects
+unobserved payloads, and preserves UIM's distinct resource/ownership boundaries.
