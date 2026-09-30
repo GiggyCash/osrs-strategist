@@ -350,7 +350,21 @@ name lookup only for legacy inputs without IDs. Adaptive selection, universal
 resource ranking, and account supply planning share that lookup. Restricted UIM
 storage uses the same identity rule without becoming directly usable.
 
-Supply grouping merges equal positive IDs despite different display labels and
-keeps different IDs distinct despite equal labels. Universal ranking accumulates
+Supply grouping keeps different IDs distinct despite equal labels; conflicting
+requirement labels for the same ID now fail closed under the checked merge below.
+Universal ranking accumulates
 required and owned totals in long values so multiple large ingredients cannot
 wrap the coverage denominator. Existing mode-safe container rules still apply.
+
+## Invalid supply requirements fail closed
+
+AccountResourcePlanner uses the same checked MethodInput merge as reviewed
+recipes and typed preparation. Null/malformed ingredients and duplicate totals
+above Integer.MAX_VALUE yield no supply plan, not a partial list or a capped
+requirement. Both guidance consumers stop when their planner cannot resolve the
+requirements. An explicit empty ingredient list remains valid.
+
+Conflicting names for the same ID inside a requirement list remain ambiguous and
+fail closed, matching preparation and recipe validation. A different live item
+display label still resolves by reviewed ID. Requirements without IDs retain
+normalized-name grouping.

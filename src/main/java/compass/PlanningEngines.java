@@ -64,7 +64,8 @@ class AccountResourcePlanner
         var groupIncluded = useGroupStorage && mode.isGroupIronman();
         var groupObserved = observed.groupStorageObserved();
 
-        var needs = merge(rawNeeds);
+        var needs = MethodInput.mergeExact(rawNeeds, false);
+        if (needs == null) return null;
         List<String> required = new ArrayList<>();
         List<String> verified = new ArrayList<>();
         List<String> missing = new ArrayList<>();
@@ -393,51 +394,6 @@ class AccountResourcePlanner
         return null;
     }
 
-    /** Merge duplicate recipe rows before comparing them with storage. */
-    private static List<MethodInput> merge(
-            List<MethodInput> rawNeeds)
-    {
-        if (rawNeeds == null || rawNeeds.isEmpty()) return new ArrayList<>();
-        Map<String, MutableNeed> merged = new LinkedHashMap<>();
-        for (MethodInput input : rawNeeds)
-        {
-            if (input == null || input.getName() == null
-                    || input.getName().trim().isEmpty()
-                    || input.quantity <= 0)
-            {
-                continue;
-            }
-            var key = input.itemId > 0 ? "id:" + input.itemId : "name:" + Names.lower(input.getName());
-            var existing = merged.get(key);
-            if (existing == null)
-            {
-                merged.put(key, new MutableNeed(
-                        input.getName().trim(),
-                        input.itemId,
-                        input.quantity));
-            }
-            else
-            {
-                existing.quantity = safeAdd(
-                        existing.quantity, input.quantity);
-            }
-        }
-
-        List<MethodInput> result = new ArrayList<>();
-        for (MutableNeed need : merged.values())
-        {
-            result.add(new MethodInput(
-                    need.name, need.itemId, need.quantity));
-        }
-        return result;
-    }
-
-    private static int safeAdd(int a, int b)
-    {
-        if (a >= Integer.MAX_VALUE - b) return Integer.MAX_VALUE;
-        return a + b;
-    }
-
     private static String join(List<String> parts)
     {
         if (parts == null || parts.isEmpty()) return "nothing";
@@ -458,19 +414,7 @@ class AccountResourcePlanner
     }
 
 
-    private static final class MutableNeed
-    {
-        private final String name;
-        private final int itemId;
-        private int quantity;
 
-        private MutableNeed(String name, int itemId, int quantity)
-        {
-            this.name = name;
-            this.itemId = itemId;
-            this.quantity = max(0, quantity);
-        }
-    }
 }
 
 /**

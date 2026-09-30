@@ -10,12 +10,25 @@ public class SharedMaterialIdentityTest
     private final List<MethodInput> needs = Collections.singletonList(new MethodInput("Uncut sapphire", 1623, 10));
 
     @Test
-    public void duplicateIdsMergeButMatchingLabelsCannotMergeDifferentIds()
+    public void invalidOrOverflowingNeedsCannotProducePartialSupplyGuidance()
+    {
+        GameData owned = data(1, 1623, "Uncut sapphire", Integer.MAX_VALUE);
+        assertNull(planner.plan(owned, null, false));
+        assertNull(planner.plan(owned, Arrays.asList(needs.get(0), null), false));
+        assertNull(planner.plan(owned, Arrays.asList(needs.get(0),
+                new MethodInput("Invalid", -1, 0)), false));
+        assertNull(planner.plan(owned, Arrays.asList(
+                new MethodInput("Uncut sapphire", 1623, Integer.MAX_VALUE), needs.get(0)), false));
+        assertNotNull(planner.plan(owned, Collections.emptyList(), false));
+    }
+
+    @Test
+    public void ambiguousRequirementLabelsFailClosedAndDifferentIdsRemainDistinct()
     {
         GameData owned = data(1, 1623, "Uncut sapphire", 10);
         List<MethodInput> aliases = Arrays.asList(new MethodInput("Uncut sapphire", 1623, 8),
                 new MethodInput("Different label", 1623, 8));
-        assertEquals(6, planner.plan(owned, aliases, false).getTotalMissingUnits());
+        assertNull(planner.plan(owned, aliases, false));
         List<MethodInput> distinct = Arrays.asList(new MethodInput("Uncut sapphire", 1623, 5),
                 new MethodInput("Uncut sapphire", 1621, 5));
         SupplyPlan plan = planner.plan(owned, distinct, false);

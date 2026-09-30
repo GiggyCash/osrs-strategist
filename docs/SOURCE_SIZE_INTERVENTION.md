@@ -384,3 +384,11 @@ reporting). Replaced the supply planner's name-only grouping key with identity
 keys. No game-specific Java or catalog expansion. The small shared helper growth
 fixes disagreement between selection and supply guidance; it is not represented
 as a source reduction. Universal coverage totals now use long arithmetic.
+
+## Checked supply merge consolidation
+
+Removed AccountResourcePlanner's private merge, saturating addition and
+MutableNeed carrier. It now delegates to the existing checked MethodInput merge;
+both guidance consumers reject an unresolved supply plan. Existing strict
+requirement-identity checks remain unchanged. No new schema, model or production file.
+Net production change: -53 lines / -1,610 characters / -402 estimated tokens.

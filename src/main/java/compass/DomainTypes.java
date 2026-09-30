@@ -1098,7 +1098,8 @@ final class MethodInput
             long quantity = (long) need.quantity + (previous == null ? 0 : previous.quantity);
             if (quantity > Integer.MAX_VALUE || previous != null
                     && !previous.name.equalsIgnoreCase(need.name)) return null;
-            merged.put(key, new MethodInput(need.name, need.itemId, (int) quantity));
+            merged.put(key, new MethodInput(previous == null ? need.name : previous.name,
+                    need.itemId, (int) quantity));
         }
         return new ArrayList<>(merged.values());
     }

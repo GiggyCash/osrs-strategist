@@ -101,6 +101,7 @@ class AdaptiveMilestoneGuidanceService
         SupplyPlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, inputs, useGroupStorage);
+        if (resourcePlanner != null && resources == null) return null;
         String supplies = inputs.isEmpty()
                 ? null
                 : resources == null ? null : resources.guidance;
@@ -1526,6 +1527,7 @@ class UniversalSkillActionGuidanceService
         SupplyPlan resources = resourcePlanner == null
                 ? null
                 : resourcePlanner.plan(data, recipe.inputs, useGroupStorage);
+        if (resourcePlanner != null && resources == null) return null;
         String supplies;
         if (recipe.inputs.isEmpty())
         {
