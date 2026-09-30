@@ -32,7 +32,6 @@ public final class MethodProfile
         ACTION_ITEM,
         LOG_FOR_BOW,
         BAR_FOR_SMITHED_ITEM,
-        UNCUT_GEM,
         SAPLING_FOR_TREE,
         FIXED
     }

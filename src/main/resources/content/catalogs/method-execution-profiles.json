@@ -762,13 +762,9 @@
     "unitSingular": "gem cut",
     "unitPlural": "gems cut",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "UNCUT_GEM",
-        "quantityPerAction": 0.0
-      }
-    ],
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "magic_f2p_fire_strike_splash",

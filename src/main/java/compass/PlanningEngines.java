@@ -3142,9 +3142,6 @@ class UniversalActionRecipeResolver
                         : metal.equals("rune") ? "Runite bar"
                         : capitalize(metal) + " bar";
                 break;
-            case UNCUT_GEM:
-                name = lower.startsWith("uncut ") ? value : "Uncut " + lower;
-                break;
             case SAPLING_FOR_TREE:
                 if (lower.equals("spirit tree")) name = "Spirit seed";
                 else if (lower.equals("crystal tree")) name = "Crystal acorn";
@@ -3181,9 +3178,6 @@ class UniversalActionRecipeResolver
 
     private static UniversalActionRecipe crafting(String name, String lower, int n)
     {
-        if (gemName(lower) != null && !jewellery(lower) && !lower.contains("bolt"))
-            return recipe("Bring a chisel.", n,
-                    lower.startsWith("uncut ") ? name : "Uncut " + lower, 1);
         if (lower.contains("bird house"))
             return recipe(get(911), n, wood(name, "Logs"), 1);
         if (contains(lower, "d'hide", "dragonhide"))

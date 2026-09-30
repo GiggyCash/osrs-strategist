@@ -237,3 +237,12 @@ characters / 105 estimated tokens, with no new production file or catalog data.
 The prior saturation regression now asserts rejection and a valid boundary;
 additional cases cover catalog overflow, duplicate totals and invalid identities.
 Existing recipe provenance and access limitations are unchanged.
+
+## Both gem-cutting name transformations removed
+
+Six reviewed deterministic records replace the universal gem-name inference and
+the UNCUT_GEM profile transformation. The existing crafting_gems profile uses the
+shared catalog; variable soft gems and the conflicting zenyte XP remain unresolved.
+The gemName helper still serves legacy jewelry and is not claimed as removed.
+Net production change: -7 Java lines / -358 characters / -90 estimated tokens,
+without new production files, schemas or validators. No broad method expansion.

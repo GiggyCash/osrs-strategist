@@ -1406,5 +1406,137 @@
     "sourceRevision": 15301675,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire",
+    "inputs": [
+      "Uncut sapphire"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1623
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire",
+    "sourceRevision": 15357748,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald",
+    "inputs": [
+      "Uncut emerald"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1621
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald",
+    "sourceRevision": 15357750,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby",
+    "inputs": [
+      "Uncut ruby"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1619
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby",
+    "sourceRevision": 15357755,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond",
+    "inputs": [
+      "Uncut diamond"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1617
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond",
+    "sourceRevision": 15357761,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone",
+    "inputs": [
+      "Uncut dragonstone"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1631
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone",
+    "sourceRevision": 15357763,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx",
+    "inputs": [
+      "Uncut onyx"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      6571
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx",
+    "sourceRevision": 15357764,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

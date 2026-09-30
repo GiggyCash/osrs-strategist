@@ -257,3 +257,18 @@ ingredients or win adaptive selection merely because an action label matches.
 This removes the final RAW_ACTION_ITEM transformation without claiming that
 owning raw fish proves the route is available. Adding support requires reviewing
 the unlock and execution contract, not restoring the string heuristic.
+
+## Existing gem cutting uses reviewed inputs
+
+Sapphire, emerald, ruby, diamond, dragonstone and onyx now share reviewed
+one-uncut-gem recipes between universal guidance and the existing crafting_gems
+profile. The first four are F2P; dragonstone and onyx require P2P. The chisel is
+reusable setup, not a consumed ingredient. Recipe data carries Wiki revisions
+and exact uncut IDs. This does not add acquisition or live tool-readiness proof.
+
+Both gem-cutting name transformations are removed. Soft gems (opal, jade and
+red topaz) remain unresolved because crushing changes output and XP. Zenyte also
+remains unresolved: Wiki revision 15357771 reports 50 cutting XP, while the
+public RuneLite CraftingAction inspected on 2026-09-30 still reports 200. No
+speculative XP override or recipe is used to bridge that disagreement. Jewelry
+has a separate existing path; its presence does not make it a gem-cutting action.
