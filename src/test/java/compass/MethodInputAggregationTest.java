@@ -13,8 +13,8 @@ public class MethodInputAggregationTest
     public void duplicateProfileInputsNeverWrapIntoZeroRequirements()
     {
         MethodProfile profile = profile(1, 1);
-        assertNull(resolver.profileInputs(profile, action(1), Integer.MAX_VALUE));
-        List<MethodInput> valid = resolver.profileInputs(profile, action(1), 10);
+        assertNull(resolver.profileInputs(profile, action(1), Integer.MAX_VALUE, Membership.P2P));
+        List<MethodInput> valid = resolver.profileInputs(profile, action(1), 10, Membership.P2P);
         assertEquals(1, valid.size());
         assertEquals(20, valid.get(0).quantity);
     }
@@ -23,7 +23,7 @@ public class MethodInputAggregationTest
     public void unrepresentableIndividualQuantitiesFailClosed()
     {
         for (double units : new double[] {Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, 2})
-            assertNull(resolver.profileInputs(profile(units), action(1), Integer.MAX_VALUE));
+            assertNull(resolver.profileInputs(profile(units), action(1), Integer.MAX_VALUE, Membership.P2P));
     }
 
     @Test

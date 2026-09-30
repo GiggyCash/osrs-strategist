@@ -324,14 +324,10 @@
     "unitSingular": "fish cooked",
     "unitPlural": "fish cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "smithing_f2p_uim_bronze",
@@ -406,7 +402,7 @@
       },
       {
         "mode": "FIXED",
-        "fixedName": "Red spiders\u0027 eggs",
+        "fixedName": "Red spiders' eggs",
         "quantityPerAction": 1.0
       },
       {
@@ -1002,14 +998,10 @@
     "unitSingular": "fish cooked",
     "unitPlural": "fish cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "runecraft_blood",
@@ -1088,19 +1080,10 @@
     "unitSingular": "dart fletched",
     "unitPlural": "darts fletched",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "DART_TIP_FOR_DART",
-        "quantityPerAction": 1.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Feather",
-        "quantityPerAction": 1.0
-      }
-    ],
+    "inputs": [],
     "note": "Quantities are per dart. This route is only selected after the relevant dart-making unlock is available.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "runecraft_soul",
@@ -1162,20 +1145,10 @@
     "unitSingular": "jug of wine made",
     "unitPlural": "jugs of wine made",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Grapes",
-        "quantityPerAction": 1.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Jug of water",
-        "quantityPerAction": 1.0
-      }
-    ],
+    "inputs": [],
     "note": "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedInputs": true
   },
   {
     "methodId": "herblore_prayer_potions",
@@ -1242,7 +1215,7 @@
         "quantityPerAction": 1.0
       }
     ],
-    "note": "RuneLite\u0027s cannonball action XP is per steel bar processed.",
+    "note": "RuneLite's cannonball action XP is per steel bar processed.",
     "progressEstimateMode": "EXACT_ACTIONS"
   }
 ]

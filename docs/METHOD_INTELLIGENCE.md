@@ -210,3 +210,18 @@ FletchingAction entry supplies 9.5 per dart. Atlatl assembly also uses headless
 atlatl darts and atlatl dart tips, not the ordinary tip/feather pair. Resolve that
 XP/input discrepancy in a separate reviewed slice before enabling its recipe.
 No new training method or full readiness contract is introduced here.
+
+## Reviewed execution-profile inputs
+
+The adaptive profile path now shares reviewed inputs for the existing dart,
+F2P fish, F2P fish baseline and wine profiles. `reviewedInputs` requires an empty
+legacy rule list and resolves the exact action through the shared catalog.
+Both adaptive selection and milestone guidance pass account membership into
+that lookup. Missing recipes, unavailable membership and conflicting inline
+rules return unresolved inputs; profile term matching alone cannot manufacture
+supplies. The Dart-tip-from-name input mode and its switch branch are removed.
+
+Other execution profiles retain their existing rules until separately reviewed.
+This change does not broaden method coverage, certify an unknown recipe, or
+replace the independent account/build/access/capacity checks. Existing Cooking
+and Fletching preparation contracts continue to control actual readiness.

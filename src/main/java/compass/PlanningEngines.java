@@ -3092,10 +3092,18 @@ class UniversalActionRecipeResolver
     }
 
     List<MethodInput> profileInputs(MethodProfile profile, ActionDef action,
-            int count)
+            int count, Membership membership)
     {
         if (profile == null || action == null || count <= 0) return emptyList();
         if (profile.inputs == null) return null;
+        if (profile.reviewedInputs)
+        {
+            if (!profile.inputs.isEmpty()) return null;
+            var reviewed = REVIEWED.recipe(action.getSkill(), Names.lower(action.getName()));
+            if (reviewed == null) return null;
+            var recipe = reviewed.build(count, membership);
+            return recipe.hasExactInputs() ? recipe.inputs : null;
+        }
         List<MethodInput> inputs = new ArrayList<>();
         for (MethodInputRule rule : profile.inputs)
         {
@@ -3148,11 +3156,6 @@ class UniversalActionRecipeResolver
                     name = value.substring(0, value.length() - 5).trim()
                             + " sapling";
                 else return null;
-                break;
-            case DART_TIP_FOR_DART:
-                if (!lower.endsWith(" dart")) return null;
-                name = value.substring(0, value.length() - 5).trim()
-                        + " dart tip";
                 break;
             case UNFINISHED_BOLT:
                 if (!lower.endsWith(" bolts")) return null;

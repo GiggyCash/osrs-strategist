@@ -190,3 +190,14 @@ The atlatl input/XP discrepancy discovered during research is documented in
 METHOD_INTELLIGENCE.md. Other projectile inference and legacy execution-profile
 input transformations remain separate follow-up work, not certified by this
 migration.
+
+## Alternate profile path consolidated
+
+Four existing execution profiles now consume reviewed recipe inputs instead of
+repeating raw-food, wine and dart ingredient rules. The dart-tip inference enum
+value and five-line switch branch are deleted. A generic reviewed-input dispatch
+plus membership plumbing replaces them: net +4 Java lines / +316 characters /
++79 estimated tokens, with no new production file. This near-flat adapter closes
+a separate inference path rather than adding another recipe validator. Regression
+coverage compares both input paths and rejects unknown names that still match
+profile terms. Remaining legacy profile transformations need separate migration.

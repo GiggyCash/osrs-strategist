@@ -35,7 +35,6 @@ public final class MethodProfile
         BAR_FOR_SMITHED_ITEM,
         UNCUT_GEM,
         SAPLING_FOR_TREE,
-        DART_TIP_FOR_DART,
         UNFINISHED_BOLT,
         FIXED
     }
@@ -46,6 +45,7 @@ public final class MethodProfile
     String unitPlural;
     double xpMultiplier;
     List<MethodInputRule> inputs;
+    boolean reviewedInputs;
     String note;
     ProgressEstimateMode progressEstimateMode;
 

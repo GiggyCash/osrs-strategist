@@ -87,7 +87,7 @@ public class AdaptiveActionSelector
             int actionsNeeded = divideRoundUp(
                     max(0, targetXp - currentXp), xpPerAction);
             List<MethodInput> needs = recipeResolver.profileInputs(
-                    profile, action, actionsNeeded);
+                    profile, action, actionsNeeded, membership);
             if (needs == null) continue;
 
             // Base ranking remains tied to the actual action inside the already

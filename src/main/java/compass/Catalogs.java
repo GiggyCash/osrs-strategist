@@ -414,7 +414,8 @@ class MethodExecutionProfileCatalog extends IndexedCatalog<MethodProfile>
     public MethodExecutionProfileCatalog()
     {
         super(RESOURCE, MethodProfile[].class, MethodProfile::getMethodId);
-        for (MethodProfile profile : values) if (profile.actionTerms == null)
+        for (MethodProfile profile : values) if (profile.actionTerms == null || profile.inputs == null
+                || profile.reviewedInputs && !profile.inputs.isEmpty())
             throw new IllegalStateException(Text.get(1224) + RESOURCE);
     }
 
