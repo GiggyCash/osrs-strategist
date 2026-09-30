@@ -346,14 +346,28 @@
     "unitSingular": "bronze item smithed",
     "unitPlural": "bronze items smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Copper and tin are mined and processed locally; the loop never requires conventional banking.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:bronze sq shield",
+      "SMITHING:bronze full helm",
+      "SMITHING:bronze platebody",
+      "SMITHING:bronze plateskirt",
+      "SMITHING:bronze kiteshield",
+      "SMITHING:bronze med helm",
+      "SMITHING:bronze 2h sword",
+      "SMITHING:bronze axe",
+      "SMITHING:bronze battleaxe",
+      "SMITHING:bronze chainbody",
+      "SMITHING:bronze dagger",
+      "SMITHING:bronze longsword",
+      "SMITHING:bronze mace",
+      "SMITHING:bronze platelegs",
+      "SMITHING:bronze scimitar",
+      "SMITHING:bronze sword",
+      "SMITHING:bronze warhammer"
+    ]
   },
   {
     "methodId": "magic_f2p_curse",
@@ -443,14 +457,17 @@
     "unitSingular": "platebody smithed",
     "unitPlural": "platebodies smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Each platebody uses five bars, so the action count converts directly into the matching bar total.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:bronze platebody",
+      "SMITHING:iron platebody",
+      "SMITHING:adamant platebody",
+      "SMITHING:mithril platebody",
+      "SMITHING:rune platebody",
+      "SMITHING:steel platebody"
+    ]
   },
   {
     "methodId": "fishing_f2p_fly",
@@ -665,14 +682,17 @@
     "unitSingular": "bar smithed",
     "unitPlural": "bars smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "The action XP is per bar used to smith dart tips.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:adamant dart tip",
+      "SMITHING:bronze dart tip",
+      "SMITHING:iron dart tip",
+      "SMITHING:steel dart tip",
+      "SMITHING:mithril dart tip",
+      "SMITHING:rune dart tip"
+    ]
   },
   {
     "methodId": "fishing_3t_barb",

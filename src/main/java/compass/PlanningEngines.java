@@ -3133,14 +3133,6 @@ class UniversalActionRecipeResolver
                 name = value;
                 itemId = action.itemId;
                 break;
-            case BAR_FOR_SMITHED_ITEM:
-                String metal = first(lower, "bronze", "iron", "steel",
-                        "mithril", "adamant", "rune");
-                if (metal == null) return null;
-                name = metal.equals("adamant") ? "Adamantite bar"
-                        : metal.equals("rune") ? "Runite bar"
-                        : capitalize(metal) + " bar";
-                break;
             case SAPLING_FOR_TREE:
                 if (lower.equals("spirit tree")) name = "Spirit seed";
                 else if (lower.equals("crystal tree")) name = "Crystal acorn";
@@ -3158,9 +3150,7 @@ class UniversalActionRecipeResolver
         }
         double units = rule.getQuantityPerAction();
         if (!Double.isFinite(units)) return null;
-        if (units <= 0) units = rule.getMode()
-                == MethodProfile.InputMode.BAR_FOR_SMITHED_ITEM
-                && lower.contains("platebody") ? 5 : 1;
+        if (units <= 0) units = 1;
         double quantity = Math.ceil(count * units);
         return !Double.isFinite(quantity) || quantity <= 0 || quantity > Integer.MAX_VALUE
                 ? null : new MethodInput(name, itemId, (int) quantity);

@@ -341,3 +341,17 @@ unresolved rather than receiving guessed support.
 Net production change: -8 Java lines / -382 characters / -96 estimated tokens;
 no new production file, schema or validator. Twenty-three evidence-backed records
 replace existing inferred coverage, with no new training methods.
+
+## Shared Smithing profile bar inference removed
+
+Removed BAR_FOR_SMITHED_ITEM, its metal-name construction switch branch, and the
+platebody-versus-one-bar default. All three consumers now reference the existing
+reviewed recipe catalog. This corrects undercounted multi-bar bronze items and
+prevents broad bronze search terms from admitting unrelated activities. No new
+training method or schema was added. The universal smithingBarsFor fallback is
+still present and is not counted as removed.
+
+Net production change: -11 Java lines / -580 characters / -145 estimated tokens.
+Twenty-eight verified recipe rows replace the profile heuristic; shared universal
+lookup also reuses those rows. Source XP/action units were cross-checked against
+current RuneLite, including the ten-tip batch represented by one Smithing action.

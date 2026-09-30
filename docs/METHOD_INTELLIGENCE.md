@@ -301,3 +301,20 @@ branch and being incorrectly assigned logs. Invented and modified bow names stay
 unresolved. Willow shortbow stringing is deliberately unresolved: Wiki revision
 15183273 reports 33.2 XP while current RuneLite FletchingAction reports 33.3;
 its cutting recipe independently agrees at 33.3. No XP override is inferred.
+
+## Existing Smithing profile inputs
+
+The three bar-consuming profiles now reference reviewed recipes: 17 ordinary
+F2P bronze anvil items, six metal platebodies and six dart-tip batches. The old
+profile rule charged one bar for every non-platebody; scimitars, shields and
+platelegs now consume their actual reviewed totals. Each dart-tip calculator
+action consumes one bar for ten tips; it does not mean one tip. All 28 distinct
+records agree with current RuneLite action XP and retain Wiki revision provenance.
+Hammers remain reusable setup, separate from consumed bars.
+
+The bronze profile excludes smelting and unreviewed bronze activities rather
+than interpreting every bronze action as a one-bar anvil item. Dart-tip recipes
+remain P2P and explicitly mention The Tourist Trap; ingredient resolution does
+not prove that unlock. Existing method requirements still control access.
+The separate universal Smithing fallback remains for unreviewed rows and needs
+its own migration; this checkpoint does not claim it is removed or verified.

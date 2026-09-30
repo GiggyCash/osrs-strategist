@@ -2088,5 +2088,621 @@
     "sourceRevision": 15322392,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze sq shield",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_sq_shield",
+    "sourceRevision": 15320133,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze full helm",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_full_helm",
+    "sourceRevision": 15320135,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze platebody",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_platebody",
+    "sourceRevision": 15182541,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze plateskirt",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_plateskirt",
+    "sourceRevision": 15182542,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze kiteshield",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_kiteshield",
+    "sourceRevision": 15182543,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze med helm",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_med_helm",
+    "sourceRevision": 15352958,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron platebody",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_platebody",
+    "sourceRevision": 15320146,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamant dart tip",
+    "inputs": [
+      "Adamantite bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2361
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_dart_tip",
+    "sourceRevision": 15182719,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamant platebody",
+    "inputs": [
+      "Adamantite bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2361
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_platebody",
+    "sourceRevision": 15320171,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze 2h sword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_2h_sword",
+    "sourceRevision": 15320181,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze axe",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_axe",
+    "sourceRevision": 15347397,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze battleaxe",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_battleaxe",
+    "sourceRevision": 15182785,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze chainbody",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_chainbody",
+    "sourceRevision": 15320183,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze dagger",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dagger",
+    "sourceRevision": 15320184,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze dart tip",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dart_tip",
+    "sourceRevision": 15182791,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze longsword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_longsword",
+    "sourceRevision": 15182809,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze mace",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_mace",
+    "sourceRevision": 15182810,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze platelegs",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_platelegs",
+    "sourceRevision": 15320189,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze scimitar",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_scimitar",
+    "sourceRevision": 15320200,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril platebody",
+    "inputs": [
+      "Mithril bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2359
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_platebody",
+    "sourceRevision": 15320204,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze sword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_sword",
+    "sourceRevision": 15182845,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze warhammer",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_warhammer",
+    "sourceRevision": 15182846,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "rune platebody",
+    "inputs": [
+      "Runite bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2363
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_platebody",
+    "sourceRevision": 15346837,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel platebody",
+    "inputs": [
+      "Steel bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2353
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_platebody",
+    "sourceRevision": 15320258,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron dart tip",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_dart_tip",
+    "sourceRevision": 15186414,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel dart tip",
+    "inputs": [
+      "Steel bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2353
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_dart_tip",
+    "sourceRevision": 15186415,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril dart tip",
+    "inputs": [
+      "Mithril bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2359
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_dart_tip",
+    "sourceRevision": 15186416,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "rune dart tip",
+    "inputs": [
+      "Runite bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2363
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_dart_tip",
+    "sourceRevision": 15317693,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]
