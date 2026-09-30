@@ -24,6 +24,32 @@ class AccountResourcePlanner
     private final MarketPriceService marketPriceService;
     private final ResourceSourceCatalog resourceSourceCatalog;
 
+    /** Shared purchase proof for guidance and typed preparation. Never treats unknown as zero. */
+    Purchase purchase(GameData data, List<MethodInput> needs)
+    {
+        if (data == null || data.account() == null
+                || !AccountMode.fromTypeCode(data.account().modeCode()).usesGrandExchange())
+            return new Purchase(RequirementState.BLOCKED, 0, "This account cannot use the Grand Exchange.");
+        Long cost = exactCost(needs);
+        var cash = data.economy();
+        if (cost == null || cash == null || !cash.hasUsableCash())
+            return new Purchase(RequirementState.CHECK_NEEDED, 0,
+                    "Purchase cannot be verified: observe usable prices and cash for the exact quantity.");
+        if (cash.coins < cost)
+            return new Purchase(RequirementState.BLOCKED, cost, "Insufficient observed cash for this batch.");
+        return new Purchase(RequirementState.VERIFIED, cost,
+                "Purchase is affordable for this batch (" + cost + " coins at observed prices); recheck before buying.");
+    }
+
+    static final class Purchase
+    {
+        final RequirementState state;
+        final long cost;
+        final String reason;
+        Purchase(RequirementState state, long cost, String reason)
+        { this.state = state; this.cost = cost; this.reason = reason; }
+    }
+
     public SupplyPlan plan(
             GameData data,
             List<MethodInput> rawNeeds,
@@ -196,16 +222,16 @@ class AccountResourcePlanner
             GameData data, String shortfall,
             List<MethodInput> missingInputs)
     {
-        Long cost = exactCost(missingInputs);
+        Purchase purchase = purchase(data, missingInputs);
+        Long cost = purchase.state == RequirementState.CHECK_NEEDED ? null : purchase.cost;
         List<String> routes = mainRoutes(missingInputs,
                 data == null || data.account() == null
                         ? Membership.UNKNOWN
                         : data.account().membership());
         AccountEconomySnapshot economy = data == null ? null : data.economy();
         long coins = economy == null ? 0 : max(0, economy.coins);
-        boolean priced = cost != null && cost > 0 && economy != null
-                && economy.confidence == Confidence.VERIFIED;
-        boolean affordable = priced && coins >= cost;
+        boolean priced = cost != null && cost > 0 && economy != null && economy.hasUsableCash();
+        boolean affordable = purchase.state == RequirementState.VERIFIED;
         boolean buy = affordable && (cost <= 1_000L && coins >= 5_000L
                 || cost <= coins / 10L && coins - cost >= 10_000L);
         if (buy)
@@ -256,14 +282,14 @@ class AccountResourcePlanner
         long total = 0;
         for (MethodInput input : missing)
         {
-            if (input == null || input.quantity <= 0) continue;
+            if (input == null || input.quantity <= 0 || input.getName() == null) return null;
             MarketPriceQuote quote = marketPriceService.quote(input.getName());
-            if (quote == null || !quote.hasPrice()) return null;
-            if (quote.getUnitPrice() > Long.MAX_VALUE / input.quantity
-                    || total > Long.MAX_VALUE
-                            - quote.getUnitPrice() * input.quantity)
-                return Long.MAX_VALUE;
-            total += quote.getUnitPrice() * input.quantity;
+            if (quote == null || !quote.hasPrice()
+                    || !input.getName().equalsIgnoreCase(quote.itemName)
+                    || input.itemId > 0 && input.itemId != quote.itemId) return null;
+            long lineCost = (long) quote.getUnitPrice() * input.quantity;
+            if (total > Long.MAX_VALUE - lineCost) return null;
+            total += lineCost;
         }
         return total > 0 ? total : null;
     }

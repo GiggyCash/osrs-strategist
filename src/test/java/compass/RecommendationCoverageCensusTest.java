@@ -244,7 +244,7 @@ public class RecommendationCoverageCensusTest
                     0, count(prepared, skill, CoverageClass.RECOVERY));
         }
         for (Skill skill : EnumSet.of(
-                Skill.COOKING, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.FISHING, Skill.RUNECRAFT,
                 Skill.FARMING, Skill.HUNTER))
         {
             assertEquals(skill.getName() + " observed-empty recovery debt",
@@ -252,6 +252,8 @@ public class RecommendationCoverageCensusTest
         }
         assertTrue("Unknown spellbook must leave observed-empty Magic gated",
                 count(observed, Skill.MAGIC, CoverageClass.RECOVERY) > 0);
+        assertTrue("Empty Cooking stock without a verified acquisition path must stay unresolved",
+                count(observed, Skill.COOKING, CoverageClass.RECOVERY) > 0);
     }
 
     @Test
@@ -748,7 +750,7 @@ public class RecommendationCoverageCensusTest
                 // Census scenarios model a complete live container, including
                 // the observed-empty case. UIM generation must not confuse it
                 // with a persisted list whose slot completeness is unknown.
-                .inventory(new ItemsState(items, true))
+                .inventory(new ItemsState(scenario.type == 2 ? items : Collections.emptyList(), true))
                 .equipment(new ItemsState(Collections.emptyList()));
         if (prepared)
         {
@@ -789,7 +791,7 @@ public class RecommendationCoverageCensusTest
         }
         if (scenario.type != 2)
         {
-            builder.bank(new ItemsState(Collections.emptyList(), 1L));
+            builder.bank(new ItemsState(items, 1L));
         }
         return builder.build();
     }
@@ -797,6 +799,7 @@ public class RecommendationCoverageCensusTest
     private static List<ItemState> preparedItems()
     {
         List<ItemState> items = new ArrayList<>();
+        items.add(item(ItemID.RAW_SHRIMP, "Raw shrimps", 100));
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
         items.add(item(ItemID.BRONZE_SCIMITAR, "Bronze scimitar", 1));
@@ -855,7 +858,7 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.SHORTBOW, "Shortbow", 1));
         items.add(item(ItemID.BRONZE_ARROW, "Bronze arrow", 10_000));
         items.add(item(ItemID.NET, "Small fishing net", 1));
-        items.add(item(ItemID.RAW_SALMON, "Raw salmon", 10_000));
+        items.addAll(MethodIntelligenceTest.carried(ItemID.RAW_SHRIMP, "Raw shrimps", 4));
         items.add(item(ItemID.HAMMER, "Hammer", 1));
         items.add(item(ItemID.POH_SAW, "Saw", 1));
         items.add(item(ItemID.WOODPLANK, "Plank", 10_000));

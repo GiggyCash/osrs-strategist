@@ -51,7 +51,8 @@ public class StrategyQualityTournamentTest
                 quests(), minigames(), true);
         assertLowAttentionCookingWinner(noWineSupplies,
                 StrategyMode.EFFICIENT, SessionIntent.QUICK_20_MIN);
-        assertWinner("cooking_wines", noWineSupplies, Skill.COOKING, 70,
+        // A long session does not establish prices, cash or acquisition.
+        assertLowAttentionCookingWinner(noWineSupplies,
                 StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
 
         GameData iron = data(1, Membership.P2P,
@@ -231,12 +232,7 @@ public class StrategyQualityTournamentTest
                     quests(), minigames(), true);
             TrainingPlan plan = winner(account, Skill.COOKING, 70,
                     StrategyMode.EFFICIENT, SessionIntent.LONG_SESSION);
-            if (accountTypes[i] == 0)
-            {
-                assertEquals(AccountMode.fromTypeCode(accountTypes[i]).name(),
-                        "cooking_wines", plan.getMethod().getId());
-            }
-            else
+            // Main mode alone no longer proves that missing wine supplies can be bought.
             {
                 assertEquals(AccountMode.fromTypeCode(accountTypes[i]).name(),
                         AttentionLevel.LOW,
@@ -478,10 +474,17 @@ public class StrategyQualityTournamentTest
         tools.put("rake", Capability.VERIFIED);
         tools.put("dibber", Capability.VERIFIED);
         tools.put("spade", Capability.VERIFIED);
+        List<ItemState> carried = new ArrayList<>();
+        boolean uim = accountType == 2;
+        if (uim)
+            for (ItemState item : inventory)
+                if (item.itemId == ItemID.RAW_SALMON)
+                    carried.addAll(MethodIntelligenceTest.carried(item.itemId, item.name, 4));
+                else carried.add(item);
         return GameData.builder(account)
-                .inventory(new ItemsState(inventory))
+                .inventory(new ItemsState(carried, true))
                 .equipment(new ItemsState(equipment))
-                .bank(new ItemsState(Collections.emptyList(), 1L))
+                .bank(uim ? null : new ItemsState(inventory, 1L))
                 .quests(new QuestSnapshot(quests))
                 .diaries(new DiarySnapshot(Collections.emptyMap(),
                         Collections.emptyMap(), tiers, Collections.emptyMap()))

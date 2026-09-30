@@ -1030,18 +1030,27 @@ final class MarketPriceQuote
     final int itemId;
     final String itemName;
     final int unitPrice;
+    final long observedAtMillis;
 
     public MarketPriceQuote(int itemId, String itemName, int unitPrice)
+    {
+        this(itemId, itemName, unitPrice, System.currentTimeMillis());
+    }
+
+    public MarketPriceQuote(int itemId, String itemName, int unitPrice, long observedAtMillis)
     {
         this.itemId = itemId;
         this.itemName = itemName;
         this.unitPrice = max(0, unitPrice);
+        this.observedAtMillis = observedAtMillis;
     }
 
 
     public boolean hasPrice()
     {
-        return itemId > 0 && unitPrice > 0;
+        long age = System.currentTimeMillis() - observedAtMillis;
+        return itemId > 0 && unitPrice > 0 && observedAtMillis > 0
+                && age >= 0 && age <= ItemsState.FRESH_FOR_MILLIS;
     }
 }
 

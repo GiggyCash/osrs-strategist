@@ -1,0 +1,340 @@
+[
+  {
+    "recipes": [
+      {
+        "id": "shrimp",
+        "skill": "COOKING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 317,
+            "name": "Raw shrimps",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw shrimps on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "sardine",
+        "skill": "COOKING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 327,
+            "name": "Raw sardine",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw sardine on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "herring",
+        "skill": "COOKING",
+        "level": 5,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 345,
+            "name": "Raw herring",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw herring on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "trout",
+        "skill": "COOKING",
+        "level": 15,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 335,
+            "name": "Raw trout",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw trout on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "pike",
+        "skill": "COOKING",
+        "level": 20,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 349,
+            "name": "Raw pike",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw pike on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "salmon",
+        "skill": "COOKING",
+        "level": 25,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 331,
+            "name": "Raw salmon",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw salmon on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "tuna",
+        "skill": "COOKING",
+        "level": 30,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 359,
+            "name": "Raw tuna",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw tuna on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "lobster",
+        "skill": "COOKING",
+        "level": 40,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 377,
+            "name": "Raw lobster",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw lobster on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "swordfish",
+        "skill": "COOKING",
+        "level": 45,
+        "workingBatch": 4,
+        "maximumBatch": 28,
+        "inputs": [
+          {
+            "itemId": 371,
+            "name": "Raw swordfish",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "the cooked or burnt fish in the consumed input slots",
+        "action": "Cook Raw swordfish on the named range.",
+        "efficientBatch": 28
+      },
+      {
+        "id": "wine",
+        "skill": "COOKING",
+        "level": 35,
+        "workingBatch": 4,
+        "maximumBatch": 14,
+        "inputs": [
+          {
+            "itemId": 1987,
+            "name": "Grapes",
+            "quantity": 1,
+            "stackable": false
+          },
+          {
+            "itemId": 1937,
+            "name": "Jug of water",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "each unfermented jug, including any bad wine after fermentation",
+        "action": "Use grapes on jugs of water; wait for fermentation before reviewing the batch.",
+        "efficientBatch": 14
+      }
+    ],
+    "methods": [
+      {
+        "ids": [
+          "cooking_f2p_fish",
+          "cooking_f2p_fish_baseline"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Al Kharid bank and the range immediately north of it. Retrieve only this batch; retain outputs and recheck before repeating.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Cooking_training",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15352306
+      },
+      {
+        "ids": [
+          "cooking_wines"
+        ],
+        "recipes": [
+          "wine"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Grand Exchange bank: combine the prepared ingredients and retain the fermenting jugs.",
+        "source": "https://oldschool.runescape.wiki/w/Jug_of_wine",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15333576
+      },
+      {
+        "ids": [
+          "cooking_hosidius"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "diaryRegion": "Kourend & Kebos",
+        "diaryTier": "EASY",
+        "location": "Hosidius Kitchen bank chest and range. Retain outputs; review the next batch before withdrawing.",
+        "source": "https://oldschool.runescape.wiki/w/Hosidius_Kitchen",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15317135
+      },
+      {
+        "ids": [
+          "cooking_f2p_uim_carried_fish"
+        ],
+        "recipes": [
+          "shrimp",
+          "sardine",
+          "herring",
+          "trout",
+          "pike",
+          "salmon",
+          "tuna",
+          "lobster",
+          "swordfish"
+        ],
+        "bankLoop": false,
+        "purchaseAllowed": false,
+        "membersOnly": false,
+        "location": "Al Kharid range immediately north of the bank: process only carried raw fish and retain the cooked or burnt outputs.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Cooking_training",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15352306
+      },
+      {
+        "ids": [
+          "cooking_karambwan_1t"
+        ],
+        "recipes": [],
+        "bankLoop": true,
+        "purchaseAllowed": false,
+        "membersOnly": true,
+        "requiredQuest": "Tai Bwo Wannai Trio",
+        "unresolved": "The post-quest cooking lesson and one-tick execution setup are not observed. Do not assume readiness from raw karambwans alone.",
+        "location": "No verified execution route yet.",
+        "source": "https://oldschool.runescape.wiki/w/Money_making_guide/Cooking_raw_karambwan",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15075253
+      },
+      {
+        "ids": [
+          "cooking_gnome_restaurant"
+        ],
+        "recipes": [],
+        "bankLoop": false,
+        "purchaseAllowed": false,
+        "membersOnly": true,
+        "unresolved": "The live delivery order, recipe ingredients and destination access are not observed.",
+        "location": "No verified delivery route yet.",
+        "source": "https://oldschool.runescape.wiki/w/Gnome_Restaurant",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15345783
+      }
+    ]
+  }
+]

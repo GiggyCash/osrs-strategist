@@ -16,14 +16,25 @@ public class TrainingMethodSelector
     private final TrainingMethodPolicy methodPolicy;
     private final MethodStrategyKnowledgeCatalog strategyCatalog;
     private final UimInventoryResolutionService inventoryResolution;
+    private final MethodReadinessService methodReadiness;
 
-    @Inject
     public TrainingMethodSelector(
             TrainingMethodCatalog catalog,
             RequirementEvidenceEngine requirementEvidenceEngine,
             TrainingMethodPolicy methodPolicy,
             MethodStrategyKnowledgeCatalog strategyCatalog,
             UimInventoryResolutionService inventoryResolution)
+    {
+        this(catalog, requirementEvidenceEngine, methodPolicy, strategyCatalog, inventoryResolution,
+                new MethodReadinessService(new MethodIntelligenceCatalog(),
+                        new MethodPreparationService(new AccountResourcePlanner(null, new ResourceSourceCatalog()))));
+    }
+
+    @Inject
+    public TrainingMethodSelector(TrainingMethodCatalog catalog,
+            RequirementEvidenceEngine requirementEvidenceEngine, TrainingMethodPolicy methodPolicy,
+            MethodStrategyKnowledgeCatalog strategyCatalog, UimInventoryResolutionService inventoryResolution,
+            MethodReadinessService methodReadiness)
     {
         this.catalog = catalog;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
@@ -32,6 +43,7 @@ public class TrainingMethodSelector
                 ? new MethodStrategyKnowledgeCatalog() : strategyCatalog;
         this.inventoryResolution = inventoryResolution == null
                 ? new UimInventoryResolutionService() : inventoryResolution;
+        this.methodReadiness = methodReadiness;
     }
 
     public TrainingPlan select(GameData data, Skill skill, int currentLevel,
@@ -73,7 +85,8 @@ public class TrainingMethodSelector
                 continue;
             }
 
-            List<EvidenceCheck> checks = requirementEvidenceEngine == null
+            MethodReadiness readiness = methodReadiness.evaluate(data, method, useGroupStorage);
+            List<EvidenceCheck> checks = readiness != null ? readiness.checks() : requirementEvidenceEngine == null
                     ? emptyList()
                     : useGroupStorage
                             ? requirementEvidenceEngine.evaluate(
@@ -87,7 +100,7 @@ public class TrainingMethodSelector
             // route the player can actually begin. Hard-gated methods can
             // return once their quest/access evidence is observed.
             TrainingPlan assessed = new TrainingPlan(method, "", confidence,
-                    checks, strategyProfile);
+                    checks, strategyProfile).withReadiness(readiness);
             boolean hardRequirementUnknown =
                     RequirementActionability.hasHardUnresolvedRequirement(
                             assessed);
@@ -96,17 +109,22 @@ public class TrainingMethodSelector
                     + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent)
                     + strategyAdjustment
                     + readinessAdjustment(data, checks, sessionIntent);
+            if (readiness != null) score += readiness.adjustment();
             // Retain a hard-gated plan as diagnostic/secondary information when
             // every route is unknown, but it must lose to any executable route
             // regardless of their normal efficiency scores.
             if (hardRequirementUnknown) score -= 10_000.0;
             ranked.add(new ScoredPlan(new TrainingPlan(method,
                     buildExplanation(method, metadata, strategyMode,
-                            sessionIntent, data, strategyProfile), confidence,
-                    checks, strategyProfile), score));
+                            sessionIntent, data, strategyProfile)
+                            + (readiness == null || readiness.preparation == null ? "" : " " + readiness.preparation.explanation()), confidence,
+                    checks, strategyProfile).withReadiness(readiness), score));
         }
 
-        ranked.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed());
+        // Feasibility is a decision tier, not a score penalty that a large score can defeat.
+        ranked.sort(Comparator.comparing((ScoredPlan candidate) ->
+                RequirementActionability.hasHardUnresolvedRequirement(candidate.plan))
+                .thenComparing(Comparator.comparingDouble(ScoredPlan::getScore).reversed()));
         List<TrainingPlan> plans = new ArrayList<>();
         for (ScoredPlan candidate : ranked) plans.add(candidate.plan);
         return unmodifiableList(plans);

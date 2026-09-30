@@ -759,6 +759,7 @@ final class TrainingPlan
     final List<EvidenceCheck> requirementChecks;
     final MethodStrategyProfile strategyProfile;
     final int currentStageTargetLevel;
+    final MethodReadiness readiness;
 
     TrainingMethod method() { return method; }
 
@@ -779,7 +780,7 @@ final class TrainingPlan
             MethodStrategyProfile strategyProfile)
     {
         this(method, whyThisMethod, confidence, requirementChecks,
-                strategyProfile, 0);
+                strategyProfile, 0, null);
     }
 
     private TrainingPlan(
@@ -788,7 +789,7 @@ final class TrainingPlan
             Confidence confidence,
             List<EvidenceCheck> requirementChecks,
             MethodStrategyProfile strategyProfile,
-            int currentStageTargetLevel)
+            int currentStageTargetLevel, MethodReadiness readiness)
     {
         this.method = method;
         this.whyThisMethod = whyThisMethod;
@@ -802,13 +803,21 @@ final class TrainingPlan
         );
         this.strategyProfile = strategyProfile;
         this.currentStageTargetLevel = max(0, currentStageTargetLevel);
+        this.readiness = readiness;
     }
 
 
     public TrainingPlan withCurrentStageTargetLevel(int targetLevel)
     {
+        if (readiness != null) targetLevel = min(targetLevel, readiness.reviewLevel);
         return new TrainingPlan(method, whyThisMethod, confidence,
-                requirementChecks, strategyProfile, targetLevel);
+                requirementChecks, strategyProfile, targetLevel, readiness);
+    }
+
+    TrainingPlan withReadiness(MethodReadiness value)
+    {
+        return new TrainingPlan(method, whyThisMethod, confidence,
+                requirementChecks, strategyProfile, currentStageTargetLevel, value);
     }
 }
 

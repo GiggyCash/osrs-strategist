@@ -369,6 +369,7 @@ final class AccountModePolicy
 @Singleton
 class ActionabilityPolicy
 {
+    private static final MethodIntelligenceCatalog METHOD_CONTRACTS = new MethodIntelligenceCatalog();
     private final RecommendationQualityPolicy qualityPolicy =
             new RecommendationQualityPolicy();
 
@@ -403,6 +404,10 @@ class ActionabilityPolicy
         {
             return false;
         }
+
+        if (METHOD_CONTRACTS.method(plan.method().id) != null)
+            return plan.readiness != null && plan.readiness.actionable()
+                    && !RequirementActionability.hasHardUnresolvedRequirement(plan);
 
         if (recommendation.confidence == Confidence.VERIFIED)
         {

@@ -38,12 +38,32 @@ final class AccessMemorySnapshot
 }
 
 @Getter
-@RequiredArgsConstructor
 final class AccountEconomySnapshot
 {
     final long coins;
     final long estimatedBankValue;
     final Confidence confidence;
+    final long observedAtMillis;
+
+    AccountEconomySnapshot(long coins, long estimatedBankValue, Confidence confidence)
+    {
+        this(coins, estimatedBankValue, confidence, System.currentTimeMillis());
+    }
+
+    AccountEconomySnapshot(long coins, long estimatedBankValue, Confidence confidence, long time)
+    {
+        this.coins = coins;
+        this.estimatedBankValue = estimatedBankValue;
+        this.confidence = confidence;
+        this.observedAtMillis = time;
+    }
+
+    boolean hasUsableCash()
+    {
+        long age = System.currentTimeMillis() - observedAtMillis;
+        return confidence == Confidence.VERIFIED && coins >= 0 && observedAtMillis > 0
+                && age >= 0 && age <= ItemsState.FRESH_FOR_MILLIS;
+    }
 
 }
 

@@ -836,6 +836,7 @@ class MarketPriceService
                 if (itemId <= 0) continue;
                 var composition = itemManager.getItemComposition(itemId);
                 if (composition == null || composition.getName() == null
+                        || !composition.isTradeable()
                         || !exactItemName.equalsIgnoreCase(composition.getName()))
                 {
                     continue;
