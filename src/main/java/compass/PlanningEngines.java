@@ -74,8 +74,8 @@ class AccountResourcePlanner
         for (MethodInput need : needs)
         {
             var reusableSource = reusableSourceFor(observed, need.getName());
-            var owned = observed.quantity(need.getName());
-            var restricted = observed.restrictedQuantity(need.getName());
+            var owned = observed.quantity(need);
+            var restricted = observed.restrictedQuantity(need);
             int shortfall = reusableSource == null
                     ? max(0, need.quantity - owned)
                     : 0;
@@ -407,7 +407,7 @@ class AccountResourcePlanner
             {
                 continue;
             }
-            var key = Names.lower(input.getName());
+            var key = input.itemId > 0 ? "id:" + input.itemId : "name:" + Names.lower(input.getName());
             var existing = merged.get(key);
             if (existing == null)
             {

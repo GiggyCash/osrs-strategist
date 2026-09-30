@@ -342,3 +342,15 @@ The context-free resolver cannot prove an equipped/charged ring of forging,
 Superheat Item or Blast Furnace setup, so it cannot promise one ore per successful
 bar. Iron input quantities remain unresolved; no expected RNG count is labelled
 exact. This does not affect consuming iron bars at an anvil.
+
+## Shared ingredient identity in selection and supply guidance
+
+ItemIndex now resolves MethodInput using its reviewed ID when present, retaining
+name lookup only for legacy inputs without IDs. Adaptive selection, universal
+resource ranking, and account supply planning share that lookup. Restricted UIM
+storage uses the same identity rule without becoming directly usable.
+
+Supply grouping merges equal positive IDs despite different display labels and
+keeps different IDs distinct despite equal labels. Universal ranking accumulates
+required and owned totals in long values so multiple large ingredients cannot
+wrap the coverage denominator. Existing mode-safe container rules still apply.

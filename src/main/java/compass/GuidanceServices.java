@@ -1673,18 +1673,18 @@ class UniversalSkillActionGuidanceService
         return best;
     }
 
-    private static double resourceCoverageScore(
+    static double resourceCoverageScore(
             GameData data,
             ItemIndex observed,
             UniversalActionRecipe recipe)
     {
         if (recipe == null || recipe.inputs.isEmpty()) return 0.0;
-        var required = 0;
-        var owned = 0;
+        long required = 0;
+        long owned = 0;
         for (MethodInput input : recipe.inputs)
         {
             required += input.quantity;
-            owned += min(input.quantity, observed.quantity(input.getName()));
+            owned += min(input.quantity, observed.quantity(input));
         }
         if (required <= 0) return 0.0;
 

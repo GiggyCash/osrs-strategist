@@ -375,3 +375,12 @@ claim. No Java production growth or new schema. This checkpoint consolidates
 existing knowledge and fixes uncertain supply arithmetic rather than adding a
 training route. Regression tests protect iron uncertainty and retained furnace
 input IDs/quantities across membership states.
+
+## Shared material identity lookup
+
+Consolidated ID-first MethodInput lookup in ItemIndex for adaptive selection,
+universal ranking and account supply planning (including restricted-storage
+reporting). Replaced the supply planner's name-only grouping key with identity
+keys. No game-specific Java or catalog expansion. The small shared helper growth
+fixes disagreement between selection and supply guidance; it is not represented
+as a source reduction. Universal coverage totals now use long arithmetic.

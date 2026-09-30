@@ -56,6 +56,17 @@ public final class ItemIndex
                 + need.getRequiredQuantity() + ".");
     }
 
+    /** Reviewed identity wins over a display label; legacy requirements retain name lookup. */
+    int quantity(MethodInput need)
+    {
+        return need.itemId > 0 ? quantity(need.itemId) : quantity(need.getName());
+    }
+
+    int restrictedQuantity(MethodInput need)
+    {
+        return need.itemId > 0 ? restrictedQuantity(need.itemId) : restrictedQuantity(need.getName());
+    }
+
     public int quantity(int... itemIds)
     {
         if (data == null || itemIds == null) return 0;
