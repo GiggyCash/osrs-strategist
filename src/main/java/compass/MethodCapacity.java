@@ -88,7 +88,8 @@ final class MethodCapacity
             quantities.put(input.itemId, Math.max(held, needed));
         }
         if (occupied > 28) return false;
-        boolean outputStackExists = quantities.getOrDefault(recipe.outputItemId, 0L) > 0;
+        long outputQuantity = quantities.getOrDefault(recipe.outputItemId, 0L);
+        boolean outputStackExists = outputQuantity > 0;
         for (int action = 0; action < batch; action++)
         {
             for (MethodIntelligenceCatalog.Ingredient input : recipe.inputs)
@@ -99,6 +100,9 @@ final class MethodCapacity
             }
             if (recipe.outputStackable)
             {
+                outputQuantity += recipe.outputsPerAction;
+                // Do not prove a batch whose resulting stack cannot fit live quantity evidence.
+                if (outputQuantity > Integer.MAX_VALUE) return false;
                 if (!outputStackExists && recipe.outputsPerAction > 0) occupied++;
                 outputStackExists = recipe.outputsPerAction > 0 || outputStackExists;
             }

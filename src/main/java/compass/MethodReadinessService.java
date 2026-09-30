@@ -24,7 +24,7 @@ final class MethodReadinessService
         String reason = method.unresolved != null ? method.unresolved
                 : access == RequirementState.VERIFIED ? "The modeled access requirements are verified."
                 : "Method access is unresolved or unavailable for this account.";
-        int review = 99;
+        int review = Math.min(99, training.maxLevel + 1);
         int xp = 0;
         if (data != null && data.account() != null)
         {
@@ -56,7 +56,7 @@ final class MethodReadinessService
                 if (tool.equippedAllowed) equippedReusable.add(tool.itemId);
             }
             MethodPreparation prep = preparation.evaluate(data, needs, group,
-                    method.bankLoop, method.purchaseAllowed, equippedReusable);
+                    method.bankLoop || method.bankSupplies, method.purchaseAllowed, equippedReusable);
             MethodReadiness candidate = new MethodReadiness(access, prep, capacity,
                     method, recipe, batch, reason, review, xp);
             if (best.recipe == null || candidate.adjustment() > best.adjustment()

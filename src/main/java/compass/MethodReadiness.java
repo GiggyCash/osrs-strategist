@@ -71,7 +71,7 @@ final class MethodReadiness
                 + recipe.skill.getName() + " XP remaining to this checkpoint.";
         return new Guidance(action, preparation.explanation(), method.location,
                 "Retain " + recipe.outputDescription + ". No disposal is assumed. "
-                        + "A working batch is verified; sustained efficiency and burn outcomes are not assumed.",
+                        + "A working batch is verified; processing outcomes and sustained efficiency are not inferred from available space.",
                 method.bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP : BankingMode.LOCAL_PROCESSING);
     }
 }

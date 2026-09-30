@@ -216,6 +216,66 @@
         "outputDescription": "each unfermented jug, including any bad wine after fermentation",
         "action": "Use grapes on jugs of water; wait for fermentation before reviewing the batch.",
         "efficientBatch": 14
+      },
+      {
+        "id": "regular_arrow_shafts",
+        "skill": "FLETCHING",
+        "level": 1,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1511,
+            "name": "Logs",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 15,
+        "outputStackable": true,
+        "outputItemId": 52,
+        "outputDescription": "the arrow shaft stack and reusable knife",
+        "action": "Use a knife on logs and select arrow shafts."
+      },
+      {
+        "id": "oak_arrow_shafts",
+        "skill": "FLETCHING",
+        "level": 15,
+        "workingBatch": 4,
+        "maximumBatch": 27,
+        "efficientBatch": 27,
+        "inputs": [
+          {
+            "itemId": 1521,
+            "name": "Oak logs",
+            "quantity": 1,
+            "stackable": false
+          }
+        ],
+        "tools": [
+          {
+            "itemId": 946,
+            "name": "Knife",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 30,
+        "outputStackable": true,
+        "outputItemId": 52,
+        "outputDescription": "the arrow shaft stack and reusable knife",
+        "action": "Use a knife on oak logs and select arrow shafts."
       }
     ],
     "methods": [
@@ -334,6 +394,23 @@
         "source": "https://oldschool.runescape.wiki/w/Gnome_Restaurant",
         "reviewed": "2026-09-30",
         "sourceRevision": 15345783
+      },
+      {
+        "ids": [
+          "fletching_arrow_shafts"
+        ],
+        "recipes": [
+          "regular_arrow_shafts",
+          "oak_arrow_shafts"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": true,
+        "location": "Grand Exchange bank area: use the knife on logs and retain the resulting arrow shafts. Withdraw stock only when preparation lists an observed bank supply.",
+        "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+        "reviewed": "2026-09-30",
+        "sourceRevision": 15332152
       }
     ]
   }

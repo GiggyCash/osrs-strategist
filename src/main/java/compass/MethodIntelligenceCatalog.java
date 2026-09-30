@@ -36,6 +36,7 @@ final class MethodIntelligenceCatalog
         String diaryRegion;
         DiaryTier diaryTier;
         Boolean bankLoop, purchaseAllowed, membersOnly;
+        boolean bankSupplies;
     }
 
     static final class Bundle
@@ -73,7 +74,7 @@ final class MethodIntelligenceCatalog
                     || recipe.efficientBatch > 0 && recipe.efficientBatch < recipe.workingBatch
                     || recipe.inputs == null || recipe.inputs.isEmpty() || recipe.tools == null
                     || recipe.outputsPerAction == null || recipe.outputsPerAction < 0
-                    || recipe.outputsPerAction > 28 || !text(recipe.action)
+                    || !recipe.outputStackable && recipe.outputsPerAction > 28 || !text(recipe.action)
                     || !text(recipe.outputDescription)
                     || recipe.outputStackable && recipe.outputItemId <= 0)
                 throw new IllegalStateException("Invalid method recipe");
