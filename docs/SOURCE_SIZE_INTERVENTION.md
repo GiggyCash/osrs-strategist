@@ -221,3 +221,19 @@ list while its cooking lesson and execution setup remain unobserved. Net change:
 -5 production Java lines / -198 characters / -50 estimated tokens; no new
 production file, schema, validator or recipe record. This deliberately preserves
 the unresolved route instead of expanding support without an access contract.
+
+## Checked recipe scaling shared across legacy and reviewed paths
+
+Removed the saturating multiply helper and the independent reviewed-recipe
+scaling loop. Legacy catalog rows, legacy inferred recipes and reviewed recipes
+now use one checked quantity boundary plus the existing exact-input merger.
+Overflow or incomplete identities discard the whole recipe rather than retaining
+partial inputs or claiming an exact Integer.MAX_VALUE requirement. Duplicate
+materials merge before guidance receives the recipe. Explicit no-consumable
+activities keep their separate representation.
+
+This correctness consolidation adds a net 7 production Java lines / 419
+characters / 105 estimated tokens, with no new production file or catalog data.
+The prior saturation regression now asserts rejection and a valid boundary;
+additional cases cover catalog overflow, duplicate totals and invalid identities.
+Existing recipe provenance and access limitations are unchanged.

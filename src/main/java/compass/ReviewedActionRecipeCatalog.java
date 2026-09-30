@@ -62,14 +62,7 @@ final class ReviewedActionRecipeCatalog
             if (actionUnitsPerBatch == null || count <= 0 || membersOnly && membership != Membership.P2P)
                 return UniversalActionRecipe.unknown("Recipe quantity or members access is unresolved.");
             int batches = (count - 1) / actionUnitsPerBatch + 1;
-            List<MethodInput> result = new ArrayList<>();
-            for (int i = 0; i < inputs.length; i++)
-            {
-                if (batches > Integer.MAX_VALUE / units[i])
-                    return UniversalActionRecipe.unknown("Recipe quantity exceeds supported planning capacity.");
-                result.add(new MethodInput(inputs[i], itemIds[i], batches * units[i]));
-            }
-            return new UniversalActionRecipe(result, setup, true);
+            return UniversalActionRecipe.scaled(inputs, itemIds, units, batches, setup);
         }
     }
 }

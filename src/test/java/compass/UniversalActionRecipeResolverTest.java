@@ -201,15 +201,17 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void largeSmithingCountSaturatesInsteadOfOverflowingNegative()
+    public void largeSmithingCountCannotClaimAnExactSaturatedQuantity()
     {
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.SMITHING, "Rune platebody", 375),
                 Integer.MAX_VALUE,
                 Membership.P2P);
 
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Runite bar", Integer.MAX_VALUE);
+        assertFalse(recipe.hasExactInputs());
+        assertTrue(recipe.getInputs().isEmpty());
+        assertInput(resolver.resolve(action(Skill.SMITHING, "Rune platebody", 375),
+                Integer.MAX_VALUE / 5, Membership.P2P), "Runite bar", Integer.MAX_VALUE / 5 * 5);
     }
 
     private static ActionDef action(

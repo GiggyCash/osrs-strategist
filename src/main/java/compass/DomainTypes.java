@@ -2467,6 +2467,24 @@ final class UniversalActionRecipe
         this.exactInputs = exactInputs;
     }
 
+    /** Invalid or unrepresentable material totals must never become exact guidance. */
+    static UniversalActionRecipe scaled(String[] names, int[] ids, int[] units, int count, String setup)
+    {
+        String unresolved = "Recipe quantity or ingredient identity is unresolved.";
+        if (count <= 0 || names == null || units == null || names.length == 0
+                || names.length != units.length || ids != null && ids.length != names.length)
+            return unknown(unresolved);
+        List<MethodInput> needs = new ArrayList<>();
+        for (int i = 0; i < names.length; i++)
+        {
+            long quantity = (long) count * units[i];
+            if (quantity <= 0 || quantity > Integer.MAX_VALUE) return unknown(unresolved);
+            needs.add(new MethodInput(names[i], ids == null ? -1 : ids[i], (int) quantity));
+        }
+        List<MethodInput> merged = MethodInput.mergeExact(needs, ids != null);
+        return merged == null ? unknown(unresolved) : new UniversalActionRecipe(merged, setup, true);
+    }
+
     public static UniversalActionRecipe noConsumedInputs(String setup)
     {
         return new UniversalActionRecipe(emptyList(), setup, true);

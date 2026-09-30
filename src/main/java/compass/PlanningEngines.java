@@ -3258,12 +3258,15 @@ class UniversalActionRecipeResolver
     private static UniversalActionRecipe recipe(String setup, int count,
             Object... items)
     {
-        List<MethodInput> inputs = new ArrayList<>();
-        for (int i = 0; i + 1 < items.length; i += 2)
-            if (items[i] != null && (Integer) items[i + 1] > 0)
-                inputs.add(new MethodInput((String) items[i], -1,
-                        multiply(count, (Integer) items[i + 1])));
-        return new UniversalActionRecipe(inputs, setup, true);
+        if (items.length % 2 != 0) return unknown("Recipe ingredients are unresolved.");
+        String[] names = new String[items.length / 2];
+        int[] units = new int[names.length];
+        for (int i = 0; i < names.length; i++)
+        {
+            names[i] = (String) items[i * 2];
+            units[i] = (Integer) items[i * 2 + 1];
+        }
+        return UniversalActionRecipe.scaled(names, null, units, count, setup);
     }
 
     private static UniversalActionRecipe none(String setup)
@@ -3306,10 +3309,6 @@ class UniversalActionRecipeResolver
                 && contains(lower, "bronze", "iron", "steel", "mithril",
                 "adamant", "rune", "amethyst", "dragon");
     }
-    private static int multiply(int a, int b)
-    {
-        return a > Integer.MAX_VALUE / b ? Integer.MAX_VALUE : a * b;
-    }
     private static String capitalize(String value)
     {
         return value == null || value.isEmpty() ? "Dragon"
@@ -3330,10 +3329,7 @@ class UniversalActionRecipeResolver
 
         private UniversalActionRecipe build(int count)
         {
-            List<MethodInput> result = new ArrayList<>();
-            for (int i = 0; i < inputs.length; i++)
-                result.add(new MethodInput(inputs[i], -1, multiply(count, units[i])));
-            return new UniversalActionRecipe(result, setup, true);
+            return UniversalActionRecipe.scaled(inputs, null, units, count, setup);
         }
     }
 }

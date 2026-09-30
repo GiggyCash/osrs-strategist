@@ -56,6 +56,36 @@ public class MethodInputAggregationTest
         }
     }
 
+    @Test
+    public void catalogRecipeOverflowDiscardsAllPartialInputs()
+    {
+        ActionDef steel = new ActionDef(Skill.SMITHING, "test:steel", "Steel bar", 1, 1, "test", Membership.P2P);
+        UniversalActionRecipe overflow = resolver.resolve(steel, Integer.MAX_VALUE, Membership.P2P);
+        assertFalse(overflow.hasExactInputs());
+        assertTrue(overflow.inputs.isEmpty());
+        UniversalActionRecipe boundary = resolver.resolve(steel, Integer.MAX_VALUE / 2, Membership.P2P);
+        assertTrue(boundary.hasExactInputs());
+        assertEquals(Integer.MAX_VALUE / 2 * 2, boundary.inputs.get(1).quantity);
+    }
+
+    @Test
+    public void scaledRecipesMergeDuplicatesAndRejectAmbiguousOrOverflowingTotals()
+    {
+        String[] names = {"Material", "Material"};
+        int[] ids = {123, 123};
+        UniversalActionRecipe merged = UniversalActionRecipe.scaled(names, ids, new int[] {2, 3}, 4, "Setup");
+        assertTrue(merged.hasExactInputs());
+        assertEquals(1, merged.inputs.size());
+        assertEquals(20, merged.inputs.get(0).quantity);
+        assertFalse(UniversalActionRecipe.scaled(names, ids, new int[] {1, 1}, Integer.MAX_VALUE, "Setup").hasExactInputs());
+        assertFalse(UniversalActionRecipe.scaled(new String[] {"Material", "Different"}, ids,
+                new int[] {1, 1}, 1, "Setup").hasExactInputs());
+        assertFalse(UniversalActionRecipe.scaled(names, new int[] {123}, new int[] {1, 1}, 1, "Setup").hasExactInputs());
+        assertFalse(UniversalActionRecipe.scaled(names, ids, new int[] {0, 1}, 1, "Setup").hasExactInputs());
+        assertFalse(UniversalActionRecipe.scaled(names, new int[] {123, -1}, new int[] {1, 1}, 1, "Setup").hasExactInputs());
+        assertFalse(UniversalActionRecipe.scaled(new String[] {null}, null, new int[] {1}, 1, "Setup").hasExactInputs());
+    }
+
     private static MethodProfile profile(double... units)
     {
         MethodProfile profile = new MethodProfile();
