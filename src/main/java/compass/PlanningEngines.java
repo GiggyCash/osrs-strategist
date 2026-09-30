@@ -3096,10 +3096,12 @@ class UniversalActionRecipeResolver
     {
         if (profile == null || action == null || count <= 0) return emptyList();
         if (profile.inputs == null) return null;
-        if (profile.reviewedInputs)
+        if (profile.reviewedRecipes != null)
         {
             if (!profile.inputs.isEmpty()) return null;
-            var reviewed = REVIEWED.recipe(action.getSkill(), Names.lower(action.getName()));
+            String key = action.getSkill() + ":" + Names.lower(action.getName());
+            if (!profile.reviewedRecipes.contains(key)) return null;
+            var reviewed = REVIEWED.recipe(key);
             if (reviewed == null) return null;
             var recipe = reviewed.build(count, membership);
             return recipe.hasExactInputs() ? recipe.inputs : null;

@@ -15,7 +15,7 @@ public class GemRecipeTest
     {
         String[] names = {"Sapphire", "Emerald", "Ruby", "Diamond", "Dragonstone", "Onyx"};
         int[] ids = {1623, 1621, 1619, 1617, 1631, 6571};
-        assertTrue(profile.reviewedInputs);
+        assertNotNull(profile.reviewedRecipes);
         assertTrue(profile.inputs.isEmpty());
         for (int i = 0; i < names.length; i++)
         {

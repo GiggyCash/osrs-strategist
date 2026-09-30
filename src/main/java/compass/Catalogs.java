@@ -414,9 +414,20 @@ class MethodExecutionProfileCatalog extends IndexedCatalog<MethodProfile>
     public MethodExecutionProfileCatalog()
     {
         super(RESOURCE, MethodProfile[].class, MethodProfile::getMethodId);
-        for (MethodProfile profile : values) if (profile.actionTerms == null || profile.inputs == null
-                || profile.reviewedInputs && !profile.inputs.isEmpty())
-            throw new IllegalStateException(Text.get(1224) + RESOURCE);
+        ReviewedActionRecipeCatalog recipes = new ReviewedActionRecipeCatalog();
+        for (MethodProfile profile : values)
+        {
+            if (profile.actionTerms == null || profile.inputs == null
+                    || profile.reviewedRecipes != null && !profile.inputs.isEmpty())
+                throw new IllegalStateException(Text.get(1224) + RESOURCE);
+            if (profile.reviewedRecipes != null)
+            {
+                Set<String> seen = new HashSet<>();
+                for (String key : profile.reviewedRecipes)
+                    if (recipes.recipe(key) == null || !seen.add(key))
+                        throw new IllegalStateException("Invalid profile recipe reference: " + key);
+            }
+        }
     }
 
     public MethodProfile forMethod(String methodId) { return indexed(methodId); }

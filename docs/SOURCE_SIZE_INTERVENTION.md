@@ -316,3 +316,15 @@ Net production change: -13 lines / -504 characters / -126 estimated tokens, with
 no new production files or data. Added cross-mode acquisition scenarios verify
 that unknown inventory or equipment cannot justify a detour, while known empty
 observations can. Existing purchase and group-storage tests cover those paths.
+
+## Explicit recipe scope replaces the broad review flag
+
+The seven migrated execution profiles now declare exact recipe keys; the broad
+reviewedInputs flag is removed. A shared catalog row is knowledge, not permission
+to use that row in every method matching a substring. Validation and resolution
+reuse the existing catalog and profile boundary, without a new service or file.
+
+Net production change: +15 Java lines / +754 characters / +189 estimated tokens.
+This is an intentional correctness boundary, not a source reduction claim. No
+recipe facts were added. Cross-product coverage checks all seven profiles against
+all 66 reviewed rows; a misleading ID/category cannot promote another activity.

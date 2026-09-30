@@ -42,7 +42,8 @@ public final class MethodProfile
     String unitPlural;
     double xpMultiplier;
     List<MethodInputRule> inputs;
-    boolean reviewedInputs;
+    // Null keeps legacy rules; an empty list deliberately leaves the method unresolved.
+    List<String> reviewedRecipes;
     String note;
     ProgressEstimateMode progressEstimateMode;
 

@@ -214,7 +214,7 @@ No new training method or full readiness contract is introduced here.
 ## Reviewed execution-profile inputs
 
 The adaptive profile path now shares reviewed inputs for the existing dart,
-F2P fish, F2P fish baseline and wine profiles. `reviewedInputs` requires an empty
+F2P fish, F2P fish baseline and wine profiles. `reviewedRecipes` requires an empty
 legacy rule list and resolves the exact action through the shared catalog.
 Both adaptive selection and milestone guidance pass account membership into
 that lookup. Missing recipes, unavailable membership and conflicting inline
@@ -272,3 +272,16 @@ remains unresolved: Wiki revision 15357771 reports 50 cutting XP, while the
 public RuneLite CraftingAction inspected on 2026-09-30 still reports 200. No
 speculative XP override or recipe is used to bridge that disagreement. Jewelry
 has a separate existing path; its presence does not make it a gem-cutting action.
+
+## Reviewed execution profiles declare their recipe scope
+
+Seven migrated profiles now reference exact SKILL:name recipe keys instead of a
+boolean enabling the whole reviewed catalog. Missing or duplicate references
+fail catalog validation. A present empty list deliberately keeps karambwan
+unresolved; an absent list retains the legacy input rules until that profile is
+migrated. Inline input rules cannot override reviewed references.
+
+Search terms remain discovery hints, but cannot authorize a different activity
+because its category or ID happens to match. Selection and stage boundaries both
+use the same explicit recipe check. This adds no recipes or methods and does not
+turn ingredient identity into proof of tools, unlocks, affordability or capacity.

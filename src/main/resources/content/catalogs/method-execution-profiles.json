@@ -212,7 +212,15 @@
     "inputs": [],
     "note": "Models the basic feathering step for metal bolts; gem-tipping variants need a separate gem-input profile.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "FLETCHING:bronze bolts",
+      "FLETCHING:iron bolts",
+      "FLETCHING:steel bolts",
+      "FLETCHING:mithril bolts",
+      "FLETCHING:adamant bolts",
+      "FLETCHING:runite bolts",
+      "FLETCHING:dragon bolts"
+    ]
   },
   {
     "methodId": "agility_canifis_marks",
@@ -318,7 +326,17 @@
     "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "COOKING:shrimps",
+      "COOKING:sardine",
+      "COOKING:herring",
+      "COOKING:trout",
+      "COOKING:pike",
+      "COOKING:salmon",
+      "COOKING:tuna",
+      "COOKING:lobster",
+      "COOKING:swordfish"
+    ]
   },
   {
     "methodId": "smithing_f2p_uim_bronze",
@@ -489,7 +507,7 @@
     "inputs": [],
     "note": "Cooking lesson and execution setup must be verified before this route can provide ingredient guidance; raw stock alone does not prove readiness.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": []
   },
   {
     "methodId": "mining_f2p_iron",
@@ -764,7 +782,14 @@
     "xpMultiplier": 1.0,
     "inputs": [],
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "CRAFTING:sapphire",
+      "CRAFTING:emerald",
+      "CRAFTING:ruby",
+      "CRAFTING:diamond",
+      "CRAFTING:dragonstone",
+      "CRAFTING:onyx"
+    ]
   },
   {
     "methodId": "magic_f2p_fire_strike_splash",
@@ -984,7 +1009,17 @@
     "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "COOKING:shrimps",
+      "COOKING:sardine",
+      "COOKING:herring",
+      "COOKING:trout",
+      "COOKING:pike",
+      "COOKING:salmon",
+      "COOKING:tuna",
+      "COOKING:lobster",
+      "COOKING:swordfish"
+    ]
   },
   {
     "methodId": "runecraft_blood",
@@ -1066,7 +1101,16 @@
     "inputs": [],
     "note": "Quantities are per dart. This route is only selected after the relevant dart-making unlock is available.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "FLETCHING:bronze dart",
+      "FLETCHING:iron dart",
+      "FLETCHING:steel dart",
+      "FLETCHING:mithril dart",
+      "FLETCHING:adamant dart",
+      "FLETCHING:rune dart",
+      "FLETCHING:amethyst dart",
+      "FLETCHING:dragon dart"
+    ]
   },
   {
     "methodId": "runecraft_soul",
@@ -1131,7 +1175,9 @@
     "inputs": [],
     "note": "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
     "progressEstimateMode": "EXACT_ACTIONS",
-    "reviewedInputs": true
+    "reviewedRecipes": [
+      "COOKING:jug of wine"
+    ]
   },
   {
     "methodId": "herblore_prayer_potions",

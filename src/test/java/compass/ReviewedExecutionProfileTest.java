@@ -20,7 +20,7 @@ public class ReviewedExecutionProfileTest
             MethodProfile profile = profiles.forMethod(ids[i]);
             Skill skill = i == 0 ? Skill.FLETCHING : Skill.COOKING;
             ActionDef action = action(skill, names[i], 1);
-            assertTrue(profile.reviewedInputs);
+            assertNotNull(profile.reviewedRecipes);
             assertTrue(profile.inputs.isEmpty());
             List<MethodInput> inputs = resolver.profileInputs(profile, action, 10, Membership.P2P);
             List<MethodInput> universal = resolver.resolve(action, 10, Membership.P2P).inputs;
@@ -66,7 +66,7 @@ public class ReviewedExecutionProfileTest
     public void unresolvedKarambwanProfileCannotInventIngredientsOrWinSelection()
     {
         MethodProfile profile = profiles.forMethod("cooking_karambwan_1t");
-        assertTrue(profile.reviewedInputs);
+        assertNotNull(profile.reviewedRecipes);
         assertTrue(profile.inputs.isEmpty());
         for (String name : Arrays.asList("Cooked karambwan", "Poison karambwan", "Future cooked karambwan"))
         {
@@ -79,6 +79,40 @@ public class ReviewedExecutionProfileTest
                 assertNull(new AdaptiveActionSelector().select(data, profile,
                         Collections.singletonList(action), 80, Membership.P2P, 0, 10000, 1, false));
             }
+        }
+    }
+
+    @Test
+    public void reviewedKnowledgeCannotLeakAcrossMethodContracts()
+    {
+        ReviewedActionRecipeCatalog.Recipe[] recipes = BundledCatalogLoader.array(
+                "/content/catalogs/reviewed-action-recipes.json", ReviewedActionRecipeCatalog.Recipe[].class);
+        for (MethodProfile profile : profiles.all().values())
+        {
+            if (profile.reviewedRecipes == null) continue;
+            for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
+            {
+                ActionDef action = action(Skill.valueOf(recipe.skill), recipe.match, 1);
+                boolean allowed = profile.reviewedRecipes.contains(recipe.skill + ":" + recipe.match);
+                assertEquals(profile.methodId + " / " + recipe.match, allowed,
+                        resolver.profileInputs(profile, action, 10, Membership.P2P) != null);
+            }
+        }
+    }
+
+    @Test
+    public void misleadingSearchTermsCannotAdmitAnotherReviewedActivity()
+    {
+        MethodProfile profile = profiles.forMethod("fletching_darts");
+        ActionDef otherActivity = new ActionDef(Skill.FLETCHING, "test:bronze_dart", "Arrow shaft",
+                1, 1000, "bronze_dart", Membership.P2P);
+        ActionDef supported = action(Skill.FLETCHING, "Bronze dart", 1.8f);
+        assertTrue(resolver.resolve(otherActivity, 10, Membership.P2P).hasExactInputs());
+        for (int mode = 0; mode <= 6; mode++)
+        {
+            GameData data = MethodIntelligenceTest.data(mode, -1, Collections.emptyList(), Collections.emptyList());
+            assertSame(supported, new AdaptiveActionSelector().select(data, profile,
+                    Arrays.asList(otherActivity, supported), 99, Membership.P2P, 0, 10000, 1, false));
         }
     }
 

@@ -15,7 +15,8 @@ final class ReviewedActionRecipeCatalog
             recipes.put(recipe.skill + ":" + recipe.match, recipe);
     }
 
-    Recipe recipe(Skill skill, String name) { return recipes.get(skill + ":" + name); }
+    Recipe recipe(String key) { return recipes.get(key); }
+    Recipe recipe(Skill skill, String name) { return recipe(skill + ":" + name); }
 
     static Recipe[] validate(Recipe[] recipes)
     {

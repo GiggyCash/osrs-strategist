@@ -39,7 +39,7 @@ public class BoltRecipeTest
     public void reviewedProfileCannotRecreateUnsupportedBoltInputs()
     {
         MethodProfile profile = new MethodExecutionProfileCatalog().forMethod("fletching_bolts");
-        assertTrue(profile.reviewedInputs);
+        assertNotNull(profile.reviewedRecipes);
         assertTrue(profile.inputs.isEmpty());
         assertEquals(9380, resolver.profileInputs(profile, action("Adamant bolts", 7), 11, Membership.P2P).get(0).itemId);
         ActionDef unknown = action("Future bronze bolts", 10000);
