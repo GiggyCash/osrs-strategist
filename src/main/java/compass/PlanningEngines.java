@@ -2899,11 +2899,11 @@ class StrategyEngine
     {
         if (pool == null || pool.isEmpty()) return emptyList();
 
-        Map<Recommendation, Double> scores = new IdentityHashMap<>();
         List<Recommendation> ready = new ArrayList<>();
         List<Recommendation> secondary = new ArrayList<>();
-        for (Recommendation recommendation : deduplicator.deduplicate(pool))
+        for (Recommendation recommendation : pool)
         {
+            if (recommendation == null) continue;
             recommendation = goalProvenanceService.attach(
                     recommendation, context);
             var semanticKey = deduplicator.semanticKey(recommendation);
@@ -2913,13 +2913,22 @@ class StrategyEngine
                     .isSemanticOnCooldown(semanticKey))) continue;
             if (!candidateSafetyPolicy.isAllowed(recommendation, context)) continue;
             if (!actionabilityPolicy.mayAppearAsAlternative(recommendation)) continue;
-            double score = intelligenceService.rankScore(recommendation, context)
-                    + semanticPreferenceScore(recommendation, context);
-            if (!Double.isFinite(score)) continue;
-            scores.put(recommendation, score);
             if (actionabilityPolicy.canLeadQueue(recommendation)) ready.add(recommendation);
             else secondary.add(recommendation);
         }
+
+        // Invalid or secondary duplicates must not suppress an executable candidate.
+        ready = deduplicator.deduplicate(ready);
+        secondary = deduplicator.deduplicate(secondary);
+        Map<Recommendation, Double> scores = new IdentityHashMap<>();
+        for (List<Recommendation> tier : Arrays.asList(ready, secondary))
+            tier.removeIf(recommendation -> {
+                double score = intelligenceService.rankScore(recommendation, context)
+                        + semanticPreferenceScore(recommendation, context);
+                if (!Double.isFinite(score)) return true;
+                scores.put(recommendation, score);
+                return false;
+            });
 
         Comparator<Recommendation> byAccountValue = Comparator
                 .comparingDouble((Recommendation recommendation) -> scores.get(recommendation))

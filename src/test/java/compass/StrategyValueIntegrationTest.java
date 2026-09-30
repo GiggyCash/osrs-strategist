@@ -20,6 +20,19 @@ import org.junit.Test;
 public class StrategyValueIntegrationTest
 {
     @Test
+    public void unsafeDuplicateCannotEraseASafeExecutableCandidate()
+    {
+        Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());
+        Recommendation unsafe = new Recommendation("candidate:unsafe", valid.title, "Unsafe duplicate", 500,
+                Confidence.VERIFIED, guidance(), Safety.unknown());
+        AccountSnapshot hardcore = account(3, "HARDCORE_IRONMAN", null, 70);
+        StrategyContext context = context(hardcore, GameData.builder(hardcore).build());
+        List<Recommendation> queue = engine(null, null).buildPlayerQueue(Arrays.asList(unsafe, valid), context);
+        assertEquals(1, queue.size());
+        assertEquals(valid.id, queue.get(0).id);
+    }
+
+    @Test
     public void nonFiniteScoresCannotPoisonDuplicatesOrLeadTheFinalQueue()
     {
         Recommendation valid = ready("candidate:valid", 50, StrategicValue.neutral());

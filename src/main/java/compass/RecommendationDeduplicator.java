@@ -66,6 +66,7 @@ public final class RecommendationDeduplicator
                 primary.plan(), primary.confidence,
                 primary.currentLevel, primary.targetLevel,
                 primary.guidance, primary.safetyEvidence)
+                .withGoalProvenance(primary.goalProvenance)
                 .withStrategicValue(first.strategicValue.merge(
                         second.strategicValue));
     }
