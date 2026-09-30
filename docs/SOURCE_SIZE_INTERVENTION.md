@@ -303,3 +303,16 @@ Net production change: +3 Java lines / +110 characters / +27 estimated tokens,
 with no new production file or data. Three independent accumulation loops were
 replaced. Regression coverage includes duplicate IDs, overflow through each
 query surface, invalid stacks and the actual preparation consumer.
+
+## Preparation shares ownership policy
+
+MethodPreparationService now delegates purchase observation to ItemIndex's
+primary ownership boundary and acquisition observation to its usable ownership
+boundary. The duplicate inventory/equipment/bank/UIM/group completeness helper
+and local observation helper are removed. The explicit UNKNOWN-mode acquisition
+rejection remains; known carried or retrieved stock still resolves independently.
+
+Net production change: -13 lines / -504 characters / -126 estimated tokens, with
+no new production files or data. Added cross-mode acquisition scenarios verify
+that unknown inventory or equipment cannot justify a detour, while known empty
+observations can. Existing purchase and group-storage tests cover those paths.

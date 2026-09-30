@@ -50,6 +50,21 @@ public class MethodAcquisitionTest
     }
 
     @Test
+    public void acquisitionRequiresObservedInventoryAndEquipmentForEveryMode()
+    {
+        for (int mode : new int[] {0, 1, 2, 3, 4, 5, 6, -1})
+            for (int missing = 0; missing < 3; missing++)
+            {
+                ItemsState known = new ItemsState(empty());
+                GameData data = GameData.builder(MethodIntelligenceTest.account(mode))
+                        .inventory(missing == 0 ? ItemsState.unknown() : known)
+                        .equipment(missing == 1 ? ItemsState.unknown() : known)
+                        .bank(known).build();
+                assertEquals(mode >= 0 && missing == 2, prepare(data, knife()).feasible());
+            }
+    }
+
+    @Test
     public void unsupportedRemainderCannotExposeAPartialAcquisitionPlan()
     {
         List<MethodInput> needs = Arrays.asList(new MethodInput("Knife", 946, 1),

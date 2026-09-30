@@ -82,10 +82,10 @@ final class MethodPreparationService
         }
         if (missing.isEmpty()) return new MethodPreparation(preparation
                 ? MethodPreparation.State.VERIFIED : MethodPreparation.State.READY, steps, 0);
+        ItemIndex ownership = new ItemIndex(data, group);
         MethodPreparation purchasePlan = null;
         if (purchaseAllowed && mode.usesGrandExchange() && resources != null
-                && observed(data.inventory()) && observed(data.equipment())
-                && observed(data.bank()))
+                && ownership.primaryOwnershipObserved())
         {
             AccountResourcePlanner.Purchase purchase = resources.purchase(data, missing);
             List<MethodPreparation.Step> purchaseSteps = new ArrayList<>(steps);
@@ -100,7 +100,7 @@ final class MethodPreparationService
         }
         // Prove every remaining source before exposing any acquisition plan. Unknown
         // ownership must not be turned into a fabricated shortfall or repeated detour.
-        if (acquisition != null && ownershipObserved(data, mode, group))
+        if (acquisition != null && mode != AccountMode.UNKNOWN && ownership.usableOwnershipObserved())
         {
             List<MethodPreparation.Step> sourced = new ArrayList<>(steps);
             boolean complete = true;
@@ -119,19 +119,6 @@ final class MethodPreparationService
                             + "; no verified source/retrieval plan."
                             + (mode == AccountMode.ULTIMATE_IRONMAN ? " UIM bank or restricted storage is not assumed." : "")));
         return new MethodPreparation(MethodPreparation.State.UNRESOLVED, steps, 0);
-    }
-
-    private static boolean ownershipObserved(GameData data, AccountMode mode, boolean group)
-    {
-        return data != null && mode != AccountMode.UNKNOWN
-                && observed(data.inventory()) && observed(data.equipment())
-                && (mode == AccountMode.ULTIMATE_IRONMAN || observed(data.bank()))
-                && (!group || !mode.isGroupIronman() || observed(data.groupStorage()));
-    }
-
-    private static boolean observed(ItemsState items)
-    {
-        return items != null && items.isObserved();
     }
 
     private static int quantity(ItemsState items, int id)
