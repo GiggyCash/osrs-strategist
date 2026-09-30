@@ -285,3 +285,19 @@ Search terms remain discovery hints, but cannot authorize a different activity
 because its category or ID happens to match. Selection and stage boundaries both
 use the same explicit recipe check. This adds no recipes or methods and does not
 turn ingredient identity into proof of tools, unlocks, affordability or capacity.
+
+## Existing standard bow cutting and stringing
+
+Twelve unstrung standard-bow recipes and eleven stringing recipes now use exact
+reviewed ingredients. The existing fletching_bows profile references only the
+12 cutting recipes, so stringing cannot enter the log-cutting route. Creation is
+members-only even when the finished bow is F2P. Cutting retains a reusable knife;
+stringing consumes an unstrung bow and bow string. No new training method or
+acquisition/readiness proof is introduced.
+
+Both universal bow name heuristics and the LOG_FOR_BOW profile transformation
+are removed. This also prevents crossbows from entering the old bow-(u) suffix
+branch and being incorrectly assigned logs. Invented and modified bow names stay
+unresolved. Willow shortbow stringing is deliberately unresolved: Wiki revision
+15183273 reports 33.2 XP while current RuneLite FletchingAction reports 33.3;
+its cutting recipe independently agrees at 33.3. No XP override is inferred.

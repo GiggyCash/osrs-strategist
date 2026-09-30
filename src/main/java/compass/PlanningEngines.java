@@ -3133,9 +3133,6 @@ class UniversalActionRecipeResolver
                 name = value;
                 itemId = action.itemId;
                 break;
-            case LOG_FOR_BOW:
-                name = wood(value, "Logs");
-                break;
             case BAR_FOR_SMITHED_ITEM:
                 String metal = first(lower, "bronze", "iron", "steel",
                         "mithril", "adamant", "rune");
@@ -3210,10 +3207,6 @@ class UniversalActionRecipeResolver
     {
         if (lower.equals("headless arrow") || lower.equals("headless arrows"))
             return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
-        if (lower.endsWith("bow (u)"))
-            return recipe("Bring a knife.", n, wood(name, "Logs"), 1);
-        if (contains(lower, "shortbow", "longbow") && !lower.contains("(u)"))
-            return recipe(get(1266), n, name + " (u)", 1, "Bow string", 1);
         if (lower.endsWith(" shield") || lower.endsWith(" stock"))
             return recipe("Bring a knife.", n, wood(name, null),
                     lower.endsWith(" shield") ? 2 : 1);

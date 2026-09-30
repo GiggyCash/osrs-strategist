@@ -1538,5 +1538,555 @@
     "sourceRevision": 15357764,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "shortbow (u)",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Shortbow_(u)",
+    "sourceRevision": 15184949,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "shortbow",
+    "inputs": [
+      "Shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      50,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Shortbow",
+    "sourceRevision": 15336512,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "longbow (u)",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Longbow_(u)",
+    "sourceRevision": 15272110,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "longbow",
+    "inputs": [
+      "Longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      48,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Longbow",
+    "sourceRevision": 15343873,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak shortbow (u)",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_shortbow_(u)",
+    "sourceRevision": 15183291,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak shortbow",
+    "inputs": [
+      "Oak shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      54,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_shortbow",
+    "sourceRevision": 15322390,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak longbow (u)",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_longbow_(u)",
+    "sourceRevision": 15272112,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak longbow",
+    "inputs": [
+      "Oak longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      56,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_longbow",
+    "sourceRevision": 15322339,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow shortbow (u)",
+    "inputs": [
+      "Willow logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1519
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_shortbow_(u)",
+    "sourceRevision": 15185210,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow longbow (u)",
+    "inputs": [
+      "Willow logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1519
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_longbow_(u)",
+    "sourceRevision": 15272117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow longbow",
+    "inputs": [
+      "Willow longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      58,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_longbow",
+    "sourceRevision": 15272114,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple shortbow (u)",
+    "inputs": [
+      "Maple logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1517
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_shortbow_(u)",
+    "sourceRevision": 15184137,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple shortbow",
+    "inputs": [
+      "Maple shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      64,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_shortbow",
+    "sourceRevision": 15322337,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple longbow (u)",
+    "inputs": [
+      "Maple logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1517
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_longbow_(u)",
+    "sourceRevision": 15272118,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple longbow",
+    "inputs": [
+      "Maple longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      62,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_longbow",
+    "sourceRevision": 15322335,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew shortbow (u)",
+    "inputs": [
+      "Yew logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1515
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_shortbow_(u)",
+    "sourceRevision": 15184282,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew shortbow",
+    "inputs": [
+      "Yew shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      68,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_shortbow",
+    "sourceRevision": 15183551,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew longbow (u)",
+    "inputs": [
+      "Yew logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1515
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_longbow_(u)",
+    "sourceRevision": 15272119,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew longbow",
+    "inputs": [
+      "Yew longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      66,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_longbow",
+    "sourceRevision": 15272116,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic shortbow (u)",
+    "inputs": [
+      "Magic logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1513
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_shortbow_(u)",
+    "sourceRevision": 15185211,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic shortbow",
+    "inputs": [
+      "Magic shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      72,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_shortbow",
+    "sourceRevision": 15183117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic longbow (u)",
+    "inputs": [
+      "Magic logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1513
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_longbow_(u)",
+    "sourceRevision": 15272120,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic longbow",
+    "inputs": [
+      "Magic longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      70,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_longbow",
+    "sourceRevision": 15322392,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

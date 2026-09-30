@@ -695,14 +695,23 @@
     "unitSingular": "unstrung bow fletched",
     "unitPlural": "unstrung bows fletched",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "LOG_FOR_BOW",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Uses unstrung shortbow/longbow actions so the supply count is logs, not bowstrings.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "FLETCHING:shortbow (u)",
+      "FLETCHING:longbow (u)",
+      "FLETCHING:oak shortbow (u)",
+      "FLETCHING:oak longbow (u)",
+      "FLETCHING:willow shortbow (u)",
+      "FLETCHING:willow longbow (u)",
+      "FLETCHING:maple shortbow (u)",
+      "FLETCHING:maple longbow (u)",
+      "FLETCHING:yew shortbow (u)",
+      "FLETCHING:yew longbow (u)",
+      "FLETCHING:magic shortbow (u)",
+      "FLETCHING:magic longbow (u)"
+    ]
   },
   {
     "methodId": "hunter_bird_traps",

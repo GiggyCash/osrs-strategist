@@ -328,3 +328,16 @@ Net production change: +15 Java lines / +754 characters / +189 estimated tokens.
 This is an intentional correctness boundary, not a source reduction claim. No
 recipe facts were added. Cross-product coverage checks all seven profiles against
 all 66 reviewed rows; a misleading ID/category cannot promote another activity.
+
+## Paired bow inference paths removed
+
+Reviewed standard-bow records replace both universal cutting/stringing heuristics
+and the LOG_FOR_BOW profile branch/enum. The existing wood helper remains for
+shield/stock and bird-house paths; it is not claimed as removed. Crossbows no
+longer inherit a log recipe from an overbroad suffix. Exact profile references
+separate cutting from stringing, and the conflicting Willow stringing XP stays
+unresolved rather than receiving guessed support.
+
+Net production change: -8 Java lines / -382 characters / -96 estimated tokens;
+no new production file, schema or validator. Twenty-three evidence-backed records
+replace existing inferred coverage, with no new training methods.
