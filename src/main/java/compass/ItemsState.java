@@ -80,21 +80,16 @@ public final class ItemsState
 
     public int quantityOf(int itemId)
     {
-        var total = 0;
-        for (ItemState item : items)
-            if (item != null && item.itemId == itemId)
-                total += item.quantity;
-        return total;
+        return sum(item -> item.itemId == itemId);
     }
 
     public int quantityOf(int... itemIds)
     {
-        var total = 0;
-        if (itemIds == null) return total;
-        for (ItemState item : items)
-            if (item != null) for (int id : itemIds)
-                if (item.itemId == id) total += item.quantity;
-        return total;
+        if (itemIds == null) return 0;
+        return sum(item -> {
+            for (int id : itemIds) if (item.itemId == id) return true;
+            return false;
+        });
     }
 
     public int quantityNamed(String... names)
@@ -107,13 +102,21 @@ public final class ItemsState
 
     public int quantityWhere(Predicate<String> nameTest)
     {
-        var total = 0;
-        if (nameTest == null) return total;
+        return nameTest == null ? 0 : sum(item -> item.getName() != null
+                && nameTest.test(item.getName().toLowerCase(Locale.ROOT)));
+    }
+
+    /** Ownership totals are lower bounds at the integer limit, never wrapped shortages. */
+    private int sum(Predicate<ItemState> matches)
+    {
+        long total = 0;
         for (ItemState item : items)
-            if (item != null && item.getName() != null
-                    && nameTest.test(item.getName().toLowerCase(Locale.ROOT)))
-                total += max(0, item.quantity);
-        return total;
+            if (item != null && item.quantity > 0 && matches.test(item))
+            {
+                total += item.quantity;
+                if (total >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
+            }
+        return (int) total;
     }
 
     public boolean containsItem(int itemId)

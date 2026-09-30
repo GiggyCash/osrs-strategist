@@ -289,3 +289,17 @@ Net production change: +5 Java lines / +131 characters / +33 estimated tokens.
 No new production file or catalog data. Regression coverage distinguishes known
 empty and explicitly unknown snapshots across all account modes, rejects
 unobserved payloads, and preserves UIM's distinct resource/ownership boundaries.
+
+## Container quantities share checked accumulation
+
+ItemsState's single-ID, multi-ID and name-predicate totals now use one positive
+stack accumulator. Duplicate requested IDs match a stack once; invalid negative
+stacks cannot subtract observed stock. Totals stop at Integer.MAX_VALUE as an
+ownership lower bound instead of wrapping into a shortage. This differs from
+recipe requirements: an unrepresentable required quantity still fails closed.
+Observation checks remain at the existing caller boundaries.
+
+Net production change: +3 Java lines / +110 characters / +27 estimated tokens,
+with no new production file or data. Three independent accumulation loops were
+replaced. Regression coverage includes duplicate IDs, overflow through each
+query surface, invalid stacks and the actual preparation consumer.
