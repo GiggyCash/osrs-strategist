@@ -3216,12 +3216,6 @@ class UniversalActionRecipeResolver
             return gem == null ? recipe(get(1265), n, bar, 1)
                     : recipe(get(1265), n, bar, 1, capitalize(gem), 1);
         }
-        if (contains(lower, "battlestaff", "battlestave"))
-        {
-            var element = first(lower, "air", "water", "earth", "fire");
-            if (element != null) return recipe(get(912), n, "Battlestaff", 1,
-                    capitalize(element) + " orb", 1);
-        }
         return unknown(get(913));
     }
 

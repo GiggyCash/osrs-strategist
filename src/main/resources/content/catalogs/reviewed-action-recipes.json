@@ -706,5 +706,109 @@
     "sourceRevision": 15332152,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": null
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "air battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Air orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged air orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Air_battlestaff",
+    "sourceRevision": 15182754,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "water battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Water orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      571
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged water orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Water_battlestaff",
+    "sourceRevision": 15184146,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "earth battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Earth orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      575
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged earth orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Earth_battlestaff",
+    "sourceRevision": 15182985,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "fire battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Fire orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      569
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged fire orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_battlestaff",
+    "sourceRevision": 15320213,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

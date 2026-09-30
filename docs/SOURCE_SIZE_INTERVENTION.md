@@ -157,3 +157,15 @@ remain the behavioral gates. The next embedded-knowledge seam is the remaining
 Crafting/Fletching inference in UniversalActionRecipeResolver: suffix-based wood,
 metal and composite input guesses must be replaced only with reviewed facts,
 not transcribed into trusted data indiscriminately.
+
+## Elemental battlestaff inference removed
+
+Replaced the existing four-element Crafting assembly family with four reviewed
+rows in the shared catalog. Deleted the six-line substring/element inference
+branch in UniversalActionRecipeResolver; no replacement production Java was
+needed. Net production delta: -6 lines / -284 characters / -71 estimated tokens.
+This is semantic knowledge removal rather than a file move. Targeted scenarios
+retain the four canonical recipes and reject invented higher-XP staff candidates
+for Main/Iron/UIM; membership is explicit in the reviewed records. Remaining
+Crafting gem, jewellery, leather, glass and bird-house inference still requires
+its own evidence-backed migration. No broad method expansion is implied.

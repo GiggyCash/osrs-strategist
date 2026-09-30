@@ -160,3 +160,17 @@ The existing Arrow shaft Wiki revision 15332152 provides the batch yields; Logs
 RuneLite FletchingAction source was checked on 2026-09-30 for its individual-shaft
 calculator unit. Other Fletching name-inference branches remain separate audit
 work; this change does not broaden method coverage.
+
+## Existing battlestaff assembly family
+
+The four elemental battlestaff assembly recipes now use the shared reviewed
+catalog. Each consumes one battlestaff and its charged elemental orb per crafted
+staff. Ingredient IDs and non-stackability were checked against the current
+Battlestaff/orb Wiki pages; assembly provenance is recorded on each output row.
+RuneLite's current CraftingAction entries were checked for the same four outputs.
+
+This replaces the Java substring/element-name inference; it adds no training
+method, orb-charging plan or transmutation route. F2P and unknown membership
+cannot resolve these members recipes, even if an action is mislabeled. Unknown
+staff names remain unresolved instead of acquiring guessed ingredients. Existing
+level/access/resource/readiness checks retain their separate responsibilities.
