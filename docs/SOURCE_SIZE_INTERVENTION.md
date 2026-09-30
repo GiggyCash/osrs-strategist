@@ -246,3 +246,18 @@ shared catalog; variable soft gems and the conflicting zenyte XP remain unresolv
 The gemName helper still serves legacy jewelry and is not claimed as removed.
 Net production change: -7 Java lines / -358 characters / -90 estimated tokens,
 without new production files, schemas or validators. No broad method expansion.
+
+## Stage transitions share recipe and access checks
+
+Adaptive stage resolution formerly used only name matching and future levels,
+so an action rejected by execution selection could still shorten the current
+stage. It now reuses the same profile-input boundary and membership policy,
+with live membership supplied by RecommendationEngine. The legacy overload
+fails closed to UNKNOWN. Both paths reject non-finite or non-positive XP.
+Curated method level-band boundaries remain independent and preserved.
+
+Net production change: +9 Java lines / +526 characters / +132 estimated tokens;
+no added production file or data. This consolidates eligibility policy rather
+than adding an action-specific exception. It does not certify future resources,
+access unlocks or setup; it only prevents unsupported actions from creating a
+spurious recipe transition.

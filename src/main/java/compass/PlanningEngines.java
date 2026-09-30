@@ -1708,7 +1708,7 @@ class RecommendationEngine
                 if (highestRankedPlan == null) highestRankedPlan = candidate;
                 Guidance candidateGuidance = buildGuidance(
                         context, skill, level,
-                        actionResolver.resolve(candidate, level, target),
+                        actionResolver.resolve(candidate, level, target, snapshot.membership()),
                         candidate);
                 if (candidateGuidance != null
                         && candidate.getStrategyProfile() != null)
@@ -1723,7 +1723,7 @@ class RecommendationEngine
                 // skill's only candidate and hide a ready lower-ranked route.
                 if (candidateGuidance == null) continue;
                 trainingPlan = candidate.withCurrentStageTargetLevel(
-                        actionResolver.resolve(candidate, level, target));
+                        actionResolver.resolve(candidate, level, target, snapshot.membership()));
                 guidance = candidateGuidance;
                 break;
             }
