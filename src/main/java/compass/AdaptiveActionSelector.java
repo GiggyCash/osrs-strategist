@@ -165,7 +165,7 @@ public class AdaptiveActionSelector
         for (MethodInput need : needs)
         {
             if (need == null || need.quantity <= 0) continue;
-            var owned = items.quantity(need.getName());
+            var owned = need.itemId > 0 ? items.quantity(need.itemId) : items.quantity(need.getName());
             total += min(1.0, owned / (double) need.quantity);
             counted++;
         }

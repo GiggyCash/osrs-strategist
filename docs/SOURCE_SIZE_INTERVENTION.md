@@ -261,3 +261,17 @@ no added production file or data. This consolidates eligibility policy rather
 than adding an action-specific exception. It does not certify future resources,
 access unlocks or setup; it only prevents unsupported actions from creating a
 spurious recipe transition.
+
+## Adaptive resource coverage uses reviewed identities
+
+AdaptiveActionSelector now uses the existing ItemIndex ID lookup when a recipe
+supplies a positive item ID. Name-only legacy inputs retain their existing lookup.
+This closes the gap between reviewed ingredient identity and selection scoring:
+a display label cannot substitute for a different reviewed item, and a changed
+label cannot hide stock with the correct ID. Existing mode-safe containers,
+observation gating and group-storage opt-in remain in ItemIndex.
+
+Net production change: 0 lines / +48 characters / +12 estimated tokens. No new
+production file, catalog data or policy service. Regression scenarios cover all
+six iron modes, UIM bank exclusion and enabled observed group storage; existing
+name-only profile scenarios continue to cover the legacy path.
