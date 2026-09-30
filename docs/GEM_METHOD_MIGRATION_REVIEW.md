@@ -54,3 +54,59 @@ Do not substitute a blanket lower-price or higher-level rule for this decision:
 both can conflict with XP efficiency, player goals and owned-resource value.
 Do not equate Iron self-sourcing with zero opportunity cost. No schema or runtime
 behavior has changed while the policy question is pending.
+
+## Proposed integration boundary for reviewer decision
+
+The preferred direction is option 1, with separate feasibility and value stages.
+This is a proposed design, not an approved runtime contract.
+
+The current call graph loses alternatives too early: TrainingMethodSelector calls
+MethodReadinessService.evaluate, which chooses one recipe using preparation
+burden and level before a Recommendation receives StrategicValue. Adding an
+economic adjustment only in MethodRecommendationValueService would therefore
+score the surviving recipe without reconsidering discarded alternatives. That
+service currently contributes travel evidence only. Its name does not imply an
+existing recipe economics implementation.
+
+Introduce an internal evaluation of all eligible recipe contracts, retaining the
+existing single-result evaluate facade until its callers migrate. Each result
+must carry its own preparation, capacity, batch and evidence. Filter feasibility
+before comparing value; never combine one recipe's cheap inputs with another's
+XP, outputs or setup. Select the recipe with the same strategy/session context
+used to rank its method, and carry that chosen evaluation into the final shared
+recommendation layer and guidance. Recipe identity must survive semantic
+deduplication as part of the selected plan, not as merged quantities.
+
+The value evidence should distinguish:
+
+| Evidence | Meaning and limits |
+|---|---|
+| Immediate purchase cost | Checked total for the actual missing consumables and reusable tools; the existing preparation cost proves cash affordability only. |
+| Consumed input value | Value of the full consumed batch, including owned stock. Ownership does not make a valuable input free. |
+| Retained outputs | Item identities and quantities from the reviewed flow; market value is not cash until a separately supported sale occurs. |
+| XP outcome | Verified deterministic XP/action, or an explicitly variable/unknown outcome. Do not derive exact cost/XP for an unknown outcome. |
+| Acquisition and setup | Separate retrieval/tool/setup costs from recurring consumable cost; do not charge a reusable tool on every batch. |
+| Account purpose | Goal/output demand and session context. Iron opportunity cost requires acquisition/use evidence; a GE quote is not an Iron replacement route. |
+
+Every monetary value needs quote provenance and checked arithmetic. Missing or
+stale quotes remain unknown, never zero; overflow must invalidate the estimate.
+Estimated output proceeds must not fund the current purchase. Current shared
+StrategicValue components are bounded scores rather than currency amounts, so
+raw coins must not be assigned directly to opportunityCost or resourceFit.
+An explicit, reviewable normalization policy is still required. Likewise,
+combining evidence with StrategicValue.merge must not charge the same economic
+burden again in the final ranking score.
+
+Before enabling gem contracts, regression coverage should demonstrate a cheaper
+but slower recipe, an expensive owned input, a goal-relevant retained output,
+missing input/output quotes, unaffordable up-front purchases despite valuable
+outputs, deterministic versus variable XP, and Main/Iron/UIM transitions.
+Expected winners require the reviewer-approved policy; tests must not enshrine
+an arbitrary cheapest-input or highest-level rule. Existing Cooking and bow
+contracts must preserve their verified feasibility and preparation behavior.
+
+The remaining decision is the recipe comparison/normalization policy and its
+unknown-value behavior, not whether the six gem flows are mechanically reviewed.
+Until that decision, keep the gem full contract disabled and avoid adding an
+unused economics service that appears to close this gap without affecting the
+actual selection path.
