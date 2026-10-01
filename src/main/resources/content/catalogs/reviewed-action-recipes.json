@@ -2900,5 +2900,1133 @@
     "sourceRevision": 15346872,
     "reviewed": "2026-09-30",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_amulet_(u)",
+    "sourceRevision": 15251051,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond bracelet",
+    "inputs": [
+      "Diamond",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1601,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_bracelet",
+    "sourceRevision": 15356046,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond necklace",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_necklace",
+    "sourceRevision": 15182969,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond ring",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_ring",
+    "sourceRevision": 15320294,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragon necklace",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_necklace",
+    "sourceRevision": 15322451,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_amulet_(u)",
+    "sourceRevision": 15185255,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone bracelet",
+    "inputs": [
+      "Dragonstone",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1615,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_bracelet",
+    "sourceRevision": 15231178,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone ring",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_ring",
+    "sourceRevision": 15320299,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald amulet (u)",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_amulet_(u)",
+    "sourceRevision": 15184822,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald bracelet",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_bracelet",
+    "sourceRevision": 15356045,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald necklace",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_necklace",
+    "sourceRevision": 15320301,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald ring",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_ring",
+    "sourceRevision": 15322373,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold amulet (u)",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_amulet_(u)",
+    "sourceRevision": 15184811,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold bracelet",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_bracelet",
+    "sourceRevision": 15183046,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold necklace",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_necklace",
+    "sourceRevision": 15352326,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold ring",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_ring",
+    "sourceRevision": 15320306,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade amulet (u)",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_amulet_(u)",
+    "sourceRevision": 15355961,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade bracelet",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_bracelet",
+    "sourceRevision": 15355960,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade necklace",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_necklace",
+    "sourceRevision": 15355959,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade ring",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_ring",
+    "sourceRevision": 15355958,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Onyx"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      6573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_amulet_(u)",
+    "sourceRevision": 15185256,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx bracelet",
+    "inputs": [
+      "Onyx",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      6573,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_bracelet",
+    "sourceRevision": 15183155,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx necklace",
+    "inputs": [
+      "Gold bar",
+      "Onyx"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      6573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_necklace",
+    "sourceRevision": 15306679,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx ring",
+    "inputs": [
+      "Onyx",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      6573,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_ring",
+    "sourceRevision": 15183157,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal amulet (u)",
+    "inputs": [
+      "Silver bar",
+      "Opal"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2355,
+      1609
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_amulet_(u)",
+    "sourceRevision": 15355957,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal bracelet",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_bracelet",
+    "sourceRevision": 15355956,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal necklace",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_necklace",
+    "sourceRevision": 15355955,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal ring",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_ring",
+    "sourceRevision": 15355954,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby amulet (u)",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_amulet_(u)",
+    "sourceRevision": 15251050,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby bracelet",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_bracelet",
+    "sourceRevision": 15356043,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby necklace",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_necklace",
+    "sourceRevision": 15184357,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby ring",
+    "inputs": [
+      "Gold bar",
+      "Ruby"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1603
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_ring",
+    "sourceRevision": 15322349,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire amulet (u)",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_amulet_(u)",
+    "sourceRevision": 15355969,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire bracelet",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_bracelet",
+    "sourceRevision": 15356044,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire necklace",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_necklace",
+    "sourceRevision": 15355971,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire ring",
+    "inputs": [
+      "Gold bar",
+      "Sapphire"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1607
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_ring",
+    "sourceRevision": 15355966,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz amulet (u)",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_amulet_(u)",
+    "sourceRevision": 15355965,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz bracelet",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_bracelet",
+    "sourceRevision": 15355964,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz necklace",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_necklace",
+    "sourceRevision": 15355963,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz ring",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_ring",
+    "sourceRevision": 15355962,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_amulet_(u)",
+    "sourceRevision": 15187509,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte bracelet",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_bracelet",
+    "sourceRevision": 15187469,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte necklace",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_necklace",
+    "sourceRevision": 15187474,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte ring",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_ring",
+    "sourceRevision": 15187471,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
   }
 ]

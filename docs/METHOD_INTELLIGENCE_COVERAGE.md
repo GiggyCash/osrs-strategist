@@ -93,3 +93,25 @@ This establishes snapshot and event-routing coverage, not an in-client playtest.
 recipe outputs/tools/levels and identifies an unresolved recipe-value ranking
 issue. Affordability plus a higher level is insufficient to choose expensive
 training inputs. No gem full contract is enabled by that research.
+
+### Jewelry ingredient migration
+
+The existing universal jewelry name inference is replaced by 44 reviewed casting
+recipes: rings, necklaces, bracelets and unstrung amulets represented in current
+RuneLite CraftingAction. Reviewed ingredients now total 169 (Crafting 61); full
+method/flow contracts and execution profiles are unchanged. Each added row has
+its current Wiki page revision, exact consumed item IDs, membership and reusable
+mould setup. Wiki recipe levels/XP were compared with current RuneLite source;
+this migration does not override those calculator values.
+
+The former matcher recognized `red topaz` inside output names, so `Topaz ring`
+incorrectly became a gold-bar-only recipe. Reviewed topaz casting consumes silver
+and cut red topaz. Exact names also distinguish casting an unstrung amulet from
+stringing/enchanting, and prevent invented jewelry names inheriting ingredients.
+The canonical Dragon necklace page is followed from the Dragonstone necklace
+redirect. No diagnostic-name alias or enchanted recipe is inferred.
+
+Tests cover all 44 ingredient/membership combinations, reusable mould separation,
+the topaz regression, and unsupported names. This proves consumed ingredients,
+not affordability, efficient training value, full preparation or output capacity.
+The pending gem-value policy remains a separate decision.

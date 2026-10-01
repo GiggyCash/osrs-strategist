@@ -3137,14 +3137,6 @@ class UniversalActionRecipeResolver
             return recipe(get(1264), n, "Leather", 1);
         if (contains(lower, get(1584), get(1585)))
             return recipe(get(1264), n, "Hard leather", 1);
-        if (jewellery(lower))
-        {
-            var gem = gemName(lower);
-            String bar = gem != null && contains(gem, "opal", "jade", "red topaz")
-                    ? "Silver bar" : "Gold bar";
-            return gem == null ? recipe(get(1265), n, bar, 1)
-                    : recipe(get(1265), n, bar, 1, capitalize(gem), 1);
-        }
         return unknown(get(913));
     }
 
@@ -3196,16 +3188,6 @@ class UniversalActionRecipeResolver
     {
         for (String part : parts) if (text.contains(part)) return part;
         return null;
-    }
-    private static String gemName(String lower)
-    {
-        return first(lower, "red topaz", "opal", "jade", "sapphire", "emerald",
-                "ruby", "diamond", "dragonstone", "onyx", "zenyte");
-    }
-    private static boolean jewellery(String lower)
-    {
-        return lower.endsWith(" ring") || lower.endsWith(" bracelet")
-                || lower.endsWith(" necklace") || lower.contains("amulet");
     }
     private static String wood(String name, String fallback)
     {
