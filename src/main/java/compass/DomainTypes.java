@@ -1154,6 +1154,9 @@ final class MilestoneCompletion
 /** Canonical local identifiers shared by catalogs, evidence, and planners. */
 final class Names
 {
+    private static final java.util.regex.Pattern WORD_SEPARATORS =
+            java.util.regex.Pattern.compile("[^a-z0-9]+");
+
     private Names() { }
 
     static String lower(String value)
@@ -1168,8 +1171,8 @@ final class Names
 
     static String words(String value)
     {
-        return lower(value).replace('\u2019', '\'')
-                .replaceAll("[^a-z0-9]+", " ").trim();
+        return WORD_SEPARATORS.matcher(lower(value).replace('\u2019', '\''))
+                .replaceAll(" ").trim();
     }
 
     static String slug(String value)

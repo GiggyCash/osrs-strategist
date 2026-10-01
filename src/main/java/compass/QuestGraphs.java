@@ -11,11 +11,7 @@ final class QuestGraphs
     {
         if (context == null || context.data() == null
                 || context.data().quests() == null) return QuestStatus.UNKNOWN;
-        var key = Names.words(quest);
-        for (Map.Entry<String, QuestStatus> entry
-                : context.data().quests().quests().entrySet())
-            if (Names.words(entry.getKey()).equals(key)) return entry.getValue();
-        return QuestStatus.UNKNOWN;
+        return context.data().quests().normalizedStatusOf(quest);
     }
 
     static List<String> path(QuestKnowledgeCatalog catalog,
@@ -49,12 +45,21 @@ final class QuestGraphs
     static void collect(QuestKnowledgeCatalog catalog, String quest,
             Set<String> result)
     {
-        for (String seen : result)
-            if (Names.words(seen).equals(Names.words(quest))) return;
+        Set<String> seen = new HashSet<>();
+        for (String existing : result) seen.add(Names.words(existing));
+        collect(catalog, quest, result, seen);
+    }
+
+    private static void collect(QuestKnowledgeCatalog catalog, String quest,
+            Set<String> result, Set<String> seen)
+    {
+        // Normalize each visited node once, rather than rescanning the entire
+        // growing result for every prerequisite edge (including cycles).
+        if (!seen.add(Names.words(quest))) return;
         result.add(quest);
         var definition = catalog.definitionFor(quest);
         if (definition != null)
             for (String prerequisite : definition.prerequisites)
-                collect(catalog, prerequisite, result);
+                collect(catalog, prerequisite, result, seen);
     }
 }

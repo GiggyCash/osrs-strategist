@@ -6,9 +6,10 @@ import com.google.inject.Guice;
 import com.google.inject.Stage;
 import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
-import net.runelite.client.plugins.cluescrolls.ClueScrollPlugin;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.cluescrolls.ClueScrollService;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -31,10 +32,11 @@ public class PluginInjectionTest
                 // TOOL validates the real Compass graph without starting a game client.
                 // Only services supplied by RuneLite are left unprovisioned.
                 hostService(Client.class);
+                hostService(ClientThread.class);
                 hostService(ConfigManager.class);
                 hostService(ItemManager.class);
                 hostService(SpriteManager.class);
-                hostService(ClueScrollPlugin.class);
+                hostService(PluginManager.class);
                 hostService(ClueScrollService.class);
                 hostService(ClientToolbar.class);
                 hostService(OverlayManager.class);

@@ -564,10 +564,25 @@ final class QuestSnapshot
     @Getter
     @Accessors(fluent = true)
     final Map<String, QuestStatus> quests;
+    private final Map<String, QuestStatus> normalizedStatuses;
 
     public QuestSnapshot(Map<String, QuestStatus> quests)
     {
         this.quests = SnapshotCollections.map(quests);
+        Map<String, QuestStatus> normalized = new HashMap<>();
+        // Quest graphs query this immutable snapshot repeatedly during a rank.
+        // Preserve the former scan's first match, including a null status.
+        for (Map.Entry<String, QuestStatus> entry : this.quests.entrySet())
+        {
+            String key = Names.words(entry.getKey());
+            if (!normalized.containsKey(key)) normalized.put(key, entry.getValue());
+        }
+        normalizedStatuses = unmodifiableMap(normalized);
+    }
+
+    QuestStatus normalizedStatusOf(String questName)
+    {
+        return normalizedStatuses.getOrDefault(Names.words(questName), QuestStatus.UNKNOWN);
     }
 
     public QuestStatus statusOf(String questName)
