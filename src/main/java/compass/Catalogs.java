@@ -690,16 +690,13 @@ class PvmActivityCatalog
                 Text.get(1831), PvmActivity[].class))
             if (value.id == null || values.put(value.id, value) != null)
                 throw new IllegalStateException(Text.get(1199));
-        var bosses = 0;
+        Set<String> currentBosses = new HashSet<>();
         for (HiscoreSkill skill : HiscoreSkill.values())
             if (skill.getType() == HiscoreSkillType.BOSS)
-            {
-                bosses++;
-                var id = "pvm:" + skill.name().toLowerCase(Locale.ROOT);
-                if (!values.containsKey(id))
-                    throw new IllegalStateException(Text.get(1200) + id);
-            }
-        if (values.size() != bosses)
+                currentBosses.add("pvm:" + skill.name().toLowerCase(Locale.ROOT));
+        // New RuneLite identities remain unavailable until their Compass facts are reviewed.
+        // A removed/renamed identity still fails so stale bundled guidance cannot ship silently.
+        if (!currentBosses.containsAll(values.keySet()))
             throw new IllegalStateException(Text.get(1201));
         byId = unmodifiableMap(values);
         activities = unmodifiableList(new ArrayList<>(values.values()));
