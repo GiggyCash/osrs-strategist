@@ -6556,5 +6556,109 @@
       "PRAYER": 38750
     },
     "fieldUncertainties": []
+  },
+  {
+    "name": "A Ruff Situation",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "CRAFTING": 15
+    },
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required items: Either a needle or costume needle; thread unless using a costume needle; one usable fur; grain",
+      "Combat encounters: Two outlaws (levels 22 and 23)"
+    ],
+    "startLocation": "Talk to Talia in the Dog Shelter south-west of the Edgeville Monastery.",
+    "unlocks": [
+      "Access to puppies that can grow into pet dogs"
+    ],
+    "rewardXp": {
+      "CRAFTING": 1000
+    },
+    "fieldUncertainties": []
+  },
+  {
+    "name": "Crab Quest",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "SAILING": 40,
+      "FISHING": 30
+    },
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required item: Big fishing net, obtained during the quest"
+    ],
+    "startLocation": "Sail to Dognose Island north-west of the Great Conch and drink from the strange bottle.",
+    "unlocks": [
+      "Shell collection musical instrument set"
+    ],
+    "rewardXp": {
+      "SAILING": 10000,
+      "FISHING": 3000
+    },
+    "fieldUncertainties": []
+  },
+  {
+    "name": "The Fractured Archive",
+    "freeToPlay": false,
+    "prerequisites": [
+      "While Guthix Sleeps"
+    ],
+    "skillRequirements": {},
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required setup: Combat gear and supplies for a complete Fractured Archive raid",
+      "Combat encounters: Archive Guardian; Ezekiel or Bork and the Smorks; Moia or Dreadnoth the Jellied; Xarth or the Dagon'hai Elder and monks; Ocellus"
+    ],
+    "startLocation": "Approach the Fractured Archive entrance near the Ancient Guthixian Temple.",
+    "unlocks": [
+      "Access to further runs of The Fractured Archive"
+    ],
+    "rewardXp": {},
+    "fieldUncertainties": []
+  },
+  {
+    "name": "Mudfoot\u0027s Big Adventure",
+    "freeToPlay": true,
+    "prerequisites": [],
+    "skillRequirements": {},
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required setup: Magic or Ranged gear for the final outlaw, obtainable during the quest; poisoned weapons are an alternative",
+      "Combat encounters: Ranger outlaw (level 6), mage outlaw (level 6), and warrior outlaw (level 8)"
+    ],
+    "startLocation": "Talk to Captain Harlan outside the Lumbridge General Store.",
+    "unlocks": [
+      "Basic combat-style equipment claims from Captain Harlan every 30 minutes"
+    ],
+    "rewardXp": {},
+    "fieldUncertainties": []
+  },
+  {
+    "name": "The Writing\u0027s on the Wall",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "AGILITY": 22,
+      "THIEVING": 20
+    },
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [],
+    "startLocation": "Talk to Betty at Land's End.",
+    "unlocks": [
+      "Amulet of sight and replacement purchases from Sergeant Hudson"
+    ],
+    "rewardXp": {
+      "AGILITY": 2500,
+      "THIEVING": 2500
+    },
+    "fieldUncertainties": []
   }
 ]

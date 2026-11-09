@@ -19,7 +19,7 @@ public class ContentCoverageManifestTest
     {
         QuestKnowledgeCatalog knowledge = new QuestKnowledgeCatalog();
         assertEquals(Quest.values().length, knowledge.all().size());
-        assertEquals(211, knowledge.all().size());
+        assertEquals(216, knowledge.all().size());
         assertEquals(0, knowledge.all().values().stream()
                 .filter(QuestDefinition::hasFieldUncertainty).count());
         assertNotNull(knowledge.definitionFor("Watchtower"));
