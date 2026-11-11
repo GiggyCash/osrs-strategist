@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "validationDate": "2026-08-30",
+  "validationDate": "2026-11-09",
   "currentLiveStatus": "LIVE_CURRENT",
   "runtimeNetworking": false,
   "families": [
-    {"id":"quests","source":"RuneLite Quest enum plus pinned OSRS Wiki snapshots","snapshotDate":"2026-08-18","generatorVersion":"update-quest-enrichment.py/1","recordCount":211,"status":"PARTIAL"},
+    {"id":"quests","source":"RuneLite Quest enum plus pinned OSRS Wiki snapshots","snapshotDate":"2026-11-09","generatorVersion":"update-quest-enrichment.py/1 + manual review/2","recordCount":216,"status":"PARTIAL"},
     {"id":"miniquests","source":"manually Wiki-verified manifest","snapshotDate":"2026-08-19","generatorVersion":"manual/1","recordCount":19,"status":"STRUCTURED"},
     {"id":"training-methods","source":"RuneLite 1.12.35 calculators plus maintained current-live strategy catalog and official August 2026 overrides","snapshotDate":"2026-08-30","generatorVersion":"training-census/4","recordCount":180,"status":"STRUCTURED"},
     {"id":"pvm","source":"RuneLite 1.12.35 HiscoreSkill boss identities plus encounter preparation profiles","snapshotDate":"2026-08-25","generatorVersion":"pvm-preparation/3","recordCount":71,"status":"PARTIAL"},
