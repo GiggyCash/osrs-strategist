@@ -6,6 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class PvmActivityCatalogTest extends CatalogHostTest
@@ -20,6 +21,13 @@ public class PvmActivityCatalogTest extends CatalogHostTest
         assertNotNull(catalog.byId("pvm:bryophyta"));
         assertNotNull(catalog.byId("pvm:brutus"));
         assertNotNull(catalog.byId("pvm:tombs_of_amascut"));
+    }
+
+    @Test
+    public void unreviewedRuneLiteBossAdditionDoesNotDisableThePlugin()
+    {
+        PvmActivityCatalog catalog = new PvmActivityCatalog();
+        assertNull(catalog.byId("pvm:the_fractured_archive"));
     }
 
     @Test
