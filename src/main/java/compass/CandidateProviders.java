@@ -1582,15 +1582,29 @@ class PvmCandidateProvider implements CandidateProvider
 
             String normalizedKey = entry.getKey().startsWith("pvm:")
                     ? entry.getKey().substring(4) : entry.getKey();
-            var id = "pvm:" + normalizedKey;
-            if (preferences.isOnCooldown(id)) continue;
             var ready = readiness.isReadyForRecommendation();
             var relevant = progressionRelevant(definition, context);
+            boolean moonsGoal = context.goal() == GoalType.MOONS_GRIND_READY
+                    && "pvm:lunar_chests".equals(definition.id);
+            // Access is mandatory but does not prove a sustainable setup. Let
+            // the quest/skill providers lead until completion is observed.
+            if (moonsGoal && !questComplete(context, "Perilous Moons"))
+                continue;
             // A generic hiscore identity is not a reason to boss. Preparation
             // competes globally only when a goal/task makes the encounter
             // relevant and a curated readiness floor can name concrete work.
             if (!ready && (!catalog.hasCuratedReadinessProfile(definition.id)
                     || !relevant)) continue;
+
+            boolean observedSetup = context.data().equipment() != null
+                    && context.data().equipment().isObserved()
+                    && context.data().inventory() != null
+                    && context.data().inventory().isObserved();
+            var id = moonsGoal && !ready
+                    ? (observedSetup ? "prepare:" : "verify:")
+                            + "pvm:lunar_chests"
+                    : "pvm:" + normalizedKey;
+            if (preferences.isOnCooldown(id)) continue;
 
             double score = (ready ? 48.0 : 32.0)
                     + preferences.weightFor(id) * 10.0;
@@ -1602,12 +1616,16 @@ class PvmCandidateProvider implements CandidateProvider
                         && AccountModePolicy.isRiskSensitive(mode)) score -= 8.0;
             }
 
-            var title = definition == null ? entry.getKey() : definition.getName();
+            var title = moonsGoal && !ready
+                    ? (observedSetup ? get(1988) : get(1989))
+                    : definition.getName();
             String missing = readiness.missingRequirements.isEmpty()
                     ? "" : String.join("; ", readiness.missingRequirements);
             if (!ready && missing.trim().isEmpty()) continue;
             Guidance guidance = ready
                     ? readyGuidance(definition, title)
+                    : moonsGoal
+                    ? moonsGuidance(missing, observedSetup)
                     : new Guidance(
                             get(417) + title + ": " + missing + ".",
                             missing,
@@ -1628,6 +1646,22 @@ class PvmCandidateProvider implements CandidateProvider
             ));
         }
         return result;
+    }
+
+    private static Guidance moonsGuidance(String missing, boolean observedSetup)
+    {
+        String action = observedSetup
+                ? get(1990) + missing + "."
+                : get(1991);
+        return new Guidance(action, get(1992), get(1993), get(1994));
+    }
+
+    private static boolean questComplete(StrategyContext context, String quest)
+    {
+        return context != null && context.data() != null
+                && context.data().quests() != null
+                && context.data().quests().normalizedStatusOf(quest)
+                        == QuestStatus.COMPLETE;
     }
 
     private static Guidance readyGuidance(
@@ -1656,6 +1690,8 @@ class PvmCandidateProvider implements CandidateProvider
                     get(424),
                     get(1338),
                     get(425));
+        if (definition != null && "pvm:lunar_chests".equals(definition.id))
+            return new Guidance(get(1995), get(1992), get(1993), get(1994));
         return new Guidance(
                 "Attempt " + title + get(426),
                 get(427),
@@ -1683,6 +1719,8 @@ class PvmCandidateProvider implements CandidateProvider
             return id.endsWith("tztok_jad");
         if (goal == GoalType.INFERNAL_CAPE)
             return id.endsWith("tztok_jad") || id.endsWith("tzkal_zuk");
+        if (goal == GoalType.MOONS_GRIND_READY)
+            return id.endsWith("lunar_chests");
         if (goal == GoalType.RAID_READY)
             return definition.isRaid();
         if (goal == GoalType.ELITE_COMBAT_ACHIEVEMENTS)

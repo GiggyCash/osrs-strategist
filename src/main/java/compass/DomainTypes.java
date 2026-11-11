@@ -644,6 +644,8 @@ final class GoalGraph
                 singletonList(get(1721)));
         roots.put(GoalType.BOWFA,
                 singletonList(get(1721)));
+        roots.put(GoalType.MOONS_GRIND_READY,
+                singletonList("Perilous Moons"));
         QUEST_ROOTS = unmodifiableMap(roots);
     }
 
@@ -756,6 +758,7 @@ enum GoalType
     PRIFDDINAS,
     BOWFA,
     INFERNAL_CAPE,
+    MOONS_GRIND_READY,
     DIARY_CAPE,
     ELITE_COMBAT_ACHIEVEMENTS,
     RAID_READY,
@@ -771,6 +774,8 @@ enum GoalType
         if (this == AUTOMATIC) return "Automatic";
         if (this == BOWFA) return "Bowfa";
         if (this == MAX) return "Max cape";
+        if (this == MOONS_GRIND_READY)
+            return "Moons of Peril — Grind Ready";
         String lower = name().toLowerCase(java.util.Locale.ROOT)
                 .replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);

@@ -501,6 +501,11 @@ class GoalDependencyProvenanceService
             case INFERNAL_CAPE:
                 return contains(identity, "inferno", "infernal cape", "tzkal zuk")
                         ? list(goal.toString(), get(1327)) : null;
+            case MOONS_GRIND_READY:
+                return contains(identity, "lunar chests", "moons of peril",
+                        "perilous moons")
+                        ? list(goal.toString(), "Repeatable Moons of Peril")
+                        : null;
             default:
                 return null;
         }
@@ -1453,6 +1458,7 @@ class RecommendationIntelligenceService
             case PRIFDDINAS: direct = 42.0; break;
             case BOWFA: direct = 38.0; break;
             case INFERNAL_CAPE: direct = 45.0; break;
+            case MOONS_GRIND_READY: direct = 45.0; break;
             case DIARY_CAPE: direct = 30.0; break;
             case ELITE_COMBAT_ACHIEVEMENTS: direct = 32.0; break;
             case RAID_READY: direct = 24.0; break;

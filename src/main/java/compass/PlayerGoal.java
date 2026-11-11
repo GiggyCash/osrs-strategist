@@ -19,6 +19,8 @@ public enum PlayerGoal
     PRIFDDINAS(GoalType.PRIFDDINAS, "Prifddinas"),
     BOWFA(GoalType.BOWFA, "Bowfa"),
     INFERNAL_CAPE(GoalType.INFERNAL_CAPE, "Infernal cape"),
+    MOONS_GRIND_READY(GoalType.MOONS_GRIND_READY,
+            "Moons of Peril — Grind Ready"),
     MAX(GoalType.MAX, "Max cape");
 
     final GoalType planningGoal;

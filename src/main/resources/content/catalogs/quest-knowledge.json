@@ -5464,8 +5464,16 @@
   {
     "name": "Perilous Moons",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "Twilight\u0027s Promise"
+    ],
+    "skillRequirements": {
+      "SLAYER": 48,
+      "HUNTER": 20,
+      "FISHING": 20,
+      "RUNECRAFT": 20,
+      "CONSTRUCTION": 10
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
@@ -5475,7 +5483,7 @@
     ],
     "startLocation": "Talk to Zuma or Attala at the entrance to Cam Torum.",
     "unlocks": [
-      "Quest rewards: "
+      "Neypotzli and Moons of Peril access"
     ],
     "rewardXp": {
       "FISHING": 5000,

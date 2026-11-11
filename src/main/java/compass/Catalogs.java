@@ -682,6 +682,7 @@ class PvmActivityCatalog
             new HashSet<>(Arrays.asList(
                     "pvm:brutus", "pvm:obor", "pvm:bryophyta", Text.get(1815),
                     "pvm:scurrius", "pvm:giant_mole", "pvm:sarachnis", "pvm:hespori",
+                    "pvm:lunar_chests",
                     "pvm:zulrah", "pvm:vorkath", Text.get(1816),
                     Text.get(1817), Text.get(1818),
                     Text.get(1819), Text.get(1820),
