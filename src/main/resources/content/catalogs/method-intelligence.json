@@ -755,6 +755,29 @@
         "outputItemId": 0,
         "outputDescription": "the reusable tinderbox; ashes are not assumed collected",
         "action": "Use the tinderbox on the prepared yew logs."
+      },
+      {
+        "id": "normal_bones_burial",
+        "skill": "PRAYER",
+        "level": 1,
+        "workingBatch": 1,
+        "maximumBatch": 28,
+        "efficientBatch": 28,
+        "inputs": [
+          {
+            "itemId": 526,
+            "name": "Bones",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "tools": [],
+        "outputsPerAction": 0,
+        "outputStackable": false,
+        "outputItemId": 0,
+        "outputDescription": "no retained inventory output",
+        "action": "Bury the prepared normal bones."
       }
     ],
     "methods": [
@@ -936,6 +959,22 @@
         "location": "Use an open line of clear ground; the Grand Exchange south-east corner is one unrestricted F2P option.",
         "source": "https://oldschool.runescape.wiki/w/Firemaking",
         "sourceRevision": 15383056,
+        "reviewed": "2026-11-12"
+      },
+      {
+        "ids": [
+          "prayer_f2p_bones"
+        ],
+        "recipes": [
+          "normal_bones_burial"
+        ],
+        "bankLoop": false,
+        "bankSupplies": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Bury carried normal bones wherever they were obtained; no facility is required.",
+        "source": "https://oldschool.runescape.wiki/w/Bones",
+        "sourceRevision": 15327876,
         "reviewed": "2026-11-12"
       },
       {

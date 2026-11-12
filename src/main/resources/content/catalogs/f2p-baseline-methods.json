@@ -142,7 +142,7 @@
       "minLevel": 1,
       "maxLevel": 99,
       "name": "Bury F2P bones",
-      "instructions": "Lumbridge Castle bank: withdraw the bone type named in DO, bury the full inventory, bank, and repeat.",
+      "instructions": "Bury the normal bones named in DO wherever they were obtained; review carried supplies before repeating.",
       "efficientScore": 5.0,
       "balancedScore": 6.0,
       "relaxedScore": 7.0,

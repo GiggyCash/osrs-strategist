@@ -126,6 +126,60 @@ public class ReviewedBankingPolicyTest
                 .noneMatch(plan -> plan.readiness.actionable()));
     }
 
+    @Test
+    public void carriedNormalBonesEnableLocalUimPrayer()
+    {
+        GameData uim = MethodIntelligenceTest.data(2, -1,
+                MethodIntelligenceTest.carried(526, "Bones", 4),
+                Collections.emptyList());
+        TrainingMethodSelector selector = new TrainingMethodSelector(
+                methods, null, new TrainingMethodPolicy(), strategy,
+                new UimInventoryResolutionService(),
+                new MethodReadinessService(new MethodIntelligenceCatalog(),
+                        new MethodPreparationService(
+                                MethodIntelligenceTest.resources(0, 0))));
+        RecommendationEngine recommendations =
+                TestFixtures.recommendationEngine(selector);
+        ActionabilityPolicy actionability = new ActionabilityPolicy();
+
+        for (StrategyMode mode : StrategyMode.values())
+        {
+            for (SessionIntent session : Arrays.asList(
+                    SessionIntent.QUICK_20_MIN,
+                    SessionIntent.ONE_HOUR,
+                    SessionIntent.LONG_SESSION,
+                    SessionIntent.AFK))
+            {
+                Recommendation selected = recommendations.recommendAll(
+                        uim, mode, session, false, false,
+                        GoalType.AUTOMATIC, new PreferenceProfile()).stream()
+                        .filter(candidate -> candidate.getTrainingPlan()
+                                != null
+                                && candidate.getTrainingPlan().getMethod()
+                                != null
+                                && candidate.getTrainingPlan().getMethod()
+                                        .getSkill() == Skill.PRAYER)
+                        .findFirst().orElseThrow(AssertionError::new);
+                assertEquals(mode + " " + session,
+                        "prayer_f2p_bones", selected.getTrainingPlan()
+                                .getMethod().getId());
+                assertTrue(mode + " " + session,
+                        actionability.canLeadQueue(selected));
+                assertFalse(selected.getGuidance().getAction().toLowerCase(
+                        Locale.ROOT).contains("bank"));
+            }
+        }
+
+        GameData missingBones = MethodIntelligenceTest.data(
+                2, -1, Collections.emptyList(), Collections.emptyList());
+        assertTrue(selector.rankedCandidates(missingBones,
+                Skill.PRAYER, 80, StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR, false, false).stream()
+                .filter(plan -> plan.method().id.equals(
+                        "prayer_f2p_bones"))
+                .noneMatch(plan -> plan.readiness.actionable()));
+    }
+
     private CuratedTrainingMethod method(Skill skill, String id)
     {
         return methods.curatedFor(skill).stream().filter(m -> m.method().id.equals(id))
