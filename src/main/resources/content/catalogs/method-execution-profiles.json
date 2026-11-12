@@ -260,8 +260,7 @@
   {
     "methodId": "thieving_ardy_knights",
     "actionTerms": [
-      "ardougne_knight",
-      "knight_of_ardougne"
+      "runelite:thieving:knight"
     ],
     "unitSingular": "successful pickpocket",
     "unitPlural": "successful pickpockets",

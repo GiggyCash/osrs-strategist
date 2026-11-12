@@ -505,3 +505,11 @@ dead High Alchemy alias and dose-less Herblore matches. The duplicate Magic row
 was removed; Herblore now removes only RuneLite's terminal `(3)`/`(4)` output
 dose before exact base-name lookup, and antifire uses its full potion name.
 Invented prefixes still fail exact matching.
+
+## Execution profiles require a live action
+
+Added a reachability invariant that runs every execution profile through the
+same action matcher used by adaptive selection. It found one dead profile:
+Ardougne knights referenced names RuneLite does not expose. The profile now uses
+the pinned `runelite:thieving:knight` identity; every execution profile matches
+at least one maintained action.

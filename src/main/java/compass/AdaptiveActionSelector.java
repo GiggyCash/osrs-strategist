@@ -172,7 +172,7 @@ public class AdaptiveActionSelector
         return counted == 0 ? 1.0 : total / counted;
     }
 
-    private static boolean matches(
+    static boolean matches(
             ActionDef action,
             List<String> terms)
     {
