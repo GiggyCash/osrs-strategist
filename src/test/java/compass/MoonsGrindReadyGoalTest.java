@@ -202,6 +202,31 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void weaponComponentsCannotMasqueradeAsMoonsStyleOptions()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(java.util.Arrays.asList(
+                new ItemState(1, "Godsword shard 1", 1),
+                new ItemState(2, "Dragon mace", 1)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("stab")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("slash")));
+    }
+
+    @Test
     public void selectionAndAccountSafetyRemainFailClosed()
     {
         GameData main = data(0, Membership.P2P, QuestStatus.COMPLETE,

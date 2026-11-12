@@ -170,7 +170,8 @@ public class PvmReadinessAnalyzer
             if (item == null || item.quantity <= 0 || item.getName() == null)
                 continue;
             String name = item.getName().toLowerCase(Locale.ROOT);
-            if (name.contains("ornament kit") || name.contains("swordfish"))
+            if (containsAny(name, "ornament kit", "swordfish", "shard",
+                    "hilt", "godsword blade", "broken"))
                 continue;
             if (containsAny(name, terms))
                 return true;
