@@ -167,7 +167,8 @@ public class PvmReadinessAnalyzer
     {
         for (ItemState item : items)
         {
-            if (item == null || item.quantity <= 0 || item.getName() == null)
+            if (item == null || item.isNoted()
+                    || item.quantity <= 0 || item.getName() == null)
                 continue;
             String name = item.getName().toLowerCase(Locale.ROOT);
             if (containsAny(name, "ornament kit", "swordfish", "shard",
@@ -255,7 +256,8 @@ public class PvmReadinessAnalyzer
         if (inventory == null) return 0;
         int total = 0;
         for (ItemState item : inventory.getItems())
-            if (item != null && recognizedCombatFood(item.getName()))
+            if (item != null && !item.isNoted()
+                    && recognizedCombatFood(item.getName()))
                 total += Math.max(0, item.quantity);
         return total;
     }
@@ -335,6 +337,7 @@ public class PvmReadinessAnalyzer
         var total = 0;
         for (ItemState item : inventory.getItems())
         {
+            if (item.isNoted()) continue;
             var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             if (containsAny(name, terms)) total += Math.max(0, item.quantity);
         }

@@ -294,6 +294,29 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void notedWeaponsCannotMasqueradeAsCarriedMoonsSwitches()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune scimitar", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(1435, "Rune mace", 1, -1, true)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("crush")));
+    }
+
+    @Test
     public void selectionAndAccountSafetyRemainFailClosed()
     {
         GameData main = data(0, Membership.P2P, QuestStatus.COMPLETE,

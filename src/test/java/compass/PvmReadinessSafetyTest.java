@@ -120,6 +120,22 @@ public class PvmReadinessSafetyTest
     }
 
     @Test
+    public void notedFoodCannotProveCarriedReadiness()
+    {
+        ItemsState equipment = new ItemsState(
+                Collections.singletonList(weapon("Rune scimitar", 1)));
+        ItemsState inventory = new ItemsState(Arrays.asList(
+                new ItemState(386, "Shark", 5, -1, true),
+                item("Giant key", 1)));
+
+        PvmReadiness readiness = analyze(equipment, inventory, null);
+
+        assertFalse(readiness.isReadyForRecommendation());
+        assertTrue(readiness.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("token food")));
+    }
+
+    @Test
     public void exactProfileRecomputesAndClearsStalePreparationEvidence()
     {
         Map<String, PvmReadiness> observed = new java.util.HashMap<>();

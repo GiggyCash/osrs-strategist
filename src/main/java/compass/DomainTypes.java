@@ -1027,6 +1027,12 @@ final class ItemState
     final String name;
     final int quantity;
     final int slotIndex;
+    final boolean noted;
+
+    public ItemState(int itemId, String name, int quantity, int slotIndex)
+    {
+        this(itemId, name, quantity, slotIndex, false);
+    }
 
     public ItemState(int itemId, String name, int quantity)
     {

@@ -806,16 +806,17 @@ class LiveItemStateReader
                 continue;
             }
 
-            String name = itemManager
-                    .getItemComposition(item.getId())
-                    .getName();
+            ItemComposition composition = itemManager
+                    .getItemComposition(item.getId());
+            String name = composition.getName();
 
             result.add(
                     new ItemState(
                             item.getId(),
                             name,
                             item.getQuantity(),
-                            slotIndex
+                            slotIndex,
+                            composition.getNote() != -1
                     )
             );
         }
