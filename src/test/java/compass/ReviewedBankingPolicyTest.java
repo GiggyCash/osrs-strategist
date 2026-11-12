@@ -76,6 +76,35 @@ public class ReviewedBankingPolicyTest
                         && plan.readiness.actionable())
                 .findFirst().orElseThrow(AssertionError::new);
 
+        RecommendationEngine recommendations =
+                TestFixtures.recommendationEngine(selector);
+        ActionabilityPolicy actionability = new ActionabilityPolicy();
+        for (StrategyMode mode : StrategyMode.values())
+        {
+            for (SessionIntent session : Arrays.asList(
+                    SessionIntent.QUICK_20_MIN,
+                    SessionIntent.ONE_HOUR,
+                    SessionIntent.LONG_SESSION,
+                    SessionIntent.AFK))
+            {
+                Recommendation selected = recommendations.recommendAll(
+                        uim, mode, session, false, false,
+                        GoalType.AUTOMATIC, new PreferenceProfile()).stream()
+                        .filter(candidate -> candidate.getTrainingPlan()
+                                != null
+                                && candidate.getTrainingPlan().getMethod()
+                                != null
+                                && candidate.getTrainingPlan().getMethod()
+                                        .getSkill() == Skill.FIREMAKING)
+                        .findFirst().orElseThrow(AssertionError::new);
+                assertEquals(mode + " " + session,
+                        "firemaking_f2p_logs", selected.getTrainingPlan()
+                                .getMethod().getId());
+                assertTrue(mode + " " + session,
+                        actionability.canLeadQueue(selected));
+            }
+        }
+
         assertEquals(BankingMode.LOCAL_PROCESSING,
                 firemaking.strategyProfile.bankingBehavior);
         assertEquals("normal_logs_firemaking",
