@@ -458,7 +458,18 @@
     "xpMultiplier": 1.0,
     "inputs": [],
     "note": "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run. Nest yields are variable; the August 2026 five-roll/tripled-success change must not be presented as an exact yield.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "HUNTER:regular bird house",
+      "HUNTER:oak bird house",
+      "HUNTER:willow bird house",
+      "HUNTER:teak bird house",
+      "HUNTER:maple bird house",
+      "HUNTER:mahogany bird house",
+      "HUNTER:yew bird house",
+      "HUNTER:magic bird house",
+      "HUNTER:redwood bird house"
+    ]
   },
   {
     "methodId": "smithing_f2p_platebodies",

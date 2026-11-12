@@ -13,13 +13,17 @@ public class ReviewedExecutionProfileTest
     @Test
     public void migratedProfilesUseReviewedIdsWithoutDuplicateRules()
     {
-        String[] ids = {"fletching_darts", "cooking_f2p_fish", "cooking_f2p_fish_baseline", "cooking_wines"};
-        String[] names = {"Bronze dart", "Salmon", "Salmon", "Jug of wine"};
+        String[] ids = {"fletching_darts", "cooking_f2p_fish",
+                "cooking_f2p_fish_baseline", "cooking_wines",
+                "hunter_birdhouses"};
+        String[] names = {"Bronze dart", "Salmon", "Salmon", "Jug of wine",
+                "Redwood Bird House"};
+        Skill[] skills = {Skill.FLETCHING, Skill.COOKING, Skill.COOKING,
+                Skill.COOKING, Skill.HUNTER};
         for (int i = 0; i < ids.length; i++)
         {
             MethodProfile profile = profiles.forMethod(ids[i]);
-            Skill skill = i == 0 ? Skill.FLETCHING : Skill.COOKING;
-            ActionDef action = action(skill, names[i], 1);
+            ActionDef action = action(skills[i], names[i], 1);
             assertNotNull(profile.reviewedRecipes);
             assertTrue(profile.inputs.isEmpty());
             List<MethodInput> inputs = resolver.profileInputs(profile, action, 10, Membership.P2P);

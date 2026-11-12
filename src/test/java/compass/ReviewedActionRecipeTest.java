@@ -52,7 +52,7 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(183, recipes.length);
+        assertEquals(192, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
@@ -61,6 +61,23 @@ public class ReviewedActionRecipeTest
             assertTrue(recipe.match, resolved.hasExactInputs());
             assertTrue(resolved.inputs.stream().allMatch(input -> input.itemId > 0 && input.quantity > 0));
         }
+    }
+
+    @Test
+    public void birdHouseResetCountsLogsAndConcreteBaitButNotClockwork()
+    {
+        ActionDef action = new ActionDef(Skill.HUNTER,
+                "runelite:hunter:redwood_bird_house",
+                "Redwood Bird House", 89, 1200, "test", Membership.P2P);
+        UniversalActionRecipe recipe = resolver.resolve(action, 4,
+                Membership.P2P);
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Redwood logs", 19669, 4);
+        assertInput(recipe, "Potato seed", 5318, 40);
+        assertFalse(recipe.inputs.stream()
+                .anyMatch(input -> input.name.equals("Clockwork")));
+        assertFalse(resolver.resolve(action, 4, Membership.F2P)
+                .hasExactInputs());
     }
 
     @Test
@@ -116,6 +133,16 @@ public class ReviewedActionRecipeTest
     {
         return resolver.resolve(new ActionDef(Skill.COOKING, "test:cooking", name,
                 1, 1, "test", Membership.F2P), 7, membership);
+    }
+
+    private static void assertInput(UniversalActionRecipe recipe,
+            String name, int itemId, int quantity)
+    {
+        MethodInput input = recipe.inputs.stream()
+                .filter(candidate -> name.equals(candidate.name))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(itemId, input.itemId);
+        assertEquals(quantity, input.quantity);
     }
 
     private static ReviewedActionRecipeCatalog.Recipe[] definitions()

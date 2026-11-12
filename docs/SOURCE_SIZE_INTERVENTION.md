@@ -513,3 +513,11 @@ same action matcher used by adaptive selection. It found one dead profile:
 Ardougne knights referenced names RuneLite does not expose. The profile now uses
 the pinned `runelite:thieving:knight` identity; every execution profile matches
 at least one maintained action.
+
+## Birdhouse runs count consumed supplies
+
+The Hunter birdhouse profile no longer claims zero consumed inputs. Nine exact
+RuneLite tiers now use reviewed recipes pinned to Bird house trapping revision
+15364256. Each emptied/reset house consumes its matching log and a concrete
+10-potato-seed bait route; hammer, chisel, and the returned clockwork remain
+reusable setup rather than inflated per-house costs.
