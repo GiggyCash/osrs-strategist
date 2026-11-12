@@ -102,6 +102,24 @@ public class PvmReadinessSafetyTest
     }
 
     @Test
+    public void uncookedBurntAndIncompleteFoodCannotProveReadiness()
+    {
+        ItemsState equipment = new ItemsState(
+                Collections.singletonList(weapon("Rune scimitar", 1)));
+        ItemsState inventory = new ItemsState(Arrays.asList(
+                item("Raw shark", 5),
+                item("Burnt lobster", 5),
+                item("Pizza base", 5),
+                item("Giant key", 1)));
+
+        PvmReadiness readiness = analyze(equipment, inventory, null);
+
+        assertFalse(readiness.isReadyForRecommendation());
+        assertTrue(readiness.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("token food")));
+    }
+
+    @Test
     public void exactProfileRecomputesAndClearsStalePreparationEvidence()
     {
         Map<String, PvmReadiness> observed = new java.util.HashMap<>();

@@ -252,8 +252,40 @@ public class PvmReadinessAnalyzer
 
     private static int carriedFoodQuantity(ItemsState inventory)
     {
-        return carriedQuantity(inventory, "shark", "karambwan", "anglerfish",
-                "manta ray", get(1568), "lobster", "swordfish", "pizza");
+        if (inventory == null) return 0;
+        int total = 0;
+        for (ItemState item : inventory.getItems())
+            if (item != null && recognizedCombatFood(item.getName()))
+                total += Math.max(0, item.quantity);
+        return total;
+    }
+
+    private static boolean recognizedCombatFood(String itemName)
+    {
+        String name = itemName == null ? ""
+                : itemName.trim().toLowerCase(Locale.ROOT);
+        switch (name)
+        {
+            case "shark":
+            case "cooked karambwan":
+            case "anglerfish":
+            case "manta ray":
+            case "moonlight antelope":
+            case "cooked moonlight antelope":
+            case "lobster":
+            case "swordfish":
+            case "plain pizza":
+            case "1/2 plain pizza":
+            case "meat pizza":
+            case "1/2 meat pizza":
+            case "anchovy pizza":
+            case "1/2 anchovy pizza":
+            case "pineapple pizza":
+            case "1/2 pineapple pizza":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static int carriedRestorationQuantity(ItemsState inventory)
