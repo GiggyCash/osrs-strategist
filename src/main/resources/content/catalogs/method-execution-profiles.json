@@ -67,7 +67,7 @@
   {
     "methodId": "construction_oak_doors",
     "actionTerms": [
-      "oak_dungeon_door"
+      "runelite:construction:oak_door"
     ],
     "unitSingular": "oak dungeon door built",
     "unitPlural": "oak dungeon doors built",

@@ -489,3 +489,11 @@ Removed the universal `* curse` suffix recipe. The exact Curse action remains
 covered by the existing catalog recipe, and the curated F2P method retains its
 explicit execution profile. Invented or future action names no longer inherit
 Curse's rune quantities merely from their suffix.
+
+## Construction actions use exact RuneLite identities
+
+Replaced seven legacy substring recipes with six exact RuneLite 1.13.6 action
+names. The duplicate, nonexistent Oak Dungeon Door recipe was removed, and the
+curated oak-door profile now selects RuneLite's actual
+`runelite:construction:oak_door` action. Prefixed or invented furniture names no
+longer inherit material quantities from a partial match.

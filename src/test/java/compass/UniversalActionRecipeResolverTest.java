@@ -77,6 +77,34 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void constructionRecipesRequireExactRuneLiteActionNames()
+    {
+        String[] names = {"Oak Larder", "Oak Door", "Mahogany Table",
+                "Crude Wooden Chair", "Teak Garden Bench",
+                "Mounted Mythical Cape"};
+        String[] inputs = {"Oak plank", "Oak plank", "Mahogany plank",
+                "Plank", "Teak plank", "Teak plank"};
+        int[] quantities = {8, 10, 6, 2, 6, 3};
+        for (int i = 0; i < names.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.P2P);
+            assertTrue(names[i], recipe.hasExactInputs());
+            assertInput(recipe, inputs[i], quantities[i] * 2);
+        }
+        assertInput(resolver.resolve(action(Skill.CONSTRUCTION,
+                "Crude Wooden Chair", 1), 2, Membership.P2P),
+                "Steel nails", 4);
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.CONSTRUCTION, "Future Oak Larder", 1), 2,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
+    }
+
+    @Test
     public void f2pFireCombatSpellsHaveExactRuneInputs()
     {
         UniversalActionRecipe bolt = resolver.resolve(
