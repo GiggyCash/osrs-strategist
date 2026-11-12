@@ -293,6 +293,7 @@ class AdaptiveMilestoneGuidanceService
             return "Bring " + traps + get(1284) + traps
                     + get(9);
         }
+        if ("hunter_birdhouses".equals(methodId)) return get(1996);
         if (get(1625).equals(methodId))
             return get(10);
         if (get(1626).equals(methodId))

@@ -292,6 +292,32 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
+    public void birdhousesExplainReusableAndInitialClockworkSetup()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.HUNTER, "redwood_bird_house",
+                        "Redwood Bird House", 89, 1200));
+        GameData data = GameData.builder(
+                account(1, Membership.P2P, Skill.HUNTER, 90,
+                        Experience.getXpForLevel(90)))
+                .inventory(new ItemsState(Arrays.asList(
+                        item(19669, "Redwood logs", 4),
+                        item(5318, "Potato seed", 40))))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.HUNTER,
+                90, 91, plan("hunter_birdhouses", Skill.HUNTER), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("4 Redwood logs"));
+        assertTrue(guidance.getSupplies().contains("40 Potato seed"));
+        assertTrue(guidance.getSupplies().contains("hammer and chisel"));
+        assertTrue(guidance.getSupplies().contains("return their clockworks"));
+        assertTrue(guidance.getSupplies().contains("initial four-house setup"));
+        assertFalse(guidance.getSupplies().contains("Acquire 4 Clockwork"));
+    }
+
+    @Test
     public void uimInventoryProcessingNeverRoutesThroughABank()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
