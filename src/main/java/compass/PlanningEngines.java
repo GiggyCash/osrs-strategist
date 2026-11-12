@@ -3158,8 +3158,6 @@ class UniversalActionRecipeResolver
         if (lower.endsWith(" shield") || lower.endsWith(" stock"))
             return recipe("Bring a knife.", n, wood(name, null),
                     lower.endsWith(" shield") ? 2 : 1);
-        if (projectile(lower, "javelin")) return recipe(get(919), n,
-                "Javelin shaft", 1, firstWord(name) + " javelin head", 1);
         return unknown(get(922));
     }
 
@@ -3201,23 +3199,11 @@ class UniversalActionRecipeResolver
                 "yew", "mahogany", "maple", "teak", "willow", "oak");
         return value == null ? fallback : capitalize(value) + " logs";
     }
-    private static boolean projectile(String lower, String kind)
-    {
-        return (lower.endsWith(" " + kind) || lower.endsWith(" " + kind + "s"))
-                && contains(lower, "bronze", "iron", "steel", "mithril",
-                "adamant", "rune", "amethyst", "dragon");
-    }
     private static String capitalize(String value)
     {
         return value == null || value.isEmpty() ? "Dragon"
                 : Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
-    private static String firstWord(String value)
-    {
-        var space = value.indexOf(' ');
-        return space < 0 ? value : value.substring(0, space);
-    }
-
     private static final class Recipe
     {
         private String skill, match, setup;

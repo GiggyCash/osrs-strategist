@@ -864,6 +864,214 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "FLETCHING",
+    "match": "bronze javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Bronze javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19570
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_javelin",
+    "sourceRevision": 15305303,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Iron javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19572
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_javelin",
+    "sourceRevision": 15305305,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Steel javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19574
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_javelin",
+    "sourceRevision": 15182590,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Mithril javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19576
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_javelin",
+    "sourceRevision": 15182826,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Adamant javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19578
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_javelin",
+    "sourceRevision": 15182726,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Rune javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19580
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_javelin",
+    "sourceRevision": 15372028,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "amethyst javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Amethyst javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      21352
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Amethyst_javelin",
+    "sourceRevision": 15305300,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Dragon javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19582
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_javelin",
+    "sourceRevision": 15305299,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "CRAFTING",
     "match": "air battlestaff",
     "inputs": [

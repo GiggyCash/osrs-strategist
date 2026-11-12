@@ -408,3 +408,13 @@ Fletching unlock is not directly observed. The profile now uses RuneLite item
 11874's player-facing `Broad arrowheads` name, while generic universal resolution
 fails closed instead of implying the unlock is known. The mechanic and identity
 were checked against Wiki revisions 15397287 and 15373576.
+
+## Javelin tip inference removed
+
+Replaced all eight RuneLite calculator javelin suffix guesses with exact reviewed
+rows for bronze through rune, amethyst and dragon javelins. Each row uses one
+javelin shaft and one matching player-facing `javelin tips` item per output;
+unknown names and non-members fail closed. Source revisions are 15305303,
+15305305, 15182590, 15182826, 15182726, 15372028, 15305300 and 15305299.
+The obsolete projectile and first-word helpers were removed rather than retained
+for a different family.

@@ -267,6 +267,43 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void javelinsUseReviewedTipIdentitiesAndMembership()
+    {
+        String[] javelins = {"Bronze javelin", "Iron javelin",
+                "Steel javelin", "Mithril javelin", "Adamant javelin",
+                "Rune javelin", "Amethyst javelin", "Dragon javelin"};
+        String[] tips = {"Bronze javelin tips", "Iron javelin tips",
+                "Steel javelin tips", "Mithril javelin tips",
+                "Adamant javelin tips", "Rune javelin tips",
+                "Amethyst javelin tips", "Dragon javelin tips"};
+        int[] tipIds = {ItemID.BRONZE_JAVELIN_HEAD,
+                ItemID.IRON_JAVELIN_HEAD, ItemID.STEEL_JAVELIN_HEAD,
+                ItemID.MITHRIL_JAVELIN_HEAD, ItemID.ADAMANT_JAVELIN_HEAD,
+                ItemID.RUNE_JAVELIN_HEAD, ItemID.AMETHYST_JAVELIN_HEAD,
+                ItemID.DRAGON_JAVELIN_HEAD};
+        for (int i = 0; i < javelins.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.FLETCHING, javelins[i], 1), 15,
+                    Membership.P2P);
+            assertTrue(javelins[i], recipe.hasExactInputs());
+            assertInput(recipe, "Javelin shaft", 15,
+                    ItemID.JAVELIN_SHAFT);
+            assertInput(recipe, tips[i], 15, tipIds[i]);
+
+            assertFalse(javelins[i], resolver.resolve(
+                    action(Skill.FLETCHING, javelins[i], 1), 15,
+                    Membership.F2P).hasExactInputs());
+        }
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.FLETCHING, "Future bronze javelin", 1), 15,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
+    }
+
+    @Test
     public void specialtyGemBoltFailsClosedInsteadOfGuessingBasicBoltRecipe()
     {
         UniversalActionRecipe recipe = resolver.resolve(
