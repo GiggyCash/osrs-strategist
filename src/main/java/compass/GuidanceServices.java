@@ -116,8 +116,12 @@ class AdaptiveMilestoneGuidanceService
 
         String location = routeLocation(data, plan.method().id,
                 action, plan.method().instructions);
-        String actionText = executionAction(plan.method(), profile, action,
-                routeOutputs);
+        AccountMode mode = AccountMode.fromTypeCode(
+                data.account().modeCode());
+        String actionText = mode == AccountMode.ULTIMATE_IRONMAN
+                && "crafting_gems".equals(plan.method().id)
+                ? get(1997) : executionAction(plan.method(), profile, action,
+                        routeOutputs);
         var note = profile.note;
         if (note == null || note.trim().isEmpty())
         {
@@ -137,8 +141,6 @@ class AdaptiveMilestoneGuidanceService
             note += get(27);
         }
 
-        AccountMode mode = AccountMode.fromTypeCode(
-                data.account().modeCode());
         if (mode.isIronLike() && !inputs.isEmpty())
         {
             note += get(33)

@@ -330,12 +330,37 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 .build();
 
         Guidance guidance = service.build(data, Skill.CRAFTING,
-                20, 21, plan("crafting_gems", Skill.CRAFTING), true);
+                20, 21, gemPlan(), true);
 
         assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("chisel"));
+        assertTrue(guidance.getAction().contains("carried uncut gems"));
+        assertFalse(guidance.getAction().toLowerCase().contains("withdraw"));
+        assertFalse(guidance.getAction().toLowerCase().contains("bank"));
         assertTrue(guidance.getLocation().contains(
                 "immediately usable carried materials"));
         assertFalse(guidance.getLocation().toLowerCase().contains("bank"));
+    }
+
+    @Test
+    public void mainGemCuttingRetainsItsBankLoop()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.CRAFTING, "sapphire", "Sapphire", 20, 50));
+        GameData data = GameData.builder(
+                account(0, Membership.P2P, Skill.CRAFTING, 20,
+                        Experience.getXpForLevel(20)))
+                .bank(new ItemsState(Collections.singletonList(
+                        item(1623, "Uncut sapphire", 20)), 1L))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.CRAFTING,
+                20, 21, gemPlan(), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Withdraw a chisel"));
+        assertTrue(guidance.getAction().contains("bank, and repeat"));
+        assertEquals("Grand Exchange bank.", guidance.getLocation());
     }
 
     private static AdaptiveMilestoneGuidanceService serviceWith(
@@ -378,9 +403,21 @@ public class AdaptiveMilestoneGuidanceServiceTest
 
     private static TrainingPlan plan(String id, Skill skill)
     {
+        return plan(id, skill, "Use the modeled method.");
+    }
+
+    private static TrainingPlan gemPlan()
+    {
+        return plan("crafting_gems", Skill.CRAFTING,
+                "Grand Exchange bank: withdraw a chisel and the uncut gem named in DO, cut the full inventory, bank, and repeat.");
+    }
+
+    private static TrainingPlan plan(String id, Skill skill,
+            String instructions)
+    {
         TrainingMethod method = new TrainingMethod(
                 id, skill, 1, 99, id,
-                "Use the modeled method.",
+                instructions,
                 10, 10, 10, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
                 Confidence.VERIFIED);
