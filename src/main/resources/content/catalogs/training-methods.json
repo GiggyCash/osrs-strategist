@@ -381,7 +381,7 @@
     "membersOnly": false,
     "wilderness": false,
     "progressionProtected": false,
-    "delegatesMethodChoice": false
+    "delegatesMethodChoice": true
   },
   {
     "id": "mining_mlm",

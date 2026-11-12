@@ -181,12 +181,17 @@ public class StrategyQualityTournamentTest
         TrainingMethod genericMagic = legacy.methodsFor(Skill.MAGIC).stream()
                 .filter(method -> "magic_utility".equals(method.getId()))
                 .findFirst().orElse(null);
+        TrainingMethod genericMining = legacy.methodsFor(Skill.MINING).stream()
+                .filter(method -> "mining_ore".equals(method.getId()))
+                .findFirst().orElse(null);
         TrainingMethod concreteCombat = legacy.methodsFor(Skill.ATTACK).stream()
                 .filter(method -> "attack_combat".equals(method.getId()))
                 .findFirst().orElse(null);
 
         assertNotNull(genericMagic);
         assertTrue(genericMagic.delegatesMethodChoice());
+        assertNotNull(genericMining);
+        assertTrue(genericMining.delegatesMethodChoice());
         assertNotNull(concreteCombat);
         assertFalse(concreteCombat.delegatesMethodChoice());
     }

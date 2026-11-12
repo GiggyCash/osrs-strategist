@@ -341,7 +341,7 @@ public class RecommendationCoverageCensusTest
                 Skill.COOKING, Skill.HERBLORE, Skill.MAGIC,
                 Skill.FISHING, Skill.RUNECRAFT,
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
-                Skill.SMITHING, Skill.SAILING,
+                Skill.MINING, Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
         ActionabilityPolicy policy =
                 new ActionabilityPolicy();
