@@ -165,6 +165,24 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void unreviewedWoodProductsFailClosedWithoutReusableAndUnlockEvidence()
+    {
+        for (String name : new String[] {"Bird house", "Oak bird house",
+                "Future bird house", "Oak shield", "Future shield",
+                "Oak stock", "Future stock"})
+            for (Membership membership : Membership.values())
+            {
+                Skill skill = name.contains("bird house")
+                        ? Skill.CRAFTING : Skill.FLETCHING;
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(skill, name, 25), 40, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void opalJewelleryUsesSilverBar()
     {
         UniversalActionRecipe recipe = resolver.resolve(

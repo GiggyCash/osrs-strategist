@@ -3040,8 +3040,8 @@ class UniversalActionRecipeResolver
             case RUNECRAFT: return recipe(get(901), count,
                     membership == Membership.P2P
                             ? "Pure essence" : "Rune essence", 1);
-            case CRAFTING: return crafting(name, lower, count);
-            case FLETCHING: return fletching(name, lower, count);
+            case CRAFTING: return unknown(get(913));
+            case FLETCHING: return fletching(lower, count);
             case SMITHING: return unknown(get(924));
             case FARMING: return lower.endsWith(" tree")
                     ? recipe(get(930), count,
@@ -3131,20 +3131,10 @@ class UniversalActionRecipeResolver
         return null;
     }
 
-    private static UniversalActionRecipe crafting(String name, String lower, int n)
-    {
-        if (lower.contains("bird house"))
-            return recipe(get(911), n, wood(name, "Logs"), 1);
-        return unknown(get(913));
-    }
-
-    private static UniversalActionRecipe fletching(String name, String lower, int n)
+    private static UniversalActionRecipe fletching(String lower, int n)
     {
         if (lower.equals("headless arrow") || lower.equals("headless arrows"))
             return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
-        if (lower.endsWith(" shield") || lower.endsWith(" stock"))
-            return recipe("Bring a knife.", n, wood(name, null),
-                    lower.endsWith(" shield") ? 2 : 1);
         return unknown(get(922));
     }
 
@@ -3174,22 +3164,6 @@ class UniversalActionRecipeResolver
     {
         for (String part : parts) if (text.contains(part)) return true;
         return false;
-    }
-    private static String first(String text, String... parts)
-    {
-        for (String part : parts) if (text.contains(part)) return part;
-        return null;
-    }
-    private static String wood(String name, String fallback)
-    {
-        String value = first(name.toLowerCase(Locale.ROOT), "redwood", "magic",
-                "yew", "mahogany", "maple", "teak", "willow", "oak");
-        return value == null ? fallback : capitalize(value) + " logs";
-    }
-    private static String capitalize(String value)
-    {
-        return value == null || value.isEmpty() ? "Dragon"
-                : Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
     private static final class Recipe
     {

@@ -428,3 +428,13 @@ members-only coif on free accounts and let invented names inherit recipes.
 Universal leather actions now remain unresolved until a reviewed contract can
 represent the needle/thread alternative and its live evidence; no existing
 curated training method depended on this fallback.
+
+## Unreviewed wood products fail closed
+
+Removed bird-house, shield and crossbow-stock name inference. Bird-house
+crafting counted logs while omitting required clockwork state; shield and stock
+suffixes admitted invented names without membership or unlock evidence. These
+unreviewed universal actions now remain unresolved, while the existing reviewed
+bow recipes and exact headless-arrow recipe are unchanged. No curated training
+method depended on the removed fallbacks, and the obsolete wood-name helpers
+were removed with them.
