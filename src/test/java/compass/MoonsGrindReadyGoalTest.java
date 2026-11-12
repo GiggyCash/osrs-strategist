@@ -187,6 +187,37 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void liveSetupProgressionClearsStaleMoonsPreparation()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        PvmReadinessAnalyzer analyzer = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog());
+        PvmSnapshot preparing = analyzer.analyze(
+                base.account(), base.quests(),
+                new ItemsState(Collections.singletonList(
+                        equipped("Rune scimitar",
+                                EquipmentInventorySlot.WEAPON))),
+                new ItemsState(Collections.emptyList()), null, null);
+        assertFalse(preparing.readinessFor(ACTIVITY)
+                .isReadyForRecommendation());
+
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+        PvmReadiness ready = analyzer.analyze(
+                base.account(), base.quests(), equipment, inventory,
+                null, preparing).readinessFor(ACTIVITY);
+
+        assertTrue(ready.isReadyForRecommendation());
+        assertTrue(ready.getMissingRequirements().isEmpty());
+    }
+
+    @Test
     public void foodAndUtilityToolsCannotMasqueradeAsMeleeSwitches()
     {
         GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
