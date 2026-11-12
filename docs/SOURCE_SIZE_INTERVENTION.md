@@ -482,3 +482,10 @@ unsupported actions and was wrong for special trees. The existing curated tree
 profiles retain their selected-action mapping, with the fruit-tree profile now
 correctly mapping RuneLite's Pineapple plant action to a pineapple sapling.
 Unknown Farming actions remain unresolved instead of inheriting a guessed item.
+
+## Magic curse suffix inference removed
+
+Removed the universal `* curse` suffix recipe. The exact Curse action remains
+covered by the existing catalog recipe, and the curated F2P method retains its
+explicit execution profile. Invented or future action names no longer inherit
+Curse's rune quantities merely from their suffix.

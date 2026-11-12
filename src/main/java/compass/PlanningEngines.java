@@ -3046,10 +3046,7 @@ class UniversalActionRecipeResolver
             case FLETCHING: return fletching(lower, count);
             case SMITHING: return unknown(get(924));
             case FARMING: return unknown(get(929));
-            case MAGIC: return lower.endsWith(" curse")
-                    ? recipe(get(933), count, "Earth rune", 3,
-                    "Water rune", 2, "Body rune", 1)
-                    : unknown(get(934));
+            case MAGIC: return unknown(get(934));
             case HERBLORE: return unknown(get(925));
             case CONSTRUCTION: return unknown(get(928));
             default: return unknown(get(902));

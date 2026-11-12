@@ -57,6 +57,26 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void curseRequiresItsExactReviewedActionName()
+    {
+        UniversalActionRecipe curse = resolver.resolve(
+                action(Skill.MAGIC, "Curse", 29), 10, Membership.F2P);
+        assertTrue(curse.hasExactInputs());
+        assertInput(curse, "Earth rune", 30);
+        assertInput(curse, "Water rune", 20);
+        assertInput(curse, "Body rune", 10);
+
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe invented = resolver.resolve(
+                    action(Skill.MAGIC, "Future curse", 29), 10,
+                    membership);
+            assertFalse(invented.hasExactInputs());
+            assertTrue(invented.getInputs().isEmpty());
+        }
+    }
+
+    @Test
     public void f2pFireCombatSpellsHaveExactRuneInputs()
     {
         UniversalActionRecipe bolt = resolver.resolve(
