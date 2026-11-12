@@ -215,6 +215,13 @@ public class RecommendationCoverageCensusTest
             System.out.println("COVERAGE_PREPARED " + skill.getName() + " "
                     + executable.getOrDefault(skill, 0) + "/" + possible);
         }
+        for (Skill skill : EnumSet.of(
+                Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE))
+        {
+            assertEquals(skill.getName() + " prepared melee coverage",
+                    eligible.getOrDefault(skill, 0),
+                    executable.getOrDefault(skill, 0));
+        }
         assertTrue(executable.getOrDefault(Skill.RANGED, 0) > 0);
         assertTrue(executable.getOrDefault(Skill.RUNECRAFT, 0) > 0);
     }
@@ -848,7 +855,7 @@ public class RecommendationCoverageCensusTest
     /**
      * A physically possible broad UIM setup for coverage testing. It carries
      * the core tools/inputs used by the asserted families and intentionally
-     * leaves four slots free; the ordinary-account omnibus fixture has more
+     * leaves three slots free; the ordinary-account omnibus fixture has more
      * than 28 distinct stacks and must never masquerade as a UIM inventory.
      */
     private static List<ItemState> uimPreparedItems()
@@ -856,6 +863,7 @@ public class RecommendationCoverageCensusTest
         List<ItemState> items = new ArrayList<>();
         items.add(item(ItemID.BRONZE_PICKAXE, "Bronze pickaxe", 1));
         items.add(item(ItemID.BRONZE_AXE, "Bronze axe", 1));
+        items.add(item(ItemID.BRONZE_SCIMITAR, "Bronze scimitar", 1));
         items.add(item(ItemID.SHORTBOW, "Shortbow", 1));
         items.add(item(ItemID.BRONZE_ARROW, "Bronze arrow", 10_000));
         items.add(item(ItemID.NET, "Small fishing net", 1));
@@ -875,7 +883,7 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.RAKE, "Rake", 1));
         items.add(item(ItemID.DIBBER, "Seed dibber", 1));
         items.add(item(ItemID.SPADE, "Spade", 1));
-        assertEquals("Prepared UIM fixture occupied slots", 24, items.size());
+        assertEquals("Prepared UIM fixture occupied slots", 25, items.size());
         for (int slot = 0; slot < items.size(); slot++)
         {
             ItemState item = items.get(slot);
