@@ -142,6 +142,21 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void farmingNeedsACuratedRouteBeforeInferringSaplings()
+    {
+        for (String name : new String[] {"Maple tree", "Spirit tree",
+                "Crystal tree", "Future tree"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FARMING, name, 50), 5, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void compositeCookingRecipeFailsClosed()
     {
         UniversalActionRecipe recipe = resolver.resolve(

@@ -3045,10 +3045,7 @@ class UniversalActionRecipeResolver
             case CRAFTING: return unknown(get(913));
             case FLETCHING: return fletching(lower, count);
             case SMITHING: return unknown(get(924));
-            case FARMING: return lower.endsWith(" tree")
-                    ? recipe(get(930), count,
-                    name.substring(0, name.length() - 5).trim() + " sapling", 1)
-                    : unknown(get(929));
+            case FARMING: return unknown(get(929));
             case MAGIC: return lower.endsWith(" curse")
                     ? recipe(get(933), count, "Earth rune", 3,
                     "Water rune", 2, "Body rune", 1)
@@ -3104,6 +3101,8 @@ class UniversalActionRecipeResolver
             case SAPLING_FOR_TREE:
                 if (lower.equals("spirit tree")) name = "Spirit seed";
                 else if (lower.equals("crystal tree")) name = "Crystal acorn";
+                else if (lower.equals("pineapple plant"))
+                    name = "Pineapple sapling";
                 else if (lower.endsWith(" tree"))
                     name = value.substring(0, value.length() - 5).trim()
                             + " sapling";

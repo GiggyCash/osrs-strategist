@@ -474,3 +474,11 @@ sandworms. The exact karambwan execution profile was removed because bait can
 be lost on failed attempts; its existing variable guidance remains available.
 Unsupported Fishing actions fail closed until a reviewed route identifies their
 consumables.
+
+## Farming sapling inference scoped to curated routes
+
+Removed the universal `tree` suffix recipe, which invented sapling names for
+unsupported actions and was wrong for special trees. The existing curated tree
+profiles retain their selected-action mapping, with the fruit-tree profile now
+correctly mapping RuneLite's Pineapple plant action to a pineapple sapling.
+Unknown Farming actions remain unresolved instead of inheriting a guessed item.

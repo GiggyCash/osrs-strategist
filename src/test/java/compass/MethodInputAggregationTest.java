@@ -73,15 +73,30 @@ public class MethodInputAggregationTest
     {
         MethodExecutionProfileCatalog catalog =
                 new MethodExecutionProfileCatalog();
-        assertProfileInput(catalog, "fishing_barbarian", "Leaping trout",
+        assertProfileInput(catalog, Skill.FISHING,
+                "fishing_barbarian", "Leaping trout",
                 "Feather", 20);
-        assertProfileInput(catalog, "fishing_3t_barb", "Leaping salmon",
+        assertProfileInput(catalog, Skill.FISHING,
+                "fishing_3t_barb", "Leaping salmon",
                 "Feather", 20);
-        assertProfileInput(catalog, "fishing_dark_crabs", "Dark crab",
+        assertProfileInput(catalog, Skill.FISHING,
+                "fishing_dark_crabs", "Dark crab",
                 "Dark fishing bait", 20);
-        assertProfileInput(catalog, "fishing_anglers", "Anglerfish",
+        assertProfileInput(catalog, Skill.FISHING,
+                "fishing_anglers", "Anglerfish",
                 "Sandworms", 20);
         assertNull(catalog.forMethod("fishing_karambwan"));
+    }
+
+    @Test
+    public void farmingProfilesMapOnlyTheirSelectedTreeActionsToSaplings()
+    {
+        MethodExecutionProfileCatalog catalog =
+                new MethodExecutionProfileCatalog();
+        assertProfileInput(catalog, Skill.FARMING, "farming_trees",
+                "Maple tree", "Maple sapling", 3);
+        assertProfileInput(catalog, Skill.FARMING, "farming_fruit_trees",
+                "Pineapple plant", "Pineapple sapling", 3);
     }
 
     @Test
@@ -118,11 +133,12 @@ public class MethodInputAggregationTest
     }
 
     private void assertProfileInput(MethodExecutionProfileCatalog catalog,
-            String methodId, String actionName, String inputName, int count)
+            Skill skill, String methodId, String actionName, String inputName,
+            int count)
     {
         MethodProfile profile = catalog.forMethod(methodId);
         assertNotNull(profile);
-        ActionDef action = new ActionDef(Skill.FISHING,
+        ActionDef action = new ActionDef(skill,
                 "test:" + actionName.toLowerCase().replace(' ', '_'),
                 actionName, 1, 1, "test", Membership.P2P);
         List<MethodInput> inputs = resolver.profileInputs(profile, action,
