@@ -404,19 +404,21 @@ final class PvmEvidenceProfile
     final int minimumRestoration;
     final Map<String, List<String>> weaponOptionGroups;
     final Map<EquipmentInventorySlot, String> requiredEquippedSlots;
+    final Map<EquipmentInventorySlot, List<String>> requiredEquippedOptions;
     final boolean inventoryWeaponOptions;
 
     PvmEvidenceProfile(String activityId, String weaponStyle,
             List<String> accessItems, int minimumFood, int minimumRestoration)
     {
         this(activityId, weaponStyle, accessItems, minimumFood,
-                minimumRestoration, emptyMap(), emptyMap(), false);
+                minimumRestoration, emptyMap(), emptyMap(), emptyMap(), false);
     }
 
     PvmEvidenceProfile(String activityId, String weaponStyle,
             List<String> accessItems, int minimumFood, int minimumRestoration,
             Map<String, List<String>> weaponOptionGroups,
             Map<EquipmentInventorySlot, String> requiredEquippedSlots,
+            Map<EquipmentInventorySlot, List<String>> requiredEquippedOptions,
             boolean inventoryWeaponOptions)
     {
         this.activityId = activityId;
@@ -430,6 +432,12 @@ final class PvmEvidenceProfile
                 new EnumMap<>(EquipmentInventorySlot.class);
         slots.putAll(requiredEquippedSlots);
         this.requiredEquippedSlots = unmodifiableMap(slots);
+        Map<EquipmentInventorySlot, List<String>> equippedOptions =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        requiredEquippedOptions.forEach((slot, terms) ->
+                equippedOptions.put(slot,
+                        unmodifiableList(new ArrayList<>(terms))));
+        this.requiredEquippedOptions = unmodifiableMap(equippedOptions);
         this.inventoryWeaponOptions = inventoryWeaponOptions;
         this.minimumFood = minimumFood;
         this.minimumRestoration = minimumRestoration;

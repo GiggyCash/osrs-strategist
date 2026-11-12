@@ -117,7 +117,9 @@ public class PvmReadinessAnalyzer
                         addMissing(missing, "Carry " + accessItem + get(1567));
                 for (Map.Entry<EquipmentInventorySlot, String> slot
                         : exact.getRequiredEquippedSlots().entrySet())
-                    if (!equippedInSlot(equipment, slot.getKey()))
+                    if (!equippedInSlot(equipment, slot.getKey(),
+                            exact.getRequiredEquippedOptions().get(
+                                    slot.getKey())))
                         addMissing(missing, "Equip observed " + slot.getValue());
             }
 
@@ -177,12 +179,19 @@ public class PvmReadinessAnalyzer
     }
 
     private static boolean equippedInSlot(ItemsState equipment,
-            EquipmentInventorySlot slot)
+            EquipmentInventorySlot slot, List<String> allowedNameTerms)
     {
         if (equipment == null || !equipment.isObserved()) return false;
         for (ItemState item : equipment.getEquippedItems())
             if (item != null && item.quantity > 0
-                    && item.slotIndex == slot.getSlotIdx()) return true;
+                    && item.slotIndex == slot.getSlotIdx()
+                    && (allowedNameTerms == null
+                            || allowedNameTerms.isEmpty()
+                            || item.getName() != null
+                            && containsAny(item.getName().toLowerCase(
+                                    Locale.ROOT), allowedNameTerms.toArray(
+                                            new String[0]))))
+                return true;
         return false;
     }
 

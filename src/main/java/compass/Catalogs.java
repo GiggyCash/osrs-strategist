@@ -770,7 +770,8 @@ class PvmEvidenceProfileCatalog
         add(new PvmEvidenceProfile("pvm:scurrius", "melee",
                 emptyList(), 5, 1));
         add(new PvmEvidenceProfile("pvm:lunar_chests", "melee",
-                emptyList(), 0, 0, moonsWeapons(), moonsArmour(), true));
+                emptyList(), 0, 0, moonsWeapons(), moonsArmour(),
+                moonsArmourOptions(), true));
     }
 
     public PvmEvidenceProfile forActivity(String id)
@@ -801,6 +802,21 @@ class PvmEvidenceProfileCatalog
                 new EnumMap<>(EquipmentInventorySlot.class);
         result.put(EquipmentInventorySlot.BODY, "defensive body armour");
         result.put(EquipmentInventorySlot.LEGS, "defensive leg armour");
+        return result;
+    }
+
+    private static Map<EquipmentInventorySlot, List<String>>
+            moonsArmourOptions()
+    {
+        Map<EquipmentInventorySlot, List<String>> result =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        result.put(EquipmentInventorySlot.BODY, Arrays.asList(
+                "platebody", "chainbody", "chestplate", "chestguard",
+                "torso", "hauberk", "brassard", "cuirass",
+                "granite body"));
+        result.put(EquipmentInventorySlot.LEGS, Arrays.asList(
+                "platelegs", "plateskirt", "tasset", "legguards",
+                "cuisse", "granite legs"));
         return result;
     }
 }
