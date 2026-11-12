@@ -53,6 +53,50 @@ public class ReviewedBankingPolicyTest
                 .noneMatch(p -> p.method().id.equals("cooking_wines")));
     }
 
+    @Test
+    public void carriedLogsAndTinderboxEnableLocalUimFiremaking()
+    {
+        List<ItemState> inventory = MethodIntelligenceTest.carried(
+                1511, "Logs", 4);
+        inventory.add(new ItemState(590, "Tinderbox", 1));
+        GameData uim = MethodIntelligenceTest.data(
+                2, -1, inventory, Collections.emptyList());
+        TrainingMethodSelector selector = new TrainingMethodSelector(
+                methods, null, new TrainingMethodPolicy(), strategy,
+                new UimInventoryResolutionService(),
+                new MethodReadinessService(new MethodIntelligenceCatalog(),
+                        new MethodPreparationService(
+                                MethodIntelligenceTest.resources(0, 0))));
+
+        TrainingPlan firemaking = selector.rankedCandidates(
+                uim, Skill.FIREMAKING, 80, StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR, false, false).stream()
+                .filter(plan -> plan.method().id.equals(
+                        "firemaking_f2p_logs")
+                        && plan.readiness.actionable())
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertEquals(BankingMode.LOCAL_PROCESSING,
+                firemaking.strategyProfile.bankingBehavior);
+        assertEquals("normal_logs_firemaking",
+                firemaking.readiness.recipe.id);
+        Guidance guidance = firemaking.readiness.guidance(81);
+        assertTrue(guidance.getAction().contains(
+                "Use the tinderbox on the prepared normal logs"));
+        assertFalse(guidance.getAction().toLowerCase(
+                Locale.ROOT).contains("bank"));
+
+        GameData missingTool = MethodIntelligenceTest.data(2, -1,
+                MethodIntelligenceTest.carried(1511, "Logs", 4),
+                Collections.emptyList());
+        assertTrue(selector.rankedCandidates(missingTool,
+                Skill.FIREMAKING, 80, StrategyMode.BALANCED,
+                SessionIntent.ONE_HOUR, false, false).stream()
+                .filter(plan -> plan.method().id.equals(
+                        "firemaking_f2p_logs"))
+                .noneMatch(plan -> plan.readiness.actionable()));
+    }
+
     private CuratedTrainingMethod method(Skill skill, String id)
     {
         return methods.curatedFor(skill).stream().filter(m -> m.method().id.equals(id))

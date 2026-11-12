@@ -2516,7 +2516,7 @@
       "minLevel": 1,
       "maxLevel": 99,
       "name": "Burn logs",
-      "instructions": "Grand Exchange south-east corner: withdraw the log type named in DO and a tinderbox, burn east-to-west rows, bank, and repeat.",
+      "instructions": "Use a tinderbox on the log type named in DO along an open east-to-west line; review carried supplies before the next batch.",
       "efficientScore": 14.0,
       "balancedScore": 17.0,
       "relaxedScore": 12.0,
