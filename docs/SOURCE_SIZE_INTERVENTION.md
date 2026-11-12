@@ -400,5 +400,11 @@ rows pinned to OSRS Wiki revisions 15397319, 15397320, 15397322, 15397324,
 15397326 and 15397327. RuneLite item IDs 39–44 retain their player-facing
 `arrowtips` names throughout action guidance and the deterministic dependency
 graph. Invented arrow names and non-members now fail closed instead of receiving
-a fabricated `arrowhead` input. The generic javelin and broad-arrow paths remain
-separate and are not claimed as reviewed by this checkpoint.
+a fabricated `arrowhead` input. The generic javelin path remains separate and is
+not claimed as reviewed by this checkpoint.
+
+Broad arrows remain a distinct CHECK_NEEDED method because the 300-point Broader
+Fletching unlock is not directly observed. The profile now uses RuneLite item
+11874's player-facing `Broad arrowheads` name, while generic universal resolution
+fails closed instead of implying the unlock is known. The mechanic and identity
+were checked against Wiki revisions 15397287 and 15373576.

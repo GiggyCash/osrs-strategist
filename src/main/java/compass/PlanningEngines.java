@@ -3158,8 +3158,6 @@ class UniversalActionRecipeResolver
         if (lower.endsWith(" shield") || lower.endsWith(" stock"))
             return recipe("Bring a knife.", n, wood(name, null),
                     lower.endsWith(" shield") ? 2 : 1);
-        if (lower.contains("broad arrow")) return recipe(get(917), n,
-                "Headless arrow", 1, "Broad arrowhead", 1);
         if (projectile(lower, "javelin")) return recipe(get(919), n,
                 "Javelin shaft", 1, firstWord(name) + " javelin head", 1);
         return unknown(get(922));

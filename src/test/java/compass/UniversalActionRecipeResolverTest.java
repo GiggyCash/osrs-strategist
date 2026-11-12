@@ -250,6 +250,23 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void broadArrowsRequireTheExplicitCheckNeededMethodContract()
+    {
+        ActionDef action = action(Skill.FLETCHING, "Broad arrows", 10);
+        UniversalActionRecipe universal = resolver.resolve(action, 15,
+                Membership.P2P);
+        assertFalse(universal.hasExactInputs());
+        assertTrue(universal.getInputs().isEmpty());
+
+        MethodProfile profile = new MethodExecutionProfileCatalog()
+                .forMethod("fletching_broad_arrows");
+        java.util.List<MethodInput> inputs = resolver.profileInputs(
+                profile, action, 15, Membership.P2P);
+        assertInput(inputs, "Headless arrow", 15);
+        assertInput(inputs, "Broad arrowheads", 15);
+    }
+
+    @Test
     public void specialtyGemBoltFailsClosedInsteadOfGuessingBasicBoltRecipe()
     {
         UniversalActionRecipe recipe = resolver.resolve(
@@ -325,6 +342,20 @@ public class UniversalActionRecipeResolverTest
             {
                 assertEquals(quantity, input.getQuantity());
                 assertEquals(itemId, input.itemId);
+                return;
+            }
+        }
+        throw new AssertionError("Missing input: " + name);
+    }
+
+    private static void assertInput(java.util.List<MethodInput> inputs,
+            String name, int quantity)
+    {
+        for (MethodInput input : inputs)
+        {
+            if (name.equals(input.getName()))
+            {
+                assertEquals(quantity, input.getQuantity());
                 return;
             }
         }
