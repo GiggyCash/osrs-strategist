@@ -20,12 +20,6 @@
   {"skill":"MAGIC","match":"high level alchemy","setup":"An equipped fire source can replace fire runes; use only a verified safe alch list.","inputs":["Nature rune","Fire rune"],"units":[1,5]},
   {"skill":"MAGIC","match":"curse","setup":"Elemental staves can replace corresponding runes.","inputs":["Earth rune","Water rune","Body rune"],"units":[3,2,1]},
 
-  {"skill":"CONSTRUCTION","match":"oak larder","setup":"Bring a hammer and saw.","inputs":["Oak plank"],"units":[8]},
-  {"skill":"CONSTRUCTION","match":"oak door","setup":"Bring a hammer and saw.","inputs":["Oak plank"],"units":[10]},
-  {"skill":"CONSTRUCTION","match":"mahogany table","setup":"Bring a hammer and saw.","inputs":["Mahogany plank"],"units":[6]},
-  {"skill":"CONSTRUCTION","match":"teak garden bench","setup":"Bring a hammer and saw.","inputs":["Teak plank"],"units":[6]},
-  {"skill":"CONSTRUCTION","match":"mounted mythical cape","setup":"The cape is returned; only planks are counted.","inputs":["Teak plank"],"units":[3]},
-
   {"skill":"HERBLORE","match":"attack potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Guam leaf","Eye of newt","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"antipoison","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Marrentill","Unicorn horn dust","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"strength potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Tarromin","Limpwurt root","Vial of water"],"units":[1,1,1]},

@@ -548,3 +548,18 @@ This migration changes no production Java, removes 216 legacy-data characters,
 and adds 893 reviewed-data characters. The full clean suite is 952/952, the
 packaged JAR is 1,255,893 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens.
+
+## Construction recipes use reviewed plank identities
+
+Moved the five exact Construction recipes from the legacy catalog into the
+shared reviewed catalog. Oak larders and doors now use item 8778 (Oak plank),
+teak garden benches and mounted mythical capes use item 8780 (Teak plank), and
+mahogany tables use item 8782 (Mahogany plank). All five explicitly require P2P;
+F2P and unknown membership now fail closed at the recipe boundary. Reusable
+hammers, saws, and the returned mythical cape remain setup rather than consumed
+inputs.
+
+This migration changes no production Java, removes 642 legacy-data characters,
+and adds 2,275 reviewed-data characters. The full clean suite is 953/953, the
+packaged JAR is 1,256,012 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens.

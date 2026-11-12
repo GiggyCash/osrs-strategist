@@ -1098,6 +1098,116 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "CONSTRUCTION",
+    "match": "oak larder",
+    "inputs": [
+      "Oak plank"
+    ],
+    "units": [
+      8
+    ],
+    "itemIds": [
+      8778
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_larder",
+    "sourceRevision": 15194498,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "oak door",
+    "inputs": [
+      "Oak plank"
+    ],
+    "units": [
+      10
+    ],
+    "itemIds": [
+      8778
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_door",
+    "sourceRevision": 15232750,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "mahogany table",
+    "inputs": [
+      "Mahogany plank"
+    ],
+    "units": [
+      6
+    ],
+    "itemIds": [
+      8782
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Mahogany_table",
+    "sourceRevision": 14913577,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "teak garden bench",
+    "inputs": [
+      "Teak plank"
+    ],
+    "units": [
+      6
+    ],
+    "itemIds": [
+      8780
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Teak_garden_bench",
+    "sourceRevision": 14913760,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "mounted mythical cape",
+    "inputs": [
+      "Teak plank"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      8780
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw; the mythical cape is returned when the mount is removed, so only planks are counted.",
+    "source": "https://oldschool.runescape.wiki/w/Mythical_cape_(mounted)",
+    "sourceRevision": 14913609,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "CRAFTING",
     "match": "ball of wool",
     "inputs": [

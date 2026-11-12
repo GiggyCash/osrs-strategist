@@ -75,6 +75,23 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void constructionRecipesUseCurrentRuneLiteActionIdentities()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        List<String> identities = new ArrayList<>();
+        for (ActionDef action : catalog.actionsFor(Skill.CONSTRUCTION))
+            identities.add(action.id + "=" + Names.actionKey(action.name));
+
+        for (String identity : new String[] {
+                "runelite:construction:oak_larder=oak_larder",
+                "runelite:construction:oak_door=oak_door",
+                "runelite:construction:mahogany_table=mahogany_table",
+                "runelite:construction:teak_garden_bench=teak_garden_bench",
+                "runelite:construction:mounted_mythical_cape=mounted_mythical_cape"})
+            assertTrue(identity, identities.contains(identity));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

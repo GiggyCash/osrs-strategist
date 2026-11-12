@@ -85,13 +85,22 @@ public class UniversalActionRecipeResolverTest
         String[] inputs = {"Oak plank", "Oak plank", "Mahogany plank",
                 "Teak plank", "Teak plank"};
         int[] quantities = {8, 10, 6, 6, 3};
+        int[] itemIds = {ItemID.PLANK_OAK, ItemID.PLANK_OAK,
+                ItemID.PLANK_MAHOGANY, ItemID.PLANK_TEAK,
+                ItemID.PLANK_TEAK};
         for (int i = 0; i < names.length; i++)
         {
             UniversalActionRecipe recipe = resolver.resolve(
                     action(Skill.CONSTRUCTION, names[i], 1), 2,
                     Membership.P2P);
             assertTrue(names[i], recipe.hasExactInputs());
-            assertInput(recipe, inputs[i], quantities[i] * 2);
+            assertInput(recipe, inputs[i], quantities[i] * 2, itemIds[i]);
+            assertFalse(names[i], resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.F2P).hasExactInputs());
+            assertFalse(names[i], resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.UNKNOWN).hasExactInputs());
         }
         UniversalActionRecipe variableNails = resolver.resolve(
                 action(Skill.CONSTRUCTION, "Crude Wooden Chair", 1), 2,
