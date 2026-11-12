@@ -130,6 +130,39 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void selectedGoalProducesTypedGlobalDoNext()
+    {
+        PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
+                Confidence.VERIFIED, Collections.emptyList());
+        CandidateProvider generic = context -> Collections.singletonList(
+                new Recommendation("generic:progress", "Generic progress",
+                        "Useful but unrelated account progress.", 80.0,
+                        Confidence.VERIFIED,
+                        new Guidance("Do the generic step.", "Ready.",
+                                "Safe location.", "Generic progress."),
+                        Safety.harmless(false)));
+        StrategyEngine engine = TestFixtures.strategyEngine(null, null, null,
+                new StrategyCandidateRegistry(java.util.Arrays.asList(
+                        provider, generic)), new ActionabilityPolicy(),
+                new RecommendationIntelligenceService(),
+                new CandidateSafetyPolicy(),
+                new GoalDependencyProvenanceService());
+
+        List<Recommendation> queue = engine.evaluate(
+                data(0, Membership.P2P, QuestStatus.COMPLETE,
+                        readiness, true),
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+
+        assertFalse(queue.isEmpty());
+        assertEquals(ACTIVITY, queue.get(0).getId());
+        assertNotNull(queue.get(0).getGoalProvenance());
+        assertEquals(GoalRelation.DIRECT,
+                queue.get(0).getGoalProvenance().getRelationship());
+    }
+
+    @Test
     public void analyzerKeepsIncompleteStyleAndArmourEvidenceInPreparation()
     {
         GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
