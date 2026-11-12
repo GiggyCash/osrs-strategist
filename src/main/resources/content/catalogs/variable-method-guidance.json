@@ -227,6 +227,14 @@
     "observed": ["Plank sack", "Steel bar"]
   },
   {
+    "ids": ["construction_crude_chairs"],
+    "action": "Build and remove crude wooden chairs in your parlour until you gain {xp} Construction XP toward level {target}.",
+    "supplies": "Each successful chair uses two planks and at least two steel nails. Bring extra steel nails for bends, plus a hammer and saw. {observed}",
+    "location": "The chair space in a parlour inside your player-owned house.",
+    "note": "Nails can bend, so Compass does not fabricate an exact nail total. Steel nails or better reduce bending; switch to oak furniture at level 15 to stop consuming nails.",
+    "observed": ["Plank", "Steel nails", "Hammer", "Saw"]
+  },
+  {
     "ids": ["farming_tithe"],
     "kind": "tithe",
     "action": "Take {seed} seeds from the table. Plant and immediately water a 20-plot cycle, revisit each plant for every watering stage, harvest, deposit the fruit, and repeat for {xp} Farming XP to level {target}.",

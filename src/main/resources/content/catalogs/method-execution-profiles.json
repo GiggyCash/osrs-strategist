@@ -1017,29 +1017,6 @@
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
-    "methodId": "construction_crude_chairs",
-    "actionTerms": [
-      "crude_wooden_chair"
-    ],
-    "unitSingular": "crude wooden chair built",
-    "unitPlural": "crude wooden chairs built",
-    "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Plank",
-        "quantityPerAction": 2.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Steel nails",
-        "quantityPerAction": 2.0
-      }
-    ],
-    "note": "Bring a hammer and saw. Steel nails or better reduce bending; the count is the minimum consumed by successful builds.",
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
     "methodId": "cooking_f2p_fish_baseline",
     "actionTerms": [
       "shrimp",

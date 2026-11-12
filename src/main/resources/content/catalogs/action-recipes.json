@@ -25,7 +25,6 @@
   {"skill":"CONSTRUCTION","match":"oak larder","setup":"Bring a hammer and saw.","inputs":["Oak plank"],"units":[8]},
   {"skill":"CONSTRUCTION","match":"oak door","setup":"Bring a hammer and saw.","inputs":["Oak plank"],"units":[10]},
   {"skill":"CONSTRUCTION","match":"mahogany table","setup":"Bring a hammer and saw.","inputs":["Mahogany plank"],"units":[6]},
-  {"skill":"CONSTRUCTION","match":"crude wooden chair","setup":"Bring a hammer and saw.","inputs":["Plank","Steel nails"],"units":[2,2]},
   {"skill":"CONSTRUCTION","match":"teak garden bench","setup":"Bring a hammer and saw.","inputs":["Teak plank"],"units":[6]},
   {"skill":"CONSTRUCTION","match":"mounted mythical cape","setup":"The cape is returned; only planks are counted.","inputs":["Teak plank"],"units":[3]},
 
