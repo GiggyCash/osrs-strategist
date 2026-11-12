@@ -56,6 +56,43 @@ public class AccountModePairRedTeamTest
     }
 
     @Test
+    public void selectedUimGuidanceNeverCommandsConventionalBanking()
+    {
+        GameData data = data(AccountMode.ULTIMATE_IRONMAN,
+                Membership.P2P, carriedSetup(), null);
+        RecommendationGuidanceService guidanceService =
+                TestFixtures.recommendationGuidanceService();
+        List<Skill> skills = Arrays.asList(
+                Skill.AGILITY, Skill.COOKING, Skill.CONSTRUCTION,
+                Skill.CRAFTING, Skill.FARMING, Skill.FIREMAKING,
+                Skill.FISHING, Skill.FLETCHING, Skill.HERBLORE,
+                Skill.HUNTER, Skill.MAGIC, Skill.MINING, Skill.PRAYER,
+                Skill.RUNECRAFT, Skill.SMITHING, Skill.THIEVING,
+                Skill.WOODCUTTING);
+        int rendered = 0;
+        for (Skill skill : skills)
+        {
+            TrainingPlan plan = selector.select(data, skill, 50,
+                    StrategyMode.BALANCED, SessionIntent.ONE_HOUR,
+                    false, false);
+            if (plan == null) continue;
+            Guidance guidance = guidanceService.build(data, skill, 50, 51,
+                    plan, false);
+            if (guidance == null) continue;
+            rendered++;
+            String text = ((guidance.getAction() == null ? ""
+                    : guidance.getAction()) + " "
+                    + (guidance.getLocation() == null ? ""
+                    : guidance.getLocation())).toLowerCase(
+                            java.util.Locale.ROOT);
+            assertFalse(plan.method().id + " rendered an unsafe UIM bank command: "
+                    + text, containsConventionalBankCommand(text));
+        }
+        assertTrue("Too few UIM guidance paths rendered: " + rendered,
+                rendered >= 3);
+    }
+
+    @Test
     public void mainVersusUimChangesSmithingAndRunecraftGeneration()
     {
         GameData main = data(AccountMode.MAIN,
@@ -217,6 +254,17 @@ public class AccountModePairRedTeamTest
                 StrategyMode.BALANCED, SessionIntent.ONE_HOUR, false, false);
         assertNotNull(skill.getName(), plan);
         return plan;
+    }
+
+    private static boolean containsConventionalBankCommand(String value)
+    {
+        return value.contains("withdraw ")
+                || value.contains("bank, and repeat")
+                || value.contains("bank the ")
+                || value.contains("bank each ")
+                || value.contains("bank immediately")
+                || value.contains("use the nearby bank")
+                || value.contains("bank/altar route");
     }
 
     private static Recommendation candidate(String id)
