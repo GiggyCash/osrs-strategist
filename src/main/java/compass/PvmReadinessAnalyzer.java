@@ -82,21 +82,11 @@ public class PvmReadinessAnalyzer
                 missing.add("Quest/access: " + preparation.requiredQuest);
             }
 
-            if ("pvm:lunar_chests".equals(activity.id))
-            {
-                addMoonsEvidence(equipment, inventory, missing);
-                boolean verified = missing.isEmpty();
-                result.put(activity.id, new PvmReadiness(activity.id,
-                        verified,
-                        verified ? Confidence.VERIFIED
-                                : Confidence.CHECK_NEEDED,
-                        missing));
-                continue;
-            }
-
             String requiredStyle = exact == null ? preparation.getPreferredStyle()
                     : exact.getWeaponStyle();
-            if (!hasCombatWeapon(equipment, requiredStyle))
+            if (exact != null && !exact.getWeaponOptionGroups().isEmpty())
+                addWeaponOptionEvidence(exact, equipment, inventory, missing);
+            else if (!hasCombatWeapon(equipment, requiredStyle))
                 addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + get(1566));
             else if (exact == null)
                 addMissing(missing, get(443));
@@ -121,9 +111,15 @@ public class PvmReadinessAnalyzer
             if (exact == null)
                 addMissing(missing, get(451));
             else
+            {
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
                         addMissing(missing, "Carry " + accessItem + get(1567));
+                for (Map.Entry<EquipmentInventorySlot, String> slot
+                        : exact.getRequiredEquippedSlots().entrySet())
+                    if (!equippedInSlot(equipment, slot.getKey()))
+                        addMissing(missing, "Equip observed " + slot.getValue());
+            }
 
             if (exact == null && preparation != null)
                 for (String check : preparation.getChecks()) addMissing(missing, check);
@@ -143,31 +139,26 @@ public class PvmReadinessAnalyzer
         return new PvmSnapshot(result);
     }
 
-    /** Positive live evidence only; no bank, market, or execution inference. */
-    private static void addMoonsEvidence(ItemsState equipment,
-            ItemsState inventory, List<String> missing)
+    /** Positive carried evidence only; no bank, market, or execution inference. */
+    private static void addWeaponOptionEvidence(PvmEvidenceProfile profile,
+            ItemsState equipment, ItemsState inventory, List<String> missing)
     {
         if (equipment == null || !equipment.isObserved()
-                || inventory == null || !inventory.isObserved())
+                || profile.isInventoryWeaponOptions()
+                && (inventory == null || !inventory.isObserved()))
         {
             addMissing(missing, "Observe live equipment and inventory");
             return;
         }
         List<ItemState> available = new ArrayList<>();
         available.addAll(equipment.getEquippedItems());
-        available.addAll(inventory.getItems());
-        if (!hasNamedOption(available, "spear", "hasta", "fang", "rapier",
-                "sword"))
-            addMissing(missing, "Carry a usable stab option");
-        if (!hasNamedOption(available, "mace", "maul", "bludgeon",
-                "warhammer"))
-            addMissing(missing, "Carry a usable crush option");
-        if (!hasNamedOption(available, "scimitar", "whip", "battleaxe",
-                "scythe", "halberd", "sword"))
-            addMissing(missing, "Carry a usable slash option");
-        if (!equippedInSlot(equipment, EquipmentInventorySlot.BODY)
-                || !equippedInSlot(equipment, EquipmentInventorySlot.LEGS))
-            addMissing(missing, "Equip observed defensive body and leg armour");
+        if (profile.isInventoryWeaponOptions())
+            available.addAll(inventory.getItems());
+        for (Map.Entry<String, List<String>> option
+                : profile.getWeaponOptionGroups().entrySet())
+            if (!hasNamedOption(available,
+                    option.getValue().toArray(new String[0])))
+                addMissing(missing, "Carry a usable " + option.getKey() + " option");
     }
 
     private static boolean hasNamedOption(List<ItemState> items, String... terms)
@@ -188,6 +179,7 @@ public class PvmReadinessAnalyzer
     private static boolean equippedInSlot(ItemsState equipment,
             EquipmentInventorySlot slot)
     {
+        if (equipment == null || !equipment.isObserved()) return false;
         for (ItemState item : equipment.getEquippedItems())
             if (item != null && item.quantity > 0
                     && item.slotIndex == slot.getSlotIdx()) return true;

@@ -145,7 +145,35 @@ public class MoonsGrindReadyGoalTest
         assertTrue(analyzed.getMissingRequirements().stream()
                 .anyMatch(value -> value.contains("crush")));
         assertTrue(analyzed.getMissingRequirements().stream()
-                .anyMatch(value -> value.contains("body and leg armour")));
+                .anyMatch(value -> value.contains("body armour")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("leg armour")));
+    }
+
+    @Test
+    public void foodAndUtilityToolsCannotMasqueradeAsMeleeSwitches()
+    {
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune scimitar", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(java.util.Arrays.asList(
+                new ItemState(1, "Swordfish", 10),
+                new ItemState(2, "Hammer", 1)));
+
+        PvmReadiness analyzed = new PvmReadinessAnalyzer(
+                new PvmActivityCatalog(), new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
+
+        assertFalse(analyzed.isReadyForRecommendation());
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("stab")));
+        assertTrue(analyzed.getMissingRequirements().stream()
+                .anyMatch(value -> value.contains("crush")));
     }
 
     @Test

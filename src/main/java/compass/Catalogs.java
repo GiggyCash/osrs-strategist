@@ -755,6 +755,8 @@ class PvmEvidenceProfileCatalog
                 singletonList("Mossy key"), 5, 0));
         add(new PvmEvidenceProfile("pvm:scurrius", "melee",
                 emptyList(), 5, 1));
+        add(new PvmEvidenceProfile("pvm:lunar_chests", "melee",
+                emptyList(), 0, 0, moonsWeapons(), moonsArmour(), true));
     }
 
     public PvmEvidenceProfile forActivity(String id)
@@ -767,6 +769,25 @@ class PvmEvidenceProfileCatalog
     private void add(PvmEvidenceProfile profile)
     {
         profiles.put(profile.activityId, profile);
+    }
+
+    private static Map<String, List<String>> moonsWeapons()
+    {
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        result.put("stab", Arrays.asList("spear", "hasta", "fang", "rapier", "sword"));
+        result.put("crush", Arrays.asList("mace", "maul", "bludgeon", "warhammer"));
+        result.put("slash", Arrays.asList("scimitar", "whip", "battleaxe",
+                "scythe", "halberd", "sword"));
+        return result;
+    }
+
+    private static Map<EquipmentInventorySlot, String> moonsArmour()
+    {
+        Map<EquipmentInventorySlot, String> result =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        result.put(EquipmentInventorySlot.BODY, "defensive body armour");
+        result.put(EquipmentInventorySlot.LEGS, "defensive leg armour");
+        return result;
     }
 }
 

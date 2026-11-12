@@ -6,6 +6,7 @@ import static java.util.Collections.*;
 import static compass.Text.get;
 
 import java.util.*;
+import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Skill;
 
 /** Verified prerequisites for a prayer, spell, or spellbook unlock. */
@@ -393,7 +394,6 @@ final class PvmActivity
 }
 
 /** Complete evidence contract for encounters simple enough to verify locally. */
-@RequiredArgsConstructor
 @Getter
 final class PvmEvidenceProfile
 {
@@ -402,8 +402,38 @@ final class PvmEvidenceProfile
     final List<String> accessItems;
     final int minimumFood;
     final int minimumRestoration;
+    final Map<String, List<String>> weaponOptionGroups;
+    final Map<EquipmentInventorySlot, String> requiredEquippedSlots;
+    final boolean inventoryWeaponOptions;
 
+    PvmEvidenceProfile(String activityId, String weaponStyle,
+            List<String> accessItems, int minimumFood, int minimumRestoration)
+    {
+        this(activityId, weaponStyle, accessItems, minimumFood,
+                minimumRestoration, emptyMap(), emptyMap(), false);
+    }
 
+    PvmEvidenceProfile(String activityId, String weaponStyle,
+            List<String> accessItems, int minimumFood, int minimumRestoration,
+            Map<String, List<String>> weaponOptionGroups,
+            Map<EquipmentInventorySlot, String> requiredEquippedSlots,
+            boolean inventoryWeaponOptions)
+    {
+        this.activityId = activityId;
+        this.weaponStyle = weaponStyle;
+        this.accessItems = unmodifiableList(new ArrayList<>(accessItems));
+        Map<String, List<String>> options = new LinkedHashMap<>();
+        weaponOptionGroups.forEach((label, terms) -> options.put(label,
+                unmodifiableList(new ArrayList<>(terms))));
+        this.weaponOptionGroups = unmodifiableMap(options);
+        Map<EquipmentInventorySlot, String> slots =
+                new EnumMap<>(EquipmentInventorySlot.class);
+        slots.putAll(requiredEquippedSlots);
+        this.requiredEquippedSlots = unmodifiableMap(slots);
+        this.inventoryWeaponOptions = inventoryWeaponOptions;
+        this.minimumFood = minimumFood;
+        this.minimumRestoration = minimumRestoration;
+    }
 }
 
 /** Reviewable preparation evidence that may produce actions but never READY. */
