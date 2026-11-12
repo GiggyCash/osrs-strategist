@@ -535,3 +535,16 @@ full clean suite is 950/950, the packaged JAR is 1,255,814 bytes, and the curren
 source audit is 1,077,288 production-Java characters / 269,322 estimated tokens.
 The project remains above the intervention threshold; this is one measured
 knowledge-boundary reduction, not a claim that the total size issue is resolved.
+
+## Spinning recipes use reviewed identities and membership
+
+Moved the two spinning-wheel Crafting recipes from the legacy catalog into the
+shared reviewed catalog. `Ball of wool` now consumes item 1737 (Wool) and stays
+F2P, while `Bow string` consumes item 1779 (Flax) and correctly fails closed for
+F2P and unknown membership. The exact RuneLite 1.13.6 action identities are
+guarded, and the unsupported plural alias remains unresolved.
+
+This migration changes no production Java, removes 216 legacy-data characters,
+and adds 893 reviewed-data characters. The full clean suite is 952/952, the
+packaged JAR is 1,255,893 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens.

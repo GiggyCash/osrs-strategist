@@ -62,6 +62,19 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void spinningRecipesUseCurrentRuneLiteActionIdentities()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        List<ActionDef> crafting = catalog.actionsFor(Skill.CRAFTING);
+        assertTrue(crafting.stream().anyMatch(action ->
+                "runelite:crafting:ball_of_wool".equals(action.id)
+                        && "Ball of wool".equals(action.name)));
+        assertTrue(crafting.stream().anyMatch(action ->
+                "runelite:crafting:bow_string".equals(action.id)
+                        && "Bow string".equals(action.name)));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

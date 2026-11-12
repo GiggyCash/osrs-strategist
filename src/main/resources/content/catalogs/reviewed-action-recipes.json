@@ -1099,6 +1099,50 @@
   },
   {
     "skill": "CRAFTING",
+    "match": "ball of wool",
+    "inputs": [
+      "Wool"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1737
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Spin wool into a ball of wool at a spinning wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Ball_of_wool",
+    "sourceRevision": 15374780,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "bow string",
+    "inputs": [
+      "Flax"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1779
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Spin flax into bow string at a spinning wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Bow_string",
+    "sourceRevision": 15278670,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
     "match": "air battlestaff",
     "inputs": [
       "Battlestaff",

@@ -273,6 +273,26 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void spinningRecipesUseReviewedIdentitiesAndMembership()
+    {
+        UniversalActionRecipe wool = resolver.resolve(
+                action(Skill.CRAFTING, "Ball of wool", 2.5f), 28,
+                Membership.F2P);
+        assertTrue(wool.hasExactInputs());
+        assertInput(wool, "Wool", 28, ItemID.WOOL);
+
+        UniversalActionRecipe bowString = resolver.resolve(
+                action(Skill.CRAFTING, "Bow string", 15), 28,
+                Membership.P2P);
+        assertTrue(bowString.hasExactInputs());
+        assertInput(bowString, "Flax", 28, ItemID.FLAX);
+        assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                "Bow string", 15), 28, Membership.F2P).hasExactInputs());
+        assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                "Bow strings", 15), 28, Membership.P2P).hasExactInputs());
+    }
+
+    @Test
     public void unreviewedWoodProductsFailClosedWithoutReusableAndUnlockEvidence()
     {
         for (String name : new String[] {"Bird house", "Oak bird house",

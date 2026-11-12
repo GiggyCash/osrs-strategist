@@ -1,6 +1,4 @@
 [
-  {"skill":"CRAFTING","match":"ball of wool","setup":"Use a spinning wheel.","inputs":["Wool"],"units":[1]},
-  {"skill":"CRAFTING","match":"bow string","setup":"Use a spinning wheel.","inputs":["Flax"],"units":[1]},
   {"skill":"CRAFTING","match":"unfired pot","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
   {"skill":"CRAFTING","match":"unfired pie dish","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
   {"skill":"CRAFTING","match":"unfired bowl","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
