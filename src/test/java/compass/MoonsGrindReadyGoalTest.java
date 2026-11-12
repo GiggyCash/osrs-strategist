@@ -123,6 +123,9 @@ public class MoonsGrindReadyGoalTest
         assertNotNull(candidate);
         assertEquals(ACTIVITY, candidate.getId());
         assertEquals(Confidence.VERIFIED, candidate.getConfidence());
+        assertTrue(candidate.getReason()
+                .contains("without claiming player execution skill"));
+        assertFalse(candidate.getReason().contains("carried supplies"));
         assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
     }
 

@@ -1635,7 +1635,7 @@ class PvmCandidateProvider implements CandidateProvider
                     id,
                     "Do " + title,
                     ready
-                            ? get(434)
+                            ? (moonsGoal ? get(1994) : get(434))
                             : get(435),
                     score,
                     ready ? Confidence.VERIFIED
