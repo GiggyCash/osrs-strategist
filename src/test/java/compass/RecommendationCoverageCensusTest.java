@@ -225,6 +225,9 @@ public class RecommendationCoverageCensusTest
         assertEquals("Prepared Mining should select a concrete route",
                 eligible.getOrDefault(Skill.MINING, 0),
                 executable.getOrDefault(Skill.MINING, 0));
+        assertEquals("Prepared Woodcutting should select a concrete route",
+                eligible.getOrDefault(Skill.WOODCUTTING, 0),
+                executable.getOrDefault(Skill.WOODCUTTING, 0));
         assertTrue(executable.getOrDefault(Skill.RANGED, 0) > 0);
         assertTrue(executable.getOrDefault(Skill.RUNECRAFT, 0) > 0);
     }
@@ -342,7 +345,7 @@ public class RecommendationCoverageCensusTest
     {
         EnumSet<Skill> priority = EnumSet.of(
                 Skill.COOKING, Skill.HERBLORE, Skill.MAGIC,
-                Skill.FISHING, Skill.RUNECRAFT,
+                Skill.FISHING, Skill.RUNECRAFT, Skill.WOODCUTTING,
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
                 Skill.MINING, Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);

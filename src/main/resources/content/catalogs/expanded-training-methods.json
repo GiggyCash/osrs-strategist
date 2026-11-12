@@ -1732,17 +1732,15 @@
       "minLevel": 35,
       "maxLevel": 99,
       "name": "Teak trees",
-      "instructions": "Cut teak trees for strong conventional Woodcutting experience.",
+      "instructions": "Teak tree south-west of Castle Wars: cut teak logs and drop them when inventory space is needed.",
       "efficientScore": 19.0,
       "balancedScore": 15.0,
       "relaxedScore": 5.0,
       "attentionLevel": "MODERATE",
       "minimumSessionMinutes": 20,
       "setupMinutes": 4,
-      "requirements": [
-        "Reachable teak trees"
-      ],
-      "confidence": "CHECK_NEEDED",
+      "requirements": [],
+      "confidence": "VERIFIED",
       "membersOnly": true,
       "wilderness": false,
       "progressionProtected": false,
@@ -1807,10 +1805,8 @@
       "attentionLevel": "MODERATE",
       "minimumSessionMinutes": 20,
       "setupMinutes": 3,
-      "requirements": [
-        "Forestry-enabled tree location"
-      ],
-      "confidence": "CHECK_NEEDED",
+      "requirements": [],
+      "confidence": "VERIFIED",
       "membersOnly": true,
       "wilderness": false,
       "progressionProtected": false,

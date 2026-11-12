@@ -363,6 +363,30 @@ public class AdaptiveMilestoneGuidanceServiceTest
         assertEquals("Grand Exchange bank.", guidance.getLocation());
     }
 
+    @Test
+    public void teakRouteUsesTheUnrestrictedCastleWarsTreeWithoutABankLoop()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.WOODCUTTING, "teak", "Teak", 35, 85));
+        GameData data = GameData.builder(
+                account(2, Membership.P2P, Skill.WOODCUTTING, 50,
+                        Experience.getXpForLevel(50)))
+                .inventory(new ItemsState(Collections.singletonList(
+                        item(1351, "Bronze axe", 1))))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.WOODCUTTING,
+                50, 51, catalogPlan("woodcutting_teaks", Skill.WOODCUTTING),
+                true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Cut teak logs"));
+        assertFalse(guidance.getAction().toLowerCase().contains("bank"));
+        assertEquals("Teak tree south-west of Castle Wars.",
+                guidance.getLocation());
+        assertTrue(guidance.getSupplies().contains("Bronze axe"));
+    }
+
     private static AdaptiveMilestoneGuidanceService serviceWith(
             ActionDef... definitions)
     {
@@ -410,6 +434,16 @@ public class AdaptiveMilestoneGuidanceServiceTest
     {
         return plan("crafting_gems", Skill.CRAFTING,
                 "Grand Exchange bank: withdraw a chisel and the uncut gem named in DO, cut the full inventory, bank, and repeat.");
+    }
+
+    private static TrainingPlan catalogPlan(String id, Skill skill)
+    {
+        TrainingMethod method = new TrainingMethodCatalog().curatedFor(skill)
+                .stream().map(CuratedTrainingMethod::method)
+                .filter(value -> id.equals(value.id)).findFirst()
+                .orElseThrow(AssertionError::new);
+        return new TrainingPlan(method, "test", method.confidence,
+                Collections.emptyList());
     }
 
     private static TrainingPlan plan(String id, Skill skill,
