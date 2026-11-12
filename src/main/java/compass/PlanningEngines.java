@@ -3135,19 +3135,6 @@ class UniversalActionRecipeResolver
     {
         if (lower.contains("bird house"))
             return recipe(get(911), n, wood(name, "Logs"), 1);
-        if (contains(lower, "d'hide", "dragonhide"))
-        {
-            int hides = lower.contains("body") ? 3 : lower.contains("chaps") ? 2
-                    : lower.contains("vambrace") ? 1 : 0;
-            if (hides > 0) return recipe(get(1264), n,
-                    capitalize(first(lower, "green", "blue", "red", "black",
-                            "dragon")) + " dragon leather", hides);
-        }
-        if (contains(lower, "leather gloves", "leather boots", "cowl",
-                get(1583), "leather body", "leather chaps", "coif"))
-            return recipe(get(1264), n, "Leather", 1);
-        if (contains(lower, get(1584), get(1585)))
-            return recipe(get(1264), n, "Hard leather", 1);
         return unknown(get(913));
     }
 

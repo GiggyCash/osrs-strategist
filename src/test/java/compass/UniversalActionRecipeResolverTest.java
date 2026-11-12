@@ -150,16 +150,18 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void plainLeatherBodyUsesOneLeatherNotDragonhideBodyCount()
+    public void leatherCraftingFailsClosedWithoutThreadAndNeedleEvidence()
     {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.CRAFTING, "Leather body", 25),
-                80,
-                Membership.F2P);
-
-        assertTrue(recipe.hasExactInputs());
-        assertEquals(1, recipe.getInputs().size());
-        assertInput(recipe, "Leather", 80);
+        for (String name : new String[] {"Leather body", "Hardleather body",
+                "Green d'hide body", "Coif", "Future leather body"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 25), 80, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
     }
 
     @Test

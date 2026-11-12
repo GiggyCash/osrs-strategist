@@ -418,3 +418,13 @@ unknown names and non-members fail closed. Source revisions are 15305303,
 15305305, 15182590, 15182826, 15182726, 15372028, 15305300 and 15305299.
 The obsolete projectile and first-word helpers were removed rather than retained
 for a different family.
+
+## Unobservable leather consumables fail closed
+
+Removed the plain, hard-leather and dragonhide substring fallbacks. They counted
+leather but omitted thread, whose five-use state is not observed, and could not
+distinguish the thread-free costume-needle unlock. The same path also admitted a
+members-only coif on free accounts and let invented names inherit recipes.
+Universal leather actions now remain unresolved until a reviewed contract can
+represent the needle/thread alternative and its live evidence; no existing
+curated training method depended on this fallback.
