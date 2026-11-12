@@ -42,4 +42,15 @@ public class ItemsStateQuantityTest
         assertEquals(MethodPreparation.Kind.CARRIED, preparation.steps.get(0).kind);
         assertEquals(10, preparation.steps.get(0).input.quantity);
     }
+
+    @Test
+    public void nameQueriesExcludeNotedStacksFromUsableInventory()
+    {
+        ItemsState items = new ItemsState(Collections.singletonList(
+                new ItemState(1520, "Willow logs", 100, -1, true)));
+
+        assertEquals(0, items.quantityNamed("Willow logs"));
+        assertEquals(0, items.quantityWhere(name -> name.endsWith(" logs")));
+        assertEquals(100, items.quantityOf(1520));
+    }
 }

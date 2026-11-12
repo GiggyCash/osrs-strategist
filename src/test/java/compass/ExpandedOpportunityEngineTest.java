@@ -106,6 +106,20 @@ public class ExpandedOpportunityEngineTest
         assertTrue(!new OpportunityEngine().evaluate(treeSeeds).get(0)
                 .isSetupVerified());
 
+        GameData notedSetup = GameData.builder(account())
+                .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
+                .quests(new QuestSnapshot(Collections.singletonMap(
+                        "Bone Voyage", QuestStatus.COMPLETE)))
+                .inventory(new ItemsState(Arrays.asList(
+                        item("Hammer"), item("Chisel"),
+                        new ItemState(1, "Clockwork", 4),
+                        new ItemState(2, "Logs", 4, -1, true),
+                        new ItemState(3, "Guam seed", 40, -1, true)))).build();
+        Opportunity notes = new OpportunityEngine().evaluate(notedSetup).get(0);
+        assertTrue(!notes.isSetupVerified());
+        assertTrue(notes.getPreparation().contains("Carry 4 regular logs"));
+        assertTrue(notes.getPreparation().contains("Carry 40 barley seeds"));
+
         GameData ready = GameData.builder(account())
                 .recurringOpportunities(new RecurringOpportunitySnapshot(timers))
                 .quests(new QuestSnapshot(Collections.singletonMap(

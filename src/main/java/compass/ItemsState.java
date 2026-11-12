@@ -102,7 +102,8 @@ public final class ItemsState
 
     public int quantityWhere(Predicate<String> nameTest)
     {
-        return nameTest == null ? 0 : sum(item -> item.getName() != null
+        return nameTest == null ? 0 : sum(item -> !item.isNoted()
+                && item.getName() != null
                 && nameTest.test(item.getName().toLowerCase(Locale.ROOT)));
     }
 

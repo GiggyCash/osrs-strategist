@@ -175,7 +175,7 @@ public final class ItemIndex
         for (Iterable<ItemState> items : sources)
             if (items != null) for (ItemState item : items)
             {
-                if (item == null || item.quantity <= 0) continue;
+                if (item == null || item.isNoted() || item.quantity <= 0) continue;
                 int value = rank.applyAsInt(Names.lower(item.getName()));
                 if (value > bestRank) { bestRank = value; best = item.getName(); }
             }
@@ -327,7 +327,7 @@ public final class ItemIndex
         var total = 0;
         for (ItemState item : items)
         {
-            if (item == null || item.getName() == null) continue;
+            if (item == null || item.isNoted() || item.getName() == null) continue;
             var actual = Names.lower(item.getName());
             for (String name : names)
             {
@@ -346,7 +346,7 @@ public final class ItemIndex
         if (items == null) return 0;
         var total = 0;
         for (ItemState item : items)
-            if (item != null)
+            if (item != null && !item.isNoted())
                 for (int id : ids)
                     if (item.itemId == id)
                     {
@@ -363,7 +363,7 @@ public final class ItemIndex
         var total = 0;
         for (ItemState item : items)
         {
-            if (item == null || item.getName() == null
+            if (item == null || item.isNoted() || item.getName() == null
                     || !itemClass.matches(item.getName())
                     || excluded(item.getName(), excludedNames)) continue;
             total = safeAdd(total, max(0, item.quantity));

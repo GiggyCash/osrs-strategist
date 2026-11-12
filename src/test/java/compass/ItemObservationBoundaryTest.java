@@ -51,6 +51,19 @@ public class ItemObservationBoundaryTest
         assertFalse(noInventory.primaryOwnershipObserved());
     }
 
+    @Test
+    public void notedInventoryDoesNotSatisfyImmediatelyUsableQueries()
+    {
+        ItemsState notes = new ItemsState(Collections.singletonList(
+                new ItemState(1520, "Willow logs", 100, -1, true)));
+        ItemIndex index = index(2, notes, empty(), ItemsState.unknown());
+
+        assertEquals(0, index.quantity(1520));
+        assertEquals(0, index.quantity("Willow logs"));
+        assertEquals(0, index.inventoryQuantity("Willow logs"));
+        assertNull(index.bestInventoryName(name -> 1));
+    }
+
     private static ItemsState empty() { return new ItemsState(Collections.emptyList()); }
 
     private static ItemIndex index(int mode, ItemsState inventory, ItemsState equipment, ItemsState bank)
