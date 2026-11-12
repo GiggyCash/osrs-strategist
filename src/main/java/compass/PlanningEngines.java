@@ -3040,9 +3040,7 @@ class UniversalActionRecipeResolver
             case HUNTER: return none(get(936));
             case COOKING: return unknown("No reviewed ingredient recipe is available for this food.");
             case FIREMAKING: return unknown(get(938));
-            case PRAYER: return contains(lower, "bones", "ashes", "head")
-                    ? recipe(get(939), count, name, 1)
-                    : unknown(get(900));
+            case PRAYER: return unknown(get(900));
             case RUNECRAFT: return runecraft(action, count, membership);
             case CRAFTING: return unknown(get(913));
             case FLETCHING: return fletching(lower, count);
@@ -3176,11 +3174,6 @@ class UniversalActionRecipeResolver
     private static UniversalActionRecipe unknown(String setup)
     {
         return UniversalActionRecipe.unknown(setup);
-    }
-    private static boolean contains(String text, String... parts)
-    {
-        for (String part : parts) if (text.contains(part)) return true;
-        return false;
     }
     private static final class Recipe
     {

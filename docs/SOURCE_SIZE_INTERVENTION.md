@@ -455,3 +455,12 @@ runes, Zeah actions and unknown future runes no longer inherit a false essence
 recipe. The relaxed blood and soul profiles now select their exact Arceuus action
 IDs and count dark essence fragments. The lava profile was removed because pure
 essence alone omitted its elemental-rune and binding-resource requirements.
+
+## Universal Prayer inference retired
+
+Removed the universal bones/ashes/head substring recipe. A calculator item alone
+does not identify the selected route: ensouled heads also consume reanimation
+runes, and Ectofuntus guidance needs its processing and slime requirements. The
+existing F2P-bone and gilded-altar execution profiles retain exact action-item
+identity; unsupported Prayer routes now remain CHECK_NEEDED instead of receiving
+incomplete universal supply guidance.

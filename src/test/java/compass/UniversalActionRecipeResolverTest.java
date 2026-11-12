@@ -112,15 +112,18 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void prayerTreatsConcreteCalculatorItemAsConsumedInput()
+    public void unreviewedPrayerMethodsFailClosedWithoutRouteInputs()
     {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.PRAYER, "Big bones", 15),
-                250,
-                Membership.F2P);
-
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Big bones", 250);
+        for (String name : new String[] {"Big bones", "Infernal ashes",
+                "Ensouled dragon head", "Future bones"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.PRAYER, name, 15), 250, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
     }
 
     @Test
