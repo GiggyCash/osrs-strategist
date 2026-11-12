@@ -10,19 +10,24 @@ final class MethodReadiness
     final MethodCapacity capacity;
     final MethodIntelligenceCatalog.Method method;
     final MethodIntelligenceCatalog.Recipe recipe;
+    final MethodIntelligenceCatalog.Recipe nextUnlock;
+    final MethodIntelligenceCatalog.Economics economics; // null is unknown, not zero cost or zero returns.
     final int batch;
     final int reviewLevel, currentXp;
     final String reason;
 
     MethodReadiness(RequirementState access, MethodPreparation preparation, MethodCapacity capacity,
             MethodIntelligenceCatalog.Method method, MethodIntelligenceCatalog.Recipe recipe,
-            int batch, String reason, int reviewLevel, int currentXp)
+            int batch, String reason, int reviewLevel, int currentXp,
+            MethodIntelligenceCatalog.Economics economics, MethodIntelligenceCatalog.Recipe nextUnlock)
     {
         this.access = access;
         this.preparation = preparation;
         this.capacity = capacity;
         this.method = method;
         this.recipe = recipe;
+        this.nextUnlock = nextUnlock;
+        this.economics = economics;
         this.batch = batch;
         this.reason = reason;
         this.reviewLevel = reviewLevel;
@@ -33,6 +38,13 @@ final class MethodReadiness
     {
         return access == RequirementState.VERIFIED && preparation != null && preparation.feasible()
                 && capacity != null && capacity.working == RequirementState.VERIFIED;
+    }
+
+    String nextUnlockName()
+    {
+        if (nextUnlock == null) return null;
+        String value = nextUnlock.inputRecipe == null ? nextUnlock.action : nextUnlock.inputRecipe;
+        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
     List<EvidenceCheck> checks()

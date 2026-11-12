@@ -1,0 +1,61 @@
+package compass;
+
+import java.util.*;
+import net.runelite.api.Skill;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class ReviewedBankingPolicyTest
+{
+    private final TrainingMethodCatalog methods = new TrainingMethodCatalog();
+    private final MethodStrategyKnowledgeCatalog strategy = new MethodStrategyKnowledgeCatalog();
+
+    @Test
+    public void reviewedLocalProcessingReplacesLegacyBankLoopForUim()
+    {
+        CuratedTrainingMethod bows = method(Skill.FLETCHING, "fletching_bows");
+        assertNull(strategy.profileFor(bows.method(), bows.getMetadata(), AccountMode.ULTIMATE_IRONMAN));
+        MethodStrategyProfile reviewed = strategy.profileFor(bows.method(), bows.getMetadata(),
+                AccountMode.ULTIMATE_IRONMAN, BankingMode.LOCAL_PROCESSING);
+        assertNotNull(reviewed);
+        assertTrue(reviewed.supports(AccountMode.ULTIMATE_IRONMAN));
+        assertEquals(BankingMode.LOCAL_PROCESSING, reviewed.bankingBehavior);
+        assertNull(strategy.profileFor(bows.method(), bows.getMetadata(),
+                AccountMode.ULTIMATE_IRONMAN, BankingMode.CONVENTIONAL_BANK_LOOP));
+    }
+
+    @Test
+    public void reviewedConventionalLoopStillFailsClosedForUim()
+    {
+        CuratedTrainingMethod wines = method(Skill.COOKING, "cooking_wines");
+        assertNull(strategy.profileFor(wines.method(), wines.getMetadata(),
+                AccountMode.ULTIMATE_IRONMAN, BankingMode.CONVENTIONAL_BANK_LOOP));
+    }
+
+    @Test
+    public void fullSelectorUsesReviewedBankingWithoutChangingLegacyMethodPolicy()
+    {
+        List<ItemState> inventory = MethodIntelligenceTest.carried(1511, "Logs", 4);
+        inventory.add(new ItemState(946, "Knife", 1));
+        GameData uim = MethodIntelligenceTest.data(2, -1, inventory, Collections.emptyList());
+        TrainingMethodSelector selector = new TrainingMethodSelector(methods, null,
+                new TrainingMethodPolicy(), strategy, new UimInventoryResolutionService(),
+                new MethodReadinessService(new MethodIntelligenceCatalog(),
+                        new MethodPreparationService(MethodIntelligenceTest.resources(0, 0))));
+        TrainingPlan bows = selector.rankedCandidates(uim, Skill.FLETCHING, 80,
+                StrategyMode.BALANCED, SessionIntent.ONE_HOUR, false, false).stream()
+                .filter(p -> p.method().id.equals("fletching_bows") && p.readiness.actionable())
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals(BankingMode.LOCAL_PROCESSING, bows.strategyProfile.bankingBehavior);
+        assertEquals("longbow_cutting", bows.readiness.recipe.id);
+        assertTrue(selector.rankedCandidates(uim, Skill.COOKING, 80,
+                StrategyMode.EFFICIENT, SessionIntent.ONE_HOUR, false, false).stream()
+                .noneMatch(p -> p.method().id.equals("cooking_wines")));
+    }
+
+    private CuratedTrainingMethod method(Skill skill, String id)
+    {
+        return methods.curatedFor(skill).stream().filter(m -> m.method().id.equals(id))
+                .findFirst().orElseThrow(AssertionError::new);
+    }
+}

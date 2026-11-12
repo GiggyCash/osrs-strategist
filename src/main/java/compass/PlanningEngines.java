@@ -1677,6 +1677,7 @@ class RecommendationEngine
             // leading DO NEXT; this also preserves focused selector callers.
             if (trainingPlan == null) trainingPlan = highestRankedPlan;
             if (trainingPlan == null || trainingPlan.method() == null) continue;
+            breakpoint = reviewedBreakpoint(breakpoint, trainingPlan, level);
 
             var score = baseScore(level, breakpoint);
             score += safePreferences.weightFor(activityId) * 10.0;
@@ -1713,6 +1714,16 @@ class RecommendationEngine
         recommendations.sort(Comparator.comparingDouble(
                 Recommendation::getScore).reversed());
         return recommendations;
+    }
+
+    private static SkillBreakpoint reviewedBreakpoint(
+            SkillBreakpoint fallback, TrainingPlan plan, int currentLevel)
+    {
+        MethodIntelligenceCatalog.Recipe next = plan.readiness == null ? null : plan.readiness.nextUnlock;
+        if (fallback.kind != SkillBreakpoint.Kind.NEXT_LEVEL_FALLBACK || next == null
+                || next.level <= currentLevel || next.level != fallback.level) return fallback;
+        return new SkillBreakpoint(next.skill, next.level, "Unlock " + plan.readiness.nextUnlockName(),
+                SkillBreakpoint.Kind.TRAINING_ACTION_UNLOCK, "method-recipe:" + next.id);
     }
 
     private Guidance buildGuidance(

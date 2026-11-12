@@ -849,6 +849,15 @@ class TrainingMethodPolicy
         return score;
     }
 
+    /** Applies shared bounded value weights to reviewed recipe facts. */
+    double economicScore(MethodIntelligenceCatalog.Economics economics)
+    {
+        if (economics == null) return 0;
+        return StrategicValue.builder().resourceFit(economics.resourceFit)
+                .opportunityCost(economics.opportunityCost)
+                .evidenceIds(economics.evidence).build().scoreDelta();
+    }
+
     private static double intensityAdjustment(
             TrainingIntensity intensity,
             StrategyMode mode,

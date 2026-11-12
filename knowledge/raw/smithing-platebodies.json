@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "domain": "smithing-platebodies",
+  "reviewedDate": "2026-10-01",
+  "license": "OSRS Wiki text: CC BY-NC-SA 3.0",
+  "acquiredFrom": "https://oldschool.runescape.wiki/api.php",
+  "runtimeNetworking": false,
+  "records": [
+    {
+      "recipeId": "bronze_platebody_smithing",
+      "match": "bronze platebody",
+      "outputPage": "Bronze platebody",
+      "materialPage": "Bronze bar"
+    },
+    {
+      "recipeId": "iron_platebody_smithing",
+      "match": "iron platebody",
+      "outputPage": "Iron platebody",
+      "materialPage": "Iron bar"
+    },
+    {
+      "recipeId": "steel_platebody_smithing",
+      "match": "steel platebody",
+      "outputPage": "Steel platebody",
+      "materialPage": "Steel bar"
+    },
+    {
+      "recipeId": "mithril_platebody_smithing",
+      "match": "mithril platebody",
+      "outputPage": "Mithril platebody",
+      "materialPage": "Mithril bar"
+    },
+    {
+      "recipeId": "adamant_platebody_smithing",
+      "match": "adamant platebody",
+      "outputPage": "Adamant platebody",
+      "materialPage": "Adamantite bar"
+    },
+    {
+      "recipeId": "rune_platebody_smithing",
+      "match": "rune platebody",
+      "outputPage": "Rune platebody",
+      "materialPage": "Runite bar"
+    }
+  ],
+  "toolPage": "Hammer",
+  "pages": [
+    {
+      "title": "Adamant platebody",
+      "url": "https://oldschool.runescape.wiki/w/Adamant_platebody",
+      "revision": 15320171,
+      "timestamp": "2026-08-25T22:39:55Z",
+      "wikitextSha256": "7e4e4fdd679fd8461de364c0e4588e9c1722e67e1b0e731540703e3618ac4ffa",
+      "item": {
+        "name": "Adamant platebody",
+        "id": 1123,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 88,
+        "xp": "312.5",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Adamantite bar",
+        "materialQuantity": 5,
+        "output": "Adamant platebody",
+        "outputQuantity": 1
+      }
+    },
+    {
+      "title": "Adamantite bar",
+      "url": "https://oldschool.runescape.wiki/w/Adamantite_bar",
+      "revision": 15332236,
+      "timestamp": "2026-09-06T07:28:24Z",
+      "wikitextSha256": "4b35f1095ea1ccbf2c29245f94b60e239a12961f7c37e3ba70467226dd47998e",
+      "item": {
+        "name": "Adamantite bar",
+        "id": 2361,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Bronze bar",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_bar",
+      "revision": 15315107,
+      "timestamp": "2026-08-21T04:18:17Z",
+      "wikitextSha256": "722c1841621c30fc066dc6c66c354e5e0734761bb683e2b36046b6063392174e",
+      "item": {
+        "name": "Bronze bar",
+        "id": 2349,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Bronze platebody",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_platebody",
+      "revision": 15182541,
+      "timestamp": "2026-04-22T02:44:13Z",
+      "wikitextSha256": "8893825bb28a8ad2b8cc613538eecedabbc5804da4488abb1d3b45cb184c7f55",
+      "item": {
+        "name": "Bronze platebody",
+        "id": 1117,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 18,
+        "xp": "62.5",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Bronze bar",
+        "materialQuantity": 5,
+        "output": "Bronze platebody",
+        "outputQuantity": 1
+      }
+    },
+    {
+      "title": "Hammer",
+      "url": "https://oldschool.runescape.wiki/w/Hammer",
+      "revision": 15358372,
+      "timestamp": "2026-09-29T15:34:30Z",
+      "wikitextSha256": "c2f8a99f886175523de83b91c0b83b4ba202b1ccd8e8582b46edf9edbb88bfb6",
+      "item": {
+        "name": "Hammer",
+        "id": 2347,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Iron bar",
+      "url": "https://oldschool.runescape.wiki/w/Iron_bar",
+      "revision": 15315108,
+      "timestamp": "2026-08-21T04:18:22Z",
+      "wikitextSha256": "c59f45cc430e0b49f21fa7375763f1585ae0b74cadecd0343ea229877a507f5f",
+      "item": {
+        "name": "Iron bar",
+        "id": 2351,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Iron platebody",
+      "url": "https://oldschool.runescape.wiki/w/Iron_platebody",
+      "revision": 15320146,
+      "timestamp": "2026-08-25T22:34:06Z",
+      "wikitextSha256": "113a1dd3feddd193adc3a26367bba01bc613015d9ff3b585e78320b0afb56fa4",
+      "item": {
+        "name": "Iron platebody",
+        "id": 1115,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 33,
+        "xp": "125",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Iron bar",
+        "materialQuantity": 5,
+        "output": "Iron platebody",
+        "outputQuantity": 1
+      }
+    },
+    {
+      "title": "Mithril bar",
+      "url": "https://oldschool.runescape.wiki/w/Mithril_bar",
+      "revision": 15315118,
+      "timestamp": "2026-08-21T04:19:20Z",
+      "wikitextSha256": "76e1ac6bbd6f6067af021075afd61416e9a007363858384b21574f3c5ba1ffb2",
+      "item": {
+        "name": "Mithril bar",
+        "id": 2359,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Mithril platebody",
+      "url": "https://oldschool.runescape.wiki/w/Mithril_platebody",
+      "revision": 15320204,
+      "timestamp": "2026-08-25T22:47:33Z",
+      "wikitextSha256": "6f8388ccd1bf5bb56c8011d0395419165063519c7cb2ac3c09b8bb93681ba8be",
+      "item": {
+        "name": "Mithril platebody",
+        "id": 1121,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 68,
+        "xp": "250",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Mithril bar",
+        "materialQuantity": 5,
+        "output": "Mithril platebody",
+        "outputQuantity": 1
+      }
+    },
+    {
+      "title": "Rune platebody",
+      "url": "https://oldschool.runescape.wiki/w/Rune_platebody",
+      "revision": 15346837,
+      "timestamp": "2026-09-16T17:46:15Z",
+      "wikitextSha256": "9f6275ca1beb6a003936200b345889dde6bba1ce35182b13245ab659cb5525e3",
+      "item": {
+        "name": "Rune platebody",
+        "id": 1127,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 99,
+        "xp": "375",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Runite bar",
+        "materialQuantity": 5,
+        "output": "Rune platebody",
+        "outputQuantity": 1
+      }
+    },
+    {
+      "title": "Runite bar",
+      "url": "https://oldschool.runescape.wiki/w/Runite_bar",
+      "revision": 15346872,
+      "timestamp": "2026-09-16T17:55:02Z",
+      "wikitextSha256": "3e33f9d087be30ff7a7a443e1e5b54f022589bf6324ec7fe823cf3c2670aacf7",
+      "item": {
+        "name": "Runite bar",
+        "id": 2363,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Steel bar",
+      "url": "https://oldschool.runescape.wiki/w/Steel_bar",
+      "revision": 15315116,
+      "timestamp": "2026-08-21T04:19:09Z",
+      "wikitextSha256": "89e819d78b28e0673deb6a62ca4be1ef4149021bab0cdaed73673b7b720aebb9",
+      "item": {
+        "name": "Steel bar",
+        "id": 2353,
+        "members": false,
+        "stackable": false
+      }
+    },
+    {
+      "title": "Steel platebody",
+      "url": "https://oldschool.runescape.wiki/w/Steel_platebody",
+      "revision": 15320258,
+      "timestamp": "2026-08-25T23:01:23Z",
+      "wikitextSha256": "309550f907689fba08a1d8f1ccfd601ebc7c88fb4cfad197b07eb39a74a55e04",
+      "item": {
+        "name": "Steel platebody",
+        "id": 1119,
+        "members": false,
+        "stackable": false
+      },
+      "recipe": {
+        "skill": "Smithing",
+        "level": 48,
+        "xp": "187.5",
+        "members": false,
+        "ticks": 5,
+        "tool": "Hammer",
+        "facility": "Anvil",
+        "material": "Steel bar",
+        "materialQuantity": 5,
+        "output": "Steel platebody",
+        "outputQuantity": 1
+      }
+    }
+  ]
+}

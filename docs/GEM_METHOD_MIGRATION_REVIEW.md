@@ -58,17 +58,20 @@ behavior has changed while the policy question is pending.
 ## Proposed integration boundary for reviewer decision
 
 The preferred direction is option 1, with separate feasibility and value stages.
-This is a proposed design, not an approved runtime contract.
+The [issue #9 architecture decision](https://github.com/GiggyCash/osrs-strategist/issues/9#issuecomment-5920677558)
+approved this boundary with coarse, bounded economic tie-breaking after
+feasibility and strategy/session/verified outcome fit. Missing monetary evidence
+must remain unknown and must not independently block an otherwise feasible plan.
 
-The current call graph loses alternatives too early: TrainingMethodSelector calls
-MethodReadinessService.evaluate, which chooses one recipe using preparation
+The pre-migration call graph lost alternatives too early: TrainingMethodSelector called
+MethodReadinessService.evaluate, which chose one recipe using preparation
 burden and level before a Recommendation receives StrategicValue. Adding an
 economic adjustment only in MethodRecommendationValueService would therefore
 score the surviving recipe without reconsidering discarded alternatives. That
 service currently contributes travel evidence only. Its name does not imply an
 existing recipe economics implementation.
 
-Introduce an internal evaluation of all eligible recipe contracts, retaining the
+The approved design calls for evaluation of all eligible recipe contracts, retaining the
 existing single-result evaluate facade until its callers migrate. Each result
 must carry its own preparation, capacity, batch and evidence. Filter feasibility
 before comparing value; never combine one recipe's cheap inputs with another's
@@ -105,8 +108,65 @@ Expected winners require the reviewer-approved policy; tests must not enshrine
 an arbitrary cheapest-input or highest-level rule. Existing Cooking and bow
 contracts must preserve their verified feasibility and preparation behavior.
 
-The remaining decision is the recipe comparison/normalization policy and its
-unknown-value behavior, not whether the six gem flows are mechanically reviewed.
-Until that decision, keep the gem full contract disabled and avoid adding an
-unused economics service that appears to close this gap without affecting the
-actual selection path.
+## Recipe candidate boundary — 2026-10-01
+
+The first implementation slice retains every level-eligible recipe evaluation
+through `TrainingMethodSelector.rankedCandidates`. Each candidate carries its
+own preparation, capacity, batch, checks and guidance; absent contracts still use
+the legacy evidence path, while unknown access produces only a diagnostic.
+Feasibility remains a hard ranking tier. Method-level strategy/session scoring
+is computed once and shared across its recipe candidates.
+
+The single-result readiness facade and existing preparation/level fallback order
+remain compatible. This is not an economic or XP ranking policy. The skill
+provider still chooses the first renderable ranked plan and carries that exact
+readiness into the final queue. The next slice can compare these retained recipe
+candidates using reviewed outcome/purpose evidence and bounded economics before
+that selection, without reevaluating or mixing their execution plans.
+
+Gem full contracts remain disabled. Consumed-input opportunity cost, reusable
+setup value, retained-output value and verified XP evidence are still unmodeled
+at this boundary. No cost-per-XP, output-funded purchase or Iron replacement-price
+assumption has been introduced. Regression coverage checks simultaneous ordinary
+and yew bow candidates, distinct batches and guidance, legacy winner behavior,
+level eligibility, and membership/access fail-closed behavior.
+
+Validation: 38 focused tests passed. JDK 11 `./gradlew --offline --no-daemon
+clean test jar --continue` ran 872 tests: 869 passed, exactly the three unchanged
+quest baselines failed (A Ruff Situation and two expected 213 / actual 211),
+with no errors or skips; JAR build passed. Freshness/source validators,
+changed-file privacy scan and `git diff --check` passed. Production delta:
++17 net Java lines, no catalog/schema changes. No push or release performed.
+
+## Bounded economics integration — 2026-10-01
+
+The next slice adds optional account-mode-specific reviewed `StrategicValue`
+economics to retained recipe candidates. Existing value weights break only
+equal same-method ranking scores; incomplete economic evidence preserves the
+previous order. See [the comparison contract](METHOD_INTELLIGENCE.md#recipe-economics-comparison-boundary).
+Production catalog rows remain unchanged/unrated. This does not complete gem
+economics or model cash returns; gem full contracts remain disabled.
+
+At this slice checkpoint, 39 focused tests passed. JDK 11 `./gradlew --offline --no-daemon
+clean test jar --continue`: 879 tests, 876 passed, exactly the same three quest
+baseline failures, no errors/skips; JAR passed. Freshness (14 families), source
+validation (53 sources), privacy scan and diff check passed. This economics slice
+adds exactly 43 net production Java lines beyond the prior uncommitted boundary
+slice (+60 combined versus `bc082bd`), with no new production Java files or catalog
+data changes. The optional economics map is a backward-compatible schema
+extension; no recipe has received a production rating. All changes remain local
+and uncommitted; nothing pushed or published.
+
+## Foundation follow-on — 2026-10-01
+
+Economics is now stored as reviewed normalized facts (`resourceFit`,
+`opportunityCost`, evidence) rather than precomputed policy value. Existing
+`StrategicValue` weights convert those facts at the ranking boundary. The selected
+plan also retains a typed comparison basis and player-facing explanation for its
+closest alternative. Equal or incomplete economics preserve the old stable order.
+
+Reviewed banking behavior now reaches strategy policy. This corrects the legacy
+classification of carried-log bow cutting as a conventional UIM bank loop without
+weakening conventional-bank restrictions. Six reviewed F2P platebody recipes then
+exercise the same pipeline in Smithing with no Smithing-specific Java branch.
+Production recipe economics remain unrated and gem contracts remain disabled.

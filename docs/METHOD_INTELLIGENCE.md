@@ -404,3 +404,58 @@ For an actionable contract, carried/equipped reusable supplies are complete;
 steps with pending actions remain ACTION. The aggregate preparation-proof row
 is replaced by those details so a verified plan is not shown as completed work.
 Access and capacity evidence remain separate checklist rows.
+
+## Recipe economics comparison boundary
+
+Recipes may optionally supply an `economics` map keyed by exact `AccountMode`.
+Each entry is a reviewed fact record: `resourceFit` ([-1, 1]),
+`opportunityCost` ([0, 1]) and nonempty `evidence`. Nonfinite/out-of-range
+numbers, null entries and UNKNOWN mode keys are rejected. The enclosing method
+still requires reviewed source provenance. Catalog values and evidence lists are
+copied into immutable candidate evidence.
+
+These are reviewed normalized resource benefits/burdens, not coin amounts or
+market-return forecasts. No coin-to-score conversion, GE lookup, sale proceeds,
+XP valuation or inferred Iron replacement cost is introduced. Missing evidence
+for an account mode remains null; one mode never inherits another's rating.
+All production recipes currently omit ratings, so existing winners are unchanged.
+
+`TrainingMethodPolicy` converts these facts with existing `StrategicValue` weights
+(`resourceFit * 8 - opportunityCost * 12`) only to break equal existing scores
+among alternatives of the same method. Strategy/session fit, preparation scores
+and the hard feasibility tier retain priority. If any actionable alternative
+lacks economics, comparison is disabled for that method's whole feasible cohort;
+this avoids treating unknown as free or creating a nontransitive comparator.
+Equal values preserve the stable legacy recipe order. Different methods retain
+their existing ordering and scores.
+
+The selected readiness object retains its own economics, preparation, capacity,
+batch and guidance. Its explanation identifies use of the economic comparison.
+The tie-break does not add a second charge to final-queue `StrategicValue` or
+affect purchase affordability; observed usable cash is still required. Source
+ratings must cover resource benefit/opportunity burden rather than duplicating
+the preparation step penalties already modeled. Gem contracts remain disabled.
+
+Enabling actual ratings remains a separate reviewed-data slice: monetary
+economics still need quote provenance, consumed versus reusable cost separation,
+retained-output uncertainty, and verified outcome/purpose evidence. This optional
+field is not permission to encode changing market prices as permanent ratings.
+
+## Candidate comparison and reviewed banking policy
+
+After strategy/session ranking, each `TrainingPlan` retains a structured
+`CandidateComparison` with the closest lower-ranked alternative and the deciding
+basis: unresolved access, observed preparation, reviewed economics,
+strategy/session fit, or a deterministic tie. Recommendation Details includes
+this comparison in WHY without exposing recipe IDs or internal score values.
+The selected plan still owns its exact readiness, preparation, capacity,
+economics and guidance; the comparison is a summary after ranking, not a merge.
+
+Full method contracts also provide the banking behavior consumed by strategy
+policy. A reviewed `bankLoop=true` remains a conventional bank loop and fails
+closed for UIM. A reviewed local-processing contract can supersede an older
+method-family bank-loop classification, allowing UIM only when its exact carried
+resources and capacity make a recipe actionable. Methods without full contracts
+retain the legacy strategy profile. This fixes the existing bow-cutting route:
+carried logs plus a knife now reach its reviewed local-processing plan for UIM,
+while Cooking wines remain excluded as a conventional bank loop.

@@ -18,24 +18,39 @@ final class MethodReadinessService
 
     MethodReadiness evaluate(GameData data, TrainingMethod training, boolean group)
     {
+        List<MethodReadiness> candidates = evaluateCandidates(data, training, group);
+        return candidates.isEmpty() ? null : candidates.get(0);
+    }
+
+    /** Retain independent recipe plans until strategy/session ranking; never merge their evidence. */
+    List<MethodReadiness> evaluateCandidates(GameData data, TrainingMethod training, boolean group)
+    {
         MethodIntelligenceCatalog.Method method = catalog.method(training.id);
-        if (method == null) return null;
+        if (method == null) return Collections.emptyList();
         RequirementState access = access(data, method);
         String reason = method.unresolved != null ? method.unresolved
                 : access == RequirementState.VERIFIED ? "The modeled access requirements are verified."
                 : "Method access is unresolved or unavailable for this account.";
         int review = Math.min(99, training.maxLevel + 1);
         int xp = 0;
+        MethodIntelligenceCatalog.Recipe nextUnlock = null;
         if (data != null && data.account() != null)
         {
             int level = data.account().level(training.getSkill());
             xp = data.account().xp(training.getSkill());
             if (xp <= 0) xp = net.runelite.api.Experience.getXpForLevel(level);
             for (String id : method.recipes)
-                if (catalog.recipe(id).level > level) review = Math.min(review, catalog.recipe(id).level);
+            {
+                MethodIntelligenceCatalog.Recipe recipe = catalog.recipe(id);
+                if (recipe.level > level && (nextUnlock == null || recipe.level < nextUnlock.level))
+                    nextUnlock = recipe;
+            }
+            if (nextUnlock != null) review = Math.min(review, nextUnlock.level);
         }
-        MethodReadiness best = new MethodReadiness(access, null, null, method, null, 0, reason, review, xp);
-        if (access != RequirementState.VERIFIED) return best;
+        MethodReadiness diagnostic = new MethodReadiness(access, null, null, method, null, 0,
+                reason, review, xp, null, nextUnlock);
+        if (access != RequirementState.VERIFIED) return Collections.singletonList(diagnostic);
+        List<MethodReadiness> candidates = new ArrayList<>();
         for (String id : method.recipes)
         {
             MethodIntelligenceCatalog.Recipe recipe = catalog.recipe(id);
@@ -57,13 +72,17 @@ final class MethodReadinessService
             }
             MethodPreparation prep = preparation.evaluate(data, needs, group,
                     method.bankLoop || method.bankSupplies, method.purchaseAllowed, equippedReusable);
-            MethodReadiness candidate = new MethodReadiness(access, prep, capacity,
-                    method, recipe, batch, reason, review, xp);
-            if (best.recipe == null || candidate.adjustment() > best.adjustment()
-                    || candidate.adjustment() == best.adjustment() && recipe.level > best.recipe.level)
-                best = candidate;
+            candidates.add(new MethodReadiness(access, prep, capacity,
+                    method, recipe, batch, reason, review, xp,
+                    recipe.economics.get(AccountMode.fromTypeCode(data.account().modeCode())), nextUnlock));
         }
-        return best;
+        if (candidates.isEmpty()) return Collections.singletonList(diagnostic);
+        // Preserve the existing preference as a fallback, not an XP/economic value claim.
+        // Feasibility is a hard tier even if future preparation scores change scale.
+        candidates.sort(Comparator.comparing((MethodReadiness candidate) -> !candidate.actionable())
+                .thenComparing(Comparator.comparingDouble(MethodReadiness::adjustment).reversed())
+                .thenComparing(Comparator.comparingInt((MethodReadiness candidate) -> candidate.recipe.level).reversed()));
+        return Collections.unmodifiableList(candidates);
     }
 
     private static RequirementState access(GameData data, MethodIntelligenceCatalog.Method method)

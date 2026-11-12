@@ -9,11 +9,12 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "src/main/resources/content/content-freshness.json"
 STRATEGY_SNAPSHOT = ROOT / "src/main/resources/content/strategy-source-snapshot.json"
+KNOWLEDGE_SNAPSHOT = ROOT / "knowledge/raw/smithing-platebodies.json"
 REQUIRED = {
     "quests", "miniquests", "training-methods", "pvm", "slayer",
     "minigames", "diaries", "transportation", "clues", "stash",
     "gear", "resource-dependencies", "resource-sources",
-    "strategy-sources",
+    "strategy-sources", "knowledge-snapshots",
 }
 
 
@@ -52,6 +53,13 @@ if strategy_entry.get("recordCount") != len(strategy_snapshot.get("sources", [])
     fail("strategy-sources recordCount does not match the pinned source snapshot")
 if strategy_entry.get("snapshotDate") != strategy_snapshot.get("reviewedDate"):
     fail("strategy-sources snapshotDate does not match the pinned review date")
+knowledge_entry = next(entry for entry in families
+        if entry.get("id") == "knowledge-snapshots")
+knowledge_snapshot = json.loads(KNOWLEDGE_SNAPSHOT.read_text(encoding="utf-8"))
+if knowledge_entry.get("recordCount") != len(knowledge_snapshot.get("records", [])):
+    fail("knowledge-snapshots recordCount does not match the reviewed snapshot")
+if knowledge_entry.get("snapshotDate") != knowledge_snapshot.get("reviewedDate"):
+    fail("knowledge-snapshots date does not match the reviewed snapshot")
 for change in data.get("announcedNotLive", []):
     dt.date.fromisoformat(change["effectiveDate"])
     if change.get("planningEnabled") is not False:

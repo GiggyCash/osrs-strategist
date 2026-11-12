@@ -136,10 +136,22 @@ public final class Presentation
                     compactSentence(goalContext.status, 160)));
 
         var why = playerWhy(recommendation);
+        CandidateComparison comparison = recommendation.plan() == null
+                ? null : recommendation.plan().comparison;
+        if (comparison != null)
+            why = compactSentence(why, 82) + " " + compactSentence(comparison.reason, 110);
         if (hasText(why))
-            sections.add(new Section("WHY", compactSentence(why, 140)));
+            sections.add(new Section("WHY", compactSentence(why, 195)));
 
         var plan = recommendation.plan();
+        MethodIntelligenceCatalog.Recipe nextUnlock = plan == null || plan.readiness == null
+                ? null : plan.readiness.nextUnlock;
+        if (nextUnlock != null && nextUnlock.level > recommendation.currentLevel)
+        {
+            sections.add(new Section("NEXT UNLOCK", plan.readiness.nextUnlockName() + " becomes available at "
+                    + nextUnlock.skill.getName() + " " + nextUnlock.level + ". Current level: "
+                    + recommendation.currentLevel + ". It is excluded until that requirement is met."));
+        }
         if (plan != null && plan.readiness != null && plan.readiness.actionable()
                 && plan.readiness.preparation.nextAction() != null)
         {

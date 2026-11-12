@@ -462,6 +462,144 @@
         "outputDescription": "the unstrung bows and reusable knife",
         "action": "Use a knife on the prepared logs and select Magic longbow (u).",
         "inputRecipe": "magic longbow (u)"
+      },
+      {
+        "id": "bronze_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 18,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1117,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Bronze platebody.",
+        "inputRecipe": "bronze platebody"
+      },
+      {
+        "id": "iron_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 33,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1115,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Iron platebody.",
+        "inputRecipe": "iron platebody"
+      },
+      {
+        "id": "steel_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 48,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1119,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Steel platebody.",
+        "inputRecipe": "steel platebody"
+      },
+      {
+        "id": "mithril_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 68,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1121,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Mithril platebody.",
+        "inputRecipe": "mithril platebody"
+      },
+      {
+        "id": "adamant_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 88,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1123,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Adamant platebody.",
+        "inputRecipe": "adamant platebody"
+      },
+      {
+        "id": "rune_platebody_smithing",
+        "skill": "SMITHING",
+        "level": 99,
+        "workingBatch": 5,
+        "maximumBatch": 5,
+        "efficientBatch": 5,
+        "tools": [
+          {
+            "itemId": 2347,
+            "name": "Hammer",
+            "quantity": 1,
+            "stackable": false,
+            "equippedAllowed": false
+          }
+        ],
+        "outputsPerAction": 1,
+        "outputStackable": false,
+        "outputItemId": 1127,
+        "outputDescription": "the forged platebodies and reusable hammer",
+        "action": "Use the prepared bars on the anvil and select Rune platebody.",
+        "inputRecipe": "rune platebody"
       }
     ],
     "methods": [
@@ -624,6 +762,27 @@
         "source": "https://oldschool.runescape.wiki/w/Shortbow_(u)",
         "sourceRevision": 15184949,
         "reviewed": "2026-09-30"
+      },
+      {
+        "ids": [
+          "smithing_f2p_platebodies",
+          "smithing_f2p_platebody_baseline"
+        ],
+        "recipes": [
+          "bronze_platebody_smithing",
+          "iron_platebody_smithing",
+          "steel_platebody_smithing",
+          "mithril_platebody_smithing",
+          "adamant_platebody_smithing",
+          "rune_platebody_smithing"
+        ],
+        "bankLoop": true,
+        "purchaseAllowed": true,
+        "membersOnly": false,
+        "location": "Use the anvils immediately south of Varrock West Bank; retain the platebodies and hammer, then bank before another batch.",
+        "source": "https://oldschool.runescape.wiki/w/Free-to-play_Smithing_training",
+        "sourceRevision": 15260354,
+        "reviewed": "2026-10-01"
       }
     ]
   }

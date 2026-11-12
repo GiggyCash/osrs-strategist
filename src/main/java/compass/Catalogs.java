@@ -506,6 +506,13 @@ final class MethodStrategyKnowledgeCatalog
     public MethodStrategyProfile profileFor(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode)
     {
+        return profileFor(method, metadata, mode, null);
+    }
+
+    public MethodStrategyProfile profileFor(TrainingMethod method,
+            TrainingMethodMetadata metadata, AccountMode mode,
+            BankingMode reviewedBanking)
+    {
         if (method == null || metadata == null || mode == null) return null;
         List<MethodStrategyProfile> specific = exact.get(
                 method.id);
@@ -517,10 +524,15 @@ final class MethodStrategyKnowledgeCatalog
                         && (selected == null || profile.tier.ordinal()
                                 < selected.tier.ordinal()))
                     selected = profile;
-            return selected;
+            if (selected == null || reviewedBanking == null
+                    || selected.bankingBehavior == reviewedBanking) return selected;
+            return new MethodStrategyProfile(selected.methodId, selected.tier,
+                    selected.accountModes, reviewedBanking, selected.inventoryFootprint,
+                    selected.accountValueFit, selected.playerReason, selected.sources);
         }
 
-        var bankLoop = CONVENTIONAL_BANK_LOOPS.contains(method.id);
+        var bankLoop = reviewedBanking == BankingMode.CONVENTIONAL_BANK_LOOP
+                || reviewedBanking == null && CONVENTIONAL_BANK_LOOPS.contains(method.id);
         if (mode == AccountMode.UNKNOWN && bankLoop) return null;
         if (mode == AccountMode.ULTIMATE_IRONMAN
                 && (bankLoop || !metadata.uimFriendly)) return null;
@@ -530,15 +542,18 @@ final class MethodStrategyKnowledgeCatalog
             modes.remove(AccountMode.ULTIMATE_IRONMAN);
         if (!modes.contains(mode)) return null;
 
-        var key = mode.name() + ':' + method.id;
+        var banking = reviewedBanking == null
+                ? bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP : BankingMode.NONE
+                : reviewedBanking;
+        var key = mode.name() + ':' + banking + ':' + method.id;
         return generated.computeIfAbsent(key, ignored -> genericProfile(
-                method, metadata, mode, bankLoop, modes,
+                method, metadata, mode, banking, modes,
                 executionProfiles.forMethod(method.id)));
     }
 
     private static MethodStrategyProfile genericProfile(TrainingMethod method,
             TrainingMethodMetadata metadata, AccountMode mode,
-            boolean bankLoop, Set<AccountMode> modes,
+            BankingMode banking, Set<AccountMode> modes,
             MethodProfile executionProfile)
     {
         Source source = accountSkillSource(
@@ -548,8 +563,7 @@ final class MethodStrategyKnowledgeCatalog
                 : Text.get(387);
         return new MethodStrategyProfile(method.id,
                 KnowledgeTier.VERIFIED_SHARED, modes,
-                bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP
-                        : BankingMode.NONE,
+                banking,
                 typedFootprint(method, metadata, executionProfile),
                 metadata.selfSourceFriendly && mode.isIronLike() ? 0.55 : 0.35,
                 reason, singletonList(source));

@@ -36,7 +36,7 @@ public class SharedRecipeContractTest
                 assertEquals(source.stackable[i].booleanValue(), method.inputs.get(i).stackable);
             }
         }
-        assertEquals(24, references);
+        assertEquals(30, references);
     }
 
     @Test

@@ -26,6 +26,14 @@ final class MethodIntelligenceCatalog
         Integer outputsPerAction;
         boolean outputStackable;
         int outputItemId;
+        // Optional reviewed, normalized facts by exact account mode; never coin quotes.
+        Map<AccountMode, Economics> economics = new EnumMap<>(AccountMode.class);
+    }
+
+    static final class Economics
+    {
+        double resourceFit, opportunityCost;
+        List<String> evidence = new ArrayList<>();
     }
 
     static final class Method
@@ -108,6 +116,18 @@ final class MethodIntelligenceCatalog
                     throw new IllegalStateException("Invalid or overlapping reusable tool: " + recipe.id);
             if (ids.contains(recipe.outputItemId))
                 throw new IllegalStateException("Output recycling requires a separate flow contract: " + recipe.id);
+            if (recipe.economics == null) throw new IllegalStateException("Null recipe economics");
+            Map<AccountMode, Economics> values = new EnumMap<>(AccountMode.class);
+            recipe.economics.forEach((mode, value) -> {
+                if (mode == null || mode == AccountMode.UNKNOWN || !validEconomics(value))
+                    throw new IllegalStateException("Invalid reviewed recipe economics: " + recipe.id);
+                Economics copy = new Economics();
+                copy.resourceFit = value.resourceFit;
+                copy.opportunityCost = value.opportunityCost;
+                copy.evidence = Collections.unmodifiableList(new ArrayList<>(value.evidence));
+                values.put(mode, copy);
+            });
+            recipe.economics = Collections.unmodifiableMap(values);
             if (recipes.put(recipe.id, recipe) != null)
                 throw new IllegalStateException("Duplicate recipe: " + recipe.id);
         }
@@ -147,6 +167,16 @@ final class MethodIntelligenceCatalog
     }
 
     private static boolean text(String value) { return value != null && !value.trim().isEmpty(); }
+
+    private static boolean validEconomics(Economics value)
+    {
+        return value != null && Double.isFinite(value.resourceFit)
+                && Double.isFinite(value.opportunityCost)
+                && value.resourceFit >= -1 && value.resourceFit <= 1
+                && value.opportunityCost >= 0 && value.opportunityCost <= 1
+                && value.evidence != null && !value.evidence.isEmpty()
+                && value.evidence.stream().allMatch(MethodIntelligenceCatalog::text);
+    }
 
     Method method(String id) { return methods.get(id); }
     Recipe recipe(String id) { return recipes.get(id); }
