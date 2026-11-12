@@ -1070,9 +1070,9 @@
       "rune arrow",
       "amethyst arrow"
     ],
-    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise fletch shafts, feathers, and matching arrowheads or buy compatible ammunition.",
-    "ironRoute": "Self-source the exact requirement: fletch shafts, feathers, and matching arrowheads or buy compatible ammunition.",
-    "uimRoute": "Use a task-sized, immediately consumable route: fletch shafts, feathers, and matching arrowheads or buy compatible ammunition; do not assume conventional bank storage.",
+    "mainRoute": "Buy the exact requirement when current price and time saved justify it; otherwise fletch shafts, feathers, and matching arrowtips or buy compatible ammunition.",
+    "ironRoute": "Self-source the exact requirement: fletch shafts, feathers, and matching arrowtips or buy compatible ammunition.",
+    "uimRoute": "Use a task-sized, immediately consumable route: fletch shafts, feathers, and matching arrowtips or buy compatible ammunition; do not assume conventional bank storage.",
     "freeToPlayItemNames": [
       "Bronze arrow",
       "Iron arrow",

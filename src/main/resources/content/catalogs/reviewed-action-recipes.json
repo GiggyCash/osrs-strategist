@@ -708,6 +708,162 @@
     "actionUnitsPerBatch": null
   },
   {
+    "skill": "FLETCHING",
+    "match": "bronze arrow",
+    "inputs": [
+      "Headless arrow",
+      "Bronze arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      39
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_arrow",
+    "sourceRevision": 15397319,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron arrow",
+    "inputs": [
+      "Headless arrow",
+      "Iron arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      40
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_arrow",
+    "sourceRevision": 15397320,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel arrow",
+    "inputs": [
+      "Headless arrow",
+      "Steel arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      41
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_arrow",
+    "sourceRevision": 15397322,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril arrow",
+    "inputs": [
+      "Headless arrow",
+      "Mithril arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      42
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_arrow",
+    "sourceRevision": 15397324,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant arrow",
+    "inputs": [
+      "Headless arrow",
+      "Adamant arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      43
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_arrow",
+    "sourceRevision": 15397326,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune arrow",
+    "inputs": [
+      "Headless arrow",
+      "Rune arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      44
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_arrow",
+    "sourceRevision": 15397327,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "CRAFTING",
     "match": "air battlestaff",
     "inputs": [

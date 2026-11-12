@@ -392,3 +392,13 @@ MutableNeed carrier. It now delegates to the existing checked MethodInput merge;
 both guidance consumers reject an unresolved supply plan. Existing strict
 requirement-identity checks remain unchanged. No new schema, model or production file.
 Net production change: -53 lines / -1,610 characters / -402 estimated tokens.
+
+## Standard arrow identity correction
+
+Replaced the six standard metal-arrow name guesses with exact reviewed recipe
+rows pinned to OSRS Wiki revisions 15397319, 15397320, 15397322, 15397324,
+15397326 and 15397327. RuneLite item IDs 39–44 retain their player-facing
+`arrowtips` names throughout action guidance and the deterministic dependency
+graph. Invented arrow names and non-members now fail closed instead of receiving
+a fabricated `arrowhead` input. The generic javelin and broad-arrow paths remain
+separate and are not claimed as reviewed by this checkpoint.

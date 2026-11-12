@@ -1,6 +1,7 @@
 package compass;
 
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -216,6 +217,39 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void standardArrowsUseReviewedArrowtipIdentitiesAndMembership()
+    {
+        String[] arrows = {"Bronze arrow", "Iron arrow", "Steel arrow",
+                "Mithril arrow", "Adamant arrow", "Rune arrow"};
+        String[] tips = {"Bronze arrowtips", "Iron arrowtips",
+                "Steel arrowtips", "Mithril arrowtips",
+                "Adamant arrowtips", "Rune arrowtips"};
+        int[] tipIds = {ItemID.BRONZE_ARROWHEADS, ItemID.IRON_ARROWHEADS,
+                ItemID.STEEL_ARROWHEADS, ItemID.MITHRIL_ARROWHEADS,
+                ItemID.ADAMANT_ARROWHEADS, ItemID.RUNE_ARROWHEADS};
+        for (int i = 0; i < arrows.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.FLETCHING, arrows[i], 1), 15,
+                    Membership.P2P);
+            assertTrue(arrows[i], recipe.hasExactInputs());
+            assertInput(recipe, "Headless arrow", 15,
+                    ItemID.HEADLESS_ARROW);
+            assertInput(recipe, tips[i], 15, tipIds[i]);
+
+            assertFalse(arrows[i], resolver.resolve(
+                    action(Skill.FLETCHING, arrows[i], 1), 15,
+                    Membership.F2P).hasExactInputs());
+        }
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.FLETCHING, "Future bronze arrow", 1), 15,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
+    }
+
+    @Test
     public void specialtyGemBoltFailsClosedInsteadOfGuessingBasicBoltRecipe()
     {
         UniversalActionRecipe recipe = resolver.resolve(
@@ -276,6 +310,21 @@ public class UniversalActionRecipeResolverTest
             if (name.equals(input.getName()))
             {
                 assertEquals(quantity, input.getQuantity());
+                return;
+            }
+        }
+        throw new AssertionError("Missing input: " + name);
+    }
+
+    private static void assertInput(UniversalActionRecipe recipe,
+            String name, int quantity, int itemId)
+    {
+        for (MethodInput input : recipe.getInputs())
+        {
+            if (name.equals(input.getName()))
+            {
+                assertEquals(quantity, input.getQuantity());
+                assertEquals(itemId, input.itemId);
                 return;
             }
         }

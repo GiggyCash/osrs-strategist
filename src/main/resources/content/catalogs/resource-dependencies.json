@@ -523,7 +523,7 @@
   {
     "itemId": 882,
     "itemName": "Bronze arrow",
-    "action": "Attach bronze arrowheads to headless arrows.",
+    "action": "Attach bronze arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -547,11 +547,11 @@
       },
       {
         "id": "resource:39",
-        "label": "Bronze arrowhead",
+        "label": "Bronze arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 39,
-          "itemName": "Bronze arrowhead",
+          "itemName": "Bronze arrowtips",
           "quantity": 1
         },
         "level": 0
@@ -561,7 +561,7 @@
   {
     "itemId": 884,
     "itemName": "Iron arrow",
-    "action": "Attach iron arrowheads to headless arrows.",
+    "action": "Attach iron arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -585,11 +585,11 @@
       },
       {
         "id": "resource:40",
-        "label": "Iron arrowhead",
+        "label": "Iron arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 40,
-          "itemName": "Iron arrowhead",
+          "itemName": "Iron arrowtips",
           "quantity": 1
         },
         "level": 0
@@ -599,7 +599,7 @@
   {
     "itemId": 886,
     "itemName": "Steel arrow",
-    "action": "Attach steel arrowheads to headless arrows.",
+    "action": "Attach steel arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -623,11 +623,11 @@
       },
       {
         "id": "resource:41",
-        "label": "Steel arrowhead",
+        "label": "Steel arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 41,
-          "itemName": "Steel arrowhead",
+          "itemName": "Steel arrowtips",
           "quantity": 1
         },
         "level": 0
@@ -637,7 +637,7 @@
   {
     "itemId": 888,
     "itemName": "Mithril arrow",
-    "action": "Attach mithril arrowheads to headless arrows.",
+    "action": "Attach mithril arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -661,11 +661,11 @@
       },
       {
         "id": "resource:42",
-        "label": "Mithril arrowhead",
+        "label": "Mithril arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 42,
-          "itemName": "Mithril arrowhead",
+          "itemName": "Mithril arrowtips",
           "quantity": 1
         },
         "level": 0
@@ -675,7 +675,7 @@
   {
     "itemId": 890,
     "itemName": "Adamant arrow",
-    "action": "Attach adamant arrowheads to headless arrows.",
+    "action": "Attach adamant arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -699,11 +699,11 @@
       },
       {
         "id": "resource:43",
-        "label": "Adamant arrowhead",
+        "label": "Adamant arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 43,
-          "itemName": "Adamant arrowhead",
+          "itemName": "Adamant arrowtips",
           "quantity": 1
         },
         "level": 0
@@ -713,7 +713,7 @@
   {
     "itemId": 892,
     "itemName": "Rune arrow",
-    "action": "Attach rune arrowheads to headless arrows.",
+    "action": "Attach rune arrowtips to headless arrows.",
     "opportunityCost": 8,
     "outputQuantity": 1,
     "prerequisites": [
@@ -737,11 +737,11 @@
       },
       {
         "id": "resource:44",
-        "label": "Rune arrowhead",
+        "label": "Rune arrowtips",
         "kind": "RESOURCE",
         "resource": {
           "itemId": 44,
-          "itemName": "Rune arrowhead",
+          "itemName": "Rune arrowtips",
           "quantity": 1
         },
         "level": 0
