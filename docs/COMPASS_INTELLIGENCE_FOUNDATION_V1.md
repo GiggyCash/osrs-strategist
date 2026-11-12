@@ -81,5 +81,6 @@ reviewed banking policy; the representative Smithing expansion is data-only.
 
 `method-intelligence.json` adds 159 lines: six platebody recipes and one method
 record covering two existing Smithing method IDs. It contains no production
-economics ratings. Reviewed-action ingredient data is unchanged. All work remains
-local and uncommitted; nothing has been pushed or published.
+economics ratings. Reviewed-action ingredient data is unchanged. This record is
+tracked on the development branch; nothing has been merged into `main` or
+published.
