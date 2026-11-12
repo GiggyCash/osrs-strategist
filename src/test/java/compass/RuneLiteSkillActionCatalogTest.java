@@ -40,6 +40,17 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void diagnosticHerbloreNamesPreserveDosePunctuation()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        ActionDef attackPotion = catalog.actionsFor(Skill.HERBLORE).stream()
+                .filter(action -> "runelite:herblore:attack_potion_3"
+                        .equals(action.id))
+                .findFirst().orElseThrow(AssertionError::new);
+        assertEquals("Attack potion(3)", attackPotion.name);
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
@@ -59,11 +70,10 @@ public class RuneLiteSkillActionCatalogTest
 
     private static String legacyActionKey(Skill skill, String name)
     {
-        String key = Names.actionKey(name);
         if (skill == Skill.HERBLORE
-                && (key.endsWith("_3") || key.endsWith("_4")))
-            return key.substring(0, key.length() - 2);
-        return key;
+                && (name.endsWith("(3)") || name.endsWith("(4)")))
+            name = name.substring(0, name.length() - 3);
+        return Names.actionKey(name);
     }
 
     private static final class LegacyRecipe

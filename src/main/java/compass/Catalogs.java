@@ -1052,7 +1052,7 @@ class RuneLiteSkillActionCatalog
             var enumValue = (Enum<?>) action;
             String id = "runelite:" + skill.name().toLowerCase(Locale.ROOT)
                     + ":" + enumValue.name().toLowerCase(Locale.ROOT);
-            String name = itemManager == null ? pretty(enumValue.name())
+            String name = itemManager == null ? pretty(skill, enumValue.name())
                     : action.getName(itemManager);
             Membership membership = itemManager == null
                     ? Membership.UNKNOWN
@@ -1092,9 +1092,13 @@ class RuneLiteSkillActionCatalog
         actionsBySkill.put(Skill.WOODCUTTING, WoodcuttingAction.values());
     }
 
-    private static String pretty(String value)
+    private static String pretty(Skill skill, String value)
     {
         var text = value.toLowerCase(Locale.ROOT).replace('_', ' ');
+        if (skill == HERBLORE
+                && (text.endsWith(" 3") || text.endsWith(" 4")))
+            text = text.substring(0, text.length() - 2)
+                    + "(" + text.charAt(text.length() - 1) + ")";
         return Character.toUpperCase(text.charAt(0)) + text.substring(1);
     }
 }

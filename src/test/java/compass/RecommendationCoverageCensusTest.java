@@ -331,7 +331,8 @@ public class RecommendationCoverageCensusTest
     public void priorityCoverageDebtRemainsVisibleBySelectedMethod()
     {
         EnumSet<Skill> priority = EnumSet.of(
-                Skill.COOKING, Skill.MAGIC, Skill.FISHING, Skill.RUNECRAFT,
+                Skill.COOKING, Skill.HERBLORE, Skill.MAGIC,
+                Skill.FISHING, Skill.RUNECRAFT,
                 Skill.CONSTRUCTION, Skill.FARMING, Skill.HUNTER,
                 Skill.SMITHING, Skill.SAILING,
                 Skill.ATTACK, Skill.STRENGTH, Skill.DEFENCE);
