@@ -198,6 +198,43 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void runecraftRecipesRequireExactSimpleRuneActionIdentity()
+    {
+        UniversalActionRecipe air = resolver.resolve(
+                action(Skill.RUNECRAFT, "runelite:runecraft:air_rune",
+                        "Air rune", 5, Membership.F2P),
+                28, Membership.F2P);
+        assertTrue(air.hasExactInputs());
+        assertInput(air, "Rune essence", 28);
+
+        UniversalActionRecipe water = resolver.resolve(
+                action(Skill.RUNECRAFT, "runelite:runecraft:water_rune",
+                        "Water rune", 6, Membership.F2P),
+                28, Membership.P2P);
+        assertTrue(water.hasExactInputs());
+        assertInput(water, "Pure essence", 28);
+
+        String[][] unsupported = {
+                {"runelite:runecraft:water_tiara", "Water tiara"},
+                {"runelite:runecraft:lava_rune", "Lava rune"},
+                {"runelite:runecraft:mind_core", "Mind core"},
+                {"runelite:runecraft:zeah_blood_rune", "Blood rune"},
+                {"runelite:runecraft:soul_rune", "Soul rune"},
+                {"runelite:runecraft:aether_rune", "Aether rune"},
+                {"test:future_rune", "Future rune"}};
+        for (String[] value : unsupported)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.RUNECRAFT, value[0], value[1], 10,
+                                Membership.P2P), 28, membership);
+                assertFalse(value[0] + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(value[0], recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void opalJewelleryUsesSilverBar()
     {
         UniversalActionRecipe recipe = resolver.resolve(
@@ -387,6 +424,12 @@ public class UniversalActionRecipeResolverTest
                 xp,
                 "test",
                 Membership.F2P);
+    }
+
+    private static ActionDef action(Skill skill, String id, String name,
+            float xp, Membership membership)
+    {
+        return new ActionDef(skill, id, name, 1, xp, "test", membership);
     }
 
     private static void assertInput(

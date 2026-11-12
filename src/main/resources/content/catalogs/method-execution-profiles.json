@@ -937,24 +937,6 @@
     "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
   },
   {
-    "methodId": "runecraft_lava",
-    "actionTerms": [
-      "lava_rune"
-    ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
-    "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Pure essence",
-        "quantityPerAction": 1.0
-      }
-    ],
-    "note": "Binding necklace/elemental-rune charges are setup resources and are not yet reduced to a per-essence count.",
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
     "methodId": "magic_high_alch",
     "actionTerms": [
       "high_level_alchemy",
@@ -1057,18 +1039,19 @@
   {
     "methodId": "runecraft_blood",
     "actionTerms": [
-      "blood_rune"
+      "runelite:runecraft:zeah_blood_rune"
     ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
+    "unitSingular": "dark essence fragment crafted",
+    "unitPlural": "dark essence fragments crafted",
     "xpMultiplier": 1.0,
     "inputs": [
       {
         "mode": "FIXED",
-        "fixedName": "Pure essence",
+        "fixedName": "Dark essence fragments",
         "quantityPerAction": 1.0
       }
     ],
+    "note": "The relaxed level-77 route is the Arceuus dark-essence method, not the true Blood Altar pure-essence method.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -1148,18 +1131,19 @@
   {
     "methodId": "runecraft_soul",
     "actionTerms": [
-      "soul_rune"
+      "runelite:runecraft:soul_rune"
     ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
+    "unitSingular": "dark essence fragment crafted",
+    "unitPlural": "dark essence fragments crafted",
     "xpMultiplier": 1.0,
     "inputs": [
       {
         "mode": "FIXED",
-        "fixedName": "Pure essence",
+        "fixedName": "Dark essence fragments",
         "quantityPerAction": 1.0
       }
     ],
+    "note": "The Arceuus Soul Altar consumes dark essence fragments rather than pure essence.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {

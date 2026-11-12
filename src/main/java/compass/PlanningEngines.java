@@ -3007,6 +3007,14 @@ class StrategyEngine
 @Singleton
 class UniversalActionRecipeResolver
 {
+    private static final Set<String> SIMPLE_RUNECRAFT_ACTIONS =
+            new HashSet<>(Arrays.asList(
+                    "runelite:runecraft:air_rune",
+                    "runelite:runecraft:mind_rune",
+                    "runelite:runecraft:water_rune",
+                    "runelite:runecraft:earth_rune",
+                    "runelite:runecraft:fire_rune",
+                    "runelite:runecraft:body_rune"));
     private static final Recipe[] EXACT = BundledCatalogLoader.array(
             get(1582), Recipe[].class);
     private static final ReviewedActionRecipeCatalog REVIEWED = new ReviewedActionRecipeCatalog();
@@ -3035,9 +3043,7 @@ class UniversalActionRecipeResolver
             case PRAYER: return contains(lower, "bones", "ashes", "head")
                     ? recipe(get(939), count, name, 1)
                     : unknown(get(900));
-            case RUNECRAFT: return recipe(get(901), count,
-                    membership == Membership.P2P
-                            ? "Pure essence" : "Rune essence", 1);
+            case RUNECRAFT: return runecraft(action, count, membership);
             case CRAFTING: return unknown(get(913));
             case FLETCHING: return fletching(lower, count);
             case SMITHING: return unknown(get(924));
@@ -3134,6 +3140,19 @@ class UniversalActionRecipeResolver
         if (lower.equals("headless arrow") || lower.equals("headless arrows"))
             return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
         return unknown(get(922));
+    }
+
+    private static UniversalActionRecipe runecraft(ActionDef action, int count,
+            Membership membership)
+    {
+        String id = action.id == null ? ""
+                : action.id.toLowerCase(Locale.ROOT);
+        if (!SIMPLE_RUNECRAFT_ACTIONS.contains(id)
+                || (membership != Membership.P2P
+                && action.membership != Membership.F2P))
+            return unknown(get(901));
+        return recipe(get(901), count, membership == Membership.P2P
+                ? "Pure essence" : "Rune essence", 1);
     }
 
     private static UniversalActionRecipe recipe(String setup, int count,

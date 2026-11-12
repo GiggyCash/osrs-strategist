@@ -446,3 +446,12 @@ invented future names as ordinary one-log actions. The curated F2P route now
 matches only RuneLite's five F2P log-burning action IDs and consumes the action's
 observed item identity. Pyre logs, sacred oil and other methods remain unresolved
 until their additional inputs and access requirements have reviewed contracts.
+
+## RuneCraft action families separated
+
+The universal one-essence fallback now accepts only the six explicit RuneLite
+F2P rune action IDs that have concrete altar guidance. Tiaras, cores, combination
+runes, Zeah actions and unknown future runes no longer inherit a false essence
+recipe. The relaxed blood and soul profiles now select their exact Arceuus action
+IDs and count dark essence fragments. The lava profile was removed because pure
+essence alone omitted its elemental-rune and binding-resource requirements.
