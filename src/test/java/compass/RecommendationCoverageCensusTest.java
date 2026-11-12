@@ -222,6 +222,9 @@ public class RecommendationCoverageCensusTest
                     eligible.getOrDefault(skill, 0),
                     executable.getOrDefault(skill, 0));
         }
+        assertEquals("Prepared Mining should select a concrete route",
+                eligible.getOrDefault(Skill.MINING, 0),
+                executable.getOrDefault(Skill.MINING, 0));
         assertTrue(executable.getOrDefault(Skill.RANGED, 0) > 0);
         assertTrue(executable.getOrDefault(Skill.RUNECRAFT, 0) > 0);
     }
