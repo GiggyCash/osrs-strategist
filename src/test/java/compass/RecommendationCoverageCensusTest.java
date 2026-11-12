@@ -270,6 +270,58 @@ public class RecommendationCoverageCensusTest
     }
 
     @Test
+    public void remainingPreparedResourceDebtIsConfinedToUim()
+    {
+        EnumSet<Skill> resourceBound = EnumSet.of(
+                Skill.PRAYER, Skill.FIREMAKING, Skill.SMITHING,
+                Skill.FLETCHING, Skill.HERBLORE);
+        Map<Skill, Integer> total = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> uim = new EnumMap<>(Skill.class);
+        ActionabilityPolicy policy = new ActionabilityPolicy();
+        for (Scenario account : ACCOUNTS)
+        {
+            RecommendationEngine engine = recommendationEngine(
+                    account.membership);
+            StrategyEngine strategy = TestFixtures.strategyEngine(
+                    engine, null, null, null, policy,
+                    new RecommendationIntelligenceService());
+            for (int level : LEVELS)
+            {
+                GameData data = data(account, level, true);
+                for (StrategyMode mode : MODES)
+                {
+                    for (SessionIntent session : SESSIONS)
+                    {
+                        List<Recommendation> candidates = engine.recommendAll(
+                                data, mode, session, true, false,
+                                GoalType.AUTOMATIC, new PreferenceProfile());
+                        Recommendation recovery = strategy.evaluate(
+                                data, mode, session,
+                                new PreferenceProfile())
+                                .getRecommendations().get(0);
+                        for (Skill skill : resourceBound)
+                        {
+                            if (!ContentAccessRules.isSkillAvailable(
+                                    skill, account.membership))
+                                continue;
+                            if (classify(skill, candidateFor(candidates, skill),
+                                    recovery, policy) != CoverageClass.RECOVERY)
+                                continue;
+                            total.merge(skill, 1, Integer::sum);
+                            if (account.type == 2)
+                                uim.merge(skill, 1, Integer::sum);
+                        }
+                    }
+                }
+            }
+        }
+        for (Skill skill : resourceBound)
+            assertEquals(skill.getName() + " non-UIM prepared debt",
+                    total.getOrDefault(skill, 0),
+                    uim.getOrDefault(skill, 0));
+    }
+
+    @Test
     public void classificationHasAnHonestBlockedState()
     {
         assertEquals(CoverageClass.BLOCKED,
