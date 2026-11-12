@@ -848,7 +848,7 @@ public class RecommendationCoverageCensusTest
     /**
      * A physically possible broad UIM setup for coverage testing. It carries
      * the core tools/inputs used by the asserted families and intentionally
-     * leaves seven slots free; the ordinary-account omnibus fixture has more
+     * leaves four slots free; the ordinary-account omnibus fixture has more
      * than 28 distinct stacks and must never masquerade as a UIM inventory.
      */
     private static List<ItemState> uimPreparedItems()
@@ -875,6 +875,7 @@ public class RecommendationCoverageCensusTest
         items.add(item(ItemID.RAKE, "Rake", 1));
         items.add(item(ItemID.DIBBER, "Seed dibber", 1));
         items.add(item(ItemID.SPADE, "Spade", 1));
+        assertEquals("Prepared UIM fixture occupied slots", 24, items.size());
         for (int slot = 0; slot < items.size(); slot++)
         {
             ItemState item = items.get(slot);
