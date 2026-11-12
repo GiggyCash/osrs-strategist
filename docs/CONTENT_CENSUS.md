@@ -13,7 +13,7 @@ master and the latest released RuneLite build dependency:
 | Skills and strategically useful training methods | `net.runelite.api.Skill`, maintained strategy catalog, RuneLite calculators | 24 skills / 180 curated methods / 1,529 actions | 24 skills represented | 0 raw-only skills | 0 invalid methods |
 | Progression miniquests | Maintained, Wiki-verified manifest | 19 | 19 | 0 | 0 |
 | Minigames and major minigame-style activities | Maintained, Wiki-verified manifest | 43 | 42 | 0 | 0 (1 not progression-relevant) |
-| PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 4 locally verifiable | 67 preparation-only; all 71 have specific preparation | 0 |
+| PvM encounters | RuneLite `HiscoreSkill` entries of type `BOSS` | 71 | 5 locally verifiable | 66 preparation-only; all 71 have specific preparation | 0 |
 | Slayer assignments | RuneLite Slayer `Task` enum | 151 | 151 mapped to 147 specific profiles / 230 aliases | readiness stays evidence-bound | 0 |
 | Contextual gear and acquisition | Maintained target/context catalogs | 41 acquisition targets / 17 context ladders | 7 decision kinds operational | live value/readiness checked | 0 |
 | Resource dependencies and sources | Deterministic recipes and account-aware source families | 41 recipes / 60 source families | quantity/yield/account routes | unknown live supply checked | 0 |
