@@ -18,3 +18,12 @@ Its direct prerequisite is While Guthix Sleeps, and completion requires a full
 raid run; the planner therefore retains explicit combat/setup checks rather
 than treating lobby access as completion readiness. Mudfoot's four selectable
 combat lamps are intentionally not represented as fixed skill XP.
+
+## Resolved validation baseline
+
+The three previously reported quest-data failures were baseline-drift failures,
+not accepted product failures. Updating the quest census from 211 to the 216
+RuneLite 1.13.6 identities and making unreviewed new hiscore bosses fail closed
+resolved them without weakening catalog validation. The focused coverage,
+authoritative quest, quest-census, and PvM catalog suites now pass; the full
+clean suite is tracked in draft PR #12.
