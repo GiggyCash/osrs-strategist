@@ -69,6 +69,22 @@ public class MethodInputAggregationTest
     }
 
     @Test
+    public void fishingProfilesCountOnlyDeterministicBaitRoutes()
+    {
+        MethodExecutionProfileCatalog catalog =
+                new MethodExecutionProfileCatalog();
+        assertProfileInput(catalog, "fishing_barbarian", "Leaping trout",
+                "Feather", 20);
+        assertProfileInput(catalog, "fishing_3t_barb", "Leaping salmon",
+                "Feather", 20);
+        assertProfileInput(catalog, "fishing_dark_crabs", "Dark crab",
+                "Dark fishing bait", 20);
+        assertProfileInput(catalog, "fishing_anglers", "Anglerfish",
+                "Sandworms", 20);
+        assertNull(catalog.forMethod("fishing_karambwan"));
+    }
+
+    @Test
     public void scaledRecipesMergeDuplicatesAndRejectAmbiguousOrOverflowingTotals()
     {
         String[] names = {"Material", "Material"};
@@ -99,5 +115,21 @@ public class MethodInputAggregationTest
     private static ActionDef action(float xp)
     {
         return new ActionDef(Skill.FLETCHING, "test:logs", "Logs", 1, xp, "test", Membership.P2P);
+    }
+
+    private void assertProfileInput(MethodExecutionProfileCatalog catalog,
+            String methodId, String actionName, String inputName, int count)
+    {
+        MethodProfile profile = catalog.forMethod(methodId);
+        assertNotNull(profile);
+        ActionDef action = new ActionDef(Skill.FISHING,
+                "test:" + actionName.toLowerCase().replace(' ', '_'),
+                actionName, 1, 1, "test", Membership.P2P);
+        List<MethodInput> inputs = resolver.profileInputs(profile, action,
+                count, Membership.P2P);
+        assertNotNull(inputs);
+        assertEquals(1, inputs.size());
+        assertEquals(inputName, inputs.get(0).name);
+        assertEquals(count, inputs.get(0).quantity);
     }
 }

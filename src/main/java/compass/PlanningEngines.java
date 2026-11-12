@@ -3034,7 +3034,7 @@ class UniversalActionRecipeResolver
         {
             case AGILITY: return none(get(899));
             case MINING: return none(get(910));
-            case FISHING: return none(get(921));
+            case FISHING: return unknown(get(921));
             case WOODCUTTING: return none(get(932));
             case THIEVING: return none(get(935));
             case HUNTER: return none(get(936));

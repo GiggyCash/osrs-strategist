@@ -464,3 +464,13 @@ runes, and Ectofuntus guidance needs its processing and slime requirements. The
 existing F2P-bone and gilded-altar execution profiles retain exact action-item
 identity; unsupported Prayer routes now remain CHECK_NEEDED instead of receiving
 incomplete universal supply guidance.
+
+## Fishing bait contracts corrected
+
+Universal Fishing no longer claims that every catch has no consumed inputs.
+Barbarian routes now select a concrete one-feather-per-catch contract, dark
+crabs count dark fishing bait, and the standard anglerfish route counts
+sandworms. The exact karambwan execution profile was removed because bait can
+be lost on failed attempts; its existing variable guidance remains available.
+Unsupported Fishing actions fail closed until a reviewed route identifies their
+consumables.

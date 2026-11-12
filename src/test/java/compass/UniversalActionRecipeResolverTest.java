@@ -127,6 +127,21 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void fishingNeedsAReviewedRouteBeforeClaimingConsumedInputs()
+    {
+        for (String name : new String[] {"Raw karambwan", "Raw anglerfish",
+                "Raw dark crab", "Future fish"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FISHING, name, 50), 100, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void compositeCookingRecipeFailsClosed()
     {
         UniversalActionRecipe recipe = resolver.resolve(

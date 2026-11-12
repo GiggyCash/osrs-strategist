@@ -191,8 +191,14 @@
     "unitSingular": "fish caught",
     "unitPlural": "fish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
-    "note": "Selects the highest unlocked leaping fish. Passive Agility/Strength XP is extra.",
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Selects the highest unlocked leaping fish and a concrete feather-bait route. Passive Agility/Strength XP is extra.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -242,7 +248,13 @@
     "unitSingular": "dark crab caught",
     "unitPlural": "dark crabs caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Dark fishing bait",
+        "quantityPerAction": 1.0
+      }
+    ],
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -593,7 +605,14 @@
     "unitSingular": "anglerfish caught",
     "unitPlural": "anglerfish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Sandworms",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Uses the standard sandworm route; the diabolic-worm alternative is not conflated with this supply plan.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -706,8 +725,14 @@
     "unitSingular": "fish caught",
     "unitPlural": "fish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
-    "note": "Three-ticking changes speed, not the Fishing XP of each successful catch.",
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Uses feather bait. Three-ticking changes speed, not the bait or Fishing XP of each successful catch.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -1222,17 +1247,6 @@
       }
     ],
     "note": "Counts all three consumed materials for each prayer potion.",
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
-    "methodId": "fishing_karambwan",
-    "actionTerms": [
-      "karambwan"
-    ],
-    "unitSingular": "karambwan caught",
-    "unitPlural": "karambwans caught",
-    "xpMultiplier": 1.0,
-    "inputs": [],
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
