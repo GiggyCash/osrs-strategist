@@ -497,3 +497,11 @@ names. The duplicate, nonexistent Oak Dungeon Door recipe was removed, and the
 curated oak-door profile now selects RuneLite's actual
 `runelite:construction:oak_door` action. Prefixed or invented furniture names no
 longer inherit material quantities from a partial match.
+
+## Legacy action recipes checked against RuneLite identities
+
+Added a pinned-enum coverage invariant for every legacy recipe. It exposed a
+dead High Alchemy alias and dose-less Herblore matches. The duplicate Magic row
+was removed; Herblore now removes only RuneLite's terminal `(3)`/`(4)` output
+dose before exact base-name lookup, and antifire uses its full potion name.
+Invented prefixes still fail exact matching.

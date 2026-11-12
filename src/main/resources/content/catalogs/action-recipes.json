@@ -20,7 +20,6 @@
   {"skill":"MAGIC","match":"fire bolt","setup":"Full base rune cost.","inputs":["Air rune","Fire rune","Chaos rune"],"units":[3,4,1]},
   {"skill":"MAGIC","match":"fire blast","setup":"Full base rune cost.","inputs":["Air rune","Fire rune","Death rune"],"units":[4,5,1]},
   {"skill":"MAGIC","match":"high level alchemy","setup":"An equipped fire source can replace fire runes; use only a verified safe alch list.","inputs":["Nature rune","Fire rune"],"units":[1,5]},
-  {"skill":"MAGIC","match":"high alchemy","setup":"An equipped fire source can replace fire runes; use only a verified safe alch list.","inputs":["Nature rune","Fire rune"],"units":[1,5]},
   {"skill":"MAGIC","match":"curse","setup":"Elemental staves can replace corresponding runes.","inputs":["Earth rune","Water rune","Body rune"],"units":[3,2,1]},
 
   {"skill":"CONSTRUCTION","match":"oak larder","setup":"Bring a hammer and saw.","inputs":["Oak plank"],"units":[8]},
@@ -48,7 +47,7 @@
   {"skill":"HERBLORE","match":"weapon poison","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Kwuarm","Dragon scale dust","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"super restore","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Snapdragon","Red spiders' eggs","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"super defence","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Cadantine","White berries","Vial of water"],"units":[1,1,1]},
-  {"skill":"HERBLORE","match":"antifire","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Lantadyme","Dragon scale dust","Vial of water"],"units":[1,1,1]},
+  {"skill":"HERBLORE","match":"antifire potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Lantadyme","Dragon scale dust","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"ranging potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Dwarf weed","Wine of zamorak","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"magic potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Lantadyme","Potato cactus","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"zamorak brew","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Torstol","Jangerberries","Vial of water"],"units":[1,1,1]},

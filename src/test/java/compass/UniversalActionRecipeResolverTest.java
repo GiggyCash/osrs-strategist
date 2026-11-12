@@ -220,7 +220,7 @@ public class UniversalActionRecipeResolverTest
     public void herblorePrayerPotionHasAllConsumedInputs()
     {
         UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.HERBLORE, "Prayer potion", 87.5f),
+                action(Skill.HERBLORE, "Prayer potion(3)", 87.5f),
                 40,
                 Membership.P2P);
 
@@ -228,6 +228,31 @@ public class UniversalActionRecipeResolverTest
         assertInput(recipe, "Ranarr weed", 40);
         assertInput(recipe, "Snape grass", 40);
         assertInput(recipe, "Vial of water", 40);
+    }
+
+    @Test
+    public void herbloreDoseNamesResolveOnlyTheirExactBasePotion()
+    {
+        UniversalActionRecipe attack = resolver.resolve(
+                action(Skill.HERBLORE, "Attack potion(3)", 25), 10,
+                Membership.P2P);
+        assertTrue(attack.hasExactInputs());
+        assertInput(attack, "Guam leaf", 10);
+        assertInput(attack, "Eye of newt", 10);
+        assertInput(attack, "Vial of water", 10);
+
+        UniversalActionRecipe antifire = resolver.resolve(
+                action(Skill.HERBLORE, "Antifire potion(3)", 157.5f),
+                10, Membership.P2P);
+        assertTrue(antifire.hasExactInputs());
+        assertInput(antifire, "Lantadyme", 10);
+        assertInput(antifire, "Dragon scale dust", 10);
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.HERBLORE, "Future attack potion(3)", 25),
+                10, Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
     }
 
     @Test

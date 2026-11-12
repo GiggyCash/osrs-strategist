@@ -964,8 +964,7 @@
   {
     "methodId": "magic_high_alch",
     "actionTerms": [
-      "high_level_alchemy",
-      "high_alchemy"
+      "runelite:magic:high_level_alchemy"
     ],
     "unitSingular": "High Alchemy cast",
     "unitPlural": "High Alchemy casts",

@@ -3122,11 +3122,20 @@ class UniversalActionRecipeResolver
 
     private static Recipe exact(Skill skill, String name)
     {
+        name = legacyRecipeName(skill, name);
         for (Recipe recipe : EXACT)
             if (skill.name().equals(recipe.skill)
                     && (recipe.contains ? name.contains(recipe.match)
                     : name.equals(recipe.match))) return recipe;
         return null;
+    }
+
+    private static String legacyRecipeName(Skill skill, String name)
+    {
+        if (skill == Skill.HERBLORE && name != null
+                && (name.endsWith("(3)") || name.endsWith("(4)")))
+            return name.substring(0, name.length() - 3).trim();
+        return name;
     }
 
     private static UniversalActionRecipe fletching(String lower, int n)
