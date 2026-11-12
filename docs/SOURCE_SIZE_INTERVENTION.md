@@ -438,3 +438,11 @@ unreviewed universal actions now remain unresolved, while the existing reviewed
 bow recipes and exact headless-arrow recipe are unchanged. No curated training
 method depended on the removed fallbacks, and the obsolete wood-name helpers
 were removed with them.
+
+## Firemaking inference fails closed
+
+Removed the universal `contains("log")` recipe, which treated pyre logs and
+invented future names as ordinary one-log actions. The curated F2P route now
+matches only RuneLite's five F2P log-burning action IDs and consumes the action's
+observed item identity. Pyre logs, sacred oil and other methods remain unresolved
+until their additional inputs and access requirements have reviewed contracts.

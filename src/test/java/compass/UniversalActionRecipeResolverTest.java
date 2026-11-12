@@ -183,6 +183,21 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void unreviewedFiremakingActionsFailClosed()
+    {
+        for (String name : new String[] {"Logs", "Oak pyre logs",
+                "Sacred oil(4)", "Future logs"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FIREMAKING, name, 40), 60, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void opalJewelleryUsesSilverBar()
     {
         UniversalActionRecipe recipe = resolver.resolve(

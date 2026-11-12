@@ -661,7 +661,11 @@
   {
     "methodId": "firemaking_f2p_logs",
     "actionTerms": [
-      "logs"
+      "runelite:firemaking:logs",
+      "runelite:firemaking:oak_logs",
+      "runelite:firemaking:willow_logs",
+      "runelite:firemaking:maple_logs",
+      "runelite:firemaking:yew_logs"
     ],
     "unitSingular": "log burned",
     "unitPlural": "logs burned",
@@ -669,7 +673,7 @@
     "inputs": [
       {
         "mode": "ACTION_ITEM",
-        "quantityPerAction": 0.0
+        "quantityPerAction": 1.0
       }
     ],
     "progressEstimateMode": "EXACT_ACTIONS"

@@ -3031,9 +3031,7 @@ class UniversalActionRecipeResolver
             case THIEVING: return none(get(935));
             case HUNTER: return none(get(936));
             case COOKING: return unknown("No reviewed ingredient recipe is available for this food.");
-            case FIREMAKING: return lower.contains("log")
-                    ? recipe(get(937), count, name, 1)
-                    : unknown(get(938));
+            case FIREMAKING: return unknown(get(938));
             case PRAYER: return contains(lower, "bones", "ashes", "head")
                     ? recipe(get(939), count, name, 1)
                     : unknown(get(900));
