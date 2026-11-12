@@ -709,6 +709,32 @@
   },
   {
     "skill": "FLETCHING",
+    "match": "headless arrow",
+    "inputs": [
+      "Arrow shaft",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      52,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach feathers to arrow shafts. Quantities are per arrow; one interaction processes up to 15 of each.",
+    "source": "https://oldschool.runescape.wiki/w/Headless_arrow",
+    "sourceRevision": 15399603,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
     "match": "bronze arrow",
     "inputs": [
       "Headless arrow",

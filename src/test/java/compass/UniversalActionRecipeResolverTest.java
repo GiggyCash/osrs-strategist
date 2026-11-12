@@ -397,6 +397,22 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void headlessArrowsUseReviewedIdentitiesAndMembership()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.FLETCHING, "Headless arrow", 1), 15,
+                Membership.P2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Arrow shaft", 15, ItemID.ARROW_SHAFT);
+        assertInput(recipe, "Feather", 15, ItemID.FEATHER);
+        assertFalse(resolver.resolve(action(Skill.FLETCHING,
+                "Headless arrow", 1), 15, Membership.F2P).hasExactInputs());
+        assertFalse(resolver.resolve(action(Skill.FLETCHING,
+                "Headless arrows", 1), 15, Membership.P2P).hasExactInputs());
+    }
+
+    @Test
     public void standardArrowsUseReviewedArrowtipIdentitiesAndMembership()
     {
         String[] arrows = {"Bronze arrow", "Iron arrow", "Steel arrow",

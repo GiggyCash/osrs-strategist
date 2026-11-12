@@ -521,3 +521,17 @@ RuneLite tiers now use reviewed recipes pinned to Bird house trapping revision
 15364256. Each emptied/reset house consumes its matching log and a concrete
 10-potato-seed bait route; hammer, chisel, and the returned clockwork remain
 reusable setup rather than inflated per-house costs.
+
+## Headless arrows use reviewed identities
+
+Moved the remaining headless-arrow Java recipe into the shared reviewed catalog.
+The exact RuneLite `Headless arrow` action now consumes item 52 (Arrow shaft)
+and item 314 (Feather), pinned to OSRS Wiki revision 15399603. The former plural
+alias was not a RuneLite action and now fails closed. P2P gating is preserved.
+
+Deleting the dedicated Fletching branch removes 276 production-Java characters
+(about 69 char/4 proxy tokens) while adding 560 reviewed-data characters. The
+full clean suite is 950/950, the packaged JAR is 1,255,814 bytes, and the current
+source audit is 1,077,288 production-Java characters / 269,322 estimated tokens.
+The project remains above the intervention threshold; this is one measured
+knowledge-boundary reduction, not a claim that the total size issue is resolved.

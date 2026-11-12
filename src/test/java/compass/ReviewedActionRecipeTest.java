@@ -52,7 +52,7 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(192, recipes.length);
+        assertEquals(193, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {

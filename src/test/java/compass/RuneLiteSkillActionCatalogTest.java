@@ -51,6 +51,17 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void headlessArrowRecipeUsesCurrentRuneLiteActionIdentity()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        ActionDef headless = catalog.actionsFor(Skill.FLETCHING).stream()
+                .filter(action -> "Headless arrow".equals(action.name))
+                .findFirst().orElseThrow(AssertionError::new);
+
+        assertEquals("headless_arrow", Names.actionKey(headless.name));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

@@ -3043,7 +3043,7 @@ class UniversalActionRecipeResolver
             case PRAYER: return unknown(get(900));
             case RUNECRAFT: return runecraft(action, count, membership);
             case CRAFTING: return unknown(get(913));
-            case FLETCHING: return fletching(lower, count);
+            case FLETCHING: return unknown(get(922));
             case SMITHING: return unknown(get(924));
             case FARMING: return unknown(get(929));
             case MAGIC: return unknown(get(934));
@@ -3136,13 +3136,6 @@ class UniversalActionRecipeResolver
                 && (name.endsWith("(3)") || name.endsWith("(4)")))
             return name.substring(0, name.length() - 3).trim();
         return name;
-    }
-
-    private static UniversalActionRecipe fletching(String lower, int n)
-    {
-        if (lower.equals("headless arrow") || lower.equals("headless arrows"))
-            return recipe(get(915), n, "Arrow shaft", 1, "Feather", 1);
-        return unknown(get(922));
     }
 
     private static UniversalActionRecipe runecraft(ActionDef action, int count,
