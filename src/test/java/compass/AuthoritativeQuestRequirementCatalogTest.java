@@ -39,6 +39,20 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void whileGuthixSleepsKeepsCompletionRequirementsConcise()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("While Guthix Sleeps");
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify Warriors' Guild access: Attack plus Strength totals "
+                        + "at least 130, or either skill is 99"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

@@ -6443,6 +6443,7 @@
     ],
     "skillRequirements": {
       "MAGIC": 67,
+      "FIREMAKING": 49,
       "HERBLORE": 65,
       "AGILITY": 66,
       "THIEVING": 72,
@@ -6453,7 +6454,7 @@
     "questPointsRequired": 180,
     "accessChecks": [
       "Required items: Ring of Charos(a) or 500 coins Knife Seed dibber (only if Barbarian Farming Training has not been completed) Lantern lens Unpowered orb Bronze med helm Iron chainbody Sapphire lantern Runes to cast the Astral Contact spell four times (8 air runes, 4 astral rune, 4 cosmic rune) Runes for any charge orb spell (30 runes of a chosen element and 3 cosmic runes) Equipment for two different combat styles Runes for the following spells: multiple casts of all four elemental spells, Snare/Entangle, Weake…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 180 Quest points [ required to start ] link\u003dThieving|alt\u003dThieving 72 Thieving [ not boostable ] [ required to start ] link\u003dMagic|alt\u003dMagic 67 Magic [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 66 Agility [ not boostable ] [ required to start ] link\u003dFarming|alt\u003dFarming 65 Farming [ not boostable ] [ required to start ] link\u003dHerblore|alt\u003dHerblore 65 Herblore [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 62 Hunter [ not boosta…",
+      "Verify Warriors' Guild access: Attack plus Strength totals at least 130, or either skill is 99",
       "Combat encounters: 2 Assassins (level 167) 2 Mercenary axemen (level 131) Mercenary mage (level 112) 3 Elite Black Knights (level 138) Surok Magis (level 265) Balance Elemental (level 524) 2 Tormented Demons (level 450)"
     ],
     "startLocation": "Talk to Ivy Sophista in Taverley.",
