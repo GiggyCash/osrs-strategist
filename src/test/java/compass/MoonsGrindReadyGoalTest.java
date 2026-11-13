@@ -84,6 +84,10 @@ public class MoonsGrindReadyGoalTest
                 .contains("Equip stab, crush, and slash options"));
         assertTrue(candidate.getGuidance().getSupplies()
                 .contains("moonlight-potion"));
+        assertTrue(candidate.getGuidance().getLocation()
+                .contains("calcified moth"));
+        assertTrue(candidate.getGuidance().getLocation()
+                .contains("northern end"));
         assertFalse(candidate.getGuidance().getAction()
                 .toLowerCase().contains("grand exchange"));
         assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));

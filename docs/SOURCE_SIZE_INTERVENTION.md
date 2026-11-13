@@ -668,3 +668,14 @@ This guard adds 52 production-Java characters (13 char/4 proxy tokens) and 14
 packaged-JAR bytes. The full clean suite is 963/963, the packaged JAR is
 1,257,956 bytes, and the production-Java audit is 1,078,816 characters /
 269,704 estimated tokens.
+
+## Moons guidance names a usable return route
+
+The Moons location guidance now identifies the northern Cam Torum entrance and
+offers a calcified moth or an already-unlocked Quetzal route. This makes travel
+actionable without assuming that a particular landing site has been built.
+
+This data-only correction changes no production Java, adds 55 player-text
+characters, and adds 30 packaged-JAR bytes. The focused Moons suite is 16/16,
+the packaged JAR is 1,257,986 bytes, and the production-Java audit remains
+1,078,816 characters / 269,704 estimated tokens.
