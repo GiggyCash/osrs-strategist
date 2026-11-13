@@ -214,6 +214,17 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void tribalTotemUsesOnlyItsTypedThievingRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tribal Totem");
+        assertEquals(Integer.valueOf(21),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

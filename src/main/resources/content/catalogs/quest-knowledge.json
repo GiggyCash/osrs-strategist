@@ -6336,9 +6336,7 @@
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Access requirements: link\u003dThieving|alt\u003dThieving 21 Thieving [ boostable ] [ not required to start ]"
-    ],
+    "accessChecks": [],
     "startLocation": "Talk to Kangai Mau at The Shrimp and Parrot restaurant in Brimhaven.",
     "unlocks": [
       "Quest rewards: "
