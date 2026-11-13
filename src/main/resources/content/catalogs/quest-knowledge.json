@@ -4102,7 +4102,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Any axe (a bronze axe can be found during the quest, but bringing a better one is recommended for cutting 10 logs) Hammer (obtainable during the quest) or Imcando hammer Saw (obtainable during the quest) or Amy\u0027s saw",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 51 Slayer [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 48 Construction [ not boostable ] [ required to start ] link\u003dSailing|alt\u003dSailing 45 Sailing [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 45 Hunter [ not boostable ] [ required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 40 Woodcutting [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 34 Crafting [ not boostable ] [ required to start ] Completion of Pande…",
       "Combat encounters: Gryphon (level 95) Shellbane gryphon (level 235)"
     ],
     "startLocation": "Talk to the injured tortugan on a Remote Island in the Unquiet Ocean.",

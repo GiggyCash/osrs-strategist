@@ -198,6 +198,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void troubledTortugansDoesNotDuplicateTypedAccessRequirements()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Troubled Tortugans");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Shellbane gryphon (level 235)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
