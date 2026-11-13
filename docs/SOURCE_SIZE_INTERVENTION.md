@@ -563,3 +563,18 @@ This migration changes no production Java, removes 642 legacy-data characters,
 and adds 2,275 reviewed-data characters. The full clean suite is 953/953, the
 packaged JAR is 1,256,012 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens.
+
+## Magic recipes use reviewed rune identities
+
+Moved the five exact universal Magic recipes from the legacy catalog into the
+shared reviewed catalog: Wind Strike, Fire Bolt, Fire Blast, High Level Alchemy,
+and Curse. Their base rune quantities now use RuneLite item identities and
+pinned Wiki revisions, so universal resource evidence cannot substitute a
+different display label. All five remain explicitly F2P. Existing staff-source
+setup wording is preserved, and curated execution profiles remain separate;
+this migration does not broaden or replace their input contracts.
+
+This migration changes no production Java, removes 751 legacy-data characters,
+and adds 2,594 reviewed-data characters. The full clean suite is 954/954, the
+packaged JAR is 1,256,152 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens.

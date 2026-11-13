@@ -92,6 +92,23 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void magicRecipesUseCurrentRuneLiteActionIdentities()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        List<String> identities = new ArrayList<>();
+        for (ActionDef action : catalog.actionsFor(Skill.MAGIC))
+            identities.add(action.id + "=" + Names.actionKey(action.name));
+
+        for (String identity : new String[] {
+                "runelite:magic:wind_strike=wind_strike",
+                "runelite:magic:fire_bolt=fire_bolt",
+                "runelite:magic:fire_blast=fire_blast",
+                "runelite:magic:high_level_alchemy=high_level_alchemy",
+                "runelite:magic:curse=curse"})
+            assertTrue(identity, identities.contains(identity));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

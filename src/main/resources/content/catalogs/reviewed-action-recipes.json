@@ -1098,6 +1098,148 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "MAGIC",
+    "match": "wind strike",
+    "inputs": [
+      "Air rune",
+      "Mind rune"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      556,
+      558
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Wind_Strike",
+    "sourceRevision": 15341514,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "fire bolt",
+    "inputs": [
+      "Air rune",
+      "Fire rune",
+      "Chaos rune"
+    ],
+    "units": [
+      3,
+      4,
+      1
+    ],
+    "itemIds": [
+      556,
+      554,
+      562
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_Bolt",
+    "sourceRevision": 15341476,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "fire blast",
+    "inputs": [
+      "Air rune",
+      "Fire rune",
+      "Death rune"
+    ],
+    "units": [
+      4,
+      5,
+      1
+    ],
+    "itemIds": [
+      556,
+      554,
+      560
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_Blast",
+    "sourceRevision": 15394303,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "high level alchemy",
+    "inputs": [
+      "Nature rune",
+      "Fire rune"
+    ],
+    "units": [
+      1,
+      5
+    ],
+    "itemIds": [
+      561,
+      554
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "An equipped fire source can replace fire runes; use only a verified safe alch list.",
+    "source": "https://oldschool.runescape.wiki/w/High_Level_Alchemy",
+    "sourceRevision": 15393805,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "curse",
+    "inputs": [
+      "Earth rune",
+      "Water rune",
+      "Body rune"
+    ],
+    "units": [
+      3,
+      2,
+      1
+    ],
+    "itemIds": [
+      557,
+      555,
+      559
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Elemental staves can replace corresponding runes.",
+    "source": "https://oldschool.runescape.wiki/w/Curse",
+    "sourceRevision": 14797456,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "CONSTRUCTION",
     "match": "oak larder",
     "inputs": [

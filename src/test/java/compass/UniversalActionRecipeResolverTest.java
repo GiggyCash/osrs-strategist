@@ -52,8 +52,8 @@ public class UniversalActionRecipeResolverTest
                 Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Air rune", 25);
-        assertInput(recipe, "Mind rune", 25);
+        assertInput(recipe, "Air rune", 25, ItemID.AIRRUNE);
+        assertInput(recipe, "Mind rune", 25, ItemID.MINDRUNE);
     }
 
     @Test
@@ -62,9 +62,9 @@ public class UniversalActionRecipeResolverTest
         UniversalActionRecipe curse = resolver.resolve(
                 action(Skill.MAGIC, "Curse", 29), 10, Membership.F2P);
         assertTrue(curse.hasExactInputs());
-        assertInput(curse, "Earth rune", 30);
-        assertInput(curse, "Water rune", 20);
-        assertInput(curse, "Body rune", 10);
+        assertInput(curse, "Earth rune", 30, ItemID.EARTHRUNE);
+        assertInput(curse, "Water rune", 20, ItemID.WATERRUNE);
+        assertInput(curse, "Body rune", 10, ItemID.BODYRUNE);
 
         for (Membership membership : Membership.values())
         {
@@ -122,17 +122,17 @@ public class UniversalActionRecipeResolverTest
                 action(Skill.MAGIC, "Fire Bolt", 22.5f), 10,
                 Membership.F2P);
         assertTrue(bolt.hasExactInputs());
-        assertInput(bolt, "Air rune", 30);
-        assertInput(bolt, "Fire rune", 40);
-        assertInput(bolt, "Chaos rune", 10);
+        assertInput(bolt, "Air rune", 30, ItemID.AIRRUNE);
+        assertInput(bolt, "Fire rune", 40, ItemID.FIRERUNE);
+        assertInput(bolt, "Chaos rune", 10, ItemID.CHAOSRUNE);
 
         UniversalActionRecipe blast = resolver.resolve(
                 action(Skill.MAGIC, "Fire Blast", 34.5f), 10,
                 Membership.F2P);
         assertTrue(blast.hasExactInputs());
-        assertInput(blast, "Air rune", 40);
-        assertInput(blast, "Fire rune", 50);
-        assertInput(blast, "Death rune", 10);
+        assertInput(blast, "Air rune", 40, ItemID.AIRRUNE);
+        assertInput(blast, "Fire rune", 50, ItemID.FIRERUNE);
+        assertInput(blast, "Death rune", 10, ItemID.DEATHRUNE);
     }
 
     @Test
@@ -165,8 +165,8 @@ public class UniversalActionRecipeResolverTest
 
         assertTrue(recipe.hasExactInputs());
         assertEquals(2, recipe.getInputs().size());
-        assertInput(recipe, "Nature rune", 100);
-        assertInput(recipe, "Fire rune", 500);
+        assertInput(recipe, "Nature rune", 100, ItemID.NATURERUNE);
+        assertInput(recipe, "Fire rune", 500, ItemID.FIRERUNE);
         assertTrue(recipe.getSetup().contains("safe alch list"));
     }
 

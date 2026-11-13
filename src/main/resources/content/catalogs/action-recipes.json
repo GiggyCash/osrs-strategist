@@ -14,12 +14,6 @@
   {"skill":"CRAFTING","match":"gold tiara","setup":"Bring a tiara mould to a furnace.","inputs":["Gold bar"],"units":[1]},
 
 
-  {"skill":"MAGIC","match":"wind strike","setup":"Full base rune cost.","inputs":["Air rune","Mind rune"],"units":[1,1]},
-  {"skill":"MAGIC","match":"fire bolt","setup":"Full base rune cost.","inputs":["Air rune","Fire rune","Chaos rune"],"units":[3,4,1]},
-  {"skill":"MAGIC","match":"fire blast","setup":"Full base rune cost.","inputs":["Air rune","Fire rune","Death rune"],"units":[4,5,1]},
-  {"skill":"MAGIC","match":"high level alchemy","setup":"An equipped fire source can replace fire runes; use only a verified safe alch list.","inputs":["Nature rune","Fire rune"],"units":[1,5]},
-  {"skill":"MAGIC","match":"curse","setup":"Elemental staves can replace corresponding runes.","inputs":["Earth rune","Water rune","Body rune"],"units":[3,2,1]},
-
   {"skill":"HERBLORE","match":"attack potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Guam leaf","Eye of newt","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"antipoison","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Marrentill","Unicorn horn dust","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"strength potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Tarromin","Limpwurt root","Vial of water"],"units":[1,1,1]},
