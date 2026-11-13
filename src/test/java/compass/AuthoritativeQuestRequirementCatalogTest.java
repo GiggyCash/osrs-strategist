@@ -237,6 +237,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void hopespearsWillDistinguishesStartedFromCompletedPrerequisites()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Hopespear's Will");
+        assertEquals(java.util.Collections.singletonList("The Restless Ghost"),
+                quest.getStartedPrerequisites());
+        assertEquals(3, quest.getPrerequisites().size());
+        assertFalse(quest.getPrerequisites().contains("The Restless Ghost"));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Strongbones (level 184)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

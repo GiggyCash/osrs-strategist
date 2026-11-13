@@ -71,6 +71,45 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void startedPrerequisiteAcceptsObservedProgressButFailsClosed()
+    {
+        QuestDefinition definition = new QuestDefinition("Started gate", false,
+                Collections.emptyList(),
+                Collections.singletonList("The Restless Ghost"),
+                Collections.emptyMap(), Collections.emptyList(), null, 0, 0,
+                Collections.emptyList(), "Test", Collections.emptyList(),
+                Collections.emptyMap(), Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+        AccountSnapshot account = account(Membership.P2P, 40, 40, 40);
+
+        QuestResolution notStarted = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.NOT_STARTED))).build()));
+        assertEquals(Confidence.CHECK_NEEDED, notStarted.getConfidence());
+        assertTrue(notStarted.getGuidance().getAction().contains(
+                "Start The Restless Ghost"));
+
+        QuestResolution inProgress = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.IN_PROGRESS))).build()));
+        assertEquals(Confidence.VERIFIED, inProgress.getConfidence());
+
+        QuestResolution complete = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.COMPLETE))).build()));
+        assertEquals(Confidence.VERIFIED, complete.getConfidence());
+
+        QuestResolution unknown = resolver.resolve(definition,
+                context(GameData.builder(account).build()));
+        assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
+        assertTrue(unknown.getGuidance().getAction().contains(
+                "Verify or start The Restless Ghost"));
+    }
+
+    @Test
     public void irreversibleRewardQuestIsExcludedForOneDefencePure()
     {
         assertTrue(provider.candidates(context(data(account(Membership.F2P,
@@ -83,7 +122,7 @@ public class QuestPlanningEngineTest
     {
         Map<Skill, Integer> requirements = new EnumMap<>(Skill.class);
         requirements.put(Skill.DEFENCE, 40);
-        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), requirements, Collections.emptyList(), null, 0, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
+        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), Collections.emptyList(), requirements, Collections.emptyList(), null, 0, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
         AccountSnapshot pure = account(Membership.F2P, 60, 60, 1);
         QuestResolution resolution = TestFixtures.questRequirementResolver().resolve(
                 definition, context(GameData.builder(pure).build()));
@@ -114,7 +153,8 @@ public class QuestPlanningEngineTest
     public void observedQuestPointsResolveOnlyTheRemainingGate()
     {
         QuestDefinition definition = new QuestDefinition("Quest-point test", true,
-                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), Collections.emptyList(),
+                Collections.emptyMap(),
                 Collections.emptyList(), null, 32, 0, Collections.emptyList(),
                 "Verified start", Collections.emptyList(), Collections.emptyMap(),
                 Collections.emptyList());
@@ -154,7 +194,8 @@ public class QuestPlanningEngineTest
                 value -> value.contains("combat level 85")));
 
         QuestDefinition definition = new QuestDefinition("Combat gate", false,
-                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), Collections.emptyList(),
+                Collections.emptyMap(),
                 Collections.emptyList(), null, 0, 85,
                 Collections.emptyList(), "Verified start",
                 Collections.emptyList(), Collections.emptyMap(),
@@ -215,7 +256,7 @@ public class QuestPlanningEngineTest
     @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
-        QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
+        QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
                         ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
                         ItemRequirementScope.CARRIED), 0, 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
         QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();

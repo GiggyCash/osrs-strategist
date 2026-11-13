@@ -1342,6 +1342,21 @@ class QuestRequirementResolver
                                 definition.freeToPlay)));
         }
 
+        for (String prerequisite : definition.getStartedPrerequisites())
+        {
+            QuestStatus status = quests == null ? QuestStatus.UNKNOWN
+                    : quests.statusOf(prerequisite);
+            if (status != QuestStatus.IN_PROGRESS
+                    && status != QuestStatus.COMPLETE)
+                missing.add(new Preparation(status == QuestStatus.UNKNOWN
+                        ? "Verify or start " + prerequisite
+                        : "Start " + prerequisite,
+                        RestrictedQuestPolicy.isSafe(account, prerequisite)
+                                ? Safety.verifiedSafe(definition.freeToPlay)
+                                : Safety.potentiallyIrreversible(
+                                definition.freeToPlay)));
+        }
+
         for (Map.Entry<Skill, Integer> requirement
                 : definition.skillRequirements.entrySet())
         {

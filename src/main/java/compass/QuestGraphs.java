@@ -38,6 +38,17 @@ final class QuestGraphs
                 return child;
             }
         }
+        if (definition != null) for (String prerequisite
+                : definition.getStartedPrerequisites())
+        {
+            List<String> child = path(catalog, prerequisite, target, active);
+            if (child != null)
+            {
+                child.add(0, current);
+                active.remove(key);
+                return child;
+            }
+        }
         active.remove(key);
         return null;
     }
@@ -59,7 +70,11 @@ final class QuestGraphs
         result.add(quest);
         var definition = catalog.definitionFor(quest);
         if (definition != null)
+        {
             for (String prerequisite : definition.prerequisites)
                 collect(catalog, prerequisite, result, seen);
+            for (String prerequisite : definition.getStartedPrerequisites())
+                collect(catalog, prerequisite, result, seen);
+        }
     }
 }

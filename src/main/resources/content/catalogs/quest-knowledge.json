@@ -6566,17 +6566,20 @@
     "name": "Hopespear\u0027s Will",
     "freeToPlay": false,
     "prerequisites": [
-      "The Restless Ghost",
       "Desert Treasure I",
       "Fairytale II - Cure a Queen",
       "Land of the Goblins"
     ],
-    "skillRequirements": {},
+    "startedPrerequisites": [
+      "The Restless Ghost"
+    ],
+    "skillRequirements": {
+      "PRAYER": 50
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ghostspeak amulet or Morytania legs 2 or better Ring of visibility or ring of shadows Goblin potion Dramen or lunar staff (unless the Lumbridge \u0026 Draynor Diary has been fully completed) Food and potions to defeat 5 enemies without armour, weapons, or magic",
-      "Access requirements: Started The Restless Ghost Completion of Desert Treasure I Completion of Fairytale II - Cure a Queen Completion of Land of the Goblins link\u003dPrayer|alt\u003dPrayer 50 Prayer [ not boostable ] Category:Unknown start requirement status",
       "Combat encounters: Snothead (level 32) Snailfeet (level 56) Mosschin (level 88) Redeyes (level 121) Strongbones (level 184)"
     ],
     "startLocation": "Speak to Hopespear in the crypt of the Goblin Temple.",

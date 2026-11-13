@@ -65,7 +65,7 @@ public class QuestGraphLookupTest
     }
 
     @Test
-    public void collectedPrerequisitesMatchFormerTraversalForEntireCatalog()
+    public void collectedPrerequisitesMatchReferenceTraversalForEntireCatalog()
     {
         QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog();
         for (QuestDefinition definition : catalog.all().values())
@@ -101,6 +101,26 @@ public class QuestGraphLookupTest
         assertEquals(new ArrayList<>(expected), new ArrayList<>(seeded));
     }
 
+    @Test
+    public void startedPrerequisitesRemainVisibleToGraphTraversal()
+    {
+        Map<String, QuestDefinition> definitions = new HashMap<>();
+        definitions.put("root", startedQuest("Root", "Starter"));
+        definitions.put("starter", quest("Starter"));
+        QuestKnowledgeCatalog catalog = new QuestKnowledgeCatalog()
+        {
+            @Override public QuestDefinition definitionFor(String name)
+            { return definitions.get(Names.words(name)); }
+        };
+
+        assertEquals(Arrays.asList("Root", "Starter"),
+                QuestGraphs.path(catalog, "Root", "Starter"));
+        Set<String> collected = new LinkedHashSet<>();
+        QuestGraphs.collect(catalog, "Root", collected);
+        assertEquals(Arrays.asList("Root", "Starter"),
+                new ArrayList<>(collected));
+    }
+
     private static QuestStatus scan(QuestSnapshot snapshot, String name)
     {
         for (Map.Entry<String, QuestStatus> entry : snapshot.quests().entrySet())
@@ -113,15 +133,31 @@ public class QuestGraphLookupTest
         for (String seen : result) if (Names.words(seen).equals(Names.words(name))) return;
         result.add(name);
         QuestDefinition definition = catalog.definitionFor(name);
-        if (definition != null) for (String prerequisite : definition.prerequisites)
-            oldCollect(catalog, prerequisite, result);
+        if (definition != null)
+        {
+            for (String prerequisite : definition.prerequisites)
+                oldCollect(catalog, prerequisite, result);
+            for (String prerequisite : definition.getStartedPrerequisites())
+                oldCollect(catalog, prerequisite, result);
+        }
     }
 
     private static QuestDefinition quest(String name, String... prerequisites)
     {
         return new QuestDefinition(name, false, Arrays.asList(prerequisites),
-                Collections.emptyMap(), Collections.emptyList(), null, 0, 0,
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), null, 0, 0,
                 Collections.emptyList(), "Test", Collections.emptyList(),
                 Collections.emptyMap(), Collections.emptyList());
+    }
+
+    private static QuestDefinition startedQuest(String name,
+            String... startedPrerequisites)
+    {
+        return new QuestDefinition(name, false, Collections.emptyList(),
+                Arrays.asList(startedPrerequisites), Collections.emptyMap(),
+                Collections.emptyList(), null, 0, 0, Collections.emptyList(),
+                "Test", Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList());
     }
 }

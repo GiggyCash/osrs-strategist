@@ -14,6 +14,7 @@ public final class QuestDefinition
     final String name;
     final boolean freeToPlay;
     final List<String> prerequisites;
+    List<String> startedPrerequisites;
     final Map<Skill, Integer> skillRequirements;
     final List<QuestItemRequirement> itemRequirements;
     final ItemRule itemRequirementExpression;
@@ -25,6 +26,11 @@ public final class QuestDefinition
     final Map<Skill, Integer> rewardXp;
     final List<String> fieldUncertainties;
     public boolean hasFieldUncertainty() { return !fieldUncertainties.isEmpty(); }
+    public List<String> getStartedPrerequisites()
+    {
+        return startedPrerequisites == null
+                ? emptyList() : startedPrerequisites;
+    }
 
     @Getter
     public static final class QuestItemRequirement
