@@ -294,6 +294,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void generalsShadowSeparatesStartedQuestFromTypedRingOwnership()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The General's Shadow");
+        assertEquals(java.util.Collections.singletonList("Desert Treasure I"),
+                quest.getStartedPrerequisites());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Curse of the Empty Lord", "Fight Arena")));
+        assertTrue(quest.getItemRequirements().stream().anyMatch(
+                item -> item.getName().equals("Ring of visibility")));
+        assertEquals(java.util.Collections.singletonList(
+                "Verify a legal setup for the prayer-disabled, safespottable "
+                        + "Ghost of Bouncer fight"), quest.getAccessChecks());
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

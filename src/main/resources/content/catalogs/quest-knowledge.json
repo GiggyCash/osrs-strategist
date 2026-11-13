@@ -3683,6 +3683,9 @@
       "Curse of the Empty Lord",
       "Fight Arena"
     ],
+    "startedPrerequisites": [
+      "Desert Treasure I"
+    ],
     "skillRequirements": {},
     "itemRequirements": [
       {
@@ -3724,7 +3727,6 @@
     ],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Start Desert Treasure I to obtain and use the ring of visibility",
       "Verify a legal setup for the prayer-disabled, safespottable Ghost of Bouncer fight"
     ],
     "startLocation": "Find General Khazard\u0027s ghost south-east of Rellekka.",
