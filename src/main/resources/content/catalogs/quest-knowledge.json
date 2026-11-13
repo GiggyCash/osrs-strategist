@@ -6573,9 +6573,91 @@
       "CRAFTING": 15
     },
     "itemRequirements": [],
+    "itemRequirementExpression": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ANY_OF",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": [
+            {
+              "kind": "ALL_OF",
+              "itemNames": [],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": [
+                {
+                  "kind": "ITEM",
+                  "itemNames": ["Needle"],
+                  "quantity": 1,
+                  "quantityMode": "EXACT",
+                  "scope": "OWNED_OR_RETRIEVABLE",
+                  "excludedItemNames": [],
+                  "checkAction": "",
+                  "children": []
+                },
+                {
+                  "kind": "ITEM",
+                  "itemNames": ["Thread"],
+                  "quantity": 1,
+                  "quantityMode": "EXACT",
+                  "scope": "OWNED_OR_RETRIEVABLE",
+                  "excludedItemNames": [],
+                  "checkAction": "",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "kind": "ITEM",
+              "itemNames": ["Costume needle"],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "OWNED_OR_RETRIEVABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "CHECK_NEEDED",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "Verify and bring one fur accepted by A Ruff Situation.",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": ["Grain"],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        }
+      ]
+    },
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Either a needle or costume needle; thread unless using a costume needle; one usable fur; grain",
       "Combat encounters: Two outlaws (levels 22 and 23)"
     ],
     "startLocation": "Talk to Talia in the Dog Shelter south-west of the Edgeville Monastery.",

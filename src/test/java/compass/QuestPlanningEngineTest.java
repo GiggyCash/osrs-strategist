@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class QuestPlanningEngineTest
@@ -141,6 +142,38 @@ public class QuestPlanningEngineTest
         assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
         assertTrue(unknown.getGuidance().getAction()
                 .contains("Verify at least 32 quest points"));
+    }
+
+    @Test
+    public void ruffSituationModelsConditionalSewingToolsWithoutGuessingFur()
+    {
+        QuestDefinition definition = new QuestKnowledgeCatalog()
+                .definitionFor("A Ruff Situation");
+        assertNotNull(definition.getItemRequirementExpression());
+        GameData data = GameData.builder(account(Membership.P2P, 40, 40, 40))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Costume needle"), item("Grain")), 1L))
+                .build();
+
+        ItemRequirementResult result = new ItemRequirementEvaluator().evaluate(
+                definition.getItemRequirementExpression(), data, false);
+
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().contains("one fur accepted"));
+        assertFalse(result.getAction().contains("Thread"));
+
+        GameData ordinaryNeedle = GameData.builder(
+                        account(Membership.P2P, 40, 40, 40))
+                .bank(new ItemsState(Arrays.asList(item("Needle"),
+                        item("Thread"), item("Grain")), 1L))
+                .build();
+        ItemRequirementResult ordinary = new ItemRequirementEvaluator().evaluate(
+                definition.getItemRequirementExpression(), ordinaryNeedle, false);
+        assertEquals(RequirementState.CHECK_NEEDED, ordinary.getState());
+        assertTrue(ordinary.getAction().contains("one fur accepted"));
+        assertFalse(ordinary.getAction().contains("Costume needle"));
     }
 
     @Test

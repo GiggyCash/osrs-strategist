@@ -19,6 +19,11 @@ raid run; the planner therefore retains explicit combat/setup checks rather
 than treating lobby access as completion readiness. Mudfoot's four selectable
 combat lamps are intentionally not represented as fixed skill XP.
 
+The pinned `A Ruff Situation` details expose no conventional item field. Its
+reviewed local contract therefore models needle plus thread or a costume
+needle, requires grain, and keeps the accepted-fur choice as an explicit check
+rather than guessing which fur identities are valid.
+
 ## Resolved validation baseline
 
 The three previously reported quest-data failures were baseline-drift failures,

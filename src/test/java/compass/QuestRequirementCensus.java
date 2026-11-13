@@ -8,6 +8,8 @@ import net.runelite.api.Quest;
 /** Machine-readable quality census over every current RuneLite quest identity. */
 public final class QuestRequirementCensus
 {
+    private static final String IMPORTED_ITEM_PREFIX = "Required items:";
+
     public static final class Unresolved
     {
         private final String quest;
@@ -62,6 +64,17 @@ public final class QuestRequirementCensus
                 auditUncertainty(quest.getName(), uncertainty);
             ImportedQuestItemRequirementCatalog.Result result =
                     imported.resultFor(quest.getName());
+            boolean expectsImportedRequirements = record.getAccessChecks().stream()
+                    .anyMatch(check -> check != null
+                            && check.startsWith(IMPORTED_ITEM_PREFIX));
+            if (expectsImportedRequirements && result == null)
+            {
+                questsWithItemRequirements++;
+                unsupportedExpressions++;
+                unresolved.add(new Unresolved(quest.getName(), "items", "",
+                        "Required item evidence has no imported expression record."));
+                continue;
+            }
             boolean hasTypedRequirements = !record.getItemRequirements().isEmpty()
                     || record.getItemRequirementExpression() != null;
             boolean hasImportedRequirements = result != null
@@ -73,30 +86,41 @@ public final class QuestRequirementCensus
                 continue;
             }
             questsWithItemRequirements++;
+            ItemRule expression;
+            List<String> unresolvedItems;
             if (!hasImportedRequirements)
             {
-                // Curated typed requirements are the resolver's executable
-                // representation for simple exact item lists. Imported
-                // expressions are only needed for richer source prose.
-                fullyExecutable++;
-                continue;
+                expression = record.getItemRequirementExpression();
+                unresolvedItems = Collections.emptyList();
+                if (expression == null)
+                {
+                    // Curated typed requirements are the resolver's executable
+                    // representation for simple exact item lists. Imported
+                    // expressions are only needed for richer source prose.
+                    fullyExecutable++;
+                    continue;
+                }
+            }
+            else
+            {
+                expression = result.getExpression();
+                unresolvedItems = result.getUnresolved();
             }
             // A VALUE field may contain only explicitly optional preparation.
             // Once the parser proves every line non-mandatory, that is the same
             // executable outcome as source NONE: there is no ownership gate.
-            int checks = countChecks(result.getExpression());
+            int checks = countChecks(expression);
             explicitCheckExpressions += checks;
-            if (result.getUnresolved().isEmpty() && checks == 0)
+            if (unresolvedItems.isEmpty() && checks == 0)
                 fullyExecutable++;
-            else if (result.getExpression() != null
-                    || result.getUnresolved().isEmpty())
+            else if (expression != null || unresolvedItems.isEmpty())
                 partiallyExecutable++;
             else
             {
                 rawOnly++;
                 rawOnlyQuests.add(quest.getName());
             }
-            for (String raw : result.getUnresolved())
+            for (String raw : unresolvedItems)
             {
                 unsupportedExpressions++;
                 unresolved.add(new Unresolved(quest.getName(), "items", raw,

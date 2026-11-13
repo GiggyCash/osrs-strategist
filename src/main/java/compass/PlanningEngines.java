@@ -1387,7 +1387,7 @@ class QuestRequirementResolver
             Integer observedQuestPoints = data.slayer() == null ? null
                     : data.slayer().getQuestPoints();
             if (observedQuestPoints == null)
-                missing.add(new Preparation("Verify at least "
+                missing.add(new Preparation(get(1924)
                         + definition.getQuestPointsRequired() + " quest points",
                         Safety.harmless(definition.freeToPlay)));
             else if (observedQuestPoints < definition.getQuestPointsRequired())

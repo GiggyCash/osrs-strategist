@@ -31,9 +31,9 @@ sections rather than conventional reward sections; the generator proves those
 known structures as NOT_APPLICABLE while typed local quest definitions retain
 their requirements, checks, and durable unlocks.
 
-The executable quest-item census currently reports 216 identities, 192 with
-item requirements, 89 deterministically executable-or-verified-NONE, 127
-partially executable, 0 raw-only, 0 unsupported item lines, 342 explicit
+The executable quest-item census currently reports 216 identities, 193 with
+item requirements, 88 deterministically executable-or-verified-NONE, 128
+partially executable, 0 raw-only, 0 unsupported item lines, 343 explicit
 semantic checks, 0 parser failures, and 0 source-missing fields. Conditional,
 skill-dependent, variable-quantity, generic-loadout, and quest-phase evidence
 becomes a specific `CHECK_NEEDED` action rather than a fake exact item. The
