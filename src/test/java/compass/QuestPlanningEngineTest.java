@@ -110,6 +110,40 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void observedQuestPointsResolveOnlyTheRemainingGate()
+    {
+        QuestDefinition definition = new QuestDefinition("Quest-point test", true,
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), null, 32, Collections.emptyList(),
+                "Verified start", Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+
+        QuestResolution ready = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40))
+                .slayer(TestFixtures.slayerSnapshot(null, 0, null, null, 0,
+                        null, 40, null, null, Confidence.CHECK_NEEDED))
+                .build()));
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
+
+        QuestResolution shortfall = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40))
+                .slayer(TestFixtures.slayerSnapshot(null, 0, null, null, 0,
+                        null, 20, null, null, Confidence.CHECK_NEEDED))
+                .build()));
+        assertEquals(Confidence.CHECK_NEEDED, shortfall.getConfidence());
+        assertTrue(shortfall.getGuidance().getAction()
+                .contains("Earn 12 more quest points"));
+        assertTrue(shortfall.getGuidance().getSupplies().contains("20/32 observed"));
+
+        QuestResolution unknown = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40)).build()));
+        assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
+        assertTrue(unknown.getGuidance().getAction()
+                .contains("Verify at least 32 quest points"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(

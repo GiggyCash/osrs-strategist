@@ -1383,9 +1383,24 @@ class QuestRequirementResolver
         }
 
         if (definition.getQuestPointsRequired() > 0)
-            missing.add(new Preparation(get(1924)
-                    + definition.getQuestPointsRequired() + " quest points",
-                    Safety.harmless(definition.freeToPlay)));
+        {
+            Integer observedQuestPoints = data.slayer() == null ? null
+                    : data.slayer().getQuestPoints();
+            if (observedQuestPoints == null)
+                missing.add(new Preparation("Verify at least "
+                        + definition.getQuestPointsRequired() + " quest points",
+                        Safety.harmless(definition.freeToPlay)));
+            else if (observedQuestPoints < definition.getQuestPointsRequired())
+            {
+                int remaining = definition.getQuestPointsRequired()
+                        - observedQuestPoints;
+                missing.add(new Preparation("Earn " + remaining
+                        + " more quest points", "Earn " + remaining
+                        + " more quest points (" + observedQuestPoints + "/"
+                        + definition.getQuestPointsRequired() + " observed)",
+                        Safety.harmless(definition.freeToPlay)));
+            }
+        }
         for (String check : definition.getAccessChecks())
         {
             if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))
