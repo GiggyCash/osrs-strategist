@@ -225,6 +225,18 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void fishingContestDoesNotDuplicateItsTypedSkillRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Fishing Contest");
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Required items:"));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

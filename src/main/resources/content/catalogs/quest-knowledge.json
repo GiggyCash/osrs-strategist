@@ -4847,8 +4847,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Spade 5 coins (10 if you buy a fishing rod from Jack) Garlic (obtainable during quest) Fishing rod or Pearl fishing rod (oily fishing rod does not work) Red vine worm (obtainable during quest)",
-      "Access requirements: link\u003dFishing|alt\u003dFishing 10 Fishing [ not boostable ] [ required to start ]"
+      "Required items: Spade 5 coins (10 if you buy a fishing rod from Jack) Garlic (obtainable during quest) Fishing rod or Pearl fishing rod (oily fishing rod does not work) Red vine worm (obtainable during quest)"
     ],
     "startLocation": "Talk to Austri east of White Wolf Mountain or Vestri to the west of it, by either tunnel entrance.",
     "unlocks": [
