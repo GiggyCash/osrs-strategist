@@ -5593,19 +5593,21 @@
       "Horror from the Deep",
       "Rag and Bone Man I",
       "Skippy and the Mogres",
-      "Creature of Fenkenstrain",
       "Waterfall Quest",
       "Zogre Flesh Eaters"
     ],
+    "startedPrerequisites": [
+      "Creature of Fenkenstrain"
+    ],
     "skillRequirements": {
-      "DEFENCE": 20,
       "SLAYER": 40
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: 27 pots 27 jugs of vinegar (bought from Fortunato for 27 coins) 27 sets of logs (any logs - normal logs can be obtained on the path just below the Odd Old Man\u0027s hut if you bring an axe). Tinderbox Light source Dusty key (if under link\u003dAgility|alt\u003dAgility 70 Agility ) Rope Combat gear to kill zogres (an ogre composite bow with brutal arrows or runes for Crumble Undead casts is advised) Slayer equipment: Ice coolers Fishing explosives Mirror shield or V\u0027s shield (unless using a workaround - see g…",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 40 Slayer [ boostable ] [ not required to start ] link\u003dDefence|alt\u003dDefence 20 Defence [ not boostable ] [ not required to start ] to wield a mirror shield to kill a basilisk (though not necessary; see below) Completed Rag and Bone Man I [ required to start ] Completed Skippy and the Mogres [ not required to start ] Partial completion of Creature of Fenkenstrain [ not required to start ] The ability to kill several high-level monsters",
+      "Verify a legal basilisk route; 20 Defence is needed only to wield a mirror shield",
+      "Verify legal setups for the high-level bone targets",
       "Combat encounters: Several (27): see below."
     ],
     "startLocation": "Talk to the Odd Old Man in Silvarea north-east of Varrock, by the Limestone Mine.",

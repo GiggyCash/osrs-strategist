@@ -310,6 +310,27 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ragAndBoneTwoDoesNotHardGatePartialQuestOrOptionalDefence()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Rag and Bone Man II");
+        assertEquals(java.util.Collections.singletonList(
+                "Creature of Fenkenstrain"), quest.getStartedPrerequisites());
+        assertFalse(quest.getPrerequisites().contains(
+                "Creature of Fenkenstrain"));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.DEFENCE));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify a legal basilisk route; 20 Defence is needed only "
+                        + "to wield a mirror shield"));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify legal setups for the high-level bone targets"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
