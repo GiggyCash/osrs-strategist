@@ -435,8 +435,13 @@ class DiaryCandidateProvider implements CandidateProvider
                             && !(requirement.isStartedOnly()
                             && status == QuestStatus.IN_PROGRESS)) return false;
                     break;
-                case COMBAT_LEVEL:
                 case QUEST_POINTS:
+                    SlayerSnapshot slayer = context.data().slayer();
+                    if (slayer == null || slayer.getQuestPoints() == null
+                            || slayer.getQuestPoints() < requirement.getLevel())
+                        return false;
+                    break;
+                case COMBAT_LEVEL:
                 case ALTERNATIVE_CHECK:
                 default:
                     return false;
@@ -456,6 +461,9 @@ class DiaryCandidateProvider implements CandidateProvider
             else if (requirement.getKind() == DiaryTaskRequirement.Kind.QUEST)
                 values.add(requirement.getQuest()
                         + (requirement.isStartedOnly() ? " started" : " complete"));
+            else if (requirement.getKind()
+                    == DiaryTaskRequirement.Kind.QUEST_POINTS)
+                values.add(requirement.getLevel() + " quest points");
         }
         return values.isEmpty()
                 ? get(212)
