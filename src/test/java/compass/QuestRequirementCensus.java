@@ -60,15 +60,20 @@ public final class QuestRequirementCensus
             }
             for (String uncertainty : record.getFieldUncertainties())
                 auditUncertainty(quest.getName(), uncertainty);
-            if (record.getItemRequirements().isEmpty())
+            ImportedQuestItemRequirementCatalog.Result result =
+                    imported.resultFor(quest.getName());
+            boolean hasTypedRequirements = !record.getItemRequirements().isEmpty()
+                    || record.getItemRequirementExpression() != null;
+            boolean hasImportedRequirements = result != null
+                    && (result.getExpression() != null
+                    || !result.getUnresolved().isEmpty());
+            if (!hasTypedRequirements && !hasImportedRequirements)
             {
                 fullyExecutable++;
                 continue;
             }
             questsWithItemRequirements++;
-            ImportedQuestItemRequirementCatalog.Result result =
-                    imported.resultFor(quest.getName());
-            if (result == null)
+            if (!hasImportedRequirements)
             {
                 // Curated typed requirements are the resolver's executable
                 // representation for simple exact item lists. Imported
