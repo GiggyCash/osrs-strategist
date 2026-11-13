@@ -592,3 +592,17 @@ This migration changes no production Java, removes 705 legacy-data characters,
 and adds 2,925 reviewed-data characters. The full clean suite is 956/956, the
 packaged JAR is 1,256,350 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens.
+
+## Plant pots reviewed; quest-locked pot lids fail closed
+
+Moved the two plant-pot shaping/firing actions into the shared reviewed catalog
+with explicit P2P access and exact Soft clay / Unfired plant pot identities.
+Firing remains attempt-based and does not promise an output. Removed both pot-lid
+legacy rows instead of certifying them: crafting pot lids requires partial One
+Small Favour progress, which the universal recipe contract cannot currently
+observe. They now remain unresolved across every membership state.
+
+This migration changes no production Java, removes 494 legacy-data characters,
+and adds 1,009 reviewed-data characters. The full clean suite is 957/957, the
+packaged JAR is 1,256,325 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens.

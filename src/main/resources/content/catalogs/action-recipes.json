@@ -1,8 +1,4 @@
 [
-  {"skill":"CRAFTING","match":"unfired plant pot","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
-  {"skill":"CRAFTING","match":"unfired pot lid","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
-  {"skill":"CRAFTING","match":"empty plant pot","setup":"Use a pottery oven.","inputs":["Unfired plant pot"],"units":[1]},
-  {"skill":"CRAFTING","match":"pot lid","setup":"Use a pottery oven.","inputs":["Unfired pot lid"],"units":[1]},
   {"skill":"CRAFTING","match":"molten glass","setup":"Conventional furnace glassmaking; Superglass Make has different yield math.","inputs":["Bucket of sand","Soda ash"],"units":[1,1]},
   {"skill":"CRAFTING","match":"tiara","setup":"Bring a tiara mould to the Edgeville furnace, smelt each silver bar, bank, and repeat.","inputs":["Silver bar"],"units":[1]},
   {"skill":"CRAFTING","match":"gold tiara","setup":"Bring a tiara mould to a furnace.","inputs":["Gold bar"],"units":[1]},

@@ -1230,6 +1230,50 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "CRAFTING",
+    "match": "unfired plant pot",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_plant_pot",
+    "sourceRevision": 15185899,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty plant pot",
+    "inputs": [
+      "Unfired plant pot"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      5352
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Fire the unfired plant pot in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_plant_pot",
+    "sourceRevision": 15183864,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "MAGIC",
     "match": "wind strike",
     "inputs": [

@@ -315,6 +315,45 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void plantPotsAreReviewedWhileQuestLockedPotLidsFailClosed()
+    {
+        UniversalActionRecipe forming = resolver.resolve(
+                action(Skill.CRAFTING, "Unfired plant pot", 20), 12,
+                Membership.P2P);
+        assertTrue(forming.hasExactInputs());
+        assertInput(forming, "Soft clay", 12, ItemID.SOFTCLAY);
+
+        UniversalActionRecipe firing = resolver.resolve(
+                action(Skill.CRAFTING, "Empty plant pot", 17.5f), 12,
+                Membership.P2P);
+        assertTrue(firing.hasExactInputs());
+        assertInput(firing, "Unfired plant pot", 12,
+                ItemID.PLANTPOT_UNFIRED);
+        assertTrue(firing.getSetup().contains("not guaranteed"));
+
+        for (Membership membership : new Membership[] {
+                Membership.F2P, Membership.UNKNOWN})
+        {
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Unfired plant pot", 20), 12, membership)
+                    .hasExactInputs());
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Empty plant pot", 17.5f), 12, membership)
+                    .hasExactInputs());
+        }
+        for (String name : new String[] {"Unfired pot lid", "Pot lid"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 20), 12,
+                        membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void spinningRecipesUseReviewedIdentitiesAndMembership()
     {
         UniversalActionRecipe wool = resolver.resolve(

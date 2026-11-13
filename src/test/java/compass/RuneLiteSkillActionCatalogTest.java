@@ -120,9 +120,11 @@ public class RuneLiteSkillActionCatalogTest
                 "runelite:crafting:unfired_pot=unfired_pot",
                 "runelite:crafting:unfired_pie_dish=unfired_pie_dish",
                 "runelite:crafting:unfired_bowl=unfired_bowl",
+                "runelite:crafting:unfired_plant_pot=unfired_plant_pot",
                 "runelite:crafting:pot=pot",
                 "runelite:crafting:pie_dish=pie_dish",
-                "runelite:crafting:bowl=bowl"})
+                "runelite:crafting:bowl=bowl",
+                "runelite:crafting:empty_plant_pot=empty_plant_pot"})
             assertTrue(identity, identities.contains(identity));
     }
 
