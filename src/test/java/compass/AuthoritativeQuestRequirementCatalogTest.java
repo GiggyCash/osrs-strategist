@@ -36,6 +36,8 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertFalse(bloodMoon.getStartLocation().isEmpty());
         assertTrue(bloodMoon.getAccessChecks().stream().anyMatch(
                 check -> check.startsWith("Required items:")));
+        assertFalse(bloodMoon.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
     }
 
     @Test
