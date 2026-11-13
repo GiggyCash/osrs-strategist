@@ -6549,12 +6549,17 @@
     "name": "Curse of the Empty Lord",
     "freeToPlay": false,
     "prerequisites": [],
+    "startedPrerequisites": [
+      "Desert Treasure I",
+      "The Restless Ghost"
+    ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ring of visibility Ghostspeak amulet (Morytania legs 2 or higher may be used instead, except when otherwise noted) Some players may need a knife or slash weapon",
-      "Access requirements: Started Desert Treasure I and The Restless Ghost link\u003dThieving|alt\u003dThieving 53 Thieving [ not boostable ] [ required to start ] to obtain the Ring of visibility link\u003dPrayer|alt\u003dPrayer 31 Prayer [ not boostable ] [ not required to start ] (Some players will need this to access the 2nd floor of the Edgeville Monastery)"
+      "If the ring of visibility is not already owned, obtain it with 53 Thieving",
+      "Verify 31 Prayer only if Edgeville Monastery second-floor access is needed"
     ],
     "startLocation": "Talk to the mysterious ghost (Valdez) near Glarial\u0027s Tomb.",
     "unlocks": [

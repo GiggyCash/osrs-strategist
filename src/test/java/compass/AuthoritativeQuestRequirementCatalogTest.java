@@ -274,6 +274,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void emptyLordTypesStartedQuestsWithoutHardGatingConditionalSkills()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Curse of the Empty Lord");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getStartedPrerequisites().containsAll(
+                java.util.Arrays.asList(
+                        "Desert Treasure I", "The Restless Ghost")));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().contains(
+                "If the ring of visibility is not already owned, obtain it "
+                        + "with 53 Thieving"));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify 31 Prayer only if Edgeville Monastery second-floor "
+                        + "access is needed"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
