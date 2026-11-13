@@ -2528,7 +2528,11 @@
     "name": "Tears of Guthix",
     "freeToPlay": false,
     "prerequisites": [],
-    "skillRequirements": {},
+    "skillRequirements": {
+      "FIREMAKING": 49,
+      "CRAFTING": 20,
+      "MINING": 20
+    },
     "itemRequirements": [
       {
         "name": "Sapphire lantern",

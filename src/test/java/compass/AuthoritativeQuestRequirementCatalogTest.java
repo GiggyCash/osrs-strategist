@@ -123,6 +123,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void tearsOfGuthixPromotesCompletionSkillsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tears of Guthix");
+        assertEquals(43, quest.getQuestPointsRequired());
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().contains(
+                "Use a lit sapphire lantern and a safe light-source route "
+                        + "through Lumbridge Swamp Caves"));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
