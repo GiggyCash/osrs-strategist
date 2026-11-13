@@ -51,7 +51,12 @@ public class RuneLiteSkillActionCatalogTest
                 "runelite:herblore:attack_potion_3=Attack potion(3)",
                 "runelite:herblore:antipoison_3=Antipoison(3)",
                 "runelite:herblore:strength_potion_3=Strength potion(3)",
-                "runelite:herblore:restore_potion_3=Restore potion(3)"})
+                "runelite:herblore:restore_potion_3=Restore potion(3)",
+                "runelite:herblore:energy_potion_3=Energy potion(3)",
+                "runelite:herblore:defence_potion_3=Defence potion(3)",
+                "runelite:herblore:agility_potion_3=Agility potion(3)",
+                "runelite:herblore:combat_potion_3=Combat potion(3)",
+                "runelite:herblore:prayer_potion_3=Prayer potion(3)"})
             assertTrue(identity, identities.contains(identity));
     }
 

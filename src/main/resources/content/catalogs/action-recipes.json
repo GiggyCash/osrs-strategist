@@ -1,9 +1,4 @@
 [
-  {"skill":"HERBLORE","match":"energy potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Harralander","Chocolate dust","Vial of water"],"units":[1,1,1]},
-  {"skill":"HERBLORE","match":"defence potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Ranarr weed","White berries","Vial of water"],"units":[1,1,1]},
-  {"skill":"HERBLORE","match":"agility potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Toadflax","Toad's legs","Vial of water"],"units":[1,1,1]},
-  {"skill":"HERBLORE","match":"combat potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Harralander","Goat horn dust","Vial of water"],"units":[1,1,1]},
-  {"skill":"HERBLORE","match":"prayer potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Ranarr weed","Snape grass","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"super attack","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Irit leaf","Eye of newt","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"superantipoison","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Irit leaf","Unicorn horn dust","Vial of water"],"units":[1,1,1]},
   {"skill":"HERBLORE","match":"fishing potion","setup":"Make the complete potion from herb, secondary, and vial.","inputs":["Avantoe","Snape grass","Vial of water"],"units":[1,1,1]},

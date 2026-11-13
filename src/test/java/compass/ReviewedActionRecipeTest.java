@@ -52,7 +52,7 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(218, recipes.length);
+        assertEquals(223, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
@@ -74,6 +74,16 @@ public class ReviewedActionRecipeTest
                 "Limpwurt root", 225);
         assertHerblore("Restore potion(3)", "Harralander", 255,
                 "Red spiders' eggs", 223);
+        assertHerblore("Energy potion(3)", "Harralander", 255,
+                "Chocolate dust", 1975);
+        assertHerblore("Defence potion(3)", "Ranarr weed", 257,
+                "White berries", 239);
+        assertHerblore("Agility potion(3)", "Toadflax", 2998,
+                "Toad's legs", 2152);
+        assertHerblore("Combat potion(3)", "Harralander", 255,
+                "Goat horn dust", 9736);
+        assertHerblore("Prayer potion(3)", "Ranarr weed", 257,
+                "Snape grass", 231);
     }
 
     @Test

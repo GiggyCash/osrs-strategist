@@ -693,3 +693,15 @@ This migration changes no production Java, removes 752 legacy-data characters,
 and adds 2,096 reviewed-data characters. The full clean suite is 964/964, the
 packaged JAR is 1,258,234 bytes, and the production-Java audit remains
 1,078,816 characters / 269,704 estimated tokens.
+
+## Five common Herblore potions use reviewed identities
+
+Moved Energy potion(3), Defence potion(3), Agility potion(3), Combat potion(3),
+and Prayer potion(3) into the shared reviewed catalog. Their exact ingredients,
+P2P production boundary, Wiki revisions, and current RuneLite action names are
+now explicit. Fourteen Herblore rows remain in the legacy table.
+
+This migration changes no production Java, removes 937 legacy-data characters,
+and adds 2,623 reviewed-data characters. The full clean suite remains 964/964,
+the packaged JAR is 1,258,357 bytes, and the production-Java audit remains
+1,078,816 characters / 269,704 estimated tokens.
