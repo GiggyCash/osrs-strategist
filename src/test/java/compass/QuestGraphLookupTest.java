@@ -120,7 +120,7 @@ public class QuestGraphLookupTest
     private static QuestDefinition quest(String name, String... prerequisites)
     {
         return new QuestDefinition(name, false, Arrays.asList(prerequisites),
-                Collections.emptyMap(), Collections.emptyList(), null, 0,
+                Collections.emptyMap(), Collections.emptyList(), null, 0, 0,
                 Collections.emptyList(), "Test", Collections.emptyList(),
                 Collections.emptyMap(), Collections.emptyList());
     }

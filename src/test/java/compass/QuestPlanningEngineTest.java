@@ -83,7 +83,7 @@ public class QuestPlanningEngineTest
     {
         Map<Skill, Integer> requirements = new EnumMap<>(Skill.class);
         requirements.put(Skill.DEFENCE, 40);
-        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), requirements, Collections.emptyList(), null, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
+        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), requirements, Collections.emptyList(), null, 0, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
         AccountSnapshot pure = account(Membership.F2P, 60, 60, 1);
         QuestResolution resolution = TestFixtures.questRequirementResolver().resolve(
                 definition, context(GameData.builder(pure).build()));
@@ -115,7 +115,7 @@ public class QuestPlanningEngineTest
     {
         QuestDefinition definition = new QuestDefinition("Quest-point test", true,
                 Collections.emptyList(), Collections.emptyMap(),
-                Collections.emptyList(), null, 32, Collections.emptyList(),
+                Collections.emptyList(), null, 32, 0, Collections.emptyList(),
                 "Verified start", Collections.emptyList(), Collections.emptyMap(),
                 Collections.emptyList());
         QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
@@ -142,6 +142,42 @@ public class QuestPlanningEngineTest
         assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
         assertTrue(unknown.getGuidance().getAction()
                 .contains("Verify at least 32 quest points"));
+    }
+
+    @Test
+    public void observedCombatLevelResolvesTypedQuestGate()
+    {
+        QuestDefinition dreamMentor = new QuestKnowledgeCatalog()
+                .definitionFor("Dream Mentor");
+        assertEquals(85, dreamMentor.getCombatLevelRequired());
+        assertFalse(dreamMentor.getAccessChecks().stream().anyMatch(
+                value -> value.contains("combat level 85")));
+
+        QuestDefinition definition = new QuestDefinition("Combat gate", false,
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList(), null, 0, 85,
+                Collections.emptyList(), "Verified start",
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+        AccountSnapshot low = account(Membership.P2P, 60, 60, 60);
+        int observed = SlayerMasterCatalog.combatLevel(low);
+        QuestResolution shortfall = resolver.resolve(definition,
+                context(GameData.builder(low).build()));
+        assertEquals(Confidence.CHECK_NEEDED, shortfall.getConfidence());
+        assertEquals("Raise combat level from " + observed + " to 85.",
+                shortfall.getGuidance().getAction());
+
+        AccountSnapshot pure = account(Membership.P2P, 60, 60, 1);
+        StrategyContext pureContext = context(GameData.builder(pure).build());
+        QuestResolution unsafeForPure = resolver.resolve(definition,
+                pureContext);
+        assertFalse(new CandidateSafetyPolicy().isAllowed(
+                unsafeForPure.getSafetyEvidence(), pureContext));
+
+        QuestResolution ready = resolver.resolve(definition, context(
+                GameData.builder(account(Membership.P2P, 70, 70, 70)).build()));
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
     }
 
     @Test
@@ -181,7 +217,7 @@ public class QuestPlanningEngineTest
     {
         QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
                         ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
-                        ItemRequirementScope.CARRIED), 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
+                        ItemRequirementScope.CARRIED), 0, 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
         QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
 
         QuestResolution blocked = resolver.resolve(definition,

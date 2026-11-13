@@ -18,6 +18,7 @@ public final class QuestDefinition
     final List<QuestItemRequirement> itemRequirements;
     final ItemRule itemRequirementExpression;
     final int questPointsRequired;
+    final int combatLevelRequired;
     final List<String> accessChecks;
     final String startLocation;
     final List<String> unlocks;

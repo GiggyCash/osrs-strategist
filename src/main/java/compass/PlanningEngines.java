@@ -1401,6 +1401,16 @@ class QuestRequirementResolver
                         Safety.harmless(definition.freeToPlay)));
             }
         }
+        if (definition.getCombatLevelRequired() > 0)
+        {
+            int current = SlayerMasterCatalog.combatLevel(account);
+            if (current < definition.getCombatLevelRequired())
+                missing.add(new Preparation("Raise combat level from "
+                        + current + " to "
+                        + definition.getCombatLevelRequired(),
+                        Safety.potentiallyIrreversible(
+                                definition.freeToPlay)));
+        }
         for (String check : definition.getAccessChecks())
         {
             if (check != null && check.startsWith(IMPORTED_ITEM_PREFIX))

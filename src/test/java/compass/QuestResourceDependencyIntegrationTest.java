@@ -85,7 +85,7 @@ public class QuestResourceDependencyIntegrationTest
     {
         ItemRule requirement = ItemRule.item(
                 "Molten glass", 8, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("Dependency test quest", false, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
+        QuestDefinition quest = new QuestDefinition("Dependency test quest", false, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         ItemsState bank = new ItemsState(Collections.singletonList(
                 new ItemState(ItemID.MOLTEN_GLASS, "Molten glass", 5)), 1L);
 

@@ -3529,8 +3529,9 @@
       }
     ],
     "questPointsRequired": 0,
+    "combatLevelRequired": 85,
     "accessChecks": [
-      "Verify combat level 85 and three suitable food types totalling the required feeding setup",
+      "Verify three suitable food types totalling the required feeding setup",
       "Prepare to defeat four bosses consecutively without prayer; this is unsafe death content for Hardcore accounts"
     ],
     "startLocation": "Talk to the fallen man in the small cave in the Lunar Isle mine.",
