@@ -3015,8 +3015,6 @@ class UniversalActionRecipeResolver
                     "runelite:runecraft:earth_rune",
                     "runelite:runecraft:fire_rune",
                     "runelite:runecraft:body_rune"));
-    private static final Recipe[] EXACT = BundledCatalogLoader.array(
-            get(1582), Recipe[].class);
     private static final ReviewedActionRecipeCatalog REVIEWED = new ReviewedActionRecipeCatalog();
 
     public UniversalActionRecipe resolve(ActionDef action, int count,
@@ -3028,8 +3026,6 @@ class UniversalActionRecipeResolver
         var lower = name.toLowerCase(Locale.ROOT);
         var reviewed = REVIEWED.recipe(action.getSkill(), lower);
         if (reviewed != null) return reviewed.build(count, membership);
-        var exact = exact(action.getSkill(), lower);
-        if (exact != null) return exact.build(count);
         switch (action.getSkill())
         {
             case AGILITY: return none(get(899));
@@ -3120,24 +3116,6 @@ class UniversalActionRecipeResolver
                 ? null : new MethodInput(name, itemId, (int) quantity);
     }
 
-    private static Recipe exact(Skill skill, String name)
-    {
-        name = legacyRecipeName(skill, name);
-        for (Recipe recipe : EXACT)
-            if (skill.name().equals(recipe.skill)
-                    && (recipe.contains ? name.contains(recipe.match)
-                    : name.equals(recipe.match))) return recipe;
-        return null;
-    }
-
-    private static String legacyRecipeName(Skill skill, String name)
-    {
-        if (skill == Skill.HERBLORE && name != null
-                && (name.endsWith("(3)") || name.endsWith("(4)")))
-            return name.substring(0, name.length() - 3).trim();
-        return name;
-    }
-
     private static UniversalActionRecipe runecraft(ActionDef action, int count,
             Membership membership)
     {
@@ -3172,17 +3150,5 @@ class UniversalActionRecipeResolver
     private static UniversalActionRecipe unknown(String setup)
     {
         return UniversalActionRecipe.unknown(setup);
-    }
-    private static final class Recipe
-    {
-        private String skill, match, setup;
-        private String[] inputs;
-        private int[] units;
-        private boolean contains;
-
-        private UniversalActionRecipe build(int count)
-        {
-            return UniversalActionRecipe.scaled(inputs, null, units, count, setup);
-        }
     }
 }

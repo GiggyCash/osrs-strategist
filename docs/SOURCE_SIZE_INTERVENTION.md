@@ -719,3 +719,15 @@ This migration changes no production Java, removes 2,615 legacy-data characters,
 and adds 7,309 reviewed-data characters. The full clean suite remains 964/964,
 the packaged JAR is 1,258,432 bytes, and the production-Java audit remains
 1,078,816 characters / 269,704 estimated tokens.
+
+## Dead legacy resolver removed
+
+With the legacy action-recipe table guarded empty, removed its runtime loader,
+exact/substring matcher, Herblore dose-stripping shim, and private recipe DTO.
+The reviewed catalog is now the only generic consumed-input path; the empty
+legacy resource remains solely as an explicit regression boundary.
+
+This cleanup removes 34 production-Java lines / 1,212 characters (303 char/4
+proxy tokens) and 1,178 packaged-JAR bytes. The full clean suite remains
+964/964, the packaged JAR is 1,257,254 bytes, and the production-Java audit is
+1,077,604 characters / 269,401 estimated tokens.

@@ -481,4 +481,5 @@ and setup wording instead of inheriting the three-dose potion contract.
 `action-recipes.json` is now an empty compatibility resource. A regression gate
 requires it to remain empty, so new ingredient knowledge must include exact item
 identities, membership, stackability, setup, review date, and pinned provenance
-instead of reintroducing unreviewed legacy rows.
+instead of reintroducing unreviewed legacy rows. The runtime resolver no longer
+loads this resource or carries the former substring/dose-normalization matcher.
