@@ -4509,7 +4509,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: 3 dwellberries Ring of life Any pickaxe Any crossbow (except the love crossbow) Mith grapple (Hallowed grapple will not work) Insulated boots",
-      "Access requirements: link\u003dMining|alt\u003dMining 64 Mining [ not boostable ] Category:Unknown start requirement status link\u003dRanged|alt\u003dRanged 62 Ranged [ not boostable ] Category:Unknown start requirement status link\u003dThieving|alt\u003dThieving 62 Thieving [ not boostable ] Category:Unknown start requirement status link\u003dAgility|alt\u003dAgility 61 Agility [ not boostable ] Category:Unknown start requirement status link\u003dStrength|alt\u003dStrength 58 Strength [ not boostable ] Category:Unknown start requirement status link\u003dSlayer|alt\u003dSla…",
       "Combat encounters: Golem guard (level 141) Arrav (level 339)"
     ],
     "startLocation": "Talk to Elias White at the Uzer Oasis.",

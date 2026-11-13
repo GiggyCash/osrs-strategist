@@ -183,6 +183,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void curseOfArravDoesNotDuplicateTypedAccessRequirements()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Curse of Arrav");
+        assertEquals(2, quest.getPrerequisites().size());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Arrav (level 339)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
