@@ -4420,7 +4420,6 @@
     "freeToPlay": false,
     "prerequisites": [],
     "skillRequirements": {
-      "WOODCUTTING": 50,
       "CRAFTING": 30,
       "AGILITY": 30,
       "THIEVING": 15,
@@ -4431,7 +4430,7 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: 10 oak planks 10 steel nails Hammer Spade Clockwork or a steel bar to make one Plank Silk Raw cod or the Ring of Charos(a) Swamp tar 5 feathers (only regular chicken feathers work) Mahogany plank Leather Cowbells (obtainable only during quest)",
-      "Access requirements: link\u003dHunter|alt\u003dHunter 10 Hunter [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 30 Agility [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] [ required to start ] \u0027\"`UNIQ--ref-00000063-QINU`\"\u0027 link\u003dConstruction|alt\u003dConstruction 34 Construction [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 15 Thieving [ not boostable ] [ required to start ] Access to a crafting table 3",
+      "Verify access to a crafting table 3",
       "Combat encounters: 1–3 Icelords (level 51)"
     ],
     "startLocation": "Talk to Larry at Ardougne Zoo.",

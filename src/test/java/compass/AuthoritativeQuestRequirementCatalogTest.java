@@ -350,6 +350,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void coldWarDoesNotConfuseMahoganyPlankWithWoodcuttingRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Cold War");
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.WOODCUTTING));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify access to a crafting table 3"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Icelords (level 51)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
