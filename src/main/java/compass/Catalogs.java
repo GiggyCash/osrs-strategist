@@ -1279,7 +1279,7 @@ class SlayerMasterCatalog
                 && status == QuestStatus.IN_PROGRESS;
     }
 
-    private static int combatLevel(AccountSnapshot account)
+    static int combatLevel(AccountSnapshot account)
     {
         double base = .25 * (account.level(DEFENCE) + account.level(HITPOINTS)
                 + Math.floor(account.level(PRAYER) / 2.0));

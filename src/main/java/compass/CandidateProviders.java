@@ -442,6 +442,9 @@ class DiaryCandidateProvider implements CandidateProvider
                         return false;
                     break;
                 case COMBAT_LEVEL:
+                    if (SlayerMasterCatalog.combatLevel(account)
+                            < requirement.getLevel()) return false;
+                    break;
                 case ALTERNATIVE_CHECK:
                 default:
                     return false;
@@ -464,6 +467,9 @@ class DiaryCandidateProvider implements CandidateProvider
             else if (requirement.getKind()
                     == DiaryTaskRequirement.Kind.QUEST_POINTS)
                 values.add(requirement.getLevel() + " quest points");
+            else if (requirement.getKind()
+                    == DiaryTaskRequirement.Kind.COMBAT_LEVEL)
+                values.add(requirement.getLevel() + " combat");
         }
         return values.isEmpty()
                 ? get(212)

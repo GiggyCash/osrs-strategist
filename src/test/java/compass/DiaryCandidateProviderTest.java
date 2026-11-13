@@ -61,6 +61,25 @@ public class DiaryCandidateProviderTest
                 .candidates(context(snapshot, null)).isEmpty());
     }
 
+    @Test
+    public void combatTaskUsesCalculatedAccountCombatLevel()
+    {
+        DiaryTaskDefinition task = new DiaryTaskCatalog()
+                .forTier("Varrock", DiaryTier.MEDIUM).stream()
+                .filter(value -> value.getTask().contains("Vannaka"))
+                .findFirst().orElseThrow(AssertionError::new);
+        DiarySnapshot snapshot = snapshot("Varrock", DiaryTier.MEDIUM,
+                task.getId());
+
+        Recommendation ready = new DiaryCandidateProvider()
+                .candidates(context(snapshot, null, 99)).get(0);
+        assertEquals(task.getId(), ready.getId());
+        assertTrue(ready.getGuidance().getSupplies().contains("40 combat"));
+
+        assertTrue(new DiaryCandidateProvider()
+                .candidates(context(snapshot, null, 1)).isEmpty());
+    }
+
     private static DiarySnapshot snapshot(Map<String, Boolean> tasks)
     {
         Map<String, Integer> completed = Collections.singletonMap("Ardougne", 0);
@@ -93,6 +112,12 @@ public class DiaryCandidateProviderTest
     private static StrategyContext context(DiarySnapshot snapshot,
             Integer questPoints)
     {
+        return context(snapshot, questPoints, 99);
+    }
+
+    private static StrategyContext context(DiarySnapshot snapshot,
+            Integer questPoints, int combatStats)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -100,6 +125,10 @@ public class DiaryCandidateProviderTest
             levels.put(skill, 99);
             xp.put(skill, 13_034_431);
         }
+        for (Skill skill : new Skill[] {Skill.ATTACK, Skill.STRENGTH,
+                Skill.DEFENCE, Skill.HITPOINTS, Skill.PRAYER, Skill.RANGED,
+                Skill.MAGIC})
+            levels.put(skill, combatStats);
         AccountSnapshot account = new AccountSnapshot("Diary", 1L, 0,
                 "NORMAL", Membership.P2P, 1, 2277, 0L, levels, xp);
         GameData.Builder builder = GameData.builder(account)
