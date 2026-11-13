@@ -331,6 +331,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Elemental Workshop I");
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Earth elemental (level 35)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

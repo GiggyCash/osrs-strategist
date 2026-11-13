@@ -4691,13 +4691,12 @@
     "skillRequirements": {
       "CRAFTING": 20,
       "SMITHING": 20,
-      "MINING": 30
+      "MINING": 20
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Knife (obtainable during the quest) or a slash weapon (e.g. dagger or scimitar) Pickaxe Needle (obtainable during the quest, Costume needle does not work) Thread Leather (obtainable during the quest) Hammer 4 coal (4 more for each additional bar you would like to produce)",
-      "Access requirements: link\u003dMining|alt\u003dMining 20 Mining [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000004-QINU`\"\u0027 link\u003dSmithing|alt\u003dSmithing 20 Smithing [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ]",
       "Combat encounters: Earth elemental (level 35)"
     ],
     "startLocation": "Search the bookcase in the house immediately south-west of the Seers\u0027 Village bank.",
