@@ -168,6 +168,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Devious Minds");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Abyssal creatures level 41+")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

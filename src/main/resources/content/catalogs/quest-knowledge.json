@@ -4626,7 +4626,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: A mithril 2h sword A bow string A non-degraded large or colossal pouch :(You will lose all 3 items!) unless a colossal pouch is used.",
-      "Access requirements: link\u003dSmithing|alt\u003dSmithing 65 Smithing [ boostable ] [ not required to start ] link\u003dRunecraft|alt\u003dRunecraft 50 Runecraft [ not boostable ] Category:Unknown start requirement status link\u003dFletching|alt\u003dFletching 50 Fletching [ boostable ] Category:Unknown start requirement status Completion of the following quests: Wanted! Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Goblin Diplomacy Rune Mysteries Priest in Peril Enter the Abyss Troll Stronghold Death Plateau Doric\u0027s Q…",
       "Combat encounters: Abyssal creatures level 41+ (if not using Guardians of the Rift to obtain a large pouch)"
     ],
     "startLocation": "Talk to the monk outside the Paterdomus Temple, at the northern end of the River Salve.",
