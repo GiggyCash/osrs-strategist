@@ -55,6 +55,20 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void swanSongKeepsCombatEvidenceWithoutDuplicatingTypedAccess()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Swan Song");
+        assertEquals(100, quest.getQuestPointsRequired());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Sea Troll Queen (level 170)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
