@@ -155,6 +155,19 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ethicallyAcquiredAntiquitiesPromotesCompleteStartContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Ethically Acquired Antiquities");
+        assertEquals(2, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Children of the Sun", "Shield of Arrav")));
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

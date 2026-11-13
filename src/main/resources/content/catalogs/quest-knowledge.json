@@ -4767,13 +4767,16 @@
   {
     "name": "Ethically Acquired Antiquities",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "Children of the Sun",
+      "Shield of Arrav"
+    ],
+    "skillRequirements": {
+      "THIEVING": 25
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Access requirements: link\u003dThieving|alt\u003dThieving 25 Thieving [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun Shield of Arrav"
-    ],
+    "accessChecks": [],
     "startLocation": "Inspect the empty display on the ground floor of the Grand Museum in Civitas illa Fortis.",
     "unlocks": [
       "Quest rewards: "
