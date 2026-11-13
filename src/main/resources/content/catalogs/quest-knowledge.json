@@ -5451,13 +5451,22 @@
   {
     "name": "The Path of Glouphrie",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "The Eyes of Glouphrie",
+      "Waterfall Quest",
+      "Tree Gnome Village"
+    ],
+    "skillRequirements": {
+      "STRENGTH": 60,
+      "SLAYER": 56,
+      "THIEVING": 56,
+      "RANGED": 47,
+      "AGILITY": 45
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Tree Gnome Village Dungeon key (unless Roving Elves has been started) (obtainable during the quest) Combat equipment and some food Mith Grapple Any crossbow",
-      "Access requirements: Completion of the following quests: The Eyes of Glouphrie The Grand Tree Waterfall Quest Tree Gnome Village link\u003dStrength|alt\u003dStrength 60 Strength [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 56 Slayer [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 56 Thieving [ not boostable ] [ required to start ] link\u003dRanged|alt\u003dRanged 47 Ranged [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 45 Agility [ not boostable ] [ required to start ]",
       "Combat encounters: 3 Warped Terrorbirds (level 138) Evil Creature (level 1)"
     ],
     "startLocation": "Speak to King Bolren in the Tree Gnome Village.",

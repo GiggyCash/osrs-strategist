@@ -97,6 +97,32 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void pathOfGlouphriePromotesSourceRequirementsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Path of Glouphrie");
+        assertEquals(3, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "The Eyes of Glouphrie", "Waterfall Quest",
+                "Tree Gnome Village")));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.STRENGTH));
+        assertEquals(Integer.valueOf(56),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(56),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(47),
+                quest.getSkillRequirements().get(Skill.RANGED));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Warped Terrorbirds (level 138)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
