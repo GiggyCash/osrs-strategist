@@ -254,6 +254,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void fenkenstrainUsesPartialRestlessGhostProgressWithoutPhantomSmithing()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Creature of Fenkenstrain");
+        assertEquals(java.util.Collections.singletonList("Priest in Peril"),
+                quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList("The Restless Ghost"),
+                quest.getStartedPrerequisites());
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.SMITHING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getAccessChecks().contains(
+                "Verify a safe route past level 72 monsters"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

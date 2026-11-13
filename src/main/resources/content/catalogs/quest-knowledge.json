@@ -4465,19 +4465,20 @@
     "name": "Creature of Fenkenstrain",
     "freeToPlay": false,
     "prerequisites": [
-      "Priest in Peril",
+      "Priest in Peril"
+    ],
+    "startedPrerequisites": [
       "The Restless Ghost"
     ],
     "skillRequirements": {
       "CRAFTING": 20,
-      "SMITHING": 4,
       "THIEVING": 25
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ghostspeak amulet Silver bar 3 bronze wire (unnoted) Needle (costume needle does not work) 5 thread Spade 50 coins OR 1 law \u0026 1 air rune for Telekinetic Grab (requires link\u003dMagic|alt\u003dMagic 33 Magic )",
-      "Access requirements: Completion of Priest in Peril Partial completion of The Restless Ghost link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 25 Thieving [ boostable ] [ not required to start ] Able to defeat a level 51 monster and run past level 72 monsters",
+      "Verify a safe route past level 72 monsters",
       "Combat encounters: Experiment (level 51) - can be safespotted or flinched"
     ],
     "startLocation": "Read the signpost in the middle of Canifis.",
