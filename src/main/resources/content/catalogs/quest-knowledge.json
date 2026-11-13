@@ -4969,12 +4969,14 @@
     "name": "Getting Ahead",
     "freeToPlay": false,
     "prerequisites": [],
-    "skillRequirements": {},
+    "skillRequirements": {
+      "CRAFTING": 30,
+      "CONSTRUCTION": 26
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Bear fur, grey wolf fur, or Fur (a Grizzly bear and bear cub spawn west of the farm and two black bears spawn east of the farm) Soft clay or a pickaxe you can use Clay rocks are found in the Kebos Lowlands mine passed during the quest; Gordon\u0027s house has a water source and a bucket spawn; There is a Bronze pickaxe spawn at the mine, stuck in some rocks. Hammer (obtainable near the cattle gate) or Imcando hammer Saw (obtainable in the shed north of the house) or Amy\u0027s saw 2 normal planks (obtain…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 26 Construction [ not boostable ] [ required to start ]",
       "Combat encounters: Headless Beast (level-82)"
     ],
     "startLocation": "Talk to Gordon on his farm south of the Farming Guild.",

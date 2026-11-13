@@ -140,6 +140,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void gettingAheadPromotesMandatoryStartSkillsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Getting Ahead");
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(26),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Headless Beast (level-82)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
