@@ -641,3 +641,17 @@ char/4 proxy tokens) and 103 catalog characters. The full clean suite is
 audit is 1,078,764 characters / 269,691 estimated tokens. The added generic
 contract is bounded to the demonstrated false-positive and does not change
 quest access, player-execution claims, or runtime networking.
+
+## Repeat-farm combat floor stays separate from access
+
+The Lunar Chests preparation profile now uses 70 Attack, Strength, and Defence
+for verified repeat-farm readiness, pinned to the Moons money-making guide at
+revision 15399704. This does not alter the lower mandatory quest requirements,
+prevent an initial clear, require Piety, or claim player execution skill. It
+prevents the practical farming goal from treating the quest-oriented 60-stat
+recommendation as equivalent to the reviewed repeat-completion baseline.
+
+This correction changes no production Java, adds 54 catalog characters, and
+adds 25 packaged-JAR bytes. The full clean suite is 961/961, the packaged JAR
+is 1,257,942 bytes, and the production-Java audit remains 1,078,764 characters
+/ 269,691 estimated tokens.

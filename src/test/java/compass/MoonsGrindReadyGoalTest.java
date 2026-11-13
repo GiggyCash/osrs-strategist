@@ -146,6 +146,18 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void repeatableFarmCombatFloorExceedsQuestAccess()
+    {
+        PvmReadiness initialClear = combatReadiness(60, 60, 60);
+        assertFalse(initialClear.isReadyForRecommendation());
+        assertTrue(initialClear.getMissingRequirements().contains("Attack 70"));
+        assertTrue(initialClear.getMissingRequirements().contains("Strength 70"));
+        assertTrue(initialClear.getMissingRequirements().contains("Defence 70"));
+        assertTrue(combatReadiness(70, 70, 70)
+                .isReadyForRecommendation());
+    }
+
+    @Test
     public void selectedGoalProducesTypedGlobalDoNext()
     {
         PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
@@ -419,6 +431,24 @@ public class MoonsGrindReadyGoalTest
         levels.put(Skill.HERBLORE, herblore);
         levels.put(Skill.HUNTER, hunter);
         levels.put(Skill.FISHING, fishing);
+        return readiness(levels);
+    }
+
+    private static PvmReadiness combatReadiness(int attack, int strength,
+            int defence)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        levels.put(Skill.ATTACK, attack);
+        levels.put(Skill.STRENGTH, strength);
+        levels.put(Skill.DEFENCE, defence);
+        levels.put(Skill.COOKING, 60);
+        levels.put(Skill.HERBLORE, 55);
+        levels.put(Skill.HUNTER, 50);
+        return readiness(levels);
+    }
+
+    private static PvmReadiness readiness(Map<Skill, Integer> levels)
+    {
         GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
                 checkNeeded(), true, levels);
         ItemsState equipment = new ItemsState(java.util.Arrays.asList(

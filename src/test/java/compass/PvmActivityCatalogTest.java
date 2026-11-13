@@ -75,6 +75,9 @@ public class PvmActivityCatalogTest
         PvmPreparationProfile profile = new PvmPreparationProfileCatalog()
                 .forActivity("pvm:lunar_chests");
         assertEquals("Perilous Moons", profile.getRequiredQuest());
+        assertEquals(70, profile.getAttack());
+        assertEquals(70, profile.getStrength());
+        assertEquals(70, profile.getDefence());
         assertEquals(Integer.valueOf(60),
                 profile.getReadinessSkills().get(Skill.COOKING));
         assertEquals(Integer.valueOf(55),
