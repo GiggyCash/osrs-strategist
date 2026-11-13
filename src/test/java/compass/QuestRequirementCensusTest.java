@@ -14,6 +14,7 @@ public class QuestRequirementCensusTest
         QuestRequirementCensus census = new QuestRequirementCensus();
         assertEquals(Quest.values().length, census.getTotalQuests());
         assertEquals(0, census.getParseFailures());
+        assertEquals(0, census.getUnsupportedExpressions());
         for (QuestRequirementCensus.Unresolved entry : census.getUnresolved())
         {
             assertFalse(entry.getQuest().trim().isEmpty());

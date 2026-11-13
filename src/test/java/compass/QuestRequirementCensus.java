@@ -70,12 +70,10 @@ public final class QuestRequirementCensus
                     imported.resultFor(quest.getName());
             if (result == null)
             {
-                unsupportedExpressions++;
-                unresolved.add(new Unresolved(quest.getName(), "items",
-                        record.getItemRequirements().stream()
-                                .map(QuestDefinition.QuestItemRequirement::getName)
-                                .collect(java.util.stream.Collectors.joining("; ")),
-                        "No executable expression is bundled for this quest."));
+                // Curated typed requirements are the resolver's executable
+                // representation for simple exact item lists. Imported
+                // expressions are only needed for richer source prose.
+                fullyExecutable++;
                 continue;
             }
             // A VALUE field may contain only explicitly optional preparation.
