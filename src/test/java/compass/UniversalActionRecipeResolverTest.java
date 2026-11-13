@@ -354,6 +354,37 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void moltenGlassIsReviewedWhileMouldBoundTiarasFailClosed()
+    {
+        UniversalActionRecipe glass = resolver.resolve(
+                action(Skill.CRAFTING, "Molten glass", 20), 12,
+                Membership.P2P);
+        assertTrue(glass.hasExactInputs());
+        assertInput(glass, "Bucket of sand", 12, ItemID.BUCKET_SAND);
+        assertInput(glass, "Soda ash", 12, ItemID.SODA_ASH);
+        assertTrue(glass.getSetup().contains("Superglass Make"));
+
+        for (Membership membership : new Membership[] {
+                Membership.F2P, Membership.UNKNOWN})
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Molten glass", 20), 12, membership)
+                    .hasExactInputs());
+
+        // Both actions require a carried, reusable tiara mould. The shared
+        // consumed-input contract cannot prove that tool state yet.
+        for (String name : new String[] {"Tiara", "Gold tiara"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 35), 12,
+                        membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
     public void spinningRecipesUseReviewedIdentitiesAndMembership()
     {
         UniversalActionRecipe wool = resolver.resolve(
@@ -469,19 +500,6 @@ public class UniversalActionRecipeResolverTest
         assertInput(recipe, "Gold bar", 25);
         assertInput(recipe, "Sapphire", 25);
         assertNoInput(recipe, "Silver bar");
-    }
-
-    @Test
-    public void f2pTiaraUsesSilverBar()
-    {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.CRAFTING, "Tiara", 52.5f),
-                30,
-                Membership.F2P);
-
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Silver bar", 30);
-        assertTrue(recipe.getSetup().contains("Edgeville furnace"));
     }
 
     @Test

@@ -606,3 +606,20 @@ This migration changes no production Java, removes 494 legacy-data characters,
 and adds 1,009 reviewed-data characters. The full clean suite is 957/957, the
 packaged JAR is 1,256,325 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens.
+
+## Molten glass reviewed; mould-bound tiaras fail closed
+
+Moved conventional furnace `Molten glass` into the shared reviewed catalog as
+an explicitly P2P recipe with exact Bucket of sand and Soda ash identities,
+pinned to Wiki revision 15288555. The setup keeps Superglass Make outside this
+contract because its spell requirements and variable yield differ. Removed the
+two tiara legacy rows instead of continuing to treat silver or gold bars alone
+as sufficient: both actions require a carried, reusable tiara mould, which the
+consumed-input recipe contract cannot currently prove. Both tiaras now remain
+unresolved across every membership state.
+
+This boundary changes no production Java, removes 484 legacy-data characters,
+and adds 511 reviewed-data characters. The full clean suite is 958/958, the
+packaged JAR is 1,256,287 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens. The legacy catalog is now
+confined to the separately bounded Herblore family.

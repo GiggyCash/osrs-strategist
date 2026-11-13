@@ -129,6 +129,21 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void glassAndTiaraActionsUseCurrentRuneLiteIdentities()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        List<String> identities = new ArrayList<>();
+        for (ActionDef action : catalog.actionsFor(Skill.CRAFTING))
+            identities.add(action.id + "=" + Names.actionKey(action.name));
+
+        for (String identity : new String[] {
+                "runelite:crafting:molten_glass=molten_glass",
+                "runelite:crafting:tiara=tiara",
+                "runelite:crafting:gold_tiara=gold_tiara"})
+            assertTrue(identity, identities.contains(identity));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

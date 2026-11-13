@@ -4892,6 +4892,20 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "CRAFTING",
+    "match": "molten glass",
+    "inputs": ["Bucket of sand", "Soda ash"],
+    "units": [1, 1],
+    "itemIds": [1783, 1781],
+    "stackable": [false, false],
+    "membersOnly": true,
+    "setup": "Use a conventional furnace. This recipe does not model Superglass Make, whose spell requirements and output yield differ.",
+    "source": "https://oldschool.runescape.wiki/w/Molten_glass",
+    "sourceRevision": 15288555,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "HUNTER",
     "match": "regular bird house",
     "inputs": ["Logs", "Potato seed"],
