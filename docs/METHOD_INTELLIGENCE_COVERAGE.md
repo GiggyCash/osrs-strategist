@@ -52,7 +52,9 @@ Blast Furnace and boosted or catalysed variants, require separate setup facts.
 This audit does not establish completion for quests, Slayer, Farming, PvM,
 minigames, gear, recurring activities, UI, performance or privacy. Their existing
 implementations need domain-specific acceptance evidence; passing recipe tests
-cannot stand in for that audit. The three known quest coverage failures remain.
+cannot stand in for that audit. The three historical quest coverage failures
+were resolved as baseline drift and remain documented in
+`QUEST_BASELINE_REVIEW_2026-11-09.md`.
 
 The isolated release restoration remains a separate approval-boundary task.
 It must not be inferred released from development branch pushes. The older
