@@ -519,15 +519,16 @@ class CandidateSafetyPolicy
         }
 
         var mode = AccountMode.fromTypeCode(account.modeCode());
-        if ((mode == AccountMode.HARDCORE_IRONMAN
+        if ((mode == AccountMode.UNKNOWN
+                || mode == AccountMode.HARDCORE_IRONMAN
                 || mode == AccountMode.HARDCORE_GROUP_IRONMAN)
                 && (evidence.getBuildEffect()
                 == Safety.BuildEffect.POTENTIALLY_IRREVERSIBLE
                 || evidence.getBuildEffect()
                 == Safety.BuildEffect.UNKNOWN))
         {
-            // When the candidate cannot prove its risk/build effects, preserving
-            // a Hardcore life takes precedence over provider score.
+            // When the account mode or candidate risk is unknown, preserving
+            // a possible Hardcore life takes precedence over provider score.
             return false;
         }
 

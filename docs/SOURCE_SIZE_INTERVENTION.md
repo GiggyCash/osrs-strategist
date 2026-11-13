@@ -655,3 +655,16 @@ This correction changes no production Java, adds 54 catalog characters, and
 adds 25 packaged-JAR bytes. The full clean suite is 961/961, the packaged JAR
 is 1,257,942 bytes, and the production-Java audit remains 1,078,764 characters
 / 269,691 estimated tokens.
+
+## Unknown account modes fail closed for irreversible work
+
+The final candidate safety gate now treats an unknown RuneLite account mode as
+potentially Hardcore when a recommendation is irreversible or its build effect
+is unknown. Harmless recommendations remain available. Moons regression
+coverage now exercises Main, Ironman, Ultimate Ironman, both ranked Group
+variants, Unranked Group Ironman, both Hardcore variants, and unknown modes.
+
+This guard adds 52 production-Java characters (13 char/4 proxy tokens) and 14
+packaged-JAR bytes. The full clean suite is 963/963, the packaged JAR is
+1,257,956 bytes, and the production-Java audit is 1,078,816 characters /
+269,704 estimated tokens.

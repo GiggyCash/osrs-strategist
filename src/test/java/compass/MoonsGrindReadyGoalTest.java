@@ -369,6 +369,40 @@ public class MoonsGrindReadyGoalTest
                 .contains("bank"));
     }
 
+    @Test
+    public void everyAccountModeUsesTheMoonsSafetyBoundary()
+    {
+        CandidateSafetyPolicy safety = new CandidateSafetyPolicy();
+        for (int type : new int[] {0, 1, 2, 4, 6})
+        {
+            StrategyContext context = context(data(type, Membership.P2P,
+                    QuestStatus.COMPLETE, checkNeeded(), true),
+                    GoalType.MOONS_GRIND_READY);
+            Recommendation candidate = find(provider.candidates(context));
+            assertNotNull(AccountMode.fromTypeCode(type).name(), candidate);
+            assertTrue(AccountMode.fromTypeCode(type).name(),
+                    safety.isAllowed(candidate, context));
+            String guidance = candidate.getGuidance().getAction().toLowerCase();
+            assertFalse(guidance.contains("grand exchange"));
+            assertFalse(guidance.contains("group storage"));
+        }
+
+        for (int type : new int[] {3, 5})
+        {
+            assertTrue(AccountMode.fromTypeCode(type).name(),
+                    provider.candidates(context(data(type, Membership.P2P,
+                            QuestStatus.COMPLETE, checkNeeded(), true),
+                            GoalType.MOONS_GRIND_READY)).isEmpty());
+        }
+
+        StrategyContext unknown = context(data(99, Membership.P2P,
+                QuestStatus.COMPLETE, checkNeeded(), true),
+                GoalType.MOONS_GRIND_READY);
+        Recommendation candidate = find(provider.candidates(unknown));
+        assertNotNull(candidate);
+        assertFalse(safety.isAllowed(candidate, unknown));
+    }
+
     private static PvmReadiness checkNeeded()
     {
         return new PvmReadiness(ACTIVITY, false, Confidence.CHECK_NEEDED,
