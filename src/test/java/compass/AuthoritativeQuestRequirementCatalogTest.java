@@ -69,6 +69,34 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void fremennikExilesPromotesSourceRequirementsIntoTypedGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Fremennik Exiles");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "The Fremennik Isles", "Lunar Diplomacy",
+                "Mountain Daughter", "Heroes' Quest")));
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(65),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(60),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("The Jormungand (level 363)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

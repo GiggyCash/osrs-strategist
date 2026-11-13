@@ -4906,13 +4906,24 @@
   {
     "name": "The Fremennik Exiles",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "The Fremennik Isles",
+      "Lunar Diplomacy",
+      "Mountain Daughter",
+      "Heroes' Quest"
+    ],
+    "skillRequirements": {
+      "CRAFTING": 65,
+      "SLAYER": 60,
+      "SMITHING": 60,
+      "FISHING": 60,
+      "RUNECRAFT": 55,
+      "MINING": 60
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Combat equipment Mirror shield 2 Kegs of beer (cannot be obtained in Rellekka during quest, buy from Thora the Barkeep before starting the quest) 1 Molten glass 100 Astral runes Pet rock Fishing rod, fly fishing rod, or barbarian fishing rod Fremennik shield (this is not the tradeable Neitiznot shield) Alternatively, get it from Bardur AFTER being exiled, for either 150,000 or for free using a Ring of Charos(a) Recommended: Rune thrownaxes or link\u003dAgility|alt\u003dAgility 85 Agility to get to Bardur…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 65 Crafting [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 60 Slayer [ not boostable ] [ required to start ] link\u003dSmithing|alt\u003dSmithing 60 Smithing [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 60 Fishing [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 55 Runecraft [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 60 Mining [ boostable ] [ not required to start ] Completion of the following quests: T…",
       "Combat encounters: Basilisk Youngling (level 53) Basilisk (level 61) Monstrous Basilisk (level 135) Typhor (level 218) The Jormungand (level 363)"
     ],
     "startLocation": "Talk to Brundt the Chieftain in Rellekka.",
