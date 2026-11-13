@@ -54,6 +54,33 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void unfinishedAccessProducesActionableGoalQuestPreparation()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), true);
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:perilous-moons", candidate.getId());
+        assertEquals(Confidence.CHECK_NEEDED, candidate.getConfidence());
+        assertEquals("Train Slayer from 40 to 48.",
+                candidate.getGuidance().getAction());
+        assertTrue(candidate.getReason().contains(
+                "selected goal's proven quest path"));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("skill:slayer", queue.get(0).getId());
+        assertEquals(48, queue.get(0).getTargetLevel());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(queue.get(0)));
+    }
+
+    @Test
     public void completedQuestWithUnobservedSetupProducesExactVerification()
     {
         Recommendation candidate = find(provider.candidates(context(
@@ -505,6 +532,30 @@ public class MoonsGrindReadyGoalTest
     private static Recommendation find(List<Recommendation> candidates)
     {
         return candidates.isEmpty() ? null : candidates.get(0);
+    }
+
+    private static StrategyEngine moonsStrategyEngine()
+    {
+        TrainingMethodSelector selector = new TrainingMethodSelector(
+                new TrainingMethodCatalog(),
+                new RequirementEvidenceEngine(
+                        new FarmingAccessEvaluator(new FarmingAccessCatalog()),
+                        new AgilityAccessEvaluator(new AgilityCourseCatalog()),
+                        new FarmingSupplyCatalog(),
+                        new RunecraftSupplyCatalog()),
+                new TrainingMethodPolicy(),
+                new MethodStrategyKnowledgeCatalog(),
+                new UimInventoryResolutionService());
+        StrategyCandidateRegistry registry = new StrategyCandidateRegistry(
+                java.util.Arrays.asList(new PvmCandidateProvider(),
+                        TestFixtures.questCandidateProvider(
+                                new QuestPriorityCatalog())));
+        return TestFixtures.strategyEngine(
+                TestFixtures.recommendationEngine(selector), null, null,
+                registry, new ActionabilityPolicy(),
+                new RecommendationIntelligenceService(),
+                new CandidateSafetyPolicy(),
+                new GoalDependencyProvenanceService());
     }
 
     private static ItemState equipped(String name,
