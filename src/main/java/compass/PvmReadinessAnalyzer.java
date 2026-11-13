@@ -74,6 +74,7 @@ public class PvmReadinessAnalyzer
             requireLevel(account, MAGIC, preparation.getMagic(), missing);
             requireLevel(account, PRAYER, preparation.getPrayer(), missing);
             requireLevel(account, SLAYER, preparation.getSlayer(), missing);
+            requireReadinessLevels(account, preparation, missing);
 
             if (preparation.requiredQuest != null
                     && !questUsable(quests, preparation.requiredQuest,
@@ -213,6 +214,23 @@ public class PvmReadinessAnalyzer
     {
         if (required > 1 && account.level(skill) < required)
             missing.add(skill.getName() + " " + required);
+    }
+
+    private static void requireReadinessLevels(AccountSnapshot account,
+            PvmPreparationProfile profile, List<String> missing)
+    {
+        if (profile.readinessSkills != null)
+            profile.readinessSkills.forEach((skill, level) ->
+                    requireLevel(account, skill, level, missing));
+        if (profile.alternativeReadinessSkills == null
+                || profile.alternativeReadinessSkills.isEmpty()
+                || profile.alternativeReadinessSkills.entrySet().stream()
+                .anyMatch(entry -> account.level(entry.getKey())
+                        >= entry.getValue())) return;
+        missing.add(profile.alternativeReadinessSkills.entrySet().stream()
+                .map(entry -> entry.getKey().getName() + " "
+                        + entry.getValue())
+                .collect(java.util.stream.Collectors.joining(" or ")));
     }
 
     private static boolean questUsable(QuestSnapshot quests, String quest,

@@ -623,3 +623,21 @@ and adds 511 reviewed-data characters. The full clean suite is 958/958, the
 packaged JAR is 1,256,287 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens. The legacy catalog is now
 confined to the separately bounded Herblore family.
+
+## Repeatable Moons supplies use observed skill quality
+
+Quest completion and the dungeon's infinite gathering tools no longer prove a
+sustainable Moons supply loop by themselves. The reviewed preparation profile
+now requires 60 Cooking, 55 Herblore, and either 50 Hunter or 60 Fishing before
+the exact Moons evidence profile can report grind readiness. These are practical
+repeat-farming floors pinned to Perilous Moons revision 15399389, not mandatory
+quest-access requirements. The generic preparation contract supports required
+skill levels plus one alternative skill group, so the analyzer remains shared
+rather than adding a Moons-only branch.
+
+This correction adds 29 production-Java lines / 1,476 characters (about 369
+char/4 proxy tokens) and 103 catalog characters. The full clean suite is
+960/960, the packaged JAR is 1,257,917 bytes, and the production-Java source
+audit is 1,078,764 characters / 269,691 estimated tokens. The added generic
+contract is bounded to the demonstrated false-positive and does not change
+quest access, player-execution claims, or runtime networking.

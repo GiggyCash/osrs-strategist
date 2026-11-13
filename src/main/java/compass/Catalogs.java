@@ -832,12 +832,21 @@ class PvmPreparationProfileCatalog extends IndexedCatalog<PvmPreparationProfile>
     {
         super(RESOURCE, PvmPreparationProfile[].class,
                 PvmPreparationProfile::getActivityId);
-        for (PvmPreparationProfile profile : values) if (profile.getChecks() == null)
+        for (PvmPreparationProfile profile : values) if (profile.getChecks() == null
+                || invalidLevels(profile.readinessSkills)
+                || invalidLevels(profile.alternativeReadinessSkills))
             throw new IllegalStateException(Text.get(1164) + RESOURCE);
     }
 
     public PvmPreparationProfile forActivity(String id) { return indexed(id); }
     public Map<String, PvmPreparationProfile> all() { return index; }
+
+    private static boolean invalidLevels(Map<Skill, Integer> levels)
+    {
+        return levels != null && (levels.isEmpty() || levels.entrySet().stream()
+                .anyMatch(entry -> entry.getKey() == null
+                        || entry.getValue() == null || entry.getValue() <= 1));
+    }
 }
 
 /** Curated quest knowledge plus fail-closed authoritative enrichment. */

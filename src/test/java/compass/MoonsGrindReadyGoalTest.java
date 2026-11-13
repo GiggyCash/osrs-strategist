@@ -130,6 +130,22 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void repeatableDungeonSuppliesRequireReviewedSkillQuality()
+    {
+        PvmReadiness underprepared = supplyReadiness(30, 38, 20, 20);
+        assertFalse(underprepared.isReadyForRecommendation());
+        assertTrue(underprepared.getMissingRequirements().contains("Cooking 60"));
+        assertTrue(underprepared.getMissingRequirements().contains("Herblore 55"));
+        assertTrue(underprepared.getMissingRequirements().contains(
+                "Hunter 50 or Fishing 60"));
+
+        assertTrue(supplyReadiness(60, 55, 50, 20)
+                .isReadyForRecommendation());
+        assertTrue(supplyReadiness(60, 55, 20, 60)
+                .isReadyForRecommendation());
+    }
+
+    @Test
     public void selectedGoalProducesTypedGlobalDoNext()
     {
         PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
@@ -359,6 +375,14 @@ public class MoonsGrindReadyGoalTest
             QuestStatus questStatus, PvmReadiness readiness,
             boolean observedSetup)
     {
+        return data(type, membership, questStatus, readiness, observedSetup,
+                Collections.emptyMap());
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus questStatus, PvmReadiness readiness,
+            boolean observedSetup, Map<Skill, Integer> levelOverrides)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -366,6 +390,7 @@ public class MoonsGrindReadyGoalTest
             levels.put(skill, skill == Skill.SLAYER ? 40 : 70);
             xp.put(skill, 0);
         }
+        levels.putAll(levelOverrides);
         AccountSnapshot account = new AccountSnapshot("Moons", 901L,
                 type, AccountMode.fromTypeCode(type).name(), membership,
                 membership == Membership.P2P ? 1 : 0,
@@ -384,6 +409,29 @@ public class MoonsGrindReadyGoalTest
                 .inventory(setup)
                 .pvm(new PvmSnapshot(readinessByActivity))
                 .build();
+    }
+
+    private static PvmReadiness supplyReadiness(int cooking, int herblore,
+            int hunter, int fishing)
+    {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        levels.put(Skill.COOKING, cooking);
+        levels.put(Skill.HERBLORE, herblore);
+        levels.put(Skill.HUNTER, hunter);
+        levels.put(Skill.FISHING, fishing);
+        GameData base = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                checkNeeded(), true, levels);
+        ItemsState equipment = new ItemsState(java.util.Arrays.asList(
+                equipped("Rune longsword", EquipmentInventorySlot.WEAPON),
+                equipped("Rune platebody", EquipmentInventorySlot.BODY),
+                equipped("Rune platelegs", EquipmentInventorySlot.LEGS)));
+        ItemsState inventory = new ItemsState(Collections.singletonList(
+                new ItemState(2, "Dragon mace", 1)));
+        return new PvmReadinessAnalyzer(new PvmActivityCatalog(),
+                new PvmEvidenceProfileCatalog(),
+                new PvmPreparationProfileCatalog()).analyze(
+                        base.account(), base.quests(), equipment, inventory,
+                        null, null).readinessFor(ACTIVITY);
     }
 
     private static Recommendation find(List<Recommendation> candidates)

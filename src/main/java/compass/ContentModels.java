@@ -454,6 +454,8 @@ final class PvmPreparationProfile
     String accountValue;
     String provenance;
     int attack, strength, defence, ranged, magic, prayer, slayer;
+    Map<Skill, Integer> readinessSkills;
+    Map<Skill, Integer> alternativeReadinessSkills;
     String preferredStyle;
     String requiredQuest;
     boolean questMayBeInProgress;

@@ -1,6 +1,7 @@
 package compass;
 
 import java.util.List;
+import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -66,5 +67,21 @@ public class PvmActivityCatalogTest
         assertNotNull(profiles.forActivity("pvm:lunar_chests"));
         assertTrue(profiles.forActivity("pvm:obor").getAccessItems()
                 .contains("Giant key"));
+    }
+
+    @Test
+    public void moonsAccessAndRepeatReadinessStaySeparate()
+    {
+        PvmPreparationProfile profile = new PvmPreparationProfileCatalog()
+                .forActivity("pvm:lunar_chests");
+        assertEquals("Perilous Moons", profile.getRequiredQuest());
+        assertEquals(Integer.valueOf(60),
+                profile.getReadinessSkills().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(55),
+                profile.getReadinessSkills().get(Skill.HERBLORE));
+        assertEquals(Integer.valueOf(50), profile
+                .getAlternativeReadinessSkills().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(60), profile
+                .getAlternativeReadinessSkills().get(Skill.FISHING));
     }
 }
