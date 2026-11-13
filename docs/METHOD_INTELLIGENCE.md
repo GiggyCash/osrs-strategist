@@ -459,3 +459,16 @@ resources and capacity make a recipe actionable. Methods without full contracts
 retain the legacy strategy profile. This fixes the existing bow-cutting route:
 carried logs plus a knife now reach its reviewed local-processing plan for UIM,
 while Cooking wines remain excluded as a conventional bank loop.
+
+## Early Herblore recipes use reviewed identities
+
+Attack potion(3), Antipoison(3), Strength potion(3), and Restore potion(3) now
+use exact reviewed input identities rather than the dose-stripping legacy table.
+Each contract consumes one clean herb, one secondary ingredient, and one vial of
+water per completed three-dose potion. Production is explicitly members-only
+even where the finished potion can be used on a free world; F2P and unknown
+membership therefore remain unresolved.
+
+The four records are pinned respectively to Wiki revisions 15247702, 15365013,
+15359571, and 15183838 and match RuneLite 1.13.6's exact `(3)` action names.
+The other nineteen Herblore rows remain legacy and gain no implied provenance.

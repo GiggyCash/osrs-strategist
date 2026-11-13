@@ -40,14 +40,19 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
-    public void diagnosticHerbloreNamesPreserveDosePunctuation()
+    public void reviewedHerbloreNamesPreserveDosePunctuation()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
-        ActionDef attackPotion = catalog.actionsFor(Skill.HERBLORE).stream()
-                .filter(action -> "runelite:herblore:attack_potion_3"
-                        .equals(action.id))
-                .findFirst().orElseThrow(AssertionError::new);
-        assertEquals("Attack potion(3)", attackPotion.name);
+        List<String> identities = new ArrayList<>();
+        for (ActionDef action : catalog.actionsFor(Skill.HERBLORE))
+            identities.add(action.id + "=" + action.name);
+
+        for (String identity : new String[] {
+                "runelite:herblore:attack_potion_3=Attack potion(3)",
+                "runelite:herblore:antipoison_3=Antipoison(3)",
+                "runelite:herblore:strength_potion_3=Strength potion(3)",
+                "runelite:herblore:restore_potion_3=Restore potion(3)"})
+            assertTrue(identity, identities.contains(identity));
     }
 
     @Test

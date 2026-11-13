@@ -5030,5 +5030,61 @@
     "sourceRevision": 15364256,
     "reviewed": "2026-11-12",
     "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "attack potion(3)",
+    "inputs": ["Guam leaf", "Eye of newt", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [249, 221, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Attack_potion",
+    "sourceRevision": 15247702,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "antipoison(3)",
+    "inputs": ["Marrentill", "Unicorn horn dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [251, 235, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Antipoison",
+    "sourceRevision": 15365013,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "strength potion(3)",
+    "inputs": ["Tarromin", "Limpwurt root", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [253, 225, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Strength_potion",
+    "sourceRevision": 15359571,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "restore potion(3)",
+    "inputs": ["Harralander", "Red spiders' eggs", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [255, 223, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Restore_potion",
+    "sourceRevision": 15183838,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
   }
 ]

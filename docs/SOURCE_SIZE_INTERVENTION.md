@@ -679,3 +679,17 @@ This data-only correction changes no production Java, adds 55 player-text
 characters, and adds 30 packaged-JAR bytes. The focused Moons suite is 16/16,
 the packaged JAR is 1,257,986 bytes, and the production-Java audit remains
 1,078,816 characters / 269,704 estimated tokens.
+
+## First Herblore recipes use reviewed item identities
+
+Moved Attack potion(3), Antipoison(3), Strength potion(3), and Restore potion(3)
+from the legacy recipe table into the shared reviewed catalog. Exact clean-herb,
+secondary, and vial identities are pinned to individual Wiki revisions and the
+current RuneLite dose-bearing action names. All four production contracts are
+P2P; unknown and F2P membership fail closed. The remaining nineteen Herblore
+rows stay legacy and are not certified by this slice.
+
+This migration changes no production Java, removes 752 legacy-data characters,
+and adds 2,096 reviewed-data characters. The full clean suite is 964/964, the
+packaged JAR is 1,258,234 bytes, and the production-Java audit remains
+1,078,816 characters / 269,704 estimated tokens.

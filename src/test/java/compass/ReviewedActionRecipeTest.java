@@ -52,7 +52,7 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(214, recipes.length);
+        assertEquals(218, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
@@ -61,6 +61,19 @@ public class ReviewedActionRecipeTest
             assertTrue(recipe.match, resolved.hasExactInputs());
             assertTrue(resolved.inputs.stream().allMatch(input -> input.itemId > 0 && input.quantity > 0));
         }
+    }
+
+    @Test
+    public void earlyHerblorePotionsUseExactInputsAndFailClosedOutsideP2p()
+    {
+        assertHerblore("Attack potion(3)", "Guam leaf", 249,
+                "Eye of newt", 221);
+        assertHerblore("Antipoison(3)", "Marrentill", 251,
+                "Unicorn horn dust", 235);
+        assertHerblore("Strength potion(3)", "Tarromin", 253,
+                "Limpwurt root", 225);
+        assertHerblore("Restore potion(3)", "Harralander", 255,
+                "Red spiders' eggs", 223);
     }
 
     @Test
@@ -133,6 +146,24 @@ public class ReviewedActionRecipeTest
     {
         return resolver.resolve(new ActionDef(Skill.COOKING, "test:cooking", name,
                 1, 1, "test", Membership.F2P), 7, membership);
+    }
+
+    private void assertHerblore(String output, String herb, int herbId,
+            String secondary, int secondaryId)
+    {
+        ActionDef action = new ActionDef(Skill.HERBLORE,
+                "runelite:herblore:" + Names.actionKey(output), output,
+                1, 1, "test", Membership.UNKNOWN);
+        UniversalActionRecipe recipe = resolver.resolve(action, 3,
+                Membership.P2P);
+        assertTrue(output, recipe.hasExactInputs());
+        assertInput(recipe, herb, herbId, 3);
+        assertInput(recipe, secondary, secondaryId, 3);
+        assertInput(recipe, "Vial of water", 227, 3);
+        assertFalse(output, resolver.resolve(action, 3, Membership.F2P)
+                .hasExactInputs());
+        assertFalse(output, resolver.resolve(action, 3, Membership.UNKNOWN)
+                .hasExactInputs());
     }
 
     private static void assertInput(UniversalActionRecipe recipe,
