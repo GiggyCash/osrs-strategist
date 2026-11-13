@@ -578,3 +578,17 @@ This migration changes no production Java, removes 751 legacy-data characters,
 and adds 2,594 reviewed-data characters. The full clean suite is 954/954, the
 packaged JAR is 1,256,152 bytes, and the production-Java source audit remains
 1,077,288 characters / 269,322 estimated tokens.
+
+## F2P pottery uses reviewed attempt identities
+
+Moved the six exact F2P pot, pie-dish and bowl shaping/firing actions from the
+legacy catalog into the shared reviewed catalog. Shaping consumes item 1761
+(Soft clay); firing consumes the matching unfired item identities. Firing setup
+now states that quantities are per attempt and low-level pottery can crack, so
+successful outputs are not promised. The members-only plant-pot and pot-lid
+rows remain legacy and are not certified by this slice.
+
+This migration changes no production Java, removes 705 legacy-data characters,
+and adds 2,925 reviewed-data characters. The full clean suite is 956/956, the
+packaged JAR is 1,256,350 bytes, and the production-Java source audit remains
+1,077,288 characters / 269,322 estimated tokens.

@@ -282,6 +282,39 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
+    public void f2pPotteryUsesReviewedInputsAndHonestFiringGuidance()
+    {
+        String[] forming = {"Unfired pot", "Unfired pie dish",
+                "Unfired bowl"};
+        for (String name : forming)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 10), 12, membership);
+                assertTrue(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertInput(recipe, "Soft clay", 12, ItemID.SOFTCLAY);
+            }
+
+        String[] firing = {"Pot", "Pie dish", "Bowl"};
+        String[] inputs = {"Unfired pot", "Unfired pie dish",
+                "Unfired bowl"};
+        int[] itemIds = {ItemID.POT_UNFIRED, ItemID.PIEDISH_UNFIRED,
+                ItemID.BOWL_UNFIRED};
+        for (int i = 0; i < firing.length; i++)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, firing[i], 10), 12,
+                        membership);
+                assertTrue(firing[i] + " / " + membership,
+                        recipe.hasExactInputs());
+                assertInput(recipe, inputs[i], 12, itemIds[i]);
+                assertTrue(recipe.getSetup().contains("not guaranteed"));
+            }
+    }
+
+    @Test
     public void spinningRecipesUseReviewedIdentitiesAndMembership()
     {
         UniversalActionRecipe wool = resolver.resolve(

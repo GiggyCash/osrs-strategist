@@ -1,12 +1,6 @@
 [
-  {"skill":"CRAFTING","match":"unfired pot","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
-  {"skill":"CRAFTING","match":"unfired pie dish","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
-  {"skill":"CRAFTING","match":"unfired bowl","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
   {"skill":"CRAFTING","match":"unfired plant pot","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
   {"skill":"CRAFTING","match":"unfired pot lid","setup":"Use the clay on a pottery wheel.","inputs":["Soft clay"],"units":[1]},
-  {"skill":"CRAFTING","match":"pot","setup":"Use a pottery oven.","inputs":["Unfired pot"],"units":[1]},
-  {"skill":"CRAFTING","match":"pie dish","setup":"Use a pottery oven.","inputs":["Unfired pie dish"],"units":[1]},
-  {"skill":"CRAFTING","match":"bowl","setup":"Use a pottery oven.","inputs":["Unfired bowl"],"units":[1]},
   {"skill":"CRAFTING","match":"empty plant pot","setup":"Use a pottery oven.","inputs":["Unfired plant pot"],"units":[1]},
   {"skill":"CRAFTING","match":"pot lid","setup":"Use a pottery oven.","inputs":["Unfired pot lid"],"units":[1]},
   {"skill":"CRAFTING","match":"molten glass","setup":"Conventional furnace glassmaking; Superglass Make has different yield math.","inputs":["Bucket of sand","Soda ash"],"units":[1,1]},

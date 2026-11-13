@@ -109,6 +109,24 @@ public class RuneLiteSkillActionCatalogTest
     }
 
     @Test
+    public void f2pPotteryRecipesUseCurrentRuneLiteActionIdentities()
+    {
+        RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
+        List<String> identities = new ArrayList<>();
+        for (ActionDef action : catalog.actionsFor(Skill.CRAFTING))
+            identities.add(action.id + "=" + Names.actionKey(action.name));
+
+        for (String identity : new String[] {
+                "runelite:crafting:unfired_pot=unfired_pot",
+                "runelite:crafting:unfired_pie_dish=unfired_pie_dish",
+                "runelite:crafting:unfired_bowl=unfired_bowl",
+                "runelite:crafting:pot=pot",
+                "runelite:crafting:pie_dish=pie_dish",
+                "runelite:crafting:bowl=bowl"})
+            assertTrue(identity, identities.contains(identity));
+    }
+
+    @Test
     public void everyLegacyRecipeNamesAPinnedRuneLiteAction()
     {
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();

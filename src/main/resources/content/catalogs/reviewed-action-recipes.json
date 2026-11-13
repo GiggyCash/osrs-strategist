@@ -1098,6 +1098,138 @@
     "actionUnitsPerBatch": 1
   },
   {
+    "skill": "CRAFTING",
+    "match": "unfired pot",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_pot",
+    "sourceRevision": 15187384,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired pie dish",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_pie_dish",
+    "sourceRevision": 15272568,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired bowl",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_bowl",
+    "sourceRevision": 15183539,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "pot",
+    "inputs": [
+      "Unfired pot"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1787
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired pot in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Pot",
+    "sourceRevision": 15384837,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "pie dish",
+    "inputs": [
+      "Unfired pie dish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1789
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired pie dish in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Pie_dish",
+    "sourceRevision": 15272560,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "bowl",
+    "inputs": [
+      "Unfired bowl"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1791
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired bowl in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Bowl",
+    "sourceRevision": 15356622,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
     "skill": "MAGIC",
     "match": "wind strike",
     "inputs": [
