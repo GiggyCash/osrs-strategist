@@ -56,7 +56,21 @@ public class RuneLiteSkillActionCatalogTest
                 "runelite:herblore:defence_potion_3=Defence potion(3)",
                 "runelite:herblore:agility_potion_3=Agility potion(3)",
                 "runelite:herblore:combat_potion_3=Combat potion(3)",
-                "runelite:herblore:prayer_potion_3=Prayer potion(3)"})
+                "runelite:herblore:prayer_potion_3=Prayer potion(3)",
+                "runelite:herblore:super_attack_3=Super attack(3)",
+                "runelite:herblore:superantipoison_3=Superantipoison(3)",
+                "runelite:herblore:fishing_potion_3=Fishing potion(3)",
+                "runelite:herblore:super_energy_3=Super energy(3)",
+                "runelite:herblore:hunter_potion_3=Hunter potion(3)",
+                "runelite:herblore:super_strength_3=Super strength(3)",
+                "runelite:herblore:weapon_poison=Weapon poison",
+                "runelite:herblore:super_restore_3=Super restore(3)",
+                "runelite:herblore:super_defence_3=Super defence(3)",
+                "runelite:herblore:antifire_potion_3=Antifire potion(3)",
+                "runelite:herblore:ranging_potion_3=Ranging potion(3)",
+                "runelite:herblore:magic_potion_3=Magic potion(3)",
+                "runelite:herblore:zamorak_brew_3=Zamorak brew(3)",
+                "runelite:herblore:saradomin_brew_3=Saradomin brew(3)"})
             assertTrue(identity, identities.contains(identity));
     }
 
@@ -159,6 +173,8 @@ public class RuneLiteSkillActionCatalogTest
         RuneLiteSkillActionCatalog catalog = new RuneLiteSkillActionCatalog();
         LegacyRecipe[] recipes = BundledCatalogLoader.array(
                 "/content/catalogs/action-recipes.json", LegacyRecipe[].class);
+        assertEquals("Legacy recipes must migrate through reviewed provenance",
+                0, recipes.length);
         List<String> missing = new ArrayList<>();
         for (LegacyRecipe recipe : recipes)
         {

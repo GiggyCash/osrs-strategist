@@ -52,7 +52,7 @@ public class ReviewedActionRecipeTest
     public void allReviewedRowsHaveUsableProductionMappings()
     {
         ReviewedActionRecipeCatalog.Recipe[] recipes = definitions();
-        assertEquals(223, recipes.length);
+        assertEquals(237, recipes.length);
         ReviewedActionRecipeCatalog.validate(recipes);
         for (ReviewedActionRecipeCatalog.Recipe recipe : recipes)
         {
@@ -84,6 +84,34 @@ public class ReviewedActionRecipeTest
                 "Goat horn dust", 9736);
         assertHerblore("Prayer potion(3)", "Ranarr weed", 257,
                 "Snape grass", 231);
+        assertHerblore("Super attack(3)", "Irit leaf", 259,
+                "Eye of newt", 221);
+        assertHerblore("Superantipoison(3)", "Irit leaf", 259,
+                "Unicorn horn dust", 235);
+        assertHerblore("Fishing potion(3)", "Avantoe", 261,
+                "Snape grass", 231);
+        assertHerblore("Super energy(3)", "Avantoe", 261,
+                "Mort myre fungus", 2970);
+        assertHerblore("Hunter potion(3)", "Avantoe", 261,
+                "Kebbit teeth dust", 10111);
+        assertHerblore("Super strength(3)", "Kwuarm", 263,
+                "Limpwurt root", 225);
+        assertHerblore("Weapon poison", "Kwuarm", 263,
+                "Dragon scale dust", 241);
+        assertHerblore("Super restore(3)", "Snapdragon", 3000,
+                "Red spiders' eggs", 223);
+        assertHerblore("Super defence(3)", "Cadantine", 265,
+                "White berries", 239);
+        assertHerblore("Antifire potion(3)", "Lantadyme", 2481,
+                "Dragon scale dust", 241);
+        assertHerblore("Ranging potion(3)", "Dwarf weed", 267,
+                "Wine of zamorak", 245);
+        assertHerblore("Magic potion(3)", "Lantadyme", 2481,
+                "Potato cactus", 3138);
+        assertHerblore("Zamorak brew(3)", "Torstol", 269,
+                "Jangerberries", 247);
+        assertHerblore("Saradomin brew(3)", "Toadflax", 2998,
+                "Crushed nest", 6693);
     }
 
     @Test

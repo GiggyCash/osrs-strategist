@@ -705,3 +705,17 @@ This migration changes no production Java, removes 937 legacy-data characters,
 and adds 2,623 reviewed-data characters. The full clean suite remains 964/964,
 the packaged JAR is 1,258,357 bytes, and the production-Java audit remains
 1,078,816 characters / 269,704 estimated tokens.
+
+## Legacy action-recipe table retired
+
+Moved the final fourteen Herblore rows into the shared reviewed catalog. The
+thirteen dose-bearing potion/brew actions retain exact `(3)` RuneLite identities;
+Weapon poison has its distinct non-dose action and setup contract. Every row is
+P2P and carries exact item IDs, stackability, an individual Wiki revision, and a
+review date. The legacy table is now empty and a regression test prevents new
+unreviewed rows from returning.
+
+This migration changes no production Java, removes 2,615 legacy-data characters,
+and adds 7,309 reviewed-data characters. The full clean suite remains 964/964,
+the packaged JAR is 1,258,432 bytes, and the production-Java audit remains
+1,078,816 characters / 269,704 estimated tokens.

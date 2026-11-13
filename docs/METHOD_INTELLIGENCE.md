@@ -460,7 +460,7 @@ retain the legacy strategy profile. This fixes the existing bow-cutting route:
 carried logs plus a knife now reach its reviewed local-processing plan for UIM,
 while Cooking wines remain excluded as a conventional bank loop.
 
-## Early and mid-level Herblore recipes use reviewed identities
+## Reviewed Herblore recipes retire the legacy table
 
 Attack potion(3), Antipoison(3), Strength potion(3), and Restore potion(3) now
 use exact reviewed input identities rather than the dose-stripping legacy table.
@@ -473,5 +473,12 @@ membership therefore remain unresolved.
 
 The nine records are pinned individually to Wiki revisions 15247702, 15365013,
 15359571, 15183838, 15374696, 15183997, 15250405, 15183999, and 15386662 and
-match RuneLite 1.13.6's exact `(3)` action names. The other fourteen Herblore
-rows remain legacy and gain no implied provenance.
+match RuneLite 1.13.6's exact `(3)` action names. The remaining fourteen
+ordinary potion, brew, and poison rows are also pinned individually in the
+reviewed catalog. Weapon poison deliberately uses its non-dose RuneLite action
+and setup wording instead of inheriting the three-dose potion contract.
+
+`action-recipes.json` is now an empty compatibility resource. A regression gate
+requires it to remain empty, so new ingredient knowledge must include exact item
+identities, membership, stackability, setup, review date, and pinned provenance
+instead of reintroducing unreviewed legacy rows.
