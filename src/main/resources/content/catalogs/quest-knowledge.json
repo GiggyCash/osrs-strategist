@@ -5777,14 +5777,11 @@
       "Recipe for Disaster - Another Cook\u0027s Quest",
       "Shadow of the Storm"
     ],
-    "skillRequirements": {
-      "COOKING": 25
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any cat except an overgrown cat (note that each cat has a different effective rat catch rate -- kittens or lazy cats are not recommended) Several bowls of stew (9 at most)",
-      "Access requirements: Completion of the following quests: Gertrude\u0027s Cat Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Shadow of the Storm Demon Slayer The Golem"
+      "Obtain any cat except an overgrown cat and up to nine bowls of stew; kittens and lazy cats are not recommended because cats have different effective rat catch rates"
     ],
     "startLocation": "Inspect Evil Dave in the Lumbridge Castle dining room.",
     "unlocks": [

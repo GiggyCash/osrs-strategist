@@ -533,6 +533,28 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void evilDaveDoesNotTurnStewIntoACookingGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Evil Dave");
+        assertEquals(java.util.Arrays.asList(
+                "Gertrude's Cat",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Shadow of the Storm"), quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertFalse(quest.getPrerequisites().contains("Demon Slayer"));
+        assertFalse(quest.getPrerequisites().contains("The Golem"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain any cat except an overgrown cat"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "up to nine bowls of stew"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "kittens and lazy cats are not recommended"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
