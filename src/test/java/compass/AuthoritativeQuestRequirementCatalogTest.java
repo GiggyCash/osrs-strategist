@@ -1512,6 +1512,30 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void whatLiesBelowUsesDirectGraphAndTypedRunecraftStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("What Lies Below");
+        assertEquals(java.util.Collections.singletonList("Rune Mysteries"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(java.util.Arrays.asList(
+                        "35 Runecraft is non-boostable and required to start "
+                                + "the quest",
+                        "Bring an empty bowl and 15 chaos runes",
+                        "Have access to the Chaos Altar through a chaos or "
+                                + "catalytic talisman or tiara, the Abyss, or "
+                                + "Temple of the Eye",
+                        "Combat encounters: 5 Outlaws (level 32) and King "
+                                + "Roald (level 47)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

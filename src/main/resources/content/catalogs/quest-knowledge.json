@@ -6426,9 +6426,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Empty bowl 15 chaos runes Access to the Chaos Altar (Chaos talisman or tiara, Catalytic talisman or tiara, or travelling through the Abyss or Temple of the Eye)",
-      "Access requirements: Completion of the following quests: Rune Mysteries link\u003dRunecraft|alt\u003dRunecraft 35 Runecraft [ not boostable ] [ required to start ]",
-      "Combat encounters: 5 Outlaws (level 32) King Roald (level 47)"
+      "35 Runecraft is non-boostable and required to start the quest",
+      "Bring an empty bowl and 15 chaos runes",
+      "Have access to the Chaos Altar through a chaos or catalytic talisman or tiara, the Abyss, or Temple of the Eye",
+      "Combat encounters: 5 Outlaws (level 32) and King Roald (level 47)"
     ],
     "startLocation": "Talk to Rat Burgiss south of Varrock.",
     "unlocks": [
