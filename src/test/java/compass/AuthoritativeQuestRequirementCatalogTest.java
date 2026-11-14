@@ -1885,6 +1885,41 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void redReefKeepsDirectGraphAndUnknownStartGateExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Red Reef");
+        assertEquals(java.util.Collections.singletonList(
+                        "Troubled Tortugans"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Pandemonium"));
+        assertEquals(Integer.valueOf(52),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "52 Sailing and 48 Smithing are non-boostable; "
+                                + "whether either is required to start the "
+                                + "quest is unknown",
+                        "Use a boat; equip it with cannons for ship combat, "
+                                + "or bring Magic or Ranged gear to skip ship "
+                                + "combat",
+                        "Ship combat or crew encounters: Oaky Doak (level "
+                                + "77), Boatswain Bill Teak (level 77), "
+                                + "Mister U. (level 77), Captain Ruban Acer "
+                                + "(level 95), Old Jack (level 77), Mute Jack "
+                                + "(level 77), Bloody Jack (level 77), and "
+                                + "Captain Jack (level 95)",
+                        "Combat encounters: 6 pirates (level 52), Black Eye "
+                                + "Bethel (level 191), and Giant lobster "
+                                + "(level 112, safespottable)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

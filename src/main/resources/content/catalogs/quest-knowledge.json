@@ -4113,8 +4113,7 @@
     "name": "The Red Reef",
     "freeToPlay": false,
     "prerequisites": [
-      "Troubled Tortugans",
-      "Pandemonium"
+      "Troubled Tortugans"
     ],
     "skillRequirements": {
       "SMITHING": 48,
@@ -4123,9 +4122,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A boat Cannons on your boat for ship combat, or Magic/Ranged gear to skip it",
-      "Access requirements: link\u003dSailing|alt\u003dSailing 52 Sailing [ not boostable ] Category:Unknown start requirement status link\u003dSmithing|alt\u003dSmithing 48 Smithing [ not boostable ] Category:Unknown start requirement status Completion of the following quests: Troubled Tortugans Pandemonium",
-      "Combat encounters: 2 pirate ships (or the crew on the ship) Oaky Doak (level 77) Boatswain Bill Teak (level 77) Mister U. (level 77) Captain Ruban Acer (level 95) Old Jack (level 77) Mute Jack (level 77) Bloody Jack (level 77) Captain Jack (level 95) 6 pirates (level 52) Black Eye Bethel (level 191) Giant lobster (level 112, safespottable)"
+      "52 Sailing and 48 Smithing are non-boostable; whether either is required to start the quest is unknown",
+      "Use a boat; equip it with cannons for ship combat, or bring Magic or Ranged gear to skip ship combat",
+      "Ship combat or crew encounters: Oaky Doak (level 77), Boatswain Bill Teak (level 77), Mister U. (level 77), Captain Ruban Acer (level 95), Old Jack (level 77), Mute Jack (level 77), Bloody Jack (level 77), and Captain Jack (level 95)",
+      "Combat encounters: 6 pirates (level 52), Black Eye Bethel (level 191), and Giant lobster (level 112, safespottable)"
     ],
     "startLocation": "Talk to Elder Raley at his home on the Great Conch.",
     "unlocks": [
