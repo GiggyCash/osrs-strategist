@@ -1861,6 +1861,30 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void currentAffairsKeepsUnknownFishingBoostStatusExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Current Affairs");
+        assertEquals(java.util.Collections.singletonList("Pandemonium"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(22),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(java.util.Arrays.asList(
+                        "22 Sailing is non-boostable and required to start "
+                                + "the quest",
+                        "10 Fishing is required to start the quest; whether "
+                                + "it is boostable is unknown",
+                        "Bring 50 coins; charcoal is obtainable during the "
+                                + "quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

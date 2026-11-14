@@ -4065,8 +4065,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Charcoal (obtainable during quest) 50 Coins",
-      "Access requirements: link\u003dSailing|alt\u003dSailing 22 Sailing [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 10 Fishing [ unknown Category:Unknown boost status] [ required to start ] Completion of Pandemonium"
+      "22 Sailing is non-boostable and required to start the quest",
+      "10 Fishing is required to start the quest; whether it is boostable is unknown",
+      "Bring 50 coins; charcoal is obtainable during the quest"
     ],
     "startLocation": "Talk to Arhein on the Catherby docks.",
     "unlocks": [
