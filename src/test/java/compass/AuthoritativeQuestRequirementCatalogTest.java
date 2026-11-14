@@ -507,6 +507,32 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void lumbridgeGuideKeepsDirectGraphAndTravelAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Lumbridge Guide");
+        assertEquals(7, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Big Chompy Bird Hunting", "Biohazard", "Demon Slayer",
+                "Murder Mystery", "Nature Spirit",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Witch's House")));
+        assertFalse(quest.getPrerequisites().contains("Plague City"));
+        assertFalse(quest.getPrerequisites().contains("Priest in Peril"));
+        assertFalse(quest.getPrerequisites().contains("The Restless Ghost"));
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk, egg, pot of flour, and cake tin"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "40 Cooking is boostable but required to start"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "fairy ring D I S with a Lunar or Dramen staff"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

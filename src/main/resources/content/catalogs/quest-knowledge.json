@@ -5757,8 +5757,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A bucket of milk An egg A pot of flour A cake tin (All required items can be bought from the Culinaromancer\u0027s Chest) Recommended: Minigame Teleport to Guardians of the Rift Necklace of passage or access to fairy rings ( D I S ) and a Lunar/Dramen staff (for quick transportation to Wizards\u0027 Tower)",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 40 Cooking [ boostable ] [ required to start ] Completion of the following quests: Big Chompy Bird Hunting Biohazard Plague City Demon Slayer Murder Mystery Nature Spirit Priest in Peril The Restless Ghost Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Witch\u0027s House"
+      "Obtain a bucket of milk, egg, pot of flour, and cake tin—all are sold by the Culinaromancer\u0027s Chest; 40 Cooking is boostable but required to start, and for faster Wizards\u0027 Tower travel use a Guardians of the Rift minigame teleport, a necklace of passage, or fairy ring D I S with a Lunar or Dramen staff"
     ],
     "startLocation": "Inspect the Lumbridge Guide in the Lumbridge Castle dining room.",
     "unlocks": [
