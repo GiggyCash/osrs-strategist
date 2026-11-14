@@ -6122,9 +6122,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Commorb (can get another by speaking to Sir Tiffy) Swamp paste (not consumed) Dead sea slug (obtainable during the quest) At least 5 rune/pure essence (bring 15–20 in case they shatter; succeeding with 5 is very unlikely) Chisel 5 open inventory slots Access to the Air, Water, Earth, Fire, and Mind Altars Elemental talisman OR Air, Water, Earth, and Fire talismans or tiaras Mind talisman or tiara :OR Travelling through the Abyss or using a Runecraft cape :OR Access to Guardians of the Rift",
-      "Access requirements: Completion of the following quests: Wanted! Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Rune Mysteries Goblin Diplomacy Enter the Abyss Priest in Peril Sea Slug link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] Category:Unknown start requirement status link\u003dRunecraft|alt\u003dRunecraft 30 Runecraft [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 30 Slayer [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 30 Thieving [ not boostable ]…",
-      "Combat encounters: Slug Prince (level 62)"
+      "Obtain and carry a Commorb to start—Sir Tiffy replaces it—plus swamp paste, at least five rune or pure essence, preferably 15–20 because they can shatter, a chisel, and five open inventory slots; the dead sea slug is obtainable during the quest and swamp paste is not consumed; all four skill requirements are non-boostable, with Runecraft and Slayer explicitly required to start",
+      "Obtain access to the Air, Water, Earth, Fire, and Mind Altars using an elemental talisman or four elemental talismans or tiaras plus a mind talisman or tiara, or instead travel through the Abyss, use a Runecraft cape, or use Guardians of the Rift",
+      "Combat encounter: Slug Prince (level 62), which must be defeated with Melee"
     ],
     "startLocation": "Talk to Sir Tiffy Cashien in Falador Park.",
     "unlocks": [

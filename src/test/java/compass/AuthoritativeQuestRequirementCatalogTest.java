@@ -819,6 +819,37 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void slugMenaceRestoresAltarAndCombatAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Slug Menace");
+        assertEquals(java.util.Arrays.asList("Sea Slug", "Wanted!"),
+                quest.getPrerequisites());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.RUNECRAFT));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SLAYER));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain and carry a Commorb to start"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "preferably 15–20 because they can shatter"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Runecraft and Slayer explicitly required to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "four elemental talismans or tiaras plus a mind talisman or tiara"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "use a Runecraft cape, or use Guardians of the Rift"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Slug Prince (level 62)")
+                        && check.contains("must be defeated with Melee")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
