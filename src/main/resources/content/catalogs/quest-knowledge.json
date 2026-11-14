@@ -5038,7 +5038,6 @@
     "name": "Grim Tales",
     "freeToPlay": false,
     "prerequisites": [
-      "Druidic Ritual",
       "Witch\u0027s House"
     ],
     "skillRequirements": {
@@ -5051,8 +5050,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 2 Tarromin potion (unf) or 2 vials of water and 2 tarromins Seed dibber (leprechaun is nearby). Not needed if the Farming portion of the Barbarian Training miniquest is completed Watering can with at least 1 dose (can also be stored with the leprechaun) Any axe Leather gloves (obtainable during quest, optional if willing to take 17 damage) High healing food Good armour and a weapon (Ranged or Magic equipment recommended if you have low melee levels)",
-      "Access requirements: Completion of the following quests: Witch\u0027s House link\u003dFarming|alt\u003dFarming 45 Farming [ boostable ] [ not required to start ] link\u003dHerblore|alt\u003dHerblore 52 Herblore [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 58 Thieving [ boostable ] [ not required to start ] link\u003dAgility|alt\u003dAgility 59 Agility [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000008-QINU`\"\u0027 link\u003dWoodcutting|alt\u003dWoodcutting 71 Woodcutting [ boostable ] [ not required to start ] Ability to defeat a…",
+      "Obtain two Tarromin potion (unf), or two vials of water and two tarromins, a watering can with at least one dose, and any axe; bring a seed dibber unless the Farming portion of Barbarian Training is complete, and the watering can can be stored with the nearby leprechaun; all five skill requirements are boostable and not needed to start",
+      "Obtain high-healing food, good armour, and a weapon, with Ranged or Magic recommended at low Melee levels; leather gloves are obtainable during the quest and optional if willing to take 17 damage",
       "Combat encounters: Glod (level 138)"
     ],
     "startLocation": "Talk to Sylas in Taverley, just south of the house portal.",

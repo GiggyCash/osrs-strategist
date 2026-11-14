@@ -790,6 +790,35 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void grimTalesDoesNotTurnHerbloreIntoAQuestGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Grim Tales");
+        assertEquals(java.util.Collections.singletonList("Witch's House"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertEquals(5, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(71),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(Integer.valueOf(45),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain two Tarromin potion (unf)"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "unless the Farming portion of Barbarian Training is complete"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all five skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "optional if willing to take 17 damage"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Glod (level 138)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
