@@ -5865,8 +5865,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: M\u0027speak amulet Karamjan monkey greegree (unless you already have another greegree) Gorilla, Ninja monkey and Zombie monkey greegree (or 3,000 coins to purchase three monkey talismans) Banana (can be obtained during the quest) Monkey nuts (or 3 coins to buy some during the quest) Rope Knife or slashing weapon Pestle and mortar",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 70 Cooking [ boostable ] [ not required to start ] link\u003dAgility|alt\u003dAgility 48 Agility [ not boostable ] [ not required to start ] Completion of the following quests: Monkey Madness I The Grand Tree Tree Gnome Village Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant The ability to defeat a level 84 Big Snake",
+      "Obtain an M\u0027speak amulet, a Karamjan monkey greegree unless another greegree is owned, Gorilla, Ninja monkey, and Zombie monkey greegrees or 3,000 coins for three monkey talismans, rope, a knife or slashing weapon, and a pestle and mortar; a banana is obtainable during the quest, monkey nuts can be bought for 3 coins, 70 Cooking is boostable, and neither skill requirement is needed to start",
       "Combat encounters: Big Snake (level 84) - (recommended to kill several as they burn often when cooking) To obtain the greegrees: Zombie monkey (levels 82/129) Monkey guard (level 167) Monkey archer (level 86)"
     ],
     "startLocation": "Inspect Awowogei in the Lumbridge Castle dining room.",

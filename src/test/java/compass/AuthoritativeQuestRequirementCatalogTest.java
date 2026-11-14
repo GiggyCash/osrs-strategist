@@ -450,6 +450,35 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void kingAwowogeiKeepsDirectGraphAndAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - King Awowogei");
+        assertEquals(java.util.Arrays.asList(
+                "Monkey Madness I",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(70),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(48),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an M'speak amulet"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "or 3,000 coins for three monkey talismans"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "70 Cooking is boostable"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "neither skill requirement is needed to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Big Snake (level 84)")
+                        && check.contains("Monkey guard (level 167)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
