@@ -4820,8 +4820,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Shrimps Salmon Tuna Bass Swordfish Pickaxe - adamant or rune (41+ Mining) highly recommended 2 cut rubies Ring mould Necklace mould Any poison cure (you will lose this item). Does not need to contain full doses. Means to cast all 4 Blast spells",
-      "Access requirements: link\u003dMining|alt\u003dMining 40 Mining [ boostable ] [ not required to start ] link\u003dSmithing|alt\u003dSmithing 40 Smithing [ boostable ] [ not required to start ] link\u003dMagic|alt\u003dMagic 59 Magic [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dCrafting 40 Crafting [ boostable ] [ not required to start ] The ability to defeat a level 170 demon (can be safespotted)",
+      "Obtain shrimps, salmon, tuna, bass, swordfish, two cut rubies, a ring mould, necklace mould, poison cure, and means to cast all four Blast spells; bring a pickaxe, preferably adamant or rune at 41 Mining",
       "Combat encounters: Chronozon (level 170) (can be safespotted)"
     ],
     "startLocation": "Talk to Dimintheis in south-eastern Varrock.",

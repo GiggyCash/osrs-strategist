@@ -168,6 +168,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void familyCrestUsesConcretePreparationWithoutDuplicateSkillDump()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Family Crest");
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(59),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain shrimps, salmon, tuna, bass, swordfish"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Chronozon (level 170)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
