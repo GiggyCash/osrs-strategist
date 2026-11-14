@@ -5313,8 +5313,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Children of the Sun",
-      "Combat encounters: Dire Wolf Alpha (level 113) Minotaur (level 193)"
+      "Combat encounters: Dire Wolf Alpha (level 113) and Minotaur (level 193)"
     ],
     "startLocation": "Talk to Emelio at his home in Outer Fortis.",
     "unlocks": [

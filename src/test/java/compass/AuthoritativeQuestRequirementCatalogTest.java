@@ -1751,6 +1751,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void meatAndGreetUsesTypedGraphWithoutDuplicateRawAccess()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Meat and Greet");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Combat encounters: Dire Wolf Alpha (level 113) and "
+                                + "Minotaur (level 193)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
