@@ -6380,8 +6380,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Items for two different combat classes or a poisoned weapon (be warned that the poison method is much slower).",
-      "Access requirements: Completion of the following quests: Children of the Sun",
+      "Equip items for two different combat classes or bring a poisoned weapon; poison is the slower route",
       "Combat encounters: Knight of Varlamore (level 81) 8 cultists (level 34)"
     ],
     "startLocation": "Talk to Ennius Tullus or Furia Tullus in front of the Sunrise Palace.",

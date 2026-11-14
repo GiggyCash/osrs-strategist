@@ -81,6 +81,54 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void unfinishedTwilightPromiseLeadsBeforePerilousMoons()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, QuestStatus.NOT_STARTED,
+                checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:twilight-s-promise", candidate.getId());
+        assertNull(find(provider.candidates(context(blocked,
+                GoalType.MOONS_GRIND_READY))));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:twilight-s-promise", queue.get(0).getId());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(queue.get(0)));
+    }
+
+    @Test
+    public void rawQuestRequirementDumpStillCannotLeadDoNext()
+    {
+        Recommendation raw = new Recommendation("quest:raw", "Quest: Raw",
+                "Unresolved raw requirements.", 100.0,
+                Confidence.CHECK_NEEDED,
+                new Guidance("Required items: unknown setup.",
+                        "Access requirements: unknown.", "Unknown.", null),
+                Safety.harmless(false));
+
+        assertFalse(new ActionabilityPolicy().canLeadQueue(raw));
+
+        Recommendation unknownPrerequisite = new Recommendation(
+                "quest:unknown-prerequisite", "Quest: Unknown prerequisite",
+                "Prerequisite state is unknown.", 100.0,
+                Confidence.CHECK_NEEDED,
+                new Guidance("Verify and complete prerequisite quest: Unknown.",
+                        "Quest completion is unobserved.", "Unknown.", null),
+                Safety.harmless(false));
+        assertFalse(new ActionabilityPolicy().canLeadQueue(
+                unknownPrerequisite));
+    }
+
+    @Test
     public void completedQuestWithUnobservedSetupProducesExactVerification()
     {
         Recommendation candidate = find(provider.candidates(context(
@@ -219,6 +267,44 @@ public class MoonsGrindReadyGoalTest
         assertNotNull(queue.get(0).getGoalProvenance());
         assertEquals(GoalRelation.DIRECT,
                 queue.get(0).getGoalProvenance().getRelationship());
+    }
+
+    @Test
+    public void goalSwitchingClearsAndRestoresMoonsDoNext()
+    {
+        PvmReadiness readiness = new PvmReadiness(ACTIVITY, true,
+                Confidence.VERIFIED, Collections.emptyList());
+        GameData ready = data(0, Membership.P2P, QuestStatus.COMPLETE,
+                readiness, true);
+        StrategyEngine engine = moonsStrategyEngine();
+
+        List<Recommendation> selected = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(selected.isEmpty());
+        assertEquals(ACTIVITY, selected.get(0).getId());
+
+        List<Recommendation> automatic = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.AUTOMATIC,
+                false, false, new PreferenceProfile()).getRecommendations();
+        Recommendation automaticMoons = automatic.stream()
+                .filter(recommendation -> ACTIVITY.equals(
+                        recommendation.getId()))
+                .findFirst().orElse(null);
+        assertNotNull(automaticMoons);
+        assertNull(automaticMoons.getGoalProvenance());
+
+        List<Recommendation> restored = engine.evaluate(ready,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(restored.isEmpty());
+        assertEquals(ACTIVITY, restored.get(0).getId());
+        assertNotNull(restored.get(0).getGoalProvenance());
+        assertEquals(GoalRelation.DIRECT,
+                restored.get(0).getGoalProvenance().getRelationship());
     }
 
     @Test
@@ -460,6 +546,23 @@ public class MoonsGrindReadyGoalTest
             QuestStatus questStatus, PvmReadiness readiness,
             boolean observedSetup, Map<Skill, Integer> levelOverrides)
     {
+        return data(type, membership, QuestStatus.COMPLETE, questStatus,
+                readiness, observedSetup, levelOverrides);
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus twilightStatus, QuestStatus questStatus,
+            PvmReadiness readiness, boolean observedSetup)
+    {
+        return data(type, membership, twilightStatus, questStatus, readiness,
+                observedSetup, Collections.emptyMap());
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus twilightStatus, QuestStatus questStatus,
+            PvmReadiness readiness, boolean observedSetup,
+            Map<Skill, Integer> levelOverrides)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -473,7 +576,8 @@ public class MoonsGrindReadyGoalTest
                 membership == Membership.P2P ? 1 : 0,
                 70 * Skill.values().length, 0L, levels, xp);
         Map<String, QuestStatus> quests = new HashMap<>();
-        quests.put("Twilight's Promise", QuestStatus.COMPLETE);
+        quests.put("Children of the Sun", QuestStatus.COMPLETE);
+        quests.put("Twilight's Promise", twilightStatus);
         quests.put("Perilous Moons", questStatus);
         Map<String, PvmReadiness> readinessByActivity = new HashMap<>();
         readinessByActivity.put(ACTIVITY, readiness);

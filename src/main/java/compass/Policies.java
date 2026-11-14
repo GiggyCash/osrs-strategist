@@ -460,9 +460,17 @@ class ActionabilityPolicy
         String id = recommendation == null || recommendation.id == null
                 ? "" : recommendation.id.toLowerCase(
                         Locale.ROOT);
-        return id.startsWith("prepare:")
+        if (id.startsWith("prepare:")
                 || id.startsWith("preparation:")
-                || id.startsWith("verify:");
+                || id.startsWith("verify:")) return true;
+        if (!id.startsWith("quest:") || recommendation.guidance == null)
+            return false;
+        String action = recommendation.guidance.getAction();
+        if (!hasText(action)) return false;
+        String normalized = action.trim().toLowerCase(Locale.ROOT);
+        return normalized.startsWith("equip ")
+                || normalized.startsWith("obtain ")
+                || normalized.startsWith("verify ownership of ");
     }
 }
 
