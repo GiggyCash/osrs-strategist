@@ -4738,8 +4738,7 @@
     "itemRequirements": [],
     "questPointsRequired": 20,
     "accessChecks": [
-      "Required items: TRIP 1 (starting the quest): 3 unnoted papyrus 1 ball of wool A full sack of potatoes (item is called Potatoes(10)) (there are potatoes growing in Entrana in the house east of Auguste, bring another empty sack if picking here) 8 empty sacks – bring 9 sacks if planning to fill one with potatoes on Entrana. 1 unlit candle or black candle (can be obtained during quest by stealing candles in Entrana church) Yellow dye Red dye 10 unnoted silk A bowl (obtainable during quest) TRIP 2 (building the thi…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 20 Quest points Category:Unknown start requirement status link\u003dFiremaking|alt\u003dFiremaking 20 Firemaking [ boostable ] [ required to start ] link\u003dFarming|alt\u003dFarming 30 Farming [ boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 36 Crafting [ boostable ] [ required to start ]"
+      "Obtain for Trip 1 three unnoted papyrus, a ball of wool, Potatoes(10), eight empty sacks or nine if filling the potato sack on Entrana, yellow and red dye, and ten unnoted silk; a candle and bowl are obtainable during the quest. For Trip 2 obtain at least ten normal logs, a tinderbox, and twelve unnoted willow branches; bring secateurs, a rake, and a spade only if growing the quest-provided willow sapling"
     ],
     "startLocation": "Talk to Auguste on Entrana.",
     "unlocks": [

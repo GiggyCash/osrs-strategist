@@ -345,6 +345,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void enlightenedJourneyRestoresBothTripSetups()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Enlightened Journey");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(20, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain for Trip 1"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "For Trip 2 obtain at least ten normal logs"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "only if growing the quest-provided willow sapling"));
+        assertFalse(quest.getAccessChecks().get(0).contains("…"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
