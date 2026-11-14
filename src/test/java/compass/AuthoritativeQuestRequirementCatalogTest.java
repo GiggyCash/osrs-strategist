@@ -1715,6 +1715,42 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void spiritsOfTheElidKeepsQuestObtainableCombatFallbacks()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Spirits of the Elid");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(33),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.RANGED));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(37),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(java.util.Arrays.asList(
+                        "33 Magic and 37 Ranged, Mining, and Thieving are "
+                                + "boostable and not required to start the "
+                                + "quest",
+                        "Bring 1 law rune and 1 air rune for Telekinetic Grab, "
+                                + "a needle (not a costume needle), 1-2 thread, "
+                                + "crush, stab, and slash weapons, a light "
+                                + "source, a knife or fletching knife, and a "
+                                + "rope",
+                        "Bring a pickaxe you can use; a bronze pickaxe is "
+                                + "obtainable during the quest",
+                        "Bring a Ranged or Magic attack method; a shortbow and "
+                                + "bronze arrows are obtainable during the "
+                                + "quest",
+                        "Be able to defeat the Black, Grey, and White golems "
+                                + "(level 75 each)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
