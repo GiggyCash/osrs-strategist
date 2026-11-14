@@ -1565,6 +1565,29 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void aSoulsBaneSeparatesKillableWavesFromTankOnlyPhase()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Soul's Bane");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a rope and a weapon",
+                        "Be able to defeat level 45+ enemies",
+                        "Combat waves: 7-8 angry unicorns, angry bears, angry "
+                                + "giant rats, and/or angry goblins; then 5 "
+                                + "fear reapers (level 42)",
+                        "Tank 6 confusion beasts (level 43); they cannot be "
+                                + "killed",
+                        "Further combat: 5 hopeless creatures (level 40) and "
+                                + "3 parts of Tolna (level 46)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
