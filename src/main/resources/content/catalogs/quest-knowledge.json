@@ -6052,8 +6052,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Swamp paste (made by mixing flour with swamp tar then cooking the mixture on a fire; can also be bought from a Trader crewmember for 75 coins, from Rasolo for 60 coins west of the Fishing Guild, or from the Khazard General Store for 42 coins at full stock)",
-      "Access requirements: link\u003dFiremaking|alt\u003dFiremaking 30 Firemaking [ boostable ] [ not required to start ]"
+      "Obtain swamp paste by mixing flour with swamp tar and cooking it on a fire, or buy it from a Trader crewmember for 75 coins, Rasolo west of the Fishing Guild for 60 coins, or the Khazard General Store for 42 coins at full stock",
+      "Reach or boost to 30 Firemaking before the relevant quest step; the quest can be started without that level"
     ],
     "startLocation": "Talk to Caroline just north of Witchaven.",
     "unlocks": [

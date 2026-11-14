@@ -1354,6 +1354,27 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void seaSlugOffersSelfSourcedSwampPasteWithoutRawSkillMarkup()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Sea Slug");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mixing flour with swamp tar")
+                        && check.contains("Trader crewmember for 75 coins")
+                        && check.contains("Rasolo")
+                        && check.contains("Khazard General Store")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Reach or boost to 30 Firemaking")
+                        && check.contains("started without that level")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
