@@ -6068,7 +6068,6 @@
     "name": "Shades of Mort\u0027ton",
     "freeToPlay": false,
     "prerequisites": [
-      "Druidic Ritual",
       "Priest in Peril"
     ],
     "skillRequirements": {
@@ -6079,8 +6078,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 1000+ coins (bring plenty of money just in case) 2 Tarromin potion (unf) OR 2 vials of water and 2 tarromins (both obtainable during the quest) 2 ashes Tinderbox Logs OR an axe to obtain some 1 hammer Using a Flamtaer hammer is highly recommended in case the minigame is unpopulated, as a regular hammer is insufficient to build the temple alone. An additional 13,000 coins (or 5,079 on the Grand Exchange) allows you to buy a Flamtaer hammer from Razmire.",
-      "Access requirements: Completion of the following quests: Priest in Peril link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ] link\u003dHerblore|alt\u003dHerblore 15 Herblore [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 5 Firemaking [ boostable ] [ not required to start ] Must be able to defeat 5 level-40 Loar Shades. Must be able to survive an onslaught when rebuilding the Temple (Being surrounded by many players makes this much easier). Access to Mort\u0027ton",
+      "Obtain at least 1,000 coins with extra margin, 2 Tarromin potion (unf), or 2 vials of water and 2 tarromins obtainable during the quest, plus 2 ashes, a tinderbox, logs or an axe, and a hammer",
+      "For an unpopulated temple, obtain a Flamtaer hammer because a regular hammer is insufficient to rebuild it alone; Razmire sells one for an additional 13,000 coins",
+      "All three skill requirements are boostable and are not required to start the quest",
+      "Obtain access to Mort\u0027ton and prepare to survive the temple-rebuilding onslaught; nearby players make the rebuild easier",
       "Combat encounters: 5 Loar Shades (level 40)"
     ],
     "startLocation": "Search the shelf in the southern-western house of Mort\u0027ton.",

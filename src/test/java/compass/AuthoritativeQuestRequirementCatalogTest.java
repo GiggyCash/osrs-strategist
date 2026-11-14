@@ -1316,6 +1316,44 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void shadesOfMorttonUsesDirectGraphAndSoloTemplePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Shades of Mort'ton");
+        assertEquals(java.util.Collections.singletonList("Priest in Peril"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.HERBLORE));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("at least 1,000 coins")
+                        && check.contains("2 Tarromin potion (unf)")
+                        && check.contains("2 ashes")
+                        && check.contains("logs or an axe")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("unpopulated temple")
+                        && check.contains("Flamtaer hammer")
+                        && check.contains("Razmire sells one")
+                        && !check.contains("Grand Exchange")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("All three skill requirements are boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("temple-rebuilding onslaught")
+                        && check.contains("nearby players")));
+        assertTrue(quest.getAccessChecks().contains(
+                "Combat encounters: 5 Loar Shades (level 40)"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
