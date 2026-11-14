@@ -419,6 +419,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void fremennikIslesUsesOnlyItsMandatoryConstructionGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Fremennik Isles");
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.AGILITY));
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().contains(
+                "Resolve the Mining-level-dependent ore requirement"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Ice Troll King")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

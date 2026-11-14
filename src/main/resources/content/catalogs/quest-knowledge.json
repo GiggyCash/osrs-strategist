@@ -1041,7 +1041,6 @@
       "The Fremennik Trials"
     ],
     "skillRequirements": {
-      "AGILITY": 40,
       "CONSTRUCTION": 20
     },
     "itemRequirements": [
