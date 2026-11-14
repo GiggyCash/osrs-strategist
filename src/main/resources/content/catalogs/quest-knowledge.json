@@ -4944,8 +4944,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ring of Charos All tool leprechaun tools A rake A seed dibber (or partial completion of the Farming portion of the Barbarian Training miniquest) A spade Secateurs (magic secateurs work) A watering can A gardening trowel 2 plant cures A marigold seed (2 recommended in case of failure) 3+ cabbage seeds (6 recommended to plant in both allotments to increase chance of survival) 3+ onion seeds (6 recommended to plant in both allotments to increase chance of survival) A hammer A rune/pure essence A p…",
-      "Access requirements: link\u003dFarming|alt\u003dFarming 25 Farming [ not boostable ] [ required to start ] Completion of the following quests: Creature of Fenkenstrain Priest in Peril The Restless Ghost"
+      "Obtain a ring of Charos; rake, seed dibber or partial Barbarian Farming training, spade, secateurs, watering can, and gardening trowel; two plant cures; one marigold, at least three cabbage, and at least three onion seeds; a hammer, rune or pure essence, pestle and mortar, filled plant pot, and two compost items—the bottomless compost bucket does not work"
     ],
     "startLocation": "Talk to Queen Ellamaria in the garden of Varrock Palace.",
     "unlocks": [

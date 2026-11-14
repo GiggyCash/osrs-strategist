@@ -235,6 +235,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void gardenOfTranquillityRestoresCompletePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Garden of Tranquillity");
+        assertEquals(java.util.Collections.singletonList(
+                "Creature of Fenkenstrain"), quest.getPrerequisites());
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a ring of Charos"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "pestle and mortar, filled plant pot"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "bottomless compost bucket does not work"));
+        assertFalse(quest.getAccessChecks().get(0).contains("…"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
