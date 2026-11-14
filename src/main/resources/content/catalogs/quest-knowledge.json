@@ -5617,16 +5617,21 @@
     "name": "Ratcatchers",
     "freeToPlay": false,
     "prerequisites": [
-      "Icthlarin\u0027s Little Helper",
+      "Icthlarin\u0027s Little Helper"
+    ],
+    "startedPrerequisites": [
       "The Giant Dwarf"
     ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any type of cat or hellcat (for most of the quest, a cat with a high successful rat catch rate is recommended, and overgrown cats cannot be used there -- during the Hooknosed Jack part of the quest, any cat with strong combat stats is recommended) 4 cheese (or 4 Poisoned cheese) Rat poison (if cheese is not already poisoned; can be found in the Clock Tower Basement), or made during the quest with the following items: Empty vial Cleaned kwuarm (grimy will not work; Zahur in Nardah cleans grimy h…",
-      "Access requirements: Completion of the following quests: Icthlarin\u0027s Little Helper Gertrude\u0027s Cat Access to Keldagrim The Giant Dwarf started",
-      "Combat encounters: None, but your cat will have to fight the King rat"
+      "Obtain any cat or hellcat; prefer a high rat-catch rate for most of the quest because overgrown cats cannot be used there, and prefer strong cat combat stats for the Hooknosed Jack section",
+      "Obtain 4 cheese or 4 poisoned cheese; if the cheese is not poisoned, obtain rat poison from the Clock Tower Basement or make it during the quest with an empty vial, cleaned kwuarm, and red spiders' eggs—grimy kwuarm does not work, while Zahur can clean it for 200 coins",
+      "Obtain cleaned marrentill, unicorn horn dust, and a bucket of milk or bottomless milk bucket; grimy marrentill does not work",
+      "Obtain a Catspeak amulet even after Dragon Slayer II, plus a pot of weeds made with an empty pot, and a tinderbox",
+      "Obtain 101 coins, or 51 coins with a Ring of Charos(a), a snake charm obtainable from The Feud or during this quest, and one free inventory space",
+      "No player combat encounter is required, but the cat must fight the King rat"
     ],
     "startLocation": "Talk to Gertrude west of Varrock.",
     "unlocks": [

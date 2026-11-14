@@ -1145,6 +1145,43 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ratcatchersUsesStartedKeldagrimAccessAndConditionalSupplies()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Ratcatchers");
+        assertEquals(java.util.Collections.singletonList(
+                "Icthlarin's Little Helper"), quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList(
+                "The Giant Dwarf"), quest.getStartedPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("overgrown cats cannot be used")
+                        && check.contains("Hooknosed Jack")
+                        && check.contains("strong cat combat stats")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("4 cheese or 4 poisoned cheese")
+                        && check.contains("Clock Tower Basement")
+                        && check.contains("cleaned kwuarm")
+                        && check.contains("Zahur can clean it for 200 coins")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("cleaned marrentill")
+                        && check.contains("bottomless milk bucket")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Catspeak amulet even after Dragon Slayer II")
+                        && check.contains("pot of weeds")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("101 coins, or 51 coins")
+                        && check.contains("Ring of Charos(a)")
+                        && check.contains("one free inventory space")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("cat must fight the King rat")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
