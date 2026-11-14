@@ -130,6 +130,29 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void freshVarlamoreAccountLeadsWithChildrenOfTheSun()
+    {
+        GameData blocked = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, QuestStatus.NOT_STARTED,
+                QuestStatus.NOT_STARTED, checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(blocked,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:children-of-the-sun", candidate.getId());
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(blocked,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:children-of-the-sun", queue.get(0).getId());
+    }
+
+    @Test
     public void rawQuestRequirementDumpStillCannotLeadDoNext()
     {
         Recommendation raw = new Recommendation("quest:raw", "Quest: Raw",
@@ -587,6 +610,15 @@ public class MoonsGrindReadyGoalTest
             PvmReadiness readiness, boolean observedSetup,
             Map<Skill, Integer> levelOverrides)
     {
+        return data(type, membership, QuestStatus.COMPLETE, twilightStatus,
+                questStatus, readiness, observedSetup, levelOverrides);
+    }
+
+    private static GameData data(int type, Membership membership,
+            QuestStatus childrenStatus, QuestStatus twilightStatus,
+            QuestStatus questStatus, PvmReadiness readiness,
+            boolean observedSetup, Map<Skill, Integer> levelOverrides)
+    {
         Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
         Map<Skill, Integer> xp = new EnumMap<>(Skill.class);
         for (Skill skill : Skill.values())
@@ -600,7 +632,7 @@ public class MoonsGrindReadyGoalTest
                 membership == Membership.P2P ? 1 : 0,
                 70 * Skill.values().length, 0L, levels, xp);
         Map<String, QuestStatus> quests = new HashMap<>();
-        quests.put("Children of the Sun", QuestStatus.COMPLETE);
+        quests.put("Children of the Sun", childrenStatus);
         quests.put("Twilight's Promise", twilightStatus);
         quests.put("Perilous Moons", questStatus);
         Map<String, PvmReadiness> readinessByActivity = new HashMap<>();
