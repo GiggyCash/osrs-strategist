@@ -81,6 +81,30 @@ public class MoonsGrindReadyGoalTest
     }
 
     @Test
+    public void metAccessLevelsProduceActionablePerilousMoonsPreparation()
+    {
+        GameData preparing = data(0, Membership.P2P,
+                QuestStatus.NOT_STARTED, checkNeeded(), true,
+                Collections.singletonMap(Skill.SLAYER, 70));
+        Recommendation candidate = find(TestFixtures.questCandidateProvider(
+                new QuestPriorityCatalog()).candidates(context(preparing,
+                        GoalType.MOONS_GRIND_READY)));
+
+        assertNotNull(candidate);
+        assertEquals("quest:perilous-moons", candidate.getId());
+        assertTrue(candidate.getGuidance().getAction().startsWith(
+                "Obtain a knife, big fishing net, rope, and pestle and mortar"));
+        assertTrue(new ActionabilityPolicy().canLeadQueue(candidate));
+
+        List<Recommendation> queue = moonsStrategyEngine().evaluate(preparing,
+                StrategyMode.BALANCED, SessionIntent.PICK_FOR_ME,
+                QuestTolerance.NORMAL, GoalType.MOONS_GRIND_READY,
+                false, false, new PreferenceProfile()).getRecommendations();
+        assertFalse(queue.isEmpty());
+        assertEquals("quest:perilous-moons", queue.get(0).getId());
+    }
+
+    @Test
     public void unfinishedTwilightPromiseLeadsBeforePerilousMoons()
     {
         GameData blocked = data(0, Membership.P2P,

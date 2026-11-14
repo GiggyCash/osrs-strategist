@@ -5499,8 +5499,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Knife (obtainable during quest) Big fishing net (obtainable during quest) Rope (obtainable during quest) Pestle and mortar (obtainable during quest) Combat equipment for multiple PvM encounters.",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 48 Slayer [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 20 Hunter [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 20 Fishing [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 20 Runecraft [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 10 Construction [ not boostable ] [ required to start ] Completion of the following quests: Twilight\u0027s Promise Children of the Sun",
+      "Obtain a knife, big fishing net, rope, and pestle and mortar, or collect them during the quest; equip combat gear for the three Moons encounters",
       "Combat encounters: Sulphur Nagua (level 98) Blue Moon (level 329) Blood Moon (level 329) Eclipse Moon (level 329)"
     ],
     "startLocation": "Talk to Zuma or Attala at the entrance to Cam Torum.",
