@@ -4566,8 +4566,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Chaos core (obtainable during the quest) Barronite deposit or a pickaxe to mine one",
-      "Access requirements: link\u003dSmithing|alt\u003dSmithing 55 Smithing [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 52 Hunter [ not boostable ] [ required to start ] Completion of the following quests: Shield of Arrav Temple of Ikov Below Ice Mountain Family Crest Garden of Tranquillity Creature of Fenkenstrain Priest in Peril The Restless Ghost What Lies Below Rune Mysteries Romeo \u0026 Juliet Demon Slayer",
+      "Obtain a barronite deposit or bring a pickaxe to mine one; the chaos core is obtainable during the quest",
       "Combat encounters: At least six armoured zombies (level 85) Multiple Chaos Golems (level 70)"
     ],
     "startLocation": "Talk to Elias White in the Jolly Boar Inn.",

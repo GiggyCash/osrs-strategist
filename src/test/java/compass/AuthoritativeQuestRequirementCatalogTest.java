@@ -218,6 +218,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void defenderOfVarrockUsesDirectGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Defender of Varrock");
+        assertEquals(8, quest.getPrerequisites().size());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a barronite deposit"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("armoured zombies (level 85)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
