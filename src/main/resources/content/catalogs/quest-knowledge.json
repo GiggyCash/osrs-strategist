@@ -5513,8 +5513,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Soft clay 3 balls of wool Yellow dye or 2 onions and 5 coins Redberries Ashes Bucket of water or jug of water (obtainable during quest) Pot of flour Bronze bar Pink skirt 3 beers Rope (can be bought during the quest from Ned for 18 coins) 30-40 coins for the Al Kharid toll gate if not using teleports to and from Al Kharid",
-      "Access requirements: The ability to get past aggressive combat level 26 jail guards.",
+      "Obtain soft clay, three balls of wool, yellow dye or two onions and 5 coins, redberries, ashes, pot of flour, bronze bar, pink skirt, and three beers; bring a bucket or jug of water or obtain one during the quest, plus a rope or 18 coins to buy one from Ned, and 30–40 toll coins unless using Al Kharid teleports",
       "Combat encounters: Jail guard (level 26, optional)"
     ],
     "startLocation": "Talk to Hassan in the palace at Al Kharid.",

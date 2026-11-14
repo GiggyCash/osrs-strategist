@@ -275,6 +275,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void princeAliRescueKeepsAlternativesAndOptionalCombat()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Prince Ali Rescue");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain soft clay, three balls of wool"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "yellow dye or two onions and 5 coins"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Jail guard (level 26, optional)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
