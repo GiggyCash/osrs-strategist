@@ -1121,8 +1121,27 @@ public class AuthoritativeQuestRequirementCatalogTest
                         + "to wield a mirror shield"));
         assertTrue(quest.getAccessChecks().contains(
                 "Verify legal setups for the high-level bone targets"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("27 pots, 27 jugs of vinegar")
+                        && check.contains("27 sets of any logs")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("dusty key when below 70 Agility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ogre composite bow with brutal arrows")
+                        && check.contains("Crumble Undead")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("mirror shield or V's shield")
+                        && check.contains("verified shield workaround")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("40 Slayer is boostable")
+                        && check.contains("not required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Check the quest's 27 combat targets")
+                        && check.contains("does not enumerate the full target list")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test
