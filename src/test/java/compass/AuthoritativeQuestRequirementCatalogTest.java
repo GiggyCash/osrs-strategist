@@ -1681,6 +1681,40 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void betweenARockKeepsOptionalCannonballAndVariableBossLevel()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Between a Rock...");
+        assertEquals(java.util.Arrays.asList("Dwarf Cannon",
+                        "Fishing Contest"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.DEFENCE));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "30 Defence, 40 Mining, and 50 Smithing are boostable "
+                                + "and not required to start the quest",
+                        "Bring a pickaxe, 4 gold bars, a hammer, an ammo mould "
+                                + "or double ammo mould, and about 830 coins "
+                                + "for the cart and ferry; an ammo mould is "
+                                + "available during the quest for 5 coins",
+                        "Bring an extra gold bar and Telekinetic Grab only if "
+                                + "you want to keep a golden cannonball after "
+                                + "the quest",
+                        "Combat encounters: level 14 scorpions and the "
+                                + "Arzinian Being of Bordanzan (level 75-125); "
+                                + "be able to defeat the boss, whose level "
+                                + "depends on how much gold you mine"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

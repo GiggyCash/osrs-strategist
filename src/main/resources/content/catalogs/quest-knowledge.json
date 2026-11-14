@@ -4362,9 +4362,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A pickaxe 4 gold bars (You will need an extra bar and telegrab if you want to keep a golden cannonball for after the quest) A hammer An ammo mould (can be bought for 5 coins during the quest) or a double ammo mould ~830 coins (for cart and ferry)",
-      "Access requirements: Completion of the following quests: Dwarf Cannon Fishing Contest link\u003dDefence|alt\u003dDefence 30 Defence [ boostable ] [ not required to start ] link\u003dMining|alt\u003dMining 40 Mining [ boostable ] [ not required to start ] link\u003dSmithing|alt\u003dSmithing 50 Smithing [ boostable ] [ not required to start ] The ability to defeat a level 75-125 enemy (depends on how much gold you mine)",
-      "Combat encounters: Scorpion(s) (level 14) Arzinian Being of Bordanzan (level 75-125)"
+      "30 Defence, 40 Mining, and 50 Smithing are boostable and not required to start the quest",
+      "Bring a pickaxe, 4 gold bars, a hammer, an ammo mould or double ammo mould, and about 830 coins for the cart and ferry; an ammo mould is available during the quest for 5 coins",
+      "Bring an extra gold bar and Telekinetic Grab only if you want to keep a golden cannonball after the quest",
+      "Combat encounters: level 14 scorpions and the Arzinian Being of Bordanzan (level 75-125); be able to defeat the boss, whose level depends on how much gold you mine"
     ],
     "startLocation": "Talk to Dondakan the Dwarf at the Keldagrim south-west mine.",
     "unlocks": [
