@@ -1257,6 +1257,34 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void scorpionCatcherKeepsDungeonRoutesAndJailerConditional()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Scorpion Catcher");
+        assertEquals(java.util.Collections.singletonList(
+                "Alfred Grimhand's Barcrawl"), quest.getPrerequisites());
+        assertEquals(Integer.valueOf(31),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("dusty key obtainable during the quest")
+                        && check.contains("Legends' Guild Shop of Useful Items")
+                        && check.contains("boostable 70 Agility")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("31 Prayer")
+                        && check.contains("not boostable")
+                        && check.contains("not required to start")
+                        && check.contains("level 172 black demons")
+                        && check.contains("level 64 poison spiders")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Combat encounter only when obtaining")
+                        && check.contains("Jailer (level 47)")
+                        && check.contains("avoids this fight")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

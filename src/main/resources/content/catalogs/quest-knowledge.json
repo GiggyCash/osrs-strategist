@@ -6027,9 +6027,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Dusty key (obtainable during the quest) or link\u003dAgility|alt\u003dAgility 70 Agility [ boostable ] .",
-      "Access requirements: link\u003dPrayer|alt\u003dPrayer 31 Prayer [ not boostable ] [ not required to start ] Completion of Alfred Grimhand\u0027s Barcrawl [ required to start ] The ability to run past level 172 black demons and level 64 poison spiders",
-      "Combat encounters: Jailer (level 47) if you need to acquire the dusty key (alternatively, you can skip this if you have access to the Legends Guild Shop of Useful Items, where the key is sold)"
+      "Arrange Taverley Dungeon access with a dusty key obtainable during the quest, a key bought from the Legends\u0027 Guild Shop of Useful Items when accessible, or boostable 70 Agility to bypass the key route",
+      "Reach 31 Prayer, which is not boostable but is not required to start the quest, and prepare to run past level 172 black demons and level 64 poison spiders",
+      "Combat encounter only when obtaining the dusty key: Jailer (level 47); the Legends\u0027 Guild shop or Agility route avoids this fight"
     ],
     "startLocation": "Talk to Thormac at the top floor of the Sorcerer\u0027s Tower, south-east of the Ranging Guild.",
     "unlocks": [
