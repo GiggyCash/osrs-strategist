@@ -6396,8 +6396,7 @@
     "itemRequirements": [],
     "questPointsRequired": 32,
     "accessChecks": [
-      "Required items: 10,000 coins, or: Law rune Enchanted gem (bought from a Slayer Master) Molten glass 20 un-noted Rune essence or pure essence (you\u0027ll get them back) File:Ultimate ironman chat badge.png The player must deliver all 20 rune essence at once Light source (Note: Candles, torches and oil lamps can cause swamp gas explosions if going off-route, and need a tinderbox to stay lit)",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 32 Quest points [ required to start ] Completion of the following quests: Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Rune Mysteries Goblin Diplomacy Priest in Peril Enter the Abyss The ability to defeat a level 32 Black Knight.",
+      "Obtain either 10,000 coins or a law rune, enchanted gem, and molten glass; also bring 20 unnoted rune or pure essence at once and a safe light source, noting that candles, torches, and oil lamps need a tinderbox and can ignite swamp gas off-route",
       "Combat encounters: Black Knight (level 32) Solus Dellagar"
     ],
     "startLocation": "Talk to Sir Tiffy Cashien in Falador Park.",

@@ -201,6 +201,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void wantedUsesDirectGraphAndAlternativePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Wanted!");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(32, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain either 10,000 coins or"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "20 unnoted rune or pure essence at once"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Black Knight (level 32)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
