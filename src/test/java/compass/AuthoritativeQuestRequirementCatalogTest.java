@@ -1445,6 +1445,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void monksFriendKeepsAlternativeMaterialAndRunPastHazard()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Monk's Friend");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a jug of water and either regular logs or a "
+                                + "regular plank",
+                        "Be able to run past two level 14 thieves and one "
+                                + "level 26 NPC"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
