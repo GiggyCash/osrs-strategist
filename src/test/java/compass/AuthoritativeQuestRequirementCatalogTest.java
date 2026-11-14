@@ -1375,6 +1375,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void depthsOfDespairUsesDirectClientGraphAndTypedStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Depths of Despair");
+        assertEquals(java.util.Collections.singletonList("Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(18),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(java.util.Arrays.asList(
+                        "18 Agility is non-boostable and required to start the quest",
+                        "Combat encounter: Sand Snake (level 36)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

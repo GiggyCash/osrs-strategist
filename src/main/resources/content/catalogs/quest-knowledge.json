@@ -4590,8 +4590,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dAgility|alt\u003dAgility 18 Agility [ not boostable ] [ required to start ] Ability to kill a level 36 Sand Snake",
-      "Combat encounters: Sand Snake (level 36)"
+      "18 Agility is non-boostable and required to start the quest",
+      "Combat encounter: Sand Snake (level 36)"
     ],
     "startLocation": "Talk to Lord Kandur Hosidius at his home in Hosidius, north-west of the Vinery.",
     "unlocks": [
