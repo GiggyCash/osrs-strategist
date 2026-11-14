@@ -4861,8 +4861,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: ~400 coins 2 barley malt (no range in Keldagrim, plain barley has to be cooked elsewhere) 2 buckets of water Seed dibber (no Tool leprechaun in Keldagrim) or partial completion of the Farming portion of the Barbarian Training miniquest Rake (obtainable during the quest) Ale yeast (or a Pot (obtainable during the quest) + 25 coins) Kebab (purchasable during quest for 1 coin) 2 beers (purchasable during quest for 1-2 coins each) Beer glass (obtainable during the quest) A random item from the list…",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 22 Cooking [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000019-QINU`\"\u0027 link\u003dFarming|alt\u003dFarming 17 Farming [ boostable ] [ not required to start ] Completion of the following quests: The Giant Dwarf Fishing Contest"
+      "Obtain about 400 coins, 2 barley malt, and 2 buckets of water; Keldagrim has no range, so cook plain barley into malt elsewhere",
+      "Obtain a seed dibber because Keldagrim has no Tool Leprechaun, unless the Farming portion of Barbarian Training has been partially completed; a rake is obtainable during the quest",
+      "Obtain ale yeast, or use a pot obtainable during the quest plus 25 coins; a kebab and 2 beers can be bought during the quest, and a beer glass is obtainable there",
+      "Check which random item the quest requests and obtain that exact item; the reviewed source does not enumerate the possible items",
+      "Both skill requirements are boostable and are not required to start the quest"
     ],
     "startLocation": "Talk to Commander Veldaban in the Dwarven Black Guard headquarters in Keldagrim.",
     "unlocks": [

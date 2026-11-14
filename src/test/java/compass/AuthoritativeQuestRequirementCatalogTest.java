@@ -893,6 +893,41 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void forgettableTalePreservesVariableItemCheckWithoutGuessing()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Forgettable Tale...");
+        assertEquals(java.util.Arrays.asList("The Giant Dwarf", "Fishing Contest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(22),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(17),
+                quest.getSkillRequirements().get(Skill.FARMING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Keldagrim has no range")
+                        && check.contains("cook plain barley into malt elsewhere")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Keldagrim has no Tool Leprechaun")
+                        && check.contains("Barbarian Training")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("ale yeast")
+                        && check.contains("a kebab and 2 beers")
+                        && check.contains("beer glass is obtainable")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Check which random item")
+                        && check.contains("does not enumerate the possible items")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are boostable")
+                        && check.contains("not required to start")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.contains("UNIQ--ref")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
