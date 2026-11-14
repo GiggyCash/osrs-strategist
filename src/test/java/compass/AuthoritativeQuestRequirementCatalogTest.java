@@ -1412,6 +1412,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void clockTowerKeepsObtainableWaterOptionAndRunPastHazard()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Clock Tower");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Arrays.asList(
+                        "Bring a bucket of water, a jug of water, ice gloves, "
+                                + "or smiths gloves (i); a bucket of water is "
+                                + "obtainable during the quest",
+                        "Be able to run past level 53 ogres"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

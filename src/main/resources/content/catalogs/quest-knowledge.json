@@ -4400,8 +4400,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket of water (obtainable during quest) Alternatively, a Jug of water, Ice gloves, or Smiths gloves (i)",
-      "Access requirements: The ability to run past level 53 Ogres"
+      "Bring a bucket of water, a jug of water, ice gloves, or smiths gloves (i); a bucket of water is obtainable during the quest",
+      "Be able to run past level 53 ogres"
     ],
     "startLocation": "Talk to Brother Kojo in the Clock Tower south of East Ardougne.",
     "unlocks": [
