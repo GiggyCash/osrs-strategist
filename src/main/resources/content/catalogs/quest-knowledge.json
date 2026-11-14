@@ -5824,15 +5824,22 @@
     "name": "Recipe for Disaster - Sir Amik Varze",
     "freeToPlay": false,
     "prerequisites": [
+      "Family Crest",
+      "Heroes\u0027 Quest",
       "Recipe for Disaster - Another Cook\u0027s Quest",
+      "Shilo Village",
+      "Underground Pass",
+      "Waterfall Quest"
+    ],
+    "startedPrerequisites": [
       "Legends\u0027 Quest"
     ],
     "skillRequirements": {},
     "itemRequirements": [],
-    "questPointsRequired": 0,
+    "questPointsRequired": 107,
     "accessChecks": [
-      "Required items: Bucket of milk (can be bought from the Culinaromancer\u0027s Chest) or Bottomless milk bucket Pot of cream (can be bought from the Culinaromancer\u0027s Chest) Pot of cornflour Sweetcorn (Can be picked from the sweetcorn fields south of Civitas illa Fortis in Varlamore without link\u003dFarming|alt\u003dFarming 20 Farming [ boostable ] ) Vanilla pod or tools to get one: Any axe (the Blessed axe will not work!) Any machete (as well as Radimus notes if you haven\u0027t completed Legends\u0027 Quest) Dramen staff or Lunar staf…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 107 Quest points Category:Unknown start requirement status Access to the Kharazi Jungle Started Legends\u0027 Quest Completion of the following quests: Family Crest Heroes\u0027 Quest Shield of Arrav Lost City Merlin\u0027s Crystal Dragon Slayer I Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Shilo Village Jungle Potion Druidic Ritual Underground Pass Biohazard Plague City Waterfall Quest The ability to defeat a level 227 Black dragon",
+      "Obtain a bucket of milk or Bottomless milk bucket, pot of cream, pot of cornflour, and vanilla pod or a non-blessed axe and any machete; also bring Radimus notes if Legends\u0027 Quest is not complete, and sweetcorn for cornflour can be picked south of Civitas illa Fortis without 20 Farming; milk and cream are sold by the Culinaromancer\u0027s Chest",
+      "Obtain a Dramen or Lunar staff unless the Elite Lumbridge & Draynor Diary is complete, plus a Dramen branch, pestle and mortar, and raw chicken; ice gloves prevent all flambé damage, while an anti-dragon shield mitigates most damage to under 10",
       "Combat encounters: Evil Chicken (level varies) (see below) Black dragon (level 227)"
     ],
     "startLocation": "Inspect Sir Amik Varze in the Lumbridge Castle dining room.",

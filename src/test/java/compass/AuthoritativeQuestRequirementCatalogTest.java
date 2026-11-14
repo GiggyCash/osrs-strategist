@@ -604,6 +604,36 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void sirAmikSeparatesStartedQuestAndDirectCompletions()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Sir Amik Varze");
+        assertEquals(java.util.Arrays.asList(
+                "Family Crest", "Heroes' Quest",
+                "Recipe for Disaster - Another Cook's Quest",
+                "Shilo Village", "Underground Pass", "Waterfall Quest"),
+                quest.getPrerequisites());
+        assertEquals(java.util.Collections.singletonList("Legends' Quest"),
+                quest.getStartedPrerequisites());
+        assertEquals(107, quest.getQuestPointsRequired());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk or Bottomless milk bucket"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "without 20 Farming"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain a Dramen or Lunar staff"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "anti-dragon shield mitigates most damage to under 10"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Black dragon (level 227)")
+                        && check.contains("Evil Chicken (level varies)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
