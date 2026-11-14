@@ -1227,6 +1227,36 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void knightsSwordKeepsF2pPreparationFreeOfMemberDetours()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Knight's Sword");
+        assertTrue(quest.isFreeToPlay());
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("full redberry pie")
+                        && check.contains("2 iron bars")
+                        && check.contains("pickaxe available in Rimmington")
+                        && check.contains("mine 1 blurite ore")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("personal blurite sword")
+                        && check.contains("4 iron bars total")
+                        && check.contains("2 blurite ore total")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Reach or boost to 10 Mining")
+                        && check.contains("started without that level")
+                        && check.contains("level 57 ice warriors")
+                        && check.contains("level 53 ice giants")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Members")
+                        || check.contains("Falador easy diary")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

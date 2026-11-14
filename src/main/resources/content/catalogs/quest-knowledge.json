@@ -5218,8 +5218,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Redberry pie (not half a redberry pie) 2 or 4 iron bars (4 if you want your own blurite sword) 1-3 Blurite ore (obtained during the quest) - optionally an additional ore each for your own blurite sword and the Falador easy diary (Members only) Any pickaxe (one spawns in Rimmington)",
-      "Access requirements: link\u003dMining|alt\u003dMining 10 Mining [ boostable ] [ not required to start ] The ability to run from level 57 ice warriors and level 53 ice giants could help."
+      "Obtain a full redberry pie, 2 iron bars, and any pickaxe, with a pickaxe available in Rimmington; mine 1 blurite ore during the quest",
+      "If making a personal blurite sword, bring 4 iron bars total and mine 2 blurite ore total",
+      "Reach or boost to 10 Mining before collecting blurite; the quest can be started without that level, and being able to run past level 57 ice warriors and level 53 ice giants is useful"
     ],
     "startLocation": "Talk to the squire in the courtyard of the White Knights\u0027 Castle in Falador.",
     "unlocks": [
