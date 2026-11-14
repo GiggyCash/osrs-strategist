@@ -5093,8 +5093,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Beer (obtainable during the quest) About 150 coins 1 empty vial Redberries (purchasable during the quest from the Food Store in Port Sarim) White berries Lantern lens 5 earth runes (can be bought from Betty for 20 gp) Bucket of sand (obtainable during quest if you bring a bucket)",
-      "Access requirements: link\u003dThieving|alt\u003dThieving 17 Thieving [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 49 Crafting [ not boostable ] [ required to start ]"
+      "Obtain about 150 coins, an empty vial, white berries, and a lantern lens",
+      "Obtain beer during the quest and redberries from the Port Sarim Food Store; obtain 5 earth runes, which Betty sells for 20 coins",
+      "Obtain a bucket of sand during the quest by bringing a bucket",
+      "Both skill requirements are non-boostable and required to start the quest"
     ],
     "startLocation": "Talk to Bert in Yanille, near the sand pit.",
     "unlocks": [

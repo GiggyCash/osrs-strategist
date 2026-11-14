@@ -1285,6 +1285,37 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void handInTheSandUsesTypedStartGatesAndActionableSupplies()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Hand in the Sand");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(17),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("about 150 coins")
+                        && check.contains("empty vial")
+                        && check.contains("white berries")
+                        && check.contains("lantern lens")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("beer during the quest")
+                        && check.contains("Port Sarim Food Store")
+                        && check.contains("Betty sells for 20 coins")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("bucket of sand")
+                        && check.contains("bringing a bucket")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are non-boostable")
+                        && check.contains("required to start")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
