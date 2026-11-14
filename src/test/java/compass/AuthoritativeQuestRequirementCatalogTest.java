@@ -634,6 +634,38 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void culinaromancerKeepsDirectFinaleReadiness()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Culinaromancer");
+        assertEquals(10, quest.getPrerequisites().size());
+        assertTrue(quest.getPrerequisites().containsAll(java.util.Arrays.asList(
+                "Desert Treasure I", "Horror from the Deep",
+                "Recipe for Disaster - Mountain Dwarf",
+                "Recipe for Disaster - Wartface & Bentnoze",
+                "Recipe for Disaster - Pirate Pete",
+                "Recipe for Disaster - Lumbridge Guide",
+                "Recipe for Disaster - Evil Dave",
+                "Recipe for Disaster - Skrach Uglogwee",
+                "Recipe for Disaster - Sir Amik Varze",
+                "Recipe for Disaster - King Awowogei")));
+        assertEquals(175, quest.getQuestPointsRequired());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain ice gloves for Flambeed"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Menaphite remedy or restore potions for Karamel"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "defeat every boss without Prayer"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Agrith-Na-Na (level 146)")
+                        && check.contains("Culinaromancer (level 75)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

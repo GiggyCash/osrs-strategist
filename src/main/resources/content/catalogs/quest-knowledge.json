@@ -5898,8 +5898,7 @@
     "itemRequirements": [],
     "questPointsRequired": 175,
     "accessChecks": [
-      "Required items: Ice gloves for defeating Flambeed Menaphite remedy or restore potions since Karamel will lower your stats Certain armour and weapons for each boss Good healing food, such as sharks",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 175 Quest points [ required to start ] Completion of the following quests: Desert Treasure I The Dig Site Temple of Ikov The Tourist Trap Troll Stronghold Death Plateau Priest in Peril Waterfall Quest Horror from the Deep Alfred Grimhand\u0027s Barcrawl miniquest Freeing Evil Dave Freeing the Goblin generals Freeing the Lumbridge Guide Freeing the Mountain Dwarf Freeing Pirate Pete Freeing Sir Amik Varze Freeing Skrach Uglogwee Freeing King Awowogei The ability to…",
+      "Obtain ice gloves for Flambeed, a Menaphite remedy or restore potions for Karamel, suitable armour and weapons for each boss, and good healing food such as sharks; prepare to defeat every boss without Prayer",
       "Combat encounters: Agrith-Na-Na (level 146) Flambeed (level 149) Karamel (level 136) Dessourt (level 121) Gelatinnoth Mother (level 130) Culinaromancer (level 75)"
     ],
     "startLocation": "Release each member of the council from the Culinaromancer\u0027s spell.",
