@@ -479,6 +479,34 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void skrachUglogweeKeepsAcquisitionAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Skrach Uglogwee");
+        assertEquals(java.util.Arrays.asList(
+                "Big Chompy Bird Hunting",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(41),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a non-blessed axe"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "bought from Rantz for at most 600 coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Brutal arrows work with a comp ogre bow"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "both skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Jubbly bird (Level 11)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

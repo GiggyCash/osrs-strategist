@@ -5810,8 +5810,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Axe (a blessed axe will not work) Raw chompy (bring several if you have a low cooking level) Iron spit (made on an anvil with an iron bar) Logs (obtainable during the quest) Tinderbox Pickaxe Ogre bellows (obtainable during the quest) Ball of wool Ogre bow or comp ogre bow (can be purchased from Rantz during the quest for at most 600 coins) Ogre arrows Chisel, knife, wolf bones, and feathers if you are making your own ogre arrows (Brutal arrows also work if using a comp ogre bow)",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 41 Cooking [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 20 Firemaking [ boostable ] [ not required to start ] Completion of the following quests: Big Chompy Bird Hunting Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant",
+      "Obtain a non-blessed axe, raw chompy—several at low Cooking—an iron spit made from an iron bar on an anvil, tinderbox, pickaxe, ball of wool, an ogre bow or comp ogre bow, and ogre arrows; logs and ogre bellows are obtainable during the quest, the bow can be bought from Rantz for at most 600 coins, self-made ogre arrows also require a chisel, knife, wolf bones, and feathers, Brutal arrows work with a comp ogre bow, and both skill requirements are boostable and not needed to start",
       "Combat encounters: Jubbly bird (Level 11)"
     ],
     "startLocation": "Inspect Skrach Uglogwee in the Lumbridge Castle dining room.",
