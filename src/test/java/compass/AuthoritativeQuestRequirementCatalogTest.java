@@ -1393,6 +1393,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void ascentOfArceuusUsesDirectClientGraphAndTypedStartGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Ascent of Arceuus");
+        assertEquals(java.util.Collections.singletonList("Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(12),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals(java.util.Arrays.asList(
+                        "12 Hunter is non-boostable and required to start the quest",
+                        "Combat encounters: 5 Tormented Souls (level 16) "
+                                + "and the Trapped Soul (level 30)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

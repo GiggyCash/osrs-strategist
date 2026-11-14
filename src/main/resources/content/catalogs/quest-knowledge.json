@@ -4305,8 +4305,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dHunter|alt\u003dHunter 12 Hunter [ not boostable ] [ required to start ]",
-      "Combat encounters: 5 Tormented Souls (Level 16) Trapped Soul (Level 30)"
+      "12 Hunter is non-boostable and required to start the quest",
+      "Combat encounters: 5 Tormented Souls (level 16) and the Trapped Soul (level 30)"
     ],
     "startLocation": "Talk to Mori in Arceuus.",
     "unlocks": [
