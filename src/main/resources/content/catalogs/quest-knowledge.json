@@ -6355,14 +6355,12 @@
       "Troll Stronghold"
     ],
     "skillRequirements": {
-      "WOODCUTTING": 45,
       "AGILITY": 28
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: An iron bar Maple or yew logs Rope Climbing boots (not needed if using Trollheim Teleport) Wax (can be made ahead of time) A bucket of wax (use insect repellent on a beehive followed by a bucket) A cake tin Swamp tar",
-      "Access requirements: link\u003dAgility|alt\u003dAgility 28 Agility [ boostable ] Category:Unknown start requirement status Completion of the following quests: Troll Stronghold Death Plateau The ability to defeat a level 113 troll",
       "Combat encounters: Arrg (level 113) (safespottable; difficult to reach) Note: This fight is not a safe death."
     ],
     "startLocation": "Talk to Ug at the Troll Stronghold.",

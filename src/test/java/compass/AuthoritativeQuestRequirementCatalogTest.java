@@ -368,6 +368,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void trollRomanceUsesOnlyItsSourceBackedAgilityRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Troll Romance");
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.WOODCUTTING));
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(28),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Arrg (level 113)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
