@@ -5438,9 +5438,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any woodcutting axe Tinderbox Spade 6 Ropes (obtainable during the quest) 4 free inventory slots (10 if not bringing your own ropes)",
-      "Access requirements: Completion of The Fremennik Trials link\u003dFiremaking|alt\u003dFiremaking 40 Firemaking [ boostable ] [ not required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 50 Woodcutting [ boostable ] [ not required to start ] The ability to defeat a level 100 monster",
-      "Combat encounters: Skeleton fremennik (level 40) Ulfric (level 100) (safespottable)"
+      "40 Firemaking and 50 Woodcutting are boostable and not required to start the quest",
+      "Bring any woodcutting axe, a tinderbox, a spade, and 6 ropes; ropes are obtainable during the quest",
+      "Keep 4 free inventory slots, or 10 if not bringing your own ropes",
+      "Combat encounters: Skeleton fremennik (level 40) and Ulfric (level 100); be able to defeat Ulfric, who is safespottable"
     ],
     "startLocation": "Talk to Olaf Hradson east of Rellekka, just south of the Rellekka Hunter area.",
     "unlocks": [

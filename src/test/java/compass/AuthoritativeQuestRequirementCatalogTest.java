@@ -1536,6 +1536,35 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void olafsQuestKeepsBoostableSkillsAndRopeInventoryTradeoff()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Olaf's Quest");
+        assertEquals(java.util.Collections.singletonList(
+                        "The Fremennik Trials"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.WOODCUTTING));
+        assertEquals(java.util.Arrays.asList(
+                        "40 Firemaking and 50 Woodcutting are boostable and "
+                                + "not required to start the quest",
+                        "Bring any woodcutting axe, a tinderbox, a spade, and "
+                                + "6 ropes; ropes are obtainable during the "
+                                + "quest",
+                        "Keep 4 free inventory slots, or 10 if not bringing "
+                                + "your own ropes",
+                        "Combat encounters: Skeleton fremennik (level 40) and "
+                                + "Ulfric (level 100); be able to defeat "
+                                + "Ulfric, who is safespottable"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
