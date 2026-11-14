@@ -5719,15 +5719,12 @@
       "Recipe for Disaster - Another Cook\u0027s Quest"
     ],
     "skillRequirements": {
-      "COOKING": 31,
-      "CRAFTING": 42,
-      "SMITHING": 31
+      "COOKING": 31
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A raw cod (It\u0027s highly recommended to get at least 3 of all the ingredients, as the Fishcake can burn) A pestle and mortar Bread (at least 3 recommended) A knife A fishbowl (empty) A needle (Costume needle does not work) 3 bronze wire",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 31 Cooking [ boostable ] Category:Unknown start requirement status Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant The ability to defeat 5 level 30 monsters.",
+      "Obtain at least three raw cod and three bread, a pestle and mortar, knife, empty fishbowl, a non-costume needle, and three bronze wire; extra fishcake ingredients are recommended because fishcakes can burn, and 31 Cooking is boostable",
       "Combat encounters: 5 Mudskippers (level 30/31) Crab (level 21/23)"
     ],
     "startLocation": "Inspect Pirate Pete in the Lumbridge Castle dining room.",

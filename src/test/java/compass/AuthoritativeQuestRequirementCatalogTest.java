@@ -424,6 +424,32 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void piratePeteDoesNotTurnItemUseIntoSkillGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Pirate Pete");
+        assertEquals(java.util.Collections.singletonList(
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertEquals(1, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(31),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.CRAFTING));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.SMITHING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain at least three raw cod and three bread"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "fishcakes can burn"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "31 Cooking is boostable"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("5 Mudskippers (level 30/31)")
+                        && check.contains("Crab (level 21/23)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
