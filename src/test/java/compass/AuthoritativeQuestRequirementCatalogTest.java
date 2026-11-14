@@ -1202,6 +1202,31 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void rovingElvesKeepsCharterRouteOutsideMandatorySkillGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Roving Elves");
+        assertEquals(java.util.Arrays.asList("Regicide", "Waterfall Quest"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Glarial's pebble")
+                        && check.contains("Waterfall Dungeon key")
+                        && check.contains("spade and rope")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("56 Agility")
+                        && check.contains("boostable and not required to start")
+                        && check.contains("bypass that level with a charter ship")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Moss Guardian (level 84)")
+                        && check.contains("restricted-item rules")
+                        && check.contains("can be flinched")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

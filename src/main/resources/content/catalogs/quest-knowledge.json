@@ -5997,15 +5997,13 @@
       "Regicide",
       "Waterfall Quest"
     ],
-    "skillRequirements": {
-      "AGILITY": 56
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Glarial\u0027s pebble (obtainable during the quest) Key (obtainable during the quest) Spade Rope",
-      "Access requirements: Completion of the following quests: Regicide Underground Pass Biohazard Plague City Waterfall Quest The ability to defeat a level 84 enemy unarmed, with heavy restrictions link\u003dAgility|alt\u003dAgility 56 Agility [ boostable ] [ not required to start ] , unless travelling with a charter ship to the elven woods",
-      "Combat encounters: Moss Guardian (level 84) (has to be killed with restricted items, can be flinched)"
+      "Obtain Glarial\u0027s pebble and the Waterfall Dungeon key during the quest, plus a spade and rope",
+      "Arrange travel to the elven woods using 56 Agility, which is boostable and not required to start, or bypass that level with a charter ship",
+      "Prepare to defeat the Moss Guardian (level 84) under Glarial\u0027s Tomb restricted-item rules; it can be flinched"
     ],
     "startLocation": "Talk to Islwyn inside the elven woods of Isafdar.",
     "unlocks": [
