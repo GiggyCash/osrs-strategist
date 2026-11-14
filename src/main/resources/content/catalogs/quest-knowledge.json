@@ -5698,8 +5698,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bread Orange slices Use a knife on an orange Either blue, black, green, or purple dye (purple dye spawns directly east of the spirit tree at the Khazard Battlefield, south of the Ardougne Castle) Spice or gnome spice (can be bought or stolen from the Ardougne market, bought from the Culinaromancer\u0027s Chest or bought in the Tree Gnome Stronghold) Fishing bait Bucket of water Charcoal or ground charcoal (buy in Shilo Village, Jiminua\u0027s Jungle Store, or Gunslik\u0027s Assorted Items)",
-      "Access requirements: Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Goblin Diplomacy"
+      "Obtain bread, orange slices or an orange and knife, blue, black, green, or purple dye, spice or gnome spice, fishing bait, a bucket of water, and charcoal or ground charcoal; purple dye spawns east of the Khazard Battlefield spirit tree, spice is available at Ardougne market, the Culinaromancer\u0027s Chest, or Tree Gnome Stronghold, and charcoal is sold in Shilo Village, Jiminua\u0027s Jungle Store, and Gunslik\u0027s Assorted Items"
     ],
     "startLocation": "Inspect one of the goblin generals in the Lumbridge Castle dining room.",
     "unlocks": [

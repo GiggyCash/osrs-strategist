@@ -555,6 +555,28 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void goblinGeneralsKeepIngredientAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Wartface & Bentnoze");
+        assertEquals(java.util.Arrays.asList(
+                "Goblin Diplomacy",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain bread, orange slices or an orange and knife"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "blue, black, green, or purple dye"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "spice is available at Ardougne market"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "charcoal is sold in Shilo Village"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
