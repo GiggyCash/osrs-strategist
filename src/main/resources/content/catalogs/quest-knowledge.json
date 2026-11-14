@@ -5010,7 +5010,11 @@
   {
     "name": "The Great Brain Robbery",
     "freeToPlay": false,
-    "prerequisites": [],
+    "prerequisites": [
+      "Creature of Fenkenstrain",
+      "Cabin Fever",
+      "Recipe for Disaster - Pirate Pete"
+    ],
     "skillRequirements": {
       "PRAYER": 50,
       "CRAFTING": 16,
@@ -5019,9 +5023,12 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Equipment to breathe underwater: A fishbowl helmet and a diving apparatus (reobtainable from Murphy in Port Khazard if you\u0027ve lost them) OR a Medallion of the Deep (counts as both helmet and apparatus) 10 wooden cats – partial completion of The Great Brain Robbery is required to make these yourself, however they are tradeable and available at the Grand Exchange 4 oak planks, a hammer, and a saw (if you are building your own crafting table and do not already have one; build in the Clockmaking sp…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 16 Crafting [ not boostable ] Category:Unknown start requirement status \u0027\"`UNIQ--ref-0000009F-QINU`\"\u0027 link\u003dConstruction|alt\u003dConstruction 30 Construction [ not boostable ] Category:Unknown start requirement status link\u003dPrayer|alt\u003dPrayer 50 Prayer [ not boostable ] Category:Unknown start requirement status Must have completed the following quests: Creature of Fenkenstrain Cabin Fever Pirate\u0027s Treasure Rum Deal Priest in Peril Zogre Flesh Eaters Big Chompy Bird Hunting…",
-      "Combat encounters: Barrelchest (level 190) 4 Sorebones (level 57)"
+      "Obtain underwater breathing equipment: a fishbowl helmet with a diving apparatus, both reobtainable from Murphy in Port Khazard, or a Medallion of the Deep, which replaces both",
+      "Obtain 10 wooden cats after partial quest progress, either by buying the tradeable cats from the Grand Exchange where account rules permit or by making them at a player-owned house workshop crafting table with 10 normal planks and 10 pieces of fur, bear fur, or grey wolf fur; furs from Hunter creatures do not work",
+      "If the required workshop crafting table is not already available, obtain 4 oak planks, a hammer, and a saw to build one in a Clockmaking space",
+      "Obtain a hammer—the Imcando hammer does not work—about 100 nails because 38 are required and lower-tier nails may bend, 8 normal planks or 18 total when making the wooden cats, a holy symbol, and a Ring of Charos; a lost ring can be reobtained during the quest by pickpocketing Fenkenstrain",
+      "All three skill requirements are non-boostable; their start-gating status is unknown",
+      "Prepare to defeat Barrelchest (level 190), which can disable prayers and can be safespotted without taking damage, plus four Sorebones (level 57)"
     ],
     "startLocation": "Talk to Brother Tranquility in Mos Le\u0027Harmless.",
     "unlocks": [

@@ -850,6 +850,49 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void greatBrainRobberyRestoresConditionalWorkshopAndCombatReadiness()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Great Brain Robbery");
+        assertEquals(java.util.Arrays.asList(
+                        "Creature of Fenkenstrain",
+                        "Cabin Fever",
+                        "Recipe for Disaster - Pirate Pete"),
+                quest.getPrerequisites());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(16),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(50),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("fishbowl helmet with a diving apparatus")
+                        && check.contains("Medallion of the Deep")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("10 wooden cats after partial quest progress")
+                        && check.contains("where account rules permit")
+                        && check.contains("furs from Hunter creatures do not work")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("4 oak planks")
+                        && check.contains("Clockmaking space")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Imcando hammer does not work")
+                        && check.contains("18 total when making the wooden cats")
+                        && check.contains("Ring of Charos")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Barrelchest (level 190)")
+                        && check.contains("disable prayers")
+                        && check.contains("safespotted without taking damage")
+                        && check.contains("four Sorebones (level 57)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.contains("UNIQ--ref")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
