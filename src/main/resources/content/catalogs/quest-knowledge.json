@@ -6292,8 +6292,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A pickaxe A ranged weapon with ammunition. Darts and throwing knives also work. Runes for 2-3 casts of any magic combat spell A melee weapon of any kind (pickaxe will work) Rope",
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dStrength|alt\u003dStrength 16 Strength [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 10 Mining [ not boostable ] [ required to start ]",
+      "16 Strength and 10 Mining are non-boostable and required to start the quest",
+      "Bring a pickaxe, a ranged weapon with ammunition, runes for 2-3 casts of any magic combat spell, and a rope; darts or throwing knives work for ranged, and the pickaxe can serve as the melee weapon",
       "Combat encounters: Corrupt Lizardman (level 46)"
     ],
     "startLocation": "Talk to Phileas Rimor in his house west of The Cloak and Stagger tavern in Shayzien.",

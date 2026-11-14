@@ -1630,6 +1630,34 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void taleOfTheRighteousUsesDirectGraphAndThreeStylePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tale of the Righteous");
+        assertEquals(java.util.Collections.singletonList(
+                        "Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(Integer.valueOf(16),
+                quest.getSkillRequirements().get(Skill.STRENGTH));
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertEquals(java.util.Arrays.asList(
+                        "16 Strength and 10 Mining are non-boostable and "
+                                + "required to start the quest",
+                        "Bring a pickaxe, a ranged weapon with ammunition, "
+                                + "runes for 2-3 casts of any magic combat "
+                                + "spell, and a rope; darts or throwing knives "
+                                + "work for ranged, and the pickaxe can serve "
+                                + "as the melee weapon",
+                        "Combat encounters: Corrupt Lizardman (level 46)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
