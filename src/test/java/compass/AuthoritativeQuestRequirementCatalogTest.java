@@ -254,6 +254,27 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void legendsQuestRestoresCompletePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Legends' Quest");
+        assertEquals(5, quest.getPrerequisites().size());
+        assertEquals(10, quest.getSkillRequirements().size());
+        assertEquals(107, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain two gold bars"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "standard-spellbook runes for one Charge Orb cast"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "the long path requires a second Charge Orb cast"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Nezikchened (level 187)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
