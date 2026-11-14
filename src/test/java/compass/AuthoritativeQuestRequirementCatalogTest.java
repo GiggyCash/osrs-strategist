@@ -1658,6 +1658,29 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void deathOnTheIsleKeepsEquipmentFreeNonlethalEncounter()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Death on the Isle");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(34),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(32),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(java.util.Arrays.asList(
+                        "34 Thieving and 32 Agility are non-boostable and "
+                                + "required to start the quest",
+                        "Combat encounter: fight two low-level enemies with "
+                                + "no equipment; they cannot kill you"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

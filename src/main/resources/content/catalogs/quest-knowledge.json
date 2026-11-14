@@ -4531,8 +4531,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: link\u003dThieving|alt\u003dThieving 34 Thieving [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 32 Agility [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun",
-      "Combat encounters: Two low-level enemies must be fought with no equipment, but you can’t die to them"
+      "34 Thieving and 32 Agility are non-boostable and required to start the quest",
+      "Combat encounter: fight two low-level enemies with no equipment; they cannot kill you"
     ],
     "startLocation": "Talk to Patzi by the entrance to Villa Lucens.",
     "unlocks": [
