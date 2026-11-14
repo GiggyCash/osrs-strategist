@@ -386,6 +386,18 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void doricsQuestTreatsOresAsItemsNotAMiningGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Doric's Quest");
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("6 clay")
+                        && check.contains("4 copper ores")
+                        && check.contains("2 iron ores")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

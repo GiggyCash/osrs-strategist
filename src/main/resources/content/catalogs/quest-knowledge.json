@@ -4643,9 +4643,7 @@
     "name": "Doric\u0027s Quest",
     "freeToPlay": true,
     "prerequisites": [],
-    "skillRequirements": {
-      "MINING": 15
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
