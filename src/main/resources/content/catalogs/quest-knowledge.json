@@ -6254,15 +6254,14 @@
     ],
     "skillRequirements": {
       "COOKING": 30,
-      "FISHING": 65,
-      "HERBLORE": 34,
+      "FISHING": 5,
       "AGILITY": 15
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Knife or bladed weapon, such as a Sword or a Spear Sliced banana (obtainable during the quest) Small fishing net Pestle and mortar (obtainable during the quest for 6 gp) 2 Logs to quickly make Poison karambwan at fishing site and to cook Pasty jogre bones later in the quest Iron spear, Steel spear, Mithril spear, Adamant spear, Rune spear or Dragon spear which will be consumed during the quest. Agility potion(4) (must be 4 doses) Ranged equipment, Magic equipment, or a halberd to kill a monkey…",
-      "Access requirements: link\u003dAgility|alt\u003dAgility 15 Agility [ boostable ] [ not required to start ] link\u003dCooking|alt\u003dCooking 30 Cooking [ not boostable ] [ not required to start ] link\u003dFishing|alt\u003dFishing 5 Fishing [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000021-QINU`\"\u0027 Completion of the following quests: Jungle Potion Druidic Ritual",
+      "15 Agility, 30 Cooking, and 5 Fishing are required during the quest but not to start it",
       "Combat encounters: Monkey (level 3)"
     ],
     "startLocation": "Talk to Timfraku in his house in Tai Bwo Wannai.",

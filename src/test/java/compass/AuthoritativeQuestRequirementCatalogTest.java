@@ -434,6 +434,28 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void taiBwoWannaiTrioSeparatesSkillsFromPotionAcquisition()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tai Bwo Wannai Trio");
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.FISHING));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(15),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertFalse(quest.getSkillRequirements().containsKey(Skill.HERBLORE));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Agility potion(4)")));
+        assertTrue(quest.getAccessChecks().contains(
+                "15 Agility, 30 Cooking, and 5 Fishing are required during "
+                        + "the quest but not to start it"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
