@@ -4968,8 +4968,12 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bear fur, grey wolf fur, or Fur (a Grizzly bear and bear cub spawn west of the farm and two black bears spawn east of the farm) Soft clay or a pickaxe you can use Clay rocks are found in the Kebos Lowlands mine passed during the quest; Gordon\u0027s house has a water source and a bucket spawn; There is a Bronze pickaxe spawn at the mine, stuck in some rocks. Hammer (obtainable near the cattle gate) or Imcando hammer Saw (obtainable in the shed north of the house) or Amy\u0027s saw 2 normal planks (obtain…",
-      "Combat encounters: Headless Beast (level-82)"
+      "Obtain bear fur, grey wolf fur, or fur; nearby options include a grizzly bear and bear cub west of the farm or two black bears east of it",
+      "Obtain soft clay or a usable pickaxe; clay rocks and a bronze pickaxe spawn are available in the Kebos Lowlands mine passed during the quest, while Gordon's house has a water source and bucket spawn",
+      "Obtain a hammer or Imcando hammer, a saw or Amy's saw, 2 normal planks, and at least 6 nails of any kind; the ordinary hammer, saw, planks, and iron nails are obtainable nearby, and extra nails are recommended in case some bend",
+      "Obtain a knife, red dye, pot of flour, and either a needle with thread or a costume needle; each ordinary item is obtainable in or near Gordon's house, and thread is unnecessary with the costume needle",
+      "Both skill requirements are non-boostable and required to start the quest",
+      "Combat encounter: Headless Beast (level 82)"
     ],
     "startLocation": "Talk to Gordon on his farm south of the Farming Guild.",
     "unlocks": [

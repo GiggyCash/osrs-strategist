@@ -163,7 +163,7 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertEquals(Integer.valueOf(26),
                 quest.getSkillRequirements().get(Skill.CONSTRUCTION));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
-                check -> check.contains("Headless Beast (level-82)")));
+                check -> check.contains("Headless Beast (level 82)")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
                 check -> check.startsWith("Access requirements:")));
     }
@@ -924,6 +924,41 @@ public class AuthoritativeQuestRequirementCatalogTest
                 check -> check.contains("…")
                         || check.contains("UNIQ--ref")
                         || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
+    public void gettingAheadRestoresOnSiteSupplyAlternatives()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Getting Ahead");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(Integer.valueOf(26),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("grizzly bear and bear cub west of the farm")
+                        && check.contains("two black bears east")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Kebos Lowlands mine")
+                        && check.contains("bronze pickaxe spawn")
+                        && check.contains("water source and bucket spawn")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Imcando hammer")
+                        && check.contains("Amy's saw")
+                        && check.contains("extra nails are recommended")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("needle with thread or a costume needle")
+                        && check.contains("thread is unnecessary")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Both skill requirements are non-boostable")
+                        && check.contains("required to start")));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.equals("Combat encounter: Headless Beast (level 82)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
                         || check.startsWith("Required items:")));
     }
 
