@@ -362,6 +362,28 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void makingFriendsWithMyArmKeepsConditionalPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Making Friends with My Arm");
+        assertEquals(4, quest.getPrerequisites().size());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a saw, bolt of cloth, five mahogany planks"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "climbing boots unless using Trollheim teleports"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Agility above 68 is beneficial"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Mother (level 198)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

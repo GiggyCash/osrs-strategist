@@ -5270,8 +5270,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Saw Bolt of cloth 5 mahogany planks Cadava berries Bucket of water (obtainable during quest) Rope (obtainable during quest) Pickaxe (obtainable during quest) Hammer (obtainable during quest) Combat equipment (preferably Melee or Ranged) Climbing boots (if not using Trollheim teleports)",
-      "Access requirements: link\u003dFiremaking|alt\u003dFiremaking 66 Firemaking [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 72 Mining [ boostable ] [ not required to start ] link\u003dConstruction|alt\u003dConstruction 35 Construction [ boostable ] Category:Unknown start requirement status link\u003dAgility|alt\u003dAgility 68 Agility [ boostable ] [ not required to start ] It is beneficial to have a higher Agility level. Completion of the following quests: My Arm\u0027s Big Adventure Eadgar\u0027s Ruse Druidic Ritual Troll Stronghold Deat…",
+      "Obtain a saw, bolt of cloth, five mahogany planks, cadava berries, combat equipment—preferably Melee or Ranged—and climbing boots unless using Trollheim teleports; a bucket of water, rope, pickaxe, and hammer are obtainable during the quest, and Agility above 68 is beneficial",
       "Combat encounters: Don\u0027t Know What (Level 163) Mother (level 198)"
     ],
     "startLocation": "Talk to Burntmeat in the Troll Stronghold\u0027s kitchen.",
