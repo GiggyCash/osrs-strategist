@@ -1182,6 +1182,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void recruitmentDriveUsesTypedGraphWithoutRawDuplicateGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recruitment Drive");
+        assertEquals(java.util.Arrays.asList(
+                        "Black Knights' Fortress", "Druidic Ritual"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Combat encounter: Sir Leye (level 20)"),
+                quest.getAccessChecks());
+        assertEquals(
+                "Talk to Sir Amik Varze on the second floor (UK; third floor US) "
+                        + "of the White Knights' Castle's western tower in Falador.",
+                quest.getStartLocation());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

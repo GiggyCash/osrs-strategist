@@ -5937,10 +5937,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Black Knights\u0027 Fortress Druidic Ritual",
-      "Combat encounters: Sir Leye (level 20)"
+      "Combat encounter: Sir Leye (level 20)"
     ],
-    "startLocation": "Talk to Sir Amik Varze on the 2 nd \u0026nbsp;floor \u0026 91; UK \u0026 93; 3 rd \u0026nbsp;floor \u0026 91; US \u0026 93; of the White Knights\u0027 Castle\u0027s western tower in Falador.",
+    "startLocation": "Talk to Sir Amik Varze on the second floor (UK; third floor US) of the White Knights\u0027 Castle\u0027s western tower in Falador.",
     "unlocks": [
       "Quest rewards: }}"
     ],
