@@ -4712,9 +4712,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Pickaxe (if obtaining elemental ore during quest) Hammer 2 Elemental metals (3 elemental metals if you wish to smith the Mind shield), or: 2 Elemental ore (obtainable during quest) (3 if you wish to smith the mind shield) 8 Coal (12 if you wish to smith the mind shield) The battered key from Elemental Workshop I",
-      "Access requirements: link\u003dMagic|alt\u003dMagic 20 Magic [ boostable ] Category:Unknown start requirement status link\u003dSmithing|alt\u003dSmithing 30 Smithing [ boostable ] Category:Unknown start requirement status Completion of Elemental Workshop I",
-      "Combat encounters: (If you do not have the elemental metal bars) 2 Earth elementals (level 35)"
+      "20 Magic and 30 Smithing are boostable; whether either is required to start is unknown",
+      "Bring a hammer, the battered key from Elemental Workshop I, and either 2 elemental metals or 2 elemental ore plus 8 coal; bring a pickaxe if obtaining ore during the quest",
+      "For a Mind shield, use 3 elemental metals or 3 elemental ore plus 12 coal instead",
+      "If you do not bring elemental metal bars, be prepared for 2 Earth elementals (level 35)"
     ],
     "startLocation": "Search the bookcases in the Exam Centre\u0027s library.",
     "unlocks": [

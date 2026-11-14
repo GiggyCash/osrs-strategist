@@ -1483,6 +1483,35 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void elementalWorkshopTwoKeepsBoostableUnknownStartContract()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Elemental Workshop II");
+        assertEquals(java.util.Collections.singletonList(
+                        "Elemental Workshop I"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "20 Magic and 30 Smithing are boostable; whether "
+                                + "either is required to start is unknown",
+                        "Bring a hammer, the battered key from Elemental "
+                                + "Workshop I, and either 2 elemental metals "
+                                + "or 2 elemental ore plus 8 coal; bring a "
+                                + "pickaxe if obtaining ore during the quest",
+                        "For a Mind shield, use 3 elemental metals or 3 "
+                                + "elemental ore plus 12 coal instead",
+                        "If you do not bring elemental metal bars, be prepared "
+                                + "for 2 Earth elementals (level 35)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
