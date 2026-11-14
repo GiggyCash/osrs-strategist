@@ -6206,8 +6206,9 @@
     "itemRequirements": [],
     "questPointsRequired": 100,
     "accessChecks": [
-      "Required items: 10 mist runes 10 lava runes 5 blood runes 7 bones (obtainable during the quest) An airtight pot – created by using a pot lid on a pot Soft clay if making your own pot lid during the quest (2 if also making the pot), or a pickaxe to obtain the clay during the quest 5 iron bars, or a pickaxe (obtainable during the quest) if mining your own iron during quest 1 set of logs of any kind, or an axe (obtainable during quest) if chopping your own logs during quest A tinderbox (obtainable during the ques…",
-      "Combat encounters: 11 Sea trolls (1 each of levels 65/87/101 and 8 of level 79) Sea Troll Queen (level 170)"
+      "Obtain 10 mist runes, 10 lava runes, 5 blood runes, and an airtight pot; if making its lid during the quest bring one soft clay, or two when also making the pot, or bring a pickaxe to obtain clay; all six skill requirements are boostable and not needed to start",
+      "Obtain five iron bars or mine them during the quest with an obtainable pickaxe, and one set of any logs or chop them with an obtainable axe; seven bones, a tinderbox, small fishing net, and brown apron are obtainable during the quest, and bring a hammer or Imcando hammer, with a normal hammer also obtainable",
+      "Combat encounters: 11 Sea trolls (1 each of levels 65/87/101 and 8 of level 79) Sea Troll Queen (level 170), which uses Magic and Melee and can drain Prayer"
     ],
     "startLocation": "Talk to Herman Caranos in the Piscatoris Fishing Colony, accessed via a boat trip from the river to the west of the Tree Gnome Stronghold.",
     "unlocks": [

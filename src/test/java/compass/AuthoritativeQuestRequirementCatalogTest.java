@@ -714,6 +714,36 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void swanSongRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Swan Song");
+        assertEquals(java.util.Arrays.asList(
+                "Garden of Tranquillity", "One Small Favour"),
+                quest.getPrerequisites());
+        assertEquals(6, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(40),
+                quest.getSkillRequirements().get(Skill.CRAFTING));
+        assertEquals(100, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 10 mist runes, 10 lava runes, 5 blood runes"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all six skill requirements are boostable and not needed to start"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "five iron bars or mine them during the quest"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "small fishing net, and brown apron are obtainable"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("11 Sea trolls")
+                        && check.contains("can drain Prayer")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
