@@ -5384,8 +5384,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ivandis flail or Blisterwood flail Saw (crystal saw also works) Ghostspeak amulet (Morytania legs 2 or better also work) Any axe besides the blessed axe",
-      "Access requirements: Completion of the following quests: A Taste of Hope Darkness of Hallowvale In Aid of the Myreque In Search of the Myreque Nature Spirit Priest in Peril The Restless Ghost",
+      "Obtain an Ivandis or Blisterwood flail, a saw or crystal saw, a ghostspeak amulet or Morytania legs 2 or better, and any axe other than the blessed axe",
       "Combat encounters: Vyrewatch (Level 105) Several venomous araxyte (Levels 96 and 146) (can be avoided) Hespori (Level 302) All Theatre of Blood bosses (optional, if a kill count has been acquired before starting the quest): The Maiden of Sugadinti and Nylocas Matomenos Pestilent Bloat Nylocas Toxobolos, Nylocas Hagios, Nylocas Ischyros and Nylocas Vasilias Sotetseg Xarpus Verzik Vitur, Nylocas Athanatos and Nylocas Matamenos"
     ],
     "startLocation": "Talk to the Mysterious Stranger inside Ver Sinhaza, south-east of Meiyerditch.",

@@ -293,6 +293,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void nightAtTheTheatreKeepsEncounterSafetyExplicit()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Night at the Theatre");
+        assertEquals(java.util.Collections.singletonList("A Taste of Hope"),
+                quest.getPrerequisites());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an Ivandis or Blisterwood flail"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Hespori (Level 302)")
+                        && check.contains("optional, if a kill count")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
