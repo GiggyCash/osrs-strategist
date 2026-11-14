@@ -1769,6 +1769,33 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void pryingTimesKeepsOpenPortSlotAndSkippableCombat()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Prying Times");
+        assertEquals(java.util.Arrays.asList("Pandemonium",
+                        "The Knight's Sword"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(30),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(Integer.valueOf(12),
+                quest.getSkillRequirements().get(Skill.SAILING));
+        assertEquals(java.util.Arrays.asList(
+                        "30 Smithing and 12 Sailing are non-boostable and "
+                                + "required to start the quest",
+                        "Keep one port task slot open",
+                        "Bring a hammer or Imcando hammer, a steel bar, a "
+                                + "redberry pie, and the Captain's log; a "
+                                + "hammer is obtainable during the quest",
+                        "Optional combat: Drink troll (level 14) can be "
+                                + "skipped"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

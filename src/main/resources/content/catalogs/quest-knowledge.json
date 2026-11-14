@@ -4042,9 +4042,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Hammer or Imcando hammer (obtainable during quest) Steel bar Redberry pie Captain\u0027s log",
-      "Access requirements: link\u003dSmithing|alt\u003dSmithing 30 Smithing [ not boostable ] [ required to start ] link\u003dSailing|alt\u003dSailing 12 Sailing [ not boostable ] [ required to start ] Completion of the following quests: Pandemonium The Knight\u0027s Sword One open port task slot",
-      "Combat encounters: Drink troll (level 14) - can be skipped"
+      "30 Smithing and 12 Sailing are non-boostable and required to start the quest",
+      "Keep one port task slot open",
+      "Bring a hammer or Imcando hammer, a steel bar, a redberry pie, and the Captain\u0027s log; a hammer is obtainable during the quest",
+      "Optional combat: Drink troll (level 14) can be skipped"
     ],
     "startLocation": "Talk to \u0027Squawking\u0027 Steve Beanie at The Pandemonium pub.",
     "unlocks": [
