@@ -4280,8 +4280,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A light source Trowel (obtained during the quest) Specimen brush (obtained during the quest) Magic or Ranged gear for enemy fight (cannot use Melee on them)",
-      "Access requirements: link\u003dAttack|alt\u003dAttack 15 Attack [ not boostable ] Category:Unknown start requirement status link\u003dPrayer|alt\u003dPrayer 25 Prayer [ not boostable ] Category:Unknown start requirement status Completion of the following quests: Death to the Dorgeshuun The Lost Tribe Goblin Diplomacy Rune Mysteries The Giant Dwarf The Dig Site The ability to defeat a level 64 (using any combat style) and two level 30 enemies using either Ranged or Magic.",
+      "Obtain a light source and Magic or Ranged combat gear for the two level-30 enemies that cannot be fought with Melee; the trowel and specimen brush are obtained during the quest",
       "Combat encounters: H.A.M. Archer (level 30) H.A.M. Mage (level 30) Sigmund (level 64)"
     ],
     "startLocation": "Talk to Ur-tag in Dorgesh-Kaan.",

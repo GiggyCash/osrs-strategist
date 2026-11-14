@@ -310,6 +310,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void anotherSliceOfHamKeepsCombatStyleConstraint()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Another Slice of H.A.M.");
+        assertEquals(3, quest.getPrerequisites().size());
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(25),
+                quest.getSkillRequirements().get(Skill.PRAYER));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a light source and Magic or Ranged combat gear"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "cannot be fought with Melee"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Sigmund (level 64)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
