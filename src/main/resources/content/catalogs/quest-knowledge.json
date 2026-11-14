@@ -6442,7 +6442,9 @@
     "itemRequirements": [],
     "questPointsRequired": 180,
     "accessChecks": [
-      "Required items: Ring of Charos(a) or 500 coins Knife Seed dibber (only if Barbarian Farming Training has not been completed) Lantern lens Unpowered orb Bronze med helm Iron chainbody Sapphire lantern Runes to cast the Astral Contact spell four times (8 air runes, 4 astral rune, 4 cosmic rune) Runes for any charge orb spell (30 runes of a chosen element and 3 cosmic runes) Equipment for two different combat styles Runes for the following spells: multiple casts of all four elemental spells, Snare/Entangle, Weake…",
+      "Obtain a Ring of Charos(a) or 500 coins, knife, seed dibber unless Barbarian Farming Training is complete, lantern lens, unpowered orb, bronze med helm, iron chainbody, sapphire lantern, and equipment for two combat styles",
+      "Obtain runes for four Astral Contact casts—8 air, 4 astral, and 4 cosmic—plus any charge orb spell—30 runes of one element and 3 cosmic—and multiple casts of all four elemental spells, Snare or Entangle, Weaken or Enfeeble, Telekinetic Grab, and Low or High Alchemy; this needs air, water, earth, fire, body or soul, nature, law, and the highest usable mind, chaos, death, blood, or wrath runes",
+      "Obtain during the quest mort myre fungus, a non-redwood log, pink dye or 20 coins, a snapdragon seed, papyrus, charcoal, a restore potion, and one each of air, water, earth, fire, mind, law, and death runes; the bronze axe by the Hunting Expert can supply the log only when no axe is carried, and a carried Zombie axe blocks that option despite being unable to cut the tree",
       "Verify Warriors' Guild access: Attack plus Strength totals at least 130, or either skill is 99",
       "Combat encounters: 2 Assassins (level 167) 2 Mercenary axemen (level 131) Mercenary mage (level 112) 3 Elite Black Knights (level 138) Surok Magis (level 265) Balance Elemental (level 524) 2 Tormented Demons (level 450)"
     ],

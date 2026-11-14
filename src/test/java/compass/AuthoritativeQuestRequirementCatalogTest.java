@@ -681,6 +681,39 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void whileGuthixSleepsRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("While Guthix Sleeps");
+        assertEquals(10, quest.getPrerequisites().size());
+        assertEquals(7, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(72),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertEquals(Integer.valueOf(49),
+                quest.getSkillRequirements().get(Skill.FIREMAKING));
+        assertEquals(180, quest.getQuestPointsRequired());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a Ring of Charos(a) or 500 coins"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "four Astral Contact casts"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "Snare or Entangle, Weaken or Enfeeble"));
+        assertTrue(quest.getAccessChecks().get(2).startsWith(
+                "Obtain during the quest mort myre fungus"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "carried Zombie axe blocks that option"));
+        assertEquals("Verify Warriors' Guild access: Attack plus Strength "
+                        + "totals at least 130, or either skill is 99",
+                quest.getAccessChecks().get(3));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Balance Elemental (level 524)")
+                        && check.contains("2 Tormented Demons (level 450)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
