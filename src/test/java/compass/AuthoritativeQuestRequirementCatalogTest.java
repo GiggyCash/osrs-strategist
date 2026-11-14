@@ -1588,6 +1588,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void forsakenTowerUsesDirectClientGraphAndObtainableTinderbox()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Forsaken Tower");
+        assertEquals(java.util.Collections.singletonList(
+                        "Client of Kourend"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Bring a tinderbox; one is obtainable during the "
+                                + "quest"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

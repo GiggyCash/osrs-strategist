@@ -4881,13 +4881,14 @@
   {
     "name": "The Forsaken Tower",
     "freeToPlay": false,
-    "prerequisites": [],
+    "prerequisites": [
+      "Client of Kourend"
+    ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Tinderbox (obtainable during quest)",
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot"
+      "Bring a tinderbox; one is obtainable during the quest"
     ],
     "startLocation": "Talk to Lady Vulcana Lovakengj in Lovakengj.",
     "unlocks": [
