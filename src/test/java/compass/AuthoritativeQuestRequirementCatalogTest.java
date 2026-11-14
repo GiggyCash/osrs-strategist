@@ -744,6 +744,38 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void kingdomDividedUsesDirectGraphAndStartGates()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("A Kingdom Divided");
+        assertEquals(java.util.Arrays.asList(
+                "The Ascent of Arceuus", "The Depths of Despair",
+                "The Forsaken Tower", "The Queen of Thieves",
+                "Tale of the Righteous"), quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Druidic Ritual"));
+        assertFalse(quest.getPrerequisites().contains("Client of Kourend"));
+        assertFalse(quest.getPrerequisites().contains("X Marks the Spot"));
+        assertEquals(7, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(54),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain access to the normal spellbook"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "dark essence block or a pickaxe and chisel"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "all seven skill requirements are non-boostable and required to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Judge of Yama (Level 168)")
+                        && check.contains("Xamphur (level 239)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

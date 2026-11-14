@@ -5167,7 +5167,6 @@
     "prerequisites": [
       "The Ascent of Arceuus",
       "The Depths of Despair",
-      "Druidic Ritual",
       "The Forsaken Tower",
       "The Queen of Thieves",
       "Tale of the Righteous"
@@ -5184,8 +5183,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Normal spellbook, and runes to cast a fire spell (fire bolt or better) Any axe A defence potion (3 or 4 doses) Volcanic sulphur Molten glass A dark essence block or a pickaxe and chisel (the latter is found at the mine) to obtain one",
-      "Access requirements: Completion of the following quests: The Depths of Despair The Queen of Thieves The Ascent of Arceuus The Forsaken Tower Tale of the Righteous The above quests all require the following quests to be completed: Client of Kourend X Marks the Spot link\u003dAgility|alt\u003dAgility 54 Agility [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 52 Thieving [ not boostable ] [ required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 52 Woodcutting [ not boostable ] [ required to start ] link\u003dHerblor…",
+      "Obtain access to the normal spellbook and runes for Fire Bolt or a stronger fire spell, any axe, a 3- or 4-dose defence potion, volcanic sulphur, molten glass, and a dark essence block or a pickaxe and chisel to obtain one, with the chisel available at the mine; all seven skill requirements are non-boostable and required to start",
       "Combat encounters: Judge of Yama (Level 168) 2 Assassins (Level 132) Lizardman brute (Level 75) Xamphur (level 239) Barbarian Warlord (Level 91)"
     ],
     "startLocation": "Talk to Martin Holt at the entrance to Kourend Castle in Kingstown.",
