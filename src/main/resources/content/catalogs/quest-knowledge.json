@@ -5629,11 +5629,7 @@
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Required items: To start the quest and finish the first chapter: Eye of newt Greenman\u0027s ale Rotten tomato Any fruit blast excluding a premade fr\u0027 blast Ashes To complete all chapters of the quest: About 320 coins (or 120 if you have the activated Ring of Charos) Bowl of water (an empty bowl can be bought from the Culinaromancer\u0027s Chest) Bucket of water (an empty bucket can be bought from the Culinaromancer\u0027s Chest) 3 buckets of milk (can be bought from the Culinaromancer\u0027s Chest) 2 eggs (can be bought from the…",
-      "Access requirements: To start the quest and finish the first chapter: link\u003dCooking|alt\u003dCooking 10 Cooking [ boostable ] Completion of Cook\u0027s Assistant To complete all chapters of the quest: All prerequisite quest requirements link\u003dQuest points|alt\u003dQuest points 175 Quest points (9 are earned for the other parts of the quest, and 79 are gained by completing all required quests) link\u003dCooking|alt\u003dCooking 70 Cooking [ boostable ] link\u003dAgility|alt\u003dAgility 48 Agility [ not boostable ] link\u003dMining|alt\u003dMining 50 Mining [ bo…",
-      "Combat encounters: Icefiend (level 13) (only if you lack ice gloves) 5 Mudskippers (level 30/31) Crab (level 21/23) Evil Chicken (level varies) (see below) Black dragon (level 227) Big Snake (level 84) Zombie monkey (levels 82/129) Monkey guard (level 167) Ninja monkey (level 86) Agrith-Na-Na (Level 146) Flambeed (level 149) Karamel (level 136) Dessourt (level 121) Gelatinnoth Mother (level 130) Culinaromancer (level 75)"
-    ],
+    "accessChecks": [],
     "startLocation": "Talk to the Cook in the kitchen of Lumbridge Castle.",
     "unlocks": [
       "Quest rewards: "

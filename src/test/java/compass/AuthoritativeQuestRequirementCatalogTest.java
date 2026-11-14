@@ -666,6 +666,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void recipeForDisasterWrapperDelegatesToReviewedFinaleGraph()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster");
+        assertEquals(java.util.Collections.singletonList(
+                "Recipe for Disaster - Culinaromancer"),
+                quest.getPrerequisites());
+        assertTrue(quest.getStartedPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(0, quest.getQuestPointsRequired());
+        assertTrue(quest.getItemRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().isEmpty());
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
