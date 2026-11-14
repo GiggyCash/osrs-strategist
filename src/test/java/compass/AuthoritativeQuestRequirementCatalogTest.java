@@ -406,6 +406,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void anotherCooksQuestKeepsConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Another Cook's Quest");
+        assertEquals(java.util.Collections.singletonList("Cook's Assistant"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain an eye of newt, Greenman's ale"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "any fruit blast except a premade fr' blast"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "10 Cooking is not boostable"));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

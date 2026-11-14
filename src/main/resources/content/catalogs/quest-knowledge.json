@@ -5653,8 +5653,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Eye of newt Greenman\u0027s ale Rotten tomato Any fruit blast excluding a premade fr\u0027 blast Ashes",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 10 Cooking [ not boostable ] Category:Unknown start requirement status Completion of Cook\u0027s Assistant"
+      "Obtain an eye of newt, Greenman\u0027s ale, rotten tomato, ashes, and any fruit blast except a premade fr\u0027 blast; 10 Cooking is not boostable"
     ],
     "startLocation": "Talk to the Cook in Lumbridge Castle\u0027s kitchen.",
     "unlocks": [
