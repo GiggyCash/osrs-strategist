@@ -90,10 +90,24 @@ public class AuthoritativeQuestRequirementCatalogTest
                 quest.getSkillRequirements().get(Skill.RUNECRAFT));
         assertEquals(Integer.valueOf(60),
                 quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain combat equipment, a mirror shield, two kegs of beer"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "buy the beer from Thora the Barkeep before starting"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "Fremennik shield—not a Neitiznot shield"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "for 150,000 coins or free with a Ring of Charos(a)"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "three Lunar bars or a pickaxe to mine three Lunar ores"));
+        assertTrue(quest.getAccessChecks().get(2).contains(
+                "60 Mining is boostable and not required to start"));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
                 check -> check.contains("The Jormungand (level 363)")));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test

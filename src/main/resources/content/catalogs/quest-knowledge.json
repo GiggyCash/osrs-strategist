@@ -4915,7 +4915,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Combat equipment Mirror shield 2 Kegs of beer (cannot be obtained in Rellekka during quest, buy from Thora the Barkeep before starting the quest) 1 Molten glass 100 Astral runes Pet rock Fishing rod, fly fishing rod, or barbarian fishing rod Fremennik shield (this is not the tradeable Neitiznot shield) Alternatively, get it from Bardur AFTER being exiled, for either 150,000 or for free using a Ring of Charos(a) Recommended: Rune thrownaxes or link\u003dAgility|alt\u003dAgility 85 Agility to get to Bardur…",
+      "Obtain combat equipment, a mirror shield, two kegs of beer, molten glass, 100 astral runes, a pet rock, and a fishing, fly fishing, or barbarian fishing rod; buy the beer from Thora the Barkeep before starting because it cannot be obtained in Rellekka during the quest",
+      "Obtain a Fremennik shield—not a Neitiznot shield—or, after exile, get one from Bardur for 150,000 coins or free with a Ring of Charos(a); rune thrownaxes or 85 Agility are recommended to reach Bardur in Waterbirth Island Dungeon",
+      "Obtain ice gloves or Smiths gloves (i), a hammer, glassblowing pipe, and three Lunar bars or a pickaxe to mine three Lunar ores; also bring a Seal of Passage unless the elite Fremennik diaries are complete; the first five skill requirements are non-boostable and required to start, while 60 Mining is boostable and not required to start",
       "Combat encounters: Basilisk Youngling (level 53) Basilisk (level 61) Monstrous Basilisk (level 135) Typhor (level 218) The Jormungand (level 363)"
     ],
     "startLocation": "Talk to Brundt the Chieftain in Rellekka.",
