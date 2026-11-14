@@ -5116,8 +5116,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Able to defeat a level 13 cultist (this applies only if you\u0027re taking Ceril\u0027s side)",
-      "Combat encounters: Alomone (level 13) if taking Ceril\u0027s side"
+      "If taking Ceril\u0027s side, be able to defeat Alomone (level 13)"
     ],
     "startLocation": "Talk to Ceril Carnillean in East Ardougne, just north of the Clock Tower.",
     "unlocks": [

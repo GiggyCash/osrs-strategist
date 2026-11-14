@@ -1430,6 +1430,21 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void hazeelCultKeepsCombatConditionalOnCerilsRoute()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Hazeel Cult");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "If taking Ceril's side, be able to defeat Alomone "
+                                + "(level 13)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
