@@ -292,6 +292,32 @@ public class AdaptiveMilestoneGuidanceServiceTest
     }
 
     @Test
+    public void birdhousesExplainReusableAndInitialClockworkSetup()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.HUNTER, "redwood_bird_house",
+                        "Redwood Bird House", 89, 1200));
+        GameData data = GameData.builder(
+                account(1, Membership.P2P, Skill.HUNTER, 90,
+                        Experience.getXpForLevel(90)))
+                .inventory(new ItemsState(Arrays.asList(
+                        item(19669, "Redwood logs", 4),
+                        item(5318, "Potato seed", 40))))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.HUNTER,
+                90, 91, plan("hunter_birdhouses", Skill.HUNTER), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getSupplies().contains("4 Redwood logs"));
+        assertTrue(guidance.getSupplies().contains("40 Potato seed"));
+        assertTrue(guidance.getSupplies().contains("hammer and chisel"));
+        assertTrue(guidance.getSupplies().contains("return their clockworks"));
+        assertTrue(guidance.getSupplies().contains("initial four-house setup"));
+        assertFalse(guidance.getSupplies().contains("Acquire 4 Clockwork"));
+    }
+
+    @Test
     public void uimInventoryProcessingNeverRoutesThroughABank()
     {
         AdaptiveMilestoneGuidanceService service = serviceWith(
@@ -304,12 +330,61 @@ public class AdaptiveMilestoneGuidanceServiceTest
                 .build();
 
         Guidance guidance = service.build(data, Skill.CRAFTING,
-                20, 21, plan("crafting_gems", Skill.CRAFTING), true);
+                20, 21, gemPlan(), true);
 
         assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("chisel"));
+        assertTrue(guidance.getAction().contains("carried uncut gems"));
+        assertFalse(guidance.getAction().toLowerCase().contains("withdraw"));
+        assertFalse(guidance.getAction().toLowerCase().contains("bank"));
         assertTrue(guidance.getLocation().contains(
                 "immediately usable carried materials"));
         assertFalse(guidance.getLocation().toLowerCase().contains("bank"));
+    }
+
+    @Test
+    public void mainGemCuttingRetainsItsBankLoop()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.CRAFTING, "sapphire", "Sapphire", 20, 50));
+        GameData data = GameData.builder(
+                account(0, Membership.P2P, Skill.CRAFTING, 20,
+                        Experience.getXpForLevel(20)))
+                .bank(new ItemsState(Collections.singletonList(
+                        item(1623, "Uncut sapphire", 20)), 1L))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.CRAFTING,
+                20, 21, gemPlan(), true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Withdraw a chisel"));
+        assertTrue(guidance.getAction().contains("bank, and repeat"));
+        assertEquals("Grand Exchange bank.", guidance.getLocation());
+    }
+
+    @Test
+    public void teakRouteUsesTheUnrestrictedCastleWarsTreeWithoutABankLoop()
+    {
+        AdaptiveMilestoneGuidanceService service = serviceWith(
+                action(Skill.WOODCUTTING, "teak", "Teak", 35, 85));
+        GameData data = GameData.builder(
+                account(2, Membership.P2P, Skill.WOODCUTTING, 50,
+                        Experience.getXpForLevel(50)))
+                .inventory(new ItemsState(Collections.singletonList(
+                        item(1351, "Bronze axe", 1))))
+                .build();
+
+        Guidance guidance = service.build(data, Skill.WOODCUTTING,
+                50, 51, catalogPlan("woodcutting_teaks", Skill.WOODCUTTING),
+                true);
+
+        assertNotNull(guidance);
+        assertTrue(guidance.getAction().contains("Cut teak logs"));
+        assertFalse(guidance.getAction().toLowerCase().contains("bank"));
+        assertEquals("Teak tree south-west of Castle Wars.",
+                guidance.getLocation());
+        assertTrue(guidance.getSupplies().contains("Bronze axe"));
     }
 
     private static AdaptiveMilestoneGuidanceService serviceWith(
@@ -352,9 +427,31 @@ public class AdaptiveMilestoneGuidanceServiceTest
 
     private static TrainingPlan plan(String id, Skill skill)
     {
+        return plan(id, skill, "Use the modeled method.");
+    }
+
+    private static TrainingPlan gemPlan()
+    {
+        return plan("crafting_gems", Skill.CRAFTING,
+                "Grand Exchange bank: withdraw a chisel and the uncut gem named in DO, cut the full inventory, bank, and repeat.");
+    }
+
+    private static TrainingPlan catalogPlan(String id, Skill skill)
+    {
+        TrainingMethod method = new TrainingMethodCatalog().curatedFor(skill)
+                .stream().map(CuratedTrainingMethod::method)
+                .filter(value -> id.equals(value.id)).findFirst()
+                .orElseThrow(AssertionError::new);
+        return new TrainingPlan(method, "test", method.confidence,
+                Collections.emptyList());
+    }
+
+    private static TrainingPlan plan(String id, Skill skill,
+            String instructions)
+    {
         TrainingMethod method = new TrainingMethod(
                 id, skill, 1, 99, id,
-                "Use the modeled method.",
+                instructions,
                 10, 10, 10, AttentionLevel.MODERATE,
                 10, 1, Collections.emptyList(),
                 Confidence.VERIFIED);

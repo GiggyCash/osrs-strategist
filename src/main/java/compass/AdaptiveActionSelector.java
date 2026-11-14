@@ -37,6 +37,12 @@ public class AdaptiveActionSelector
     public int resolve(TrainingPlan plan, int currentLevel,
             int objectiveTargetLevel)
     {
+        return resolve(plan, currentLevel, objectiveTargetLevel, Membership.UNKNOWN);
+    }
+
+    public int resolve(TrainingPlan plan, int currentLevel,
+            int objectiveTargetLevel, Membership membership)
+    {
         var objective = max(currentLevel + 1, objectiveTargetLevel);
         if (plan == null || plan.method() == null) return objective;
         var method = plan.method();
@@ -48,7 +54,10 @@ public class AdaptiveActionSelector
         for (ActionDef action : actionCatalog.actionsFor(method.getSkill()))
             if (action != null && action.getLevel() > currentLevel
                     && action.getLevel() < boundary
-                    && matches(action, profile.actionTerms))
+                    && action.xp > 0 && Float.isFinite(action.xp)
+                    && membershipAllowed(action.membership, membership)
+                    && matches(action, profile.actionTerms)
+                    && recipeResolver.profileInputs(profile, action, 1, membership) != null)
                 boundary = action.getLevel();
         return max(currentLevel + 1, min(objective, boundary));
     }
@@ -75,7 +84,7 @@ public class AdaptiveActionSelector
         var bestScore = Double.NEGATIVE_INFINITY;
         for (ActionDef action : actions)
         {
-            if (action == null || action.xp <= 0
+            if (action == null || action.xp <= 0 || !Float.isFinite(action.xp)
                     || action.getLevel() > currentLevel
                     || !membershipAllowed(action.membership, membership))
             {
@@ -87,7 +96,8 @@ public class AdaptiveActionSelector
             int actionsNeeded = divideRoundUp(
                     max(0, targetXp - currentXp), xpPerAction);
             List<MethodInput> needs = recipeResolver.profileInputs(
-                    profile, action, actionsNeeded);
+                    profile, action, actionsNeeded, membership);
+            if (needs == null) continue;
 
             // Base ranking remains tied to the actual action inside the already
             // selected strategic method. Logarithmic XP weighting prevents a
@@ -155,14 +165,14 @@ public class AdaptiveActionSelector
         for (MethodInput need : needs)
         {
             if (need == null || need.quantity <= 0) continue;
-            var owned = items.quantity(need.getName());
+            var owned = items.quantity(need);
             total += min(1.0, owned / (double) need.quantity);
             counted++;
         }
         return counted == 0 ? 1.0 : total / counted;
     }
 
-    private static boolean matches(
+    static boolean matches(
             ActionDef action,
             List<String> terms)
     {

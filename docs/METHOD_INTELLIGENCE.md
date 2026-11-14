@@ -1,0 +1,485 @@
+# Method intelligence
+
+Cooking and early arrow-shaft Fletching consume a shared method contract. Java evaluates the
+contract; method IDs, recipes, ingredients, access gates, locations and retained
+outputs live in `content/catalogs/method-intelligence.json`.
+
+`MethodReadinessService` evaluates access before selecting a legal recipe and
+batch. `MethodPreparationService` merges duplicate item requests before spending
+observed stock, describes retrieval separately from carried supplies, and uses
+`AccountResourcePlanner.purchase` for one combined affordability decision.
+Unknown storage is not empty. Main purchases need observed ownership, usable
+cash and exact matching price quotes. Iron modes cannot purchase. Group stock
+requires an enabled, fresh observation. UIM conventional bank routes are blocked;
+looting bag, death storage and deathpiles cannot satisfy a recipe without a
+separate verified retrieval contract.
+
+`MethodCapacity` simulates each action's consumed inputs and retained outputs.
+Hard capacity means one action fits; working capacity means the chosen batch
+fits. Efficient capacity refers only to the data's larger batch threshold. It
+does not prove throughput, burn rates, available inputs, sustained banking or
+XP per hour. Unprepared efficient quantities stay unknown. Reusable tools are
+reserved once and never consumed. Equipped tools satisfy capacity only when the
+contract explicitly permits equipped use; bank ownership is never equipment.
+Input/output recycling under the same item ID is rejected until modeled.
+
+Selection sorts feasible candidates ahead of unknown hard requirements before
+comparing scores. The same readiness result supplies guidance and the final
+actionability gate; it cannot override another unresolved access requirement.
+Guidance bounds a batch and asks for reassessment after processing or reaching
+the next recipe level. It does not predict exact successful cooks or burns.
+One carried input can be a valid small UIM batch.
+
+Karambwan execution and Gnome Restaurant orders remain unresolved because their
+full live execution requirements are not modeled. Missing Iron supplies likewise
+remain unresolved until an acquisition route is proved. These are intentional
+safety limits, not substitute recommendations to buy or assume access.
+
+## Source review
+
+Reviewed through the live OSRS Wiki Action API on 2026-09-30. Method contracts
+record their source revision. Ingredient identity, F2P status, stackability and
+Cooking levels were checked against these revisions:
+
+| Page | Revision |
+| --- | --- |
+| Raw shrimps | 15331265 |
+| Raw sardine | 15331276 |
+| Raw herring | 15331274 |
+| Raw trout | 15331267 |
+| Raw pike | 15331271 |
+| Raw salmon | 15331268 |
+| Raw tuna | 15331278 |
+| Raw lobster | 15331269 |
+| Raw swordfish | 15337086 |
+| Grapes | 15353159 |
+| Jug of water | 15229681 |
+
+The four-action preparation batch is a planner policy, not a game requirement.
+The larger 28-fish/14-wine thresholds describe modeled inventory batches, not
+claims that those routes maximize account progression.
+
+## Early Fletching
+
+The arrow-shaft contract covers regular logs from level 1 and oak logs from
+level 15 within the existing early-method level range. Both reserve one reusable
+knife and retain stackable shafts. Optional observed bank supplies are separate
+from requiring a bank loop, so UIM can process carried logs without receiving
+bank withdrawal instructions. Missing tools or inaccessible sources remain gated.
+The capacity simulator checks the resulting stack against the live quantity
+representation limit instead of silently assuming unlimited stack growth.
+
+Verified on 2026-09-30 through current Wiki revisions: Arrow shaft 15332152,
+Logs 15322883, Oak logs 15182629 and Knife 15350068. The 27-log threshold is
+inventory batch capacity with a knife, not a throughput claim. An existing output
+stack or retained setup can reduce it. Java contains no Fletching recipe IDs or
+special cases.
+
+## Verified pickup preparation
+
+`MethodAcquisitionCatalog` currently supports only reviewed ground-item pickups
+with explicitly unrestricted access, no risk, and no skill XP. It does not turn
+the descriptive resource-source catalog into evidence. The initial contracts are
+a knife in Lumbridge Castle's kitchen and logs on the castle bank floor, reviewed
+against the Knife and Logs revisions above. Other source types require explicit
+access, build, input and outcome evaluation before they can be added.
+
+Preparation first uses observed usable stock, then a verified affordable purchase
+when allowed. If purchasing is unavailable or unproved, every missing item must
+have a reviewed pickup route before a self-source plan becomes actionable. Unknown
+ordinary ownership or opted-in unobserved Group Storage still blocks that proof.
+UIM bank and retrieval-only storage are not counted. Pickups remain acquisition
+steps until live inventory confirms possession; guidance leads with the pickup
+instructions and handles absent spawns without promising a respawn time.
+
+Pickup preparation carries a higher ranking burden than observed retrieval and
+increases with requested quantity. This is a planner preference, not a measured
+travel time. The method capacity check reserves all resulting inputs and tools
+before any processing or disposal can be assumed.
+
+## Reviewed legacy action inputs
+
+`reviewed-action-recipes.json` replaces Cooking's legacy name-derived input
+fallback. It contains 29 ordinary fish recipes, jug of wine, and the two existing
+arrow-shaft ingredient contracts. Each
+row records exact consumed item IDs and quantities per attempt, explicit
+membership, setup assumptions, a Wiki page/revision and review date. Runtime
+validation in `ReviewedActionRecipeCatalog` rejects incomplete provenance,
+substring matching, duplicate keys, missing membership or stackability, and
+invalid ingredient identities/quantities. The installed
+plugin reads bundled data only.
+
+This table is an ingredient contract for the existing universal guidance path,
+not a replacement readiness engine. It does not prove level, access, usable
+ownership, purchase affordability, inventory capacity, burn rates or successful
+outputs. Those remain separate planning responsibilities. Unknown membership can
+use only explicitly F2P rows. Supported fish are cooked on a range/fire; wine
+uses grapes and water and requires fermentation. Quantities describe attempts,
+not a promise that every output succeeds.
+
+The 30 normalized output names were checked against all 148 Cooking actions in
+the current public RuneLite CookingAction source on 2026-09-30. The remaining
+118 actions are not covered by this ingredient table. Previous Java guesses for
+composite, alternative-input, local and quest-dependent foods are deliberately
+removed rather than certified by migration. This includes cooked meat, sinew,
+karambwan and unknown future foods. Unsupported names return unresolved inputs
+and cannot win universal Cooking action selection. They need reviewed explicit
+recipes and any special access/setup model before becoming supported.
+
+The existing `action-recipes.json` table remains a legacy contract for other
+skills. New reviewed rows are checked first and retain item IDs; legacy rows do
+not silently acquire provenance. Method readiness continues to use
+`method-intelligence.json`; adding a reviewed ingredient row alone does not add a
+new actionable training method.
+
+Twelve method recipes (ten Cooking and two Fletching) now use `inputRecipe` to reference the shared reviewed
+row by exact output name within their skill. Their repeated ingredient IDs,
+names, quantities and stackability have been removed from method data. Inline
+inputs and a reference cannot coexist. Missing references fail catalog loading,
+and a method marked F2P cannot reference a members-only input recipe. Referenced
+ingredients are copied into the evaluated method contract; batch limits, reusable
+tools, retained outputs and access requirements remain method-specific.
+
+Stackability is explicitly recorded per shared ingredient (verified against the
+same individual Wiki pages/revisions as the input IDs). It cannot default from a
+missing field. Action quantity multiplication also fails unresolved if its total
+cannot be represented, rather than saturating a supposedly exact requirement.
+The existing regular-log and oak-log arrow-shaft methods now use shared inputs.
+`actionUnitsPerBatch` separates calculator counts from processing batches: regular
+logs produce 15 calculator shaft units per log, while readiness still consumes
+one log per processing action. A null conversion explicitly leaves a recipe
+available only to method batch planning. The oak recipe uses that state because
+RuneLite's generic Arrow shaft action does not identify its log tier. Its existing
+method contract retains the 30-shaft output and level gate. Neither recipe is
+available to F2P/unknown membership. Knife tools remain in the method contract.
+
+The arrow-shaft Java special case and its integer ceiling helper have been
+removed. Generic conversion rounds positive counts up without addition overflow.
+The existing Arrow shaft Wiki revision 15332152 provides the batch yields; Logs
+15322883 and Oak logs 15182629 supply item/stackability facts. The current public
+RuneLite FletchingAction source was checked on 2026-09-30 for its individual-shaft
+calculator unit. Other Fletching name-inference branches remain separate audit
+work; this change does not broaden method coverage.
+
+## Existing battlestaff assembly family
+
+The four elemental battlestaff assembly recipes now use the shared reviewed
+catalog. Each consumes one battlestaff and its charged elemental orb per crafted
+staff. Ingredient IDs and non-stackability were checked against the current
+Battlestaff/orb Wiki pages; assembly provenance is recorded on each output row.
+RuneLite's current CraftingAction entries were checked for the same four outputs.
+
+This replaces the Java substring/element-name inference; it adds no training
+method, orb-charging plan or transmutation route. F2P and unknown membership
+cannot resolve these members recipes, even if an action is mislabeled. Unknown
+staff names remain unresolved instead of acquiring guessed ingredients. Existing
+level/access/resource/readiness checks retain their separate responsibilities.
+
+## Existing glassblowing family
+
+Seven existing RuneLite calculator actions now resolve through reviewed rows:
+beer glass, empty candle lantern, empty oil lamp, vial, fishbowl, unpowered orb
+and lantern lens. Each consumes one molten glass per attempt and retains the
+instruction to use a glassblowing pipe. The calculator's Fishbowl label describes
+making the empty bowl; its setup text says so explicitly. Filled lamps/bowls,
+vials of water and arbitrary names containing those words do not inherit this
+recipe. Light orbs are outside this migration's previously supported family.
+
+Crafting membership is taken from each Wiki creation recipe, not the output
+item's infobox. Beer glass and vial are free items with members-only glassblowing
+recipes. Their reviewed rows therefore reject F2P and unknown membership even
+if a caller labels the output item free. Per-output source revisions are stored
+in the data; molten glass identity/non-stackability comes from revision 15288555.
+This removes the Java substring rule and does not add a new training method or
+assert full tool/access/capacity readiness from ingredient resolution alone.
+
+## Existing ordinary dart assembly family
+
+The eight ordinary dart types in RuneLite (bronze, iron, steel, mithril, adamant,
+rune, amethyst and dragon) now resolve to exact reviewed tip IDs plus ordinary
+feathers. Wiki recipes show ten tips and ten feathers producing ten darts;
+normalized calculator quantities are one of each per individual dart. Both
+inputs are stackable. The recipes remain members-only. Colored-feather variants,
+poisoning and tip production are separate routes, not inferred alternatives.
+
+The suffix-based dart-input guess is removed. Unknown dart names and atlatl
+variants now remain unresolved in universal recipe guidance instead of receiving
+invented tip names. This review found that Atlatl dart Wiki revision 15343589
+models 30 Fletching XP per 20 outputs, whereas the inspected public RuneLite
+FletchingAction entry supplies 9.5 per dart. Atlatl assembly also uses headless
+atlatl darts and atlatl dart tips, not the ordinary tip/feather pair. Resolve that
+XP/input discrepancy in a separate reviewed slice before enabling its recipe.
+No new training method or full readiness contract is introduced here.
+
+## Reviewed execution-profile inputs
+
+The adaptive profile path now shares reviewed inputs for the existing dart,
+F2P fish, F2P fish baseline and wine profiles. `reviewedRecipes` requires an empty
+legacy rule list and resolves the exact action through the shared catalog.
+Both adaptive selection and milestone guidance pass account membership into
+that lookup. Missing recipes, unavailable membership and conflicting inline
+rules return unresolved inputs; profile term matching alone cannot manufacture
+supplies. The Dart-tip-from-name input mode and its switch branch are removed.
+
+Other execution profiles retain their existing rules until separately reviewed.
+This change does not broaden method coverage, certify an unknown recipe, or
+replace the independent account/build/access/capacity checks. Existing Cooking
+and Fletching preparation contracts continue to control actual readiness.
+
+## Existing ordinary bolt feathering
+
+Nine previously inferred ordinary bolt recipes (bronze, blurite, iron, silver,
+steel, mithril, adamant, runite and dragon) now use reviewed unfinished-item IDs
+and ordinary feathers. Recipes normalize ten inputs of each kind producing ten
+bolts to one of each per calculator bolt. Membership comes from creation rules;
+bronze bolts being a free item does not make feathering F2P. Actual item spelling
+is preserved, including `Adamant bolts(unf)` without a space.
+
+The existing bolt execution profile now shares these records. The metal-name
+heuristic, specialty-gem exclusion list, and profile suffix-appending rule have
+been deleted. Specialty, poisoned and invented names remain unresolved. This
+adds no method or access/acquisition proof; colored feathers and gem tipping
+remain separate routes.
+
+The inspected public RuneLite DRAGON_BOLTS calculator entry uses the
+DRAGON_BOLTS_UNFEATHERED icon. An unfinished-item action label is deliberately
+not accepted as a finished-bolt recipe alias: the label/identity mismatch needs
+separate normalization and guidance review. The canonical Dragon bolts recipe
+is recorded, but `Dragon bolts (unf)` cannot silently become a finished-output
+instruction. Per-output Wiki revisions and reviewed dates are stored in data.
+
+## Unresolved karambwan execution profile
+
+The karambwan profile now uses the shared reviewed-input lookup. It has no
+reviewed recipe, matching the existing unresolved readiness contract for the
+post-quest cooking lesson and one-tick setup. It therefore cannot synthesize raw
+ingredients or win adaptive selection merely because an action label matches.
+This removes the final RAW_ACTION_ITEM transformation without claiming that
+owning raw fish proves the route is available. Adding support requires reviewing
+the unlock and execution contract, not restoring the string heuristic.
+
+## Existing gem cutting uses reviewed inputs
+
+Sapphire, emerald, ruby, diamond, dragonstone and onyx now share reviewed
+one-uncut-gem recipes between universal guidance and the existing crafting_gems
+profile. The first four are F2P; dragonstone and onyx require P2P. The chisel is
+reusable setup, not a consumed ingredient. Recipe data carries Wiki revisions
+and exact uncut IDs. This does not add acquisition or live tool-readiness proof.
+
+Both gem-cutting name transformations are removed. Soft gems (opal, jade and
+red topaz) remain unresolved because crushing changes output and XP. Zenyte also
+remains unresolved: Wiki revision 15357771 reports 50 cutting XP, while the
+public RuneLite CraftingAction inspected on 2026-09-30 still reports 200. No
+speculative XP override or recipe is used to bridge that disagreement. Jewelry
+has a separate existing path; its presence does not make it a gem-cutting action.
+
+## Reviewed execution profiles declare their recipe scope
+
+Seven migrated profiles now reference exact SKILL:name recipe keys instead of a
+boolean enabling the whole reviewed catalog. Missing or duplicate references
+fail catalog validation. A present empty list deliberately keeps karambwan
+unresolved; an absent list retains the legacy input rules until that profile is
+migrated. Inline input rules cannot override reviewed references.
+
+Search terms remain discovery hints, but cannot authorize a different activity
+because its category or ID happens to match. Selection and stage boundaries both
+use the same explicit recipe check. This adds no recipes or methods and does not
+turn ingredient identity into proof of tools, unlocks, affordability or capacity.
+
+## Existing standard bow cutting and stringing
+
+Twelve unstrung standard-bow recipes and eleven stringing recipes now use exact
+reviewed ingredients. The existing fletching_bows profile references only the
+12 cutting recipes, so stringing cannot enter the log-cutting route. Creation is
+members-only even when the finished bow is F2P. Cutting retains a reusable knife;
+stringing consumes an unstrung bow and bow string. No new training method or
+acquisition/readiness proof is introduced.
+
+Both universal bow name heuristics and the LOG_FOR_BOW profile transformation
+are removed. This also prevents crossbows from entering the old bow-(u) suffix
+branch and being incorrectly assigned logs. Invented and modified bow names stay
+unresolved. Willow shortbow stringing is deliberately unresolved: Wiki revision
+15183273 reports 33.2 XP while current RuneLite FletchingAction reports 33.3;
+its cutting recipe independently agrees at 33.3. No XP override is inferred.
+
+## Existing Smithing profile inputs
+
+The three bar-consuming profiles now reference reviewed recipes: 17 ordinary
+F2P bronze anvil items, six metal platebodies and six dart-tip batches. The old
+profile rule charged one bar for every non-platebody; scimitars, shields and
+platelegs now consume their actual reviewed totals. Each dart-tip calculator
+action consumes one bar for ten tips; it does not mean one tip. All 28 distinct
+records agree with current RuneLite action XP and retain Wiki revision provenance.
+Hammers remain reusable setup, separate from consumed bars.
+
+The bronze profile excludes smelting and unreviewed bronze activities rather
+than interpreting every bronze action as a one-bar anvil item. Dart-tip recipes
+remain P2P and explicitly mention The Tourist Trap; ingredient resolution does
+not prove that unlock. Existing method requirements still control access.
+The separate universal Smithing fallback remains for unreviewed rows and needs
+its own migration; this checkpoint does not claim it is removed or verified.
+
+## Universal Smithing identity boundary
+
+The universal resolver now shares the reviewed anvil identities without a
+metal/item substring fallback. Unsupported and invented names yield unresolved
+inputs instead of fabricated bar totals. The 28 reviewed rows remain available;
+one reviewed iron 2h sword row preserves the existing F2P level-29 route.
+Other anvil actions require evidence-backed migration before exact planning.
+Legacy exact furnace records remain separate and are not certified by this
+change; furnace success conditions and action-unit semantics need a later audit.
+
+## Standard furnace recipes and iron uncertainty
+
+Seven ordinary furnace recipes now use reviewed records with concrete ore IDs,
+nonstackable inventory inputs and revision provenance. Their standard base XP
+matches current RuneLite SmithingAction. Blast Furnace, catalysts and boosted XP
+are separate setups, not inferred from these records.
+
+Iron bar was removed from the legacy exact recipe list. The Wiki (Iron bar,
+revision 15315108) documents ore loss without XP in ordinary furnace smelting.
+The context-free resolver cannot prove an equipped/charged ring of forging,
+Superheat Item or Blast Furnace setup, so it cannot promise one ore per successful
+bar. Iron input quantities remain unresolved; no expected RNG count is labelled
+exact. This does not affect consuming iron bars at an anvil.
+
+## Shared ingredient identity in selection and supply guidance
+
+ItemIndex now resolves MethodInput using its reviewed ID when present, retaining
+name lookup only for legacy inputs without IDs. Adaptive selection, universal
+resource ranking, and account supply planning share that lookup. Restricted UIM
+storage uses the same identity rule without becoming directly usable.
+
+Supply grouping keeps different IDs distinct despite equal labels; conflicting
+requirement labels for the same ID now fail closed under the checked merge below.
+Universal ranking accumulates
+required and owned totals in long values so multiple large ingredients cannot
+wrap the coverage denominator. Existing mode-safe container rules still apply.
+
+## Invalid supply requirements fail closed
+
+AccountResourcePlanner uses the same checked MethodInput merge as reviewed
+recipes and typed preparation. Null/malformed ingredients and duplicate totals
+above Integer.MAX_VALUE yield no supply plan, not a partial list or a capped
+requirement. Both guidance consumers stop when their planner cannot resolve the
+requirements. An explicit empty ingredient list remains valid.
+
+Conflicting names for the same ID inside a requirement list remain ambiguous and
+fail closed, matching preparation and recipe validation. A different live item
+display label still resolves by reviewed ID. Requirements without IDs retain
+normalized-name grouping.
+
+## Existing bow-cutting route migration
+
+fletching_bows now has a full method contract using its twelve reviewed cutting
+recipes, from shortbow through magic longbow. Every action consumes one log and
+retains one nonstackable unstrung bow; the reusable knife occupies a slot. The
+maximum/efficient capacity target is 27 actions with a knife, while four is the
+working-batch target (a planning choice, not an OSRS minimum or XP-rate claim).
+Existing occupied slots can reduce feasibility; no output disposal is assumed.
+
+The route is local processing with optional observed bank retrieval, not an
+obligatory bank loop. UIM may use carried inputs or proven self-sourcing steps;
+conventional bank stock cannot satisfy preparation. Main purchases still need
+observed prices and affordable totals; an unaffordable purchase may be replaced
+by independently verified self-sourcing. F2P and unknown membership fail closed.
+
+Current Wiki unstrung-bow pages were rechecked for output IDs, Fletching levels,
+knife use, membership and nonstackability; revisions match the twelve shared
+input records. Recipe output identities are 50/48,54/56,60/58,64/62,68/66,72/70
+(shortbow/longbow pairs, ordinary through magic). Stringing and crossbows are not
+part of this contract. No production Java or schema extension was needed.
+
+## Preparation order across guidance surfaces
+
+Shared method guidance now prefixes processing with every pending preparation
+step action, including purchase, retrieval and unequipping, as well as acquisition.
+Previously only acquisition appeared before processing in this text, although the
+sidebar already selected the next preparation step. Ready carried inputs add no
+prefix. The Method Guidance checklist consumes this shared action text, so it no
+longer starts processing while an ordinary preparation step is still pending.
+
+Method Guidance also renders the typed preparation steps as checklist rows.
+For an actionable contract, carried/equipped reusable supplies are complete;
+steps with pending actions remain ACTION. The aggregate preparation-proof row
+is replaced by those details so a verified plan is not shown as completed work.
+Access and capacity evidence remain separate checklist rows.
+
+## Recipe economics comparison boundary
+
+Recipes may optionally supply an `economics` map keyed by exact `AccountMode`.
+Each entry is a reviewed fact record: `resourceFit` ([-1, 1]),
+`opportunityCost` ([0, 1]) and nonempty `evidence`. Nonfinite/out-of-range
+numbers, null entries and UNKNOWN mode keys are rejected. The enclosing method
+still requires reviewed source provenance. Catalog values and evidence lists are
+copied into immutable candidate evidence.
+
+These are reviewed normalized resource benefits/burdens, not coin amounts or
+market-return forecasts. No coin-to-score conversion, GE lookup, sale proceeds,
+XP valuation or inferred Iron replacement cost is introduced. Missing evidence
+for an account mode remains null; one mode never inherits another's rating.
+All production recipes currently omit ratings, so existing winners are unchanged.
+
+`TrainingMethodPolicy` converts these facts with existing `StrategicValue` weights
+(`resourceFit * 8 - opportunityCost * 12`) only to break equal existing scores
+among alternatives of the same method. Strategy/session fit, preparation scores
+and the hard feasibility tier retain priority. If any actionable alternative
+lacks economics, comparison is disabled for that method's whole feasible cohort;
+this avoids treating unknown as free or creating a nontransitive comparator.
+Equal values preserve the stable legacy recipe order. Different methods retain
+their existing ordering and scores.
+
+The selected readiness object retains its own economics, preparation, capacity,
+batch and guidance. Its explanation identifies use of the economic comparison.
+The tie-break does not add a second charge to final-queue `StrategicValue` or
+affect purchase affordability; observed usable cash is still required. Source
+ratings must cover resource benefit/opportunity burden rather than duplicating
+the preparation step penalties already modeled. Gem contracts remain disabled.
+
+Enabling actual ratings remains a separate reviewed-data slice: monetary
+economics still need quote provenance, consumed versus reusable cost separation,
+retained-output uncertainty, and verified outcome/purpose evidence. This optional
+field is not permission to encode changing market prices as permanent ratings.
+
+## Candidate comparison and reviewed banking policy
+
+After strategy/session ranking, each `TrainingPlan` retains a structured
+`CandidateComparison` with the closest lower-ranked alternative and the deciding
+basis: unresolved access, observed preparation, reviewed economics,
+strategy/session fit, or a deterministic tie. Recommendation Details includes
+this comparison in WHY without exposing recipe IDs or internal score values.
+The selected plan still owns its exact readiness, preparation, capacity,
+economics and guidance; the comparison is a summary after ranking, not a merge.
+
+Full method contracts also provide the banking behavior consumed by strategy
+policy. A reviewed `bankLoop=true` remains a conventional bank loop and fails
+closed for UIM. A reviewed local-processing contract can supersede an older
+method-family bank-loop classification, allowing UIM only when its exact carried
+resources and capacity make a recipe actionable. Methods without full contracts
+retain the legacy strategy profile. This fixes the existing bow-cutting route:
+carried logs plus a knife now reach its reviewed local-processing plan for UIM,
+while Cooking wines remain excluded as a conventional bank loop.
+
+## Reviewed Herblore recipes retire the legacy table
+
+Attack potion(3), Antipoison(3), Strength potion(3), and Restore potion(3) now
+use exact reviewed input identities rather than the dose-stripping legacy table.
+Energy potion(3), Defence potion(3), Agility potion(3), Combat potion(3), and
+Prayer potion(3) use the same reviewed boundary.
+Each contract consumes one clean herb, one secondary ingredient, and one vial of
+water per completed three-dose potion. Production is explicitly members-only
+even where the finished potion can be used on a free world; F2P and unknown
+membership therefore remain unresolved.
+
+The nine records are pinned individually to Wiki revisions 15247702, 15365013,
+15359571, 15183838, 15374696, 15183997, 15250405, 15183999, and 15386662 and
+match RuneLite 1.13.6's exact `(3)` action names. The remaining fourteen
+ordinary potion, brew, and poison rows are also pinned individually in the
+reviewed catalog. Weapon poison deliberately uses its non-dose RuneLite action
+and setup wording instead of inheriting the three-dose potion contract.
+
+`action-recipes.json` is now an empty compatibility resource. A regression gate
+requires it to remain empty, so new ingredient knowledge must include exact item
+identities, membership, stackability, setup, review date, and pinned provenance
+instead of reintroducing unreviewed legacy rows. The runtime resolver no longer
+loads this resource or carries the former substring/dose-normalization matcher.

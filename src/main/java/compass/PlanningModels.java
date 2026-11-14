@@ -759,6 +759,8 @@ final class TrainingPlan
     final List<EvidenceCheck> requirementChecks;
     final MethodStrategyProfile strategyProfile;
     final int currentStageTargetLevel;
+    final MethodReadiness readiness;
+    final CandidateComparison comparison;
 
     TrainingMethod method() { return method; }
 
@@ -779,7 +781,7 @@ final class TrainingPlan
             MethodStrategyProfile strategyProfile)
     {
         this(method, whyThisMethod, confidence, requirementChecks,
-                strategyProfile, 0);
+                strategyProfile, 0, null, null);
     }
 
     private TrainingPlan(
@@ -788,7 +790,8 @@ final class TrainingPlan
             Confidence confidence,
             List<EvidenceCheck> requirementChecks,
             MethodStrategyProfile strategyProfile,
-            int currentStageTargetLevel)
+            int currentStageTargetLevel, MethodReadiness readiness,
+            CandidateComparison comparison)
     {
         this.method = method;
         this.whyThisMethod = whyThisMethod;
@@ -802,14 +805,41 @@ final class TrainingPlan
         );
         this.strategyProfile = strategyProfile;
         this.currentStageTargetLevel = max(0, currentStageTargetLevel);
+        this.readiness = readiness;
+        this.comparison = comparison;
     }
 
 
     public TrainingPlan withCurrentStageTargetLevel(int targetLevel)
     {
+        if (readiness != null) targetLevel = min(targetLevel, readiness.reviewLevel);
         return new TrainingPlan(method, whyThisMethod, confidence,
-                requirementChecks, strategyProfile, targetLevel);
+                requirementChecks, strategyProfile, targetLevel, readiness, comparison);
     }
+
+    TrainingPlan withReadiness(MethodReadiness value)
+    {
+        return new TrainingPlan(method, whyThisMethod, confidence,
+                requirementChecks, strategyProfile, currentStageTargetLevel, value, comparison);
+    }
+
+    TrainingPlan withComparison(CandidateComparison value)
+    {
+        return new TrainingPlan(method, whyThisMethod, confidence,
+                requirementChecks, strategyProfile, currentStageTargetLevel, readiness, value);
+    }
+}
+
+/** Player-facing trace of the closest alternative at the strategy/session boundary. */
+@Getter
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+final class CandidateComparison
+{
+    enum Basis { REQUIREMENTS, PREPARATION, ECONOMICS, STRATEGY_SESSION, CATALOG_ORDER }
+
+    final Basis basis;
+    final String alternative;
+    final String reason;
 }
 
 /** Result of the ordered UIM inventory-resolution policy. */

@@ -1,0 +1,5356 @@
+[
+  {
+    "skill": "COOKING",
+    "match": "anchovies",
+    "inputs": [
+      "Raw anchovies"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      321
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_anchovies",
+    "sourceRevision": 15331266,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "anglerfish",
+    "inputs": [
+      "Raw anglerfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      13439
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_anglerfish",
+    "sourceRevision": 15357467,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "bass",
+    "inputs": [
+      "Raw bass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      363
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_bass",
+    "sourceRevision": 15331273,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "bluefin",
+    "inputs": [
+      "Raw bluefin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32341
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_bluefin",
+    "sourceRevision": 15327739,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "cave eel",
+    "inputs": [
+      "Raw cave eel"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      5001
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_cave_eel",
+    "sourceRevision": 15326686,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "cod",
+    "inputs": [
+      "Raw cod"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      341
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_cod",
+    "sourceRevision": 15342741,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "dark crab",
+    "inputs": [
+      "Raw dark crab"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      11934
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_dark_crab",
+    "sourceRevision": 15296400,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "giant krill",
+    "inputs": [
+      "Raw giant krill"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32309
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_giant_krill",
+    "sourceRevision": 15262014,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "haddock",
+    "inputs": [
+      "Raw haddock"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32317
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_haddock",
+    "sourceRevision": 15327735,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "halibut",
+    "inputs": [
+      "Raw halibut"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32333
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_halibut",
+    "sourceRevision": 15327738,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "herring",
+    "inputs": [
+      "Raw herring"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      345
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_herring",
+    "sourceRevision": 15331274,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "jug of wine",
+    "inputs": [
+      "Grapes",
+      "Jug of water"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1987,
+      1937
+    ],
+    "membersOnly": false,
+    "setup": "Use grapes on jugs of water and allow fermentation. Inputs are per attempt; successful fermentation is not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Jug_of_wine",
+    "sourceRevision": 15333576,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false,
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "jumbo squid",
+    "inputs": [
+      "Raw jumbo squid"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      31561
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_jumbo_squid",
+    "sourceRevision": 15327691,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "lobster",
+    "inputs": [
+      "Raw lobster"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      377
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_lobster",
+    "sourceRevision": 15331269,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "mackerel",
+    "inputs": [
+      "Raw mackerel"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      353
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_mackerel",
+    "sourceRevision": 15331272,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "manta ray",
+    "inputs": [
+      "Raw manta ray"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      389
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_manta_ray",
+    "sourceRevision": 15213248,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "marlin",
+    "inputs": [
+      "Raw marlin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32349
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_marlin",
+    "sourceRevision": 15327740,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "monkfish",
+    "inputs": [
+      "Raw monkfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      7944
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_monkfish",
+    "sourceRevision": 15331275,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "pike",
+    "inputs": [
+      "Raw pike"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      349
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_pike",
+    "sourceRevision": 15331271,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "rainbow fish",
+    "inputs": [
+      "Raw rainbow fish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      10138
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_rainbow_fish",
+    "sourceRevision": 15183823,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "salmon",
+    "inputs": [
+      "Raw salmon"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      331
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_salmon",
+    "sourceRevision": 15331268,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "sardine",
+    "inputs": [
+      "Raw sardine"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      327
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_sardine",
+    "sourceRevision": 15331276,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "sea turtle",
+    "inputs": [
+      "Raw sea turtle"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      395
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_sea_turtle",
+    "sourceRevision": 15185410,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "shark",
+    "inputs": [
+      "Raw shark"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      383
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_shark",
+    "sourceRevision": 15352513,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "shrimps",
+    "inputs": [
+      "Raw shrimps"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      317
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_shrimps",
+    "sourceRevision": 15331265,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "swordfish",
+    "inputs": [
+      "Raw swordfish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      371
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_swordfish",
+    "sourceRevision": 15337086,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "swordtip squid",
+    "inputs": [
+      "Raw swordtip squid"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      31553
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_swordtip_squid",
+    "sourceRevision": 15327692,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "trout",
+    "inputs": [
+      "Raw trout"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      335
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_trout",
+    "sourceRevision": 15331267,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "tuna",
+    "inputs": [
+      "Raw tuna"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      359
+    ],
+    "membersOnly": false,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_tuna",
+    "sourceRevision": 15331278,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "COOKING",
+    "match": "yellowfin",
+    "inputs": [
+      "Raw yellowfin"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      32325
+    ],
+    "membersOnly": true,
+    "setup": "Cook on a range or fire. Inputs are per attempt; burns and successful output counts are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Raw_yellowfin",
+    "sourceRevision": 15327736,
+    "reviewed": "2026-09-30",
+    "stackable": [
+      false
+    ],
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "arrow shaft",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a knife. 15 shafts per log using regular logs; retain the shafts.",
+    "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+    "sourceRevision": 15332152,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 15
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "arrow shafts from oak logs",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a knife; process oak logs and retain the shafts. Use the method batch contract.",
+    "source": "https://oldschool.runescape.wiki/w/Arrow_shaft",
+    "sourceRevision": 15332152,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": null
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "headless arrow",
+    "inputs": [
+      "Arrow shaft",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      52,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach feathers to arrow shafts. Quantities are per arrow; one interaction processes up to 15 of each.",
+    "source": "https://oldschool.runescape.wiki/w/Headless_arrow",
+    "sourceRevision": 15399603,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze arrow",
+    "inputs": [
+      "Headless arrow",
+      "Bronze arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      39
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_arrow",
+    "sourceRevision": 15397319,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron arrow",
+    "inputs": [
+      "Headless arrow",
+      "Iron arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      40
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_arrow",
+    "sourceRevision": 15397320,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel arrow",
+    "inputs": [
+      "Headless arrow",
+      "Steel arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      41
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_arrow",
+    "sourceRevision": 15397322,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril arrow",
+    "inputs": [
+      "Headless arrow",
+      "Mithril arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      42
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_arrow",
+    "sourceRevision": 15397324,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant arrow",
+    "inputs": [
+      "Headless arrow",
+      "Adamant arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      43
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_arrow",
+    "sourceRevision": 15397326,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune arrow",
+    "inputs": [
+      "Headless arrow",
+      "Rune arrowtips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      53,
+      44
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching arrowtips to headless arrows. Quantities are per arrow, not per click; retain the finished arrows.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_arrow",
+    "sourceRevision": 15397327,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Bronze javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19570
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_javelin",
+    "sourceRevision": 15305303,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Iron javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19572
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_javelin",
+    "sourceRevision": 15305305,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Steel javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19574
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_javelin",
+    "sourceRevision": 15182590,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Mithril javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19576
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_javelin",
+    "sourceRevision": 15182826,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Adamant javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19578
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_javelin",
+    "sourceRevision": 15182726,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Rune javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19580
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_javelin",
+    "sourceRevision": 15372028,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "amethyst javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Amethyst javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      21352
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Amethyst_javelin",
+    "sourceRevision": 15305300,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon javelin",
+    "inputs": [
+      "Javelin shaft",
+      "Dragon javelin tips"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      19584,
+      19582
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach matching javelin tips to javelin shafts. Quantities are per javelin, not per click; retain the finished javelins.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_javelin",
+    "sourceRevision": 15305299,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired pot",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_pot",
+    "sourceRevision": 15187384,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired pie dish",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_pie_dish",
+    "sourceRevision": 15272568,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired bowl",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_bowl",
+    "sourceRevision": 15183539,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "pot",
+    "inputs": [
+      "Unfired pot"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1787
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired pot in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Pot",
+    "sourceRevision": 15384837,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "pie dish",
+    "inputs": [
+      "Unfired pie dish"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1789
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired pie dish in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Pie_dish",
+    "sourceRevision": 15272560,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "bowl",
+    "inputs": [
+      "Unfired bowl"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1791
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Fire the unfired bowl in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Bowl",
+    "sourceRevision": 15356622,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unfired plant pot",
+    "inputs": [
+      "Soft clay"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1761
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Shape soft clay on a pottery wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Unfired_plant_pot",
+    "sourceRevision": 15185899,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty plant pot",
+    "inputs": [
+      "Unfired plant pot"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      5352
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Fire the unfired plant pot in a pottery oven. Inputs are per attempt; low-level pottery can crack, so successful outputs are not guaranteed.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_plant_pot",
+    "sourceRevision": 15183864,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "wind strike",
+    "inputs": [
+      "Air rune",
+      "Mind rune"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      556,
+      558
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Wind_Strike",
+    "sourceRevision": 15341514,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "fire bolt",
+    "inputs": [
+      "Air rune",
+      "Fire rune",
+      "Chaos rune"
+    ],
+    "units": [
+      3,
+      4,
+      1
+    ],
+    "itemIds": [
+      556,
+      554,
+      562
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_Bolt",
+    "sourceRevision": 15341476,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "fire blast",
+    "inputs": [
+      "Air rune",
+      "Fire rune",
+      "Death rune"
+    ],
+    "units": [
+      4,
+      5,
+      1
+    ],
+    "itemIds": [
+      556,
+      554,
+      560
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Full base rune cost.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_Blast",
+    "sourceRevision": 15394303,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "high level alchemy",
+    "inputs": [
+      "Nature rune",
+      "Fire rune"
+    ],
+    "units": [
+      1,
+      5
+    ],
+    "itemIds": [
+      561,
+      554
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "An equipped fire source can replace fire runes; use only a verified safe alch list.",
+    "source": "https://oldschool.runescape.wiki/w/High_Level_Alchemy",
+    "sourceRevision": 15393805,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "MAGIC",
+    "match": "curse",
+    "inputs": [
+      "Earth rune",
+      "Water rune",
+      "Body rune"
+    ],
+    "units": [
+      3,
+      2,
+      1
+    ],
+    "itemIds": [
+      557,
+      555,
+      559
+    ],
+    "stackable": [
+      true,
+      true,
+      true
+    ],
+    "membersOnly": false,
+    "setup": "Elemental staves can replace corresponding runes.",
+    "source": "https://oldschool.runescape.wiki/w/Curse",
+    "sourceRevision": 14797456,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "oak larder",
+    "inputs": [
+      "Oak plank"
+    ],
+    "units": [
+      8
+    ],
+    "itemIds": [
+      8778
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_larder",
+    "sourceRevision": 15194498,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "oak door",
+    "inputs": [
+      "Oak plank"
+    ],
+    "units": [
+      10
+    ],
+    "itemIds": [
+      8778
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_door",
+    "sourceRevision": 15232750,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "mahogany table",
+    "inputs": [
+      "Mahogany plank"
+    ],
+    "units": [
+      6
+    ],
+    "itemIds": [
+      8782
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Mahogany_table",
+    "sourceRevision": 14913577,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "teak garden bench",
+    "inputs": [
+      "Teak plank"
+    ],
+    "units": [
+      6
+    ],
+    "itemIds": [
+      8780
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw.",
+    "source": "https://oldschool.runescape.wiki/w/Teak_garden_bench",
+    "sourceRevision": 14913760,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CONSTRUCTION",
+    "match": "mounted mythical cape",
+    "inputs": [
+      "Teak plank"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      8780
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a hammer and saw; the mythical cape is returned when the mount is removed, so only planks are counted.",
+    "source": "https://oldschool.runescape.wiki/w/Mythical_cape_(mounted)",
+    "sourceRevision": 14913609,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ball of wool",
+    "inputs": [
+      "Wool"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1737
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Spin wool into a ball of wool at a spinning wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Ball_of_wool",
+    "sourceRevision": 15374780,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "bow string",
+    "inputs": [
+      "Flax"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1779
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Spin flax into bow string at a spinning wheel.",
+    "source": "https://oldschool.runescape.wiki/w/Bow_string",
+    "sourceRevision": 15278670,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "air battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Air orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged air orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Air_battlestaff",
+    "sourceRevision": 15182754,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "water battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Water orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      571
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged water orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Water_battlestaff",
+    "sourceRevision": 15184146,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "earth battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Earth orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      575
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged earth orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Earth_battlestaff",
+    "sourceRevision": 15182985,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "fire battlestaff",
+    "inputs": [
+      "Battlestaff",
+      "Fire orb"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1391,
+      569
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use the charged fire orb on the battlestaff. This models assembly, not orb charging or staff transmutation.",
+    "source": "https://oldschool.runescape.wiki/w/Fire_battlestaff",
+    "sourceRevision": 15320213,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "beer glass",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make beer glass.",
+    "source": "https://oldschool.runescape.wiki/w/Beer_glass",
+    "sourceRevision": 15355509,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty candle lantern",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make empty candle lantern.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_candle_lantern",
+    "sourceRevision": 15188816,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "empty oil lamp",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make empty oil lamp.",
+    "source": "https://oldschool.runescape.wiki/w/Empty_oil_lamp",
+    "sourceRevision": 15185200,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "vial",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make vial.",
+    "source": "https://oldschool.runescape.wiki/w/Vial",
+    "sourceRevision": 15183725,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "fishbowl",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make an empty fishbowl.",
+    "source": "https://oldschool.runescape.wiki/w/Fishbowl",
+    "sourceRevision": 15286250,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "unpowered orb",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make unpowered orb.",
+    "source": "https://oldschool.runescape.wiki/w/Unpowered_orb",
+    "sourceRevision": 15218232,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "lantern lens",
+    "inputs": [
+      "Molten glass"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1775
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a glassblowing pipe on molten glass to make lantern lens.",
+    "source": "https://oldschool.runescape.wiki/w/Lantern_lens",
+    "sourceRevision": 15183962,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze dart",
+    "inputs": [
+      "Bronze dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      819,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dart",
+    "sourceRevision": 15301674,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron dart",
+    "inputs": [
+      "Iron dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      820,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_dart",
+    "sourceRevision": 15301682,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel dart",
+    "inputs": [
+      "Steel dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      821,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_dart",
+    "sourceRevision": 15301693,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril dart",
+    "inputs": [
+      "Mithril dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      822,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_dart",
+    "sourceRevision": 15301685,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant dart",
+    "inputs": [
+      "Adamant dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      823,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_dart",
+    "sourceRevision": 15301656,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "rune dart",
+    "inputs": [
+      "Rune dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      824,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_dart",
+    "sourceRevision": 15355936,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "amethyst dart",
+    "inputs": [
+      "Amethyst dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      25853,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Amethyst_dart",
+    "sourceRevision": 15301666,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon dart",
+    "inputs": [
+      "Dragon dart tip",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      11232,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching dart tips. Quantities are per dart, not per click; retain the finished darts.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_dart",
+    "sourceRevision": 15301677,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "bronze bolts",
+    "inputs": [
+      "Bronze bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9375,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_bolts",
+    "sourceRevision": 15301699,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "blurite bolts",
+    "inputs": [
+      "Blurite bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9376,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Blurite_bolts",
+    "sourceRevision": 15301667,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "iron bolts",
+    "inputs": [
+      "Iron bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9377,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_bolts",
+    "sourceRevision": 15301681,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "silver bolts",
+    "inputs": [
+      "Silver bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9382,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Silver_bolts",
+    "sourceRevision": 15301703,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "steel bolts",
+    "inputs": [
+      "Steel bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9378,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_bolts",
+    "sourceRevision": 15301692,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "mithril bolts",
+    "inputs": [
+      "Mithril bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9379,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_bolts",
+    "sourceRevision": 15301684,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "adamant bolts",
+    "inputs": [
+      "Adamant bolts(unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9380,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_bolts",
+    "sourceRevision": 15301669,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "runite bolts",
+    "inputs": [
+      "Runite bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      9381,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Runite_bolts",
+    "sourceRevision": 15301687,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "dragon bolts",
+    "inputs": [
+      "Dragon bolts (unf)",
+      "Feather"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      21930,
+      314
+    ],
+    "stackable": [
+      true,
+      true
+    ],
+    "membersOnly": true,
+    "setup": "Attach ordinary feathers to the matching unfinished bolts. Quantities are per bolt; retain the completed bolts.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_bolts",
+    "sourceRevision": 15301675,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire",
+    "inputs": [
+      "Uncut sapphire"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1623
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire",
+    "sourceRevision": 15357748,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald",
+    "inputs": [
+      "Uncut emerald"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1621
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald",
+    "sourceRevision": 15357750,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby",
+    "inputs": [
+      "Uncut ruby"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1619
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby",
+    "sourceRevision": 15357755,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond",
+    "inputs": [
+      "Uncut diamond"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1617
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond",
+    "sourceRevision": 15357761,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone",
+    "inputs": [
+      "Uncut dragonstone"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1631
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone",
+    "sourceRevision": 15357763,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx",
+    "inputs": [
+      "Uncut onyx"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      6571
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a chisel on the uncut gem. Retain the cut gem; the chisel is reusable.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx",
+    "sourceRevision": 15357764,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "shortbow (u)",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Shortbow_(u)",
+    "sourceRevision": 15184949,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "shortbow",
+    "inputs": [
+      "Shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      50,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Shortbow",
+    "sourceRevision": 15336512,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "longbow (u)",
+    "inputs": [
+      "Logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1511
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Longbow_(u)",
+    "sourceRevision": 15272110,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "longbow",
+    "inputs": [
+      "Longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      48,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Longbow",
+    "sourceRevision": 15343873,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak shortbow (u)",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_shortbow_(u)",
+    "sourceRevision": 15183291,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak shortbow",
+    "inputs": [
+      "Oak shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      54,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_shortbow",
+    "sourceRevision": 15322390,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak longbow (u)",
+    "inputs": [
+      "Oak logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1521
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_longbow_(u)",
+    "sourceRevision": 15272112,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "oak longbow",
+    "inputs": [
+      "Oak longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      56,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Oak_longbow",
+    "sourceRevision": 15322339,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow shortbow (u)",
+    "inputs": [
+      "Willow logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1519
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_shortbow_(u)",
+    "sourceRevision": 15185210,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow longbow (u)",
+    "inputs": [
+      "Willow logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1519
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_longbow_(u)",
+    "sourceRevision": 15272117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "willow longbow",
+    "inputs": [
+      "Willow longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      58,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Willow_longbow",
+    "sourceRevision": 15272114,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple shortbow (u)",
+    "inputs": [
+      "Maple logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1517
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_shortbow_(u)",
+    "sourceRevision": 15184137,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple shortbow",
+    "inputs": [
+      "Maple shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      64,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_shortbow",
+    "sourceRevision": 15322337,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple longbow (u)",
+    "inputs": [
+      "Maple logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1517
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_longbow_(u)",
+    "sourceRevision": 15272118,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "maple longbow",
+    "inputs": [
+      "Maple longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      62,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Maple_longbow",
+    "sourceRevision": 15322335,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew shortbow (u)",
+    "inputs": [
+      "Yew logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1515
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_shortbow_(u)",
+    "sourceRevision": 15184282,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew shortbow",
+    "inputs": [
+      "Yew shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      68,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_shortbow",
+    "sourceRevision": 15183551,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew longbow (u)",
+    "inputs": [
+      "Yew logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1515
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_longbow_(u)",
+    "sourceRevision": 15272119,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "yew longbow",
+    "inputs": [
+      "Yew longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      66,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Yew_longbow",
+    "sourceRevision": 15272116,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic shortbow (u)",
+    "inputs": [
+      "Magic logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1513
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_shortbow_(u)",
+    "sourceRevision": 15185211,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic shortbow",
+    "inputs": [
+      "Magic shortbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      72,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_shortbow",
+    "sourceRevision": 15183117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic longbow (u)",
+    "inputs": [
+      "Magic logs"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      1513
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a reusable knife on the logs; retain the unstrung bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_longbow_(u)",
+    "sourceRevision": 15272120,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "FLETCHING",
+    "match": "magic longbow",
+    "inputs": [
+      "Magic longbow (u)",
+      "Bow string"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      70,
+      1777
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Attach a bow string to the matching unstrung bow; retain the completed bow.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_longbow",
+    "sourceRevision": 15322392,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze sq shield",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_sq_shield",
+    "sourceRevision": 15320133,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze full helm",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_full_helm",
+    "sourceRevision": 15320135,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze platebody",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_platebody",
+    "sourceRevision": 15182541,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze plateskirt",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_plateskirt",
+    "sourceRevision": 15182542,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze kiteshield",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_kiteshield",
+    "sourceRevision": 15182543,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze med helm",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_med_helm",
+    "sourceRevision": 15352958,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron platebody",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_platebody",
+    "sourceRevision": 15320146,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamant dart tip",
+    "inputs": [
+      "Adamantite bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2361
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_dart_tip",
+    "sourceRevision": 15182719,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamant platebody",
+    "inputs": [
+      "Adamantite bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2361
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Adamant_platebody",
+    "sourceRevision": 15320171,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze 2h sword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_2h_sword",
+    "sourceRevision": 15320181,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze axe",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_axe",
+    "sourceRevision": 15347397,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze battleaxe",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_battleaxe",
+    "sourceRevision": 15182785,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze chainbody",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_chainbody",
+    "sourceRevision": 15320183,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze dagger",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dagger",
+    "sourceRevision": 15320184,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze dart tip",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_dart_tip",
+    "sourceRevision": 15182791,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze longsword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_longsword",
+    "sourceRevision": 15182809,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze mace",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_mace",
+    "sourceRevision": 15182810,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze platelegs",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_platelegs",
+    "sourceRevision": 15320189,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze scimitar",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      2
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_scimitar",
+    "sourceRevision": 15320200,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril platebody",
+    "inputs": [
+      "Mithril bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2359
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_platebody",
+    "sourceRevision": 15320204,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze sword",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_sword",
+    "sourceRevision": 15182845,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze warhammer",
+    "inputs": [
+      "Bronze bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2349
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Bronze_warhammer",
+    "sourceRevision": 15182846,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "rune platebody",
+    "inputs": [
+      "Runite bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2363
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_platebody",
+    "sourceRevision": 15346837,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel platebody",
+    "inputs": [
+      "Steel bar"
+    ],
+    "units": [
+      5
+    ],
+    "itemIds": [
+      2353
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_platebody",
+    "sourceRevision": 15320258,
+    "reviewed": "2026-10-01",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron dart tip",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_dart_tip",
+    "sourceRevision": 15186414,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel dart tip",
+    "inputs": [
+      "Steel bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2353
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Steel_dart_tip",
+    "sourceRevision": 15186415,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril dart tip",
+    "inputs": [
+      "Mithril bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2359
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Mithril_dart_tip",
+    "sourceRevision": 15186416,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "rune dart tip",
+    "inputs": [
+      "Runite bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2363
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Bring a reusable hammer to an anvil. Each calculator action consumes one bar and produces ten dart tips; verify The Tourist Trap unlock first.",
+    "source": "https://oldschool.runescape.wiki/w/Rune_dart_tip",
+    "sourceRevision": 15317693,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "iron 2h sword",
+    "inputs": [
+      "Iron bar"
+    ],
+    "units": [
+      3
+    ],
+    "itemIds": [
+      2351
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Bring a reusable hammer to an anvil. Quantities are bars per finished item; retain the output.",
+    "source": "https://oldschool.runescape.wiki/w/Iron_2h_sword",
+    "sourceRevision": 15320140,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "bronze bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Copper ore",
+      "Tin ore"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      436,
+      438
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Bronze_bar",
+    "sourceRevision": 15315107,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "silver bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Silver ore"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      442
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Silver_bar",
+    "sourceRevision": 15315110,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "gold bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Gold ore"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      444
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Gold_bar",
+    "sourceRevision": 15315117,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "steel bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Iron ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      2
+    ],
+    "itemIds": [
+      440,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Steel_bar",
+    "sourceRevision": 15315116,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "mithril bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Mithril ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      4
+    ],
+    "itemIds": [
+      447,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Mithril_bar",
+    "sourceRevision": 15315118,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "adamantite bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Adamantite ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      6
+    ],
+    "itemIds": [
+      449,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Adamantite_bar",
+    "sourceRevision": 15332236,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "SMITHING",
+    "match": "runite bar",
+    "setup": "Standard furnace recipe per bar at base XP. Blast Furnace, catalysts and XP-boosting equipment require separate planning.",
+    "inputs": [
+      "Runite ore",
+      "Coal"
+    ],
+    "units": [
+      1,
+      8
+    ],
+    "itemIds": [
+      451,
+      453
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "source": "https://oldschool.runescape.wiki/w/Runite_bar",
+    "sourceRevision": 15346872,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_amulet_(u)",
+    "sourceRevision": 15251051,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond bracelet",
+    "inputs": [
+      "Diamond",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1601,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_bracelet",
+    "sourceRevision": 15356046,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond necklace",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_necklace",
+    "sourceRevision": 15182969,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "diamond ring",
+    "inputs": [
+      "Gold bar",
+      "Diamond"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1601
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Diamond_ring",
+    "sourceRevision": 15320294,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragon necklace",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragon_necklace",
+    "sourceRevision": 15322451,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_amulet_(u)",
+    "sourceRevision": 15185255,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone bracelet",
+    "inputs": [
+      "Dragonstone",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1615,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_bracelet",
+    "sourceRevision": 15231178,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "dragonstone ring",
+    "inputs": [
+      "Gold bar",
+      "Dragonstone"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1615
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Dragonstone_ring",
+    "sourceRevision": 15320299,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald amulet (u)",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_amulet_(u)",
+    "sourceRevision": 15184822,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald bracelet",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_bracelet",
+    "sourceRevision": 15356045,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald necklace",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_necklace",
+    "sourceRevision": 15320301,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "emerald ring",
+    "inputs": [
+      "Emerald",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1605,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Emerald_ring",
+    "sourceRevision": 15322373,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold amulet (u)",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_amulet_(u)",
+    "sourceRevision": 15184811,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold bracelet",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_bracelet",
+    "sourceRevision": 15183046,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold necklace",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_necklace",
+    "sourceRevision": 15352326,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "gold ring",
+    "inputs": [
+      "Gold bar"
+    ],
+    "units": [
+      1
+    ],
+    "itemIds": [
+      2357
+    ],
+    "stackable": [
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Gold_ring",
+    "sourceRevision": 15320306,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade amulet (u)",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_amulet_(u)",
+    "sourceRevision": 15355961,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade bracelet",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_bracelet",
+    "sourceRevision": 15355960,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade necklace",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_necklace",
+    "sourceRevision": 15355959,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "jade ring",
+    "inputs": [
+      "Jade",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1611,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Jade_ring",
+    "sourceRevision": 15355958,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Onyx"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      6573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_amulet_(u)",
+    "sourceRevision": 15185256,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx bracelet",
+    "inputs": [
+      "Onyx",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      6573,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_bracelet",
+    "sourceRevision": 15183155,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx necklace",
+    "inputs": [
+      "Gold bar",
+      "Onyx"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      6573
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_necklace",
+    "sourceRevision": 15306679,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "onyx ring",
+    "inputs": [
+      "Onyx",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      6573,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Onyx_ring",
+    "sourceRevision": 15183157,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal amulet (u)",
+    "inputs": [
+      "Silver bar",
+      "Opal"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2355,
+      1609
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_amulet_(u)",
+    "sourceRevision": 15355957,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal bracelet",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_bracelet",
+    "sourceRevision": 15355956,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal necklace",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_necklace",
+    "sourceRevision": 15355955,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "opal ring",
+    "inputs": [
+      "Opal",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1609,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Opal_ring",
+    "sourceRevision": 15355954,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby amulet (u)",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_amulet_(u)",
+    "sourceRevision": 15251050,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby bracelet",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_bracelet",
+    "sourceRevision": 15356043,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby necklace",
+    "inputs": [
+      "Ruby",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1603,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_necklace",
+    "sourceRevision": 15184357,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "ruby ring",
+    "inputs": [
+      "Gold bar",
+      "Ruby"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1603
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Ruby_ring",
+    "sourceRevision": 15322349,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire amulet (u)",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_amulet_(u)",
+    "sourceRevision": 15355969,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire bracelet",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_bracelet",
+    "sourceRevision": 15356044,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire necklace",
+    "inputs": [
+      "Sapphire",
+      "Gold bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1607,
+      2357
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_necklace",
+    "sourceRevision": 15355971,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "sapphire ring",
+    "inputs": [
+      "Gold bar",
+      "Sapphire"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      1607
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": false,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Sapphire_ring",
+    "sourceRevision": 15355966,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz amulet (u)",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_amulet_(u)",
+    "sourceRevision": 15355965,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz bracelet",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_bracelet",
+    "sourceRevision": 15355964,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz necklace",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_necklace",
+    "sourceRevision": 15355963,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "topaz ring",
+    "inputs": [
+      "Red topaz",
+      "Silver bar"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      1613,
+      2355
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Topaz_ring",
+    "sourceRevision": 15355962,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte amulet (u)",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a amulet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_amulet_(u)",
+    "sourceRevision": 15187509,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte bracelet",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a bracelet mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_bracelet",
+    "sourceRevision": 15187469,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte necklace",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a necklace mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_necklace",
+    "sourceRevision": 15187474,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "zenyte ring",
+    "inputs": [
+      "Gold bar",
+      "Zenyte"
+    ],
+    "units": [
+      1,
+      1
+    ],
+    "itemIds": [
+      2357,
+      19493
+    ],
+    "stackable": [
+      false,
+      false
+    ],
+    "membersOnly": true,
+    "setup": "Use a furnace with a ring mould. The mould is reusable; this recipe models unenchanted jewellery casting only.",
+    "source": "https://oldschool.runescape.wiki/w/Zenyte_ring",
+    "sourceRevision": 15187471,
+    "reviewed": "2026-09-30",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "CRAFTING",
+    "match": "molten glass",
+    "inputs": ["Bucket of sand", "Soda ash"],
+    "units": [1, 1],
+    "itemIds": [1783, 1781],
+    "stackable": [false, false],
+    "membersOnly": true,
+    "setup": "Use a conventional furnace. This recipe does not model Superglass Make, whose spell requirements and output yield differ.",
+    "source": "https://oldschool.runescape.wiki/w/Molten_glass",
+    "sourceRevision": 15288555,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "regular bird house",
+    "inputs": ["Logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1511, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "oak bird house",
+    "inputs": ["Oak logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1521, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "willow bird house",
+    "inputs": ["Willow logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1519, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "teak bird house",
+    "inputs": ["Teak logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [6333, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "maple bird house",
+    "inputs": ["Maple logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1517, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "mahogany bird house",
+    "inputs": ["Mahogany logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [6332, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "yew bird house",
+    "inputs": ["Yew logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1515, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "magic bird house",
+    "inputs": ["Magic logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [1513, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HUNTER",
+    "match": "redwood bird house",
+    "inputs": ["Redwood logs", "Potato seed"],
+    "units": [1, 10],
+    "itemIds": [19669, 5318],
+    "stackable": [false, true],
+    "membersOnly": true,
+    "setup": "Reset one completed bird house with the matching log and 10 potato seeds. Hammer, chisel, and the returned clockwork are reusable setup.",
+    "source": "https://oldschool.runescape.wiki/w/Bird_house_trapping",
+    "sourceRevision": 15364256,
+    "reviewed": "2026-11-12",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "attack potion(3)",
+    "inputs": ["Guam leaf", "Eye of newt", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [249, 221, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Attack_potion",
+    "sourceRevision": 15247702,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "antipoison(3)",
+    "inputs": ["Marrentill", "Unicorn horn dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [251, 235, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Antipoison",
+    "sourceRevision": 15365013,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "strength potion(3)",
+    "inputs": ["Tarromin", "Limpwurt root", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [253, 225, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Strength_potion",
+    "sourceRevision": 15359571,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "restore potion(3)",
+    "inputs": ["Harralander", "Red spiders' eggs", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [255, 223, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Restore_potion",
+    "sourceRevision": 15183838,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "energy potion(3)",
+    "inputs": ["Harralander", "Chocolate dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [255, 1975, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Energy_potion",
+    "sourceRevision": 15374696,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "defence potion(3)",
+    "inputs": ["Ranarr weed", "White berries", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [257, 239, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Defence_potion",
+    "sourceRevision": 15183997,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "agility potion(3)",
+    "inputs": ["Toadflax", "Toad's legs", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [2998, 2152, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Agility_potion",
+    "sourceRevision": 15250405,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "combat potion(3)",
+    "inputs": ["Harralander", "Goat horn dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [255, 9736, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Combat_potion",
+    "sourceRevision": 15183999,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "prayer potion(3)",
+    "inputs": ["Ranarr weed", "Snape grass", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [257, 231, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Prayer_potion",
+    "sourceRevision": 15386662,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "super attack(3)",
+    "inputs": ["Irit leaf", "Eye of newt", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [259, 221, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Super_attack",
+    "sourceRevision": 15184104,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "superantipoison(3)",
+    "inputs": ["Irit leaf", "Unicorn horn dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [259, 235, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Superantipoison",
+    "sourceRevision": 15355229,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "fishing potion(3)",
+    "inputs": ["Avantoe", "Snape grass", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [261, 231, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Fishing_potion",
+    "sourceRevision": 15183994,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "super energy(3)",
+    "inputs": ["Avantoe", "Mort myre fungus", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [261, 2970, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Super_energy",
+    "sourceRevision": 15185231,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "hunter potion(3)",
+    "inputs": ["Avantoe", "Kebbit teeth dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [261, 10111, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Hunter_potion",
+    "sourceRevision": 15184175,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "super strength(3)",
+    "inputs": ["Kwuarm", "Limpwurt root", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [263, 225, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Super_strength",
+    "sourceRevision": 15184084,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "weapon poison",
+    "inputs": ["Kwuarm", "Dragon scale dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [263, 241, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make one weapon poison from the clean herb, dragon scale dust, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Weapon_poison",
+    "sourceRevision": 15385397,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "super restore(3)",
+    "inputs": ["Snapdragon", "Red spiders' eggs", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [3000, 223, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Super_restore",
+    "sourceRevision": 15183989,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "super defence(3)",
+    "inputs": ["Cadantine", "White berries", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [265, 239, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Super_defence",
+    "sourceRevision": 15183946,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "antifire potion(3)",
+    "inputs": ["Lantadyme", "Dragon scale dust", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [2481, 241, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Antifire_potion",
+    "sourceRevision": 15185102,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "ranging potion(3)",
+    "inputs": ["Dwarf weed", "Wine of zamorak", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [267, 245, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Ranging_potion",
+    "sourceRevision": 15386661,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "magic potion(3)",
+    "inputs": ["Lantadyme", "Potato cactus", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [2481, 3138, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose potion from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Magic_potion",
+    "sourceRevision": 15247721,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "zamorak brew(3)",
+    "inputs": ["Torstol", "Jangerberries", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [269, 247, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose brew from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Zamorak_brew",
+    "sourceRevision": 15366988,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  },
+  {
+    "skill": "HERBLORE",
+    "match": "saradomin brew(3)",
+    "inputs": ["Toadflax", "Crushed nest", "Vial of water"],
+    "units": [1, 1, 1],
+    "itemIds": [2998, 6693, 227],
+    "stackable": [false, false, false],
+    "membersOnly": true,
+    "setup": "Make the complete three-dose brew from the clean herb, secondary ingredient, and vial of water.",
+    "source": "https://oldschool.runescape.wiki/w/Saradomin_brew",
+    "sourceRevision": 15385383,
+    "reviewed": "2026-11-13",
+    "actionUnitsPerBatch": 1
+  }
+]

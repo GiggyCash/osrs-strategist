@@ -1,11 +1,13 @@
 package compass;
 
 import java.util.List;
+import net.runelite.api.Skill;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class PvmActivityCatalogTest
@@ -20,6 +22,13 @@ public class PvmActivityCatalogTest
         assertNotNull(catalog.byId("pvm:bryophyta"));
         assertNotNull(catalog.byId("pvm:brutus"));
         assertNotNull(catalog.byId("pvm:tombs_of_amascut"));
+    }
+
+    @Test
+    public void unreviewedRuneLiteBossAdditionDoesNotDisableThePlugin()
+    {
+        PvmActivityCatalog catalog = new PvmActivityCatalog();
+        assertNull(catalog.byId("pvm:the_fractured_archive"));
     }
 
     @Test
@@ -50,12 +59,32 @@ public class PvmActivityCatalogTest
     public void fullEvidenceSubsetIsSmallAndExplicit()
     {
         PvmEvidenceProfileCatalog profiles = new PvmEvidenceProfileCatalog();
-        assertEquals(4, profiles.size());
+        assertEquals(5, profiles.size());
         assertNotNull(profiles.forActivity("pvm:obor"));
         assertNotNull(profiles.forActivity("pvm:bryophyta"));
         assertNotNull(profiles.forActivity("pvm:scurrius"));
         assertNotNull(profiles.forActivity("pvm:brutus"));
+        assertNotNull(profiles.forActivity("pvm:lunar_chests"));
         assertTrue(profiles.forActivity("pvm:obor").getAccessItems()
                 .contains("Giant key"));
+    }
+
+    @Test
+    public void moonsAccessAndRepeatReadinessStaySeparate()
+    {
+        PvmPreparationProfile profile = new PvmPreparationProfileCatalog()
+                .forActivity("pvm:lunar_chests");
+        assertEquals("Perilous Moons", profile.getRequiredQuest());
+        assertEquals(70, profile.getAttack());
+        assertEquals(70, profile.getStrength());
+        assertEquals(70, profile.getDefence());
+        assertEquals(Integer.valueOf(60),
+                profile.getReadinessSkills().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(55),
+                profile.getReadinessSkills().get(Skill.HERBLORE));
+        assertEquals(Integer.valueOf(50), profile
+                .getAlternativeReadinessSkills().get(Skill.HUNTER));
+        assertEquals(Integer.valueOf(60), profile
+                .getAlternativeReadinessSkills().get(Skill.FISHING));
     }
 }

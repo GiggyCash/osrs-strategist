@@ -67,7 +67,7 @@
   {
     "methodId": "construction_oak_doors",
     "actionTerms": [
-      "oak_dungeon_door"
+      "runelite:construction:oak_door"
     ],
     "unitSingular": "oak dungeon door built",
     "unitPlural": "oak dungeon doors built",
@@ -191,8 +191,14 @@
     "unitSingular": "fish caught",
     "unitPlural": "fish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
-    "note": "Selects the highest unlocked leaping fish. Passive Agility/Strength XP is extra.",
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Selects the highest unlocked leaping fish and a concrete feather-bait route. Passive Agility/Strength XP is extra.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -209,19 +215,18 @@
     "unitSingular": "bolt fletched",
     "unitPlural": "bolts fletched",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "UNFINISHED_BOLT",
-        "quantityPerAction": 1.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Feather",
-        "quantityPerAction": 1.0
-      }
-    ],
+    "inputs": [],
     "note": "Models the basic feathering step for metal bolts; gem-tipping variants need a separate gem-input profile.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "FLETCHING:bronze bolts",
+      "FLETCHING:iron bolts",
+      "FLETCHING:steel bolts",
+      "FLETCHING:mithril bolts",
+      "FLETCHING:adamant bolts",
+      "FLETCHING:runite bolts",
+      "FLETCHING:dragon bolts"
+    ]
   },
   {
     "methodId": "agility_canifis_marks",
@@ -243,14 +248,19 @@
     "unitSingular": "dark crab caught",
     "unitPlural": "dark crabs caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Dark fishing bait",
+        "quantityPerAction": 1.0
+      }
+    ],
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
     "methodId": "thieving_ardy_knights",
     "actionTerms": [
-      "ardougne_knight",
-      "knight_of_ardougne"
+      "runelite:thieving:knight"
     ],
     "unitSingular": "successful pickpocket",
     "unitPlural": "successful pickpockets",
@@ -324,14 +334,20 @@
     "unitSingular": "fish cooked",
     "unitPlural": "fish cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "COOKING:shrimps",
+      "COOKING:sardine",
+      "COOKING:herring",
+      "COOKING:trout",
+      "COOKING:pike",
+      "COOKING:salmon",
+      "COOKING:tuna",
+      "COOKING:lobster",
+      "COOKING:swordfish"
+    ]
   },
   {
     "methodId": "smithing_f2p_uim_bronze",
@@ -341,14 +357,28 @@
     "unitSingular": "bronze item smithed",
     "unitPlural": "bronze items smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Copper and tin are mined and processed locally; the loop never requires conventional banking.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:bronze sq shield",
+      "SMITHING:bronze full helm",
+      "SMITHING:bronze platebody",
+      "SMITHING:bronze plateskirt",
+      "SMITHING:bronze kiteshield",
+      "SMITHING:bronze med helm",
+      "SMITHING:bronze 2h sword",
+      "SMITHING:bronze axe",
+      "SMITHING:bronze battleaxe",
+      "SMITHING:bronze chainbody",
+      "SMITHING:bronze dagger",
+      "SMITHING:bronze longsword",
+      "SMITHING:bronze mace",
+      "SMITHING:bronze platelegs",
+      "SMITHING:bronze scimitar",
+      "SMITHING:bronze sword",
+      "SMITHING:bronze warhammer"
+    ]
   },
   {
     "methodId": "magic_f2p_curse",
@@ -406,7 +436,7 @@
       },
       {
         "mode": "FIXED",
-        "fixedName": "Red spiders\u0027 eggs",
+        "fixedName": "Red spiders' eggs",
         "quantityPerAction": 1.0
       },
       {
@@ -428,7 +458,18 @@
     "xpMultiplier": 1.0,
     "inputs": [],
     "note": "Selects the highest birdhouse tier unlocked by Hunter level. Four houses normally make one run. Nest yields are variable; the August 2026 five-roll/tripled-success change must not be presented as an exact yield.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "HUNTER:regular bird house",
+      "HUNTER:oak bird house",
+      "HUNTER:willow bird house",
+      "HUNTER:teak bird house",
+      "HUNTER:maple bird house",
+      "HUNTER:mahogany bird house",
+      "HUNTER:yew bird house",
+      "HUNTER:magic bird house",
+      "HUNTER:redwood bird house"
+    ]
   },
   {
     "methodId": "smithing_f2p_platebodies",
@@ -438,14 +479,17 @@
     "unitSingular": "platebody smithed",
     "unitPlural": "platebodies smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Each platebody uses five bars, so the action count converts directly into the matching bar total.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:bronze platebody",
+      "SMITHING:iron platebody",
+      "SMITHING:adamant platebody",
+      "SMITHING:mithril platebody",
+      "SMITHING:rune platebody",
+      "SMITHING:steel platebody"
+    ]
   },
   {
     "methodId": "fishing_f2p_fly",
@@ -499,14 +543,10 @@
     "unitSingular": "karambwan cooked",
     "unitPlural": "karambwans cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
-    "note": "Raw quantity should include a burn allowance appropriate to current Cooking level/location; a dedicated high-level burn model remains preferable.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "inputs": [],
+    "note": "Cooking lesson and execution setup must be verified before this route can provide ingredient guidance; raw stock alone does not prove readiness.",
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": []
   },
   {
     "methodId": "mining_f2p_iron",
@@ -575,7 +615,14 @@
     "unitSingular": "anglerfish caught",
     "unitPlural": "anglerfish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Sandworms",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Uses the standard sandworm route; the diabolic-worm alternative is not conflated with this supply plan.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -643,7 +690,11 @@
   {
     "methodId": "firemaking_f2p_logs",
     "actionTerms": [
-      "logs"
+      "runelite:firemaking:logs",
+      "runelite:firemaking:oak_logs",
+      "runelite:firemaking:willow_logs",
+      "runelite:firemaking:maple_logs",
+      "runelite:firemaking:yew_logs"
     ],
     "unitSingular": "log burned",
     "unitPlural": "logs burned",
@@ -651,7 +702,7 @@
     "inputs": [
       {
         "mode": "ACTION_ITEM",
-        "quantityPerAction": 0.0
+        "quantityPerAction": 1.0
       }
     ],
     "progressEstimateMode": "EXACT_ACTIONS"
@@ -664,14 +715,17 @@
     "unitSingular": "bar smithed",
     "unitPlural": "bars smithed",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "BAR_FOR_SMITHED_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "The action XP is per bar used to smith dart tips.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "SMITHING:adamant dart tip",
+      "SMITHING:bronze dart tip",
+      "SMITHING:iron dart tip",
+      "SMITHING:steel dart tip",
+      "SMITHING:mithril dart tip",
+      "SMITHING:rune dart tip"
+    ]
   },
   {
     "methodId": "fishing_3t_barb",
@@ -681,8 +735,14 @@
     "unitSingular": "fish caught",
     "unitPlural": "fish caught",
     "xpMultiplier": 1.0,
-    "inputs": [],
-    "note": "Three-ticking changes speed, not the Fishing XP of each successful catch.",
+    "inputs": [
+      {
+        "mode": "FIXED",
+        "fixedName": "Feather",
+        "quantityPerAction": 1.0
+      }
+    ],
+    "note": "Uses feather bait. Three-ticking changes speed, not the bait or Fishing XP of each successful catch.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -694,14 +754,23 @@
     "unitSingular": "unstrung bow fletched",
     "unitPlural": "unstrung bows fletched",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "LOG_FOR_BOW",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Uses unstrung shortbow/longbow actions so the supply count is logs, not bowstrings.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "FLETCHING:shortbow (u)",
+      "FLETCHING:longbow (u)",
+      "FLETCHING:oak shortbow (u)",
+      "FLETCHING:oak longbow (u)",
+      "FLETCHING:willow shortbow (u)",
+      "FLETCHING:willow longbow (u)",
+      "FLETCHING:maple shortbow (u)",
+      "FLETCHING:maple longbow (u)",
+      "FLETCHING:yew shortbow (u)",
+      "FLETCHING:yew longbow (u)",
+      "FLETCHING:magic shortbow (u)",
+      "FLETCHING:magic longbow (u)"
+    ]
   },
   {
     "methodId": "hunter_bird_traps",
@@ -779,13 +848,16 @@
     "unitSingular": "gem cut",
     "unitPlural": "gems cut",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "UNCUT_GEM",
-        "quantityPerAction": 0.0
-      }
-    ],
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "inputs": [],
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "CRAFTING:sapphire",
+      "CRAFTING:emerald",
+      "CRAFTING:ruby",
+      "CRAFTING:diamond",
+      "CRAFTING:dragonstone",
+      "CRAFTING:onyx"
+    ]
   },
   {
     "methodId": "magic_f2p_fire_strike_splash",
@@ -900,28 +972,9 @@
     "progressEstimateMode": "VARIABLE_OUTPUT_RANGE"
   },
   {
-    "methodId": "runecraft_lava",
-    "actionTerms": [
-      "lava_rune"
-    ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
-    "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Pure essence",
-        "quantityPerAction": 1.0
-      }
-    ],
-    "note": "Binding necklace/elemental-rune charges are setup resources and are not yet reduced to a per-essence count.",
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
     "methodId": "magic_high_alch",
     "actionTerms": [
-      "high_level_alchemy",
-      "high_alchemy"
+      "runelite:magic:high_level_alchemy"
     ],
     "unitSingular": "High Alchemy cast",
     "unitPlural": "High Alchemy casts",
@@ -964,29 +1017,6 @@
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
-    "methodId": "construction_crude_chairs",
-    "actionTerms": [
-      "crude_wooden_chair"
-    ],
-    "unitSingular": "crude wooden chair built",
-    "unitPlural": "crude wooden chairs built",
-    "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Plank",
-        "quantityPerAction": 2.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Steel nails",
-        "quantityPerAction": 2.0
-      }
-    ],
-    "note": "Bring a hammer and saw. Steel nails or better reduce bending; the count is the minimum consumed by successful builds.",
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
     "methodId": "cooking_f2p_fish_baseline",
     "actionTerms": [
       "shrimp",
@@ -1002,30 +1032,37 @@
     "unitSingular": "fish cooked",
     "unitPlural": "fish cooked",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "RAW_ACTION_ITEM",
-        "quantityPerAction": 0.0
-      }
-    ],
+    "inputs": [],
     "note": "Successful cooks use RuneLite action XP; raw supply still needs a burn allowance when the selected fish can burn.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "COOKING:shrimps",
+      "COOKING:sardine",
+      "COOKING:herring",
+      "COOKING:trout",
+      "COOKING:pike",
+      "COOKING:salmon",
+      "COOKING:tuna",
+      "COOKING:lobster",
+      "COOKING:swordfish"
+    ]
   },
   {
     "methodId": "runecraft_blood",
     "actionTerms": [
-      "blood_rune"
+      "runelite:runecraft:zeah_blood_rune"
     ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
+    "unitSingular": "dark essence fragment crafted",
+    "unitPlural": "dark essence fragments crafted",
     "xpMultiplier": 1.0,
     "inputs": [
       {
         "mode": "FIXED",
-        "fixedName": "Pure essence",
+        "fixedName": "Dark essence fragments",
         "quantityPerAction": 1.0
       }
     ],
+    "note": "The relaxed level-77 route is the Arceuus dark-essence method, not the true Blood Altar pure-essence method.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -1088,35 +1125,36 @@
     "unitSingular": "dart fletched",
     "unitPlural": "darts fletched",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "DART_TIP_FOR_DART",
-        "quantityPerAction": 1.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Feather",
-        "quantityPerAction": 1.0
-      }
-    ],
+    "inputs": [],
     "note": "Quantities are per dart. This route is only selected after the relevant dart-making unlock is available.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "FLETCHING:bronze dart",
+      "FLETCHING:iron dart",
+      "FLETCHING:steel dart",
+      "FLETCHING:mithril dart",
+      "FLETCHING:adamant dart",
+      "FLETCHING:rune dart",
+      "FLETCHING:amethyst dart",
+      "FLETCHING:dragon dart"
+    ]
   },
   {
     "methodId": "runecraft_soul",
     "actionTerms": [
-      "soul_rune"
+      "runelite:runecraft:soul_rune"
     ],
-    "unitSingular": "essence crafted",
-    "unitPlural": "essence crafted",
+    "unitSingular": "dark essence fragment crafted",
+    "unitPlural": "dark essence fragments crafted",
     "xpMultiplier": 1.0,
     "inputs": [
       {
         "mode": "FIXED",
-        "fixedName": "Pure essence",
+        "fixedName": "Dark essence fragments",
         "quantityPerAction": 1.0
       }
     ],
+    "note": "The Arceuus Soul Altar consumes dark essence fragments rather than pure essence.",
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
@@ -1147,7 +1185,7 @@
       },
       {
         "mode": "FIXED",
-        "fixedName": "Broad arrowhead",
+        "fixedName": "Broad arrowheads",
         "quantityPerAction": 1.0
       }
     ],
@@ -1162,20 +1200,12 @@
     "unitSingular": "jug of wine made",
     "unitPlural": "jugs of wine made",
     "xpMultiplier": 1.0,
-    "inputs": [
-      {
-        "mode": "FIXED",
-        "fixedName": "Grapes",
-        "quantityPerAction": 1.0
-      },
-      {
-        "mode": "FIXED",
-        "fixedName": "Jug of water",
-        "quantityPerAction": 1.0
-      }
-    ],
+    "inputs": [],
     "note": "Wine fermentation is delayed but XP is deterministic for the completed wine action.",
-    "progressEstimateMode": "EXACT_ACTIONS"
+    "progressEstimateMode": "EXACT_ACTIONS",
+    "reviewedRecipes": [
+      "COOKING:jug of wine"
+    ]
   },
   {
     "methodId": "herblore_prayer_potions",
@@ -1206,17 +1236,6 @@
     "progressEstimateMode": "EXACT_ACTIONS"
   },
   {
-    "methodId": "fishing_karambwan",
-    "actionTerms": [
-      "karambwan"
-    ],
-    "unitSingular": "karambwan caught",
-    "unitPlural": "karambwans caught",
-    "xpMultiplier": 1.0,
-    "inputs": [],
-    "progressEstimateMode": "EXACT_ACTIONS"
-  },
-  {
     "methodId": "woodcutting_teaks",
     "actionTerms": [
       "teak"
@@ -1242,7 +1261,7 @@
         "quantityPerAction": 1.0
       }
     ],
-    "note": "RuneLite\u0027s cannonball action XP is per steel bar processed.",
+    "note": "RuneLite's cannonball action XP is per steel bar processed.",
     "progressEstimateMode": "EXACT_ACTIONS"
   }
 ]

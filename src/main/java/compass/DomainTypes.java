@@ -644,6 +644,8 @@ final class GoalGraph
                 singletonList(get(1721)));
         roots.put(GoalType.BOWFA,
                 singletonList(get(1721)));
+        roots.put(GoalType.MOONS_GRIND_READY,
+                singletonList("Perilous Moons"));
         QUEST_ROOTS = unmodifiableMap(roots);
     }
 
@@ -756,6 +758,7 @@ enum GoalType
     PRIFDDINAS,
     BOWFA,
     INFERNAL_CAPE,
+    MOONS_GRIND_READY,
     DIARY_CAPE,
     ELITE_COMBAT_ACHIEVEMENTS,
     RAID_READY,
@@ -771,6 +774,8 @@ enum GoalType
         if (this == AUTOMATIC) return "Automatic";
         if (this == BOWFA) return "Bowfa";
         if (this == MAX) return "Max cape";
+        if (this == MOONS_GRIND_READY)
+            return "Moons of Peril — Grind Ready";
         String lower = name().toLowerCase(java.util.Locale.ROOT)
                 .replace('_', ' ');
         return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
@@ -849,6 +854,12 @@ final class Guidance
         return new Guidance(action, supplies, location, progress,
                 note,
                 value, storageDecision, riskDisclosure, strategicValue);
+    }
+
+    public Guidance withLocationAndNote(String value, String explanation)
+    {
+        return new Guidance(action, supplies, value, progress, explanation,
+                bankingBehavior, storageDecision, riskDisclosure, strategicValue);
     }
 
     public Guidance withProgress(String value)
@@ -1016,6 +1027,12 @@ final class ItemState
     final String name;
     final int quantity;
     final int slotIndex;
+    final boolean noted;
+
+    public ItemState(int itemId, String name, int quantity, int slotIndex)
+    {
+        this(itemId, name, quantity, slotIndex, false);
+    }
 
     public ItemState(int itemId, String name, int quantity)
     {
@@ -1030,18 +1047,27 @@ final class MarketPriceQuote
     final int itemId;
     final String itemName;
     final int unitPrice;
+    final long observedAtMillis;
 
     public MarketPriceQuote(int itemId, String itemName, int unitPrice)
+    {
+        this(itemId, itemName, unitPrice, System.currentTimeMillis());
+    }
+
+    public MarketPriceQuote(int itemId, String itemName, int unitPrice, long observedAtMillis)
     {
         this.itemId = itemId;
         this.itemName = itemName;
         this.unitPrice = max(0, unitPrice);
+        this.observedAtMillis = observedAtMillis;
     }
 
 
     public boolean hasPrice()
     {
-        return itemId > 0 && unitPrice > 0;
+        long age = System.currentTimeMillis() - observedAtMillis;
+        return itemId > 0 && unitPrice > 0 && observedAtMillis > 0
+                && age >= 0 && age <= ItemsState.FRESH_FOR_MILLIS;
     }
 }
 
@@ -1073,6 +1099,26 @@ final class MethodInput
         this.name = name;
         this.itemId = itemId;
         this.quantity = max(0, quantity);
+    }
+
+    /** Null means unresolved, never no supplies. Strict preparation requires positive IDs. */
+    static List<MethodInput> mergeExact(List<MethodInput> needs, boolean requireItemIds)
+    {
+        if (needs == null) return null;
+        Map<String, MethodInput> merged = new LinkedHashMap<>();
+        for (MethodInput need : needs)
+        {
+            if (need == null || requireItemIds && need.itemId <= 0 || need.quantity <= 0
+                    || need.name == null || need.name.trim().isEmpty()) return null;
+            String key = need.itemId > 0 ? "id:" + need.itemId : "name:" + Names.lower(need.name);
+            MethodInput previous = merged.get(key);
+            long quantity = (long) need.quantity + (previous == null ? 0 : previous.quantity);
+            if (quantity > Integer.MAX_VALUE || previous != null
+                    && !previous.name.equalsIgnoreCase(need.name)) return null;
+            merged.put(key, new MethodInput(previous == null ? need.name : previous.name,
+                    need.itemId, (int) quantity));
+        }
+        return new ArrayList<>(merged.values());
     }
 
 }
@@ -1119,6 +1165,9 @@ final class MilestoneCompletion
 /** Canonical local identifiers shared by catalogs, evidence, and planners. */
 final class Names
 {
+    private static final java.util.regex.Pattern WORD_SEPARATORS =
+            java.util.regex.Pattern.compile("[^a-z0-9]+");
+
     private Names() { }
 
     static String lower(String value)
@@ -1133,8 +1182,8 @@ final class Names
 
     static String words(String value)
     {
-        return lower(value).replace('\u2019', '\'')
-                .replaceAll("[^a-z0-9]+", " ").trim();
+        return WORD_SEPARATORS.matcher(lower(value).replace('\u2019', '\''))
+                .replaceAll(" ").trim();
     }
 
     static String slug(String value)
@@ -1322,47 +1371,6 @@ final class CompletionRule
 
 }
 
-/**
- * Goals that are complete enough to expose in RuneLite configuration.
- *
- * <p>Internal planning goals remain in {@link GoalType}; keeping this list
- * separate prevents experimental enum values from silently becoming public
- * controls.</p>
- */
-@RequiredArgsConstructor
-enum PlayerGoal
-{
-    AUTOMATIC(GoalType.AUTOMATIC, "Automatic"),
-    BARROWS_GLOVES(GoalType.BARROWS_GLOVES, "Barrows gloves"),
-    FIRE_CAPE(GoalType.FIRE_CAPE, "Fire cape"),
-    QUEST_CAPE(GoalType.QUEST_CAPE, "Quest cape"),
-    PRIFDDINAS(GoalType.PRIFDDINAS, "Prifddinas"),
-    BOWFA(GoalType.BOWFA, "Bowfa"),
-    INFERNAL_CAPE(GoalType.INFERNAL_CAPE, "Infernal cape"),
-    MAX(GoalType.MAX, "Max cape");
-
-    final GoalType planningGoal;
-    final String displayName;
-    public GoalType toPlanningGoal()
-    {
-        return planningGoal;
-    }
-
-    public static boolean isPlayerFacing(GoalType goal)
-    {
-        if (goal == null) return false;
-        for (PlayerGoal candidate : values())
-            if (candidate.planningGoal == goal) return true;
-        return false;
-    }
-
-    @Override
-    public String toString()
-    {
-        return displayName;
-    }
-}
-
 /** Static safety and presentation allow/deny lists bundled for review. */
 final class PolicyLists
 {
@@ -1537,13 +1545,6 @@ enum QuestStatus
     IN_PROGRESS,
     COMPLETE,
     UNKNOWN
-}
-
-enum QuestTolerance
-{
-    LOW,
-    NORMAL,
-    HIGH
 }
 
 /** Bounded local history so learning cannot grow profile config forever. */
@@ -1815,39 +1816,6 @@ enum RiskLevel
     MEDIUM,
     HIGH,
     IRREVERSIBLE
-}
-
-@RequiredArgsConstructor
-enum SessionIntent
-{
-    QUICK_20_MIN("Quick session"),
-    ONE_HOUR("~1 hour"),
-    LONG_SESSION("Long session"),
-    AFK("AFK"),
-    PICK_FOR_ME("Pick for me");
-
-    final String displayName;
-    @Override
-    public String toString()
-    {
-        return displayName;
-    }
-}
-
-/** User-selectable scaling limited to the Compass sidebar. */
-@RequiredArgsConstructor
-@Getter
-enum SidebarTextSize
-{
-    STANDARD("Standard", 1.00f),
-    LARGE("Large", 1.12f),
-    EXTRA_LARGE("Extra large", 1.24f);
-
-    final String displayName;
-    final float scale;
-
-    @Override
-    public String toString() { return displayName; }
 }
 
 /** One actual level target and the typed reason it matters. */
@@ -2371,13 +2339,6 @@ enum KnowledgeTier
     SAFE_RECOVERY
 }
 
-enum StrategyMode
-{
-    EFFICIENT,
-    BALANCED,
-    RELAXED
-}
-
 /** Stable keys for development-time strategy sources. */
 enum Source
 {
@@ -2525,6 +2486,24 @@ final class UniversalActionRecipe
         this.inputs = unmodifiableList(copy);
         this.setup = setup;
         this.exactInputs = exactInputs;
+    }
+
+    /** Invalid or unrepresentable material totals must never become exact guidance. */
+    static UniversalActionRecipe scaled(String[] names, int[] ids, int[] units, int count, String setup)
+    {
+        String unresolved = "Recipe quantity or ingredient identity is unresolved.";
+        if (count <= 0 || names == null || units == null || names.length == 0
+                || names.length != units.length || ids != null && ids.length != names.length)
+            return unknown(unresolved);
+        List<MethodInput> needs = new ArrayList<>();
+        for (int i = 0; i < names.length; i++)
+        {
+            long quantity = (long) count * units[i];
+            if (quantity <= 0 || quantity > Integer.MAX_VALUE) return unknown(unresolved);
+            needs.add(new MethodInput(names[i], ids == null ? -1 : ids[i], (int) quantity));
+        }
+        List<MethodInput> merged = MethodInput.mergeExact(needs, ids != null);
+        return merged == null ? unknown(unresolved) : new UniversalActionRecipe(merged, setup, true);
     }
 
     public static UniversalActionRecipe noConsumedInputs(String setup)

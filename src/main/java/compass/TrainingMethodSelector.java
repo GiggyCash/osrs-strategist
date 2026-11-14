@@ -16,14 +16,25 @@ public class TrainingMethodSelector
     private final TrainingMethodPolicy methodPolicy;
     private final MethodStrategyKnowledgeCatalog strategyCatalog;
     private final UimInventoryResolutionService inventoryResolution;
+    private final MethodReadinessService methodReadiness;
 
-    @Inject
     public TrainingMethodSelector(
             TrainingMethodCatalog catalog,
             RequirementEvidenceEngine requirementEvidenceEngine,
             TrainingMethodPolicy methodPolicy,
             MethodStrategyKnowledgeCatalog strategyCatalog,
             UimInventoryResolutionService inventoryResolution)
+    {
+        this(catalog, requirementEvidenceEngine, methodPolicy, strategyCatalog, inventoryResolution,
+                new MethodReadinessService(new MethodIntelligenceCatalog(),
+                        new MethodPreparationService(new AccountResourcePlanner(null, new ResourceSourceCatalog()))));
+    }
+
+    @Inject
+    public TrainingMethodSelector(TrainingMethodCatalog catalog,
+            RequirementEvidenceEngine requirementEvidenceEngine, TrainingMethodPolicy methodPolicy,
+            MethodStrategyKnowledgeCatalog strategyCatalog, UimInventoryResolutionService inventoryResolution,
+            MethodReadinessService methodReadiness)
     {
         this.catalog = catalog;
         this.requirementEvidenceEngine = requirementEvidenceEngine;
@@ -32,6 +43,7 @@ public class TrainingMethodSelector
                 ? new MethodStrategyKnowledgeCatalog() : strategyCatalog;
         this.inventoryResolution = inventoryResolution == null
                 ? new UimInventoryResolutionService() : inventoryResolution;
+        this.methodReadiness = methodReadiness;
     }
 
     public TrainingPlan select(GameData data, Skill skill, int currentLevel,
@@ -60,56 +72,120 @@ public class TrainingMethodSelector
         {
             var method = candidate.method();
             var metadata = candidate.getMetadata();
-            MethodStrategyProfile strategyProfile = strategyCatalog.profileFor(
-                    method, metadata, mode);
-            double strategyAdjustment = strategyAdjustment(data,
-                    strategyProfile);
             if (!method.supportsLevel(currentLevel)
                     || !ContentAccessRules.isMethodAvailable(method, membershipStatus)
                     || method.confidence == Confidence.BLOCKED
-                    || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods)
-                    || Double.isNaN(strategyAdjustment))
+                    || !methodPolicy.isAllowed(data, method, metadata, allowWildernessMethods))
             {
                 continue;
             }
 
-            List<EvidenceCheck> checks = requirementEvidenceEngine == null
-                    ? emptyList()
-                    : useGroupStorage
-                            ? requirementEvidenceEngine.evaluate(
-                                    data, method, true)
-                            : requirementEvidenceEngine.evaluate(data, method);
-            var confidence = assessConfidence(method, checks);
-            if (confidence == Confidence.BLOCKED) continue;
-
-            // A skill gets one selected method. Never let a higher-scoring
-            // method with unknown access consume that slot and hide a simpler
-            // route the player can actually begin. Hard-gated methods can
-            // return once their quest/access evidence is observed.
-            TrainingPlan assessed = new TrainingPlan(method, "", confidence,
-                    checks, strategyProfile);
-            boolean hardRequirementUnknown =
-                    RequirementActionability.hasHardUnresolvedRequirement(
-                            assessed);
-
-            double score = method.scoreFor(strategyMode, sessionIntent)
+            List<MethodReadiness> recipes = methodReadiness.evaluateCandidates(data, method, useGroupStorage);
+            MethodReadiness reviewed = recipes.isEmpty() ? null : recipes.get(0);
+            BankingMode reviewedBanking = reviewed == null || reviewed.method == null ? null
+                    : reviewed.method.bankLoop ? BankingMode.CONVENTIONAL_BANK_LOOP : BankingMode.LOCAL_PROCESSING;
+            MethodStrategyProfile strategyProfile = strategyCatalog.profileFor(
+                    method, metadata, mode, reviewedBanking);
+            double strategyAdjustment = strategyAdjustment(data, strategyProfile);
+            if (Double.isNaN(strategyAdjustment)) continue;
+            // Compare a complete feasible cohort, so an unknown recipe never looks free.
+            boolean compareEconomics = recipes.stream().anyMatch(MethodReadiness::actionable)
+                    && recipes.stream().filter(MethodReadiness::actionable).allMatch(r -> r.economics != null);
+            List<ScoredPlan> methodPlans = new ArrayList<>();
+            // An absent full contract keeps the established requirement-evidence path.
+            if (recipes.isEmpty()) recipes = Collections.singletonList(null);
+            double methodScore = method.scoreFor(strategyMode, sessionIntent)
                     + methodPolicy.scoreAdjustment(data, metadata, strategyMode, sessionIntent)
-                    + strategyAdjustment
-                    + readinessAdjustment(data, checks, sessionIntent);
-            // Retain a hard-gated plan as diagnostic/secondary information when
-            // every route is unknown, but it must lose to any executable route
-            // regardless of their normal efficiency scores.
-            if (hardRequirementUnknown) score -= 10_000.0;
-            ranked.add(new ScoredPlan(new TrainingPlan(method,
-                    buildExplanation(method, metadata, strategyMode,
-                            sessionIntent, data, strategyProfile), confidence,
-                    checks, strategyProfile), score));
+                    + strategyAdjustment;
+            String explanation = buildExplanation(method, metadata, strategyMode,
+                    sessionIntent, data, strategyProfile);
+            for (MethodReadiness readiness : recipes)
+            {
+                List<EvidenceCheck> checks = readiness != null ? readiness.checks() : requirementEvidenceEngine == null
+                        ? emptyList()
+                        : useGroupStorage
+                                ? requirementEvidenceEngine.evaluate(
+                                        data, method, true)
+                                : requirementEvidenceEngine.evaluate(data, method);
+                var confidence = assessConfidence(method, checks);
+                if (confidence == Confidence.BLOCKED) continue;
+
+                // A skill gets one selected method. Never let a higher-scoring
+                // method with unknown access consume that slot and hide a simpler
+                // route the player can actually begin. Hard-gated methods can
+                // return once their quest/access evidence is observed.
+                TrainingPlan assessed = new TrainingPlan(method, "", confidence,
+                        checks, strategyProfile).withReadiness(readiness);
+                boolean hardRequirementUnknown =
+                        RequirementActionability.hasHardUnresolvedRequirement(
+                                assessed);
+
+                double score = methodScore + readinessAdjustment(data, checks, sessionIntent);
+                if (readiness != null) score += readiness.adjustment();
+                // Retain a hard-gated plan as diagnostic/secondary information when
+                // every route is unknown, but it must lose to any executable route
+                // regardless of their normal efficiency scores.
+                if (hardRequirementUnknown) score -= 10_000.0;
+                double economicScore = compareEconomics && readiness != null && readiness.actionable()
+                        ? methodPolicy.economicScore(readiness.economics) : 0;
+                methodPlans.add(new ScoredPlan(new TrainingPlan(method,
+                        explanation
+                                + (readiness == null || readiness.preparation == null ? "" : " " + readiness.preparation.explanation()), confidence,
+                        checks, strategyProfile).withReadiness(readiness), score, economicScore));
+            }
+            // Economics only breaks same-method score ties; preserve method preferences and
+            // the stable legacy recipe order for equal/unknown values. No second final-queue charge.
+            methodPlans.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed()
+                    .thenComparing(Comparator.comparingDouble(ScoredPlan::getEconomicScore).reversed()));
+            ranked.addAll(methodPlans);
         }
 
-        ranked.sort(Comparator.comparingDouble(ScoredPlan::getScore).reversed());
+        // Feasibility is a decision tier, not a score penalty that a large score can defeat.
+        ranked.sort(Comparator.comparing((ScoredPlan candidate) ->
+                RequirementActionability.hasHardUnresolvedRequirement(candidate.plan))
+                .thenComparing(Comparator.comparingDouble(ScoredPlan::getScore).reversed()));
         List<TrainingPlan> plans = new ArrayList<>();
-        for (ScoredPlan candidate : ranked) plans.add(candidate.plan);
+        for (int i = 0; i < ranked.size(); i++)
+        {
+            ScoredPlan candidate = ranked.get(i);
+            CandidateComparison comparison = i + 1 < ranked.size()
+                    ? comparison(candidate, ranked.get(i + 1)) : null;
+            plans.add(candidate.plan.withComparison(comparison));
+        }
         return unmodifiableList(plans);
+    }
+
+    private static CandidateComparison comparison(ScoredPlan selected, ScoredPlan alternative)
+    {
+        String label = candidateLabel(alternative.plan);
+        if (RequirementActionability.hasHardUnresolvedRequirement(alternative.plan))
+            return comparison(label, CandidateComparison.Basis.REQUIREMENTS,
+                    " has unresolved requirements.");
+        else if (selected.plan.readiness != null && alternative.plan.readiness != null
+                && selected.plan.readiness.adjustment() != alternative.plan.readiness.adjustment())
+            return comparison(label, CandidateComparison.Basis.PREPARATION,
+                    " requires more preparation for the observed account state.");
+        else if (selected.economicScore != alternative.economicScore)
+            return comparison(label, CandidateComparison.Basis.ECONOMICS,
+                    " has weaker reviewed resource value after opportunity cost.");
+        else if (selected.score != alternative.score)
+            return comparison(label, CandidateComparison.Basis.STRATEGY_SESSION,
+                    " is a weaker fit for the selected strategy and session.");
+        return comparison(label, CandidateComparison.Basis.CATALOG_ORDER,
+                " has equivalent evaluated fit; deterministic catalog order breaks the tie.");
+    }
+
+    private static CandidateComparison comparison(String label, CandidateComparison.Basis basis, String reason)
+    {
+        return new CandidateComparison(basis, label, "Compared with " + label + ": it" + reason);
+    }
+
+    private static String candidateLabel(TrainingPlan plan)
+    {
+        MethodReadiness readiness = plan == null ? null : plan.readiness;
+        if (readiness != null && readiness.recipe != null)
+            return readiness.recipe.action.replaceFirst("[.!?]+$", "");
+        return plan == null || plan.method() == null ? "another route" : plan.method().getName();
     }
 
     private static double readinessAdjustment(GameData data,
@@ -154,6 +230,8 @@ public class TrainingMethodSelector
         private final TrainingPlan plan;
         @Getter
         private final double score;
+        @Getter
+        private final double economicScore;
     }
 
     private List<CuratedTrainingMethod> candidates(GameData data, Skill skill)

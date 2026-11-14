@@ -77,7 +77,7 @@ public class QuestItemAcquisitionGuidanceTest
     {
         ItemRule requirement = ItemRule.item(
                 "Death rune", 5, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("Test quest", false, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
+        QuestDefinition quest = new QuestDefinition("Test quest", false, Collections.emptyList(), Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, 0, Collections.emptyList(), "Test location", Collections.singletonList("Test unlock"), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         GameData data = GameData.builder(account(1))
                 .inventory(new ItemsState(Collections.emptyList()))
                 .equipment(new ItemsState(Collections.emptyList()))
@@ -100,7 +100,7 @@ public class QuestItemAcquisitionGuidanceTest
     {
         ItemRule requirement = ItemRule.item(
                 "Raw beef", 1, ItemRequirementScope.OWNED_OR_RETRIEVABLE);
-        QuestDefinition quest = new QuestDefinition("F2P test quest", true, Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, Collections.emptyList(), "Lumbridge", Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
+        QuestDefinition quest = new QuestDefinition("F2P test quest", true, Collections.emptyList(), Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList(), requirement, 0, 0, Collections.emptyList(), "Lumbridge", Collections.emptyList(), Collections.<Skill, Integer>emptyMap(), Collections.emptyList());
         GameData data = GameData.builder(
                         account(1, Membership.F2P))
                 .inventory(new ItemsState(Collections.emptyList()))

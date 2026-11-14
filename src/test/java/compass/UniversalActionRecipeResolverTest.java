@@ -1,6 +1,7 @@
 package compass;
 
 import net.runelite.api.Skill;
+import net.runelite.api.gameval.ItemID;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,6 +14,37 @@ public class UniversalActionRecipeResolverTest
             new UniversalActionRecipeResolver();
 
     @Test
+    public void ironSmeltingCannotPromiseOrePerSuccessfulBarWithoutSetupEvidence()
+    {
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.SMITHING, "Iron bar", 12.5f), 100, membership);
+            assertFalse(recipe.hasExactInputs());
+            assertTrue(recipe.getInputs().isEmpty());
+        }
+    }
+
+    @Test
+    public void standardFurnaceInputsRetainVerifiedIdentitiesAndQuantities()
+    {
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe bronze = resolver.resolve(
+                    action(Skill.SMITHING, "Bronze bar", 6.2f), 10, membership);
+            assertInput(bronze, "Copper ore", 10);
+            assertInput(bronze, "Tin ore", 10);
+            assertEquals(436, bronze.getInputs().get(0).itemId);
+            UniversalActionRecipe rune = resolver.resolve(
+                    action(Skill.SMITHING, "Runite bar", 50), 10, membership);
+            assertInput(rune, "Runite ore", 10);
+            assertInput(rune, "Coal", 80);
+            assertEquals(451, rune.getInputs().get(0).itemId);
+            assertEquals(453, rune.getInputs().get(1).itemId);
+        }
+    }
+
+    @Test
     public void windStrikeHasExactRuneInputs()
     {
         UniversalActionRecipe recipe = resolver.resolve(
@@ -20,8 +52,67 @@ public class UniversalActionRecipeResolverTest
                 Membership.F2P);
 
         assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Air rune", 25);
-        assertInput(recipe, "Mind rune", 25);
+        assertInput(recipe, "Air rune", 25, ItemID.AIRRUNE);
+        assertInput(recipe, "Mind rune", 25, ItemID.MINDRUNE);
+    }
+
+    @Test
+    public void curseRequiresItsExactReviewedActionName()
+    {
+        UniversalActionRecipe curse = resolver.resolve(
+                action(Skill.MAGIC, "Curse", 29), 10, Membership.F2P);
+        assertTrue(curse.hasExactInputs());
+        assertInput(curse, "Earth rune", 30, ItemID.EARTHRUNE);
+        assertInput(curse, "Water rune", 20, ItemID.WATERRUNE);
+        assertInput(curse, "Body rune", 10, ItemID.BODYRUNE);
+
+        for (Membership membership : Membership.values())
+        {
+            UniversalActionRecipe invented = resolver.resolve(
+                    action(Skill.MAGIC, "Future curse", 29), 10,
+                    membership);
+            assertFalse(invented.hasExactInputs());
+            assertTrue(invented.getInputs().isEmpty());
+        }
+    }
+
+    @Test
+    public void constructionRecipesRequireExactRuneLiteActionNames()
+    {
+        String[] names = {"Oak Larder", "Oak Door", "Mahogany Table",
+                "Teak Garden Bench",
+                "Mounted Mythical Cape"};
+        String[] inputs = {"Oak plank", "Oak plank", "Mahogany plank",
+                "Teak plank", "Teak plank"};
+        int[] quantities = {8, 10, 6, 6, 3};
+        int[] itemIds = {ItemID.PLANK_OAK, ItemID.PLANK_OAK,
+                ItemID.PLANK_MAHOGANY, ItemID.PLANK_TEAK,
+                ItemID.PLANK_TEAK};
+        for (int i = 0; i < names.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.P2P);
+            assertTrue(names[i], recipe.hasExactInputs());
+            assertInput(recipe, inputs[i], quantities[i] * 2, itemIds[i]);
+            assertFalse(names[i], resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.F2P).hasExactInputs());
+            assertFalse(names[i], resolver.resolve(
+                    action(Skill.CONSTRUCTION, names[i], 1), 2,
+                    Membership.UNKNOWN).hasExactInputs());
+        }
+        UniversalActionRecipe variableNails = resolver.resolve(
+                action(Skill.CONSTRUCTION, "Crude Wooden Chair", 1), 2,
+                Membership.P2P);
+        assertFalse(variableNails.hasExactInputs());
+        assertTrue(variableNails.getInputs().isEmpty());
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.CONSTRUCTION, "Future Oak Larder", 1), 2,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
     }
 
     @Test
@@ -31,29 +122,37 @@ public class UniversalActionRecipeResolverTest
                 action(Skill.MAGIC, "Fire Bolt", 22.5f), 10,
                 Membership.F2P);
         assertTrue(bolt.hasExactInputs());
-        assertInput(bolt, "Air rune", 30);
-        assertInput(bolt, "Fire rune", 40);
-        assertInput(bolt, "Chaos rune", 10);
+        assertInput(bolt, "Air rune", 30, ItemID.AIRRUNE);
+        assertInput(bolt, "Fire rune", 40, ItemID.FIRERUNE);
+        assertInput(bolt, "Chaos rune", 10, ItemID.CHAOSRUNE);
 
         UniversalActionRecipe blast = resolver.resolve(
                 action(Skill.MAGIC, "Fire Blast", 34.5f), 10,
                 Membership.F2P);
         assertTrue(blast.hasExactInputs());
-        assertInput(blast, "Air rune", 40);
-        assertInput(blast, "Fire rune", 50);
-        assertInput(blast, "Death rune", 10);
+        assertInput(blast, "Air rune", 40, ItemID.AIRRUNE);
+        assertInput(blast, "Fire rune", 50, ItemID.FIRERUNE);
+        assertInput(blast, "Death rune", 10, ItemID.DEATHRUNE);
     }
 
     @Test
-    public void smithingBarCountsMatchStandardAnvilFamilies()
+    public void smithingRequiresReviewedIdentityRatherThanMetalAndItemFragments()
     {
-        assertEquals(5, UniversalActionRecipeResolver.smithingBarsFor("rune platebody"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune platelegs"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune 2h sword"));
-        assertEquals(3, UniversalActionRecipeResolver.smithingBarsFor("rune battleaxe"));
-        assertEquals(2, UniversalActionRecipeResolver.smithingBarsFor("rune claws"));
-        assertEquals(2, UniversalActionRecipeResolver.smithingBarsFor("rune scimitar"));
-        assertEquals(1, UniversalActionRecipeResolver.smithingBarsFor("rune dagger"));
+        for (Membership membership : Membership.values())
+        {
+            for (String name : new String[] {"Future rune platebody", "Bronze ceremonial sword",
+                    "Rune claws", "Steel wire", "Adamant knife"})
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.SMITHING, name, 1), 10, membership);
+                assertFalse(name, recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+            UniversalActionRecipe reviewed = resolver.resolve(
+                    action(Skill.SMITHING, "Bronze scimitar", 25), 10, membership);
+            assertTrue(reviewed.hasExactInputs());
+            assertInput(reviewed, "Bronze bar", 20);
+        }
     }
 
     @Test
@@ -66,21 +165,54 @@ public class UniversalActionRecipeResolverTest
 
         assertTrue(recipe.hasExactInputs());
         assertEquals(2, recipe.getInputs().size());
-        assertInput(recipe, "Nature rune", 100);
-        assertInput(recipe, "Fire rune", 500);
+        assertInput(recipe, "Nature rune", 100, ItemID.NATURERUNE);
+        assertInput(recipe, "Fire rune", 500, ItemID.FIRERUNE);
         assertTrue(recipe.getSetup().contains("safe alch list"));
     }
 
     @Test
-    public void prayerTreatsConcreteCalculatorItemAsConsumedInput()
+    public void unreviewedPrayerMethodsFailClosedWithoutRouteInputs()
     {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.PRAYER, "Big bones", 15),
-                250,
-                Membership.F2P);
+        for (String name : new String[] {"Big bones", "Infernal ashes",
+                "Ensouled dragon head", "Future bones"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.PRAYER, name, 15), 250, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
 
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Big bones", 250);
+    @Test
+    public void fishingNeedsAReviewedRouteBeforeClaimingConsumedInputs()
+    {
+        for (String name : new String[] {"Raw karambwan", "Raw anglerfish",
+                "Raw dark crab", "Future fish"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FISHING, name, 50), 100, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void farmingNeedsACuratedRouteBeforeInferringSaplings()
+    {
+        for (String name : new String[] {"Maple tree", "Spirit tree",
+                "Crystal tree", "Future tree"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FARMING, name, 50), 5, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
     }
 
     @Test
@@ -99,7 +231,7 @@ public class UniversalActionRecipeResolverTest
     public void herblorePrayerPotionHasAllConsumedInputs()
     {
         UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.HERBLORE, "Prayer potion", 87.5f),
+                action(Skill.HERBLORE, "Prayer potion(3)", 87.5f),
                 40,
                 Membership.P2P);
 
@@ -110,16 +242,236 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void plainLeatherBodyUsesOneLeatherNotDragonhideBodyCount()
+    public void herbloreDoseNamesResolveOnlyTheirExactBasePotion()
     {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.CRAFTING, "Leather body", 25),
-                80,
-                Membership.F2P);
+        UniversalActionRecipe attack = resolver.resolve(
+                action(Skill.HERBLORE, "Attack potion(3)", 25), 10,
+                Membership.P2P);
+        assertTrue(attack.hasExactInputs());
+        assertInput(attack, "Guam leaf", 10);
+        assertInput(attack, "Eye of newt", 10);
+        assertInput(attack, "Vial of water", 10);
 
-        assertTrue(recipe.hasExactInputs());
-        assertEquals(1, recipe.getInputs().size());
-        assertInput(recipe, "Leather", 80);
+        UniversalActionRecipe antifire = resolver.resolve(
+                action(Skill.HERBLORE, "Antifire potion(3)", 157.5f),
+                10, Membership.P2P);
+        assertTrue(antifire.hasExactInputs());
+        assertInput(antifire, "Lantadyme", 10);
+        assertInput(antifire, "Dragon scale dust", 10);
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.HERBLORE, "Future attack potion(3)", 25),
+                10, Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
+    }
+
+    @Test
+    public void leatherCraftingFailsClosedWithoutThreadAndNeedleEvidence()
+    {
+        for (String name : new String[] {"Leather body", "Hardleather body",
+                "Green d'hide body", "Coif", "Future leather body"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 25), 80, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void f2pPotteryUsesReviewedInputsAndHonestFiringGuidance()
+    {
+        String[] forming = {"Unfired pot", "Unfired pie dish",
+                "Unfired bowl"};
+        for (String name : forming)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 10), 12, membership);
+                assertTrue(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertInput(recipe, "Soft clay", 12, ItemID.SOFTCLAY);
+            }
+
+        String[] firing = {"Pot", "Pie dish", "Bowl"};
+        String[] inputs = {"Unfired pot", "Unfired pie dish",
+                "Unfired bowl"};
+        int[] itemIds = {ItemID.POT_UNFIRED, ItemID.PIEDISH_UNFIRED,
+                ItemID.BOWL_UNFIRED};
+        for (int i = 0; i < firing.length; i++)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, firing[i], 10), 12,
+                        membership);
+                assertTrue(firing[i] + " / " + membership,
+                        recipe.hasExactInputs());
+                assertInput(recipe, inputs[i], 12, itemIds[i]);
+                assertTrue(recipe.getSetup().contains("not guaranteed"));
+            }
+    }
+
+    @Test
+    public void plantPotsAreReviewedWhileQuestLockedPotLidsFailClosed()
+    {
+        UniversalActionRecipe forming = resolver.resolve(
+                action(Skill.CRAFTING, "Unfired plant pot", 20), 12,
+                Membership.P2P);
+        assertTrue(forming.hasExactInputs());
+        assertInput(forming, "Soft clay", 12, ItemID.SOFTCLAY);
+
+        UniversalActionRecipe firing = resolver.resolve(
+                action(Skill.CRAFTING, "Empty plant pot", 17.5f), 12,
+                Membership.P2P);
+        assertTrue(firing.hasExactInputs());
+        assertInput(firing, "Unfired plant pot", 12,
+                ItemID.PLANTPOT_UNFIRED);
+        assertTrue(firing.getSetup().contains("not guaranteed"));
+
+        for (Membership membership : new Membership[] {
+                Membership.F2P, Membership.UNKNOWN})
+        {
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Unfired plant pot", 20), 12, membership)
+                    .hasExactInputs());
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Empty plant pot", 17.5f), 12, membership)
+                    .hasExactInputs());
+        }
+        for (String name : new String[] {"Unfired pot lid", "Pot lid"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 20), 12,
+                        membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void moltenGlassIsReviewedWhileMouldBoundTiarasFailClosed()
+    {
+        UniversalActionRecipe glass = resolver.resolve(
+                action(Skill.CRAFTING, "Molten glass", 20), 12,
+                Membership.P2P);
+        assertTrue(glass.hasExactInputs());
+        assertInput(glass, "Bucket of sand", 12, ItemID.BUCKET_SAND);
+        assertInput(glass, "Soda ash", 12, ItemID.SODA_ASH);
+        assertTrue(glass.getSetup().contains("Superglass Make"));
+
+        for (Membership membership : new Membership[] {
+                Membership.F2P, Membership.UNKNOWN})
+            assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                    "Molten glass", 20), 12, membership)
+                    .hasExactInputs());
+
+        // Both actions require a carried, reusable tiara mould. The shared
+        // consumed-input contract cannot prove that tool state yet.
+        for (String name : new String[] {"Tiara", "Gold tiara"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.CRAFTING, name, 35), 12,
+                        membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void spinningRecipesUseReviewedIdentitiesAndMembership()
+    {
+        UniversalActionRecipe wool = resolver.resolve(
+                action(Skill.CRAFTING, "Ball of wool", 2.5f), 28,
+                Membership.F2P);
+        assertTrue(wool.hasExactInputs());
+        assertInput(wool, "Wool", 28, ItemID.WOOL);
+
+        UniversalActionRecipe bowString = resolver.resolve(
+                action(Skill.CRAFTING, "Bow string", 15), 28,
+                Membership.P2P);
+        assertTrue(bowString.hasExactInputs());
+        assertInput(bowString, "Flax", 28, ItemID.FLAX);
+        assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                "Bow string", 15), 28, Membership.F2P).hasExactInputs());
+        assertFalse(resolver.resolve(action(Skill.CRAFTING,
+                "Bow strings", 15), 28, Membership.P2P).hasExactInputs());
+    }
+
+    @Test
+    public void unreviewedWoodProductsFailClosedWithoutReusableAndUnlockEvidence()
+    {
+        for (String name : new String[] {"Bird house", "Oak bird house",
+                "Future bird house", "Oak shield", "Future shield",
+                "Oak stock", "Future stock"})
+            for (Membership membership : Membership.values())
+            {
+                Skill skill = name.contains("bird house")
+                        ? Skill.CRAFTING : Skill.FLETCHING;
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(skill, name, 25), 40, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void unreviewedFiremakingActionsFailClosed()
+    {
+        for (String name : new String[] {"Logs", "Oak pyre logs",
+                "Sacred oil(4)", "Future logs"})
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.FIREMAKING, name, 40), 60, membership);
+                assertFalse(name + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(name, recipe.getInputs().isEmpty());
+            }
+    }
+
+    @Test
+    public void runecraftRecipesRequireExactSimpleRuneActionIdentity()
+    {
+        UniversalActionRecipe air = resolver.resolve(
+                action(Skill.RUNECRAFT, "runelite:runecraft:air_rune",
+                        "Air rune", 5, Membership.F2P),
+                28, Membership.F2P);
+        assertTrue(air.hasExactInputs());
+        assertInput(air, "Rune essence", 28);
+
+        UniversalActionRecipe water = resolver.resolve(
+                action(Skill.RUNECRAFT, "runelite:runecraft:water_rune",
+                        "Water rune", 6, Membership.F2P),
+                28, Membership.P2P);
+        assertTrue(water.hasExactInputs());
+        assertInput(water, "Pure essence", 28);
+
+        String[][] unsupported = {
+                {"runelite:runecraft:water_tiara", "Water tiara"},
+                {"runelite:runecraft:lava_rune", "Lava rune"},
+                {"runelite:runecraft:mind_core", "Mind core"},
+                {"runelite:runecraft:zeah_blood_rune", "Blood rune"},
+                {"runelite:runecraft:soul_rune", "Soul rune"},
+                {"runelite:runecraft:aether_rune", "Aether rune"},
+                {"test:future_rune", "Future rune"}};
+        for (String[] value : unsupported)
+            for (Membership membership : Membership.values())
+            {
+                UniversalActionRecipe recipe = resolver.resolve(
+                        action(Skill.RUNECRAFT, value[0], value[1], 10,
+                                Membership.P2P), 28, membership);
+                assertFalse(value[0] + " / " + membership,
+                        recipe.hasExactInputs());
+                assertTrue(value[0], recipe.getInputs().isEmpty());
+            }
     }
 
     @Test
@@ -151,19 +503,6 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void f2pTiaraUsesSilverBar()
-    {
-        UniversalActionRecipe recipe = resolver.resolve(
-                action(Skill.CRAFTING, "Tiara", 52.5f),
-                30,
-                Membership.F2P);
-
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Silver bar", 30);
-        assertTrue(recipe.getSetup().contains("Edgeville furnace"));
-    }
-
-    @Test
     public void arrowShaftXpUnitUsesFifteenShaftsPerBasicLog()
     {
         UniversalActionRecipe recipe = resolver.resolve(
@@ -174,6 +513,109 @@ public class UniversalActionRecipeResolverTest
         assertTrue(recipe.hasExactInputs());
         assertInput(recipe, "Logs", 3);
         assertTrue(recipe.getSetup().contains("15 shafts per log"));
+    }
+
+    @Test
+    public void headlessArrowsUseReviewedIdentitiesAndMembership()
+    {
+        UniversalActionRecipe recipe = resolver.resolve(
+                action(Skill.FLETCHING, "Headless arrow", 1), 15,
+                Membership.P2P);
+
+        assertTrue(recipe.hasExactInputs());
+        assertInput(recipe, "Arrow shaft", 15, ItemID.ARROW_SHAFT);
+        assertInput(recipe, "Feather", 15, ItemID.FEATHER);
+        assertFalse(resolver.resolve(action(Skill.FLETCHING,
+                "Headless arrow", 1), 15, Membership.F2P).hasExactInputs());
+        assertFalse(resolver.resolve(action(Skill.FLETCHING,
+                "Headless arrows", 1), 15, Membership.P2P).hasExactInputs());
+    }
+
+    @Test
+    public void standardArrowsUseReviewedArrowtipIdentitiesAndMembership()
+    {
+        String[] arrows = {"Bronze arrow", "Iron arrow", "Steel arrow",
+                "Mithril arrow", "Adamant arrow", "Rune arrow"};
+        String[] tips = {"Bronze arrowtips", "Iron arrowtips",
+                "Steel arrowtips", "Mithril arrowtips",
+                "Adamant arrowtips", "Rune arrowtips"};
+        int[] tipIds = {ItemID.BRONZE_ARROWHEADS, ItemID.IRON_ARROWHEADS,
+                ItemID.STEEL_ARROWHEADS, ItemID.MITHRIL_ARROWHEADS,
+                ItemID.ADAMANT_ARROWHEADS, ItemID.RUNE_ARROWHEADS};
+        for (int i = 0; i < arrows.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.FLETCHING, arrows[i], 1), 15,
+                    Membership.P2P);
+            assertTrue(arrows[i], recipe.hasExactInputs());
+            assertInput(recipe, "Headless arrow", 15,
+                    ItemID.HEADLESS_ARROW);
+            assertInput(recipe, tips[i], 15, tipIds[i]);
+
+            assertFalse(arrows[i], resolver.resolve(
+                    action(Skill.FLETCHING, arrows[i], 1), 15,
+                    Membership.F2P).hasExactInputs());
+        }
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.FLETCHING, "Future bronze arrow", 1), 15,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
+    }
+
+    @Test
+    public void broadArrowsRequireTheExplicitCheckNeededMethodContract()
+    {
+        ActionDef action = action(Skill.FLETCHING, "Broad arrows", 10);
+        UniversalActionRecipe universal = resolver.resolve(action, 15,
+                Membership.P2P);
+        assertFalse(universal.hasExactInputs());
+        assertTrue(universal.getInputs().isEmpty());
+
+        MethodProfile profile = new MethodExecutionProfileCatalog()
+                .forMethod("fletching_broad_arrows");
+        java.util.List<MethodInput> inputs = resolver.profileInputs(
+                profile, action, 15, Membership.P2P);
+        assertInput(inputs, "Headless arrow", 15);
+        assertInput(inputs, "Broad arrowheads", 15);
+    }
+
+    @Test
+    public void javelinsUseReviewedTipIdentitiesAndMembership()
+    {
+        String[] javelins = {"Bronze javelin", "Iron javelin",
+                "Steel javelin", "Mithril javelin", "Adamant javelin",
+                "Rune javelin", "Amethyst javelin", "Dragon javelin"};
+        String[] tips = {"Bronze javelin tips", "Iron javelin tips",
+                "Steel javelin tips", "Mithril javelin tips",
+                "Adamant javelin tips", "Rune javelin tips",
+                "Amethyst javelin tips", "Dragon javelin tips"};
+        int[] tipIds = {ItemID.BRONZE_JAVELIN_HEAD,
+                ItemID.IRON_JAVELIN_HEAD, ItemID.STEEL_JAVELIN_HEAD,
+                ItemID.MITHRIL_JAVELIN_HEAD, ItemID.ADAMANT_JAVELIN_HEAD,
+                ItemID.RUNE_JAVELIN_HEAD, ItemID.AMETHYST_JAVELIN_HEAD,
+                ItemID.DRAGON_JAVELIN_HEAD};
+        for (int i = 0; i < javelins.length; i++)
+        {
+            UniversalActionRecipe recipe = resolver.resolve(
+                    action(Skill.FLETCHING, javelins[i], 1), 15,
+                    Membership.P2P);
+            assertTrue(javelins[i], recipe.hasExactInputs());
+            assertInput(recipe, "Javelin shaft", 15,
+                    ItemID.JAVELIN_SHAFT);
+            assertInput(recipe, tips[i], 15, tipIds[i]);
+
+            assertFalse(javelins[i], resolver.resolve(
+                    action(Skill.FLETCHING, javelins[i], 1), 15,
+                    Membership.F2P).hasExactInputs());
+        }
+
+        UniversalActionRecipe invented = resolver.resolve(
+                action(Skill.FLETCHING, "Future bronze javelin", 1), 15,
+                Membership.P2P);
+        assertFalse(invented.hasExactInputs());
+        assertTrue(invented.getInputs().isEmpty());
     }
 
     @Test
@@ -201,15 +643,17 @@ public class UniversalActionRecipeResolverTest
     }
 
     @Test
-    public void largeSmithingCountSaturatesInsteadOfOverflowingNegative()
+    public void largeSmithingCountCannotClaimAnExactSaturatedQuantity()
     {
         UniversalActionRecipe recipe = resolver.resolve(
                 action(Skill.SMITHING, "Rune platebody", 375),
                 Integer.MAX_VALUE,
                 Membership.P2P);
 
-        assertTrue(recipe.hasExactInputs());
-        assertInput(recipe, "Runite bar", Integer.MAX_VALUE);
+        assertFalse(recipe.hasExactInputs());
+        assertTrue(recipe.getInputs().isEmpty());
+        assertInput(resolver.resolve(action(Skill.SMITHING, "Rune platebody", 375),
+                Integer.MAX_VALUE / 5, Membership.P2P), "Runite bar", Integer.MAX_VALUE / 5 * 5);
     }
 
     private static ActionDef action(
@@ -225,12 +669,47 @@ public class UniversalActionRecipeResolverTest
                 Membership.F2P);
     }
 
+    private static ActionDef action(Skill skill, String id, String name,
+            float xp, Membership membership)
+    {
+        return new ActionDef(skill, id, name, 1, xp, "test", membership);
+    }
+
     private static void assertInput(
             UniversalActionRecipe recipe,
             String name,
             int quantity)
     {
         for (MethodInput input : recipe.getInputs())
+        {
+            if (name.equals(input.getName()))
+            {
+                assertEquals(quantity, input.getQuantity());
+                return;
+            }
+        }
+        throw new AssertionError("Missing input: " + name);
+    }
+
+    private static void assertInput(UniversalActionRecipe recipe,
+            String name, int quantity, int itemId)
+    {
+        for (MethodInput input : recipe.getInputs())
+        {
+            if (name.equals(input.getName()))
+            {
+                assertEquals(quantity, input.getQuantity());
+                assertEquals(itemId, input.itemId);
+                return;
+            }
+        }
+        throw new AssertionError("Missing input: " + name);
+    }
+
+    private static void assertInput(java.util.List<MethodInput> inputs,
+            String name, int quantity)
+    {
+        for (MethodInput input : inputs)
         {
             if (name.equals(input.getName()))
             {

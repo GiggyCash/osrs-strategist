@@ -19,7 +19,7 @@ public class ContentCoverageManifestTest
     {
         QuestKnowledgeCatalog knowledge = new QuestKnowledgeCatalog();
         assertEquals(Quest.values().length, knowledge.all().size());
-        assertEquals(211, knowledge.all().size());
+        assertEquals(216, knowledge.all().size());
         assertEquals(0, knowledge.all().values().stream()
                 .filter(QuestDefinition::hasFieldUncertainty).count());
         assertNotNull(knowledge.definitionFor("Watchtower"));
@@ -47,10 +47,34 @@ public class ContentCoverageManifestTest
         assertEquals(new PvmActivityCatalog().all().size(), manifest.all().size());
         assertEquals(71, manifest.all().size());
         assertUniqueAndExplained(manifest.all());
-        assertEquals(4, count(manifest.all(), ContentCoverageState.STRUCTURED));
-        assertEquals(67, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
+        assertEquals(5, count(manifest.all(), ContentCoverageState.STRUCTURED));
+        assertEquals(66, count(manifest.all(), ContentCoverageState.PARTIAL_PREPARATION));
         assertEquals(0, count(manifest.all(), ContentCoverageState.CONSERVATIVE_FAIL_CLOSED));
         assertEquals(71, new PvmPreparationProfileCatalog().all().size());
+    }
+
+    @Test
+    public void humanReadablePvmCensusMatchesTheCoverageManifest()
+            throws Exception
+    {
+        PvmCoverageManifest manifest = new PvmCoverageManifest();
+        String census = new String(java.nio.file.Files.readAllBytes(
+                java.nio.file.Paths.get("docs/CONTENT_CENSUS.md")),
+                java.nio.charset.StandardCharsets.UTF_8);
+        java.util.regex.Matcher row = java.util.regex.Pattern.compile(
+                "(?m)^\\| PvM encounters \\|[^\\n]*\\| (\\d+) \\| "
+                        + "(\\d+) locally verifiable \\| "
+                        + "(\\d+) preparation-only;")
+                .matcher(census);
+
+        assertTrue("CONTENT_CENSUS.md is missing its PvM coverage row",
+                row.find());
+        assertEquals(manifest.all().size(), Integer.parseInt(row.group(1)));
+        assertEquals(count(manifest.all(), ContentCoverageState.STRUCTURED),
+                Long.parseLong(row.group(2)));
+        assertEquals(count(manifest.all(),
+                        ContentCoverageState.PARTIAL_PREPARATION),
+                Long.parseLong(row.group(3)));
     }
 
     @Test

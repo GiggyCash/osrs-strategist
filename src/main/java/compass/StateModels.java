@@ -38,12 +38,32 @@ final class AccessMemorySnapshot
 }
 
 @Getter
-@RequiredArgsConstructor
 final class AccountEconomySnapshot
 {
     final long coins;
     final long estimatedBankValue;
     final Confidence confidence;
+    final long observedAtMillis;
+
+    AccountEconomySnapshot(long coins, long estimatedBankValue, Confidence confidence)
+    {
+        this(coins, estimatedBankValue, confidence, System.currentTimeMillis());
+    }
+
+    AccountEconomySnapshot(long coins, long estimatedBankValue, Confidence confidence, long time)
+    {
+        this.coins = coins;
+        this.estimatedBankValue = estimatedBankValue;
+        this.confidence = confidence;
+        this.observedAtMillis = time;
+    }
+
+    boolean hasUsableCash()
+    {
+        long age = System.currentTimeMillis() - observedAtMillis;
+        return confidence == Confidence.VERIFIED && coins >= 0 && observedAtMillis > 0
+                && age >= 0 && age <= ItemsState.FRESH_FOR_MILLIS;
+    }
 
 }
 
@@ -544,10 +564,25 @@ final class QuestSnapshot
     @Getter
     @Accessors(fluent = true)
     final Map<String, QuestStatus> quests;
+    private final Map<String, QuestStatus> normalizedStatuses;
 
     public QuestSnapshot(Map<String, QuestStatus> quests)
     {
         this.quests = SnapshotCollections.map(quests);
+        Map<String, QuestStatus> normalized = new HashMap<>();
+        // Quest graphs query this immutable snapshot repeatedly during a rank.
+        // Preserve the former scan's first match, including a null status.
+        for (Map.Entry<String, QuestStatus> entry : this.quests.entrySet())
+        {
+            String key = Names.words(entry.getKey());
+            if (!normalized.containsKey(key)) normalized.put(key, entry.getValue());
+        }
+        normalizedStatuses = unmodifiableMap(normalized);
+    }
+
+    QuestStatus normalizedStatusOf(String questName)
+    {
+        return normalizedStatuses.getOrDefault(Names.words(questName), QuestStatus.UNKNOWN);
     }
 
     public QuestStatus statusOf(String questName)

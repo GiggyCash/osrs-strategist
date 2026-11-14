@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class QuestPlanningEngineTest
@@ -70,6 +71,45 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void startedPrerequisiteAcceptsObservedProgressButFailsClosed()
+    {
+        QuestDefinition definition = new QuestDefinition("Started gate", false,
+                Collections.emptyList(),
+                Collections.singletonList("The Restless Ghost"),
+                Collections.emptyMap(), Collections.emptyList(), null, 0, 0,
+                Collections.emptyList(), "Test", Collections.emptyList(),
+                Collections.emptyMap(), Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+        AccountSnapshot account = account(Membership.P2P, 40, 40, 40);
+
+        QuestResolution notStarted = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.NOT_STARTED))).build()));
+        assertEquals(Confidence.CHECK_NEEDED, notStarted.getConfidence());
+        assertTrue(notStarted.getGuidance().getAction().contains(
+                "Start The Restless Ghost"));
+
+        QuestResolution inProgress = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.IN_PROGRESS))).build()));
+        assertEquals(Confidence.VERIFIED, inProgress.getConfidence());
+
+        QuestResolution complete = resolver.resolve(definition, context(
+                GameData.builder(account).quests(new QuestSnapshot(
+                        Collections.singletonMap("The Restless Ghost",
+                                QuestStatus.COMPLETE))).build()));
+        assertEquals(Confidence.VERIFIED, complete.getConfidence());
+
+        QuestResolution unknown = resolver.resolve(definition,
+                context(GameData.builder(account).build()));
+        assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
+        assertTrue(unknown.getGuidance().getAction().contains(
+                "Verify or start The Restless Ghost"));
+    }
+
+    @Test
     public void irreversibleRewardQuestIsExcludedForOneDefencePure()
     {
         assertTrue(provider.candidates(context(data(account(Membership.F2P,
@@ -82,7 +122,7 @@ public class QuestPlanningEngineTest
     {
         Map<Skill, Integer> requirements = new EnumMap<>(Skill.class);
         requirements.put(Skill.DEFENCE, 40);
-        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), requirements, Collections.emptyList(), null, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
+        QuestDefinition definition = new QuestDefinition("Safe parent", true, Collections.emptyList(), Collections.emptyList(), requirements, Collections.emptyList(), null, 0, 0, Collections.emptyList(), "Varrock", Collections.singletonList("A useful unlock"), Collections.emptyMap(), Collections.emptyList());
         AccountSnapshot pure = account(Membership.F2P, 60, 60, 1);
         QuestResolution resolution = TestFixtures.questRequirementResolver().resolve(
                 definition, context(GameData.builder(pure).build()));
@@ -110,11 +150,115 @@ public class QuestPlanningEngineTest
     }
 
     @Test
+    public void observedQuestPointsResolveOnlyTheRemainingGate()
+    {
+        QuestDefinition definition = new QuestDefinition("Quest-point test", true,
+                Collections.emptyList(), Collections.emptyList(),
+                Collections.emptyMap(),
+                Collections.emptyList(), null, 32, 0, Collections.emptyList(),
+                "Verified start", Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+
+        QuestResolution ready = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40))
+                .slayer(TestFixtures.slayerSnapshot(null, 0, null, null, 0,
+                        null, 40, null, null, Confidence.CHECK_NEEDED))
+                .build()));
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
+
+        QuestResolution shortfall = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40))
+                .slayer(TestFixtures.slayerSnapshot(null, 0, null, null, 0,
+                        null, 20, null, null, Confidence.CHECK_NEEDED))
+                .build()));
+        assertEquals(Confidence.CHECK_NEEDED, shortfall.getConfidence());
+        assertTrue(shortfall.getGuidance().getAction()
+                .contains("Earn 12 more quest points"));
+        assertTrue(shortfall.getGuidance().getSupplies().contains("20/32 observed"));
+
+        QuestResolution unknown = resolver.resolve(definition, context(GameData.builder(
+                        account(Membership.F2P, 40, 40, 40)).build()));
+        assertEquals(Confidence.CHECK_NEEDED, unknown.getConfidence());
+        assertTrue(unknown.getGuidance().getAction()
+                .contains("Verify at least 32 quest points"));
+    }
+
+    @Test
+    public void observedCombatLevelResolvesTypedQuestGate()
+    {
+        QuestDefinition dreamMentor = new QuestKnowledgeCatalog()
+                .definitionFor("Dream Mentor");
+        assertEquals(85, dreamMentor.getCombatLevelRequired());
+        assertFalse(dreamMentor.getAccessChecks().stream().anyMatch(
+                value -> value.contains("combat level 85")));
+
+        QuestDefinition definition = new QuestDefinition("Combat gate", false,
+                Collections.emptyList(), Collections.emptyList(),
+                Collections.emptyMap(),
+                Collections.emptyList(), null, 0, 85,
+                Collections.emptyList(), "Verified start",
+                Collections.emptyList(), Collections.emptyMap(),
+                Collections.emptyList());
+        QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
+        AccountSnapshot low = account(Membership.P2P, 60, 60, 60);
+        int observed = SlayerMasterCatalog.combatLevel(low);
+        QuestResolution shortfall = resolver.resolve(definition,
+                context(GameData.builder(low).build()));
+        assertEquals(Confidence.CHECK_NEEDED, shortfall.getConfidence());
+        assertEquals("Raise combat level from " + observed + " to 85.",
+                shortfall.getGuidance().getAction());
+
+        AccountSnapshot pure = account(Membership.P2P, 60, 60, 1);
+        StrategyContext pureContext = context(GameData.builder(pure).build());
+        QuestResolution unsafeForPure = resolver.resolve(definition,
+                pureContext);
+        assertFalse(new CandidateSafetyPolicy().isAllowed(
+                unsafeForPure.getSafetyEvidence(), pureContext));
+
+        QuestResolution ready = resolver.resolve(definition, context(
+                GameData.builder(account(Membership.P2P, 70, 70, 70)).build()));
+        assertEquals(Confidence.VERIFIED, ready.getConfidence());
+    }
+
+    @Test
+    public void ruffSituationModelsConditionalSewingToolsWithoutGuessingFur()
+    {
+        QuestDefinition definition = new QuestKnowledgeCatalog()
+                .definitionFor("A Ruff Situation");
+        assertNotNull(definition.getItemRequirementExpression());
+        GameData data = GameData.builder(account(Membership.P2P, 40, 40, 40))
+                .inventory(new ItemsState(Collections.emptyList()))
+                .equipment(new ItemsState(Collections.emptyList()))
+                .bank(new ItemsState(Arrays.asList(
+                        item("Costume needle"), item("Grain")), 1L))
+                .build();
+
+        ItemRequirementResult result = new ItemRequirementEvaluator().evaluate(
+                definition.getItemRequirementExpression(), data, false);
+
+        assertEquals(RequirementState.CHECK_NEEDED, result.getState());
+        assertTrue(result.getAction().contains("one fur accepted"));
+        assertFalse(result.getAction().contains("Thread"));
+
+        GameData ordinaryNeedle = GameData.builder(
+                        account(Membership.P2P, 40, 40, 40))
+                .bank(new ItemsState(Arrays.asList(item("Needle"),
+                        item("Thread"), item("Grain")), 1L))
+                .build();
+        ItemRequirementResult ordinary = new ItemRequirementEvaluator().evaluate(
+                definition.getItemRequirementExpression(), ordinaryNeedle, false);
+        assertEquals(RequirementState.CHECK_NEEDED, ordinary.getState());
+        assertTrue(ordinary.getAction().contains("one fur accepted"));
+        assertFalse(ordinary.getAction().contains("Costume needle"));
+    }
+
+    @Test
     public void exactUimQuestSlotRequirementChangesReadiness()
     {
-        QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
+        QuestDefinition definition = new QuestDefinition("Slot test", false, Collections.emptyList(), Collections.emptyList(), Collections.emptyMap(), Collections.emptyList(), ItemRule.itemClass(
                         ItemRequirementClass.EMPTY_INVENTORY_SPACE, 5,
-                        ItemRequirementScope.CARRIED), 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
+                        ItemRequirementScope.CARRIED), 0, 0, Collections.emptyList(), "Verified start", Collections.emptyList(), Collections.emptyMap(), Collections.emptyList());
         QuestRequirementResolver resolver = TestFixtures.questRequirementResolver();
 
         QuestResolution blocked = resolver.resolve(definition,

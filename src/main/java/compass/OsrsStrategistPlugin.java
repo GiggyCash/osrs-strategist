@@ -3,7 +3,6 @@ import static java.util.Collections.*;
 
 import static compass.Text.get;
 
-import com.google.inject.Binder;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -15,6 +14,7 @@ import net.runelite.api.events.*;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.*;
 import net.runelite.client.plugins.*;
@@ -39,6 +39,7 @@ public class OsrsStrategistPlugin extends Plugin
 
     @Inject private OsrsStrategistConfig config;
     @Inject private ConfigManager configManager;
+    @Inject private ClientThread clientThread;
     @Inject private ClientToolbar clientToolbar;
     @Inject private OverlayManager overlayManager;
     @Inject private StrategyDataAssembler strategyDataAssembler;
@@ -69,7 +70,7 @@ public class OsrsStrategistPlugin extends Plugin
     private final AccountProgressMilestoneDetector progressMilestoneDetector =
             new AccountProgressMilestoneDetector();
     private NavigationButton navButton;
-    private OsrsStrategistPanel panel;
+    private volatile OsrsStrategistPanel panel;
     private final UiGenerationGuard uiGeneration = new UiGenerationGuard();
     private final AtomicBoolean progressUiUpdatePending =
             new AtomicBoolean();
@@ -86,12 +87,6 @@ public class OsrsStrategistPlugin extends Plugin
             new OverlayLifecycleGuard();
     private final RecommendationStabilizer recommendationStabilizer =
             new RecommendationStabilizer();
-
-    @Override
-    public void configure(Binder binder)
-    {
-        binder.requestStaticInjection(BundledCatalogLoader.class);
-    }
 
     @Provides
     OsrsStrategistConfig provideConfig(ConfigManager manager)
@@ -722,7 +717,18 @@ public class OsrsStrategistPlugin extends Plugin
 
     private void updateAccountPanel()
     {
-        if (panel == null) return;
+        var requestedPanel = panel;
+        if (requestedPanel == null) return;
+        // Startup, config and sidebar callbacks can run on EDT. All live reads
+        // belong on the client thread; an old enable must not refresh a new one.
+        clientThread.invoke(() ->
+        {
+            if (panel == requestedPanel) updateAccountPanelOnClientThread();
+        });
+    }
+
+    private void updateAccountPanelOnClientThread()
+    {
         lastStrategyRefreshAtMillis = System.currentTimeMillis();
         final long generation = uiGeneration.next();
         var data = strategyDataAssembler.read();

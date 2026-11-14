@@ -1041,7 +1041,6 @@
       "The Fremennik Trials"
     ],
     "skillRequirements": {
-      "AGILITY": 40,
       "CONSTRUCTION": 20
     },
     "itemRequirements": [
@@ -2528,7 +2527,11 @@
     "name": "Tears of Guthix",
     "freeToPlay": false,
     "prerequisites": [],
-    "skillRequirements": {},
+    "skillRequirements": {
+      "FIREMAKING": 49,
+      "CRAFTING": 20,
+      "MINING": 20
+    },
     "itemRequirements": [
       {
         "name": "Sapphire lantern",
@@ -3529,8 +3532,9 @@
       }
     ],
     "questPointsRequired": 0,
+    "combatLevelRequired": 85,
     "accessChecks": [
-      "Verify combat level 85 and three suitable food types totalling the required feeding setup",
+      "Verify three suitable food types totalling the required feeding setup",
       "Prepare to defeat four bosses consecutively without prayer; this is unsafe death content for Hardcore accounts"
     ],
     "startLocation": "Talk to the fallen man in the small cave in the Lunar Isle mine.",
@@ -3678,6 +3682,9 @@
       "Curse of the Empty Lord",
       "Fight Arena"
     ],
+    "startedPrerequisites": [
+      "Desert Treasure I"
+    ],
     "skillRequirements": {},
     "itemRequirements": [
       {
@@ -3719,7 +3726,6 @@
     ],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Start Desert Treasure I to obtain and use the ring of visibility",
       "Verify a legal setup for the prayer-disabled, safespottable Ghost of Bouncer fight"
     ],
     "startLocation": "Find General Khazard\u0027s ghost south-east of Rellekka.",
@@ -3965,7 +3971,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Blisterwood flail or 40,000 coins Vyre noble clothing (obtainable for free during quest from the chest in the Myreque Hideout under Old Man Ral\u0027s house) Melee combat gear Tinderbox (obtainable during quest) Pickaxe (a bronze pickaxe is obtainable during quest from Ivan Strom) Hammer (obtainable during quest) Knife (obtainable during quest) Chisel (obtainable during quest) Blisterwood logs (obtainable during quest)",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 74 Slayer [ not boostable ] [ required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 74 Woodcutting [ not boostable ] [ required to start ] link\u003dSmithing|alt\u003dSmithing 72 Smithing [ not boostable ] [ required to start ] link\u003dCooking|alt\u003dCooking 72 Cooking [ not boostable ] [ required to start ] link\u003dFletching|alt\u003dFletching 70 Fletching [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 66 Mining [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 65 Hu…",
       "Combat encounters: Several vyrewatch and vyrewatch sentinels during various encounters Several Monk of Zamorak (level 36) Several level 106 Sanguidae Several level 98 Webbed-winged Crows A level 200 Venator (as well as a few more optional ones) Four Ancient feral vyres Several waves of Nylocas The Maiden of Sugadinti Nylocas Vasilias Wyrd (level 564) Lowerniel Drakan (level 1063) (four total fights)"
     ],
     "startLocation": "Talk to Sarius Guile in the Icyene Graveyard.",
@@ -3980,8 +3985,6 @@
     "freeToPlay": false,
     "prerequisites": [
       "The Heart of Darkness",
-      "Twilight\u0027s Promise",
-      "Children of the Sun",
       "Perilous Moons"
     ],
     "skillRequirements": {
@@ -3992,8 +3995,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Emissary robes Any kind of bones (except sun-kissed bones) or raw meat/cooked meat A knife (obtainable during the quest) A beer (obtainable during the quest)",
-      "Access requirements: link\u003dThieving|alt\u003dThieving 66 Thieving [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 52 Runecraft [ not boostable ] [ required to start ] link\u003dFletching|alt\u003dFletching 52 Fletching [ not boostable ] [ required to start ] Completion of the following quests: The Heart of Darkness Twilight\u0027s Promise Children of the Sun Perilous Moons Twilight\u0027s Promise Children of the Sun",
+      "Obtain Emissary robes and any non-sun-kissed bones or meat; a knife and beer are obtainable during the quest",
       "Combat encounters: Emissary Enforcer (lvl-196) Chimalli (lvl-160) and Lucius (lvl-160) Multiple waves of Emissary cultists (lvl-70 to lvl-90) Ennius Tullus (lvl-306) Augur Metzli (lvl-396)"
     ],
     "startLocation": "Talk to Servius in the Sunrise Palace.",
@@ -4098,7 +4100,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Any axe (a bronze axe can be found during the quest, but bringing a better one is recommended for cutting 10 logs) Hammer (obtainable during the quest) or Imcando hammer Saw (obtainable during the quest) or Amy\u0027s saw",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 51 Slayer [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 48 Construction [ not boostable ] [ required to start ] link\u003dSailing|alt\u003dSailing 45 Sailing [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 45 Hunter [ not boostable ] [ required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 40 Woodcutting [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 34 Crafting [ not boostable ] [ required to start ] Completion of Pande…",
       "Combat encounters: Gryphon (level 95) Shellbane gryphon (level 235)"
     ],
     "startLocation": "Talk to the injured tortugan on a Remote Island in the Unquiet Ocean.",
@@ -4279,8 +4280,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A light source Trowel (obtained during the quest) Specimen brush (obtained during the quest) Magic or Ranged gear for enemy fight (cannot use Melee on them)",
-      "Access requirements: link\u003dAttack|alt\u003dAttack 15 Attack [ not boostable ] Category:Unknown start requirement status link\u003dPrayer|alt\u003dPrayer 25 Prayer [ not boostable ] Category:Unknown start requirement status Completion of the following quests: Death to the Dorgeshuun The Lost Tribe Goblin Diplomacy Rune Mysteries The Giant Dwarf The Dig Site The ability to defeat a level 64 (using any combat style) and two level 30 enemies using either Ranged or Magic.",
+      "Obtain a light source and Magic or Ranged combat gear for the two level-30 enemies that cannot be fought with Melee; the trowel and specimen brush are obtained during the quest",
       "Combat encounters: H.A.M. Archer (level 30) H.A.M. Mage (level 30) Sigmund (level 64)"
     ],
     "startLocation": "Talk to Ur-tag in Dorgesh-Kaan.",
@@ -4305,8 +4305,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dHunter|alt\u003dHunter 12 Hunter [ not boostable ] [ required to start ]",
-      "Combat encounters: 5 Tormented Souls (Level 16) Trapped Soul (Level 30)"
+      "12 Hunter is non-boostable and required to start the quest",
+      "Combat encounters: 5 Tormented Souls (level 16) and the Trapped Soul (level 30)"
     ],
     "startLocation": "Talk to Mori in Arceuus.",
     "unlocks": [
@@ -4400,8 +4400,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket of water (obtainable during quest) Alternatively, a Jug of water, Ice gloves, or Smiths gloves (i)",
-      "Access requirements: The ability to run past level 53 Ogres"
+      "Bring a bucket of water, a jug of water, ice gloves, or smiths gloves (i); a bucket of water is obtainable during the quest",
+      "Be able to run past level 53 ogres"
     ],
     "startLocation": "Talk to Brother Kojo in the Clock Tower south of East Ardougne.",
     "unlocks": [
@@ -4415,7 +4415,6 @@
     "freeToPlay": false,
     "prerequisites": [],
     "skillRequirements": {
-      "WOODCUTTING": 50,
       "CRAFTING": 30,
       "AGILITY": 30,
       "THIEVING": 15,
@@ -4426,7 +4425,7 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: 10 oak planks 10 steel nails Hammer Spade Clockwork or a steel bar to make one Plank Silk Raw cod or the Ring of Charos(a) Swamp tar 5 feathers (only regular chicken feathers work) Mahogany plank Leather Cowbells (obtainable only during quest)",
-      "Access requirements: link\u003dHunter|alt\u003dHunter 10 Hunter [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 30 Agility [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] [ required to start ] \u0027\"`UNIQ--ref-00000063-QINU`\"\u0027 link\u003dConstruction|alt\u003dConstruction 34 Construction [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 15 Thieving [ not boostable ] [ required to start ] Access to a crafting table 3",
+      "Verify access to a crafting table 3",
       "Combat encounters: 1–3 Icelords (level 51)"
     ],
     "startLocation": "Talk to Larry at Ardougne Zoo.",
@@ -4462,19 +4461,20 @@
     "name": "Creature of Fenkenstrain",
     "freeToPlay": false,
     "prerequisites": [
-      "Priest in Peril",
+      "Priest in Peril"
+    ],
+    "startedPrerequisites": [
       "The Restless Ghost"
     ],
     "skillRequirements": {
       "CRAFTING": 20,
-      "SMITHING": 4,
       "THIEVING": 25
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ghostspeak amulet Silver bar 3 bronze wire (unnoted) Needle (costume needle does not work) 5 thread Spade 50 coins OR 1 law \u0026 1 air rune for Telekinetic Grab (requires link\u003dMagic|alt\u003dMagic 33 Magic )",
-      "Access requirements: Completion of Priest in Peril Partial completion of The Restless Ghost link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 25 Thieving [ boostable ] [ not required to start ] Able to defeat a level 51 monster and run past level 72 monsters",
+      "Verify a safe route past level 72 monsters",
       "Combat encounters: Experiment (level 51) - can be safespotted or flinched"
     ],
     "startLocation": "Read the signpost in the middle of Canifis.",
@@ -4505,7 +4505,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: 3 dwellberries Ring of life Any pickaxe Any crossbow (except the love crossbow) Mith grapple (Hallowed grapple will not work) Insulated boots",
-      "Access requirements: link\u003dMining|alt\u003dMining 64 Mining [ not boostable ] Category:Unknown start requirement status link\u003dRanged|alt\u003dRanged 62 Ranged [ not boostable ] Category:Unknown start requirement status link\u003dThieving|alt\u003dThieving 62 Thieving [ not boostable ] Category:Unknown start requirement status link\u003dAgility|alt\u003dAgility 61 Agility [ not boostable ] Category:Unknown start requirement status link\u003dStrength|alt\u003dStrength 58 Strength [ not boostable ] Category:Unknown start requirement status link\u003dSlayer|alt\u003dSla…",
       "Combat encounters: Golem guard (level 141) Arrav (level 339)"
     ],
     "startLocation": "Talk to Elias White at the Uzer Oasis.",
@@ -4566,8 +4565,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Chaos core (obtainable during the quest) Barronite deposit or a pickaxe to mine one",
-      "Access requirements: link\u003dSmithing|alt\u003dSmithing 55 Smithing [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 52 Hunter [ not boostable ] [ required to start ] Completion of the following quests: Shield of Arrav Temple of Ikov Below Ice Mountain Family Crest Garden of Tranquillity Creature of Fenkenstrain Priest in Peril The Restless Ghost What Lies Below Rune Mysteries Romeo \u0026 Juliet Demon Slayer",
+      "Obtain a barronite deposit or bring a pickaxe to mine one; the chaos core is obtainable during the quest",
       "Combat encounters: At least six armoured zombies (level 85) Multiple Chaos Golems (level 70)"
     ],
     "startLocation": "Talk to Elias White in the Jolly Boar Inn.",
@@ -4592,8 +4590,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dAgility|alt\u003dAgility 18 Agility [ not boostable ] [ required to start ] Ability to kill a level 36 Sand Snake",
-      "Combat encounters: Sand Snake (level 36)"
+      "18 Agility is non-boostable and required to start the quest",
+      "Combat encounter: Sand Snake (level 36)"
     ],
     "startLocation": "Talk to Lord Kandur Hosidius at his home in Hosidius, north-west of the Vinery.",
     "unlocks": [
@@ -4622,7 +4620,6 @@
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: A mithril 2h sword A bow string A non-degraded large or colossal pouch :(You will lose all 3 items!) unless a colossal pouch is used.",
-      "Access requirements: link\u003dSmithing|alt\u003dSmithing 65 Smithing [ boostable ] [ not required to start ] link\u003dRunecraft|alt\u003dRunecraft 50 Runecraft [ not boostable ] Category:Unknown start requirement status link\u003dFletching|alt\u003dFletching 50 Fletching [ boostable ] Category:Unknown start requirement status Completion of the following quests: Wanted! Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Goblin Diplomacy Rune Mysteries Priest in Peril Enter the Abyss Troll Stronghold Death Plateau Doric\u0027s Q…",
       "Combat encounters: Abyssal creatures level 41+ (if not using Guardians of the Rift to obtain a large pouch)"
     ],
     "startLocation": "Talk to the monk outside the Paterdomus Temple, at the northern end of the River Salve.",
@@ -4640,9 +4637,7 @@
     "name": "Doric\u0027s Quest",
     "freeToPlay": true,
     "prerequisites": [],
-    "skillRequirements": {
-      "MINING": 15
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
@@ -4667,8 +4662,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Yellow dye Swamp tar 50 Coins",
-      "Access requirements: link\u003dHunter|alt\u003dHunter 27 Hunter [ boostable ] [ required to start ]",
+      "Obtain yellow dye, swamp tar, and 50 coins",
       "Combat encounters: Kebbit (level 13) (optional)"
     ],
     "startLocation": "Talk to Charlie at the Ardougne Zoo.",
@@ -4687,13 +4681,12 @@
     "skillRequirements": {
       "CRAFTING": 20,
       "SMITHING": 20,
-      "MINING": 30
+      "MINING": 20
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Knife (obtainable during the quest) or a slash weapon (e.g. dagger or scimitar) Pickaxe Needle (obtainable during the quest, Costume needle does not work) Thread Leather (obtainable during the quest) Hammer 4 coal (4 more for each additional bar you would like to produce)",
-      "Access requirements: link\u003dMining|alt\u003dMining 20 Mining [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000004-QINU`\"\u0027 link\u003dSmithing|alt\u003dSmithing 20 Smithing [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ]",
       "Combat encounters: Earth elemental (level 35)"
     ],
     "startLocation": "Search the bookcase in the house immediately south-west of the Seers\u0027 Village bank.",
@@ -4719,9 +4712,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Pickaxe (if obtaining elemental ore during quest) Hammer 2 Elemental metals (3 elemental metals if you wish to smith the Mind shield), or: 2 Elemental ore (obtainable during quest) (3 if you wish to smith the mind shield) 8 Coal (12 if you wish to smith the mind shield) The battered key from Elemental Workshop I",
-      "Access requirements: link\u003dMagic|alt\u003dMagic 20 Magic [ boostable ] Category:Unknown start requirement status link\u003dSmithing|alt\u003dSmithing 30 Smithing [ boostable ] Category:Unknown start requirement status Completion of Elemental Workshop I",
-      "Combat encounters: (If you do not have the elemental metal bars) 2 Earth elementals (level 35)"
+      "20 Magic and 30 Smithing are boostable; whether either is required to start is unknown",
+      "Bring a hammer, the battered key from Elemental Workshop I, and either 2 elemental metals or 2 elemental ore plus 8 coal; bring a pickaxe if obtaining ore during the quest",
+      "For a Mind shield, use 3 elemental metals or 3 elemental ore plus 12 coal instead",
+      "If you do not bring elemental metal bars, be prepared for 2 Earth elementals (level 35)"
     ],
     "startLocation": "Search the bookcases in the Exam Centre\u0027s library.",
     "unlocks": [
@@ -4745,8 +4739,7 @@
     "itemRequirements": [],
     "questPointsRequired": 20,
     "accessChecks": [
-      "Required items: TRIP 1 (starting the quest): 3 unnoted papyrus 1 ball of wool A full sack of potatoes (item is called Potatoes(10)) (there are potatoes growing in Entrana in the house east of Auguste, bring another empty sack if picking here) 8 empty sacks – bring 9 sacks if planning to fill one with potatoes on Entrana. 1 unlit candle or black candle (can be obtained during quest by stealing candles in Entrana church) Yellow dye Red dye 10 unnoted silk A bowl (obtainable during quest) TRIP 2 (building the thi…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 20 Quest points Category:Unknown start requirement status link\u003dFiremaking|alt\u003dFiremaking 20 Firemaking [ boostable ] [ required to start ] link\u003dFarming|alt\u003dFarming 30 Farming [ boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 36 Crafting [ boostable ] [ required to start ]"
+      "Obtain for Trip 1 three unnoted papyrus, a ball of wool, Potatoes(10), eight empty sacks or nine if filling the potato sack on Entrana, yellow and red dye, and ten unnoted silk; a candle and bowl are obtainable during the quest. For Trip 2 obtain at least ten normal logs, a tinderbox, and twelve unnoted willow branches; bring secateurs, a rake, and a spade only if growing the quest-provided willow sapling"
     ],
     "startLocation": "Talk to Auguste on Entrana.",
     "unlocks": [
@@ -4763,13 +4756,16 @@
   {
     "name": "Ethically Acquired Antiquities",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "Children of the Sun",
+      "Shield of Arrav"
+    ],
+    "skillRequirements": {
+      "THIEVING": 25
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Access requirements: link\u003dThieving|alt\u003dThieving 25 Thieving [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun Shield of Arrav"
-    ],
+    "accessChecks": [],
     "startLocation": "Inspect the empty display on the ground floor of the Grand Museum in Civitas illa Fortis.",
     "unlocks": [
       "Quest rewards: "
@@ -4787,14 +4783,13 @@
     ],
     "skillRequirements": {
       "MAGIC": 46,
-      "RUNECRAFT": 13,
       "CONSTRUCTION": 5
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Bucket of sap (If you do not have one, you can use a knife on any tree that looks pointy (evergreen shaped trees) with a bucket in your inventory) Mud rune Maple logs Oak logs Hammer Saw Pestle and mortar",
-      "Access requirements: Completed The Grand Tree quest link\u003dConstruction|alt\u003dConstruction 5 Construction [ not boostable ] Category:Unknown start requirement status link\u003dMagic|alt\u003dMagic 46 Magic [ not boostable ] [ not required to start ]",
+      "46 Magic is required during the quest but not to start it",
       "Combat encounters: 6 x Evil creature that each have 1 HP"
     ],
     "startLocation": "Talk to Brimstail in his cave south-west side of the Tree Gnome Stronghold, directly west of the bank near the Stronghold Slayer Cave.",
@@ -4822,8 +4817,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Shrimps Salmon Tuna Bass Swordfish Pickaxe - adamant or rune (41+ Mining) highly recommended 2 cut rubies Ring mould Necklace mould Any poison cure (you will lose this item). Does not need to contain full doses. Means to cast all 4 Blast spells",
-      "Access requirements: link\u003dMining|alt\u003dMining 40 Mining [ boostable ] [ not required to start ] link\u003dSmithing|alt\u003dSmithing 40 Smithing [ boostable ] [ not required to start ] link\u003dMagic|alt\u003dMagic 59 Magic [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dCrafting 40 Crafting [ boostable ] [ not required to start ] The ability to defeat a level 170 demon (can be safespotted)",
+      "Obtain shrimps, salmon, tuna, bass, swordfish, two cut rubies, a ring mould, necklace mould, poison cure, and means to cast all four Blast spells; bring a pickaxe, preferably adamant or rune at 41 Mining",
       "Combat encounters: Chronozon (level 170) (can be safespotted)"
     ],
     "startLocation": "Talk to Dimintheis in south-eastern Varrock.",
@@ -4843,8 +4837,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Spade 5 coins (10 if you buy a fishing rod from Jack) Garlic (obtainable during quest) Fishing rod or Pearl fishing rod (oily fishing rod does not work) Red vine worm (obtainable during quest)",
-      "Access requirements: link\u003dFishing|alt\u003dFishing 10 Fishing [ not boostable ] [ required to start ]"
+      "Required items: Spade 5 coins (10 if you buy a fishing rod from Jack) Garlic (obtainable during quest) Fishing rod or Pearl fishing rod (oily fishing rod does not work) Red vine worm (obtainable during quest)"
     ],
     "startLocation": "Talk to Austri east of White Wolf Mountain or Vestri to the west of it, by either tunnel entrance.",
     "unlocks": [
@@ -4869,8 +4862,11 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: ~400 coins 2 barley malt (no range in Keldagrim, plain barley has to be cooked elsewhere) 2 buckets of water Seed dibber (no Tool leprechaun in Keldagrim) or partial completion of the Farming portion of the Barbarian Training miniquest Rake (obtainable during the quest) Ale yeast (or a Pot (obtainable during the quest) + 25 coins) Kebab (purchasable during quest for 1 coin) 2 beers (purchasable during quest for 1-2 coins each) Beer glass (obtainable during the quest) A random item from the list…",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 22 Cooking [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000019-QINU`\"\u0027 link\u003dFarming|alt\u003dFarming 17 Farming [ boostable ] [ not required to start ] Completion of the following quests: The Giant Dwarf Fishing Contest"
+      "Obtain about 400 coins, 2 barley malt, and 2 buckets of water; Keldagrim has no range, so cook plain barley into malt elsewhere",
+      "Obtain a seed dibber because Keldagrim has no Tool Leprechaun, unless the Farming portion of Barbarian Training has been partially completed; a rake is obtainable during the quest",
+      "Obtain ale yeast, or use a pot obtainable during the quest plus 25 coins; a kebab and 2 beers can be bought during the quest, and a beer glass is obtainable there",
+      "Check which random item the quest requests and obtain that exact item; the reviewed source does not enumerate the possible items",
+      "Both skill requirements are boostable and are not required to start the quest"
     ],
     "startLocation": "Talk to Commander Veldaban in the Dwarven Black Guard headquarters in Keldagrim.",
     "unlocks": [
@@ -4906,13 +4902,26 @@
   {
     "name": "The Fremennik Exiles",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "The Fremennik Isles",
+      "Lunar Diplomacy",
+      "Mountain Daughter",
+      "Heroes' Quest"
+    ],
+    "skillRequirements": {
+      "CRAFTING": 65,
+      "SLAYER": 60,
+      "SMITHING": 60,
+      "FISHING": 60,
+      "RUNECRAFT": 55,
+      "MINING": 60
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Combat equipment Mirror shield 2 Kegs of beer (cannot be obtained in Rellekka during quest, buy from Thora the Barkeep before starting the quest) 1 Molten glass 100 Astral runes Pet rock Fishing rod, fly fishing rod, or barbarian fishing rod Fremennik shield (this is not the tradeable Neitiznot shield) Alternatively, get it from Bardur AFTER being exiled, for either 150,000 or for free using a Ring of Charos(a) Recommended: Rune thrownaxes or link\u003dAgility|alt\u003dAgility 85 Agility to get to Bardur…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 65 Crafting [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 60 Slayer [ not boostable ] [ required to start ] link\u003dSmithing|alt\u003dSmithing 60 Smithing [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 60 Fishing [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 55 Runecraft [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 60 Mining [ boostable ] [ not required to start ] Completion of the following quests: T…",
+      "Obtain combat equipment, a mirror shield, two kegs of beer, molten glass, 100 astral runes, a pet rock, and a fishing, fly fishing, or barbarian fishing rod; buy the beer from Thora the Barkeep before starting because it cannot be obtained in Rellekka during the quest",
+      "Obtain a Fremennik shield—not a Neitiznot shield—or, after exile, get one from Bardur for 150,000 coins or free with a Ring of Charos(a); rune thrownaxes or 85 Agility are recommended to reach Bardur in Waterbirth Island Dungeon",
+      "Obtain ice gloves or Smiths gloves (i), a hammer, glassblowing pipe, and three Lunar bars or a pickaxe to mine three Lunar ores; also bring a Seal of Passage unless the elite Fremennik diaries are complete; the first five skill requirements are non-boostable and required to start, while 60 Mining is boostable and not required to start",
       "Combat encounters: Basilisk Youngling (level 53) Basilisk (level 61) Monstrous Basilisk (level 135) Typhor (level 218) The Jormungand (level 363)"
     ],
     "startLocation": "Talk to Brundt the Chieftain in Rellekka.",
@@ -4938,8 +4947,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ring of Charos All tool leprechaun tools A rake A seed dibber (or partial completion of the Farming portion of the Barbarian Training miniquest) A spade Secateurs (magic secateurs work) A watering can A gardening trowel 2 plant cures A marigold seed (2 recommended in case of failure) 3+ cabbage seeds (6 recommended to plant in both allotments to increase chance of survival) 3+ onion seeds (6 recommended to plant in both allotments to increase chance of survival) A hammer A rune/pure essence A p…",
-      "Access requirements: link\u003dFarming|alt\u003dFarming 25 Farming [ not boostable ] [ required to start ] Completion of the following quests: Creature of Fenkenstrain Priest in Peril The Restless Ghost"
+      "Obtain a ring of Charos; rake, seed dibber or partial Barbarian Farming training, spade, secateurs, watering can, and gardening trowel; two plant cures; one marigold, at least three cabbage, and at least three onion seeds; a hammer, rune or pure essence, pestle and mortar, filled plant pot, and two compost items—the bottomless compost bucket does not work"
     ],
     "startLocation": "Talk to Queen Ellamaria in the garden of Varrock Palace.",
     "unlocks": [
@@ -4954,13 +4962,19 @@
     "name": "Getting Ahead",
     "freeToPlay": false,
     "prerequisites": [],
-    "skillRequirements": {},
+    "skillRequirements": {
+      "CRAFTING": 30,
+      "CONSTRUCTION": 26
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bear fur, grey wolf fur, or Fur (a Grizzly bear and bear cub spawn west of the farm and two black bears spawn east of the farm) Soft clay or a pickaxe you can use Clay rocks are found in the Kebos Lowlands mine passed during the quest; Gordon\u0027s house has a water source and a bucket spawn; There is a Bronze pickaxe spawn at the mine, stuck in some rocks. Hammer (obtainable near the cattle gate) or Imcando hammer Saw (obtainable in the shed north of the house) or Amy\u0027s saw 2 normal planks (obtain…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 26 Construction [ not boostable ] [ required to start ]",
-      "Combat encounters: Headless Beast (level-82)"
+      "Obtain bear fur, grey wolf fur, or fur; nearby options include a grizzly bear and bear cub west of the farm or two black bears east of it",
+      "Obtain soft clay or a usable pickaxe; clay rocks and a bronze pickaxe spawn are available in the Kebos Lowlands mine passed during the quest, while Gordon's house has a water source and bucket spawn",
+      "Obtain a hammer or Imcando hammer, a saw or Amy's saw, 2 normal planks, and at least 6 nails of any kind; the ordinary hammer, saw, planks, and iron nails are obtainable nearby, and extra nails are recommended in case some bend",
+      "Obtain a knife, red dye, pot of flour, and either a needle with thread or a costume needle; each ordinary item is obtainable in or near Gordon's house, and thread is unnecessary with the costume needle",
+      "Both skill requirements are non-boostable and required to start the quest",
+      "Combat encounter: Headless Beast (level 82)"
     ],
     "startLocation": "Talk to Gordon on his farm south of the Farming Guild.",
     "unlocks": [
@@ -4985,8 +4999,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 200 coins for the clothes Means to cast Telekinetic Grab (air and law rune) Logs (most logs will work, however, arctic pine, redwood \u0026 coloured logs do not work) Tinderbox Coal (obtainable during the quest with 30 Mining) Iron bar 3 cut sapphires Various ores and bars (mostly obtainable during the quest, see below) Redberry pie",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 12 Crafting [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 16 Firemaking [ boostable ] [ not required to start ] link\u003dMagic|alt\u003dMagic 33 Magic [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 14 Thieving [ boostable ] [ not required to start ]"
+      "Obtain 200 coins, air and law runes for Telekinetic Grab, usable logs, a tinderbox, iron bar, three cut sapphires, and redberry pie; after choosing a company, source its assigned ores and bars, with coal obtainable during the quest at 30 Mining"
     ],
     "startLocation": "Talk to the Dwarven Boatman by the underground River Kelda, accessible through the Keldagrim entrance east of Rellekka, in the cave beyond the statues.",
     "unlocks": [
@@ -5005,7 +5018,11 @@
   {
     "name": "The Great Brain Robbery",
     "freeToPlay": false,
-    "prerequisites": [],
+    "prerequisites": [
+      "Creature of Fenkenstrain",
+      "Cabin Fever",
+      "Recipe for Disaster - Pirate Pete"
+    ],
     "skillRequirements": {
       "PRAYER": 50,
       "CRAFTING": 16,
@@ -5014,9 +5031,12 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Equipment to breathe underwater: A fishbowl helmet and a diving apparatus (reobtainable from Murphy in Port Khazard if you\u0027ve lost them) OR a Medallion of the Deep (counts as both helmet and apparatus) 10 wooden cats – partial completion of The Great Brain Robbery is required to make these yourself, however they are tradeable and available at the Grand Exchange 4 oak planks, a hammer, and a saw (if you are building your own crafting table and do not already have one; build in the Clockmaking sp…",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 16 Crafting [ not boostable ] Category:Unknown start requirement status \u0027\"`UNIQ--ref-0000009F-QINU`\"\u0027 link\u003dConstruction|alt\u003dConstruction 30 Construction [ not boostable ] Category:Unknown start requirement status link\u003dPrayer|alt\u003dPrayer 50 Prayer [ not boostable ] Category:Unknown start requirement status Must have completed the following quests: Creature of Fenkenstrain Cabin Fever Pirate\u0027s Treasure Rum Deal Priest in Peril Zogre Flesh Eaters Big Chompy Bird Hunting…",
-      "Combat encounters: Barrelchest (level 190) 4 Sorebones (level 57)"
+      "Obtain underwater breathing equipment: a fishbowl helmet with a diving apparatus, both reobtainable from Murphy in Port Khazard, or a Medallion of the Deep, which replaces both",
+      "Obtain 10 wooden cats after partial quest progress, either by buying the tradeable cats from the Grand Exchange where account rules permit or by making them at a player-owned house workshop crafting table with 10 normal planks and 10 pieces of fur, bear fur, or grey wolf fur; furs from Hunter creatures do not work",
+      "If the required workshop crafting table is not already available, obtain 4 oak planks, a hammer, and a saw to build one in a Clockmaking space",
+      "Obtain a hammer—the Imcando hammer does not work—about 100 nails because 38 are required and lower-tier nails may bend, 8 normal planks or 18 total when making the wooden cats, a holy symbol, and a Ring of Charos; a lost ring can be reobtained during the quest by pickpocketing Fenkenstrain",
+      "All three skill requirements are non-boostable; their start-gating status is unknown",
+      "Prepare to defeat Barrelchest (level 190), which can disable prayers and can be safespotted without taking damage, plus four Sorebones (level 57)"
     ],
     "startLocation": "Talk to Brother Tranquility in Mos Le\u0027Harmless.",
     "unlocks": [
@@ -5033,7 +5053,6 @@
     "name": "Grim Tales",
     "freeToPlay": false,
     "prerequisites": [
-      "Druidic Ritual",
       "Witch\u0027s House"
     ],
     "skillRequirements": {
@@ -5046,8 +5065,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 2 Tarromin potion (unf) or 2 vials of water and 2 tarromins Seed dibber (leprechaun is nearby). Not needed if the Farming portion of the Barbarian Training miniquest is completed Watering can with at least 1 dose (can also be stored with the leprechaun) Any axe Leather gloves (obtainable during quest, optional if willing to take 17 damage) High healing food Good armour and a weapon (Ranged or Magic equipment recommended if you have low melee levels)",
-      "Access requirements: Completion of the following quests: Witch\u0027s House link\u003dFarming|alt\u003dFarming 45 Farming [ boostable ] [ not required to start ] link\u003dHerblore|alt\u003dHerblore 52 Herblore [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 58 Thieving [ boostable ] [ not required to start ] link\u003dAgility|alt\u003dAgility 59 Agility [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000008-QINU`\"\u0027 link\u003dWoodcutting|alt\u003dWoodcutting 71 Woodcutting [ boostable ] [ not required to start ] Ability to defeat a…",
+      "Obtain two Tarromin potion (unf), or two vials of water and two tarromins, a watering can with at least one dose, and any axe; bring a seed dibber unless the Farming portion of Barbarian Training is complete, and the watering can can be stored with the nearby leprechaun; all five skill requirements are boostable and not needed to start",
+      "Obtain high-healing food, good armour, and a weapon, with Ranged or Magic recommended at low Melee levels; leather gloves are obtainable during the quest and optional if willing to take 17 damage",
       "Combat encounters: Glod (level 138)"
     ],
     "startLocation": "Talk to Sylas in Taverley, just south of the house portal.",
@@ -5075,8 +5094,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Beer (obtainable during the quest) About 150 coins 1 empty vial Redberries (purchasable during the quest from the Food Store in Port Sarim) White berries Lantern lens 5 earth runes (can be bought from Betty for 20 gp) Bucket of sand (obtainable during quest if you bring a bucket)",
-      "Access requirements: link\u003dThieving|alt\u003dThieving 17 Thieving [ not boostable ] [ required to start ] link\u003dCrafting|alt\u003dCrafting 49 Crafting [ not boostable ] [ required to start ]"
+      "Obtain about 150 coins, an empty vial, white berries, and a lantern lens",
+      "Obtain beer during the quest and redberries from the Port Sarim Food Store; obtain 5 earth runes, which Betty sells for 20 coins",
+      "Obtain a bucket of sand during the quest by bringing a bucket",
+      "Both skill requirements are non-boostable and required to start the quest"
     ],
     "startLocation": "Talk to Bert in Yanille, near the sand pit.",
     "unlocks": [
@@ -5096,8 +5117,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Able to defeat a level 13 cultist (this applies only if you\u0027re taking Ceril\u0027s side)",
-      "Combat encounters: Alomone (level 13) if taking Ceril\u0027s side"
+      "If taking Ceril\u0027s side, be able to defeat Alomone (level 13)"
     ],
     "startLocation": "Talk to Ceril Carnillean in East Ardougne, just north of the Clock Tower.",
     "unlocks": [
@@ -5123,8 +5143,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 30 coins Pickaxe (obtainable during quest) Up to 4 empty inventory slots",
-      "Access requirements: link\u003dMining|alt\u003dMining 55 Mining [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 48 Thieving [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 48 Slayer [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 46 Agility [ not boostable ] [ required to start ] Completion of the following quests: Twilight\u0027s Promise Children of the Sun",
+      "Obtain 30 coins and leave up to 4 empty inventory slots; a pickaxe is obtainable during the quest",
       "Combat encounters: Several Emissary Brawlers (levels 74 and 86) Several Emissary Conjurers (level 71) Prince Itzla Arkan (level 167) Amoxliatl (level 263)"
     ],
     "startLocation": "Talk to Prince Itzla Arkan at the Teomat.",
@@ -5165,7 +5184,6 @@
     "prerequisites": [
       "The Ascent of Arceuus",
       "The Depths of Despair",
-      "Druidic Ritual",
       "The Forsaken Tower",
       "The Queen of Thieves",
       "Tale of the Righteous"
@@ -5182,8 +5200,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Normal spellbook, and runes to cast a fire spell (fire bolt or better) Any axe A defence potion (3 or 4 doses) Volcanic sulphur Molten glass A dark essence block or a pickaxe and chisel (the latter is found at the mine) to obtain one",
-      "Access requirements: Completion of the following quests: The Depths of Despair The Queen of Thieves The Ascent of Arceuus The Forsaken Tower Tale of the Righteous The above quests all require the following quests to be completed: Client of Kourend X Marks the Spot link\u003dAgility|alt\u003dAgility 54 Agility [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 52 Thieving [ not boostable ] [ required to start ] link\u003dWoodcutting|alt\u003dWoodcutting 52 Woodcutting [ not boostable ] [ required to start ] link\u003dHerblor…",
+      "Obtain access to the normal spellbook and runes for Fire Bolt or a stronger fire spell, any axe, a 3- or 4-dose defence potion, volcanic sulphur, molten glass, and a dark essence block or a pickaxe and chisel to obtain one, with the chisel available at the mine; all seven skill requirements are non-boostable and required to start",
       "Combat encounters: Judge of Yama (Level 168) 2 Assassins (Level 132) Lizardman brute (Level 75) Xamphur (level 239) Barbarian Warlord (Level 91)"
     ],
     "startLocation": "Talk to Martin Holt at the entrance to Kourend Castle in Kingstown.",
@@ -5203,8 +5220,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Redberry pie (not half a redberry pie) 2 or 4 iron bars (4 if you want your own blurite sword) 1-3 Blurite ore (obtained during the quest) - optionally an additional ore each for your own blurite sword and the Falador easy diary (Members only) Any pickaxe (one spawns in Rimmington)",
-      "Access requirements: link\u003dMining|alt\u003dMining 10 Mining [ boostable ] [ not required to start ] The ability to run from level 57 ice warriors and level 53 ice giants could help."
+      "Obtain a full redberry pie, 2 iron bars, and any pickaxe, with a pickaxe available in Rimmington; mine 1 blurite ore during the quest",
+      "If making a personal blurite sword, bring 4 iron bars total and mine 2 blurite ore total",
+      "Reach or boost to 10 Mining before collecting blurite; the quest can be started without that level, and being able to run past level 57 ice warriors and level 53 ice giants is useful"
     ],
     "startLocation": "Talk to the squire in the courtyard of the White Knights\u0027 Castle in Falador.",
     "unlocks": [
@@ -5240,8 +5258,7 @@
     "itemRequirements": [],
     "questPointsRequired": 107,
     "accessChecks": [
-      "Required items: Any machete (obtainable during the quest) 2 gold bars (6 in case you fail or want more gold bowls) Hammer or Imcando hammer Rope Rune, Dragon or Infernal axe Lockpick (2 in case you fail) (Strange old lockpick does not work) Pickaxe Vial of water Ardrigal (obtainable during the quest) Snake weed (obtainable during the quest) One of each cut gem up to diamond: Sapphire Emerald Ruby Diamond Opal Jade Red topaz Soul rune Mind rune 2 law runes Earth rune Unpowered orb and runes to cast any Charge O…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 107 Quest points [ required to start ] link\u003dAgility|alt\u003dAgility 50 Agility [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dCrafting 50 Crafting [ boostable ] [ not required to start ] link\u003dHerblore|alt\u003dHerblore 45 Herblore [ boostable ] [ not required to start ] link\u003dMagic|alt\u003dMagic 56 Magic [ boostable ] [ not required to start ] link\u003dMining|alt\u003dMining 52 Mining [ boostable ] [ not required to start ] link\u003dPrayer|alt\u003dPrayer 42 Prayer [ boostable ] […",
+      "Obtain two gold bars, a hammer, rope, rune/dragon/infernal axe, lockpick, pickaxe, vial of water, cut sapphire, emerald, ruby, diamond, opal, jade, and red topaz, a soul rune, mind rune, two law runes, earth rune, unpowered orb plus standard-spellbook runes for one Charge Orb cast, charcoal, and three papyrus; a machete, ardrigal, and snake weed are obtainable during the quest, and the long path requires a second Charge Orb cast",
       "Combat encounters: Ranalph Devere (level 92) — 2 times Irvig Senay (level 100) — 2 times San Tojalon (level 106) — 2 times Nezikchened (level 187) — 3 times"
     ],
     "startLocation": "Talk to the Legends\u0027 Guards just outside of the Legends\u0027 Guild.",
@@ -5269,8 +5286,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Saw Bolt of cloth 5 mahogany planks Cadava berries Bucket of water (obtainable during quest) Rope (obtainable during quest) Pickaxe (obtainable during quest) Hammer (obtainable during quest) Combat equipment (preferably Melee or Ranged) Climbing boots (if not using Trollheim teleports)",
-      "Access requirements: link\u003dFiremaking|alt\u003dFiremaking 66 Firemaking [ not boostable ] [ required to start ] link\u003dMining|alt\u003dMining 72 Mining [ boostable ] [ not required to start ] link\u003dConstruction|alt\u003dConstruction 35 Construction [ boostable ] Category:Unknown start requirement status link\u003dAgility|alt\u003dAgility 68 Agility [ boostable ] [ not required to start ] It is beneficial to have a higher Agility level. Completion of the following quests: My Arm\u0027s Big Adventure Eadgar\u0027s Ruse Druidic Ritual Troll Stronghold Deat…",
+      "Obtain a saw, bolt of cloth, five mahogany planks, cadava berries, combat equipment—preferably Melee or Ranged—and climbing boots unless using Trollheim teleports; a bucket of water, rope, pickaxe, and hammer are obtainable during the quest, and Agility above 68 is beneficial",
       "Combat encounters: Don\u0027t Know What (Level 163) Mother (level 198)"
     ],
     "startLocation": "Talk to Burntmeat in the Troll Stronghold\u0027s kitchen.",
@@ -5334,8 +5350,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Jug of water Regular logs or a regular plank",
-      "Access requirements: The ability to run past two level 14 thieves, and one level 26."
+      "Bring a jug of water and either regular logs or a regular plank",
+      "Be able to run past two level 14 thieves and one level 26 NPC"
     ],
     "startLocation": "Talk to Brother Omad at the Ardougne Monastery south of East Ardougne.",
     "unlocks": [
@@ -5356,9 +5372,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Rope Pickaxe Axe Plank Staff or a pole (obtainable during the quest, Dramen Staff does not work, but elemental staves and Lunar staff do work) Gloves (excluding: Slayer, Ranger, Moonclan, Lunar, vambraces, mystic and random event apparel)",
-      "Access requirements: link\u003dAgility|alt\u003dAgility 20 Agility [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000081-QINU`\"\u0027 The ability to defeat a level 70 monster (can be safespotted)",
-      "Combat encounters: The Kendal (level 70)"
+      "Obtain a rope, pickaxe, axe, plank, a staff or pole, and gloves other than Slayer, Ranger, Moonclan, Lunar, vambraces, mystic, or random-event apparel; the staff or pole is obtainable during the quest, a Dramen staff does not work, elemental staves and the Lunar staff do work, and the 20 Agility requirement is boostable and not required to start",
+      "Combat encounter: The Kendal (level 70), which can be safespotted"
     ],
     "startLocation": "Talk to Hamal the Chieftain in the Mountain Camp east of Rellekka (to access the camp, see below)",
     "unlocks": [
@@ -5380,8 +5395,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Ivandis flail or Blisterwood flail Saw (crystal saw also works) Ghostspeak amulet (Morytania legs 2 or better also work) Any axe besides the blessed axe",
-      "Access requirements: Completion of the following quests: A Taste of Hope Darkness of Hallowvale In Aid of the Myreque In Search of the Myreque Nature Spirit Priest in Peril The Restless Ghost",
+      "Obtain an Ivandis or Blisterwood flail, a saw or crystal saw, a ghostspeak amulet or Morytania legs 2 or better, and any axe other than the blessed axe",
       "Combat encounters: Vyrewatch (Level 105) Several venomous araxyte (Levels 96 and 146) (can be avoided) Hespori (Level 302) All Theatre of Blood bosses (optional, if a kill count has been acquired before starting the quest): The Maiden of Sugadinti and Nylocas Matomenos Pestilent Bloat Nylocas Toxobolos, Nylocas Hagios, Nylocas Ischyros and Nylocas Vasilias Sotetseg Xarpus Verzik Vitur, Nylocas Athanatos and Nylocas Matamenos"
     ],
     "startLocation": "Talk to the Mysterious Stranger inside Ver Sinhaza, south-east of Meiyerditch.",
@@ -5440,13 +5454,22 @@
   {
     "name": "The Path of Glouphrie",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "The Eyes of Glouphrie",
+      "Waterfall Quest",
+      "Tree Gnome Village"
+    ],
+    "skillRequirements": {
+      "STRENGTH": 60,
+      "SLAYER": 56,
+      "THIEVING": 56,
+      "RANGED": 47,
+      "AGILITY": 45
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Tree Gnome Village Dungeon key (unless Roving Elves has been started) (obtainable during the quest) Combat equipment and some food Mith Grapple Any crossbow",
-      "Access requirements: Completion of the following quests: The Eyes of Glouphrie The Grand Tree Waterfall Quest Tree Gnome Village link\u003dStrength|alt\u003dStrength 60 Strength [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 56 Slayer [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 56 Thieving [ not boostable ] [ required to start ] link\u003dRanged|alt\u003dRanged 47 Ranged [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 45 Agility [ not boostable ] [ required to start ]",
       "Combat encounters: 3 Warped Terrorbirds (level 138) Evil Creature (level 1)"
     ],
     "startLocation": "Speak to King Bolren in the Tree Gnome Village.",
@@ -5464,18 +5487,25 @@
   {
     "name": "Perilous Moons",
     "freeToPlay": false,
-    "prerequisites": [],
-    "skillRequirements": {},
+    "prerequisites": [
+      "Twilight\u0027s Promise"
+    ],
+    "skillRequirements": {
+      "SLAYER": 48,
+      "HUNTER": 20,
+      "FISHING": 20,
+      "RUNECRAFT": 20,
+      "CONSTRUCTION": 10
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Knife (obtainable during quest) Big fishing net (obtainable during quest) Rope (obtainable during quest) Pestle and mortar (obtainable during quest) Combat equipment for multiple PvM encounters.",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 48 Slayer [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 20 Hunter [ not boostable ] [ required to start ] link\u003dFishing|alt\u003dFishing 20 Fishing [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 20 Runecraft [ not boostable ] [ required to start ] link\u003dConstruction|alt\u003dConstruction 10 Construction [ not boostable ] [ required to start ] Completion of the following quests: Twilight\u0027s Promise Children of the Sun",
+      "Obtain a knife, big fishing net, rope, and pestle and mortar, or collect them during the quest; equip combat gear for the three Moons encounters",
       "Combat encounters: Sulphur Nagua (level 98) Blue Moon (level 329) Blood Moon (level 329) Eclipse Moon (level 329)"
     ],
     "startLocation": "Talk to Zuma or Attala at the entrance to Cam Torum.",
     "unlocks": [
-      "Quest rewards: "
+      "Neypotzli and Moons of Peril access"
     ],
     "rewardXp": {
       "FISHING": 5000,
@@ -5493,8 +5523,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Soft clay 3 balls of wool Yellow dye or 2 onions and 5 coins Redberries Ashes Bucket of water or jug of water (obtainable during quest) Pot of flour Bronze bar Pink skirt 3 beers Rope (can be bought during the quest from Ned for 18 coins) 30-40 coins for the Al Kharid toll gate if not using teleports to and from Al Kharid",
-      "Access requirements: The ability to get past aggressive combat level 26 jail guards.",
+      "Obtain soft clay, three balls of wool, yellow dye or two onions and 5 coins, redberries, ashes, pot of flour, bronze bar, pink skirt, and three beers; bring a bucket or jug of water or obtain one during the quest, plus a rope or 18 coins to buy one from Ned, and 30–40 toll coins unless using Al Kharid teleports",
       "Combat encounters: Jail guard (level 26, optional)"
     ],
     "startLocation": "Talk to Hassan in the palace at Al Kharid.",
@@ -5557,20 +5586,26 @@
       "Horror from the Deep",
       "Rag and Bone Man I",
       "Skippy and the Mogres",
-      "Creature of Fenkenstrain",
       "Waterfall Quest",
       "Zogre Flesh Eaters"
     ],
+    "startedPrerequisites": [
+      "Creature of Fenkenstrain"
+    ],
     "skillRequirements": {
-      "DEFENCE": 20,
       "SLAYER": 40
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 27 pots 27 jugs of vinegar (bought from Fortunato for 27 coins) 27 sets of logs (any logs - normal logs can be obtained on the path just below the Odd Old Man\u0027s hut if you bring an axe). Tinderbox Light source Dusty key (if under link\u003dAgility|alt\u003dAgility 70 Agility ) Rope Combat gear to kill zogres (an ogre composite bow with brutal arrows or runes for Crumble Undead casts is advised) Slayer equipment: Ice coolers Fishing explosives Mirror shield or V\u0027s shield (unless using a workaround - see g…",
-      "Access requirements: link\u003dSlayer|alt\u003dSlayer 40 Slayer [ boostable ] [ not required to start ] link\u003dDefence|alt\u003dDefence 20 Defence [ not boostable ] [ not required to start ] to wield a mirror shield to kill a basilisk (though not necessary; see below) Completed Rag and Bone Man I [ required to start ] Completed Skippy and the Mogres [ not required to start ] Partial completion of Creature of Fenkenstrain [ not required to start ] The ability to kill several high-level monsters",
-      "Combat encounters: Several (27): see below."
+      "Obtain 27 pots, 27 jugs of vinegar—Fortunato sells them for 27 coins—and 27 sets of any logs; normal logs are available below the Odd Old Man's hut when carrying an axe",
+      "Obtain a tinderbox, light source, rope, and a dusty key when below 70 Agility",
+      "Obtain combat gear for zogres; an ogre composite bow with brutal arrows or runes for Crumble Undead is advised",
+      "Obtain ice coolers, fishing explosives, and a mirror shield or V's shield unless using a verified shield workaround",
+      "40 Slayer is boostable and is not required to start the quest",
+      "Verify a legal basilisk route; 20 Defence is needed only to wield a mirror shield",
+      "Verify legal setups for the high-level bone targets",
+      "Check the quest's 27 combat targets before setting out; the reviewed source does not enumerate the full target list"
     ],
     "startLocation": "Talk to the Odd Old Man in Silvarea north-east of Varrock, by the Limestone Mine.",
     "unlocks": [
@@ -5585,16 +5620,21 @@
     "name": "Ratcatchers",
     "freeToPlay": false,
     "prerequisites": [
-      "Icthlarin\u0027s Little Helper",
+      "Icthlarin\u0027s Little Helper"
+    ],
+    "startedPrerequisites": [
       "The Giant Dwarf"
     ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any type of cat or hellcat (for most of the quest, a cat with a high successful rat catch rate is recommended, and overgrown cats cannot be used there -- during the Hooknosed Jack part of the quest, any cat with strong combat stats is recommended) 4 cheese (or 4 Poisoned cheese) Rat poison (if cheese is not already poisoned; can be found in the Clock Tower Basement), or made during the quest with the following items: Empty vial Cleaned kwuarm (grimy will not work; Zahur in Nardah cleans grimy h…",
-      "Access requirements: Completion of the following quests: Icthlarin\u0027s Little Helper Gertrude\u0027s Cat Access to Keldagrim The Giant Dwarf started",
-      "Combat encounters: None, but your cat will have to fight the King rat"
+      "Obtain any cat or hellcat; prefer a high rat-catch rate for most of the quest because overgrown cats cannot be used there, and prefer strong cat combat stats for the Hooknosed Jack section",
+      "Obtain 4 cheese or 4 poisoned cheese; if the cheese is not poisoned, obtain rat poison from the Clock Tower Basement or make it during the quest with an empty vial, cleaned kwuarm, and red spiders' eggs—grimy kwuarm does not work, while Zahur can clean it for 200 coins",
+      "Obtain cleaned marrentill, unicorn horn dust, and a bucket of milk or bottomless milk bucket; grimy marrentill does not work",
+      "Obtain a Catspeak amulet even after Dragon Slayer II, plus a pot of weeds made with an empty pot, and a tinderbox",
+      "Obtain 101 coins, or 51 coins with a Ring of Charos(a), a snake charm obtainable from The Feud or during this quest, and one free inventory space",
+      "No player combat encounter is required, but the cat must fight the King rat"
     ],
     "startLocation": "Talk to Gertrude west of Varrock.",
     "unlocks": [
@@ -5614,11 +5654,7 @@
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Required items: To start the quest and finish the first chapter: Eye of newt Greenman\u0027s ale Rotten tomato Any fruit blast excluding a premade fr\u0027 blast Ashes To complete all chapters of the quest: About 320 coins (or 120 if you have the activated Ring of Charos) Bowl of water (an empty bowl can be bought from the Culinaromancer\u0027s Chest) Bucket of water (an empty bucket can be bought from the Culinaromancer\u0027s Chest) 3 buckets of milk (can be bought from the Culinaromancer\u0027s Chest) 2 eggs (can be bought from the…",
-      "Access requirements: To start the quest and finish the first chapter: link\u003dCooking|alt\u003dCooking 10 Cooking [ boostable ] Completion of Cook\u0027s Assistant To complete all chapters of the quest: All prerequisite quest requirements link\u003dQuest points|alt\u003dQuest points 175 Quest points (9 are earned for the other parts of the quest, and 79 are gained by completing all required quests) link\u003dCooking|alt\u003dCooking 70 Cooking [ boostable ] link\u003dAgility|alt\u003dAgility 48 Agility [ not boostable ] link\u003dMining|alt\u003dMining 50 Mining [ bo…",
-      "Combat encounters: Icefiend (level 13) (only if you lack ice gloves) 5 Mudskippers (level 30/31) Crab (level 21/23) Evil Chicken (level varies) (see below) Black dragon (level 227) Big Snake (level 84) Zombie monkey (levels 82/129) Monkey guard (level 167) Ninja monkey (level 86) Agrith-Na-Na (Level 146) Flambeed (level 149) Karamel (level 136) Dessourt (level 121) Gelatinnoth Mother (level 130) Culinaromancer (level 75)"
-    ],
+    "accessChecks": [],
     "startLocation": "Talk to the Cook in the kitchen of Lumbridge Castle.",
     "unlocks": [
       "Quest rewards: "
@@ -5638,8 +5674,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Eye of newt Greenman\u0027s ale Rotten tomato Any fruit blast excluding a premade fr\u0027 blast Ashes",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 10 Cooking [ not boostable ] Category:Unknown start requirement status Completion of Cook\u0027s Assistant"
+      "Obtain an eye of newt, Greenman\u0027s ale, rotten tomato, ashes, and any fruit blast except a premade fr\u0027 blast; 10 Cooking is not boostable"
     ],
     "startLocation": "Talk to the Cook in Lumbridge Castle\u0027s kitchen.",
     "unlocks": [
@@ -5659,8 +5694,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket of milk (can be bought from the Culinaromancer\u0027s Chest) Pot of flour (can be bought from the Culinaromancer\u0027s chest) Egg (can be bought from the Culinaromancer\u0027s chest) Bowl of water (a bowl and sink can be found in the kitchen of Lumbridge Castle) 4 Asgarnian ales (can be bought during the quest at the Rising Sun Inn in Falador) Recommended to bring at least 2 additional ales in case Rohak sobers up 306 coins (300 + 1 coin per ale, 100 instead of 300 if you choose to bring a Ring of Cha…",
-      "Access requirements: Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Fishing Contest The ability to defeat a level 13 icefiend if you don\u0027t have the ice gloves.",
+      "Obtain a bucket of milk, pot of flour, egg, bowl of water, four Asgarnian ales, and 304 coins; bring two extra ales and two extra coins in case Rohak sobers up, the default 300-coin payment falls to 100 with a Ring of Charos(a) or 150 with a chocolate bar, and bring more coins if buying ingredients or ales; the first three ingredients are sold by the Culinaromancer\u0027s Chest, a bowl and sink are in Lumbridge Castle kitchen, and ales are sold by the Rising Sun Inn",
+      "Obtain gloves or Telekinetic Grab runes if using none; ice gloves are best but other gloves work",
       "Combat encounters: Icefiend (level 13) (only if you lack ice gloves)"
     ],
     "startLocation": "Inspect the frozen dwarf in the Lumbridge Castle dining room.",
@@ -5684,8 +5719,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bread Orange slices Use a knife on an orange Either blue, black, green, or purple dye (purple dye spawns directly east of the spirit tree at the Khazard Battlefield, south of the Ardougne Castle) Spice or gnome spice (can be bought or stolen from the Ardougne market, bought from the Culinaromancer\u0027s Chest or bought in the Tree Gnome Stronghold) Fishing bait Bucket of water Charcoal or ground charcoal (buy in Shilo Village, Jiminua\u0027s Jungle Store, or Gunslik\u0027s Assorted Items)",
-      "Access requirements: Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Goblin Diplomacy"
+      "Obtain bread, orange slices or an orange and knife, blue, black, green, or purple dye, spice or gnome spice, fishing bait, a bucket of water, and charcoal or ground charcoal; purple dye spawns east of the Khazard Battlefield spirit tree, spice is available at Ardougne market, the Culinaromancer\u0027s Chest, or Tree Gnome Stronghold, and charcoal is sold in Shilo Village, Jiminua\u0027s Jungle Store, and Gunslik\u0027s Assorted Items"
     ],
     "startLocation": "Inspect one of the goblin generals in the Lumbridge Castle dining room.",
     "unlocks": [
@@ -5705,15 +5739,12 @@
       "Recipe for Disaster - Another Cook\u0027s Quest"
     ],
     "skillRequirements": {
-      "COOKING": 31,
-      "CRAFTING": 42,
-      "SMITHING": 31
+      "COOKING": 31
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A raw cod (It\u0027s highly recommended to get at least 3 of all the ingredients, as the Fishcake can burn) A pestle and mortar Bread (at least 3 recommended) A knife A fishbowl (empty) A needle (Costume needle does not work) 3 bronze wire",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 31 Cooking [ boostable ] Category:Unknown start requirement status Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant The ability to defeat 5 level 30 monsters.",
+      "Obtain at least three raw cod and three bread, a pestle and mortar, knife, empty fishbowl, a non-costume needle, and three bronze wire; extra fishcake ingredients are recommended because fishcakes can burn, and 31 Cooking is boostable",
       "Combat encounters: 5 Mudskippers (level 30/31) Crab (level 21/23)"
     ],
     "startLocation": "Inspect Pirate Pete in the Lumbridge Castle dining room.",
@@ -5746,8 +5777,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: A bucket of milk An egg A pot of flour A cake tin (All required items can be bought from the Culinaromancer\u0027s Chest) Recommended: Minigame Teleport to Guardians of the Rift Necklace of passage or access to fairy rings ( D I S ) and a Lunar/Dramen staff (for quick transportation to Wizards\u0027 Tower)",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 40 Cooking [ boostable ] [ required to start ] Completion of the following quests: Big Chompy Bird Hunting Biohazard Plague City Demon Slayer Murder Mystery Nature Spirit Priest in Peril The Restless Ghost Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Witch\u0027s House"
+      "Obtain a bucket of milk, egg, pot of flour, and cake tin—all are sold by the Culinaromancer\u0027s Chest; 40 Cooking is boostable but required to start, and for faster Wizards\u0027 Tower travel use a Guardians of the Rift minigame teleport, a necklace of passage, or fairy ring D I S with a Lunar or Dramen staff"
     ],
     "startLocation": "Inspect the Lumbridge Guide in the Lumbridge Castle dining room.",
     "unlocks": [
@@ -5767,14 +5797,11 @@
       "Recipe for Disaster - Another Cook\u0027s Quest",
       "Shadow of the Storm"
     ],
-    "skillRequirements": {
-      "COOKING": 25
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Any cat except an overgrown cat (note that each cat has a different effective rat catch rate -- kittens or lazy cats are not recommended) Several bowls of stew (9 at most)",
-      "Access requirements: Completion of the following quests: Gertrude\u0027s Cat Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Shadow of the Storm Demon Slayer The Golem"
+      "Obtain any cat except an overgrown cat and up to nine bowls of stew; kittens and lazy cats are not recommended because cats have different effective rat catch rates"
     ],
     "startLocation": "Inspect Evil Dave in the Lumbridge Castle dining room.",
     "unlocks": [
@@ -5799,8 +5826,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Axe (a blessed axe will not work) Raw chompy (bring several if you have a low cooking level) Iron spit (made on an anvil with an iron bar) Logs (obtainable during the quest) Tinderbox Pickaxe Ogre bellows (obtainable during the quest) Ball of wool Ogre bow or comp ogre bow (can be purchased from Rantz during the quest for at most 600 coins) Ogre arrows Chisel, knife, wolf bones, and feathers if you are making your own ogre arrows (Brutal arrows also work if using a comp ogre bow)",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 41 Cooking [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 20 Firemaking [ boostable ] [ not required to start ] Completion of the following quests: Big Chompy Bird Hunting Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant",
+      "Obtain a non-blessed axe, raw chompy—several at low Cooking—an iron spit made from an iron bar on an anvil, tinderbox, pickaxe, ball of wool, an ogre bow or comp ogre bow, and ogre arrows; logs and ogre bellows are obtainable during the quest, the bow can be bought from Rantz for at most 600 coins, self-made ogre arrows also require a chisel, knife, wolf bones, and feathers, Brutal arrows work with a comp ogre bow, and both skill requirements are boostable and not needed to start",
       "Combat encounters: Jubbly bird (Level 11)"
     ],
     "startLocation": "Inspect Skrach Uglogwee in the Lumbridge Castle dining room.",
@@ -5819,15 +5845,22 @@
     "name": "Recipe for Disaster - Sir Amik Varze",
     "freeToPlay": false,
     "prerequisites": [
+      "Family Crest",
+      "Heroes\u0027 Quest",
       "Recipe for Disaster - Another Cook\u0027s Quest",
+      "Shilo Village",
+      "Underground Pass",
+      "Waterfall Quest"
+    ],
+    "startedPrerequisites": [
       "Legends\u0027 Quest"
     ],
     "skillRequirements": {},
     "itemRequirements": [],
-    "questPointsRequired": 0,
+    "questPointsRequired": 107,
     "accessChecks": [
-      "Required items: Bucket of milk (can be bought from the Culinaromancer\u0027s Chest) or Bottomless milk bucket Pot of cream (can be bought from the Culinaromancer\u0027s Chest) Pot of cornflour Sweetcorn (Can be picked from the sweetcorn fields south of Civitas illa Fortis in Varlamore without link\u003dFarming|alt\u003dFarming 20 Farming [ boostable ] ) Vanilla pod or tools to get one: Any axe (the Blessed axe will not work!) Any machete (as well as Radimus notes if you haven\u0027t completed Legends\u0027 Quest) Dramen staff or Lunar staf…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 107 Quest points Category:Unknown start requirement status Access to the Kharazi Jungle Started Legends\u0027 Quest Completion of the following quests: Family Crest Heroes\u0027 Quest Shield of Arrav Lost City Merlin\u0027s Crystal Dragon Slayer I Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Shilo Village Jungle Potion Druidic Ritual Underground Pass Biohazard Plague City Waterfall Quest The ability to defeat a level 227 Black dragon",
+      "Obtain a bucket of milk or Bottomless milk bucket, pot of cream, pot of cornflour, and vanilla pod or a non-blessed axe and any machete; also bring Radimus notes if Legends\u0027 Quest is not complete, and sweetcorn for cornflour can be picked south of Civitas illa Fortis without 20 Farming; milk and cream are sold by the Culinaromancer\u0027s Chest",
+      "Obtain a Dramen or Lunar staff unless the Elite Lumbridge & Draynor Diary is complete, plus a Dramen branch, pestle and mortar, and raw chicken; ice gloves prevent all flambé damage, while an anti-dragon shield mitigates most damage to under 10",
       "Combat encounters: Evil Chicken (level varies) (see below) Black dragon (level 227)"
     ],
     "startLocation": "Inspect Sir Amik Varze in the Lumbridge Castle dining room.",
@@ -5854,8 +5887,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: M\u0027speak amulet Karamjan monkey greegree (unless you already have another greegree) Gorilla, Ninja monkey and Zombie monkey greegree (or 3,000 coins to purchase three monkey talismans) Banana (can be obtained during the quest) Monkey nuts (or 3 coins to buy some during the quest) Rope Knife or slashing weapon Pestle and mortar",
-      "Access requirements: link\u003dCooking|alt\u003dCooking 70 Cooking [ boostable ] [ not required to start ] link\u003dAgility|alt\u003dAgility 48 Agility [ not boostable ] [ not required to start ] Completion of the following quests: Monkey Madness I The Grand Tree Tree Gnome Village Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant The ability to defeat a level 84 Big Snake",
+      "Obtain an M\u0027speak amulet, a Karamjan monkey greegree unless another greegree is owned, Gorilla, Ninja monkey, and Zombie monkey greegrees or 3,000 coins for three monkey talismans, rope, a knife or slashing weapon, and a pestle and mortar; a banana is obtainable during the quest, monkey nuts can be bought for 3 coins, 70 Cooking is boostable, and neither skill requirement is needed to start",
       "Combat encounters: Big Snake (level 84) - (recommended to kill several as they burn often when cooking) To obtain the greegrees: Zombie monkey (levels 82/129) Monkey guard (level 167) Monkey archer (level 86)"
     ],
     "startLocation": "Inspect Awowogei in the Lumbridge Castle dining room.",
@@ -5887,8 +5919,7 @@
     "itemRequirements": [],
     "questPointsRequired": 175,
     "accessChecks": [
-      "Required items: Ice gloves for defeating Flambeed Menaphite remedy or restore potions since Karamel will lower your stats Certain armour and weapons for each boss Good healing food, such as sharks",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 175 Quest points [ required to start ] Completion of the following quests: Desert Treasure I The Dig Site Temple of Ikov The Tourist Trap Troll Stronghold Death Plateau Priest in Peril Waterfall Quest Horror from the Deep Alfred Grimhand\u0027s Barcrawl miniquest Freeing Evil Dave Freeing the Goblin generals Freeing the Lumbridge Guide Freeing the Mountain Dwarf Freeing Pirate Pete Freeing Sir Amik Varze Freeing Skrach Uglogwee Freeing King Awowogei The ability to…",
+      "Obtain ice gloves for Flambeed, a Menaphite remedy or restore potions for Karamel, suitable armour and weapons for each boss, and good healing food such as sharks; prepare to defeat every boss without Prayer",
       "Combat encounters: Agrith-Na-Na (level 146) Flambeed (level 149) Karamel (level 136) Dessourt (level 121) Gelatinnoth Mother (level 130) Culinaromancer (level 75)"
     ],
     "startLocation": "Release each member of the council from the Culinaromancer\u0027s spell.",
@@ -5909,10 +5940,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Black Knights\u0027 Fortress Druidic Ritual",
-      "Combat encounters: Sir Leye (level 20)"
+      "Combat encounter: Sir Leye (level 20)"
     ],
-    "startLocation": "Talk to Sir Amik Varze on the 2 nd \u0026nbsp;floor \u0026 91; UK \u0026 93; 3 rd \u0026nbsp;floor \u0026 91; US \u0026 93; of the White Knights\u0027 Castle\u0027s western tower in Falador.",
+    "startLocation": "Talk to Sir Amik Varze on the second floor (UK; third floor US) of the White Knights\u0027 Castle\u0027s western tower in Falador.",
     "unlocks": [
       "Quest rewards: }}"
     ],
@@ -5970,15 +6000,13 @@
       "Regicide",
       "Waterfall Quest"
     ],
-    "skillRequirements": {
-      "AGILITY": 56
-    },
+    "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Glarial\u0027s pebble (obtainable during the quest) Key (obtainable during the quest) Spade Rope",
-      "Access requirements: Completion of the following quests: Regicide Underground Pass Biohazard Plague City Waterfall Quest The ability to defeat a level 84 enemy unarmed, with heavy restrictions link\u003dAgility|alt\u003dAgility 56 Agility [ boostable ] [ not required to start ] , unless travelling with a charter ship to the elven woods",
-      "Combat encounters: Moss Guardian (level 84) (has to be killed with restricted items, can be flinched)"
+      "Obtain Glarial\u0027s pebble and the Waterfall Dungeon key during the quest, plus a spade and rope",
+      "Arrange travel to the elven woods using 56 Agility, which is boostable and not required to start, or bypass that level with a charter ship",
+      "Prepare to defeat the Moss Guardian (level 84) under Glarial\u0027s Tomb restricted-item rules; it can be flinched"
     ],
     "startLocation": "Talk to Islwyn inside the elven woods of Isafdar.",
     "unlocks": [
@@ -6001,9 +6029,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Dusty key (obtainable during the quest) or link\u003dAgility|alt\u003dAgility 70 Agility [ boostable ] .",
-      "Access requirements: link\u003dPrayer|alt\u003dPrayer 31 Prayer [ not boostable ] [ not required to start ] Completion of Alfred Grimhand\u0027s Barcrawl [ required to start ] The ability to run past level 172 black demons and level 64 poison spiders",
-      "Combat encounters: Jailer (level 47) if you need to acquire the dusty key (alternatively, you can skip this if you have access to the Legends Guild Shop of Useful Items, where the key is sold)"
+      "Arrange Taverley Dungeon access with a dusty key obtainable during the quest, a key bought from the Legends\u0027 Guild Shop of Useful Items when accessible, or boostable 70 Agility to bypass the key route",
+      "Reach 31 Prayer, which is not boostable but is not required to start the quest, and prepare to run past level 172 black demons and level 64 poison spiders",
+      "Combat encounter only when obtaining the dusty key: Jailer (level 47); the Legends\u0027 Guild shop or Agility route avoids this fight"
     ],
     "startLocation": "Talk to Thormac at the top floor of the Sorcerer\u0027s Tower, south-east of the Ranging Guild.",
     "unlocks": [
@@ -6024,8 +6052,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Swamp paste (made by mixing flour with swamp tar then cooking the mixture on a fire; can also be bought from a Trader crewmember for 75 coins, from Rasolo for 60 coins west of the Fishing Guild, or from the Khazard General Store for 42 coins at full stock)",
-      "Access requirements: link\u003dFiremaking|alt\u003dFiremaking 30 Firemaking [ boostable ] [ not required to start ]"
+      "Obtain swamp paste by mixing flour with swamp tar and cooking it on a fire, or buy it from a Trader crewmember for 75 coins, Rasolo west of the Fishing Guild for 60 coins, or the Khazard General Store for 42 coins at full stock",
+      "Reach or boost to 30 Firemaking before the relevant quest step; the quest can be started without that level"
     ],
     "startLocation": "Talk to Caroline just north of Witchaven.",
     "unlocks": [
@@ -6040,7 +6068,6 @@
     "name": "Shades of Mort\u0027ton",
     "freeToPlay": false,
     "prerequisites": [
-      "Druidic Ritual",
       "Priest in Peril"
     ],
     "skillRequirements": {
@@ -6051,8 +6078,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 1000+ coins (bring plenty of money just in case) 2 Tarromin potion (unf) OR 2 vials of water and 2 tarromins (both obtainable during the quest) 2 ashes Tinderbox Logs OR an axe to obtain some 1 hammer Using a Flamtaer hammer is highly recommended in case the minigame is unpopulated, as a regular hammer is insufficient to build the temple alone. An additional 13,000 coins (or 5,079 on the Grand Exchange) allows you to buy a Flamtaer hammer from Razmire.",
-      "Access requirements: Completion of the following quests: Priest in Peril link\u003dCrafting|alt\u003dCrafting 20 Crafting [ boostable ] [ not required to start ] link\u003dHerblore|alt\u003dHerblore 15 Herblore [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 5 Firemaking [ boostable ] [ not required to start ] Must be able to defeat 5 level-40 Loar Shades. Must be able to survive an onslaught when rebuilding the Temple (Being surrounded by many players makes this much easier). Access to Mort\u0027ton",
+      "Obtain at least 1,000 coins with extra margin, 2 Tarromin potion (unf), or 2 vials of water and 2 tarromins obtainable during the quest, plus 2 ashes, a tinderbox, logs or an axe, and a hammer",
+      "For an unpopulated temple, obtain a Flamtaer hammer because a regular hammer is insufficient to rebuild it alone; Razmire sells one for an additional 13,000 coins",
+      "All three skill requirements are boostable and are not required to start the quest",
+      "Obtain access to Mort\u0027ton and prepare to survive the temple-rebuilding onslaught; nearby players make the rebuild easier",
       "Combat encounters: 5 Loar Shades (level 40)"
     ],
     "startLocation": "Search the shelf in the southern-western house of Mort\u0027ton.",
@@ -6117,9 +6146,9 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Commorb (can get another by speaking to Sir Tiffy) Swamp paste (not consumed) Dead sea slug (obtainable during the quest) At least 5 rune/pure essence (bring 15–20 in case they shatter; succeeding with 5 is very unlikely) Chisel 5 open inventory slots Access to the Air, Water, Earth, Fire, and Mind Altars Elemental talisman OR Air, Water, Earth, and Fire talismans or tiaras Mind talisman or tiara :OR Travelling through the Abyss or using a Runecraft cape :OR Access to Guardians of the Rift",
-      "Access requirements: Completion of the following quests: Wanted! Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Rune Mysteries Goblin Diplomacy Enter the Abyss Priest in Peril Sea Slug link\u003dCrafting|alt\u003dCrafting 30 Crafting [ not boostable ] Category:Unknown start requirement status link\u003dRunecraft|alt\u003dRunecraft 30 Runecraft [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 30 Slayer [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 30 Thieving [ not boostable ]…",
-      "Combat encounters: Slug Prince (level 62)"
+      "Obtain and carry a Commorb to start—Sir Tiffy replaces it—plus swamp paste, at least five rune or pure essence, preferably 15–20 because they can shatter, a chisel, and five open inventory slots; the dead sea slug is obtainable during the quest and swamp paste is not consumed; all four skill requirements are non-boostable, with Runecraft and Slayer explicitly required to start",
+      "Obtain access to the Air, Water, Earth, Fire, and Mind Altars using an elemental talisman or four elemental talismans or tiaras plus a mind talisman or tiara, or instead travel through the Abyss, use a Runecraft cape, or use Guardians of the Rift",
+      "Combat encounter: Slug Prince (level 62), which must be defeated with Melee"
     ],
     "startLocation": "Talk to Sir Tiffy Cashien in Falador Park.",
     "unlocks": [
@@ -6200,9 +6229,9 @@
     "itemRequirements": [],
     "questPointsRequired": 100,
     "accessChecks": [
-      "Required items: 10 mist runes 10 lava runes 5 blood runes 7 bones (obtainable during the quest) An airtight pot – created by using a pot lid on a pot Soft clay if making your own pot lid during the quest (2 if also making the pot), or a pickaxe to obtain the clay during the quest 5 iron bars, or a pickaxe (obtainable during the quest) if mining your own iron during quest 1 set of logs of any kind, or an axe (obtainable during quest) if chopping your own logs during quest A tinderbox (obtainable during the ques…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 100 Quest points Category:Unknown start requirement status link\u003dMagic|alt\u003dMagic 66 Magic [ boostable ] [ not required to start ] link\u003dCooking|alt\u003dCooking 62 Cooking [ boostable ] [ not required to start ] link\u003dFishing|alt\u003dFishing 62 Fishing [ boostable ] [ not required to start ] link\u003dSmithing|alt\u003dSmithing 45 Smithing [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 42 Firemaking [ boostable ] [ not required to start ] link\u003dCrafting|alt\u003dC…",
-      "Combat encounters: 11 Sea trolls (1 each of levels 65/87/101 and 8 of level 79) Sea Troll Queen (level 170)"
+      "Obtain 10 mist runes, 10 lava runes, 5 blood runes, and an airtight pot; if making its lid during the quest bring one soft clay, or two when also making the pot, or bring a pickaxe to obtain clay; all six skill requirements are boostable and not needed to start",
+      "Obtain five iron bars or mine them during the quest with an obtainable pickaxe, and one set of any logs or chop them with an obtainable axe; seven bones, a tinderbox, small fishing net, and brown apron are obtainable during the quest, and bring a hammer or Imcando hammer, with a normal hammer also obtainable",
+      "Combat encounters: 11 Sea trolls (1 each of levels 65/87/101 and 8 of level 79) Sea Troll Queen (level 170), which uses Magic and Melee and can drain Prayer"
     ],
     "startLocation": "Talk to Herman Caranos in the Piscatoris Fishing Colony, accessed via a boat trip from the river to the west of the Tree Gnome Stronghold.",
     "unlocks": [
@@ -6223,15 +6252,15 @@
     ],
     "skillRequirements": {
       "COOKING": 30,
-      "FISHING": 65,
-      "HERBLORE": 34,
+      "FISHING": 5,
       "AGILITY": 15
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Knife or bladed weapon, such as a Sword or a Spear Sliced banana (obtainable during the quest) Small fishing net Pestle and mortar (obtainable during the quest for 6 gp) 2 Logs to quickly make Poison karambwan at fishing site and to cook Pasty jogre bones later in the quest Iron spear, Steel spear, Mithril spear, Adamant spear, Rune spear or Dragon spear which will be consumed during the quest. Agility potion(4) (must be 4 doses) Ranged equipment, Magic equipment, or a halberd to kill a monkey…",
-      "Access requirements: link\u003dAgility|alt\u003dAgility 15 Agility [ boostable ] [ not required to start ] link\u003dCooking|alt\u003dCooking 30 Cooking [ not boostable ] [ not required to start ] link\u003dFishing|alt\u003dFishing 5 Fishing [ boostable ] [ not required to start ] \u0027\"`UNIQ--ref-00000021-QINU`\"\u0027 Completion of the following quests: Jungle Potion Druidic Ritual",
+      "Obtain a knife or bladed weapon, small fishing net, two logs, an iron, steel, mithril, adamant, rune, or dragon spear that will be consumed, an Agility potion(4) with all four doses, and Ranged or Magic equipment or a halberd because adjacent Melee deals no damage to the monkey; 15 Agility and 5 Fishing are boostable, but 30 Cooking is not",
+      "Obtain Karamjan rum or 30 coins; when bringing rum before starting, add the sliced banana before leaving the island or the rum disappears; the sliced banana, jogre bones, and seaweed are obtainable during the quest, a pestle and mortar costs 6 coins during the quest, and a tinderbox avoids returning to the Brimhaven range",
+      "15 Agility, 30 Cooking, and 5 Fishing are required during the quest but not to start it",
       "Combat encounters: Monkey (level 3)"
     ],
     "startLocation": "Talk to Timfraku in his house in Tai Bwo Wannai.",
@@ -6280,8 +6309,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Hammer (or Imcando hammer) Saw (or crystal saw) Beer (must be a regular beer - other beers do not work.)",
-      "Access requirements: link\u003dConstruction|alt\u003dConstruction 10 Construction [ not boostable ] [ required to start ]"
+      "10 Construction is non-boostable and required to start the quest",
+      "Bring a hammer or Imcando hammer, a saw or crystal saw, and a regular beer; other beers do not work"
     ],
     "startLocation": "Talk to Effigy at the Tower of Life just east of the Ardougne Monastery.",
     "unlocks": [
@@ -6303,9 +6332,7 @@
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
-    "accessChecks": [
-      "Access requirements: link\u003dThieving|alt\u003dThieving 21 Thieving [ boostable ] [ not required to start ]"
-    ],
+    "accessChecks": [],
     "startLocation": "Talk to Kangai Mau at The Shrimp and Parrot restaurant in Brimhaven.",
     "unlocks": [
       "Quest rewards: "
@@ -6322,14 +6349,12 @@
       "Troll Stronghold"
     ],
     "skillRequirements": {
-      "WOODCUTTING": 45,
       "AGILITY": 28
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: An iron bar Maple or yew logs Rope Climbing boots (not needed if using Trollheim Teleport) Wax (can be made ahead of time) A bucket of wax (use insect repellent on a beehive followed by a bucket) A cake tin Swamp tar",
-      "Access requirements: link\u003dAgility|alt\u003dAgility 28 Agility [ boostable ] Category:Unknown start requirement status Completion of the following quests: Troll Stronghold Death Plateau The ability to defeat a level 113 troll",
       "Combat encounters: Arrg (level 113) (safespottable; difficult to reach) Note: This fight is not a safe death."
     ],
     "startLocation": "Talk to Ug at the Troll Stronghold.",
@@ -6352,8 +6377,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Items for two different combat classes or a poisoned weapon (be warned that the poison method is much slower).",
-      "Access requirements: Completion of the following quests: Children of the Sun",
+      "Equip items for two different combat classes or bring a poisoned weapon; poison is the slower route",
       "Combat encounters: Knight of Varlamore (level 81) 8 cultists (level 34)"
     ],
     "startLocation": "Talk to Ennius Tullus or Furia Tullus in front of the Sunrise Palace.",
@@ -6378,8 +6402,7 @@
     "itemRequirements": [],
     "questPointsRequired": 32,
     "accessChecks": [
-      "Required items: 10,000 coins, or: Law rune Enchanted gem (bought from a Slayer Master) Molten glass 20 un-noted Rune essence or pure essence (you\u0027ll get them back) File:Ultimate ironman chat badge.png The player must deliver all 20 rune essence at once Light source (Note: Candles, torches and oil lamps can cause swamp gas explosions if going off-route, and need a tinderbox to stay lit)",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 32 Quest points [ required to start ] Completion of the following quests: Recruitment Drive Black Knights\u0027 Fortress Druidic Ritual The Lost Tribe Rune Mysteries Goblin Diplomacy Priest in Peril Enter the Abyss The ability to defeat a level 32 Black Knight.",
+      "Obtain either 10,000 coins or a law rune, enchanted gem, and molten glass; also bring 20 unnoted rune or pure essence at once and a safe light source, noting that candles, torches, and oil lamps need a tinderbox and can ignite swamp gas off-route",
       "Combat encounters: Black Knight (level 32) Solus Dellagar"
     ],
     "startLocation": "Talk to Sir Tiffy Cashien in Falador Park.",
@@ -6403,9 +6426,10 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Empty bowl 15 chaos runes Access to the Chaos Altar (Chaos talisman or tiara, Catalytic talisman or tiara, or travelling through the Abyss or Temple of the Eye)",
-      "Access requirements: Completion of the following quests: Rune Mysteries link\u003dRunecraft|alt\u003dRunecraft 35 Runecraft [ not boostable ] [ required to start ]",
-      "Combat encounters: 5 Outlaws (level 32) King Roald (level 47)"
+      "35 Runecraft is non-boostable and required to start the quest",
+      "Bring an empty bowl and 15 chaos runes",
+      "Have access to the Chaos Altar through a chaos or catalytic talisman or tiara, the Abyss, or Temple of the Eye",
+      "Combat encounters: 5 Outlaws (level 32) and King Roald (level 47)"
     ],
     "startLocation": "Talk to Rat Burgiss south of Varrock.",
     "unlocks": [
@@ -6434,6 +6458,7 @@
     ],
     "skillRequirements": {
       "MAGIC": 67,
+      "FIREMAKING": 49,
       "HERBLORE": 65,
       "AGILITY": 66,
       "THIEVING": 72,
@@ -6443,8 +6468,10 @@
     "itemRequirements": [],
     "questPointsRequired": 180,
     "accessChecks": [
-      "Required items: Ring of Charos(a) or 500 coins Knife Seed dibber (only if Barbarian Farming Training has not been completed) Lantern lens Unpowered orb Bronze med helm Iron chainbody Sapphire lantern Runes to cast the Astral Contact spell four times (8 air runes, 4 astral rune, 4 cosmic rune) Runes for any charge orb spell (30 runes of a chosen element and 3 cosmic runes) Equipment for two different combat styles Runes for the following spells: multiple casts of all four elemental spells, Snare/Entangle, Weake…",
-      "Access requirements: link\u003dQuest points|alt\u003dQuest points 180 Quest points [ required to start ] link\u003dThieving|alt\u003dThieving 72 Thieving [ not boostable ] [ required to start ] link\u003dMagic|alt\u003dMagic 67 Magic [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 66 Agility [ not boostable ] [ required to start ] link\u003dFarming|alt\u003dFarming 65 Farming [ not boostable ] [ required to start ] link\u003dHerblore|alt\u003dHerblore 65 Herblore [ not boostable ] [ required to start ] link\u003dHunter|alt\u003dHunter 62 Hunter [ not boosta…",
+      "Obtain a Ring of Charos(a) or 500 coins, knife, seed dibber unless Barbarian Farming Training is complete, lantern lens, unpowered orb, bronze med helm, iron chainbody, sapphire lantern, and equipment for two combat styles",
+      "Obtain runes for four Astral Contact casts—8 air, 4 astral, and 4 cosmic—plus any charge orb spell—30 runes of one element and 3 cosmic—and multiple casts of all four elemental spells, Snare or Entangle, Weaken or Enfeeble, Telekinetic Grab, and Low or High Alchemy; this needs air, water, earth, fire, body or soul, nature, law, and the highest usable mind, chaos, death, blood, or wrath runes",
+      "Obtain during the quest mort myre fungus, a non-redwood log, pink dye or 20 coins, a snapdragon seed, papyrus, charcoal, a restore potion, and one each of air, water, earth, fire, mind, law, and death runes; the bronze axe by the Hunting Expert can supply the log only when no axe is carried, and a carried Zombie axe blocks that option despite being unable to cut the tree",
+      "Verify Warriors' Guild access: Attack plus Strength totals at least 130, or either skill is 99",
       "Combat encounters: 2 Assassins (level 167) 2 Mercenary axemen (level 131) Mercenary mage (level 112) 3 Elite Black Knights (level 138) Surok Magis (level 265) Balance Elemental (level 524) 2 Tormented Demons (level 450)"
     ],
     "startLocation": "Talk to Ivy Sophista in Taverley.",
@@ -6517,12 +6544,17 @@
     "name": "Curse of the Empty Lord",
     "freeToPlay": false,
     "prerequisites": [],
+    "startedPrerequisites": [
+      "Desert Treasure I",
+      "The Restless Ghost"
+    ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ring of visibility Ghostspeak amulet (Morytania legs 2 or higher may be used instead, except when otherwise noted) Some players may need a knife or slash weapon",
-      "Access requirements: Started Desert Treasure I and The Restless Ghost link\u003dThieving|alt\u003dThieving 53 Thieving [ not boostable ] [ required to start ] to obtain the Ring of visibility link\u003dPrayer|alt\u003dPrayer 31 Prayer [ not boostable ] [ not required to start ] (Some players will need this to access the 2nd floor of the Edgeville Monastery)"
+      "If the ring of visibility is not already owned, obtain it with 53 Thieving",
+      "Verify 31 Prayer only if Edgeville Monastery second-floor access is needed"
     ],
     "startLocation": "Talk to the mysterious ghost (Valdez) near Glarial\u0027s Tomb.",
     "unlocks": [
@@ -6535,17 +6567,20 @@
     "name": "Hopespear\u0027s Will",
     "freeToPlay": false,
     "prerequisites": [
-      "The Restless Ghost",
       "Desert Treasure I",
       "Fairytale II - Cure a Queen",
       "Land of the Goblins"
     ],
-    "skillRequirements": {},
+    "startedPrerequisites": [
+      "The Restless Ghost"
+    ],
+    "skillRequirements": {
+      "PRAYER": 50
+    },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Ghostspeak amulet or Morytania legs 2 or better Ring of visibility or ring of shadows Goblin potion Dramen or lunar staff (unless the Lumbridge \u0026 Draynor Diary has been fully completed) Food and potions to defeat 5 enemies without armour, weapons, or magic",
-      "Access requirements: Started The Restless Ghost Completion of Desert Treasure I Completion of Fairytale II - Cure a Queen Completion of Land of the Goblins link\u003dPrayer|alt\u003dPrayer 50 Prayer [ not boostable ] Category:Unknown start requirement status",
       "Combat encounters: Snothead (level 32) Snailfeet (level 56) Mosschin (level 88) Redeyes (level 121) Strongbones (level 184)"
     ],
     "startLocation": "Speak to Hopespear in the crypt of the Goblin Temple.",
@@ -6554,6 +6589,192 @@
     ],
     "rewardXp": {
       "PRAYER": 38750
+    },
+    "fieldUncertainties": []
+  },
+  {
+    "name": "A Ruff Situation",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "CRAFTING": 15
+    },
+    "itemRequirements": [],
+    "itemRequirementExpression": {
+      "kind": "ALL_OF",
+      "itemNames": [],
+      "quantity": 1,
+      "quantityMode": "EXACT",
+      "scope": "IMMEDIATELY_USABLE",
+      "excludedItemNames": [],
+      "checkAction": "",
+      "children": [
+        {
+          "kind": "ANY_OF",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": [
+            {
+              "kind": "ALL_OF",
+              "itemNames": [],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "IMMEDIATELY_USABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": [
+                {
+                  "kind": "ITEM",
+                  "itemNames": ["Needle"],
+                  "quantity": 1,
+                  "quantityMode": "EXACT",
+                  "scope": "OWNED_OR_RETRIEVABLE",
+                  "excludedItemNames": [],
+                  "checkAction": "",
+                  "children": []
+                },
+                {
+                  "kind": "ITEM",
+                  "itemNames": ["Thread"],
+                  "quantity": 1,
+                  "quantityMode": "EXACT",
+                  "scope": "OWNED_OR_RETRIEVABLE",
+                  "excludedItemNames": [],
+                  "checkAction": "",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "kind": "ITEM",
+              "itemNames": ["Costume needle"],
+              "quantity": 1,
+              "quantityMode": "EXACT",
+              "scope": "OWNED_OR_RETRIEVABLE",
+              "excludedItemNames": [],
+              "checkAction": "",
+              "children": []
+            }
+          ]
+        },
+        {
+          "kind": "CHECK_NEEDED",
+          "itemNames": [],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "IMMEDIATELY_USABLE",
+          "excludedItemNames": [],
+          "checkAction": "Verify and bring one fur accepted by A Ruff Situation.",
+          "children": []
+        },
+        {
+          "kind": "ITEM",
+          "itemNames": ["Grain"],
+          "quantity": 1,
+          "quantityMode": "EXACT",
+          "scope": "OWNED_OR_RETRIEVABLE",
+          "excludedItemNames": [],
+          "checkAction": "",
+          "children": []
+        }
+      ]
+    },
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Combat encounters: Two outlaws (levels 22 and 23)"
+    ],
+    "startLocation": "Talk to Talia in the Dog Shelter south-west of the Edgeville Monastery.",
+    "unlocks": [
+      "Access to puppies that can grow into pet dogs"
+    ],
+    "rewardXp": {
+      "CRAFTING": 1000
+    },
+    "fieldUncertainties": []
+  },
+  {
+    "name": "Crab Quest",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "SAILING": 40,
+      "FISHING": 30
+    },
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required item: Big fishing net, obtained during the quest"
+    ],
+    "startLocation": "Sail to Dognose Island north-west of the Great Conch and drink from the strange bottle.",
+    "unlocks": [
+      "Shell collection musical instrument set"
+    ],
+    "rewardXp": {
+      "SAILING": 10000,
+      "FISHING": 3000
+    },
+    "fieldUncertainties": []
+  },
+  {
+    "name": "The Fractured Archive",
+    "freeToPlay": false,
+    "prerequisites": [
+      "While Guthix Sleeps"
+    ],
+    "skillRequirements": {},
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required setup: Combat gear and supplies for a complete Fractured Archive raid",
+      "Combat encounters: Archive Guardian; Ezekiel or Bork and the Smorks; Moia or Dreadnoth the Jellied; Xarth or the Dagon'hai Elder and monks; Ocellus"
+    ],
+    "startLocation": "Approach the Fractured Archive entrance near the Ancient Guthixian Temple.",
+    "unlocks": [
+      "Access to further runs of The Fractured Archive"
+    ],
+    "rewardXp": {},
+    "fieldUncertainties": []
+  },
+  {
+    "name": "Mudfoot\u0027s Big Adventure",
+    "freeToPlay": true,
+    "prerequisites": [],
+    "skillRequirements": {},
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [
+      "Required setup: Magic or Ranged gear for the final outlaw, obtainable during the quest; poisoned weapons are an alternative",
+      "Combat encounters: Ranger outlaw (level 6), mage outlaw (level 6), and warrior outlaw (level 8)"
+    ],
+    "startLocation": "Talk to Captain Harlan outside the Lumbridge General Store.",
+    "unlocks": [
+      "Basic combat-style equipment claims from Captain Harlan every 30 minutes"
+    ],
+    "rewardXp": {},
+    "fieldUncertainties": []
+  },
+  {
+    "name": "The Writing\u0027s on the Wall",
+    "freeToPlay": false,
+    "prerequisites": [],
+    "skillRequirements": {
+      "AGILITY": 22,
+      "THIEVING": 20
+    },
+    "itemRequirements": [],
+    "questPointsRequired": 0,
+    "accessChecks": [],
+    "startLocation": "Talk to Betty at Land's End.",
+    "unlocks": [
+      "Amulet of sight and replacement purchases from Sergeant Hudson"
+    ],
+    "rewardXp": {
+      "AGILITY": 2500,
+      "THIEVING": 2500
     },
     "fieldUncertainties": []
   }

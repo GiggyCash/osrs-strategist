@@ -103,3 +103,19 @@ The report uses `NEW`, `REMOVED`, `RENAMED`, `CHANGED`, and
 `POSSIBLY_STALE`. It never edits catalogs or enables announced content. A human
 must review every event, update provenance and regression tests, and only then
 replace a committed snapshot.
+
+## Production source-size review
+
+At each substantial checkpoint run:
+
+```sh
+python3 scripts/audit-source-size.py --base <previous-checkpoint>
+```
+
+Report production file/line counts, the consistent characters/4 token estimate,
+largest files and growth. These are internal engineering guardrails, not Plugin
+Hub limits: target about 100k estimated tokens, warning at 130k, intervention
+before 150k. The existing code exceeds the intervention threshold. Follow the
+measured findings and ordered work in [SOURCE_SIZE_INTERVENTION.md](SOURCE_SIZE_INTERVENTION.md)
+before expanding content; do not minify sources or merely split files to claim
+size reduction.

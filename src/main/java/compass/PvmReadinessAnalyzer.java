@@ -18,7 +18,6 @@ public class PvmReadinessAnalyzer
     private final PvmActivityCatalog catalog;
     private final PvmEvidenceProfileCatalog evidenceProfiles;
     private final PvmPreparationProfileCatalog preparationProfiles;
-    @Inject
     public PvmSnapshot analyze(
             AccountSnapshot account,
             QuestSnapshot quests,
@@ -75,6 +74,7 @@ public class PvmReadinessAnalyzer
             requireLevel(account, MAGIC, preparation.getMagic(), missing);
             requireLevel(account, PRAYER, preparation.getPrayer(), missing);
             requireLevel(account, SLAYER, preparation.getSlayer(), missing);
+            requireReadinessLevels(account, preparation, missing);
 
             if (preparation.requiredQuest != null
                     && !questUsable(quests, preparation.requiredQuest,
@@ -85,7 +85,9 @@ public class PvmReadinessAnalyzer
 
             String requiredStyle = exact == null ? preparation.getPreferredStyle()
                     : exact.getWeaponStyle();
-            if (!hasCombatWeapon(equipment, requiredStyle))
+            if (exact != null && !exact.getWeaponOptionGroups().isEmpty())
+                addWeaponOptionEvidence(exact, equipment, inventory, missing);
+            else if (!hasCombatWeapon(equipment, requiredStyle))
                 addMissing(missing, "Equip a usable " + preparation.getPreferredStyle() + get(1566));
             else if (exact == null)
                 addMissing(missing, get(443));
@@ -110,9 +112,17 @@ public class PvmReadinessAnalyzer
             if (exact == null)
                 addMissing(missing, get(451));
             else
+            {
                 for (String accessItem : exact.getAccessItems())
                     if (carriedQuantity(inventory, accessItem.toLowerCase(Locale.ROOT)) < 1)
                         addMissing(missing, "Carry " + accessItem + get(1567));
+                for (Map.Entry<EquipmentInventorySlot, String> slot
+                        : exact.getRequiredEquippedSlots().entrySet())
+                    if (!equippedInSlot(equipment, slot.getKey(),
+                            exact.getRequiredEquippedOptions().get(
+                                    slot.getKey())))
+                        addMissing(missing, "Equip observed " + slot.getValue());
+            }
 
             if (exact == null && preparation != null)
                 for (String check : preparation.getChecks()) addMissing(missing, check);
@@ -132,6 +142,62 @@ public class PvmReadinessAnalyzer
         return new PvmSnapshot(result);
     }
 
+    /** Positive carried evidence only; no bank, market, or execution inference. */
+    private static void addWeaponOptionEvidence(PvmEvidenceProfile profile,
+            ItemsState equipment, ItemsState inventory, List<String> missing)
+    {
+        if (equipment == null || !equipment.isObserved()
+                || profile.isInventoryWeaponOptions()
+                && (inventory == null || !inventory.isObserved()))
+        {
+            addMissing(missing, "Observe live equipment and inventory");
+            return;
+        }
+        List<ItemState> available = new ArrayList<>();
+        available.addAll(equipment.getEquippedItems());
+        if (profile.isInventoryWeaponOptions())
+            available.addAll(inventory.getItems());
+        for (Map.Entry<String, List<String>> option
+                : profile.getWeaponOptionGroups().entrySet())
+            if (!hasNamedOption(available,
+                    option.getValue().toArray(new String[0])))
+                addMissing(missing, "Carry a usable " + option.getKey() + " option");
+    }
+
+    private static boolean hasNamedOption(List<ItemState> items, String... terms)
+    {
+        for (ItemState item : items)
+        {
+            if (item == null || item.isNoted()
+                    || item.quantity <= 0 || item.getName() == null)
+                continue;
+            String name = item.getName().toLowerCase(Locale.ROOT);
+            if (containsAny(name, "ornament kit", "swordfish", "shard",
+                    "hilt", "godsword blade", "broken"))
+                continue;
+            if (containsAny(name, terms))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean equippedInSlot(ItemsState equipment,
+            EquipmentInventorySlot slot, List<String> allowedNameTerms)
+    {
+        if (equipment == null || !equipment.isObserved()) return false;
+        for (ItemState item : equipment.getEquippedItems())
+            if (item != null && item.quantity > 0
+                    && item.slotIndex == slot.getSlotIdx()
+                    && (allowedNameTerms == null
+                            || allowedNameTerms.isEmpty()
+                            || item.getName() != null
+                            && containsAny(item.getName().toLowerCase(
+                                    Locale.ROOT), allowedNameTerms.toArray(
+                                            new String[0]))))
+                return true;
+        return false;
+    }
+
 
     private static PvmReadiness priorFor(PvmSnapshot observed, String activityId)
     {
@@ -148,6 +214,23 @@ public class PvmReadinessAnalyzer
     {
         if (required > 1 && account.level(skill) < required)
             missing.add(skill.getName() + " " + required);
+    }
+
+    private static void requireReadinessLevels(AccountSnapshot account,
+            PvmPreparationProfile profile, List<String> missing)
+    {
+        if (profile.readinessSkills != null)
+            profile.readinessSkills.forEach((skill, level) ->
+                    requireLevel(account, skill, level, missing));
+        if (profile.alternativeReadinessSkills == null
+                || profile.alternativeReadinessSkills.isEmpty()
+                || profile.alternativeReadinessSkills.entrySet().stream()
+                .anyMatch(entry -> account.level(entry.getKey())
+                        >= entry.getValue())) return;
+        missing.add(profile.alternativeReadinessSkills.entrySet().stream()
+                .map(entry -> entry.getKey().getName() + " "
+                        + entry.getValue())
+                .collect(java.util.stream.Collectors.joining(" or ")));
     }
 
     private static boolean questUsable(QuestSnapshot quests, String quest,
@@ -188,8 +271,41 @@ public class PvmReadinessAnalyzer
 
     private static int carriedFoodQuantity(ItemsState inventory)
     {
-        return carriedQuantity(inventory, "shark", "karambwan", "anglerfish",
-                "manta ray", get(1568), "lobster", "swordfish", "pizza");
+        if (inventory == null) return 0;
+        int total = 0;
+        for (ItemState item : inventory.getItems())
+            if (item != null && !item.isNoted()
+                    && recognizedCombatFood(item.getName()))
+                total += Math.max(0, item.quantity);
+        return total;
+    }
+
+    private static boolean recognizedCombatFood(String itemName)
+    {
+        String name = itemName == null ? ""
+                : itemName.trim().toLowerCase(Locale.ROOT);
+        switch (name)
+        {
+            case "shark":
+            case "cooked karambwan":
+            case "anglerfish":
+            case "manta ray":
+            case "moonlight antelope":
+            case "cooked moonlight antelope":
+            case "lobster":
+            case "swordfish":
+            case "plain pizza":
+            case "1/2 plain pizza":
+            case "meat pizza":
+            case "1/2 meat pizza":
+            case "anchovy pizza":
+            case "1/2 anchovy pizza":
+            case "pineapple pizza":
+            case "1/2 pineapple pizza":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private static int carriedRestorationQuantity(ItemsState inventory)
@@ -239,6 +355,7 @@ public class PvmReadinessAnalyzer
         var total = 0;
         for (ItemState item : inventory.getItems())
         {
+            if (item.isNoted()) continue;
             var name = item.getName() == null ? "" : item.getName().toLowerCase(Locale.ROOT);
             if (containsAny(name, terms)) total += Math.max(0, item.quantity);
         }

@@ -1,0 +1,30 @@
+[
+  {
+    "itemId": 946,
+    "name": "Knife",
+    "kind": "GROUND_PICKUP",
+    "access": "UNRESTRICTED",
+    "risk": "NONE",
+    "experienceSkills": [],
+    "membersOnly": false,
+    "location": "Lumbridge Castle's ground-floor kitchen",
+    "action": "Pick up the knife spawn in the kitchen.",
+    "source": "https://oldschool.runescape.wiki/w/Knife",
+    "sourceRevision": 15350068,
+    "reviewed": "2026-09-30"
+  },
+  {
+    "itemId": 1511,
+    "name": "Logs",
+    "kind": "GROUND_PICKUP",
+    "access": "UNRESTRICTED",
+    "risk": "NONE",
+    "experienceSkills": [],
+    "membersOnly": false,
+    "location": "Lumbridge Castle's top floor (second floor UK / third floor US)",
+    "action": "Climb the castle stairs and pick up the log spawns on the bank floor.",
+    "source": "https://oldschool.runescape.wiki/w/Logs",
+    "sourceRevision": 15322883,
+    "reviewed": "2026-09-30"
+  }
+]

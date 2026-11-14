@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "domain": "smithing-platebodies",
+  "reviewedDate": "2026-10-01",
+  "license": "OSRS Wiki text: CC BY-NC-SA 3.0",
+  "wikiApi": "https://oldschool.runescape.wiki/api.php",
+  "runtimeNetworking": false,
+  "toolPage": "Hammer",
+  "records": [
+    {"recipeId": "bronze_platebody_smithing", "match": "bronze platebody", "outputPage": "Bronze platebody", "materialPage": "Bronze bar"},
+    {"recipeId": "iron_platebody_smithing", "match": "iron platebody", "outputPage": "Iron platebody", "materialPage": "Iron bar"},
+    {"recipeId": "steel_platebody_smithing", "match": "steel platebody", "outputPage": "Steel platebody", "materialPage": "Steel bar"},
+    {"recipeId": "mithril_platebody_smithing", "match": "mithril platebody", "outputPage": "Mithril platebody", "materialPage": "Mithril bar"},
+    {"recipeId": "adamant_platebody_smithing", "match": "adamant platebody", "outputPage": "Adamant platebody", "materialPage": "Adamantite bar"},
+    {"recipeId": "rune_platebody_smithing", "match": "rune platebody", "outputPage": "Rune platebody", "materialPage": "Runite bar"}
+  ]
+}

@@ -18,146 +18,72 @@ public class RecommendationGuidanceServiceTest
             TestFixtures.recommendationGuidanceService();
 
     @Test
-    public void mainAccountGetsExactGrandExchangeShortfall()
+    public void unknownPriceAndCashCannotBecomePurchaseGuidance()
     {
-        GameData data = GameData.builder(
-                        account(0, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemState(335, "Raw trout", 20)))
-                .inventory(inventory(new ItemState(335, "Raw trout", 5)))
-                .quests(completedCooksAssistant())
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                17,
-                20,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getAction().contains("20 successful cooks"));
-        assertTrue(guidance.getSupplies().contains("about 50 raw trout"));
-        assertTrue(guidance.getSupplies().contains("Verified: 25 raw trout"));
-        assertTrue(guidance.getSupplies().contains("Buy 25 raw trout"));
-        assertTrue(guidance.getSupplies().contains("Grand Exchange"));
-        assertTrue(guidance.getLocation().contains("Lumbridge Castle range"));
+        GameData data = GameData.builder(account(0, 17, Experience.getXpForLevel(17)))
+                .bank(bank()).inventory(inventory()).build();
+        org.junit.Assert.assertNull(service.build(data, Skill.COOKING, 17, 20, fishPlan(), false));
     }
 
     @Test
     public void enoughVerifiedTroutDoesNotTellPlayerToBuyMore()
     {
-        GameData data = GameData.builder(
-                        account(0, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemState(335, "Raw trout", 60)))
-                .inventory(inventory())
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                17,
-                20,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getSupplies().contains("already have enough"));
-        assertFalse(guidance.getSupplies().contains(" Buy "));
+        GameData data = GameData.builder(account(0, 17, Experience.getXpForLevel(17)))
+                .bank(bank(new ItemState(335, "Raw trout", 60))).inventory(inventory()).build();
+        Guidance guidance = service.build(data, Skill.COOKING, 17, 20, fishPlan(), false);
+        assertTrue(guidance.supplies.contains("Withdraw observed bank stock: 4 Raw trout"));
+        assertFalse(guidance.supplies.contains("Buy"));
     }
 
     @Test
-    public void unopenedBankIsUnknownNotEmpty()
+    public void carriedBatchDoesNotRequireOpeningAnUnknownBank()
     {
-        GameData data = GameData.builder(
-                        account(0, 17, Experience.getXpForLevel(17)))
-                .inventory(inventory(new ItemState(335, "Raw trout", 4)))
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                17,
-                20,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getSupplies().contains("Open your bank once"));
-        assertFalse(guidance.getSupplies().contains("Buy 50"));
+        GameData data = GameData.builder(account(0, 17, Experience.getXpForLevel(17)))
+                .inventory(inventory(new ItemState(335, "Raw trout", 4))).build();
+        Guidance guidance = service.build(data, Skill.COOKING, 17, 20, fishPlan(), false);
+        assertTrue(guidance.supplies.contains("already carried: 4 Raw trout"));
+        assertFalse(guidance.supplies.contains("Buy"));
+        assertTrue(guidance.getAction().contains("when this batch is used"));
     }
 
     @Test
-    public void ironAccountSourcesMissingFishInsteadOfUsingGrandExchange()
+    public void ironUsesObservedStockButDoesNotInventAcquisition()
     {
-        GameData data = GameData.builder(
-                        account(1, 17, Experience.getXpForLevel(17)))
-                .bank(bank(new ItemState(335, "Raw trout", 20)))
-                .inventory(inventory())
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                17,
-                20,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getSupplies().toLowerCase()
-                .contains("source 30 raw trout"));
-        assertTrue(guidance.getSupplies().contains("Barbarian Village"));
-        assertFalse(guidance.getSupplies().contains("Grand Exchange"));
+        GameData stocked = GameData.builder(account(1, 17, Experience.getXpForLevel(17)))
+                .bank(bank(new ItemState(335, "Raw trout", 20))).inventory(inventory()).build();
+        Guidance guidance = service.build(stocked, Skill.COOKING, 17, 20, fishPlan(), false);
+        assertTrue(guidance.supplies.contains("Withdraw observed bank stock"));
+        assertFalse(guidance.supplies.contains("Grand Exchange"));
+        GameData missing = GameData.builder(account(1, 17, Experience.getXpForLevel(17)))
+                .bank(bank()).inventory(inventory()).build();
+        org.junit.Assert.assertNull(service.build(missing, Skill.COOKING, 17, 20, fishPlan(), false));
     }
 
     @Test
     public void partialLevelProgressUsesExactCurrentExperience()
     {
-        GameData data = GameData.builder(
-                        account(0, 19, 4000))
-                .bank(bank())
-                .inventory(inventory())
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                19,
-                20,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getAction().contains("7 successful cooks"));
-        assertTrue(guidance.getSupplies().contains("about 18 raw trout"));
-        assertTrue(guidance.getSupplies().contains("Buy 18 raw trout"));
+        GameData data = GameData.builder(account(0, 19, 4000))
+                .inventory(inventory(new ItemState(335, "Raw trout", 4))).build();
+        Guidance guidance = service.build(data, Skill.COOKING, 19, 20, fishPlan(), false);
+        assertTrue(guidance.getAction().contains("470 Cooking XP remaining"));
+        assertTrue(guidance.getAction().contains("Stop at level 20"));
+        assertFalse(guidance.supplies.contains("Buy"));
     }
 
     @Test
-    public void levelTwentyPlanStagesPikeThenSalmonToThirty()
+    public void levelTwentyReviewsAtSalmonUnlockWithoutSpendingLockedInputs()
     {
-        GameData data = GameData.builder(
-                        account(0, 20, Experience.getXpForLevel(20)))
-                .bank(bank(
-                        new ItemState(349, "Raw pike", 8),
-                        new ItemState(331, "Raw salmon", 5)
-                ))
-                .inventory(inventory())
-                .build();
-
-        Guidance guidance = service.build(
-                data,
-                Skill.COOKING,
-                20,
-                30,
-                fishPlan(), true
-        );
-
-        assertTrue(guidance.getAction().contains("pike to level 25"));
-        assertTrue(guidance.getAction().contains("43 successful cooks"));
-        assertTrue(guidance.getAction().contains("salmon to level 30"));
-        assertTrue(guidance.getAction().contains("62 successful cooks"));
-        assertTrue(guidance.getSupplies().contains("about 108 raw pike"));
-        assertTrue(guidance.getSupplies().contains("about 155 raw salmon"));
-        assertTrue(guidance.getSupplies().contains("Buy 100 raw pike and 150 raw salmon"));
+        GameData data = GameData.builder(account(0, 20, Experience.getXpForLevel(20)))
+                .bank(bank(new ItemState(349, "Raw pike", 8), new ItemState(331, "Raw salmon", 50)))
+                .inventory(inventory()).build();
+        Guidance guidance = service.build(data, Skill.COOKING, 20, 30, fishPlan(), false);
+        assertTrue(guidance.getAction().contains("Raw pike"));
+        assertTrue(guidance.getAction().contains("Stop at level 25"));
+        assertFalse(guidance.supplies.contains("salmon"));
+        GameData unlocked = GameData.builder(account(0, 25, Experience.getXpForLevel(25)))
+                .bank(bank(new ItemState(331, "Raw salmon", 50))).inventory(inventory()).build();
+        assertTrue(service.build(unlocked, Skill.COOKING, 25, 30, fishPlan(), false).getAction().contains("Raw salmon"));
     }
-
     private static TrainingPlan fishPlan()
     {
         TrainingMethod method = new TrainingMethod(
@@ -214,13 +140,12 @@ public class RecommendationGuidanceServiceTest
 
     private static ItemsState inventory(ItemState... items)
     {
-        return new ItemsState(
-                items == null || items.length == 0
-                        ? Collections.emptyList()
-                        : Arrays.asList(items)
-        );
+        java.util.List<ItemState> slots = new java.util.ArrayList<>();
+        for (ItemState item : items)
+            for (int n = 0; n < item.quantity; n++)
+                slots.add(new ItemState(item.itemId, item.name, 1));
+        return new ItemsState(slots, true);
     }
-
     private static QuestSnapshot completedCooksAssistant()
     {
         Map<String, QuestStatus> quests = new HashMap<>();

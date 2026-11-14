@@ -11,6 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class F2pRunecraftRecommendationTest
@@ -196,10 +197,10 @@ public class F2pRunecraftRecommendationTest
                 if (skill != Skill.RUNECRAFT) return Collections.emptyList();
                 return Arrays.asList(
                         new ActionDef(Skill.RUNECRAFT,
-                                "test:water_tiara", "Water tiara", 1, 50,
+                                "runelite:runecraft:water_tiara", "Water tiara", 1, 50,
                                 null, Membership.F2P),
                         new ActionDef(Skill.RUNECRAFT,
-                                "test:water_rune", "Water rune", 5, 5,
+                                "runelite:runecraft:water_rune", "Water rune", 5, 5,
                                 null, Membership.F2P));
             }
         };
@@ -231,6 +232,38 @@ public class F2pRunecraftRecommendationTest
         assertNotNull(guidance);
         assertTrue(guidance.getAction().contains("Water runes"));
         assertFalse(guidance.getAction().contains("Water tiara"));
+    }
+
+    @Test
+    public void arceuusProfilesUseDarkEssenceAndExactActionIds()
+    {
+        MethodExecutionProfileCatalog profiles =
+                new MethodExecutionProfileCatalog();
+        UniversalActionRecipeResolver recipes =
+                new UniversalActionRecipeResolver();
+        AdaptiveActionSelector actions = new AdaptiveActionSelector();
+        GameData data = GameData.builder(account(Membership.P2P, 99)).build();
+
+        MethodProfile blood = profiles.forMethod("runecraft_blood");
+        ActionDef selected = actions.select(data, blood, Arrays.asList(
+                new ActionDef(Skill.RUNECRAFT,
+                        "runelite:runecraft:true_blood_rune", "Blood rune",
+                        77, 10.5f, null, Membership.P2P),
+                new ActionDef(Skill.RUNECRAFT,
+                        "runelite:runecraft:zeah_blood_rune", "Blood rune",
+                        77, 24.425f, null, Membership.P2P)),
+                99, Membership.P2P, 0, 10000, 1.0, false);
+        assertEquals("runelite:runecraft:zeah_blood_rune", selected.getId());
+        assertEquals("Dark essence fragments", recipes.profileInputs(
+                blood, selected, 10, Membership.P2P).get(0).getName());
+
+        MethodProfile soul = profiles.forMethod("runecraft_soul");
+        ActionDef soulAction = new ActionDef(Skill.RUNECRAFT,
+                "runelite:runecraft:soul_rune", "Soul rune", 90, 30.325f,
+                null, Membership.P2P);
+        assertEquals("Dark essence fragments", recipes.profileInputs(
+                soul, soulAction, 10, Membership.P2P).get(0).getName());
+        assertNull(profiles.forMethod("runecraft_lava"));
     }
 
     private static TrainingMethodSelector selector()
