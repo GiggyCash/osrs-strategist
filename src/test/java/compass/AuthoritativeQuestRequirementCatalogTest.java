@@ -1024,11 +1024,23 @@ public class AuthoritativeQuestRequirementCatalogTest
         assertFalse(quest.getSkillRequirements().containsKey(Skill.HERBLORE));
         assertTrue(quest.getAccessChecks().stream().anyMatch(
                 check -> check.contains("Agility potion(4)")));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a knife or bladed weapon, small fishing net"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "adjacent Melee deals no damage to the monkey"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "15 Agility and 5 Fishing are boostable, but 30 Cooking is not"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain Karamjan rum or 30 coins"));
+        assertTrue(quest.getAccessChecks().get(1).contains(
+                "before leaving the island or the rum disappears"));
         assertTrue(quest.getAccessChecks().contains(
                 "15 Agility, 30 Cooking, and 5 Fishing are required during "
                         + "the quest but not to start it"));
         assertFalse(quest.getAccessChecks().stream().anyMatch(
-                check -> check.startsWith("Access requirements:")));
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
     }
 
     @Test

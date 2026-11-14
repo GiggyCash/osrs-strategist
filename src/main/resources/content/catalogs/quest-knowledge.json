@@ -6235,7 +6235,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Knife or bladed weapon, such as a Sword or a Spear Sliced banana (obtainable during the quest) Small fishing net Pestle and mortar (obtainable during the quest for 6 gp) 2 Logs to quickly make Poison karambwan at fishing site and to cook Pasty jogre bones later in the quest Iron spear, Steel spear, Mithril spear, Adamant spear, Rune spear or Dragon spear which will be consumed during the quest. Agility potion(4) (must be 4 doses) Ranged equipment, Magic equipment, or a halberd to kill a monkey…",
+      "Obtain a knife or bladed weapon, small fishing net, two logs, an iron, steel, mithril, adamant, rune, or dragon spear that will be consumed, an Agility potion(4) with all four doses, and Ranged or Magic equipment or a halberd because adjacent Melee deals no damage to the monkey; 15 Agility and 5 Fishing are boostable, but 30 Cooking is not",
+      "Obtain Karamjan rum or 30 coins; when bringing rum before starting, add the sliced banana before leaving the island or the rum disappears; the sliced banana, jogre bones, and seaweed are obtainable during the quest, a pestle and mortar costs 6 coins during the quest, and a tinderbox avoids returning to the Brimhaven range",
       "15 Agility, 30 Cooking, and 5 Fishing are required during the quest but not to start it",
       "Combat encounters: Monkey (level 3)"
     ],
