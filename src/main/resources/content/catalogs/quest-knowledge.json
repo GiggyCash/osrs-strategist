@@ -4994,8 +4994,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 200 coins for the clothes Means to cast Telekinetic Grab (air and law rune) Logs (most logs will work, however, arctic pine, redwood \u0026 coloured logs do not work) Tinderbox Coal (obtainable during the quest with 30 Mining) Iron bar 3 cut sapphires Various ores and bars (mostly obtainable during the quest, see below) Redberry pie",
-      "Access requirements: link\u003dCrafting|alt\u003dCrafting 12 Crafting [ boostable ] [ not required to start ] link\u003dFiremaking|alt\u003dFiremaking 16 Firemaking [ boostable ] [ not required to start ] link\u003dMagic|alt\u003dMagic 33 Magic [ boostable ] [ not required to start ] link\u003dThieving|alt\u003dThieving 14 Thieving [ boostable ] [ not required to start ]"
+      "Obtain 200 coins, air and law runes for Telekinetic Grab, usable logs, a tinderbox, iron bar, three cut sapphires, and redberry pie; after choosing a company, source its assigned ores and bars, with coal obtainable during the quest at 30 Mining"
     ],
     "startLocation": "Talk to the Dwarven Boatman by the underground River Kelda, accessible through the Keldagrim entrance east of Rellekka, in the cave beyond the statues.",
     "unlocks": [

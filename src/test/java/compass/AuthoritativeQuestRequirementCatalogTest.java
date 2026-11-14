@@ -184,6 +184,23 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void giantDwarfKeepsVariableCompanyTaskActionable()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Giant Dwarf");
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(33),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(1, quest.getAccessChecks().size());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 200 coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "after choosing a company, source its assigned ores and bars"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
