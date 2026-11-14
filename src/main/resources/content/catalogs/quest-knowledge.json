@@ -3920,18 +3920,13 @@
     "name": "Into the Tombs",
     "freeToPlay": false,
     "prerequisites": [
-      "Beneath Cursed Sands",
-      "Contact!",
-      "Prince Ali Rescue",
-      "Icthlarin\u0027s Little Helper",
-      "Gertrude\u0027s Cat"
+      "Beneath Cursed Sands"
     ],
     "skillRequirements": {},
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Access requirements: Completion of the following quests: Beneath Cursed Sands Contact! Prince Ali Rescue Icthlarin\u0027s Little Helper Gertrude\u0027s Cat",
-      "Combat encounters: Note: This section assumes the raid level is 0 (no invocations). Akkha (level 337) Ba-Ba (level 359) Kephri (level 341) Zebak (level 371) Tumeken\u0027s Warden (level 489) Elidinis\u0027 Warden (level 489)"
+      "Raid-level-0 combat encounters with no invocations: Akkha (level 337), Ba-Ba (level 359), Kephri (level 341), Zebak (level 371), Tumeken\u0027s Warden (level 489), and Elidinis\u0027 Warden (level 489)"
     ],
     "startLocation": "Talk to Maisa inside Osmumten\u0027s tomb at the Necropolis.",
     "unlocks": [

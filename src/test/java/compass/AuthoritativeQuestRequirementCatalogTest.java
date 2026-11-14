@@ -1835,6 +1835,32 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void intoTheTombsUsesOnlyDirectBeneathCursedSandsGraph()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Into the Tombs");
+        assertEquals(java.util.Collections.singletonList(
+                        "Beneath Cursed Sands"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Contact!"));
+        assertFalse(quest.getPrerequisites().contains("Prince Ali Rescue"));
+        assertFalse(quest.getPrerequisites().contains(
+                "Icthlarin's Little Helper"));
+        assertFalse(quest.getPrerequisites().contains("Gertrude's Cat"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertEquals(java.util.Collections.singletonList(
+                        "Raid-level-0 combat encounters with no invocations: "
+                                + "Akkha (level 337), Ba-Ba (level 359), "
+                                + "Kephri (level 341), Zebak (level 371), "
+                                + "Tumeken's Warden (level 489), and "
+                                + "Elidinis' Warden (level 489)"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
