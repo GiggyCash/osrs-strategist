@@ -577,6 +577,33 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void mountainDwarfRestoresTruncatedPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Recipe for Disaster - Mountain Dwarf");
+        assertEquals(java.util.Arrays.asList(
+                "Fishing Contest",
+                "Recipe for Disaster - Another Cook's Quest"),
+                quest.getPrerequisites());
+        assertFalse(quest.getPrerequisites().contains("Cook's Assistant"));
+        assertTrue(quest.getSkillRequirements().isEmpty());
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a bucket of milk, pot of flour, egg, bowl of water"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "two extra ales and two extra coins"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "falls to 100 with a Ring of Charos(a) or 150 with a chocolate bar"));
+        assertTrue(quest.getAccessChecks().get(1).startsWith(
+                "Obtain gloves or Telekinetic Grab runes"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Icefiend (level 13)")
+                        && check.contains("only if you lack ice gloves")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("…")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

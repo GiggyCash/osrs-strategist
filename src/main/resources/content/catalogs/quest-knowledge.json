@@ -5673,8 +5673,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Bucket of milk (can be bought from the Culinaromancer\u0027s Chest) Pot of flour (can be bought from the Culinaromancer\u0027s chest) Egg (can be bought from the Culinaromancer\u0027s chest) Bowl of water (a bowl and sink can be found in the kitchen of Lumbridge Castle) 4 Asgarnian ales (can be bought during the quest at the Rising Sun Inn in Falador) Recommended to bring at least 2 additional ales in case Rohak sobers up 306 coins (300 + 1 coin per ale, 100 instead of 300 if you choose to bring a Ring of Cha…",
-      "Access requirements: Completion of the following quests: Recipe for Disaster/Another Cook\u0027s Quest Cook\u0027s Assistant Fishing Contest The ability to defeat a level 13 icefiend if you don\u0027t have the ice gloves.",
+      "Obtain a bucket of milk, pot of flour, egg, bowl of water, four Asgarnian ales, and 304 coins; bring two extra ales and two extra coins in case Rohak sobers up, the default 300-coin payment falls to 100 with a Ring of Charos(a) or 150 with a chocolate bar, and bring more coins if buying ingredients or ales; the first three ingredients are sold by the Culinaromancer\u0027s Chest, a bowl and sink are in Lumbridge Castle kitchen, and ales are sold by the Rising Sun Inn",
+      "Obtain gloves or Telekinetic Grab runes if using none; ice gloves are best but other gloves work",
       "Combat encounters: Icefiend (level 13) (only if you lack ice gloves)"
     ],
     "startLocation": "Inspect the frozen dwarf in the Lumbridge Castle dining room.",
