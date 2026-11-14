@@ -3985,8 +3985,6 @@
     "freeToPlay": false,
     "prerequisites": [
       "The Heart of Darkness",
-      "Twilight\u0027s Promise",
-      "Children of the Sun",
       "Perilous Moons"
     ],
     "skillRequirements": {
@@ -3997,8 +3995,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Emissary robes Any kind of bones (except sun-kissed bones) or raw meat/cooked meat A knife (obtainable during the quest) A beer (obtainable during the quest)",
-      "Access requirements: link\u003dThieving|alt\u003dThieving 66 Thieving [ not boostable ] [ required to start ] link\u003dRunecraft|alt\u003dRunecraft 52 Runecraft [ not boostable ] [ required to start ] link\u003dFletching|alt\u003dFletching 52 Fletching [ not boostable ] [ required to start ] Completion of the following quests: The Heart of Darkness Twilight\u0027s Promise Children of the Sun Perilous Moons Twilight\u0027s Promise Children of the Sun",
+      "Obtain Emissary robes and any non-sun-kissed bones or meat; a knife and beer are obtainable during the quest",
       "Combat encounters: Emissary Enforcer (lvl-196) Chimalli (lvl-160) and Lucius (lvl-160) Multiple waves of Emissary cultists (lvl-70 to lvl-90) Ennius Tullus (lvl-306) Augur Metzli (lvl-396)"
     ],
     "startLocation": "Talk to Servius in the Sunrise Palace.",

@@ -456,6 +456,25 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void finalDawnUsesDirectQuestGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Final Dawn");
+        assertEquals(java.util.Arrays.asList(
+                "The Heart of Darkness", "Perilous Moons"),
+                quest.getPrerequisites());
+        assertEquals(3, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(66),
+                quest.getSkillRequirements().get(Skill.THIEVING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain Emissary robes"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Augur Metzli (lvl-396)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(
