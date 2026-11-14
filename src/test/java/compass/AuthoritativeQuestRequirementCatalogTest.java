@@ -329,6 +329,22 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void eaglesPeakKeepsOptionalCombatSeparate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Eagles' Peak");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(27),
+                quest.getSkillRequirements().get(Skill.HUNTER));
+        assertEquals("Obtain yellow dye, swamp tar, and 50 coins",
+                quest.getAccessChecks().get(0));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Kebbit (level 13) (optional)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()

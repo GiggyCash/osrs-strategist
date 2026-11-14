@@ -4662,8 +4662,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Yellow dye Swamp tar 50 Coins",
-      "Access requirements: link\u003dHunter|alt\u003dHunter 27 Hunter [ boostable ] [ required to start ]",
+      "Obtain yellow dye, swamp tar, and 50 coins",
       "Combat encounters: Kebbit (level 13) (optional)"
     ],
     "startLocation": "Talk to Charlie at the Ardougne Zoo.",
