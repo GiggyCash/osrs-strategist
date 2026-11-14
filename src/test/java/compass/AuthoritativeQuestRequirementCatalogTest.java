@@ -475,6 +475,24 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void heartOfDarknessUsesDirectQuestGraphAndConcretePreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Heart of Darkness");
+        assertEquals(java.util.Collections.singletonList("Twilight's Promise"),
+                quest.getPrerequisites());
+        assertEquals(4, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(55),
+                quest.getSkillRequirements().get(Skill.MINING));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain 30 coins"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("Amoxliatl (level 263)")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

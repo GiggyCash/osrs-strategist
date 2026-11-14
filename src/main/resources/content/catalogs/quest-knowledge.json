@@ -5133,8 +5133,7 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: 30 coins Pickaxe (obtainable during quest) Up to 4 empty inventory slots",
-      "Access requirements: link\u003dMining|alt\u003dMining 55 Mining [ not boostable ] [ required to start ] link\u003dThieving|alt\u003dThieving 48 Thieving [ not boostable ] [ required to start ] link\u003dSlayer|alt\u003dSlayer 48 Slayer [ not boostable ] [ required to start ] link\u003dAgility|alt\u003dAgility 46 Agility [ not boostable ] [ required to start ] Completion of the following quests: Twilight\u0027s Promise Children of the Sun",
+      "Obtain 30 coins and leave up to 4 empty inventory slots; a pickaxe is obtainable during the quest",
       "Combat encounters: Several Emissary Brawlers (levels 74 and 86) Several Emissary Conjurers (level 71) Prince Itzla Arkan (level 167) Amoxliatl (level 263)"
     ],
     "startLocation": "Talk to Prince Itzla Arkan at the Teomat.",
