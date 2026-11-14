@@ -5547,8 +5547,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Stew (Cooking ingredients can be obtained during quest for 6 coins. Requires 25 Cooking)",
-      "Access requirements: Completion of the following quests: Client of Kourend X Marks the Spot link\u003dThieving|alt\u003dThieving 20 Thieving [ not boostable ] [ required to start ]"
+      "20 Thieving is non-boostable and required to start the quest",
+      "Bring a stew, or use 6 coins and 25 Cooking to obtain ingredients and cook one during the quest"
     ],
     "startLocation": "Talk to Tomas Lawry outside the Port Piscarilius bank.",
     "unlocks": [
