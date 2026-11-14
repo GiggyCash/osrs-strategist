@@ -384,6 +384,28 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void mountainDaughterKeepsConditionalPreparation()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Mountain Daughter");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(20),
+                quest.getSkillRequirements().get(Skill.AGILITY));
+        assertTrue(quest.getAccessChecks().get(0).startsWith(
+                "Obtain a rope, pickaxe, axe, plank"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "Dramen staff does not work"));
+        assertTrue(quest.getAccessChecks().get(0).contains(
+                "boostable and not required to start"));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.contains("The Kendal (level 70)")
+                        && check.contains("can be safespotted")));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")
+                        || check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void deviousMindsDoesNotDuplicateTypedAccessRequirements()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
