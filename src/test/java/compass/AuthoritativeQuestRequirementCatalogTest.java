@@ -398,6 +398,27 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void eyesOfGlouphrieTreatsMudRuneAsAnItemNotASkillGate()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("The Eyes of Glouphrie");
+        assertFalse(quest.getSkillRequirements().containsKey(
+                Skill.RUNECRAFT));
+        assertEquals(2, quest.getSkillRequirements().size());
+        assertEquals(Integer.valueOf(46),
+                quest.getSkillRequirements().get(Skill.MAGIC));
+        assertEquals(Integer.valueOf(5),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertTrue(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Required items:")
+                        && check.contains("Mud rune")));
+        assertTrue(quest.getAccessChecks().contains(
+                "46 Magic is required during the quest but not to start it"));
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")));
+    }
+
+    @Test
     public void recipeSubquestAliasesResolveToRuneLiteIdentities()
     {
         QuestDefinition king = new QuestKnowledgeCatalog().definitionFor(

@@ -4790,14 +4790,13 @@
     ],
     "skillRequirements": {
       "MAGIC": 46,
-      "RUNECRAFT": 13,
       "CONSTRUCTION": 5
     },
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
       "Required items: Bucket of sap (If you do not have one, you can use a knife on any tree that looks pointy (evergreen shaped trees) with a bucket in your inventory) Mud rune Maple logs Oak logs Hammer Saw Pestle and mortar",
-      "Access requirements: Completed The Grand Tree quest link\u003dConstruction|alt\u003dConstruction 5 Construction [ not boostable ] Category:Unknown start requirement status link\u003dMagic|alt\u003dMagic 46 Magic [ not boostable ] [ not required to start ]",
+      "46 Magic is required during the quest but not to start it",
       "Combat encounters: 6 x Evil creature that each have 1 HP"
     ],
     "startLocation": "Talk to Brimstail in his cave south-west side of the Tree Gnome Stronghold, directly west of the bank near the Stronghold Slayer Cave.",
