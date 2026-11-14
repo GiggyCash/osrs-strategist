@@ -6308,8 +6308,8 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: Hammer (or Imcando hammer) Saw (or crystal saw) Beer (must be a regular beer - other beers do not work.)",
-      "Access requirements: link\u003dConstruction|alt\u003dConstruction 10 Construction [ not boostable ] [ required to start ]"
+      "10 Construction is non-boostable and required to start the quest",
+      "Bring a hammer or Imcando hammer, a saw or crystal saw, and a regular beer; other beers do not work"
     ],
     "startLocation": "Talk to Effigy at the Tower of Life just east of the Ardougne Monastery.",
     "unlocks": [

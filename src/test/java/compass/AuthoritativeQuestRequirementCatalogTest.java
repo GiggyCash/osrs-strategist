@@ -1463,6 +1463,26 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void towerOfLifeUsesTypedConstructionGateAndExactBeerRequirement()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Tower of Life");
+        assertTrue(quest.getPrerequisites().isEmpty());
+        assertEquals(Integer.valueOf(10),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(java.util.Arrays.asList(
+                        "10 Construction is non-boostable and required to "
+                                + "start the quest",
+                        "Bring a hammer or Imcando hammer, a saw or crystal "
+                                + "saw, and a regular beer; other beers do "
+                                + "not work"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
