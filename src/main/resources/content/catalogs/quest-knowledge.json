@@ -4186,9 +4186,12 @@
     "itemRequirements": [],
     "questPointsRequired": 0,
     "accessChecks": [
-      "Required items: All items obtainable during quest: Bowl of water (two spawn in town, fountain next to bank) 2 planks (south of the town near the water) 6 nails (more recommended as they can bend, 20 nails may be found on the workbench) Saw (spawn in range shop) or Amy\u0027s saw Hammer (spawn in furnace house) or Imcando hammer",
-      "Access requirements: link\u003dConstruction|alt\u003dConstruction 38 Construction [ not boostable ] [ required to start ] link\u003dCooking|alt\u003dCooking 36 Cooking [ not boostable ] [ required to start ] link\u003dSmithing|alt\u003dSmithing 35 Smithing [ not boostable ] [ required to start ] Completion of the following quests: Children of the Sun",
-      "Combat encounters: Large chicken (level 16) - can be recoiled Black jaguar (level 88) - can be safespotted or recoiled Red dragon (level 106) - can be safespotted or recoiled"
+      "38 Construction, 36 Cooking, and 35 Smithing are non-boostable and required to start the quest",
+      "All required items are obtainable during the quest",
+      "Collect a bowl of water from two town spawns or the fountain by the bank, 2 planks south of town near the water, and at least 6 nails; extra nails are recommended because they can bend, and 20 are available on the workbench",
+      "Use a saw from the range shop or Amy\u0027s saw, and a hammer from the furnace house or an Imcando hammer",
+      "Combat encounter: Large chicken (level 16) can be recoiled",
+      "Combat encounters: Black jaguar (level 88) and Red dragon (level 106) can be safespotted or recoiled"
     ],
     "startLocation": "Talk to Alan at the temple of Tal Teok north of Tal Teklan.",
     "unlocks": [

@@ -1796,6 +1796,45 @@ public class AuthoritativeQuestRequirementCatalogTest
     }
 
     @Test
+    public void scrambledKeepsQuestObtainableSuppliesAndSafeCombatOptions()
+    {
+        QuestDefinition quest = new QuestKnowledgeCatalog()
+                .definitionFor("Scrambled!");
+        assertEquals(java.util.Collections.singletonList(
+                        "Children of the Sun"),
+                quest.getPrerequisites());
+        assertEquals(Integer.valueOf(38),
+                quest.getSkillRequirements().get(Skill.CONSTRUCTION));
+        assertEquals(Integer.valueOf(36),
+                quest.getSkillRequirements().get(Skill.COOKING));
+        assertEquals(Integer.valueOf(35),
+                quest.getSkillRequirements().get(Skill.SMITHING));
+        assertEquals(java.util.Arrays.asList(
+                        "38 Construction, 36 Cooking, and 35 Smithing are "
+                                + "non-boostable and required to start the "
+                                + "quest",
+                        "All required items are obtainable during the quest",
+                        "Collect a bowl of water from two town spawns or the "
+                                + "fountain by the bank, 2 planks south of "
+                                + "town near the water, and at least 6 nails; "
+                                + "extra nails are recommended because they "
+                                + "can bend, and 20 are available on the "
+                                + "workbench",
+                        "Use a saw from the range shop or Amy's saw, and a "
+                                + "hammer from the furnace house or an "
+                                + "Imcando hammer",
+                        "Combat encounter: Large chicken (level 16) can be "
+                                + "recoiled",
+                        "Combat encounters: Black jaguar (level 88) and Red "
+                                + "dragon (level 106) can be safespotted or "
+                                + "recoiled"),
+                quest.getAccessChecks());
+        assertFalse(quest.getAccessChecks().stream().anyMatch(
+                check -> check.startsWith("Access requirements:")
+                        || check.startsWith("Required items:")));
+    }
+
+    @Test
     public void elementalWorkshopOneUsesCurrentLevelTwentySkillContract()
     {
         QuestDefinition quest = new QuestKnowledgeCatalog()
